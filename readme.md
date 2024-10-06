@@ -118,7 +118,7 @@ The hypotez project is designed to streamline the process of hypothesis analysis
 
    ```powershell
    ps
-   git+https://github.com/DavidkaBenAvraham/hypotez-3.12-0.0.0.4.git
+   git+https://github.com/hypo69/hypo.git
    cd hypotez
    setup.ps1
    ```
@@ -136,7 +136,7 @@ The hypotez project is designed to streamline the process of hypothesis analysis
 
    ```powershell
    ps
-   git clone https://github.com/DavidkaBenAvraham/hypotez
+   git clone https://github.com/hypo69/hypo.git
    ```
 
 3. Navigate to the `hypotez` directory:
@@ -185,7 +185,7 @@ The hypotez project is designed to streamline the process of hypothesis analysis
 
     ```powershell
     ps
-    git clone https://github.com/DavidkaBenAvraham/docs
+    git clone https://github.com/hypo69/docs.git
     ```
 
 10. Run doxyrun (from `hypotez`):
@@ -226,7 +226,7 @@ The following is the content of the `setup.ps1` script referenced in the medium 
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 # Cloning the `hypotez` repository
-#git clone https://github.com/DavidkaBenAvraham/hypotez
+#git clone https://github.com/hypo69/hypo.git
 
 # Navigating to the hypotez directory
 #cd hypotez
@@ -270,8 +270,7 @@ New-Item -ItemType Directory -Path .\bin
 New-Item -ItemType Directory -Path .\sandbox
 
 # Cloning the `docs` repository inside the hypotez directory
-git clone https://github.com/DavidkaBenAvraham/docs
-
+git clone https://github.com/hypo69/docs.git
 # Running doxyrun (from `hypotez`)
 ./doxyrun
 
