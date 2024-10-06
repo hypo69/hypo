@@ -1,0 +1,13 @@
+{
+  "scenarios": {
+    "office chairs": {
+      "url": "https://amzn.to/3K2tABL",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": { "11236": "office chairs" },
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    }
+  }
+}

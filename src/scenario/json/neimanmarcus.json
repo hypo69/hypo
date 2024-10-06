@@ -1,0 +1,14 @@
+{
+  "supplier": "ksp",
+  "supplier_prefix": "ksp",
+  "start_url": "https://www.ksp.co.il/",
+  "price_rule": "+100",
+  "num_items_4_flush": 300,
+  "if_login": false,
+  "parcing method [webdriver|api]": "web",
+  "about method web scrapping [webdriver|api]": "Если я работаю через API мне не нужен webdriver",
+  "collect_products_from_categorypage": false,
+  "scenarios": {}
+
+}
+

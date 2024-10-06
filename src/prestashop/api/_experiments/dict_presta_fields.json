@@ -1,0 +1,16 @@
+{
+  "prestashop": {
+    "product": {
+      "associations": {
+        "categories": {
+          "category": [
+            { "id": 11248 },
+            { "id": 11246 },
+            { "id": 11245 },
+            { "id": 2 }
+          ]
+        }
+      }
+    }
+  }
+}

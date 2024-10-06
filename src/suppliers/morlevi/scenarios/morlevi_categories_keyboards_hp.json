@@ -1,0 +1,45 @@
+{
+  "scenarios": {
+    "HP WIRELESS KEYBOARD": {
+      "brand": "HP",
+      "url": "-----------------------------------------------HP WIRELESS KEYBOARD----------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,316"
+    },
+    "HP USB KEYBOARD": {
+      "brand": "HP",
+      "url": "-------------------------------------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,315"
+    },
+    "HP USB MOUSE": {
+      "brand": "HP",
+      "url": "------------------------------------------------------HP USB MOUSE------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,317"
+    },
+    "HP WIRELESS MOUSE": {
+      "brand": "HP",
+      "url": "---------------------------------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,318"
+    },
+    "HP USB KEYBOARD-MOUSE SET": {
+      "brand": "HP",
+      "url": "--------------------------------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,208"
+    },
+    "HP WIRELESS  KEYBOARD-MOUSE SET": {
+      "brand": "HP",
+      "url": "https://www.morlevi.co.il/Cat/114?p_315=10&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,334"
+    }
+  }

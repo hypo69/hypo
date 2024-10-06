@@ -1,0 +1,180 @@
+{
+  "scenarios": {
+    "EPIX": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..33807",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Fenix 6": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..9393..13927..9392..13929..13930..9391",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Fenix 7": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..32654..32651..32657",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "HRM": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..33807",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Vivo": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..31651..33932..13858..13860..10115..10116",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Venu": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..10117..15956..15955..25643..24313..31738",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Lily": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..25048",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Instinct": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..6109..33962",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Swim": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..10118",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Enduro": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..21932",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Forerunner": {
+      "brand": "GARMIN",
+      "url": "https://ksp.co.il/web/cat/2085..2160..8336..17956..27545..7820..7821..15741..4104..7822",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    }
+  }
+}

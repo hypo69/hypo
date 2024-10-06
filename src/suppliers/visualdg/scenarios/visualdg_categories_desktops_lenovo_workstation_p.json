@@ -1,0 +1,43 @@
+{
+  "scenarios": {
+    "DESKTOP LENOVO WORKSTATION P I3": {
+      "brand": "LENOVO",
+      "template": "WORKSTATION P",
+      "url": "-----------------------------------DESKTOP LENOVO WORKSTATION P I3---------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,235"
+    },
+    "DESKTOP LENOVO WORKSTATION P I5": {
+      "brand": "LENOVO",
+      "template": "WORKSTATION P",
+      "url": "--------------------------------DESKTOP LENOVO WORKSTATION P I5--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,236,242"
+    },
+    "DESKTOP LENOVO WORKSTATION P I7": {
+      "brand": "LENOVO",
+      "template": "WORKSTATION P",
+      "url": "https://www.visualdg.co.il/172346-WorkStation-P-Series/253274",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,237,242"
+    },
+    "DESKTOP LENOVO WORKSTATION P I9": {
+      "brand": "LENOVO",
+      "template": "WORKSTATION P",
+      "url": "https://www.visualdg.co.il/172346-WorkStation-P-Series/253278",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,238,242"
+    },
+    "DESKTOP LENOVO WORKSTATION P AMD": {
+      "brand": "LENOVO",
+      "template": "WORKSTATION P",
+      "url": "-------------------------------------DESKTOP DESKTOP LENOVO WORKSTATION P AMD-----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,239"
+    }
+  }

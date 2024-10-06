@@ -1,0 +1,14 @@
+{
+  "scenarios": {
+    "In-ear Bud": {
+      "brand": "HYPER-X",
+      "url": "https://ksp.co.il/web/cat/242..1250..2767",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hyper-x": "HEADPHONES BT In-ear Bud" }
+      }
+    }
+  }
+}

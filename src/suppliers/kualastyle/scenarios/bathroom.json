@@ -1,0 +1,13 @@
+{
+  "scenarios": {
+
+    "Designed sinks": {
+      "url": "https://kualastyle.com/collections/%D7%9B%D7%99%D7%95%D7%A8%D7%99%D7%9D-%D7%9E%D7%A2%D7%95%D7%A6%D7%91%D7%99%D7%9D",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": { "11005": "Designed sinks" }
+      },
+      "price_rule": 1
+    }
+  }
+}

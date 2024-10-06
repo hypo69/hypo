@@ -1,0 +1,27 @@
+{
+  "store": {
+    "store_id": "",
+    "supplier_id": "",
+    "get store banners": true,
+    "description": "ASUS laptops",
+    "about": "ASUS laptops",
+    
+    "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer&dc&qid=1671859579&rnid=2528832011&ref=sr_nr_p_89_2&ds=v1%3Aug88%2Bcw6xXqu9pU7BCAPtyLlMbg8LlAfoW9fTRvciDo",
+    "shop categories page": "",
+    "shop categories json file": ""
+  },
+
+  "scenarios": {
+    "ASUS INTEL CELERON": {
+      "brand": "DELL",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ADell%2Cp_n_feature_four_browse-bin%3A1264444011&dc&qid=1671871063&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_3&ds=v1%3AKCj1uS039qeaZ2R6HdoHqgStringFormatterkBHKy61GaNmpCn%2FDs9s",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "asus": "LAPTOPS INTEL CELERON" }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    }
+  }
+}

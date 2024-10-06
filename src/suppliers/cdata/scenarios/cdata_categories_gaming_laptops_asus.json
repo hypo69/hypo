@@ -1,0 +1,87 @@
+{
+  "scenarios": {
+    "ASUS GAMING 14 I5": {
+      "brand": "ASUS",
+      "url": "-----------------------------------ASUS GAMING 14 I5----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,98,10,5,434"
+    },
+    "ASUS GAMING 14 I7": {
+      "brand": "ASUS",
+      "url": "-----------------------------------ASUS GAMING 14 I7----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,98,10,6,435"
+    },
+    "ASUS GAMING 14 I9": {
+      "brand": "ASUS",
+      "url": "------------------------------------ASUS GAMING 14 I9--------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,98,10,7,436"
+    },
+    "ASUS GAMING 14 AMD": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%A0%D7%99%D7%99%D7%93%D7%99-gaming#/specFilters=227m!#-!4920!-#!225!#-!4662&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,98,10,234,437"
+    },
+    "ASUS GAMING 15 I5": {
+      "brand": "ASUS",
+      "url": "------------------------------------ASUS GAMING 15 I5 --------------------------4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,99,11,5,441"
+    },
+    "ASUS GAMING 15 I7": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%A0%D7%99%D7%99%D7%93%D7%99-gaming#/specFilters=227!#-!4635!-#!225m!#-!4663&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,99,11,6,442"
+    },
+    "ASUS GAMING 15 I9": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%A0%D7%99%D7%99%D7%93%D7%99-gaming#/specFilters=227m!#-!5836!-#!225!#-!4663&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,99,11,7,443"
+    },
+    "ASUS GAMING 15 AMD": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%A0%D7%99%D7%99%D7%93%D7%99-gaming#/specFilters=227m!#-!4920!-#!225!#-!4663&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,99,11,234,444"
+    },
+    "ASUS GAMING 17 I5": {
+      "brand": "ASUS",
+      "url": "----------------------------------ASUS GAMING 17 I5----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,99,12,5,448"
+    },
+    "ASUS GAMING 17 I7": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%A0%D7%99%D7%99%D7%93%D7%99-gaming#/specFilters=227m!#-!4635!-#!225!#-!4664&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,100,12,6,449"
+    },
+    "ASUS GAMING 17 I9": {
+      "brand": "ASUS",
+      "url": "----------------------------------ASUS GAMING 17 I9----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,100,12,7,450"
+    },
+    "ASUS GAMING 17 AMD": {
+      "brand": "ASUS",
+      "url": "-------------------------------------ASUS GAMING 17 AMD-------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,48,100,12,234,451"
+    }
+  }

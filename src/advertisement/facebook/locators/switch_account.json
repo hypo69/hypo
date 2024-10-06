@@ -1,0 +1,11 @@
+{
+  "switch_to_account_button": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//div[@aria-label = 'Переключить']",
+    "use_mouse": false,
+    "event": "click()",
+    "mandatory": true,
+    "locator_description": "Переключение на аккаунт, если надо. Если есть кнопка - нажимаю"
+  }
+}

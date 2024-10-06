@@ -1,0 +1,21 @@
+{
+  "supplier": "https://www.etzmaleh.co.il/",
+  "supplier_id": 11234,
+  "supplier_prefix": "etzmaleh",
+  "active_clients_list": [
+    "emil-design.com",
+    "e-cat.co.il"
+  ],
+  "start_url": "https://www.etzmaleh.co.il/",
+  "price_rule": "+0",
+  "if_login": false,
+  "login_url": "",
+  "lang": "HE",
+  "id_category_default": 11246,
+  "compare_categorie_dict": false,
+  "collect_products_from_categorypage": false,
+  "scenario_files": [
+  ],
+  "excluded": [
+  ]
+}

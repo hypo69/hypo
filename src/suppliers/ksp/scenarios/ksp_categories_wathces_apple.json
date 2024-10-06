@@ -1,0 +1,76 @@
+{
+  "scenarios": {
+    "Apple Watch SE": {
+      "brand": "APPLE",
+      "url": "https://ksp.co.il/web/cat/2085..245..29185..28724",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      },
+      "price_rule": 1,
+      "combinations": {
+        "size:select": "40 mm",
+        "color:color": "black",
+        "reseller:select": "Autorized Reseller",
+        "importer:select": "Official Importer",
+        "warranty:select": "1 year"
+      }
+    },
+    "Apple Watch Series 7": {
+      "brand": "APPLE",
+      "url": "https://ksp.co.il/web/cat/245..2085..29150..29229",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      },
+      "price_rule": 1,
+      "combinations": {
+        "size:select": "40 mm",
+        "color:color": "black",
+        "reseller:select": "Autorized Reseller",
+        "importer:select": "Official Importer",
+        "warranty:select": "1 year"
+      }
+    },
+    "Apple Watch Series 6": {
+      "brand": "APPLE",
+      "url": "https://ksp.co.il/web/cat/2085..245..16121",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      },
+      "price_rule": 1,
+      "combinations": {
+        "size:select": "40 mm",
+        "color:color:": "black",
+        "reseller:select": "Autorized Reseller",
+        "importer:select": "Official Importer",
+        "warranty:select": "1 year"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "email": "513404160",
+  "password": "513404160",
+
+  "open_login_dialog_locator": {
+    "by": "css selector",
+    "selector": ".fancyboxdiller"
+  },
+  "email_locator": {
+    "by": "css selector",
+    "selector": "input[id='UserName_61']"
+  },
+  "password_locator": {
+    "by": "css selector",
+    "selector": "input[id='IDNum_61']"
+  },
+  "loginbutton_locator": {
+    "by": "css selector",
+    "selector": "div.actions button[title='���']"
+  }
+}

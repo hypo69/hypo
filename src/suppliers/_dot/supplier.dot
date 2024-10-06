@@ -1,0 +1,83 @@
+digraph G {
+    // Настройки стиля для всего графа
+    graph [splines=ortho, rankdir=LR, fontsize=12, fontname="Helvetica"];
+
+    // Настройки стиля для узлов
+    node [shape=box, style=rounded, fontsize=10, fontname="Helvetica"];
+    
+    // Настройки стиля для рёбер
+    edge [fontsize=10, fontname="Helvetica"];
+
+    // Класс Supplier
+    Supplier [label="
+        Supplier
+        | Attributes
+        | supplier_id: int
+        | supplier_prefix: str
+        | supplier_settings: dict
+        | locale: str
+        | price_rule: str
+        | related_modules: module
+        | scenario_files: list
+        | current_scenario: dict
+        | login_data: dict
+        | locators: dict
+        | driver: Driver
+        | Methods
+        | + __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs)
+        | + _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool
+        | + login(self) -> bool
+        | + run_scenario_files(self, scenario_files: str | List[str] = None) -> bool
+        | + run_scenarios(self, scenarios: dict | list[dict]) -> bool
+    "];
+
+    // Зависимости от других классов и модулей
+    Driver [label="Driver\n(WebDriver)"];
+    SimpleNamespace [label="SimpleNamespace"];
+    j_loads_ns [label="j_loads_ns\n(Path, JSON)"];
+    j_loads [label="j_loads\n(Path, JSON)"];
+    run_scenarios [label="run_scenarios\n(scenarios)"];
+    run_scenario_files [label="run_scenario_files\n(scenario_files)"];
+    Logger [label="Logger\n(logger)"];
+    DefaultSettingsException [label="DefaultSettingsException\n(Exception)"];
+    Chrome [label="Chrome\n(WebDriver)"];
+    Firefox [label="Firefox\n(WebDriver)"];
+    Edge [label="Edge\n(WebDriver)"];
+    gs [label="gs\n(src.settings)"];
+
+    // Связи между классами и модулями
+    Supplier -> Driver [label="uses"];
+    Supplier -> SimpleNamespace [label="uses"];
+    Supplier -> j_loads_ns [label="uses"];
+    Supplier -> j_loads [label="uses"];
+    Supplier -> run_scenarios [label="calls"];
+    Supplier -> run_scenario_files [label="calls"];
+    Supplier -> Logger [label="logs"];
+    Supplier -> DefaultSettingsException [label="raises"];
+    Supplier -> Chrome [label="optional\n(WebDriver)"];
+    Supplier -> Firefox [label="optional\n(WebDriver)"];
+    Supplier -> Edge [label="optional\n(WebDriver)"];
+    Supplier -> gs [label="accesses\n(src.settings)"];
+
+    // Импортируемые модули
+    importlib [label="importlib\n(module)"];
+    pathlib_Path [label="pathlib.Path\n(module)"];
+    List [label="typing.List\n(module)"];
+    src_settings [label="src.settings\n(gs)"];
+    src_utils [label="src.utils\n(j_loads, j_loads_ns)"];
+    src_webdriver [label="src.webdriver\n(Driver, Chrome, Firefox, Edge)"];
+    src_scenario [label="src.scenario\n(run_scenarios, run_scenario_files)"];
+    src_logger [label="src.logger\n(logger)"];
+    src_exceptions [label="src.exceptions\n(DefaultSettingsException)"];
+
+    // Связи для импортированных модулей
+    Supplier -> importlib [label="imports"];
+    Supplier -> pathlib_Path [label="imports"];
+    Supplier -> List [label="imports"];
+    Supplier -> src_settings [label="imports"];
+    Supplier -> src_utils [label="imports"];
+    Supplier -> src_webdriver [label="imports"];
+    Supplier -> src_scenario [label="imports"];
+    Supplier -> src_logger [label="imports"];
+    Supplier -> src_exceptions [label="imports"];
+}

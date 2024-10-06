@@ -1,0 +1,36 @@
+{
+  "scenarios": {
+    "Huawei MateBook 14": {
+      "brand": "HUAWEI",
+      "url": "https://ksp.co.il/web/cat/268..271..583..31024",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Huawei Matebook D14": {
+      "brand": "HUAWEI",
+      "url": "https://ksp.co.il/web/cat/268..271..583..23286",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    }
+  }
+}

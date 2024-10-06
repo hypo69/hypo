@@ -1,0 +1,13 @@
+{
+  "scenarios": {
+    "In-ear Bud": {
+      "brand": "RAZER",
+      "url": "https://ksp.co.il/web/cat/242..1250..309",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "razer": "In-ear Bud" }
+      }
+    }
+  }
+}

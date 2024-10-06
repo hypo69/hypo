@@ -1,0 +1,19 @@
+{
+  "scenarios": {
+    "ASUS CASE": {
+      "brand": "ASUS",
+      "template": "",
+      "url": "https://www.visualdg.co.il/169420-%D7%9E%D7%90%D7%A8%D7%96%D7%99-ASUS/243216-Asus",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "195,534"
+    },
+    "ASUS - XPG CASE": {
+      "brand": "ASUS",
+      "template": "",
+      "url": "https://www.visualdg.co.il/169420-%D7%9E%D7%90%D7%A8%D7%96%D7%99-ASUS/249893-XPG",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "195,982"
+    }
+  }

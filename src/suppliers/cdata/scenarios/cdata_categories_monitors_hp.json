@@ -1,0 +1,52 @@
+{
+  "scenarios": {
+    "HP 18": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215!#-!4586!-#!216m&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,241"
+    },
+    "HP 21.5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4587&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,128"
+    },
+    "HP 23.5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4588!##!4589&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,129"
+    },
+    "HP 27": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4590&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,130"
+    },
+    "HP 31": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4591&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,131"
+    },
+    "HP 34": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4592&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,132"
+    },
+    "HP 49": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4592&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,133"
+    }
+  }

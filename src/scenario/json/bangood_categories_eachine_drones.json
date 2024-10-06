@@ -1,0 +1,12 @@
+{
+  "scenarios": {
+    "Eachine RC Drones": {
+      "brand": "Eachine",
+      "url": "https://www.banggood.com/search/eachine-rc-drones/8767-0-0-1-1-60-0-price-0-0_p-1.html",
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "eachine": "RC Drones" }
+      }
+    }
+  }
+}

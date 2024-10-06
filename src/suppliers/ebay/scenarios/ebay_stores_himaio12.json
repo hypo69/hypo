@@ -1,0 +1,26 @@
+{
+  "store": {
+    "store_id": "thegasketsman75",
+    "supplier_id": 4534,
+    "get store banners": true,
+    "description": "thegasketsman75 Gasket KIT",
+    "about": " ",
+    "url": "https://www.ebay.com/str/himaio12",
+    "shop categories page": "",
+    "shop categories json file": ""
+  },
+
+  "scenarios": {
+    "Gaming Concoles": {
+      "url": "https://www.ebay.com/str/himaio12",
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "gaming": "CONSOLES" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    }
+  }
+
+}

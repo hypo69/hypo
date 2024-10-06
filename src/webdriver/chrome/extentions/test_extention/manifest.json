@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Hypotez",
+  "version": "1.0",
+  "description": "Collects data from web pages and sends it to a server.",
+  "permissions": [ "activeTab", "storage", "scripting" ],
+  "background": {
+    "service_worker": "borderify.js"
+  },
+  "action": {
+    "default_popup": "html/popup.html",
+    "default_icon": {
+      "16": "icons/icon.png",
+      "48": "icons/icon.png",
+      "128": "icons/icon.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon.png",
+    "48": "icons/icon.png",
+    "128": "icons/icon.png"
+  },
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "scenarios": {
+    "DELL 18": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4586&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,241"
+    },
+    "DELL 21.5": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4587&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,128"
+    },
+    "DELL 23.5": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4588!##!6029!##!4589&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,129"
+    },
+    "DELL 27": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4590&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,130"
+    },
+    "DELL 31": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4591&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,131"
+    },
+    "DELL 34": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!4592&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,132"
+    },
+    "DELL 49": {
+      "brand": "DELL",
+      "url": "---------------------DELL 49----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,133"
+    }
+  }

@@ -1,0 +1,29 @@
+{
+  "scenarios": {
+    "In-ear Bud": {
+      "brand": "XIAOMI",
+      "url": "https://ksp.co.il/web/cat/242..2202..1250",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "xiaomi": "HEADPHONES"
+        }
+      }
+    },
+    "Xiaomi Mi In-ear Bud cable 3.5mm connection": {
+      "brand": "XIAOMI",
+      "url": "https://ksp.co.il/web/cat/242..2202..1250..5162",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3459": "Xiaomi Mi In-ear Bud cable 3.5mm connection",
+        "template": { "xiaomi": "HEADPHONES" },
+
+        "2250": "brand:  XIAOMI",
+        "2479": "BT Earbuds",
+        "3494": "Redmi Buds 3"
+      }
+    }
+  }
+}

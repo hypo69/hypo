@@ -1,0 +1,19 @@
+# \file "src\advertisement\facebook\_dot\promoter.dot"
+digraph FacebookPromoter {
+    node [shape=box];
+
+    init [label="__init__"];
+    parse_interval [label="parse_interval"];
+    promote [label="promote"];
+    process_groups [label="process_groups"];
+    check_interval [label="check_interval"];
+    run_campaigns [label="run_campaigns"];
+    run_events [label="run_events"];
+    stop [label="stop"];
+
+    init -> process_groups;
+    process_groups -> promote;
+    process_groups -> check_interval;
+    run_campaigns -> process_groups;
+    run_events -> process_groups;
+}

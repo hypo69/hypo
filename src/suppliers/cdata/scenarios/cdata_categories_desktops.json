@@ -1,0 +1,129 @@
+{
+  "scenarios": {
+    "DESKTOP HP I3": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4633&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,235"
+    },
+    "DESKTOP HP I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4634&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,236,242"
+    },
+    "DESKTOP HP I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4635&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,237,242"
+    },
+    "DESKTOP HP I9": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!5836&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,238,242"
+    },
+    "DESKTOP HP AMD": {
+      "brand": "HP",
+      "url": "-------------------------------------DESKTOP DESKTOP HP AMD-----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,239"
+    },
+    "DESKTOP HP pentium": {
+      "brand": "HP",
+      "url": "-------------------------------------DESKTOP HP pentium-----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,232"
+    },
+    "DESKTOP ASUS I3": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4633&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,235"
+    },
+    "DESKTOP ASUS I5": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4634&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,236,242"
+    },
+    "DESKTOP ASUS I7": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4635&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,237,242"
+    },
+    "DESKTOP ASUS I9": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!5836&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,238,242"
+    },
+    "DESKTOP ASUS AMD": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4920&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,239"
+    },
+    "DESKTOP ASUS pentium": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%97%D7%99%D7%9D#/specFilters=227m!#-!4652&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,232"
+    },
+    "DESKTOP DELL I3": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4633&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,235"
+    },
+    "DESKTOP DELL I5": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4634&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,236,242"
+    },
+    "DESKTOP DELL I7": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!4635&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,237,242"
+    },
+    "DESKTOP DELL I9": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/desktops#/specFilters=227m!#-!5836&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,238,242"
+    },
+    "DESKTOP DELL AMD": {
+      "brand": "DELL",
+      "url": "-------------------------------------DESKTOP DELL AMD-----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,239"
+    },
+    "DESKTOP DELL pentium": {
+      "brand": "DELL",
+      "url": "-------------------------------------DESKTOP DELL pentium-----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "91,89,231,232"
+    }
+  }

@@ -1,0 +1,27 @@
+{
+  "scenarios": {
+    "USED HP DESKTOP INTEL I5": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565098&rh=n%3A172282%2Cn%3A541966%2Cn%3A13896617011%2Cn%3A565098%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_condition-type%3A2224373011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289793011&dc&qid=1674309202&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_1&ds=v1%3A3opKFvNsBrAlTma48Fhm9Z15nWOKHypDzbdHeg0IvUI",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": "DESKTOPS INTEL I3" }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+
+    "USED HP DESKTOP AMD RYZEN 5": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565098&rh=n%3A172282%2Cn%3A541966%2Cn%3A13896617011%2Cn%3A565098%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_condition-type%3A2224373011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A18107801011%7C2289793011&dc&qid=1674309214&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_2&ds=v1%3Ahqid0YcY15vr344QTI%2Bwl3faAO4P4Fa7PRg81bZauW8",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": "DESKTOPS INTEL I5" }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    }
+  }
+}

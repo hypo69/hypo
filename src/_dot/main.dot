@@ -1,0 +1,42 @@
+digraph main {
+    rankdir=LR;
+    node [shape=box];
+
+    main_py [label="main.py"];
+
+    subgraph cluster_imports {
+        label="Imports";
+        sys [label="sys"];
+        pathlib [label="pathlib"];
+        typing [label="typing"];
+        src_settings_gs [label="src.settings.gs"];
+        src_launcher_launcher [label="src.launcher.launcher"];
+    }
+
+    subgraph cluster_functions {
+        label="Functions";
+        main_func [label="main(supplier_prefix, active_clients_list, scenario, scenario_files, locale, gui_mode) -> bool"];
+    }
+
+    subgraph cluster_classes {
+        label="Classes";
+        dir_root [label="dir_root: Path"];
+        dir_src [label="dir_src"];
+    }
+
+    # Relationships
+    main_py -> sys;
+    main_py -> pathlib;
+    main_py -> typing;
+    main_py -> src_settings_gs;
+    main_py -> src_launcher_launcher;
+
+    main_py -> dir_root;
+    main_py -> dir_src;
+
+    main_py -> main_func;
+
+    main_func -> src_launcher_launcher;
+
+    {rank=same; dir_root; dir_src;}
+}

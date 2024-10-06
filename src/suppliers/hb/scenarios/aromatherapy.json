@@ -1,0 +1,15 @@
+
+{
+  "scenarios": {
+
+    "diffusers": {
+      "url": "https://hbdeadsea.co.il/product-category/aromatherapy/diffusers/",
+      "name": "מפיצי ריח ומילוי",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11246,
+        "additional_categories": []
+      }
+    }
+  }
+}

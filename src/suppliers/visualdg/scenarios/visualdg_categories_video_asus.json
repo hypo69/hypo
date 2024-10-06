@@ -1,0 +1,10 @@
+{
+  "scenarios": {
+    "GForce": {
+      "brand": "Nvidia",
+      "url": "https://www.visualdg.co.il/169411-%D7%9B%D7%A8%D7%98%D7%99%D7%A1%D7%99-%D7%9E%D7%A1%D7%9A-ASUS/243216-Asus",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "108,524"
+    }
+  }

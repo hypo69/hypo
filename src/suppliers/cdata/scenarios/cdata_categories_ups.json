@@ -1,0 +1,10 @@
+{
+  "scenarios": {
+    "ups": {
+      "brand": "APC",
+      "url": "https://reseller.c-data.co.il/UPS-%D7%90%D7%9C-%D7%A4%D7%A1%D7%A7",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "158,247"
+    }
+  }

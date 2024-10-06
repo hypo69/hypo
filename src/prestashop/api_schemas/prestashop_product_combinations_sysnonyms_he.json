@@ -1,0 +1,16 @@
+{
+  "consoles": {
+    "synonyms": {
+      "דגם": "model:select:0",
+      "מעבד": "cpu:select:0",
+      "צבע": "color:color:0"
+    }
+  },
+
+  "skip": 
+    [
+      "אחריות",
+      "סיכום"
+    ]
+  
+}

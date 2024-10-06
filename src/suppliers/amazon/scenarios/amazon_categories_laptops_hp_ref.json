@@ -1,0 +1,412 @@
+{
+ 
+  "scenarios": {
+    "LAPTOPS HP INTEL CELERON 11": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A1264420011%7C1264444011%2Cp_n_size_browse-bin%3A13580785011&dc&qid=1673003876&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3AX04xpAWnKr6xvuDflqgcXwlFEA0yw8Vn%2FryiGCUqVig",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL CELERON", "11" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL CELERON 13": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A1264420011%7C1264444011%2Cp_n_size_browse-bin%3A13580784011&dc&qid=1673003916&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3AfFS%2Fy4Y4WiqLrSyEv6csuPb5qSuiJWDY5cT3X7LU5ag",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL CELERON", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP INTEL CELERON 14": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A1264420011%7C1264444011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1673003953&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3AvPlfpQKkac0R%2FXGtxkz6RlzuPjesVbA%2BvHpk4LUH5Og",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL CELERON", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL CELERON 15": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A1264420011%7C1264444011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1673004029&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3AoVUTh%2FGVNCgcgoHwdslGHJBv7CKi4eTHThXj80u4XPs",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL CELERON", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL CELERON 17": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A1264420011%7C1264444011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1673004080&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3A6UCUbJ8mFn7iDhnl%2Bw5DZogpn35fR4ptmWkDEk8MNSg",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL CELERON", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL I3 11": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A13580785011&dc&qid=1673004198&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_1&ds=v1%3AkSbd%2BCclvLg%2FReZ668QS8LgzfCqZkMLvmF5NNnLoaT0",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I3", "11" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL I3 13": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1673004240&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3AZspxUd70PXdQ%2FZpSUllVzXYm2CdC98BFYE7pmQr8Pj0",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I3", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL I3 14": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1673004277&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3AIGQ6kVqDdDEGc4SV2gK%2F3kRilYqw4K4w0DSs9lFqKXA",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I3", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL I3 15": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1673004522&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3A83Kq2OrKvMeL%2F9pyp7VCUvucpo%2BVebuK9eKmRPAw7Aw",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I3", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP INTEL I3 17": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1673004569&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3AnZB9ql4TvrinKHdKStHSP7eMUmtUPcUtfkhHHUACdBU",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I3", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL I5 11": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A13580784011&dc&qid=1673004625&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_1&ds=v1%3A0SPmRzK%2BCWRTedun48mewHIBAJ8%2Fro2tWtVB3W7BpXo",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I5", "11" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL I5 13": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1673004705&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3AJMDkfkbaAyaSRiXmcbh519JStringNormalizerkWHkVblNQiYGupnBkE",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I5", "11" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL I5 14": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1673004769&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3A7ahN5fb1fzCXMnAoHqTN%2BqqWMcSXQAS74wo3YnX7VWk",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I5", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP INTEL I5 15": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1673004806&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3ASBaUP%2FmTaeim%2BpkJaB0JXJ9z1BCpmw5GAGDMeiedOGM",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I5", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP INTEL I5 17": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1673004862&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3ABZykFaiG0dU%2Fr3lO1yv8BMs1BAOBM8C4s3zvEqJk8UE",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I5", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+
+    "LAPTOPS HP INTEL I7 11": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289792011%7C2289793011%2Cp_n_size_browse-bin%3A13580784011&dc&qid=1673004894&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_1&ds=v1%3AStringNormalizerzPJNF%2FodbUrQYpa2BnFfSukNRDjynD3DnmQkcUbfQ",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I7", "11" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP INTEL I7 13": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289792011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1673005050&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3ApTs9MYu7WuEzcG%2BlAzraDWouXvm%2B6DFZgAzGuhOb9b0",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I7", "13" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP INTEL I7 14": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289792011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1673005027&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3AqUCDctTDUMiK4JOPJOQBuzRQIrfsUGuKiRED%2FC7pWlI",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I7", "14" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP INTEL I7 15": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289792011%2Cp_n_size_browse-bin%3A2242801011%7C2423841011&dc&qid=1673005136&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3AXv%2FcfvEHdDI7WbS8VsJkG%2B4Nj3yDrH7H9DLfDRJJQyg",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I7", "15" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOPS HP INTEL I7 17": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A2289792011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1673005209&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3Az1clpsGg2V0dUf%2Fj7%2FHlwjLnaCeXZpr9erq6iJbXjYE",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL I7", "17" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP AMD RYZEN 3 14": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107800011&dc&qid=1671870723&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_1&ds=v1%3AtDyYXQD%2B0puaXPRDWmVjeAyyUAFH1u3njg8upvft2z4",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 3", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP AMD RYZEN 3 17": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_89%3AHP%2Cp_n_feature_four_browse-bin%3A18107800011%2Cp_n_size_browse-bin%3A2423840011%7C7817234011%2Cp_72%3A1248879011&dc&qid=1673005320&rnid=1248877011&ref=sr_nr_p_72_1&ds=v1%3AtoIHBIgGiVI6Dm7WiD7bWeBbQDHV%2BEn42ytYARYnpCU",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 3", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP AMD RYZEN 5 13": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107801011&dc&qid=1671870624&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_1&ds=v1%3AuLrq4xL4RowvHeK9D7aDGMqmwZiCFwYUQnzvLzpsiJA",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 5", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP AMD RYZEN 5 14": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107801011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1673005431&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3AVN%2BaUwT%2B60Dsmd69kkdkzCy8rfERkeh0Ox7ZKx9cYKA",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 5", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP AMD RYZEN 5 15": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107801011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1673005590&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3AUIZ9EqlrS%2B2XSGA73TjERDfhU5r3kKyYUB2a%2F%2BChQ4k",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 5", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP AMD RYZEN 5 17": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107801011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1673005613&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3Azy%2F6tWz%2B3h5WMEeA3dKhlrf5j9ZiX7cQPa82TZqEy8A",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 5", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP AMD RYZEN 7 13": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107802011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1673005667&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3AWV%2FdWoXquBqjEG%2B1OprimKeDt7B7gqdmQeLHCBxXR5s",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 7", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP AMD RYZEN 7 14": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107802011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1673005754&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3ANDUABNur5lnD4YYaMKk5Iskqx%2Fi%2B1OTVLjUB%2FXs7nt8",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 7", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP AMD RYZEN 7 15": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107802011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1673005829&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3AYHpaQ2NvSgl%2FyWm%2F0fdakHq3PeP7VCDzNXjJkRmC5vw",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 7", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOPS HP AMD RYZEN 7 17": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A18107802011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1673005896&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3AK6vBptPM2K0fonLppGC5GFy5ocF%2BbYD4Nf%2BrQjSl1q4",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD RYZEN 7", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP AMD ATHLON 14": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1673005961&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_1&ds=v1%3AsWocK4bviDz6Tqe2wy8cnVXDXERWR4AdCxh%2BB0WE1yE",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD ATHLON", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP AMD ATHLON 15": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1673006052&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3AMs2LoMPYDwlebofBM4S%2BkZ4FMChzUMwF3b2QOopkYCw",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD ATHLON", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOPS HP AMD ATHLON 17": {
+      "brand": "HP",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AHP%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A7817234011%2Cp_n_condition-type%3A2224373011&dc&qid=1674228457&rnid=2224369011&ref=sr_nr_p_n_condition-type_2&ds=v1%3AxYsvStringNormalizerSe8KC0775FNn6SEfPDU0nEm9Y%2B6Z6%2BzTil4dA",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS AMD ATHLON", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    }
+
+  }
+}

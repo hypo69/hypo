@@ -1,0 +1,45 @@
+{
+  "scenarios": {
+    "ASUS MINIPC I3": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169415-ASUS-MiniPC/253272",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,160"
+    },
+    "ASUS MINIPC I5": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169415-ASUS-MiniPC/253273",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,161"
+    },
+    "ASUS  MINIPC I7": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169415-ASUS-MiniPC/253274",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,162"
+    },
+    "ASUS  MINIPC I9": {
+      "brand": "ASUS",
+      "url": "-------------ASUS  MINIPC I9---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,530"
+    },
+    "ASUS MINIPC AMD": {
+      "brand": "ASUS",
+      "url": "-------------ASUS MINIPC AMD---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,531"
+    },
+    "ASUS MINIPC Celeron": {
+      "brand": "ASUS",
+      "url": "-------------ASUS MINIPC Celeron---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,532"
+    }
+  }

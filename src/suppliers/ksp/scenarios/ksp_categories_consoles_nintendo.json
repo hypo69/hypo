@@ -1,0 +1,41 @@
+{
+  "scenarios": {
+    "Nintendo Switch OLED": {
+      "brand": "NINTENDO",
+      "url": "https://ksp.co.il/web/cat/255..1304..28511",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "nintendo": "Nintendo Switch OLED" }
+      }
+    },
+    "Nintendo Switch": {
+      "brand": "NINTENDO",
+      "url": "https://ksp.co.il/web/cat/255..1304..4173",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "nintendo": "Nintendo Switch OLED" }
+      }
+    },
+    "Nintendo Switch Lite": {
+      "brand": "NINTENDO",
+      "url": "https://ksp.co.il/web/cat/255..1304..9674",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "nintendo": "Nintendo Switch Lite" }
+      }
+    },
+
+    "Nintendo Classic": {
+      "brand": "NINTENDO",
+      "url": "https://ksp.co.il/web/cat/255..1304..5192",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "nintendo": "Nintendo Classic" }
+      }
+    }
+  }
+}

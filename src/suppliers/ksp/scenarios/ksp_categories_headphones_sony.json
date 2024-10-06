@@ -1,0 +1,40 @@
+{
+  "scenarios": {
+    "In-ear Bud": {
+      "brand": "SONY",
+     "url": "https://ksp.co.il/web/cat/242..323..1250",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "sony": "HEADPHONES BT In-ear Bud" }
+      }
+    },
+    "Over-ear": {
+      "brand": "SONY",
+     "url": "https://ksp.co.il/web/cat/242..323..1252",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "sony": "HEADPHONES BT In-ear Bud" }
+      }
+    },
+    "On-ear": {
+      "brand": "SONY",
+     "url": "https://ksp.co.il/web/cat/242..323..3139",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "sony": "HEADPHONES BT OVEREAR" }
+      }
+    },
+    "Neckband": {
+      "brand": "SONY",
+     "url": "https://ksp.co.il/web/cat/242..323..1253",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "sony": "HEADPHONES NECKBAND" }
+      }
+    }
+  }
+}

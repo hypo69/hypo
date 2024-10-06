@@ -1,0 +1,44 @@
+
+body {
+    font-family: sans-serif;
+}
+
+h1 {
+    font-size: 120%;
+    margin: 20px 0px 0px;
+}
+
+body > div:first-child > h1 {
+    margin: 0px;
+}
+
+ul {
+    margin: 0px;
+    padding-left: 30px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+table {
+    box-sizing: border-box;
+    width: 100%;
+    border-collapse: collapse;
+    word-break: break-all;
+    font-family: Consolas, Monaco, "Ubuntu Mono", monospace;
+}
+
+td,
+th {
+    border: solid 1px;
+    min-width: 60px;
+}
+
+th {
+    background-color: rgb(255,255,0);
+}

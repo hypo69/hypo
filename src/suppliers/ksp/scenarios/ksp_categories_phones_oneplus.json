@@ -1,0 +1,161 @@
+{
+  "scenarios": {
+    "ONEPLUS NORD 2": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..27278",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS NORD 2"
+        }
+      }
+    },
+    "ONEPLUS NORD CE": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..26037",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS NORD CE"
+        }
+      }
+    },
+    "ONEPLUS 8 PRO": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..13340",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS 8 PRO"
+        }
+      }
+    },
+    "ONEPLUS 8T": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..19689",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS 8T"
+        }
+      }
+    },
+    "ONEPLUS 9": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..24484",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS 9"
+        }
+      }
+    },
+    "ONEPLUS 9 PRO": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..26171",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS 9 PRO"
+        }
+      }
+    },
+    "ONEPLUS NORD N20 SE": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..42032",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS NORD N20 SE"
+        }
+      }
+    },
+    "ONEPLUS NORD CE 2 5G": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..36632",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS NORD CE 2 5G"
+        }
+      }
+    },
+    "ONEPLUS NORD CE 2 LITE 5G": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..38693",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS NORD CE 2 5G"
+        }
+      }
+    },
+    "ONEPLUS NORD 2T 5G": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..38706",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS NORD 2T 5G"
+        }
+      }
+    },
+    "ONEPLUS 9 Pro 5G": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..26171",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS NORD 2T 5G"
+        }
+      }
+    },
+    "ONEPLUS 10 PRO 5G": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..36978",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS 10 PRO 5G"
+        }
+      }
+    },
+
+    "ONEPLUS 10T": {
+      "brand": "ONEPLUS",
+      "url": "https://ksp.co.il/web/cat/272..573..2190..43056",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oneplus": "ONEPLUS 10T"
+        }
+      }
+    }
+  }
+}

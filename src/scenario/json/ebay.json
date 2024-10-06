@@ -1,0 +1,24 @@
+{
+  "supplier": "ebay",
+  "supplier_prefix": "ebay",
+  "start_url": "https://www.ebay.com/",
+  "price_rule": "1",
+  "supplier_id": "2792",
+  "num_items_4_flush": 300,
+  "if_login": false,
+  "parcing method [webdriver|api]": "web",
+  "about method web scrapping [webdriver|api]": "Если я работаю через API мне не нужен webdriver",
+  "collect_products_from_categorypage": false,
+  "scenario_files": [
+    "ebay_categories_phones_apple.json",
+    "ebay_stores_mmhfcom.json",
+    "ebay_stores_pacificindustriesltd.json",
+    "ebay_stores_thegasketsman75.json",
+    "ebay_stores_himaio12.json"
+  ],
+  "excluded": [
+
+  ],
+  "last_runned_scenario": ""
+}
+

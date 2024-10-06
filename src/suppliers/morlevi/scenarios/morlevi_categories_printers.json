@@ -1,0 +1,8 @@
+{
+  "scenarios": {
+    
+    "url": "https://www.morlevi.co.il/Cat/60",
+    "checkbox": false,
+    "active": true,
+    "condition":"new","presta_categories": "151,209"
+  }

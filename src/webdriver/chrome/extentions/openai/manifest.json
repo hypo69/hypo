@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "OpenAI Model Interface",
+  "version": "1.0",
+  "description": "Interface for interacting with OpenAI model",
+  "permissions": [
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icons/16.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    },
+    "default_width": 750, // 3/4 ширины экрана
+    "default_height": 600
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}

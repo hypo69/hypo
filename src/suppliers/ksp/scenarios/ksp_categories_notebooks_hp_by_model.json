@@ -1,0 +1,260 @@
+{
+  "scenarios": {
+    "HP Laptop 14 I7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..7975..5315",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I7", "14" ]
+        }
+      }
+    },
+    "HP Laptop 15 I3": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/268..271..162..7766..2179..9718",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I3", "15" ]
+        }
+      }
+    },
+    "HP Laptop 15 I5": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/268..271..162..7766..2183..5394",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I5", "15" ]
+        }
+      }
+    },
+    "HP Laptop 15 I7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/268..271..162..7766..2185..5315",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I7", "15" ]
+        }
+      }
+    },
+    "HP Pavilion Aero 13 RYZEN 7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..33856..3955",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS AMD RYZEN 7", "13" ]
+        }
+      }
+    },
+    "HP Pavilion 15 I5": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/268..271..162..7766..2528",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I5", "15" ]
+        }
+      }
+    },
+    "HP Pavilion 14 I5": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..2526..5394",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I5", "14" ]
+        }
+      }
+    },
+
+    "HP Pavilion Gaming 15 RYZEN 7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..8312..3955",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS AMD RYZEN 7", "15" ]
+        }
+      }
+    },
+    "HP Pavilion x360 14 I7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..4392..5315",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I7", "14" ]
+        }
+      }
+    },
+    "HP Pavilion x360 15 I5": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..44301..2183",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I5", "15" ]
+        }
+      }
+    },
+    "HP Pavilion x360 15 I7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..5315..44301..2185",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I7", "15" ]
+        }
+      }
+    },
+    "HP Omen 16 RYZEN 7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/268..271..162..3489",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS AMD RYZEN 7", "15" ]
+        }
+      }
+    },
+
+    "HP Victus 16 RYZEN 7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/268..271..162..29547",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS AMD RYZEN 7", "15" ]
+        }
+      }
+    },
+    "HP Spectre x360 14 I7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/268..271..162..21745",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I7", "14" ]
+        }
+      }
+    },
+
+
+    "HP Envy 15 I5": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..28949..2174",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I5", "15" ]
+        }
+      }
+    },
+    "HP Envy 14 I5": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..20892..5394",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I5", "14" ]
+        }
+      }
+    },
+    "HP Envy 14 I7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..20892..5315",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I7", "14" ]
+        }
+      }
+    },
+    "HP Envy 13 I7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..3839..5315",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I7", "14" ]
+        }
+      }
+    },
+    "HP Envy X360 13 I5": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..19509..213..5394",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I5", "13" ]
+        }
+      }
+    },
+    "HP Envy X360 13 I7": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..19509..213..5315",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I7", "13" ]
+        }
+      }
+    },
+    "HP Envy X360 15 I5": {
+      "brand": "HP",
+      "url": "https://ksp.co.il/web/cat/162..268..271..19509..5394..211",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "hp": [ "LAPTOPS INTEL I5", "15" ]
+        }
+      }
+    }
+  }
+}

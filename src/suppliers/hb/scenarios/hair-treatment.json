@@ -1,0 +1,71 @@
+{
+  "scenarios": {
+    "complementary-products": {
+
+      "url": "https://hbdeadsea.co.il/product-category/hair-treatment/complementary-products/",
+      "name": "מוצרי טיפוח משלימים",
+      "condition": "new"
+      "new" ],
+      "presta_categories": {
+        "default_category": {
+          "11111": "presta_category"
+        },
+        "additional_categories": [
+          ""
+        ]
+      }
+    },
+
+    "url": "https://hbdeadsea.co.il/product-category/hair-treatment/",
+    "name": "טיפוח השיער",
+    "condition": [
+      "new"
+    ],
+    "presta_categories": {
+      "default_category": {
+        "11111": "presta_category"
+      },
+      "additional_categories": [
+        ""
+      ]
+    },
+    "shampoo-conditioner": {
+
+      "url": "https://hbdeadsea.co.il/product-category/hair-treatment/shampoo-conditioner/",
+      "name": "שמפו ומרכך",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": {
+          "11111": "presta_category"
+        },
+        "additional_categories": [
+          ""
+        ]
+      }
+    },
+    "cratin-series": {
+
+      "url": "https://hbdeadsea.co.il/product-category/hair-treatment/cratin-series/",
+      "name": "סדרת קרטין",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11111,
+        "additional_categories": [
+          ""
+        ]
+      }
+    },
+    "hair-masks": {
+
+      "url": "https://hbdeadsea.co.il/product-category/hair-treatment/hair-masks/",
+      "name": "מסכות לשיער",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11111,
+        "additional_categories": [
+          ""
+        ]
+      }
+    }
+  }
+}

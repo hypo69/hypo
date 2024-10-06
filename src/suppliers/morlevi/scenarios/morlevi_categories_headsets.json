@@ -1,0 +1,52 @@
+{
+  "scenarios": {
+    "HEADSET_LOGITECH": {
+      "brand": "LOGITECH",
+      "template": "HEADSET_LOGITECH",
+      "url": "https://www.morlevi.co.il/Cat/162?p_315=29&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": { "template": { "logitech": "HEADPHONES" } }
+    },
+    "HEADSET_MICROSOFT": {
+      "brand": "MICROSOFT",
+      "template": "HEADSET_MICROSOFT",
+      "url": "https://www.morlevi.co.il/Cat/162?p_315=42&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "microsoft": "HEADPHONES" }
+      },
+      "HEADSET_ZALMAN": {
+        "brand": "ZALMAN",
+        "template": "HEADSET_ZALMAN",
+        "url": "https://www.morlevi.co.il/Cat/162?p_315=34&sort=datafloat2%2Cprice&keyword=",
+        "checkbox": false,
+        "active": true,
+        "condition":"new","presta_categories": {
+          "template": { "zalman": "HEADPHONES" }
+        }
+      },
+      "HEADSET_CORSAIR": {
+        "brand": "CORSAIR",
+        "template": "HEADSET_CORSAIR",
+        "url": "https://www.morlevi.co.il/Cat/162?p_315=20&sort=datafloat2%2Cprice&keyword=",
+        "checkbox": false,
+        "active": true,
+        "condition":"new","presta_categories": {
+          "template": { "corsair": "HEADPHONES" }
+        }
+      },
+      "HEADSET_COOLER MASTER": {
+        "brand": "COOLER MASTER",
+        "template": "HEADSET_COOLER MASTER",
+        "url": "https://www.morlevi.co.il/Cat/162?p_315=74&sort=datafloat2%2Cprice&keyword=",
+        "checkbox": false,
+        "active": true,
+        "condition":"new","presta_categories": {
+          "template": { "cooler master": "HEADPHONES" }
+        }
+      }
+    }
+  }
+}
