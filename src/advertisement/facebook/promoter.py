@@ -24,7 +24,8 @@ from src.advertisement.facebook.scenarios import (post_message,
                                                   post_event, 
                                                   post_message_title, 
                                                   upload_post_media,
-                                                  message_publish
+                                                  message_publish,
+                                                  post_ad,
                                                     )
 from src.utils import (read_text_file,
                         get_filenames,
@@ -83,8 +84,15 @@ class FacebookPromoter:
 
 
 
-    def promote(self, group: SimpleNamespace, item: SimpleNamespace, is_event: bool = False) -> bool:
+    def promote(self, group: SimpleNamespace, item: SimpleNamespace, is_event: bool = False, language: str = None, currency: str = None) -> bool:
         """Promotes a category or event in a Facebook group."""
+        ...
+        if language:
+           if group.language.upper() != language.upper():
+                return
+        if currency:
+            if group.currency.upper() != currency.upper():
+                return
 
         item_name = item.event_name if is_event else item.category_name
         ev_or_msg = getattr(item.language, group.language) if is_event else item
@@ -99,23 +107,32 @@ class FacebookPromoter:
                 self.log_promotion_error(is_event, item_name)
                 return
         else:
-            if not post_message(d=self.d, message=ev_or_msg, no_video=self.no_video, without_captions=False):
-                self.log_promotion_error(is_event, item_name)
+            if 'kazarinov' in self.promoter or 'emil' in self.promoter:
+                if not post_ad(self.d, ev_or_msg):
+                    return
+
+
+            elif not post_message(d=self.d, message=ev_or_msg, no_video=self.no_video, without_captions=False):
                 return
 
-        self.update_group_promotion_data(group, item_name, is_event)
+        # Обновление данных группы после публикации
+        self.update_group_promotion_data(group, ev_or_msg.name)
         return True
+
 
     def log_promotion_error(self, is_event: bool, item_name: str):
         """Logs promotion error for category or event."""
         logger.debug(f"Error while posting {'event' if is_event else 'category'} {item_name}", None, False)
 
-    def update_group_promotion_data(self, group: SimpleNamespace, item_name: str, is_event: bool):
+    def update_group_promotion_data(self, group: SimpleNamespace, item_name: str, is_event: bool = False):
         """Updates group promotion data with the new promotion."""
         timestamp = datetime.now().strftime("%d/%m/%y %H:%M")
+        group.last_promo_sended = gs.now
         if is_event:
+            group.promoted_events = group.promoted_events if isinstance(group.promoted_events,list) else [group.promoted_events]
             group.promoted_events.append(item_name)
         else:
+            group.promoted_categories = group.promoted_categories if isinstance(group.promoted_categories,list) else [group.promoted_categories]
             group.promoted_categories.append(item_name)
         group.last_promo_sended = timestamp
 
@@ -127,7 +144,7 @@ class FacebookPromoter:
             return
 
         for group_file in group_file_paths:
-            path_to_group_file: Path = gs.path.data / 'facebook' / 'groups' / group_file
+            path_to_group_file: Path = gs.path.data / 'facebook' / 'groups' / group_file 
             groups_ns: dict = j_loads_ns(path_to_group_file)
 
             if not groups_ns:
@@ -141,7 +158,7 @@ class FacebookPromoter:
                     logger.debug(f"{campaign_name=}\n Interval in group: {group.group_url}", None, False)
                     continue
 
-                if not set(group_categories_to_adv).intersection(group.group_categories) or not 'active' in group.status:
+                if not set(group_categories_to_adv).intersection(group.group_categories if isinstance(group.group_categories,list) else [group.group_categories]) or not 'active' in group.status:
                     continue
 
                 if not is_event:
@@ -149,17 +166,25 @@ class FacebookPromoter:
                 else:
                     random.shuffle(events)
                     item = events.pop()
+                    
 
                 if item.name in (group.promoted_events if is_event else group.promoted_categories):
                     logger.debug(f"Item already promoted")
                     continue
 
+                if not group.language.upper() == language.upper() and group.currency.upper() == currency.upper():
+                   continue
+
                 self.d.get_url(get_event_url(group.group_url) if is_event else group.group_url)
-            
-                if not self.promote(group = group, item = item, is_event = is_event):
+
+                if not self.promote(group = group, item = item, is_event = is_event, language = language, currency = currency):
                     continue
 
                 j_dumps(groups_ns, path_to_group_file)
+                t = random.randint(30, 420)
+                print(f"sleeping {t} sec")
+                time.sleep(t)
+                
 
     def get_category_item(self, campaign_name: str, group: SimpleNamespace, language: str, currency: str) -> SimpleNamespace:
         """Fetches the category item for promotion based on the campaign and promoter."""
@@ -168,18 +193,27 @@ class FacebookPromoter:
             ce = AliCampaignEditor(campaign_name=campaign_name, language=group.language, currency=group.currency)
             list_categories = ce.list_categories
             random.shuffle(list_categories)
-            item.name =  list_categories.pop()
-            item = ce.get_category(item.name)
-            item.products = ce.get_category_products(item.name)
+            category_name = list_categories.pop()
+            item = ce.get_category(category_name)
+            item.name = category_name
+            item.products = ce.get_category_products(item.category_name)
         else:
             base_path = gs.path.data / self.promoter / 'campaigns' / campaign_name
             adv: SimpleNamespace = j_loads_ns(base_path / f"{language}_{currency}.json")
-            adv_categories = vars(adv.category).items()
+            adv_categories = list(vars(adv.category).items())  # Преобразуем в список для перемешивания
+            random.shuffle(adv_categories)  # Перемешиваем категории
+
             for ad_name, ad in adv_categories:
-                if ad_name not in group.promoted_categories:
-                    item = ad
-                    item.name = ad_name
-                    break
+                ad.description = read_text_file(base_path / 'category' / ad_name / 'description.txt')
+                if not ad.description:
+                    logger.error(f"ошибка чтения файла", None, False)
+                    continue
+                item = ad
+                item.name = ad_name
+                _img = get_filenames(base_path / 'category' / ad_name / 'images')
+                if _img:
+                    _img = _img if isinstance(_img, str) else _img[0]  # Беру первый для рекламного объявления с одним изображением
+                    item.image_path = base_path / 'category' / ad_name / 'images' / _img                    
         return item
 
     def check_interval(self, group: SimpleNamespace) -> bool:
@@ -244,16 +278,23 @@ class FacebookPromoter:
         self.no_video = no_video 
 
         while campaigns:  # Продолжаем, пока есть кампании
-            random.shuffle(campaigns)  # Перемешиваем список кампаний
-            campaign_name = campaigns.pop()  # Извлекаем последнюю кампанию из перемешанного списка
+            if isinstance(campaigns,list):
+                random.shuffle(campaigns)  
+                campaign_name = campaigns.pop()  
+            else:
+                campaign_name = campaigns
 
-            self.process_groups(group_file_paths = group_file_paths if group_file_paths else self.group_file_paths, 
+            if self.process_groups(group_file_paths = group_file_paths if group_file_paths else self.group_file_paths, 
                                 group_categories_to_adv = group_categories_to_adv, 
                                 campaign_name = campaign_name,  
                                 language = language, 
-                                currency = currency)
+                                currency = currency):
 
-            logger.debug(f"Закончил {campaign_name=}")
+                logger.debug(f"Закончил {campaign_name=}")
+                return True
+            else:                
+                logger.error(f"Не Закончил {campaign_name=}", None, True)
+                return 
 
     def run_events(self, events_names: list[str], group_file_paths: list[str]):
         """ Runs event promotion in all groups sequentially.

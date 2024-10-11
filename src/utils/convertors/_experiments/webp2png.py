@@ -29,14 +29,15 @@ def convert_images(webp_dir: Path, png_dir: Path) -> None:
     webp_files: list = get_filenames(webp_dir)
 
     for webp in webp_files:
-        png = png_dir / f"{webp.split('.')[0]}.png" 
+        png = png_dir / f"{Path(webp).stem}.png"  # Use `stem` to get the file name without extension
         webp_path = webp_dir / webp  
         result = webp2png(webp_path, png)
         print(result)
 
-# Define the directories for WebP and PNG images
-webp_dir = gs.path.data / 'emil' / 'raw_images_from_openai'
-png_dir = gs.path.data / 'emil' / 'converted_images'
-
-# Run the conversion
-convert_images(webp_dir, png_dir)
+if __name__ == '__main__':
+    # Define the directories for WebP and PNG images
+    webp_dir = gs.path.data / 'kazarinov' / 'raw_images_from_openai'
+    png_dir = gs.path.data / 'kazarinov' / 'converted_images'
+    print(f"from: {webp_dir=}\nto:{png_dir=}")
+    # Run the conversion
+    convert_images(webp_dir, png_dir)

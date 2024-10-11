@@ -1,11 +1,11 @@
-""" Google generative ai """
 ## \file ../src/ai/gooogle_generativeai/generative_ai.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-
+""" Google generative ai """
 import header  
 import time
 import base64
+import argparse
 from typing import Optional, List, Dict
 from pathlib import Path
 import os
@@ -127,3 +127,31 @@ class GoogleGenerativeAI:
         except Exception as e:
             logger.error(f"Ошибка при описании изображения: {e}")
             return 
+
+
+
+def chat():
+    logger.debug("Привет, я ИИ ассистент компьюрного мастера Сергея Казаринова. Задавайте вопросы", None, False)
+    print("Чтобы завершить чат, напишите 'exit'.\n")
+    
+    # Инициализация модели с системной инструкцией, если нужно
+    system_instruction = input("Введите системную инструкцию (или нажмите Enter, чтобы пропустить): @TODO: - сделать возможность чтения из .txt")
+    ...
+    ai = GoogleGenerativeAI(system_instruction=system_instruction if system_instruction else None)
+
+    while True:
+        # Получаем вопрос от пользователя
+        user_input = input("> вопрос\n> ")
+        
+        if user_input.lower() == 'exit':
+            print("Чат завершен.")
+            break
+        
+        # Отправляем запрос модели и получаем ответ
+        response = ai.ask(prompt=user_input)
+        
+        # Выводим ответ
+        print(f">> ответ\n>> {response}\n")
+
+if __name__ == "__main__":
+    chat()

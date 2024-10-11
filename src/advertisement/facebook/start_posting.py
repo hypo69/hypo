@@ -16,8 +16,8 @@ d.get_url(r"https://facebook.com")
 
 filenames:list[str] = [
                         "usa.json",
-                        "he_il.json",
-                        "ru_il.json",
+                        "he_ils.json",
+                        "ru_ils.json",
                         "katia_homepage.json",
                         "my_managed_groups.json",
           

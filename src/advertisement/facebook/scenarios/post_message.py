@@ -1,4 +1,5 @@
 ﻿## \file ../src/advertisement/facebook/scenarios/post_message.py
+## \file ../src/advertisement/facebook/scenarios/post_message.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Публикация сообщения """
@@ -254,18 +255,21 @@ def post_title(d: Driver, message: SimpleNamespace | str) -> bool:
     """
     # Scroll backward in the page
     if not d.scroll(1, 1200, 'backward'):
-        logger.error("Scroll failed during post title", exc_info=False)
+        logger.error("Scroll failed during post title")
         return
 
     # Open the 'add post' box
     if not d.execute_locator(locator = locator.open_add_post_box):
-        logger.debug("Failed to open 'add post' box", exc_info=False)
+        logger.debug("Failed to open 'add post' box")
         return
 
     # Add the message to the post box
-    message =  f"{message.title}\n{message.description}" if isinstance(message, SimpleNamespace) else message
-    if not d.execute_locator(locator.add_message, message = message, timeout = 5, timeout_for_event = 'element_to_be_clickable'):
-        logger.debug(f"Failed to add message to post box: {message=}", exc_info=False)
+    m =  f"{message.title}\n{message.description}" if isinstance(message, SimpleNamespace) else message
+    # if isinstance(message, SimpleNamespace) and hasattr( message,'tags'):
+    #     m = f"{m}\nTags: {message.tags}"
+
+    if not d.execute_locator(locator.add_message, message = m, timeout = 5, timeout_for_event = 'element_to_be_clickable'):
+        logger.debug(f"Failed to add message to post box: {m=}")
         return
 
     return True
@@ -337,12 +341,12 @@ def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str
         logger.error("Не нашлись поля ввода подписи к изображениям")
         return
     # Update image captions.
-    update_images_captions(d, products, textarea_list)
+    update_images_captions(d, media, textarea_list)
 
     return ret
 
 
-def update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
+def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
     """ Adds descriptions to uploaded media files.
 
     Args:
@@ -386,9 +390,9 @@ def update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_
                 if hasattr(product, 'promotion_link'):
                     message += f"{getattr(local_units.promotion_link, lang)}: {product.promotion_link}\n"
 
-                if hasattr(product, 'tags'):
-                    message += f"{getattr(local_units.tags, lang)}: {product.tags}\n"
-                message += f"{getattr(local_units.COPYRIGHT, lang)}"
+                # if hasattr(product, 'tags'):
+                #     message += f"{getattr(local_units.tags, lang)}: {product.tags}\n"
+                # message += f"{getattr(local_units.COPYRIGHT, lang)}"
                 
             else:  # RTL direction
                 if hasattr(product, 'product_title'):
@@ -407,9 +411,9 @@ def update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_
                 if hasattr(product, 'promotion_link'):
                     message += f"\n{product.promotion_link} :{getattr(local_units.promotion_link, lang)}"
 
-                if hasattr(product, 'tags'):
-                    message += f"\n{product.tags} :{getattr(local_units.tags, lang)}"
-                message += f"\n{getattr(local_units.COPYRIGHT, lang)}"
+                # if hasattr(product, 'tags'):
+                #     message += f"\n{product.tags} :{getattr(local_units.tags, lang)}"
+                # message += f"\n{getattr(local_units.COPYRIGHT, lang)}"
                 
         except Exception as ex:
             logger.error("Error in message generation", ex, exc_info=True)
@@ -424,7 +428,7 @@ def update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_
             return
 
     # Process products and update their captions.
-    for i, product in enumerate(products):
+    for i, product in enumerate(media):
         handle_product(product, textarea_list, i)
 
 def publish(d:Driver) -> bool:
@@ -433,10 +437,10 @@ def publish(d:Driver) -> bool:
     if not d.execute_locator(locator.publish, timeout = 20): 
         return
 
-    attempts = 3
+    attempts = 30
     while not d.execute_locator(locator = locator.open_add_post_box, timeout = 10, timeout_for_event = 'element_to_be_clickable'):
         logger.debug(f"не освободилось поле ввода {attempts=}",None, False)
-        attempts += 1
+        attempts -= 1
         if attempts < 0:
             return
 

@@ -13,7 +13,7 @@ from .post_message import (post_title as post_message_title,   # <- заголо
                            upload_media as upload_post_media, # <- изображения 
                            update_images_captions as update_post_media_captions, # <- подписи к изображениям 
                            publish as message_publish,
-                           post_message
+                           post_message,
                            )
 
 from .post_event import (post_title as post_event_title,
@@ -23,3 +23,5 @@ from .post_event import (post_title as post_event_title,
                          #send,
                          post_event
                          )
+
+from .post_ad import post_ad

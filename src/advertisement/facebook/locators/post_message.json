@@ -78,7 +78,7 @@
   "publish": {
     "attribute": null,
     "by": "XPATH",
-    "selector": "//div[@aria-label='Опубликовать' or @aria-label='Отправить']",
+    "selector": "//div[@aria-label='Опубликовать' or @aria-label='Отправить' or @aria-label='Далее']",
     "event": "click()",
     "mandatory": true,
     "locator_description": "Закрытие окна загрузки фото и описаний"

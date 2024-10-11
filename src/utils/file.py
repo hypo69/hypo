@@ -128,7 +128,7 @@ def read_text_file(
         except Exception as ex:
             if exc_info:
                 logger.error(f"Failed to read file {file_path}.", ex, exc_info=exc_info)
-            return None
+            return 
     elif path.is_dir():
         try:
             content = []
