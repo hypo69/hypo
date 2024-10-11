@@ -57,6 +57,7 @@ from .file import (get_directory_names,
                     read_text_file, 
                     save_text_file, 
                     recursive_get_filenames,
+                    recursive_read_text_files,
                     )
 
 from .image import (save_png, 

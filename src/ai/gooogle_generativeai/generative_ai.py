@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Google generative ai """
+from types import SimpleNamespace
 import header  
 import time
 import base64
@@ -18,6 +19,7 @@ from src import gs
 from src.utils import pprint
 from src.utils.csv import save_csv_file
 from src.utils.jjson import j_dumps  
+from src.utils.file import read_text_file, save_text_file
 
 
 class GoogleGenerativeAI:
@@ -25,7 +27,7 @@ class GoogleGenerativeAI:
 
     model: genai.GenerativeModel
     dialogue_log_path: str | Path = gs.path.data / 'AI' / f"gemini_{gs.now}.json"
-    dialogue: List[Dict[str, str]] = []  # Список для хранения диалога
+    dialogue_txt_path: str | Path = gs.path.data / 'AI' / f"gemini_{gs.now}.txt"
     system_instruction:str
 
     def __init__(self, system_instruction: Optional[str] = None, generation_config: dict = {"response_mime_type": "application/json"}):
@@ -49,8 +51,9 @@ class GoogleGenerativeAI:
     def _save_dialogue(self):
         """Save the entire dialogue to a CSV file."""
         j_dumps(self.dialogue, self.dialogue_log_path)
+        save_text_file(self.dialogue, self.dialogue_txt_path, mode = '+a')
 
-    def ask(self, prompt: str, system_instruction: Optional[str] = None, attempts: int = 3, total_wait_time: int = 0) -> Optional[str]:
+    def ask(self, q: str, system_instruction: Optional[str] = None, attempts: int = 3, total_wait_time: int = 0) -> Optional[str]:
         """Send a prompt to the model and return the response.
 
         Args:
@@ -63,33 +66,36 @@ class GoogleGenerativeAI:
             Optional[str]: The model's response or None if an error occurs.
         """
         try:
-            # Send prompt to the model
-            response = self.model.generate_content(prompt)
-            reply = response.text
-
+            
             # Add user prompt and model reply to the dialogue
+            dialogue:list = SimpleNamespace()
             if system_instruction:
-                self.dialogue.append({"role": "system", "content": system_instruction})
+                dialogue.append({"role": "system", "content": system_instruction})
 
-            self.dialogue.append({"role": "user", "content": prompt})
-            self.dialogue.append({"role": "assistant", "content": reply})
+            dialogue.append({"role": "user", "content": q})
+            
 
             # Save the dialogue to a CSV file
-            self._save_dialogue()
+            response = self.model.generate_content(q)
+            reply = response.text
+
+            dialogue.append({"role": "assistant", "content": reply})
+            self._save_dialogue(dialogue)
 
             return reply
+
         except Exception as ex:
             wait_time = 15  # Time to sleep in case of an error
             total_wait_time += wait_time
-            logger.error(f"Error occurred. Waiting for {wait_time} seconds. Total wait time so far: {total_wait_time} seconds", ex, False)
+            logger.error(f"Error occurred. Waiting for resend", ex, False)
             time.sleep(wait_time)
 
             if attempts > 0:
-                return self.ask(prompt, system_instruction, attempts - 1, total_wait_time)
+                return self.ask(q, system_instruction, attempts - 1, total_wait_time)
             else:
                 logger.debug(f"Max attempts have been exceeded. Total wait time: {total_wait_time} seconds", None, False)
                 attempts = 3
-                return self.ask(prompt, system_instruction, attempts, total_wait_time)
+                return self.ask(q, system_instruction, attempts, total_wait_time)
 
 
     def describe_image(self, image_path: str, prompt: str = None) -> Optional[str]:

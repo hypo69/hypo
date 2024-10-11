@@ -1,4 +1,7 @@
-﻿""" <b>Class</b> `Supplier` <b>Base class for all suppliers</b>
+﻿## \file ../src/suppliers/supplier.py
+# -*- coding: utf-8 -*-
+# /path/to/interpreter/python
+""" <b>Class</b> `Supplier` <b>Base class for all suppliers</b>
 Provides methods and attributes for a specific
 data supplier: e.g., amazon.com, walmart.com, mouser.com, digikey.com, or custom ones.
 Several suppliers are already created in the program, others will be defined by the customer.
@@ -149,11 +152,7 @@ Supplier
 </pre>
 @dotfile suppliers//supplier.dot
 """
-...
-## \file ../src/suppliers/supplier.py
-# -*- coding: utf-8 -*-
-# /path/to/interpreter/python
-...
+
 import importlib
 from pathlib import Path
 from typing import List

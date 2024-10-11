@@ -14,14 +14,17 @@ import random
 from pathlib import Path
 from src import gs
 from src.ai import OpenAIModel, GoogleGenerativeAI
-from src.utils.file import get_filenames, read_text_file
+from src.utils.file import get_filenames, read_text_file, recursive_read_text_files
 from src.utils.jjson import j_dumps
 from src.logger import logger
 
 # Base paths for system instructions and training files
 base_path = gs.path.data / 'kazarinov' / 'prompts'
-system_instruction_path = base_path / 'system_instruction.txt'
+system_instruction_path = base_path / 'chat_system_instruction.txt'
 system_instruction: str = read_text_file(system_instruction_path)
+
+#system_instruction_path_advertisement_strings = base_path / 'system_instruction_path_advertisement_strings.txt'
+#system_instruction: str = read_text_file(system_instruction_path_advertisement_strings)
 
 # Retrieve filenames for training data
 train_files = get_filenames(base_path / 'questions_answers')
@@ -32,12 +35,15 @@ if not train_files:
 class Kazarinov:
     """Handles model training and dialog generation for the Kazarinov project using GoogleGenerativeAI."""
     
-    gemini_1 = GoogleGenerativeAI(system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
-    gemini_2 = GoogleGenerativeAI(system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
+    gemini_1:GoogleGenerativeAI
+    gemini_2:GoogleGenerativeAI
     timestamp = gs.now
 
-    def __init__(self):
+    def __init__(self, system_instruction:str = None, generation_config:dict | list [dict] = None):
         """Initialize the Kazarinov model."""
+        ...
+        self.gemini_1 = GoogleGenerativeAI(system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
+        self.gemini_2 = GoogleGenerativeAI(system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
         pass
 
     def train(self, train_files: list | str):
@@ -120,44 +126,121 @@ class Kazarinov:
                 """)
             logger.debug(response_1)
 
-    def ask(self, prompt) -> bool:
+    def ask(self, q, system_instruction:str = None) -> bool:
         """Спрашиваю у машины """
-        return self.gemini_1.ask(prompt)
+        return self.gemini_1.ask(f"assistant asst_w5cM3yqOX1pDJARO2hzNMVZrq {q}", system_instruction)
 
 
 
 def start_trainig():
+    """Берет информацию и прогоняет через машину. 
+    Один сет уже прогнан. Пока не готовторой сет нет смысла запуакть по второму разу
+    """
+    ...
+    return True # <- см объснение в комментарии к функции
     kazarinov = Kazarinov()
     train_files = get_filenames(gs.path.data / 'kazarinov' / 'prompts' / 'questions_answers')
     kazarinov.train(train_files)
     kazarinov.dialog()
 
+def upload_strings():
+    """ Беру информацию из файлов рекламых сообщений
+    для дообучения модели рекламе """
+    ...
+    base_path = gs.path.data / 'kazarinov' / 'prompts'
+    system_instruction_path = base_path / 'chat_system_instruction.txt'
+    system_instruction: str = read_text_file(system_instruction_path)
+
+
+    k = Kazarinov(system_instruction = system_instruction, generation_config={"response_mime_type": "text/plain"})
+    #adverstisement_strings_list:list = recursive_read_text_files(gs.path.data / 'kazarinov' / 'campaigns', ['description.txt'])
+    adverstisement_strings_list:list = recursive_read_text_files(gs.path.data / 'kazarinov' /  'prompts', ['*.txt','*.md'])
+    response = k.ask(adverstisement_strings_list)
+    print(response)
+    ...
+
+def assistant_reminder():
+    """Processes reminders in batches and sends them to the Kazarinov assistant."""
+    ...
+    base_path = gs.path.data / 'kazarinov' / 'prompts'
+    system_instruction_path = base_path / 'system_instruction.txt'
+    system_instruction: str = read_text_file(system_instruction_path)
+
+    k = Kazarinov(system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
+
+    # Read reminders strings list from .txt and .md files
+    reminders_strings_list: list = recursive_read_text_files(gs.path.data / 'AI', ['*.txt', '*.md'])
+    logger.info(f"{len(reminders_strings_list)=}")
+
+    # Send reminders in batches of 100
+    batch_size = 20
+    # for i in range(0, len(reminders_strings_list), batch_size):
+    #     batch = reminders_strings_list[i:i + batch_size]  # Get the current batch
+    #     print(batch)
+    #     response = k.ask(q=batch, system_instruction=system_instruction)
+    #     logger.info(f"{batch=} sended")
+
+    # # Read reminders strings list from all file types
+    # reminders_strings_list: list = recursive_read_text_files(gs.path.data / 'AI', ['*.*'])
+    # logger.info(f"{len(reminders_strings_list)=}")
+
+    # Send reminders in batches of ...
+    for i in range(0, len(reminders_strings_list), batch_size):
+        batch = reminders_strings_list[i:i + batch_size]  # Get the current batch
+        print(batch)
+        response = k.ask(q=batch, system_instruction=system_instruction)
+        logger.info(f"{batch=} sended")
+
+    #print(response)
 
 def chat():
-    logger.debug("Привет, я ИИ ассистент компьюрного мастера Сергея Казаринова. Задавайте вопросы", None, False)
+    """ Чат с gemini """
+    ...
+
+    base_path = gs.path.data / 'kazarinov' / 'prompts'
+    system_instruction_path = base_path / 'chat_system_instruction.txt'
+    system_instruction: str = read_text_file(system_instruction_path)
+
     print("Чтобы завершить чат, напишите 'exit'.\n")
     
     # Инициализация модели с системной инструкцией, если нужно
-    system_instruction = input("Введите системную инструкцию (или нажмите Enter, чтобы пропустить): @TODO: - сделать возможность чтения из .txt")
+    #system_instruction = input("Введите системную инструкцию (или нажмите Enter, чтобы пропустить): @TODO: - сделать возможность чтения из .txt")
+    logger.debug("Привет, я ИИ ассистент компьюрного мастера Сергея Казаринова. Задавайте вопросы", None, False)
     ...
-    ai = Kazarinov()
+    ai = Kazarinov(system_instruction  = system_instruction, generation_config = {'response_mime_type': 'text/plain'})
 
     while True:
         # Получаем вопрос от пользователя
-        user_input = input("> вопрос\n> ")
-        
+        #user_input = input(">>>> ")
+        user_input = input_colored(">>>> ", GREEN)
         if user_input.lower() == 'exit':
             print("Чат завершен.")
             break
         
         # Отправляем запрос модели и получаем ответ
-        response = ai.ask(prompt=user_input)
+        response = ai.ask(q = user_input, system_instruction=system_instruction)
         
         # Выводим ответ
-        print(f">> ответ\n>> {response}\n")
+        logger.warning(response, None, False)
 
+# ANSI escape codes
+RESET = "\033[0m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
+
+def input_colored(prompt: str, color: str) -> str:
+    """Prompts the user for input with colored text."""
+    return input(f"{color}{prompt}{RESET}")
+
+# # Пример использования
+# user_input = input_colored(">>>> ", GREEN)
+# print(f"Вы ввели: {user_input}")
 
 if __name__ == "__main__":
     #start_trainig()
+    assistant_reminder()
+    #upload_strings()
     chat()
 

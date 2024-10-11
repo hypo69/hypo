@@ -1,5 +1,4 @@
 ﻿## \file ../src/utils/file.py
-## \file ../src/utils/file.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """
@@ -36,13 +35,13 @@ Examples:
     >>> matched_files: list[str] = recursive_get_filenames(root_dir="/path/to/root", pattern="*.txt")
 """
 
-
 import os
 import json
 import fnmatch
 from typing import List, Optional, Union
 from pathlib import Path
 from src.logger import logger
+
 
 def save_text_file(
     data: str | list | dict,
@@ -81,6 +80,7 @@ def save_text_file(
             if isinstance(data, list):
                 for line in data:
                     file.write(f"{line}\n")
+                    logger.debug(f"{file_path=}", None, False)
             else:
                 file.write(data)
         return True
@@ -128,7 +128,7 @@ def read_text_file(
         except Exception as ex:
             if exc_info:
                 logger.error(f"Failed to read file {file_path}.", ex, exc_info=exc_info)
-            return 
+            return None
     elif path.is_dir():
         try:
             content = []
@@ -148,7 +148,6 @@ def read_text_file(
     else:
         logger.warning(f"File or directory '{file_path}' does not exist.")
         return None
-
 
 
 def get_filenames(
@@ -221,36 +220,127 @@ def get_directory_names(directory: str | Path, exc_info: bool = True) -> list[st
         return directory_names
     except Exception as ex:
         if exc_info:
-            logger.warning(f"Failed to get directory names from {directory=}", ex if exc_info else None, exc_info=exc_info)
+            logger.warning(f"Failed to get directory names from '{directory}'.", ex, exc_info=exc_info)
         return []
 
-
-def recursive_get_filenames(root_dir: str | Path, pattern: str) -> List[str]:
-    """Рекурсивно обходит все директории и собирает пути к файлам, соответствующим заданному шаблону.
+def recursive_get_filenames(root_dir: str | Path, pattern: str = "*") -> List[str]:
+    """
+    Recursively retrieves filenames from directories and subdirectories that match the provided pattern.
 
     Args:
-        root_dir (str | Path): Путь к корневой директории для начала поиска.
-        pattern (str): Шаблон для фильтрации файлов. Можете использовать `*` для поиска всех файлов.
+        root_dir (str | Path): The root directory from which to start the recursive search.
+        pattern (str, optional): The pattern to match filenames against (e.g., '*.txt'). Defaults to '*'.
 
     Returns:
-        List[str]: Список путей к файлам, соответствующим шаблону.
+        list[str]: List of filenames that match the provided pattern.
+
+    Example:
+        >>> files: list[str] = recursive_get_filenames(root_dir="/path/to/root", pattern="*.txt")
+        >>> print(files)
+        ['/path/to/root/file1.txt', '/path/to/root/subdir/file2.txt']
     """
     matches = []
     root_path = Path(root_dir)
 
-    # Проверка существования корневой директории
     if not root_path.is_dir():
-        #raise ValueError(f"The root directory '{root_path}' does not exist or is not a directory.")
         logger.debug(f"The root directory '{root_path}' does not exist or is not a directory.")
-        return
-        
-
-    print(f"Searching in directory: {root_path}")
+        return []
 
     for root, dirs, files in os.walk(root_path):
         for filename in files:
             file_path = Path(root) / filename
             if fnmatch.fnmatch(filename, pattern):
-                matches.append(str(file_path))
+                try:
+                    with file_path.open("r", encoding="utf-8") as file:
+                        matches.append(file.read())
+                except Exception as ex:
+                    logger.warning(f"Failed to read file {file_path}.", ex, exc_info=True)
     
     return matches
+
+def recursively_get_filepath(
+    root_dir: str | Path, 
+    pattern: str = '*', 
+    exc_info: bool = True
+) -> List[str]:
+    """
+    Recursively retrieves all file paths in the directory matching the specified pattern.
+
+    Args:
+        root_dir (str | Path): The root directory from which to start the recursive search.
+        pattern (str, optional): Pattern to filter files (e.g., '*.txt'). Defaults to '*', which matches all files.
+        exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
+
+    Returns:
+        list[str]: List of file paths that match the specified pattern.
+
+    Example:
+        >>> files: list[str] = recursively_get_filepath(root_dir=".", pattern="*.py")
+        >>> print(files)
+        ['./src/main.py', './tests/test_main.py']
+    """
+    try:
+        root_dir = Path(root_dir)
+        file_paths = []
+        
+        # Recursively go through directories and find files matching the pattern
+        for path in root_dir.rglob(pattern):
+            if path.is_file():
+                file_paths.append(str(path))
+        
+        return file_paths
+    except Exception as ex:
+        if exc_info:
+            logger.error(f"Failed to retrieve file paths in '{root_dir}'", ex, exc_info=exc_info)
+        return []
+
+def recursive_read_text_files(root_dir: str | Path, patterns: str | list[str]) -> list[str]:
+    """
+    Recursively reads text files from the specified root directory that match the given patterns.
+
+    Args:
+        root_dir (str | Path): Path to the root directory for the search.
+        patterns (str | list[str]): Filename pattern(s) to filter the files. 
+                                     Can be a single pattern (e.g., '*.txt') or a list of patterns.
+
+    Returns:
+        list[str]: List of file contents that match the specified patterns.
+
+    Example:
+        >>> contents = recursive_read_text_files("/path/to/root", ["*.txt", "*.md"])
+        >>> for content in contents:
+        ...     print(content)
+        This will print the contents of all matched text files in the specified directory.
+    """
+    matches = []
+    root_path = Path(root_dir)
+
+    # Check if the root directory exists
+    if not root_path.is_dir():
+        logger.debug(f"The root directory '{root_path}' does not exist or is not a directory.")
+        return []
+
+    print(f"Searching in directory: {root_path}")
+
+    # Normalize patterns to a list if it's a single string
+    if isinstance(patterns, str):
+        patterns = [patterns]
+
+    for root, dirs, files in os.walk(root_path):
+        for filename in files:
+            # Check if the filename matches any of the specified patterns
+            if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
+                file_path = Path(root) / filename
+               
+                # Read the file content and append to matches
+                try:
+                    with file_path.open("r", encoding="utf-8") as file:
+                        matches.append(file.read())
+                except Exception as ex:
+                    logger.warning(f"Failed to read file '{file_path}'.", ex)
+
+    return matches
+
+
+
+
