@@ -1,10 +1,9 @@
-﻿## \file ../src/utils/header.py
-## \file ../src/suppliers/header.py
+﻿## \file ../src/bots/openai/header.py
+## \file ../src/bots/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-"""! Absolute path to modules  """
 
 import sys,os
 from pathlib import Path
 __root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
-sys.path.append (__root__)  
+sys.path.append (__root__)     

@@ -1,38 +1,11 @@
 ﻿## \file ../src/utils/file.py
+## \file ../src/utils/file.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """
 Module for file operations.
 
-This module provides functions for performing various file operations, including:
-- Saving text to a file.
-- Reading text from a file.
-- Retrieving filenames from a specified directory.
-- Recursively retrieving filenames from directories based on a pattern.
-- Retrieving directory names from a specified directory.
 
-Functions:
-    save_text_file(data: str | list | dict, file_path: str | Path, mode: str = 'w', exc_info: bool = True) -> bool:
-        Saves the provided data to a file at the specified file path.
-    
-    read_text_file(file_path: str | Path, as_list: bool = False, exc_info: bool = True) -> list | None:
-        Reads content from a file and returns it either as a list of lines or a single string.
-    
-    get_filenames(directory: str | Path, extensions: str | List[str] = '*', exc_info: bool = True) -> list[str]:
-        Retrieves filenames from the specified directory, optionally filtered by file extension(s).
-
-    get_directory_names(directory: str | Path, exc_info: bool = True) -> list[str]:
-        Retrieves all directory names from the specified directory.
-    
-    recursive_get_filenames(root_dir: str | Path, pattern: str) -> List[str]:
-        Recursively searches directories and gathers file paths matching the given pattern.
-
-Examples:
-    >>> success: bool = save_text_file(data="Hello World", file_path="/path/to/file.txt")
-    >>> file_content: str = read_text_file(file_path="/path/to/file.txt")
-    >>> filenames: list[str] = get_filenames(directory="/path/to/directory")
-    >>> dir_names: list[str] = get_directory_names(directory="/path/to/directory")
-    >>> matched_files: list[str] = recursive_get_filenames(root_dir="/path/to/root", pattern="*.txt")
 """
 
 import os
@@ -51,7 +24,7 @@ def save_text_file(
 ) -> bool:
     """
     Saves the provided data to a file at the specified file path.
-    
+
     Args:
         data (str | list | dict): The data to be written to the file. It can be a string, list, or dictionary.
         file_path (str | Path): The full path to the file where the data should be saved.
@@ -59,7 +32,7 @@ def save_text_file(
             - 'w': Write mode, which overwrites the file.
             - 'a': Append mode, which appends to the file.
         exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
-    
+
     Returns:
         bool: Returns True if the file is successfully saved, otherwise returns False.
 
@@ -71,16 +44,17 @@ def save_text_file(
         >>> success: bool = save_text_file(data="This will fail", file_path="/invalid/path/output.txt")
         >>> print(success)
         False
+        
     More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#save_text_file
     """
     try:
         file_path = Path(file_path)
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        with file_path.open(mode) as file:
+        with file_path.open(mode, encoding="utf-8") as file:  # Ensure UTF-8 encoding
             if isinstance(data, list):
                 for line in data:
                     file.write(f"{line}\n")
-                    logger.debug(f"{file_path=}", None, False)
+                    #logger.debug(f"{file_path=}", None, False)
             else:
                 file.write(data)
         return True
@@ -120,7 +94,7 @@ def read_text_file(
 
     if path.is_file():
         try:
-            with path.open("r", encoding="utf-8") as file:
+            with path.open("r", encoding="utf-8") as file:  # Ensure UTF-8 encoding
                 if as_list:
                     return [line.strip() for line in file]
                 else:
@@ -133,11 +107,11 @@ def read_text_file(
         try:
             content = []
             for file in path.glob("*.txt"):
-                with file.open("r", encoding="utf-8") as f:
+                with file.open("r", encoding="utf-8") as f:  # Ensure UTF-8 encoding
                     content.append(f.read())
             
             for file in path.glob("*.md"):
-                with file.open("r", encoding="utf-8") as f:
+                with file.open("r", encoding="utf-8") as f:  # Ensure UTF-8 encoding
                     content.append(f.read())
             
             return "\n".join(content)
@@ -158,7 +132,7 @@ def get_filenames(
 
     Args:
         directory (str | Path): Path to the directory from which filenames should be retrieved.
-        extensions (str | List[str], optional): File extension(s) to filter the filenames. It can be a single extension (e.g., '*.txt') or a list of extensions (e.g., ['*.txt', '*.py']). If '*' is specified, all files are returned. Defaults to '*'.
+        extensions (str | List[str], optional): File extension(s) to filter the filenames. It can be a single extension (e.g., '*.txt') or a list of extensions (e.g., ['*.txt', '*.py']). If '*' is specified, all files are returned. Defaults to '*'..
         exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
 
     Returns:
@@ -209,54 +183,48 @@ def get_directory_names(directory: str | Path, exc_info: bool = True) -> list[st
         list[str]: List of directory names found in the specified directory.
 
     Example:
-        >>> directories: list[str] = get_directory_names(directory=".")
+        >>> directories: list[str] = get_directory_names(directory=".") 
         >>> print(directories)
         ['dir1', 'dir2']
+    
     More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#get_directory_names
     """
     try:
-        path = Path(directory)
-        directory_names = [dir.name for dir in path.iterdir() if dir.is_dir()]
-        return directory_names
+        return [entry.name for entry in Path(directory).iterdir() if entry.is_dir()]
     except Exception as ex:
         if exc_info:
-            logger.warning(f"Failed to get directory names from '{directory}'.", ex, exc_info=exc_info)
-        return []
+            logger.warning(
+                f"Failed to get directory names from '{directory}'.",
+                ex,
+                exc_info=exc_info,
+            )
+        return 
 
-def recursive_get_filenames(root_dir: str | Path, pattern: str = "*") -> List[str]:
+
+def recursive_get_filenames(root_dir: str | Path, pattern: str) -> List[str]:
     """
-    Recursively retrieves filenames from directories and subdirectories that match the provided pattern.
+    Recursively searches directories and gathers file paths matching the given pattern.
 
     Args:
-        root_dir (str | Path): The root directory from which to start the recursive search.
-        pattern (str, optional): The pattern to match filenames against (e.g., '*.txt'). Defaults to '*'.
+        root_dir (str | Path): The root directory to start the search.
+        pattern (str): The pattern to match files against (e.g., '*.txt').
 
     Returns:
-        list[str]: List of filenames that match the provided pattern.
+        List[str]: A list of file paths matching the specified pattern.
 
     Example:
-        >>> files: list[str] = recursive_get_filenames(root_dir="/path/to/root", pattern="*.txt")
-        >>> print(files)
-        ['/path/to/root/file1.txt', '/path/to/root/subdir/file2.txt']
+        >>> matched_files: list[str] = recursive_get_filenames(root_dir=".", pattern="*.py")
+        >>> print(matched_files)
+        ['script1.py', 'script2.py']
+
+    More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#recursive_get_filenames
     """
     matches = []
-    root_path = Path(root_dir)
-
-    if not root_path.is_dir():
-        logger.debug(f"The root directory '{root_path}' does not exist or is not a directory.")
-        return []
-
-    for root, dirs, files in os.walk(root_path):
-        for filename in files:
-            file_path = Path(root) / filename
-            if fnmatch.fnmatch(filename, pattern):
-                try:
-                    with file_path.open("r", encoding="utf-8") as file:
-                        matches.append(file.read())
-                except Exception as ex:
-                    logger.warning(f"Failed to read file {file_path}.", ex, exc_info=True)
-    
+    for dirpath, _, filenames in os.walk(root_dir):
+        for filename in fnmatch.filter(filenames, pattern):
+            matches.append(os.path.join(dirpath, filename))
     return matches
+
 
 def recursively_get_filepath(
     root_dir: str | Path, 
@@ -272,29 +240,28 @@ def recursively_get_filepath(
         exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
 
     Returns:
-        list[str]: List of file paths that match the specified pattern.
+        List[str]: A list of file paths matching the specified pattern.
 
     Example:
-        >>> files: list[str] = recursively_get_filepath(root_dir=".", pattern="*.py")
+        >>> files: list[str] = recursively_get_filepath(root_dir=".", pattern="*.txt")
         >>> print(files)
-        ['./src/main.py', './tests/test_main.py']
+        ['./file1.txt', './file2.txt']
+
+    More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#recursively_get_filepath
     """
     try:
-        root_dir = Path(root_dir)
-        file_paths = []
-        
-        # Recursively go through directories and find files matching the pattern
-        for path in root_dir.rglob(pattern):
-            if path.is_file():
-                file_paths.append(str(path))
-        
-        return file_paths
+        return [str(file) for file in Path(root_dir).rglob(pattern)]
     except Exception as ex:
         if exc_info:
-            logger.error(f"Failed to retrieve file paths in '{root_dir}'", ex, exc_info=exc_info)
-        return []
+            logger.error(
+                f"Failed to recursively get file paths from '{root_dir}'.", 
+                ex, 
+                exc_info=exc_info
+            )
+        return 
 
-def recursive_read_text_files(root_dir: str | Path, patterns: str | list[str]) -> list[str]:
+
+def recursive_read_text_files(root_dir: str | Path, patterns: str | list[str], exc_info:bool = True) -> list[str]:
     """
     Recursively reads text files from the specified root directory that match the given patterns.
 
@@ -337,10 +304,6 @@ def recursive_read_text_files(root_dir: str | Path, patterns: str | list[str]) -
                     with file_path.open("r", encoding="utf-8") as file:
                         matches.append(file.read())
                 except Exception as ex:
-                    logger.warning(f"Failed to read file '{file_path}'.", ex)
+                    logger.warning(f"Failed to read file '{file_path}'.", ex, None)
 
     return matches
-
-
-
-

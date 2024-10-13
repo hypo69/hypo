@@ -10,6 +10,6 @@ from .version import __version__, __doc__, __details__
 ...
 from .formatter import StringFormatter
 from .validator import ProductFieldsValidator
-from .normalizer import StringNormalizer
+from .product_normalizer import ProductFieldsNormalizer
 from .url_unparсe import extract_url_params
 

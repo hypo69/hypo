@@ -216,7 +216,7 @@ class ExecuteLocator:
 
             if attribute:
                 # Return the attribute of the element
-                return self.get_attribute_by_locator(*args)
+                return self.get_attribute_by_locator(locator)
 
 
         if isinstance(locator.by, list):
@@ -414,73 +414,87 @@ class ExecuteLocator:
         elif len(elements) == 1:
             return elements[0]
 
+
+
     def get_attribute_by_locator(
-        self, locator: dict | SimpleNamespace, message: str = None
+        self,
+        locator: dict | SimpleNamespace,
+        timeout: float = 10,
+        timeout_for_event: str = 'presence_of_element_located'
     ) -> str | list | dict | bool:
-        """Retrieves the attribute of an element found by the given locator.
+        """! Retrieves attributes from an element or list of elements found by the given locator.
 
         Args:
-            locator (dict | SimpleNamespace): A dictionary or SimpleNamespace containing the locator information.
-                - If a dictionary is provided, it should include the fields necessary for locating the element.
-            message (str, optional): An optional message to be used for logging or error reporting.
+            locator (dict | SimpleNamespace): Locator as a dictionary or SimpleNamespace.
+            timeout (float, optional): Max wait time for the element to appear. Defaults to 10 seconds.
+            timeout_for_event (str, optional): Type of wait condition. Defaults to 'presence_of_element_located'.
 
         Returns:
-            str | list | dict | bool: The attribute value of the element, or `None` if the element or attribute is not found.
-                - If the element is a list, returns a list of attribute values.
-                - If the element is a single element, returns the attribute value.
+            str | list | dict | bool: The attribute value(s) or dictionary with attributes if parsed from a string.
+                - If the element is a list, returns a list of dictionaries or attributes.
+                - If the element is a single element, returns the attribute or dictionary.
                 - If the element is not found, returns `None`.
-
-        Example:
-            >>> locator = {"by": "id", "selector": "username"}
-            >>> attribute_value: str = instance.get_attribute_by_locator(locator)
-            >>> print(attribute_value)
-            'user123'
-
-            >>> locator = SimpleNamespace(by="class", selector="profile")
-            >>> attribute_values: list = instance.get_attribute_by_locator(locator)
-            >>> print(attribute_values)
-            ['profile1', 'profile2']
-
         """
-        element = self.get_webelement_by_locator(locator, message)
+        element = self.get_webelement_by_locator(locator, timeout, timeout_for_event)
         locator = (
-            locator
-            if isinstance(locator, SimpleNamespace)
-            else SimpleNamespace(**locator)
+            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
         )
 
-        def _get_element_attribute(element: WebElement, attribute: str) -> str | None:
-            """Helper function to get the attribute of a web element.
+        def _parse_dict_string(attr_string: str) -> dict:
+            """! Parses a string like '{attr1:attr2}' into a dictionary.
 
             Args:
-                element (WebElement): The web element from which to retrieve the attribute.
-                attribute (str): The name of the attribute to retrieve.
+                attr_string (str): String representing a dictionary-like structure.
 
             Returns:
-                str | None: The attribute value or `None` if not found.
-
-            Example:
-                >>> element: WebElement = driver.find_element(By.ID, 'username')
-                >>> attribute_value: str = instance._get_element_attribute(element, 'value')
-                >>> print(attribute_value)
-                'user123'
-
+                dict: Parsed dictionary.
             """
             try:
-                return element.get_attribute(attribute)
-            except Exception as ex:
-                logger.error(
-                    f"Error retrieving attribute '{attribute}' from element.", ex
-                )
-            return
+                return {
+                    k.strip(): v.strip()
+                    for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))
+                }
+            except ValueError:
+                logger.error(f"Invalid attribute string format: {attr_string}")
+                return {}
+
+        def _get_attributes_from_dict(element: WebElement, attr_dict: dict) -> dict:
+            """! Retrieves attribute values for each key in a given dictionary.
+
+            Args:
+                element (WebElement): The web element to retrieve attributes from.
+                attr_dict (dict): A dictionary where keys/values represent attribute names.
+
+            Returns:
+                dict: Dictionary with attributes and their corresponding values.
+            """
+            result = {}
+            for key, value in attr_dict.items():
+                try:
+                    attr_key = element.get_attribute(key)
+                    attr_value = element.get_attribute(value)
+                    result[attr_key] = attr_value
+                except Exception as ex:
+                    logger.error(
+                        f"Error retrieving attributes '{key}' or '{value}' from element.", ex
+                    )
+                    result[key] = None  # Если атрибут не найден
+            return result
 
         if element:
+            # Определяем, является ли атрибут строкой словаря
+            if isinstance(locator.attribute, str) and locator.attribute.startswith("{"):
+                attr_dict = _parse_dict_string(locator.attribute)
+
+                if isinstance(element, list):
+                    return [_get_attributes_from_dict(el, attr_dict) for el in element]
+                return _get_attributes_from_dict(element, attr_dict)
+
+            # Если атрибут — одиночный (не словарь)
             if isinstance(element, list):
-                return [
-                    self._get_element_attribute(el, locator.attribute) for el in element
-                ]
-            return self._get_element_attribute(element, locator.attribute)
-        return
+                return [element.get_attribute(locator.attribute) for el in element]
+            return element.get_attribute(locator.attribute)
+        return None
 
     def get_webelement_as_screenshot(self, locator: dict | SimpleNamespace, timeout:int, timeout_for_event:str) -> BinaryIO | None:
         """  Беру скиншот элемента в формате `.png`.

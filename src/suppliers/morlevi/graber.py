@@ -1,223 +1,199 @@
-## \file ../src/suppliers/kualastyle/graber.py
-## \file src/suppliers/kualastyle/graber.py
-""" Асинхронный сборщик полей товара HB -> product_fields
-Модуль собирет поля со страницы товара и заполняет поля объекта ProductFields
-
-@todo
-    1. проверить на что влияет `out_of_stock()`
+## \file ../src/suppliers/hb/graber.py
+# -*- coding: utf-8 -*-
+#! /usr/share/projects/hypotez/venv/scripts python
+""" morlevi
 """
 
 import os, sys, asyncio
 from pathlib import Path
-from typing import List, Union, Dict, Any
+from typing import List, Union, Dict, Any, Optional
+from types import SimpleNamespace
 from urllib import response
 from langdetect import detect
+from functools import wraps
+...
 from src import gs
 from src.suppliers import Supplier
 from src.product import ProductFields, record
 from src.category import Category
-from src.webdriver import Driver as Webdriver
-from src.utils import j_loads, j_dumps, pprint, StringFormatter, ProductFieldsNormalizer ,ProductFieldsValidator
-from src.utils import list2string
-from src.suppliers.kualastyle.locators import locator
+from src.webdriver import Driver
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
+from src.utils import pprint 
 from src.logger import logger 
 from src.logger.exceptions import ExecuteLocatorException
 from src.prestashop import Prestashop
+from src.utils.string.product_normalizer import ProductFieldsNormalizer
+...
 
+supplier_prefix = 'morlevi'
 
-s: Supplier = None
-#c: Category = None 
-l: Dict = {}
-d: Webdriver = None
+s: Supplier = Supplier(supplier_prefix = supplier_prefix)
+#l: dict = j_loads(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+l: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
 f: ProductFields = ProductFields()
+d: Driver
 
-
-async def async_grab_page(supplier: Supplier) -> ProductFields:
-
-    global s
-    s = supplier
-    global d
-    d = s.driver
-    global l
-    l = s.locators["product"]
-
-    from functools import wraps
-
-    def close_popup(locator_key: str):
-        """
-        Decorator to call `d.execute_locator` before the actual function logic.
+def close_pop_up():
+    """
+    Decorator to call `d.execute_locator` before the actual function logic.
     
-        Args:
-            locator_key (str): Locator key to be executed before the function logic.
-        """
+    Args:
+        locator_key (str): Locator key to be executed before the function logic.
+    """
 
-        def decorator(func):
-            @wraps(func)
-            async def wrapper(*args, **kwargs):
-                # Execute locator before the original function logic
-                try:
-                    result = d.execute_locator(l[locator_key])
-                    logger.info(f"Pre-execution of locator '{locator_key}' successful: {result}")
-                except ExecuteLocatorException as e:
-                    logger.error(f"Pre-execution failed for locator '{locator_key}': {e}")
-                    raise  # Re-raise the exception if needed
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # Execute locator before the original function logic
+            try:
+                result = d.execute_locator(l.close_popup)
+                ...
+                
+            except ExecuteLocatorException as e:
+                #raise  # Re-raise the exception if needed
+                ...
 
-                # Continue with the original function logic
-                return await func(*args, **kwargs)
+            # Continue with the original function logic
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
 
-            return wrapper
+async def async_grab_page(driver:Driver) -> ProductFields:
+    """"""
+    ...
+    global d
+    d = driver
 
-        return decorator
 
 
     async def fetch_specific_data():
-        webelements = d.execute_locator(l["product_reference_and_volume_and_price_for_100"])
-        for webelement in webelements:
-            if ('Fl.oz' in webelement.text) and ('מ"ל' in webelement.text):
-                """объем"""
-                f.volume = webelement.text
-            elif str(r'מחיר ל100 מ"ל') in webelement.text:
-                """цена за единицу товара
-                @todo придумать куда
-                """
-                logger.debug(f"""поле цена за единицу товара не на своем месте """)
-            elif 'מקט' in webelement.text:
-                rawreference = webelement.text
-                try:
-                   f.supplier_reference = StringFormatter.clear_numbers(rawreference)
-                   ...
-                except ExecuteLocatorException as e:
-                    logger.critical(f"""Не получил макат """, е)
-                    ...
-                    return
+        """Место для специальных операций с полями """
+        return True
                 
     async def fetch_all_data():
-        await fetch_specific_data()  # Call function to fetch specific data
+        #await fetch_specific_data()  # Call function to fetch specific data
         
-        await additional_shipping_cost()
-        await delivery_in_stock()
-        await active()
-        await additional_delivery_times()
-        await advanced_stock_management()
-        await affiliate_short_link()
-        await affiliate_summary()
-        await affiliate_summary_2()
-        await affiliate_text()
-        await affiliate_image_large()
-        await affiliate_image_medium()
-        await affiliate_image_small()
-        await available_date()
-        await available_for_order()
-        await available_later()
-        await available_now()
+        # await additional_shipping_cost()
+        # await delivery_in_stock()
+        # await active()
+        # await additional_delivery_times()
+        # await advanced_stock_management()
+        # await affiliate_short_link()
+        # await affiliate_summary()
+        # await affiliate_summary_2()
+        # await affiliate_text()
+        # await affiliate_image_large( )
+        # await affiliate_image_medium()
+        # await affiliate_image_small()
+        # await available_date()
+        # await available_for_order()
+        # await available_later()
+        # await available_now()
 
-        await cache_default_attribute()
-        await cache_has_attachments()
-        await cache_is_pack()
-        await condition()
-        await customizable()
-        await date_add()
-        await date_upd()
-        await delivery_in_stock()
-        await delivery_out_stock()
-        await depth()
-        await description()
-        await ean13()
-        await ecotax()
-        await height()
-        await how_to_use()
-        await id_category_default()
-        await additional_categories(f.id_category_default, s.current_scenario['presta_categories']['additional_categories'])
-        await id_default_combination()
-        await id_default_image()
-        await id_manufacturer()
-        await id_product()
-        await id_supplier()
-        await id_tax()
-        await id_type_redirected()
-        await images_urls()
-        await indexed()
-        await ingredients()
-        await meta_description()
-        await meta_keywords()
-        await meta_title()
-        await is_virtual()
-        await isbn()
-        await name()
-        await link_rewrite()
-        await location()
-        await low_stock_alert()
-        await low_stock_threshold()
-        await meta_description()
-        await meta_keywords()
-        await minimal_quantity()
-        await mpn()
-        
-        await online_only()
-        await on_sale()
-        await out_of_stock()
-        await pack_stock_type()
-        await locale()        
-        await price()
-        await product_type()
-        await quantity_discount()
-        await redirect_type()
-        await reference()
-        await show_condition()
-        await show_price()
-        await state()
-        await text_fields()
-        await unit_price_ratio()
-        await unity()
-        await upc()
-        await uploadable_files()
+        # await cache_default_attribute()
+        # await cache_has_attachments()
+        # await cache_is_pack()
+        # await condition()
+        # await customizable()
+        # await date_add()
+        # await date_upd()
         await default_image_url()
-        await visibility()
-        await weight()
-        await wholesale_price()
-        await width()
+        # await delivery_in_stock()
+        # await delivery_out_stock()
+        # await depth()
+        await description()
+        # await ean13()
+        # await ecotax()
+        # await height()
+        # await how_to_use()
+        # await id_category_default()
+        # await additional_categories(f.id_category_default, s.current_scenario['presta_categories']['additional_categories'])
+        # await id_default_combination()
+        # await id_default_image()
+        # await id_manufacturer()
+        await id_product()
+        # await id_supplier()
+        # await id_tax()
+        # await id_type_redirected()
+        # await images_urls()
+        # await indexed()
+        # await ingredients()
+        # await meta_description()
+        # await meta_keywords()
+        # await meta_title()
+        # await is_virtual()
+        # await isbn()
+        await name()
+        # await link_rewrite()
+        # await location()
+        # await low_stock_alert()
+        # await low_stock_threshold()
+        # await meta_description()
+        # await meta_keywords()
+        # await minimal_quantity()
+        # await mpn()
+        
+        # await online_only()
+        # await on_sale()
+        # await out_of_stock()
+        # await pack_stock_type()
+        # await locale()        
+        # await price()
+        # await product_type()
+        # await quantity_discount()
+        # await redirect_type()
+        # await reference()
+        # await show_condition()
+        # await show_price()
+        # await state()
+        # await text_fields()
+        # await unit_price_ratio()
+        # await unity()
+        # await upc()
+        # await uploadable_files()
+        # await visibility()
+        # await weight()
+        # await wholesale_price()
+        # await width()
 
     # Call the function to fetch all data
     await fetch_all_data()
     return f
 
-
-
-
-
-
-
-
+@close_pop_up()
 async def additional_shipping_cost():
     """  Function for field additional_shipping_cost"""
     ...
     if not f.additional_shipping_cost:
         try:
-            f.additional_shipping_cost = d.execute_locator(l["additional_shipping_cost"]) or ''
+            #f.additional_shipping_cost = d.execute_locator(l["additional_shipping_cost"]) or ''
+            f.additional_shipping_cost = d.execute_locator(l_ns.additional_shipping_cost) or ''
         except ExecuteLocatorException as e:
             logger.error(f"""Error occurred while executing the locator for the field `additional_shipping_cost`: 
                             response type: {type(response)}
                         response: {pprint(response)}""", e)
     ... 
         
-
+@close_pop_up()
 async def delivery_in_stock():
     """  Function for field delivery_in_stock"""
     ...
     if not f.delivery_in_stock:
         try:
-            f.delivery_in_stock = d.execute_locator(l["delivery_in_stock"]) or ''
+            #f.delivery_in_stock = d.execute_locator(l["delivery_in_stock"]) or ''
+            f.delivery_in_stock = d.execute_locator(l_ns.delivery_in_stock) or ''
         except ExecuteLocatorException as e:
             logger.error(f"""Error occurred while executing the locator for the field `delivery_in_stock`: 
                             response type: {type(response)}
                         response: {pprint(response)}""", e)
     ... 
         
-
+@close_pop_up()
 async def active():
     """  Function for field active"""
     ...
 
+@close_pop_up()
 async def additional_delivery_times():
     """  Function for field additional_delivery_times"""
     ...
@@ -230,11 +206,12 @@ async def additional_delivery_times():
                         response: {pprint(response)}""", e)
     ... 
         
-
+@close_pop_up()
 async def advanced_stock_management():
     """  Function for field advanced_stock_management"""
     ...
 
+@close_pop_up()
 async def affiliate_short_link():
     """  Function for field affiliate_short_link"""
     try:
@@ -242,8 +219,7 @@ async def affiliate_short_link():
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field affiliate_short_link: ", e)
         
-
-
+@close_pop_up()
 async def affiliate_summary():
     """  Function for field affiliate_summary"""
     ...
@@ -258,7 +234,7 @@ async def affiliate_summary():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ... 
         
-
+@close_pop_up()
 async def affiliate_summary_2():
     """  Function for field affiliate_summary_2"""
     ...
@@ -273,7 +249,7 @@ async def affiliate_summary_2():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def affiliate_text():
     """  Function for field affiliate_text"""
     ...
@@ -288,7 +264,7 @@ async def affiliate_text():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def affiliate_image_large():
     """  Function for field affiliate_image_large"""
     ...
@@ -303,7 +279,7 @@ async def affiliate_image_large():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def affiliate_image_medium():
     """  Function for field affiliate_image_medium"""
     ...
@@ -318,7 +294,7 @@ async def affiliate_image_medium():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def affiliate_image_small():
     """  Function for field affiliate_image_small"""
     ...
@@ -333,7 +309,7 @@ async def affiliate_image_small():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def available_date():
     """  Function for field available_date"""
     ...
@@ -348,6 +324,7 @@ async def available_date():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
+@close_pop_up()
 async def available_for_order():
     """  Function for field available_for_order
     @
@@ -363,7 +340,7 @@ async def available_for_order():
     except Exception as e:
         logger.critical(f"""Error occurred while executing the locator for the field `available_for_order`: """, e)
 
-
+@close_pop_up()
 async def available_later():
     """  Function for field available_later"""
     ...
@@ -378,6 +355,7 @@ async def available_later():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
+@close_pop_up()
 async def available_now():
     """  Function for field available_now"""
     ...
@@ -392,7 +370,8 @@ async def available_now():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
-async def additional_categories(category_id: list[str], categories_ids: list[str] = None) -> Dict:
+@close_pop_up()
+async def additional_categories(category_id: list[str], categories_ids: Optional[list[str]] = None) -> Dict:
     """  Function for field additional_categories"""
     # 
     #                   Это поле должно заполнятся на клиенте. 
@@ -402,7 +381,7 @@ async def additional_categories(category_id: list[str], categories_ids: list[str
     #     logger.error(f"Error occurred while executing the locator for the field condition: ", e)
     ...
         
-
+@close_pop_up()
 async def cache_default_attribute():
     """  Function for field cache_default_attribute"""
     ...
@@ -416,7 +395,7 @@ async def cache_default_attribute():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def cache_has_attachments():
     """  Function for field cache_has_attachments"""
     ...
@@ -430,7 +409,7 @@ async def cache_has_attachments():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def cache_is_pack():
     """  Function for field cache_is_pack"""
     ...
@@ -444,7 +423,7 @@ async def cache_is_pack():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def condition():
     """  Function for field condition"""
     try:
@@ -454,7 +433,7 @@ async def condition():
     except Exception as e:
             logger.critical(f"""Error occurred while executing the locator for the field `condition`: """, e)        
         
-
+@close_pop_up()
 async def customizable():
     """  Function for field customizable"""
     ...
@@ -468,7 +447,7 @@ async def customizable():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def date_add():
     """  Function for field date_add"""
     ...
@@ -482,7 +461,7 @@ async def date_add():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def date_upd():
     """  Function for field date_upd"""
     ...
@@ -497,7 +476,7 @@ async def date_upd():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
     
-
+@close_pop_up()
 async def delivery_out_stock():
     """  Function for field delivery_out_stock"""
     ...
@@ -513,7 +492,7 @@ async def delivery_out_stock():
     ...    
         
     
-    
+@close_pop_up()
 async def depth():
     """  Function for field depth"""
     ...
@@ -528,7 +507,7 @@ async def depth():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def description():
     """  Function for field description
     d.execute_locator(l["description"]) может вернуть объект/список selenium
@@ -536,21 +515,19 @@ async def description():
     ...
     if not f.description:
         try:
-            f.description = d.execute_locator(l["description"])  or ''
+            f.description = d.execute_locator(l.description)  or ''
         except ExecuteLocatorException as e:
             logger.error(f"""Error occurred while executing the locator for the field `description`: 
                          response type: {type(response)}                                 
                         response: {pprint(response)}""", e)
         except Exception as e:
             logger.critical(f"""Error occurred while executing the locator for the field `description`: """, e)
-        
-    ...
-        
 
+@close_pop_up()
 async def id_category_default():
     """  Function for field id_category_default"""
     f.id_category_default = s.current_scenario["presta_categories"]["default_category"]
-    
+@close_pop_up()
 async def id_default_combination():
     """  Function for field id_default_combination"""
     ...
@@ -565,20 +542,25 @@ async def id_default_combination():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
+@close_pop_up()
 async def id_product():
     """  Function for field id_product"""
     ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
+    if not f.id_product:
+        try:
+            if not f.id_manufacturer:
+                f.id_manufacturer = d.execute_locator(l.id_manufacturer)  or None
+            if f.id_manufacturer:
+                f.id_product = 'mlv-'+f.id_manufacturer
+
+        except ExecuteLocatorException as e:
+            logger.error(f"""Error occurred while executing the locator for the field `description`: 
+                         response type: {type(response)}                                 
+                        response: {pprint(response)}""", e)
+        except Exception as e:
+            logger.critical(f"""Error occurred while executing the locator for the field `description`: """, e)
     ...
-    
+@close_pop_up()
 async def locale():
     """  Function for field locale.
     current webpage lang
@@ -592,7 +574,7 @@ async def locale():
     f.locale = i18n
 
     ...
-    
+@close_pop_up()
 async def id_default_image():
     """  Function for field id_default_image"""
     ...
@@ -607,7 +589,7 @@ async def id_default_image():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
-
+@close_pop_up()
 async def ean13():
     """  Function for field ean13"""
     ...
@@ -622,7 +604,7 @@ async def ean13():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ... 
         
-
+@close_pop_up()
 async def ecotax():
     """  Function for field ecotax"""
     ...
@@ -636,7 +618,7 @@ async def ecotax():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def height():
     """  Function for field height"""
     ...
@@ -650,7 +632,7 @@ async def height():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def how_to_use():
     """  Function for field how_to_use"""
     ...
@@ -665,13 +647,13 @@ async def how_to_use():
             logger.critical(f"""Error occurred while executing the locator for the field `how_to_use`: """, e)
     ...
 
-
+@close_pop_up()
 async def id_manufacturer():
     """  Function for field id_manufacturer"""
     ...
     if not f.id_manufacturer:
         try:
-            f.id_manufacturer = d.execute_locator(l["id_manufacturer"])  or ''
+            f.id_manufacturer = d.execute_locator(l.id_manufacturer)  or ''
         except ExecuteLocatorException as e:
             logger.error(f"""Error occurred while executing the locator for the field `id_manufacturer`: 
                             response type: {type(response)}
@@ -679,7 +661,7 @@ async def id_manufacturer():
         except Exception as e:
             logger.critical(f"""Error occurred while executing the locator for the field `id_manufacturer`: """, e)
     ...
-    
+@close_pop_up()    
 async def id_supplier():
     """  Function for field id_supplier"""
     ...
@@ -692,7 +674,7 @@ async def id_supplier():
                         response: {pprint(response)}""", e)
     ...
         
-
+@close_pop_up()
 async def id_tax():
     """  Function for field id_tax"""
     ...
@@ -706,7 +688,7 @@ async def id_tax():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def id_type_redirected():
     """  Function for field id_type_redirected"""
     ...
@@ -721,11 +703,12 @@ async def id_type_redirected():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
+@close_pop_up()
 async def images_urls():
-    """  Function for field additional_images_urls"""
+    """  Function for field images_urls"""
     if not f.images_urls:
         try:
-            response = d.execute_locator(l["additional_images_urls"]) or ''
+            response = d.execute_locator(l.images_urls) or ''
             ...
             f.images_urls = response
         except ExecuteLocatorException as e:
@@ -741,7 +724,7 @@ async def images_urls():
             
     ...
         
-
+@close_pop_up()
 async def indexed():
     """  Function for field indexed"""
     ...
@@ -755,7 +738,7 @@ async def indexed():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def ingredients():
     """  Function for field ingredients"""
     ...
@@ -768,7 +751,7 @@ async def ingredients():
                         response: {pprint(response)}""", e)
     ...
 
-
+@close_pop_up()
 async def meta_description():
     """  Function for field meta_description"""
     ...
@@ -781,7 +764,7 @@ async def meta_description():
                         response: {pprint(response)}""", e)
     ...    
         
-
+@close_pop_up()
 async def meta_keywords():
     """  Function for field meta_keywords"""
     ...
@@ -794,7 +777,7 @@ async def meta_keywords():
                         response: {pprint(response)}""", e)
     ... 
         
-
+@close_pop_up()
 async def meta_title():
     """  Function for field meta_title"""
     ...
@@ -807,7 +790,7 @@ async def meta_title():
                         response: {pprint(response)}""", e)
     ... 
         
-    
+@close_pop_up()    
 async def is_virtual():
     """  Function for field is_virtual"""
     ...
@@ -821,7 +804,7 @@ async def is_virtual():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def isbn():
     """  Function for field isbn"""
     ...
@@ -836,7 +819,7 @@ async def isbn():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def link_rewrite() -> str:
     """  Function for field link_rewrite
     @todo
@@ -853,9 +836,8 @@ async def link_rewrite() -> str:
         logger.error(f"Error occurred while executing the locator for the link_rewrite: ", e)
     except Exception as e:
             logger.critical(f"""Error occurred while executing the locator for the field `link_rewrite`: """, e)
-   
-    
-
+...    
+@close_pop_up()
 async def location():
     """  Function for field location"""
     ...
@@ -869,7 +851,7 @@ async def location():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def low_stock_alert():
     """  Function for field low_stock_alert"""
     ...
@@ -883,7 +865,7 @@ async def low_stock_alert():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-    
+@close_pop_up()
 async def low_stock_threshold():
     """  Function for field low_stock_threshold"""
     ...
@@ -897,7 +879,7 @@ async def low_stock_threshold():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def minimal_quantity():
     """  Function for field minimal_quantity"""
     ...
@@ -911,7 +893,7 @@ async def minimal_quantity():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def mpn():
     """  Function for field mpn"""
     ...
@@ -926,16 +908,22 @@ async def mpn():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
+@close_pop_up()
 async def name():
     """  Function for field name"""
     try:
-        rawname = d.execute_locator (l["name"])[0] or ''
+        rawname = d.execute_locator (l.name)
+        if not rawname:
+            logger.error("Нет данных")
+            return
+            
+        rawname = rawname[0] if isinstance(rawname, list) else rawname
         f.name = ProductFieldsNormalizer.normalize_name(rawname)
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field name: ", e)
         
     
-
+@close_pop_up()
 async def online_only():
     """  Function for field online_only"""
     ...
@@ -950,7 +938,7 @@ async def online_only():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def on_sale():
     """  Function for field on_sale"""
     ...
@@ -965,7 +953,7 @@ async def on_sale():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
         
-
+@close_pop_up()
 async def out_of_stock():
     """  Function for field out_of_stock"""
     ...
@@ -981,7 +969,7 @@ async def out_of_stock():
     ...
         
 
-
+@close_pop_up()
 async def pack_stock_type():
     """  Function for field pack_stock_type"""
     ...
@@ -997,6 +985,7 @@ async def pack_stock_type():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
+@close_pop_up()
 async def price():
     """  Function for field price"""
     ...
@@ -1010,7 +999,7 @@ async def price():
                             response type: {type(response)}
                         response: {pprint(response)}""", e)
     ... 
-
+@close_pop_up()
 async def product_type():
     """  Function for field product_type"""
     ...
@@ -1024,7 +1013,7 @@ async def product_type():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-    
+@close_pop_up()    
 async def quantity():
     """  Function for field quantity"""
     ...
@@ -1038,7 +1027,7 @@ async def quantity():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def quantity_discount():
     """  Function for field quantity_discount"""
     ...
@@ -1052,7 +1041,7 @@ async def quantity_discount():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def redirect_type():
     """  Function for field redirect_type"""
     ...
@@ -1066,7 +1055,7 @@ async def redirect_type():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def reference():
     """  Function for field reference
     locator_description на HB заполняется в отдельной функции. См выше 
@@ -1074,7 +1063,7 @@ async def reference():
     ...
     f.reference = f"""{s.supplier_id}-{f.supplier_reference}"""
     ... 
-
+@close_pop_up()
 async def show_condition():
     """  Function for field show_condition"""
     ...
@@ -1088,7 +1077,7 @@ async def show_condition():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def show_price():
     """  Function for field show_price"""
     ...
@@ -1102,7 +1091,7 @@ async def show_price():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def state():
     """  Function for field state"""
     ...
@@ -1116,7 +1105,7 @@ async def state():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def text_fields():
     """  Function for field text_fields"""
     ...
@@ -1130,7 +1119,7 @@ async def text_fields():
     #     except Exception as e:
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
-
+@close_pop_up()
 async def unit_price_ratio():
     """  Function for field unit_price_ratio"""
     try:
@@ -1138,7 +1127,7 @@ async def unit_price_ratio():
         ...
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field unit_price_ratio: ", e)
-
+@close_pop_up()
 async def unity():
     """  Function for field unity"""
     try:
@@ -1146,7 +1135,7 @@ async def unity():
         ...
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field unity: ", e)
-
+@close_pop_up()
 async def upc():
     """  Function for field upc"""
     try:
@@ -1154,8 +1143,8 @@ async def upc():
         ...
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field upc: ", e)
-
-
+...
+@close_pop_up()
 async def uploadable_files():
     """  Function for field uploadable_files"""
     try:
@@ -1165,44 +1154,46 @@ async def uploadable_files():
         logger.error(f"Error occurred while executing the locator for the field upc: ", e)
     ...
 
+@close_pop_up()
 async def default_image_url():
     """  Function for field default_image_url"""
     try:
-        f.default_image_url =  d.execute_locator(l["default_image_url"]) or ''
+        f.default_image_url =  d.execute_locator(l.default_image_url) or '' # <- может вернуть png как `bytes` !
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field default_image_url: ", e)
 
+@close_pop_up()
 async def visibility():
     """  Function for field visibility"""
     try:
-        f.visibility = d.execute_locator(l["visibility"]) or 'both'
+        f.visibility = d.execute_locator(l.visibility) or 'both'
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field visibility: ", e)
         
 
-
+@close_pop_up()
 async def weight():
     """  Function for field weight"""
     try:
-        f.weight = d.execute_locator(l["weight"]) or ''
+        f.weight = d.execute_locator(l.weight) or ''
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field weight: ", e)
-
+@close_pop_up()
 async def wholesale_price():
     """  Function for field wholesale_price"""
     try:
-        f.wholesale_price = d.execute_locator(l["wholesale_price"]) or ''
+        f.wholesale_price = d.execute_locator(l.wholesale_price) or ''
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field wholesale_price: ", e)
-
+@close_pop_up()
 async def width():
     """  Function for field width"""
     try:
-        f.width = d.execute_locator(l["width"]) or ''
+        f.width = d.execute_locator(l.width) or ''
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field width: ", e)
 
-       
+@close_pop_up()
 async def specification():
     """  Function for field width
     В HB нет такого поля. Копирую из 
@@ -1211,7 +1202,7 @@ async def specification():
     
 
 
-
+@close_pop_up()
 async def link():
     """  Function for field link"""
     try:

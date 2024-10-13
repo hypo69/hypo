@@ -19,8 +19,10 @@ from src import gs
 from src.utils import pprint
 from src.utils.csv import save_csv_file
 from src.utils.jjson import j_dumps  
-from src.utils.file import read_text_file, save_text_file
+from src.utils.file import read_text_file, save_text_file, recursive_read_text_files
+from src.utils.date_time import TimeoutCheck
 
+timeout_check = TimeoutCheck()
 
 class GoogleGenerativeAI:
     """GoogleGenerativeAI class for interacting with Google's Generative AI models."""
@@ -30,7 +32,7 @@ class GoogleGenerativeAI:
     dialogue_txt_path: str | Path = gs.path.data / 'AI' / f"gemini_{gs.now}.txt"
     system_instruction:str
 
-    def __init__(self, system_instruction: Optional[str] = None, generation_config: dict = {"response_mime_type": "application/json"}):
+    def __init__(self, system_instruction: Optional[str] = None,  generation_config: dict = {"response_mime_type": "application/json"}):
         """Initialize GoogleGenerativeAI with the model and API key.
 
         Args:
@@ -41,19 +43,19 @@ class GoogleGenerativeAI:
         genai.configure(api_key=gs.credentials.googleai.api_key)
         self.system_instruction = system_instruction
         # Using `response_mime_type` requires either a Gemini 1.5 Pro or 1.5 Flash model
-        models = ["gemini-1.5-flash-8b-exp-0924","gemini-1.5-flash"]
+        models = ["gemini-1.5-flash-8b-exp-0924","gemini-1.5-flash","gemini-1.5-flash-8b"]
         self.model = genai.GenerativeModel(
-            models[0],
+            models[2],
             generation_config = generation_config,
             system_instruction = system_instruction if system_instruction else None
         )
-
-    def _save_dialogue(self):
+        
+    def _save_dialogue(self, dialogue):
         """Save the entire dialogue to a CSV file."""
-        j_dumps(self.dialogue, self.dialogue_log_path)
-        save_text_file(self.dialogue, self.dialogue_txt_path, mode = '+a')
+        #j_dumps(dialogue, self.dialogue_log_path)
+        save_text_file(dialogue, self.dialogue_txt_path, mode = '+a')
 
-    def ask(self, q: str, system_instruction: Optional[str] = None, attempts: int = 3, total_wait_time: int = 0) -> Optional[str]:
+    def ask(self, q: str, system_instruction: Optional[str] = None, attempts: int = 3, total_wait_time: int = 0, no_log:bool = False, with_pretrain:bool = False) -> Optional[str]:
         """Send a prompt to the model and return the response.
 
         Args:
@@ -65,30 +67,60 @@ class GoogleGenerativeAI:
         Returns:
             Optional[str]: The model's response or None if an error occurs.
         """
+
+       
         try:
-            
-            # Add user prompt and model reply to the dialogue
-            dialogue:list = SimpleNamespace()
-            if system_instruction:
-                dialogue.append({"role": "system", "content": system_instruction})
+            if with_pretrain:
+                train_data_list:list = recursive_read_text_files(gs.path.data / 'AI', ['*.txt'], exc_info=False)
+                if train_data_list:
+                    i:int = 0
+                    for train_data in train_data_list:
+                        i += 1
+                        print(f"pretrain {i} from {len(train_data_list)}")
+                        print(f"Q:> {train_data}")
+                        response = self.model.generate_content(train_data)  # Генерация ответа модели
+                        print(f"A:> {response.text}")
 
-            dialogue.append({"role": "user", "content": q})
-            
+                        # # Ожидаем ввод с тайм-аутом 5 секунд
+                        # print("U: Waiting for input... (timeout in 5 seconds) >")
+                        # u = timeout_check.input_with_timeout(timeout=5)
+    
+                        # if u:
+                        #     response = self.model.generate_content(u)
+                        #     print(f"A:> {response.text}")
+                        # else:
+                        #     print("Timeout occurred, no input provided.")
 
-            # Save the dialogue to a CSV file
-            response = self.model.generate_content(q)
+                        # print("Continuing execution after timeout.")
+                        time.sleep(8)
+
+            ...
+            content:dict = {
+               "messages":[{"role": "user", "content": q},
+                           {"role": "system", "content": system_instruction} if system_instruction else None] ,
+                "model": "gemini-1.5-flash-8b",
+                "temperature": 0.7
+            }
+
+            messages = [{"role": "user", "content": q},
+                           {"role": "system", "content": system_instruction} if system_instruction else None]
+
+            response = self.model.generate_content(str(messages))
             reply = response.text
 
-            dialogue.append({"role": "assistant", "content": reply})
-            self._save_dialogue(dialogue)
+            if not no_log:
+                self._save_dialogue([{"role": "system", "content": system_instruction} if system_instruction else None,
+                                    {"role": "user", "content": q},
+                                    {"role": "assistant", "content": reply }]
+                                    )
 
             return reply
 
         except Exception as ex:
             wait_time = 15  # Time to sleep in case of an error
             total_wait_time += wait_time
-            logger.error(f"Error occurred. Waiting for resend", ex, False)
-            time.sleep(wait_time)
+            logger.error(f"Error occurred", ex, False)
+            #time.sleep(wait_time)
 
             if attempts > 0:
                 return self.ask(q, system_instruction, attempts - 1, total_wait_time)

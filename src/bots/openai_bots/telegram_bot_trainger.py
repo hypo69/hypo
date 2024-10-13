@@ -1,5 +1,6 @@
-## \file ../src/ai/openai/bots/telegram_bot_trainger.py
+## \file ../src/bots/openai_bots/telegram_bot_trainger.py
 """ This script creates a simple Telegram bot using the python-telegram-bot library."""
+
 from pathlib import Path
 import tempfile
 import asyncio
@@ -15,7 +16,7 @@ import speech_recognition as sr  # Библиотека для распозна�
 import requests  # Для скачивания файлов
 from pydub import AudioSegment  # Библиотека для конвертации аудио
 from gtts import gTTS  # Библиотека для текстового воспроизведения
-from src.ai.openai.bots.chatterbox import recognizer, text_to_speech
+from src.utils.convertors.tts import recognizer, text_to_speech
 
 model = Model()
 

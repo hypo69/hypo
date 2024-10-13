@@ -1,5 +1,4 @@
 ﻿## \file ../src/utils/printer.py
-## \file ../src/utils/printer.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

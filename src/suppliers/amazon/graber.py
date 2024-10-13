@@ -375,7 +375,7 @@ async def available_now():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, ex)
     ...
 
-async def additional_categories(category_id: List[str, str], categories_ids: List[str, str] = None) -> Dict:
+async def additional_categories(category_id: list[str], categories_ids: list[str] = None) -> Dict:
     """  Function for field additional_categories"""
     # 
     #                   Это поле должно заполнятся на клиенте. 
@@ -431,7 +431,7 @@ async def cache_is_pack():
 async def condition():
     """  Function for field condition"""
     try:
-        f.condition = d.execute_locator(l["condition"]) or 'new'
+        f.condition = d.execute_locator(l.condition) or 'new'
     except ExecuteLocatorException as ex:
         logger.error(f"Error occurred while executing the locator for the field condition: ", ex)
     except Exception as ex:

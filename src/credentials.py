@@ -79,9 +79,9 @@ class ProjectSettings(metaclass = SingletonMeta):
                 password=None,)]
         ),
         openai=SimpleNamespace(api_key = None, assistant = SimpleNamespace(), project_api = None),
-        googleai=SimpleNamespace(api_key=None),
-        discord=SimpleNamespace(application_id=None, public_key=None, bot_token=None),
-        telegram=SimpleNamespace(bot_token=None),
+        gemini=SimpleNamespace(api_key = SimpleNamespace()),
+        discord=SimpleNamespace(application_id = None, public_key = None, bot_token = None),
+        telegram=SimpleNamespace( bot = SimpleNamespace()),
         smtp=[],
         facebook=[],
         gapi={} 
@@ -110,7 +110,7 @@ class ProjectSettings(metaclass = SingletonMeta):
         if not self._load_openai_credentials(kp):
             raise DefaultSettingsException('Failed to load OpenAI credentials')
 
-        if not self._load_googleai_credentials(kp):
+        if not self._load_gemini_credentials(kp):
             raise DefaultSettingsException('Failed to load GoogleAI credentials')
 
         if not self._load_discord_credentials(kp):
@@ -191,12 +191,13 @@ class ProjectSettings(metaclass = SingletonMeta):
             logger.error("Failed to extract OpenAI credentials from KeePass", ex)
             return False
 
-    def _load_googleai_credentials(self, kp: PyKeePass) -> bool:
+    def _load_gemini_credentials(self, kp: PyKeePass) -> bool:
         """ Load GoogleAI credentials from KeePass"""
         try:
-            entry = kp.find_groups(path=['google', 'ai.google.dev']).entries[0]
-            self.credentials.googleai.api_key = entry.custom_properties.get('api_key', None)
-            self.credentials.googleai.project_id = entry.custom_properties.get('project_id', None)
+            entries = kp.find_groups(path=['gemini']).entries
+
+            for entry in entries:
+                setattr(self.credentials.gemini, entry.title, entry.custom_properties.get('api_key', None))
             return True
         except DefaultSettingsException as ex:
             logger.error("Failed to extract GoogleAI credentials from KeePass", ex)
@@ -206,7 +207,14 @@ class ProjectSettings(metaclass = SingletonMeta):
         """ Load Telegram credentials from KeePass"""
         try:
             entry = kp.find_groups(path=['telegram']).entries[0]
-            self.credentials.telegram.bot_token = entry.custom_properties.get('bot_token', None)
+            setattr( self.credentials.telegram.bot, 
+            'onela', 
+            entry.custom_properties.get('onela', None))
+
+            setattr( self.credentials.telegram.bot, 
+            'kazarinov', 
+            entry.custom_properties.get('kazarinov', None))
+
             return True
         except DefaultSettingsException as ex:
             logger.error("Failed to extract Telegram credentials from KeePass", ex)

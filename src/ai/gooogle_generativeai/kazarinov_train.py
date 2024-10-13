@@ -1,4 +1,4 @@
-## \file ../src/ai/openai/model/_experiments/kazarinov.py
+## \file ../src/ai/gooogle_generativeai/kazarinov_train.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Module that handles model training for Aliexpress using GoogleGenerativeAI with logging of the dialog into JSON files """
@@ -113,7 +113,119 @@ class Kazarinov:
             logger.debug(response_1, None, False)
 
     def ask(self, prompt):
-        return self.gemini_1.ask(prompt)
+        return self.gemini_1.ask(prompt)  
+
+    
+
+    def assistant_reminder(self):
+        """Processes reminders in batches and sends them to the Kazarinov assistant."""
+        ...
+
+        # # Read reminders strings list from .txt and .md files
+        # reminders_strings_list: list = recursive_read_text_files(gs.path.data / 'AI', ['*.txt', '*.md'])
+        # logger.info(f"{len(reminders_strings_list)=}")
+
+        # # Send reminders in batches of 100
+        # batch_size = 1
+        # for i in range(0, len(reminders_strings_list), batch_size):
+        #     batch = reminders_strings_list[i:i + batch_size]  # Get the current batch
+        #     print(batch)
+        #     response = k.ask(q=batch, system_instruction=system_instruction)
+        #     logger.info(f"{batch=} sended")
+
+        # Read reminders strings list from all file types
+        reminders_strings_list: list = recursive_read_text_files(base_path / 'campaigns' , ['*.txt'] )
+        if not reminders_strings_list:
+            return
+    
+        logger.info(f"{len(reminders_strings_list)=}")
+        #Send reminders in batches of ...
+        batch_size = 1
+        for i in range(0, len(reminders_strings_list), batch_size):
+        
+            batch = reminders_strings_list[i:i + batch_size]  # Get the current batch
+            print(batch)
+            response = k.ask(q=batch, no_log=True)
+            logger.info(f"{batch=} sended")
+
+        #print(response)
+
+
+
+
+    def start_trainig(self):
+        """Берет информацию и прогоняет через машину. 
+        Один сет уже прогнан. Пока не готовторой сет нет смысла запуакть по второму разу
+        """
+        ...
+        return True # <- см объснение в комментарии к функции
+        kazarinov = Kazarinov()
+        train_files = get_filenames(gs.path.data / 'kazarinov' / 'prompts' / 'questions_answers')
+        kazarinov.train(train_files)
+        kazarinov.dialog()
+
+    def upload_strings(sekf):
+        """ Беру информацию из файлов рекламых сообщений
+        для дообучения модели рекламе """
+        ...
+
+        strings_list:list = recursive_read_text_files(base_path / 'campaigns', ['description.txt'])
+        if not  strings_list:
+            ...
+        else:
+            k = Kazarinov(system_instruction = system_instruction_list[random.randint(0, len(system_instruction_list) - 1)], 
+                      generation_config={"response_mime_type": "text/plain"})
+            for string in strings_list:
+                response = k.ask(string,  no_log = True , with_pretrain = True)
+                print(response)
+
+        strings_list:list = recursive_read_text_files(base_path /  'prompts', ['*.txt','*.md'])
+        if not  strings_list:
+            ...
+        else:
+            for string in strings_list:
+                response = k.ask(string,  no_log=True)
+                print(response)
+            k = Kazarinov(system_instruction = system_instruction_list[random.randint(0, len(system_instruction_list) - 1)], 
+                      generation_config={"response_mime_type": "text/plain"})
+            for string in strings_list:
+                response = k.ask(string,  no_log=True)
+                print(response)
+
+
+    def assistant_reminder(self):
+        """Processes reminders in batches and sends them to the Kazarinov assistant."""
+        ...
+
+        # # Read reminders strings list from .txt and .md files
+        # reminders_strings_list: list = recursive_read_text_files(gs.path.data / 'AI', ['*.txt', '*.md'])
+        # logger.info(f"{len(reminders_strings_list)=}")
+
+        # # Send reminders in batches of 100
+        # batch_size = 1
+        # for i in range(0, len(reminders_strings_list), batch_size):
+        #     batch = reminders_strings_list[i:i + batch_size]  # Get the current batch
+        #     print(batch)
+        #     response = k.ask(q=batch, system_instruction=system_instruction)
+        #     logger.info(f"{batch=} sended")
+
+        # Read reminders strings list from all file types
+        reminders_strings_list: list = recursive_read_text_files(base_path / 'campaigns' , ['*.txt'] )
+        if not reminders_strings_list:
+            return
+    
+        logger.info(f"{len(reminders_strings_list)=}")
+        #Send reminders in batches of ...
+        batch_size = 1
+        for i in range(0, len(reminders_strings_list), batch_size):
+        
+            batch = reminders_strings_list[i:i + batch_size]  # Get the current batch
+            print(batch)
+            response = k.ask(q=batch, no_log=True)
+            logger.info(f"{batch=} sended")
+
+        #print(response)
+
 
 
 

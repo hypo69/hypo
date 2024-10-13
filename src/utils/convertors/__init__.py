@@ -70,5 +70,9 @@ from .base64 import (
                     base64encode,
                     )
 from .text2png import TextToImageGenerator
+from .tts import (
+                    speech_recognizer, 
+                    text2speech,
+                )
 
 

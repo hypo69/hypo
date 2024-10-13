@@ -61,7 +61,7 @@ async def save_png_from_url(
                 image_data = await response.read()
     except Exception as ex:
         logger.error("Error downloading image", ex, exc_info=True)
-        return None
+        return 
 
     return await save_png(image_data, filename)
 

@@ -37,8 +37,10 @@ from .convertors import (xml2dict,
                         ns2dict, 
                         ns2json, 
                         ns2xls, 
-                        ns2xml, 
+                        ns2xml,
+                        speech_recognizer,
                         text2png,
+                        text2speech,
                         xls2dict,
                         webp2png,
                         ) 
@@ -64,8 +66,10 @@ from .image import (save_png,
                     save_png_from_url
                     )
 
+from .input import input
+
 from .video import save_video_from_url
-from .date_time import interval
+from .date_time import TimeoutCheck
 
 from .csv import (read_csv_file, 
                   read_csv_as_dict, 

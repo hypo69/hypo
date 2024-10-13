@@ -2,7 +2,6 @@
 ## \file ../src/ai/openai/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-""" Absolute path to modules  """
 
 import sys,os
 from pathlib import Path

@@ -48,7 +48,7 @@ class OpenAIModel:
         """
         self.client = OpenAI(api_key = gs.credentials.openai.project_api)
         self.current_job_id = None
-        self.assistant_id = assistant_id or gs.credentials.openai.assistant_create_categories_with_description_from_product_titles
+        self.assistant_id = assistant_id or gs.credentials.openai.assistant.category_descriptions
         self.system_instruction = system_instruction
 
         # Load assistant and thread during initialization

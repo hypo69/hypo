@@ -1,6 +1,5 @@
-﻿""" Модуль управления моделью OpenAI 
-"""
-## \file ../src/ai/openai/bots/header.py
+﻿## \file ../src/bots/openai/header.py
+## \file ../src/bots/openai_bots/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

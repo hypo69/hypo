@@ -1,6 +1,6 @@
 ﻿""" AI Suppliers """
 
-## \file ../src/ai/__init__.py
+## \file ../src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

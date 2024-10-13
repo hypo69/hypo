@@ -155,7 +155,7 @@ Supplier
 
 import importlib
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 from types import SimpleNamespace
 
 from src import gs
@@ -167,6 +167,7 @@ from src.scenario import (
 )
 from src.logger import logger
 from src.logger.exceptions import DefaultSettingsException
+from src.utils.file import get_filenames
 
 class Supplier:
     """ Supplier class. Executes scenarios: `scenario->executer` -> `executor->grabber` -> `grabber->prestashop`
@@ -197,31 +198,18 @@ class Supplier:
     # Class attributes declaration
     supplier_id: int = None
     supplier_prefix: str = None
-    supplier_settings: dict = None
     locale: str = None
     price_rule: str = None
     related_modules = None
     scenario_files: list = None
     current_scenario: dict = None
+    d:Driver
 
-    login_data: dict = {
-        'if_login': None,
-        'login_url': None,
-        'user': None,
-        'password': None,
-    }
-    
-    locators: dict = {
-        'store': None,
-        'login': None,
-        'category': None,
-        'product': None,
-    }
     """  _var locators  Dictionary of web element locators on pages `product`, `category`, `login`, `store`.
     Each key will be populated with a dictionary of web elements from files `product.json`, `category.json`, `login.json`, `store.json`
     located in the directory `<supplier_prefix>/locators`. """
 
-    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs):
+    def __init__(self, supplier_prefix: str, locale: str = 'en', d: Optional[str | Driver | bool] = None, *attrs, **kwargs):
         """ 
         @param supplier_prefix `str` supplier_prefix e.g., 'aliexpress'
                         Table of suppliers: https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?usp=sharing
@@ -231,76 +219,60 @@ class Supplier:
         self.supplier_prefix = supplier_prefix
         self.locale = locale 
 
-        if not self._payload(webdriver, *attrs, **kwargs): 
+        if not self._payload(d, *attrs, **kwargs): 
             raise DefaultSettingsException(f'Error starting supplier ', supplier_prefix )
 
-    def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
-        """ Load supplier parameters
-        @param webdriver - WebDriver mode (default False)
-        WebDriver modes: False, 'chrome', 'firefox', 'edge', 'default'
+    def _payload(self, d: str | Driver | bool, *attrs, **kwargs) -> bool:
+        """Load supplier parameters.
+
+        Args:
+            webdriver (str | Driver | bool): 
+                WebDriver mode (default False). 
+                WebDriver modes: False, 'chrome', 'firefox', 'edge', 'default'.
+            *attrs: Additional positional arguments.
+            **kwargs: Additional keyword arguments.
+
+        Returns:
+            bool: True if the supplier parameters are loaded successfully, otherwise returns False.
+
+        Raises:
+            FileNotFoundError: If the supplier settings file cannot be read.
         """
-        logger.info(self.supplier_prefix)        
+        settings: SimpleNamespace = j_loads_ns(
+            gs.path.src / 'suppliers' / self.supplier_prefix / f"{self.supplier_prefix}.json"
+        )
 
-        self.supplier_home_dir = Path(gs.path.src, 'suppliers', self.supplier_prefix)
-        
+        if not settings:
+            logger.error(f'Ошибка чтения файла установок поставщика {self.supplier_prefix}')
+            return 
+
+        self.scenario_files = get_filenames(
+            gs.path.src / 'suppliers' / self.supplier_prefix / 'scenarios'
+        )
         self.related_modules = importlib.import_module(f'src.suppliers.{self.supplier_prefix}')
-        """ `self.related_modules`  Additional functions from the module `<supplier_prefix>` """
-        
-        self.supplier_settings = j_loads(
-            Path(self.supplier_home_dir, f'{self.supplier_prefix}.json'))
-        """ supplier_settings: `self.supplier_settings` Default settings for this supplier, read from file <supplier_prefix>.json """
+        self.price_rule = getattr(settings, 'price_rule', 0)
+        self.supplier_id = getattr(settings, 'supplier_id', None)
 
-        # Execute scenario via grabber
-        self.price_rule = self.supplier_settings.get('price_rule', 0)
-        self.supplier_id = self.supplier_settings['supplier_id']
         """ Supplier ID
         Google spreadsheet of suppliers can be found here:  
         https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?usp=sharing
-       """
-
-        """  If scenario list is NOT defined during class initialization - take all from supplier's scenarios folder.  
-        I still left the option to change the list before starting the collection of scenarios.  
-        All scenario files paths are converted to absolute paths.
         """
-        self.scenario_files = [ Path(self.supplier_home_dir, 'scenarios', scenario_filename) for scenario_filename 
-                               in self.supplier_settings.get('scenario_files', 
-                                [ Path(self.supplier_home_dir, 'scenarios', scenario_filename) for scenario_filename 
-                                 in Path(self.supplier_home_dir, 'scenarios').iterdir() 
-                                 if scenario_filename.suffix == '.json' ] ) ]
-        
 
-        locators_path =  Path(self.supplier_home_dir, 'locators')
-        self.locator: SimpleNamespace = SimpleNamespace(**{
-            'store': j_loads_ns(Path(locators_path, 'store.json')),
-            'login': j_loads_ns(Path(locators_path, 'login.json')),
-            'category': j_loads_ns(Path(locators_path, 'category.json')),
-            'product': j_loads_ns(Path(locators_path, 'product.json')),
-        })
-       
-        """  locators `dict` - Dictionary of web element locators on pages `product`, `category`, `login`, `store`.
-        Each page type corresponds to its own JSON file: `product.json`, `category.json`, `login.json`, `store.json`
-        Files for each supplier are located in corresponding directories `<supplier_prefix>/locators` """     
+        if not d:
+            return True
 
-        # ~~~~~~~~~~~~~~~~~ debug ~~~~~~~
-        # _start_time = int(time.time())
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        if not webdriver: ...
+        if isinstance(d, str):
+            webdriver_map = {'chrome': Chrome, 'firefox': Firefox, 'edge': Edge}
+            self.d = Driver(webdriver_map.get(d.lower()))
+            if not self.d:
+                logger.error(f'Неизвестный режим WebDriver: {d}')
+                return 
         else:
-            if webdriver == 'chrome':
-                WebDriver = Chrome
-            elif webdriver == 'firefox':
-                WebDriver = Firefox
-            elif webdriver == 'edge':
-                WebDriver = Edge
+            self.d = d  # Assume it's a valid Driver instance
 
-            self.driver = Driver(WebDriver)
-            
-            # ~~~~~~~~~~~~~~~~~ debug ~~~~~~~~~~~~
-            # logger.success(f""" ... driver connected in {int(time.time()) - _start_time} seconds """)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-           
         return True
+
+
 
     def login(self) -> bool:
         """  Log in to the supplier website.  

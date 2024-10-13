@@ -503,7 +503,7 @@ def field_condition():
 	
 	@details
 	"""
-	return d.execute_locator(l["condition"])
+	return d.execute_locator(l.condition)
         
 
 def field_customizable():

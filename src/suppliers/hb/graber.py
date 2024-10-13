@@ -1,5 +1,6 @@
 ## \file ../src/suppliers/hb/graber.py
-## \file src/suppliers/hb/graber.py
+# -*- coding: utf-8 -*-
+#! /usr/share/projects/hypotez/venv/scripts python
 """ Асинхронный сборщик полей товара HB -> product_fields
 Модуль собирет поля со страницы товара и заполняет поля объекта ProductFields
 
@@ -10,6 +11,7 @@
 import os, sys, asyncio
 from pathlib import Path
 from typing import List, Union, Dict, Any
+from types import SimpleNamespace
 from urllib import response
 
 from langdetect import detect
@@ -19,29 +21,23 @@ from src.suppliers import Supplier
 from src.product import ProductFields, record
 from src.category import Category
 from src.webdriver import Driver as Webdriver
-from src.utils import j_loads, j_dumps, pprint, StringFormatter, ProductFieldsNormalizer ,ProductFieldsValidator
-from src.utils import list2string
-from src.suppliers.hb.locators import locator
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
+from src.utils import pprint
 from src.logger import logger 
 from src.logger.exceptions import ExecuteLocatorException
 from src.prestashop import Prestashop
 ...
 
-s: Supplier = None
-#c: Category = None 
-l: Dict = {}
+supplier_prefix = 'hb'
+
+s: Supplier = Supplier(supplier_prefix)
+l: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
 d: Webdriver = None
 f: ProductFields = ProductFields()
 
 
-async def async_grab_page(supplier: Supplier) -> ProductFields:
+async def async_grab_page() -> ProductFields:
 
-    global s
-    s = supplier
-    global d
-    d = s.driver
-    global l
-    l = s.locators["product"]
 
     async def fetch_specific_data():
         webelements = d.execute_locator(l["product_reference_and_volume_and_price_for_100"])
@@ -365,7 +361,7 @@ async def available_now():
     #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
     ...
 
-async def additional_categories(category_id: List[str, str], categories_ids: List[str, str] = None) -> Dict:
+async def additional_categories(category_id:list[str], categories_ids:list[str] = None) -> Dict:
     """  Function for field additional_categories"""
     # 
     #                   Это поле должно заполнятся на клиенте. 
@@ -421,7 +417,7 @@ async def cache_is_pack():
 async def condition():
     """  Function for field condition"""
     try:
-        f.condition = d.execute_locator(l["condition"]) or 'new'
+        f.condition = d.execute_locator(l.condition) or 'new'
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field condition: ", e)
     except Exception as e:

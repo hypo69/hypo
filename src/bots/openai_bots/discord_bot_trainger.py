@@ -1,4 +1,4 @@
-## \file ../src/ai/openai/bots/discord_bot_trainger.py
+## \file ../src/bots/openai_bots/discord_bot_trainger.py
 import discord
 from discord.ext import commands
 from pathlib import Path
