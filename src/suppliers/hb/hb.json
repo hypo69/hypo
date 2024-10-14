@@ -8,7 +8,7 @@
   ],
   "start_url": "https://hbdeadsea.co.il/",
   "price_rule": "+0",
-  "use_mouse": false,
+  "if_list":"first","use_mouse": false,
   "mandatory": "true",
   "if_login": false,
   "login_url": "",

@@ -5,7 +5,7 @@
     "by": "XPATH",
     "selector": "//a[contains(@class,'image-link')]",
 
-    "use_mouse": false,
+    "if_list":"first","use_mouse": false,
     "mandatory": true,
     "event": false
   },

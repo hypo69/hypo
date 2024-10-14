@@ -4,7 +4,7 @@
   "supplier_prefix": "amazon",
   "start_url": "https://www.amazon.com/",
   "price_rule": "+0",
-  "use_mouse": false, "mandatory": true,
+  "if_list":"first","use_mouse": false, "mandatory": true,
   "if_login": false,
   "login_url": "https://amazon.com",
   "lang": "EN",

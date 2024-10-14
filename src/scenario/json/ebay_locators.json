@@ -5,35 +5,35 @@
       "by": "XPATH",
       "selector": "//a[. = 'Sign in']",
       "event": "click()",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "user_id": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//input[@id = 'userid']",
       "event": "send_keys('one.last.bit@gmail.com')",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "button_continue_login": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//button[@id = 'signin-continue-btn']",
       "event": "click()",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "password": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//input[@id = '...']",
       "event": "send_keys('bG4I8y_oiOh9')",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "button_login": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//button[@id = 'sgnBt']",
       "event": "click()",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     }
   },
   "pagination": {
@@ -42,7 +42,7 @@
       "by": "XPATH",
       "selector": "//a[contains(@class,'pagination__next')]",
       "event": "click()",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     }
   },
   "product": {
@@ -51,7 +51,7 @@
       "by": "css selector",
       "selector": "div.boxItem-wrap",
       "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
 
     },
     "link_to_product_locator": {
@@ -109,7 +109,7 @@
       "by": "XPATH",
       "selector": "//div[@class='ux-image-carousel-item active image']",
       "event": "screenshot()",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
 
     "price_locator": {

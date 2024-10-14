@@ -3,6 +3,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//button[@class='close']",
+    "if_list": "first",
     "use_mouse": false,
     "event": "click()",
     "mandatory": true,
@@ -10,33 +11,32 @@
   },
   "id": {
     "attribute": null,
-
     "by": null,
     "selector": null,
-
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
   },
   "id_manufacturer": {
-    "attribute": null,
-
-    "by": null,
-    "selector": null,
-
+    "attribute": "innerText",
+    "by": "XPATH",
+    "selector": "//span[@class = 'ltr sku-copy']",
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "event": null
+    "event": null,
+    "locator_description": "SKU morlevi"
   },
   "id_supplier": {
-    "attribute": null,
-
-    "by": null,
-    "selector": null,
-
+    "attribute": "innerText",
+    "by": "XPATH",
+    "selector": "//span[@class = 'ltr sku-copy']",
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "event": null
+    "event": null,
+    "locator_description": "SKU morlevi"
   },
   "id_category_default": {
     "attribute": null,
@@ -44,6 +44,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -54,6 +55,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -64,6 +66,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -74,6 +77,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -82,6 +86,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//a[@id = 'mainpic']//img",
+    "if_list": "first",
     "use_mouse": false,
     "event": "screenshot()",
     "mandatory": true,
@@ -93,6 +98,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -103,6 +109,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -113,6 +120,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -123,6 +131,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -133,6 +142,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -143,6 +153,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -153,6 +164,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -163,6 +175,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -173,6 +186,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -183,6 +197,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -193,6 +208,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -203,6 +219,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -213,6 +230,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -223,6 +241,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -233,6 +252,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -243,6 +263,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -253,6 +274,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -263,6 +285,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -273,6 +296,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -283,6 +307,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -293,6 +318,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -303,6 +329,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -313,6 +340,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -323,6 +351,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -333,6 +362,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -343,6 +373,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -353,6 +384,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -363,6 +395,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -373,6 +406,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -383,6 +417,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -393,6 +428,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -403,6 +439,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -413,6 +450,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -423,6 +461,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -433,6 +472,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -443,6 +483,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -453,6 +494,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -463,6 +505,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -473,6 +516,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -483,6 +527,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -493,6 +538,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -503,6 +549,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -513,6 +560,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -523,6 +571,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -533,6 +582,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -543,6 +593,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -553,6 +604,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -563,6 +615,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -573,6 +626,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -583,6 +637,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -593,6 +648,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -603,6 +659,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -613,6 +670,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -623,6 +681,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -633,6 +692,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -643,6 +703,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -653,6 +714,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -661,6 +723,7 @@
     "attribute": "innerText",
     "by": "XPATH",
     "selector": "//div[contains(@class, 'product-header')]//h1",
+    "if_list": "first",
     "use_mouse": false,
     "event": null,
     "mandatory": true,
@@ -670,6 +733,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[contains(@class, 'description')]",
+    "if_list": "first",
     "use_mouse": false,
     "event": null,
     "mandatory": true,
@@ -681,6 +745,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -691,6 +756,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -701,6 +767,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -711,6 +778,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -721,6 +789,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -731,6 +800,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -741,6 +811,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -751,6 +822,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -761,6 +833,7 @@
     "by": "XPATH",
     "selector": "//*[contains(text(),'ASIN')]/following-sibling::*",
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -771,6 +844,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -781,6 +855,7 @@
     "by": "XPATH",
     "selector": "//span[@id='productTitle']",
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -792,6 +867,7 @@
     "by": "XPATH",
     "selector": "//div[contains(@id,'corePrice')]//span[@class ='a-price-whole'][1]",
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -802,6 +878,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -812,6 +889,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -822,6 +900,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -832,6 +911,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -842,6 +922,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -852,6 +933,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -862,6 +944,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -872,6 +955,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -882,6 +966,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -892,6 +977,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -902,6 +988,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -912,6 +999,7 @@
     "by": "XPATH",
     "selector": "//span[contains(text(), 'Brand')]/parent::td/following-sibling::td/span[contains(@class, 'po-break-word')]",
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -922,6 +1010,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -932,6 +1021,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -942,6 +1032,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -952,6 +1043,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -962,6 +1054,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -972,6 +1065,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -982,6 +1076,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -992,6 +1087,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1002,6 +1098,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1012,6 +1109,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1022,6 +1120,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1032,6 +1131,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1042,6 +1142,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1052,6 +1153,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1062,6 +1164,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1072,6 +1175,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1082,6 +1186,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1092,6 +1197,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1102,6 +1208,7 @@
     "by": "XPATH",
     "selector": "//div[contains(@data-a-expander-name , 'product_overview')]//table",
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1112,6 +1219,7 @@
     "by": "XPATH",
     "selector": "//div[@id='productDescription']",
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1122,6 +1230,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1132,6 +1241,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1142,6 +1252,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1152,6 +1263,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1162,6 +1274,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1172,6 +1285,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1182,6 +1296,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1192,6 +1307,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1202,6 +1318,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1212,6 +1329,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1222,6 +1340,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1231,6 +1350,7 @@
 
     "by": "XPATH",
     "selector": "//img[@id='landingImage']|//img[@class='a-dynamic-image']",
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": "screenshot()",
@@ -1242,6 +1362,7 @@
     "attribute": "{src:alt}",
     "by": "XPATH",
     "selector": "//div[@class = 'carousel-inner']//img",
+    "if_list": "first",
     "use_mouse": false,
     "event": null,
     "mandatory": true,
@@ -1254,6 +1375,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1264,6 +1386,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1274,6 +1397,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1284,6 +1408,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1294,6 +1419,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1304,6 +1430,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1314,6 +1441,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1324,6 +1452,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1334,6 +1463,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1344,6 +1474,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1354,6 +1485,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1364,6 +1496,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1374,6 +1507,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1384,6 +1518,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1394,6 +1529,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1404,6 +1540,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1414,6 +1551,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1424,6 +1562,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1434,6 +1573,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1444,6 +1584,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1465,6 +1606,7 @@
       "//li[contains(@id,'amzn-ss-text-link')]",
       "//textarea[contains(@id,'amzn-ss-text-shortlink-textarea')]"
     ],
+    "if_list": "first",
     "use_mouse": [
       false,
       false
@@ -1484,6 +1626,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1494,6 +1637,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1504,6 +1648,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1514,6 +1659,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1524,6 +1670,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1534,6 +1681,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1544,6 +1692,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null
@@ -1554,6 +1703,7 @@
     "by": null,
     "selector": null,
 
+    "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null

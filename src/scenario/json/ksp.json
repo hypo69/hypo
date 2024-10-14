@@ -4,7 +4,7 @@
   "supplier_prefix": "ksp",
   "start_url": "https://www.ksp.co.il/",
   "price_rule": "+100",
-  "use_mouse": false, "mandatory": true,
+  "if_list":"first","use_mouse": false, "mandatory": true,
   "num_items_4_flush": 300,
   "if_login": false,
   "parcing method [webdriver|api]": "web",

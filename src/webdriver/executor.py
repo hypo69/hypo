@@ -76,11 +76,11 @@ class ExecuteLocator:
     def execute_locator(
     self,
     locator: dict,
+    timeout:float = 5 , 
+    timeout_for_event: str = 'presence_of_element_located',
     message: str = None,
     typing_speed: float = 0,
     continue_on_error: bool = True,
-    timeout:float = 5 , 
-    timeout_for_event: str = 'presence_of_element_located'
     ) -> str | list | dict | WebElement | bool:
         """
     Executes the logic specified in the locator dictionary to interact with web elements.
@@ -196,7 +196,7 @@ class ExecuteLocator:
             locator.by = self.by_mapping.get(by, by)
 
             # Общие аргументы для всех функций
-            args = (locator, timeout, timeout_for_event)
+            args = (locator, timeout, timeout_for_event, message, typing_speed)
 
             if by == "VALUE":
                 # Return value through attribute, could be a computed function
@@ -208,11 +208,11 @@ class ExecuteLocator:
 
             if event:
                 # Event is provided, perform action
-                return self.execute_event(*args, message=message, typing_speed=typing_speed)
+                return self.execute_event(*args)
 
             elif message:
                 # Send message to element
-                return self.send_message(*args, message=message, typing_speed=typing_speed)
+                return self.send_message(*args)
 
             if attribute:
                 # Return the attribute of the element
@@ -227,7 +227,7 @@ class ExecuteLocator:
                         "by": locator.by[i],
                         "selector": locator.selector[i],
                         "event": locator.event[i],
-                        "use_mouse": locator.use_mouse[i]
+                        "if_list":"first","use_mouse": locator.use_mouse[i]
                         if "use_mouse" in locator and isinstance(locator.use_mouse, list)
                         else None,
                         "mandatory": locator.mandatory[i]
@@ -243,9 +243,9 @@ class ExecuteLocator:
             ]
             ret = [_parse_locator(loc, message) for loc in locators]
         else:
-            ret = _parse_locator(locator, message)
+            result = _parse_locator(locator, message)
 
-        return ret
+        return result
 
     def evaluate_locator(
         self, attribute: str | list[str] | dict
@@ -356,9 +356,13 @@ class ExecuteLocator:
             return [_evaluate(attr) for attr in attribute]
         return _evaluate(attribute)
     
-    def get_webelement_by_locator(
-        self, locator: dict | SimpleNamespace, timeout: float = 10, timeout_for_event: str = 'presence_of_element_located'
-    ) -> WebElement | list[WebElement] | None:
+    def get_webelement_by_locator(self,
+                                    locator: dict,
+                                    timeout:float = 5 , 
+                                    timeout_for_event: str = 'presence_of_element_located',
+                                    message: str = None,
+                                    typing_speed: float = 0,
+                                    continue_on_error: bool = True,) -> WebElement | list[WebElement] | None:
         """
         Retrieves web elements on the page based on the provided locator, with options to wait for specific conditions.
 
@@ -409,19 +413,23 @@ class ExecuteLocator:
                 # raise ExecuteLocatorException("Locator execution failed")
                 return
 
-        if len(elements) > 1:
+        if not hasattr(locator, 'if_list'):
             return elements
-        elif len(elements) == 1:
-            return elements[0]
 
+        if  locator.if_list == 'first':
+            return elements[0] if isinstance(elements, list) else elements
+        elif locator.if_list == 'last':
+            return elements[len(elements) - 1] if isinstance(elements, list) else elements
+        else:
+            return elements
 
-
-    def get_attribute_by_locator(
-        self,
-        locator: dict | SimpleNamespace,
-        timeout: float = 10,
-        timeout_for_event: str = 'presence_of_element_located'
-    ) -> str | list | dict | bool:
+    def get_attribute_by_locator(self,                                     
+                                    locator: SimpleNamespace | dict,
+                                    timeout:float = 5 , 
+                                    timeout_for_event: str = 'presence_of_element_located',
+                                    message: str = None,
+                                    typing_speed: float = 0,
+                                    continue_on_error: bool = True,) -> str | list | dict | WebElement | list[WebElement] | None:
         """! Retrieves attributes from an element or list of elements found by the given locator.
 
         Args:
@@ -435,11 +443,15 @@ class ExecuteLocator:
                 - If the element is a single element, returns the attribute or dictionary.
                 - If the element is not found, returns `None`.
         """
-        element = self.get_webelement_by_locator(locator, timeout, timeout_for_event)
+        
         locator = (
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
         )
 
+        element:WebElement = self.get_webelement_by_locator(locator, timeout, timeout_for_event)
+        if not element:
+            return 
+       
         def _parse_dict_string(attr_string: str) -> dict:
             """! Parses a string like '{attr1:attr2}' into a dictionary.
 
@@ -482,6 +494,7 @@ class ExecuteLocator:
             return result
 
         if element:
+
             # Определяем, является ли атрибут строкой словаря
             if isinstance(locator.attribute, str) and locator.attribute.startswith("{"):
                 attr_dict = _parse_dict_string(locator.attribute)
@@ -496,7 +509,14 @@ class ExecuteLocator:
             return element.get_attribute(locator.attribute)
         return None
 
-    def get_webelement_as_screenshot(self, locator: dict | SimpleNamespace, timeout:int, timeout_for_event:str) -> BinaryIO | None:
+    def get_webelement_as_screenshot(self,                                     
+                                    locator: SimpleNamespace | dict,
+                                    timeout:float = 5 , 
+                                    timeout_for_event: str = 'presence_of_element_located',
+                                    message: str = None,
+                                    typing_speed: float = 0,
+                                    continue_on_error: bool = True,
+                                    webelement: Optional[WebElement] = None) -> BinaryIO | None:
         """  Беру скиншот элемента в формате `.png`.
         @todo добавить возможность делать скриншот всего экрана, его части, всплывающих окон
         Takes a screenshot of a given WebElement object and returns it as a PNG image.
@@ -508,28 +528,25 @@ class ExecuteLocator:
         @returns Бинарный код изображения
             A binary PNG image if succesStringFormatterul, False if the element is no longer attached to the DOM or an error occurs.
         """
-        webelement = self.get_webelement_by_locator(locator = locator, timeout = timeout, timeout_for_event = timeout_for_event)
-        webelements_list = (
-            [webelement] if not isinstance(webelement, list) else webelement
-        )
-        ret: List = []
-        for element in webelements_list:
-            try:
-                ret.extend(element.screenshot_as_png)
-            except Exception as ex:
-                logger.error(f"Error:", ex)
-                ...
-        return ret
+        if not webelement:
+            webelement = self.get_webelement_by_locator(locator = locator, timeout = timeout, timeout_for_event = timeout_for_event)
+        
+        if not webelement:
+            return False
 
-    def execute_event(
-        self,
-        locator: SimpleNamespace | dict,
-        timeout, 
-        timeout_for_event,
-        message: Optional[str] = None,
-        typing_speed: int = 0,
-        max_attempts: int = 20,
-    ) -> bool:
+        webelement = webelement[0] if isinstance(webelement, list) else webelement
+        ...
+        return webelement.screenshot_as_png
+
+
+    def execute_event(self,              
+                    locator: SimpleNamespace | dict,
+                    timeout:float = 5 , 
+                    timeout_for_event: str = 'presence_of_element_located',
+                    message: str = None,
+                    typing_speed: float = 0,
+                    continue_on_error: bool = True,
+    ) -> bool | bytes | list[bytes]:
         """
         Execute the events associated with a locator.
 
@@ -548,17 +565,20 @@ class ExecuteLocator:
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
         )
         events = str(locator.event).split(";")
-
+        result: list = []
         # Retrieve the web element based on the locator
-        webelement = self.get_webelement_by_locator(locator = locator, timeout = timeout, timeout_for_event = timeout_for_event)
+        webelement = self.get_webelement_by_locator(                                     
+                                    locator,
+                                    timeout, 
+                                    timeout_for_event,
+                                    message,
+                                    typing_speed,
+                                    continue_on_error,)
         ...
 
         if not webelement:
             return False
         webelement = webelement[0] if isinstance(webelement, list) else webelement
-
-        # Initialize a variable to hold screenshots
-        screenshots = []
 
         for event in events:
             if event == "click()":
@@ -592,7 +612,8 @@ class ExecuteLocator:
 
             elif event == "screenshot()":
                 try:
-                    screenshots.append(self.get_webelement_as_screenshot(locator))
+                    result.append(self.get_webelement_as_screenshot(locator, webelement = webelement))
+                    ...
                 except Exception as ex:
                     logger.error(f"Error taking screenshot: {locator}", ex)
                     return False
@@ -628,8 +649,6 @@ class ExecuteLocator:
                 for _ in range(len(field_value)):
                     webelement.send_keys(Keys.BACKSPACE)
 
- 
-
             elif event == "%EXTERNAL_MESSAGE%":
                 if not message:
                     logger.error("External message is required but not provided.")
@@ -643,143 +662,17 @@ class ExecuteLocator:
             else:
                 logger.error(f"Unsupported event type: {event}")
                 return False
-
-        return True
-
-    def execute_event(
-        self,
-        locator: SimpleNamespace | dict,
-        timeout, 
-        timeout_for_event,
-        message: Optional[str] = None,
-        typing_speed: int = 0,
-        max_attempts: int = 20,
-    ) -> bool:
-        """
-        Execute the events associated with a locator.
-
-        Args:
-            locator (SimpleNamespace | dict): Locator specifying the element and event to execute.
-            timeout: Timeout for locating the element.
-            timeout_for_event: Timeout for waiting for the event.
-            message (Optional[str], optional): Message to send with the event, if applicable. Defaults to None.
-            typing_speed (int, optional): Speed of typing for send_keys events. Defaults to 0.
-            max_attempts (int, optional): Number of attempts to handle element click if intercepted. Defaults to 20.
-
-        Returns:
-            bool: Returns True if event execution was successful, False otherwise.
-        """
-        locator = (
-            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
-        )
-        events = str(locator.event).split(";")
-
-        # Retrieve the web element based on the locator
-        webelement = self.get_webelement_by_locator(locator=locator, timeout=timeout, timeout_for_event=timeout_for_event)
         ...
+        return result[0] if len(result) == 1 else result if len(result) > 1 else False 
 
-        if not webelement:
-            return False
-        webelement = webelement[0] if isinstance(webelement, list) else webelement
+    def send_message(self,               
+                        locator: SimpleNamespace | dict,
+                        timeout:float = 5 , 
+                        timeout_for_event: str = 'presence_of_element_located',
+                        message: str = None,
+                        typing_speed: float = 0,
+                        continue_on_error: bool = True,
 
-        # Initialize a variable to hold screenshots
-        screenshots = []
-
-        for event in events:
-            if event == "click()":
-                try:
-                    webelement.click()
-                except ElementClickInterceptedException as ex:
-                    logger.error(f"Element click intercepted: {locator}", ex)
-                    return False
-                except Exception as ex:
-                    logger.error(f"Error clicking element: {locator}", ex)
-                    return False
-
-            elif event.startswith("pause("):
-                match = re.match(r"pause\((\d+)\)", event)
-                if match:
-                    pause_duration = int(match.group(1))
-                    time.sleep(pause_duration)
-                    continue
-                logger.error(f"Invalid pause duration: {event}")
-                return False
-
-            elif event == "upload_media()":
-                if not message:
-                    logger.error(f"Message is required for upload_media event. Message: {message}")
-                    return False
-                try:
-                    webelement.send_keys(message)
-                except Exception as ex:
-                    logger.error(f"Error uploading media: {message}", ex)
-                    return False
-
-            elif event == "screenshot()":
-                try:
-                    screenshots.append(self.get_webelement_as_screenshot(locator))
-                except Exception as ex:
-                    logger.error(f"Error taking screenshot: {locator}", ex)
-                    return False
-
-            elif event == "clear()":
-                try:
-                    webelement.clear()
-                except Exception as ex:
-                    logger.error(f"Error clearing element: {locator}", ex)
-                    return False
-
-            elif event.startswith("send_keys("):
-                keys_to_send = event.replace("send_keys(", "").replace(")", "").split("+")
-                try:
-                    actions = ActionChains(self.driver)
-                    for key in keys_to_send:
-                        key = key.strip().strip("'")
-                        if key == "ENTER":
-                            actions.send_keys(Keys.ENTER)
-                        elif hasattr(Keys, key):
-                            # Get the actual key from the Keys object
-                            key_to_send = getattr(Keys, key)
-                            actions.send_keys(key_to_send)
-                        else:
-                            actions.send_keys(key)
-                    actions.perform()
-                except Exception as ex:
-                    logger.error(f"Error sending keys: {keys_to_send}", ex)
-                    return False
-
-            # Handling backspace(n)
-            elif event.startswith("backspace("):
-                webelement.send_keys(Keys.END)
-                field_value = webelement.get_attribute('value')
-                for _ in range(len(field_value)):
-                    webelement.send_keys(Keys.BACKSPACE)
-
-            elif event == "%EXTERNAL_MESSAGE%":
-                if not message:
-                    logger.error("External message is required but not provided.")
-                    return False
-                try:
-                    self.send_message(locator=locator, timeout=timeout, timeout_for_event=timeout_for_event, message=message, typing_speed=typing_speed)
-                except Exception as ex:
-                    logger.error(f"Error sending external message: {message}", ex)
-                    return False
-
-            else:
-                logger.error(f"Unsupported event type: {event}")
-                return False
-
-        return True
-
-
-    def send_message(
-        self,
-        locator: dict | SimpleNamespace,
-        timeout, 
-        timeout_for_event,
-        message: Optional[str] = None,
-        replace_dict: dict = {";": "SHIFT+ENTER"},
-        typing_speed: float = 0,
     ) -> bool:
         """Sends a message to a web element.
 

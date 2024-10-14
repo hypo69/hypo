@@ -8,7 +8,7 @@
     "selector": "//div[contains(@style, 'z-index: 9000')]//button[contains(@style, 'z-index: 6')]",
     "selector tmp": "//div[contains(@class,'needsclick')]//button[contains(@class,'needsClick')]",
     "event": "click()",
-    "use_mouse": false
+    "if_list":"first","use_mouse": false
   },
   "main menu": {
     "categories parent": {
@@ -17,7 +17,7 @@
       "by": "XPATH",
 
       "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//details//summary",
-      "use_mouse": false, "mandatory": true,
+      "if_list":"first","use_mouse": false, "mandatory": true,
       "event": "loop",
       
       "variables in selector": "x",
@@ -30,7 +30,7 @@
       "attribute": "{'innerText':'href'}",
       "by": "XPATH",
       "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//div[contains(@class,'navmenu-submenu')]//li//a",
-      "use_mouse": false, "mandatory": true,
+      "if_list":"first","use_mouse": false, "mandatory": true,
       "event": "click()",
       "logic for action[AND|OR|XOR|VALUE|null]": null
 
@@ -41,7 +41,7 @@
       "by": "XPATH",
       "selector": "//ul[@class='pagination']//a[@class='page-link']",
       "event": "click()",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     }
   },
 
@@ -56,7 +56,7 @@
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "store categories dept-2": {
       "description": "Список подкатегероий магазина",
@@ -68,7 +68,7 @@
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li//ul[contains(@class,'navmenu-depth-2')]/li",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "store categories dept-3": {
       "description": "Список подкатегероий магазина",
@@ -80,7 +80,7 @@
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li//ul[contains(@class,'navmenu-depth-2')]/li//ul[contains(@class,'navmenu-depth-3')]/li",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     }
   },
 
@@ -92,7 +92,7 @@
       "selector": "//div[@class = 'product-thumb']/a",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "stock available": {
       
@@ -101,7 +101,7 @@
       "selector": "//div[conatins(@class , 'stockMsg')]",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
 
     "product_name_locator": {
@@ -111,7 +111,7 @@
       "selector": "h1.d-inline-block",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "summary_locator": {
       
@@ -120,7 +120,7 @@
       "selector": "h1.d-inline-block",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "description_locator": {
       
@@ -129,7 +129,7 @@
       "selector": ".row.product-params.pt-2.pb-2.pt-sm-5.pb-sm-5",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
 
     "price_locator": {
@@ -139,7 +139,7 @@
       "selector": "basicPrice",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
 
     "brand_locator": {
@@ -149,7 +149,7 @@
       "selector": "text*='éöøï'",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
 
     "sku_locator": {
@@ -159,7 +159,7 @@
       "selector": "//div[contains(@class,'main-details')]//span[contains(@class,'sku-copy')]",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
     "brand_sku_locator": {
       
@@ -168,7 +168,7 @@
       "selector": "span.sku-copy",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
 
     "main_image_locator": {
@@ -178,7 +178,7 @@
       "selector": "mainpic",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     },
 
     "li_locator": {
@@ -188,7 +188,7 @@
       "selector": "li",
       
       "event": null,
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     }
   },
   "product_fields_locators": {

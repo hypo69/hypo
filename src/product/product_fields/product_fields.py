@@ -570,7 +570,6 @@ class ProductFields:
     
     
     @id_category_default.setter
-     
     def id_category_default(self, value: int):
         """  <sub>*[setter]*</sub> Сюда передается та категория, которая будет однознчно - родительская `ps_product.id_category_default: int(10) unsigned`"""
         try:
@@ -2071,7 +2070,7 @@ class ProductFields:
         field DB type: varchar(128)
         description: __prod_desc__"""
         return self.presta_fields_dict['link_rewrite']   or ''
-
+                                                              
     
     @link_rewrite.setter
      
@@ -2545,6 +2544,25 @@ class ProductFields:
             Ошибка: """, ex)
             return    
 
+    @property
+    def images_urls(self):
+        """  <sub>*[property]*</sub>   __prod_name__
+        field DB type: __prod_type__
+        description: __prod_desc__"""
+        return self.assist_fields_dict['images_urls']  or ''
+
+    @images_urls.setter
+    def images_urls(self, value:str = None) -> bool:
+        """  <sub>*[setter]* link_to_video</sub>   """
+        ...
+        try:
+            if value:
+                self.presta_fields_dict['link_to_video'] = value
+            ...
+        except ProductFieldException as ex:
+            logger.error(f"""Ошибка заполнения поля: 'link_to_video' данными {value}
+            Ошибка: """, ex)
+            return    
 
     # @property
     # def position_in_category(self) -> str:
@@ -2604,46 +2622,8 @@ class ProductFields:
                 self.assist_fields_dict['page_lang'] = value
             else:
                 self.assist_fields_dict.update({'page_lang':value}) 
-    ...
 
-    @property
-    def default_image_url(self) -> str:
-        """  <sub>*[property]*</sub>   `_???????.id_default_image` """
-        return self.assist_fields_dict['default_image_url'] or ''    
 
-    @default_image_url.setter
-    def default_image_url(self, value = None ) -> bool:
-        """  <sub>*[setter]*</sub>   """
-        try:
-            if value:
-                self.assist_fields_dict['default_image_url'] = value
-            ...
-        except ProductFieldException as ex:
-            logger.error(f"""Ошибка заполнения поля: 'id_default_image' данными {value}
-            Ошибка: """, ex)
-            return   
-    ...
-
-    @property
-    def images_urls(self):
-        """  <sub>*[property]*</sub>   __prod_name__
-        field DB type: __prod_type__
-        description: __prod_desc__"""
-        return self.assist_fields_dict['images_urls']  or ''
-    
-    
-    @images_urls.setter
-    def images_urls(self, value:str = None) -> bool:
-        """  <sub>*[setter]*</sub>   """
-        try:
-            if value:
-                self.assist_fields_dict['images_urls'].append(value)
-            ...
-        except ProductFieldException as ex:
-            logger.error(f"""Ошибка заполнения поля: 'additional_images_urls' данными {value}
-            Ошибка: """,ex)
-            return
-    ...
 
 def record(presta_fields_dict:Dict, i18n:str = None, i:int = 0) -> Dict:
     """ Вытаскивает из словаря полей престашоп 

@@ -8,7 +8,7 @@
       "by": "XPATH",
 
       "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//details//summary",
-      "use_mouse": false, "mandatory": true,
+      "if_list":"first","use_mouse": false, "mandatory": true,
       "event": "loop",
       
       "variables in selector": "x",
@@ -20,7 +20,7 @@
       "attribute": "{'innerText':'href'}",
       "by": "XPATH",
       "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//div[contains(@class,'navmenu-submenu')]//li//a",
-      "use_mouse": false, "mandatory": true,
+      "if_list":"first","use_mouse": false, "mandatory": true,
       "event": "click()",
       "logic for action[AND|OR|XOR|VALUE|null]": null
 

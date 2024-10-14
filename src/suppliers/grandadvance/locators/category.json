@@ -5,7 +5,7 @@
     "by": "XPATH",
     "selector": "//span[@data-component-type ='s-product-image']//a",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   }
 }

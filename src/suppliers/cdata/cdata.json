@@ -1,7 +1,7 @@
 {
   "supplier": "cdata",
   "supplier_prefix": "CDT-",
-  "use_mouse": false, "mandatory": true,
+  "if_list":"first","use_mouse": false, "mandatory": true,
   "start_url": "https://www.c-data.co.il/",
   "price_rule": "3.5*1.17",
 

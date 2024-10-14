@@ -5,7 +5,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "id_manufacturer": {
@@ -14,7 +14,7 @@
     "by": "VALUE",
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "id_supplier": {
@@ -23,7 +23,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "id_category_default": {
@@ -32,7 +32,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "new": {
@@ -41,7 +41,7 @@
     "by": "VALUE",
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "cache_default_attribute": {
@@ -50,7 +50,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "id_default_image": {
@@ -59,7 +59,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "id_default_combination": {
@@ -68,7 +68,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "id_tax": {
@@ -77,7 +77,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "position_in_category": {
@@ -86,7 +86,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "type": {
@@ -95,7 +95,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "id_shop_default": {
@@ -104,7 +104,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "reference": {
@@ -113,7 +113,7 @@
     "by": "XPATH",
     "selector": "//DIV[@CLASS='product-barcode']",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "supplier_reference": {
@@ -122,7 +122,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "location": {
@@ -131,7 +131,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "width": {
@@ -140,7 +140,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "height": {
@@ -149,7 +149,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "depth": {
@@ -158,7 +158,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "weight": {
@@ -167,7 +167,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "quantity_discount": {
@@ -176,7 +176,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "ean13": {
@@ -185,7 +185,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "isbn": {
@@ -194,7 +194,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "upc": {
@@ -203,7 +203,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "mpn": {
@@ -212,7 +212,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "cache_is_pack": {
@@ -221,7 +221,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "cache_has_attachments": {
@@ -230,7 +230,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "is_virtual": {
@@ -239,7 +239,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "state": {
@@ -248,7 +248,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "additional_delivery_times": {
@@ -257,7 +257,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "delivery_in_stock": {
@@ -266,7 +266,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "delivery_out_stock": {
@@ -275,7 +275,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "product_type": {
@@ -284,7 +284,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "on_sale": {
@@ -293,7 +293,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "online_only": {
@@ -302,7 +302,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "ecotax": {
@@ -311,7 +311,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "minimal_quantity": {
@@ -320,7 +320,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "low_stock_threshold": {
@@ -329,7 +329,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "low_stock_alert": {
@@ -338,7 +338,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "price": {
@@ -347,7 +347,7 @@
     "by": "XPATH",
     "selector": "//div[@class='price__current  price__current--on-sale'][1] | //span[@class = 'money'][1]",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "wholesale_price": {
@@ -356,7 +356,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "unity": {
@@ -365,7 +365,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "unit_price_ratio": {
@@ -374,7 +374,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "additional_shipping_cost": {
@@ -383,7 +383,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "customizable": {
@@ -392,7 +392,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "text_fields": {
@@ -401,7 +401,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "uploadable_files": {
@@ -410,7 +410,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "active": {
@@ -419,7 +419,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "redirect_type": {
@@ -428,7 +428,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "id_type_redirected": {
@@ -437,7 +437,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "available_for_order": {
@@ -446,7 +446,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "available_date": {
@@ -455,7 +455,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "show_condition": {
@@ -464,7 +464,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "condition": {
@@ -473,7 +473,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "show_price": {
@@ -482,7 +482,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "indexed": {
@@ -491,7 +491,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "visibility": {
@@ -500,7 +500,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "advanced_stock_management": {
@@ -509,7 +509,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "date_add": {
@@ -518,7 +518,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "date_upd": {
@@ -527,7 +527,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "pack_stock_type": {
@@ -536,7 +536,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "meta_description": {
@@ -545,7 +545,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "meta_keywords": {
@@ -554,7 +554,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "meta_title": {
@@ -563,7 +563,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "link_rewrite": {
@@ -572,7 +572,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "name": {
@@ -581,7 +581,7 @@
     "by":  "XPATH", 
     "selector": "//h1[@class='product-title monserrat']",
      
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "description": {
@@ -590,7 +590,7 @@
     "by": null,
     "selector": "//div[contains(@class,'easyslider-content-wrapper')]",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "description_short": {
@@ -599,7 +599,7 @@
     "by": [ "XPATH", "XPATH" ],
     "selector": [ "//span[contains(@class,'productitem--title-')][1]", "//span[contains(@class,'productitem--title-')][2]" ],
     "logic for action[AND|OR|XOR|VALUE|null]": [ null, null ],
-    "use_mouse": [ false, false ],
+    "if_list":"first","use_mouse": [ false, false ],
     "event": [ null, null ]
   },
 
@@ -609,7 +609,7 @@
     "by": "VALUE",
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "affiliate_text": {
@@ -618,7 +618,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "affiliate_summary": {
@@ -627,7 +627,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "affiliate_summary_2": {
@@ -636,7 +636,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "available_now": {
@@ -645,7 +645,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "available_later": {
@@ -654,7 +654,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "associations": {
@@ -663,7 +663,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
 
@@ -673,7 +673,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Name*": {
@@ -682,7 +682,7 @@
     "by": "XPATH",
     "selector": "//span[@id='productTitle']",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Categories (x,y,z...)": "2,",
@@ -692,7 +692,7 @@
     "by": "XPATH",
     "selector": "//div[contains(@id,'corePrice')]//span[@class ='a-price-whole'][1]",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Price tax included": {
@@ -701,7 +701,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Tax rule ID": {
@@ -710,7 +710,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Cost price": {
@@ -719,7 +719,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "On sale (0/1)": {
@@ -728,7 +728,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Discount amount": {
@@ -737,7 +737,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Discount percent": {
@@ -746,7 +746,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Discount from (yyyy-mm-dd)": {
@@ -755,7 +755,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Discount to (yyyy-mm-dd)": {
@@ -764,7 +764,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "reference #": {
@@ -773,7 +773,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Supplier reference #": {
@@ -782,7 +782,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Supplier": {
@@ -791,7 +791,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Brand": {
@@ -800,7 +800,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "EAN13": {
@@ -809,7 +809,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "UPC": {
@@ -818,7 +818,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "MPN": {
@@ -827,7 +827,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Ecotax": {
@@ -836,7 +836,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Width": {
@@ -845,7 +845,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Height": {
@@ -854,7 +854,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Depth": {
@@ -863,7 +863,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Weight": {
@@ -872,7 +872,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Delivery time of in-stock products:": {
@@ -881,7 +881,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Delivery time of out-of-stock products with allowed orders:": {
@@ -890,7 +890,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Quantity": {
@@ -899,7 +899,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Minimal quantity": {
@@ -908,7 +908,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Low stock level": {
@@ -917,7 +917,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Send me an email when the quantity is under this level": {
@@ -926,7 +926,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Visibility": {
@@ -935,7 +935,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Additional shipping cost": {
@@ -944,7 +944,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Unit for base price": {
@@ -953,7 +953,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Base price": {
@@ -962,7 +962,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Summary": {
@@ -971,7 +971,7 @@
     "by": "XPATH",
     "selector": "//div[contains(@data-a-expander-name , 'product_overview')]//table",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Description": {
@@ -980,7 +980,7 @@
     "by": "XPATH",
     "selector": "//div[@id='productDescription']",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Tags (x,y,z...)": {
@@ -989,7 +989,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Meta title": {
@@ -998,7 +998,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Meta keywords": {
@@ -1007,7 +1007,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Meta description": {
@@ -1016,7 +1016,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Rewritten URL": {
@@ -1025,7 +1025,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Label when in stock": {
@@ -1034,7 +1034,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Label when backorder allowed": {
@@ -1043,7 +1043,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Available for order (0 = No, 1 = Yes)": {
@@ -1052,7 +1052,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Product availability date": {
@@ -1061,7 +1061,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Product creation date": {
@@ -1070,7 +1070,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Show price (0 = No, 1 = Yes)": {
@@ -1079,7 +1079,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Screenshot": {
@@ -1087,7 +1087,7 @@
     
     "by": "XPATH",
     "selector": "//img[@id='landingImage']|//img[@class='a-dynamic-image']",
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": "screenshot()",
     "logic for action[AND|OR|XOR|VALUE|null]": null
   },
@@ -1097,7 +1097,7 @@
     "by": "XPATH",
     "selector": "//img[@class='product-gallery--loaded-image']",
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "additional_images_alts": {
@@ -1106,7 +1106,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Delete existing images (0 = No, 1 = Yes)": {
@@ -1115,7 +1115,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Feature (Name:Value:Position:Customized)": {
@@ -1124,7 +1124,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Available online only (0 = No, 1 = Yes)": {
@@ -1133,7 +1133,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Condition": {
@@ -1142,7 +1142,7 @@
     "by": "VALUE",
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Customizable (0 = No, 1 = Yes)": {
@@ -1151,7 +1151,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Uploadable files (0 = No, 1 = Yes)": {
@@ -1160,7 +1160,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Text fields (0 = No, 1 = Yes)": {
@@ -1169,7 +1169,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Action when out of stock": {
@@ -1178,7 +1178,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Virtual product (0 = No, 1 = Yes)": {
@@ -1187,7 +1187,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "File URL": {
@@ -1196,7 +1196,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Number of allowed downloads": {
@@ -1205,7 +1205,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Expiration date (yyyy-mm-dd)": {
@@ -1214,7 +1214,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Number of days": {
@@ -1223,7 +1223,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "ID / Name of shop": {
@@ -1232,7 +1232,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Advanced Stock Management": {
@@ -1241,7 +1241,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Depends on stock": {
@@ -1250,7 +1250,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Warehouse": {
@@ -1259,7 +1259,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Accessories (x,y,z...)": {
@@ -1268,7 +1268,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
 
@@ -1278,7 +1278,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Byer protection": {
@@ -1287,7 +1287,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Specification": {
@@ -1296,7 +1296,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Refirbished product description": {
@@ -1305,7 +1305,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   },
   "Additional shipping details": {
@@ -1314,7 +1314,7 @@
     "by": null,
     "selector": null,
     
-    "use_mouse": false, "mandatory": true,
+    "if_list":"first","use_mouse": false, "mandatory": true,
     "event": null
   }
 

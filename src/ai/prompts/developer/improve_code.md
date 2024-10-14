@@ -474,3 +474,15 @@ def html2ns(html_str: str) -> SimpleNamespace:
     html_dict = html2dict(html_str)
     return SimpleNamespace(**html_dict)
 ``` 
+
+Я предопчитаю объявление переменных в начале  класса и функции
+Например:
+```class ExecuteProducts:
+    """! Handles Morlevi product extraction, parsing, and saving processes."""
+    
+    d:Driver
+    base_path:Path
+    def __init__(self, d: Driver):
+        """Initializes the driver and base path."""
+        self.d = d
+        self.base_path = gs.path.data / 'kazarinov' / 'mexironim' / gs.now```

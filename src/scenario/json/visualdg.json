@@ -4,7 +4,7 @@
   "supplier_prefix": "VDG-",
   "start_url": "https://www.visualdg.co.il/",
   "price_rule": "*1.43",
-  "use_mouse": false, "mandatory": true,
+  "if_list":"first","use_mouse": false, "mandatory": true,
   "num_items_4_flush": 25,
   "collect_products_from_categorypage": false,
   "parcing method [webdriver|api]": "web",

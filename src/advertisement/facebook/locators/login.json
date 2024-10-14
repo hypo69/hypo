@@ -3,7 +3,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//input[@name = 'email']",
-    "use_mouse": false,
+    "if_list":"first","use_mouse": false,
     "event": "click()",
     "mandatory": true,
     "locator_description": "user email or phone"
@@ -12,7 +12,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector":  "//input[@name = 'pass']",
-    "use_mouse": [ false, false ],
+    "if_list":"first","use_mouse": [ false, false ],
     "event": "click()",
     "mandatory": [ true, true ],
     "locator_description": "user email or phone"
@@ -21,7 +21,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//button[@name = 'login']",
-    "use_mouse": false,
+    "if_list":"first","use_mouse": false,
     "event": "click()",
     "mandatory": true,
     "locator_description": "send button"

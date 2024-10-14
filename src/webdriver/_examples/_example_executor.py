@@ -61,7 +61,7 @@ def main():
         "selector": "//h1",
         "attribute": "textContent",
         "event": None,
-        "use_mouse": False,
+        "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Getting the page title"
     }
@@ -80,7 +80,7 @@ def main():
             "by": "XPATH",
             "selector": "//a[contains(@class, 'product')]",
             "event": None,
-            "use_mouse": False,
+            "if_list":"first","use_mouse": False,
             "mandatory": True,
             "locator_description": "Getting the product link"
         },
@@ -90,7 +90,7 @@ def main():
                 "by": "XPATH",
                 "selector": "//ul[@class='pagination']",
                 "event": "click()",
-                "use_mouse": False,
+                "if_list":"first","use_mouse": False,
                 "mandatory": True,
                 "locator_description": "Click on pagination"
             },
@@ -99,7 +99,7 @@ def main():
                 "by": "XPATH",
                 "selector": "//*[@class = 'ui-pagination-navi util-left']/a[@class='ui-pagination-next']",
                 "event": "click()",
-                "use_mouse": False,
+                "if_list":"first","use_mouse": False,
                 "mandatory": True,
                 "locator_description": "Click on the next page"
             }
@@ -127,7 +127,7 @@ def main():
         "selector": "//input[@name='search']",
         "attribute": None,
         "event": "%SEARCH%",
-        "use_mouse": False,
+        "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Sending a search query"
     }
@@ -146,7 +146,7 @@ def main():
         "selector": ["//button[@id='submit']", "//input[@id='username']"],
         "attribute": ["textContent", "value"],
         "event": ["click()", "send_keys('user')"],
-        "use_mouse": [True, False],
+        "if_list":"first","use_mouse": [True, False],
         "mandatory": [True, True],
         "locator_description": ["Click the submit button", "Enter username"]
     }
@@ -164,7 +164,7 @@ def main():
         "selector": "//meta[@name='description']",
         "attribute": "content",
         "event": None,
-        "use_mouse": False,
+        "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Getting the page meta-description"
     }
@@ -191,7 +191,7 @@ def main():
         "selector": "//h1",
         "attribute": "textContent",
         "event": None,
-        "use_mouse": False,
+        "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Getting the page title"
     }

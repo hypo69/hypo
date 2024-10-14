@@ -5,7 +5,7 @@
   "start_url": "https://www.morlevi.co.il/",
   "login_url": "https://www.morlevi.co.il/",
   "price_rule": "*1.43",
-  "use_mouse": false, "mandatory": true,
+  "if_list":"first","use_mouse": false, "mandatory": true,
   "collect_products_from_categorypage": false,
   "num_items_4_flush": 500,
   "if_login": true,

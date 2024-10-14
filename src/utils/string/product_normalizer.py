@@ -1,3 +1,4 @@
+## \file ../src/utils/string/product_normalizer.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Модуль нормализации строк """

@@ -5,7 +5,7 @@
     "by": "event",
     "selector": null,
 
-    "use_mouse": false,
+    "if_list":"first","use_mouse": false,
     "mandatory": true,
     "event": "scroll(5,'both')"
   },
@@ -15,7 +15,7 @@
     "by": "XPATH",
     "selector": "//span[@data-component-type ='s-product-image']//a",
 
-    "use_mouse": false,
+    "if_list":"first","use_mouse": false,
     "mandatory": true,
     "event": null
   },

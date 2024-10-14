@@ -3,7 +3,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//span[contains(text(), 'Что у вас нового') or contains(text(), 'Напишите что-нибудь...')]",
-    "use_mouse": false,
+    "if_list":"first","use_mouse": false,
     "event": "click()",
     "mandatory": true,
     "locator_description": "открытие окна для ввода сообщения, пауза, отправка сообщения"
@@ -12,7 +12,7 @@
     "attribute": "None",
     "by": "XPATH",
     "selector": "(//div[@role='textbox'])[last()]",
-    "use_mouse": "None",
+    "if_list":"first","use_mouse": "None",
     "event": "pause(1);%EXTERNAL_MESSAGE%",
     "mandatory": "True",
     "locator_description": "через `execute_locator()` будет передан текст",
@@ -24,7 +24,7 @@
     "by": "XPATH",
     "#selector": "//span[contains(text(),'или перетащите файлы')]",
     "selector": "//div[@aria-label='Фото/видео']",
-    "use_mouse": true,
+    "if_list":"first","use_mouse": true,
     "event": "click()",
     "mandatory": true,
     "locator_description": "Нажать для меню загрузки видео"

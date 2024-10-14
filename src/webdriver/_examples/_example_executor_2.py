@@ -27,7 +27,7 @@ simple_locator = {
     "selector": "//h1",
     "attribute": "textContent",
     "event": None,
-    "use_mouse": False,
+    "if_list":"first","use_mouse": False,
     "mandatory": True,
     "locator_description": "Получение заголовка страницы"
 }
@@ -47,7 +47,7 @@ complex_locator = {
         "by": "XPATH",
         "selector": "//a[contains(@class, 'product')]",
         "event": None,
-        "use_mouse": False,
+        "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Получение ссылки на продукт"
     },
@@ -57,7 +57,7 @@ complex_locator = {
             "by": "XPATH",
             "selector": "//ul[@class='pagination']",
             "event": "click()",
-            "use_mouse": False,
+            "if_list":"first","use_mouse": False,
             "mandatory": True,
             "locator_description": "Нажатие на пагинацию"
         },
@@ -66,7 +66,7 @@ complex_locator = {
             "by": "XPATH",
             "selector": "//*[@class = 'ui-pagination-navi util-left']/a[@class='ui-pagination-next']",
             "event": "click()",
-            "use_mouse": False,
+            "if_list":"first","use_mouse": False,
             "mandatory": True,
             "locator_description": "Клик по следующей странице"
         }
@@ -96,7 +96,7 @@ message_locator = {
     "selector": "//input[@name='search']",
     "attribute": None,
     "event": "%SEARCH%",
-    "use_mouse": False,
+    "if_list":"first","use_mouse": False,
     "mandatory": True,
     "locator_description": "Отправка поискового запроса"
 }
@@ -116,7 +116,7 @@ multi_locator = {
     "selector": ["//button[@id='submit']", "//input[@id='username']"],
     "attribute": ["textContent", "value"],
     "event": ["click()", "send_keys('user')"],
-    "use_mouse": [True, False],
+    "if_list":"first","use_mouse": [True, False],
     "mandatory": [True, True],
     "locator_description": ["Нажатие кнопки отправки", "Ввод имени пользователя"]
 }
@@ -135,7 +135,7 @@ attribute_locator = {
     "selector": "//meta[@name='description']",
     "attribute": "content",
     "event": None,
-    "use_mouse": False,
+    "if_list":"first","use_mouse": False,
     "mandatory": True,
     "locator_description": "Получение значения мета-описания страницы"
 }
@@ -164,7 +164,7 @@ test_locator = {
     "selector": "//h1",
     "attribute": "textContent",
     "event": None,
-    "use_mouse": False,
+    "if_list":"first","use_mouse": False,
     "mandatory": True,
     "locator_description": "Получение заголовка страницы"
 }

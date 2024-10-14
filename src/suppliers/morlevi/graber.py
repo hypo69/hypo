@@ -548,17 +548,19 @@ async def id_product():
     ...
     if not f.id_product:
         try:
-            if not f.id_manufacturer:
-                f.id_manufacturer = d.execute_locator(l.id_manufacturer)  or None
-            if f.id_manufacturer:
-                f.id_product = 'mlv-'+f.id_manufacturer
+            if not f.id_supplier:
+                f.id_supplier = d.execute_locator(l.id_supplier)  or None
+            if f.id_supplier:
+                f.id_product = 'mlv-'+f.id_supplier
 
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `description`: 
+        except ExecuteLocatorException as ex:
+            logger.critical(f"""Error occurred while executing the locator for the field `description`: 
                          response type: {type(response)}                                 
-                        response: {pprint(response)}""", e)
-        except Exception as e:
-            logger.critical(f"""Error occurred while executing the locator for the field `description`: """, e)
+                        response: {pprint(response)}""", ex)
+            ...
+        except Exception as ex:
+            logger.critical(f"""Error occurred while executing the locator for the field `description`: """, ex)
+            ...
     ...
 @close_pop_up()
 async def locale():
@@ -667,7 +669,7 @@ async def id_supplier():
     ...
     if not f.id_supplier:
         try:
-            f.id_supplier = d.execute_locator(l["id_supplier"]) or ''
+            f.id_supplier = d.execute_locator(l.id_supplier) or ''
         except ExecuteLocatorException as e:
             logger.error(f"""Error occurred while executing the locator for the field `id_supplier`: 
                             response type: {type(response)}
@@ -1159,16 +1161,17 @@ async def default_image_url():
     """  Function for field default_image_url"""
     try:
         f.default_image_url =  d.execute_locator(l.default_image_url) or '' # <- может вернуть png как `bytes` !
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field default_image_url: ", e)
+        ...
+    except ExecuteLocatorException as ex:
+        logger.error(f"Error occurred while executing the locator for the field default_image_url: ", ex)
 
 @close_pop_up()
 async def visibility():
     """  Function for field visibility"""
     try:
         f.visibility = d.execute_locator(l.visibility) or 'both'
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field visibility: ", e)
+    except ExecuteLocatorException as ex:
+        logger.error(f"Error occurred while executing the locator for the field visibility: ", ex)
         
 
 @close_pop_up()
@@ -1176,8 +1179,8 @@ async def weight():
     """  Function for field weight"""
     try:
         f.weight = d.execute_locator(l.weight) or ''
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field weight: ", e)
+    except ExecuteLocatorException as ex:
+        logger.error(f"Error occurred while executing the locator for the field weight: ", ex)
 @close_pop_up()
 async def wholesale_price():
     """  Function for field wholesale_price"""

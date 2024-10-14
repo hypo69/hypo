@@ -143,7 +143,7 @@ The file also includes examples of various locators that can be used for testing
     "by": "xpath",
     "selector": "//div[contains(@id,'node-galery')]//li[contains(@class,'item')]//a",
     "selector 2": "//span[@data-component-type='s-product-image']//a",
-    "use_mouse": false, 
+    "if_list":"first","use_mouse": false, 
     "mandatory": true,
     "event": null
   },
@@ -160,7 +160,7 @@ The file also includes examples of various locators that can be used for testing
     "by": "xpath",
     "selector": "//div[contains(@id,'node-galery')]//li[contains(@class,'item')]//a",
     "selector 2": "//span[@data-component-type='s-product-image']//a",
-    "use_mouse": false, 
+    "if_list":"first","use_mouse": false, 
     "mandatory": true,
     "event": null
   },
@@ -177,7 +177,7 @@ The file also includes examples of various locators that can be used for testing
       "by": "xpath",
       "selector": "//*[@class = 'ui-pagination-navi util-left']/a[@class='ui-pagination-next']",
       "event": "click()",
-      "use_mouse": false
+      "if_list":"first","use_mouse": false
     }
   }
 
@@ -199,7 +199,7 @@ The file also includes examples of various locators that can be used for testing
     "click()",
     null
   ],
-  "use_mouse": [
+  "if_list":"first","use_mouse": [
     false,
     false
   ],

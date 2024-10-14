@@ -2,7 +2,7 @@
   "supplier": "bug",
   "supplier_prefix": "BUG-",
   "start_url": "https://www.bug.co.il/",
-  "use_mouse": false, "mandatory": true,
+  "if_list":"first","use_mouse": false, "mandatory": true,
   "price_rule": "1",
 
   "num_items_4_flush": 300,

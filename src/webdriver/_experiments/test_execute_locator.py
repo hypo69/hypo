@@ -259,7 +259,7 @@ class TestGetImgsLinks(unittest.TestCase):
         locator = {
             "by": By.XPATH,
             "selector": "//a[contains(text(),'More information')]",
-            "use_mouse": False
+            "if_list":"first","use_mouse": False
         }
         result = click(self.driver, locator)
         self.assertTrue(result)
@@ -269,7 +269,7 @@ class TestGetImgsLinks(unittest.TestCase):
         locator = {
             "by": By.XPATH,
             "selector": "//a[contains(text(),'More information')]",
-            "use_mouse": false
+            "if_list":"first","use_mouse": false
         }
         result = click(self.driver, locator)
         self.assertTrue(result)
@@ -279,7 +279,7 @@ class TestGetImgsLinks(unittest.TestCase):
         locator = {
             "by": By.XPATH,
             "selector": "//a[contains(text(),'Not Found')]",
-            "use_mouse": False
+            "if_list":"first","use_mouse": False
         }
         result = click(self.driver, locator)
         self.assertFalse(result)
