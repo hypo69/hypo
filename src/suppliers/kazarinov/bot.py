@@ -80,10 +80,10 @@ class KazarinovTelegram(TelegramBot):
             tab_name, urls = fetch_target_urls_onetab(response)
 
             if await self.mexiron.run_scenario(price = tab_name, urls = urls):
-                return  await update.message.reply_text('Готово!')
+                return  await update.message.reply_text('Готово!\nСсылку я вышлю на whatsapp')
             return  await update.message.reply_text('Хуёвенько')
 
-        if response.startswith(('--next','-next','__next')):
+        if response.startswith(('--next','-next','__next')) or response=='-n' or response=='-q':
                 q = random.choice( self.questions_list)
                 await update.message.reply_text(q)
                 a =  self.model.ask(q)

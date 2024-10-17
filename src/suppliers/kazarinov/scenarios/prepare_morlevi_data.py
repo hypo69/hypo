@@ -8,6 +8,7 @@ processes the data, and saves relevant product information, including images, lo
 """
 
 from ast import Return
+import random
 import asyncio
 import time
 from pathlib import Path
@@ -26,7 +27,7 @@ from src.advertisement.facebook.scenarios import post_message_title, upload_post
 from src.suppliers.morlevi.graber import async_grab_page as grab_morlevi_page
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png
-from src.utils.file import read_text_file, save_text_file
+from src.utils.file import read_text_file, save_text_file, recursively_get_filepath
 from src.utils import pprint
 from src.logger import logger
 
@@ -127,16 +128,26 @@ class ExecuteMexiron:
 
         def ask_gemini(q, system_instruction, attempts=3):
             """Attempts to get translations from Gemini AI."""
+            logger.info(f"Q: > {pprint(q)}", None, False)
             for attempt in range(attempts):
-                translations = self.ask_gemini(q, system_instruction=system_instruction or self.system_instruction)
-                data: SimpleNamespace = j_loads_ns(translations)
+                response = self.ask_gemini(q, system_instruction=system_instruction or self.system_instruction)
+                logger.debug(f"A: > {pprint(q)}", None, False)
+                data: SimpleNamespace = j_loads_ns(response) # <- вернет False в случае ошибки
 
                 if data:
-                    if j_dumps(data, self.base_path / 'ai' / f'{gs.now}.json'):
+                    if j_dumps(data, self.base_path / 'ai' / f'{gs.now}.json'): # <- певая проверка валидности полученных данных
                         return data
+                    else:
+                        if attempts <0:
+                            return
+                        logger.warning(f"Invalid JSON received: {pprint(response)}")
+                        ask_gemini(q, system_instruction, attempts - 1)
                 else:
+                    if attempts <0:
+                        return
                     logger.warning(f"Invalid JSON received: {pprint(translations)}")
-                    time.sleep(5)
+                    ask_gemini(q, system_instruction, attempts-1)
+
 
             logger.error("Failed to get valid response from Gemini AI after multiple attempts")
             return 
@@ -161,16 +172,43 @@ class ExecuteMexiron:
                 ...
                 return
             
-
+        service_images_path = recursively_get_filepath(gs.path.data / 'kazarinov' / 'converted_images' / 'pastel' / 'bright', ['*.jpeg','*.jpg','*.png'])
+        #service_image = random.choice(service_images_path)
+        ...
         setattr(ru, 'language', 'ru')
         setattr(ru, 'currency', 'ils')
         setattr(ru, 'price', price)
+        service_product_description_ru = f"""{read_text_file(gs.path.data / 'kazarinov' / 'service_as_product_ru.txt')}
+            \n ----------------- \n
+            Общая цена за все: {price} шек.
+            💥 Для защитников страны — солдат ЦАХАЛ — специальные цены на все услуги! Спасибо вам за то, что вы защищаете нашу страну.
+            """
+        ru.products.append(SimpleNamespace (**{
+            "product_id":"service",
+            "product_title":"Сервисное обслуживание:",
+            "product_description":service_product_description_ru,
+            "image_local_saved_path": random.choice(service_images_path),
+            "language":"ru",
+            }))
         j_dumps(ru, self.base_path / f'{self.timestamp}_ru.json')
 
         
         setattr(he, 'language', 'he')
         setattr(he, 'currency', 'ils')
         setattr(he, 'price', price)
+        service_product_description_he = f"""{read_text_file(gs.path.data / 'kazarinov' / 'service_as_product_he.txt')}
+            \n ----------------- \n
+           מחיר כולל הכל {price} ש''ח
+           💥 למגני הארץ — חיילי צה"ל — יש לי מחיר מיוחד על כל השירותים! תודה לכם על כך שאתם מגנים על המדינה שלנו. 
+
+            """
+        he.products.append(SimpleNamespace (**{
+            "product_id":"service",
+            "product_title":"שרות",
+            "product_description":service_product_description_he,
+            "image_local_saved_path": random.choice(service_images_path),
+            "language":"he",
+            }))
         j_dumps(he, self.base_path / f'{self.timestamp}_he.json')
 
         self.post_facebook(ru)

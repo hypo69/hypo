@@ -225,32 +225,37 @@ def recursive_get_filenames(root_dir: str | Path, pattern: str) -> List[str]:
             matches.append(os.path.join(dirpath, filename))
     return matches
 
-
 def recursively_get_filepath(
     root_dir: str | Path, 
-    pattern: str = '*', 
+    patterns: str | List[str] = '*', 
     exc_info: bool = True
-) -> List[str]:
+) -> List[str] | None:
     """
-    Recursively retrieves all file paths in the directory matching the specified pattern.
+    Recursively retrieves all file paths in the directory matching the specified pattern or patterns.
 
     Args:
-        root_dir (str | Path): The root directory from which to start the recursive search.
-        pattern (str, optional): Pattern to filter files (e.g., '*.txt'). Defaults to '*', which matches all files.
-        exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
+        root_dir (str | Path): The root directory to start the recursive search.
+        patterns (str | List[str], optional): A pattern or list of patterns to filter files. 
+            Defaults to '*', which matches all files.
+        exc_info (bool, optional): If True, logs traceback information in case of an error.
 
     Returns:
-        List[str]: A list of file paths matching the specified pattern.
+        List[str]: A list of file paths matching the specified pattern(s).
 
     Example:
-        >>> files: list[str] = recursively_get_filepath(root_dir=".", pattern="*.txt")
+        >>> files = recursively_get_filepath('.', ['*.txt', '*.md'])
         >>> print(files)
-        ['./file1.txt', './file2.txt']
-
-    More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#recursively_get_filepath
+        ['./file1.txt', './file2.md']
     """
     try:
-        return [str(file) for file in Path(root_dir).rglob(pattern)]
+        if isinstance(patterns, str):
+            patterns = [patterns]  # Convert single string pattern to list
+
+        file_paths = []
+        for pattern in patterns:
+            file_paths.extend(Path(root_dir).rglob(pattern))
+
+        return [str(file) for file in file_paths]
     except Exception as ex:
         if exc_info:
             logger.error(
@@ -259,7 +264,6 @@ def recursively_get_filepath(
                 exc_info=exc_info
             )
         return 
-
 
 
 def recursive_read_text_files(

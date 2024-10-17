@@ -44,8 +44,15 @@ def fetch_target_urls_onetab(target_page_url: str) -> tuple[str, list] | bool:
         soup = BeautifulSoup(response.content, "html.parser")
         urls = [a['href'] for a in soup.find_all("a", class_="tabLink")]
         element = soup.find('div', class_='tabGroupLabel')
-        price = element.get_text() if element else None
-        return price, urls
+        data = element.get_text() if element else None
+        if not data:
+            return
+        parts = data.split(maxsplit=1)  # Разбиваем только на 2 части
+        price = int(parts[0])
+        title = parts[1] if len(parts) > 1 else ""
+
+        data = element.get_text() if element else None
+        return price, title, urls
     except requests.exceptions.RequestException as ex:
         logger.error(f"Failed to fetch the URL: ",ex)
         return False
