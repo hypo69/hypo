@@ -14,7 +14,7 @@ import random
 from pathlib import Path
 from src import gs
 from src.ai.openai import OpenAIModel
-from src.ai.gooogle_generativeai import GoogleGenerativeAI
+from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import get_filenames, read_text_file, recursive_read_text_files, recursively_get_filepath
 from src.utils.jjson import j_dumps
 from src.logger import logger
@@ -22,6 +22,7 @@ from src.logger import logger
 # Base paths for system instructions and training files
 base_path = gs.path.data / 'kazarinov' 
 system_instruction_list: list = recursive_read_text_files(base_path, ['*.txt','*.md'])
+questions_list:list = recursive_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'q', ['*.*'])
 
 # Retrieve filenames for training data
 train_files = get_filenames(base_path / 'prompts' / 'questions_answers')
@@ -36,7 +37,7 @@ GREEN = "\033[32m"
 YELLOW = "\033[33m"
 
 BLUE = "\033[34m"
-class Kazarinov:
+class KazarinovAI:
     """Handles model training and dialog generation for the Kazarinov project using GoogleGenerativeAI."""
     
     gemini_1:GoogleGenerativeAI
@@ -127,14 +128,13 @@ class Kazarinov:
             logger.info(q)
             response_1 = self.gemini_1.ask(q, """
                 assistant asst_w5cM3yqOX1pDJARO2hzNMVZr. 
-                Prompt: Add a line at the end of each answer: '<a href='https://wa.me/972544229497'> Whatsapp </a> 
-                <a href="mailto:sergey@mymaster.co.il">or email</a>'.
+                Prompt: Add a line at the end of each answer: 'Мой телефонЬ 054-422-94-97'.
                 """)
             logger.debug(response_1)
 
     def ask(self, q:str, no_log:bool=False, with_pretrain:bool = False) -> bool:
         """Спрашиваю у машины """
-        return self.gemini_1.ask(f"assistant asst_w5cM3yqOX1pDJARO2hzNMVZrq \n Question: {q}", no_log = no_log, with_pretrain = with_pretrain )
+        return self.gemini_1.ask(f"assistant asst_w5cM3yqOX1pDJARO2hzNMVZrq \n Question: {q}", no_log = no_log, with_pretrain = False )
 
 
 
@@ -150,7 +150,7 @@ def chat():
     """
     
 
-    k = Kazarinov(system_instruction=system_instruction_list[random.randint(0, len(system_instruction_list) - 1)], 
+    k = KazarinovAI(system_instruction=system_instruction_list[random.randint(0, len(system_instruction_list) - 1)], 
                   generation_config={'response_mime_type': 'text/plain'})   
     
     questions_list:list = recursive_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'q', ['*.*'])

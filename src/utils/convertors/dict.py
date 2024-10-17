@@ -20,7 +20,6 @@ from types import SimpleNamespace
 from typing import Any, Dict, List
 from pathlib import Path
 from xml.dom.minidom import getDOMImplementation
-from src.utils.csv import save_csv_file
 from src.utils.xls import save_xls_file
 
 def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:

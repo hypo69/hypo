@@ -4,7 +4,6 @@
 # /path/to/interpreter/python
 """ Публикация сообщения """
 ...
-from socket import timeout
 import time
 from pathlib import Path
 from types import SimpleNamespace
@@ -377,6 +376,9 @@ def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_lis
                 if hasattr(product, 'product_title'):
                     message += f"{product.product_title}\n"
 
+                if hasattr(product, 'product_description'):
+                    message += f'{product.product_description}\n'
+
                 if hasattr(product, 'original_price'):
                     message += f"{getattr(local_units.original_price, lang)}: {product.original_price} {product.target_original_price_currency}\n"
 
@@ -397,6 +399,9 @@ def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_lis
             else:  # RTL direction
                 if hasattr(product, 'product_title'):
                     message += f"\n{product.product_title}"
+
+                if hasattr(product, 'product_description'):
+                    message += f'{product.product_description}\n'
 
                 if hasattr(product, 'original_price'):
                     message += f"\n {product.target_original_price_currency} {product.original_price} :{getattr(local_units.original_price, lang)}"
@@ -431,18 +436,34 @@ def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_lis
     for i, product in enumerate(media):
         handle_product(product, textarea_list, i)
 
-def publish(d:Driver) -> bool:
+def publish(d:Driver, attempts = 5) -> bool:
     """"""
     ...
-    if not d.execute_locator(locator.publish, timeout = 20): 
+    if not d.execute_locator(locator.finish_editing_button, timeout = 1):
+        logger.debug(f"Неудача обработки локатора {locator.finish_editing_button}")
+        return 
+    d.wait(1)
+    if not d.execute_locator(locator.publish, timeout = 5): 
+        if d.execute_locator(locator.close_popup):
+            publish(d)
+        if d.execute_locator(locator.not_now):
+            publish(d)
+        if attempts > 0:
+           d.wait(5)
+           publish(d, attempts -1)
+        logger.debug(f"Неудача обработки локатора {locator.finish_editing_button}")
         return
 
-    attempts = 30
     while not d.execute_locator(locator = locator.open_add_post_box, timeout = 10, timeout_for_event = 'element_to_be_clickable'):
         logger.debug(f"не освободилось поле ввода {attempts=}",None, False)
-        attempts -= 1
-        if attempts < 0:
-            return
+        if d.execute_locator(locator.close_popup):
+            publish(d)
+        if d.execute_locator(locator.not_now):
+            publish(d)
+        if attempts > 0:
+           d.wait(5)
+           publish(d, attempts -1)
+
 
     return True
 

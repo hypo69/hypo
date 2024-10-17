@@ -1,5 +1,4 @@
 ﻿## \file ../src/advertisement/facebook/promoter.py
-## \file ../src/advertisement/facebook/promoter.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """
@@ -27,6 +26,7 @@ from src.advertisement.facebook.scenarios import (post_message,
                                                   message_publish,
                                                   post_ad,
                                                     )
+
 from src.utils import (read_text_file,
                         get_filenames,
                         get_directory_names,

@@ -3,7 +3,8 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//span[contains(text(), 'Что у вас нового') or contains(text(), 'Напишите что-нибудь...')]",
-    "if_list":"first","use_mouse": false,
+    "if_list": "first",
+    "use_mouse": false,
     "event": "click()",
     "mandatory": true,
     "locator_description": "открытие окна для ввода сообщения, пауза, отправка сообщения"
@@ -12,7 +13,8 @@
     "attribute": "None",
     "by": "XPATH",
     "selector": "(//div[@role='textbox'])[last()]",
-    "if_list":"first","use_mouse": "None",
+    "if_list": "first",
+    "use_mouse": "None",
     "event": "pause(1);%EXTERNAL_MESSAGE%",
     "mandatory": "True",
     "locator_description": "через `execute_locator()` будет передан текст",
@@ -24,7 +26,8 @@
     "by": "XPATH",
     "#selector": "//span[contains(text(),'или перетащите файлы')]",
     "selector": "//div[@aria-label='Фото/видео']",
-    "if_list":"first","use_mouse": true,
+    "if_list": "first",
+    "use_mouse": true,
     "event": "click()",
     "mandatory": true,
     "locator_description": "Нажать для меню загрузки видео"
@@ -95,6 +98,22 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//span[contains(text(),'Не сейчас')]",
+    "event": "click()",
+    "mandatory": true
+
+  },
+  "close_popup": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//div[@aria-label = 'Закрыть']",
+    "event": "click()",
+    "mandatory": true
+
+  },
+  "edit_posts": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//span[@text = 'Управление публикациями']",
     "event": "click()",
     "mandatory": true
 

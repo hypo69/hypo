@@ -1,4 +1,4 @@
-﻿"""  Модуль поставщика. Class `Supplier`
+"""  Модуль поставщика. Class `Supplier`
 - для каждого конкретного поставщика есть свои специфичные методы (функции) извлечения информации. 
 Эти функции дополняют базовый класс `Supplier` и подключаются через интерфейс  `supplier.related_functions`
 Методы каждого конкретного поставщика находятся в директориях с именем <supplier_prefix>, 
@@ -21,5 +21,5 @@ from packaging.version import Version
 from .version import __version__, __doc__, __details__  
 
 from .bot import KazarinovTelegram
-from .prepare_morlevi_data import ExecuteProducts
+from .scenarios import  ExecuteMexiron
 

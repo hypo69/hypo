@@ -13,6 +13,9 @@ from src.logger import logger
 # Загрузка локаторов для авторизации Facebook
 locators = j_loads_ns(
             Path(gs.path.src, 'advertisement', 'facebook', 'locators', 'login.json'))
+if not locators:
+    logger.debug(f"Ошибка в файле локаторов")
+    ...
 
 def login(d: Driver) -> bool:
     """ Выполняет вход на Facebook.

@@ -261,23 +261,32 @@ def recursively_get_filepath(
         return 
 
 
-def recursive_read_text_files(root_dir: str | Path, patterns: str | list[str], exc_info:bool = True) -> list[str]:
+
+def recursive_read_text_files(
+    root_dir: str | Path, 
+    patterns: str | list[str], 
+    as_list: bool = False, 
+    exc_info: bool = True
+) -> list[str]:
     """
     Recursively reads text files from the specified root directory that match the given patterns.
 
     Args:
         root_dir (str | Path): Path to the root directory for the search.
-        patterns (str | list[str]): Filename pattern(s) to filter the files. 
-                                     Can be a single pattern (e.g., '*.txt') or a list of patterns.
+        patterns (str | list[str]): Filename pattern(s) to filter the files.
+                                    Can be a single pattern (e.g., '*.txt') or a list of patterns.
+        as_list (bool, optional): If True, returns the file content as a list of lines.
+                                  Defaults to False.
+        exc_info (bool, optional): If True, includes exception information in warnings. Defaults to True.
 
     Returns:
-        list[str]: List of file contents that match the specified patterns.
+        list[str]: List of file contents (or lines if `as_list=True`) that match the specified patterns.
 
     Example:
-        >>> contents = recursive_read_text_files("/path/to/root", ["*.txt", "*.md"])
-        >>> for content in contents:
-        ...     print(content)
-        This will print the contents of all matched text files in the specified directory.
+        >>> contents = recursive_read_text_files("/path/to/root", ["*.txt", "*.md"], as_list=True)
+        >>> for line in contents:
+        ...     print(line)
+        This will print each line from all matched text files in the specified directory.
     """
     matches = []
     root_path = Path(root_dir)
@@ -298,12 +307,16 @@ def recursive_read_text_files(root_dir: str | Path, patterns: str | list[str], e
             # Check if the filename matches any of the specified patterns
             if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
                 file_path = Path(root) / filename
-               
-                # Read the file content and append to matches
+
                 try:
                     with file_path.open("r", encoding="utf-8") as file:
-                        matches.append(file.read())
+                        if as_list:
+                            # Read lines if `as_list=True`
+                            matches.extend(file.readlines())
+                        else:
+                            # Read entire content otherwise
+                            matches.append(file.read())
                 except Exception as ex:
-                    logger.warning(f"Failed to read file '{file_path}'.", ex, None)
+                    logger.warning(f"Failed to read file '{file_path}'.", exc_info=exc_info)
 
     return matches

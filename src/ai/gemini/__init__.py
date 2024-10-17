@@ -1,6 +1,6 @@
 ﻿""" AI Suppliers """
 
-## \file ../src/ai/gooogle_generativeai/__init__.py
+## \file ../src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

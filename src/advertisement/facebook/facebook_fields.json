@@ -1,0 +1,21 @@
+{
+	"post": {
+		"title": "",
+		"description": "",
+		"language": "",
+		"currency": "",
+		"price": "",
+		"category": "",
+		"products" : []
+	},
+	"event": {
+		"title": "",
+		"description": "",
+		"language": "",
+		"currency": "",
+		"price": "",
+		"start_date": "",
+		"start_time": "",
+		"end_date": ""
+	}
+}

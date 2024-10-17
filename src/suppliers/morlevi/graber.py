@@ -1,4 +1,4 @@
-## \file ../src/suppliers/hb/graber.py
+## \file ../src/suppliers/morlevi/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """ morlevi
@@ -22,15 +22,19 @@ from src.utils import pprint
 from src.logger import logger 
 from src.logger.exceptions import ExecuteLocatorException
 from src.prestashop import Prestashop
-from src.utils.string.product_normalizer import ProductFieldsNormalizer
+from src.utils.string.product_fields_normalizer import ProductFieldsNormalizer as normalizer
 ...
 
 supplier_prefix = 'morlevi'
 
 s: Supplier = Supplier(supplier_prefix = supplier_prefix)
 #l: dict = j_loads(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
-l: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
-f: ProductFields = ProductFields()
+l: SimpleNamespace
+l = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+if not l:
+    logger.debug(f"Не определились локаторы - ошибка в файле  {gs.path.src}/suppliers/{supplier_prefix}/locators/product.json")
+    ...
+f: ProductFields
 d: Driver
 
 def close_pop_up():
@@ -71,6 +75,8 @@ async def async_grab_page(driver:Driver) -> ProductFields:
         return True
                 
     async def fetch_all_data():
+        global f
+        f = ProductFields()
         #await fetch_specific_data()  # Call function to fetch specific data
         
         # await additional_shipping_cost()
@@ -102,6 +108,7 @@ async def async_grab_page(driver:Driver) -> ProductFields:
         # await delivery_out_stock()
         # await depth()
         await description()
+        # await description_short()
         # await ean13()
         # await ecotax()
         # await height()
@@ -513,15 +520,36 @@ async def description():
     d.execute_locator(l["description"]) может вернуть объект/список selenium
     """
     ...
-    if not f.description:
-        try:
-            f.description = d.execute_locator(l.description)  or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `description`: 
-                         response type: {type(response)}                                 
-                        response: {pprint(response)}""", e)
-        except Exception as e:
-            logger.critical(f"""Error occurred while executing the locator for the field `description`: """, e)
+    try:
+        f.description = d.execute_locator(l.description)  or ''
+        if isinstance(f.description,list):
+            ...
+    except ExecuteLocatorException as eх:
+        logger.error(f"""Error occurred while executing the locator for the field `description`: 
+                        response type: {type(response)}                                 
+                    response: {pprint(response)}""", eх)
+    except Exception as ex:
+        logger.debug(f"""Error occurred while executing the locator for the field `description`: """, ex)
+        ...
+
+
+@close_pop_up()
+async def description_short():
+    """  Function for field description
+    d.execute_locator(l["description"]) может вернуть объект/список selenium
+    """
+    ...
+    try:
+        f.description_short = d.execute_locator(l.description_short)  or ''
+        if isinstance(f.description_short,list):
+            ...
+    except ExecuteLocatorException as eх:
+        logger.error(f"""Error occurred while executing the locator for the field `description_short`: 
+                        response type: {type(response)}                                 
+                    response: {pprint(response)}""", eх)
+    except Exception as ex:
+        logger.critical(f"""Error occurred while executing the locator for the field `description_short`: """, ex)
+        ...
 
 @close_pop_up()
 async def id_category_default():
@@ -554,12 +582,12 @@ async def id_product():
                 f.id_product = 'mlv-'+f.id_supplier
 
         except ExecuteLocatorException as ex:
-            logger.critical(f"""Error occurred while executing the locator for the field `description`: 
+            logger.critical(f"""Error occurred while executing the locator for the field `id_product`: 
                          response type: {type(response)}                                 
                         response: {pprint(response)}""", ex)
             ...
         except Exception as ex:
-            logger.critical(f"""Error occurred while executing the locator for the field `description`: """, ex)
+            logger.critical(f"""Error occurred while executing the locator for the field `id_product`: """, ex)
             ...
     ...
 @close_pop_up()
@@ -833,7 +861,7 @@ async def link_rewrite() -> str:
     _product_fileds = record(f.presta_fields_dict,'en-US') # <- плохое решение
     """ record возвращает плоский словарь """
     try:
-        f.link_rewrite = ProductFieldsNormalizer.normalize_link_rewrite(_product_fileds['name']) or ''
+        f.link_rewrite = normalizer.normalize_link_rewrite(_product_fileds['name']) or ''
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the link_rewrite: ", e)
     except Exception as e:
@@ -920,7 +948,7 @@ async def name():
             return
             
         rawname = rawname[0] if isinstance(rawname, list) else rawname
-        f.name = ProductFieldsNormalizer.normalize_name(rawname)
+        f.name = normalizer.normalize_name(rawname)
     except ExecuteLocatorException as e:
         logger.error(f"Error occurred while executing the locator for the field name: ", e)
         
@@ -994,7 +1022,7 @@ async def price():
     if not f.price:
         try:
             rawprice = d.execute_locator(l["price"])[0] or ''
-            f.price = ProductFieldsNormalizer.normalize_price(rawprice)
+            f.price = normalizer.normalize_price(rawprice)
             ...
         except ExecuteLocatorException as e:
             logger.error(f"""Error occurred while executing the locator for the field `delivery_out_stock`: 
@@ -1160,6 +1188,7 @@ async def uploadable_files():
 async def default_image_url():
     """  Function for field default_image_url"""
     try:
+        d.scroll(scrolls = 1, frame_size = 200, direction = 'down')
         f.default_image_url =  d.execute_locator(l.default_image_url) or '' # <- может вернуть png как `bytes` !
         ...
     except ExecuteLocatorException as ex:

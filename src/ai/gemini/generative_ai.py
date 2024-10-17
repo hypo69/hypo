@@ -1,4 +1,4 @@
-## \file ../src/ai/gooogle_generativeai/generative_ai.py
+## \file ../src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Google generative ai """
@@ -32,7 +32,7 @@ class GoogleGenerativeAI:
     dialogue_txt_path: str | Path = gs.path.data / 'AI' / f"gemini_{gs.now}.txt"
     system_instruction:str
 
-    def __init__(self, system_instruction: Optional[str] = None,  generation_config: dict = {"response_mime_type": "application/json"}):
+    def __init__(self, api_key:str, system_instruction: Optional[str] = None,  generation_config: dict = {"response_mime_type": "application/json"}):
         """Initialize GoogleGenerativeAI with the model and API key.
 
         Args:
@@ -40,10 +40,15 @@ class GoogleGenerativeAI:
             generation_config (dict): "response_mime_type": "text/html" | "text/plain" | "application/json" 
             "response_mime_type": 
         """
-        genai.configure(api_key=gs.credentials.googleai.api_key)
+        genai.configure(api_key = api_key)
+        #genai.configure(api_key=gs.credentials.googleai.api_key)
         self.system_instruction = system_instruction
         # Using `response_mime_type` requires either a Gemini 1.5 Pro or 1.5 Flash model
-        models = ["gemini-1.5-flash-8b-exp-0924","gemini-1.5-flash","gemini-1.5-flash-8b"]
+        models = [
+                    "gemini-1.5-flash-8b-exp-0924",
+                    "gemini-1.5-flash",
+                    "gemini-1.5-flash-8b",
+                  ]
         self.model = genai.GenerativeModel(
             models[2],
             generation_config = generation_config,
@@ -105,16 +110,23 @@ class GoogleGenerativeAI:
             messages = [{"role": "user", "content": q},
                            {"role": "system", "content": system_instruction} if system_instruction else None]
 
-            response = self.model.generate_content(str(messages))
-            reply = response.text
-
+            try:
+                response = self.model.generate_content(str(messages))
+            except Exception as ex:
+                logger.debug("Ошибка ответа от модели\n", ex, True)
+                ...
+                return
+            if not response:
+                logger.debug("Не получил ответ от модели", None, True)
+                ...
+                return
             if not no_log:
                 self._save_dialogue([{"role": "system", "content": system_instruction} if system_instruction else None,
                                     {"role": "user", "content": q},
-                                    {"role": "assistant", "content": reply }]
+                                    {"role": "assistant", "content": response }]
                                     )
 
-            return reply
+            return response.text
 
         except Exception as ex:
             wait_time = 15  # Time to sleep in case of an error

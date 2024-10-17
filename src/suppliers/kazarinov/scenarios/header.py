@@ -1,8 +1,8 @@
-﻿## \file ../src/ai/openai/header.py
-## \file ../src/ai/gooogle_generativeai/chat/header.py
+﻿## \file ../src/suppliers/kazarinov/header.py
+## \file ../src/suppliers/kazarinov/scenarios/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-""" Absolute path to modules  """
+"""! Absolute path to modules  """
 
 import sys,os
 from pathlib import Path

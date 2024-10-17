@@ -729,26 +729,25 @@
     "mandatory": true,
     "locator_description": "Название товара"
   },
-  "description": {
-    "attribute": null,
+  "description_short": {
+    "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//div[contains(@class, 'description')]",
-    "if_list": "first",
+    "selector": "(//div[contains(@class, 'description')])[2]//div",
+    "if_list": "all",
     "use_mouse": false,
     "event": null,
     "mandatory": true,
-    "locator_description": "Описание товара"
+    "locator_description": "краткое Описание товара. Оно нахосится в спанах под див"
   },
-  "description_short": {
-    "attribute": null,
-
-    "by": null,
-    "selector": null,
-
-    "if_list": "first",
+  "description": {
+    "attribute": "innerText",
+    "by": "XPATH",
+    "selector": "//div[contains(@class, 'product-params')]//li",
+    "if_list": "all",
     "use_mouse": false,
     "mandatory": true,
-    "event": null
+    "event": null,
+    "locator_description": "Технические характеристики. Оно нахосится в спанах под див"
   },
   "affiliate_short_link": {
     "attribute": null,

@@ -1,0 +1,231 @@
+## \file ../src/suppliers/kazarinov/scenarios/prepare_morlevi_data.py
+# -*- coding: utf-8 -*-
+#! /usr/share/projects/hypotez/venv/scripts python
+"""! Module for handling Morlevi product data extraction and saving.
+
+This module interacts with a web driver to scrape product details from given URLs, 
+processes the data, and saves relevant product information, including images, locally.
+"""
+
+from ast import Return
+import asyncio
+import time
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Optional
+import requests
+from bs4 import BeautifulSoup
+from lxml import etree
+
+import header
+from src import gs
+from src.product.product_fields import ProductFields
+from src.webdriver import Driver
+from src.ai.gemini import GoogleGenerativeAI
+from src.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
+from src.suppliers.morlevi.graber import async_grab_page as grab_morlevi_page
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
+from src.utils.image import save_png
+from src.utils.file import read_text_file, save_text_file
+from src.utils import pprint
+from src.logger import logger
+
+locators = j_loads_ns(gs.path.src / 'suppliers' / 'morlevi' / 'locators' / 'product.json')
+
+
+class ExecuteMexiron:
+    """! Handles Morlevi product extraction, parsing, and saving processes."""
+    
+    d:Driver
+    base_path:Path
+    mexiron_title:str
+    price:float
+    timestamp:str = gs.now
+    products_list:list = []
+    product_titles_list:list = []
+    gemini:GoogleGenerativeAI
+    system_instruction:str = None
+
+
+    def __init__(self, d: Driver):
+        """Initializes the driver and base path."""
+        self.d = d
+        self.base_path = gs.path.data / 'kazarinov' / 'mexironim' / self.timestamp
+
+        system_instruction_path = gs.path.data / 'kazarinov' / 'prompts' /  'buid_mexiron.txt'
+        self.system_instruction: str = read_text_file(system_instruction_path)
+
+        api_key = gs.credentials.gemini.kazarinov
+        self.model = GoogleGenerativeAI(api_key = api_key, system_instruction = self.system_instruction, generation_config = {"response_mime_type": "application/json"})
+
+
+    async def run_scenario(self, system_instruction: Optional[str] = None, price:Optional[str] = None, urls:Optional[str | list] = None  ) -> bool:
+        """Prepares product data by parsing and saving product pages.
+
+        Args:
+            price (str): Price to assign or process.
+            urls (list | str): URL(s) to be processed.
+
+        Returns:
+            list[dict] | None: List of product data if successful, otherwise None.
+        """
+        ...
+
+        self.system_instruction = system_instruction if system_instruction else self.system_instruction
+
+        urls_list:list = [urls] if isinstance(urls, str) else urls
+        if not urls_list:
+            logger.debug("Нет ссылок на страницы с комплектующими")
+            ...
+            return
+        
+        
+        product_fields_list: list = []
+        product_titles_list: list = []
+
+        for url in urls_list:
+            if not url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
+                continue
+
+            try:
+                self.d.get_url(url)
+            except Exception as ex:
+                logger.debug(f"Ошибка открытия страницы {url}",ex)
+                ...
+                continue
+            try:
+                f: ProductFields = await grab_morlevi_page(self.d)
+
+            except Exception as ex:
+                logger.debug(f"Ошибка получения полей товара", ex)
+                ...
+                continue
+
+            if not f:
+                logger.debug(f"Ошибка при обработке товара морлеви")
+                ...
+                continue
+            
+            f: ProductFields = await self.convert_product_fields(f)
+            if not f:
+                logger.debug(f"Ошибка конвертации {pprint(f)}")
+                ...
+
+            f: SimpleNamespace = SimpleNamespace(**f)
+            if not j_dumps(f, self.base_path / 'products' / f'{f.product_id}.json'):
+                logger.debug(f"не сохранился файл {f.product_id}.json")
+                ...
+            save_text_file(f.product_title, self.base_path / 'product_titles.txt', mode='a')
+            product_titles_list.append({'product_id':f.product_id,
+                                        'product_title':f.product_title,
+                                        'product_description':f.product_description,
+                                        'image_local_saved_path':f.image_local_saved_path})
+            if not j_dumps(product_titles_list, self.base_path / 'products' / 'product_titles.json'):
+                logger.debug(f"не сохранился файл {f.product_id}.json")
+                ...
+
+
+        def ask_gemini(q, system_instruction, attempts=3):
+            """Attempts to get translations from Gemini AI."""
+            for attempt in range(attempts):
+                translations = self.ask_gemini(q, system_instruction=system_instruction or self.system_instruction)
+                data: SimpleNamespace = j_loads_ns(translations)
+
+                if data:
+                    if j_dumps(data, self.base_path / 'ai' / f'{gs.now}.json'):
+                        return data
+                else:
+                    logger.warning(f"Invalid JSON received: {pprint(translations)}")
+                    time.sleep(5)
+
+            logger.error("Failed to get valid response from Gemini AI after multiple attempts")
+            return 
+        ...
+
+        response = ask_gemini(product_titles_list, self.system_instruction)
+        if not response:
+            logger.error('нет словаря')
+            ...
+            return
+        
+        try:
+            ru:SimpleNamespace = response.ru
+            he:SimpleNamespace = response.he
+        except Exception as ex:
+            try:
+                response = ask_gemini(product_titles_list, self.system_instruction)
+                ru:SimpleNamespace = response.ru
+                he:SimpleNamespace = response.he
+            except Exception as ex:
+                logger.debug("Нет словаря")
+                ...
+                return
+            
+
+        setattr(ru, 'language', 'ru')
+        setattr(ru, 'currency', 'ils')
+        setattr(ru, 'price', price)
+        j_dumps(ru, self.base_path / f'{self.timestamp}_ru.json')
+
+        
+        setattr(he, 'language', 'he')
+        setattr(he, 'currency', 'ils')
+        setattr(he, 'price', price)
+        j_dumps(he, self.base_path / f'{self.timestamp}_he.json')
+
+        self.post_facebook(ru)
+        self.post_facebook(he)
+        
+        return True
+
+
+
+    def ask_gemini(self, q: str |list | dict, system_instruction: Optional[str] = None) -> dict:
+        """Переводчик полей товара"""
+        return self.model.ask(q, system_instruction)
+        ...
+
+    async def convert_product_fields(self, f: ProductFields) -> dict:
+        """Prepares a product dictionary from product field data.
+
+        Args:
+            f (ProductFields): Object containing product field data.
+
+        Returns:
+            dict: Product information including title, description, ID, and image path.
+        """
+        image_path = self.base_path / 'images' / f'{f.id_product}.png'
+        if not await save_png(f.default_image_url, image_path):
+            logger.debug("Картинка не сохранилась на диске :()")
+
+        return {
+            'product_title': str(f.name['language'][0]['value']).strip(),
+            'product_id': f.id_product,
+            'product_description': f.description['language'][0]['value'].strip(),
+            'image_local_saved_path': str(image_path),
+        }
+
+
+    def post_facebook(self, mexiron:SimpleNamespace) -> bool:
+        """"""
+        ...
+        self.d.get_url(r'https://www.facebook.com/profile.php?id=61566067514123')
+        currency = "ש''ח"
+        title = f'{mexiron.title}\n{mexiron.description}\n{mexiron.price} {currency}'
+        if not post_message_title(self.d, title):
+            logger.warning(f'Не получилось отправить название мехирона')
+            ...
+            return
+
+        if not upload_post_media(self.d, media = mexiron.products):
+            logger.warning(f'Не получилось отправить media')
+            ...
+            return
+        if not message_publish(self.d):
+            logger.warning(f'Не получилось отправить media')
+            ...
+            return
+
+        return True
+
+

@@ -212,6 +212,8 @@ from pathlib import Path
 from enum import Enum
 from types import MappingProxyType
 from langdetect import detect
+from functools import wraps
+from typing import Callable
 ...
 from src import gs
 from src.utils import j_loads
@@ -220,7 +222,22 @@ from src.product.ttypes import ProductType
 from src.logger.exceptions import ProductFieldException
 from src.logger import logger
 
-
+def list2string_decorator(func: Callable) -> Callable:
+    """Decorator to convert list values to strings and handle errors."""
+    @wraps(func)
+    def wrapper(self, value: str | list = '') -> bool:
+        try:
+            # Convert list to string if necessary
+            if isinstance(value, list):
+                value = ', '.join(map(str, value))
+            return func(self, value)
+        except ProductFieldException as ex:
+            logger.error(
+                f"""Ошибка заполнения поля: 'description' данными {value}
+                Ошибка: """, ex
+            )
+            return
+    return wrapper
 
 class ProductFields:
     """ Класс, описывающий поля товара в формате API PRESTASHOP 
@@ -348,14 +365,16 @@ class ProductFields:
         ...
         self._payload(*args, **kwargs)
 
-    def _payload(self,  *args, **kwargs):
+    def _payload(self,  *args, **kwargs) -> bool:
         """ Загрузка дефолтных значений полей """
         
-        _default_values = j_loads (Path (gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
-        
-        for attr_name, default_value in _default_values.items():
-            setattr(self, f'{attr_name}', default_value)
-        ...
+        data = j_loads (Path (gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
+        if not data:
+            logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
+            return 
+        for name, value in data.items():
+            setattr(self, f'{name}', value)
+        return True
 
     
  
@@ -2030,17 +2049,26 @@ class ProductFields:
         description: Описание """
         return self.presta_fields_dict['description']  or ''
 
-    
+
     @description.setter
-     
-    def description(self, value:str = '') -> bool:
-        """  <sub>*[setter]*</sub>   """
+    @list2string_decorator
+    def description(self, value: str | list = '') -> bool:
+        """<sub>*[setter]*</sub>"""
         try:
-            self.presta_fields_dict['description']: dict = {'language':[{'attrs':{'id':'1'}, 'value':value},]}
+            # # Convert list to string if necessary
+            # if isinstance(value, list):
+            #     value = ', '.join(map(str, value))
+        
+            self.presta_fields_dict['description']: dict = {
+                'language': [{'attrs': {'id': '1'}, 'value': value}]
+            }
             return True
+
         except ProductFieldException as ex:
-            logger.error(f"""Ошибка заполнения поля: 'description' данными {value}
-            Ошибка: """, ex)
+            logger.error(
+                f"""Ошибка заполнения поля: 'description' данными {value}
+                Ошибка: """, ex
+            )
             return
 #   5
     
@@ -2052,7 +2080,7 @@ class ProductFields:
         return self.presta_fields_dict['description_short']   or ''
     
     @description_short.setter
-     
+    @list2string_decorator
     def description_short(self, value:str = '') -> bool:
         """  <sub>*[setter]*</sub>   """
         try:

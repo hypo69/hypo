@@ -51,7 +51,10 @@ class Chrome(webdriver.Chrome):
         try:
             # Function attributes declaration
             user_agent = user_agent if user_agent else UserAgent().random
-            settings: SimpleNamespace = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))  # Load settings from JSON file
+            settings =  j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))  # Load settings from JSON file
+            if not settings:
+                logger.debug(f"Ошибка в файле {gs.path.src}/webdriver/chrome/chrome.json")
+                ...
             options: ChromeOptions = ChromeOptions()  # Initialize options
             profile_directory: Path  # Set user data directory
             executable_path: str

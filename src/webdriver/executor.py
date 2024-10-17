@@ -503,11 +503,19 @@ class ExecuteLocator:
                     return [_get_attributes_from_dict(el, attr_dict) for el in element]
                 return _get_attributes_from_dict(element, attr_dict)
 
-            # Если атрибут — одиночный (не словарь)
+            
             if isinstance(element, list):
-                return [element.get_attribute(locator.attribute) for el in element]
+                ret:list = []
+                try:
+                    for e in element:
+                        ret.append(f'{e.get_attribute(locator.attribute)}')
+                    return ret if len(ret) > 1 else ret[0]
+                except Exception as ex:
+                    logger.critical(f"Error in get_attribute()", ex)
+                    ...
+                    return
             return element.get_attribute(locator.attribute)
-        return None
+        return 
 
     def get_webelement_as_screenshot(self,                                     
                                     locator: SimpleNamespace | dict,
@@ -584,6 +592,8 @@ class ExecuteLocator:
             if event == "click()":
                 try:
                     webelement.click()
+                    result.append(True)
+                    continue
                 except ElementClickInterceptedException as ex:
                     logger.error(f"Element click intercepted: {locator}", ex)
                     return False
@@ -596,6 +606,7 @@ class ExecuteLocator:
                 if match:
                     pause_duration = int(match.group(1))
                     time.sleep(pause_duration)
+                    result.append(True)
                     continue
                 logger.error(f"Invalid pause duration: {event}")
                 return False
@@ -606,6 +617,8 @@ class ExecuteLocator:
                     return False
                 try:
                     webelement.send_keys(message)
+                    result.append(True)
+                    continue
                 except Exception as ex:
                     logger.error(f"Error uploading media: {message}", ex)
                     return False
@@ -655,13 +668,13 @@ class ExecuteLocator:
                     return False
                 try:
                     self.send_message(locator = locator, timeout = timeout, timeout_for_event = timeout_for_event, message = message, typing_speed=typing_speed)
+                    result.append(True)
                 except Exception as ex:
                     logger.error(f"Error sending external message: {message}", ex)
                     return False
 
             else:
-                logger.error(f"Unsupported event type: {event}")
-                return False
+                ... # <- implementation of other events 
         ...
         return result[0] if len(result) == 1 else result if len(result) > 1 else False 
 
@@ -771,7 +784,7 @@ class ExecuteLocator:
         def type_message(
             el: WebElement,
             message: str,
-            replace_dict: dict = replace_dict,
+            replace_dict: dict = {";":"SHIFT+ENTER"},
             typing_speed: float = typing_speed,
         ) -> bool:
             """Types a message into a web element with a specified typing speed.
@@ -833,7 +846,7 @@ class ExecuteLocator:
         type_message(
             el=webelement,
             message=message,
-            replace_dict=replace_dict,
+            replace_dict={";":"SHIFT+ENTER"},
             typing_speed=typing_speed,
         )
         return True

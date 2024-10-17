@@ -73,7 +73,6 @@ def csv2ns(csv_file: str | Path, *args, **kwargs) -> SimpleNamespace | None:
     """
     return read_csv_as_ns(csv_file, *args, **kwargs)
 
-
 def csv_to_json(
     csv_file_path: str | Path,
     json_file_path: str | Path,

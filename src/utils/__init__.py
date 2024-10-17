@@ -51,7 +51,6 @@ from .printer import  pprint
 from .jjson import (j_loads, 
                     j_loads_ns, 
                     j_dumps,
-                    fix_json_string,
                     )
 
 from .file import (get_directory_names, 
@@ -75,5 +74,8 @@ from .csv import (read_csv_file,
                   read_csv_as_dict, 
                   read_csv_as_ns, 
                   save_csv_file,
+                    )
+from .string import (extract_url_params, 
+                     is_url,
                     )
 

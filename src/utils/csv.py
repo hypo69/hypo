@@ -1,172 +1,164 @@
 ## \file ../src/utils/csv.py
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
 """!
-Module for CSV file operations.
+Module for CSV and JSON file operations.
 
-This module provides functions for saving and reading CSV files, including:
-- Saving data to a CSV file.
-- Reading data from a CSV file.
-- Converting data from JSON to CSV and vice versa.
-- Converting CSV data to a dictionary format.
+This module provides utilities for:
+- Saving and reading CSV files.
+- Converting JSON data to CSV and vice versa.
+- Transforming CSV content into dictionaries for easy manipulation.
 
 Functions:
-    save_csv_file(data: List[Dict[str, str]], file_path: str | Path, mode: str = 'a', exc_info: bool = True) -> bool:
-        Saves a list of dictionaries to a CSV file.
+    - save_csv_file: Save a list of dictionaries to a CSV file.
+    - read_csv_file: Read CSV content as a list of dictionaries.
+    - json_to_csv: Convert JSON data to CSV.
+    - csv_to_json: Convert CSV to JSON and save to a file.
+    - read_csv_as_dict: Convert CSV content to a dictionary format.
 
-    read_csv_file(file_path: str | Path, exc_info: bool = True) -> List[Dict[str, str]] | None:
-        Reads the content of a CSV file and returns it as a list of dictionaries.
-
-    json_to_csv(json_data: List[Dict[str, str]], csv_file_path: str | Path, exc_info: bool = True) -> bool:
-        Converts a list of dictionaries from JSON format to a CSV file.
-
-    csv_to_json(csv_file_path: str | Path, json_file_path: str | Path, exc_info: bool = True) -> List[Dict[str, str]] | None:
-        Converts a CSV file to JSON format and saves it to a JSON file.
-
-    read_csv_as_dict(csv_file: str | Path) -> dict | bool:
-        Converts CSV data to a dictionary containing the data from the CSV file.
-
-Examples:
-    >>> data = [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
-    >>> success = save_csv_file(data=data, file_path='dialogue_log.csv')
-    >>> print(success)
+Example usage:
+    >>> data = [{'role': 'user', 'content': 'Hello'}]
+    >>> save_csv_file(data, 'dialogue_log.csv')
     True
 
-    >>> data = read_csv_file(file_path='dialogue_log.csv')
-    >>> print(data)
-    [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
-
-    >>> json_data = [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
-    >>> success = json_to_csv(json_data, 'dialogue_log.csv')
-    >>> print(success)
-    True
-
-    >>> json_data = csv_to_json('dialogue_log.csv', 'dialogue_log.json')
-    >>> print(json_data)
-    [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
-
-    >>> data = read_csv_as_dict('dialogue_log.csv')
-    >>> print(data)
-    {'data': [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]}
+    >>> read_data = read_csv_file('dialogue_log.csv')
+    >>> print(read_data)
+    [{'role': 'user', 'content': 'Hello'}]
 """
 
 import csv
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import List, Dict, Union
+import pandas as pd
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
 def save_csv_file(
-    data: List[Dict[str, str]],
-    file_path: str | Path,
+    data: List[Dict[str, str] | SimpleNamespace],
+    file_path: Union[str, Path],
     mode: str = 'a',
     exc_info: bool = True
 ) -> bool:
     """! Save a list of dictionaries to a CSV file.
 
     Args:
-        data (List[Dict[str, str]]): The data to be written to the CSV file.
-        file_path (str | Path): The full path to the CSV file.
-        mode (str, optional): The file mode. Defaults to 'a' (append).
-        exc_info (bool, optional): If True, includes traceback information in the log. Defaults to True.
+        data (List[Dict[str, str]]): Data to be saved in CSV format.
+        file_path (str | Path): Path to the CSV file.
+        mode (str, optional): File mode ('a' to append, 'w' to overwrite). Default is 'a'.
+        exc_info (bool, optional): Include traceback information in logs. Default is True.
 
     Returns:
-        bool: True if successful, else False.
+        bool: True if successful, otherwise False.
 
     Example:
-        >>> data = [{'role': 'user', 'content': 'Hello'}]
-        >>> success = save_csv_file(data=data, file_path='dialogue_log.csv')
-        >>> print(success)
-        True
-
-        >>> data = [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
-        >>> success = save_csv_file(data=data, file_path='dialogue_log.csv', mode='w')
-        >>> print(success)
+        >>> data = [{'name': 'Alice', 'age': '30'}]
+        >>> save_csv_file(data, 'people.csv', mode='w')
         True
     """
     try:
         file_path = Path(file_path)
-        file_exists = file_path.exists()
         file_path.parent.mkdir(parents=True, exist_ok=True)
 
-        if data:
-            headers = list(data[0].keys())
-        else:
-            headers = []
-
-        with file_path.open(mode, newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=headers)
-            if not file_exists and headers:
+        with file_path.open(mode, newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=data[0].keys())
+            if mode == 'w' or not file_path.exists():
                 writer.writeheader()
             writer.writerows(data)
         return True
     except Exception as ex:
-        logger.error(f"Failed to save CSV file {file_path}.", ex, exc_info=exc_info)
+        logger.error(f"Failed to save CSV to {file_path}", exc_info=exc_info)
         return False
 
-def read_csv_file(
-    file_path: str | Path,
-    exc_info: bool = True
-) -> List[Dict[str, str]] | None:
-    """! Read the content of a CSV file and return it as a list of dictionaries.
+def read_csv_file(file_path: Union[str, Path], exc_info: bool = True) -> List[Dict[str, str]] | None:
+    """! Read CSV content as a list of dictionaries.
 
     Args:
-        file_path (str | Path): The path to the CSV file to read.
-        exc_info (bool, optional): If True, includes traceback information in the log. Defaults to True.
+        file_path (str | Path): Path to the CSV file.
+        exc_info (bool, optional): Include traceback information in logs. Default is True.
 
     Returns:
-        List[Dict[str, str]] | None: The content of the CSV file as a list of dictionaries, or None if reading failed.
+        List[Dict[str, str]] | None: List of dictionaries with CSV data or None if failed.
 
     Example:
-        >>> data = read_csv_file(file_path='dialogue_log.csv')
+        >>> data = read_csv_file('people.csv')
         >>> print(data)
-        [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
+        [{'name': 'Alice', 'age': '30'}]
     """
     try:
-        file_path = Path(file_path)
-        with file_path.open('r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            return list(reader)
+        with Path(file_path).open('r', encoding='utf-8') as f:
+            return list(csv.DictReader(f))
     except Exception as ex:
-        logger.error(f"Failed to read CSV file {file_path}.", ex, exc_info=exc_info)
+        logger.error(f"Failed to read CSV from {file_path}", exc_info=exc_info)
         return None
 
-def read_csv_as_dict(
-    csv_file: str | Path
-) -> dict | bool:
-    """! Convert CSV data to a dictionary containing the data from the CSV file.
+
+def read_csv_as_json(csv_file_path: Union[str, Path], json_file_path: Union[str, Path], exc_info: bool = True) -> bool:
+    """! Convert a CSV file to JSON format and save it.
 
     Args:
-        csv_file (str | Path): The path to the CSV file to read.
+        csv_file_path (str | Path): Path to the CSV file.
+        json_file_path (str | Path): Path to save the JSON file.
+        exc_info (bool, optional): Include traceback information in logs. Default is True.
 
     Returns:
-        dict | bool: Dictionary containing the data from CSV, or False if conversion failed.
+        bool: True if conversion is successful, else False.
 
     Example:
-        >>> data = read_csv_as_dict('dialogue_log.csv')
-        >>> print(data)
-        {'data': [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]}
+        >>> csv_to_json('people.csv', 'people.json')
+        True
     """
     try:
-        with open(csv_file, 'r', encoding='utf-8') as csvfile:
-            reader = csv.reader(csvfile)
-            rows = [row for row in reader]
-
-        if len(rows[0]) == 1:
-            # If there is only one column, return a list of values
-            return {"data": [row[0] for row in rows]}
-        else:
-            # Otherwise, assume multiple columns and return a list of dictionaries
-            headers = rows[0]
-            data = [dict(zip(headers, row)) for row in rows[1:]]
-            return {"data": data}
+        data = read_csv_file(csv_file_path, exc_info=exc_info)
+        if data is None:
+            return False
+        with Path(json_file_path).open('w', encoding='utf-8') as f:
+            json.dump(data, f, indent=4)
+        return True
     except Exception as ex:
-        logger.error("Failed to convert CSV to dictionary", ex)
+        logger.error(f"Failed to convert CSV to JSON at {json_file_path}", exc_info=exc_info)
         return False
 
-def read_csv_as_ns():
-    """! Placeholder function for future extension.
+def read_csv_as_dict(csv_file: Union[str, Path]) -> dict | None:
+    """! Convert CSV content to a dictionary.
 
-    Currently, this function does nothing and serves as a stub for future implementation.
+    Args:
+        csv_file (str | Path): Path to the CSV file.
+
+    Returns:
+        dict | None: Dictionary representation of CSV content, or None if failed.
+
+    Example:
+        >>> data = read_csv_as_dict('people.csv')
+        >>> print(data)
+        {'data': [{'name': 'Alice', 'age': '30'}]}
     """
-    pass
+    try:
+        with Path(csv_file).open('r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            return {"data": [row for row in reader]}
+    except Exception as ex:
+        logger.error("Failed to read CSV as dictionary", exc_info=True)
+        return None
+
+def read_csv_as_ns(file_path: Union[str, Path]) -> List[dict]:
+    """! Load CSV data into a list of dictionaries using Pandas.
+
+    Args:
+        file_path (str | Path): Path to the CSV file.
+
+    Returns:
+        List[dict]: List of dictionaries representing the CSV content.
+
+    Example:
+        >>> data = read_csv_as_ns('people.csv')
+        >>> print(data)
+        [{'name': 'Alice', 'age': '30'}]
+    """
+    try:
+        df = pd.read_csv(file_path)
+        data: SimpleNamespace = SimpleNamespace(**df.to_dict(orient='records'))
+        return data
+    except Exception as ex:
+        logger.error(f"Failed to load CSV as namespaces from {file_path}", exc_info=True)
+        return []
