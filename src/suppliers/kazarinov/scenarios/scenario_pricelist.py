@@ -25,6 +25,7 @@ from src.webdriver import Driver
 from src.ai.gemini import GoogleGenerativeAI
 from src.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
 from src.suppliers.morlevi.graber import async_grab_page as grab_morlevi_page
+from src.suppliers.ksp.graber import async_grab_page as grab_ksp_page 
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png
 from src.utils.file import read_text_file, save_text_file, recursively_get_filepath
@@ -85,7 +86,13 @@ class ExecuteMexiron:
         product_titles_list: list = []
 
         for url in urls_list:
-            if not url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
+            if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
+                supplier = 'morlevi'
+            elif url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
+                supplier = 'ksp'
+            elif url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
+                supplier = 'grandadvance'
+            else:
                 continue
 
             try:
@@ -95,7 +102,13 @@ class ExecuteMexiron:
                 ...
                 continue
             try:
-                f: ProductFields = await grab_morlevi_page(self.d)
+                if supplier == 'morlevi':
+                    f: ProductFields = await grab_morlevi_page(self.d)
+                if supplier == 'ksp':
+                    f: ProductFields = await grab_ksp_page(self.d)
+                if supplier == 'grandadvance':
+                    f: ProductFields = await grab_grandadvance_page(self.d)
+
 
             except Exception as ex:
                 logger.debug(f"Ошибка получения полей товара", ex)
