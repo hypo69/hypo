@@ -1,0 +1,48 @@
+{
+  "scenarios": {
+    "MAG 22": {
+      "brand": "MAG",
+
+      "url": "https://www.morlevi.co.il/Cat/8?p_315=24&p_350=1805&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,128,529"
+    },
+    "MAG 24-25": {
+      "brand": "MAG",
+
+      "url": "https://www.morlevi.co.il/Cat/8?p_315=24&p_350=1807&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,129,529"
+
+    },
+    "MAG 27-29": {
+      "brand": "MAG",
+      "url": "https://www.morlevi.co.il/Cat/8?p_315=24&p_350=1808&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,130,529"
+    },
+    "MAG 32": {
+      "brand": "MAG",
+      "url": "https://www.morlevi.co.il/Cat/8?p_315=24&p_350=1809&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,131,529"
+    },
+    "MAG 34": {
+      "brand": "MAG",
+      "url": " --------------------------  MAG 34 -----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,132,529"
+    },
+    "MAG 49": {
+      "brand": "MAG",
+      "url": "-----------------------------  MAG 49 ---------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,133,529"
+    }
+  }

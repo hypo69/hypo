@@ -1,0 +1,81 @@
+{
+  "store": {
+    "description": "Antec Computer Cases",
+    "about": " ",
+    "category ID on site": "",
+    "category ID in PRESTAHOP db": "",
+    "brand": [ "ANTEC" ],
+    "url": "https://www.morlevi.co.il/Cat/95?p_315=12&sort=datafloat2%2Cprice&keyword=",
+    
+    "get store banners": true
+  },
+  "scenarios": {
+    "ANTEC MID TOWER": {
+      "brand": "ANTEC",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/98?p_315=12&p_124=540&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "antec": "MID TOWER"
+        }
+      }
+    },
+    "ANTEC FULL TOWER": {
+      "brand": "ANTEC",
+      "url": "----------------------------ANTEC FULL TOWER--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "antec": "FULL TOWER" }
+      }
+    },
+    "ANTEC MINI TOWER": {
+      "brand": "ANTEC",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/98?p_315=12&p_124=542&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "antec": "MINI TOWER" }
+      }
+    },
+    "ANTEC gaming MID TOWER": {
+      "brand": "ANTEC",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/98?p_315=12&p_124=545&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "antec": "MINI TOWER" }
+      }
+    },
+    "ANTEC gaming full tower": {
+      "brand": "ANTEC",
+      "template": "",
+      "url": "----------------------------ANTEC gaming full TOWER--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "antec": "MINI TOWER" }
+      }
+    },
+    "ANTEC mini itx": {
+      "brand": "ANTEC",
+      "template": "",
+      "url": "----------------------------ANTEC mini itxR--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "antec": "MINI ITX" }
+      }
+    }
+  }
+}

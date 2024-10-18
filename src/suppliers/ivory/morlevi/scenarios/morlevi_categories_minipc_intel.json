@@ -1,0 +1,60 @@
+{
+  "scenarios": {
+    "INTEL MINIPC I3 8-9th GEN": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=3&p_189=3339&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,160"
+    },
+    "INTEL MINIPC I3 10th GEN": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=3&p_189=3498&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,160"
+    },
+
+    "INTEL MINIPC I5 8-9th": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=3&p_189=3391&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,161"
+    },
+    "INTEL MINIPC I5 10th": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=3&p_189=3500&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,161"
+    },
+    "INTEL  MINIPC I7": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=3&p_189=3501&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,162"
+    },
+    "INTEL  MINIPC I9": {
+      "brand": "INTEL",
+      "url": "-------------INTEL  MINIPC I9---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,530"
+    },
+    "INTEL MINIPC AMD": {
+      "brand": "INTEL",
+      "url": "-------------INTEL MINIPC AMD---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,531"
+    },
+    "INTEL MINIPC Celeron": {
+      "brand": "INTEL",
+      "url": "-------------INTEL MINIPC Celeron---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,532"
+    }
+  }

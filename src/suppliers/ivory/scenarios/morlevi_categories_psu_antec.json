@@ -1,0 +1,59 @@
+{
+  "scenarios": {
+    "ANTEC 450W": {
+      "brand": "ANTEC",
+      "name": "450W",
+      "url": "https://www.morlevi.co.il/Cat/66?p_145=634&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "158,511,188,577"
+    },
+    "ANTEC 500W": {
+      "brand": "ANTEC",
+      "name": "500W",
+      "url": "https://www.morlevi.co.il/Cat/66?p_145=635&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "158,511,189,577"
+    },
+    "ANTEC 550W": {
+      "brand": "ANTEC",
+      "name": "550W",
+      "url": "https://www.morlevi.co.il/Cat/66?p_145=678&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,190,577"
+    },
+    "ANTEC 600W": {
+      "brand": "ANTEC",
+      "name": "600W",
+      "url": "https://www.morlevi.co.il/Cat/66?p_145=636&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,191,577"
+    },
+    "ANTEC 650W": {
+      "brand": "ANTEC",
+      "name": "650W",
+      "url": "https://www.morlevi.co.il/Cat/66?p_145=637&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,192,577"
+    },
+    "ANTEC 700W": {
+      "brand": "ANTEC",
+      "name": "700W",
+      "url": "https://www.morlevi.co.il/Cat/66?p_145=669&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,193,577"
+    },
+    "ANTEC 750W": {
+      "brand": "ANTEC",
+      "name": "750W",
+      "url": "https://www.morlevi.co.il/Cat/66?p_145=670&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,194,577"
+    }
+  }

@@ -1,7 +1,7 @@
-﻿## \file ../src/suppliers/morlevi/graber.py
+﻿## \file ../src/suppliers/ksp/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
-""" morlevi
+""" ksp
 """
 
 import os, sys, asyncio
@@ -50,7 +50,8 @@ def close_pop_up():
         def wrapper(*args, **kwargs):
             # Execute locator before the original function logic
             try:
-                result = d.execute_locator(l.close_popup)
+                #result = d.execute_locator(l.close_popup)
+                # <- здесь можно добавить обработчик
                 ...
                 
             except ExecuteLocatorException as e:
@@ -522,8 +523,7 @@ async def description():
     ...
     try:
         f.description = d.execute_locator(l.description)  or ''
-        if isinstance(f.description,list):
-            ...
+        ...
     except ExecuteLocatorException as eх:
         logger.error(f"""Error occurred while executing the locator for the field `description`: 
                         response type: {type(response)}                                 
@@ -579,7 +579,7 @@ async def id_product():
             if not f.id_supplier:
                 f.id_supplier = d.execute_locator(l.id_supplier)  or None
             if f.id_supplier:
-                f.id_product = 'mlv-'+f.id_supplier
+                f.id_product = supplier_prefix+'-'+f.id_supplier
 
         except ExecuteLocatorException as ex:
             logger.critical(f"""Error occurred while executing the locator for the field `id_product`: 
@@ -1188,8 +1188,8 @@ async def uploadable_files():
 async def default_image_url():
     """  Function for field default_image_url"""
     try:
-        d.scroll(scrolls = 1, frame_size = 200, direction = 'down')
-        f.default_image_url =  d.execute_locator(l.default_image_url) or '' # <- может вернуть png как `bytes` !
+        #d.scroll(scrolls = 1, frame_size = 200, direction = 'down')
+        f.default_image_url =  d.execute_locator(l.default_image_url) or None
         ...
     except ExecuteLocatorException as ex:
         logger.error(f"Error occurred while executing the locator for the field default_image_url: ", ex)

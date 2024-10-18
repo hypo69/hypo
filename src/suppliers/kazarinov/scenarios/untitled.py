@@ -1,3 +1,4 @@
+## \file ../src/suppliers/kazarinov/scenarios/untitled.py
 def j_loads(
         jjson: dict | SimpleNamespace | str | Path | list[dict] | list[SimpleNamespace],
         ordered: bool = True,

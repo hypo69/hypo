@@ -1,4 +1,4 @@
-## \file ../src/suppliers/kazarinov/scenarios/prepare_morlevi_data.py
+## \file ../src/suppliers/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Module for handling Morlevi product data extraction and saving.
@@ -26,6 +26,7 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
 from src.suppliers.morlevi.graber import async_grab_page as grab_morlevi_page
 from src.suppliers.ksp.graber import async_grab_page as grab_ksp_page 
+from src.suppliers.grandadvance.graber import async_grab_page as grab_grandadvance_page
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png
 from src.utils.file import read_text_file, save_text_file, recursively_get_filepath
@@ -35,7 +36,7 @@ from src.logger import logger
 locators = j_loads_ns(gs.path.src / 'suppliers' / 'morlevi' / 'locators' / 'product.json')
 
 
-class ExecuteMexiron:
+class Mexiron:
     """! Handles Morlevi product extraction, parsing, and saving processes."""
     
     d:Driver
@@ -61,7 +62,7 @@ class ExecuteMexiron:
         self.model = GoogleGenerativeAI(api_key = api_key, system_instruction = self.system_instruction, generation_config = {"response_mime_type": "application/json"})
 
 
-    async def run_scenario(self, system_instruction: Optional[str] = None, price:Optional[str] = None, urls:Optional[str | list] = None  ) -> bool:
+    async def run_scenario(self, system_instruction: Optional[str] = None, price:Optional[str] = None, title:str = None, urls:Optional[str | list] = None  ) -> bool:
         """Prepares product data by parsing and saving product pages.
 
         Args:
@@ -84,14 +85,14 @@ class ExecuteMexiron:
         
         product_fields_list: list = []
         product_titles_list: list = []
-
+        supplier_prefix:str
         for url in urls_list:
             if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
-                supplier = 'morlevi'
+                supplier_prefix = 'morlevi'
             elif url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
-                supplier = 'ksp'
+                supplier_prefix = 'ksp'
             elif url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
-                supplier = 'grandadvance'
+                supplier_prefix = 'grandadvance'
             else:
                 continue
 
@@ -102,11 +103,11 @@ class ExecuteMexiron:
                 ...
                 continue
             try:
-                if supplier == 'morlevi':
+                if supplier_prefix == 'morlevi':
                     f: ProductFields = await grab_morlevi_page(self.d)
-                if supplier == 'ksp':
+                if supplier_prefix == 'ksp':
                     f: ProductFields = await grab_ksp_page(self.d)
-                if supplier == 'grandadvance':
+                if supplier_prefix == 'grandadvance':
                     f: ProductFields = await grab_grandadvance_page(self.d)
 
 
@@ -194,7 +195,7 @@ class ExecuteMexiron:
         service_product_description_ru = f"""{read_text_file(gs.path.data / 'kazarinov' / 'service_as_product_ru.txt')}
             \n ----------------- \n
             Общая цена за все: {price} шек.
-            💥 Для защитников страны — солдат ЦАХАЛ — специальные цены на все услуги! Спасибо вам за то, что вы защищаете нашу страну.
+            Для защитников страны — солдат ЦАХАЛ — специальные цены на все услуги! Спасибо вам за то, что вы защищаете нашу страну.
             """
         ru.products.append(SimpleNamespace (**{
             "product_id":"service",
@@ -212,7 +213,7 @@ class ExecuteMexiron:
         service_product_description_he = f"""{read_text_file(gs.path.data / 'kazarinov' / 'service_as_product_he.txt')}
             \n ----------------- \n
            מחיר כולל הכל {price} ש''ח
-           💥 למגני הארץ — חיילי צה"ל — יש לי מחיר מיוחד על כל השירותים! תודה לכם על כך שאתם מגנים על המדינה שלנו. 
+           . 
 
             """
         he.products.append(SimpleNamespace (**{

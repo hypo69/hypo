@@ -457,11 +457,11 @@ def publish(d:Driver, attempts = 5) -> bool:
     while not d.execute_locator(locator = locator.open_add_post_box, timeout = 10, timeout_for_event = 'element_to_be_clickable'):
         logger.debug(f"не освободилось поле ввода {attempts=}",None, False)
         if d.execute_locator(locator.close_popup):
-            publish(d)
+            publish(d, attempts -1)
         if d.execute_locator(locator.not_now):
-            publish(d)
+            publish(d, attempts -1)
         if attempts > 0:
-           d.wait(5)
+           d.wait(2)
            publish(d, attempts -1)
 
 

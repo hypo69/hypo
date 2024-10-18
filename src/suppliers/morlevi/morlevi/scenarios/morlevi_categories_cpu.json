@@ -1,0 +1,178 @@
+{
+  "scenarios": {
+    "Intel  CELERON LGA1200 Gen 10": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/337?p_134=584&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "INTEL CELERON LGA1200"
+        }
+      }
+    },
+    "Intel  CELERON LGA1200 Gen 11": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/363?p_134=584&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "INTEL CELERON LGA1200"
+        }
+      }
+    },
+
+    "Intel  PENTIUM LGA1200 Gen 10": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/337?p_134=585&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "INTEL PENTIUM LGA1200"
+        }
+      }
+    },
+    "I3 LGA1200": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/337?p_134=586&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I3 LGA1200"
+        }
+      }
+    },
+
+    "I5 LGA1200": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/399?p_134=587&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I5 LGA1200"
+        }
+      }
+    },
+
+    "I5 LGA1200 11": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/363?p_134=587&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I5 LGA1200"
+        }
+      }
+    },
+    "I5 LGA1700 12": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/380?p_134=587&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I5 LGA1700"
+        }
+      }
+    },
+    "I5 LGA1700 13": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/399",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I5 LGA1700"
+        }
+      }
+    },
+    "I7 LGA1200": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/399?p_134=588&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I7 LGA1200"
+        }
+      }
+    },
+    "I7 LGA1200 11": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/363?p_134=588&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I7 LGA1200"
+        }
+      }
+    },
+    "I7 LGA1700 12": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/380?p_134=588&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I7 LGA1700"
+        }
+      }
+    },
+
+    "I7 LGA1700 13": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/399",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I7 LGA1700"
+        }
+      }
+    },
+
+    "I9 LGA1200": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/399?p_134=588&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I7 LGA1200"
+        }
+      }
+    },
+
+    "I9 LGA1700 12": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/380",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I9 LGA1700"
+        }
+      }
+    },
+
+    "I9 LGA1700 13": {
+      "brand": "INTEL",
+      "url": "https://www.morlevi.co.il/Cat/399?p_134=848&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": {
+          "cpu": "I9 LGA1700"
+        }
+      }
+    }
+
+
+  }
+}

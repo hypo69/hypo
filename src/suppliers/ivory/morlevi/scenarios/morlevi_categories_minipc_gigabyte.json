@@ -1,0 +1,74 @@
+{
+  "scenarios": {
+    "GIGABYTE MINIPC I3 8-9th GEN": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=2&p_189=1895&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,160"
+    },
+    "GIGABYTE MINIPC I3 10th GEN": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=2&p_189=3447&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,160"
+    },
+
+    "GIGABYTE MINIPC I5 8-9th": {
+      "brand": "GIGABYTE",
+      "url": "--------------------------GIGABYTE MINIPC I5 8-9th-------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,161"
+    },
+    "GIGABYTE MINIPC I5 10th": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=2&p_189=3500&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,161"
+    },
+    "GIGABYTE  MINIPC I7": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=2&p_189=3501&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,162"
+    },
+    "GIGABYTE  MINIPC I9": {
+      "brand": "GIGABYTE",
+      "url": "-------------GIGABYTE  MINIPC I9---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,530"
+    },
+    "GIGABYTE MINIPC AMD": {
+      "brand": "GIGABYTE",
+      "url": "-------------GIGABYTE MINIPC AMD---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,531"
+    },
+    "GIGABYTE MINIPC Celeron": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=2&p_189=3371&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,532"
+    },
+    "GIGABYTE MINIPC Celeron 2": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=2&p_189=3133&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,532"
+    },
+    "GIGABYTE MINIPC Pentium": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/127?p_315=2&p_189=3133&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "159,532"
+    }
+  }

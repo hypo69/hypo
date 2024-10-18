@@ -55,4 +55,4 @@ def fetch_target_urls_onetab(target_page_url: str) -> tuple[str, list] | bool:
         return price, title, urls
     except requests.exceptions.RequestException as ex:
         logger.error(f"Failed to fetch the URL: ",ex)
-        return False
+        return False, False, False

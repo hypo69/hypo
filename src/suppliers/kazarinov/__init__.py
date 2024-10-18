@@ -1,3 +1,6 @@
+## \file ../src/suppliers/kazarinov/__init__.py
+# -*- coding: utf-8 -*-
+# /path/to/interpreter/python
 """  Модуль поставщика. Class `Supplier`
 - для каждого конкретного поставщика есть свои специфичные методы (функции) извлечения информации. 
 Эти функции дополняют базовый класс `Supplier` и подключаются через интерфейс  `supplier.related_functions`
@@ -13,13 +16,11 @@
 @image html supplier-warehouse-client.png
 
 """
-## \file ../src/suppliers/kazarinov/__init__.py
-# -*- coding: utf-8 -*-
-# /path/to/interpreter/python
+
 ...
 from packaging.version import Version
 from .version import __version__, __doc__, __details__  
 
 from .bot import KazarinovTelegram
-from .scenarios import  ExecuteMexiron
+from .scenarios import  Mexiron
 

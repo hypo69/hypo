@@ -7,13 +7,14 @@ import asyncio
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 import random
+
 import header
 from src import gs
 from src.bots.telegram_bot import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.suppliers.kazarinov.parser_onetab import fetch_target_urls_onetab
-from src.suppliers.kazarinov.scenarios.prepare_morlevi_data import ExecuteMexiron
+from src.suppliers.kazarinov.scenarios.scenario_pricelist import Mexiron
 from src.suppliers.kazarinov import gemini_chat
 from src.utils.file import read_text_file, recursive_read_text_files
 from src.utils.string.url import is_url
@@ -23,7 +24,7 @@ class KazarinovTelegram(TelegramBot):
 
     token = gs.credentials.telegram.bot.kazarinov
     d:Driver
-    mexiron: ExecuteMexiron
+    mexiron: Mexiron
     model_chat:GoogleGenerativeAI
     model_adviser:GoogleGenerativeAI
     system_instruction:str
@@ -34,7 +35,7 @@ class KazarinovTelegram(TelegramBot):
         """Initialize the Kazarinov bot."""
         super().__init__(self.token)
         self.d = Driver(Chrome)
-        self.mexiron = ExecuteMexiron(self.d)
+        self.mexiron = Mexiron(self.d)
         self.timestamp = gs.now
         # Register command handlers
         self.application.add_handler(CommandHandler('start', self.start))
@@ -77,9 +78,12 @@ class KazarinovTelegram(TelegramBot):
             return  await update.message.reply_text('Хуёвенько')
 
         if response.startswith('https://www.one-tab.com'): # <- пока обрабатываются ссылки только на морлеви
-            tab_name, urls = fetch_target_urls_onetab(response)
+            price, title, urls = fetch_target_urls_onetab(response)
+            if not all(price, title, urls):
+                return  await update.message.reply_text('Ошибка на сервере OneTab. Такое редко, но бывет. Отдохни, попей кофе и попробуй еще раз через часок, другой')
 
-            if await self.mexiron.run_scenario(price = tab_name, urls = urls):
+
+            if await self.mexiron.run_scenario(price = price, title = title, urls = urls):
                 return  await update.message.reply_text('Готово!\nСсылку я вышлю на whatsapp')
             return  await update.message.reply_text('Хуёвенько')
 
