@@ -1,0 +1,13 @@
+{
+  "scenarios": {
+    "OTOMANS": {
+      "url": "https://amzn.to/44Mknp7",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": { "11057": "OTOMANS" },
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    }
+  }
+}

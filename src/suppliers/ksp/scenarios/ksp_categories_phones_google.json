@@ -1,0 +1,40 @@
+{
+  "scenarios": {
+    "Pixel 6 PRO": {
+      "brand": "GOOGLE",
+      "url": "https://ksp.co.il/web/cat/573..3887..31508",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "google": "GOOGLE PIXEL 6 PRO" }
+      },
+      "Pixel 6": {
+        "brand": "GOOGLE",
+        "url": "https://ksp.co.il/web/cat/573..3887..30356",
+        "checkbox": false,
+        "active": true,
+        "condition":"new","presta_categories": {
+          "template": { "google": "GOOGLE PIXEL 6" }
+        },
+        "Google Pixel 5a 5G": {
+          "brand": "GOOGLE",
+          "url": "https://ksp.co.il/web/cat/573..3887..28492",
+          "checkbox": false,
+          "active": true,
+          "condition":"new","presta_categories": {
+            "template": { "google": "GOOGLE PIXEL 5A 5G" }
+          }
+        },
+        "Google Pixel 6a": {
+          "brand": "GOOGLE",
+          "url": "https://ksp.co.il/web/cat/573..3887..28492",
+          "checkbox": false,
+          "active": true,
+          "condition":"new","presta_categories": {
+            "template": { "google": "GOOGLE PIXEL 6A" }
+          }
+        }
+      }
+    }
+  }
+}

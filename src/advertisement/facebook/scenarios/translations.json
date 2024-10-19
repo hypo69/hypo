@@ -1,0 +1,44 @@
+{
+  "LOCALE": {
+    "EN": "LTR",
+    "RU": "LTR",
+    "HE": "RTL"
+  },
+  "COPYRIGHT": {
+    "EN": ".The product images are taken from the AliExpress website . All rights to the images belong to their respective owners",
+    "RU": "Изображения товаров взяты с сайта AliExpress. Все права на изображения принадлежат их владельцам",
+    "HE": "התמונות המוצרים נלקחו מאתר AliExpres ר כל הזכויות על התמונות שייכות לבעליהן החוקי"
+  },
+  "original_price": {
+    "EN": "Price",
+    "RU": "Цена",
+    "HE": "מחיר "
+  },
+  "sale_price": {
+    "EN": "Sale Price",
+    "RU": "Цена сегодня",
+    "HE": " מחיר מבצע"
+  },
+  "discount": {
+    "EN": "Discount",
+    "RU": "Скидка",
+    "HE": "מבצע "
+  },
+  "promotion_link": {
+    "EN": "Link to Shop",
+    "RU": "Ссылка на товар",
+    "HE": "לינק "
+  },
+  "tags": {
+    "EN": "tags",
+    "RU": "хэштеги",
+    "HE": " תגים"
+  },
+  "evaluate_rate": {
+    "EN": "Product rating",
+    "RU": "Рейтинг товара",
+    "HE": "דירוג מוצר "
+
+  }
+
+}

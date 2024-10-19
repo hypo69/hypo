@@ -1,0 +1,123 @@
+{
+  "scenarios": {
+    "TAB M7 TB-7305": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1045..270..159..133790..11613",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3508": "7-8 inch",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "3227": "Tablets",
+        "2572": "LENOVO TAB"
+
+      }
+    },
+    "TAB M8": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1045..270..159..13379",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "TAB M10": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1045..270..159..9721..19433..13544",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "TAB P11": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1045..270..159..22065..30559..21476",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "TAB P12": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1045..270..159..32548",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "697,700,682,260,1,2,429,826,999,1004"
+    },
+    "Yoga Smart Tab": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1045..270..159..9734",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Yoga TAB 11": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1045..270..159..26718",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Yoga TAB 13": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1045..270..159..26718",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    }
+  }
+}

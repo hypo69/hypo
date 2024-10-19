@@ -1,0 +1,22 @@
+{
+
+  "MSI": {
+    "brand": "MSI",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=571&manId=69",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "108,109"
+  },
+  "GIGABYTE": {
+    "brand": "GIGABYTE",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=571&manId=25",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "108,109"
+  },
+  "PNY": {
+    "brand": "PNY",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=571&manId=27",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "108,111"
+  }
+
+}

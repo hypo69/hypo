@@ -1,0 +1,317 @@
+{
+  "store": {
+    "store_id": "",
+    "supplier_id": "",
+    "get store banners": true,
+    "description": "dell laptops",
+    "about": "dell ",
+    "brand": "dell",
+    "url": "",
+    "condition": "NEW",
+    "price_rule": 1
+  },
+  "scenarios": {
+
+    "dell INTEL CELERON 11": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_size_browse-bin%3A13580785011%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_89%3ADell&dc&qid=1674221990&rnid=2528832011&ref=sr_nr_p_89_1&ds=v1%3A%2FOkWjUtQb5x50UYXcoGtWwF06yVTDdb9RNCRwiYM0Ck",
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL CELERON", "11" ] }
+      },
+      "checkbox": false
+    },
+
+    "dell INTEL CELERON 14": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_89%3ADell%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674222280&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3ApvDZL5CBIrH0VePFUW0hmcjGxA4SwvMpqOhJVfs1ssQ",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL CELERON", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL CELERON 15": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_89%3ADell%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1674222305&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3ADokpnGiAx9fN%2BEfchCCA0nzLo9qpmGiC9JkZinrm5c8",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL CELERON", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+
+    "dell INTEL I3 13": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ADell%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1674222343&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_1&ds=v1%3AYLClxETgox4VOMqFKkMJRIm%2FH6t7nfxr%2BnqpXvp5u84",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I3", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I3 14": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ADell%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674222388&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3ABZqJe8KWVrmFrF1nSq0uGQD3q12obWiq%2BBEThd3mLGk",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I3", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I3 15": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ADell%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A2423841011&dc&ds=v1%3AeqVEPzlbyFWgBGmQHHiH4pdNoha5LtJtOIi%2FbMU0ASY&qid=1674222421&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I3", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "dell INTEL I5 11": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ADell%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A13580785011%7C13580786011&dc&qid=1674222583&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_8&ds=v1%3AFh7yE7B%2BKvq%2FyrfPARA3k6dPL3Eh1vvH9XH4XdKkaIA",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I5", "11" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I5 13": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_size_browse-bin%3A3545275011%2Cp_n_feature_four_browse-bin%3A2289793011&dc&qid=1674219921&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_2&ds=v1%3APF8QoVY%2FR4DX7qzJ8f%2BGTk6DZpRfXPVsEvU3%2Bg3RSGE",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I5", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I5 14": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674224134&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3AH%2B%2BJZbvpVN1dfl12vpQOIUX4lsHiiSQYabnI8blhd3g",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I5", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I5 15": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A2242801011%7C2423841011&dc&qid=1674224180&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3A9%2F2VTP2q124B4YmCInhz80S6Axze4QeN5v%2F9FmVl7GY",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I5", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I5 17": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1674224231&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3Aodww0joREFFtKxu9pABxoVqRoXhRg6aPIhaC0bHwk0s",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I5", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I7 13": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A2289792011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1674220655&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3AEb6bP5gqr1Qp9JisRadxFE5XnyP2utkyVNUZiuyMDaA",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I7", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I7 14": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A2289792011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674220718&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3AKmeJ%2FOxV4%2Bv%2BV%2FN%2FMVhtqwKF3JeCd2AAoKsGvNNPAv8",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I7", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I7 15": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A2289792011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1674220810&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3Ak9%2BGthLI%2FNqbXhW07O6hsV2WzHmhWlaAVXExOD8ygzo",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I7", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell INTEL I7 17": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A2289792011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1674220857&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3A2QNVjxcCRt9c3DiVvV%2Bl%2F7q9IxgsKF8fDcoE0h8VIYY",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "INTEL I7", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD ATHLON 13": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1674220938&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_1&ds=v1%3Ahqs%2B4YO1ziBLEC3lOvOLmY2ASj5QKxOHrjZu5NmCp9Y",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD ATHLON", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD ATHLON 14": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674221011&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3A5tcutml4xwuJkMl8lj13bonT9jrZwMEHd%2FKnfjU%2BPZY",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD ATHLON", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD ATHLON 15": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1674221073&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3Aa%2BBQQ0NmvI3MTO3OPPNWkmMi2bmmPYc4zg%2BguRnzaLg",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD ATHLON", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD ATHLON 17": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1674221133&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3A3cY5T1HxjxvTD9jj6WSOjDqwblLd0fwc7AAxibuOMo4",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD ATHLON", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD RYZEN 5 13": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1674221133&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3A3cY5T1HxjxvTD9jj6WSOjDqwblLd0fwc7AAxibuOMo4",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD RYZEN 5", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD A8 13": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1674221133&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3A3cY5T1HxjxvTD9jj6WSOjDqwblLd0fwc7AAxibuOMo4",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD RYZEN A8", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD RYZEN 3 14": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_size_browse-bin%3A2423840011%2Cp_n_feature_four_browse-bin%3A18107800011&dc&qid=1674221563&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_5&ds=v1%3Av3dslNStringFormatter4Eh3BsQNy3aGBvqh7XiQGb1XQAzaLrG4iBo",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD RYZEN 3", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD RYZEN 5 14": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A18107801011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674221389&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3AgwgerNLaFU40474iDplZjLuACU%2BdydellS4ccs3fRFxrQ",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD RYZEN 5", "14" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD RYZEN 3 15": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A18107800011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1674221705&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3ABen2iAbKno%2F3qpMYqYS5ONmtnXg0cG5y3SX4AAmYu7s",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD RYZEN 3", "15" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "dell AMD RYZEN 3 17": {
+      "brand": "dell",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3Adell%2Cp_n_feature_four_browse-bin%3A18107800011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1674221759&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3AUDnpJ6qliUxjNNBtCIF1%2BpPPfsmC7%2B%2BJCI%2FWH9FJfbQ",
+      "active": true,
+      "condition": "NEW",
+      "presta_categories": {
+        "template": { "dell": [ "AMD RYZEN 3", "17" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    }
+  }
+}

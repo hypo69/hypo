@@ -1,0 +1,60 @@
+digraph dependencies {
+    node [shape=box];
+    
+    affiliated_products_generator [label="affiliated_products_generator.py"];
+
+    asyncio [label="asyncio"];
+    itertools [label="itertools"];
+    math [label="math"];
+    pathlib [label="pathlib"];
+    typing [label="typing"];
+    types [label="types"];
+    urllib_parse [label="urllib.parse"];
+    src_settings [label="src.settings"];
+    src_suppliers_aliexpress [label="src.suppliers.aliexpress"];
+    src_utils_convertor [label="src.utils.convertor"];
+    src_utils [label="src.utils"];
+    src_logger [label="src.logger"];
+
+    affiliated_products_generator -> asyncio;
+    affiliated_products_generator -> itertools;
+    affiliated_products_generator -> math;
+    affiliated_products_generator -> pathlib;
+    affiliated_products_generator -> typing;
+    affiliated_products_generator -> types;
+    affiliated_products_generator -> urllib_parse;
+    affiliated_products_generator -> src_settings;
+    affiliated_products_generator -> src_suppliers_aliexpress;
+    affiliated_products_generator -> src_utils_convertor;
+    affiliated_products_generator -> src_utils;
+    affiliated_products_generator -> src_logger;
+
+    pathlib -> Path;
+    
+    typing -> List;
+    typing -> Union;
+    typing -> Optional;
+
+    types -> SimpleNamespace;
+
+    urllib_parse -> urlparse;
+    urllib_parse -> parse_qs;
+
+    src_suppliers_aliexpress -> AliApi;
+    src_suppliers_aliexpress -> Aliexpress;
+    src_suppliers_aliexpress -> AffiliateLinksShortener;
+    src_suppliers_aliexpress -> extract_prod_ids;
+    src_suppliers_aliexpress -> ensure_https;
+
+    src_utils_convertor -> csv2dict;
+    src_utils_convertor -> j_dumps;
+    src_utils_convertor -> convert_list_to_homogeneous_list;
+
+    src_utils -> save_png_from_url;
+    src_utils -> save_video_from_url;
+    src_utils -> pprint;
+    src_utils -> read_text_file;
+    src_utils -> save_text_file;
+
+    src_logger -> logger;
+}

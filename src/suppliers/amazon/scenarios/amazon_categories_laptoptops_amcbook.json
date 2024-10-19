@@ -1,0 +1,15 @@
+{
+  "scenarios": {
+    "HP INTEL CELERON 11": {
+      "brand": "DELL",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_size_browse-bin%3A13580785011%2Cp_89%3AHP&dc&qid=1672979071&rnid=2528832011&ref=sr_nr_p_89_2&ds=v1%3ABfCa6dK3bKfa8zhk0fTD5046esU9J%2F%2BFgaeWagLJ%2FsU",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "hp": [ "LAPTOPS INTEL CELERON", "11" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    }
+  }
+}

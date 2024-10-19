@@ -1,0 +1,68 @@
+{
+  "scenarios": {
+    "GALAXY Watch": {
+      "brand": "SAMSUNG",
+      "url": "https://ksp.co.il/web/cat/2085..137..11631",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "GALAXY Watch Active 2": {
+      "brand": "SAMSUNG",
+      "url": "https://ksp.co.il/web/cat/2085..137..10040",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "GALAXY Watch 3": {
+      "brand": "SAMSUNG",
+      "url": "https://ksp.co.il/web/cat/2085..137..28031..28036",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "GALAXY Watch 4": {
+      "brand": "SAMSUNG",
+      "url": "https://ksp.co.il/web/cat/2085..137..14382",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    }
+  }
+}

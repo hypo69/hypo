@@ -1,0 +1,14 @@
+{
+  "scenarios": {
+
+    "url": "https://hbdeadsea.co.il/product-category/health-products/",
+    "name": "מוצרי בריאות",
+    "condition": "new",
+    "presta_categories": {
+      "default_category": 11111,
+      "additional_categories": [
+        ""
+      ]
+    }
+  }
+}

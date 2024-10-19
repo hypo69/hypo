@@ -1,0 +1,11 @@
+{
+  "product_links": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//a[contains( @class ,'productContainer')]",
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "Товары со страницы deals"
+  }
+}

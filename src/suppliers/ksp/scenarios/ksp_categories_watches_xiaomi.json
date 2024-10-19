@@ -1,0 +1,36 @@
+{
+  "scenarios": {
+    "Xiaomi Redmi Watch": {
+      "brand": "XIAOMI",
+      "url": "https://ksp.co.il/web/cat/2085..2202..34255",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Xiaomi Mi Watch": {
+      "brand": "XIAOMI",
+      "url": "https://ksp.co.il/web/cat/2085..2202..29146..29145",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    }
+  }
+}

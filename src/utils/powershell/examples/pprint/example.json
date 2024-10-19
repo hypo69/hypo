@@ -1,0 +1,24 @@
+{
+  "keys": {
+    "key_hello": {
+      "messages": [
+        {
+          "en": "Hello, World!"
+        },
+        {
+          "ru": "Привет, Мир!"
+        }
+      ]
+    },
+    "key_goodbye": {
+      "messages": [
+        {
+          "en": "Have a nice day!"
+        },
+        {
+          "ru": "Всего хорошего!"
+        }
+      ]
+    }
+  }
+}

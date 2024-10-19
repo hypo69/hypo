@@ -1,0 +1,40 @@
+{
+
+  "MICROSOFT WIRELESS KEYBOARD": {
+    "brand": "MICROSOFT",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=585&manId=14",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,204,316"
+  },
+  "MICROSOFT USB KEYBOARD": {
+    "brand": "MICROSOFT",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=589&manId=14",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,204,315"
+  },
+  "MICROSOFT USB MOUSE": {
+    "brand": "MICROSOFT",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=587&manId=14",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,206,317"
+  },
+  "MICROSOFT WIRELESS MOUSE": {
+    "brand": "MICROSOFT",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=586&manId=14",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,206,318"
+  },
+  "MICROSOFT USB KEYBOARD-MOUSE SET": {
+    "brand": "MICROSOFT",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=582&manId=14",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,207,208"
+  },
+  "MICROSOFT WIRELESS  KEYBOARD-MOUSE SET": {
+    "brand": "MICROSOFT",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=582&manId=14",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,207,334"
+  }
+
+}

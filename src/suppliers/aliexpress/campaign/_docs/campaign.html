@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Module Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        code {
+            font-family: "Courier New", Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Campaign Module Documentation</h1>
+
+    <h2>Overview</h2>
+    <p>The <code>campaign</code> module in the AliExpress system is designed to manage and edit promotional campaigns, interact with Google Sheets for data, and prepare campaign data for use. Below is a high-level overview of the algorithm and workflow within the module.</p>
+
+    <h2>Algorithm</h2>
+    <ol>
+        <li>
+            <strong>Initialization</strong>:
+            <p>The <code>__init__.py</code> file initializes the <code>campaign</code> module, making it available for import and use in other parts of the application.</p>
+        </li>
+        <li>
+            <strong>Editing Campaigns</strong>:
+            <p>The <code>ali_campaign_editor.py</code> file contains the main logic for editing campaigns. It provides functions to create, update, and manage campaign data.</p>
+            <p>External dependencies, such as <code>AliCampaignGoogleSheet</code> from <code>src.suppliers.aliexpress</code>, are used to interact with AliExpress campaign data.</p>
+        </li>
+        <li>
+            <strong>Managing Promotional Campaigns</strong>:
+            <p>The <code>ali_promo_campaign.py</code> file manages promotional campaigns, handling specific promotional strategies and configurations.</p>
+            <p>It leverages <code>AliCampaignGoogleSheet</code> for specific functionalities related to AliExpress.</p>
+        </li>
+        <li>
+            <strong>Google Sheets Interaction</strong>:
+            <p>The <code>gsheet.py</code> file manages interactions with Google Sheets. This includes reading from and writing to sheets for campaign data.</p>
+            <p>Dependencies such as <code>gspread</code> and <code>pandas</code> are used to facilitate these interactions. The module retrieves settings from <code>src.settings.gs</code> to configure Google Sheets access.</p>
+        </li>
+        <li>
+            <strong>Common Functions and Classes</strong>:
+            <p>The <code>header.py</code> file contains common functions or classes that are used across different parts of the <code>campaign</code> module. This ensures reusability and modularity.</p>
+        </li>
+        <li>
+            <strong>Preparing Campaign Data</strong>:
+            <p>The <code>prepare_campaigns.py</code> file is responsible for setting up and organizing necessary data for campaigns. This includes preprocessing data, validating inputs, and ensuring all necessary information is prepared for campaign execution.</p>
+        </li>
+        <li>
+            <strong>Type Definitions</strong>:
+            <p>The <code>ttypes.py</code> file defines types and structures used throughout the <code>campaign</code> module. This helps in maintaining consistency and type safety.</p>
+        </li>
+        <li>
+            <strong>Version Management</strong>:
+            <p>The <code>version.py</code> file maintains version information for the <code>campaign</code> module. This can be useful for debugging and tracking updates.</p>
+        </li>
+    </ol>
+
+    <h2>Documentation and Examples</h2>
+    <ul>
+        <li>
+            <strong>Documentation</strong>:
+            <p>The <code>_docs</code> directory contains markdown files that provide detailed documentation for the module, coding instructions, and startup options.</p>
+        </li>
+        <li>
+            <strong>Graphical Representations</strong>:
+            <p>The <code>_dot</code> and <code>_mermaid</code> directories contain graphical representations of the campaign structures in DOT and Mermaid formats respectively.</p>
+        </li>
+        <li>
+            <strong>Examples</strong>:
+            <p>The <code>_examples</code> directory includes example scripts demonstrating how to use various functionalities of the <code>campaign</code> module.</p>
+        </li>
+    </ul>
+
+    <h2>Testing</h2>
+    <ul>
+        <li>
+            <strong>Test Scripts</strong>:
+            <p>The <code>_pytest</code> directory includes test scripts that verify the correctness and integration of the <code>campaign</code> module. These tests ensure that all functionalities work as expected and help in maintaining code quality.</p>
+        </li>
+    </ul>
+
+    <h2>Detailed Workflow</h2>
+    <ol>
+        <li>
+            <strong>Setup and Configuration</strong>:
+            <p>Import necessary modules and dependencies. Initialize settings and configurations.</p>
+        </li>
+        <li>
+            <strong>Campaign Editing</strong>:
+            <p>Use <code>ali_campaign_editor.py</code> to create and modify campaign data. Fetch existing campaign data using <code>AliCampaignGoogleSheet</code> and apply updates.</p>
+        </li>
+        <li>
+            <strong>Promotional Campaign Management</strong>:
+            <p>Apply promotional strategies using <code>ali_promo_campaign.py</code>. Manage different types of promotions and their configurations.</p>
+        </li>
+        <li>
+            <strong>Data Interaction with Google Sheets</strong>:
+            <p>Read campaign data from Google Sheets using <code>gsheet.py</code>. Process the data using <code>pandas</code> and other utilities. Write updated campaign data back to Google Sheets.</p>
+        </li>
+        <li>
+            <strong>Data Preparation</strong>:
+            <p>Use <code>prepare_campaigns.py</code> to preprocess and validate campaign data. Ensure all necessary information is prepared for campaign execution.</p>
+        </li>
+        <li>
+            <strong>Common Operations</strong>:
+            <p>Utilize common functions from <code>header.py</code> for repeated tasks.</p>
+        </li>
+        <li>
+            <strong>Testing and Validation</strong>:
+            <p>Run test scripts from <code>_pytest</code> to ensure functionality. Validate campaign data and operations through integration tests.</p>
+        </li>
+        <li>
+            <strong>Documentation and Examples</strong>:
+            <p>Refer to <code>_docs</code> for detailed documentation. Use <code>_examples</code> to understand and implement specific functionalities.</p>
+        </li>
+    </ol>
+
+    <h2>Example Usage</h2>
+    <ol>
+        <li>
+            <strong>Process a Single Campaign Category:</strong>
+            <pre><code>process_campaign_category("SummerSale", "Electronics", "EN", "USD", force=True)</code></pre>
+        </li>
+        <li>
+            <strong>Process a Specific Campaign:</strong>
+            <pre><code>process_campaign("WinterSale", categories=["Clothing", "Toys"], language="EN", currency="USD", force=False)</code></pre>
+        </li>
+        <li>
+            <strong>Process All Campaigns:</strong>
+            <pre><code>process_all_campaigns(language="EN", currency="USD", force=True)</code></pre>
+        </li>
+    </ol>
+</body>
+</html>

@@ -1,0 +1,98 @@
+{
+  "category": {
+    "pages_listing_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "href",
+      "by": "css selector",
+      "selector": "li.next-page a"
+    }
+  },
+  "product": {
+    "product_block_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "div.item-box"
+    },
+    "link_to_product_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "href",
+      "by": "css selector",
+      "selector": "div.product-item a"
+    }
+  },
+  "product_fields_locators": {
+    "product_name_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "div[class=product-name] h1[itemprop='name']"
+    },
+    "brand_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+      "by": "css selector",
+      "selector": ".brands"
+    },
+
+    "sku_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "div[class=sku] span[itemprop='sku']"
+    },
+    "brand_sku_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "div[class=sku] span[itemprop='sku']"
+    },
+    "summary_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "div[class=product-name] h1[itemprop='name']"
+    },
+    "description_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+      "by": "css selector",
+      "selector": ".data-table[role='presentation']"
+    },
+    "images_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "src",
+      "by": "css selector",
+      "selector": ".cloudzoom"
+    },
+    "price_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "div span[itemprop='price']"
+    }
+  },
+  "stock_locator": {
+    "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
+    "by": "css selector",
+    "selector": "div[class=stock]"
+  },
+  "not in stock": [
+    "color:red",
+    "color:yellow",
+    "color:#d19b00"
+  ],
+  "login": {
+    "email": "edik@aluf.co.il",
+    "password": "Ep160172",
+
+    "open_login_dialog_locator": {
+      "by": "css selector",
+      "selector": ".ico-login"
+    },
+    "email_locator": {
+      "by": "css selector",
+      "selector": "#Email"
+    },
+    "password_locator": {
+      "by": "css selector",
+      "selector": "#Password"
+    },
+    "loginbutton_locator": {
+      "by": "css selector",
+      "selector": ".button-1.login-button"
+    }
+  },
+  "infinity_scroll": false,
+  "checkboxes_for_categories": false
+}
+

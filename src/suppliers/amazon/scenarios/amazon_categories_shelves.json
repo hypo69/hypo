@@ -1,0 +1,13 @@
+{
+  "scenarios": {
+    "SHELVES": {
+      "url": "https://amzn.to/3pObxZa",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": { "11060": "SHELVES" },
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    }
+  }
+}

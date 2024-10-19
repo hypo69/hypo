@@ -1,0 +1,25 @@
+{
+  "scenarios": {
+    "Xbox Series X": {
+      "brand": "MICROSOFT",
+      "url": "https://ksp.co.il/web/cat/219..255..15733..9335",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "microsoft": "Xbox Series X" }
+      },
+      "price_rule": 1
+    },
+    "Xbox Series S": {
+      "brand": "MICROSOFT",
+      "url": "https://ksp.co.il/web/cat/219..255..15734..9335",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "microsoft": "Xbox Series S" }
+      },
+      "price_rule": 1
+    }
+
+  }
+}

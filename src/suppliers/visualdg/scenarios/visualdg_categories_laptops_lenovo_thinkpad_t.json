@@ -1,0 +1,195 @@
+{
+  "scenarios": {
+    "LENOVO THINKPAD T 13.4 - 13.3 I3": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-----------------LENOVO THINKPAD T 13.4 - 13.3 I3-------------r ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,306,9,4,370,838"
+    },
+    "LENOVO THINKPAD T 13.4 - 13.3 I5": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-----------------LENOVO THINKPAD T 13.4 - 13.3 I5-------------r ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,306,9,5,371,838"
+    },
+    "LENOVO THINKPAD T 13.4 - 13.3 I7": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-----------------LENOVO THINKPAD T 13.4 - 13.3 I7-------------r ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,306,9,6,372,838"
+    },
+    "LENOVO THINKPAD T 13.4 - 13.3 I9": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "----------------LENOVO THINKPAD T 13.4 - 13.3 I9------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,306,9,7,373,838"
+    },
+    "LENOVO THINKPAD T 13.4 - 13.3 AMD": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "--------------LENOVO THINKPAD T 13.4 - 13.3 AMD--------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,306,9,234,347,838"
+    },
+    "LENOVO THINKPAD T 14 I3": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "------------------LENOVO THINKPAD T 14 I3-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,104,10,4,377,838"
+    },
+    "LENOVO THINKPAD T 14 I5": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "https://www.visualdg.co.il/172326-%D7%A0%D7%99%D7%99%D7%93%D7%99-ThinkPad-T/253273/253295",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,104,10,5,378,838"
+    },
+    "LENOVO THINKPAD T 14 I7": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "https://www.visualdg.co.il/172326-%D7%A0%D7%99%D7%99%D7%93%D7%99-ThinkPad-T/253274/253295",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,104,10,6,379,838"
+    },
+    "LENOVO THINKPAD T 14 I9": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "---------------LENOVO THINKPAD T 14 I9-------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,104,10,7,380,838"
+    },
+    "LENOVO THINKPAD T 14 AMD": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "------------------------LENOVO THINKPAD T 14 AMD------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,104,10,234,381,838"
+    },
+    "LENOVO THINKPAD T 15 I3": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "--------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,105,11,4,384,838"
+    },
+    "LENOVO THINKPAD T 15 I5": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "https://www.visualdg.co.il/172326-%D7%A0%D7%99%D7%99%D7%93%D7%99-ThinkPad-T/253273/253296",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,105,11,5,385,838"
+    },
+    "LENOVO THINKPAD T 15 I7": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "https://www.visualdg.co.il/172326-%D7%A0%D7%99%D7%99%D7%93%D7%99-ThinkPad-T/253274/253296",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,105,11,6,386,838"
+    },
+    "LENOVO THINKPAD T 15 I9": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "----------------LENOVO 15 I9------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,105,11,7,387,838"
+    },
+    "LENOVO THINKPAD T 15 AMD": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-----------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,105,11,234,388,838"
+    },
+    "LENOVO THINKPAD T 15 Celeron": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "---------------------LENOVO 15 Celeron-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,105,11,233,389,838"
+    },
+    "LENOVO THINKPAD T 15 Pentium": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-------------------LENOVO 15 Pentium------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,105,11,232,390,838"
+    },
+    "LENOVO THINKPAD T 17.3 I3": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-----------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,106,12,4,391,838"
+    },
+    "LENOVO THINKPAD T 17.3 I5": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,106,12,5,392,838"
+    },
+    "LENOVO THINKPAD T 17.3 I7": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "--------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,106,12,6,393,838"
+    },
+    "LENOVO THINKPAD T 17.3 I9": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "--------------------LENOVO 17.3 I9---------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,106,12,7,394,838"
+    },
+    "LENOVO THINKPAD T 17.3 AMD": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-------------------LENOVO 17.3 AMD-----------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,106,12,234,395,838"
+    },
+    "LENOVO THINKPAD T 17.3 Celeron": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "-------------------LENOVO 17.3 Celeron---------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,106,12,233,396,838"
+    },
+    "LENOVO THINKPAD T 17.3 Pentium": {
+      "brand": "LENOVO",
+      "template": "THINKPAD T",
+      "url": "---------------------LENOVO 17.3 Pentium-----------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,53,106,12,232,397,838"
+    }
+  }

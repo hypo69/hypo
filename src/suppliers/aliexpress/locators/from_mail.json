@@ -1,0 +1,11 @@
+{
+  "product_blocks": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//td[div[contains(@class, '-item-card') and not(contains(@class, 'item-card-text'))]]",
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": "",
+    "locator_description": "Товары со страницы deals, котору я делаю из почтовой рассылки. "
+  }
+}

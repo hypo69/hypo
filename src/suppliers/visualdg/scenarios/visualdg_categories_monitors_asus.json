@@ -1,0 +1,60 @@
+{
+  "scenarios": {
+    "ASUS 18": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169413-%D7%9E%D7%A1%D7%9B%D7%99-%D7%9E%D7%97%D7%A9%D7%91-ASUS/253029",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,241,535"
+    },
+    "ASUS 19.5": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169413-%D7%9E%D7%A1%D7%9B%D7%99-%D7%9E%D7%97%D7%A9%D7%91-ASUS/253029",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,241,535"
+    },
+    "ASUS 22": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169413-%D7%9E%D7%A1%D7%9B%D7%99-%D7%9E%D7%97%D7%A9%D7%91-ASUS/253020",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,128,535"
+    },
+    "ASUS 24-25": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169413-%D7%9E%D7%A1%D7%9B%D7%99-%D7%9E%D7%97%D7%A9%D7%91-ASUS/253024",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,535"
+
+    },
+    "ASUS 27-29": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169413-%D7%9E%D7%A1%D7%9B%D7%99-%D7%9E%D7%97%D7%A9%D7%91-ASUS/253022",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,535"
+    },
+    "ASUS 32": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169413-%D7%9E%D7%A1%D7%9B%D7%99-%D7%9E%D7%97%D7%A9%D7%91-ASUS/253023",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,131,535"
+    },
+    "ASUS 34": {
+      "brand": "ASUS",
+      "url": " --------------------------  ASUS 34 -----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,132,535"
+    },
+    "ASUS 49": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169413-%D7%9E%D7%A1%D7%9B%D7%99-%D7%9E%D7%97%D7%A9%D7%91-ASUS/253038",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,133,535"
+    }
+  }

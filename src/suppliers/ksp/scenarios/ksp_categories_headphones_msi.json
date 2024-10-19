@@ -1,0 +1,22 @@
+{
+  "scenarios": {
+    "In-ear Bud": {
+      "brand": "MSI",
+      "url": "https://ksp.co.il/web/cat/242..47..1250",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "msi": "HEADPHONES BT In-ear Bud" }
+      }
+    },
+    "Overear": {
+      "brand": "MSI",
+      "url": "https://ksp.co.il/web/cat/242..1252..47",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "msi": "HEADPHONES Overear" }
+      }
+    }
+  }
+}

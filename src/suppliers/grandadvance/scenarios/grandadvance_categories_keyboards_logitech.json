@@ -1,0 +1,40 @@
+{
+
+  "LOGITECH WIRELESS KEYBOARD": {
+    "brand": "LOGITECH",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=585&manId=10",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,204,316"
+  },
+  "LOGITECH USB KEYBOARD": {
+    "brand": "LOGITECH",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=589&manId=10",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,204,315"
+  },
+  "LOGITECH USB MOUSE": {
+    "brand": "LOGITECH",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=587&manId=10",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,206,317"
+  },
+  "LOGITECH WIRELESS MOUSE": {
+    "brand": "LOGITECH",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=586&manId=10",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,206,318"
+  },
+  "LOGITECH USB KEYBOARD-MOUSE SET": {
+    "brand": "LOGITECH",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=582&manId=10",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,207,208"
+  },
+  "LOGITECH WIRELESS  KEYBOARD-MOUSE SET": {
+    "brand": "LOGITECH",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=582&manId=10",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "203,207,334"
+  }
+
+}

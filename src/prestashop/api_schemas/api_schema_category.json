@@ -1,0 +1,178 @@
+{
+  "category": {
+    "id": "",
+    "id_parent": "",
+    "active": "",
+    "id_shop_default": "",
+    "is_root_category": "",
+    "position": "",
+    "date_add": "",
+    "date_upd": "",
+    "name": {
+      "language": [
+        {
+          "attrs": {
+            "id": "1"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "2"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "3"
+          },
+          "value": ""
+        }
+      ]
+    },
+    "link_rewrite": {
+      "language": [
+        {
+          "attrs": {
+            "id": "1"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "2"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "3"
+          },
+          "value": ""
+        }
+      ]
+    },
+    "description": {
+      "language": [
+        {
+          "attrs": {
+            "id": "1"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "2"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "3"
+          },
+          "value": ""
+        }
+      ]
+    },
+    "meta_title": {
+      "language": [
+        {
+          "attrs": {
+            "id": "1"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "2"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "3"
+          },
+          "value": ""
+        }
+      ]
+    },
+    "meta_description": {
+      "language": [
+        {
+          "attrs": {
+            "id": "1"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "2"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "3"
+          },
+          "value": ""
+        }
+      ]
+    },
+    "meta_keywords": {
+      "language": [
+        {
+          "attrs": {
+            "id": "1"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "2"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "3"
+          },
+          "value": ""
+        }
+      ]
+    },
+    "description_long": {
+      "language": [
+        {
+          "attrs": {
+            "id": "1"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "2"
+          },
+          "value": ""
+        },
+        {
+          "attrs": {
+            "id": "3"
+          },
+          "value": ""
+        }
+      ]
+    },
+    "associations": {
+      "categories": {
+        "category": {
+          "id": ""
+        }
+      },
+      "products": {
+        "product": {
+          "id": ""
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1153 @@
+{
+  "close_banner": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//button[@id = 'closeXButton']",
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": "click()",
+    "locator_description": "Закрываю pop-up окно, если оно не появилось - не страшно (`mandatory`:`false`)"
+  },
+  "id": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "id"
+  },
+  "id_manufacturer": {
+    "attribute": 11290,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "id_manufacturer"
+  },
+  "id_supplier": {
+    "attribute": 11267,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "id_supplier"
+  },
+  "id_category_default": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "id_category_default"
+  },
+  "condition": {
+    "attribute": "new",
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "condition"
+  },
+  "cache_default_attribute": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "cache_default_attribute"
+  },
+  "default_image_url": {
+    "attribute": "src",
+    "by": "XPATH",
+    "selector": "//img[contains(@class, 'zoomImg')]",
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "default_image_url"
+  },
+  "id_default_combination": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "id_default_combination"
+  },
+  "id_tax": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "id_tax"
+  },
+  "position_in_category": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "position_in_category"
+  },
+  "type": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "type"
+  },
+  "id_shop_default": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "id_shop_default"
+  },
+  "product_reference_and_volume_and_price_for_100": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//div[@data-widget_type='shortcode.default']",
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "На сайте кривой HTML, поэтому одним локатором вытескиваю 3 значения, а потом делаю парсинг. Приходит список из четырех объектов: объем, цена за 100 гр, артикул, пустой div"
+  },
+  "reference": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "reference Собирается в коде из supplier.supplier_id + f.supplier_reference"
+  },
+  "supplier_reference": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "logic for action[AND|OR|XOR|VALUE|null]": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "supplier_reference Получаю через локатор product_reference_and_volume_and_price_for_100"
+  },
+  "additional_images_urls": {
+    "attribute": "src",
+    "by": "XPATH",
+    "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "additional_images_alts": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "location": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "location"
+  },
+  "width": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "width"
+  },
+  "height": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "height"
+  },
+  "depth": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "depth"
+  },
+  "weight": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "logic for action[AND|OR|XOR|VALUE|null]": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "weight"
+  },
+  "quantity_discount": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "quantity_discount"
+  },
+  "ean13": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "ean13"
+  },
+  "isbn": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "isbn"
+  },
+  "upc": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "upc"
+  },
+  "mpn": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "mpn"
+  },
+  "cache_is_pack": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "cache_is_pack"
+  },
+  "cache_has_attachments": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "cache_has_attachments"
+  },
+  "is_virtual": {
+    "attribute": "0",
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "is_virtual"
+  },
+  "out_of_stock": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//p[contains(@class, 'out-of-stock')]",
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "out_of_stock"
+  },
+  "state": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "state"
+  },
+  "additional_delivery_times": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "additional_delivery_times"
+  },
+  "delivery_in_stock": {
+    "attribute": "Israel Post",
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "delivery_in_stock (Israel Post)"
+  },
+  "delivery_out_stock": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "delivery_out_stock"
+  },
+  "product_type": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "product_type"
+  },
+  "on_sale": {
+    "attribute": 0,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "on_sale"
+  },
+  "online_only": {
+    "attribute": 1,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "online_only"
+  },
+  "ecotax": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "ecotax"
+  },
+  "minimal_quantity": {
+    "attribute": 1,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "minimal_quantity"
+  },
+  "low_stock_threshold": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "low_stock_threshold"
+  },
+  "low_stock_alert": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "low_stock_alert"
+  },
+  "price": {
+    "attribute": "innerText",
+    "by": "XPATH",
+    "selector": "//p[@class='price']",
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "price"
+  },
+  "wholesale_price": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "wholesale_price"
+  },
+  "unity": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "unity"
+  },
+  "unit_price_ratio": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "unit_price_ratio"
+  },
+  "additional_shipping_cost": {
+    "attribute": 30,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "Стоимость отправки. 30 шек. by: VALUE означает, что я беру значение из attribute"
+  },
+  "customizable": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "customizable"
+  },
+  "text_fields": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "text_fields"
+  },
+  "uploadable_files": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "uploadable_files"
+  },
+  "active": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "active"
+  },
+  "redirect_type": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "redirect_type"
+  },
+  "id_type_redirected": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "id_type_redirected"
+  },
+  "available_for_order": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//p[contains(@class, 'out-of-stock')]",
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "available_for_order - Если вернулся не пустой локатор - флаг выставляется в 1, иначе 0. Текст на сайте עזל ממלאי"
+  },
+  "available_date": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "available_date"
+  },
+  "show_price": {
+    "attribute": 1,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "show_price"
+  },
+  "indexed": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": ""
+  },
+  "visibility": {
+    "attribute": "both",
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "visibility"
+  },
+  "advanced_stock_management": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "advanced_stock_management"
+  },
+  "date_add": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "date_add"
+  },
+  "date_upd": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "date_upd"
+  },
+  "pack_stock_type": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "pack_stock_type"
+  },
+  "meta_description": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "meta_description"
+  },
+  "meta_keywords": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "meta_keywords"
+  },
+  "meta_title": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "meta_title"
+  },
+  "link_rewrite": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "link_rewrite"
+  },
+  "name": {
+    "attribute": "innerText",
+    "by": "XPATH",
+    "selector": "//h1[contains(@class,'product_title')]",
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "name"
+  },
+  "description": {
+    "attribute": [
+      null,
+      null
+    ],
+    "by": [
+      "XPATH",
+      "XPATH"
+    ],
+    "selector": [
+      "//a[contains(@href, '#tab-description')]",
+      "//div[@id = 'tab-description']//p"
+    ],
+    "event": [
+      "click()",
+      null
+    ],
+    "if_list":"first","use_mouse": [
+      false,
+      false
+    ],
+    "mandatory": [
+      true,
+      true
+    ],
+    "locator_description": [
+      "Нажимаю на таб для отркытия поля description",
+      "читаю данные из div"
+    ]
+  },
+  "description_short": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "description_short - на сайте HB есть только description. получаю через селектор `description`"
+  },
+  "affiliate_short_link": {
+    "attribute": "$_(driver.current_url)_$",
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "Исполняю формулу и отдаю результат через `value`"
+  },
+  "affiliate_text": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "affiliate_text"
+  },
+  "affiliate_summary": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "affiliate_summary"
+  },
+  "affiliate_summary_2": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "affiliate_summary_2"
+  },
+  "affiliate_image_small": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "affiliate_image_small"
+  },
+  "affiliate_image_medium": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "affiliate_image_medium"
+  },
+  "affiliate_image_large": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "affiliate_image_large"
+  },
+  "ingredients": {
+    "attribute": [
+      null,
+      null
+    ],
+    "by": [
+      "XPATH",
+      "XPATH"
+    ],
+    "selector": [
+      "//a[contains(@href, 'מרכיבים')]",
+      "//div[contains(@id ,'מרכיבים')]"
+    ],
+    "if_list":"first","use_mouse": [
+      false,
+      false
+    ],
+    "mandatory": [
+      true,
+      true
+    ],
+    "event": [
+      "click()",
+      null
+    ],
+    "locator_description": "ingredients"
+  },
+  "how_to_use": {
+    "attribute": [
+      null,
+      null
+    ],
+    "by": [
+      "XPATH",
+      "XPATH"
+    ],
+    "selector": [
+      "//a[contains(@href, 'אופן-השימוש')]",
+      "//div[contains(@id ,'אופן-השימוש')]//p"
+    ],
+    "if_list":"first","use_mouse": [
+      false,
+      false
+    ],
+    "mandatory": [
+      true,
+      true
+    ],
+    "event": [
+      "click()",
+      null
+    ],
+    "locator_description": "how_to_use"
+  },
+  "specification": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "specification"
+  },
+  "available_now": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "available_now"
+  },
+  "available_later": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "available_later"
+  },
+  "quantity": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": ""
+  },
+  "link_to_video": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "link_to_video"
+  },
+  "associations": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated associations - Поле используется для добавления картинок, категорий итп. Заполняется в коде"
+  },
+  "Active (0/1)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Active (0/1) - товар показывается или нет в магазине клиента"
+  },
+  "Categories (x,y,z...)": {
+    "attribute": 2,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Categories (x,y,z...) - дополнительные категории. Поле используется при ручном импорте csv"
+  },
+  "Price tax excluded": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Price tax excluded -  Поле используется при ручном импорте csv . В коде преташоп известен как pex?"
+  },
+  "Price tax included": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Price tax included -  Поле используется при ручном импорте csv"
+  },
+  "Tax rule ID": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Tax rule ID -  Поле используется при ручном импорте csv"
+  },
+  "Cost price": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Cost price -  Поле используется при ручном импорте csv"
+  },
+  "On sale (0/1)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated On sale (0/1) -  Поле используется при ручном импорте csv"
+  },
+  "Discount amount": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Discount amount -  Поле используется при ручном импорте csv"
+  },
+  "Discount percent": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Discount amount -  Поле используется при ручном импорте csv"
+  },
+  "Discount from (yyyy-mm-dd)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Discount from (yyyy-mm-dd) -  Поле используется при ручном импорте csv"
+  },
+  "Discount to (yyyy-mm-dd)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Discount to (yyyy-mm-dd) -  Поле используется при ручном импорте csv"
+  },
+  "Brand": {
+    "attribute": "hb",
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "@deprecated Brand -  Поле используется при ручном импорте csv"
+  },
+  "Low stock level": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Low stock level -  Поле используется при ручном импорте csv"
+  },
+  "Send me an email when the quantity is under this level": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Send me an email when the quantity is under this level -  Поле используется при ручном импорте csv"
+  },
+  "Tags (x,y,z...)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Tags (x,y,z...) -  Поле используется при ручном импорте csv"
+  },
+  "Label when in stock": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Label when in stock -  Поле используется при ручном импорте csv"
+  },
+  "Label when backorder allowed": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "@deprecated Label when backorder allowed -  Поле используется при ручном импорте csv"
+  },
+  "Delete existing images (0 = No, 1 = Yes)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Feature (Name:Value:Position:Customized)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Available online only (0 = No, 1 = Yes)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Condition": {
+    "attribute": "new",
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null
+  },
+  "Customizable (0 = No, 1 = Yes)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Uploadable files (0 = No, 1 = Yes)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Text fields (0 = No, 1 = Yes)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Action when out of stock": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Virtual product (0 = No, 1 = Yes)": {
+    "attribute": 0,
+    "by": "VALUE",
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": null
+  },
+  "File URL": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Number of allowed downloads": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Expiration date (yyyy-mm-dd)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Number of days": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Advanced Stock Management": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Depends on stock": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Warehouse": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Accessories (x,y,z...)": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Open AI Product Description": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Byer protection": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Specification": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Refirbished product description": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  },
+  "Additional shipping details": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list":"first","use_mouse": false,
+    "mandatory": false,
+    "event": null
+  }
+}

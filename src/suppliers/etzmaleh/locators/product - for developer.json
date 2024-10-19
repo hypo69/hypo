@@ -1,0 +1,1416 @@
+{
+    "id": {
+        "attribute": null,
+        
+        "by": "VALUE",
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "id_manufacturer": {
+        "attribute": "innerText",
+        
+        "by": "XPATH",
+        "selector": "//span[contains(text(), 'Brand')]/parent::td/following-sibling::td/span[contains(@class, 'po-break-word')]",
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "id_supplier": {
+        "attribute": null,
+        
+        "by": "VALUE",
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "id_category_default": {
+        "attribute": null,
+        
+        "by": "VALUE",
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "new": {
+        "attribute": null,
+        
+        "by": "VALUE",
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "cache_default_attribute": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "id_default_image": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "id_default_combination": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "id_tax": {
+        "attribute": "$p.tax_rule",
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "position_in_category": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "type": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "id_shop_default": {
+        "attribute": "1",
+        
+        "by": "VALUE",
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "reference": {
+        "attribute": "$d.current_url.split(f'''/''')[-2]",
+        
+        "by": "VALUE",
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "supplier_reference": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "location": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "width": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "height": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "depth": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "weight": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "quantity_discount": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "ean13": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "isbn": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "upc": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "mpn": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "cache_is_pack": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "cache_has_attachments": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "is_virtual": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "state": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "additional_delivery_times": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "delivery_in_stock": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "delivery_out_stock": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "product_type": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "on_sale": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "online_only": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "ecotax": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "minimal_quantity": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "low_stock_threshold": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "low_stock_alert": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "price": {
+        "attribute": "innerText",
+        
+        "by": "XPATH",
+        "selector": "//td[contains(text(), 'Typical price:')]/following-sibling::td[1]//span//span[1]",
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "wholesale_price": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "unity": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "unit_price_ratio": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "additional_shipping_cost": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "customizable": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "text_fields": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "uploadable_files": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "active": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "redirect_type": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "id_type_redirected": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "available_for_order": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "available_date": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "show_condition": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "condition": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "show_price": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "indexed": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "visibility": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "advanced_stock_management": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "date_add": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "date_upd": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "pack_stock_type": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "meta_description": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "meta_keywords": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "meta_title": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "link_rewrite": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "name": {
+        "attribute": "innerText",
+        
+        "by": "XPATH",
+        "selector": "//span[@id='productTitle']",
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "description": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "description_short": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "affiliate_short_link": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "affiliate_text": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "affiliate_summary": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "affiliate_summary_2": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "available_now": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "available_later": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "associations": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "ASIN": {
+        "attribute": "innerText",
+        
+        "by": "XPATH",
+        "selector": "//*[contains(text(),'ASIN')]/following-sibling::*",
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Active (0/1)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Name*": {
+        "attribute": "innerText",
+        
+        "by": "XPATH",
+        "selector": "//span[@id='productTitle']",
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Categories (x,y,z...)": "2,",
+    "On sale (0/1)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Discount amount": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Discount percent": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Discount from (yyyy-mm-dd)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Discount to (yyyy-mm-dd)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "reference #": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Supplier reference #": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Supplier": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "UPC": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "MPN": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Ecotax": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Width": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Height": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Depth": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Weight": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Delivery time of in-stock products:": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Delivery time of out-of-stock products with allowed orders:": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "quantity": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Minimal quantity": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Low stock level": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Send me an email when the quantity is under this level": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Visibility": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Additional shipping cost": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Unit for base price": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Base price": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Summary": {
+        "attribute": "innerHTML",
+        
+        "by": "XPATH",
+        "selector": "//div[contains(@data-a-expander-name , 'product_overview')]//table",
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Description": {
+        "attribute": "innerText",
+        
+        "by": "XPATH",
+        "selector": "//div[@id='productDescription']",
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Tags (x,y,z...)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Meta title": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Meta keywords": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Meta description": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Rewritten URL": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Label when in stock": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Label when backorder allowed": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Available for order (0 = No, 1 = Yes)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Product availability date": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Product creation date": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Show price (0 = No, 1 = Yes)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Screenshot": {
+        "attribute": null,
+        
+        "by": "XPATH",
+        "selector": "//img[@id='landingImage']|//img[@class='a-dynamic-image']",
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": "screenshot()",
+        "logic for action[AND|OR|XOR|VALUE|null]": null
+    },
+    "additional_images_urls": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "additional_images_alts": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Delete existing images (0 = No, 1 = Yes)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Feature (Name:Value:Position:Customized)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Available online only (0 = No, 1 = Yes)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Condition": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Customizable (0 = No, 1 = Yes)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Uploadable files (0 = No, 1 = Yes)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Text fields (0 = No, 1 = Yes)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Action when out of stock": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Virtual product (0 = No, 1 = Yes)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "File URL": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Number of allowed downloads": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Expiration date (yyyy-mm-dd)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Number of days": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "ID / Name of shop": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Advanced Stock Management": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Depends on stock": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Warehouse": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Accessories (x,y,z...)": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "affiliate short link": {
+        "logic for attribue[AND|OR|XOR|VALUE|null]": [
+            null,
+            null
+        ],
+        "attribute": [
+            null,
+            "value"
+        ],
+        "by": [
+            "XPATH",
+            "XPATH"
+        ],
+        "selector": [
+            "//li[contains(@id,'amzn-ss-text-link')]",
+            "//textarea[contains(@id,'amzn-ss-text-shortlink-textarea')]"
+        ],
+        "if_list":"first","use_mouse": [
+            false,
+            false
+        ],
+        "event": [
+            "wait(click(),2,after)",
+            null
+        ],
+        "logic for action[AND|OR|XOR|VALUE|null]": [
+            null,
+            null
+        ]
+    },
+    "affiliate text": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "affiliate summary": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "affiliate summary 2": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Open AI Product Description": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Byer protection": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Specification": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Refirbished product description": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Additional shipping details": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "Product features": {
+        "attribute": null,
+        
+        "by": null,
+        "selector": null,
+        
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null
+    },
+    "affiliate_img_HTML": {
+        "logic for attribue[AND|OR|XOR|VALUE|null]": [
+            null,
+            null
+        ],
+        "attribute": [
+            null,
+            "value"
+        ],
+        "by": [
+            "XPATH",
+            "XPATH"
+        ],
+        "selector": [
+            "//li[contains(@id,'amzn-ss-image-link')]",
+            "//textarea[contains(@id,'amzn-ss-image-textarea')]"
+        ],
+        "if_list":"first","use_mouse": [
+            false,
+            false
+        ],
+        "event": [
+            "wait(click(),2,after)",
+            null
+        ],
+        "logic for action[AND|OR|XOR|VALUE|null]": [
+            null,
+            null
+        ]
+    },
+    "affiliate_iframe": {
+        "logic for attribue[AND|OR|XOR|VALUE|null]": [
+            null,
+            null
+        ],
+        "attribute": [
+            null,
+            "value"
+        ],
+        "by": [
+            "XPATH",
+            "XPATH"
+        ],
+        "selector": [
+            "//li[contains(@id,'amzn-ss-show-text-image-popover')]",
+            "//textarea[contains(@id,'amzn-ss-text-image-textarea')]"
+        ],
+        "if_list":"first","use_mouse": [
+            false,
+            false
+        ],
+        "event": [
+            "wait(click(),2,after)",
+            null
+        ],
+        "logic for action[AND|OR|XOR|VALUE|null]": [
+            null,
+            null
+        ]
+    },
+    "Additional product info": {
+        "attribute": "innerText",
+        
+        "by": "XPATH",
+        "selector": "",
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null,
+        "logic for action[AND|OR|XOR|VALUE|null]": null
+    },
+    "summary": {
+        "attribute": "innerText",
+        
+        "by": "XPATH",
+        "selector": "//div[@id='productDescription']",
+        "if_list":"first","use_mouse": false, "mandatory": true,
+        "event": null,
+        "logic for action[AND|OR|XOR|VALUE|null]": null
+    }
+}

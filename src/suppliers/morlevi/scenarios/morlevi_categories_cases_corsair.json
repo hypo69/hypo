@@ -1,0 +1,67 @@
+{
+  "scenarios": {
+    "CORSAIR MID TOWER": {
+      "brand": "CORSAIR",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/99?p_315=20&p_124=540&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "corsair": "MINI ITX" }
+      }
+    },
+    "CORSAIR full tower": {
+      "brand": "CORSAIR",
+      "template": "",
+      "url": null,
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "corsair": "FULL TOWER" }
+      }
+    },
+    "CORSAIR mini tower": {
+      "brand": "CORSAIR",
+      "template": "",
+      "url": null,
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "corsair": "MINI TOWER" }
+      }
+    },
+    "CORSAIR gaming MID TOWER": {
+      "brand": "CORSAIR",
+      "template": "",
+      "url": null,
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "corsair": "MID TOWER" }
+      }
+    },
+    "CORSAIR gaming full tower": {
+      "brand": "CORSAIR",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/99?p_315=20&p_124=546&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "corsair": "GAMING FULL TOWER" }
+      }
+    },
+    "CORSAIR mini itx": {
+      "brand": "CORSAIR",
+      "template": "",
+      "url": null,
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "corsair": "MINI ITX" }
+      }
+    }
+  }
+}

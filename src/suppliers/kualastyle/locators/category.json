@@ -1,0 +1,21 @@
+{
+  "product_links": {
+    "attribute": "href",
+
+    "by": "XPATH",
+    "selector": "//a[contains(@class,'image-link')]",
+
+    "if_list":"first","use_mouse": false,
+    "mandatory": true,
+    "event": false
+  },
+  "categories_links": {
+
+    "attribute": { "text": "href" },
+    "by": "XPATH",
+    "selector": "//nav[contains(@class, 'site-navigation')]//a",
+    "event": false,
+    "mandatory": false,
+    "locator_description": ""
+  }
+}

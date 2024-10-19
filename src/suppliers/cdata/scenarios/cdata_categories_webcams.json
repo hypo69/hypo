@@ -1,0 +1,19 @@
+{
+  "scenarios": {
+    "Cams MICROSOFT": {
+      "brand": "MICROSOFT",
+      "url": "https://reseller.c-data.co.il/camwebs-and-controllers#/manFilters=1&pageSize=33&viewMode=grid&orderBy=0&pageNumber=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "520,523,984"
+    },
+
+    "Cams HP": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/camwebs-and-controllers#/manFilters=2&pageSize=33&viewMode=grid&orderBy=0&pageNumber=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "520,523,985"
+    }
+
+  }

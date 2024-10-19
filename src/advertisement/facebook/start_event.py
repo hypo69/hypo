@@ -1,0 +1,41 @@
+## \file ../src/advertisement/facebook/start_event.py
+# -*- coding: utf-8 -*-
+# /path/to/interpreter/python
+"""Отправка мероприятий в группы фейсбук """
+
+from math import log
+import header
+import time
+from src.utils.jjson import j_loads
+from src.webdriver import Driver, Chrome
+from src.advertisement.facebook import FacebookPromoter
+from src.logger import logger
+
+d = Driver(Chrome)
+d.get_url(r"https://facebook.com")
+
+filenames:list[str] = [ "my_managed_groups.json",
+                        "usa.json",
+                        "he_il.json",
+                        "ru_il.json",
+                        "katia_homepage.json",
+                        
+                        "ru_usd.json",
+                        "ger_en_eur.json",            
+                        ]
+excluded_filenames:list[str] = ["my_managed_groups.json",]
+
+events_names:list = ["choice_day_01_10"]
+
+
+promoter:FacebookPromoter = FacebookPromoter(d, group_file_paths=filenames, no_video = True)
+
+try:
+    while True:
+        logger.debug(f"waikig up {time.strftime('%H:%M:%S')}",None,False)
+        promoter.run_events(events_names = events_names, group_file_paths = filenames)
+        logger.debug(f"going to sleep at {time.strftime('%H:%M:%S')}",None,False)
+        time.sleep(7200)
+        
+except KeyboardInterrupt:
+    logger.info("Campaign promotion interrupted.")

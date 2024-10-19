@@ -1,0 +1,26 @@
+{
+  "scenarios": {
+    "VIDEOCARDS GIGABYTE NEW": {
+      "brand": "GIGABYTE",
+      "url": "https://www.amazon.com/s?k=video+cards+gigabyte&i=electronics&bbn=172282&rh=n%3A172282%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AGIGABYTE%7CGigabyte%2Cp_n_condition-type%3A2224371011&dc&qid=1676213463&rnid=2224369011&ref=sr_nr_p_n_condition-type_1&ds=v1%3AVCRt9bSSpHdfd3sCc77vMRorubXPCRtN7SM2vVBM8fA",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "gigabyte": "VIDEOCARDS" }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "VIDEOCARDS GIGABYTE USED": {
+      "brand": "GIGABYTE",
+      "url": "https://www.amazon.com/s?k=video+cards+gigabyte&i=electronics&bbn=172282&rh=n%3A172282%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AGIGABYTE%7CGigabyte%2Cp_n_condition-type%3A2224373011&dc&qid=1676213812&rnid=2224369011&ref=sr_nr_p_n_condition-type_2&ds=v1%3AoSZQwtl9Ns40qx0BtCgu5jLXQ0hbQt7d6%2F9wM5zFM%2BQ",
+      "active": true,
+      "condition": "used",
+      "presta_categories": {
+        "template": { "gigabyte": "VIDEOCARDS" }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    }
+  }
+}

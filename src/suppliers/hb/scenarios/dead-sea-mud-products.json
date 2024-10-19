@@ -1,0 +1,14 @@
+{
+  "scenarios": {
+
+    "מוצרי בוץ ים המלח": {
+      "url": "https://hbdeadsea.co.il/product-category/dead-sea-mud-products/",
+      "name": "טיפוח כפות ידיים ורגליים",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11111,
+        "additional_categories": []
+      }
+    }
+  }
+}

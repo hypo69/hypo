@@ -1,0 +1,129 @@
+{
+  "login": {
+    "login_url": "https://login.aliexpress.com",
+
+
+    "close banner": {
+      
+      "attribute": "text",
+      "by": "XPATH",
+      "selector": "//div[contains(text(), 'אפשר')]",
+      "event": "send_keys(Key.RETURN)",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+
+    "open_login": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//div[@class = 'account-main']//span[. = 'Sign in'] | //div[@class = 'account-main']//span[. = 'Se connecter'] | //div[@class = 'account-main']//span[. = 'כניסה'] ",
+      "event": "click()",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+
+
+    "email_locator": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//input[@id='fm-login-id']",
+      "event": "send_keys('one.last.bit@gmail.com')",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+
+    "password_locator": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//input[@id='fm-login-password']",
+      "event": "send_keys('7p3ato9kijsosw7')",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+
+    "loginbutton_locator": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//button[@type='submit']",
+      "event": "click()",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+
+    "cookies_accept": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//button[contains(@data-role,'gdpr-accept')]",
+      "event": "click()",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    }
+
+  },
+  "currency_language_shipto_locators": {
+
+    "currency_language_shipto_block_opener_locator": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//div[@data-role = 'region-pannel']/a",
+      "event": "click()",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+
+    "shipto_locator": {
+      
+      "attribute": [ null, null, null ],
+      "by": [ "XPATH", "XPATH", "XPATH" ],
+      "selector": [
+        "//a[contains(@class,'address-select-trigger') and contains(@data-role,'country')]",
+        "//div[@class = 'filter-list-container']",
+        "//li[contains(@data-code,'il')]"
+      ],
+      "event": [ "click()", "click()", "click()" ],
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+    "language_locator": {
+      
+      "attribute": [ null, null, null ],
+      "by": [ "XPATH", "XPATH", "XPATH" ],
+      "selector": [
+        "//span[contains( @data-role , 'language-input')]",
+        "//input[contains(@data-role,'language-search')]",
+        "//a[contains(@data-locale,'en-US')]"
+      ],
+      "event": [ "click()", "click()", "click()" ],
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+    "currency_locator": {
+      
+      "attribute": [ null, null, null ],
+      "by": [ "XPATH", "XPATH", "XPATH" ],
+      "selector": [
+        "//div[contains(@class , 'switcher-currency-c language-selector')]",
+        "//span[contains(@class , 'select-item')]",
+        "//a[contains(@data-currency , 'ILS')]"
+      ],
+      "event": [ "click()", "click()", "click()" ],
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    },
+    "save_button_locator": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//div[contains(@class , 'switcher-btn')]",
+      "event": "click()",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "locator_description": ""
+    }
+  }
+}

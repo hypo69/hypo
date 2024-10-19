@@ -1,0 +1,13 @@
+{
+  "scenarios": {
+    "Consoles Entrance chests": {
+      "url": "https://amzn.to/3K1wqqD",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": { "11199": "Consoles Entrance chests" },
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    }
+  }
+}

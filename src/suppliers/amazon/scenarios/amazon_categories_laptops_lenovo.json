@@ -1,0 +1,112 @@
+{
+  "store": {
+    "store_id": "",
+    "supplier_id": "",
+    "get store banners": true,
+    "description": "Lenovo laptops",
+    "about": "Lenovo laptops",
+    "brand": "LENOVO","url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ALenovo&dc&qid=1671858970&rnid=23716050011&ref=sr_nr_p_n_feature_thirty-one_browse-bin_1&ds=v1%3AEaENIiWwifDcRT6qTB%2FxEy6WSOBD%2FsskOooUf%2FcAiGU",
+    "shop categories page": "",
+    "shop categories json file": ""
+  },
+
+  "scenarios": {
+    "LAPTOP LENOVO AMD ATHLON 13": {
+      "brand": "LENOVO",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_89%3ALenovo%2Cp_n_feature_four_browse-bin%3A1264728011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1674228094&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3AM9nKGPOL2sEa75Wq%2BN5ibb4AA3CUqLERK%2Fewcx2E9G4",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": [ "LAPTOPS AMD ATHLON", "13" ] }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOP LENOVO AMD RYZEN 3": {
+      "brand": "LENOVO",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_89%3ALenovo%2Cp_n_feature_four_browse-bin%3A18107800011&dc&qid=1671868229&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_5&ds=v1%3APd9r%2Fmu4LFPmQbVNx4r38WEVf4oLyDiRsUPRsmJcD2c",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "LAPTOPS AMD RYZEN 3" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOP LENOVO AMD RYZEN 5": {
+      "brand": "LENOVO",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_89%3ALenovo%2Cp_n_feature_four_browse-bin%3A18107801011&dc&qid=1671868297&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_4&ds=v1%3AlnkmPjF9iXbEQyTFM60xjpdQyxVlPXztK%2Ba8hC1mcIc",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "LAPTOPS AMD RYZEN 5" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOP LENOVO AMD RYZEN 7": {
+      "brand": "LENOVO",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_n_feature_thirty-one_browse-bin%3A23716057011%2Cp_89%3ALenovo%2Cp_n_feature_four_browse-bin%3A18107802011&dc&qid=1671868349&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_2&ds=v1%3AhRAIfmofpDxVwkRtHe9ZtUjE9xlCWsDuviZiGkvZQjU",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "LAPTOPS AMD RYZEN 7" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOP LENOVO INTEL CELERON": {
+      "brand": "LENOVO",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ALenovo%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A1264420011%7C1264444011&dc&qid=1671868462&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_5&ds=v1%3A%2FLFFAD%2BLJLPifEWn4EG%2BXh0xcKkn1anXkeKvpTccRy0",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "LAPTOPS INTEL CELERON" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOP LENOVO INTEL I3": {
+      "brand": "LENOVO",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AMSI%2Cp_n_feature_thirty-one_browse-bin%3A23716057011&dc&qid=1671862901&rnid=23716050011&ref=sr_nr_p_n_feature_thirty-one_browse-bin_1&ds=v1%3AmNxTrMVph6qi00BPhcatDzt6qglhtOwAfrSEzdNZFx8",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "LAPTOPS INTEL I3" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "LAPTOP LENOVO INTEL I5": {
+      "brand": "LENOVO",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ALenovo%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289793011&dc&qid=1671868668&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_3&ds=v1%3AkuiODIZhNBStringFormatterpVEO8vCPV2tbjwZH7cAchGSYomaTf6Q",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "LAPTOPS INTEL I5" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "LAPTOP LENOVO INTEL I7": {
+      "brand": "LENOVO",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ALenovo%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289792011&dc&qid=1671868737&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_1&ds=v1%3ADRHV6fhy%2BTHCiVwGbO%2B5iq0cQ8DJY3BFdJt1YASEDqE",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "LAPTOPS INTEL I7" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    }
+  }
+}

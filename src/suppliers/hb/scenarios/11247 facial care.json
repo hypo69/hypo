@@ -1,0 +1,59 @@
+{
+  "scenarios": {
+    "moisture-face": {
+      "url": "https://hbdeadsea.co.il/product-category/facial/moisture-face//",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11253,
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    },
+    "serums": {
+      "url": "https://hbdeadsea.co.il/product-category/facial/serums/",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11254,
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    },
+    "face-masks": {
+      "url": "https://hbdeadsea.co.il/product-category/facial/face-masks/#",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11255,
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    },
+    "facial-cleaning-products": {
+      "url": "https://hbdeadsea.co.il/product-category/facial/facial-cleaning-products/",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11256,
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    },
+
+    "multi-active-series": {
+      "url": "https://hbdeadsea.co.il/product-category/facial/multi-active-series/",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11257,
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    },
+    "mineral-peptide": {
+      "url": "https://hbdeadsea.co.il/product-category/facial/mineral-peptide/",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": 11258,
+        "additional_categories": [ "" ]
+      },
+      "price_rule": 1
+    }
+  }
+}

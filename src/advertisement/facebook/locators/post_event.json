@@ -1,0 +1,53 @@
+{
+  "event_title": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//label[@aria-label = 'Название мероприятия']//input",
+    "if_list":"first","use_mouse": false,
+    "event": "click();%EXTERNAL_MESSAGE%",
+    "mandatory": true,
+    "locator_description": "поле ввода названия сообщения. При переходе по специально сконструированной ссылке откроется сразу. См код сценария"
+
+  },
+  "start_date": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//label[@aria-label = 'Дата начала']//input",
+    "if_list":"first","use_mouse": false,
+    "event": "click();backspace(10);%EXTERNAL_MESSAGE%",
+    "mandatory": true,
+    "locator_description": "поле ввода даты начала мероприятия"
+
+  },
+  "start_time": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//label[@aria-label = 'Время начала']//input",
+    "if_list":"first","use_mouse": false,
+    "event": "click();backspace();%EXTERNAL_MESSAGE%",
+    "mandatory": true,
+    "locator_description": "поле ввода даты начала мероприятия"
+  },
+
+  "event_description": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//label[@aria-label = 'Расскажите подробнее о мероприятии.']//textarea",
+    "if_list":"first","use_mouse": false,
+    "event": "click();%EXTERNAL_MESSAGE%",
+    "mandatory": true,
+    "locator_description": "поле ввода даты начала мероприятия"
+  },
+
+
+  "event_send": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//div[@aria-label = 'Создать мероприятие']",
+    "if_list":"first","use_mouse": false,
+    "event": "click()",
+    "mandatory": true,
+    "locator_description": "Кнопка отправки"
+
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "scenarios": {
+    "Honor Magic Watch 2": {
+      "brand": "HONOR",
+      "url": "https://ksp.co.il/web/cat/2085..28432..28440",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    },
+    "Honor Band 6": {
+      "brand": "HONOR",
+      "url": "https://ksp.co.il/web/cat/2192..28432..28463",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3405": "GOOGLE PIXEL PRO",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "6471": "Smartphones",
+        "3403": "GOOGLE"
+
+      }
+    }
+  }
+}

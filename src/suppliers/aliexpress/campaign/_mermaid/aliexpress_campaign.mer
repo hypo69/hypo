@@ -1,0 +1,28 @@
+%% Создание рекламной кампании
+flowchart TD
+    A1[Start] --> B1[Initialize Campaign Name, Language, and Currency]
+    B1 --> C1[Create Campaign and Category Directories]
+    C1 --> D1[Save Campaign Configuration]
+    D1 --> E1[Collect Product Data]
+    E1 --> F1[Save Product Data]
+    F1 --> G1[Create Promotional Materials]
+    G1 --> H1[Review Campaign]
+    H1 --> I1{Is Campaign Ready?}
+    I1 -- Yes --> J1[Publish Campaign]
+    I1 -- No --> K1[Fix Issues]
+    K1 --> H1
+    J1 --> L1[End]
+
+%% Редактирование рекламной кампании
+    A2[Start] --> B2[Load Existing Campaign Configuration]
+    B2 --> C2[Update Campaign Configuration]
+    C2 --> D2[Update Categories and Directories]
+    D2 --> E2[Collect New Product Data]
+    E2 --> F2[Save Updated Product Data]
+    F2 --> G2[Update Promotional Materials]
+    G2 --> H2[Review Updated Campaign]
+    H2 --> I2{Is Campaign Updated?}
+    I2 -- Yes --> J2[Publish Updated Campaign]
+    I2 -- No --> K2[Fix Issues]
+    K2 --> H2
+    J2 --> L2[End]

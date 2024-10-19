@@ -1,0 +1,20 @@
+{
+  "pager": {
+    "attribute": null,
+    
+    "by": "event",
+    "selector": null,
+    
+    "if_list":"first","use_mouse": false, "mandatory": true,
+    "event": "scroll(5,'both')"
+  },
+  "product_links": {
+    "attribute": "href",
+    
+    "by": "XPATH",
+    "selector": "//span[@data-component-type ='s-product-image']//a",
+    
+    "if_list":"first","use_mouse": false, "mandatory": true,
+    "event": null
+  }
+}

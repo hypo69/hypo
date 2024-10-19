@@ -1,0 +1,150 @@
+{
+  "scenarios": {
+    "DELL 21.5 - I3": {
+      "brand": "DELL",
+      "url": "--------------AIO DELL 21.5 - I3---------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,37,303,41,37"
+    },
+    "DELL 21.5 - I5": {
+      "brand": "DELL",
+      "url": "--------------AIO DELL 21.5 - I5---------------2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,38,303,41,38"
+    },
+    "DELL 21.5 - I7": {
+      "brand": "DELL",
+      "url": "---------------AIO DELL 21.5 - I7---------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,39,41,39"
+    },
+    "DELL 21.5 - I9": {
+      "brand": "DELL",
+      "url": "----------------AIO DELL 21.5 - I9------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,41,301"
+    },
+    "DELL 21.5 amd": {
+      "brand": "DELL",
+      "url": "----------------AIO DELL 21.5 amd----------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,41,302"
+    },
+    "DELL 23.5 I3": {
+      "brand": "DELL",
+      "url": "----------------AIO DELL 23.5 I3---------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,37,303,42,37"
+    },
+    "DELL 23.8 I5": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=227m!#-!4634!-#!225!#-!5510&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,38,303,42"
+    },
+    "DELL 23.8 I7": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=225!#-!5510!-#!227m!#-!4635&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,42,39"
+    },
+    "DELL 23.5 I9": {
+      "brand": "DELL",
+      "url": "----------------AIO DELL 23.5 I9-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,42,301"
+    },
+    "DELL 23.5 amd": {
+      "brand": "DELL",
+      "url": "---------------AIO DELL 23.5 amd---------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,42,302"
+    },
+    "DELL 27 I3": {
+      "brand": "DELL",
+      "url": "---------------AIO DELL 27 I3-----------0",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,37,303,43,37"
+    },
+    "DELL 27 I5": {
+      "brand": "DELL",
+      "url": "-----------------AIO DELL 27 I5-------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,38,303,43"
+    },
+    "DELL 27 I7": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=227m!#-!30335!-#!225!#-!5512&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,43,39"
+    },
+    "DELL 27 ATOM": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=227!#-!4652!-#!225m!#-!5512&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,43,519"
+    },
+    "DELL 27 I9": {
+      "brand": "DELL",
+      "url": "-------------AIO DELL 27 I9-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,43,301"
+    },
+    "DELL 27 amd": {
+      "brand": "DELL",
+      "url": "-------------AIO DELL 27 amd-----------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,43,302"
+    },
+    "DELL 34 I3": {
+      "brand": "DELL",
+      "url": "-------------AIO DELL 34 I3------------------0",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,37,303,227,37"
+    },
+    "DELL 34 I5": {
+      "brand": "DELL",
+      "url": "--------------AIO DELL 34 I5------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,38,303,227,38"
+    },
+    "DELL 34 I7": {
+      "brand": "DELL",
+      "url": "--------------AIO DELL 34 I7------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,227,39"
+    },
+    "DELL 34 I9": {
+      "brand": "DELL",
+      "url": "-------------AIO DELL 34 I9-------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,227,301"
+    },
+    "DELL 34 amd": {
+      "brand": "DELL",
+      "url": "------------AIO DELL 34 amd-------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,303,227,302"
+    }
+  }

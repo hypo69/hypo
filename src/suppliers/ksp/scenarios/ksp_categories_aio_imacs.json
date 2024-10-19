@@ -1,0 +1,22 @@
+{
+  "scenarios": {
+    "3425 IMac 24 inch": {
+      "brand": "APPLE",
+     "url": "https://ksp.co.il/web/cat/1513..245..25303",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "apple": "iMac 24" }
+      }
+    },
+    "iMac 27 Inch": {
+      "brand": "APPLE",
+     "url": "https://ksp.co.il/web/cat/1513..245..14491",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "apple": "iMac 27" }
+      }
+    }
+  }
+}

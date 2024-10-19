@@ -1,0 +1,32 @@
+{
+  "scenarios": {
+    "in-ear-bud": {
+      "brand": "APPLE",
+      "url": "https://ksp.co.il/web/cat/242..245..1250",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "apple": "ipods in-ear-bud" }
+      }
+    },
+    "Overear": {
+      "brand": "APPLE",
+      "url": "https://ksp.co.il/web/cat/242..245..1252",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "apple": "ipods Overear" }
+      }
+    },
+    "Ear-clip": {
+      "brand": "APPLE",
+      "url": "https://ksp.co.il/web/cat/242..245..1254",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3455": "Ear-clip",
+        "template": { "apple": "ipods Ear-clip" }
+      }
+    }
+  }
+}

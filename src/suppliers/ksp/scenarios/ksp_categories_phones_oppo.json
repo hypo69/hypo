@@ -1,0 +1,138 @@
+{
+  "scenarios": {
+    "Oppo A74": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..28472",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO A74"
+        }
+      }
+    },
+    "Oppo A93": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..21447",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO A93"
+        }
+      }
+    },
+    "Oppo A94": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..25412",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO A94"
+        }
+      }
+    },
+    "Oppo Reno 5": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..25491",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO RENO 5"
+        }
+      }
+    },
+
+
+    "Oppo Reno 5 PRO": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..25800",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO RENO 5 PRO"
+        }
+      }
+    },
+    "Oppo Reno 6": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..28099",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO RENO 6"
+        }
+      }
+    },
+    "Oppo Reno7 Z": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..36732",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO RENO 7Z"
+        }
+      }
+    },
+    "Oppo Reno7": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..36731",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO RENO 7"
+        }
+      }
+    },
+    "Oppo A96": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..37544",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO A96"
+        }
+      }
+    },
+    "Oppo Find X5": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..42014",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO FIND X5"
+        }
+      }
+    },
+    "Oppo Find X5 PRO": {
+      "brand": "OPPO",
+      "url": "https://ksp.co.il/web/cat/573..21448..42025",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "oppo": "OPPO FIND X5 PRO"
+        }
+      }
+    }
+  }
+}

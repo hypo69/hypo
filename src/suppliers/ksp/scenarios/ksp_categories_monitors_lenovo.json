@@ -1,0 +1,115 @@
+{
+  "scenarios": {
+    "Lenovo Monitor L Series 23,8": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/159..230..38350..1649",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 22 - 24" }
+      }
+    },
+    "Lenovo Monitor L Series 27-28": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/159..199..230..38350..2037",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 26 - 28" }
+      }
+    },
+    "Lenovo Monitor L Series 27 - 29": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/230..159..38350..1604",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 26 - 28" }
+      }
+    },
+
+    "Lenovo Monitor L Series 31 - 33": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/230..159..1948..38350",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 31 - 33" }
+      }
+    },
+    "Lenovo Monitor D Series 31": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/230..159..38349..1948",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 34 - 38" }
+      }
+    },
+    "Lenovo Monitor G Series 22 - 24.5": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/230..159..38352..197..1649..4040",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 22 - 24" }
+      }
+    },
+    "Lenovo Monitor G Series 27-28": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/159..230..38352..199",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 26 - 28" }
+      }
+    },
+    "Lenovo Monitor G Series 31": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/159..230..38352..1948",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 31 - 33" }
+      }
+    },
+    "Lenovo Monitor G Series 34": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/230..159..38352..2129",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 34 - 38" }
+      }
+    },
+    "Lenovo Monitor Y Series 24.5": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/159..230..38353..4040",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 22 - 24" }
+      }
+    },
+    "Lenovo Monitor Q Series 24.5": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/230..159..38355..1649",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 22 - 24" }
+      }
+    },
+
+
+    "Lenovo Monitor Q Series 27-28": {
+      "brand": "Lenovo",
+      "url": "https://ksp.co.il/web/cat/230..159..38355..199",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lenovo": "PC MONITORS 26 - 28" }
+      }
+    }
+  }
+}

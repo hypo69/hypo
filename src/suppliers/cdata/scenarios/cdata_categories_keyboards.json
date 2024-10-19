@@ -1,0 +1,88 @@
+{
+  "scenarios": {
+    "MICROSOFT WIRELESS KEYBOARD": {
+      "brand": "MICROSOFT",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385!#-!6452!-#!232m!#-!4679&manFilters=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,316"
+    },
+    "MICROSOFT USB KEYBOARD": {
+      "brand": "MICROSOFT",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385m!#-!6452!-#!232!#-!4680&manFilters=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,315"
+    },
+    "MICROSOFT USB MOUSE": {
+      "brand": "MICROSOFT",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385!#-!6451!-#!232m!#-!4680&manFilters=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,317"
+    },
+    "MICROSOFT WIRELESS MOUSE": {
+      "brand": "MICROSOFT",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385!#-!6451!-#!232m!#-!4679&manFilters=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,318"
+    },
+    "MICROSOFT USB KEYBOARD-MOUSE SET": {
+      "brand": "MICROSOFT",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385!#-!6450!-#!232m!#-!4680&manFilters=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,208"
+    },
+    "MICROSOFT WIRELESS  KEYBOARD-MOUSE SET": {
+      "brand": "MICROSOFT",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385!#-!6450!-#!232m!#-!4679&manFilters=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,334"
+    },
+    "ASUS WIRELESS KEYBOARD": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385!#-!6452!-#!232m!#-!4679&manFilters=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,316"
+    },
+    "ASUS USB KEYBOARD": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385m!#-!6452!-#!232!#-!4680&manFilters=1",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,315"
+    },
+    "ASUS USB MOUSE": {
+      "brand": "ASUS",
+      "url": "-----------------------------------ASUS USB MOUSE--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,317"
+    },
+    "ASUS WIRELESS MOUSE": {
+      "brand": "ASUS",
+      "url": "-----------------------------------ASUS WIRELESS MOUSE--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,318"
+    },
+    "ASUS USB KEYBOARD-MOUSE SET": {
+      "brand": "ASUS",
+      "url": "-----------------------------------ASUS USB KEYBOARD-MOUSE SET--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,208"
+    },
+    "ASUS WIRELESS SET": {
+      "brand": "ASUS",
+      "url": "https://reseller.c-data.co.il/%D7%A1%D7%98-%D7%9E%D7%A7%D7%9C%D7%93%D7%AA-%D7%95%D7%A2%D7%9B%D7%91%D7%A8#/specFilters=385!#-!6450&manFilters=10",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,334"
+    }
+
+  }

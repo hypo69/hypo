@@ -1,0 +1,67 @@
+{
+  "scenarios": {
+    "LG monitors 21 - 22 inch": {
+      "brand": "LG",
+      "url": "https://ksp.co.il/web/cat/230..134..31308..194..195",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lg": "PC MONITORS 21 - 22" }
+      }
+    },
+    "LG monitors 22 -24 inch": {
+      "brand": "LG",
+      "url": "https://ksp.co.il/web/cat/230..134..1649..198",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lg": "PC MONITORS 22 - 24" }
+      }
+    },
+    "LG monitors 26 28 inch": {
+      "brand": "LG",
+      "url": "https://ksp.co.il/web/cat/230..137..4831..199..4784..2037",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lg": "PC MONITORS 26 - 28" }
+      }
+    },
+    "LG monitors about 29 inch": {
+      "brand": "LG",
+      "url": "https://ksp.co.il/web/cat/230..137..4831..199..4784..2037",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lg": "PC MONITORS 26 - 28" }
+      }
+    },
+    "LG monitors 31 32 inch": {
+      "brand": "LG",
+      "url": "https://ksp.co.il/web/cat/230..137..1948..200",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lg": "PC MONITORS 31 - 33" }
+      }
+    },
+    "LG monitors 34 inch": {
+      "brand": "LG",
+      "url": "https://ksp.co.il/web/cat/230..137..2129",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lg": "PC MONITORS 34 - 38" }
+      }
+    },
+    "LG monitors 48 inch": {
+      "brand": "LG",
+      "url": "https://ksp.co.il/web/cat/230..137..4831..199..4784..2037",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "lg": "PC MONITORS 50" }
+      }
+    }
+  }
+}

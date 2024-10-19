@@ -1,0 +1,13 @@
+{
+    "ws_title": {
+        "rowHeight": "35",
+        "backgroundColor": "#FFAAAA",
+        "horizontalAlignment": "RIGHT",
+        "textDirection": "RTL",
+        "textFormat": {
+            "foregroundColor": "#888888",
+            "bold": true,
+            "fontSize": "24"
+        }
+    }
+}

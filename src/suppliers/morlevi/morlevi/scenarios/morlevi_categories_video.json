@@ -1,0 +1,109 @@
+{
+  "scenarios": {
+    "GIGABYTE RTX 4090": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/85?p_315=2&p_55=4408&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "gigabyte": "RTX 4090"
+        }
+      }
+    },
+    "GIGABYTE RTX 4080": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/85?p_315=2&p_55=4452&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "gigabyte": "RTX 4080"
+        }
+      }
+    },
+
+    "GIGABYTE RTX 4070 TI": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/85?p_315=2&p_55=4455&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "gigabyte": "RTX 4070 TI"
+        }
+      }
+    },
+    "GIGABYTE RTX 3090 TI": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/85?p_315=2&p_55=4244&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "gigabyte": "RTX 3090 TI"
+        }
+      }
+    },
+    "GIGABYTE RTX 3070 TI": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/85?p_315=2&p_55=3913&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "gigabyte": "RTX 3070 TI"
+        }
+
+      }
+
+    },
+    "GIGABYTE RTX 3060": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/85?p_315=2&p_55=3930&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "gigabyte": "RTX 3060"
+        }
+
+      }
+
+    },
+    "GIGABYTE RTX 3060 TI": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/85?p_55=3740&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "gigabyte": "RTX 3060 TI"
+        }
+
+      }
+
+    },
+    "GIGABYTE RTX 3050": {
+      "brand": "GIGABYTE",
+      "url": "https://www.morlevi.co.il/Cat/85?p_55=4155&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "gigabyte": "RTX 3050"
+        }
+
+      }
+
+    }
+  }
+} 

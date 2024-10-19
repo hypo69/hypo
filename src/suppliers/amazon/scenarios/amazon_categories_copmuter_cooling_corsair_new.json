@@ -1,0 +1,27 @@
+{
+  "scenarios": {
+    "NEW CORSAIR LIQUID COOLING": {
+      "brand": "CORSAIR",
+      "url": "https://www.amazon.com/s?k=corsair&i=computers&rh=n%3A3015422011%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ACorsair&dc&ds=v1%3A4UdJ5kFgxTrEAPAFY6KYx4O48jHaTgY%2BkKFEZHAmBy4&qid=1674395191&rnid=2528832011&ref=sr_nr_p_89_1",
+      "active": true,
+      "condition": "ref",
+      "presta_categories": {
+        "template": { "corsair": "LIQUID CPU COOLING" }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+
+    "NEW CORSAIR AIR CHAISES COOLING": {
+      "brand": "CORSAIR",
+      "url": "https://www.amazon.com/s?k=corsair&i=computers&rh=n%3A172282%2Cn%3A541966%2Cn%3A193870011%2Cn%3A17923671011%2Cn%3A3012290011%2Cn%3A11036291%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ACorsair&dc&ds=v1%3A62ROR5QIpRmdvHYid8HLE4S5XJ9aeeOJV%2B9%2Fka%2FPYS8&qid=1674395269&rnid=172282&ref=sr_nr_n_2",
+      "active": true,
+      "condition": "ref",
+      "presta_categories": {
+        "template": { "corsair": "AIR CHAISES COOLING" }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    }
+  }
+}

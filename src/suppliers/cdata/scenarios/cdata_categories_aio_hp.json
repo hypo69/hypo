@@ -1,0 +1,143 @@
+{
+  "scenarios": {
+    "HP 21.5 - I3": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=227m!#-!4633!-#!225!#-!6058&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,37,46,41"
+    },
+    "HP 21.5 - I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=227m!#-!4634!-#!225!#-!6058&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,38,46,41"
+    },
+    "HP 21.5 - I7": {
+      "brand": "HP",
+      "url": "---------------AIO HP 21.5 - I7---------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,39,46,41"
+    },
+    "HP 21.5 - I9": {
+      "brand": "HP",
+      "url": "----------------AIO HP 21.5 - I9------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,41,301"
+    },
+    "HP 21.5 amd": {
+      "brand": "HP",
+      "url": "----------------AIO HP 21.5 amd----------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,41,302"
+    },
+    "HP 23.8 I3": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=225!#-!5510!-#!227m!#-!4633&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,37,46,42"
+    },
+    "HP 23.8 I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=225!#-!5510!-#!227m!#-!4634&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,38,46,42"
+    },
+    "HP 23.8 I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=225!#-!5510!-#!227m!#-!4635&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,42,39"
+    },
+    "HP 23.5 I9": {
+      "brand": "HP",
+      "url": "----------------AIO HP 23.5 I9-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,42,301"
+    },
+    "HP 23.5 amd": {
+      "brand": "HP",
+      "url": "---------------AIO HP 23.5 amd---------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,42,301"
+    },
+    "HP 27 I3": {
+      "brand": "HP",
+      "url": "---------------AIO HP 27 I3-----------0",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,37,46,43"
+    },
+    "HP 27 I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=225!#-!5512!-#!227m!#-!4634&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,38,46,43"
+    },
+    "HP 27 I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=225!#-!5512!-#!227m!#-!4635&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,43,39"
+    },
+    "HP 27 I9": {
+      "brand": "HP",
+      "url": "-------------AIO HP 27 I9-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,43,301"
+    },
+    "HP 27 amd": {
+      "brand": "HP",
+      "url": "-------------AIO HP 27 amd-----------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,43,302"
+    },
+    "HP 34 I3": {
+      "brand": "HP",
+      "url": "-------------AIO HP 34 I3------------------0",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,37,46,227"
+    },
+    "HP 34 I5": {
+      "brand": "HP",
+      "url": "--------------AIO HP 34 I5------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,38,46,227"
+    },
+    "HP 34 I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/All-In-One#/specFilters=225!#-!5817!-#!227m!#-!4635&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,227,39"
+    },
+    "HP 34 I9": {
+      "brand": "HP",
+      "url": "-------------AIO HP 34 I9-------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,227,301"
+    },
+    "HP 34 amd": {
+      "brand": "HP",
+      "url": "------------AIO HP 34 amd-------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "35,46,227,302"
+    }
+  }

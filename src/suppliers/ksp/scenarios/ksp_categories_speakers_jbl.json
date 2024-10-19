@@ -1,0 +1,109 @@
+{
+  "scenarios": {
+    "BoomBox 2": {
+      "brand": "JBL",
+      "url": "https://ksp.co.il/web/cat/7076..1047..241..1309..3127..34919",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3496": "BT Speakers",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "3479": "Speakers",
+
+
+
+        "2264": "JBL",
+        "2623": "Portable Bluetooth Speakers",
+        "2624": "BoomBox 2"
+
+      }
+    },
+    "Xtreme 3": {
+      "brand": "JBL",
+      "url": "https://ksp.co.il/web/cat/7076..1047..241..1309..3127..34920",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3496": "BT Speakers",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "3479": "Speakers",
+
+
+
+        "2264": "JBL",
+        "2623": "Portable Bluetooth Speakers",
+        "2625": "Xtreme 3"
+
+      }
+    },
+    "Horizon 2": {
+      "brand": "JBL",
+      "url": "https://ksp.co.il/web/cat/7076..1047..241..1309..3127..31833",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3496": "BT Speakers",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "3479": "Speakers",
+
+
+
+        "2264": "JBL",
+        "2623": "Portable Bluetooth Speakers",
+        "2626": "Horizon 2"
+
+      }
+    },
+    "Link Portable": {
+      "brand": "JBL",
+      "url": "https://ksp.co.il/web/cat/7076..1047..241..1309..3127..29320",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3496": "BT Speakers",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "3479": "Speakers",
+
+
+
+        "2264": "JBL",
+        "2623": "Portable Bluetooth Speakers",
+        "2627": "Link Portable"
+
+      }
+    },
+    "FLIP 5": {
+      "brand": "JBL",
+      "url": "https://ksp.co.il/web/cat/7076..1047..241..1309..3127..13938",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "3496": "BT Speakers",
+
+
+        "3198": "CONSUMER ELECTRONICS",
+        "3202": "computer,smartphone,gaming console,smart device",
+        "3479": "Speakers",
+
+
+
+        "2264": "JBL",
+        "2623": "Portable Bluetooth Speakers",
+        "2628": "FLIP 5"
+
+      }
+    }
+  }
+}

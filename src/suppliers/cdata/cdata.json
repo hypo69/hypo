@@ -1,0 +1,50 @@
+{
+  "supplier": "cdata",
+  "supplier_prefix": "CDT-",
+  "if_list":"first","use_mouse": false, "mandatory": true,
+  "start_url": "https://www.c-data.co.il/",
+  "price_rule": "3.5*1.17",
+
+  "num_items_4_flush": 300,
+  "parcing method [webdriver|api]": "web",
+  "about method web scrapping [webdriver|api]": "Если я работаю через API мне не нужен webdriver",
+  "scenario_files": [
+    [
+      "cdata_categories_aio_asus.json",
+      "cdata_categories_aio_dell.json",
+      "cdata_categories_aio_hp.json"
+    ],
+
+    [
+      "cdata_categories_desktops.json",
+      "cdata_categories_gaming_desktops.json",
+      "cdata_categories_workstatios.json"
+    ],
+
+    [
+      "cdata_categories_laptops_asus.json",
+      "cdata_categories_laptops_dell.json",
+      "cdata_categories_laptops_hp.json",
+      "cdata_categories_gaming_laptops_asus.json",
+      "cdata_categories_gaming_laptops_dell.json",
+      "cdata_categories_gaming_laptops_hp.json"
+    ],
+    [
+      "cdata_categories_monitors_apple.json",
+      "cdata_categories_monitors_dell.json",
+      "cdata_categories_monitors_hp.json"
+    ],
+
+    [ "cdata_categories_keyboards.json" ],
+
+    [ "cdata_categories_printers.json" ],
+
+    [ "cdata_categories_webcams.json" ],
+
+    [ "cdata_categories_video.json" ],
+
+    [ "cdata_categories_ups.json" ]
+  ],
+  "last_runned_scenario": ""
+}
+

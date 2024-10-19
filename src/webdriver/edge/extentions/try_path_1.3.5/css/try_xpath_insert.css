@@ -1,0 +1,62 @@
+
+[data-tryxpath-context] {
+    outline: dashed thick rgb(0,255,0) !important;
+}
+
+[data-tryxpath-element] {
+    outline: dashed thick rgb(255,0,0) !important;
+}
+
+[data-tryxpath-element][data-tryxpath-context] {
+    outline: dashed thick rgb(255,255,0) !important;
+}
+
+[data-tryxpath-focused],
+[data-tryxpath-element][data-tryxpath-focused] {
+    outline: solid thick rgb(0,0,255) !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+[data-tryxpath-focused-ancestor],
+[data-tryxpath-element][data-tryxpath-focused-ancestor] {
+    outline: dashed thick rgb(0,255,255) !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+[data-tryxpath-focused-ancestor="2"],
+[data-tryxpath-element][data-tryxpath-focused-ancestor="2"] {
+    outline: dashed thick rgb(0,192,192) !important;
+}
+
+[data-tryxpath-focused-ancestor="1"],
+[data-tryxpath-element][data-tryxpath-focused-ancestor="1"] {
+    outline: dashed thick rgb(0,128,128) !important;
+}
+
+[data-tryxpath-focused-ancestor="0"],
+[data-tryxpath-element][data-tryxpath-focused-ancestor="0"] {
+    outline: dashed thick rgb(0,64,64) !important;
+}
+
+[data-tryxpath-frame] {
+    outline: dashed thick rgb(255,0,255) !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+}
+
+[data-tryxpath-frame-ancestor] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+}

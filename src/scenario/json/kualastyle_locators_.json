@@ -1,0 +1,244 @@
+{
+  "infinity_scroll": false,
+  "checkboxes_for_categories": false,
+  "main menu": {
+    "categories parent": {
+      
+      "attribute": "innerText",
+      "by": "XPATH",
+
+      "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//details//summary",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "event": "loop",
+      
+      "variables in selector": "x",
+      "formula for locator": "range(1,6)"
+    },
+    "categories sub menu": {
+      
+
+      "attribute": "{'innerText':'href'}",
+      "by": "XPATH",
+      "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//div[contains(@class,'navmenu-submenu')]//li//a",
+      "if_list":"first","use_mouse": false, "mandatory": true,
+      "event": "click()",
+      "logic for action[AND|OR|XOR|VALUE|null]": null
+
+    },
+    "a": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//ul[@class='pagination']//a[@class='page-link']",
+      "event": "click()"
+    }
+  },
+
+  "store": {
+    "store categories dept-1": {
+      "description": "Список главных категероий магазина",
+      
+      "attribute": {
+        "innerText": "href"
+      },
+      "by": "XPATH",
+      "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li",
+      
+      "event": null
+    },
+    "store categories dept-2": {
+      "description": "Список подкатегероий магазина",
+      
+      "attribute": {
+        "innerText": "href"
+      },
+      "by": "XPATH",
+      "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li//ul[contains(@class,'navmenu-depth-2')]/li",
+      
+      "event": null
+    },
+    "store categories dept-3": {
+      "description": "Список подкатегероий магазина",
+      
+      "attribute": {
+        "innerText": "href"
+      },
+      "by": "XPATH",
+      "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li//ul[contains(@class,'navmenu-depth-2')]/li//ul[contains(@class,'navmenu-depth-3')]/li",
+      
+      "event": null
+    }
+  },
+
+  "product": {
+    "link_to_product_locator": {
+      
+      "attribute": "href",
+      "by": "XPATH",
+      "selector": "//div[@class = 'product-thumb']/a",
+      
+      "event": null
+    },
+    "stock available": {
+      
+      "attribute": "innerText",
+      "by": "XPATH",
+      "selector": "//div[conatins(@class , 'stockMsg')]",
+      
+      "event": null
+    },
+
+    "product_name_locator": {
+      
+      "attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "h1.d-inline-block",
+      
+      "event": null
+    },
+    "summary_locator": {
+      
+      "attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "h1.d-inline-block",
+      
+      "event": null
+    },
+    "description_locator": {
+      
+      "attribute": "innerHTML",
+      "by": "css selector",
+      "selector": ".row.product-params.pt-2.pb-2.pt-sm-5.pb-sm-5",
+      
+      "event": null
+    },
+
+    "price_locator": {
+      
+      "attribute": "innerHTML",
+      "by": "ID",
+      "selector": "basicPrice",
+      
+      "event": null
+    },
+
+    "brand_locator": {
+      
+      "attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "text*='éöøï'",
+      
+      "event": null
+    },
+
+    "sku_locator": {
+      
+      "attribute": "innerText",
+      "by": "XPATH",
+      "selector": "//div[contains(@class,'main-details')]//span[contains(@class,'sku-copy')]",
+      
+      "event": null
+    },
+    "brand_sku_locator": {
+      
+      "attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "span.sku-copy",
+      
+      "event": null
+    },
+
+    "main_image_locator": {
+      
+      "attribute": "href",
+      "by": "ID",
+      "selector": "mainpic",
+      
+      "event": null
+    },
+
+    "li_locator": {
+      
+      "attribute": "innerHTML",
+      "by": "tag name",
+      "selector": "li",
+      
+      "event": null
+    }
+  },
+  "product_fields_locators": {
+
+  },
+  "laptop_description_fields_selectors": {
+    "screen": {
+      
+      "attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "text*='âåãì îñê'",
+      
+      "event": null
+    },
+    "CPUTYPE": {
+      
+      "attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "text*='CPUTYPE'",
+      
+      "event": null
+    },
+    "cpu": {
+      
+      "attribute": "innerHTML",
+      "by": "css selector",
+      "selector": "text='îòáã'",
+      
+      "event": null
+    }
+  },
+  "stock_locator": {
+    
+    "attribute": "innerHTML",
+    "by": "css selector",
+    "selector": ".stockMsg",
+    
+    "event": null
+
+  },
+  "login": {
+
+    "open_login_dialog_locator": {
+      
+      "attribute": null,
+      "by": "XPATH",
+      "selector": "//a[contains(@data-modal,'User')]",
+      "event": "click()"
+    },
+
+    "email": "sales@aluf.co.il",
+    "email_locator": {
+      
+      "attribute": null,
+      "by": "ID",
+      "selector": "Email",
+      "event": "send_keys('sales@aluf.co.il')"
+
+    },
+    "password": "9643766",
+    "password_locator": {
+      
+      "attribute": null,
+      "by": "ID",
+      "selector": "Password",
+      "event": "send_keys('9643766')"
+
+    },
+    "loginbutton_locator": {
+      
+      "attribute": null,
+      "by": "css selector",
+      "selector": ".btn.btn-primary.btn-lg.w-50.float-left.mr-2",
+      "event": "click()"
+
+    }
+  }
+}

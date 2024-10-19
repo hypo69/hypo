@@ -1,0 +1,87 @@
+{
+  "scenarios": {
+    "HP GAMING 14 I5": {
+      "brand": "HP",
+      "url": "---------------------------HP GAMING 14 I5-----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,101,10,5,462"
+    },
+    "HP GAMING 14 I7": {
+      "brand": "HP",
+      "url": "------------------------------HP GAMING 14 I7---------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,101,10,6,463"
+    },
+    "HP GAMING 14 I9": {
+      "brand": "HP",
+      "url": "--------------------------------HP GAMING 14 I9------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,101,10,7,464"
+    },
+    "HP GAMING 14 AMD": {
+      "brand": "HP",
+      "url": "---------------------------------HP GAMING 14 AMD-----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,101,10,234,465"
+    },
+    "HP GAMING 15 I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%A0%D7%99%D7%99%D7%93%D7%99-gaming#/specFilters=227m!#-!4634!-#!225!#-!4663!##!6406&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,102,11,5,469"
+    },
+    "HP GAMING 15 I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%A0%D7%99%D7%99%D7%93%D7%99-gaming#/specFilters=227m!#-!4635!-#!225!#-!4663!##!6406&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,102,11,6,470"
+    },
+    "HP GAMING 15 I9": {
+      "brand": "HP",
+      "url": "--------------------------------HP GAMING 15 I9------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,102,11,7,471"
+    },
+    "HP GAMING 15 AMD": {
+      "brand": "HP",
+      "url": "-------------------------HP GAMING 15 AMD-------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,102,,11,234,472"
+    },
+    "HP GAMING 17 I5": {
+      "brand": "HP",
+      "url": "---------------------------------HP GAMING 17 I5-----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,103,12,5,476"
+    },
+    "HP GAMING 17 I7": {
+      "brand": "HP",
+      "url": "------------------------------------HP GAMING 17 I7---------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,103,12,6,477"
+    },
+    "HP GAMING 17 I9": {
+      "brand": "HP",
+      "url": "-------------------------------------HP GAMING 17 I9-------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,103,12,7,478"
+    },
+    "HP GAMING 17 AMD": {
+      "brand": "HP",
+      "url": "------------------------------------HP GAMING 17 AMD--------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,52,103,12,234,479"
+    }
+  }

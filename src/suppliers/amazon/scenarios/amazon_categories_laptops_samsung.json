@@ -1,0 +1,25 @@
+{
+  "store": {
+    "store_id": "",
+    "supplier_id": "",
+    "get store banners": true,
+    "description": "SAMSUNG laptops",
+    "about": "SAMSUNG laptops",
+    "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3ASAMSUNG&dc&qid=1671860006&rnid=2528832011&ref=sr_nr_p_89_2&ds=v1%3AHuogx9UDPmRs2cM3%2BDfn%2B3bloDsV7Yc06VQdaw2KQzg",
+    "shop categories page": "",
+    "shop categories json file": ""
+  },
+
+  "scenarios": {
+    "Apple Wathes": {
+      "url": "https://www.amazon.com/s?i=electronics-intl-ship&bbn=16225009011&rh=n%3A2811119011%2Cn%3A2407755011%2Cn%3A7939902011%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AApple&dc&ds=v1%3AyDxGiVC9lCk%2BzGvhkah6ZCjaellz7FcqKtRIfFA3o2A&qid=1671818889&rnid=2407755011&ref=sr_nr_n_2",
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "apple": "WATCHES" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    }
+  }
+}

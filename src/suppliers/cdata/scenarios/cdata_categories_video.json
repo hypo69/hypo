@@ -1,0 +1,24 @@
+{
+  "scenarios": {
+    "NVIDIA Tesla": {
+      "brand": "NVIDIA Tesla",
+      "url": "https://reseller.c-data.co.il/graphics-nvidia-tesla",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "108,109,987"
+    },
+    "NVIDIA Quadro": {
+      "brand": "NVIDIA",
+      "url": "https://reseller.c-data.co.il/graphics-nvidia-quadro",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "108,109,988"
+    },
+    "Nvidia GPU": {
+      "brand": "NVIDIA",
+      "url": "https://reseller.c-data.co.il/graphics-nvidia-gtx-rtx",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "108,110"
+    }
+  }

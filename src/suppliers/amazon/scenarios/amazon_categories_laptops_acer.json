@@ -1,0 +1,158 @@
+{
+  "store": {
+    "store_id": "",
+    "supplier_id": "",
+    "get store banners": true,
+    "description": "Asus laptops",
+    "about": "Asus laptops",
+    "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer&dc&qid=1671863837&rnid=2528832011&ref=sr_nr_p_89_2&ds=v1%3AImE9fCVHly%2BOL7qCQqeZ0%2ByP0NP1unxDDbQJ77RkUAs",
+    "shop categories page": "",
+    "shop categories json file": ""
+  },
+
+  "scenarios": {
+    "LAPTOP ACER INTEL CELERON 11": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_size_browse-bin%3A13580785011&dc&qid=1672978821&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3ATRLYbePWZqIbzyu2TpAEBpT%2FJwaStringFormatterERXJyxn4HrpaOA",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL CELERON", "11" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL CELERON 13": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_size_browse-bin%3A13580784011&dc&qid=1674395592&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3AE1os%2F7sel6k8fzSgkz6b%2BoP6Gdn906QQhlS6op2TLls",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL CELERON", "13" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL CELERON 14": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674395712&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3AGZi8vzIOvF4euP%2BXHzZ7H%2FBjUh6blzuzJGAZaovw%2FyM",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL CELERON", "14" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL CELERON 15": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1674395755&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3AQTtfBWh%2FevLj%2F0AoXZqEXrMQZuerA4iETjpIuFS8PuM",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL CELERON", "15" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL CELERON 17": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_four_browse-bin%3A1264444011%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1674395808&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3A2jKdunE%2B7wgvJyXrN%2FGAdiMUnXjADjBHSt77Xegb51U",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL CELERON", "17" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL I3 14": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674395837&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3Abe2uy3eYv%2BsQuWnRvyx9GxdtKzbJup3%2BF%2FDbrGs2Xz0",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL I3", "14" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL I3 15": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1674395909&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3AugyWsUCjCIecUQAfHuNA%2B%2FjCwSd0ou2LwVJ7spjyxEU",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL I3", "15" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL I3 17": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289794011%2Cp_n_size_browse-bin%3A7817234011&dc&qid=1674395962&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_2&ds=v1%3Afms24GBuU%2FINaXGeXDyjjIjGamd0MxUospko7DHiXc0",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL I3", "17" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL I5 13": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A13580784011&dc&qid=1674395995&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_1&ds=v1%3AMafirIof1fLt5F30DEE%2BJX4PfSZ502MW5jf%2FwTCJREI",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL I5", "13" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL I5 13-2": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A3545275011&dc&qid=1674396060&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_5&ds=v1%3AOYILnb%2FtG%2BHVG5jFdFV3nR7jnXEZRzmVobNEBsHQ6C8",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL I5", "13" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL I5 14": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A2423840011&dc&qid=1674396128&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_4&ds=v1%3A5B8zjxgtts4K1eLZePvASujpfYfCv73fnz%2FsUVtgVwM",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL I5", "14" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER INTEL I5 15": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_feature_four_browse-bin%3A2289793011%2Cp_n_size_browse-bin%3A2423841011&dc&qid=1674396157&rnid=2242797011&ref=sr_nr_p_n_size_browse-bin_3&ds=v1%3AZVi2QOu6pdkSkeWVn9Ec%2BcKrH98LOMxZ%2Fye2iUJLLPg",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS INTEL I5", "15" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    },
+    "LAPTOP ACER RYZEN 3 15": {
+      "brand": "ACER",
+      "url": "https://www.amazon.com/s?i=computers&bbn=565108&rh=n%3A565108%2Cp_n_is_free_shipping%3A10236242011%2Cp_89%3AAcer%2Cp_n_feature_thirty-one_browse-bin%3A23716064011%2Cp_n_size_browse-bin%3A2423841011%2Cp_n_feature_four_browse-bin%3A18107800011&dc&qid=1674396365&rnid=676578011&ref=sr_nr_p_n_feature_four_browse-bin_1&ds=v1%3A96DwUQk1h8g5lJcXcpv7Y033aQ5FfzqFPU2%2BDFQ6t1k",
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "acer": [ "LAPTOPS RYZEN 3", "15" ] }
+      },
+      "checkbox": false,
+      "price_rule": 1
+    }
+  }
+}

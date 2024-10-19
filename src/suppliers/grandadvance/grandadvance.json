@@ -1,0 +1,20 @@
+{
+  "supplier": "grandadvance",
+  "supplier_id": "2789",
+  "supplier_prefix": "grandadvance",
+  "start_url": "https://www.grandadvance.co.il/",
+  "price_rule": "+0",
+  "if_login": false,
+  "login_url": "https://www.login.grandadvance.co.il",
+  "root_category": 3,
+  "collect_products_from_categorypage": true,
+
+  "scenario_files": [
+
+  ],
+  "out": [
+  ],
+  "last_runned_scenario": "",
+  "locator_description": "",
+  "scenario_interrupted": ""
+}

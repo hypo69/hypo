@@ -1,0 +1,160 @@
+{
+  "scenarios": {
+    "SAMSUNG NVME GEN4 512GB": {
+      "brand": "SAMSUNG",
+      "url": "https://www.morlevi.co.il/Cat/314?p_315=28&p_175=826&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SSD NVME GEN4 512GB"
+        }
+      }
+    },
+    "SAMSUNG NVME GEN4 1TB": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/314?p_315=28&p_175=829&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SSD NVME GEN4 1TB"
+        }
+      }
+    },
+
+    "SAMSUNG NVME GEN4 2TB": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/314?p_315=28&p_175=831&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SSD NVME GEN4 2TB"
+        }
+      }
+    },
+    "SAMSUNG SATA 3 256GB": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/50?p_315=28&p_175=823&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SATA 3 256GB"
+        }
+      }
+    },
+    "SAMSUNG SATA 3 512GB": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/50?p_315=28&p_175=826&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SATA 3 521GB"
+        }
+      }
+    },
+    "SAMSUNG SATA 3 1TB": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/50?p_315=28&p_175=829&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SATA 3 1TB"
+        }
+      }
+    },
+    "SAMSUNG SATA 3 2TB": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/50?p_315=28&p_175=831&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SATA 3 2TB"
+        }
+      }
+    },
+    "SAMSUNG SATA 3 4TB": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/50?p_315=28&p_175=3576&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SATA 3 4TB"
+        }
+      }
+    },
+    "SAMSUNG SSD NVME PCIE 256GB ": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/50?p_315=28&p_175=3576&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SSD NVME PCIE 256GB"
+        }
+      }
+    },
+    "SAMSUNG SSD NVME PCIE 512GB ": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/51?p_315=28&p_175=826&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SSD NVME PCIE 512GB"
+        }
+      }
+    },
+    "SAMSUNG SSD NVME PCIE 1TB ": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/51?p_315=28&p_175=829&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SSD NVME PCIE 1TB"
+        }
+      }
+    },
+    "SAMSUNG SSD NVME PCIE 2TB ": {
+      "brand": "SAMSUNG",
+
+      "url": "https://www.morlevi.co.il/Cat/51?p_315=28&p_175=831&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "samsung": "SSD NVME PCIE 2TB"
+        }
+      }
+    }
+  }
+}

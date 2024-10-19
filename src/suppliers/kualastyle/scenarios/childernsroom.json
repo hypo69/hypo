@@ -1,0 +1,26 @@
+{
+  "scenarios": {
+
+
+    "Noar Beds": {
+      "url": "https://kualastyle.com/collections/%D7%9E%D7%99%D7%98%D7%95%D7%AA-%D7%A0%D7%95%D7%A2%D7%A8",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": { "11025": "home->furniture->childernroom->noarberd" }
+
+      },
+      "price_rule": 1
+    }
+  },
+  "Aronot": {
+    "Noar Beds": {
+      "url": "https://kualastyle.com/collections/%D7%90%D7%A8%D7%95%D7%A0%D7%95%D7%AA-%D7%97%D7%93%D7%A8%D7%99-%D7%99%D7%9C%D7%93%D7%99%D7%9D",
+      "condition": "new",
+      "presta_categories": {
+        "default_category": { "11071": "home->furniture->childernroom->noarberd" }
+
+      },
+      "price_rule": 1
+    }
+  }
+}

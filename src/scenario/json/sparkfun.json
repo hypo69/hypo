@@ -1,0 +1,14 @@
+{
+  "supplier": "sparkfun",
+  "supplier_prefix": "sparkfun",
+  "start_url": "https://www.sparkfun.com/categories",
+  "price_rule": "+0",
+  "if_login": false,
+  "collect_products_from_categorypage": false,
+  "parcing method [webdriver|api]": "web",
+  "about method web scrapping [webdriver|api]": "Если я работаю через API мне не нужен webdriver",
+  "root_category": 3,
+
+  "scenarios": {}
+}
+

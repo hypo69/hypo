@@ -1,0 +1,14 @@
+{
+  "locales": [
+
+    { "HE": "ILS" },
+    { "EN": "USD" },
+    { "RU": "ILS" }
+  ],
+  "disabled": [
+    { "RU": "USD" },
+    { "EN": "EUR" },
+    { "EN": "GBR" },
+    { "RU": "EUR" }
+  ]
+}

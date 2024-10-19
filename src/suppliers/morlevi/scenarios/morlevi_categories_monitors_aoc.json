@@ -1,0 +1,53 @@
+{
+  "scenarios": {
+    "AOC 22": {
+      "brand": "AOC",
+      "url": "---------------------------------------AOC 22-------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,128,529"
+    },
+    "AOC 23": {
+      "brand": "AOC",
+      "url": "https://www.morlevi.co.il/Cat/8?p_315=25&p_350=1806&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,128,529"
+    },
+    "AOC 24-25": {
+      "brand": "AOC",
+      "url": "https://www.morlevi.co.il/Cat/8?p_315=25&p_350=1807&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,129,529"
+
+    },
+    "AOC 27-29": {
+      "brand": "AOC",
+      "url": "https://www.morlevi.co.il/Cat/8?p_315=25&p_350=1808&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,130,529"
+    },
+    "AOC 32": {
+      "brand": "AOC",
+      "url": "https://www.morlevi.co.il/Cat/8?p_315=25&p_350=1809&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,131,529"
+    },
+    "AOC 34": {
+      "brand": "AOC",
+      "url": " --------------------------  AOC 34 -----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,132,529"
+    },
+    "AOC 49": {
+      "brand": "AOC",
+      "url": "-----------------------------  AOC 49 ---------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "127,133,529"
+    }
+  }

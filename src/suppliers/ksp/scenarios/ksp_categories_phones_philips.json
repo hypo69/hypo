@@ -1,0 +1,22 @@
+{
+  "scenarios": {
+    "E102A": {
+      "brand": "PHILIPS",
+      "url": "https://ksp.co.il/web/cat/272..573..506..30843",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+
+      }
+    },
+    "E209A": {
+      "brand": "PHILIPS",
+      "url": "https://ksp.co.il/web/cat/272..573..506..30843",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+
+      }
+    }
+  }
+}

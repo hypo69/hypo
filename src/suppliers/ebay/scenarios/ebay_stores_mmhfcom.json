@@ -1,0 +1,58 @@
+{
+  "store": {
+    "store_id": "thegasketsman75",
+    "supplier_id": 4534,
+    "get store banners": true,
+    "description": "thegasketsman75 Gasket KIT",
+    "about": " ",
+    "url": "https://www.ebay.com/str/mmhfcom",
+    "shop categories page": "",
+    "shop categories json file": ""
+  },
+
+  "scenarios": {
+    "motor parts": {
+      "url": "https://www.ebay.com/str/mmhfcom/eBay-Motors/_i.html?_sacat=6000",
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "automotive parts": "PARTS UNSORTED" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+    "industrial": {
+      "url": "https://www.ebay.com/str/mmhfcom/Business-Industrial/_i.html?_sacat=12576",
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "desktop_hardware": "UNSORTED" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "industrial 2": {
+      "url": "https://www.ebay.com/str/mmhfcom/Consumer-Electronics/_i.html?_sacat=293",
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "desktop_hardware": "UNSORTED" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    },
+
+    "health": {
+      "url": "https://www.ebay.com/str/mmhfcom/Health-Beauty/_i.html?_sacat=26395",
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "desktop_hardware": "UNSORTED" }
+      },
+      "checkbox": false,
+
+      "price_rule": 1
+    }
+  }
+
+}

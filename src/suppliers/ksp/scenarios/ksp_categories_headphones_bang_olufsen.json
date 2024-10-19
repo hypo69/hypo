@@ -1,0 +1,24 @@
+{
+  "scenarios": {
+    "In-ear Bud": {
+      "brand": "B&O",
+      "url": "https://ksp.co.il/web/cat/242..1250..5030",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "b & o": "In-ear Bud Headphones" }
+      }
+    },
+    "Overear Headphones": {
+      "brand": "B&O",
+      "url": "https://ksp.co.il/web/cat/242..1250..5030",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "b & o": "Overear Headphones" }
+      }
+    }
+  }
+}

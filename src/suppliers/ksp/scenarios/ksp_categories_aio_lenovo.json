@@ -1,0 +1,78 @@
+{
+  "scenarios": {
+    "IdeaCentre AIO 3-24ITL": {
+      "brand": "LENOVO",
+
+      "url": "https://ksp.co.il/web/cat/1513..159..28794",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "IdeaCentre 24" }
+      }
+    },
+    "IdeaCentre AIO 3-24IAP7": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1513..159..38022",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "IdeaCentre 24" }
+      }
+    },
+
+
+    "IdeaCentre AIO 5-24IOB": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1513..159..29670",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "IdeaCentre 24" }
+      }
+    },
+
+    "IdeaCentre AIO 3-27ITL": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1513..159..30015",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "IdeaCentre 27" }
+      }
+    },
+    "IdeaCentre AIO 3-27IAP7": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1513..159..38311",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "IdeaCentre 27" }
+      }
+    },
+    "IdeaCentre AIO 5-27IOB": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1513..159..31370",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "IdeaCentre 27" }
+      }
+    },
+    "Yoga AIO 7 27ACH6": {
+      "brand": "LENOVO",
+      "url": "https://ksp.co.il/web/cat/1513..159..34238",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": { "lenovo": "YOGA 27" }
+      }
+    }
+  }
+}

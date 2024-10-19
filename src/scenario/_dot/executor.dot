@@ -1,0 +1,130 @@
+Here’s a detailed dependency tree for the `executor.py` module, showing how different functions and methods relate to one another:
+
+### Dependency Tree for `executor.py`
+
+```plaintext
+└── run_scenario_files(s, scenario_files_list: Union[List[Path], Path]) -> bool
+    ├── run_scenario_file(s, scenario_file: Union[Path, str]) -> bool
+    │   ├── run_scenario(supplier, scenario: dict, _journal=None) -> Union[List, dict, False]
+    │   │   ├── fetch_product_links(scenario)  # Fetches links from the category page
+    │   │   │   ├── collect_product_data(product_link)  # Collects data for each product
+    │   │   │   │   ├── insert_grabbed_data(product_fields: ProductFields)  # Inserts product data into PrestaShop
+    │   │   │   │   │   ├── execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
+    │   │   │   │   │   │   ├── execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
+    │   │   │   │   │   │   │   └── PrestaShopClient  # Interacts with the PrestaShop API
+    │   │   │   │   │   └── (Other methods to process and validate product data)
+    │   │   │   └── (Other methods for fetching and processing data)
+    │   │   ├── update_journal(scenario)  # Updates the journal
+    │   │   └── (Error handling and logging)
+    │   └── (Error handling and logging)
+    ├── dump_journal(s, journal: dict)  # Creates or updates the journal file
+    └── (General error handling and logging)
+
+run_scenario_files(s, scenario_files_list: Union[List[Path], Path]) -> bool
+│
+├── run_scenario_file(s, scenario_file: Union[Path, str]) -> bool
+│
+└── run_scenario(supplier, scenario: dict, _journal=None) -> Union[List, dict, False]
+   ├── fetch_product_links(scenario)
+   │   └── collect_product_data(product_link)
+   │       └── insert_grabbed_data(product_fields: ProductFields)
+   │           ├── execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
+   │           │   └── execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
+   │           │       └── PrestaShopClient
+   │           └── (Additional methods for data processing)
+   ├── update_journal(scenario)
+   └── (Error handling and logging)
+
+### Breakdown of Methods
+
+1. **`run_scenario_files(s, scenario_files_list: Union[List[Path], Path]) -> bool`**
+   - Calls: `run_scenario_file(s, scenario_file)`
+
+2. **`run_scenario_file(s, scenario_file: Union[Path, str]) -> bool`**
+   - Calls: `run_scenario(supplier, scenario)`
+
+3. **`run_scenario(supplier, scenario: dict, _journal=None) -> Union[List, dict, False]`**
+   - Calls: `fetch_product_links(scenario)`
+
+4. **`fetch_product_links(scenario)`**
+   - Calls: `collect_product_data(product_link)`
+
+5. **`collect_product_data(product_link)`**
+   - Calls: `insert_grabbed_data(product_fields: ProductFields)`
+
+6. **`insert_grabbed_data(product_fields: ProductFields)`**
+   - Calls: `execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`
+
+7. **`execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+   - Calls: `execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`
+
+8. **`execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+   - Uses: `PrestaShopClient`
+
+9. **`dump_journal(s, journal: dict)`**
+   - Handles: File I/O for the journal
+
+10. **`update_journal(scenario)`**
+    - Updates the journal with the current scenario state
+
+### Functions and Dependencies
+
+Here’s how the functions depend on each other, focusing on direct function calls:
+
+```plaintext
+run_scenario_files
+    └── run_scenario_file
+        └── run_scenario
+            ├── fetch_product_links
+            │   └── collect_product_data
+            │       └── insert_grabbed_data
+            │           ├── execute_prestashop_insert_async
+            │           │   └── execute_prestashop_insert
+            │           │       └── PrestaShopClient
+            │           └── (Other methods)
+            └── update_journal
+```
+
+### Graphical Representation
+
+Here’s a visual representation of the dependencies:
+
+```plaintext
+[run_scenario_files]
+        |
+        V
+[run_scenario_file]
+        |
+        V
+[run_scenario]
+        |
+        V
+[fetch_product_links]
+        |
+        V
+[collect_product_data]
+        |
+        V
+[insert_grabbed_data]
+        |
+        V
+[execute_prestashop_insert_async]
+        |
+        V
+[execute_prestashop_insert]
+        |
+        V
+[PrestaShopClient]
+```
+
+### Summary
+
+- **`run_scenario_files`** is the entry point for executing multiple scenario files.
+- **`run_scenario_file`** processes each file and calls **`run_scenario`** to handle individual scenarios.
+- **`run_scenario`** fetches product links, collects data, and inserts it into PrestaShop.
+- **`fetch_product_links`** and **`collect_product_data`** handle data collection and interaction with product pages.
+- **`insert_grabbed_data`** manages the data insertion process.
+- **`execute_prestashop_insert_async`** and **`execute_prestashop_insert`** handle asynchronous and synchronous data insertion into PrestaShop.
+- **`dump_journal`** and **`update_journal`** manage the journal updates.
+
+This dependency tree should help you understand how different parts of the `executor.py` script interact and build upon one another.

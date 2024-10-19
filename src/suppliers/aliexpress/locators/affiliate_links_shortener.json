@@ -1,0 +1,30 @@
+{
+  "textarea_target_url": {
+    "attribute": false,
+    "by": "XPATH",
+    "selector": "//textarea[@id = 'targetUrl']",
+    "if_list":"first","use_mouse": false,
+    "event": "clear();%EXTERNAL_MESSAGE%",
+    "mandatory": true,
+    "locator_description": "Full link input box"
+  },
+  "button_get_tracking_link": {
+    "attribute": false,
+    "by": "XPATH",
+    "selector": "//button[contains(@class, 'link-form-submit')]",
+    "if_list":"first","use_mouse": false,
+    "event": "click()",
+    "mandatory": true,
+    "locator_description": "Send form button"
+  },
+
+  "textarea_short_link": {
+    "attribute": "value",
+    "by": "XPATH",
+    "selector": "//form[contains(@class, 'link-form-text')]//textarea",
+    "if_list":"first","use_mouse": false,
+    "event": false,
+    "mandatory": true,
+    "locator_description": "Send form button"
+  }
+}

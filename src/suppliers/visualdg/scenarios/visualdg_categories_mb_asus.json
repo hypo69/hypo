@@ -1,0 +1,131 @@
+{
+  "scenarios": {
+    "MOTHERBOARD Intel 10 Gen H 410": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169412-%D7%9C%D7%95%D7%97%D7%95%D7%AA-%D7%90%D7%9D-ASUS/267795",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,59,493"
+    },
+    "MOTHERBOARD Intel 10 Gen B 460": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169412-%D7%9C%D7%95%D7%97%D7%95%D7%AA-%D7%90%D7%9D-ASUS/267797",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,59,494"
+    },
+    "MOTHERBOARD Intel 10 Gen H 470": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169412-%D7%9C%D7%95%D7%97%D7%95%D7%AA-%D7%90%D7%9D-ASUS/267798",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,59,495"
+    },
+    "MOTHERBOARD Intel 10 Gen Z 490": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169412-%D7%9C%D7%95%D7%97%D7%95%D7%AA-%D7%90%D7%9D-ASUS/267800",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,59,496"
+    },
+    "MOTHERBOARD Intel LGA 2066 X 299": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD Intel LGA 2066 X 299-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,62,503"
+    },
+    "MOTHERBOARD Intel LGA 2066 X 299X": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD Intel LGA 2066 X 299X-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,62,504"
+    },
+    "MOTHERBOARD 8+9 Gen Intel LGA 1151 H 310": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169412-%D7%9C%D7%95%D7%97%D7%95%D7%AA-%D7%90%D7%9D-ASUS/266953",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,60,497"
+    },
+    "MOTHERBOARD 8+9 Gen Intel LGA 1151 B 360": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD 8+9 Gen Intel LGA 1151 B 360-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,60,498"
+    },
+    "MOTHERBOARD 8+9 Gen Intel LGA 1151 B 365": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169412-%D7%9C%D7%95%D7%97%D7%95%D7%AA-%D7%90%D7%9D-ASUS/267796",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,60,499"
+    },
+    "MOTHERBOARD 8+9 Gen Intel LGA 1151 H 370": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD 8+9 Gen Intel LGA 1151 H 370-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,60,500"
+    },
+    "MOTHERBOARD 8+9 Gen Intel LGA 1151 Z 370": {
+      "brand": "ASUS",
+      "url": "------------MOTHERBOARD 8+9 Gen Intel LGA 1151 Z 370 ----------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,60,501"
+    },
+    "MOTHERBOARD 8+9 Gen Intel LGA 1151 Z 390": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169412-%D7%9C%D7%95%D7%97%D7%95%D7%AA-%D7%90%D7%9D-ASUS/267799",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,60,502"
+    },
+
+
+    "MOTHERBOARD 6+7 Gen Intel LGA 1151 H 110": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD 6+7 Gen Intel LGA 1151 H 110-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,57,61,505"
+    },
+    "MOTHERBOARD AM4+ AMD A 520": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD AM4+ AMD A 520-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,58,64,506"
+    },
+    "MOTHERBOARD AM4+ AMD B 450": {
+      "brand": "ASUS",
+      "url": "https://www.visualdg.co.il/169412-%D7%9C%D7%95%D7%97%D7%95%D7%AA-%D7%90%D7%9D-ASUS/252486",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,58,64,507"
+    },
+    "MOTHERBOARD AM4+ AMD X 570": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD AM4+ AMD X 570-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,58,64,508"
+    },
+    "MOTHERBOARD Threadripper AMD X 399": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD Threadripper AMD X 399-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,58,65,509"
+    },
+    "MOTHERBOARD Threadripper AMD TRX 40": {
+      "brand": "ASUS",
+      "url": "----------------------MOTHERBOARD Threadripper AMD TRX 40-----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "56,58,65,510"
+    }
+  } 

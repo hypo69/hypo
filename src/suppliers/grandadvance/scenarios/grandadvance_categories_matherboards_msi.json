@@ -1,0 +1,33 @@
+{
+
+  "MOTHERBOARD socket 1200": {
+    "brand": "MSI",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=785&manId=69",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "56,57,59"
+  },
+  "MOTHERBOARD socket 1151": {
+    "brand": "MSI",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=733&manId=69",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "56,57,60"
+  },
+  "MOTHERBOARD socket 2066": {
+    "brand": "MSI",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=766&manId=69",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "56,57,62"
+  },
+  "MOTHERBOARD socket AM4": {
+    "brand": "MSI",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=758&manId=69",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "56,57,58"
+  },
+  "MOTHERBOARD socket TR4": {
+    "brand": "MSI",
+    "url": "https://www.grandadvance.co.il/default.aspx?g=products&a=list&tieId=758&manId=69",
+    "checkbox": false,
+    "active": true, "condition":"new","presta_categories": "56,57,58"
+  }
+}

@@ -1,0 +1,73 @@
+classDiagram
+    %% Определяем класс AliAffiliatedProducts
+    class AliAffiliatedProducts {
+        +String campaign_name
+        +String? category_name
+        +String language
+        +String currency
+        +String locale
+        +Path category_path
+        +process_affiliate_products(prod_urls) List
+        +delete_product(product_id, exc_info) void
+    }
+
+    %% Класс AliApi, от которого наследуется AliAffiliatedProducts
+    class AliApi {
+        <<abstract>>
+        +String language
+        +String currency
+        +__init__(language, currency)
+        +get_affiliate_links(url) List
+        +retrieve_product_details(prod_urls) List
+    }
+
+    %% Наследование AliAffiliatedProducts от AliApi
+    AliAffiliatedProducts --> AliApi : extends
+
+    %% Зависимости и использования внешних утилит
+    class AffiliateLinksShortener {
+        <<utility>>
+    }
+    class extract_prod_ids {
+        <<utility>>
+    }
+    class ensure_https {
+        <<utility>>
+    }
+    class save_png_from_url {
+        <<utility>>
+    }
+    class save_video_from_url {
+        <<utility>>
+    }
+    class j_dumps {
+        <<utility>>
+    }
+    class read_text_file {
+        <<utility>>
+    }
+    class save_text_file {
+        <<utility>>
+    }
+    class convert_list_to_homogeneous_list {
+        <<utility>>
+    }
+    class list2string {
+        <<utility>>
+    }
+    class logger {
+        <<utility>>
+    }
+
+    %% Указание зависимостей от утилит
+    AliAffiliatedProducts ..> AffiliateLinksShortener : uses
+    AliAffiliatedProducts ..> extract_prod_ids : uses
+    AliAffiliatedProducts ..> ensure_https : uses
+    AliAffiliatedProducts ..> save_png_from_url : uses
+    AliAffiliatedProducts ..> save_video_from_url : uses
+    AliAffiliatedProducts ..> j_dumps : uses
+    AliAffiliatedProducts ..> read_text_file : uses
+    AliAffiliatedProducts ..> save_text_file : uses
+    AliAffiliatedProducts ..> convert_list_to_homogeneous_list : uses
+    AliAffiliatedProducts ..> list2string : uses
+    AliAffiliatedProducts ..> logger : uses

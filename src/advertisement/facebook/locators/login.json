@@ -1,0 +1,29 @@
+{
+  "email": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//input[@name = 'email']",
+    "if_list":"first","use_mouse": false,
+    "event": "click()",
+    "mandatory": true,
+    "locator_description": "user email or phone"
+  },
+  "password": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector":  "//input[@name = 'pass']",
+    "if_list":"first","use_mouse": [ false, false ],
+    "event": "click()",
+    "mandatory": [ true, true ],
+    "locator_description": "user email or phone"
+  },
+  "button": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//button[@name = 'login']",
+    "if_list":"first","use_mouse": false,
+    "event": "click()",
+    "mandatory": true,
+    "locator_description": "send button"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "scenarios": {
+    "DELL GAMING 14 I5": {
+      "brand": "DELL",
+      "url": "------------------------------DELL GAMING 14 I5--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,93,10,5"
+    },
+    "DELL GAMING 14 I7": {
+      "brand": "DELL",
+      "url": "-------------------------DELL GAMING 14 I7--------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,93,10,6"
+    },
+    "DELL GAMING 14 I9": {
+      "brand": "DELL",
+      "url": "--------------------------DELL GAMING 14 I9------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,93,10,7"
+    },
+    "DELL GAMING 14 AMD": {
+      "brand": "DELL",
+      "url": "----------------------------DELL GAMING 14 AMD----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,93,10,234"
+    },
+    "DELL GAMING 15 I5": {
+      "brand": "DELL",
+      "url": "--------------------------------DELL GAMING 15 I5------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,96,11,5"
+    },
+    "DELL GAMING 15 I7": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%A0%D7%99%D7%99%D7%93%D7%99-gaming#/specFilters=227!#-!4635!-#!225m!#-!4663&manFilters=4",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,96,11,6"
+    },
+    "DELL GAMING 15 I9": {
+      "brand": "DELL",
+      "url": "--------------------------DELL GAMING 15 I9------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,96,11,7"
+    },
+    "DELL GAMING 15 AMD": {
+      "brand": "DELL",
+      "url": "-----------------------------DELL GAMING 15 AMD---------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,96,11,234"
+    },
+    "DELL GAMING 17 I5": {
+      "brand": "DELL",
+      "url": "---------------------------------DELL GAMING 17 I5-----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,97,12,5"
+    },
+    "DELL GAMING 17 I7": {
+      "brand": "DELL",
+      "url": "-------------------------------DELL GAMING 17 I7--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,97,12,6"
+    },
+    "DELL GAMING 17 I9": {
+      "brand": "DELL",
+      "url": "---------------------------DELL GAMING 17 I9----------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,97,12,7"
+    },
+    "DELL GAMING 17 AMD": {
+      "brand": "DELL",
+      "url": "------------------------------------DELL GAMING 17 AMD--------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,49,50,23,97,12,234"
+    }
+  }

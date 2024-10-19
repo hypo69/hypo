@@ -1,0 +1,564 @@
+{
+    "scenarios": {
+        "מינרל+לחויותלפניםמינרליםותמציותצמחים": {
+            "url": "https://hbdeadsea.co.il/product-category/facial/moisture-face/",
+            "name": "מינרל+לחויותלפניםמינרליםותמציותצמחים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "סרומיםלפנים": {
+            "url": "https://hbdeadsea.co.il/product-category/facial/serums/",
+            "name": "סרומיםלפנים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מסכותפנים": {
+            "url": "https://hbdeadsea.co.il/product-category/facial/face-masks/",
+            "name": "מסכותפנים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מוצריניקויפנים": {
+            "url": "https://hbdeadsea.co.il/product-category/facial/facial-cleaning-products/",
+            "name": "מוצריניקויפנים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "אנטיאייג’ינג": {
+            "url": "https://hbdeadsea.co.il/product-category/%d7%90%d7%a0%d7%98%d7%99-%d7%90%d7%99%d7%99%d7%92%d7%99%d7%a0%d7%92/",
+            "name": "אנטיאייג’ינג",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "סדרתמינרלפפטידאנטיאייג’ינג": {
+            "url": "https://hbdeadsea.co.il/product-category/%d7%90%d7%a0%d7%98%d7%99-%d7%90%d7%99%d7%99%d7%92%d7%99%d7%a0%d7%92/mineral-peptide/",
+            "name": "סדרתמינרלפפטידאנטיאייג’ינג",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "סדרתמולטיאקטיבחומצההיאלורונית": {
+            "url": "https://hbdeadsea.co.il/product-category/facial/multi-active-series/",
+            "name": "סדרתמולטיאקטיבחומצההיאלורונית",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "גוףוספא": {
+            "url": "https://hbdeadsea.co.il/product-category/bodyspa/",
+            "name": "גוףוספא",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "טיפוחכפותידייםורגליים": {
+            "url": "https://hbdeadsea.co.il/product-category/bodyspa/feet-hand-treatment/",
+            "name": "טיפוחכפותידייםורגליים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "קרמים,חמאותוסרומיםלגוף": {
+            "url": "https://hbdeadsea.co.il/product-category/bodyspa/creams-butters-serums-for-body/",
+            "name": "קרמים,חמאותוסרומיםלגוף",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מוצרירחצה": {
+            "url": "https://hbdeadsea.co.il/product-category/bodyspa/bath-products/",
+            "name": "מוצרירחצה",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "דאודורנטים": {
+            "url": "https://hbdeadsea.co.il/product-category/bodyspa/%d7%93%d7%90%d7%95%d7%93%d7%95%d7%a8%d7%a0%d7%98/",
+            "name": "דאודורנטים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "טיפוחהשיער": {
+            "url": "https://hbdeadsea.co.il/product-category/hair-treatment/",
+            "name": "טיפוחהשיער",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מסכותלשיער": {
+            "url": "https://hbdeadsea.co.il/product-category/hair-treatment/hair-masks/",
+            "name": "מסכותלשיער",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "שמפוומרכך": {
+            "url": "https://hbdeadsea.co.il/product-category/hair-treatment/shampoo-conditioner/",
+            "name": "שמפוומרכך",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "סדרתקרטין": {
+            "url": "https://hbdeadsea.co.il/product-category/hair-treatment/cratin-series/",
+            "name": "סדרתקרטין",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מוצריםלעיצובהשיער": {
+            "url": "https://hbdeadsea.co.il/product-category/hair-treatment/complementary-products/",
+            "name": "מוצריםלעיצובהשיער",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מוצריבוץיםהמלח": {
+            "url": "https://hbdeadsea.co.il/product-category/bodyspa/dead-sea-mud-products/",
+            "name": "מוצריבוץיםהמלח",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מוצריבריאותמינרלים": {
+            "url": "https://hbdeadsea.co.il/product-category/health-products/",
+            "name": "מוצריבריאותמינרלים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מינרלטריטמנט": {
+            "url": "https://hbdeadsea.co.il/product-category/%d7%9e%d7%99%d7%a0%d7%a8%d7%9c-%d7%98%d7%a8%d7%99%d7%98%d7%9e%d7%a0%d7%98/",
+            "name": "מינרלטריטמנט",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "טיפוחלגבר": {
+            "url": "https://hbdeadsea.co.il/product-category/men-treatment/",
+            "name": "טיפוחלגבר",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מבצעים": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/",
+            "name": "מבצעים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "טיפוחפנים4ב100": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/4at100/",
+            "name": "טיפוחפנים4ב100",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מוצריטיפוח2+1": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/but2get1/",
+            "name": "מוצריטיפוח2+1",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "ניקויפנים2ב50": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/2at50/",
+            "name": "ניקויפנים2ב50",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מסכותבד5ב50": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/5at50/",
+            "name": "מסכותבד5ב50",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "קרמיבוץ2ב-30": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/mud2at30/",
+            "name": "קרמיבוץ2ב-30",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "קרמים3ב20": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/3at20/",
+            "name": "קרמים3ב20",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "טיפוח4ב40": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/4at40/",
+            "name": "טיפוח4ב40",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "טיפוח3ב50": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/3at50/",
+            "name": "טיפוח3ב50",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "טיפוחלגבר2ב55": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/2at55/",
+            "name": "טיפוחלגבר2ב55",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מלח3ב35": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/3at35/",
+            "name": "מלח3ב35",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מוצריטיפוח3ב60": {
+            "url": "https://hbdeadsea.co.il/product-category/sale/3at60/",
+            "name": "מוצריטיפוח3ב60",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "מארזיםומתנות": {
+            "url": "https://hbdeadsea.co.il/product-category/allproducts/gift-sets/",
+            "name": "מארזיםומתנות",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "טיפוחהפנים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/",
+                "name": "טיפוחהפנים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        },
+        "טיפוחהפנים": {
+            "url": "https://hbdeadsea.co.il/product-category/facial/",
+            "name": "טיפוחהפנים",
+            "presta_categories": {
+                "default_category": 11245,
+                "additional_categories": [11288]
+            },
+            "מינרל+לחויותלפניםמינרליםותמציותצמחים": {
+                "url": "https://hbdeadsea.co.il/product-category/facial/moisture-face/",
+                "name": "מינרל+לחויותלפניםמינרליםותמציותצמחים",
+                "presta_categories": {
+                    "default_category": 11245,
+                    "additional_categories": [11288]
+                }
+            }
+        }
+    }
+}

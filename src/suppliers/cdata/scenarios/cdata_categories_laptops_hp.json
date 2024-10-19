@@ -1,0 +1,323 @@
+{
+  "scenarios": {
+    "HP 11.6 I3": {
+      "brand": "HP",
+      "url": "------------HP 11.6 I3 -------------r  ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,8,52,4,362,989"
+    },
+    "HP 11.6 I5": {
+      "brand": "HP",
+      "url": "-----------HP 11.6 I5-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,8,5"
+    },
+    "HP 11.6 I7": {
+      "brand": "HP",
+      "url": "--------------HP 11.6 I7-----------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,8,6"
+    },
+    "HP 11.6 I9": {
+      "brand": "HP",
+      "url": "-------------HP 11.6 I9---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,8,7"
+    },
+    "HP 11.6 AMD": {
+      "brand": "HP",
+      "url": "-------------HP 11.6 AMD---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,8,234,363"
+    },
+    "HP 11.6 Celeron": {
+      "brand": "HP",
+      "url": "-------------HP 11.6 Celeron----------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,233,364"
+    },
+    "HP 11.6 Pentium": {
+      "brand": "HP",
+      "url": "-----------------HP 11.6 Pentium------------ ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,8,232,365"
+    },
+    "HP 13.4 - 13.3 I3": {
+      "brand": "HP",
+      "url": "-------------------HP 13.4 - 13.3 I3-----------r ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,4,454"
+    },
+    "HP 13.4 - 13.3 I5 ProBook 430": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=235m!#-!6344!-#!227!#-!4634!-#!225!#-!4877",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,5,455,49,657"
+    },
+    "HP 13.4 - 13.3 I5 EliteBook 830": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=235m!#-!6348!-#!227!#-!4634!-#!225!#-!4877",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,5,455,49,658"
+    },
+
+
+
+    "HP 13.4 - 13.3 I7 ProBook 430": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=235m!#-!6344!-#!227!#-!4635!-#!225!#-!4877",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,6,456,49,657"
+    },
+    "HP 13.4 - 13.3 I7 EliteBook 830": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=235m!#-!6348!-#!227!#-!4635!-#!225!#-!4877",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,6,456,49,658"
+    },
+    "HP 13.4 - 13.3 I7 EliteBook 1030": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=235m!#-!6351!-#!227!#-!4635!-#!225!#-!4877",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,6,456,49,659"
+    },
+
+
+    "HP 13.4 - 13.3 I9": {
+      "brand": "HP",
+      "url": "------------HP 13.4 - 13.3 I9----------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,7,457"
+    },
+    "HP 13.4 - 13.3 AMD": {
+      "brand": "HP",
+      "url": "----------------HP 13.4 - 13.3 AMD------------------ ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,234,458"
+    },
+    "HP 13.4 - 13.3 Celeron": {
+      "brand": "HP",
+      "url": "-----------------HP 13.4 - 13.3 Celeron---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,233,459"
+    },
+    "HP 13.4 - 13.3 Pentium": {
+      "brand": "HP",
+      "url": "-----------------HP 13.4 - 13.3 Pentium ------------ ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,9,232,460"
+    },
+    "HP 14 I3": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4633!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,10,4,461"
+    },
+    "HP 14 I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4634!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,10,5,462"
+    },
+    "HP 14 I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4635!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,10,6,463"
+    },
+    "HP 14 I9": {
+      "brand": "HP",
+      "url": "----------------HP 14 I9 ---------------------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,10,7,646"
+    },
+    "HP 14 AMD": {
+      "brand": "HP",
+      "url": "------------------- HP 14 AMD ----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,10,234,465"
+    },
+    "HP 14 Celeron": {
+      "brand": "HP",
+      "url": "------------------- HP 14 AMD ----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,10,233,466"
+    },
+    "HP 14 Pentium": {
+      "brand": "HP",
+      "url": "-------------------HP 14 Pentium ---------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,10,232,467"
+    },
+    "HP 15 I3": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4633!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,4,468"
+    },
+    "HP 15 I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4634!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,5,469"
+    },
+    "HP 15 I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4635!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,6,470"
+    },
+    "HP 15 I9": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!5836!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,7,471"
+    },
+    "HP 15 AMD": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D#/specFilters=227m!#-!4920!-#!225!#-!4663!##!6406&manFilters=2",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,234,472"
+    },
+    "HP 15 Celeron": {
+      "brand": "HP",
+      "url": "---------------------HP 15 Celeron-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,233,473"
+    },
+    "HP 15 Pentium": {
+      "brand": "HP",
+      "url": "---------------------HP 15 Pentium-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,232,474"
+    },
+    "HP 16 I3": {
+      "brand": "HP",
+      "url": "--------------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,4,468"
+    },
+    "HP 16 I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4634!-#!225!#-!6406",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,5,469"
+    },
+    "HP 16 I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4635!-#!225!#-!6406",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,6,470"
+    },
+    "HP 16 I9": {
+      "brand": "HP",
+      "url": "------------------------------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,7,471"
+    },
+    "HP 16 AMD": {
+      "brand": "HP",
+      "url": "--------------------------------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,234,472"
+    },
+    "HP 16 Celeron": {
+      "brand": "HP",
+      "url": "---------------------HP 15 Celeron-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,233,473"
+    },
+    "HP 16 Pentium": {
+      "brand": "HP",
+      "url": "---------------------HP 15 Pentium-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,11,232,474"
+    },
+    "HP 17.3 I3": {
+      "brand": "HP",
+      "url": "---------------HP 17.3 I3------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,12,4,475"
+    },
+    "HP 17.3 I5": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4634!-#!225!#-!4664",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,12,5,476"
+    },
+    "HP 17.3 I7": {
+      "brand": "HP",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-HP#/specFilters=227m!#-!4635!-#!225!#-!4664",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,12,6,477"
+    },
+    "HP 17.3 I9": {
+      "brand": "HP",
+      "url": "-----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,12,7,478"
+    },
+    "HP 17.3 AMD": {
+      "brand": "HP",
+      "url": "------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,12,234,479"
+    },
+    "HP 17.3 Celeron": {
+      "brand": "HP",
+      "url": "----------------------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,12,233,480"
+    },
+    "HP 17.3 Pentium": {
+      "brand": "HP",
+      "url": "---------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "3,52,12,232,481"
+    }
+  }

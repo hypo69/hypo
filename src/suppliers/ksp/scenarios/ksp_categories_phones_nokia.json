@@ -1,0 +1,172 @@
+{
+  "scenarios": {
+    "Nokia 110 4G": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..36478",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 110 4G"
+        }
+      }
+    },
+    "Nokia 105 4G": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..36285",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 105 4G"
+        }
+      }
+    },
+    "Nokia XR20 TA-1362": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..33389",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA XR20"
+        }
+      }
+    },
+    "NOKIA G10": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..26225",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA G10"
+        }
+      }
+    },
+    "Nokia 800 Tough": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..24205",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 800 TOUGH"
+        }
+      }
+    },
+    "NOKIA 215 4G": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..22710",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 215 4G"
+        }
+      }
+    },
+    "NOKIA 5310": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..20947",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 5310"
+        }
+      }
+    },
+    "NOKIA 225 4G": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..18063",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 225 4G"
+        }
+      }
+    },
+    "NOKIA 110": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..10307",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 110"
+        }
+      }
+    },
+    "NOKIA 220 4G": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..10050",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 220 4G"
+        }
+      }
+    },
+    "Nokia 230": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..7423",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 230"
+        }
+      }
+    },
+    "Nokia 105": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..573..325..2348",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA 105"
+        }
+      }
+    },
+    "NOKIA G11": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..325..573..37077",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA G11"
+        }
+      }
+    },
+    "NOKIA G21": {
+      "brand": "NOKIA",
+      "url": "https://ksp.co.il/web/cat/272..325..573..37077",
+      "checkbox": false,
+      "active": true,
+      "condition": "new",
+      "presta_categories": {
+        "template": {
+          "nokia": "NOKIA G21"
+        }
+      }
+    }
+  }
+}
