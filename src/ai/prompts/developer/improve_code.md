@@ -485,4 +485,4 @@ def html2ns(html_str: str) -> SimpleNamespace:
     def __init__(self, d: Driver):
         """Initializes the driver and base path."""
         self.d = d
-        self.base_path = gs.path.data / 'kazarinov' / 'mexironim' / gs.now```
+        self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' / gs.now```

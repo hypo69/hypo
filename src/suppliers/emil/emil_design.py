@@ -24,7 +24,7 @@ class EmilDesign:
 
     # Base path for the module data
     base_path: Path = (
-        gs.path.data
+        gs.path.google_drive
         / "emil"
     )
 

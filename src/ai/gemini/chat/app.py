@@ -31,7 +31,7 @@ k = Kazarinov(system_instruction=None, generation_config={'response_mime_type': 
 
 # Вопросы для чата
 questions_list = [
-    q_file.read_text() for q_file in (Path(gs.path.data / 'kazarinov' / 'prompts' / 'q').rglob('*.*'))
+    q_file.read_text() for q_file in (Path(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q').rglob('*.*'))
 ]
 
 # Модель для данных из формы (вопрос пользователя)

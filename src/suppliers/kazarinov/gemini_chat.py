@@ -20,9 +20,9 @@ from src.utils.jjson import j_dumps
 from src.logger import logger
 
 # Base paths for system instructions and training files
-base_path = gs.path.data / 'kazarinov' 
+base_path = gs.path.google_drive / 'kazarinov' 
 system_instruction_list: list = recursive_read_text_files(base_path, ['*.txt','*.md'])
-questions_list:list = recursive_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'q', ['*.*'])
+questions_list:list = recursive_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'])
 
 # Retrieve filenames for training data
 train_files = get_filenames(base_path / 'prompts' / 'questions_answers')
@@ -153,7 +153,7 @@ def chat():
     k = KazarinovAI(system_instruction=system_instruction_list[random.randint(0, len(system_instruction_list) - 1)], 
                   generation_config={'response_mime_type': 'text/plain'})   
     
-    questions_list:list = recursive_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'q', ['*.*'])
+    questions_list:list = recursive_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'])
 
     print(f"""
     Чтобы завершить чат, напишите `--q`

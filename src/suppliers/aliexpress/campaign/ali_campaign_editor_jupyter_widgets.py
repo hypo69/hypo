@@ -50,7 +50,7 @@ class JupyterCampaignEditorWidgets:
         default values and callbacks for the widgets.
         """
         self.campaigns_directory:str = Path(
-            gs.path.data, "aliexpress", "campaigns"
+            gs.path.google_drive, "aliexpress", "campaigns"
         )
         
         if not self.campaigns_directory.exists():

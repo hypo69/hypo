@@ -49,7 +49,7 @@ class GPT_Traigner:
     def dump_downloaded_conversations(self):
         """ Collect conversations from the chatgpt page """
         ...
-        conversation_directory = Path(gs.path.data / 'chat_gpt' / 'conversation')
+        conversation_directory = Path(gs.path.google_drive / 'chat_gpt' / 'conversation')
         html_files = conversation_directory.glob("*.html")
 
         all_data = []
@@ -85,21 +85,21 @@ class GPT_Traigner:
             all_data_df = pd.concat(all_data, ignore_index=True)
 
             # Save all accumulated results to a single CSV file
-            csv_file_path = gs.path.data / 'chat_gpt' / 'conversation' / 'all_conversations.csv'
+            csv_file_path = gs.path.google_drive / 'chat_gpt' / 'conversation' / 'all_conversations.csv'
             all_data_df.to_csv(csv_file_path, index=False, encoding='utf-8')
 
             # Save all accumulated results to a single JSONL file
-            jsonl_file_path = gs.path.data / 'chat_gpt' / 'conversation' / 'all_conversations.jsonl'
+            jsonl_file_path = gs.path.google_drive / 'chat_gpt' / 'conversation' / 'all_conversations.jsonl'
             all_data_df.to_json(jsonl_file_path, orient='records', lines=True, force_ascii=False)
             
             # Save raw conversations to a single line without formatting
             raw_conversations = ' '.join(all_data_df['content'].dropna().tolist())
-            raw_file_path = gs.path.data / 'chat_gpt' / 'conversation' / 'raw_conversations.txt'
+            raw_file_path = gs.path.google_drive / 'chat_gpt' / 'conversation' / 'raw_conversations.txt'
             with open(raw_file_path, 'w', encoding='utf-8') as raw_file:
                 raw_file.write(raw_conversations)
 
 traigner = GPT_Traigner()
 traigner.dump_downloaded_conversations()
 model = Model()
-model.stream_w(data_file_path=Path(gs.path.data / 'chat_gpt' / 'conversation' / 'all_conversations.csv'))
+model.stream_w(data_file_path=Path(gs.path.google_drive / 'chat_gpt' / 'conversation' / 'all_conversations.csv'))
 

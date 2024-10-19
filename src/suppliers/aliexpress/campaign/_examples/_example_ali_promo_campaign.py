@@ -16,7 +16,7 @@ from src.utils import j_loads_ns
 from src.utils import pprint
 from src.logger import logger
 
-campaigns_directory = Path(gs.path.data, 'aliexpress', 'campaigns')
+campaigns_directory = Path(gs.path.google_drive, 'aliexpress', 'campaigns')
 campaign_names = get_directory_names(campaigns_directory)
 
 campaign_name = '280624_cleararanse'

@@ -101,7 +101,7 @@ def __init__(self,
     self.language = language
     self.currency = currency
     self.locale = f"{self.language}_{self.currency}"
-    self.campaign_path = gs.path.data / 'aliexpress' / 'campaigns' / self.campaign_name / 'categories' / self.campaign_category
+    self.campaign_path = gs.path.google_drive / 'aliexpress' / 'campaigns' / self.campaign_name / 'categories' / self.campaign_category
 ```
 
 - **`super().__init__(language, currency)`**: Calls the parent `AliApi` class’s constructor.

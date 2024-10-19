@@ -78,7 +78,7 @@ def campaign_cycle(d: Driver):
                     currency=currency
                 )
 
-            campaigns = get_directory_names(gs.path.data / 'aliexpress' / 'campaigns')
+            campaigns = get_directory_names(gs.path.google_drive / 'aliexpress' / 'campaigns')
             run_campaign(
                 d, 'aliexpress', campaigns, 
                 group_file_paths=group_file_paths,

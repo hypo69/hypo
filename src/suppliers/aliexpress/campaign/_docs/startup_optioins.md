@@ -82,7 +82,7 @@ from src.utils import get_directory_names, j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
 # Define the path to the directory with campaigns and languages with currencies
-campaigns_directory = gs.path.data / 'aliexpress' / 'campaigns'
+campaigns_directory = gs.path.google_drive / 'aliexpress' / 'campaigns'
 
 def update_category(json_path: Path, category: SimpleNamespace) -> bool:
     """

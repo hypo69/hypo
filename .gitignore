@@ -181,6 +181,7 @@ data/
 statistic/
 storage/
 docs/
+secrets/
 #*(*).*
 *.exe
 *.zip

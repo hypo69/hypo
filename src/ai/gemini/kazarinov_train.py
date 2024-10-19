@@ -19,7 +19,7 @@ from src.utils import pprint
 from src.logger import logger
 
 # Base paths for system instructions and training files
-base_path = gs.path.data / 'kazarinov' / 'prompts' 
+base_path = gs.path.google_drive / 'kazarinov' / 'prompts' 
 system_instruction_path = base_path / 'system_instruction.txt'
 questions_file_path = base_path / 'model' / 'generated_questions'
 system_instruction: str = read_text_file(system_instruction_path)
@@ -114,7 +114,7 @@ class Kazarinov:
     def dialog(self):
         """"""
         ...
-        base_path: Path = gs.path.data / 'kazarinov' / 'prompts' / 'q'  
+        base_path: Path = gs.path.google_drive / 'kazarinov' / 'prompts' / 'q'  
 
         questions:list = read_text_file(base_path / 'ru.md'  , as_list = True)  + read_text_file(base_path / 'he.md'  , as_list = True) + \
             read_text_file(base_path / 'ru2.md'  , as_list = True)  + read_text_file(base_path / 'he2.md'  , as_list = True)  + \
@@ -138,7 +138,7 @@ class Kazarinov:
         ...
 
         # # Read reminders strings list from .txt and .md files
-        # reminders_strings_list: list = recursive_read_text_files(gs.path.data / 'AI', ['*.txt', '*.md'])
+        # reminders_strings_list: list = recursive_read_text_files(gs.path.google_drive / 'AI', ['*.txt', '*.md'])
         # logger.info(f"{len(reminders_strings_list)=}")
 
         # # Send reminders in batches of 100
@@ -204,6 +204,6 @@ if __name__ == "__main__":
     """"""
     ...
     kazarinov = Kazarinov()
-    #kazarinov.train(train_dir = gs.path.data / 'AI', system_instructions = None )
-    kazarinov.train(train_dir = gs.path.data / 'kazarinov' / 'prompts', system_instructions = None )
+    #kazarinov.train(train_dir = gs.path.google_drive / 'AI', system_instructions = None )
+    kazarinov.train(train_dir = gs.path.google_drive / 'kazarinov' / 'prompts', system_instructions = None )
     kazarinov.dialog()

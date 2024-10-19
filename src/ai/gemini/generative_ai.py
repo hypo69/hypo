@@ -28,8 +28,8 @@ class GoogleGenerativeAI:
     """GoogleGenerativeAI class for interacting with Google's Generative AI models."""
 
     model: genai.GenerativeModel
-    dialogue_log_path: str | Path = gs.path.data / 'AI' / f"gemini_{gs.now}.json"
-    dialogue_txt_path: str | Path = gs.path.data / 'AI' / f"gemini_{gs.now}.txt"
+    dialogue_log_path: str | Path = gs.path.google_drive / 'AI' / f"gemini_{gs.now}.json"
+    dialogue_txt_path: str | Path = gs.path.google_drive / 'AI' / f"gemini_{gs.now}.txt"
     system_instruction:str
 
     def __init__(self, api_key:str, system_instruction: Optional[str] = None,  generation_config: dict = {"response_mime_type": "application/json"}):
@@ -76,7 +76,7 @@ class GoogleGenerativeAI:
        
         try:
             if with_pretrain:
-                train_data_list:list = recursive_read_text_files(gs.path.data / 'AI', ['*.txt'], exc_info=False)
+                train_data_list:list = recursive_read_text_files(gs.path.google_drive / 'AI', ['*.txt'], exc_info=False)
                 if train_data_list:
                     i:int = 0
                     for train_data in train_data_list:

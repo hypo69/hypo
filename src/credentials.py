@@ -24,7 +24,7 @@ from pykeepass import PyKeePass
 
 import header
 from header import __root__
-from src.utils import j_loads
+from src.utils import j_loads,j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import KeePassException, DefaultSettingsException
 
@@ -43,14 +43,16 @@ class ProjectSettings(metaclass = SingletonMeta):
     Designed to ensure that only one instance of it exists in the program.
     """
     dev_null: str = 'nul' if Path().drive else '/dev/null'
-    
+    __root__: Path = Path(__root__)
+    settings:SimpleNamespace = j_loads_ns(__root__ / 'src' / 'settings.json')
     path: SimpleNamespace = SimpleNamespace(
         root=Path(__root__),
-        src=Path(__root__, 'src'),
-        bin=Path(__root__, 'bin'),
-        log=Path(__root__, 'log'),
-        tmp=Path(__root__, 'tmp'),
-        data=Path(__root__, 'data'),        
+        src=Path(__root__ / 'src'),
+        bin=Path(__root__ / 'bin'),
+        log=Path(__root__ / 'log'),
+        tmp=Path(__root__ / 'tmp'),
+        data=Path(__root__ / 'data'), 
+        google_drive = Path(settings.google_drive),
     )
     
     sys.path.extend([str(path.root), str(path.src)])
@@ -138,10 +140,10 @@ class ProjectSettings(metaclass = SingletonMeta):
         """ Open KeePass database
         @param retry: Number of retries
         """
-        path = self.path.src /  'credentials.kdbx'
+        #path = self.path.src /  'credentials.kdbx'
         while retry > 0:
             try:
-                kp = PyKeePass(str(path), password=getpass.getpass('Enter KeePass master password: ').lower()) # <- `.lower()` for debug only!
+                kp = PyKeePass(str(self.path.google_drive), password=getpass.getpass('Enter KeePass master password: ').lower()) # <- `.lower()` for debug only!
                 return kp
             except Exception as ex:
                 logger.error(f"Failed to open KeePass database, {retry-1} retries left.", ex, False)
@@ -215,6 +217,9 @@ class ProjectSettings(metaclass = SingletonMeta):
             'kazarinov', 
             entry.custom_properties.get('kazarinov', None))
 
+            setattr( self.credentials.telegram.bot, 
+            'test', 
+            entry.custom_properties.get('test', None))
             return True
         except DefaultSettingsException as ex:
             logger.error("Failed to extract Telegram credentials from KeePass", ex)

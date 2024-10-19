@@ -79,7 +79,7 @@ class FacebookPromoter:
         """
         self.promoter = promoter
         self.d = d
-        self.group_file_paths = group_file_paths if group_file_paths else get_filenames(gs.path.data / 'facebook' / 'groups')
+        self.group_file_paths = group_file_paths if group_file_paths else get_filenames(gs.path.google_drive / 'facebook' / 'groups')
         self.no_video = no_video
         self.spinner = spinning_cursor()
 
@@ -145,7 +145,7 @@ class FacebookPromoter:
             return
 
         for group_file in group_file_paths:
-            path_to_group_file: Path = gs.path.data / 'facebook' / 'groups' / group_file 
+            path_to_group_file: Path = gs.path.google_drive / 'facebook' / 'groups' / group_file 
             groups_ns: dict = j_loads_ns(path_to_group_file)
 
             if not groups_ns:
@@ -199,7 +199,7 @@ class FacebookPromoter:
             item.name = category_name
             item.products = ce.get_category_products(item.category_name)
         else:
-            base_path = gs.path.data / self.promoter / 'campaigns' / campaign_name
+            base_path = gs.path.google_drive / self.promoter / 'campaigns' / campaign_name
             adv: SimpleNamespace = j_loads_ns(base_path / f"{language}_{currency}.json")
             adv_categories = list(vars(adv.category).items())  # Преобразуем в список для перемешивания
             random.shuffle(adv_categories)  # Перемешиваем категории
@@ -309,7 +309,7 @@ class FacebookPromoter:
             >>> promoter.run_events(events=[event], group_file_paths=["group1.json", "group2.json"])
         """
         for event in  events_names:
-            event_ns = j_loads_ns(gs.path.data / 'aliexpress' / 'events' / event / f"{event}.json")
+            event_ns = j_loads_ns(gs.path.google_drive / 'aliexpress' / 'events' / event / f"{event}.json")
             self.process_groups(group_file_paths=group_file_paths, campaign_name="", is_event=True, events=event_ns)
 
 

@@ -307,8 +307,9 @@ class Driver:
         Raises:
             Exception: If an error occurs while saving cookies.
         """
+        return True # <- debug без куки
         if not to_file:
-            to_file = Path(gs.path.data / 'cookies' / self.driver_name / self.extract_domain(self.current_url) / 'cookie')
+            to_file = Path(gs.path.google_drive / 'cookies' / self.driver_name / self.extract_domain(self.current_url) / 'cookie')
         
         directory = to_file.parent
         if not directory.exists():

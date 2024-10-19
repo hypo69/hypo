@@ -34,7 +34,7 @@ class OpenAIModel:
     assistant = None
     thread = None
     system_instruction: str
-    dialogue_log_path: str | Path = gs.path.data / 'AI' / f"{model}_{gs.now}.json"
+    dialogue_log_path: str | Path = gs.path.google_drive / 'AI' / f"{model}_{gs.now}.json"
     dialogue: List[Dict[str, str]] = []
     assistants: List[SimpleNamespace]
     models_list: List[str]
@@ -270,7 +270,7 @@ class OpenAIModel:
     def dynamic_train(self):
         """Dynamically load previous dialogue and fine-tune the model based on it."""
         try:
-            messages = j_loads(gs.path.data / 'AI' / 'conversation' / 'dailogue.json')
+            messages = j_loads(gs.path.google_drive / 'AI' / 'conversation' / 'dailogue.json')
 
             if messages:
                 response = self.client.chat.completions.create(
@@ -298,7 +298,7 @@ class OpenAIModel:
             str | None: The job ID of the training job or None if an error occurred.
         """
         if not data_dir:
-            data_dir = gs.path.data / 'AI' / 'training'
+            data_dir = gs.path.google_drive / 'AI' / 'training'
 
         try:
             documents = j_loads(data if data else data_file if data_file else data_dir)
@@ -325,7 +325,7 @@ class OpenAIModel:
             filename (str, optional): The file to save job IDs. Defaults to "job_ids.json".
         """
         job_data = {"id": job_id, "description": description, "created": time.time()}
-        job_file = gs.path.data / filename
+        job_file = gs.path.google_drive / filename
 
         if not job_file.exists():
             j_dumps([job_data], job_file)
@@ -381,7 +381,7 @@ def main():
 
     # Example of training the model using provided data
     print("\nTraining the model...")
-    training_result = model.train(data_file=gs.path.data / 'AI' / 'training_data.csv')
+    training_result = model.train(data_file=gs.path.google_drive / 'AI' / 'training_data.csv')
     print(f"Training job ID: {training_result}")
 
     # Example of saving a job ID
@@ -390,7 +390,7 @@ def main():
         print(f"Saved training job ID: {training_result}")
 
     # Пример описания изображения
-    image_path = gs.path.data / 'images' / 'example_image.jpg'
+    image_path = gs.path.google_drive / 'images' / 'example_image.jpg'
     print("\nDescribing Image:")
     description = model.describe_image(image_path)
     print(f"Image description: {description}")

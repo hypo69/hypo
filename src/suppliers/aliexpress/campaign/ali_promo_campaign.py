@@ -58,6 +58,7 @@ from src.logger import logger
 from src.utils.file import get_filenames, read_text_file, get_directory_names
 from src.utils.jjson import j_dumps, j_loads_ns, j_loads
 from src.utils.convertors import csv2dict
+from src.utils.file import save_text_file
 from src.utils import pprint
 
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
@@ -100,7 +101,7 @@ class AliPromoCampaign:
 
         """
         ...
-        self.base_path = gs.path.data / "aliexpress" / "campaigns" / campaign_name
+        self.base_path = gs.path.google_drive / "aliexpress" / "campaigns" / campaign_name
         campaign_file_path = self.base_path / f"{language}_{currency}.json"
         self.campaign = j_loads_ns(
             campaign_file_path, exc_info=False
@@ -804,7 +805,7 @@ class AliPromoCampaign:
 
         ...
         # Generate the main index.html file
-        campaign_path  = gs.path.data / 'aliexpress' / 'campaigns' / campaign_name
+        campaign_path  = gs.path.google_drive / 'aliexpress' / 'campaigns' / campaign_name
         campaign_path.mkdir(parents=True, exist_ok=True)
         index_html_path = campaign_path / 'index.html'
         
@@ -845,7 +846,7 @@ class AliPromoCampaign:
         Example:
             >>> campaign.generate_html_for_campaign("HolidaySale")
         """
-        campaign_root = Path(gs.path.data / "aliexpress" / "campaigns" / campaign_name)
+        campaign_root = Path(gs.path.google_drive / "aliexpress" / "campaigns" / campaign_name)
         categories = get_filenames(campaign_root / "category", extensions="")
 
         # Генерация HTML страниц для каждой категории

@@ -53,9 +53,9 @@ class Mexiron:
     def __init__(self, d: Driver):
         """Initializes the driver and base path."""
         self.d = d
-        self.base_path = gs.path.data / 'kazarinov' / 'mexironim' 
+        self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' 
 
-        system_instruction_path = gs.path.data / 'kazarinov' / 'prompts' /  'buid_mexiron.txt'
+        system_instruction_path = gs.path.google_drive / 'kazarinov' / 'prompts' /  'buid_mexiron.txt'
         self.system_instruction: str = read_text_file(system_instruction_path)
 
         api_key = gs.credentials.gemini.kazarinov
@@ -187,13 +187,13 @@ class Mexiron:
                 ...
                 return
             
-        service_images_path = recursively_get_filepath(gs.path.data / 'kazarinov' / 'converted_images' / 'pastel' / 'bright', ['*.jpeg','*.jpg','*.png'])
+        service_images_path = recursively_get_filepath(gs.path.google_drive / 'kazarinov' / 'converted_images' / 'pastel' / 'bright', ['*.jpeg','*.jpg','*.png'])
         #service_image = random.choice(service_images_path)
         ...
         setattr(ru, 'language', 'ru')
         setattr(ru, 'currency', 'ils')
         setattr(ru, 'price', price)
-        service_product_description_ru = f"""{read_text_file(gs.path.data / 'kazarinov' / 'service_as_product_ru.txt')}
+        service_product_description_ru = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'service_as_product_ru.txt')}
             \n ----------------- \n
             Общая цена за все: {price} шек.
             Для защитников страны — солдат ЦАХАЛ — специальные цены на все услуги! Спасибо вам за то, что вы защищаете нашу страну.
@@ -211,7 +211,7 @@ class Mexiron:
         setattr(he, 'language', 'he')
         setattr(he, 'currency', 'ils')
         setattr(he, 'price', price)
-        service_product_description_he = f"""{read_text_file(gs.path.data / 'kazarinov' / 'service_as_product_he.txt')}
+        service_product_description_he = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'service_as_product_he.txt')}
             \n ----------------- \n
            מחיר כולל הכל {price} ש''ח
            . 

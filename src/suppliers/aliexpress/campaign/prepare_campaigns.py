@@ -29,7 +29,7 @@ from src.logger import logger
 
 
 # Define the path to the directory with campaigns
-campaigns_directory = gs.path.data / 'aliexpress' / 'campaigns'
+campaigns_directory = gs.path.google_drive / 'aliexpress' / 'campaigns'
 
 
 def process_campaign_category(

@@ -6,7 +6,7 @@ The `campaign` module in the AliExpress system is designed to manage and edit pr
 AliPromoCampaign
 ├── __init__(campaign_name, category_name, language, currency, force_update)
 │   ├── super().__init__(campaign_name, category_name, language, currency)
-│   ├── gs.path.data / 'aliexpress' / 'campaigns' / self.campaign_name
+│   ├── gs.path.google_drive / 'aliexpress' / 'campaigns' / self.campaign_name
 │   ├── self.campaign_root / 'category' / category_name
 │   ├── self.campaign_root / f'{language}.json'
 │   ├── j_loads_ns(self._json_path)

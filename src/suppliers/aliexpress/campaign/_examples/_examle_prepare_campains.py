@@ -12,7 +12,7 @@ process_campaign("WinterSale", categories=["Clothing", "Toys"], language="EN", c
 process_all_campaigns(language="EN", currency="USD", force=True)
 
 
-campaigns_directory = Path(gs.path.data,'aliexpress','campaigns')
+campaigns_directory = Path(gs.path.google_drive,'aliexpress','campaigns')
 campaign_names = get_directory_names(campaigns_directory)
 languages = {'EN': 'USD', 'HE': 'ILS', 'RU': 'ILS'}
 

@@ -10,7 +10,7 @@ import random
 
 import header
 from src import gs
-from src.bots.telegram_bot import TelegramBot
+from src.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.suppliers.kazarinov.parser_onetab import fetch_target_urls_onetab
@@ -18,17 +18,19 @@ from src.suppliers.kazarinov.scenarios.scenario_pricelist import Mexiron
 from src.suppliers.kazarinov import gemini_chat
 from src.utils.file import read_text_file, recursive_read_text_files
 from src.utils.string.url import is_url
+from src.logger import logger
 
 class KazarinovTelegram(TelegramBot):
     """Telegram bot with custom behavior for Kazarinov."""
 
-    token = gs.credentials.telegram.bot.kazarinov
+    #token = gs.credentials.telegram.bot.kazarinov
+    token = gs.credentials.telegram.bot.test    # <- debug
     d:Driver
     mexiron: Mexiron
     model_chat:GoogleGenerativeAI
     model_adviser:GoogleGenerativeAI
     system_instruction:str
-    questions_list:list = recursive_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'q', ['*.*'], as_list = True )
+    questions_list:list = recursive_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'], as_list = True )
     timestamp:str
 
     def __init__(self):
@@ -46,11 +48,11 @@ class KazarinovTelegram(TelegramBot):
         self.application.add_handler(MessageHandler(filters.VOICE, self.handle_voice))
         self.application.add_handler(MessageHandler(filters.Document.ALL, self.handle_document))
 
-        self.base_path = gs.path.data / 'kazarinov' / 'mexironim' / self.timestamp
+        self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' / self.timestamp
         
-        self.system_instruction: str = read_text_file(gs.path.data / 'kazarinov' / 'prompts' /  'system_instruction.txt')
-        self.correct_answers: str = read_text_file(gs.path.data / 'kazarinov' / 'prompts' /  'correct_anwers.txt')
-        self.advise_instructions: str = read_text_file(gs.path.data / 'kazarinov' / 'prompts' /  'model_adviser.txt')
+        self.system_instruction: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'system_instruction.txt')
+        self.correct_answers: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'correct_anwers.txt')
+        self.advise_instructions: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'model_adviser.txt')
         api_key = gs.credentials.gemini.kazarinov
         self.model = GoogleGenerativeAI(api_key = api_key, system_instruction = self.system_instruction, generation_config = {"response_mime_type": "text/plain"})
         self.model.ask(self.correct_answers)
@@ -92,10 +94,13 @@ class KazarinovTelegram(TelegramBot):
             return  await update.message.reply_text('Хуёвенько. Попробуй еще раз')
 
         if response.startswith(('--next','-next','__next')) or response=='-n' or response=='-q':
-                q = random.choice( self.questions_list)
-                await update.message.reply_text(q)
-                a =  self.model.ask(q)
-                return await update.message.reply_text(a)
+                try:
+                    q = random.choice( self.questions_list)
+                    await update.message.reply_text(q)
+                    a =  self.model.ask(q)
+                    return await update.message.reply_text(a)
+                except Exception as ex:
+                    logger.debug(f"Ошибка чтения вопросов")
         else:
             if not is_url(response):
                 return await update.message.reply_text(self.model.ask(response))

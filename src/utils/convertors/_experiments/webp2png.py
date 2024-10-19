@@ -22,8 +22,8 @@ def convert_images(webp_dir: Path, png_dir: Path) -> None:
 
     Example:
         convert_images(
-            gs.path.data / 'emil' / 'raw_images_from_openai',
-            gs.path.data / 'emil' / 'converted_images'
+            gs.path.google_drive / 'emil' / 'raw_images_from_openai',
+            gs.path.google_drive / 'emil' / 'converted_images'
         )
     """
     webp_files: list = get_filenames(webp_dir)
@@ -36,8 +36,8 @@ def convert_images(webp_dir: Path, png_dir: Path) -> None:
 
 if __name__ == '__main__':
     # Define the directories for WebP and PNG images
-    webp_dir = gs.path.data / 'kazarinov' / 'raw_images_from_openai'
-    png_dir = gs.path.data / 'kazarinov' / 'converted_images'
+    webp_dir = gs.path.google_drive / 'kazarinov' / 'raw_images_from_openai'
+    png_dir = gs.path.google_drive / 'kazarinov' / 'converted_images'
     print(f"from: {webp_dir=}\nto:{png_dir=}")
     # Run the conversion
     convert_images(webp_dir, png_dir)
