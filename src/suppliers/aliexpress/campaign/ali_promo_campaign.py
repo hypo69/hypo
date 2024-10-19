@@ -817,7 +817,7 @@ class AliPromoCampaign:
             category_link = f"{category_name}/{category_name}.html"
             category_links.append(f"<li><a href='{category_link}'>{html.escape(category_name)}</a></li>")
 
-        index_html_content = f"""<!DOCTYPE html>
+        index_html_content = fr"""<!DOCTYPE html>
         <html lang="en">
         <head>
         <meta charset="UTF-8">
