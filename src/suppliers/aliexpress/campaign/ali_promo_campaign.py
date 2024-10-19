@@ -828,7 +828,7 @@ class AliPromoCampaign:
         <body>
         <h1>Product Categories</h1>
         <ul>
-        {"\n".join(category_links)}
+        {"".join(category_links)}
         </ul>
         </body>
         </html>
