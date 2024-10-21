@@ -52,8 +52,9 @@ class ProjectSettings(metaclass = SingletonMeta):
         log=Path(__root__ / 'log'),
         tmp=Path(__root__ / 'tmp'),
         data=Path(__root__ / 'data'), 
+        secrets = Path(__root__ / 'secrets'),
         # google_drive = Path(settings.google_drive),  
-        google_drive = Path(__root__),       # <- ~~~~~~~~~ DEBUG
+        google_drive = Path(__root__ / 'data'),       # <- ~~~~~~~~~ DEBUG
     )
     
     sys.path.extend([str(path.root), str(path.src)])
@@ -144,7 +145,7 @@ class ProjectSettings(metaclass = SingletonMeta):
         #path = self.path.src /  'credentials.kdbx'
         while retry > 0:
             try:
-                kp = PyKeePass(str(self.path.google_drive / 'secrets' / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower()) # <- `.lower()` for debug only!
+                kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower()) # <- `.lower()` for debug only!
                 return kp
             except Exception as ex:
                 logger.error(f"Failed to open KeePass database, {retry-1} retries left.", ex, False)

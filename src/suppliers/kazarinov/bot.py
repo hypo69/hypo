@@ -50,7 +50,7 @@ class KazarinovTelegram(TelegramBot):
 
         self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' / self.timestamp
         
-        self.system_instruction: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'system_instruction.txt')
+        self.system_instruction: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'chat_system_instruction.txt')
         self.correct_answers: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'correct_anwers.txt')
         self.advise_instructions: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'model_adviser.txt')
         api_key = gs.credentials.gemini.kazarinov

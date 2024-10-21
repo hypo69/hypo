@@ -21,6 +21,7 @@ if __name__ == "__main__":
 
 
 import pickle
+import os
 from pathlib import Path
 from googleapiclient.discovery import build
 from google_auth_httplib2 import AuthorizedHttpTransport
@@ -46,8 +47,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 class GoogleDriveHandler:
     """Handles interaction with Google Drive."""
 
-    creds_file: Path = gs.path.root / 'secrets' / 'hypo69-c32c8736ca62.json'
-    SCOPES: list = ['https://www.googleapis.com/auth/drive']
+
 
     def __init__(self, folder_name: str):
         self.folder_name = folder_name
@@ -55,6 +55,8 @@ class GoogleDriveHandler:
 
     def _create_credentials(self):
         """Gets valid user credentials from storage."""
+        creds_file: Path = gs.path.secrets  / 'hypo69-c32c8736ca62.json'
+        SCOPES: list = ['https://www.googleapis.com/auth/drive']
         creds = None
         if os.path.exists('token.pickle'):
             with open('token.pickle', 'rb') as token:

@@ -1,22 +1,12 @@
 ﻿## \file ../src/utils/printer.py
-## \file ../src/utils/printer.py
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
 """
 This module provides enhanced print formatting for better readability of data structures.
-It supports pretty-printing of dictionaries, lists, objects, as well as reading and printing
-from CSV and XLS/XLSX files with customization for handling `Path` objects and class instances.
+It supports pretty-printing of dictionaries, lists, objects, and reading from CSV/XLS/XLSX files 
+with customization for handling `Path` objects and class instances, along with color, background, and font styling.
 Examples: https://colab.research.google.com/drive/1uBcZuMabkix2qpNJtNkMImF1BX7e6Eqd
 """
 
-
-import json
-import csv
-import pandas as pd
-from pathlib import Path
-from typing import Any
-from pprint import pprint as pretty_print
- # @title ### код функции
 import json
 import csv
 import pandas as pd
@@ -24,223 +14,185 @@ from pathlib import Path
 from typing import Any
 from pprint import pprint as pretty_print
 
+# ANSI escape codes for colors, background, and styles
+RESET = "\033[0m"
 
-def pprint(print_data: str | list | dict | Path | Any = None, depth: int = 4, max_lines: int = 10, *args, **kwargs) -> None:
-    """ Pretty prints the given data in a formatted way.
+# Text colors
+RED = "\033[31m"
+GREEN = "\033[32m"
+BLUE = "\033[34m"
+YELLOW = "\033[33m"
+WHITE = "\033[37m"
 
-    The function handles various data types and structures such as strings, dictionaries, lists, objects, and file paths.
-    It also supports reading and displaying data from CSV and XLS/XLSX files.
+# Background colors
+BG_RED = "\033[41m"
+BG_GREEN = "\033[42m"
+BG_BLUE = "\033[44m"
+BG_YELLOW = "\033[43m"
+BG_WHITE = "\033[47m"
 
+# Font styles
+BOLD = "\033[1m"
+UNDERLINE = "\033[4m"
+ITALIC = "\033[3m"
+
+## \file ../src/utils/printer.py
+# -*- coding: utf-8 -*-
+"""
+This module provides enhanced print formatting for better readability of data structures.
+It supports pretty-printing of dictionaries, lists, objects, and reading from CSV/XLS/XLSX files 
+with customization for handling `Path` objects and class instances, along with color, background, and font styling.
+Examples: https://colab.research.google.com/drive/1uBcZuMabkix2qpNJtNkMImF1BX7e6Eqd
+"""
+
+import json
+import csv
+import pandas as pd
+from pathlib import Path
+from typing import Any
+from pprint import pprint as pretty_print
+
+# ANSI escape codes for colors, background, and styles
+RESET = "\033[0m"
+
+# Text colors mapping
+TEXT_COLORS = {
+    "red": "\033[31m",
+    "green": "\033[32m",
+    "blue": "\033[34m",
+    "yellow": "\033[33m",
+    "white": "\033[37m",
+}
+
+# Background colors
+BG_COLORS = {
+    "bg_red": "\033[41m",
+    "bg_green": "\033[42m",
+    "bg_blue": "\033[44m",
+    "bg_yellow": "\033[43m",
+    "bg_white": "\033[47m",
+}
+
+# Font styles
+FONT_STYLES = {
+    "bold": "\033[1m",
+    "underline": "\033[4m",
+    "italic": "\033[3m",
+}
+
+def pprint(print_data: str | list | dict | Path | Any = None, 
+           depth: int = 4, max_lines: int = 10, 
+           text_color: str = "white", bg_color: str = "", font_style: str = "", 
+           *args, **kwargs) -> None:
+    """Pretty prints the given data with optional color, background, and font style.
+    
     Args:
-        print_data (str | list | dict | Any, optional): The data to be printed. It can be a string, dictionary, list, object, or file path. Defaults to `None`.
-        depth (int, optional): The depth to which nested data structures will be printed. Defaults to 4.
-        max_lines (int, optional): Maximum number of lines to print from a file (CSV/XLS). Defaults to 10.
-        *args: Additional positional arguments passed to the print or pretty_print function.
-        **kwargs: Additional keyword arguments passed to the print or pretty_print function.
-
-    Returns:
-        None: The function prints the formatted output and does not return any value.
-
+        print_data (str | list | dict | Path | Any, optional): Data to be printed. Can be a string, 
+            dictionary, list, object, or file path. Defaults to `None`.
+        depth (int, optional): Depth of nested structures to print. Defaults to 4.
+        max_lines (int, optional): Max lines to print from a file. Defaults to 10.
+        text_color (str, optional): Text color using ANSI codes. Defaults to WHITE.
+        bg_color (str, optional): Background color using ANSI codes. Defaults to "" (no background).
+        font_style (str, optional): Font style using ANSI codes. Defaults to "" (no style).
+        *args: Additional positional arguments passed to print or pretty_print.
+        **kwargs: Additional keyword arguments passed to print or pretty_print.
+    
     Example:
-        >>> pprint("/path/to/file.csv", max_lines=5)
-        >>> pprint("/path/to/file.xls", max_lines=3)
+        >>> pprint("/path/to/file.csv", max_lines=5, text_color='green', font_style='bold')
     """
+
+    def _color_text(text: str) -> str:
+        """Apply color, background, and font styling to the text."""
+        return f"{font_style}{text_color}{bg_color}{text}{RESET}"
+
+    # Normalize color inputs to lower case
+    text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
+    bg_color = BG_COLORS.get(bg_color.lower(), "")
+    font_style = FONT_STYLES.get(font_style.lower(), "")
+
     if not print_data:
-        print(type(print_data))
-        #return
+        print(_color_text("No data to print!"))
+        return
 
     def _read_text_file(file_path: str | Path, max_lines: int) -> list | None:
-        """Reads the content of a text file up to `max_lines` lines."""
-        path = Path(file_path)
-        if path.is_file():
-            try:
-                with path.open("r", encoding="utf-8") as file:
-                    return [file.readline().strip() for _ in range(max_lines)]
-            except Exception:
-                pretty_print(print_data)
-                return None
-
-    def _print_class_info(instance: Any, *args, **kwargs) -> None:
-        """Prints class information including class name, methods, and properties."""
-        class_name = instance.__class__.__name__
-        class_bases = instance.__class__.__bases__
-
-        print(f"Class: {class_name}", *args, **kwargs)
-        if class_bases:
-            print([base.__name__ for base in class_bases], *args, **kwargs)
-
-        attributes_and_methods = dir(instance)
-        methods = []
-        properties = []
-
-        for attr in attributes_and_methods:
-            if not attr.startswith('__'):
-                try:
-                    value = getattr(instance, attr)
-                except Exception:
-                    value = "Error getting attribute"
-                if callable(value):
-                    methods.append(f"{attr}()")
-                else:
-                    properties.append(f"{attr} = {value}")
-
-        pretty_print("Methods:", *args, **kwargs)
-        for method in sorted(methods):
-            pretty_print(method, *args, **kwargs)
-        print("Properties:", *args, **kwargs)
-        for prop in sorted(properties):
-            pretty_print(prop, *args, **kwargs)
+        """Reads the content of a text file up to `max_lines`."""
+        try:
+            with Path(file_path).open("r", encoding="utf-8") as file:
+                return [file.readline().strip() for _ in range(max_lines)]
+        except Exception:
+            print(_color_text("Error reading file."), RED)
+            return None
 
     def _print_csv(file_path: str, max_lines: int) -> None:
-        """Prints the first `max_lines` lines from a CSV file."""
+        """Prints the first `max_lines` rows from a CSV file."""
         try:
             with open(file_path, newline='', encoding='utf-8') as csvfile:
                 reader = csv.reader(csvfile)
                 header = next(reader)
-                print(f"CSV Header: {header}")
+                print(_color_text(f"CSV Header: {header}"), BLUE)
                 for i, row in enumerate(reader, start=1):
-                    print(f"Row {i}: {row}")
+                    print(_color_text(f"Row {i}: {row}"), GREEN)
                     if i >= max_lines:
                         break
         except Exception:
-            pretty_print(print_data)
+            print(_color_text("Error reading CSV file."), RED)
 
     def _print_xls(file_path: str, max_lines: int) -> None:
         """Prints the first `max_lines` rows from an XLS/XLSX file."""
         try:
             df = pd.read_excel(file_path, nrows=max_lines)
-            print(df.head(max_lines).to_string(index=False))
+            print(_color_text(df.head(max_lines).to_string(index=False)), YELLOW)
         except Exception:
-            pretty_print(print_data)
+            print(_color_text("Error reading XLS file."), RED)
 
-    def json_serializer(obj):
-        """Custom handler for unsupported data types in JSON."""
-        if isinstance(obj, Path):
-            return str(obj)
-
-    # Check if it's a file path
-    if isinstance(print_data, str):
-        if Path(print_data).is_file():
-            file_extension = Path(print_data).suffix.lower()
-
-            if file_extension == '.csv':
-                _print_csv(print_data, max_lines)
-            elif file_extension in ['.xls', '.xlsx']:
-                _print_xls(print_data, max_lines)
-            elif file_extension == '.txt':
-                content = _read_text_file(print_data, max_lines)
-                if content:
-                    for line in content:
-                        print(line)
-            elif file_extension == '.json':
-                try:
-                    with open(print_data, 'r', encoding='utf-8') as json_file:
-                        json_data = json.load(json_file)
-                        # Use ensure_ascii=False for correct encoding
-                        print(json.dumps(json_data, ensure_ascii=False, indent=4))
-                except Exception:
-                    pretty_print(print_data)
+    if isinstance(print_data, str) and Path(print_data).is_file():
+        ext = Path(print_data).suffix.lower()
+        if ext == '.csv':
+            _print_csv(print_data, max_lines)
+        elif ext in ['.xls', '.xlsx']:
+            _print_xls(print_data, max_lines)
         else:
-            pretty_print(print_data, *args, **kwargs)
+            content = _read_text_file(print_data, max_lines)
+            if content:
+                for line in content:
+                    print(_color_text(line))
     else:
-        # If the data is not a file, pretty print or handle it as a class
         try:
             if isinstance(print_data, dict):
-                print(json.dumps(print_data, ensure_ascii=False, indent=4))
+                print(_color_text(json.dumps(print_data, indent=4, ensure_ascii=False)))
             elif isinstance(print_data, list):
-                print("[")
+                print(_color_text("["))
                 for item in print_data:
-                    print(f"\t{item} - {type(item)}")
-                print("]")
+                    print(_color_text(f"\t{item} - {type(item)}"))
+                print(_color_text("]"))
             else:
-                print(print_data, *args, **kwargs)
-                if hasattr(print_data, '__class__'):
-                    _print_class_info(print_data, *args, **kwargs)
+                print(_color_text(str(print_data)))
         except Exception:
-            pretty_print(print_data)
-
+            print(_color_text("Error printing data."), RED)
 
 if __name__ == '__main__':
-    # Examples of using the pprint function:
-
-    # Example 1: Pretty print a dictionary
+    # Example usage
     example_dict = {
         'name': 'Alice',
         'age': 30,
-        'hobbies': ['reading', 'hiking', 'coding'],
+        'hobbies': ['reading', 'hiking'],
         'address': {'city': 'New York', 'country': 'USA'}
     }
-    pprint(example_dict)
+    pprint(example_dict, text_color='green', font_style='bold')
 
-    # Example 2: Pretty print a list
-    example_list = [
-        "Hello, World!",
-        Path("/example/path"),
-        42,
-        {"key": "value"}
-    ]
-    pprint(example_list)
+    example_list = ["Hello", Path("/example/path"), 42, {"key": "value"}]
+    pprint(example_list, text_color='blue', font_style='italic')
 
-    # Example 3: Print first 5 lines of a CSV file
-    pprint("/path/to/file.csv", max_lines=5)
+    pprint("/path/to/file.csv", max_lines=5, text_color='yellow', bg_color='bg_blue')
 
-    # Example 4: Print first 3 rows of an XLS file
-    pprint("/path/to/file.xls", max_lines=3)
+    class SampleClass:
+        def __init__(self, name: str):
+            self.name = name
 
-    # Example 5: Print class information
-    class MyClass:
-        def __init__(self, var1: str, var2: bool = False):
-            self.var1 = var1
-            self.var2 = var2
+    obj = SampleClass("Test Object")
+    pprint(obj, text_color='white', font_style='underline')
 
-        def method1(self):
-            return "method1 called"
+    pprint(Path("/example/path"), text_color='red', font_style='bold')
 
-    obj = MyClass("value1", True)
-    pprint(obj)
-
-    # Example 6: Print a Path object
-    pprint(Path("/example/path"))
-
-    # Example 7: Print a string
-    pprint("This is a simple string.")
-
-    # Example 8: Print an integer
-    pprint(123)
-
-    # Example 9: Print a float
-    pprint(3.14159)
-
-    # Example 10: Print a boolean
-    pprint(True)
-
-    # Example 11: Print JSON data
-    example_json = {
-        "name": "Bob",
-        "age": 25,
-        "languages": ["Python", "JavaScript"],
-        "details": {"employed": True, "skills": ["Django", "Flask"]}
-    }
-    pprint(example_json)
-
-    # Example 12: Print a nested list
-    nested_list = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    pprint(nested_list)
-
-    import pandas as pd
-    from pathlib import Path
-
-
-    # Create a sample DataFrame and save it as an Excel file
-    data = {
-        'name': ['Alice', 'Bob', 'Charlie'],
-        'age': [30, 25, 35],
-        'city': ['New York', 'Los Angeles', 'Chicago']
-    }
-    df = pd.DataFrame(data)
-
-    # Save the DataFrame as an .xlsx file
-    df.to_excel('example.xlsx', index=False)
-
-    # Print the file name using pprint
-    pprint('example.xlsx', max_lines=3)
+    pprint("Simple String", text_color='blue')
+    pprint(123, text_color='green', font_style='italic')

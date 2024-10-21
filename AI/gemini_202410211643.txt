@@ -1,0 +1,90 @@
+None
+{'role': 'user', 'content': None}
+{'role': 'assistant', 'content': response:
+GenerateContentResponse(
+    done=True,
+    iterator=None,
+    result=protos.GenerateContentResponse({
+      "candidates": [
+        {
+          "content": {
+            "parts": [
+              {
+                "text": "The input `[{'role': 'user', 'content': None}, None]` is not a valid or useful input for a typical language model.  It indicates that a user requested something, but the content of the request is missing, and there's an additional, unexpected `None` value.  This likely represents an error or incomplete data.\n"
+              }
+            ],
+            "role": "model"
+          },
+          "finish_reason": "STOP",
+          "safety_ratings": [
+            {
+              "category": "HARM_CATEGORY_HATE_SPEECH",
+              "probability": "NEGLIGIBLE"
+            },
+            {
+              "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+              "probability": "NEGLIGIBLE"
+            },
+            {
+              "category": "HARM_CATEGORY_HARASSMENT",
+              "probability": "NEGLIGIBLE"
+            },
+            {
+              "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              "probability": "NEGLIGIBLE"
+            }
+          ]
+        }
+      ],
+      "usage_metadata": {
+        "prompt_token_count": 15,
+        "candidates_token_count": 72,
+        "total_token_count": 87
+      }
+    }),
+)}
+None
+{'role': 'user', 'content': None}
+{'role': 'assistant', 'content': response:
+GenerateContentResponse(
+    done=True,
+    iterator=None,
+    result=protos.GenerateContentResponse({
+      "candidates": [
+        {
+          "content": {
+            "parts": [
+              {
+                "text": "The input `[{'role': 'user', 'content': None}, None]` represents a list containing two elements.\n\nThe first element is a dictionary:\n\n```json\n{'role': 'user', 'content': None}\n```\n\nThis dictionary has two key-value pairs:\n\n* `role`: 'user'\n* `content`: `None`\n\nThe second element is `None`.  This indicates a missing or null value.\n\nThis likely represents a portion of a conversation or dialogue, where the first element signifies a user's role and the absence of input, and the second `None` likely indicates the absence of a response or system output.\n"
+              }
+            ],
+            "role": "model"
+          },
+          "finish_reason": "STOP",
+          "safety_ratings": [
+            {
+              "category": "HARM_CATEGORY_HATE_SPEECH",
+              "probability": "NEGLIGIBLE"
+            },
+            {
+              "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+              "probability": "NEGLIGIBLE"
+            },
+            {
+              "category": "HARM_CATEGORY_HARASSMENT",
+              "probability": "NEGLIGIBLE"
+            },
+            {
+              "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              "probability": "NEGLIGIBLE"
+            }
+          ]
+        }
+      ],
+      "usage_metadata": {
+        "prompt_token_count": 15,
+        "candidates_token_count": 138,
+        "total_token_count": 153
+      }
+    }),
+)}

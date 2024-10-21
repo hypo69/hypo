@@ -40,8 +40,7 @@ class SpreadSheet:
 
     # Path to the credentials file for accessing Google Sheets.
     #creds_file = gs.path.root / 'secrets' / 'hypo69-c32c8736ca62.json'
-    creds_file:Path = gs.path.root / 'secrets' / 'e-cat-346312-137284f4419e.json' # <-  e.cat.co.il@gmail.com
-    SCOPES: list = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+
     """ оригинал файла хранится в базе данных вместе с паролями
     @todo организовать копирование файла в прогамно созаданом `tmp`,чтобы не хранить файл в физической директории
     """
@@ -83,8 +82,10 @@ class SpreadSheet:
         @return Credentials for accessing Google Sheets.
         """
         try:
+            creds_file:Path = gs.path.secrets / 'e-cat-346312-137284f4419e.json' # <-  e.cat.co.il@gmail.com
+            SCOPES: list = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
             credentials = ServiceAccountCredentials.from_json_keyfile_name(
-                self.creds_file, self.SCOPES
+                creds_file, SCOPES
             )
             #logger.debug("Credentials created successfully.")
             return credentials

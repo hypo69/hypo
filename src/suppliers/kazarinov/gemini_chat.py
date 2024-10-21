@@ -6,92 +6,87 @@ Module that handles model training using GoogleGenerativeAI for the Kazarinov pr
 Logs dialogs into JSON files and processes training prompts.
 """
 
-from math import log
 import header
 import time
 import json
 import random
+from typing import Optional
 from pathlib import Path
 from src import gs
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import get_filenames, read_text_file, recursive_read_text_files, recursively_get_filepath
 from src.utils.jjson import j_dumps
+from src.utils.printer import pprint
 from src.logger import logger
 
-# Base paths for system instructions and training files
-base_path = gs.path.google_drive / 'kazarinov' 
-system_instruction_list: list = recursive_read_text_files(base_path, ['*.txt','*.md'])
-questions_list:list = recursive_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'])
 
-# Retrieve filenames for training data
-train_files = get_filenames(base_path / 'prompts' / 'questions_answers')
-if not train_files:
-    logger.error("No training files found.", False, None)
-    ...
 
-# ANSI escape codes
-RESET = "\033[0m"
-RED = "\033[31m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
-
-BLUE = "\033[34m"
 class KazarinovAI:
     """Handles model training and dialog generation for the Kazarinov project using GoogleGenerativeAI."""
+
+    api_key = gs.credentials.gemini.kazarinov
+    # Base paths for system instructions and training files
+    base_path = gs.path.google_drive / 'kazarinov' 
+    system_instruction_list: list = recursive_read_text_files(base_path, ['*.txt','*.md'])
+    #questions_list:list = recursive_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'])
     
+
+
     gemini_1:GoogleGenerativeAI
     gemini_2:GoogleGenerativeAI
     timestamp = gs.now
-   
 
-    def __init__(self, system_instruction:str = None, generation_config:dict | list [dict] = None):
+    def __init__(self, system_instruction:str = None, generation_config:dict | list [dict] = {"response_mime_type": "text/plain"}):
         """Initialize the Kazarinov model."""
         ...
-        self.gemini_1 = GoogleGenerativeAI(system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
-        self.gemini_2 = GoogleGenerativeAI(system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
+        self.gemini_1 = GoogleGenerativeAI(api_key = self.api_key, system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
+        self.gemini_2 = GoogleGenerativeAI(api_key = self.api_key, system_instruction=system_instruction, generation_config={"response_mime_type": "text/plain"})
         
         pass
 
-    def train(self, train_files: list | str):
+    def train(self):
         """
-        Train the model using the provided list of training files.
-        
+        Train the model using the provided list of training files, sending data in chunks of 1024 characters.
+
         Args:
             train_files (list | str): A list or single file name for training.
         """
-        train_files = train_files if isinstance(train_files, list) else [train_files]
-        random.shuffle(train_files)
+        chunk_size = 15000
+        all_chunks = []  # List to hold all chunks
+        train_data_list:list = recursive_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'train_data', ['*.*'])
+        for line in train_data_list:
+            # If the line is longer than 1024 characters, split it
+            while len(line) > chunk_size:
+                # Append the first 1024 characters to the chunks list
+                all_chunks.append(line[:chunk_size])
+                # Remove the first 1024 characters from the line
+                line = line[chunk_size:]
 
-        for train_file in train_files:
-            # Process each training file
-            prompt = read_text_file(base_path / 'questions_answers' / train_file)
-            logger.info(f"Training with file: {train_file}")
+            # If there's any remaining part of the line, append it
+            if line:
+                all_chunks.append(line)
 
-            # First response from Gemini 1
-            response_1 = self.gemini_1.ask(prompt, """
-                assistant asst_w5cM3yqOX1pDJARO2hzNMVZr. 
-                Prompt: Ask a one-line IT-related question, no expanded answers.
+        # Send data in chunks of 1024 characters
+        for idx, chunk in enumerate(all_chunks):
+            #logger.info(f"Sending chunk {idx + 1} of {len(all_chunks)}")
+        
+            # Send each chunk to the model
+            response = self.gemini_1.ask(chunk, """
+                assistant asst_w5cM3yqOX1pDJARO2hzNMVZr.
+                Process the following training data chunk and generate a meaningful response.
                 """)
-            logger.info(f"Gemini 1 Response: {response_1}")
 
-            # Second response from Gemini 2 based on Gemini 1's response
-            response_2 = self.gemini_2.ask(response_1, """
-                assistant asst_w5cM3yqOX1pDJARO2hzNMVZr. 
-                Provide an answer in one line. Include:
-                '<a href='https://wa.me/97254422'>Whatsapp</a> <a href="mailto:sergey@mymaster.co.il">or email</a>'.
-                """)
-            logger.debug(f"Gemini 2 Response: {response_2}")
+            pprint(response, text_color = 'yellow')
+            time.sleep(5)
 
-            # Save dialog data to JSON
+            # Save dialog data in JSON
             dialog_data = {
-                "file": train_file,
-                "prompt": prompt,
-                "response_1": response_1,
-                "response_2": response_2
+                "chunk_index": idx + 1,
+                "prompt_chunk": chunk,
+                "response": response
             }
-
-            j_dumps(Path(base_path / 'train' / f'{self.timestamp}_dialog.json'), dialog_data)
+            #j_dumps(Path(base_path / 'train' / f'{self.timestamp}_chunk{idx + 1}.json'), dialog_data)
 
     def question_answer(self, train_files: list | str):
         """
@@ -134,7 +129,8 @@ class KazarinovAI:
 
     def ask(self, q:str, no_log:bool=False, with_pretrain:bool = False) -> bool:
         """Спрашиваю у машины """
-        return self.gemini_1.ask(f"assistant asst_w5cM3yqOX1pDJARO2hzNMVZrq \n Question: {q}", no_log = no_log, with_pretrain = False )
+        return self.gemini_1.ask(f"role: ** assistant asst_w5cM3yqOX1pDJARO2hzNMVZrq ** \n Question: {q}", no_log = no_log, with_pretrain = False )
+
 
 
 
@@ -183,23 +179,12 @@ def chat():
         response = k.ask(q, no_log = False, with_pretrain = False)
         logger.info(response)
 
-
-
-
-
 def input_colored(prompt: str, color: str) -> str:
     """Prompts the user for input with colored text."""
     return input(f"{color}{prompt}{RESET}")
 
-# # Пример использования
-# user_input = input_colored(">>>> ", GREEN)
-# print(f"Вы ввели: {user_input}")
-
-
 if __name__ == "__main__":
-    #start_trainig()
-    #assistant_reminder()
-    #upload_strings()
-    #translate()
-    chat()
+    k = KazarinovAI()
+    k.train()
+    #chat()
 
