@@ -52,7 +52,8 @@ class ProjectSettings(metaclass = SingletonMeta):
         log=Path(__root__ / 'log'),
         tmp=Path(__root__ / 'tmp'),
         data=Path(__root__ / 'data'), 
-        google_drive = Path(settings.google_drive),
+        # google_drive = Path(settings.google_drive),  
+        google_drive = Path(__root__),       # <- ~~~~~~~~~ DEBUG
     )
     
     sys.path.extend([str(path.root), str(path.src)])
@@ -143,14 +144,14 @@ class ProjectSettings(metaclass = SingletonMeta):
         #path = self.path.src /  'credentials.kdbx'
         while retry > 0:
             try:
-                kp = PyKeePass(str(self.path.google_drive), password=getpass.getpass('Enter KeePass master password: ').lower()) # <- `.lower()` for debug only!
+                kp = PyKeePass(str(self.path.google_drive / 'secrets' / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower()) # <- `.lower()` for debug only!
                 return kp
             except Exception as ex:
                 logger.error(f"Failed to open KeePass database, {retry-1} retries left.", ex, False)
                 retry -= 1
                 if retry < 1:
                     logger.critical('Failed to open KeePass database after multiple attempts', exc_info=True)
-                    return 
+                    sys.exit() 
 
     def _load_aliexpress_credentials(self, kp: PyKeePass) -> bool:
         """ Load Aliexpress API credentials from KeePass"""

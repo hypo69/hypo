@@ -23,8 +23,8 @@ from src.logger import logger
 class KazarinovTelegram(TelegramBot):
     """Telegram bot with custom behavior for Kazarinov."""
 
-    #token = gs.credentials.telegram.bot.kazarinov
-    token = gs.credentials.telegram.bot.test    # <- debug
+    token = gs.credentials.telegram.bot.kazarinov
+    #token = gs.credentials.telegram.bot.test    # <- debug
     d:Driver
     mexiron: Mexiron
     model_chat:GoogleGenerativeAI
