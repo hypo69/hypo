@@ -211,17 +211,20 @@ class ProjectSettings(metaclass = SingletonMeta):
         """ Load Telegram credentials from KeePass"""
         try:
             entry = kp.find_groups(path=['telegram']).entries[0]
+
+
             setattr( self.credentials.telegram.bot, 
-            'onela', 
+            'onela_bot', 
             entry.custom_properties.get('onela', None))
 
             setattr( self.credentials.telegram.bot, 
-            'kazarinov', 
-            entry.custom_properties.get('kazarinov', None))
+            'hypo69_kazarinov_bot', 
+            entry.custom_properties.get('hypo69_kazarinov_bot', None))
 
             setattr( self.credentials.telegram.bot, 
-            'test', 
-            entry.custom_properties.get('test', None))
+            'hypo69_test_bot', 
+            entry.custom_properties.get('hypo69_test_bot', None))
+
             return True
         except DefaultSettingsException as ex:
             logger.error("Failed to extract Telegram credentials from KeePass", ex)

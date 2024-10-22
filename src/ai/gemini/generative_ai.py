@@ -1,207 +1,185 @@
-## \file ../src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
-""" Google generative ai """
-from types import SimpleNamespace
-import header  
+"""Google generative AI integration."""
 import time
-import base64
-import argparse
-from typing import Optional, List, Dict
+import json
 from pathlib import Path
-import os
-import pathlib
-import textwrap
+from datetime import datetime
+import base64
 import google.generativeai as genai
-
 from src.logger import logger
 from src import gs
 from src.utils import pprint
-from src.utils.csv import save_csv_file
-from src.utils.jjson import j_dumps  
-from src.utils.file import read_text_file, save_text_file, recursive_read_text_files
+from src.utils.file import read_text_file, save_text_file
 from src.utils.date_time import TimeoutCheck
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 
 timeout_check = TimeoutCheck()
 
 class GoogleGenerativeAI:
-    """GoogleGenerativeAI class for interacting with Google's Generative AI models."""
+    """Class to interact with Google Generative AI models."""
 
-    model: genai.GenerativeModel
-    dialogue_log_path: str | Path = gs.path.google_drive / 'AI' / f"gemini_{gs.now}.json"
-    dialogue_txt_path: str | Path = gs.path.google_drive / 'AI' / f"gemini_{gs.now}.txt"
-    system_instruction:str
+    MODELS = [
+        "gemini-1.5-flash-8b",
+        "gemini-2-13b",
+        "gemini-3-20b"
+    ]
 
-    def __init__(self, api_key:str, system_instruction: Optional[str] = None,  generation_config: dict = {"response_mime_type": "application/json"}):
+    def __init__(self, 
+                 api_key: str, 
+                 model_name: str = "gemini-1.5-flash-8b",
+                 system_instruction: str = None, 
+                 history_file: Path = None, 
+                 generation_config: dict = {"response_mime_type": "text/plain"}):
         """Initialize GoogleGenerativeAI with the model and API key.
 
         Args:
-            system_instruction (Optional[str], optional): Optional system instruction for the model.
-            generation_config (dict): "response_mime_type": "text/html" | "text/plain" | "application/json" 
-            "response_mime_type": 
+            api_key (str): API key for Google Generative AI.
+            model_name (str, optional): Name of the model to use. Defaults to "gemini-1.5-flash-8b".
+            system_instruction (str, optional): Instruction for system role.
+            history_file (Path, optional): Path to the history file.
+            generation_config (dict, optional): Configuration for the generation.
+                Defaults to {"response_mime_type": "text/plain"}.
         """
-        genai.configure(api_key = api_key)
-        #genai.configure(api_key=gs.credentials.googleai.api_key)
-        self.system_instruction = system_instruction
-        # Using `response_mime_type` requires either a Gemini 1.5 Pro or 1.5 Flash model
-        models = [
-                    "gemini-1.5-flash-8b-exp-0924",
-                    "gemini-1.5-flash",
-                    "gemini-1.5-flash-8b",
-                  ]
-        self.model = genai.GenerativeModel(
-            models[2],
-            generation_config = generation_config,
-            system_instruction = system_instruction if system_instruction else None
-        )
-        
-    def _save_dialogue(self, dialogue):
-        """Save the entire dialogue to a CSV file."""
-        #j_dumps(dialogue, self.dialogue_log_path)
-        save_text_file(dialogue, self.dialogue_txt_path, mode = '+a')
+        if model_name not in self.MODELS:
+            raise ValueError(f"Invalid model name. Choose from {', '.join(self.MODELS)}")
 
-    def ask(self, q: str, system_instruction: Optional[str] = None, attempts: int = 3, total_wait_time: int = 0, no_log:bool = False, with_pretrain:bool = False) -> Optional[str]:
-        """Send a prompt to the model and return the response.
+        self.dialogue_log_path = gs.path.google_drive / 'AI' / f"gemini_{gs.now}.json"
+        self.dialogue_txt_path = gs.path.google_drive / 'AI' / 'history'/ f"gemini_{gs.now}.txt"
+        self.history_dir = gs.path.google_drive / 'AI' / 'history'
+        self.history_txt_file = self.history_dir / history_file if history_file else self.history_dir / f'{gs.now}.txt' 
+        self.history_json_file = self.history_dir / history_file if history_file else self.history_dir / f'{gs.now}.json'
+        self.system_instruction = system_instruction
+
+        genai.configure(api_key=api_key)
+        self.model = genai.GenerativeModel(
+            model_name,
+            generation_config=generation_config,
+            system_instruction=system_instruction
+        )
+
+
+    def _save_dialogue(self, dialogue: list):
+        """Save dialogue to both txt and json files with size management.
 
         Args:
-            prompt (str): The prompt to send to the model.
-            system_instruction (Optional[str], optional): Instruction for system role. Defaults to None.
-            attempts (int, optional): Number of retry attempts in case of failure. Defaults to 3.
-            total_wait_time (int, optional): The total time spent waiting between attempts. Defaults to 0.
+            dialogue (list): Dialogue content to save.
+        """
+        # Сохранение в txt-файл
+        existing_content = read_text_file(self.history_txt_file)
+        new_content = f"{existing_content}\n{str(dialogue)}"
+
+        if len(new_content) > 100_000:
+            timestamp:str = gs.now
+            saved_file_name =  f"{gs.now}_{self.history_txt_file.name}"
+            new_txt_file_path:Path = self.history_txt_file.parent / saved_file_name
+            save_text_file(existing_content, new_txt_file_path, mode='w')
+            new_content += str(dialogue)
+
+        save_text_file(new_content, self.history_txt_file, mode='w')
+
+        # # Сохранение в json-файл
+        # try:
+        #     if self.history_json_file.exists():
+        #         with self.history_json_file.open('r') as f:
+        #             existing_data = json.load(f)
+        #     else:
+        #         existing_data = []
+
+        #     existing_data.append(dialogue)
+
+        #     if len(json.dumps(existing_data)) > 100_000:
+        #         new_json_file_path = self.history_json_file.parent / f"{timestamp}_{self.history_json_file.name}"
+        #         with new_json_file_path.open('w') as f:
+        #             json.dump(existing_data, f, ensure_ascii=False, indent=2)
+        #         existing_data = [dialogue]
+
+        #     with self.history_json_file.open('w') as f:
+        #         json.dump(existing_data, f, ensure_ascii=False, indent=2)
+
+        # except Exception as ex:
+        #     logger.error(f"Error saving dialogue to JSON: {ex}")
+
+
+    def ask(self, 
+        q: str,
+        history_file:str = None,
+        attempts: int = 3) -> str | None:
+        """Send a prompt to the model and get the response.
+
+        Args:
+            q (str): The prompt to send.
+            attempts (int, optional): Number of retry attempts.
 
         Returns:
-            Optional[str]: The model's response or None if an error occurs.
+            str | None: The model's response.
         """
-
-       
+        self.history_file = self.history_dir / history_file if history_file else self.history_txt_file
         try:
-            if with_pretrain:
-                train_data_list:list = recursive_read_text_files(gs.path.google_drive / 'AI', ['*.txt'], exc_info=False)
-                if train_data_list:
-                    i:int = 0
-                    for train_data in train_data_list:
-                        i += 1
-                        print(f"pretrain {i} from {len(train_data_list)}")
-                        print(f"Q:> {train_data}")
-                        response = self.model.generate_content(train_data)  # Генерация ответа модели
-                        print(f"A:> {response.text}")
+            history = read_text_file(self.history_file)
+            complete_prompt = f"{history}\n* question *\n{q}\n* answer **\n"
 
-                        # # Ожидаем ввод с тайм-аутом 5 секунд
-                        # print("U: Waiting for input... (timeout in 5 seconds) >")
-                        # u = timeout_check.input_with_timeout(timeout=5)
-    
-                        # if u:
-                        #     response = self.model.generate_content(u)
-                        #     print(f"A:> {response.text}")
-                        # else:
-                        #     print("Timeout occurred, no input provided.")
+            messages = [
+                {"role": "system", "content": self.system_instruction},  # Добавлено system_instruction
+                {"role": "user", "content": q}
+            ]
 
-                        # print("Continuing execution after timeout.")
-                        time.sleep(8)
+            response = self.model.generate_content(
+                str(complete_prompt), 
+            )
 
-            ...
-            content:dict = {
-               "messages":[{"role": "user", "content": q},
-                           {"role": "system", "content": system_instruction} if system_instruction else None] ,
-                "model": "gemini-1.5-flash-8b",
-                "temperature": 0.7
-            }
-
-            messages = [{"role": "user", "content": q},
-                           {"role": "system", "content": system_instruction} if system_instruction else None]
-
-            try:
-                response = self.model.generate_content(str(messages))
-            except Exception as ex:
-                logger.debug("Ошибка ответа от модели\n", ex, True)
-                ...
-                return
             if not response:
-                logger.debug("Не получил ответ от модели", None, True)
-                ...
-                return
-            if not no_log:
-                self._save_dialogue([{"role": "system", "content": system_instruction} if system_instruction else None,
-                                    {"role": "user", "content": q},
-                                    {"role": "assistant", "content": response }]
-                                    )
+                logger.debug("No response from the model.")
+                return 
+
+            #pprint(response.text)
+            messages.append({"role":"assiatant","content":response.text})
+            self._save_dialogue([messages])
 
             return response.text
 
         except Exception as ex:
-            wait_time = 15  # Time to sleep in case of an error
-            total_wait_time += wait_time
-            logger.error(f"Error occurred", ex, False)
-            #time.sleep(wait_time)
-
+            logger.error("Error during request", ex)
             if attempts > 0:
-                return self.ask(q, system_instruction, attempts - 1, total_wait_time)
-            else:
-                logger.debug(f"Max attempts have been exceeded. Total wait time: {total_wait_time} seconds", None, False)
-                attempts = 3
-                return self.ask(q, system_instruction, attempts, total_wait_time)
-
-
-    def describe_image(self, image_path: str, prompt: str = None) -> Optional[str]:
-        """Описывает изображение с помощью модели генерации текста.
-
-        Args:
-            image_path (str): Путь к файлу изображения.
-            prompt (str, optional): Дополнительный промпт для модели.
-
-        Returns:
-            Optional[str]: Описание изображения или None в случае ошибки.
-        """
-        ##################################################################################
-        #
-        #
-        # Модель не определяет фото!
-        # 
-        # 
-        # # Проверка поддержки модели для работы с изображениями
-        # if self.model.generation_config.get("response_mime_type") != "application/json":
-        #     logger.error("Текущая модель не поддерживает работу с изображениями.")
-        #     return None
-
-        # Кодирование изображения в формат base64
-        with open(image_path, 'rb') as f:
-            image_data = f.read()
-        encoded_image = base64.b64encode(image_data).decode('utf-8')
-
-        request = encoded_image
-
-        try:
-            # Отправка запроса к модели
-            response = self.model.generate_content(request)
-            return response.text
-        except Exception as e:
-            logger.error(f"Ошибка при описании изображения: {e}")
+                time.sleep(15)
+                return self.ask(q, attempts=attempts - 1)
             return 
 
+    def describe_image(self, image_path: Path) -> str | None:
+        """Generate a description of an image.
 
+        Args:
+            image_path (Path): Path to the image file.
+
+        Returns:
+            str | None: Description of the image.
+        """
+        try:
+            with image_path.open('rb') as f:
+                encoded_image = base64.b64encode(f.read()).decode('utf-8')
+
+            response = self.model.generate_content(encoded_image)
+            return response.text
+
+        except Exception as ex:
+            logger.error(f"Error describing image: {ex}")
+            return None
 
 def chat():
-    logger.debug("Привет, я ИИ ассистент компьюрного мастера Сергея Казаринова. Задавайте вопросы", None, False)
-    print("Чтобы завершить чат, напишите 'exit'.\n")
-    
-    # Инициализация модели с системной инструкцией, если нужно
-    system_instruction = input("Введите системную инструкцию (или нажмите Enter, чтобы пропустить): @TODO: - сделать возможность чтения из .txt")
-    ...
-    ai = GoogleGenerativeAI(system_instruction=system_instruction if system_instruction else None)
+    """Run the interactive chat session."""
+    logger.debug("Hello, I am the AI assistant of Sergey Kazarinov. Ask your questions.")
+    print("Type 'exit' to end the chat.\n")
+
+    system_instruction = input("Enter system instruction (or press Enter to skip): ")
+    ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction=system_instruction or None)
 
     while True:
-        # Получаем вопрос от пользователя
-        user_input = input("> вопрос\n> ")
-        
+        user_input = input("> Question: ")
         if user_input.lower() == 'exit':
-            print("Чат завершен.")
+            print("Chat ended.")
             break
-        
-        # Отправляем запрос модели и получаем ответ
-        response = ai.ask(prompt=user_input)
-        
-        # Выводим ответ
-        print(f">> ответ\n>> {response}\n")
+
+        response = ai.ask(q=user_input)
+        print(f">> Response:\n{response}\n")
 
 if __name__ == "__main__":
     chat()
