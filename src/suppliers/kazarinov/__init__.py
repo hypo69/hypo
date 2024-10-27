@@ -22,5 +22,7 @@ from packaging.version import Version
 from .version import __version__, __doc__, __details__  
 
 from .bot import KazarinovTelegram
+from .gemini_chat import chat
 from .scenarios import  Mexiron
+from .react import ReportGenerator
 

@@ -21,7 +21,7 @@
   "id_manufacturer": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//span[@class = 'ltr sku-copy']",
+    "selector": "",
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
@@ -31,12 +31,12 @@
   "id_supplier": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//span[@class = 'ltr sku-copy']",
+    "selector": "//span[@class = 'barcode-specific-area']",
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
     "event": null,
-    "locator_description": "SKU morlevi"
+    "locator_description": "SKU ivory"
   },
   "id_category_default": {
     "attribute": null,
@@ -83,14 +83,14 @@
     "event": null
   },
   "default_image_url": {
-    "attribute": null,
+    "attribute": "src",
     "by": "XPATH",
-    "selector": "//a[@id = 'mainpic']//img",
+    "selector": "//img[@id = 'img_zoom_inout']",
     "if_list": "first",
     "use_mouse": false,
-    "event": "screenshot()",
+    "event": null,
     "mandatory": true,
-    "locator_description": "Внимание! в морлеви картинка получается через screenshot и возвращается как png (`bytes`)"
+    "locator_description": "URL картинки"
   },
   "id_default_combination": {
     "attribute": null,
@@ -122,6 +122,7 @@
 
     "if_list": "first",
     "use_mouse": false,
+    "default_image_url": null,
     "mandatory": true,
     "event": null
   },
@@ -722,8 +723,8 @@
   "name": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//div[contains(@class, 'product-header')]//h1",
-    "if_list": "first",
+    "selector": "//h1[@id = 'titleProd']",
+    "if_list": "all",
     "use_mouse": false,
     "event": null,
     "mandatory": true,
@@ -732,22 +733,32 @@
   "description_short": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "(//div[contains(@class, 'description')])[2]//div",
+    "selector": "//h2[ contains( @class, 'col-12 h2fake')]",
     "if_list": "all",
     "use_mouse": false,
     "event": null,
     "mandatory": true,
-    "locator_description": "краткое Описание товара. Оно нахосится в спанах под див"
+    "locator_description": "краткое Описание товара. "
   },
   "description": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//div[contains(@class, 'product-params')]//li",
+    "selector": "//div[ contains( @class, 'contentproducttable')]//li",
     "if_list": "all",
     "use_mouse": false,
     "mandatory": true,
     "event": null,
-    "locator_description": "Технические характеристики. Оно нахосится в спанах под див"
+    "locator_description": "Технические характеристики. "
+  },
+  "specification": {
+    "attribute": "",
+    "by": "XPATH",
+    "selector": "",
+    "if_list": "all",
+    "use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "Технические характеристики. "
   },
   "affiliate_short_link": {
     "attribute": null,

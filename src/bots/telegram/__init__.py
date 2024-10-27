@@ -1,5 +1,5 @@
 ﻿## \file ../src/bots/__init__.py
-## \file ../src/bots/__init__.py
+## \file ../src/bots/telegram/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

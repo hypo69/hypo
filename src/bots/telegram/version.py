@@ -7,7 +7,7 @@
 - `__author__`: The name(s) of the author(s) of the module.
 """
 ## \file src/ai/model/version.py
-## \file ../src/bots/version.py
+## \file ../src/bots/telegram/version.py
 # -*- coding: utf-8 -*-
 __name__:str
 __version__="3.12.0.0.0.4"

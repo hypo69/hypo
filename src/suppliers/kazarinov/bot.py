@@ -1,119 +1,149 @@
 ## \file ../src/suppliers/kazarinov/bot.py
 # -*- coding: utf-8 -*-
-#! /usr/share/projects/hypotez/venv/scripts python
-"""! Kazarinov's specific bot with customized behavior. """
+"""! Kazarinov's specific bot with customized behavior."""
+import header
 
 import asyncio
+from pathlib import Path
 from typing import Optional
+from dataclasses import dataclass, field
+import random
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
-import random
 
-import header
 from src import gs
 from src.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.suppliers.kazarinov.parser_onetab import fetch_target_urls_onetab
 from src.suppliers.kazarinov.scenarios.scenario_pricelist import Mexiron
-from src.suppliers.kazarinov import gemini_chat
-from src.utils.file import read_text_file, recursive_read_text_files, save_text_file  # <- Ensure you have this import
+from src.utils.file import read_text_file, recursive_read_text_files, save_text_file
 from src.utils.string.url import is_url
 from src.logger import logger
 
-
+@dataclass
 class KazarinovTelegram(TelegramBot):
     """Telegram bot with custom behavior for Kazarinov."""
-    mode = 'debug' # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ debug
+    mode: str = 'debug'
+    token: str = field(init=False)
+    d: Driver = field(init=False)
+    mexiron: Mexiron = field(init=False)
+    model: GoogleGenerativeAI = field(init=False)
+    system_instruction: str = field(init=False)
+    questions_list: list = field(init=False)
+    timestamp: str = field(default_factory=lambda: gs.now)
 
-    token_kazarinov = gs.credentials.telegram.bot.hypo69_kazarinov_bot
-    token_debug = gs.credentials.telegram.bot.hypo69_test_bot    # <- debug
-    d:Driver
-    mexiron: Mexiron
-    model_chat:GoogleGenerativeAI
-    model_adviser:GoogleGenerativeAI
-    system_instruction:str
-    questions_list:list = recursive_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'], as_list = True )
-    timestamp:str
+    def __post_init__(self):
+        self.token = gs.credentials.telegram.bot.hypo69_test_bot if self.mode == 'debug' \
+            else gs.credentials.telegram.bot.hypo69_kazarinov_bot
+        super().__init__(self.token)
 
-    def __init__(self, mode:Optional[str] = 'debug'):
-        """Initialize the Kazarinov bot."""
-        self.mode = mode
-        super().__init__(self.token_debug if self.mode == 'debug' else self.token_kazarinov)
         self.d = Driver(Chrome)
         self.mexiron = Mexiron(self.d)
-        self.timestamp = gs.now
-        # Register command handlers
+
+        self.system_instruction = read_text_file(
+            gs.path.google_drive / 'kazarinov' / 'prompts' / 'chat_system_instruction.txt'
+        )
+        self.questions_list = recursive_read_text_files(
+            gs.path.google_drive / 'kazarinov' / 'prompts' / 'train_data' / 'q', ['*.*'], as_list=True
+        )
+
+        self.model = GoogleGenerativeAI(
+            api_key=gs.credentials.gemini.kazarinov,
+            system_instruction=self.system_instruction,
+            generation_config={"response_mime_type": "text/plain"}
+        )
+        
+        self.register_handlers()
+
+    def register_handlers(self):
+        """Register bot commands and message handlers."""
         self.application.add_handler(CommandHandler('start', self.start))
         self.application.add_handler(CommandHandler('help', self.help_command))
-
-        # Register message handlers
         self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
         self.application.add_handler(MessageHandler(filters.VOICE, self.handle_voice))
         self.application.add_handler(MessageHandler(filters.Document.ALL, self.handle_document))
 
-        self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' / self.timestamp
-        
-        self.system_instruction: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'chat_system_instruction.txt')
-        self.correct_answers: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'correct_anwers.txt')
-        self.advise_instructions: str = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' /  'model_adviser.txt')
-        api_key = gs.credentials.gemini.kazarinov
-        self.model = GoogleGenerativeAI(api_key = api_key, system_instruction = self.system_instruction, generation_config = {"response_mime_type": "text/plain"})
-        self.model.ask(self.correct_answers)
-        self.model.ask(self.system_instruction)
-
     async def start(self, update: Update, context: CallbackContext) -> None:
-        """Override the /start command with custom behavior."""
+        """Handle /start command."""
         await update.message.reply_text('Hello! This is Kazarinov’s custom bot.')
-        # Optionally, call the parent method if needed
         await super().start(update, context)
 
-    async def handle_message(self, update: Update, context: CallbackContext) -> bool:
-        """Override the message handler with custom logic."""
+    async def handle_message(self, update: Update, context: CallbackContext) -> None:
+        """Handle text messages with URL-based routing."""
         response = update.message.text
-        user_id = update.effective_user.id  # Get user ID for logging
+        user_id = update.effective_user.id
 
-        # Log the incoming message
-        log_message = f"User {user_id}: {response}\n"
-        save_text_file(log_message, gs.path.google_drive / 'kazarinov' / 'chat_logs.txt')
+        log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
+        save_text_file(f"User {user_id}: {response}\n", Path(log_path))
 
-        if response.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
-            if await self.mexiron.run_scenario(response): #< - одна ссылка на морлеви надо вытащить максимум данных со страницы
-                return await update.message.reply_text('Готово!')
-            return await update.message.reply_text('Хуёвенько')
+        if handler := self.get_handler_for_url(response):
+            return await handler(update, response)
 
-        if response.startswith('https://www.one-tab.com'):
-            price, mexiron_name, urls = fetch_target_urls_onetab(response)
-            if not all([price, mexiron_name, urls]):      # <- проверка, что все три значения False
-                error_message = (
-                    'Ошибка на сервере OneTab. Такое редко, но бывает. '
-                    'Отдохни, попей кофе и попробуй еще раз через часок, другой.'
-                )
-                return await update.message.reply_text(error_message)
+        if response in ('--next', '-next', '__next', '-n', '-q'):
+            return await self.handle_next_command(update)
 
-            if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
-                return await update.message.reply_text('Готово!\nСсылку я вышлю на whatsapp')
-            return await update.message.reply_text('Хуёвенько. Попробуй еще раз')
+        if not is_url(response):
+            answer = self.model.ask(q=response, history_file=f'{user_id}.txt')
+            return await update.message.reply_text(answer)
 
-        if response.startswith(('--next', '-next', '__next')) or response == '-n' or response == '-q':
-            try:
-                q = random.choice(self.questions_list)
-                await update.message.reply_text(q)
-                a = self.model.ask(q)
-                return await update.message.reply_text(a)
-            except Exception as ex:
-                logger.debug("Ошибка чтения вопросов")
+    def get_handler_for_url(self, response: str):
+        """Map URLs to specific handlers."""
+        url_handlers = {
+            "suppliers": (
+                ('https://morlevi.co.il', 'https://www.morlevi.co.il',
+                 'https://grandadvance.co.il', 'https://www.grandadvance.co.il',
+                 'https://ksp.co.il', 'https://www.ksp.co.il',
+                 'https://ivory.co.il', 'https://www.ivory.co.il'),
+                self.handle_suppliers_response
+            ),
+            "onetab": (('https://www.one-tab.com',), self.handle_onetab_response),
+        }
+        for urls, handler_func in url_handlers.values():
+            if response.startswith(urls):
+                return handler_func
+        return None
+
+    async def handle_suppliers_response(self, update: Update, response: str) -> None:
+        """Handle suppliers' URLs."""
+        if await self.mexiron.run_scenario(response, update):
+            await update.message.reply_text('Готово!')
         else:
-            if not is_url(response):
-                return await update.message.reply_text(self.model.ask(q = response, system_instruction = self.system_instruction, history_file=f'{user_id}.txt' ))
+            await update.message.reply_text('Хуёвенько. Попробуй еще раз')
 
-    async def handle_document(self, update: Update, context: CallbackContext) -> str:
-        """Override document handler with additional logging."""
+    async def handle_onetab_response(self, update: Update, response: str) -> None:
+        """Handle OneTab URLs."""
+        price, mexiron_name, urls = fetch_target_urls_onetab(response)
+
+        if not all([price, mexiron_name, urls]):
+            error_message = (
+                'Ошибка на сервере OneTab. Попробуй ещё раз через часок.'
+            )
+            return await update.message.reply_text(error_message)
+
+        if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
+            await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
+        else:
+            await update.message.reply_text('Хуёвенько. Попробуй ещё раз')
+
+    async def handle_next_command(self, update: Update) -> None:
+        """Handle '--next' and related commands."""
+        try:
+            question = random.choice(self.questions_list)
+            answer = self.model.ask(question)
+            await asyncio.gather(
+                update.message.reply_text(question),
+                update.message.reply_text(answer)
+            )
+        except Exception as ex:
+            logger.debug("Ошибка чтения вопросов")
+            await update.message.reply_text('Произошла ошибка при чтении вопросов.')
+
+    async def handle_document(self, update: Update, context: CallbackContext) -> None:
+        """Handle document uploads."""
         file_content = await super().handle_document(update, context)
         await update.message.reply_text(f'Received your document. Content: {file_content}')
-        return file_content
 
 if __name__ == "__main__":
-    kt = KazarinovTelegram(mode = 'debug')
-    # Start the bot (add necessary logic to run the event loop if needed)
+    kt = KazarinovTelegram(mode='debug')
     asyncio.run(kt.application.run_polling())

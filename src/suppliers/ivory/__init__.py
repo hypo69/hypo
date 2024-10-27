@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/morlevi/__init__.py
-## \file ../src/suppliers/morlevi/__init__.py
+## \file ../src/suppliers/ivory/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ """

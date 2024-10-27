@@ -1,10 +1,14 @@
+## \file ../src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
 """Google generative AI integration."""
+
 import time
 import json
 from pathlib import Path
 from datetime import datetime
 import base64
+from dataclasses import dataclass, field
+from typing import Optional, List, Dict
 import google.generativeai as genai
 from src.logger import logger
 from src import gs
@@ -15,48 +19,47 @@ from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 
 timeout_check = TimeoutCheck()
 
+@dataclass
 class GoogleGenerativeAI:
     """Class to interact with Google Generative AI models."""
 
-    MODELS = [
+    api_key: str
+    model_name: str = "gemini-1.5-flash-8b"
+    system_instruction: Optional[str] = None
+    history_file: Optional[Path] = None
+    generation_config: Dict = field(default_factory=lambda: {"response_mime_type": "text/plain"})
+
+    MODELS: List[str] = field(default_factory=lambda: [
         "gemini-1.5-flash-8b",
         "gemini-2-13b",
         "gemini-3-20b"
-    ]
+    ])
+    mode: str = 'debug'
 
-    def __init__(self, 
-                 api_key: str, 
-                 model_name: str = "gemini-1.5-flash-8b",
-                 system_instruction: str = None, 
-                 history_file: Path = None, 
-                 generation_config: dict = {"response_mime_type": "text/plain"}):
-        """Initialize GoogleGenerativeAI with the model and API key.
+    dialogue_log_path: Path = field(init=False)
+    dialogue_txt_path: Path = field(init=False)
+    history_dir: Path = field(init=False)
+    history_txt_file: Path = field(init=False)
+    history_json_file: Path = field(init=False)
 
-        Args:
-            api_key (str): API key for Google Generative AI.
-            model_name (str, optional): Name of the model to use. Defaults to "gemini-1.5-flash-8b".
-            system_instruction (str, optional): Instruction for system role.
-            history_file (Path, optional): Path to the history file.
-            generation_config (dict, optional): Configuration for the generation.
-                Defaults to {"response_mime_type": "text/plain"}.
-        """
-        if model_name not in self.MODELS:
+    def __post_init__(self):
+        """Initialize paths and configure the model."""
+        if self.model_name not in self.MODELS:
             raise ValueError(f"Invalid model name. Choose from {', '.join(self.MODELS)}")
 
         self.dialogue_log_path = gs.path.google_drive / 'AI' / f"gemini_{gs.now}.json"
-        self.dialogue_txt_path = gs.path.google_drive / 'AI' / 'history'/ f"gemini_{gs.now}.txt"
+        self.dialogue_txt_path = gs.path.google_drive / 'AI' / 'history' / f"gemini_{gs.now}.txt"
         self.history_dir = gs.path.google_drive / 'AI' / 'history'
-        self.history_txt_file = self.history_dir / history_file if history_file else self.history_dir / f'{gs.now}.txt' 
-        self.history_json_file = self.history_dir / history_file if history_file else self.history_dir / f'{gs.now}.json'
-        self.system_instruction = system_instruction
 
-        genai.configure(api_key=api_key)
+        self.history_txt_file = self.history_dir / self.history_file if self.history_file else self.history_dir / f'{gs.now}.txt'
+        self.history_json_file = self.history_dir / self.history_file if self.history_file else self.history_dir / f'{gs.now}.json'
+
+        genai.configure(api_key=self.api_key)
         self.model = genai.GenerativeModel(
-            model_name,
-            generation_config=generation_config,
-            system_instruction=system_instruction
+            self.model_name,
+            generation_config=self.generation_config,
+            system_instruction=self.system_instruction
         )
-
 
     def _save_dialogue(self, dialogue: list):
         """Save dialogue to both txt and json files with size management.
@@ -64,75 +67,55 @@ class GoogleGenerativeAI:
         Args:
             dialogue (list): Dialogue content to save.
         """
-        # Сохранение в txt-файл
         existing_content = read_text_file(self.history_txt_file)
         new_content = f"{existing_content}\n{str(dialogue)}"
 
         if len(new_content) > 100_000:
-            timestamp:str = gs.now
-            saved_file_name =  f"{gs.now}_{self.history_txt_file.name}"
-            new_txt_file_path:Path = self.history_txt_file.parent / saved_file_name
+            saved_file_name = f"{gs.now}_{self.history_txt_file.name}"
+            new_txt_file_path: Path = self.history_txt_file.parent / saved_file_name
             save_text_file(existing_content, new_txt_file_path, mode='w')
             new_content += str(dialogue)
 
         save_text_file(new_content, self.history_txt_file, mode='w')
 
-        # # Сохранение в json-файл
-        # try:
-        #     if self.history_json_file.exists():
-        #         with self.history_json_file.open('r') as f:
-        #             existing_data = json.load(f)
-        #     else:
-        #         existing_data = []
-
-        #     existing_data.append(dialogue)
-
-        #     if len(json.dumps(existing_data)) > 100_000:
-        #         new_json_file_path = self.history_json_file.parent / f"{timestamp}_{self.history_json_file.name}"
-        #         with new_json_file_path.open('w') as f:
-        #             json.dump(existing_data, f, ensure_ascii=False, indent=2)
-        #         existing_data = [dialogue]
-
-        #     with self.history_json_file.open('w') as f:
-        #         json.dump(existing_data, f, ensure_ascii=False, indent=2)
-
-        # except Exception as ex:
-        #     logger.error(f"Error saving dialogue to JSON: {ex}")
-
-
-    def ask(self, 
-        q: str,
-        history_file:str = None,
-        attempts: int = 3) -> str | None:
+    def ask(self, q: str, history_file: str = None, attempts: int = 3) -> Optional[str]:
         """Send a prompt to the model and get the response.
 
         Args:
             q (str): The prompt to send.
-            attempts (int, optional): Number of retry attempts.
+            history_file (str, optional): History file to use. Defaults to None.
+            attempts (int, optional): Number of retry attempts. Defaults to 3.
 
         Returns:
-            str | None: The model's response.
+            Optional[str]: The model's response or None if an error occurs.
         """
+      
         self.history_file = self.history_dir / history_file if history_file else self.history_txt_file
+
         try:
             history = read_text_file(self.history_file)
             complete_prompt = f"{history}\n* question *\n{q}\n* answer **\n"
 
+            if self.mode == 'debug':
+                pprint(f"INPUT > {q}", text_color='light_blue')
+                pprint(f"HISTORY FILE: > {self.history_file}", text_color='light_green')
+                pprint(f"PROMPT: > {complete_prompt}", text_color='green')
+
             messages = [
-                {"role": "system", "content": self.system_instruction},  # Добавлено system_instruction
+                {"role": "system", "content": self.system_instruction},
                 {"role": "user", "content": q}
             ]
 
-            response = self.model.generate_content(
-                str(complete_prompt), 
-            )
+            response = self.model.generate_content(str(complete_prompt))
 
             if not response:
                 logger.debug("No response from the model.")
-                return 
+                return None
 
-            #pprint(response.text)
-            messages.append({"role":"assiatant","content":response.text})
+            if self.mode == 'debug':
+                pprint(f"RESPONSE: > {response}", text_color='cyan')
+
+            messages.append({"role": "assistant", "content": response.text})
             self._save_dialogue([messages])
 
             return response.text
@@ -142,16 +125,16 @@ class GoogleGenerativeAI:
             if attempts > 0:
                 time.sleep(15)
                 return self.ask(q, attempts=attempts - 1)
-            return 
+            return None
 
-    def describe_image(self, image_path: Path) -> str | None:
+    def describe_image(self, image_path: Path) -> Optional[str]:
         """Generate a description of an image.
 
         Args:
             image_path (Path): Path to the image file.
 
         Returns:
-            str | None: Description of the image.
+            Optional[str]: Description of the image or None if an error occurs.
         """
         try:
             with image_path.open('rb') as f:

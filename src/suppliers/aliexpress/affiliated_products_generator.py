@@ -12,7 +12,7 @@ from src import gs
 from src.suppliers.aliexpress import AliApi
 from src.suppliers.aliexpress.campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerator, CampaignHTMLGenerator 
 from src.suppliers.aliexpress.utils.ensure_https import ensure_https
-from src.utils.string.product_fields_normalizer import ProductFieldsNormalizer as f_normalizer
+from src.product.product_fields import ProductFields as f
 from src.utils.image import save_png_from_url 
 from src.utils.video import save_video_from_url
 from src.utils.file import get_directory_names, get_filenames, read_text_file, save_text_file

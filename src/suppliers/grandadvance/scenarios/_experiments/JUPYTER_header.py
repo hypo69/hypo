@@ -1,5 +1,5 @@
 ## \file ../src/suppliers/grandadvance/scenarios/_experiments/JUPYTER_header.py
-## \file src/suppliers/granadvance.co.il/scenarios/_experiments/JUPYTER_header.py
+## \file src/suppliers/grandadvance.co.il/scenarios/_experiments/JUPYTER_header.py
 import sys
 import os
 from pathlib import Path

@@ -65,7 +65,7 @@ class KazarinovAI:
             history_file=f'{gs.now}.txt'
         )
 
-        pass  # Заглушка, если будут добавляться дополнительные действия в будущем
+        
 
 
     def train(self):
@@ -138,6 +138,7 @@ class KazarinovAI:
         Runs a dialog based on pre-defined questions, shuffling questions from different languages.
         """
         questions = recursive_read_text_files(self.base_path / 'prompts' / 'train_data' / 'q', patterns=['*.*'], as_list=True)
+        
         random.shuffle(questions)
 
         for q in questions:
@@ -206,6 +207,6 @@ def chat():
 if __name__ == "__main__":
     system_instruction = read_text_file( gs.path.google_drive / 'kazarinov' / 'prompts' / 'system_instruction.txt' )
     k = KazarinovAI(system_instruction = system_instruction)
-    #k.train()
-    k.dialog()
+    k.train()
+    #k.dialog()
 

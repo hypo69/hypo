@@ -21,7 +21,7 @@ from src.utils import j_loads, j_loads_ns, j_dumps
 from src.utils.csv import save_csv_file  
 from src.utils import pprint
 from utils.convertors.base64 import base64encode
-from utils.convertors.md2dict import md2dict, extract_json_from_md
+from utils.convertors.md2dict import md2dict, extract_json_from_string
 
 class OpenAIModel:
     """OpenAI Model Class for interacting with the OpenAI API and managing the model."""
@@ -217,7 +217,7 @@ class OpenAIModel:
             try:
                 reply = response.choices[0].message.content.strip()
                 if isinstance(reply, str) and reply.startswith('```json'):
-                    reply = extract_json_from_md(reply)
+                    reply = extract_json_from_string(reply)
                     ...
                 return reply
             except Exception as ex:

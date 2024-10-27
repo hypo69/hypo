@@ -11,7 +11,7 @@ from markdown2 import markdown
 from src.logger import logger
 
 
-def extract_json_from_md(md_string: str) -> str:
+def extract_json_from_string(md_string: str) -> str:
     """Extract JSON content from Markdown string between ```json and ``` markers.
 
     Args:
@@ -44,7 +44,7 @@ def md2dict(md_string: str) -> Dict:
     """
     try:
         # Extract JSON from Markdown if present
-        json_content = extract_json_from_md(md_string)
+        json_content = extract_json_from_string(md_string)
         if json_content:
             return {"json": json_content}
 

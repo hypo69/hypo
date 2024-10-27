@@ -1,35 +1,33 @@
 ## \file ../src/suppliers/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
-"""! Module for handling Morlevi product data extraction and saving.
+"""! Module for handling suppliers (morlevi, grandadvance, ivory, ksp) product data extraction and saving."""
 
-This module interacts with a web driver to scrape product details from given URLs, 
-processes the data, and saves relevant product information, including images, locally.
-"""
-
-from ast import Return
-import random
 import asyncio
+import random
 import time
 from pathlib import Path
+from typing import Optional, List
 from types import SimpleNamespace
-from typing import Optional
-import requests
-from bs4 import BeautifulSoup
-from lxml import etree
+from dataclasses import field
 
-import header
 from src import gs
 from src.product.product_fields import ProductFields
 from src.webdriver import Driver
 from src.ai.gemini import GoogleGenerativeAI
-from src.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
-from src.suppliers.morlevi.graber import async_grab_page as grab_morlevi_page
-from src.suppliers.ksp.graber import async_grab_page as grab_ksp_page 
-from src.suppliers.grandadvance.graber import async_grab_page as grab_grandadvance_page
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import save_png, save_png_from_url
+from src.advertisement.facebook.scenarios import (
+    post_message_title, 
+    upload_post_media, 
+    message_publish
+)
+from src.suppliers.morlevi.graber import async_grab_page as grab_morlevi
+from src.suppliers.ksp.graber import async_grab_page as grab_ksp
+from src.suppliers.ivory.graber import async_grab_page as grab_ivory
+from src.suppliers.grandadvance.graber import async_grab_page as grab_grandadvance
+from src.suppliers.kazarinov.react import ReportGenerator
+from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_filepath
+from src.utils.image import save_png_from_url, save_png
 from src.utils import pprint
 from src.logger import logger
 
@@ -39,33 +37,34 @@ locators = j_loads_ns(gs.path.src / 'suppliers' / 'morlevi' / 'locators' / 'prod
 class Mexiron:
     """! Handles Morlevi product extraction, parsing, and saving processes."""
     
-    d:Driver
-    base_path:Path
-    mexiron_title:str
-    price:float
-    timestamp:str = gs.now
-    products_list:list = []
-    product_titles_list:list = []
-    gemini:GoogleGenerativeAI
-    system_instruction:str = None
+    d: Driver
+    base_path: Path
+    mexiron_title: str
+    price: float
+    timestamp: str
+    products_list: List = field(default_factory=list)  # Инициализация пустого списка для продуктов
+    products_list: List = field(default_factory=list)  # Инициализация пустого списка заголовков продуктов
+    model: GoogleGenerativeAI
 
 
     def __init__(self, d: Driver):
         """Initializes the driver and base path."""
+        self.timestamp = gs.now
         self.d = d
-        self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' 
+        self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' / self.timestamp
 
         system_instruction_path = gs.path.google_drive / 'kazarinov' / 'prompts' /  'buid_mexiron.txt'
-        self.system_instruction: str = read_text_file(system_instruction_path)
+        system_instruction: str = read_text_file(system_instruction_path)
 
         api_key = gs.credentials.gemini.kazarinov
-        self.model = GoogleGenerativeAI(api_key = api_key, system_instruction = self.system_instruction, generation_config = {"response_mime_type": "application/json"})
+        self.model = GoogleGenerativeAI(api_key = api_key, system_instruction = system_instruction, generation_config = {"response_mime_type": "application/json"})
 
 
     async def run_scenario(self, system_instruction: Optional[str] = None, price:Optional[str] = None, mexiron_name:str = None, urls:Optional[str | list] = None  ) -> bool:
         """Prepares product data by parsing and saving product pages.
 
         Args:
+            mexiron_name (str): Я могу задать имя мехирона. Оно приходит в onetab после цены. Например, 'компьтер для тёти Любы'
             price (str): Price to assign or process.
             urls (list | str): URL(s) to be processed.
 
@@ -73,20 +72,20 @@ class Mexiron:
             list[dict] | None: List of product data if successful, otherwise None.
         """
         ...
-        self.base_path = self.base_path / mexiron_name  if mexiron_name else self.base_path / gs.now # <- в onetab после цены можно указать название сборки. Если не указано - подставляю `timestamp`
-
-        self.system_instruction = system_instruction if system_instruction else self.system_instruction
+        base_path = self.base_path   # <- в onetab после цены можно указать название сборки. Если не указано - подставляю `timestamp`
 
         urls_list:list = [urls] if isinstance(urls, str) else urls
         if not urls_list:
             logger.debug("Нет ссылок на страницы с комплектующими")
             ...
             return
-        
-        
+
         product_fields_list: list = []
-        product_titles_list: list = []
+        products_list: list = []
+        ru:SimpleNamespace = SimpleNamespace()
+        he:SimpleNamespace = SimpleNamespace()
         supplier_prefix:str
+
         for url in urls_list:
             if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
                 supplier_prefix = 'morlevi'
@@ -94,8 +93,8 @@ class Mexiron:
                 supplier_prefix = 'ksp'
             elif url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
                 supplier_prefix = 'grandadvance'
-            else:
-                continue
+            elif url.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
+                supplier_prefix = 'ivory'
 
             try:
                 self.d.get_url(url)
@@ -105,11 +104,13 @@ class Mexiron:
                 continue
             try:
                 if supplier_prefix == 'morlevi':
-                    f: ProductFields = await grab_morlevi_page(self.d)
+                    f: ProductFields = await grab_morlevi(self.d)
                 if supplier_prefix == 'ksp':
-                    f: ProductFields = await grab_ksp_page(self.d)
+                    f: ProductFields = await grab_ksp(self.d)
                 if supplier_prefix == 'grandadvance':
-                    f: ProductFields = await grab_grandadvance_page(self.d)
+                    f: ProductFields = await grab_grandadvance(self.d)
+                if supplier_prefix == 'ivory':
+                    f: ProductFields = await grab_ivory(self.d)
 
 
             except Exception as ex:
@@ -118,7 +119,7 @@ class Mexiron:
                 continue
 
             if not f:
-                logger.debug(f"Ошибка при обработке товара морлеви")
+                logger.debug(f"Не получил поля товяра {supplier_prefix} \n {url}")
                 ...
                 continue
             
@@ -128,68 +129,68 @@ class Mexiron:
                 ...
 
             f: SimpleNamespace = SimpleNamespace(**f)
-            if not j_dumps(f, self.base_path / 'products' / f'{f.product_id}.json' , ensure_ascii=False):
+            if not j_dumps(f, base_path /  'products' / f'{f.product_id}.json' , ensure_ascii=False):
                 logger.debug(f"не сохранился файл {f.product_id}.json")
                 ...
-            save_text_file(f.product_title, self.base_path / 'product_titles.txt', mode='a')
-            product_titles_list.append({'product_id':f.product_id,
+            if not save_text_file(f.product_title, base_path  / 'product_titles.txt', mode='a'):
+               logger.debug(f"не сохранилось имя товара {f.product_title=} \nв файл {base_path}/product_titles.txt")
+               ...
+            products_list.append({'product_id':f.product_id,
                                         'product_title':f.product_title,
                                         'product_description':f.product_description,
                                         'image_local_saved_path':f.image_local_saved_path})
-            if not j_dumps(product_titles_list, self.base_path / 'products' / 'product_titles.json', ensure_ascii=False):
+            if not j_dumps(products_list, base_path / 'products.json', ensure_ascii=False):
                 logger.debug(f"не сохранился файл {f.product_id}.json")
                 ...
 
 
-        def ask_gemini(q, system_instruction, attempts=3):
-            """Attempts to get translations from Gemini AI."""
-            ...
-            for attempt in range(attempts):
-                response = self.ask_gemini(q, system_instruction=system_instruction or self.system_instruction)
-
-                data: SimpleNamespace = j_loads_ns(response) # <- вернет False в случае ошибки
-
-                if data:
-                    if j_dumps(data, self.base_path / 'ai' / f'{gs.now}.json', ensure_ascii=False): # <- певая проверка валидности полученных данных
-                        return data
-                    else:
-                        if attempts <0:
-                            return
-                        logger.warning(f"Invalid JSON received: {pprint(response)}")
-                        ask_gemini(q, system_instruction, attempts - 1)
-                else:
-                    if attempts <0:
-                        return
-                    logger.warning(f"Invalid JSON received: {pprint(translations)}")
-                    ask_gemini(q, system_instruction, attempts-1)
+        def ask_and_repair(q:str, attemts:int = 3):
+            if attemts < 1:
+                return
+            response = self.model.ask(q)
+            if not response:
+                logger.error("no response from gemini")
+                ...
+                ask_and_repair(attemts - 1)
 
 
-            logger.error("Failed to get valid response from Gemini AI after multiple attempts")
-            return 
-        ...
+            data: SimpleNamespace = j_loads_ns(response) # <- вернет False в случае ошибки
 
-        response = ask_gemini(product_titles_list, self.system_instruction)
-        if not response:
-            logger.error('нет словаря')
-            ...
-            return
-        
-        try:
-            ru:SimpleNamespace = response.ru
-            he:SimpleNamespace = response.he
-        except Exception as ex:
+            if not data:
+                logger.error(f"Error in data from gemini:{data}")
+                ...
+                ask_and_repair(attemts - 1)
+
+                if not j_dumps(data, base_path / 'ai' / f'{gs.now}.json', ensure_ascii=False): # <- певая проверка валидности полученных данных
+                    ...
+                    ask_and_repair(attemts - 1)
+
             try:
-                response = ask_gemini(product_titles_list, self.system_instruction)
-                ru:SimpleNamespace = response.ru
-                he:SimpleNamespace = response.he
+                if hasattr(data,'ru'):
+                    ru:SimpleNamespace = data.ru
+                    if not ru:
+                        ask_and_repair(attemts-1)
+                else:
+                    ask_and_repair(attemts-1)
+
+                if hasattr(data,'he'):
+                    he:SimpleNamespace = data.he
+                    if not he:
+                        ask_and_repair(attemts-1)
+                else:
+                    ask_and_repair(attemts-1)
+                return ru, he
             except Exception as ex:
-                logger.debug("Нет словаря")
+                logger.debug(f"ошибка словаря")
                 ...
                 return
-            
-        service_images_path = recursively_get_filepath(gs.path.google_drive / 'kazarinov' / 'converted_images' / 'pastel' / 'bright', ['*.jpeg','*.jpg','*.png'])
+
+        ru, he = ask_and_repair(products_list)    
+        
+        service_images_path = recursively_get_filepath(gs.path.google_drive / 'kazarinov' / 'converted_images' / 'for_pricelist', ['*.jpeg','*.jpg','*.png'])
         #service_image = random.choice(service_images_path)
         ...
+        setattr(ru, 'id', self.timestamp)
         setattr(ru, 'language', 'ru')
         setattr(ru, 'currency', 'ils')
         setattr(ru, 'price', price)
@@ -205,13 +206,13 @@ class Mexiron:
             "image_local_saved_path": random.choice(service_images_path),
             "language":"ru",
             }))
-        j_dumps(ru, self.base_path / f'{self.timestamp}_ru.json', ensure_ascii=False)
+        j_dumps(ru, base_path / f'{self.timestamp}_ru.json', ensure_ascii=False)
 
-        
+        setattr(he, 'id', self.timestamp) 
         setattr(he, 'language', 'he')
         setattr(he, 'currency', 'ils')
         setattr(he, 'price', price)
-        service_product_description_he = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'service_as_product_he.txt')}
+        service_product_description_he = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' / 'service_as_product_he.txt')}
             \n ----------------- \n
            מחיר כולל הכל {price} ש''ח
            . 
@@ -224,19 +225,14 @@ class Mexiron:
             "image_local_saved_path": random.choice(service_images_path),
             "language":"he",
             }))
-        j_dumps(he, self.base_path / f'{self.timestamp}_he.json', ensure_ascii=False)
+        j_dumps(he, base_path / f'{self.timestamp}_he.json', ensure_ascii=False)
 
-        self.post_facebook(ru)
-        self.post_facebook(he)
+        self.create_report(base_path)
+        #self.post_facebook(ru)
+        #self.post_facebook(he)
         
         return True
 
-
-
-    def ask_gemini(self, q: str |list | dict, system_instruction: Optional[str] = None) -> dict:
-        """Переводчик полей товара"""
-        return self.model.ask(q, system_instruction)
-        ...
 
     async def convert_product_fields(self, f: ProductFields) -> dict:
         """Prepares a product dictionary from product field data.
@@ -247,7 +243,7 @@ class Mexiron:
         Returns:
             dict: Product information including title, description, ID, and image path.
         """
-        image_path = self.base_path / 'images' / f'{f.id_product}.png'
+        image_path = self.base_path /  'images' / f'{f.id_product}.png'
         if isinstance(f.default_image_url,(Path, str)):
             if not await save_png_from_url(f.default_image_url, image_path):
                 logger.debug(f"Картинка {image_path}\nне сохранилась на диске :(" )
@@ -285,5 +281,12 @@ class Mexiron:
             return
 
         return True
+
+    def create_report(self, base_path):
+        """"""
+        ...
+        generator = ReportGenerator( base_path = base_path, timestamp = self.timestamp )
+        for lang in ['he','ru']:
+            generator.create_report(lang)
 
 

@@ -1,558 +1,309 @@
-## \file ../src/suppliers/hb/graber.py
+## \file ../src/suppliers/morlevi/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
-""" Асинхронный сборщик полей товара HB -> product_fields
-Модуль собирет поля со страницы товара и заполняет поля объекта ProductFields
-
-@todo
-    1. проверить на что влияет `out_of_stock()`
+""" morlevi
 """
 
 import os, sys, asyncio
 from pathlib import Path
-from typing import List, Union, Dict, Any
+from typing import List, Union, Dict, Any, Optional
 from types import SimpleNamespace
 from urllib import response
-
 from langdetect import detect
-...
+from functools import wraps
+
 from src import gs
 from src.suppliers import Supplier
 from src.product import ProductFields, record
 from src.category import Category
-from src.webdriver import Driver as Webdriver
+from src.webdriver import Driver
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils import pprint
+from src.utils import pprint 
 from src.logger import logger 
 from src.logger.exceptions import ExecuteLocatorException
 from src.prestashop import Prestashop
-...
+
+
 
 supplier_prefix = 'hb'
 
-s: Supplier = Supplier(supplier_prefix)
-l: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
-d: Webdriver = None
-f: ProductFields = ProductFields()
+s: Supplier = Supplier(supplier_prefix = supplier_prefix)
+#l: dict = j_loads(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+l: SimpleNamespace
+l = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+if not l:
+    logger.debug(f"Не определились локаторы - ошибка в файле  {gs.path.src}/suppliers/{supplier_prefix}/locators/product.json")
+    ...
+f: ProductFields
+d: Driver
 
+def close_pop_up(value:Any = None):
+    """
+    Decorator to call `d.execute_locator` before the actual function logic.
+    
+    Args:
+        locator_key (str): Locator key to be executed before the function logic.
+    """
 
-async def async_grab_page() -> ProductFields:
-
-
-    async def fetch_specific_data():
-        webelements = d.execute_locator(l["product_reference_and_volume_and_price_for_100"])
-        for webelement in webelements:
-            if ('Fl.oz' in webelement.text) and ('מ"ל' in webelement.text):
-                """объем"""
-                f.volume = webelement.text
-            elif str(r'מחיר ל100 מ"ל') in webelement.text:
-                """цена за единицу товара
-                @todo придумать куда
-                """
-                logger.debug(f"""поле цена за единицу товара не на своем месте """)
-            elif 'מקט' in webelement.text:
-                rawreference = webelement.text
-                try:
-                   f.supplier_reference = StringFormatter.clear_numbers(rawreference)
-                   ...
-                except ExecuteLocatorException as e:
-                    logger.critical(f"""Не получил макат """, е)
-                    ...
-                    return
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # Execute locator before the original function logic
+            try:
+                result = d.execute_locator(l.close_popup)
+                ...
                 
-    async def fetch_all_data():
-        await fetch_specific_data()  # Call function to fetch specific data
-        
-        await additional_shipping_cost()
-        await delivery_in_stock()
-        await active()
-        await additional_delivery_times()
-        await advanced_stock_management()
-        await affiliate_short_link()
-        await affiliate_summary()
-        await affiliate_summary_2()
-        await affiliate_text()
-        await affiliate_image_large()
-        await affiliate_image_medium()
-        await affiliate_image_small()
-        await available_date()
-        await available_for_order()
-        await available_later()
-        await available_now()
+            except ExecuteLocatorException as e:
+                #raise  # Re-raise the exception if needed
+                ...
 
-        await cache_default_attribute()
-        await cache_has_attachments()
-        await cache_is_pack()
-        await condition()
-        await customizable()
-        await date_add()
-        await date_upd()
-        await delivery_in_stock()
-        await delivery_out_stock()
-        await depth()
-        await description()
-        await ean13()
-        await ecotax()
-        await height()
-        await how_to_use()
-        await id_category_default()
-        await additional_categories(f.id_category_default, s.current_scenario['presta_categories']['additional_categories'])
-        await id_default_combination()
-        await id_default_image()
-        await id_manufacturer()
-        await id_product()
-        await id_supplier()
-        await id_tax()
-        await id_type_redirected()
-        await images_urls()
-        await indexed()
-        await ingredients()
-        await meta_description()
-        await meta_keywords()
-        await meta_title()
-        await is_virtual()
-        await isbn()
-        await name()
-        await link_rewrite()
-        await location()
-        await low_stock_alert()
-        await low_stock_threshold()
-        await meta_description()
-        await meta_keywords()
-        await minimal_quantity()
-        await mpn()
-        
-        await online_only()
-        await on_sale()
-        await out_of_stock()
-        await pack_stock_type()
-        await locale()        
-        await price()
-        await product_type()
-        await quantity_discount()
-        await redirect_type()
-        await reference()
-        await show_condition()
-        await show_price()
-        await state()
-        await text_fields()
-        await unit_price_ratio()
-        await unity()
-        await upc()
-        await uploadable_files()
-        await default_image_url()
-        await visibility()
-        await weight()
-        await wholesale_price()
-        await width()
+            # Continue with the original function logic
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+async def async_grab_page(driver:Driver) -> ProductFields:
+    """"""
+    ...
+    global d
+    d = driver
+
+
+
+    async def fetch_specific_data(value:Any = None):
+        """Место для специальных операций с полями """
+        return True
+                
+    async def fetch_all_data(**kwards):
+        global f
+        f = ProductFields()
+    
+        # Call function to fetch specific data
+        # await fetch_specific_data(**kwards)  
+
+        # Uncomment the following lines to fetch specific data
+        # await additional_shipping_cost(kwards.get("additional_shipping_cost", ''))
+        # await delivery_in_stock(kwards.get("delivery_in_stock", ''))
+        # await active(kwards.get("active", ''))
+        # await additional_delivery_times(kwards.get("additional_delivery_times", ''))
+        # await advanced_stock_management(kwards.get("advanced_stock_management", ''))
+        # await affiliate_short_link(kwards.get("affiliate_short_link", ''))
+        # await affiliate_summary(kwards.get("affiliate_summary", ''))
+        # await affiliate_summary_2(kwards.get("affiliate_summary_2", ''))
+        # await affiliate_text(kwards.get("affiliate_text", ''))
+        # await affiliate_image_large(kwards.get("affiliate_image_large", ''))
+        # await affiliate_image_medium(kwards.get("affiliate_image_medium", ''))
+        # await affiliate_image_small(kwards.get("affiliate_image_small", ''))
+        # await available_date(kwards.get("available_date", ''))
+        # await available_for_order(kwards.get("available_for_order", ''))
+        # await available_later(kwards.get("available_later", ''))
+        # await available_now(kwards.get("available_now", ''))
+        # await cache_default_attribute(kwards.get("cache_default_attribute", ''))
+        # await cache_has_attachments(kwards.get("cache_has_attachments", ''))
+        # await cache_is_pack(kwards.get("cache_is_pack", ''))
+        # await condition(kwards.get("condition", ''))
+        # await customizable(kwards.get("customizable", ''))
+        # await date_add(kwards.get("date_add", ''))
+        # await date_upd(kwards.get("date_upd", ''))
+        # await default_image_url(kwards.get("default_image_url", ''))
+        # await delivery_in_stock(kwards.get("delivery_in_stock", ''))
+        # await delivery_out_stock(kwards.get("delivery_out_stock", ''))
+        # await depth(kwards.get("depth", ''))
+        await description(kwards.get("description", ''))
+        await description_short(kwards.get("description_short", ''))
+        # await ean13(kwards.get("ean13", ''))
+        # await ecotax(kwards.get("ecotax", ''))
+        # await height(kwards.get("height", ''))
+        # await how_to_use(kwards.get("how_to_use", ''))
+        # await id_category_default(kwards.get("id_category_default", ''))
+        # await additional_categories(f.id_category_default, s.current_scenario['presta_categories']['additional_categories'])
+        # await id_default_combination(kwards.get("id_default_combination", ''))
+        # await id_default_image(kwards.get("id_default_image", ''))
+        # await id_manufacturer(kwards.get("id_manufacturer", ''))
+        # await id_product(kwards.get("id_product", ''))
+        # await id_supplier(kwards.get("id_supplier", ''))
+        # await id_tax(kwards.get("id_tax", ''))
+        # await id_type_redirected(kwards.get("id_type_redirected", ''))
+        # await images_urls(kwards.get("images_urls", ''))
+        # await indexed(kwards.get("indexed", ''))
+        # await ingredients(kwards.get("ingredients", ''))
+        # await meta_description(kwards.get("meta_description", ''))
+        # await meta_keywords(kwards.get("meta_keywords", ''))
+        # await meta_title(kwards.get("meta_title", ''))
+        # await is_virtual(kwards.get("is_virtual", ''))
+        # await isbn(kwards.get("isbn", ''))
+        await name(kwards.get("name", ''))
+        # await link_rewrite(kwards.get("link_rewrite", ''))
+        # await location(kwards.get("location", ''))
+        # await low_stock_alert(kwards.get("low_stock_alert", ''))
+        # await low_stock_threshold(kwards.get("low_stock_threshold", ''))
+        # await minimal_quantity(kwards.get("minimal_quantity", ''))
+        # await mpn(kwards.get("mpn", ''))
+        # await online_only(kwards.get("online_only", ''))
+        # await on_sale(kwards.get("on_sale", ''))
+        # await out_of_stock(kwards.get("out_of_stock", ''))
+        # await pack_stock_type(kwards.get("pack_stock_type", ''))
+        # await locale(kwards.get("locale", ''))        
+        # await price(kwards.get("price", ''))
+        # await product_type(kwards.get("product_type", ''))
+        # await quantity_discount(kwards.get("quantity_discount", ''))
+        # await redirect_type(kwards.get("redirect_type", ''))
+        # await reference(kwards.get("reference", ''))
+        # await show_condition(kwards.get("show_condition", ''))
+        # await show_price(kwards.get("show_price", ''))
+        # await specification(kwards.get("specification", ''))
+        # await state(kwards.get("state", ''))
+        # await text_fields(kwards.get("text_fields", ''))
+        # await unit_price_ratio(kwards.get("unit_price_ratio", ''))
+        # await unity(kwards.get("unity", ''))
+        # await upc(kwards.get("upc", ''))
+        # await uploadable_files(kwards.get("uploadable_files", ''))
+        # await visibility(kwards.get("visibility", ''))
+        # await weight(kwards.get("weight", ''))
+        # await wholesale_price(kwards.get("wholesale_price", ''))
+        # await width(kwards.get("width", ''))
+        # await local_saved_image(kwards.get("local_saved_image", ''))
+        # await local_saved_video(kwards.get("local_saved_video", ''))
 
     # Call the function to fetch all data
     await fetch_all_data()
     return f
 
 
-
-
-
-
-
-
-async def additional_shipping_cost():
-    """  Function for field additional_shipping_cost"""
-    ...
-    if not f.additional_shipping_cost:
-        try:
-            f.additional_shipping_cost = d.execute_locator(l["additional_shipping_cost"]) or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `additional_shipping_cost`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ... 
+@close_pop_up()
+async def additional_shipping_cost(value:Any = None):
+    f.additional_shipping_cost = value if value else d.execute_locator(l.additional_shipping_cost) or ''
         
-
-async def delivery_in_stock():
-    """  Function for field delivery_in_stock"""
-    ...
-    if not f.delivery_in_stock:
-        try:
-            f.delivery_in_stock = d.execute_locator(l["delivery_in_stock"]) or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `delivery_in_stock`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ... 
+@close_pop_up()
+async def delivery_in_stock(value:Any = None):
+    f.delivery_in_stock = value if value else d.execute_locator(l.delivery_in_stock) or ''
         
+@close_pop_up()
+async def active(value:Any = None):
+    f.active = value if value else d.execute_locator(l.active) or ''
 
-async def active():
-    """  Function for field active"""
-    ...
+@close_pop_up()
+async def additional_delivery_times(value:Any = None):
+    f.additional_shipping_cost = value if value else d.execute_locator(l.additional_delivery_times) or ''
 
-async def additional_delivery_times():
-    """  Function for field additional_delivery_times"""
-    ...
-    if not f.additional_delivery_times:
-        try:
-            f.additional_delivery_times = d.execute_locator(l["additional_delivery_times"]) or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `additional_delivery_times`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ... 
         
+@close_pop_up()
+async def advanced_stock_management(value:Any = None):
+    f.advanced_stock_management = value if value else d.execute_locator(l.advanced_stock_management) or ''
 
-async def advanced_stock_management():
-    """  Function for field advanced_stock_management"""
-    ...
+@close_pop_up()
+async def affiliate_short_link(value:Any = None):
+    f.affiliate_short_link = value if value else d.execute_locator(l.affiliate_short_link) or ''
 
-async def affiliate_short_link():
-    """  Function for field affiliate_short_link"""
-    try:
-        f.affiliate_short_link = d.current_url
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field affiliate_short_link: ", e)
+@close_pop_up()
+async def affiliate_summary(value:Any = None):
+    f.affiliate_summary = value if value else d.execute_locator(l.affiliate_summary) or ''
+
+@close_pop_up()
+async def affiliate_summary_2(value:Any = None):
+    f.affiliate_summary_2 = value if value else d.execute_locator(l.affiliate_summary_2) or ''
         
-
-
-async def affiliate_summary():
-    """  Function for field affiliate_summary"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ... 
+@close_pop_up()
+async def affiliate_text(value:Any = None):
+    f.affiliate_text = value if value else d.execute_locator(l.affiliate_text) or ''
         
-
-async def affiliate_summary_2():
-    """  Function for field affiliate_summary_2"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def affiliate_image_large(value:Any = None):
+    f.affiliate_image_large = value if value else d.execute_locator(l.affiliate_image_large) or ''
         
-
-async def affiliate_text():
-    """  Function for field affiliate_text"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def affiliate_image_medium(value:Any = None):
+    f.affiliate_image_medium = value if value else d.execute_locator(l.affiliate_image_medium) or ''
         
-
-async def affiliate_image_large():
-    """  Function for field affiliate_image_large"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def affiliate_image_small(value:Any = None):
+    f.affiliate_image_small = value if value else d.execute_locator(l.affiliate_image_small) or ''
         
+@close_pop_up()
+async def available_date(value:Any = None):
+    f.available_date = value if value else d.execute_locator(l.available_date) or ''
 
-async def affiliate_image_medium():
-    """  Function for field affiliate_image_medium"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def available_for_order(value:Any = None):
+    f.available_for_order = value if value else d.execute_locator(l.available_for_order) or ''
+
+@close_pop_up()
+async def available_later(value:Any = None):
+    f.available_later = value if value else d.execute_locator(l.available_later) or ''
+
+@close_pop_up()
+async def available_now(value:Any = None):
+    f.available_now = value if value else d.execute_locator(l.available_now) or ''
+
+@close_pop_up()
+async def additional_categories(value: str | list = None) -> Dict:
+    f.additional_categories = value if value else ''
         
+@close_pop_up()
+async def cache_default_attribute(value:Any = None):
+    f.cache_default_attribute = value if value else d.execute_locator(l.cache_default_attribute) or ''
 
-async def affiliate_image_small():
-    """  Function for field affiliate_image_small"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def cache_has_attachments(value:Any = None):
+    f.cache_default_attribute = value if value else d.execute_locator(l.cache_default_attribute) or ''
+
+@close_pop_up()
+async def cache_is_pack(value:Any = None):
+    f.cache_is_pack = value if value else d.execute_locator(l.cache_is_pack) or ''
+
+@close_pop_up()
+async def condition(value:Any = None):
+    f.condition = value if value else d.execute_locator(l.condition) or ''     
         
+@close_pop_up()
+async def customizable(value:Any = None):
+    f.customizable = value if value else d.execute_locator(l.customizable) or ''
 
-async def available_date():
-    """  Function for field available_date"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def date_add(value:Any = None):
+    f.customizable = value if value else d.execute_locator(l.date_add) or ''
 
-async def available_for_order():
-    """  Function for field available_for_order
-    @
-    """
-    try:
-        response = d.execute_locator(l["available_for_order"])
-        f.available_for_order = 1 if available_for_order else 0
-
-    except ExecuteLocatorException as e:
-        logger.error(f"""Error occurred while executing the locator for the field `available_for_order`: 
-                        response type: {type(response)}
-                    response: {pprint(response)}""", e)
-    except Exception as e:
-        logger.critical(f"""Error occurred while executing the locator for the field `available_for_order`: """, e)
-...
-
-async def available_later():
-    """  Function for field available_later"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def available_now():
-    """  Function for field available_now"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def additional_categories(category_id:list[str], categories_ids:list[str] = None) -> Dict:
-    """  Function for field additional_categories"""
-    # 
-    #                   Это поле должно заполнятся на клиенте. 
-    # try:
-    #     f.set_additional_categories(category_id, categories_ids)
-    # except Exception as e:
-    #     logger.error(f"Error occurred while executing the locator for the field condition: ", e)
-    ...
-        
-
-async def cache_default_attribute():
-    """  Function for field cache_default_attribute"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def cache_has_attachments():
-    """  Function for field cache_has_attachments"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def cache_is_pack():
-    """  Function for field cache_is_pack"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def condition():
-    """  Function for field condition"""
-    try:
-        f.condition = d.execute_locator(l.condition) or 'new'
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field condition: ", e)
-    except Exception as e:
-            logger.critical(f"""Error occurred while executing the locator for the field `condition`: """, e)        
-        
-
-async def customizable():
-    """  Function for field customizable"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def date_add():
-    """  Function for field date_add"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def date_upd():
-    """  Function for field date_upd"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def date_upd(value:Any = None):
+    f.date_upd = value if value else d.execute_locator(l.date_upd) or ''
     
+@close_pop_up()
+async def delivery_out_stock(value:Any = None):
+    f.delivery_out_stock = value if value else d.execute_locator(l.delivery_out_stock) or ''
 
-async def delivery_out_stock():
-    """  Function for field delivery_out_stock"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...    
+@close_pop_up()
+async def depth(value:Any = None):
+    f.depth = value if value else d.execute_locator(l.depth) or ''
         
-    
-    
-async def depth():
-    """  Function for field depth"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-        
+@close_pop_up()
+async def description(value:Any = None):
+    f.description = value if value else d.execute_locator(l.description) or ''
 
-async def description():
-    """  Function for field description
-    d.execute_locator(l["description"]) может вернуть объект/список selenium
-    """
-    ...
-    if not f.description:
-        try:
-            f.description = d.execute_locator(l["description"])  or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `description`: 
-                         response type: {type(response)}                                 
-                        response: {pprint(response)}""", e)
-        except Exception as e:
-            logger.critical(f"""Error occurred while executing the locator for the field `description`: """, e)
-        
-    ...
-        
 
-async def id_category_default():
-    """  Function for field id_category_default"""
-    f.id_category_default = s.current_scenario["presta_categories"]["default_category"]
-    
-async def id_default_combination():
-    """  Function for field id_default_combination"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def description_short(value:Any = None):
+    f.description_short = value if value else d.execute_locator(l.description_short) or ''
 
-async def id_product():
-    """  Function for field id_product"""
+@close_pop_up()
+async def id_category_default(value:Any = None):
+    f.id_category_default = s.current_scenario.get("presta_categories", {}).get("default_category", '')
+
+@close_pop_up()
+async def id_default_combination(value:Any = None):
+    f.id_default_combination = value if value else d.execute_locator(l.id_default_combination) or ''
+
+@close_pop_up()
+async def id_product(value:Any = None):
+    if value:
+       f.id_product = value
+       return
+    if not f.id_supplier:
+        f.id_supplier = d.execute_locator(l.id_supplier)  or None
+    if f.id_supplier:
+        f.id_product = supplier_prefix+'-'+f.id_supplier
     ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-    
-async def locale():
-    """  Function for field locale.
-    current webpage lang
-    """
-    ...
+@close_pop_up()
+async def locale(value:Any = None):
     i18n = d.locale
     if not i18n:
         text = f.name['language'][0]['value']
@@ -561,664 +312,222 @@ async def locale():
     f.locale = i18n
 
     ...
-    
-async def id_default_image():
-    """  Function for field id_default_image"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def id_default_image(value:Any = None):
+    f.id_default_image = value if value else d.execute_locator(l.id_default_image) or ''
 
+@close_pop_up()
+async def ean13(value:Any = None):
+    f.id_default_image = value if value else d.execute_locator(l.id_default_image) or ''
 
-async def ean13():
-    """  Function for field ean13"""
+@close_pop_up()
+async def ecotax(value:Any = None):
+    f.ecotax = value if value else d.execute_locator(l.ecotax) or ''
+
+@close_pop_up()
+async def height(value:Any = None):
+    f.height = value if value else d.execute_locator(l.height) or ''
+
+@close_pop_up()
+async def how_to_use(value:Any = None):
+    f.how_to_use = value if value else d.execute_locator(l.how_to_use) or ''
+
+@close_pop_up()
+async def id_manufacturer(value:Any = None):
+    f.id_manufacturer = value if value else d.execute_locator(l.id_manufacturer) or ''
     ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ... 
+@close_pop_up()    
+async def id_supplier(value:Any = None):
+    f.id_manufacturer = value if value else d.execute_locator(l.id_manufacturer) or ''
         
+@close_pop_up()
+async def id_tax(value:Any = None):
+    f.id_manufacturer = value if value else d.execute_locator(l.id_manufacturer) or ''
 
-async def ecotax():
-    """  Function for field ecotax"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def id_type_redirected(value:Any = None):
+    f.id_type_redirected = value if value else d.execute_locator(l.id_type_redirected) or ''
 
-async def height():
-    """  Function for field height"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def how_to_use():
-    """  Function for field how_to_use"""
-    ...
-    if not f.how_to_use:
-        try:
-            f.how_to_use = d.execute_locator(l["how_to_use"])  or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `how_to_use`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-        except Exception as e:
-            logger.critical(f"""Error occurred while executing the locator for the field `how_to_use`: """, e)
-    ...
+@close_pop_up()
+async def images_urls(value:Any = None):
+    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
 
 
-async def id_manufacturer():
-    """  Function for field id_manufacturer"""
-    ...
-    if not f.id_manufacturer:
-        try:
-            f.id_manufacturer = d.execute_locator(l["id_manufacturer"])  or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `id_manufacturer`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-        except Exception as e:
-            logger.critical(f"""Error occurred while executing the locator for the field `id_manufacturer`: """, e)
-    ...
-    
-async def id_supplier():
-    """  Function for field id_supplier"""
-    ...
-    if not f.id_supplier:
-        try:
-            f.id_supplier = d.execute_locator(l["id_supplier"]) or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `id_supplier`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ...
+@close_pop_up()
+async def indexed(value:Any = None):
+    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
+
+@close_pop_up()
+async def ingredients(value:Any = None):
+    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
+
+@close_pop_up()
+async def meta_description(value:Any = None):
+    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
+
+@close_pop_up()
+async def meta_keywords(value:Any = None):
+    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
         
-
-async def id_tax():
-    """  Function for field id_tax"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def id_type_redirected():
-    """  Function for field id_type_redirected"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def images_urls():
-    """  Function for field additional_images_urls"""
-    if not f.images_urls:
-        try:
-            response = d.execute_locator(l["additional_images_urls"]) or ''
-            ...
-            f.images_urls = response
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `additional_images_urls`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-            ...
-            return
-        except Exception as e:
-            logger.critical(f"""Error occurred while executing the locator for the field `additional_images_urls`: """, e)
-            ...
-            return
-            
-    ...
+@close_pop_up()
+async def meta_title(value:Any = None):
+    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
         
+@close_pop_up()    
+async def is_virtual(value:Any = None):
+    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
 
-async def indexed():
-    """  Function for field indexed"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def isbn(value:Any = None):
+    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
 
-async def ingredients():
-    """  Function for field ingredients"""
-    ...
-    if not f.ingredients:
-        try:
-            f.ingredients = d.execute_locator(l["ingredients"]) or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `ingredients`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ...
+@close_pop_up()
+async def link_rewrite(value:Any = None) -> str:
+    f.link_rewrite = value if value else d.execute_locator(l.link_rewrite) or ''
+   
+@close_pop_up()
+async def location(value:Any = None):
+    f.location = value if value else d.execute_locator(l.location) or ''
 
+@close_pop_up()
+async def low_stock_alert(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
 
-async def meta_description():
-    """  Function for field meta_description"""
-    ...
-    if not f.meta_description:
-        try:
-            f.meta_description = d.execute_locator(l["meta_description"]) or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `meta_description`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ...    
-        
+@close_pop_up()
+async def low_stock_threshold(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
 
-async def meta_keywords():
-    """  Function for field meta_keywords"""
-    ...
-    if not f.meta_keywords:
-        try:
-            f.meta_keywords = d.execute_locator(l["meta_keywords"]) or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `meta_keywords`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ... 
-        
+@close_pop_up()
+async def minimal_quantity(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
 
-async def meta_title():
-    """  Function for field meta_title"""
-    ...
-    if not f.meta_title:
-        try:
-            f.meta_title = d.execute_locator(l["meta_title"]) or ''
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `meta_title`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ... 
+@close_pop_up()
+async def mpn(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def name(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
         
     
-async def is_virtual():
-    """  Function for field is_virtual"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def online_only(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+        
+@close_pop_up()
+async def on_sale(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+        
+@close_pop_up()
+async def out_of_stock(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
 
-async def isbn():
-    """  Function for field isbn"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def pack_stock_type(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def price(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def product_type(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()    
+async def quantity(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def quantity_discount(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def redirect_type(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def reference(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def show_condition(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def show_price(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def state(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def text_fields(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def unit_price_ratio(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def unity(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def upc(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def uploadable_files(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def default_image_url(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+
+@close_pop_up()
+async def visibility(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
         
 
-async def link_rewrite() -> str:
-    """  Function for field link_rewrite
-    @todo
-     - Исправить обязательного i18n `record(f,'en-US')`
-    """
-    ...
-    global record
-    if not f.name:name()
-    _product_fileds = record(f.presta_fields_dict,'en-US') # <- плохое решение
-    """ record возвращает плоский словарь """
-    try:
-        f.link_rewrite = ProductFieldsNormalizer.normalize_link_rewrite(_product_fileds['name']) or ''
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the link_rewrite: ", e)
-    except Exception as e:
-            logger.critical(f"""Error occurred while executing the locator for the field `link_rewrite`: """, e)
-...    
-    
+@close_pop_up()
+async def weight(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
 
-async def location():
-    """  Function for field location"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def wholesale_price(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
 
-async def low_stock_alert():
-    """  Function for field low_stock_alert"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-    
-async def low_stock_threshold():
-    """  Function for field low_stock_threshold"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def width(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
 
-async def minimal_quantity():
-    """  Function for field minimal_quantity"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def specification(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
 
-async def mpn():
-    """  Function for field mpn"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
 
-async def name():
-    """  Function for field name"""
-    try:
-        rawname = d.execute_locator (l["name"])[0] or ''
-        f.name = ProductFieldsNormalizer.normalize_name(rawname)
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field name: ", e)
-        
-    
-
-async def online_only():
-    """  Function for field online_only"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+@close_pop_up()
+async def link(value:Any = None):
+    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
         
 
-async def on_sale():
-    """  Function for field on_sale"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+async def byer_protection(value:Any = None):
+    f.byer_protection = value if value else d.execute_locator(l.byer_protection) or ''
         
 
-async def out_of_stock():
-    """  Function for field out_of_stock"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-        
+async def customer_reviews(value:Any = None):
+    f.customer_reviews = value if value else d.execute_locator(l.customer_reviews) or ''
 
+async def link_to_video(value:Any = None):
+    f.link_to_video = value if value else d.execute_locator(l.link_to_video) or ''
 
-async def pack_stock_type():
-    """  Function for field pack_stock_type"""
-    ...
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
+async def image_local_saved_path(value:Any = None):
+    f.image_local_saved_path = value if value else d.execute_locator(l.image_local_saved_path) or ''
 
-async def price():
-    """  Function for field price"""
-    ...
-    if not f.price:
-        try:
-            rawprice = d.execute_locator(l["price"])[0] or ''
-            f.price = ProductFieldsNormalizer.normalize_price(rawprice)
-            ...
-        except ExecuteLocatorException as e:
-            logger.error(f"""Error occurred while executing the locator for the field `delivery_out_stock`: 
-                            response type: {type(response)}
-                        response: {pprint(response)}""", e)
-    ... 
-
-async def product_type():
-    """  Function for field product_type"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-    
-async def quantity():
-    """  Function for field quantity"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def quantity_discount():
-    """  Function for field quantity_discount"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def redirect_type():
-    """  Function for field redirect_type"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def reference():
-    """  Function for field reference
-    locator_description на HB заполняется в отдельной функции. См выше 
-    """
-    ...
-    f.reference = f"""{s.supplier_id}-{f.supplier_reference}"""
-    ... 
-
-async def show_condition():
-    """  Function for field show_condition"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def show_price():
-    """  Function for field show_price"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def state():
-    """  Function for field state"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def text_fields():
-    """  Function for field text_fields"""
-    ...
-    # if not f.<FIELD NAME>:
-    #     try:
-    #         f.<FIELD NAME> = d.execute_locator(l["<FIELD NAME>"]) or ''
-    #     except ExecuteLocatorException as e:
-    #         logger.error(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: 
-    #                         response type: {type(response)}
-    #                     response: {pprint(response)}""", e)
-    #     except Exception as e:
-    #         logger.critical(f"""Error occurred while executing the locator for the field `<FIELD NAME>`: """, e)
-    ...
-
-async def unit_price_ratio():
-    """  Function for field unit_price_ratio"""
-    try:
-        #f.unit_price_ratio =  d.execute_locator(l["unit_price_ratio"])[0]  or ''
-        ...
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field unit_price_ratio: ", e)
-
-async def unity():
-    """  Function for field unity"""
-    try:
-        #f.unity =  d.execute_locator(l["unity"])[0] or ''
-        ...
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field unity: ", e)
-
-async def upc():
-    """  Function for field upc"""
-    try:
-        #f.upc =  d.execute_locator(l["upc"])[0] or ''
-        ...
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field upc: ", e)
-...
-
-async def uploadable_files():
-    """  Function for field uploadable_files"""
-    try:
-        #f.uploadable_files =  d.execute_locator(l["uploadable_files"])[0] or ''
-        ...
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field upc: ", e)
-    ...
-
-async def default_image_url():
-    """  Function for field default_image_url"""
-    try:
-        f.default_image_url =  d.execute_locator(l["default_image_url"]) or ''
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field default_image_url: ", e)
-
-async def visibility():
-    """  Function for field visibility"""
-    try:
-        f.visibility = d.execute_locator(l["visibility"]) or 'both'
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field visibility: ", e)
-        
-
-
-async def weight():
-    """  Function for field weight"""
-    try:
-        f.weight = d.execute_locator(l["weight"]) or ''
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field weight: ", e)
-
-async def wholesale_price():
-    """  Function for field wholesale_price"""
-    try:
-        f.wholesale_price = d.execute_locator(l["wholesale_price"]) or ''
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field wholesale_price: ", e)
-
-async def width():
-    """  Function for field width"""
-    try:
-        f.width = d.execute_locator(l["width"]) or ''
-    except ExecuteLocatorException as e:
-        logger.error(f"Error occurred while executing the locator for the field width: ", e)
-
-       
-async def specification():
-    """  Function for field width
-    В HB нет такого поля. Копирую из 
-    """
-    f.specification =  f.description 
-    
-
-
-
-async def link():
-    """  Function for field link"""
-    try:
-        f["link_to_product"] = d.current_url.split('?')[0]  or ''
-        return True
-    except Exception as e:
-        logger.error(f"Ошибка при получении ссылки на продукт: ", e)
-        
-
-async def byer_protection():
-    """  Function for field byer_protection"""
-    try:
-        f["product_byer_protection"] = d.execute_locator(l["byer_protection_locator"]) or ''
-        return True
-    except ExecuteLocatorException as e:
-        f["product_byer_protection"] = None
-        logger.error(f"Error occurred while executing the locator for the field byer_protection: ", e)
-        
-
-async def customer_reviews():
-    """  Function for field customer_reviews"""
-    try:
-        f["product_customer_reviews"] = d.execute_locator(l["customer_reviews_locator"]) or ''
-        return True
-    except ExecuteLocatorException as e:
-        f["product_customer_reviews"] = None
-        logger.error(f"Error occurred while executing the locator for the field customer_reviews: ", e)
-        
-# 57
-
-async def link_to_video():
-    """  Function for field link_to_video"""
-    try:
-        f["product_customer_reviews"] = d.execute_locator(l["link_to_video"]) or ''
-        return True
-    except ExecuteLocatorException as e:
-        f["product_customer_reviews"] = None
-        logger.error(f"Error occurred while executing the locator for the field link_to_video: ", e)
+async def video_local_saved_path(value:Any = None):
+    f.video_local_saved_path = value if value else d.execute_locator(l.video_local_saved_path) or ''
         
         
 

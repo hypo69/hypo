@@ -747,7 +747,17 @@
     "use_mouse": false,
     "mandatory": true,
     "event": null,
-    "locator_description": "Технические характеристики. Оно нахосится в спанах под див"
+    "locator_description": "Технические характеристики."
+  },
+  "specification": {
+    "attribute": "innerText",
+    "by": "XPATH",
+    "selector": "//div[@class = 'properties']",
+    "if_list": "all",
+    "use_mouse": false,
+    "mandatory": true,
+    "event": null,
+    "locator_description": "Технические характеристики. "
   },
   "affiliate_short_link": {
     "attribute": null,

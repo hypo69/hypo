@@ -27,7 +27,6 @@ from .convertors import (xml2dict,
                         html2text,
                         html2text_file,
                         escape2html, 
-                        extract_json_from_md,
                         json2csv, 
                         json2ns, 
                         json2xls, 
@@ -65,7 +64,6 @@ from .image import (save_png,
                     save_png_from_url
                     )
 
-from .input import input
 
 from .video import save_video_from_url
 from .date_time import TimeoutCheck
@@ -75,7 +73,11 @@ from .csv import (read_csv_file,
                   read_csv_as_ns, 
                   save_csv_file,
                     )
+
 from .string import (extract_url_params, 
                      is_url,
+                     ProductFieldsValidator,
+                     StringFormatter,
+                     StringNormalizer,
                     )
 
