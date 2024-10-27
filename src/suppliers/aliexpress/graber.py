@@ -50,7 +50,7 @@ def close_pop_up(value:Any = None):
         def wrapper(*args, **kwargs):
             # Execute locator before the original function logic
             try:
-                result = d.execute_locator(l.close_popup)
+                # result = d.execute_locator(l.close_popup)
                 ...
                 
             except ExecuteLocatorException as e:
@@ -120,7 +120,7 @@ async def async_grab_page(driver:Driver) -> ProductFields:
         # await id_default_combination(kwards.get("id_default_combination", ''))
         # await id_default_image(kwards.get("id_default_image", ''))
         # await id_manufacturer(kwards.get("id_manufacturer", ''))
-        # await id_product(kwards.get("id_product", ''))
+        await id_product(kwards.get("id_product", ''))
         # await id_supplier(kwards.get("id_supplier", ''))
         # await id_tax(kwards.get("id_tax", ''))
         # await id_type_redirected(kwards.get("id_type_redirected", ''))
@@ -151,7 +151,7 @@ async def async_grab_page(driver:Driver) -> ProductFields:
         # await reference(kwards.get("reference", ''))
         # await show_condition(kwards.get("show_condition", ''))
         # await show_price(kwards.get("show_price", ''))
-        # await specification(kwards.get("specification", ''))
+        await specification(kwards.get("specification", ''))
         # await state(kwards.get("state", ''))
         # await text_fields(kwards.get("text_fields", ''))
         # await unit_price_ratio(kwards.get("unit_price_ratio", ''))
@@ -162,372 +162,731 @@ async def async_grab_page(driver:Driver) -> ProductFields:
         # await weight(kwards.get("weight", ''))
         # await wholesale_price(kwards.get("wholesale_price", ''))
         # await width(kwards.get("width", ''))
-        # await local_saved_image(kwards.get("local_saved_image", ''))
+        await local_saved_image(kwards.get("local_saved_image", ''))
         # await local_saved_video(kwards.get("local_saved_video", ''))
 
     # Call the function to fetch all data
     await fetch_all_data()
     return f
 
+from typing import Any, Callable
+
+def error(field: str):
+    """Error handler for fields."""
+    ...
+    logger.debug(f"Ошибка заполнения поля {field}")
+    ...
+
+def set_field_value(
+    value: Any, 
+    locator_func: Callable[[], Any], 
+    field_name: str, 
+    default: Any = ''
+):
+    """Universal function for setting field values with error handling.
+
+    Args:
+        value (Any): Provided value to set.
+        locator_func (Callable[[], Any]): Function to get the locator's value.
+        field_name (str): Name of the field for error handling.
+        default (Any, optional): Default value if both value and locator fail. Defaults to ''.
+
+    Returns:
+        Any: The value to be assigned to the field.
+    """
+    return (
+        value if value 
+        else locator_func() if locator_func() 
+        else error(field_name) or default
+    )
 
 @close_pop_up()
-async def additional_shipping_cost(value:Any = None):
-    f.additional_shipping_cost = value if value else d.execute_locator(l.additional_shipping_cost) or ''
-        
-@close_pop_up()
-async def delivery_in_stock(value:Any = None):
-    f.delivery_in_stock = value if value else d.execute_locator(l.delivery_in_stock) or ''
-        
-@close_pop_up()
-async def active(value:Any = None):
-    f.active = value if value else d.execute_locator(l.active) or ''
+async def additional_shipping_cost(value: Any = None):
+    f.additional_shipping_cost = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.additional_shipping_cost), 
+        'additional_shipping_cost'
+    )
 
 @close_pop_up()
-async def additional_delivery_times(value:Any = None):
-    f.additional_shipping_cost = value if value else d.execute_locator(l.additional_delivery_times) or ''
+async def delivery_in_stock(value: Any = None):
+    f.delivery_in_stock = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.delivery_in_stock), 
+        'delivery_in_stock'
+    )
+
+@close_pop_up()
+async def active(value: Any = None):
+    f.active = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.active), 
+        'active'
+    )
+
+@close_pop_up()
+async def additional_delivery_times(value: Any = None):
+    f.additional_delivery_times = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.additional_delivery_times), 
+        'additional_delivery_times'
+    )
+
 
         
 @close_pop_up()
 async def advanced_stock_management(value:Any = None):
-    f.advanced_stock_management = value if value else d.execute_locator(l.advanced_stock_management) or ''
+        f.advanced_stock_management = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.advanced_stock_management), 
+        'advanced_stock_management'
+    )
 
 @close_pop_up()
-async def affiliate_short_link(value:Any = None):
-    f.affiliate_short_link = value if value else d.execute_locator(l.affiliate_short_link) or ''
+async def affiliate_short_link(value: Any = None):
+    f.affiliate_short_link = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.affiliate_short_link), 
+        'affiliate_short_link'
+    )
 
 @close_pop_up()
-async def affiliate_summary(value:Any = None):
-    f.affiliate_summary = value if value else d.execute_locator(l.affiliate_summary) or ''
+async def affiliate_summary(value: Any = None):
+    f.affiliate_summary = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.affiliate_summary), 
+        'affiliate_summary'
+    )
 
 @close_pop_up()
-async def affiliate_summary_2(value:Any = None):
-    f.affiliate_summary_2 = value if value else d.execute_locator(l.affiliate_summary_2) or ''
-        
-@close_pop_up()
-async def affiliate_text(value:Any = None):
-    f.affiliate_text = value if value else d.execute_locator(l.affiliate_text) or ''
-        
-@close_pop_up()
-async def affiliate_image_large(value:Any = None):
-    f.affiliate_image_large = value if value else d.execute_locator(l.affiliate_image_large) or ''
-        
-@close_pop_up()
-async def affiliate_image_medium(value:Any = None):
-    f.affiliate_image_medium = value if value else d.execute_locator(l.affiliate_image_medium) or ''
-        
-@close_pop_up()
-async def affiliate_image_small(value:Any = None):
-    f.affiliate_image_small = value if value else d.execute_locator(l.affiliate_image_small) or ''
-        
-@close_pop_up()
-async def available_date(value:Any = None):
-    f.available_date = value if value else d.execute_locator(l.available_date) or ''
+async def affiliate_summary_2(value: Any = None):
+    f.affiliate_summary_2 = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.affiliate_summary_2), 
+        'affiliate_summary_2'
+    )
 
 @close_pop_up()
-async def available_for_order(value:Any = None):
-    f.available_for_order = value if value else d.execute_locator(l.available_for_order) or ''
+async def affiliate_text(value: Any = None):
+    f.affiliate_text = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.affiliate_text), 
+        'affiliate_text'
+    )
 
 @close_pop_up()
-async def available_later(value:Any = None):
-    f.available_later = value if value else d.execute_locator(l.available_later) or ''
+async def affiliate_image_large(value: Any = None):
+    f.affiliate_image_large = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.affiliate_image_large), 
+        'affiliate_image_large'
+    )
 
 @close_pop_up()
-async def available_now(value:Any = None):
-    f.available_now = value if value else d.execute_locator(l.available_now) or ''
+async def affiliate_image_medium(value: Any = None):
+    f.affiliate_image_medium = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.affiliate_image_medium), 
+        'affiliate_image_medium'
+    )
+@close_pop_up()
+async def affiliate_image_small(value: Any = None):
+    f.affiliate_image_small = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.affiliate_image_small), 
+        'affiliate_image_small'
+    )
 
 @close_pop_up()
-async def additional_categories(value: str | list = None) -> Dict:
+async def available_date(value: Any = None):
+    f.available_date = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.available_date), 
+        'available_date'
+    )
+
+@close_pop_up()
+async def available_for_order(value: Any = None):
+    f.available_for_order = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.available_for_order), 
+        'available_for_order'
+    )
+
+@close_pop_up()
+async def available_later(value: Any = None):
+    f.available_later = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.available_later), 
+        'available_later'
+    )
+
+@close_pop_up()
+async def available_now(value: Any = None):
+    f.available_now = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.available_now), 
+        'available_now'
+    )
+
+@close_pop_up()
+async def additional_categories(value: str | list = None) -> dict:
     f.additional_categories = value if value else ''
-        
-@close_pop_up()
-async def cache_default_attribute(value:Any = None):
-    f.cache_default_attribute = value if value else d.execute_locator(l.cache_default_attribute) or ''
 
 @close_pop_up()
-async def cache_has_attachments(value:Any = None):
-    f.cache_default_attribute = value if value else d.execute_locator(l.cache_default_attribute) or ''
+async def cache_default_attribute(value: Any = None):
+    f.cache_default_attribute = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.cache_default_attribute), 
+        'cache_default_attribute'
+    )
 
 @close_pop_up()
-async def cache_is_pack(value:Any = None):
-    f.cache_is_pack = value if value else d.execute_locator(l.cache_is_pack) or ''
+async def cache_has_attachments(value: Any = None):
+    f.cache_has_attachments = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.cache_default_attribute), 
+        'cache_has_attachments'
+    )
 
 @close_pop_up()
-async def condition(value:Any = None):
-    f.condition = value if value else d.execute_locator(l.condition) or ''     
-        
-@close_pop_up()
-async def customizable(value:Any = None):
-    f.customizable = value if value else d.execute_locator(l.customizable) or ''
+async def cache_is_pack(value: Any = None):
+    f.cache_is_pack = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.cache_is_pack), 
+        'cache_is_pack'
+    )
 
 @close_pop_up()
-async def date_add(value:Any = None):
-    f.customizable = value if value else d.execute_locator(l.date_add) or ''
+async def condition(value: Any = None):
+    f.condition = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.condition), 
+        'condition'
+    )
 
 @close_pop_up()
-async def date_upd(value:Any = None):
-    f.date_upd = value if value else d.execute_locator(l.date_upd) or ''
-    
-@close_pop_up()
-async def delivery_out_stock(value:Any = None):
-    f.delivery_out_stock = value if value else d.execute_locator(l.delivery_out_stock) or ''
+async def condition(value: Any = None):
+    f.condition = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.condition), 
+        'condition'
+    )
 
 @close_pop_up()
-async def depth(value:Any = None):
-    f.depth = value if value else d.execute_locator(l.depth) or ''
-        
-@close_pop_up()
-async def description(value:Any = None):
-    f.description = value if value else d.execute_locator(l.description) or ''
-
-
-@close_pop_up()
-async def description_short(value:Any = None):
-    f.description_short = value if value else d.execute_locator(l.description_short) or ''
+async def customizable(value: Any = None):
+    f.customizable = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.customizable), 
+        'customizable'
+    )
 
 @close_pop_up()
-async def id_category_default(value:Any = None):
-    f.id_category_default = s.current_scenario.get("presta_categories", {}).get("default_category", '')
+async def date_add(value: Any = None):
+    f.date_add = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.date_add), 
+        'date_add'
+    )
 
 @close_pop_up()
-async def id_default_combination(value:Any = None):
-    f.id_default_combination = value if value else d.execute_locator(l.id_default_combination) or ''
+async def date_upd(value: Any = None):
+    f.date_upd = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.date_upd), 
+        'date_upd'
+    )
 
 @close_pop_up()
-async def id_product(value:Any = None):
+async def delivery_out_stock(value: Any = None):
+    f.delivery_out_stock = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.delivery_out_stock), 
+        'delivery_out_stock'
+    )
+
+@close_pop_up()
+async def depth(value: Any = None):
+    f.depth = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.depth), 
+        'depth'
+    )
+
+@close_pop_up()
+async def description(value: Any = None):
+    f.description = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.description), 
+        'description'
+    )
+
+@close_pop_up()
+async def description_short(value: Any = None):
+    f.description_short = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.description_short), 
+        'description_short'
+    )
+
+@close_pop_up()
+async def id_category_default(value: Any = None):
+    f.id_category_default = value
+
+@close_pop_up()
+async def id_default_combination(value: Any = None):
+    f.id_default_combination = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.id_default_combination), 
+        'id_default_combination'
+    )
+
+@close_pop_up()
+async def id_product(value: Any = None):
     if value:
-       f.id_product = value
-       return
-    if not f.id_supplier:
-        f.id_supplier = d.execute_locator(l.id_supplier)  or None
-    if f.id_supplier:
-        f.id_product = supplier_prefix+'-'+f.id_supplier
-    ...
+        f.id_product = value
+        return
+    f.id_supplier = f.id_supplier or d.execute_locator(l.id_supplier)
+    f.id_product = f"{supplier_prefix}-{f.id_supplier}" if f.id_supplier else None
+
 @close_pop_up()
-async def locale(value:Any = None):
-    i18n = d.locale
-    if not i18n:
+async def locale(value: Any = None):
+    i18n = value or d.locale
+    if not i18n and f.name['language'][0]['value']:
         text = f.name['language'][0]['value']
         i18n = detect(text)
-        ...
     f.locale = i18n
 
-    ...
 @close_pop_up()
-async def id_default_image(value:Any = None):
-    f.id_default_image = value if value else d.execute_locator(l.id_default_image) or ''
+async def id_default_image(value: Any = None):
+    f.id_default_image = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.id_default_image), 
+        'id_default_image'
+    )
 
 @close_pop_up()
-async def ean13(value:Any = None):
-    f.id_default_image = value if value else d.execute_locator(l.id_default_image) or ''
+async def ean13(value: Any = None):
+    f.ean13 = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.ean13), 
+        'ean13'
+    )
 
 @close_pop_up()
-async def ecotax(value:Any = None):
-    f.ecotax = value if value else d.execute_locator(l.ecotax) or ''
+async def ecotax(value: Any = None):
+    f.ecotax = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.ecotax), 
+        'ecotax'
+    )
 
 @close_pop_up()
-async def height(value:Any = None):
-    f.height = value if value else d.execute_locator(l.height) or ''
+async def height(value: Any = None):
+    f.height = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.height), 
+        'height'
+    )
 
 @close_pop_up()
-async def how_to_use(value:Any = None):
-    f.how_to_use = value if value else d.execute_locator(l.how_to_use) or ''
+async def how_to_use(value: Any = None):
+    f.how_to_use = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.how_to_use), 
+        'how_to_use'
+    )
 
 @close_pop_up()
-async def id_manufacturer(value:Any = None):
-    f.id_manufacturer = value if value else d.execute_locator(l.id_manufacturer) or ''
-    ...
-@close_pop_up()    
-async def id_supplier(value:Any = None):
-    f.id_manufacturer = value if value else d.execute_locator(l.id_manufacturer) or ''
-        
-@close_pop_up()
-async def id_tax(value:Any = None):
-    f.id_manufacturer = value if value else d.execute_locator(l.id_manufacturer) or ''
+async def id_manufacturer(value: Any = None):
+    f.id_manufacturer = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.id_manufacturer), 
+        'id_manufacturer'
+    )
 
 @close_pop_up()
-async def id_type_redirected(value:Any = None):
-    f.id_type_redirected = value if value else d.execute_locator(l.id_type_redirected) or ''
+async def id_supplier(value: Any = None):
+    f.id_supplier = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.id_supplier), 
+        'id_supplier'
+    )
 
 @close_pop_up()
-async def images_urls(value:Any = None):
-    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
-
-
-@close_pop_up()
-async def indexed(value:Any = None):
-    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
-
-@close_pop_up()
-async def ingredients(value:Any = None):
-    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
+async def id_tax(value: Any = None):
+    f.id_tax = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.id_tax), 
+        'id_tax'
+    )
 
 @close_pop_up()
-async def meta_description(value:Any = None):
-    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
+async def id_type_redirected(value: Any = None):
+    f.id_type_redirected = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.id_type_redirected), 
+        'id_type_redirected'
+    )
 
 @close_pop_up()
-async def meta_keywords(value:Any = None):
-    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
-        
+async def images_urls(value: Any = None):
+    f.images_urls = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.images_urls), 
+        'images_urls'
+    )
 @close_pop_up()
-async def meta_title(value:Any = None):
-    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
-        
-@close_pop_up()    
-async def is_virtual(value:Any = None):
-    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
-
-@close_pop_up()
-async def isbn(value:Any = None):
-    f.images_urls = value if value else d.execute_locator(l.images_urls) or ''
-
-@close_pop_up()
-async def link_rewrite(value:Any = None) -> str:
-    f.link_rewrite = value if value else d.execute_locator(l.link_rewrite) or ''
-   
-@close_pop_up()
-async def location(value:Any = None):
-    f.location = value if value else d.execute_locator(l.location) or ''
-
-@close_pop_up()
-async def low_stock_alert(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def low_stock_threshold(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def minimal_quantity(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def mpn(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def name(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-        
-    
-@close_pop_up()
-async def online_only(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-        
-@close_pop_up()
-async def on_sale(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-        
-@close_pop_up()
-async def out_of_stock(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def pack_stock_type(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def price(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def product_type(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()    
-async def quantity(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def quantity_discount(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def redirect_type(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def reference(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def show_condition(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def show_price(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def state(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def text_fields(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def unit_price_ratio(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def unity(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def upc(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def uploadable_files(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def default_image_url(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def visibility(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-        
-
-@close_pop_up()
-async def weight(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def wholesale_price(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def width(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-
-@close_pop_up()
-async def specification(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
+async def indexed(value: Any = None):
+    f.indexed = set_field_value(
+        value, 
+        lambda: d.execute_locator(l.indexed), 
+        'indexed'
+    )
 
 
 @close_pop_up()
-async def link(value:Any = None):
-    f.low_stock_alert = value if value else d.execute_locator(l.low_stock_alert) or ''
-        
+async def ingredients(value: Any = None):
+    f.images_urls = set_field_value(
+        value,
+        lambda: d.execute_locator(l.images_urls),
+        'images_urls'
+    )
 
-async def byer_protection(value:Any = None):
-    f.byer_protection = value if value else d.execute_locator(l.byer_protection) or ''
-        
+@close_pop_up()
+async def meta_description(value: Any = None):
+    f.meta_description = set_field_value(
+        value,
+        lambda: d.execute_locator(l.meta_description),
+        'meta_description'
+    )
 
-async def customer_reviews(value:Any = None):
-    f.customer_reviews = value if value else d.execute_locator(l.customer_reviews) or ''
+@close_pop_up()
+async def meta_keywords(value: Any = None):
+    f.meta_keywords = set_field_value(
+        value,
+        lambda: d.execute_locator(l.meta_keywords),
+        'meta_keywords'
+    )
 
-async def link_to_video(value:Any = None):
-    f.link_to_video = value if value else d.execute_locator(l.link_to_video) or ''
+@close_pop_up()
+async def meta_title(value: Any = None):
+    f.meta_title = set_field_value(
+        value,
+        lambda: d.execute_locator(l.meta_title),
+        'meta_title'
+    )
 
-async def image_local_saved_path(value:Any = None):
-    f.image_local_saved_path = value if value else d.execute_locator(l.image_local_saved_path) or ''
+@close_pop_up()
+async def is_virtual(value: Any = None):
+    f.is_virtual = set_field_value(
+        value,
+        lambda: d.execute_locator(l.is_virtual),
+        'is_virtual'
+    )
 
-async def video_local_saved_path(value:Any = None):
-    f.video_local_saved_path = value if value else d.execute_locator(l.video_local_saved_path) or ''
-        
-        
+@close_pop_up()
+async def isbn(value: Any = None):
+    f.isbn = set_field_value(
+        value,
+        lambda: d.execute_locator(l.isbn),
+        'isbn'
+    )
 
+
+@close_pop_up()
+async def link_rewrite(value: Any = None) -> str:
+    f.link_rewrite = set_field_value(
+        value,
+        lambda: d.execute_locator(l.link_rewrite),
+        'link_rewrite'
+    )
+
+@close_pop_up()
+async def location(value: Any = None):
+    f.location = set_field_value(
+        value,
+        lambda: d.execute_locator(l.location),
+        'location'
+    )
+
+@close_pop_up()
+async def low_stock_alert(value: Any = None):
+    f.low_stock_alert = set_field_value(
+        value,
+        lambda: d.execute_locator(l.low_stock_alert),
+        'low_stock_alert'
+    )
+
+@close_pop_up()
+async def low_stock_threshold(value: Any = None):
+    f.low_stock_threshold = set_field_value(
+        value,
+        lambda: d.execute_locator(l.low_stock_threshold),
+        'low_stock_threshold'
+    )
+
+@close_pop_up()
+async def minimal_quantity(value: Any = None):
+    f.minimal_quantity = set_field_value(
+        value,
+        lambda: d.execute_locator(l.minimal_quantity),
+        'minimal_quantity'
+    )
+
+@close_pop_up()
+async def mpn(value: Any = None):
+    f.mpn = set_field_value(
+        value,
+        lambda: d.execute_locator(l.mpn),
+        'mpn'
+    )
+
+@close_pop_up()
+async def name(value: Any = None):
+    f.name = set_field_value(
+        value,
+        lambda: d.execute_locator(l.name),
+        'name'
+    )
+
+@close_pop_up()
+async def online_only(value: Any = None):
+    f.online_only = set_field_value(
+        value,
+        lambda: d.execute_locator(l.online_only),
+        'online_only'
+    )
+
+@close_pop_up()
+async def on_sale(value: Any = None):
+    f.on_sale = set_field_value(
+        value,
+        lambda: d.execute_locator(l.on_sale),
+        'on_sale'
+    )
+
+@close_pop_up()
+async def out_of_stock(value: Any = None):
+    f.out_of_stock = set_field_value(
+        value,
+        lambda: d.execute_locator(l.out_of_stock),
+        'out_of_stock'
+    )
+
+@close_pop_up()
+async def pack_stock_type(value: Any = None):
+    f.pack_stock_type = set_field_value(
+        value,
+        lambda: d.execute_locator(l.pack_stock_type),
+        'pack_stock_type'
+    )
+
+@close_pop_up()
+async def price(value: Any = None):
+    f.price = set_field_value(
+        value,
+        lambda: d.execute_locator(l.price),
+        'price'
+    )
+
+@close_pop_up()
+async def product_type(value: Any = None):
+    f.product_type = set_field_value(
+        value,
+        lambda: d.execute_locator(l.product_type),
+        'product_type'
+    )
+
+@close_pop_up()
+async def quantity(value: Any = None):
+    f.quantity = set_field_value(
+        value,
+        lambda: d.execute_locator(l.quantity),
+        'quantity'
+    )
+
+@close_pop_up()
+async def quantity_discount(value: Any = None):
+    f.quantity_discount = set_field_value(
+        value,
+        lambda: d.execute_locator(l.quantity_discount),
+        'quantity_discount'
+    )
+
+@close_pop_up()
+async def redirect_type(value: Any = None):
+    f.redirect_type = set_field_value(
+        value,
+        lambda: d.execute_locator(l.redirect_type),
+        'redirect_type'
+    )
+
+@close_pop_up()
+async def reference(value: Any = None):
+    f.reference = set_field_value(
+        value,
+        lambda: d.execute_locator(l.reference),
+        'reference'
+    )
+
+@close_pop_up()
+async def show_condition(value: Any = None):
+    f.show_condition = set_field_value(
+        value,
+        lambda: d.execute_locator(l.show_condition),
+        'show_condition'
+    )
+
+@close_pop_up()
+async def show_price(value: Any = None):
+    f.show_price = set_field_value(
+        value,
+        lambda: d.execute_locator(l.show_price),
+        'show_price'
+    )
+
+@close_pop_up()
+async def state(value: Any = None):
+    f.state = set_field_value(
+        value,
+        lambda: d.execute_locator(l.state),
+        'state'
+    )
+
+@close_pop_up()
+async def text_fields(value: Any = None):
+    f.text_fields = set_field_value(
+        value,
+        lambda: d.execute_locator(l.text_fields),
+        'text_fields'
+    )
+
+@close_pop_up()
+async def unit_price_ratio(value: Any = None):
+    f.unit_price_ratio = set_field_value(
+        value,
+        lambda: d.execute_locator(l.unit_price_ratio),
+        'unit_price_ratio'
+    )
+
+
+@close_pop_up()
+async def unity(value: Any = None):
+    f.unity = set_field_value(
+        value,
+        lambda: d.execute_locator(l.unity),
+        'unity'
+    )
+
+@close_pop_up()
+async def upc(value: Any = None):
+    f.upc = set_field_value(
+        value,
+        lambda: d.execute_locator(l.upc),
+        'upc'
+    )
+
+@close_pop_up()
+async def uploadable_files(value: Any = None):
+    f.uploadable_files = set_field_value(
+        value,
+        lambda: d.execute_locator(l.uploadable_files),
+        'uploadable_files'
+    )
+
+@close_pop_up()
+async def default_image_url(value: Any = None):
+    f.default_image_url = set_field_value(
+        value,
+        lambda: d.execute_locator(l.default_image_url),
+        'default_image_url'
+    )
+
+@close_pop_up()
+async def visibility(value: Any = None):
+    f.visibility = set_field_value(
+        value,
+        lambda: d.execute_locator(l.visibility),
+        'visibility'
+    )
+
+@close_pop_up()
+async def weight(value: Any = None):
+    f.weight = set_field_value(
+        value,
+        lambda: d.execute_locator(l.weight),
+        'weight'
+    )
+
+@close_pop_up()
+async def wholesale_price(value: Any = None):
+    f.wholesale_price = set_field_value(
+        value,
+        lambda: d.execute_locator(l.wholesale_price),
+        'wholesale_price'
+    )
+
+@close_pop_up()
+async def width(value: Any = None):
+    f.width = set_field_value(
+        value,
+        lambda: d.execute_locator(l.width),
+        'width'
+    )
+
+@close_pop_up()
+async def specification(value: Any = None):
+    f.specification = set_field_value(
+        value,
+        lambda: d.execute_locator(l.specification),
+        'specification'
+    )
+
+@close_pop_up()
+async def link(value: Any = None):
+    f.link = set_field_value(
+        value,
+        lambda: d.execute_locator(l.link),
+        'link'
+    )
+
+@close_pop_up()
+async def byer_protection(value: Any = None):
+    f.byer_protection = set_field_value(
+        value,
+        lambda: d.execute_locator(l.byer_protection),
+        'byer_protection'
+    )
+
+@close_pop_up()
+async def customer_reviews(value: Any = None):
+    f.customer_reviews = set_field_value(
+        value,
+        lambda: d.execute_locator(l.customer_reviews),
+        'customer_reviews'
+    )
+
+@close_pop_up()
+async def link_to_video(value: Any = None):
+    f.link_to_video = set_field_value(
+        value,
+        lambda: d.execute_locator(l.link_to_video),
+        'link_to_video'
+    )
+
+@close_pop_up()
+async def local_saved_image(value: Any = None):
+    f.local_saved_image = set_field_value(
+        value,
+        lambda: d.execute_locator(l.local_saved_image),
+        'local_saved_image'
+    )
+
+@close_pop_up()
+async def local_saved_video(value: Any = None):
+    f.local_saved_video = set_field_value(
+        value,
+        lambda: d.execute_locator(l.local_saved_video),
+        'local_saved_video'
+    )

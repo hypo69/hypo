@@ -125,7 +125,7 @@ def post_event(d: Driver, event: SimpleNamespace) -> bool:
     Examples:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(image_local_saved_path='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
         >>> promote_post(driver, category, products)
     """
     if not post_title(d, event.title): 

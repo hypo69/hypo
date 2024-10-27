@@ -31,9 +31,6 @@ from src.utils.image import save_png_from_url, save_png
 from src.utils import pprint
 from src.logger import logger
 
-locators = j_loads_ns(gs.path.src / 'suppliers' / 'morlevi' / 'locators' / 'product.json')
-
-
 class Mexiron:
     """! Handles Morlevi product extraction, parsing, and saving processes."""
     
@@ -135,23 +132,27 @@ class Mexiron:
             if not save_text_file(f.product_title, base_path  / 'product_titles.txt', mode='a'):
                logger.debug(f"не сохранилось имя товара {f.product_title=} \nв файл {base_path}/product_titles.txt")
                ...
+
+            # prepare products_list for ask gemini
             products_list.append({'product_id':f.product_id,
-                                        'product_title':f.product_title,
-                                        'product_description':f.product_description,
-                                        'image_local_saved_path':f.image_local_saved_path})
+                                        'name':f.product_title,
+                                        'description':f.description_short + f.description,
+                                        'specification':f.specification,
+                                        'local_saved_image':f.local_saved_image})
+
             if not j_dumps(products_list, base_path / 'products.json', ensure_ascii=False):
                 logger.debug(f"не сохранился файл {f.product_id}.json")
                 ...
 
 
-        def ask_and_repair(q:str, attemts:int = 3):
+        def ask_and_repair(products_list:str, attemts:int = 3):
             if attemts < 1:
                 return
-            response = self.model.ask(q)
+            response = self.model.ask(products_list)
             if not response:
                 logger.error("no response from gemini")
                 ...
-                ask_and_repair(attemts - 1)
+                ask_and_repair(products_list,attemts - 1)
 
 
             data: SimpleNamespace = j_loads_ns(response) # <- вернет False в случае ошибки
@@ -159,26 +160,30 @@ class Mexiron:
             if not data:
                 logger.error(f"Error in data from gemini:{data}")
                 ...
-                ask_and_repair(attemts - 1)
+                ask_and_repair(products_list,attemts - 1)
 
                 if not j_dumps(data, base_path / 'ai' / f'{gs.now}.json', ensure_ascii=False): # <- певая проверка валидности полученных данных
                     ...
-                    ask_and_repair(attemts - 1)
+                    ask_and_repair(products_list, attemts - 1)
 
             try:
                 if hasattr(data,'ru'):
                     ru:SimpleNamespace = data.ru
                     if not ru:
-                        ask_and_repair(attemts-1)
+                        ...
+                        ask_and_repair(products_list, attemts-1)
                 else:
-                    ask_and_repair(attemts-1)
+                    ...
+                    ask_and_repair(products_list, attemts-1)
 
                 if hasattr(data,'he'):
                     he:SimpleNamespace = data.he
                     if not he:
-                        ask_and_repair(attemts-1)
+                        ...
+                        ask_and_repair(products_list, attemts-1)
                 else:
-                    ask_and_repair(attemts-1)
+                    ...
+                    ask_and_repair(products_list, attemts-1)
                 return ru, he
             except Exception as ex:
                 logger.debug(f"ошибка словаря")
@@ -194,7 +199,7 @@ class Mexiron:
         setattr(ru, 'language', 'ru')
         setattr(ru, 'currency', 'ils')
         setattr(ru, 'price', price)
-        service_product_description_ru = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'service_as_product_ru.txt')}
+        service_description_ru = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'service_as_product_ru.txt')}
             \n ----------------- \n
             Общая цена за все: {price} шек.
             Для защитников страны — солдат ЦАХАЛ — специальные цены на все услуги! Спасибо вам за то, что вы защищаете нашу страну.
@@ -202,8 +207,8 @@ class Mexiron:
         ru.products.append(SimpleNamespace (**{
             "product_id":"service",
             "product_title":"Сервисное обслуживание:",
-            "product_description":service_product_description_ru,
-            "image_local_saved_path": random.choice(service_images_path),
+            "description":service_description_ru,
+            "local_saved_image": random.choice(service_images_path),
             "language":"ru",
             }))
         j_dumps(ru, base_path / f'{self.timestamp}_ru.json', ensure_ascii=False)
@@ -212,7 +217,7 @@ class Mexiron:
         setattr(he, 'language', 'he')
         setattr(he, 'currency', 'ils')
         setattr(he, 'price', price)
-        service_product_description_he = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' / 'service_as_product_he.txt')}
+        service_description_he = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' / 'service_as_product_he.txt')}
             \n ----------------- \n
            מחיר כולל הכל {price} ש''ח
            . 
@@ -221,8 +226,8 @@ class Mexiron:
         he.products.append(SimpleNamespace (**{
             "product_id":"service",
             "product_title":"שרות",
-            "product_description":service_product_description_he,
-            "image_local_saved_path": random.choice(service_images_path),
+            "description":service_description_he,
+            "local_saved_image": random.choice(service_images_path),
             "language":"he",
             }))
         j_dumps(he, base_path / f'{self.timestamp}_he.json', ensure_ascii=False)
@@ -255,8 +260,8 @@ class Mexiron:
         return {
             'product_title': str(f.name['language'][0]['value']).strip(),
             'product_id': f.id_product,
-            'product_description': f.description['language'][0]['value'].strip(),
-            'image_local_saved_path': str(image_path),
+            'description': f.description['language'][0]['value'].strip(),
+            'local_saved_image': str(image_path),
         }
 
 

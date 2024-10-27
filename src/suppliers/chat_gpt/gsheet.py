@@ -245,8 +245,8 @@ class GptGs(SpreadSheet):
         try:
             headers = [
                 'product_id', 'app_sale_price', 'original_price', 'sale_price', 'discount',
-                'product_main_image_url', 'image_local_saved_path', 'product_small_image_urls',
-                'product_video_url', 'video_local_saved_path', 'first_level_category_id',
+                'product_main_image_url', 'local_saved_image', 'product_small_image_urls',
+                'product_video_url', 'local_saved_video', 'first_level_category_id',
                 'first_level_category_name', 'second_level_category_id', 'second_level_category_name',
                 'target_sale_price', 'target_sale_price_currency', 'target_app_sale_price_currency',
                 'target_original_price_currency', 'original_price_currency', 'product_title',
@@ -262,10 +262,10 @@ class GptGs(SpreadSheet):
                 str(_.get('sale_price')),
                 str(_.get('discount')),
                 str(_.get('product_main_image_url')),
-                str(_.get('image_local_saved_path')),
+                str(_.get('local_saved_image')),
                 ', '.join(map(str, _.get('product_small_image_urls', []))),
                 str(_.get('product_video_url')),
-                str(_.get('video_local_saved_path')),
+                str(_.get('local_saved_video')),
                 str(_.get('first_level_category_id')),
                 str(_.get('first_level_category_name')),
                 str(_.get('second_level_category_id')),
@@ -335,7 +335,7 @@ class GptGs(SpreadSheet):
                 updates.append({'range': f'A{index}', 'values': [[str(_.get('product_id',''))]]})
                 updates.append({'range': f'B{index}', 'values': [[str(_.get('product_title',''))]]})
                 updates.append({'range': f'C{index}', 'values': [[str(_.get('title',''))]]})
-                updates.append({'range': f'D{index}', 'values': [[str(_.get('image_local_saved_path',''))]]})
+                updates.append({'range': f'D{index}', 'values': [[str(_.get('local_saved_image',''))]]})
                 updates.append({'range': f'D{index}', 'values': [[str(_.get('product_video_url',''))]]})
                 updates.append({'range': f'F{index}', 'values': [[str(_.get('original_price',''))]]})
                 updates.append({'range': f'F{index}', 'values': [[str(_.get('app_sale_price',''))]]})

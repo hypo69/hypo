@@ -110,7 +110,7 @@ def pprint(print_data: str | list | dict | Path | Any = None,
             dictionary, list, object, or file path. Defaults to `None`.
         depth (int, optional): Depth of nested structures to print. Defaults to 4.
         max_lines (int, optional): Max lines to print from a file. Defaults to 10.
-        text_color (str, optional): Text color using ANSI codes. Defaults to WHITE.
+        text_color (str, optional): Text color using ANSI codes. Defaults to WHITE. 
         bg_color (str, optional): Background color using ANSI codes. Defaults to "" (no background).
         font_style (str, optional): Font style using ANSI codes. Defaults to "" (no style).
         *args: Additional positional arguments passed to print or pretty_print.

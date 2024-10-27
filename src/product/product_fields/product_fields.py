@@ -2568,14 +2568,14 @@ class ProductFields:
             return    
 
     @property
-    def image_local_saved_path(self):
+    def local_saved_image(self):
         """  <sub>*[property]*</sub>   __prod_name__
         Путь к картинке, сохраненной на диске
         """
         return self.presta_fields_dict['images_urls']  or None
 
-    @image_local_saved_path.setter
-    def image_local_saved_path(self, value:str = None) -> bool:
+    @local_saved_image.setter
+    def local_saved_image(self, value:str = None) -> bool:
         """  <sub>*[setter]* local_saved_image</sub>   """
         ...
         try:
@@ -2588,13 +2588,13 @@ class ProductFields:
             return    
 
     @property
-    def video_local_saved_path(self):
+    def local_saved_video(self):
         """  <sub>*[property]*</sub>   __prod_name__
             путь к видео , сохраннёному на диске"""
         return self.presta_fields_dict['images_urls']  or None
 
-    @video_local_saved_path.setter
-    def video_local_saved_path(self, value:str = None) -> bool:
+    @local_saved_video.setter
+    def local_saved_video(self, value:str = None) -> bool:
         """  <sub>*[setter]* local_saved_image</sub>   """
         ...
         try:

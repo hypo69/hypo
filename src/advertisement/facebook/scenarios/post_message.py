@@ -67,7 +67,7 @@ def upload_media(d: Driver, media: List[SimpleNamespace], no_video: bool = False
 
     Examples:
         >>> driver = Driver(...)
-        >>> products = [SimpleNamespace(image_local_saved_path='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
         >>> upload_media(driver, products)
         True
     """
@@ -82,7 +82,7 @@ def upload_media(d: Driver, media: List[SimpleNamespace], no_video: bool = False
 
     # Iterate over media and upload media.
     for media in media_list:
-        media_path = media.video_local_saved_path if hasattr(media, 'video_local_saved_path') and not no_video else media.image_local_saved_path
+        media_path = media.local_saved_video if hasattr(media, 'local_saved_video') and not no_video else media.local_saved_image
         try:
             # Upload the media file.
             if d.execute_locator(locator = locator.foto_video_input, message = media_path , timeout = 20):
@@ -203,7 +203,7 @@ def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleName
     Examples:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(image_local_saved_path='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
         >>> promote_post(driver, category, products)
     """
     if not post_title(d, category): 
@@ -288,7 +288,7 @@ def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str
 
     Examples:
         >>> driver = Driver(...)
-        >>> products = [SimpleNamespace(image_local_saved_path='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
         >>> upload_media(driver, products)
         True
     """
@@ -308,9 +308,9 @@ def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str
     for m in media_list:
         if isinstance(m, SimpleNamespace):
             try:
-                media_path = m.video_local_saved_path if hasattr(m, 'video_local_saved_path') and not no_video else m.image_local_saved_path
+                media_path = m.local_saved_video if hasattr(m, 'local_saved_video') and not no_video else m.local_saved_image
             except Exception as ex:
-                logger.debug(f"Ошибка в поле 'image_local_saved_path'")
+                logger.debug(f"Ошибка в поле 'local_saved_image'")
                 ...
         elif isinstance(m, (str, Path)):
             media_path = m
@@ -380,8 +380,8 @@ def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_lis
                 if hasattr(product, 'product_title'):
                     message += f"{product.product_title}\n"
 
-                if hasattr(product, 'product_description'):
-                    message += f'{product.product_description}\n'
+                if hasattr(product, 'description'):
+                    message += f'{product.description}\n'
 
                 if hasattr(product, 'original_price'):
                     message += f"{getattr(local_units.original_price, lang)}: {product.original_price} {product.target_original_price_currency}\n"
@@ -404,8 +404,8 @@ def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_lis
                 if hasattr(product, 'product_title'):
                     message += f"\n{product.product_title}"
 
-                if hasattr(product, 'product_description'):
-                    message += f'{product.product_description}\n'
+                if hasattr(product, 'description'):
+                    message += f'{product.description}\n'
 
                 if hasattr(product, 'original_price'):
                     message += f"\n {product.target_original_price_currency} {product.original_price} :{getattr(local_units.original_price, lang)}"
@@ -485,7 +485,7 @@ def post_message(d: Driver, message: SimpleNamespace,  no_video: bool = False,  
     Examples:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(image_local_saved_path='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
         >>> promote_post(driver, category, products)
     """
     if not post_title(d, message): 

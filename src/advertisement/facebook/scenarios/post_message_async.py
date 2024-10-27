@@ -71,7 +71,7 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video:bool
 
     Examples:
         >>> driver = Driver(...)
-        >>> products = [SimpleNamespace(image_local_saved_path='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
         >>> await upload_media(driver, products)
         True
     """
@@ -86,7 +86,7 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video:bool
 
     # Iterate over products and upload media.
     for product in products:
-        media_path = product.video_local_saved_path if hasattr(product, 'video_local_saved_path') and not no_video else product.image_local_saved_path
+        media_path = product.local_saved_video if hasattr(product, 'local_saved_video') and not no_video else product.local_saved_image
         try:
             # Upload the media file.
             if d.execute_locator(locator.foto_video_input, media_path):
@@ -202,7 +202,7 @@ async def promote_post(d: Driver, category: SimpleNamespace, products: List[Simp
     Examples:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(image_local_saved_path='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
         >>> await promote_post(driver, category, products)
     """
     if not post_title(d, category): 

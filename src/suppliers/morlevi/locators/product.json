@@ -732,7 +732,7 @@
   "description_short": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "(//div[contains(@class, 'description')])[2]//div",
+    "selector": "(//div[contains(@class, 'description')])[2]//p | (//div[contains(@class, 'description')])[2]//div",
     "if_list": "all",
     "use_mouse": false,
     "event": null,

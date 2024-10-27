@@ -39,9 +39,9 @@ def main():
         for product in products:
             print(f"Product ID: {product.product_id}")
             print(f"Affiliate Link: {product.promotion_link}")
-            print(f"Local Image Path: {product.image_local_saved_path}")
-            if product.video_local_saved_path:
-                print(f"Local Video Path: {product.video_local_saved_path}")
+            print(f"Local Image Path: {product.local_saved_image}")
+            if product.local_saved_video:
+                print(f"Local Video Path: {product.local_saved_video}")
             print()
     else:
         print("No affiliate products found.")
@@ -87,9 +87,9 @@ if __name__ == "__main__":
       for product in products:
           print(f"Product ID: {product.product_id}")
           print(f"Affiliate Link: {product.promotion_link}")
-          print(f"Local Image Path: {product.image_local_saved_path}")
-          if product.video_local_saved_path:
-              print(f"Local Video Path: {product.video_local_saved_path}")
+          print(f"Local Image Path: {product.local_saved_image}")
+          if product.local_saved_video:
+              print(f"Local Video Path: {product.local_saved_video}")
           print()
   else:
       print("No affiliate products found.")
@@ -135,9 +135,9 @@ def main():
         for product in products:
             print(f"Product ID: {product.product_id}")
             print(f"Affiliate Link: {product.promotion_link}")
-            print(f"Local Image Path: {product.image_local_saved_path}")
-            if product.video_local_saved_path:
-                print(f"Local Video Path: {product.video_local_saved_path}")
+            print(f"Local Image Path: {product.local_saved_image}")
+            if product.local_saved_video:
+                print(f"Local Video Path: {product.local_saved_video}")
             print()
     else:
         print("No affiliate products found.")

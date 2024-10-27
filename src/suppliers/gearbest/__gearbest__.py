@@ -215,7 +215,7 @@ def grab_product_page(s):
         _byer_protection = _d.execute_locator(_['product_byer_protection_'])
         return _byer_protection
     def get_description():
-        _description = _d.execute_locator(_['product_description_'])
+        _description = _d.execute_locator(_['description_'])
         return _description
     def get_specification():
         specification = _d.execute_locator(_['product_specification_'])

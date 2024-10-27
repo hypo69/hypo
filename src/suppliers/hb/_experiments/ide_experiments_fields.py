@@ -1170,9 +1170,9 @@ async def get_price(_d, _l) -> str | float:
 
 def specification():
     #f["product_specification"] = _d.execute_locator(_l["specification_locator"])
-    f["product_specification"] = f["product_description"]
+    f["product_specification"] = f["description"]
 def summary():
-    f["summary"] = f["product_description"]
+    f["summary"] = f["description"]
 def delivery():
 
     #__ = _l["dynamic_shipping_block"]

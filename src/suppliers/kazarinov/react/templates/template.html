@@ -48,8 +48,8 @@
             {% for product in products %}
             <div class="col-md-6 product-card">
                 <h3>{{ product.product_title }}</h3>
-                <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" class="img-fluid" />
-                <p>{{ product.product_description }}</p>
+                <img src="{{ product.local_saved_image }}" alt="{{ product.product_title }}" class="img-fluid" />
+                <p>{{ product.description }}</p>
                 <p><strong>Характеристики:</strong> {{ product.specs }}</p>
             </div>
             {% endfor %}

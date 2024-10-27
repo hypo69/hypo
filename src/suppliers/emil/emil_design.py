@@ -101,7 +101,7 @@ class EmilDesign:
 
             # Process the response into a structured format
             res_ns: SimpleNamespace = j_loads_ns(response)
-            setattr(res_ns, 'image_local_saved_path', str(Path(images_dir / image_path)))
+            setattr(res_ns, 'local_saved_image', str(Path(images_dir / image_path)))
             data.append(res_ns)
             j_dumps(data, output_file)
             updated_images_list.append(image_path)
@@ -125,7 +125,7 @@ class EmilDesign:
             setattr(message, 'title', f"{m.parent}\n{m.category}")
             setattr(message, 'description', m.description)
             message.products = SimpleNamespace()
-            setattr(message.products, 'image_local_saved_path', [m.image_local_saved_path])
+            setattr(message.products, 'local_saved_image', [m.local_saved_image])
            
             post_message(d, message, without_captions=True)
             ...

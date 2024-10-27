@@ -2,15 +2,20 @@
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """
-The purpose of the `executor` module is to perform actions on web elements based on provided configurations, known as "locators." These configurations (or "locators") are dictionaries containing information on how to locate and interact with elements on a web page. The module provides the following functionalities:
+The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 
+known as "locators." These configurations (or "locators") are dictionaries containing information on how to locate and interact with elements on a web page. The module provides the following functionalities:
 
-1. **Parsing and Handling Locators**: Converts dictionaries with configurations into `SimpleNamespace` objects, allowing for flexible manipulation of locator data.
+1. **Parsing and Handling Locators**: Converts dictionaries with configurations into `SimpleNamespace` objects, 
+allowing for flexible manipulation of locator data.
 
-2. **Interacting with Web Elements**: Depending on the provided data, the module can perform various actions such as clicks, sending messages, executing events, and retrieving attributes from web elements.
+2. **Interacting with Web Elements**: Depending on the provided data, the module can perform various actions such as clicks, 
+sending messages, executing events, and retrieving attributes from web elements.
 
-3. **Error Handling**: The module supports continuing execution in case of an error, allowing for the processing of web pages that might have unstable elements or require a special approach.
+3. **Error Handling**: The module supports continuing execution in case of an error, allowing for the processing of web pages 
+that might have unstable elements or require a special approach.
 
-4. **Support for Multiple Locator Types**: Handles both single and multiple locators, enabling the identification and interaction with one or several web elements simultaneously.
+4. **Support for Multiple Locator Types**: Handles both single and multiple locators, enabling the identification and interaction 
+with one or several web elements simultaneously.
 
 This module provides flexibility and versatility in working with web elements, enabling the automation of complex web interaction scenarios.
 """
@@ -65,7 +70,7 @@ class ExecuteLocator:
         "PARTIAL_LINK_TEXT": By.PARTIAL_LINK_TEXT,
         "CLASS_NAME": By.CLASS_NAME,
     }
-
+    mode = 'debug'
     def __init__(self, driver, *args, **kwargs):
         """ Locator handler
         @param driver: `src.webdriver.Driver`
@@ -76,7 +81,7 @@ class ExecuteLocator:
     def execute_locator(
     self,
     locator: dict,
-    timeout:float = 5 , 
+    timeout:float = 0, 
     timeout_for_event: str = 'presence_of_element_located',
     message: str = None,
     typing_speed: float = 0,
@@ -190,10 +195,16 @@ class ExecuteLocator:
             if all([locator.event, locator.attribute, locator.mandatory]) is None:
                 return None
 
-            by = locator.by.upper()
-            event = locator.event
-            attribute = self.evaluate_locator(locator.attribute) if locator.attribute else None
-            locator.by = self.by_mapping.get(by, by)
+            try:
+                by = locator.by.upper()
+                event = locator.event
+                attribute = self.evaluate_locator(locator.attribute) if locator.attribute else None
+                locator.by = self.by_mapping.get(by, by)
+            except Exception as ex:
+                if self.mode == 'debug': 
+                    logger.debug(f"Ошибка в локарое: {pprint(locator, text_color='RED',bg_color='BLACK',font_style="BOLD")}\n", ex, True)
+                    ...
+                return
 
             # Общие аргументы для всех функций
             args = (locator, timeout, timeout_for_event, message, typing_speed)
@@ -392,7 +403,9 @@ class ExecuteLocator:
                     EC.presence_of_element_located((locator.by, locator.selector))
                 )
             except (NoSuchElementException, TimeoutException) as ex:
-                logger.error(f"Could not find element: {locator=}\n", ex, False)
+                if self.mode == 'debug': 
+                    logger.debug(f"Could not find element: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, True)
+                    ...
                 return
         if timeout_for_event == 'element_to_be_clickable':
             try:
@@ -401,25 +414,30 @@ class ExecuteLocator:
                     EC.element_to_be_clickable((locator.by, locator.selector))
                 )
             except (NoSuchElementException, TimeoutException) as ex:
-                logger.error(f"Element not clickable: {locator=}\n", ex, False)
+                if self.mode == 'debug': 
+                    logger.debug(f"Element not clickable: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
+                    ...
+                return
                 ...
 
         try:
             # Find all elements matching the locator
             elements = d.find_elements(locator.by, locator.selector)
         except Exception as ex:
-            logger.error(f"Could not find elements: {pprint(locator)}", ex, True)
-            if locator.mandatory:
-                # raise ExecuteLocatorException("Locator execution failed")
-                return
+            if self.mode == 'debug': 
+                logger.debug(f"Could not find elements: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
+                ...
+            return
 
         if not hasattr(locator, 'if_list'):
             return elements
 
         if  locator.if_list == 'first':
             return elements[0] if isinstance(elements, list) else elements
+
         elif locator.if_list == 'last':
             return elements[len(elements) - 1] if isinstance(elements, list) else elements
+
         else:
             return elements
 
@@ -450,9 +468,11 @@ class ExecuteLocator:
 
         element:WebElement = self.get_webelement_by_locator(locator, timeout, timeout_for_event)
         if not element:
-            return 
+            if self.mode == 'debug': 
+                logger.debug(f"Element not clickable: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", None, False)
+            return
        
-        def _parse_dict_string(attr_string: str) -> dict:
+        def _parse_dict_string(attr_string: str) -> dict | None:
             """! Parses a string like '{attr1:attr2}' into a dictionary.
 
             Args:
@@ -466,9 +486,16 @@ class ExecuteLocator:
                     k.strip(): v.strip()
                     for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))
                 }
-            except ValueError:
-                logger.error(f"Invalid attribute string format: {attr_string}")
-                return {}
+            except ValueError as ex:
+                if self.mode == 'debug': 
+                    logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE',bg_color='RED')}\n", ex, False)
+                ...
+                return
+            except Exception as ex:
+                if self.mode == 'debug': 
+                    logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE',bg_color='RED')}\n", ex, False)
+                ...
+                return
 
         def _get_attributes_from_dict(element: WebElement, attr_dict: dict) -> dict:
             """! Retrieves attribute values for each key in a given dictionary.
@@ -487,10 +514,11 @@ class ExecuteLocator:
                     attr_value = element.get_attribute(value)
                     result[attr_key] = attr_value
                 except Exception as ex:
-                    logger.error(
-                        f"Error retrieving attributes '{key}' or '{value}' from element.", ex
-                    )
-                    result[key] = None  # Если атрибут не найден
+                    if self.mode == 'debug': 
+                        logger.debug(
+                            f"Error retrieving attributes '{pprint(key, text_color='WHITE',bg_color='RED')}' or '{pprint(value, text_color='WHITE',bg_color='RED')}' from element.", ex, False)
+                    ...
+                    return
             return result
 
         if element:
@@ -511,7 +539,8 @@ class ExecuteLocator:
                         ret.append(f'{e.get_attribute(locator.attribute)}')
                     return ret if len(ret) > 1 else ret[0]
                 except Exception as ex:
-                    logger.critical(f"Error in get_attribute()", ex)
+                    if self.mode == 'debug': 
+                        logger.debug(f"Error in get_attribute(): {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
                     ...
                     return
             return element.get_attribute(locator.attribute)
@@ -540,7 +569,7 @@ class ExecuteLocator:
             webelement = self.get_webelement_by_locator(locator = locator, timeout = timeout, timeout_for_event = timeout_for_event)
         
         if not webelement:
-            return False
+            return 
 
         webelement = webelement[0] if isinstance(webelement, list) else webelement
         ...
@@ -595,10 +624,14 @@ class ExecuteLocator:
                     result.append(True)
                     continue
                 except ElementClickInterceptedException as ex:
-                    logger.error(f"Element click intercepted: {locator}", ex)
+                    if self.mode == 'debug': 
+                        logger.debug(f"Element click intercepted: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
+                    ...
                     return False
                 except Exception as ex:
-                    logger.error(f"Error clicking element: {locator}", ex)
+                    if self.mode == 'debug': 
+                        logger.debug(f"Element click intercepted: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
+                    ...
                     return False
 
             elif event.startswith("pause("):
@@ -608,19 +641,25 @@ class ExecuteLocator:
                     time.sleep(pause_duration)
                     result.append(True)
                     continue
-                logger.error(f"Invalid pause duration: {event}")
+                if self.mode == 'debug': 
+                    logger.debug(f"Invalid pause duration: {pprint(event, text_color='WHITE',bg_color='RED')}\n")
+                    ...
                 return False
 
             elif event == "upload_media()":
                 if not message:
-                    logger.error(f"Message is required for upload_media event. Message: {message}")
+                    if self.mode == 'debug': 
+                        logger.debug(f"Message is required for upload_media event. Message: {pprint(message, text_color='WHITE',bg_color='RED')}", None, False)
+                    ...
                     return False
                 try:
                     webelement.send_keys(message)
                     result.append(True)
                     continue
                 except Exception as ex:
-                    logger.error(f"Error uploading media: {message}", ex)
+                    if self.mode == 'debug': 
+                        logger.debug(f"Error uploading media: {pprint(message, text_color='WHITE',bg_color='RED')}", ex, False)
+                        ...
                     return False
 
             elif event == "screenshot()":
@@ -628,14 +667,18 @@ class ExecuteLocator:
                     result.append(self.get_webelement_as_screenshot(locator, webelement = webelement))
                     ...
                 except Exception as ex:
-                    logger.error(f"Error taking screenshot: {locator}", ex)
+                    if self.mode == 'debug':
+                        logger.error(f"Error taking screenshot: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
+                    ...
                     return False
 
             elif event == "clear()":
                 try:
                     webelement.clear()
                 except Exception as ex:
-                    logger.error(f"Error clearing element: {locator}", ex)
+                    if self.mode == 'debug': 
+                        logger.error(f"Error clearing element: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
+                    ...
                     return False
 
             elif event.startswith("send_keys("):
@@ -652,7 +695,9 @@ class ExecuteLocator:
                             actions.send_keys(key)
                     actions.perform()
                 except Exception as ex:
-                    logger.error(f"Error sending keys: {keys_to_send}", ex)
+                    if self.mode == 'debug': 
+                        logger.error(f"Error clearing element: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n{pprint(keys_to_send, text_color='WHITE',bg_color='RED')}", ex, False)
+                    ...
                     return False
 
             # Handling backspace(n)
@@ -670,7 +715,9 @@ class ExecuteLocator:
                     self.send_message(locator = locator, timeout = timeout, timeout_for_event = timeout_for_event, message = message, typing_speed=typing_speed)
                     result.append(True)
                 except Exception as ex:
-                    logger.error(f"Error sending external message: {message}", ex)
+                    if self.mode == 'debug': 
+                        logger.error(f"Error sending external message:{pprint(message, text_color='WHITE',bg_color='RED')} {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
+                    ...
                     return False
 
             else:
@@ -827,9 +874,8 @@ class ExecuteLocator:
                             self.actions.pause(typing_speed)
                             self.actions.perform()
                 except Exception as ex:
-                    logger.error(
-                        f"Error typing message\n{letter=}\n{word=}", ex, exc_info=False
-                    )
+                    if self.mode == 'debug': 
+                        logger.error(f"Error typing message\n{letter=}\n{word=}\n{pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex)
                     ...
                     continue  # <- если была ошибка в передаче буквы - пока игнорую ёё
                     """ TODO:
