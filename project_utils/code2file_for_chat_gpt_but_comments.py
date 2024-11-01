@@ -174,7 +174,7 @@ def read_text_files(
 if __name__ == "__main__":
     # Указываем каталог для поиска и файл для сохранения вывода
     directory_to_search = "../src/suppliers/kazarinov/react"
-    output_file_path = Path("../data/kazaruinov_react.txt")
+    output_file_path = Path("../data/kazarinov_react.txt")
 
     # Создаем директорию, если она не существует
     output_file_path.parent.mkdir(parents=True, exist_ok=True)

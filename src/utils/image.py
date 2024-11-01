@@ -35,7 +35,7 @@ from PIL import Image
 from pathlib import Path
 import asyncio
 from src.logger import logger
-from src.utils import pprint
+from src.utils.printer import pprint
 
 
 async def save_png_from_url(

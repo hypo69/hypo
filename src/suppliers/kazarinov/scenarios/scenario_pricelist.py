@@ -116,7 +116,7 @@ class Mexiron:
                 continue
 
             if not f:
-                logger.debug(f"Не получил поля товяра {supplier_prefix} \n {url}")
+                logger.debug(f"Не получил поля товaра {supplier_prefix} \n {url}")
                 ...
                 continue
             
@@ -134,11 +134,13 @@ class Mexiron:
                ...
 
             # prepare products_list for ask gemini
-            products_list.append({'product_id':f.product_id,
-                                        'name':f.product_title,
-                                        'description':f.description_short + f.description,
-                                        'specification':f.specification,
-                                        'local_saved_image':f.local_saved_image})
+            products_list.append({'product_id': f.product_id,
+                                        'name': f.product_title,
+                                        'description_short': f.description_short,
+                                        'description': f.description,
+                                        'specification': f.specification,
+                                        'local_saved_image': f.local_saved_image,
+                                        })
 
             if not j_dumps(products_list, base_path / 'products.json', ensure_ascii=False):
                 logger.debug(f"не сохранился файл {f.product_id}.json")
@@ -260,8 +262,10 @@ class Mexiron:
         return {
             'product_title': str(f.name['language'][0]['value']).strip(),
             'product_id': f.id_product,
+            'description_short': f.description_short['language'][0]['value'].strip(),
             'description': f.description['language'][0]['value'].strip(),
-            'local_saved_image': str(image_path),
+            'specification': f.specification['language'][0]['value'].strip(),
+            'local_saved_image': fr'file:///{str(image_path)}',
         }
 
 

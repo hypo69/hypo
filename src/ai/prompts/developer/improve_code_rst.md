@@ -199,3 +199,21 @@ class ExampleClass:
 - Specify data types and defaults clearly in the `Args` section.
 - Include informative examples when relevant, demonstrating the usage of functions and methods.
 - Keep the comments and documentation in English, consistent with the RST format.
+
+неверно:```
+    except (pdfkit.PDFKitError, OSError) as e:
+        # Log any errors encountered during the process
+        logger.error(f"Failed to generate PDF: {e}")
+    except Exception as e:
+        # Catch any unexpected exceptions
+        logger.error(f"An unexpected error occurred: {e}")
+        ```
+верно:```
+    except (pdfkit.PDFKitError, OSError) as ex:
+        # Log any errors encountered during the process
+        logger.error(f"Failed to generate PDF:",ex)
+    except Exception as e:
+        # Catch any unexpected exceptions
+        logger.error(f"An unexpected error occurred:",ex)
+```
+Имя переменной в исключении `ex`, оне передается вторым параметром в logger.error(<message>, ex, exc_info = True)

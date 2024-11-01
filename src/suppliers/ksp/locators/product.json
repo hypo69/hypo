@@ -732,7 +732,7 @@
   "description_short": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//h2[contains(., 'תיאור קצר')]",
+    "selector": "//h2[contains(text(), 'תיאור קצר')]/following-sibling::p",
     "if_list": "all",
     "use_mouse": false,
     "event": null,
@@ -747,12 +747,12 @@
     "use_mouse": false,
     "mandatory": true,
     "event": null,
-    "locator_description": "Технические характеристики. Оно нахосится в спанах под див"
+    "locator_description": "На сайте нет полного описания товара, поэтому я повторяю локатор `specification`"
   },
   "specification": {
     "attribute": "",
     "by": "XPATH",
-    "selector": "",
+    "selector": "//div[@id = 'review-section']",
     "if_list": "all",
     "use_mouse": false,
     "mandatory": true,

@@ -1,5 +1,4 @@
 ﻿## \file ../src/utils/file.py
-## \file ../src/utils/file.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

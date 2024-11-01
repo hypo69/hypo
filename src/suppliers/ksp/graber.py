@@ -70,8 +70,6 @@ async def async_grab_page(driver:Driver) -> ProductFields:
     global d
     d = driver
 
-
-
     async def fetch_specific_data(value:Any = None):
         """Место для специальных операций с полями """
         return True
@@ -112,7 +110,7 @@ async def async_grab_page(driver:Driver) -> ProductFields:
         # await delivery_in_stock(kwards.get("delivery_in_stock", ''))
         # await delivery_out_stock(kwards.get("delivery_out_stock", ''))
         # await depth(kwards.get("depth", ''))
-        await description(kwards.get("description", ''))
+        # await description(kwards.get("description", '')) На сайте нет полного описания товара. Есть только краткое и specification
         await description_short(kwards.get("description_short", ''))
         # await ean13(kwards.get("ean13", ''))
         # await ecotax(kwards.get("ecotax", ''))
@@ -206,7 +204,7 @@ def set_field_value(
 async def additional_shipping_cost(value: Any = None):
     f.additional_shipping_cost = set_field_value(
         value, 
-        lambda: d.execute_locator(l.additional_shipping_cost), 
+        lambda: ''.join(await d.execute_locator(l.additional_shipping_cost) or []), 
         'additional_shipping_cost'
     )
 
@@ -214,7 +212,7 @@ async def additional_shipping_cost(value: Any = None):
 async def delivery_in_stock(value: Any = None):
     f.delivery_in_stock = set_field_value(
         value, 
-        lambda: d.execute_locator(l.delivery_in_stock), 
+        lambda: ''.join(await d.execute_locator(l.delivery_in_stock) or []), 
         'delivery_in_stock'
     )
 
@@ -222,7 +220,7 @@ async def delivery_in_stock(value: Any = None):
 async def active(value: Any = None):
     f.active = set_field_value(
         value, 
-        lambda: d.execute_locator(l.active), 
+        lambda: ''.join(await d.execute_locator(l.active) or []), 
         'active'
     )
 
@@ -230,7 +228,7 @@ async def active(value: Any = None):
 async def additional_delivery_times(value: Any = None):
     f.additional_delivery_times = set_field_value(
         value, 
-        lambda: d.execute_locator(l.additional_delivery_times), 
+        lambda: ''.join(await d.execute_locator(l.additional_delivery_times) or []), 
         'additional_delivery_times'
     )
 
@@ -240,7 +238,7 @@ async def additional_delivery_times(value: Any = None):
 async def advanced_stock_management(value:Any = None):
         f.advanced_stock_management = set_field_value(
         value, 
-        lambda: d.execute_locator(l.advanced_stock_management), 
+        lambda: ''.join(await d.execute_locator(l.advanced_stock_management) or []), 
         'advanced_stock_management'
     )
 
@@ -248,7 +246,7 @@ async def advanced_stock_management(value:Any = None):
 async def affiliate_short_link(value: Any = None):
     f.affiliate_short_link = set_field_value(
         value, 
-        lambda: d.execute_locator(l.affiliate_short_link), 
+        lambda: ''.join(await d.execute_locator(l.affiliate_short_link) or []), 
         'affiliate_short_link'
     )
 
@@ -256,7 +254,7 @@ async def affiliate_short_link(value: Any = None):
 async def affiliate_summary(value: Any = None):
     f.affiliate_summary = set_field_value(
         value, 
-        lambda: d.execute_locator(l.affiliate_summary), 
+        lambda: ''.join(await d.execute_locator(l.affiliate_summary) or []), 
         'affiliate_summary'
     )
 
@@ -264,7 +262,7 @@ async def affiliate_summary(value: Any = None):
 async def affiliate_summary_2(value: Any = None):
     f.affiliate_summary_2 = set_field_value(
         value, 
-        lambda: d.execute_locator(l.affiliate_summary_2), 
+        lambda: ''.join(await d.execute_locator(l.affiliate_summary_2) or []), 
         'affiliate_summary_2'
     )
 
@@ -272,7 +270,7 @@ async def affiliate_summary_2(value: Any = None):
 async def affiliate_text(value: Any = None):
     f.affiliate_text = set_field_value(
         value, 
-        lambda: d.execute_locator(l.affiliate_text), 
+        lambda: ''.join(await d.execute_locator(l.affiliate_text) or []), 
         'affiliate_text'
     )
 
@@ -280,7 +278,7 @@ async def affiliate_text(value: Any = None):
 async def affiliate_image_large(value: Any = None):
     f.affiliate_image_large = set_field_value(
         value, 
-        lambda: d.execute_locator(l.affiliate_image_large), 
+        lambda: ''.join(await d.execute_locator(l.affiliate_image_large) or []), 
         'affiliate_image_large'
     )
 
@@ -288,14 +286,14 @@ async def affiliate_image_large(value: Any = None):
 async def affiliate_image_medium(value: Any = None):
     f.affiliate_image_medium = set_field_value(
         value, 
-        lambda: d.execute_locator(l.affiliate_image_medium), 
+        lambda: ''.join(await d.execute_locator(l.affiliate_image_medium) or []), 
         'affiliate_image_medium'
     )
 @close_pop_up()
 async def affiliate_image_small(value: Any = None):
     f.affiliate_image_small = set_field_value(
         value, 
-        lambda: d.execute_locator(l.affiliate_image_small), 
+        lambda: ''.join(await d.execute_locator(l.affiliate_image_small) or []), 
         'affiliate_image_small'
     )
 
@@ -303,7 +301,7 @@ async def affiliate_image_small(value: Any = None):
 async def available_date(value: Any = None):
     f.available_date = set_field_value(
         value, 
-        lambda: d.execute_locator(l.available_date), 
+        lambda: ''.join(await d.execute_locator(l.available_date) or []), 
         'available_date'
     )
 
@@ -311,7 +309,7 @@ async def available_date(value: Any = None):
 async def available_for_order(value: Any = None):
     f.available_for_order = set_field_value(
         value, 
-        lambda: d.execute_locator(l.available_for_order), 
+        lambda: ''.join(await d.execute_locator(l.available_for_order) or []), 
         'available_for_order'
     )
 
@@ -319,7 +317,7 @@ async def available_for_order(value: Any = None):
 async def available_later(value: Any = None):
     f.available_later = set_field_value(
         value, 
-        lambda: d.execute_locator(l.available_later), 
+        lambda: ''.join(await d.execute_locator(l.available_later) or []), 
         'available_later'
     )
 
@@ -327,7 +325,7 @@ async def available_later(value: Any = None):
 async def available_now(value: Any = None):
     f.available_now = set_field_value(
         value, 
-        lambda: d.execute_locator(l.available_now), 
+        lambda: ''.join(await d.execute_locator(l.available_now) or []), 
         'available_now'
     )
 
@@ -339,7 +337,7 @@ async def additional_categories(value: str | list = None) -> dict:
 async def cache_default_attribute(value: Any = None):
     f.cache_default_attribute = set_field_value(
         value, 
-        lambda: d.execute_locator(l.cache_default_attribute), 
+        lambda: ''.join(await d.execute_locator(l.cache_default_attribute) or []), 
         'cache_default_attribute'
     )
 
@@ -347,7 +345,7 @@ async def cache_default_attribute(value: Any = None):
 async def cache_has_attachments(value: Any = None):
     f.cache_has_attachments = set_field_value(
         value, 
-        lambda: d.execute_locator(l.cache_default_attribute), 
+        lambda: ''.join(await d.execute_locator(l.cache_default_attribute) or []), 
         'cache_has_attachments'
     )
 
@@ -355,7 +353,7 @@ async def cache_has_attachments(value: Any = None):
 async def cache_is_pack(value: Any = None):
     f.cache_is_pack = set_field_value(
         value, 
-        lambda: d.execute_locator(l.cache_is_pack), 
+        lambda: ''.join(await d.execute_locator(l.cache_is_pack) or []), 
         'cache_is_pack'
     )
 
@@ -363,7 +361,7 @@ async def cache_is_pack(value: Any = None):
 async def condition(value: Any = None):
     f.condition = set_field_value(
         value, 
-        lambda: d.execute_locator(l.condition), 
+        lambda: ''.join(await d.execute_locator(l.condition) or []), 
         'condition'
     )
 
@@ -371,7 +369,7 @@ async def condition(value: Any = None):
 async def condition(value: Any = None):
     f.condition = set_field_value(
         value, 
-        lambda: d.execute_locator(l.condition), 
+        lambda: ''.join(await d.execute_locator(l.condition) or []), 
         'condition'
     )
 
@@ -379,7 +377,7 @@ async def condition(value: Any = None):
 async def customizable(value: Any = None):
     f.customizable = set_field_value(
         value, 
-        lambda: d.execute_locator(l.customizable), 
+        lambda: ''.join(await d.execute_locator(l.customizable) or []), 
         'customizable'
     )
 
@@ -387,7 +385,7 @@ async def customizable(value: Any = None):
 async def date_add(value: Any = None):
     f.date_add = set_field_value(
         value, 
-        lambda: d.execute_locator(l.date_add), 
+        lambda: ''.join(await d.execute_locator(l.date_add) or []), 
         'date_add'
     )
 
@@ -395,7 +393,7 @@ async def date_add(value: Any = None):
 async def date_upd(value: Any = None):
     f.date_upd = set_field_value(
         value, 
-        lambda: d.execute_locator(l.date_upd), 
+        lambda: ''.join(await d.execute_locator(l.date_upd) or []), 
         'date_upd'
     )
 
@@ -403,7 +401,7 @@ async def date_upd(value: Any = None):
 async def delivery_out_stock(value: Any = None):
     f.delivery_out_stock = set_field_value(
         value, 
-        lambda: d.execute_locator(l.delivery_out_stock), 
+        lambda: ''.join(await d.execute_locator(l.delivery_out_stock) or []), 
         'delivery_out_stock'
     )
 
@@ -411,7 +409,7 @@ async def delivery_out_stock(value: Any = None):
 async def depth(value: Any = None):
     f.depth = set_field_value(
         value, 
-        lambda: d.execute_locator(l.depth), 
+        lambda: ''.join(await d.execute_locator(l.depth) or []), 
         'depth'
     )
 
@@ -419,7 +417,7 @@ async def depth(value: Any = None):
 async def description(value: Any = None):
     f.description = set_field_value(
         value, 
-        lambda: d.execute_locator(l.description), 
+        lambda: ''.join(await d.execute_locator(l.description) or []), 
         'description'
     )
 
@@ -427,7 +425,7 @@ async def description(value: Any = None):
 async def description_short(value: Any = None):
     f.description_short = set_field_value(
         value, 
-        lambda: d.execute_locator(l.description_short), 
+        lambda: ''.join(await d.execute_locator(l.description_short) or []), 
         'description_short'
     )
 
@@ -439,7 +437,7 @@ async def id_category_default(value: Any = None):
 async def id_default_combination(value: Any = None):
     f.id_default_combination = set_field_value(
         value, 
-        lambda: d.execute_locator(l.id_default_combination), 
+        lambda: ''.join(await d.execute_locator(l.id_default_combination) or []), 
         'id_default_combination'
     )
 
@@ -463,7 +461,7 @@ async def locale(value: Any = None):
 async def id_default_image(value: Any = None):
     f.id_default_image = set_field_value(
         value, 
-        lambda: d.execute_locator(l.id_default_image), 
+        lambda: ''.join(await d.execute_locator(l.id_default_image) or []), 
         'id_default_image'
     )
 
@@ -471,7 +469,7 @@ async def id_default_image(value: Any = None):
 async def ean13(value: Any = None):
     f.ean13 = set_field_value(
         value, 
-        lambda: d.execute_locator(l.ean13), 
+        lambda: ''.join(await d.execute_locator(l.ean13) or []), 
         'ean13'
     )
 
@@ -479,7 +477,7 @@ async def ean13(value: Any = None):
 async def ecotax(value: Any = None):
     f.ecotax = set_field_value(
         value, 
-        lambda: d.execute_locator(l.ecotax), 
+        lambda: ''.join(await d.execute_locator(l.ecotax) or []), 
         'ecotax'
     )
 
@@ -487,7 +485,7 @@ async def ecotax(value: Any = None):
 async def height(value: Any = None):
     f.height = set_field_value(
         value, 
-        lambda: d.execute_locator(l.height), 
+        lambda: ''.join(await d.execute_locator(l.height) or []), 
         'height'
     )
 
@@ -495,7 +493,7 @@ async def height(value: Any = None):
 async def how_to_use(value: Any = None):
     f.how_to_use = set_field_value(
         value, 
-        lambda: d.execute_locator(l.how_to_use), 
+        lambda: ''.join(await d.execute_locator(l.how_to_use) or []), 
         'how_to_use'
     )
 
@@ -503,7 +501,7 @@ async def how_to_use(value: Any = None):
 async def id_manufacturer(value: Any = None):
     f.id_manufacturer = set_field_value(
         value, 
-        lambda: d.execute_locator(l.id_manufacturer), 
+        lambda: ''.join(await d.execute_locator(l.id_manufacturer) or []), 
         'id_manufacturer'
     )
 
@@ -511,7 +509,7 @@ async def id_manufacturer(value: Any = None):
 async def id_supplier(value: Any = None):
     f.id_supplier = set_field_value(
         value, 
-        lambda: d.execute_locator(l.id_supplier), 
+        lambda: ''.join(await d.execute_locator(l.id_supplier) or []), 
         'id_supplier'
     )
 
@@ -519,7 +517,7 @@ async def id_supplier(value: Any = None):
 async def id_tax(value: Any = None):
     f.id_tax = set_field_value(
         value, 
-        lambda: d.execute_locator(l.id_tax), 
+        lambda: ''.join(await d.execute_locator(l.id_tax) or []), 
         'id_tax'
     )
 
@@ -527,7 +525,7 @@ async def id_tax(value: Any = None):
 async def id_type_redirected(value: Any = None):
     f.id_type_redirected = set_field_value(
         value, 
-        lambda: d.execute_locator(l.id_type_redirected), 
+        lambda: ''.join(await d.execute_locator(l.id_type_redirected) or []), 
         'id_type_redirected'
     )
 
@@ -535,14 +533,14 @@ async def id_type_redirected(value: Any = None):
 async def images_urls(value: Any = None):
     f.images_urls = set_field_value(
         value, 
-        lambda: d.execute_locator(l.images_urls), 
+        lambda: ''.join(await d.execute_locator(l.images_urls) or []), 
         'images_urls'
     )
 @close_pop_up()
 async def indexed(value: Any = None):
     f.indexed = set_field_value(
         value, 
-        lambda: d.execute_locator(l.indexed), 
+        lambda: ''.join(await d.execute_locator(l.indexed) or []), 
         'indexed'
     )
 
@@ -551,7 +549,7 @@ async def indexed(value: Any = None):
 async def ingredients(value: Any = None):
     f.images_urls = set_field_value(
         value,
-        lambda: d.execute_locator(l.images_urls),
+        lambda: ''.join(await d.execute_locator(l.images_urls) or []),
         'images_urls'
     )
 
@@ -559,7 +557,7 @@ async def ingredients(value: Any = None):
 async def meta_description(value: Any = None):
     f.meta_description = set_field_value(
         value,
-        lambda: d.execute_locator(l.meta_description),
+        lambda: ''.join(await d.execute_locator(l.meta_description) or []),
         'meta_description'
     )
 
@@ -567,7 +565,7 @@ async def meta_description(value: Any = None):
 async def meta_keywords(value: Any = None):
     f.meta_keywords = set_field_value(
         value,
-        lambda: d.execute_locator(l.meta_keywords),
+        lambda: ''.join(await d.execute_locator(l.meta_keywords) or []),
         'meta_keywords'
     )
 
@@ -575,7 +573,7 @@ async def meta_keywords(value: Any = None):
 async def meta_title(value: Any = None):
     f.meta_title = set_field_value(
         value,
-        lambda: d.execute_locator(l.meta_title),
+        lambda: ''.join(await d.execute_locator(l.meta_title) or []),
         'meta_title'
     )
 
@@ -583,7 +581,7 @@ async def meta_title(value: Any = None):
 async def is_virtual(value: Any = None):
     f.is_virtual = set_field_value(
         value,
-        lambda: d.execute_locator(l.is_virtual),
+        lambda: ''.join(await d.execute_locator(l.is_virtual) or []),
         'is_virtual'
     )
 
@@ -591,7 +589,7 @@ async def is_virtual(value: Any = None):
 async def isbn(value: Any = None):
     f.isbn = set_field_value(
         value,
-        lambda: d.execute_locator(l.isbn),
+        lambda: ''.join(await d.execute_locator(l.isbn) or []),
         'isbn'
     )
 
@@ -600,7 +598,7 @@ async def isbn(value: Any = None):
 async def link_rewrite(value: Any = None) -> str:
     f.link_rewrite = set_field_value(
         value,
-        lambda: d.execute_locator(l.link_rewrite),
+        lambda: ''.join(await d.execute_locator(l.link_rewrite) or []),
         'link_rewrite'
     )
 
@@ -608,7 +606,7 @@ async def link_rewrite(value: Any = None) -> str:
 async def location(value: Any = None):
     f.location = set_field_value(
         value,
-        lambda: d.execute_locator(l.location),
+        lambda: ''.join(await d.execute_locator(l.location) or []),
         'location'
     )
 
@@ -616,7 +614,7 @@ async def location(value: Any = None):
 async def low_stock_alert(value: Any = None):
     f.low_stock_alert = set_field_value(
         value,
-        lambda: d.execute_locator(l.low_stock_alert),
+        lambda: ''.join(await d.execute_locator(l.low_stock_alert) or []),
         'low_stock_alert'
     )
 
@@ -624,7 +622,7 @@ async def low_stock_alert(value: Any = None):
 async def low_stock_threshold(value: Any = None):
     f.low_stock_threshold = set_field_value(
         value,
-        lambda: d.execute_locator(l.low_stock_threshold),
+        lambda: ''.join(await d.execute_locator(l.low_stock_threshold) or []),
         'low_stock_threshold'
     )
 
@@ -632,7 +630,7 @@ async def low_stock_threshold(value: Any = None):
 async def minimal_quantity(value: Any = None):
     f.minimal_quantity = set_field_value(
         value,
-        lambda: d.execute_locator(l.minimal_quantity),
+        lambda: ''.join(await d.execute_locator(l.minimal_quantity) or []),
         'minimal_quantity'
     )
 
@@ -640,7 +638,7 @@ async def minimal_quantity(value: Any = None):
 async def mpn(value: Any = None):
     f.mpn = set_field_value(
         value,
-        lambda: d.execute_locator(l.mpn),
+        lambda: ''.join(await d.execute_locator(l.mpn) or []),
         'mpn'
     )
 
@@ -648,7 +646,7 @@ async def mpn(value: Any = None):
 async def name(value: Any = None):
     f.name = set_field_value(
         value,
-        lambda: d.execute_locator(l.name),
+        lambda: ''.join(await d.execute_locator(l.name) or []),
         'name'
     )
 
@@ -656,7 +654,7 @@ async def name(value: Any = None):
 async def online_only(value: Any = None):
     f.online_only = set_field_value(
         value,
-        lambda: d.execute_locator(l.online_only),
+        lambda: ''.join(await d.execute_locator(l.online_only) or []),
         'online_only'
     )
 
@@ -664,7 +662,7 @@ async def online_only(value: Any = None):
 async def on_sale(value: Any = None):
     f.on_sale = set_field_value(
         value,
-        lambda: d.execute_locator(l.on_sale),
+        lambda: ''.join(await d.execute_locator(l.on_sale) or []),
         'on_sale'
     )
 
@@ -672,7 +670,7 @@ async def on_sale(value: Any = None):
 async def out_of_stock(value: Any = None):
     f.out_of_stock = set_field_value(
         value,
-        lambda: d.execute_locator(l.out_of_stock),
+        lambda: ''.join(await d.execute_locator(l.out_of_stock) or []),
         'out_of_stock'
     )
 
@@ -680,7 +678,7 @@ async def out_of_stock(value: Any = None):
 async def pack_stock_type(value: Any = None):
     f.pack_stock_type = set_field_value(
         value,
-        lambda: d.execute_locator(l.pack_stock_type),
+        lambda: ''.join(await d.execute_locator(l.pack_stock_type) or []),
         'pack_stock_type'
     )
 
@@ -688,7 +686,7 @@ async def pack_stock_type(value: Any = None):
 async def price(value: Any = None):
     f.price = set_field_value(
         value,
-        lambda: d.execute_locator(l.price),
+        lambda: ''.join(await d.execute_locator(l.price) or []),
         'price'
     )
 
@@ -696,7 +694,7 @@ async def price(value: Any = None):
 async def product_type(value: Any = None):
     f.product_type = set_field_value(
         value,
-        lambda: d.execute_locator(l.product_type),
+        lambda: ''.join(await d.execute_locator(l.product_type) or []),
         'product_type'
     )
 
@@ -704,7 +702,7 @@ async def product_type(value: Any = None):
 async def quantity(value: Any = None):
     f.quantity = set_field_value(
         value,
-        lambda: d.execute_locator(l.quantity),
+        lambda: ''.join(await d.execute_locator(l.quantity) or []),
         'quantity'
     )
 
@@ -712,7 +710,7 @@ async def quantity(value: Any = None):
 async def quantity_discount(value: Any = None):
     f.quantity_discount = set_field_value(
         value,
-        lambda: d.execute_locator(l.quantity_discount),
+        lambda: ''.join(await d.execute_locator(l.quantity_discount) or []),
         'quantity_discount'
     )
 
@@ -720,7 +718,7 @@ async def quantity_discount(value: Any = None):
 async def redirect_type(value: Any = None):
     f.redirect_type = set_field_value(
         value,
-        lambda: d.execute_locator(l.redirect_type),
+        lambda: ''.join(await d.execute_locator(l.redirect_type) or []),
         'redirect_type'
     )
 
@@ -728,7 +726,7 @@ async def redirect_type(value: Any = None):
 async def reference(value: Any = None):
     f.reference = set_field_value(
         value,
-        lambda: d.execute_locator(l.reference),
+        lambda: ''.join(await d.execute_locator(l.reference) or []),
         'reference'
     )
 
@@ -736,7 +734,7 @@ async def reference(value: Any = None):
 async def show_condition(value: Any = None):
     f.show_condition = set_field_value(
         value,
-        lambda: d.execute_locator(l.show_condition),
+        lambda: ''.join(await d.execute_locator(l.show_condition) or []),
         'show_condition'
     )
 
@@ -744,7 +742,7 @@ async def show_condition(value: Any = None):
 async def show_price(value: Any = None):
     f.show_price = set_field_value(
         value,
-        lambda: d.execute_locator(l.show_price),
+        lambda: ''.join(await d.execute_locator(l.show_price) or []),
         'show_price'
     )
 
@@ -752,7 +750,7 @@ async def show_price(value: Any = None):
 async def state(value: Any = None):
     f.state = set_field_value(
         value,
-        lambda: d.execute_locator(l.state),
+        lambda: ''.join(await d.execute_locator(l.state) or []),
         'state'
     )
 
@@ -760,7 +758,7 @@ async def state(value: Any = None):
 async def text_fields(value: Any = None):
     f.text_fields = set_field_value(
         value,
-        lambda: d.execute_locator(l.text_fields),
+        lambda: ''.join(await d.execute_locator(l.text_fields) or []),
         'text_fields'
     )
 
@@ -768,7 +766,7 @@ async def text_fields(value: Any = None):
 async def unit_price_ratio(value: Any = None):
     f.unit_price_ratio = set_field_value(
         value,
-        lambda: d.execute_locator(l.unit_price_ratio),
+        lambda: ''.join(await d.execute_locator(l.unit_price_ratio) or []),
         'unit_price_ratio'
     )
 
@@ -777,7 +775,7 @@ async def unit_price_ratio(value: Any = None):
 async def unity(value: Any = None):
     f.unity = set_field_value(
         value,
-        lambda: d.execute_locator(l.unity),
+        lambda: ''.join(await d.execute_locator(l.unity) or []),
         'unity'
     )
 
@@ -785,7 +783,7 @@ async def unity(value: Any = None):
 async def upc(value: Any = None):
     f.upc = set_field_value(
         value,
-        lambda: d.execute_locator(l.upc),
+        lambda: ''.join(await d.execute_locator(l.upc) or []),
         'upc'
     )
 
@@ -793,7 +791,7 @@ async def upc(value: Any = None):
 async def uploadable_files(value: Any = None):
     f.uploadable_files = set_field_value(
         value,
-        lambda: d.execute_locator(l.uploadable_files),
+        lambda: ''.join(d.execute_locator(l.uploadable_files)) or []),
         'uploadable_files'
     )
 
@@ -801,7 +799,7 @@ async def uploadable_files(value: Any = None):
 async def default_image_url(value: Any = None):
     f.default_image_url = set_field_value(
         value,
-        lambda: d.execute_locator(l.default_image_url),
+        lambda: ''.join(await d.execute_locator(l.default_image_url) or []),
         'default_image_url'
     )
 
@@ -809,7 +807,7 @@ async def default_image_url(value: Any = None):
 async def visibility(value: Any = None):
     f.visibility = set_field_value(
         value,
-        lambda: d.execute_locator(l.visibility),
+        lambda: ''.join(await d.execute_locator(l.visibility) or []),
         'visibility'
     )
 
@@ -817,7 +815,7 @@ async def visibility(value: Any = None):
 async def weight(value: Any = None):
     f.weight = set_field_value(
         value,
-        lambda: d.execute_locator(l.weight),
+        lambda: ''.join(await d.execute_locator(l.weight) or []),
         'weight'
     )
 
@@ -825,7 +823,7 @@ async def weight(value: Any = None):
 async def wholesale_price(value: Any = None):
     f.wholesale_price = set_field_value(
         value,
-        lambda: d.execute_locator(l.wholesale_price),
+        lambda: ''.join(await d.execute_locator(l.wholesale_price) or []),
         'wholesale_price'
     )
 
@@ -833,7 +831,7 @@ async def wholesale_price(value: Any = None):
 async def width(value: Any = None):
     f.width = set_field_value(
         value,
-        lambda: d.execute_locator(l.width),
+        lambda: ''.join(await d.execute_locator(l.width) or []),
         'width'
     )
 
@@ -841,7 +839,7 @@ async def width(value: Any = None):
 async def specification(value: Any = None):
     f.specification = set_field_value(
         value,
-        lambda: d.execute_locator(l.specification),
+        lambda: ''.join(await d.execute_locator(l.specification) or []),
         'specification'
     )
 
@@ -849,7 +847,7 @@ async def specification(value: Any = None):
 async def link(value: Any = None):
     f.link = set_field_value(
         value,
-        lambda: d.execute_locator(l.link),
+        lambda: ''.join(await d.execute_locator(l.link) or []),
         'link'
     )
 
@@ -857,7 +855,7 @@ async def link(value: Any = None):
 async def byer_protection(value: Any = None):
     f.byer_protection = set_field_value(
         value,
-        lambda: d.execute_locator(l.byer_protection),
+        lambda: ''.join(await d.execute_locator(l.byer_protection) or []),
         'byer_protection'
     )
 
@@ -865,7 +863,7 @@ async def byer_protection(value: Any = None):
 async def customer_reviews(value: Any = None):
     f.customer_reviews = set_field_value(
         value,
-        lambda: d.execute_locator(l.customer_reviews),
+        lambda: ''.join(await d.execute_locator(l.customer_reviews) or []),
         'customer_reviews'
     )
 
@@ -873,7 +871,7 @@ async def customer_reviews(value: Any = None):
 async def link_to_video(value: Any = None):
     f.link_to_video = set_field_value(
         value,
-        lambda: d.execute_locator(l.link_to_video),
+        lambda: ''.join(await d.execute_locator(l.link_to_video) or []),
         'link_to_video'
     )
 
@@ -881,7 +879,7 @@ async def link_to_video(value: Any = None):
 async def local_saved_image(value: Any = None):
     f.local_saved_image = set_field_value(
         value,
-        lambda: save_png_from_url( d.execute_locator(l.default_image_url), f.id_product),
+        lambda: save_png_from_url( d.execute_locator(l.default_image_url) or []), f.id_product) or []),
         'local_saved_image'
     )
 
@@ -889,6 +887,6 @@ async def local_saved_image(value: Any = None):
 async def local_saved_video(value: Any = None):
     f.local_saved_video = set_field_value(
         value,
-        lambda: d.execute_locator(l.local_saved_video),
+        lambda: ''.join(await d.execute_locator(l.local_saved_video) or []),
         'local_saved_video'
     )

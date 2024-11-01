@@ -9,12 +9,17 @@ Functions:
     - `escape2html`: Convert escape sequences to HTML.
     - `html2dict`: Convert HTML to dictionaries.
     - `html2ns`: Convert HTML to SimpleNamespace objects.
+    https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err
+https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b
 """
-
+import re
 from typing import Dict
+from pathlib import Path
 from src.utils.string import StringFormatter
 from types import SimpleNamespace
 from html.parser import HTMLParser
+from xhtml2pdf import pisa
+from weasyprint import HTML
 
 def html2escape(input_str: str) -> str:
     """
@@ -108,3 +113,55 @@ def html2ns(html_str: str) -> SimpleNamespace:
     """
     html_dict = html2dict(html_str)
     return SimpleNamespace(**html_dict)
+
+# def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
+#     """Converts HTML content to a PDF file after removing unsupported CSS pseudo-selectors.
+    
+#     Args:
+#         html_str (str): HTML content as a string.
+#         pdf_file (str | Path): Path to the output PDF file.
+    
+#     Returns:
+#         bool | None: Returns `True` if PDF generation is successful; `None` otherwise.
+#     """
+#     ...
+#     def preprocess_css(css_content: str) -> str:
+#         """
+#         Remove unsupported pseudo-classes and simplify CSS for xhtml2pdf.
+    
+#         Args:
+#             css_content (str): Original CSS content.
+
+#         Returns:
+#             str: Preprocessed CSS content without unsupported selectors.
+#         """
+#         # Убираем `:not(...)`
+#         css_content = re.sub(r':not\([^)]*\)', '', css_content)
+
+#         return css_content
+#     # Убираем неподдерживаемые псевдоклассы, если они есть
+#     html_str = preprocess_css(html_str)
+
+#     with open(pdf_file, "wb") as f:
+#         pisa_status = pisa.CreatePDF(html_str, dest=f)
+
+#     if pisa_status.err:
+#         print("Error during PDF generation")
+#         return
+#     else:
+#         return True
+
+
+
+
+def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
+    """Converts HTML content to a PDF file using WeasyPrint."""
+    try:
+        HTML(string=html_str).write_pdf(pdf_file)
+        return True
+    except Exception as e:
+        print(f"Error during PDF generation: {e}")
+        return
+
+
+

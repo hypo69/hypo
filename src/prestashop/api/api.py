@@ -20,8 +20,11 @@ from xml.etree import ElementTree
 from xml.parsers.expat import ExpatError
 
 from src import gs
-from src.utils import save_text_file, dict2xml, xml2dict, base64_to_tmpfile, save_png_from_url, pprint
-from src.utils import j_loads, j_loads_ns, j_dumps
+from src.utils.file import save_text_file
+from src.utils.convertors import dict2xml, xml2dict, base64_to_tmpfile
+from src.utils.image import save_png_from_url
+from src.utils.printer import pprint
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 from src.logger.exceptions import PrestaShopException, PrestaShopAuthenticationError
 
