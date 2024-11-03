@@ -11,26 +11,6 @@ from markdown2 import markdown
 from src.logger import logger
 
 
-def extract_json_from_string(md_string: str) -> str:
-    """Extract JSON content from Markdown string between ```json and ``` markers.
-
-    Args:
-        md_string (str): The Markdown string that contains JSON enclosed in ```json ```.
-
-    Returns:
-        str: The extracted JSON string or an empty string if not found.
-    """
-    try:
-        match = re.search(r'```json\s*(.*?)\s*```', md_string, re.DOTALL)
-        if match:
-            json_string = match.group(1).strip()
-            return json_string
-        else:
-            logger.warning("No JSON content found between ```json and ``` markers.")
-            return ""
-    except Exception as ex:
-        logger.error("Error extracting JSON from Markdown.", exc_info=True)
-        return ""
 
 
 def md2dict(md_string: str) -> Dict:

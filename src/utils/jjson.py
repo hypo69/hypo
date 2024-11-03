@@ -25,6 +25,12 @@ import os
 import re
 import pandas as pd
 from json_repair import repair_json
+from typing import Any
+from pathlib import Path
+import json
+import pandas as pd
+from types import SimpleNamespace
+from collections import OrderedDict
 
 
 from src.logger import logger
@@ -39,74 +45,70 @@ def j_dumps(
     mode: str = "w",
     exc_info: bool = True,
 ) -> Optional[Dict]:
-    """Dump JSON data to a file or return the JSON data.
+    """Dump JSON data to a file or return the JSON data as a dictionary.
 
     Args:
-        data (Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]): JSON objects or SimpleNamespace objects to be dumped.
-        file_path (Optional[Path], optional): Path to the output file. If None, returns the JSON data as a dictionary. Defaults to None.
-        ensure_ascii (bool, optional): If  escape non-ASCII characters in the JSON output. Defaults to False.
-        mode (str, optional): File open mode ('w' for overwrite, 'a' for append, 'a+' for prepend). Defaults to 'w'.
-        exc_info (bool, optional): If  log exceptions with traceback. Defaults to True.
+        data (Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]): JSON-compatible data or SimpleNamespace objects to dump.
+        file_path (Optional[Path], optional): Path to the output file. If None, returns JSON as a dictionary. Defaults to None.
+        ensure_ascii (bool, optional): If True, escapes non-ASCII characters in output. Defaults to True.
+        mode (str, optional): File open mode ('w' for overwrite, 'a' for append, 'a+' for merge). Defaults to 'w'.
+        exc_info (bool, optional): If True, logs exceptions with traceback. Defaults to True.
 
     Returns:
-        Optional[Dict]: The JSON data as a dictionary if successful, or None if an error occurred.
+        Optional[Dict]: JSON data as a dictionary if successful, or nothing if an error occurs.
 
     Raises:
-        ValueError: If the file mode is not supported.
+        ValueError: If the file mode is unsupported.
 
     Examples:
         >>> j_dumps({"key": "value"}, "output.json")
         {"key": "value"}
-
-        >>> j_dumps([{"key1": "value1"}, {"key2": "value2"}], "output.json")
-        {"key1": "value1", "key2": "value2"}
-
-        >>> j_dumps({"key": "value"}, None)
-        {"key": "value"}
-
-        >>> j_dumps({"key": "value"}, "output.json", mode="a")
-        {"key": "value"}
     """
-    path = file_path
-    try:
-        path = Path(path) if isinstance(path, (str, tuple, list)) else path
+    
+    path = Path(file_path) if isinstance(file_path, (str, Path)) else None
+    
+    def convert_to_dict(data):
+        """Convert SimpleNamespace instances to dictionaries recursively."""
+        if isinstance(data, SimpleNamespace):
+            return vars(data)
+        if isinstance(data, list):
+            return [convert_to_dict(item) for item in data]
+        if isinstance(data, dict):
+            return {key: convert_to_dict(value) for key, value in data.items()}
+        return data
+    
+    data = convert_to_dict(data)
 
-        def convert_to_dict(data):
-            """Recursively convert SimpleNamespace objects to dictionaries."""
-            if isinstance(data, SimpleNamespace):
-                data = vars(data)
-            if isinstance(data, list):
-                return [convert_to_dict(item) for item in data]
-            if isinstance(data, dict):
-                return {key: convert_to_dict(value) for key, value in data.items()}
-            return data
+    if mode not in {"w", "a", "a+"}:
+        raise ValueError(f"Unsupported file mode '{mode}'. Use 'w', 'a', or 'a+'.")
 
-        data = convert_to_dict(data)
+    if path and mode in {"a", "a+"}:
+        try:
+            existing_data = j_loads(path)
+            if existing_data:
+                if mode == "a+":
+                    data.update(existing_data)
+                else:
+                    existing_data.update(data)
+                    data = existing_data
+        except Exception as ex:
+            logger.error(f"Error reading {path=}: {ex}", exc_info=exc_info)
+            return
 
-        if mode in {"a", "a+", "+a"}:
-            try:
-                existing_data = j_loads(path)
-                if existing_data:
-                    data = existing_data.update(data) if mode == "a+" else data.update(existing_data)
-            except Exception as ex:
-                logger.error(f"Error reading {path=}", ex, False)
-                return  ex
+    if path:
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open(mode, encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=ensure_ascii)
+        except Exception as ex:
+            logger.error(f"Failed to write to {path}: {ex}", exc_info=exc_info)
+            return
+    else:
+        return data
+    
+    return data
 
-        if path:
-            if not path.parent.exists():
-                path.parent.mkdir(parents=True, exist_ok=True)
-            try:
-                with path.open("w", encoding="utf-8") as f:
-                    json.dump(data, f, ensure_ascii=ensure_ascii)
-            except Exception as ex:
-                logger.error(f"Error creating {path}", ex, exc_info=exc_info)
-                return  ex
 
-        return  data
-
-    except Exception as ex:
-        logger.error(f"Failed to dump JSON file {path}.\n{data}", ex, exc_info=exc_info)
-        return  ex
 
 def j_loads(
     jjson: dict | SimpleNamespace | str | Path | list[dict] | list[SimpleNamespace],
@@ -116,56 +118,36 @@ def j_loads(
     """Load JSON or CSV data from a file, directory, or string.
 
     Args:
-        jjson (Path | Dict | str): Path to a file, directory, or JSON data as a string, or JSON object.
+        jjson (Path | dict | str): Path to a file, directory, JSON data as a string, or JSON object.
         ordered (bool, optional): If True, returns OrderedDict to preserve element order. Defaults to False.
         exc_info (bool, optional): If True, logs exceptions with traceback. Defaults to True.
 
     Returns:
-        Dict | List[Dict] | bool | None: Returns a dictionary or list of dictionaries if successfully loaded. 
-        Returns False if an error occurred. Returns None if jjson is not found or cannot be read.
-
+        tuple[bool, Any]: A tuple with success status and either a dictionary or list of dictionaries.
+    
     Raises:
         FileNotFoundError: If the specified file is not found.
         json.JSONDecodeError: If JSON data could not be parsed.
 
     Examples:
         >>> j_loads('data.json')
-        {'key': 'value'}
+        (True, {'key': 'value'})
 
         >>> j_loads(Path('/path/to/directory'))
-        [{'key1': 'value1'}, {'key2': 'value2'}]
+        (True, [{'key1': 'value1'}, {'key2': 'value2'}])
 
         >>> j_loads('{"key": "value"}')
-        {'key': 'value'}
+        (True, {'key': 'value'})
 
         >>> j_loads(Path('/path/to/file.csv'))
-        [{'column1': 'value1', 'column2': 'value2'}]
+        (True, [{'column1': 'value1', 'column2': 'value2'}])
     """
-
+    
     def clean_string(json_string: str) -> str:
         """Remove triple backticks and 'json' from the beginning and end of the string."""
-        if json_string.startswith(("```", "```json")) and s.endswith("```"):
+        if json_string.startswith(("```", "```json")) and json_string.endswith("```"):
             return json_string.strip("`").replace("json", "", 1).strip()
         return json_string
-
-    # def fix_json_syntax(json_string: str) -> str:
-    #     """! Fix common JSON syntax issues like trailing commas or misplaced colons.
-
-    #     Args:
-    #         json_string (str): The raw JSON string with errors.
-
-    #     Returns:
-    #         str: JSON string with attempted fixes.
-    #     """
-    #     # Remove trailing commas before closing braces/brackets
-    #     json_string = re.sub(r",\s*([}\]])", r"\1", json_string)
-
-    #     # Add missing commas between adjacent key-value pairs (basic heuristic)
-    #     json_string = re.sub(r"(\})(\s*{)", r"\1,\2", json_string)
-
-    #     # Optionally, you could add more advanced fixes here
-
-    #     return json_string
 
     def merge_dicts(dict_list: list[dict]) -> dict:
         """Merge a list of dictionaries into a single dictionary if they have the same structure."""
@@ -186,8 +168,8 @@ def j_loads(
         try:
             return pd.read_csv(file_path).to_dict(orient='records')
         except Exception as ex:
-            logger.error(f"Error reading CSV file: {file_path}", ex, exc_info=exc_info)
-            return ex
+            logger.error(f"Error reading CSV file: {file_path}", exc_info=exc_info)
+            return []
 
     try:
         if isinstance(jjson, Path):
@@ -195,49 +177,51 @@ def j_loads(
             if json_path.is_dir():
                 json_files = list(json_path.glob("*.json"))
                 if not json_files: 
-                    logger.warning(f"No JSON files found in directory: {json_path}", None, True)
-                    return 
+                    logger.warning(f"No JSON files found in directory: {json_path}", exc_info=True)
+                    return False, None
 
-                dict_list = [j_loads(file) for file in json_files if j_loads(file)]
+                dict_list = [j_loads(file)[1] for file in json_files if j_loads(file)[0]]
                 if all(isinstance(d, dict) for d in dict_list):
-                    return merge_dicts(dict_list)
-                return dict_list
+                    return True, merge_dicts(dict_list)
+                return True, dict_list
 
             if json_path.suffix.lower() == ".csv":
-                return _load_csv_from_file(json_path)
+                csv_data = _load_csv_from_file(json_path)
+                return bool(csv_data), csv_data
 
             try:
                 data = json.loads(json_path.read_text(encoding="utf-8"))
-                return data
+                return True, data
             except Exception as ex:
-                logger.debug(f"Error reading file {json_path=}", ex, None)
-                return 
+                logger.debug(f"Error reading file {json_path=}", exc_info=exc_info)
+                return False, None
 
         elif isinstance(jjson, str):
             data = clean_string(jjson)
             try:
                 data = json.loads(data)
+                return True, data
             except Exception as ex:
-                data = repair_json(data)
+                data = repair_json(data)  # Assuming repair_json is defined elsewhere
                 try: 
                     data = json.loads(data)
+                    return True, data
                 except Exception as ex:
-                    logger.debug(f"Неправильный формат JJSON {pprint(data)}")
-                    return
-
-            return data or None
+                    logger.debug(f"Invalid JSON format {data}", exc_info=exc_info)
+                    return False, None
 
         elif isinstance(jjson, dict):
-            return jjson
+            return True, jjson
 
     except FileNotFoundError as ex:
-        logger.error(f"File not found: {jjson}", ex, exc_info=exc_info)
-        return 
+        logger.error(f"File not found: {jjson}", exc_info=exc_info)
+        return False, None
     except Exception as ex:
-        logger.error(f"Error loading JSON data from {jjson}", ex, exc_info=exc_info)
-        return 
+        logger.error(f"Error loading JSON data from {jjson}", exc_info=exc_info)
+        return False, None
 
-    return jjson
+    return False, None
+
 
 def j_loads_ns(
     jjson: Path | SimpleNamespace | Dict | str,
@@ -274,27 +258,43 @@ def j_loads_ns(
         return  dict2ns(data)
     return  data 
 
-# def merge_dicts(dict_list: List[dict]) -> dict:
-#     """Merge a list of dictionaries into a single dictionary if they have the same structure."""
-#     merged = dict_list[0]
-#     for d in dict_list[1:]:
-#         for key in merged.keys():
-#             if key in d:
-#                 if isinstance(merged[key], dict) and isinstance(d[key], dict):
-#                     merged[key] = merge_dicts([merged[key], d[key]])
-#                 elif isinstance(merged[key], list) and isinstance(d[key], list):
-#                     merged[key].extend(d[key])
-#                 else:
-#                     merged[key] = d[key]
-#     return merged
- 
 
-def replace_key_in_json(data, old_key, new_key):
+def replace_key_in_json(data, old_key, new_key) -> dict:
     """
-    Рекурсивно заменяет ключ в словаре или списке.
-    @param data: Словарь или список, в котором происходит замена ключей.
-    @param old_key: Ключ, который нужно заменить.
-    @param new_key: Новый ключ.
+    Recursively replaces a key in a dictionary or list.
+    
+    Args:
+        data (dict | list): The dictionary or list where key replacement occurs.
+        old_key (str): The key to be replaced.
+        new_key (str): The new key.
+    
+    Returns:
+        dict: The updated dictionary with replaced keys.
+
+    Example Usage:
+
+        replace_key_in_json(data, 'name', 'category_name')
+
+        # Example 1: Simple dictionary
+        data = {"old_key": "value"}
+        updated_data = replace_key_in_json(data, "old_key", "new_key")
+        # updated_data becomes {"new_key": "value"}
+
+        # Example 2: Nested dictionary
+        data = {"outer": {"old_key": "value"}}
+        updated_data = replace_key_in_json(data, "old_key", "new_key")
+        # updated_data becomes {"outer": {"new_key": "value"}}
+
+        # Example 3: List of dictionaries
+        data = [{"old_key": "value1"}, {"old_key": "value2"}]
+        updated_data = replace_key_in_json(data, "old_key", "new_key")
+        # updated_data becomes [{"new_key": "value1"}, {"new_key": "value2"}]
+
+        # Example 4: Mixed nested structure with lists and dictionaries
+        data = {"outer": [{"inner": {"old_key": "value"}}]}
+        updated_data = replace_key_in_json(data, "old_key", "new_key")
+        # updated_data becomes {"outer": [{"inner": {"new_key": "value"}}]}
+
     """
     if isinstance(data, dict):
         for key in list(data.keys()):
@@ -305,6 +305,10 @@ def replace_key_in_json(data, old_key, new_key):
     elif isinstance(data, list):
         for item in data:
             replace_key_in_json(item, old_key, new_key)
+    
+    return data
+
+
 
 def process_json_file(json_file: Path):
     """
@@ -328,31 +332,23 @@ def recursive_process_json_files(directory: Path):
             process_json_file(path)
 
             
-# def clean_string(jjson: str) -> str:
-#     """Очищает строку JSON для обеспечения правильного форматирования.
+def extract_json_from_string(md_string: str) -> str:
+    """Extract JSON content from Markdown string between ```json and ``` markers.
 
-#     Args:
-#         jjson (str): Строка JSON, которую необходимо очистить.
+    Args:
+        md_string (str): The Markdown string that contains JSON enclosed in ```json ```.
 
-#     Returns:
-#         str: Очищенная строка JSON.
-
-#     Raises:
-#         ValueError: Если предоставлена пустая строка JSON.
-
-#     Examples:
-#         >>> clean_string(' { "key": "value" } ')
-#         '{"key": "value"}'
-
-#         >>> clean_string('   {"key": "value"}\n')
-#         '{"key": "value"}'
-
-#         >>> clean_string('')
-#         Traceback (most recent call last):
-#             ...
-#         ValueError: Empty JSON string provided.
-#     """
-#     cleaned_str = jjson.strip()  # Удаление начальных и конечных пробелов
-#     if not cleaned_str:
-#         raise ValueError("Empty JSON string provided.")
-#     return cleaned_str
+    Returns:
+        str: The extracted JSON string or an empty string if not found.
+    """
+    try:
+        match = re.search(r'```json\s*(.*?)\s*```', md_string, re.DOTALL)
+        if match:
+            json_string = match.group(1).strip()
+            return json_string
+        else:
+            logger.warning("No JSON content found between ```json and ``` markers.")
+            return ""
+    except Exception as ex:
+        logger.error("Error extracting JSON from Markdown.", exc_info=True)
+        return ""

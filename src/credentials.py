@@ -23,7 +23,8 @@ from dataclasses import dataclass, field
 import header
 from header import __root__
 from src.check_relise import check_latest_release 
-from src.utils import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.file import read_text_file
 from src.logger import logger
 from src.logger.exceptions import KeePassException, DefaultSettingsException
 
@@ -47,8 +48,7 @@ class ProgamSettings(metaclass=SingletonMeta):
     dev_null: str = field(default='nul' if Path().drive else '/dev/null')
     __root__: Path = field(default=Path(__root__))
     settings: SimpleNamespace = field(default_factory=lambda: j_loads_ns(__root__ / 'src' / 'settings.json'))
-    if check_latest_release(settings.git_user, settings.git):
-        ...
+
     path: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         root=Path(__root__),
         src=Path(__root__ / 'src'),
@@ -94,12 +94,18 @@ class ProgamSettings(metaclass=SingletonMeta):
         gapi={}
     ))
 
+    def __post_init__(self) -> None:
+        """Initialization routine after the instance is created."""
+        if check_latest_release(self.settings.git_user, self.settings.git):
+            ...
+
     @classmethod
     def _load_credentials(cls) -> None:
         """ Loads credentials from the KeePass database"""
         kp = cls._open_kp(3)
         if not kp:
             logger.error(" :( ")
+            ...
             sys.exit(1)
 
         if not cls._load_aliexpress_credentials(kp):
@@ -139,7 +145,11 @@ class ProgamSettings(metaclass=SingletonMeta):
         """
         while retry > 0:
             try:
-                kp = PyKeePass(str(cls.path.secrets / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower())  # <- `.lower()` for debug only!
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                password = read_text_file( cls.path.secrets / 'password.txt').strip()
+                kp = PyKeePass(str(cls.path.secrets / 'credentials.kdbx'), password=password)
+                #kp = PyKeePass(str(cls.path.secrets / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower())  # <- `.lower()` for debug only!
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 return kp
             except Exception as ex:
                 logger.error(f"Failed to open KeePass database, {retry-1} retries left.", ex, False)
