@@ -64,15 +64,15 @@ async def save_video_from_url(
         # Check if the file was saved
         if not save_path.exists():
             logger.error(f"File {save_path=} was not saved.")
-            return None
+            return
 
         if save_path.stat().st_size == 0:
             logger.error(f"File {save_path=} was saved, but its size is 0 bytes.")
-            return None
+            return
 
     except Exception as ex:
         logger.error(f"Error saving video {save_path=}: {ex}", exc_info=True)
-        return None
+        return
 
     return save_path
 
@@ -93,14 +93,14 @@ def get_video_data(file_name: str) -> Optional[bytes]:
 
     if not file_path.exists():
         logger.error(f"File {file_path=} does not exist.")
-        return None
+        return
 
     try:
         with open(file_path, "rb") as file:
             return file.read()
     except Exception as ex:
         logger.error(f"Error reading file {file_path=}: {ex}", exc_info=True)
-        return None
+        return
 
 def main():
     url = "https://example.com/video.mp4"

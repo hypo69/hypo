@@ -52,8 +52,8 @@ def close_popup(value: Any = None) -> Callable:
             try:
                 # await d.execute_locator(l.close_popup)  # Await async pop-up close
                 ...
-            except ExecuteLocatorException as e:
-                logger.debug(f"Error executing locator: {e}")
+            except ExecuteLocatorException as ex:
+                logger.debug(f"Error executing locator: {l.close_popup=} ", ex)
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator

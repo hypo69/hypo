@@ -119,7 +119,7 @@ class Chrome(webdriver.Chrome):
                     return port
             except OSError as ex:
                 logger.debug(f"Port {port} is occupied", ex)
-        return None
+        return
 
     def set_options(self, settings: list | dict | None = None) -> ChromeOptions:
         """ Sets launch options for the Chrome WebDriver.
@@ -128,7 +128,7 @@ class Chrome(webdriver.Chrome):
         @returns: A `ChromeOptions` object with the specified launch options.
         """
         if not settings or ('options' not in settings and 'headers' not in settings):
-            return None
+            return
 
         options = ChromeOptions()
 

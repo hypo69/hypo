@@ -80,7 +80,7 @@ class TimeoutCheck:
 
         if thread.is_alive():
             print(f"Timeout occurred after {timeout} seconds.")
-            return None  # Возвращаем None, если тайм-аут произошел
+            return  # Возвращаем None, если тайм-аут произошел
 
         return self.user_input
 

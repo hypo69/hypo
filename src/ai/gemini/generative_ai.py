@@ -96,7 +96,7 @@ class GoogleGenerativeAI:
             history = read_text_file(self.history_file)
             complete_prompt = f"{history}\n* question *\n{q}\n* answer **\n"
 
-            if self.mode == 'debug':
+            if gs.mode == 'debug':
                 pprint(f"INPUT > {q}", text_color='light_blue')
                 pprint(f"HISTORY FILE: > {self.history_file}", text_color='light_green')
                 pprint(f"PROMPT: > {complete_prompt}", text_color='green')
@@ -110,9 +110,9 @@ class GoogleGenerativeAI:
 
             if not response:
                 logger.debug("No response from the model.")
-                return None
+                return
 
-            if self.mode == 'debug':
+            if gs.mode == 'debug':
                 pprint(f"RESPONSE: > {response}", text_color='cyan')
 
             messages.append({"role": "assistant", "content": response.text})
@@ -125,7 +125,7 @@ class GoogleGenerativeAI:
             if attempts > 0:
                 time.sleep(15)
                 return self.ask(q, attempts=attempts - 1)
-            return None
+            return
 
     def describe_image(self, image_path: Path) -> Optional[str]:
         """Generate a description of an image.
@@ -145,7 +145,7 @@ class GoogleGenerativeAI:
 
         except Exception as ex:
             logger.error(f"Error describing image: {ex}")
-            return None
+            return
 
 def chat():
     """Run the interactive chat session."""

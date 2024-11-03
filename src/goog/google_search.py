@@ -223,7 +223,7 @@ class GoogleHtmlParser:
                 'more_info': more_info
             }
         
-        return None
+        return
     
     def _get_scrolling_sections(self) -> list:
         """Get data in scrolling widgets.

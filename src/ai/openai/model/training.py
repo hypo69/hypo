@@ -21,7 +21,7 @@ from src.utils import j_loads, j_loads_ns, j_dumps
 from src.utils.csv import save_csv_file  
 from src.utils import pprint
 from src.utils.convertors.base64 import base64encode
-from src.utils.convertors.md2dict import md2dict, extract_json_from_string
+from src.utils.convertors.md2dict import md2dict
 
 class OpenAIModel:
     """OpenAI Model Class for interacting with the OpenAI API and managing the model."""
@@ -215,18 +215,17 @@ class OpenAIModel:
             reply = response
             ...
             try:
-                reply = response.choices[0].message.content.strip()
-                if isinstance(reply, str) and reply.startswith('```json'):
-                    reply = extract_json_from_string(reply)
-                    ...
-                return reply
+                raw_reply = response.choices[0].message.content.strip()
+                return j_loads_ns(raw_reply)
             except Exception as ex:
                 logger.error(f"Trouble in reponse {response}", ex, True)
                 ...
+                return
 
         except Exception as ex:
             logger.error(f"Ошибка openai", ex, True)
             ...
+            return
 
     def describe_image_by_requests(self, image_path: str | Path, prompt:str = None) -> str:
         """Send an image to the OpenAI API and receive a description."""
@@ -314,7 +313,7 @@ class OpenAIModel:
 
         except Exception as ex:
             logger.error("An error occurred during training:", ex)
-            return None
+            return
 
     def save_job_id(self, job_id: str, description: str, filename: str = "job_ids.json"):
         """Save the job ID with description to a file.

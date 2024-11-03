@@ -208,6 +208,7 @@ except LangDetectException as ex:
 
 from sqlite3 import Date
 from typing import List, Dict
+from types import SimpleNamespace
 from pathlib import Path
 from enum import Enum
 from types import MappingProxyType
@@ -225,6 +226,7 @@ from src.utils.string import StringFormatter as sf
 from src.product.product_fields.utils import (normalize_product_name,
                                                 normalize_bool,
                                                 )
+from src.utils.file import read_text_file
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional
 from pathlib import Path
@@ -242,96 +244,14 @@ class ProductFields:
     """
 
     
-    presta_fields_list: List[str] = field(default_factory=lambda: [
-        'active',
-        'additional_delivery_times',
-        'additional_shipping_cost',
-        'advanced_stock_management',
-        'affiliate_short_link',
-        'affiliate_summary',
-        'affiliate_summary_2',
-        'affiliate_text',
-        'affiliate_image_large',
-        'affiliate_image_medium',
-        'affiliate_image_small',
-        'associations',
-        'available_date',
-        'available_for_order',
-        'available_later',
-        'available_now',
-        'cache_default_attribute',
-        'cache_has_attachments',
-        'cache_is_pack',
-        'condition',
-        'customizable',
-        'date_add',
-        'date_upd',
-        'delivery_in_stock',
-        'delivery_out_stock',
-        'depth',
-        'description',
-        'description_short',
-        'ean13',
-        'ecotax',
-        'height',
-        'how_to_use',
-        'specification',
-        'id_category_default',
-        'id_default_combination',
-        'id_default_image',
-        'locale',
-        'id_manufacturer',
-        'id_product',
-        'id_shop_default',
-        'id_shop',
-        'id_supplier',
-        'id_tax',
-        'id_type_redirected',
-        'indexed',
-        'ingredients',
-        'is_virtual',
-        'isbn',
-        'link_rewrite',
-        'location',
-        'low_stock_alert',
-        'low_stock_threshold',
-        'meta_description',
-        'meta_keywords',
-        'meta_title',
-        'minimal_quantity',
-        'mpn',
-        'name',
-        'online_only',
-        'on_sale',
-        'out_of_stock',
-        'pack_stock_type',
-        'price',
-        'product_type',
-        'quantity_discount',
-        'redirect_type',
-        'reference',
-        'show_condition',
-        'show_price',
-        'state',
-        'supplier_reference',
-        'text_fields',
-        'unit_price_ratio',
-        'unity',
-        'upc',
-        'uploadable_files',
-        'visibility',
-        'volume',
-        'weight',
-        'wholesale_price',
-        'width',
-        'local_saved_image',
-        'local_saved_video',
+    product_fields_list: List[str] = field(default_factory=lambda: [
+        read_text_file(gs.path.src / 'product' / 'product_fields' / 'fields_list.txt', as_list = True)
     ])
 
     """ Список ключей словаря API Prestashop """
 
     language: Dict[str, int] = field(default_factory=lambda: {'en': 1, 'he': 2, 'ru': 3})
-    presta_fields_dict: Dict[str, Optional[str]] = field(init=False)
+    presta_fields: SimpleNamespace = field(init=False)
     assist_fields_dict: Dict[str, Optional[str]] = field(default_factory=lambda: {
         'default_image_url': '', 
         'images_urls': []
@@ -341,7 +261,7 @@ class ProductFields:
         """ Класс работы с полями товара. Поля берутся состраницы HTML или другого источника
         и форматируются в стандарте API Prestashop Dictonary. 
         Поля можно в принципе форматировать как угодно """
-        self.presta_fields_dict = {key: None for key in self.presta_fields_list}
+        self.presta_fields = SimpleNamespace(**{key: None for key in self.product_fields_list})
         self._payload()
 
     def _payload(self) -> bool:

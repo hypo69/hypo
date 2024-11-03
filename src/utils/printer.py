@@ -111,8 +111,15 @@ def pprint(print_data: str | list | dict | Path | Any = None,
         depth (int, optional): Depth of nested structures to print. Defaults to 4.
         max_lines (int, optional): Max lines to print from a file. Defaults to 10.
         text_color (str, optional): Text color using ANSI codes. Defaults to WHITE. 
+            Avaible colors:
+            `red`,`green`,`blue`,`yellow`,`white`,`cyan`,`magenta`,`light_gray`,`dark_gray`,`light_red`,`light_green`,`light_blue`,`light_yellow`
         bg_color (str, optional): Background color using ANSI codes. Defaults to "" (no background).
+            Avaible colors:
+            `bg_red`,`bg_green`,`bg_blue`,`bg_yellow`,`bg_white`,`bg_cyan`,`bg_magenta`,`bg_light_gray`,`bg_dark_gray`,
+            `bg_light_red`,`bg_light_green`,`bg_light_blue`,`bg_light_yellow`
         font_style (str, optional): Font style using ANSI codes. Defaults to "" (no style).
+        Avaible styles:
+            `italic`,`underline`,`bold`
         *args: Additional positional arguments passed to print or pretty_print.
         **kwargs: Additional keyword arguments passed to print or pretty_print.
     
@@ -140,7 +147,7 @@ def pprint(print_data: str | list | dict | Path | Any = None,
                 return [file.readline().strip() for _ in range(max_lines)]
         except Exception:
             print(_color_text("Error reading file."), RED)
-            return None
+            return
 
     def _print_csv(file_path: str, max_lines: int) -> None:
         """Prints the first `max_lines` rows from a CSV file."""

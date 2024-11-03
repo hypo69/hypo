@@ -25,6 +25,7 @@ from header import __root__
 from src.check_relise import check_latest_release 
 from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.file import read_text_file
+from src.utils.printer import pprint
 from src.logger import logger
 from src.logger.exceptions import KeePassException, DefaultSettingsException
 
@@ -48,7 +49,7 @@ class ProgamSettings(metaclass=SingletonMeta):
     dev_null: str = field(default='nul' if Path().drive else '/dev/null')
     __root__: Path = field(default=Path(__root__))
     settings: SimpleNamespace = field(default_factory=lambda: j_loads_ns(__root__ / 'src' / 'settings.json'))
-
+    mode:str = field(default = 'debug')
     path: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         root=Path(__root__),
         src=Path(__root__ / 'src'),
@@ -98,84 +99,233 @@ class ProgamSettings(metaclass=SingletonMeta):
         """Initialization routine after the instance is created."""
         if check_latest_release(self.settings.git_user, self.settings.git):
             ...
+        self.mode = self.settings.mode
+        self._load_credentials()
+        
 
-    @classmethod
-    def _load_credentials(cls) -> None:
+    def _load_credentials(self) -> None:
         """ Loads credentials from the KeePass database"""
-        kp = cls._open_kp(3)
+        kp = self._open_kp(3)
         if not kp:
             logger.error(" :( ")
             ...
             sys.exit(1)
 
-        if not cls._load_aliexpress_credentials(kp):
+        if not self._load_aliexpress_credentials(kp):
             raise DefaultSettingsException('Failed to load Aliexpress credentials')
 
-        if not cls._load_openai_credentials(kp):
+        if not self._load_openai_credentials(kp):
             raise DefaultSettingsException('Failed to load OpenAI credentials')
 
-        if not cls._load_gemini_credentials(kp):
+        if not self._load_gemini_credentials(kp):
             raise DefaultSettingsException('Failed to load GoogleAI credentials')
 
-        if not cls._load_discord_credentials(kp):
+        if not self._load_discord_credentials(kp):
             raise DefaultSettingsException('Failed to load Discord credentials')
 
-        if not cls._load_telegram_credentials(kp):
+        if not self._load_telegram_credentials(kp):
             raise DefaultSettingsException('Failed to load Telegram credentials')
 
-        if not cls._load_prestashop_credentials(kp):
+        if not self._load_prestashop_credentials(kp):
             raise DefaultSettingsException('Failed to load Prestashop credentials')
 
-        if not cls._load_smtp_credentials(kp):
+        if not self._load_smtp_credentials(kp):
             raise DefaultSettingsException('Failed to load SMTP credentials')
 
-        if not cls._load_facebook_credentials(kp):
+        if not self._load_facebook_credentials(kp):
             raise DefaultSettingsException('Failed to load Facebook credentials')
 
-        if not cls._load_presta_translations_credentials(kp):
+        if not self._load_presta_translations_credentials(kp):
             raise DefaultSettingsException('Failed to load Translations credentials')
 
-        if not cls._load_gapi_credentials(kp):
+        if not self._load_gapi_credentials(kp):
             raise DefaultSettingsException('Failed to load GAPI credentials')
 
-    @classmethod
-    def _open_kp(cls, retry: int = 3) -> PyKeePass | None:
+    
+    def _open_kp(self, retry: int = 3) -> PyKeePass | None:
         """ Open KeePass database
         @param retry: Number of retries
         """
         while retry > 0:
             try:
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                password = read_text_file( cls.path.secrets / 'password.txt').strip()
-                kp = PyKeePass(str(cls.path.secrets / 'credentials.kdbx'), password=password)
-                #kp = PyKeePass(str(cls.path.secrets / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower())  # <- `.lower()` for debug only!
+                password = read_text_file( self.path.secrets / 'password.txt').strip()
+                kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), 
+                               password = password or getpass.getpass(pprint('Enter KeePass master password: ', text_color='ligt_blue', bg_color='dark_gray')))
+                #kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower())  # <- `.lower()` for debug only!
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 return kp
             except Exception as ex:
                 logger.error(f"Failed to open KeePass database, {retry-1} retries left.", ex, False)
+                ...
                 retry -= 1
                 if retry < 1:
                     logger.critical('Failed to open KeePass database after multiple attempts', exc_info=True)
+                    ...
                     sys.exit()
 
     # Define methods for loading various credentials
-    def _load_aliexpress_credentials(cls, kp: PyKeePass) -> bool:
+    def _load_aliexpress_credentials(self, kp: PyKeePass) -> bool:
         """ Load Aliexpress API credentials from KeePass"""
         try:
             entry = kp.find_groups(path=['suppliers', 'aliexpress', 'api']).entries[0]
-            cls.credentials.aliexpress.api_key = entry.custom_properties.get('api_key', None)
-            cls.credentials.aliexpress.secret = entry.custom_properties.get('secret', None)
-            cls.credentials.aliexpress.tracking_id = entry.custom_properties.get('tracking_id', None)
-            cls.credentials.aliexpress.email = entry.custom_properties.get('email', None)
-            cls.credentials.aliexpress.password = entry.password
+            self.credentials.aliexpress.api_key = entry.custom_properties.get('api_key', None)
+            self.credentials.aliexpress.secret = entry.custom_properties.get('secret', None)
+            self.credentials.aliexpress.tracking_id = entry.custom_properties.get('tracking_id', None)
+            self.credentials.aliexpress.email = entry.custom_properties.get('email', None)
+            self.credentials.aliexpress.password = entry.password
             return True
         except DefaultSettingsException as ex:
             logger.error("Failed to extract Aliexpress API key from KeePass", ex)
+            ...
             return False
 
-    # Similarly implement _load_openai_credentials, _load_gemini_credentials, etc.
-    
-    # For brevity, additional methods are not displayed here. 
+    def _load_openai_credentials(self, kp: PyKeePass) -> bool:
+        """ Load OpenAI credentials from KeePass"""
+        try:
+            entries = kp.find_groups(path=['openai']).entries
+
+            for entry in entries:
+                setattr(self.credentials.openai, entry.title, entry.custom_properties.get('api_key', None))
+            return True
+        except DefaultSettingsException as ex:
+            ...
+            logger.error("Failed to extract GoogleAI credentials from KeePass", ex)
+            return False          
+
+            
+            return True
+        except DefaultSettingsException as ex:
+            logger.error("Failed to extract OpenAI credentials from KeePass", ex)
+            ...
+            return False
+
+    def _load_gemini_credentials(self, kp: PyKeePass) -> bool:
+        """ Load GoogleAI credentials from KeePass"""
+        try:
+            entries = kp.find_groups(path=['gemini']).entries
+
+            for entry in entries:
+                setattr(self.credentials.gemini, entry.title, entry.custom_properties.get('api_key', None))
+            return True
+        except DefaultSettingsException as ex:
+            ...
+            logger.error("Failed to extract GoogleAI credentials from KeePass", ex)
+            return False
+
+    def _load_telegram_credentials(self, kp: PyKeePass) -> bool:
+        """Load Telegram credentials from KeePass.
+
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
+        try:
+            entries = kp.find_groups(path=['telegram']).entries
+            for entry in entries:
+                setattr(self.credentials.telegram, entry.title, entry.custom_properties.get('token', None))
+            return True
+        except DefaultSettingsException as ex:
+            logger.error("Failed to extract Telegram credentials from KeePass", ex)
+            ...
+            return False
+
+    def _load_discord_credentials(self, kp: PyKeePass) -> bool:
+        """ Load Discord credentials from KeePass"""
+        try:
+            entry = kp.find_groups(path=['discord']).entries[0]
+            self.credentials.discord.application_id = entry.custom_properties.get('application_id', None)
+            self.credentials.discord.public_key = entry.custom_properties.get('public_key', None)
+            self.credentials.discord.bot_token = entry.custom_properties.get('bot_token', None)
+            return True
+        except DefaultSettingsException as ex:
+            logger.error("Failed to extract Discord credentials from KeePass", ex)
+            ...
+            return False
+
+    def _load_prestashop_credentials(self, kp: PyKeePass) -> bool:
+        """ Load Prestashop credentials from KeePass"""
+        try:
+            entries = kp.find_groups(path=['prestashop']).entries
+            for entry in entries:
+                setattr(self.credentials.telegram, entry.title, entry.custom_properties.get('token', None))
+            return True
+        except DefaultSettingsException as ex:
+            logger.error("Failed to extract Telegram credentials from KeePass", ex)
+            ...
+            return False
+        try:
+            for entry in kp.find_groups(path=['prestashop', 'clients']).entries:
+                self.credentials.presta.client.append(SimpleNamespace(
+                    api_key=entry.custom_properties.get('api_key', None),
+                    api_domain=entry.custom_properties.get('api_domain', None),
+                    db_server=entry.custom_properties.get('db_server', None),
+                    db_user=entry.custom_properties.get('db_user', None),
+                    db_password=entry.custom_properties.get('db_password', None),
+                ))
+            return True
+        except DefaultSettingsException as ex:
+            logger.error("Failed to extract Prestashop credentials from KeePass", ex)
+            ...
+            return False
+        
+    def _load_presta_translations_credentials(self, kp: PyKeePass) -> bool:
+        """ Load Translations credentials from KeePass"""
+        try:
+            entry = kp.find_groups(path=['prestashop','translation']).entries[0]
+            self.credentials.presta.translations.server = entry.custom_properties.get('server', None)
+            self.credentials.presta.translations.port = entry.custom_properties.get('port', None)
+            self.credentials.presta.translations.database = entry.custom_properties.get('database', None)
+            self.credentials.presta.translations.user = entry.custom_properties.get('user', None)
+            self.credentials.presta.translations.password = entry.custom_properties.get('password', None)
+            return True
+        except DefaultSettingsException as ex:
+            ...
+            logger.error("Failed to extract Translations credentials from KeePass", ex)
+            return False
+        
+    def _load_smtp_credentials(self, kp: PyKeePass) -> bool:
+        """ Load SMTP credentials from KeePass"""
+        try:
+            for entry in kp.find_groups(path=['smtp']).entries:
+                self.credentials.smtp.append(SimpleNamespace(
+                    server=entry.custom_properties.get('server', None),
+                    port=entry.custom_properties.get('port', None),
+                    user=entry.custom_properties.get('user', None),
+                    password=entry.custom_properties.get('password', None),
+                ))
+            return True
+        except DefaultSettingsException as ex:
+            ...
+            logger.error("Failed to extract SMTP credentials from KeePass", ex)
+            return False
+
+    def _load_facebook_credentials(self, kp: PyKeePass) -> bool:
+        """ Load Facebook credentials from KeePass"""
+        try:
+            for entry in kp.find_groups(path=['facebook']).entries:
+                self.credentials.facebook.append(SimpleNamespace(
+                    app_id=entry.custom_properties.get('app_id', None),
+                    app_secret=entry.custom_properties.get('app_secret', None),
+                    access_token=entry.custom_properties.get('access_token', None),
+                ))
+            return True
+        except DefaultSettingsException as ex:
+            ...
+            logger.error("Failed to extract Facebook credentials from KeePass", ex)
+            return False
+
+    def _load_gapi_credentials(self, kp: PyKeePass) -> bool:
+        """ Load Google API credentials from KeePass"""
+        try:
+            entry = kp.find_groups(path=['google','gapi']).entries[0]
+            self.credentials.gapi['api_key'] = entry.custom_properties.get('api_key', None)
+            return True
+        except DefaultSettingsException as ex:
+            logger.error("Failed to extract GAPI credentials from KeePass", ex)
+            return False
 
     @property
     def now(self) -> str:

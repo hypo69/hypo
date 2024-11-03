@@ -425,7 +425,7 @@ class Prestashop:
             return response
         except Exception as ex:
             logger.error(f"Error: {ex}")
-            return None
+            return
 
     def upload_image_async(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> dict | None:
         """ Upload an image to Prestashop API asynchronously.

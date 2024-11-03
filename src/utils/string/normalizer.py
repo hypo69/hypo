@@ -87,7 +87,7 @@ class StringNormalizer:
             return int(float(input_data))
         except (ValueError, TypeError, InvalidOperation) as e:
             logger.error(f"Error in normalize_int: {e}")
-            return None  # Changed from '...' to 'None' for clarity
+            return  # Changed from '...' to 'None' for clarity
 
     @staticmethod
     def normalize_float(value: Any) -> float | None:

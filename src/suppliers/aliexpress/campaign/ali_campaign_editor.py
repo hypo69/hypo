@@ -160,10 +160,10 @@ class AliCampaignEditor(AliPromoCampaign):
                 return getattr(self.campaign.category, category_name)
             else:
                 logger.warning(f"Category {category_name} not found in the campaign.")
-                return None
+                return
         except Exception as ex:
             logger.error(f"Error retrieving category {category_name}.", ex, exc_info=True)
-            return None
+            return
 
     @property
     def list_categories(self) -> Optional[List[str]]:
@@ -183,10 +183,10 @@ class AliCampaignEditor(AliPromoCampaign):
                 return list(vars(self.campaign.category).keys())
             else:
                 logger.warning("No categories found in the campaign.")
-                return None
+                return
         except Exception as ex:
             logger.error(f"Error retrieving categories list: {ex}")
-            return None
+            return
 
 
 

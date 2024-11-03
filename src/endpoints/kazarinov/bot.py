@@ -24,7 +24,7 @@ from src.logger import logger
 @dataclass
 class KazarinovTelegram(TelegramBot):
     """Telegram bot with custom behavior for Kazarinov."""
-    mode: str = 'debug'
+
     token: str = field(init=False)
     d: Driver = field(init=False)
     mexiron: Mexiron = field(init=False)
@@ -34,8 +34,8 @@ class KazarinovTelegram(TelegramBot):
     timestamp: str = field(default_factory=lambda: gs.now)
 
     def __post_init__(self):
-        self.token = gs.credentials.telegram.bot.hypo69_test_bot if self.mode == 'debug' \
-            else gs.credentials.telegram.bot.hypo69_kazarinov_bot
+        mode = 'test'
+        self.token = gs.credentials.telegram.hypo69_test_bot if mode == 'test' else gs.credentials.telegram.hypo69_kazarinov_bot
         super().__init__(self.token)
 
         self.d = Driver(Chrome)
@@ -102,7 +102,7 @@ class KazarinovTelegram(TelegramBot):
         for urls, handler_func in url_handlers.values():
             if response.startswith(urls):
                 return handler_func
-        return None
+        return
 
     async def handle_suppliers_response(self, update: Update, response: str) -> None:
         """Handle suppliers' URLs."""
@@ -145,5 +145,5 @@ class KazarinovTelegram(TelegramBot):
         await update.message.reply_text(f'Received your document. Content: {file_content}')
 
 if __name__ == "__main__":
-    kt = KazarinovTelegram(mode='debug')
+    kt = KazarinovTelegram()
     asyncio.run(kt.application.run_polling())

@@ -41,7 +41,7 @@ def pprint(print_data: str | list | dict | Path | Any = None, depth: int = 4, ma
                     return [file.readline().strip() for _ in range(max_lines)]
             except Exception as ex:
                 pretty_print(print_data)
-                return None
+                return
 
     def _print_class_info(instance: Any, *args, **kwargs) -> None:
         """Prints class information including class name, methods, and properties."""

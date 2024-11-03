@@ -6,7 +6,7 @@ from ..errors.exceptions import InvalidArgumentException
 
 def get_list_as_string(value):
     if value is None:
-        return None
+        return
 
     if isinstance(value, str):
         return value

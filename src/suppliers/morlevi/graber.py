@@ -46,21 +46,20 @@ def close_popup(value: Any = None) -> Callable:
         return wrapper
     return decorator
 
+supplier_prefix = 'morlevi'
 @dataclass(frozen=True)
 class Graber(Grbr):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str = field(default="morlevi")
+    supplier_prefix: str = field(default=supplier_prefix)
     d: Driver = None  # d будет назначен позже в `grab_page()`
     l: Locator = None  # l будет назначен позже в `__post_init__()`
 
     def __post_init__(self):
         """Post-initialization to load the locator namespace and set global variables."""
-
-        locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
-        object.__setattr__(self, 'l', Locator(self.supplier_prefix)
+        object.__setattr__(self, 'l', Locator(self.supplier_prefix))
         global l
         l = self.l  
-        super().__init__(self.supplier_prefix, self.l)
+        super().__init__(supplier_prefix, self.l)
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.

@@ -146,7 +146,7 @@ class Driver:
                 return self.get_page_lang()
             except Exception as ex:
                 logger.debug("Could not determine site language from JavaScript", ex)
-                return None
+                return
 
     def get_url(self, url: str) -> bool:
         """ Navigates to the specified URL and saves the current URL, previous URL, and cookies.
@@ -235,7 +235,7 @@ class Driver:
             logger.error('Invalid URL or file path:', url)
             return False
     
-        return None
+        return
 
     def extract_body_text(self, url: str = '') -> str:
         """ Extracts and returns the text from the body of the HTML page using JavaScript executed via Selenium.

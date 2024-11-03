@@ -1,11 +1,12 @@
 ﻿## \file ../src/utils/__init__.py
-## \file ../src/utils/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """
 # tiny_utils Module
 
-The `tiny_utils` module is a collection of small, useful utilities designed to simplify common programming tasks. It includes tools for data conversion, file handling, and formatted output. This module helps streamline coding by providing straightforward and reusable functions.
+The `tiny_utils` module is a collection of small, useful utilities designed to simplify common programming tasks. 
+It includes tools for data conversion, file handling, and formatted output. 
+This module helps streamline coding by providing straightforward and reusable functions.
 """
 
 from packaging.version import Version
@@ -71,6 +72,7 @@ from .jjson import (
     j_dumps,
     j_loads,
     j_loads_ns,
+    replace_key_in_json,
 )
 
 from .pdf import save_pdf

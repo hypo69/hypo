@@ -123,4 +123,4 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 
     except Exception as ex:
         logger.error(f"Error occurred while retrieving emails: {ex}", exc_info=True)
-        return None
+        return

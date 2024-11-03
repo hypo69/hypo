@@ -112,7 +112,7 @@ def read(source_file_path: str, dest_dir: str, dest_file_name: str) -> Union[str
     except Exception as ex:
         # Log error if file retrieval from FTP server fails
         logger.error(f"Failed to retrieve file from FTP server. Error: {ex}")
-        return None
+        return
     finally:
         try:
             # Close the FTP session

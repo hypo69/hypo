@@ -59,7 +59,7 @@ from .ns import (
 
 from .md2dict import (
                     md2dict, 
-                    extract_json_from_string
+                    
                       )
 
 from .xls import xls2dict

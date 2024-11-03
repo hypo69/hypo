@@ -1,5 +1,4 @@
 ﻿## \file ../src/utils/jjson.py
-## \file ../src/utils/jjson.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """
@@ -108,13 +107,11 @@ def j_dumps(
     
     return data
 
-
-
 def j_loads(
     jjson: dict | SimpleNamespace | str | Path | list[dict] | list[SimpleNamespace],
     ordered: bool = True,
     exc_info: bool = True
-) -> tuple[bool, Any]:
+) -> Any:
     """Load JSON or CSV data from a file, directory, or string.
 
     Args:
@@ -123,7 +120,7 @@ def j_loads(
         exc_info (bool, optional): If True, logs exceptions with traceback. Defaults to True.
 
     Returns:
-        tuple[bool, Any]: A tuple with success status and either a dictionary or list of dictionaries.
+        Any: A dictionary or list of dictionaries if successful, or nothing if an error occurs.
     
     Raises:
         FileNotFoundError: If the specified file is not found.
@@ -131,16 +128,16 @@ def j_loads(
 
     Examples:
         >>> j_loads('data.json')
-        (True, {'key': 'value'})
+        {'key': 'value'}
 
         >>> j_loads(Path('/path/to/directory'))
-        (True, [{'key1': 'value1'}, {'key2': 'value2'}])
+        [{'key1': 'value1'}, {'key2': 'value2'}]
 
         >>> j_loads('{"key": "value"}')
-        (True, {'key': 'value'})
+        {'key': 'value'}
 
         >>> j_loads(Path('/path/to/file.csv'))
-        (True, [{'column1': 'value1', 'column2': 'value2'}])
+        [{'column1': 'value1', 'column2': 'value2'}]
     """
     
     def clean_string(json_string: str) -> str:
@@ -178,50 +175,50 @@ def j_loads(
                 json_files = list(json_path.glob("*.json"))
                 if not json_files: 
                     logger.warning(f"No JSON files found in directory: {json_path}", exc_info=True)
-                    return False, None
+                    return
 
                 dict_list = [j_loads(file)[1] for file in json_files if j_loads(file)[0]]
                 if all(isinstance(d, dict) for d in dict_list):
-                    return True, merge_dicts(dict_list)
-                return True, dict_list
+                    return merge_dicts(dict_list)
+                return dict_list
 
             if json_path.suffix.lower() == ".csv":
                 csv_data = _load_csv_from_file(json_path)
-                return bool(csv_data), csv_data
+                return csv_data
 
             try:
                 data = json.loads(json_path.read_text(encoding="utf-8"))
-                return True, data
+                return data
             except Exception as ex:
-                logger.debug(f"Error reading file {json_path=}", exc_info=exc_info)
-                return False, None
+                logger.debug(f"Error reading file {json_path=}", ex, exc_info=exc_info)
+                ...
+                return
 
         elif isinstance(jjson, str):
             data = clean_string(jjson)
             try:
                 data = json.loads(data)
-                return True, data
+                return data
             except Exception as ex:
                 data = repair_json(data)  # Assuming repair_json is defined elsewhere
                 try: 
                     data = json.loads(data)
-                    return True, data
+                    return data
                 except Exception as ex:
                     logger.debug(f"Invalid JSON format {data}", exc_info=exc_info)
-                    return False, None
+                    return
 
         elif isinstance(jjson, dict):
-            return True, jjson
+            return jjson
 
     except FileNotFoundError as ex:
         logger.error(f"File not found: {jjson}", exc_info=exc_info)
-        return False, None
+        return
     except Exception as ex:
         logger.error(f"Error loading JSON data from {jjson}", exc_info=exc_info)
-        return False, None
+        return
 
-    return False, None
-
+    return
 
 def j_loads_ns(
     jjson: Path | SimpleNamespace | Dict | str,
@@ -257,7 +254,6 @@ def j_loads_ns(
             return  [dict2ns(item) for item in data]
         return  dict2ns(data)
     return  data 
-
 
 def replace_key_in_json(data, old_key, new_key) -> dict:
     """
@@ -308,8 +304,6 @@ def replace_key_in_json(data, old_key, new_key) -> dict:
     
     return data
 
-
-
 def process_json_file(json_file: Path):
     """
     Обрабатывает JSON файл, заменяя ключ `name` на `category_name`.
@@ -330,8 +324,7 @@ def recursive_process_json_files(directory: Path):
     for path in directory.rglob('*.json'):
         if path.is_file():
             process_json_file(path)
-
-            
+        
 def extract_json_from_string(md_string: str) -> str:
     """Extract JSON content from Markdown string between ```json and ``` markers.
 

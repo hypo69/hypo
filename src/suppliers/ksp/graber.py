@@ -1,31 +1,37 @@
-﻿## \file ../src/suppliers/ksp/graber.py
-## \file ../src/suppliers/ksp/graber.py
+﻿## \file ../src/suppliers/ksp/ksp.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 
 
 import asyncio
 from pathlib import Path
-from typing import Any, Callable, Optional
 from types import SimpleNamespace
+from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
 
 from src import gs
-from src.suppliers import Graber as Grbr
+
+from src.suppliers import Graber as Grbr, Locator
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
+from dataclasses import dataclass, field
+from types import SimpleNamespace
+from typing import Any, Callable
+
+d: Driver = None
+l: Locator = None
+
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
     """Creates a decorator to close pop-ups before executing the main function logic.
 
     Args:
-        d Driver: Driver instance to use for closing the pop-up.
-        l SimpleNamespace: Namespace with locators.
+        value (Any): Optional value passed to the decorator.
 
     Returns:
         Callable: The decorator wrapping the function.
@@ -34,28 +40,28 @@ def close_popup(value: Any = None) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                # await d.execute_locator(l.close_popup)  # Await async pop-up close
-                ...
+                await d.execute_locator(l.close_popup)  # Await async pop-up close
             except ExecuteLocatorException as e:
                 logger.debug(f"Error executing locator: {e}")
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
 
+supplier_pefix = 'ksp'
 @dataclass(frozen=True)
 class Graber(Grbr):
-    """Graber class for specific grabbing operations."""
-    supplier_prefix: str = field(default="ksp")
-    d: Driver = None  # d будет назначен позже
-    l: SimpleNamespace = None  # l будет назначен позже в __post_init__
+    """Graber class for morlevi grabbing operations."""
+    supplier_prefix: str = field(default = supplier_pefix)
+    d: Driver = None  # d будет назначен позже в `grab_page()`
+    l: Locator = None  # l будет назначен позже в `__post_init__()`
 
     def __post_init__(self):
         """Post-initialization to load the locator namespace and set global variables."""
 
         locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
-        object.__setattr__(self, 'l', j_loads_ns(locator_path))
+        object.__setattr__(self, 'l', Locator(self.supplier_prefix))
         global l
-        l = self.l  
+        l = self.l                                                                  
         super().__init__(self.supplier_prefix, self.l)
 
     async def grab_page(self, driver: Driver) -> ProductFields:

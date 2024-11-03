@@ -45,6 +45,6 @@ def translate(text, source_language, target_language):
     except Exception as ex:
         # Логируем ошибку
         logger.error("Error during translation", ex)
-        return None
+        return
 
 

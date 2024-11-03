@@ -90,7 +90,7 @@ def read_csv_file(file_path: Union[str, Path], exc_info: bool = True) -> List[Di
             return list(csv.DictReader(f))
     except Exception as ex:
         logger.error(f"Failed to read CSV from {file_path}", exc_info=exc_info)
-        return None
+        return
 
 
 def read_csv_as_json(csv_file_path: Union[str, Path], json_file_path: Union[str, Path], exc_info: bool = True) -> bool:
@@ -139,7 +139,7 @@ def read_csv_as_dict(csv_file: Union[str, Path]) -> dict | None:
             return {"data": [row for row in reader]}
     except Exception as ex:
         logger.error("Failed to read CSV as dictionary", exc_info=True)
-        return None
+        return
 
 def read_csv_as_ns(file_path: Union[str, Path]) -> List[dict]:
     """! Load CSV data into a list of dictionaries using Pandas.

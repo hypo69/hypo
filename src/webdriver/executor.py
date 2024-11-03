@@ -97,7 +97,7 @@ class ExecuteLocator:
         message: Optional[str] = None,
         typing_speed: float = 0,
         continue_on_error: bool = True,
-    ) -> str | list | dict | WebElement | bool:
+    ) -> str | list | dict | WebElement | bool | None:
         """! Executes the logic specified in the locator dictionary to interact with web elements.
 
         Args:
@@ -112,11 +112,11 @@ class ExecuteLocator:
             Union[str, list, dict, WebElement, bool]: Outcome based on locator instructions.
         """
         locator = (
-            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator)
+            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
 
         async def _parse_locator(
-            loc: Union[dict, SimpleNamespace], message: Optional[str]
+            l: Union[dict, SimpleNamespace], message: Optional[str]
         ) -> str | list | dict | WebElement | bool:
             """! Parses and executes locator instructions.
 
@@ -127,30 +127,30 @@ class ExecuteLocator:
             Returns:
                 Union[str, list, dict, WebElement, bool]: Result of the execution.
             """
-            loc = (
-                loc if isinstance(loc, SimpleNamespace) else SimpleNamespace(**loc)
+            locator = (
+                locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator)
             )
-            if all([loc.event, loc.attribute, loc.mandatory]) is None:
-                return None
+            if all([locator.event, locator.attribute, locator.mandatory]) is None:
+                return 
 
             try:
-                loc.by = self.by_mapping.get(loc.by.upper(), loc.by)
-                if loc.attribute:
-                    loc.attribute = await self.evaluate_locator(loc.attribute)
+                locator.by = self.by_mapping.get(locator.by.upper(), locator.by)
+                if locator.attribute:
+                    locator.attribute = await self.evaluate_locator(locator.attribute)
             except Exception as ex:
-                if self.mode == 'debug':
-                    logger.debug(f"Locator Error: {loc}")
-                return None
+                if gs.mode == 'debug':
+                    logger.debug(f"Locator Error: {l}")
+                return
 
-            if loc.event:
-                return await self.execute_event(loc, timeout, timeout_for_event, message, typing_speed)
-            if loc.attribute:
-                return await self.get_attribute_by_locator(loc)
-            return await self.get_webelement_by_locator(loc, timeout, timeout_for_event, message, typing_speed)
+            if locator.event:
+                return await self.execute_event(l, timeout, timeout_for_event, message, typing_speed)
+            if locator.attribute:
+                return await self.get_attribute_by_locator(l)
+            return await self.get_webelement_by_locator(l, timeout, timeout_for_event, message, typing_speed)
 
         return await _parse_locator(locator, message)
 
-    async def evaluate_locator(self, attribute: Union[str, List[str], dict]) -> Union[str, List[str], dict]:
+    async def evaluate_locator(self, attribute: str | List[str] | dict) -> Optional[str | List[str] | dict]:
         """Evaluates and processes locator attributes.
 
         Args:
@@ -187,14 +187,15 @@ class ExecuteLocator:
         """
     
         locator = (
-            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
+            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
 
         element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
         if not element:
-            if self.mode == 'debug': 
+            if gs.mode == 'debug': 
                 logger.debug(f"Element not clickable: {pprint(locator, text_color='YELLOW', bg_color='BLACK')}\n", None, False)
-            return None
+            ...
+            return
    
         def _parse_dict_string(attr_string: str) -> dict | None:
             """! Parses a string like '{attr1:attr2}' into a locator.
@@ -211,13 +212,13 @@ class ExecuteLocator:
                     for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))
                 }
             except ValueError as ex:
-                if self.mode == 'debug': 
+                if gs.mode == 'debug': 
                     logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
-                return None
+                return
             except Exception as ex:
-                if self.mode == 'debug': 
+                if gs.mode == 'debug': 
                     logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
-                return None
+                return
 
         def _get_attributes_from_dict(element: WebElement, attr_dict: dict) -> dict:
             """! Retrieves attribute values for each key in a given dictionary.
@@ -236,10 +237,10 @@ class ExecuteLocator:
                     attr_value = element.get_attribute(value)
                     result[attr_key] = attr_value
                 except Exception as ex:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.debug(
                             f"Error retrieving attributes '{pprint(key, text_color='WHITE', bg_color='RED')}' or '{pprint(value, text_color='WHITE', bg_color='RED')}' from element.", ex, False)
-                    return None
+                    return
             return result
 
         if element:
@@ -258,21 +259,21 @@ class ExecuteLocator:
                         ret.append(f'{e.get_attribute(locator.attribute)}')
                     return ret if len(ret) > 1 else ret[0]
                 except Exception as ex:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.debug(f"Error in get_attribute(): {pprint(locator, text_color='YELLOW', bg_color='BLACK')}\n", ex, False)
-                    return None
+                    return
             
             return element.get_attribute(locator.attribute)
-        return None
+        return
 
     async def get_webelement_by_locator(
         self,
-        locator: Union[dict, SimpleNamespace],
+        locator: dict | SimpleNamespace,
         timeout: float = 5,
         timeout_for_event: str = 'presence_of_element_located',
         message: Optional[str] = None,
         typing_speed: float = 0,
-    ) -> Optional[Union[WebElement, List[WebElement]]]:
+    ) -> WebElement | List[WebElement] | None:
         """Fetches web elements according to the locator.
 
         Args:
@@ -286,17 +287,17 @@ class ExecuteLocator:
             Optional[Union[WebElement, List[WebElement]]]: The located web element or list of elements.
         """
         d = self.driver
-        loc = (
-            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
+        locator = (
+            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
         try:
             condition = EC.presence_of_element_located if timeout_for_event == 'presence_of_element_located' else EC.element_to_be_clickable
-            element = await asyncio.to_thread(WebDriverWait(d, timeout).until, condition((loc.by, loc.selector)))
+            element = await asyncio.to_thread(WebDriverWait(d, timeout).until, condition((locator.by, locator.selector)))
             return element
         except Exception as ex:
-            if self.mode == 'debug':
-                logger.debug(f"Locator issue: {loc}")
-            return None
+            if gs.mode == 'debug':
+                logger.debug(f"Locator issue: {locator}")
+            return
 
     async def get_webelement_as_screenshot(
         self,                                     
@@ -323,14 +324,14 @@ class ExecuteLocator:
             BinaryIO | None: Binary stream of the screenshot or None if failed.
         """
         locator = (
-            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
+            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
 
         if not webelement:
             webelement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
 
         if not webelement:
-            return None
+            return
 
         screenshot_stream = await asyncio.to_thread(webelement.screenshot_as_png)
         return screenshot_stream
@@ -342,7 +343,7 @@ class ExecuteLocator:
                              message: str = None,
                              typing_speed: float = 0,
                              continue_on_error: bool = True,
-    ) -> bool | bytes | list[bytes]:
+    ) -> str | list[str] | bytes | list[bytes] | bool:
         """
         Execute the events associated with a locator.
 
@@ -357,7 +358,7 @@ class ExecuteLocator:
             bool: Returns True if event execution was successful, False otherwise.
         """
         locator = (
-            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
+            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
         events = str(locator.event).split(";")
         result: list = []
@@ -382,11 +383,11 @@ class ExecuteLocator:
                     result.append(True)
                     continue
                 except ElementClickInterceptedException as ex:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.debug(f"Element click intercepted: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
                     return False
                 except Exception as ex:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.debug(f"Element click intercepted: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
                     return False
 
@@ -397,13 +398,13 @@ class ExecuteLocator:
                     await asyncio.sleep(pause_duration)
                     result.append(True)
                     continue
-                if self.mode == 'debug': 
+                if gs.mode == 'debug': 
                     logger.debug(f"Invalid pause duration: {pprint(event, text_color='WHITE',bg_color='RED')}\n")
                 return False
 
             elif event == "upload_media()":
                 if not message:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.debug(f"Message is required for upload_media event. Message: {pprint(message, text_color='WHITE',bg_color='RED')}", None, False)
                     return False
                 try:
@@ -411,7 +412,7 @@ class ExecuteLocator:
                     result.append(True)
                     continue
                 except Exception as ex:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.debug(f"Error uploading media: {pprint(message, text_color='WHITE',bg_color='RED')}", ex, False)
                     return False
 
@@ -419,7 +420,7 @@ class ExecuteLocator:
                 try:
                     result.append(await self.get_webelement_as_screenshot(locator, webelement=webelement))
                 except Exception as ex:
-                    if self.mode == 'debug':
+                    if gs.mode == 'debug':
                         logger.error(f"Error taking screenshot: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
                     return False
 
@@ -427,7 +428,7 @@ class ExecuteLocator:
                 try:
                     await asyncio.to_thread(webelement.clear)
                 except Exception as ex:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.error(f"Error clearing element: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
                     return False
 
@@ -442,7 +443,7 @@ class ExecuteLocator:
                             actions.send_keys(key_to_send)
                     await asyncio.to_thread(actions.perform)
                 except Exception as ex:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.error(f"Error sending keys: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
                     return False
 
@@ -606,7 +607,7 @@ class ExecuteLocator:
                             self.actions.pause(typing_speed)
                             self.actions.perform()
                 except Exception as ex:
-                    if self.mode == 'debug': 
+                    if gs.mode == 'debug': 
                         logger.error(f"Error typing message\n{letter=}\n{word=}\n{pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex)
                     ...
                     continue  # <- если была ошибка в передаче буквы - пока игнорую ёё

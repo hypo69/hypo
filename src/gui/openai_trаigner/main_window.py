@@ -175,7 +175,7 @@ class AssistantMainWindow(QMainWindow):
 
         if ok and choice:
             return choice
-        return None
+        return
 
     # Метод для загрузки URL
     def load_url(self, url: str = None):

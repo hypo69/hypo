@@ -99,8 +99,8 @@ def csv_to_json(
             with open(json_file_path, 'w', encoding='utf-8') as jsonfile:
                 json.dump(data, jsonfile, indent=4)
             return data
-        return None
+        return
     except Exception as ex:
         logger.error("Failed to convert CSV to JSON", ex, exc_info=exc_info)
-        return None
+        return
 

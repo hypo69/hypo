@@ -102,7 +102,7 @@ def read_text_file(
         except Exception as ex:
             if exc_info:
                 logger.error(f"Failed to read file {file_path}.", ex, exc_info=exc_info)
-            return None
+            return
     elif path.is_dir():
         try:
             content = []
@@ -118,10 +118,10 @@ def read_text_file(
         except Exception as ex:
             if exc_info:
                 logger.error(f"Failed to read files in directory {file_path}.", ex, exc_info=exc_info)
-            return None
+            return
     else:
         logger.warning(f"File or directory '{file_path}' does not exist.")
-        return None
+        return
 
 
 def get_filenames(

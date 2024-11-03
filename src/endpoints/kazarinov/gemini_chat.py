@@ -24,7 +24,7 @@ from src.logger import logger
 
 class KazarinovAI:
     """Handles model training and dialog generation for the Kazarinov project using GoogleGenerativeAI."""
-
+    
     api_key = gs.credentials.gemini.kazarinov
     # Base paths for system instructions and training files
     base_path = gs.path.google_drive / 'kazarinov' 

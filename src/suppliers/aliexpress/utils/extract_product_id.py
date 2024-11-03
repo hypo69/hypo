@@ -61,7 +61,7 @@ def extract_prod_ids(urls: str | list[str]) -> str | list[str] | None:
         match = pattern.search(url)
         if match:
             return match.group(1)
-        return None
+        return
 
     if isinstance(urls, list):
         extracted_ids = [extract_id(url) for url in urls if extract_id(url) is not None]
