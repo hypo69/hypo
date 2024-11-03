@@ -14,7 +14,6 @@ from src.logger import logger
 #from src.db import ProductTranslationsManager
 from src.translator import get_translations_from_presta_translations_table
 from src.translator import insert_new_translation_to_presta_translations_table
-from src.product.product_fields.product_fields import record
 from src.logger.exceptions import ProductFieldException
 ...
 

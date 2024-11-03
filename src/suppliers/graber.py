@@ -4,16 +4,14 @@
 """ Базовый класс сбора данных со старницы для всех поставщиков
 """
 
-import os, sys, asyncio
+import os
+import sys
+import asyncio
 from pathlib import Path
-from typing import List, Union, Dict, Any, Optional, Callable
-from types import SimpleNamespace
-from urllib import response
+from typing import Any, Callable
 from langdetect import detect
 from functools import wraps
 
-
-...
 from src import gs
 from src.suppliers.locator import Locator
 from src.product.product_fields import ProductFields
@@ -21,27 +19,20 @@ from src.category import Category
 from src.webdriver import Driver
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png_from_url
-from src.utils import pprint 
-from src.utils.image import save_png_from_url
-from src.logger import logger 
+from src.utils import pprint
+from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 from src.prestashop import Prestashop
-from dataclasses import dataclass, field
-from types import SimpleNamespace
-from typing import Any, Callable, Optional
-import asyncio
-from functools import wraps
 
-d:Driver
-l:Locator
+d: Driver = None
+l: Locator = None
 
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
     """Creates a decorator to close pop-ups before executing the main function logic.
 
     Args:
-        d Driver: Driver instance to use for closing the pop-up.
-        l SimpleNamespace: Namespace with locators.
+        value (Any): Optional value passed to the decorator.
 
     Returns:
         Callable: The decorator wrapping the function.
@@ -50,58 +41,68 @@ def close_popup(value: Any = None) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                # await d.execute_locator(l.close_popup)  # Await async pop-up close
-                ...
-            except ExecuteLocatorException as ex:
-                logger.debug(f"Error executing locator: {l.close_popup=} ", ex)
+                await d.execute_locator(l.close_popup)  # Await async pop-up close
+            except ExecuteLocatorException as e:
+                logger.debug(f"Error executing locator: {e}")
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
 
-@dataclass(frozen=True)
 class Graber:
-    """"""
-    ...
-    supplier_prefix: str
-    l: Locator = field(init=False)  # Будет инициализирован в __post_init__
-    fields: ProductFields = field(default_factory=ProductFields)
-    d: Driver = None
+    """Базовый класс сбора данных со страницы для всех поставщиков."""
+    
+    def __init__(self, supplier_prefix: str, locator: Locator):
+        """Инициализация класса Graber.
 
-    def __post_init__(self):
-        """"""
-        ...
-        global d, l
-        d = self.d
-        l = self.l
+        Args:
+            supplier_prefix (str): Префикс поставщика.
+            locator (Locator): Экземпляр класса Locator.
+            driver (Driver): Экземпляр класса Driver.
+        """
+        self.supplier_prefix = supplier_prefix
+        global l
+        l = self.l = locator
+        self.fields = ProductFields()
 
-    def error(self, field: str):
-        """Error handler for fields."""
+    async def error(self, field: str):
+        """Обработчик ошибок для полей."""
         logger.debug(f"Ошибка заполнения поля {field}")
 
     async def set_field_value(
-        self, 
-        value: Any, 
-        locator_func: Callable[[], Any], 
-        field_name: str, 
+        self,
+        value: Any,
+        locator_func: Callable[[], Any],
+        field_name: str,
         default: Any = ''
     ) -> Any:
-        """Universal function for setting field values with error handling."""
-        return (
-            value if value else
-            await asyncio.to_thread(locator_func) if locator_func() else
-            self.error(field_name) or default
-        )
+        """Универсальная функция для установки значений полей с обработкой ошибок.
 
+        Args:
+            value (Any): Значение для установки.
+            locator_func (Callable[[], Any]): Функция для получения значения из локатора.
+            field_name (str): Название поля.
+            default (Any): Значение по умолчанию. По умолчанию пустая строка.
 
+        Returns:
+            Any: Установленное значение.
+        """
+        locator_result = await asyncio.to_thread(locator_func)
+        if value:
+            return value
+        if locator_result:
+            return locator_result
+        await self.error(field_name)
+        return default
 
-    async def grab_page(self, driver: Driver) -> ProductFields:
-        """Asynchronous function to grab product fields."""
-        global d
-        d = self.d = driver
-        async def fetch_all_data(**kwards):
-        
-            # Call function to fetch specific data
-            # await fetch_specific_data(**kwards)  
+    async def grab_page(self) -> ProductFields:
+        """Асинхронная функция для сбора полей продукта.
+
+        Returns:
+            ProductFields: Собранные поля продукта.
+        """
+        async def fetch_all_data(**kwargs):
+            # Вызов функции для получения конкретных данных
+            # await self.fetch_specific_data(**kwargs)  # Убедитесь, что эта функция реализована
 
             # Uncomment the following lines to fetch specific data
             await self.id_product(kwards.get("id_product", ''))
@@ -214,7 +215,7 @@ class Graber:
         """Fetch and set additional shipping cost."""
         self.fields.additional_shipping_cost = await self.set_field_value(
             value, 
-            lambda: ''.join(self.driver.execute_locator(self.l.additional_shipping_cost) or []), 
+            lambda: ''.join(self.d.execute_locator(self.l.additional_shipping_cost) or []), 
             'additional_shipping_cost'
         )
 
@@ -223,7 +224,7 @@ class Graber:
         """Fetch and set delivery in stock status."""
         self.fields.delivery_in_stock = await self.set_field_value(
             value, 
-            lambda: ''.join(self.driver.execute_locator(self.l.delivery_in_stock) or []), 
+            lambda: ''.join(self.d.execute_locator(self.l.delivery_in_stock) or []), 
             'delivery_in_stock'
         )
 
@@ -232,7 +233,7 @@ class Graber:
         """Fetch and set active status."""
         self.fields.active = await self.set_field_value(
             value, 
-            lambda: ''.join(self.driver.execute_locator(self.l.active) or []), 
+            lambda: ''.join(self.d.execute_locator(self.l.active) or []), 
             'active'
         )
 
@@ -241,7 +242,7 @@ class Graber:
         """Fetch and set additional delivery times."""
         self.fields.additional_delivery_times = await self.set_field_value(
             value, 
-            lambda: ''.join(self.driver.execute_locator(self.l.additional_delivery_times) or []), 
+            lambda: ''.join(self.d.execute_locator(self.l.additional_delivery_times) or []), 
             'additional_delivery_times'
         )
 
@@ -250,7 +251,7 @@ class Graber:
         """Fetch and set advanced stock management status."""
         self.fields.advanced_stock_management = await self.set_field_value(
             value, 
-            lambda: ''.join(self.driver.execute_locator(self.l.advanced_stock_management) or []), 
+            lambda: ''.join(self.d.execute_locator(self.l.advanced_stock_management) or []), 
             'advanced_stock_management'
         )
 
@@ -259,7 +260,7 @@ class Graber:
         """Fetch and set affiliate short link."""
         self.fields.affiliate_short_link = await self.set_field_value(
             value, 
-            lambda: ''.join(self.driver.execute_locator(self.l.affiliate_short_link) or []), 
+            lambda: ''.join(self.d.execute_locator(self.l.affiliate_short_link) or []), 
             'affiliate_short_link'
         )
 
@@ -268,7 +269,7 @@ class Graber:
         """Fetch and set affiliate summary."""
         self.fields.affiliate_summary = await self.set_field_value(
             value, 
-            lambda: ''.join(self.driver.execute_locator(self.l.affiliate_summary) or []), 
+            lambda: ''.join(self.d.execute_locator(self.l.affiliate_summary) or []), 
             'affiliate_summary'
         )
 
@@ -277,7 +278,7 @@ class Graber:
         """Fetch and set affiliate summary 2."""
         self.fields.affiliate_summary_2 = await self.set_field_value(
             value, 
-            lambda: ''.join(self.driver.execute_locator(self.l.affiliate_summary_2) or []), 
+            lambda: ''.join(self.d.execute_locator(self.l.affiliate_summary_2) or []), 
             'affiliate_summary_2'
         )
 

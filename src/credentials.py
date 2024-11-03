@@ -149,7 +149,7 @@ class ProgamSettings(metaclass=SingletonMeta):
         while retry > 0:
             try:
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                password = read_text_file( self.path.secrets / 'password.txt').strip()
+                password:str = read_text_file( self.path.secrets / 'password.txt')
                 kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), 
                                password = password or getpass.getpass(pprint('Enter KeePass master password: ', text_color='ligt_blue', bg_color='dark_gray')))
                 #kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower())  # <- `.lower()` for debug only!

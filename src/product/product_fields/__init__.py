@@ -13,5 +13,5 @@
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
 
-from .product_fields import ProductFields, record
+from .product_fields import ProductFields
 from .product_fields_translator import translate_presta_fields_dict

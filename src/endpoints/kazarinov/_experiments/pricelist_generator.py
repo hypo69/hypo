@@ -9,7 +9,7 @@ from pathlib import Path
 import header 
 from src import gs
 
-from src.suppliers.kazarinov.react import ReportGenerator
+from src.endpoints.kazarinov.react import ReportGenerator
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 
 base_path = gs.path.data / 'kazarinov' / 'mexironim' / '202410262326' 

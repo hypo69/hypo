@@ -64,64 +64,50 @@ def save_text_file(
 
 
 def read_text_file(
-    file_path: str | Path, as_list: bool = False, exc_info: bool = True
-) -> list | str | None:
+    file_path: str | Path, as_list: bool = False, extensions: list[str] = None, exc_info: bool = True
+) -> list[str] | str | None:
     """
-    Reads the content of a text file or, if a directory is provided, reads all .txt and .md files inside.
+    Reads the content of a text file or, if a directory is provided, reads all files within it (with optional extensions).
 
     Args:
         file_path (str | Path): Path to the text file or directory.
         as_list (bool, optional): If True, returns the content as a list of lines. If False, returns the content as a single string. Defaults to False.
+        extensions (list[str], optional): List of file extensions to include (e.g., ['.txt', '.md']). If None, reads all files. Defaults to None.
         exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
 
     Returns:
-        list[str] | str | None: If `as_list` is True and it's a file, returns a list of lines. If it's a directory, returns the concatenated content of all .txt and .md files as a string.
-
-    Example:
-        >>> lines: list[str] = read_text_file(file_path="example.txt", as_list=True)
-        >>> print(lines)
-        ['Line 1', 'Line 2', 'Line 3']
-
-        >>> content: str = read_text_file(file_path="example.txt")
-        >>> print(content)
-        'Line 1\nLine 2\nLine 3'
-
-        >>> all_content: str = read_text_file(file_path="directory_path")
-        >>> print(all_content)
-        'Content of file1.txt\nContent of file2.md'
+        list[str] | str | None: If `as_list` is True, returns a list of lines. Otherwise, returns concatenated content as a string.
     """
     path = Path(file_path)
 
     if path.is_file():
         try:
-            with path.open("r", encoding="utf-8") as file:  # Ensure UTF-8 encoding
-                if as_list:
-                    return [line.strip() for line in file]
-                else:
-                    return file.read()
+            with path.open("r", encoding="utf-8") as f:
+                return [line.strip() for line in f][0]
         except Exception as ex:
             if exc_info:
-                logger.error(f"Failed to read file {file_path}.", ex, exc_info=exc_info)
+                logger.error(f"Failed to read file {file_path}.", exc_info=exc_info)
             return
     elif path.is_dir():
         try:
             content = []
-            for file in path.glob("*.txt"):
-                with file.open("r", encoding="utf-8") as f:  # Ensure UTF-8 encoding
-                    content.append(f.read())
+            for file in path.iterdir():
+                if file.is_file() and (not extensions or file.suffix in extensions):
+                    with file.open("r", encoding="utf-8") as f:
+                        if as_list:
+                            content.extend(line.strip() for line in f)
+                        else:
+                            content.append(f.read())
             
-            for file in path.glob("*.md"):
-                with file.open("r", encoding="utf-8") as f:  # Ensure UTF-8 encoding
-                    content.append(f.read())
-            
-            return "\n".join(content)
+            return content if as_list else "\n".join(content)
         except Exception as ex:
             if exc_info:
-                logger.error(f"Failed to read files in directory {file_path}.", ex, exc_info=exc_info)
+                logger.error(f"Failed to read files in directory {file_path}.", exc_info=exc_info)
             return
     else:
         logger.warning(f"File or directory '{file_path}' does not exist.")
         return
+
 
 
 def get_filenames(

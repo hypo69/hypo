@@ -24,7 +24,7 @@ from src.suppliers.morlevi.graber import Graber as MorleviGraber
 from src.suppliers.ksp.graber import Graber as KspGraber
 from src.suppliers.ivory.graber import Graber as IvoryGraber
 from src.suppliers.grandadvance.graber import Graber as GrandadvanceGraber
-from src.suppliers.kazarinov.react import ReportGenerator
+from src.endpoints.kazarinov.react import ReportGenerator
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_filepath
 from src.utils.image import save_png_from_url, save_png

@@ -47,19 +47,22 @@ def close_popup(value: Any = None) -> Callable:
     return decorator
 
 supplier_prefix = 'morlevi'
-@dataclass(frozen=True)
+
 class Graber(Grbr):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str = field(default=supplier_prefix)
-    d: Driver = None  # d будет назначен позже в `grab_page()`
-    l: Locator = None  # l будет назначен позже в `__post_init__()`
+    d:Driver
+    l:Locator
 
-    def __post_init__(self):
-        """Post-initialization to load the locator namespace and set global variables."""
-        object.__setattr__(self, 'l', Locator(self.supplier_prefix))
+    def __init__(self):
+        """Initialize the Graber class and set default values."""
+        global supplier_prefix
+        self.supplier_prefix = supplier_prefix
+        locator = Locator(self.supplier_prefix)
+        self.l = locator.locator
         global l
         l = self.l  
-        super().__init__(supplier_prefix, self.l)
+        super().__init__(supplier_prefix = self.supplier_prefix, locator = self.l)
+
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.
@@ -71,16 +74,16 @@ class Graber(Grbr):
             ProductFields: The grabbed product fields.
         """
         global d
-        d = self.d = driver  
+        self.d = driver  
         
         ...
-        # Логика извлечения данных
+        # Logic for extracting data
         async def fetch_all_data(**kwards):
-        
             # Call function to fetch specific data
-            # await fetch_specific_data(**kwards)  
+            # await fetch_specific_data(**kwards)
 
             # Uncomment the following lines to fetch specific data
+
             await self.id_product(kwards.get("id_product", ''))
             # await self.additional_shipping_cost(kwards.get("additional_shipping_cost", ''))
             # await self.delivery_in_stock(kwards.get("delivery_in_stock", ''))

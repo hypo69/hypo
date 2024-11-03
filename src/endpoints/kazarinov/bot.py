@@ -15,8 +15,8 @@ from src import gs
 from src.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
-from src.suppliers.kazarinov.parser_onetab import fetch_target_urls_onetab
-from src.suppliers.kazarinov.scenarios.scenario_pricelist import Mexiron
+from src.endpoints.kazarinov.parser_onetab import fetch_target_urls_onetab
+from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
 from src.utils.file import read_text_file, recursive_read_text_files, save_text_file
 from src.utils.string.url import is_url
 from src.logger import logger
