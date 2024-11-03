@@ -1,15 +1,11 @@
 
-## Disclaimer
-
-Ten years ago, I needed a small module for minor automation of my activities, specifically for finding and purchasing small electronics, which I understood at the level of understanding the operation of various components. It started with an Excel spreadsheet and evolved into a comprehensive system. I am now developing a smart assistant module for professionals involved in procurement for manufacturing, technology, industry, and science, designed to streamline and enhance the search and acquisition of components and parts. 😊
-
----
 
 # Hypotez Project
 
 ## Project Description
+The project `hypotez` involves developing a personal AI assistant that will be trained to perform various tasks, including roles such as an insurance agent, real estate agent, sales specialist, HR representative, postal secretary, and more. Each assistant will require separate training for specific tasks, and models will be sold for different types of businesses. The goal of this project is to create an adaptive assistant capable of effectively handling complex tasks without requesting help during operation.
 
-The hypotez project is designed to streamline the process of hypothesis analysis and data analysis. It offers a suite of tools and libraries to facilitate statistical analysis and data visualization, enabling users to efficiently analyze hypotheses and interpret data.
+In addition, there is the Hypotez project, which is designed to streamline the process of hypothesis analysis and data analysis. It offers a suite of tools and libraries to facilitate statistical analysis and data visualization, enabling users to efficiently analyze hypotheses and interpret data. Together, these projects aim to enhance productivity and improve decision-making processes in various domains.
 
 **In a Nutshell**:
 
@@ -83,12 +79,13 @@ The hypotez project is designed to streamline the process of hypothesis analysis
 
 ### Software Used in the Project (No Installation Required, Located in the `bin` Folder)
 
-- `ffmpeg.exe` - Multimedia processing tool.
-- `doxygen.exe` - Documentation generator from source code.
-- `chrome drivers` - Drivers for Google Chrome (for automation testing).
-- `chrome for developers` - Developer version of the Google Chrome browser.
-- `geckodriver` - Driver for Mozilla Firefox (for automation testing).
-- `edge drivers` - Drivers for Microsoft Edge (for automation testing).
+- **`ffmpeg.exe`** - Multimedia processing tool for handling video, audio, and other multimedia files and streams.
+- **`doxygen.exe`** - Documentation generator that extracts documentation from annotated source code, useful for creating reference manuals and documentation pages.
+- **`chrome drivers`** - Drivers for Google Chrome, used for automating testing tasks and browser interactions in Chrome.
+- **`chrome for developers`** - Developer version of the Google Chrome browser, designed for testing and debugging web applications.
+- **`geckodriver`** - Driver for Mozilla Firefox, facilitating automation testing and interaction with the Firefox browser.
+- **`edge drivers`** - Drivers for Microsoft Edge, enabling automation testing for applications running in the Edge browser.
+- **`gtk`** - Toolkit for creating graphical user interfaces, used to develop applications with a rich user interface.
 
 ### Python Version
 
