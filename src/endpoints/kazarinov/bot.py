@@ -12,7 +12,7 @@ from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 
 from src import gs
-from src.bots.telegram import TelegramBot
+from src.endpoints.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.parser_onetab import fetch_target_urls_onetab
