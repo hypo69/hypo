@@ -7,7 +7,6 @@
 -:*.tmp
 -d:__pycashe__
 -d:tmp
--d:docs
 #exclude-larger:1
 -d:.ipynb_checkpoints
 -d:profiles
@@ -20,11 +19,7 @@
 -d:.jupyter
 -f:*.py[cod]*
 -f:*.pyo*
--f:*.env*
--f:*.venv*
 -f:*.log*
--f:*.sqlite3*
--f:*.db*
 -f:*.bak*
 -f:*.DS_Store*
 -f:*Thumbs.db*
@@ -43,3 +38,4 @@
 -f:*.vs
 -f:*.ipynb_checkpoints
 -f:*.dbeaver
+-d:data

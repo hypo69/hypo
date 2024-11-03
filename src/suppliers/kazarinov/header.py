@@ -1,4 +1,5 @@
-﻿## \file ../header.py
+﻿## \file ../src/suppliers/kazarinov/header.py
+## \file ../src/suppliers/kazarinov/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """! Absolute path to modules and GTK bin directory setup """
@@ -25,4 +26,11 @@ if ffmpeg_bin_path not in os.environ["PATH"]:
 if graphviz_bin_path not in os.environ["PATH"]:
     os.environ["PATH"] = graphviz_bin_path + os.pathsep + os.environ["PATH"]
 
+# https://weasyprint.org/
 os.environ['WEASYPRINT_DLL_DIRECTORIES'] = gtk_bin_path
+
+
+"""Подавляю вывод GTK логов в консоль """
+
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)

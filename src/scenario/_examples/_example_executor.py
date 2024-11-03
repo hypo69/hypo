@@ -46,7 +46,7 @@ class MockRelatedModules:
             assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'], 'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'}
         )
 
-    async def async_grab_page(self, s):
+    async def grab_page(self, s):
         return self.grab_product_page(s)
 
 class MockDriver:

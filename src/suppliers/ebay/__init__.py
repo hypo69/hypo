@@ -2,9 +2,12 @@
 ## \file ../src/suppliers/ebay/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-"""  Поставщик <I>ebay.com</I>
-
+"""  Постaвщик <i>wallmart</i>
 """
-...
+
 from packaging.version import Version
 from .version import __version__, __doc__, __details__ 
+
+from .graber import Graber
+
+

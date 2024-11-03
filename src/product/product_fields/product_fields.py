@@ -205,7 +205,7 @@ except LangDetectException as ex:
             f.width = None
 """
 ...
-import json
+
 from sqlite3 import Date
 from typing import List, Dict
 from pathlib import Path
@@ -225,9 +225,13 @@ from src.utils.string import StringFormatter as sf
 from src.product.product_fields.utils import (normalize_product_name,
                                                 normalize_bool,
                                                 )
+from dataclasses import dataclass, field
+from typing import List, Dict, Optional
+from pathlib import Path
 from src.logger import logger
 
 
+@dataclass
 class ProductFields:
     """ Класс, описывающий поля товара в формате API PRESTASHOP 
     @details Поля могут быть членами разных таблиц или добавленных мной для удобства обработки.
@@ -236,235 +240,135 @@ class ProductFields:
     locator_description Важно проверять ID языков. Они могут различаться в разных магазинах у клиентов
     'associations: dict = None ## <- Специальное поле, которое используется в словаре API PRESATSHOP для добавления всяких дополнительных полей
     """
+
     
-    presta_fields_list: List = [ 
-    'active',
-    'additional_delivery_times',
-    'additional_shipping_cost',
-    'advanced_stock_management',
-    'affiliate_short_link',
-    'affiliate_summary',
-    'affiliate_summary_2',
-    'affiliate_text',
-    'affiliate_image_large',
-    'affiliate_image_medium',
-    'affiliate_image_small',
-    'associations',
-    'available_date',
-    'available_for_order',
-    'available_later',
-    'available_now',
-    'cache_default_attribute',
-    'cache_has_attachments',
-    'cache_is_pack',
-    'condition',
-    'customizable',
-    'date_add',
-    'date_upd',
-    'delivery_in_stock',
-    'delivery_out_stock',
-    'depth',
-    'description',
-    'description_short',
-    'ean13',
-    'ecotax',
-    'height',
-    'how_to_use',
-    'specification',
-    'id_category_default',
-    'id_default_combination',
-    'id_default_image',
-    'locale',
-    'id_manufacturer',
-    'id_product',
-    'id_shop_default',
-    'id_shop',
-    'id_product',
-    'id_supplier',
-    'id_tax',
-    'id_type_redirected',
-    'indexed',
-    'ingredients',
-    'is_virtual',
-    'isbn',
-    'link_rewrite',
-    'location',
-    'low_stock_alert',
-    'low_stock_threshold',
-    'meta_description',
-    'meta_keywords',
-    'meta_title',
-    'minimal_quantity',
-    'mpn',
-    'name',
-    'online_only',
-    'on_sale',
-    'out_of_stock',
-    'pack_stock_type',
-    #'position_in_category',  # <- Нельзя оставлять пустым Функция закомментриована
-    'price',
-    'product_type',
-    #'quantity',      # <- НЕЛЬЗЯ ПЕРЕДАВАТЬ ЗНАЧЕНИЕ. 
-    'quantity_discount',
-    'redirect_type',
-    'reference',
-    'show_condition',
-    'show_price',
-    'specification',
-    'state',
-    'supplier_reference',
-    'text_fields',
-    'unit_price_ratio',
-    'unity',
-    'upc',
-    'uploadable_files',
-    'visibility',
-    'volume',
-    'weight',
-    'wholesale_price',
-    'width',
-    'local_saved_image',
-    'local_saved_video',
-    ]
+    presta_fields_list: List[str] = field(default_factory=lambda: [
+        'active',
+        'additional_delivery_times',
+        'additional_shipping_cost',
+        'advanced_stock_management',
+        'affiliate_short_link',
+        'affiliate_summary',
+        'affiliate_summary_2',
+        'affiliate_text',
+        'affiliate_image_large',
+        'affiliate_image_medium',
+        'affiliate_image_small',
+        'associations',
+        'available_date',
+        'available_for_order',
+        'available_later',
+        'available_now',
+        'cache_default_attribute',
+        'cache_has_attachments',
+        'cache_is_pack',
+        'condition',
+        'customizable',
+        'date_add',
+        'date_upd',
+        'delivery_in_stock',
+        'delivery_out_stock',
+        'depth',
+        'description',
+        'description_short',
+        'ean13',
+        'ecotax',
+        'height',
+        'how_to_use',
+        'specification',
+        'id_category_default',
+        'id_default_combination',
+        'id_default_image',
+        'locale',
+        'id_manufacturer',
+        'id_product',
+        'id_shop_default',
+        'id_shop',
+        'id_supplier',
+        'id_tax',
+        'id_type_redirected',
+        'indexed',
+        'ingredients',
+        'is_virtual',
+        'isbn',
+        'link_rewrite',
+        'location',
+        'low_stock_alert',
+        'low_stock_threshold',
+        'meta_description',
+        'meta_keywords',
+        'meta_title',
+        'minimal_quantity',
+        'mpn',
+        'name',
+        'online_only',
+        'on_sale',
+        'out_of_stock',
+        'pack_stock_type',
+        'price',
+        'product_type',
+        'quantity_discount',
+        'redirect_type',
+        'reference',
+        'show_condition',
+        'show_price',
+        'state',
+        'supplier_reference',
+        'text_fields',
+        'unit_price_ratio',
+        'unity',
+        'upc',
+        'uploadable_files',
+        'visibility',
+        'volume',
+        'weight',
+        'wholesale_price',
+        'width',
+        'local_saved_image',
+        'local_saved_video',
+    ])
+
     """ Список ключей словаря API Prestashop """
 
-    # Sort the list alphabetically
-    #presta_fields_list = sorted(presta_fields_list)
+    language: Dict[str, int] = field(default_factory=lambda: {'en': 1, 'he': 2, 'ru': 3})
+    presta_fields_dict: Dict[str, Optional[str]] = field(init=False)
+    assist_fields_dict: Dict[str, Optional[str]] = field(default_factory=lambda: {
+        'default_image_url': '', 
+        'images_urls': []
+    })
 
-    # Номер языка определяется базой данных Престашоп.
-    """#TODO: получить список языков сайта через api """
-    language:dict = {'en':1,'he':2,'ru':3} 
-
-    def __init__(self, *args, **kwargs):
+    def __post_init__(self):
         """ Класс работы с полями товара. Поля берутся состраницы HTML или другого источника
-        и форматируются в стандарте  API Prestashop Dictonary. 
+        и форматируются в стандарте API Prestashop Dictonary. 
         Поля можно в принципе форматировать как угодно """
-        self.presta_fields_dict: Dict =  {key: None for key in self.presta_fields_list}
-        self.assist_fields_dict: Dict = {
-                                            'default_image_url':'', 
-                                            'images_urls':[]
-                                        }
-        ...
-        self._payload(*args, **kwargs)
+        self.presta_fields_dict = {key: None for key in self.presta_fields_list}
+        self._payload()
 
-    def _payload(self,  *args, **kwargs) -> bool:
+    def _payload(self) -> bool:
         """ Загрузка дефолтных значений полей """
-        
-        data = j_loads (Path (gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
+        data = j_loads(Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
         if not data:
             logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
-            return 
+            return False
         for name, value in data.items():
-            setattr(self, f'{name}', value)
+            setattr(self, name, value)
         return True
 
-    
- 
-
-#   0   Ассоциации с товаром
     @property
-    def associations(self):
-        """ <sub>*[getter]*</sub> Возвращает словарь ключей ассоциаций.
-        @details
-        Конструкция `associations`:
-        
-        @code
-        'associations':
-        {
-         'categories': {
-            'category': [
-              { 'id': '1' },
-              { 'id': '2' },
-              { 'id': '3' }
-            ]
-        },
-        
-        'images': {
-            'image': [ { 'id': '1' }  ]
-        },
-      
-        'combinations': {
-            'combination': { 'id': '' }
-        },
-        
-        'product_option_values': {
-            'product_option_value': { 'id': ''}
-            },
-            
-        'product_features': {
-            'product_feature': {
-                'id': '',
-                'id_feature_value': ''
-            }
-        },
-        
-        'tags': {
-            'tag': { 'id': '' }
-        },
-        
-        'stock_availables': {
-            'stock_available': [
-                { 'id': '1', 'id_product_attribute': '1' },
-                { 'id': '2', 'id_product_attribute': '2' },
-                { 'id': '3', 'id_product_attribute': '3' }
-            ]
-        },
-      
-        'attachments': {
-            'attachment': {
-                'id': ''
-            }
-        },
-        'accessories': {
-        'product': {
-            'id': ''
-        }
-        },
-        'product_bundle': {
-        'product': {
-            'id': '',
-            'id_product_attribute': '',
-            'quantity': ''
-        }
-        }
-            }@edcode
-        """
-        
-        return self.presta_fields_dict['associations']  or None
+    def associations(self) -> Optional[Dict]:
+        """ <sub>*[getter]*</sub> Возвращает словарь ключей ассоциаций. """
+        return self.presta_fields_dict['associations'] or None
     
     @associations.setter
-    def associations(self, value:dict = {'association_name':'value'}) -> dict:
-        """  <sub>*[setter]*</sub>  Словарь ассоциаций. Список ассоциаций:
-        
-        `
-        product_bundle, 
-        accessories, 
-        attachments, 
-        stock_availables, 
-        
-        tags, 
-        product_features, 
-        product_option_values, 
-        combinations, 
-        images, 
-        categories`
-        
-        @code:
-        @code
-        associations(self, value:dict = {'categories':[3,4],})
-        @edcode
-        """
+    def associations(self, value: Dict[str, Optional[str]]):
+        """  <sub>*[setter]*</sub>  Словарь ассоциаций. Список ассоциаций: """
         self.presta_fields_dict['associations'] = value
-        ...
 
-    #1
     @property    
-    def id_product(self) -> int :
-        """ <sub>*[property]*</sub>  `ps_product.id: int(10) unsigned`
-        locator_description для нового тoвара `ID` назначется в `prestashop`
-        """
+    def id_product(self) -> Optional[int]:
+        """ <sub>*[property]*</sub>  `ps_product.id: int(10) unsigned` """
         return self.presta_fields_dict['id_product']
-    
+
     
     @id_product.setter     
     def id_product(self, value: int = None):
@@ -486,7 +390,6 @@ class ProductFields:
 
 
 #   2   Поставщик
-    
     @property
     def id_supplier(self):
         """  <sub>*[property]*</sub>  `ps_product.id_supplier: int(10) unsigned`

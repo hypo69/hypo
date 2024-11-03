@@ -20,10 +20,10 @@ from src.advertisement.facebook.scenarios import (
     upload_post_media, 
     message_publish
 )
-from src.suppliers.morlevi.graber import async_grab_page as grab_morlevi
-from src.suppliers.ksp.graber import async_grab_page as grab_ksp
-from src.suppliers.ivory.graber import async_grab_page as grab_ivory
-from src.suppliers.grandadvance.graber import async_grab_page as grab_grandadvance
+from src.suppliers.morlevi.graber import Graber as MorleviGraber
+from src.suppliers.ksp.graber import Graber as KspGraber
+from src.suppliers.ivory.graber import Graber as IvoryGraber
+from src.suppliers.grandadvance.graber import Graber as GrandadvanceGraber
 from src.suppliers.kazarinov.react import ReportGenerator
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_filepath
@@ -82,36 +82,27 @@ class Mexiron:
         ru:SimpleNamespace = SimpleNamespace()
         he:SimpleNamespace = SimpleNamespace()
         supplier_prefix:str
-
+        
         for url in urls_list:
+            graber = None # <- принимает значение грабера поставщика
+
             if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
-                supplier_prefix = 'morlevi'
+                graber  = MorleviGraber()
             elif url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
-                supplier_prefix = 'ksp'
+                graber  = KspGraber()
             elif url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
-                supplier_prefix = 'grandadvance'
+                graber  = GrandadvanceGraber()
             elif url.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
-                supplier_prefix = 'ivory'
+                graber  = IvoryGraber()
+
+            if not graber:
+                continue
 
             try:
                 self.d.get_url(url)
+                f: ProductFields = await graber.grab_page(self.d)
             except Exception as ex:
                 logger.debug(f"Ошибка открытия страницы {url}",ex)
-                ...
-                continue
-            try:
-                if supplier_prefix == 'morlevi':
-                    f: ProductFields = await grab_morlevi(self.d)
-                if supplier_prefix == 'ksp':
-                    f: ProductFields = await grab_ksp(self.d)
-                if supplier_prefix == 'grandadvance':
-                    f: ProductFields = await grab_grandadvance(self.d)
-                if supplier_prefix == 'ivory':
-                    f: ProductFields = await grab_ivory(self.d)
-
-
-            except Exception as ex:
-                logger.debug(f"Ошибка получения полей товара", ex)
                 ...
                 continue
 
@@ -120,12 +111,13 @@ class Mexiron:
                 ...
                 continue
             
-            f: ProductFields = await self.convert_product_fields(f)
+            f: ProductFields = self.convert_product_fields(f)
+            f: SimpleNamespace = SimpleNamespace(**f)
             if not f:
                 logger.debug(f"Ошибка конвертации {pprint(f)}")
                 ...
 
-            f: SimpleNamespace = SimpleNamespace(**f)
+            
             if not j_dumps(f, base_path /  'products' / f'{f.product_id}.json' , ensure_ascii=False):
                 logger.debug(f"не сохранился файл {f.product_id}.json")
                 ...
@@ -241,7 +233,7 @@ class Mexiron:
         return True
 
 
-    async def convert_product_fields(self, f: ProductFields) -> dict:
+    def convert_product_fields(self, f: ProductFields) -> dict:
         """Prepares a product dictionary from product field data.
 
         Args:
@@ -252,10 +244,10 @@ class Mexiron:
         """
         image_path = self.base_path /  'images' / f'{f.id_product}.png'
         if isinstance(f.default_image_url,(Path, str)):
-            if not await save_png_from_url(f.default_image_url, image_path):
+            if not asyncio.run( save_png_from_url(f.default_image_url, image_path)):
                 logger.debug(f"Картинка {image_path}\nне сохранилась на диске :(" )
                 ...
-        elif not await save_png(f.default_image_url, image_path):
+        elif not asyncio.run(save_png(f.default_image_url, image_path)):
             logger.debug(f"Картинка {image_path}\nне сохранилась на диске :(" )
             ...
 

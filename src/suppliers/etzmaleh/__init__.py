@@ -2,7 +2,12 @@
 ## \file ../src/suppliers/etzmaleh/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-"""  Поставщик <I>etzmaleh.co.il</I> """
+"""  Постaвщик <i>wallmart</i>
+"""
 
 from packaging.version import Version
 from .version import __version__, __doc__, __details__ 
+
+from .graber import Graber
+
+

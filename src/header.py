@@ -1,10 +1,36 @@
-﻿## \file ../src/advertisement/facebook/_experiments/header.py
+﻿## \file ../header.py
 ## \file ../src/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-""" Absolute path to modules  """
+"""! Absolute path to modules and GTK bin directory setup """
 
-import sys,os
+import sys
+import os
 from pathlib import Path
-__root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
-sys.path.append (__root__)  
+
+#  корневой путь к проекту
+__root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])
+sys.path.append(str(__root__))
+
+
+gtk_bin_path = fr"{__root__}/bin/gtk/gtk-nsis-pack/bin" 
+ffmpeg_bin_path = fr"{__root__}/bin/ffmpeg/bin" 
+graphviz_bin_path = fr"{__root__}/bin/graphviz/bin" 
+
+if gtk_bin_path not in os.environ["PATH"]:
+    os.environ["PATH"] = gtk_bin_path + os.pathsep + os.environ["PATH"]
+
+if ffmpeg_bin_path not in os.environ["PATH"]:
+    os.environ["PATH"] = ffmpeg_bin_path + os.pathsep + os.environ["PATH"]
+
+if graphviz_bin_path not in os.environ["PATH"]:
+    os.environ["PATH"] = graphviz_bin_path + os.pathsep + os.environ["PATH"]
+
+# https://weasyprint.org/
+os.environ['WEASYPRINT_DLL_DIRECTORIES'] = gtk_bin_path
+
+
+"""Подавляю вывод GTK логов в консоль """
+
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)

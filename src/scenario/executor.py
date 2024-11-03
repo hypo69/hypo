@@ -295,7 +295,7 @@ def run_scenario(supplier, scenario: dict, scenario_name: str, _journal=None) ->
 
         # Grab product page fields
         grabbed_fields = s.related_modules.grab_product_page(s)
-        f: ProductFields = asyncio.run(s.related_modules.async_grab_page(s))
+        f: ProductFields = asyncio.run(s.related_modules.grab_page(s))
         if not f:
             logger.error(f"Failed to collect product fields")
             continue
