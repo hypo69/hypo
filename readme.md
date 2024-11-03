@@ -2,10 +2,12 @@
 
 # Hypotez Project
 
-## Project Description
+## Project Description 
 The project `hypotez` involves developing a personal AI assistant that will be trained to perform various tasks, including roles such as an insurance agent, real estate agent, sales specialist, HR representative, postal secretary, and more. Each assistant will require separate training for specific tasks, and models will be sold for different types of businesses. The goal of this project is to create an adaptive assistant capable of effectively handling complex tasks without requesting help during operation.
 
-In addition, there is the Hypotez project, which is designed to streamline the process of hypothesis analysis and data analysis. It offers a suite of tools and libraries to facilitate statistical analysis and data visualization, enabling users to efficiently analyze hypotheses and interpret data. Together, these projects aim to enhance productivity and improve decision-making processes in various domains.
+In addition, there is the Hypotez project, which is designed to streamline the process of hypothesis analysis and data analysis. It offers a suite of tools and libraries to facilitate statistical analysis and data visualization, enabling users to efficiently analyze hypotheses and interpret data. 
+
+Furthermore, the project includes a parser and scraper designed to gather and process data from various sources. This tool will automate the extraction of relevant information from websites and documents, enabling users to collect data efficiently for analysis. By integrating the parser and scraper into the workflow, the project enhances the ability to obtain timely and accurate data, further supporting the assistant's functionality and decision-making capabilities. Together, these projects aim to enhance productivity and improve decision-making processes in various domains.
 
 **In a Nutshell**:
 
