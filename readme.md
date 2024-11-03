@@ -76,8 +76,8 @@ Furthermore, the project includes a parser and scraper designed to gather and pr
 
 ### Required Software for Installation
 
-1. **Firefox Mozilla** - A web browser for testing and analysis.
-2. **PowerShell** - Command-line shell for task automation.
+1. `Firefox`, and/or `Chrome`, and/or `Edge` - web browsers for testing and analysis.
+2. `PowerShell` - Command-line shell for task automation. (for `Windows`)
 
 ### Software Used in the Project (No Installation Required, Located in the `bin` Folder)
 
