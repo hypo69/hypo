@@ -81,26 +81,9 @@ if __name__ == '__main__':
 - **Configurable Logging Levels**: Easily manage log messages and their severities.
 - **Silent Mode**: Ability to toggle sound notifications on or off for a distraction-free experience.
 
-## Contributing
-
-Contributions are welcome! If you have suggestions for improvements or new features, feel free to open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
-
 ## TODO
 
 - Enhance asynchronous beep functionality to handle potential conflicts.
 - Add more configurable options for sound frequency and duration.
 - Improve logging functionality with additional features based on user feedback.
 
-## Contact
-
-For any inquiries or support, please reach out to the maintainers or open an issue in the repository.
-```
-
-### Customization
-- Adjust the contents of the sections according to the actual functionality and design of your project.
-- Ensure that the example usage reflects the correct function calls and imports according to your implementation.
-- Feel free to expand the README with additional sections if necessary, such as FAQs or a detailed installation guide if you later include dependencies.
