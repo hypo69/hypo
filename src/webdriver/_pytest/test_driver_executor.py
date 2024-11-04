@@ -1,5 +1,5 @@
 ﻿## \file src/webdriver/_pytest/test_driver_executor.py
-## \file src/webdriver/_pytest/test_driver_executor.py
+## \file ../src/webdriver/_pytest/test_driver_executor.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Общий тест для driver и executor

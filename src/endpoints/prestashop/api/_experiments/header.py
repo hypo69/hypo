@@ -3,7 +3,7 @@
 создает словари подключеня к API Prestashop из списка `gs.presta_credentials`
 
 """
-## \file src/endpoints/prestashop/api/_experiments/header.py
+## \file ../src/endpoints/prestashop/api/_experiments/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python 
 import os, sys

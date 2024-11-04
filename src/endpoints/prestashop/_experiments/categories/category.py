@@ -3,7 +3,7 @@
 
 """
 
-## \file src/endpoints/prestashop/_experiments/categories/category.py
+## \file ../src/endpoints/prestashop/_experiments/categories/category.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

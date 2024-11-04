@@ -1,4 +1,4 @@
-## \file src/goog/spreadsheet/bberyakov/grender.py
+## \file ../src/goog/spreadsheet/bberyakov/grender.py
 ## \file src/utils/interface/goog/grender.py
 """  Render Google Table
 

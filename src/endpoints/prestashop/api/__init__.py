@@ -1,6 +1,6 @@
 ﻿## \file src/prestashop/api/__init__.py
 """ @namespace src.prestashop """
-## \file src/endpoints/prestashop/api/__init__.py
+## \file ../src/endpoints/prestashop/api/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Prestashop module 

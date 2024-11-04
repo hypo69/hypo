@@ -3,7 +3,7 @@
 
 @image html login.png
 """
-## \file src/suppliers/amazon/login.py
+## \file ../src/suppliers/amazon/login.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

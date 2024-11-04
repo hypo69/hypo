@@ -1,4 +1,4 @@
-## \file src/utils/string/url.py
+## \file ../src/utils/string/url.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

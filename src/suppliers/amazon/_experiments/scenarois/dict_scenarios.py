@@ -1,4 +1,4 @@
-## \file src/suppliers/amazon/_experiments/scenarois/dict_scenarios.py
+## \file ../src/suppliers/amazon/_experiments/scenarois/dict_scenarios.py
 ## \file src/suppliers/amazon/_experiments/scenarois/dict_scenarios.py
 scenario: dict = {
 

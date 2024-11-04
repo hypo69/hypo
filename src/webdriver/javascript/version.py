@@ -1,5 +1,5 @@
 ﻿## \file src/webdriver/version.py
-## \file src/webdriver/javascript/version.py
+## \file ../src/webdriver/javascript/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 __name__ = '' 

@@ -1,4 +1,4 @@
-## \file src/translators/translate_product_fields.py
+## \file ../src/translators/translate_product_fields.py
 ## \file src/translators_api/translate_product_fields.py
 """ Модуль управления переводами.
 Слой связи между словарем полей товара, таблицей переводов и переводчиками

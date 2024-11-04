@@ -1,5 +1,5 @@
 ﻿""" Установка корня проекта """
-## \file src/webdriver/header.py
+## \file ../src/webdriver/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import sys,os

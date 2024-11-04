@@ -1,5 +1,5 @@
 ﻿## \file src/advertisement/facebook/scenarios/login.py
-## \file src/advertisement/facebook/scenarios/login.py
+## \file ../src/endpoints/advertisement/facebook/scenarios/login.py
 # -*- coding: utf-8 -*-
 """ Facebook login scenario """
 

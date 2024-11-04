@@ -1,5 +1,5 @@
 ﻿""" Установка корня проекта """
-## \file src/webdriver/firefox/header.py
+## \file ../src/webdriver/firefox/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import sys,os

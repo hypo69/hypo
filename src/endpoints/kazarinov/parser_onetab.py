@@ -1,4 +1,4 @@
-## \file src/endpoints/kazarinov/parser_onetab.py
+## \file ../src/endpoints/kazarinov/parser_onetab.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

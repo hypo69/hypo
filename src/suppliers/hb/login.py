@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/hb/login.py
-## \file src/suppliers/hb/login.py
+## \file ../src/suppliers/hb/login.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Функции авторизации поставщика """

@@ -1,7 +1,7 @@
 ﻿## \file src/prestashop/_experiments/ide_header.py
 """ Файл заголовок, подключаемый к ide тестовым модулям """
 
-## \file src/endpoints/prestashop/_experiments/ide_header.py
+## \file ../src/endpoints/prestashop/_experiments/ide_header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

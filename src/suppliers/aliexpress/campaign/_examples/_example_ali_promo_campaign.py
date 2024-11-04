@@ -1,6 +1,6 @@
 ﻿""" Примеры создания рекламной кампании """
 
-## \file src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
+## \file ../src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

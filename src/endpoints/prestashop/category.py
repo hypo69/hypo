@@ -10,7 +10,7 @@ Product binding to category is described in supplier scenarios
 @image html categories_tree.png 
 """
 ...
-## \file src/endpoints/prestashop/category.py
+## \file ../src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

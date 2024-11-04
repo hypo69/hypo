@@ -1,5 +1,5 @@
 ﻿## \file src/prestashop/product.py
-## \file src/endpoints/prestashop/product.py
+## \file ../src/endpoints/prestashop/product.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Класс товара `Prestashop`"""

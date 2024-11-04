@@ -1,4 +1,4 @@
-## \file src/suppliers/grandadvance/graber.py
+## \file ../src/suppliers/grandadvance/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

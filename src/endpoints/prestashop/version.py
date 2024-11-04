@@ -1,4 +1,4 @@
-## \file src/endpoints/prestashop/version.py
+## \file ../src/endpoints/prestashop/version.py
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

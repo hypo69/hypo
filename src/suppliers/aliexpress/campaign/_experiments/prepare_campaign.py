@@ -1,6 +1,6 @@
 ﻿""" Проверка создания affiliate для рекламной кампании  
 Если текой рекламной кампании не существует - будет создана новая"""
-## \file src/suppliers/aliexpress/campaign/_experiments/prepare_campaign.py
+## \file ../src/suppliers/aliexpress/campaign/_experiments/prepare_campaign.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

@@ -1,5 +1,5 @@
 """ Эксперименты с гугл таблицами """
-## \file src/suppliers/aliexpress/campaign/_experiments/gsheets-step-by-step.py
+## \file ../src/suppliers/aliexpress/campaign/_experiments/gsheets-step-by-step.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

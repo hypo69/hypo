@@ -15,7 +15,7 @@ Author(s):
 """
 
 
-## \file src/suppliers/kualastyle/via_webdriver.py
+## \file ../src/suppliers/kualastyle/via_webdriver.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

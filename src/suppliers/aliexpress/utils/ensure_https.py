@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/utils/ensure_https.py
-## \file src/suppliers/aliexpress/utils/ensure_https.py
+## \file ../src/suppliers/aliexpress/utils/ensure_https.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

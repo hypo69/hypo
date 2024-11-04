@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/ksp/ksp.py
-## \file src/suppliers/ksp/graber.py
+## \file ../src/suppliers/ksp/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

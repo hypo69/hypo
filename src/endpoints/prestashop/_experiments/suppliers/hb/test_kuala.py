@@ -1,4 +1,4 @@
-## \file src/endpoints/prestashop/_experiments/suppliers/hb/test_kuala.py
+## \file ../src/endpoints/prestashop/_experiments/suppliers/hb/test_kuala.py
 ## \file src/prestashop/_experiments/suppliers/hb/test_kuala.py
 from urllib import response
 import header

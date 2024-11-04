@@ -1,5 +1,5 @@
 ﻿## \file src/webdriver/firefox/version.py
-## \file src/webdriver/playwright/version.py
+## \file ../src/webdriver/playwright/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

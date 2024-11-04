@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/kualastyle/category.py
-## \file src/suppliers/kualastyle/category.py
+## \file ../src/suppliers/kualastyle/category.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Модуль сбора товаров со страницы категорий поставщика hb.co.il через вебдрайвер

@@ -1,4 +1,4 @@
-## \file src/product/_experiments/ping.py
+## \file ../src/product/_experiments/ping.py
 ## \file src/product/_experiments/ping.py
 import header
 from header import  ecat_api_credentials, emil_api_credentials

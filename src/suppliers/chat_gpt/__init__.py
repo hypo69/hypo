@@ -1,4 +1,4 @@
-## \file src/suppliers/chat_gpt/__init__.py
+## \file ../src/suppliers/chat_gpt/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Веб интерфейс взаимодействия с chatGPT.

@@ -3,7 +3,7 @@
 
 @image html login.png
 """
-## \file src/suppliers/etzmaleh/login.py
+## \file ../src/suppliers/etzmaleh/login.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

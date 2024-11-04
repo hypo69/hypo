@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
-## \file src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
+## \file ../src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

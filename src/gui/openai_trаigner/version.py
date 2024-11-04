@@ -1,4 +1,4 @@
-## \file src/gui/openai_trаigner/version.py
+## \file ../src/gui/openai_trаigner/version.py
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

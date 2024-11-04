@@ -1,5 +1,5 @@
 ﻿## \file src/category/category.py
-## \file src/category/category.py
+## \file ../src/category/category.py
 # -*- coding: utf-8 -*-
 """ @namespace src.category """
 # /path/to/interpreter/python

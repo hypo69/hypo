@@ -1,4 +1,4 @@
-## \file src/endpoints/prestashop/_experiments/notebook_header.py
+## \file ../src/endpoints/prestashop/_experiments/notebook_header.py
 ## \file src/prestashop/_experiments/notebook_header.py
 import sys
 import os

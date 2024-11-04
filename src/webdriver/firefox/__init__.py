@@ -1,5 +1,5 @@
 ﻿""" Оболочка для Firefox"""
-## \file src/webdriver/firefox/__init__.py
+## \file ../src/webdriver/firefox/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

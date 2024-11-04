@@ -1,4 +1,4 @@
-## \file src/webdriver/edge/edge.py
+## \file ../src/webdriver/edge/edge.py
 """ Custom Edge WebDriver class with simplified configuration using fake_useragent."""
 
 from pathlib import Path

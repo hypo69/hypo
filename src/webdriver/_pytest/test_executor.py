@@ -1,5 +1,5 @@
 ﻿## \file src/webdriver/_pytest/test_executor.py
-## \file src/webdriver/_pytest/test_executor.py
+## \file ../src/webdriver/_pytest/test_executor.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Фикстуры:

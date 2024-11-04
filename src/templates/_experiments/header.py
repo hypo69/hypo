@@ -1,4 +1,4 @@
-## \file src/templates/_experiments/header.py
+## \file ../src/templates/_experiments/header.py
 ## \file src/templates/_experiments/header.py
 import os
 import sys

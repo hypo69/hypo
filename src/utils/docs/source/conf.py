@@ -1,4 +1,4 @@
-## \file src/utils/docs/source/conf.py
+## \file ../src/utils/docs/source/conf.py
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:

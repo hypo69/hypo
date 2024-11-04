@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/amazon/amazon.py
-## \file src/suppliers/amazon/graber.py
+## \file ../src/suppliers/amazon/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

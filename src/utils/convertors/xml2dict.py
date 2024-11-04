@@ -1,5 +1,5 @@
 ﻿## \file src/utils/convertors/xml2dict.py
-## \file src/utils/convertors/xml2dict.py
+## \file ../src/utils/convertors/xml2dict.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

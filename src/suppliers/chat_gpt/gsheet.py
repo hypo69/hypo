@@ -1,6 +1,6 @@
 """ AliExpress Campaign Editor via Google Sheets """
 
-## \file src/suppliers/chat_gpt/gsheet.py
+## \file ../src/suppliers/chat_gpt/gsheet.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

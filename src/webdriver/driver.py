@@ -1,4 +1,4 @@
-## \file src/webdriver/driver.py
+## \file ../src/webdriver/driver.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ `WebDriver` 

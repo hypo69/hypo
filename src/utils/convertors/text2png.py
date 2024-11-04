@@ -1,5 +1,5 @@
 ﻿## \file src/utils/convertors/text2png.py
-## \file src/utils/convertors/text2png.py
+## \file ../src/utils/convertors/text2png.py
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """

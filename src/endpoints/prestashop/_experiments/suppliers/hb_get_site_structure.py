@@ -1,4 +1,4 @@
-## \file src/endpoints/prestashop/_experiments/suppliers/hb_get_site_structure.py
+## \file ../src/endpoints/prestashop/_experiments/suppliers/hb_get_site_structure.py
 ## \file src/prestashop/_experiments/suppliers/hb_get_site_structure.py
 """  [File's Description]
 

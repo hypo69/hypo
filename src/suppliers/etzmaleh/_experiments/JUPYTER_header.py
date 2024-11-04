@@ -1,4 +1,4 @@
-## \file src/suppliers/etzmaleh/_experiments/JUPYTER_header.py
+## \file ../src/suppliers/etzmaleh/_experiments/JUPYTER_header.py
 ## \file src/suppliers/etzmaleh/_experiments/JUPYTER_header.py
 import sys
 import os

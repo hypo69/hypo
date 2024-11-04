@@ -1,6 +1,6 @@
 ﻿""" Менеджер скидок, купонов и т.п. в Prestashop  """
 ...
-## \file src/db/manager_coupons_and_sales/__init__.py
+## \file ../src/db/manager_coupons_and_sales/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

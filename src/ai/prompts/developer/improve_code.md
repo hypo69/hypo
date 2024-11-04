@@ -200,3 +200,6 @@ class ExampleClass:
 - Specify data types and defaults clearly in the `Args` section.
 - Include informative examples when relevant, demonstrating the usage of functions and methods.
 - Keep the comments and documentation in English, consistent with the Sphinx format.
+
+
+Все комментрии исходного кода должны сохраняться

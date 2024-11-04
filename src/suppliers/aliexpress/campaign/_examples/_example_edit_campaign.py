@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
-## \file src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
+## \file ../src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Редактор рекламной кампании

@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/api/helpers/products.py
+## \file ../src/suppliers/aliexpress/api/helpers/products.py
 ## \file src/suppliers/aliexpress/api/helpers/products.py
 def parse_product(product):
     product.product_small_image_urls = product.product_small_image_urls.string

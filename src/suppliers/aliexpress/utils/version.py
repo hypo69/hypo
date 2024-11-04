@@ -89,6 +89,6 @@ process_all_campaigns(language="EN", currency="USD", force=True)
 
 __author__='hypotez'
 
-## \file src/suppliers/aliexpress/utils/version.py
+## \file ../src/suppliers/aliexpress/utils/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python

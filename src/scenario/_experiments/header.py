@@ -4,7 +4,7 @@ import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]
 sys.path.append(path)  # Добавляю корневую папку в sys.path
 # ----------------
-## \file src/scenario/_experiments/header.py
+## \file ../src/scenario/_experiments/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

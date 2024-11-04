@@ -1,5 +1,5 @@
 ﻿## \file src/db/manager_translations/_examples/version.py
-## \file src/db/manager_translations/_examples/version.py
+## \file ../src/db/manager_translations/_examples/version.py
 # -*- coding: utf-8 -*-
 """ @namespace src.db.manager_translations._examples """
 # /path/to/interpreter/python

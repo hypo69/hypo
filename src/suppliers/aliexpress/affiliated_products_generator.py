@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/affiliated_products_generator.py
+## \file ../src/suppliers/aliexpress/affiliated_products_generator.py
 import asyncio
 from datetime import datetime
 import html

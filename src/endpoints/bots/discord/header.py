@@ -1,5 +1,5 @@
 ﻿## \file src/bots/openai/header.py
-## \file src/endpoints/bots/discord/header.py
+## \file ../src/endpoints/bots/discord/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

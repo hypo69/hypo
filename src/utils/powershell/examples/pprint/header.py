@@ -1,4 +1,4 @@
-## \file src/utils/powershell/examples/pprint/header.py
+## \file ../src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """! Absolute path to modules  """

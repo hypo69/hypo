@@ -1,4 +1,4 @@
-## \file src/advertisement/facebook/scenarios/post_ad.py
+## \file ../src/endpoints/advertisement/facebook/scenarios/post_ad.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Публикация рекламного сообщения группах фейсбук"""

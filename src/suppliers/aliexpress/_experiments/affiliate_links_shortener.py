@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/_experiments/affiliate_links_shortener.py
-## \file src/suppliers/aliexpress/_experiments/affiliate_links_shortener.py
+## \file ../src/suppliers/aliexpress/_experiments/affiliate_links_shortener.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Short affiliate links """

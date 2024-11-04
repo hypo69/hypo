@@ -1,7 +1,7 @@
 """ Определение путей программы
 """
 
-## \file src/suppliers/aliexpress/gui/header.py
+## \file ../src/suppliers/aliexpress/gui/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

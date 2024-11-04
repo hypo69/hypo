@@ -1,6 +1,6 @@
 """ Модуль работы с базами данных """
 ...
-## \file src/db/__init__.py
+## \file ../src/db/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

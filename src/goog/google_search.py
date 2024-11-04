@@ -8,7 +8,7 @@
 
 """
 
-## \file src/goog/google_search.py
+## \file ../src/goog/google_search.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

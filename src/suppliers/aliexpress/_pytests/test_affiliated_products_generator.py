@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
-## \file src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
+## \file ../src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ YOU MUST WRITE A DESCRIPTION !

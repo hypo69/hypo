@@ -1,4 +1,4 @@
-## \file src/endpoints/prestashop/_experiments/dict_scenarios.py
+## \file ../src/endpoints/prestashop/_experiments/dict_scenarios.py
 ## \file src/prestashop/_experiments/dict_scenarios.py
 scenario: dict = {
     "Apple Wathes": {

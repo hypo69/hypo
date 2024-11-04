@@ -5,7 +5,7 @@ to get product information and affiliate links from AliExpress using the officia
 API in an easier way.
 """
 ...
-## \file src/suppliers/aliexpress/api/api.py
+## \file ../src/suppliers/aliexpress/api/api.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

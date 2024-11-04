@@ -1,4 +1,4 @@
-## \file src/suppliers/wallmart/graber.py
+## \file ../src/suppliers/wallmart/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

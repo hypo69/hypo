@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateOrderListRequest.py
+## \file ../src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateOrderListRequest.py
 ## \file src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateOrderListRequest.py
 """
 Created by auto_sdk on 2021.06.02

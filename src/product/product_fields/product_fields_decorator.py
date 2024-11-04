@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/product_fields_decorator.py
-## \file src/product/product_fields/product_fields_decorator.py
+## \file ../src/product/product_fields/product_fields_decorator.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ 

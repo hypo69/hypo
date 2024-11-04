@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
+## \file ../src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
 ## \file src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
 """
 Created by auto_sdk on 2020.09.25

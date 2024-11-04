@@ -1,4 +1,4 @@
-## \file src/templates/header.py
+## \file ../src/templates/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Module to set the project root path """

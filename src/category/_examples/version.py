@@ -1,5 +1,5 @@
 ﻿## \file src/category/_examples/version.py
-## \file src/category/_examples/version.py
+## \file ../src/category/_examples/version.py
 # -*- coding: utf-8 -*-
 """ @namespace src.category._examples """
 # /path/to/interpreter/python

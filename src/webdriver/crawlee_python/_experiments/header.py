@@ -1,5 +1,5 @@
 """ Эксперименты с библиотекой crawlee-python """
-## \file src/webdriver/crawlee_python/_experiments/header.py
+## \file ../src/webdriver/crawlee_python/_experiments/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import sys,os

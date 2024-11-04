@@ -1,4 +1,4 @@
-## \file src/endpoints/kazarinov/scenarios/__init__.py
+## \file ../src/endpoints/kazarinov/scenarios/__init__.py
 """Сценарии Казаринова"""
 ...
 from packaging.version import Version

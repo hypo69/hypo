@@ -1,5 +1,5 @@
 ﻿## \file src/prestashop/language.py
-## \file src/endpoints/prestashop/language.py
+## \file ../src/endpoints/prestashop/language.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """   класс языка в `Prestashop` """

@@ -1,5 +1,5 @@
 ﻿## \file src/credentials.py
-## \file src/credentials.py
+## \file ../src/credentials.py
 # -*- coding: utf-8 -*-
 #! /usr/bin/env python3
 """ Global Project Settings: paths, passwords, logins, and API settings.

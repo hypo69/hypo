@@ -1,1 +1,1 @@
-## \file src/endpoints/kazarinov/scenarios/adviser.py
+## \file ../src/endpoints/kazarinov/scenarios/adviser.py

@@ -1,6 +1,6 @@
 ﻿## \file src/prestashop/api_schemas/api_resourses_list.py
 """ Список всех доступных ресурсов для API вызовов"""
-## \file src/endpoints/prestashop/api_schemas/api_resourses_list.py
+## \file ../src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 resource:list = [

@@ -1,5 +1,5 @@
 ﻿## \file src/fast_api/__init__.py
-## \file src/gui/__init__.py
+## \file ../src/gui/__init__.py
 # -*- coding: utf-8 -*-
 """ @namespace src.fast_api """
 # /path/to/interpreter/python

@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/api/models/languages.py
+## \file ../src/suppliers/aliexpress/api/models/languages.py
 ## \file src/suppliers/aliexpress/api/models/languages.py
 class Language:
     EN = 'EN'

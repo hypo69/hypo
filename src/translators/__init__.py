@@ -1,5 +1,5 @@
 ﻿
-## \file src/translators/__init__.py
+## \file ../src/translators/__init__.py
 # -*- coding: utf-8 -*-
 
 from packaging.version import Version

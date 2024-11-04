@@ -1,7 +1,7 @@
 ﻿""" Переключение на аккунт. 
 Если есть кнопка `Переключить` - нажимаю её """
 
-## \file src/advertisement/facebook/scenarios/switch_account.py
+## \file ../src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

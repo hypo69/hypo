@@ -26,21 +26,3 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
-
-import os
-import sys
-import fnmatch
-
-# Добавляем путь к проекту
-sys.path.insert(0, os.path.abspath('../../src'))
-
-# Функция, которая игнорирует файлы по маске
-def skip_files(app, what, name):
-    # Игнорируем файлы, содержащие круглые скобки
-    if fnmatch.fnmatch(name, '*(*).*'):
-        return True
-    return False
-
-def setup(app):
-    app.connect('autodoc-skip-member', skip_files)
-

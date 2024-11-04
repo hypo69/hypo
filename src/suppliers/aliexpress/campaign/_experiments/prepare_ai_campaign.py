@@ -1,5 +1,5 @@
 """ Проверка создания рекламной кампании """
-## \file src/suppliers/aliexpress/campaign/_experiments/prepare_ai_campaign.py
+## \file ../src/suppliers/aliexpress/campaign/_experiments/prepare_ai_campaign.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

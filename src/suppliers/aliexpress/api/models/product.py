@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/api/models/product.py
+## \file ../src/suppliers/aliexpress/api/models/product.py
 ## \file src/suppliers/aliexpress/api/models/product.py
 from typing import List
 

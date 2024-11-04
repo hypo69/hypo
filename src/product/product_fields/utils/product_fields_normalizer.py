@@ -1,4 +1,4 @@
-## \file src/product/product_fields/utils/product_fields_normalizer.py
+## \file ../src/product/product_fields/utils/product_fields_normalizer.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

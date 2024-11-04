@@ -1,5 +1,5 @@
 ﻿## \file src/ai/openai/header.py
-## \file src/ai/gemini/html_chat/header.py
+## \file ../src/ai/gemini/html_chat/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Absolute path to modules  """

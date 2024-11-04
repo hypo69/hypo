@@ -1,4 +1,4 @@
-## \file src/logger/logger.py
+## \file ../src/logger/logger.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

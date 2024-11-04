@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/campaign/gsheet.py
+## \file ../src/suppliers/aliexpress/campaign/gsheet.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Редактор рекламной кампании через гугл таблицами """

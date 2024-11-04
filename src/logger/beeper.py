@@ -1,5 +1,5 @@
 ﻿## \file src/logger/beeper.py
-## \file src/logger/beeper.py
+## \file ../src/logger/beeper.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  бииип 

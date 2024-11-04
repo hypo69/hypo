@@ -11,7 +11,7 @@
 @todo
     1. Продумать какой нибудж парсер для en_EN, he_HE, ru-RU
 """
-## \file src/translator/product_translator.py
+## \file ../src/translators/product_translator.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

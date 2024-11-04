@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/scenarios/version.py
+## \file ../src/suppliers/aliexpress/scenarios/version.py
 ﻿# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

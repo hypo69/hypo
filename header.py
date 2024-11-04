@@ -1,28 +1,49 @@
-﻿## \file ../header.py
+﻿## \file header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-"""! Absolute path to modules and GTK bin directory setup """
+"""! Absolute path to modules and GTK & FFPMEG bin directory """
 
+import json
 import sys
-import os
 from pathlib import Path
 
-#  корневой путь к проекту
-__root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])
+# Load the project name from settings.json
+project_name = "hypotez"
+try:
+    with open('src/settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+        project_name = settings.get("project_name", "hypotez")
+        
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
+except Exception as ex:
+    print(ex)
+    ...
+    sys.exit()
+
+# Define the root path of the project
+__root__: Path = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
 sys.path.append(str(__root__))
 
+# Paths to bin directories
+gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
+ffmpeg_bin_path = __root__ / "bin" / "ffmpeg" / "bin"
+graphviz_bin_path = __root__ / "bin" / "graphviz" / "bin"
 
-gtk_bin_path = fr"{__root__}/bin/gtk/gtk-nsis-pack/bin" 
-ffmpeg_bin_path = fr"{__root__}/bin/ffmpeg/bin" 
-graphviz_bin_path = fr"{__root__}/bin/graphviz/bin" 
+# Update the PATH variable if the paths are missing
+paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
+current_paths = set(Path(p) for p in sys.path)
 
-if gtk_bin_path not in os.environ["PATH"]:
-    os.environ["PATH"] = gtk_bin_path + os.pathsep + os.environ["PATH"]
+for bin_path in paths_to_add:
+    if bin_path not in current_paths:
+        sys.path.insert(0, str(bin_path))
 
-if ffmpeg_bin_path not in os.environ["PATH"]:
-    os.environ["PATH"] = ffmpeg_bin_path + os.pathsep + os.environ["PATH"]
+# Set the variable for WeasyPrint
+sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES"
 
-if graphviz_bin_path not in os.environ["PATH"]:
-    os.environ["PATH"] = graphviz_bin_path + os.pathsep + os.environ["PATH"]
+if sys_path_env_var not in sys.path:
+    sys.path.insert(0, str(gtk_bin_path))
 
-os.environ['WEASYPRINT_DLL_DIRECTORIES'] = gtk_bin_path
+"""Suppress GTK log output to the console"""
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)

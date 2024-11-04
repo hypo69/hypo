@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/scenarios/__init__.py
-## \file src/suppliers/aliexpress/scenarios/__init__.py
+## \file ../src/suppliers/aliexpress/scenarios/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Сценарии исполнения для алиэкспресс

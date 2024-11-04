@@ -1,4 +1,4 @@
-## \file src/endpoints/prestashop/_experiments/suppliers/hb/test_1_hb_get_site_structure.py
+## \file ../src/endpoints/prestashop/_experiments/suppliers/hb/test_1_hb_get_site_structure.py
 ## \file src/prestashop/_experiments/suppliers/hb/test_1_hb_get_site_structure.py
 
 import requests

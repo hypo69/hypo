@@ -1,5 +1,5 @@
 ﻿## \file src/utils/interface/smtp.py
-## \file src/utils/smtp.py
+## \file ../src/utils/smtp.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

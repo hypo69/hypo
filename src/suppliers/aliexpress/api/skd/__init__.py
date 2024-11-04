@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/api/skd/__init__.py
+## \file ../src/suppliers/aliexpress/api/skd/__init__.py
 ## \file src/suppliers/aliexpress/api/skd/__init__.py
 '''
 Created on 2012-6-29

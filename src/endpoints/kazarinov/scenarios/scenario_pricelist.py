@@ -1,4 +1,4 @@
-## \file src/endpoints/kazarinov/scenarios/scenario_pricelist.py
+## \file ../src/endpoints/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Module for handling suppliers (morlevi, grandadvance, ivory, ksp) product data extraction and saving."""

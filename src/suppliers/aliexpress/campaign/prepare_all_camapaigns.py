@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
+## \file ../src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Проверка создания affiliate для рекламной кампании  

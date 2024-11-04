@@ -5,7 +5,7 @@
 @dotfile prestashop//api//prestashop.dot
 
 """
-## \file src/endpoints/prestashop/api/api.py
+## \file ../src/endpoints/prestashop/api/api.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import os

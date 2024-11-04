@@ -1,4 +1,4 @@
-## \file src/category/_examples/header.py
+## \file ../src/category/_examples/header.py
 ## \file src/category/_examples/header.py
 """ @namespace src.category._examples """
 import sys

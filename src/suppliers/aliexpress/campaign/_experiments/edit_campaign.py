@@ -1,7 +1,7 @@
 ﻿
 """ Редактор рекламной кампании """
 ...
-## \file src/suppliers/aliexpress/campaign/_experiments/edit_campaign.py
+## \file ../src/suppliers/aliexpress/campaign/_experiments/edit_campaign.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

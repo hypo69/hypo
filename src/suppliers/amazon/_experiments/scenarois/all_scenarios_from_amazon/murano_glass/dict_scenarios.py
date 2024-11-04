@@ -1,4 +1,4 @@
-## \file src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/dict_scenarios.py
+## \file ../src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/dict_scenarios.py
 ## \file src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/dict_scenarios.py
 scenario: dict = {
     "Murano Glass": {

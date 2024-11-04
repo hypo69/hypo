@@ -1,5 +1,5 @@
 ﻿## \file src/product/product_fields/product_fields.py
-## \file src/product/product_fields/product_fields.py
+## \file ../src/product/product_fields/product_fields.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """    <b>Kласс `ProductFields` Расписано каждое поле товара для таблиц престашоп.</b> 

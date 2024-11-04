@@ -1,4 +1,4 @@
-## \file src/logger/exceptions.py
+## \file ../src/logger/exceptions.py
 ﻿# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Program Exceptions """

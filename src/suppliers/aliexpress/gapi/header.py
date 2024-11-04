@@ -1,7 +1,7 @@
 """ Определение путей программы
 """
 
-## \file src/suppliers/aliexpress/gapi/header.py
+## \file ../src/suppliers/aliexpress/gapi/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

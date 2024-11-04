@@ -1,5 +1,5 @@
 ﻿## \file src/prestashop/_experiments/suppliers/hb/header.py
-## \file src/endpoints/prestashop/_experiments/suppliers/hb/header.py
+## \file ../src/endpoints/prestashop/_experiments/suppliers/hb/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import json

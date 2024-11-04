@@ -1,5 +1,5 @@
 ﻿## \file src/webdriver/edge/_examples/version.py
-## \file src/webdriver/edge/_examples/version.py
+## \file ../src/webdriver/edge/_examples/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

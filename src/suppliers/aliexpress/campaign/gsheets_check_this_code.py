@@ -1,5 +1,5 @@
 """ Редактор рекламной кампании через гугл таблицами """
-## \file src/suppliers/aliexpress/campaign/gsheets_check_this_code.py
+## \file ../src/suppliers/aliexpress/campaign/gsheets_check_this_code.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

@@ -1,5 +1,5 @@
 ﻿## \file src/webdriver/chrome/version.py
-## \file src/webdriver/chrome/version.py
+## \file ../src/webdriver/chrome/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

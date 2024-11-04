@@ -1,5 +1,5 @@
 """ Генератор HTML контента рекламной кампании """
-## \file src/suppliers/aliexpress/campaign/html_generators.py
+## \file ../src/suppliers/aliexpress/campaign/html_generators.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import header   

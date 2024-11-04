@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
 """
 
-## \file src/webdriver/bs/bs.py
+## \file ../src/webdriver/bs/bs.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import re

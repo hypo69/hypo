@@ -1,6 +1,6 @@
 ﻿""" Facebook"""
 
-## \file src/advertisement/__init__.py
+## \file ../src/endpoints/advertisement/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

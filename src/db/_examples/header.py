@@ -1,4 +1,4 @@
-## \file src/db/_examples/header.py
+## \file ../src/db/_examples/header.py
 ## \file src/db/_examples/header.py
 """ @namespace src.db._examples """
 import sys

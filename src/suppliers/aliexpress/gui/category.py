@@ -1,6 +1,6 @@
 ﻿""" Window interface for preparing advertising campaigns """
 
-## \file src/suppliers/aliexpress/gui/category.py
+## \file ../src/suppliers/aliexpress/gui/category.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

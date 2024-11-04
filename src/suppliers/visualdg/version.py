@@ -1,20 +1,20 @@
-﻿## \file src/suppliers/morlevi/version.py
-## \file src/suppliers/visualdg/version.py
-# -*- coding: utf-8 -*-
-# /path/to/interpreter/python
-"""
-- `__version__`: This variable holds the version of the module or package.
-- `__name__`: Contains the name of the module. If the script is being run directly, the value will be `"__main__"`.
-- `__doc__`: The module's documentation string.
-- `__details__`: This variable likely contains additional details about the module, but the exact purpose depends on the specific module or package.
-- `__annotations__`: Contains type annotations for variables and functions in the module.
-- `__author__`: The name(s) of the author(s) of the module.
-"""
-__name__:str
-__version__="3.12.0.0.0.4"
-__doc__:str
-__details__:str="Details about version for module or class"
-__annotations__
+## \file ../src/suppliers/visualdg/version.py
+﻿## \file src/suppliers/visualdg/version.py
+import json
 
-__author__='hypotez '
+settings:dict = None
+
+try:
+    with open('../../settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
+
+__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
+__version__: str = settings.get("version", '')  if settings  else ''
+__doc__: str = ''
+__details__: str = ''
+__author__: str = settings.get("author", '')  if settings  else ''
+__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 

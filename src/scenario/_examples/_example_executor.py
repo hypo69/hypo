@@ -1,5 +1,5 @@
 ﻿## \file src/scenario/_examples/_example_executor.py
-## \file src/scenario/_examples/_example_executor.py
+## \file ../src/scenario/_examples/_example_executor.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

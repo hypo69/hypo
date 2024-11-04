@@ -1,4 +1,4 @@
-## \file src/suppliers/_experiments/Supplier/test_absolute_paths.py
+## \file ../src/suppliers/_experiments/Supplier/test_absolute_paths.py
 ## \file src/suppliers/_experiments/Supplier/test_absolute_paths.py
 import unittest
 from pathlib import Path

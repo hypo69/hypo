@@ -1,4 +1,4 @@
-## \file src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
+## \file ../src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
 ## \file src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
 import pytest
 import asyncio

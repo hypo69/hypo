@@ -1,6 +1,6 @@
 ﻿""" Купоны, скидки и т.п. для товаров Prestashop"""
 ...
-## \file src/db/manager_coupons_and_sales/product_campaigns.py
+## \file ../src/db/manager_coupons_and_sales/product_campaigns.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

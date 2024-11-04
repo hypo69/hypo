@@ -2,7 +2,7 @@
 Адаптер для API
 """
 ...
-## \file src/endpoints/prestashop/__init__.py
+## \file ../src/endpoints/prestashop/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

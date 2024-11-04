@@ -1,4 +1,4 @@
-## \file src/utils/convertors/tts.py
+## \file ../src/utils/convertors/tts.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Module for speech recognition and text-to-speech conversion. """
