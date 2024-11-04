@@ -23,10 +23,6 @@ This module defines custom exceptions to manage errors related to logging operat
 
 The Beeper module handles sound notifications. It allows the application to emit different sounds based on the current logging level, providing auditory feedback that can be particularly useful in environments where visual monitoring is not practical.
 
-## Installation
-
-There are no specific installation requirements other than having Python installed on your system. The module is designed to work with Python 3.6 and above.
-
 ## Usage
 
 To utilize the Logger Module in your application, you can import the necessary components and configure the logger as needed.
