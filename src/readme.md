@@ -1,64 +1,58 @@
-### Project Modules Description
+### Project Modules
 
-1. **fast_api**  
-   Module for working with the FastAPI framework, used to create API interfaces and manage server requests. Ensures high performance through asynchronous request execution.
+1. **advertisement**  
+   Manages ad campaigns and interactions with advertising platforms, supporting creation, management, and performance analysis of advertisements.
 
-2. **goog**  
-   Module for integrating with Google services. Supports API integrations with services like Google Sheets, Google Drive, and provides tools for working with cloud-stored data.
+2. **ai**  
+   Responsible for managing AI models, including creation, training, and deployment. Supports various algorithms for data analysis and processing.
 
-3. **gui**  
-   Module for the graphical user interface (GUI), allowing users to interact with the application through visual elements. Provides windows, buttons, and other controls for user interaction.
+3. **bots**  
+   Manages bot integrations (Telegram, Discord), allowing for messaging, command processing, and user interaction through messaging platforms.
 
-4. **launcher**  
-   Main module for launching the project. Responsible for initializing and configuring all necessary services and modules before starting the application.
+4. **category**  
+   Manages the structure and hierarchy of product categories, providing support for adding, updating, deleting, and searching categories.
 
-5. **logger**  
-   Logging and error-handling module. Provides structured logging and exception handling, allowing tracking and recording of errors, warnings, and informational messages.
+5. **db**  
+   Handles database connections and interactions, including querying and secure data processing.
 
-6. **powershell**  
-   Module for executing PowerShell scripts and commands. Used for managing system resources and automating OS-related tasks.
+6. **docs**  
+   Contains project documentation, including descriptions of functions, classes, modules, API specifications, and usage instructions.
 
-7. **prestashop**  
-   Module for integrating with PrestaShop, enabling interaction with this e-commerce platform. Supports uploading, updating, and managing products, orders, and customers.
+7. **endpoints**  
+   Module for handling final consumer endpoints, integrating with external services and systems.
 
-8. **product**  
-   Module responsible for managing product data. Provides functionality to add, update, delete, and process product information.
+8. **fast_api**  
+   Provides FastAPI framework integration to create API interfaces and manage server requests with high performance through asynchronous execution.
 
-9. **scenario**  
-   Module for managing scenarios for suppliers, allowing automation and management of processes with data suppliers. Supports configurable workflows and action sequences.
+9. **goog**  
+   Integrates with Google services such as Google Sheets and Google Drive, providing tools for cloud-based data handling.
 
-10. **suppliers**  
-    Module for managing data suppliers. Contains logic for working with various data sources and supports integration with suppliers to load and update information.
+10. **gui**  
+    Graphical user interface (GUI) module for user interaction through visual elements such as windows, buttons, and controls.
 
-11. **templates**  
-    Template management module. Provides templates for various application components, such as interfaces, emails, and messages, streamlining the standardization of visual and textual elements.
+11. **launcher**  
+    Initializes and configures all necessary services and modules before application launch.
 
-12. **translator**  
-    Text translation module. Supports automatic text translation into multiple languages using external API services or built-in algorithms.
+12. **logger**  
+    Provides structured logging and error handling for tracking errors, warnings, and informational messages.
 
-13. **translators**  
-    Additional module for advanced translation management, supporting multiple sources and translation types.
+13. **product**  
+    Manages product data with functionality for adding, updating, deleting, and processing product information.
 
-14. **utils**  
-    Utility module. Contains helper functions and classes used across other modules, such as data formatting, parsers, and string processing tools.
+14. **scenario**  
+    Manages configurable workflows and automated sequences for working with data suppliers.
 
-15. **webdriver**  
-    Webdriver module for browser management and automation tasks related to web browsing. Supports browser control for tasks like scraping or web interface testing, compatible with browsers like Chrome and Firefox.
+15. **templates**  
+    Manages templates for various components, such as interfaces, emails, and messages, supporting standardized formatting.
 
-16. **advertisement**  
-    Advertisement module, enabling management of ad campaigns and interaction with advertising platforms. Supports creating, managing, and analyzing ad performance.
+16. **translator**  
+    Provides automatic text translation into multiple languages, using external APIs or built-in algorithms.
 
-17. **ai**  
-    Module for managing AI models. Responsible for creating, training, and using artificial intelligence models, supporting various algorithms for data analysis and processing.
+17. **translators**  
+    Includes additional classes and functions for advanced translation management, supporting multiple sources and translation types.
 
-18. **bot**  
-    Module for bot management (Telegram, Discord). Provides integration and management of bots, supporting sending and receiving messages, command processing, and user interaction through messaging platforms.
+18. **utils**  
+    Contains utility functions and classes used throughout the project, including data formatting, parsing, and string processing.
 
-19. **category**  
-    Module for product category management, providing structure and hierarchy management for categories. Supports adding, updating, deleting, and searching for product categories.
-
-20. **db**  
-    Database management module. Contains functions for connecting to, querying, and processing data in the database, ensuring reliable and secure interaction with data storage.
-
-21. **docs**  
-    Module for managing project documentation. Contains descriptions of functions, classes, and modules, as well as API specifications and application usage instructions.
+19. **webdriver**  
+    Manages browser automation tasks, compatible with browsers like Chrome and Firefox, supporting web scraping and interface testing.
