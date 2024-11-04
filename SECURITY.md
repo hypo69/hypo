@@ -1,7 +1,3 @@
-Here’s the updated instruction incorporating the specific folder structure and indicating where to create the KeePass database:
-
----
-
 ## Storing Application Settings
 
 ### 1. Storing Passwords and Credentials in KeePass
