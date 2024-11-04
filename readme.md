@@ -128,13 +128,15 @@ Furthermore, the project includes a parser and scraper designed to gather and pr
    ```
 
 8. Create project folders:
-   ```powershell
-   New-Item -ItemType Directory -Path .\docs
-   New-Item -ItemType Directory -Path .\export
-   New-Item -ItemType Directory -Path .\log
-   New-Item -ItemType Directory -Path .\tmp
-   New-Item -ItemType Directory -Path .\sandbox
-   ```
+```powershell
+# DEPRECATED. будет создано программой по мере необходиимости
+
+#   New-Item -ItemType Directory -Path .\docs
+#   New-Item -ItemType Directory -Path .\export
+#   New-Item -ItemType Directory -Path .\log
+#   New-Item -ItemType Directory -Path .\tmp
+#   New-Item -ItemType Directory -Path .\sandbox
+```
 
 9. Install npm and web-ext:
    ```powershell
