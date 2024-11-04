@@ -1,4 +1,4 @@
-## \file ../src/suppliers/amazon/_experiments/scenarios.py/header.py
+## \file src/suppliers/amazon/_experiments/scenarios.py/header.py
 ## \file src/suppliers/amazon/_experiments/scenarios.py/header.py
 import sys
 import os

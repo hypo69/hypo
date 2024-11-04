@@ -1,4 +1,4 @@
-## \file ../src/suppliers/etzmaleh/etzmaleh.py
+## \file src/suppliers/etzmaleh/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

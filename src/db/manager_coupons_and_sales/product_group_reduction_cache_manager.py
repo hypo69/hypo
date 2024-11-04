@@ -28,7 +28,7 @@ manager.delete_record(1, 2)
 @endcode
 """
 ...
-## \file ../src/db/manager_coupons_and_sales/product_group_reduction_cache_manager.py
+## \file src/db/manager_coupons_and_sales/product_group_reduction_cache_manager.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

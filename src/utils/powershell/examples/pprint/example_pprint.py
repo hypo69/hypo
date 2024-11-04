@@ -1,4 +1,4 @@
-## \file ../src/utils/powershell/examples/pprint/example_pprint.py
+## \file src/utils/powershell/examples/pprint/example_pprint.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

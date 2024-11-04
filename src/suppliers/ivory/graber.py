@@ -1,4 +1,4 @@
-## \file ../src/suppliers/ivory/ivory.py
+## \file src/suppliers/ivory/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

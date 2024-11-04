@@ -15,7 +15,7 @@ Examples:
     @endcode
 """
 
-## \file ../src/suppliers/aliexpress/aliexpress.py
+## \file src/suppliers/aliexpress/aliexpress.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

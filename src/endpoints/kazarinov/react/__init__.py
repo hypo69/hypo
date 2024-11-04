@@ -1,4 +1,4 @@
-## \file ../src/suppliers/kazarinov/react/__init__.py
+## \file src/endpoints/kazarinov/react/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Модуль поставщика. Class `Supplier`

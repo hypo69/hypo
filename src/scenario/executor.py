@@ -1,5 +1,5 @@
-﻿## \file ../src/scenario/executor.py
-## \file ../src/scenario/executor.py
+﻿## \file src/scenario/executor.py
+## \file src/scenario/executor.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

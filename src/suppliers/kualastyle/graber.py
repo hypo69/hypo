@@ -1,4 +1,4 @@
-## \file ../src/suppliers/kualastyle/kualastyle.py
+## \file src/suppliers/kualastyle/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

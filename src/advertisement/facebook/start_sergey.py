@@ -1,4 +1,4 @@
-## \file ../src/advertisement/facebook/start_sergey.py
+## \file src/advertisement/facebook/start_sergey.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """Отправка рекламных объявлений в группы фейсбук."""

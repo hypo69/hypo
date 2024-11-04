@@ -31,7 +31,7 @@ main.py
 @image html main.png
 """
 ...
-## \file ../src/main.py
+## \file src/main.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

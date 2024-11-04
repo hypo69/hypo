@@ -1,5 +1,5 @@
-﻿## \file ../src/utils/convertors/json.py
-## \file ../src/utils/convertors/json.py
+﻿## \file src/utils/convertors/json.py
+## \file src/utils/convertors/json.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

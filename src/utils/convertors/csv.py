@@ -1,5 +1,5 @@
-﻿## \file ../src/utils/convertors/csv.py
-## \file ../src/utils/convertors/csv.py
+﻿## \file src/utils/convertors/csv.py
+## \file src/utils/convertors/csv.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

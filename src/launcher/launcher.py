@@ -1,6 +1,6 @@
 ﻿## \file src/launcher/launcher.py
 """ @namespace src.launcher """
-## \file ../src/launcher/launcher.py
+## \file src/launcher/launcher.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Лончер. Запуск кода в автоматическом режиме на исполнение сценатиев

@@ -1,5 +1,5 @@
-﻿## \file ../src/suppliers/aliexpress/campaign/__init__.py
-## \file ../src/suppliers/aliexpress/campaign/__init__.py
+﻿## \file src/suppliers/aliexpress/campaign/__init__.py
+## \file src/suppliers/aliexpress/campaign/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ модули управления рекламной кампанией Aliexpress:

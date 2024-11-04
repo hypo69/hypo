@@ -1,5 +1,5 @@
-﻿## \file ../src/ai/openai/header.py
-## \file ../src/ai/helicone/header.py
+﻿## \file src/ai/openai/header.py
+## \file src/ai/helicone/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Absolute path to modules  """

@@ -1,4 +1,4 @@
-## \file ../src/suppliers/kualastyle/_experiments/JUPYTER_header.py
+## \file src/suppliers/kualastyle/_experiments/JUPYTER_header.py
 ## \file src/suppliers/kualastyle/_experiments/JUPYTER_header.py
 import sys
 import os

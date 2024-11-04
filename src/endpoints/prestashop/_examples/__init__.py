@@ -1,5 +1,5 @@
 ﻿## \file src/prestashop/_examples/__init__.py
-## \file ../src/prestashop/_examples/__init__.py
+## \file src/endpoints/prestashop/_examples/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ """

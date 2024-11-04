@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/scenarios/_experiments/header.py
-## \file ../src/suppliers/aliexpress/scenarios/_experiments/header.py
+## \file src/suppliers/aliexpress/scenarios/_experiments/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Aliexpress scenarios experiments """

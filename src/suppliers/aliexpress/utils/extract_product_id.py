@@ -1,5 +1,5 @@
-﻿## \file ../src/suppliers/aliexpress/utils/extract_product_id.py
-## \file ../src/suppliers/aliexpress/utils/extract_product_id.py
+﻿## \file src/suppliers/aliexpress/utils/extract_product_id.py
+## \file src/suppliers/aliexpress/utils/extract_product_id.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import re

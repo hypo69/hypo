@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/scenarios/_experiments/promote_deal.py
-## \file ../src/suppliers/aliexpress/scenarios/_experiments/promote_deal.py
+## \file src/suppliers/aliexpress/scenarios/_experiments/promote_deal.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Создание рекламной кампании """

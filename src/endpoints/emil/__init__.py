@@ -1,4 +1,5 @@
-﻿## \file ../src/suppliers/emil/__init__.py
+﻿## \file src/suppliers/emil/__init__.py
+## \file src/endpoints/emil/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

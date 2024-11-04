@@ -1,4 +1,4 @@
-## \file ../src/advertisement/facebook/start_posting_my_groups.py
+## \file src/advertisement/facebook/start_posting_my_groups.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """Отправка рекламных объявлений в группы фейсбук """

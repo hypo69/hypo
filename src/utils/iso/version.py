@@ -1,5 +1,5 @@
 ﻿## \file src/utils/iso/version.py
-## \file ../src/utils/iso/version.py
+## \file src/utils/iso/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

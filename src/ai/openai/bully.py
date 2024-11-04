@@ -1,4 +1,4 @@
-## \file ../src/ai/openai/bully.py
+## \file src/ai/openai/bully.py
 ## \file src/ai/bully.py
 """ @namespace src.ai """
 """   - Пример, как развести chatGPT на грубости

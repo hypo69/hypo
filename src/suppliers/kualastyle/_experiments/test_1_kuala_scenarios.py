@@ -1,4 +1,4 @@
-## \file ../src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
+## \file src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
 ## \file src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
 import header
 from header import Product, ProductFields, start_supplier

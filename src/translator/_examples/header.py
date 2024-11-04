@@ -1,4 +1,4 @@
-## \file ../src/translator/_examples/header.py
+## \file src/translator/_examples/header.py
 ## \file src/translator/_examples/header.py
 import sys
 import os

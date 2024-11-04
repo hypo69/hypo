@@ -1,4 +1,4 @@
-## \file ../src/webdriver/_examples/_example_driver.py
+## \file src/webdriver/_examples/_example_driver.py
 ## \file src/webdriver/_examples/_example_driver.py
 # example.py
 

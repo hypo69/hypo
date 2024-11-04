@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/kualastyle/login.py
-## \file ../src/suppliers/kualastyle/login.py
+## \file src/suppliers/kualastyle/login.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Функции авторизации поставщика """

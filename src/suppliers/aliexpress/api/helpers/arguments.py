@@ -1,4 +1,4 @@
-## \file ../src/suppliers/aliexpress/api/helpers/arguments.py
+## \file src/suppliers/aliexpress/api/helpers/arguments.py
 
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException

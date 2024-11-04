@@ -1,4 +1,4 @@
-## \file ../src/suppliers/aliexpress/api/helpers/requests.py
+## \file src/suppliers/aliexpress/api/helpers/requests.py
 ## \file src/suppliers/aliexpress/api/helpers/requests.py
 from types import SimpleNamespace
 from time import sleep

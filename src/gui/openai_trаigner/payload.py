@@ -1,1 +1,1 @@
-## \file ../src/gui/openai_trаigner/payload.py
+## \file src/gui/openai_trаigner/payload.py

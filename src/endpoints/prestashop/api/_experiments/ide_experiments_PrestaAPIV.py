@@ -1,4 +1,4 @@
-## \file ../src/prestashop/api/_experiments/ide_experiments_PrestaAPIV.py
+## \file src/endpoints/prestashop/api/_experiments/ide_experiments_PrestaAPIV.py
 ## \file src/prestashop/api/_experiments/ide_experiments_PrestaAPIV.py
 """  Прослойка между разными вериями модулей взаимммодействия с престашоп 
 Есть проблемы с аутентификацией на сайте клиента. Вполне возможно, 

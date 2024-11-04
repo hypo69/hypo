@@ -1,4 +1,4 @@
-## \file ../src/webdriver/javascript/_examples/header.py
+## \file src/webdriver/javascript/_examples/header.py
 ## \file src/webdriver/javascript/_examples/header.py
 import sys
 import os

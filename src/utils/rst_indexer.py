@@ -1,4 +1,4 @@
-## \file ../src/utils/rst_indexer.py
+## \file src/utils/rst_indexer.py
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """

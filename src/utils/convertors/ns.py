@@ -1,4 +1,4 @@
-## \file ../src/utils/convertors/ns.py
+## \file src/utils/convertors/ns.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """

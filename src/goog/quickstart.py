@@ -6,7 +6,7 @@ project, and log the script's URL to the user.
 https://developers.google.com/apps-script/api/quickstart/python
 """
 
-## \file ../src/goog/quickstart.py
+## \file src/goog/quickstart.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

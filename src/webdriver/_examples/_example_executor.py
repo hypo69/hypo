@@ -1,5 +1,5 @@
 ﻿## \file src/webdriver/_examples/_example_executor.py
-## \file ../src/webdriver/_examples/_example_executor.py
+## \file src/webdriver/_examples/_example_executor.py
 # -*- coding: utf-8 -*-
 """ Extend the Driver Class
 <pre>

@@ -1,5 +1,5 @@
 ﻿## \file src/product/product_fields/product_fields_translator.py
-## \file ../src/product/product_fields/product_fields_translator.py
+## \file src/product/product_fields/product_fields_translator.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Модуль перевода полей товара на языки клиентской базы данных """

@@ -1,5 +1,5 @@
-﻿## \file ../src/product/product_fields/__init__.py
-## \file ../src/product/product_fields/__init__.py
+﻿## \file src/product/product_fields/__init__.py
+## \file src/product/product_fields/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """   Модуль в основном используется для обработки полей товара Prestashop. 

@@ -1,4 +1,4 @@
-## \file ../src/suppliers/bangood/_experiments/JUPYTER_header.py
+## \file src/suppliers/bangood/_experiments/JUPYTER_header.py
 ## \file src/suppliers/bangood/_experiments/JUPYTER_header.py
 import sys
 import os

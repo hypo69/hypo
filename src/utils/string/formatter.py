@@ -1,5 +1,5 @@
-﻿## \file ../src/utils/string/formatter.py
-## \file ../src/utils/string/formatter.py
+﻿## \file src/utils/string/formatter.py
+## \file src/utils/string/formatter.py
 # -*- coding: utf-8 -*-
 #! /path/to/interpreter/python
 """

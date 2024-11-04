@@ -1,5 +1,5 @@
 ﻿## \file src/launcher/threads.py
-## \file ../src/launcher/threads.py
+## \file src/launcher/threads.py
 # -*- coding: utf-8 -*-
 """ @namespace src.launcher """
 # /path/to/interpreter/python

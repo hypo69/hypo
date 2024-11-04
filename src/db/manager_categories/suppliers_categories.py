@@ -1,5 +1,5 @@
 ﻿## \file src/db/manager_categories/suppliers_categories.py
-## \file ../src/db/manager_categories/suppliers_categories.py
+## \file src/db/manager_categories/suppliers_categories.py
 # -*- coding: utf-8 -*-
 """ @namespace src.db.manager_categories """
 # /path/to/interpreter/python

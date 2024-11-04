@@ -1,5 +1,5 @@
-﻿## \file ../src/utils/header.py
-## \file ../src/utils/header.py
+﻿## \file src/utils/header.py
+## \file src/utils/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """! Absolute path to modules  """

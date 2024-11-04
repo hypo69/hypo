@@ -1,4 +1,4 @@
-## \file ../src/advertisement/facebook/start_posting_katia.py
+## \file src/advertisement/facebook/start_posting_katia.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """Отправка рекламных объявлений в группы фейсбук """

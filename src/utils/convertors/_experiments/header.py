@@ -1,4 +1,4 @@
-## \file ../src/utils/convertors/_experiments/header.py
+## \file src/utils/convertors/_experiments/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Absolute path to modules  """

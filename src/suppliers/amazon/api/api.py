@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/amazon/api/api.py
-## \file ../src/suppliers/amazon/api/api.py
+## \file src/suppliers/amazon/api/api.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ template for connecting via an API: """

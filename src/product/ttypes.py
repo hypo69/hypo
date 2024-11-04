@@ -1,4 +1,4 @@
-## \file ../src/product/ttypes.py
+## \file src/product/ttypes.py
 """ Определение типa `product` """
 from typing import TypedDict, Optional
 

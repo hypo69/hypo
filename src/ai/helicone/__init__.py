@@ -1,6 +1,6 @@
 """ OpenAI """
 
-## \file ../src/ai/helicone/__init__.py
+## \file src/ai/helicone/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

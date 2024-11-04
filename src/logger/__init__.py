@@ -1,5 +1,5 @@
-﻿## \file ../src/logger/__init__.py
-## \file ../src/logger/__init__.py
+﻿## \file src/logger/__init__.py
+## \file src/logger/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Logger """

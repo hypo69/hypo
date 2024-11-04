@@ -1,5 +1,5 @@
 ﻿## \file src/db/_examples/version.py
-## \file ../src/db/_examples/version.py
+## \file src/db/_examples/version.py
 # -*- coding: utf-8 -*-
 """ @namespace src.db._examples """
 # /path/to/interpreter/python

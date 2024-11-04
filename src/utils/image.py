@@ -1,4 +1,4 @@
-## \file ../src/utils/image.py
+## \file src/utils/image.py
 # -*- coding: utf-8 -*-
 #! /path/to/interpreter/python
 """

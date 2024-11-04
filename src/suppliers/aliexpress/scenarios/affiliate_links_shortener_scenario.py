@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
-## \file ../src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
+## \file src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Сокращатель ссылок через веббраузер """

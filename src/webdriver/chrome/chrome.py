@@ -1,5 +1,5 @@
-﻿## \file ../src/webdriver/chrome/chrome.py
-## \file ../src/webdriver/chrome/chrome.py
+﻿## \file src/webdriver/chrome/chrome.py
+## \file src/webdriver/chrome/chrome.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Chrome WebDriver.

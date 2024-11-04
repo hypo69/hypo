@@ -1,6 +1,6 @@
 """ Менеджер переводов параметров товара"""
 ...
-## \file ../src/db/manager_translations/product_translations.py
+## \file src/db/manager_translations/product_translations.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

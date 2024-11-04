@@ -1,4 +1,4 @@
-## \file ../src/gui/version.py
+## \file src/gui/version.py
 ﻿__version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

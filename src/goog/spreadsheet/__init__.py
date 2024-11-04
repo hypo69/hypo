@@ -1,6 +1,6 @@
 ﻿""" Google API """
 
-## \file ../src/goog/spreadsheet/__init__.py
+## \file src/goog/spreadsheet/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

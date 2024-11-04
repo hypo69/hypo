@@ -1,4 +1,4 @@
-## \file ../src/db/manager_translations/_tests/ProductTranslationsManager.py
+## \file src/db/manager_translations/_tests/ProductTranslationsManager.py
 ## \file src/db/manager_translations/_tests/ProductTranslationsManager.py
 """ @namespace src.db.manager_translations._tests """
 import unittest

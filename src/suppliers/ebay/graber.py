@@ -1,4 +1,5 @@
-﻿## \file ../src/suppliers/ebay/ebay.py
+﻿## \file src/suppliers/ebay/ebay.py
+## \file src/suppliers/ebay/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

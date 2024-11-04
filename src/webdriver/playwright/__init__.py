@@ -1,5 +1,5 @@
 ﻿""" Обёртка для Playwrid crawler"""
-## \file ../src/webdriver/playwright/__init__.py
+## \file src/webdriver/playwright/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

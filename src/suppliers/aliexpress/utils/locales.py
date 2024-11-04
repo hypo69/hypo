@@ -1,4 +1,4 @@
-## \file ../src/suppliers/aliexpress/utils/locales.py
+## \file src/suppliers/aliexpress/utils/locales.py
 # -*- coding: utf-8 -*-
 #! /usr/bin/python3
 """ Module for loading locales data from JSON file.

@@ -6,7 +6,7 @@
 - `__annotations__`: Contains type annotations for variables and functions in the module.
 - `__author__`: The name(s) of the author(s) of the module.
 """
-## \file ../src/suppliers/aliexpress/campaign/version.py
+## \file src/suppliers/aliexpress/campaign/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 __name__=''

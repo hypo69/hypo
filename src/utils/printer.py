@@ -1,5 +1,5 @@
-﻿## \file ../src/utils/printer.py
-## \file ../src/utils/printer.py
+﻿## \file src/utils/printer.py
+## \file src/utils/printer.py
 # -*- coding: utf-8 -*-
 """
 This module provides enhanced print formatting for better readability of data structures.
@@ -37,7 +37,7 @@ BOLD = "\033[1m"
 UNDERLINE = "\033[4m"
 ITALIC = "\033[3m"
 
-## \file ../src/utils/printer.py
+## \file src/utils/printer.py
 # -*- coding: utf-8 -*-
 """
 This module provides enhanced print formatting for better readability of data structures.

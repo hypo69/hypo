@@ -1,4 +1,4 @@
-## \file ../src/suppliers/amazon/_experiments/notebook_header.py
+## \file src/suppliers/amazon/_experiments/notebook_header.py
 ## \file src/suppliers/amazon/_experiments/notebook_header.py
 import sys
 import os

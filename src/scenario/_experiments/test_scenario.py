@@ -1,4 +1,4 @@
-## \file ../src/scenario/_experiments/test_scenario.py
+## \file src/scenario/_experiments/test_scenario.py
 ## \file src/scenario/_experiments/test_scenario.py
 import sys
 import os

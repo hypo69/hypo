@@ -9,7 +9,7 @@ Author(s):
   - Created by Davidka on 09.11.2023 .
 """
 
-## \file ../src/suppliers/aliexpress/api/_examples/iop/test_internal.py
+## \file src/suppliers/aliexpress/api/_examples/iop/test_internal.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import iop

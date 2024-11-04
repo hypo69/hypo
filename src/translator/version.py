@@ -1,4 +1,4 @@
-## \file ../src/translator/version.py
+## \file src/translator/version.py
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

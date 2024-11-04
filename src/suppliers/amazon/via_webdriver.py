@@ -13,7 +13,7 @@
 
 """
 
-## \file ../src/suppliers/amazon/via_webdriver.py
+## \file src/suppliers/amazon/via_webdriver.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

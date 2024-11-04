@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/api/_examples/iop/base.py
-## \file ../src/suppliers/aliexpress/api/_examples/iop/base.py
+## \file src/suppliers/aliexpress/api/_examples/iop/base.py
 # -*- coding: utf-8 -*-
 '''
 Created on 2018-03-21

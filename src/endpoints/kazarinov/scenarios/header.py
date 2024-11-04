@@ -1,5 +1,5 @@
-﻿## \file ../src/suppliers/kazarinov/header.py
-## \file ../src/suppliers/kazarinov/scenarios/header.py
+﻿## \file src/suppliers/kazarinov/header.py
+## \file src/endpoints/kazarinov/scenarios/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """! Absolute path to modules  """

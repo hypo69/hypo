@@ -1,4 +1,5 @@
-﻿## \file ../src/ai/openai/header.py
+﻿## \file src/ai/openai/header.py
+## \file src/gui/context_menu/tkinter/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

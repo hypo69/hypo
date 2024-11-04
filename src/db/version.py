@@ -1,5 +1,5 @@
 ﻿## \file src/db/version.py
-## \file ../src/db/version.py
+## \file src/db/version.py
 # -*- coding: utf-8 -*-
 """ @namespace src.db """
 # /path/to/interpreter/python

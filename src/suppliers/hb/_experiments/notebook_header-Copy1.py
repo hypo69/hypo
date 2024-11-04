@@ -1,4 +1,4 @@
-## \file ../src/suppliers/hb/_experiments/notebook_header-Copy1.py
+## \file src/suppliers/hb/_experiments/notebook_header-Copy1.py
 ## \file src/suppliers/hb/_experiments/notebook_header-Copy1.py
 import sys
 import os

@@ -1,4 +1,4 @@
-## \file ../src/product/_experiments/header.py
+## \file src/product/_experiments/header.py
 ## \file src/product/_experiments/header.py
 import sys
 import os

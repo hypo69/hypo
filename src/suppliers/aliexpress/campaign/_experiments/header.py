@@ -1,6 +1,6 @@
 """ Header  """
 
-## \file ../src/suppliers/aliexpress/campaign/_experiments/header.py
+## \file src/suppliers/aliexpress/campaign/_experiments/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

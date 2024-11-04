@@ -1,5 +1,5 @@
-﻿## \file ../src/bots/openai/header.py
-## \file ../src/bots/telegram/header.py
+﻿## \file src/bots/openai/header.py
+## \file src/endpoints/bots/telegram/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

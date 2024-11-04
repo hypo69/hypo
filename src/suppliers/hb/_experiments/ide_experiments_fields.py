@@ -1,4 +1,4 @@
-## \file ../src/suppliers/hb/_experiments/ide_experiments_fields.py
+## \file src/suppliers/hb/_experiments/ide_experiments_fields.py
 ## \file src/suppliers/hb/_experiments/ide_experiments_fields.py
 """  Файл проверки наполнения полей HB -> product_fields """
 

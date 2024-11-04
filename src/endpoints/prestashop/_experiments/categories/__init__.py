@@ -12,7 +12,7 @@
 
 @file
 """
-## \file ../src/prestashop/_experiments/categories/__init__.py
+## \file src/endpoints/prestashop/_experiments/categories/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

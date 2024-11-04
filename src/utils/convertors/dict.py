@@ -1,4 +1,4 @@
-## \file ../src/utils/convertors/dict.py
+## \file src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """
@@ -47,7 +47,7 @@ from src.utils.xls import save_xls_file
 #     elif isinstance(data, list):
 #         return [dict2ns(item) if isinstance(item, dict) else item for item in data]
 #     return data
-## \file ../src/utils/convertors/dict.py
+## \file src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

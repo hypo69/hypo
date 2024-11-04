@@ -1,4 +1,4 @@
-## \file ../src/goog/spreadsheet/spreadsheet.py
+## \file src/goog/spreadsheet/spreadsheet.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Minimal library for working with Google Sheets.

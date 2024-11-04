@@ -1,4 +1,4 @@
-## \file ../src/suppliers/aliexpress/api/models/__init__.py
+## \file src/suppliers/aliexpress/api/models/__init__.py
 ## \file src/suppliers/aliexpress/api/models/__init__.py
 from .languages import Language
 from .currencies import Currency

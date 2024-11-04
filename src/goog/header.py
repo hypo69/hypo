@@ -1,5 +1,5 @@
-﻿## \file ../src/advertisement/facebook/_experiments/header.py
-## \file ../src/goog/header.py
+﻿## \file src/advertisement/facebook/_experiments/header.py
+## \file src/goog/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Absolute path to modules  """

@@ -1,4 +1,4 @@
-## \file ../src/advertisement/facebook/start_event.py
+## \file src/advertisement/facebook/start_event.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """Отправка мероприятий в группы фейсбук """

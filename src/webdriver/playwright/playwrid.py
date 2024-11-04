@@ -10,7 +10,7 @@ if __name__ == "__main__":
     browser.start("https://www.example.com")
 @endcode
 """
-## \file ../src/webdriver/playwright/playwrid.py
+## \file src/webdriver/playwright/playwrid.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

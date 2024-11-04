@@ -31,7 +31,7 @@ alirequests.py
     ├── Supplier.__init__()
 
 """
-## \file ../src/suppliers/aliexpress/alirequests.py
+## \file src/suppliers/aliexpress/alirequests.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import pickle

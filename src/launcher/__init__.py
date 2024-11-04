@@ -1,5 +1,5 @@
 ﻿## \file src/launcher/__init__.py
-## \file ../src/launcher/__init__.py
+## \file src/launcher/__init__.py
 # -*- coding: utf-8 -*-
 """ @namespace src.launcher """
 # /path/to/interpreter/python

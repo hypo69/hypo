@@ -1,5 +1,5 @@
 ﻿## \file src/db/manager_coupons_and_sales/version.py
-## \file ../src/db/manager_coupons_and_sales/version.py
+## \file src/db/manager_coupons_and_sales/version.py
 # -*- coding: utf-8 -*-
 """ @namespace src.db.manager_coupons_and_sales """
 # /path/to/interpreter/python

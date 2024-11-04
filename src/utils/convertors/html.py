@@ -1,5 +1,5 @@
-﻿## \file ../src/utils/convertors/html.py
-## \file ../src/utils/convertors/html.py
+﻿## \file src/utils/convertors/html.py
+## \file src/utils/convertors/html.py
 # -*- coding: utf-8 -*-
 #! /path/to/interpreter/python
 """

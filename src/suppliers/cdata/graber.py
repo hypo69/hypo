@@ -1,4 +1,4 @@
-## \file ../src/suppliers/cdata/cdata.py
+## \file src/suppliers/cdata/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

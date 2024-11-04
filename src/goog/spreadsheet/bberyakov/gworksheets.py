@@ -1,4 +1,4 @@
-## \file ../src/goog/spreadsheet/bberyakov/gworksheets.py
+## \file src/goog/spreadsheet/bberyakov/gworksheets.py
 ## \file src/utils/interface/goog/gworksheets.py
 """  [File's Description]
 

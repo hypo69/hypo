@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/hb/scenarios/__init__.py
-## \file ../src/suppliers/hb/scenarios/__init__.py
+## \file src/suppliers/hb/scenarios/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Поставщик <I>hb.co.il</I> """

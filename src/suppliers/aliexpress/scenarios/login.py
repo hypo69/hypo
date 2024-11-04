@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/scenarios/login.py
-## \file ../src/suppliers/aliexpress/scenarios/login.py
+## \file src/suppliers/aliexpress/scenarios/login.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Сценарии логина на сайт aliexpress.com 

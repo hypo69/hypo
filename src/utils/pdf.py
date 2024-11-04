@@ -1,4 +1,4 @@
-## \file ../src/utils/pdf.py
+## \file src/utils/pdf.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

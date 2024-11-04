@@ -1,4 +1,4 @@
-## \file ../src/suppliers/_experiments/test_categories_from_template.py
+## \file src/suppliers/_experiments/test_categories_from_template.py
 ## \file src/suppliers/_experiments/test_categories_from_template.py
 """ класс проверки создания шаблонов категорий.
 @deprecated Это какая-то старая версия. Сейчас в файле сценария записана дефолтная категория

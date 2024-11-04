@@ -1,5 +1,5 @@
 ﻿## \file src/suppliers/aliexpress/api/version.py
-## \file ../src/suppliers/aliexpress/api/version.py
+## \file src/suppliers/aliexpress/api/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

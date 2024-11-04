@@ -1,5 +1,5 @@
 ﻿## \file src/utils/string/validator.py
-## \file ../src/utils/string/validator.py
+## \file src/utils/string/validator.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  

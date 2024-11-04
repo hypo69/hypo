@@ -1,6 +1,6 @@
 ﻿""" Main window interface for managing advertising campaigns """
 
-## \file ../src/suppliers/aliexpress/gui/main.py
+## \file src/suppliers/aliexpress/gui/main.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

@@ -1,3 +1,4 @@
+## \file src/suppliers/locator.py
 from types import SimpleNamespace
 from src import gs
 from src.utils.jjson import j_loads_ns

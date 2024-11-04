@@ -1,5 +1,5 @@
 """ Эксперименты с бибилиотекой crawlee-python """
-## \file ../src/webdriver/crawlee_python/_experiments/crawlee_python.py
+## \file src/webdriver/crawlee_python/_experiments/crawlee_python.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 from pathlib import Path

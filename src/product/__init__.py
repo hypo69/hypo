@@ -1,4 +1,5 @@
-﻿## \file ../src/product/__init__.py
+﻿## \file src/product/__init__.py
+## \file src/product/__init__.py
 # -*- coding: utf-8 -*-
 """ Product module
 External classes and attributes:

@@ -1,1 +1,1 @@
-## \file ../src/webdriver/playwright/pw_executor.py
+## \file src/webdriver/playwright/pw_executor.py

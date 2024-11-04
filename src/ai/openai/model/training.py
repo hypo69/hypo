@@ -1,4 +1,4 @@
-## \file ../src/ai/openai/model/training.py
+## \file src/ai/openai/model/training.py
 # -*- coding: utf-8 -*- 
 # /path/to/interpreter/python
 
@@ -26,8 +26,8 @@ from src.utils.convertors.md2dict import md2dict
 class OpenAIModel:
     """OpenAI Model Class for interacting with the OpenAI API and managing the model."""
 
-    #model: str = "gpt-4o-mini"
-    model: str = "gpt-4o-2024-08-06"
+    model: str = "gpt-4o-mini"
+    #model: str = "gpt-4o-2024-08-06"
     client: OpenAI
     current_job_id: str
     assistant_id: str 

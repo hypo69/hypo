@@ -1,4 +1,5 @@
-﻿## \file ../src/endpoints/__init__.py
+﻿## \file src/endpoints/__init__.py
+## \file src/endpoints/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

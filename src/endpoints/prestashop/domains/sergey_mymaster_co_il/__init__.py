@@ -7,6 +7,6 @@ Author(s):
   - Created by [Name] [Last Name] on 07.11.2023 .
 """
 
-## \file ../src/prestashop/domains/sergey_mymaster_co_il/__init__.py
+## \file src/endpoints/prestashop/domains/sergey_mymaster_co_il/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/pythonn

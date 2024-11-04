@@ -1,6 +1,6 @@
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 ...
-## \file ../src/db/manager_categories/__init__.py
+## \file src/db/manager_categories/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

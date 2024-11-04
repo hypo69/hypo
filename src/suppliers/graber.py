@@ -1,4 +1,4 @@
-## \file ../src/suppliers/graber.py
+## \file src/suppliers/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """ Базовый класс сбора данных со старницы для всех поставщиков

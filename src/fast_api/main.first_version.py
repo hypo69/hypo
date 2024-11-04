@@ -1,4 +1,4 @@
-## \file ../src/fast_api/main.first_version.py
+## \file src/fast_api/main.first_version.py
 ﻿
 # /path/to/interpreter/python
 """ Start FastAPI 

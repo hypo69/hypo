@@ -1,4 +1,4 @@
-## \file ../src/db/manager_translations/_experiments/ProductTranslationsManager.py
+## \file src/db/manager_translations/_experiments/ProductTranslationsManager.py
 ## \file src/db/manager_translations/_experiments/ProductTranslationsManager.py
 
 """ @namespace src.db.manager_translations._experiments """

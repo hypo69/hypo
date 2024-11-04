@@ -1,5 +1,5 @@
 ﻿## \file src/prestashop/shop.py
-## \file ../src/prestashop/shop.py
+## \file src/endpoints/prestashop/shop.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Класс магазина в `Prestashop` """

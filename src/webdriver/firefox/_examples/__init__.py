@@ -1,5 +1,5 @@
 ﻿""" Firefox examples """
-## \file ../src/webdriver/firefox/_examples/__init__.py
+## \file src/webdriver/firefox/_examples/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

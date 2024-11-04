@@ -1,4 +1,4 @@
-## \file ../src/suppliers/kazarinov/bot.py
+## \file src/endpoints/kazarinov/bot.py
 # -*- coding: utf-8 -*-
 """! Kazarinov's specific bot with customized behavior."""
 import header

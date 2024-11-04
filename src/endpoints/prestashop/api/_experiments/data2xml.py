@@ -1,4 +1,4 @@
-## \file ../src/prestashop/api/_experiments/data2xml.py
+## \file src/endpoints/prestashop/api/_experiments/data2xml.py
 ## \file src/prestashop/api/_experiments/data2xml.py
 """ Проверка валидности словаря престасшоп """
 from pathlib import Path

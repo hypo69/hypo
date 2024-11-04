@@ -1,4 +1,4 @@
-## \file ../src/suppliers/morlevi/login.py
+## \file src/suppliers/morlevi/login.py
 ## \file src/suppliers/morlevi/login.py
 """   Интерфейс авторизации. Реализация для вебдрайвера
 

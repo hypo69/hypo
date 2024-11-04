@@ -1,5 +1,5 @@
-﻿## \file ../src/suppliers/wallashop/__init__.py
-## \file ../src/suppliers/wallashop/__init__.py
+﻿## \file src/suppliers/wallashop/__init__.py
+## \file src/suppliers/wallashop/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Постaвщик <i>wallmart</i>

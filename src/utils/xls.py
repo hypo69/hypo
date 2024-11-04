@@ -1,5 +1,5 @@
-﻿## \file ../src/utils/xls.py
-## \file ../src/utils/xls.py
+﻿## \file src/utils/xls.py
+## \file src/utils/xls.py
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """

@@ -1,5 +1,5 @@
-﻿## \file ../src/utils/ftp.py
-## \file ../src/utils/ftp.py
+﻿## \file src/utils/ftp.py
+## \file src/utils/ftp.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

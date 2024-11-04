@@ -1,4 +1,4 @@
-## \file ../src/suppliers/morlevi/graber.py
+## \file src/suppliers/morlevi/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 
