@@ -2,6 +2,11 @@ import json
 import os
 import sys
 import fnmatch
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath('..'))  # Adjust path if needed
+
 
 # -----------------------------------------------------------------------------------
 # Загрузка имени проекта из файла settings.json
