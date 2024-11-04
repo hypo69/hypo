@@ -1,0 +1,62 @@
+digraph G {
+    // Настройки графа
+    graph [rankdir=TB, size="10,10"];
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=14, fillcolor="#F5F5F5", color="#333333"];
+    edge [fontname="Helvetica", fontsize=12, color="#333333", arrowsize=0.75];
+    
+    // Узлы для создания рекламной кампании
+    Start_Creation [label="Start\nСоздание рекламной кампании", shape=ellipse, fillcolor="#B3E5FC"];
+    Init_Creation [label="Initialize Campaign Name,\nLanguage, and Currency"];
+    Create_Dirs [label="Create Campaign and Category Directories"];
+    Save_Config [label="Save Campaign Configuration"];
+    Collect_Data [label="Collect Product Data"];
+    Save_Data [label="Save Product Data"];
+    Create_Materials [label="Create Promotional Materials"];
+    Review_Creation [label="Review Campaign"];
+    Check_Ready_Creation [label="Is Campaign Ready?", shape=diamond];
+    Publish_Creation [label="Publish Campaign"];
+    End_Creation [label="End\nСоздание рекламной кампании", shape=ellipse, fillcolor="#C8E6C9"];
+    Fix_Issues_Creation [label="Fix Issues"];
+    
+    // Узлы для редактирования рекламной кампании
+    Start_Edit [label="Start\nРедактирование рекламной кампании", shape=ellipse, fillcolor="#FFCCBC"];
+    Load_Config [label="Load Existing Campaign Configuration"];
+    Update_Config [label="Update Campaign Configuration"];
+    Update_Dirs [label="Update Categories and Directories"];
+    Collect_New_Data [label="Collect New Product Data"];
+    Save_Updated_Data [label="Save Updated Product Data"];
+    Update_Materials [label="Update Promotional Materials"];
+    Review_Edit [label="Review Updated Campaign"];
+    Check_Updated [label="Is Campaign Updated?", shape=diamond];
+    Publish_Edit [label="Publish Updated Campaign"];
+    End_Edit [label="End\nРедактирование рекламной кампании", shape=ellipse, fillcolor="#C8E6C9"];
+    Fix_Issues_Edit [label="Fix Issues"];
+    
+    // Граф для создания рекламной кампании
+    Start_Creation -> Init_Creation;
+    Init_Creation -> Create_Dirs;
+    Create_Dirs -> Save_Config;
+    Save_Config -> Collect_Data;
+    Collect_Data -> Save_Data;
+    Save_Data -> Create_Materials;
+    Create_Materials -> Review_Creation;
+    Review_Creation -> Check_Ready_Creation;
+    Check_Ready_Creation -> Publish_Creation [label="Yes"];
+    Check_Ready_Creation -> Fix_Issues_Creation [label="No"];
+    Fix_Issues_Creation -> Review_Creation;
+    Publish_Creation -> End_Creation;
+
+    // Граф для редактирования рекламной кампании
+    Start_Edit -> Load_Config;
+    Load_Config -> Update_Config;
+    Update_Config -> Update_Dirs;
+    Update_Dirs -> Collect_New_Data;
+    Collect_New_Data -> Save_Updated_Data;
+    Save_Updated_Data -> Update_Materials;
+    Update_Materials -> Review_Edit;
+    Review_Edit -> Check_Updated [label="Yes"];
+    Review_Edit -> Fix_Issues_Edit [label="No"];
+    Fix_Issues_Edit -> Review_Edit;
+    Check_Updated -> Publish_Edit;
+    Publish_Edit -> End_Edit;
+}

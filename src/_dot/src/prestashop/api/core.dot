@@ -1,0 +1,76 @@
+digraph Prestashop {
+    node [shape=box, style=rounded, fontname="Helvetica", fontsize=12]
+
+    Prestashop [label="Prestashop"]
+
+    _exec [label="_exec(resource, resource_id, method, data, search_filter, display, sort, limit, schema, io_format, language)"]
+    _parse [label="_parse(text)"]
+    create [label="create(resource, data)"]
+    read [label="read(resource, resource_id, **kwargs)"]
+    write [label="write(resource, data)"]
+    unlink [label="unlink(resource, resource_id)"]
+    search [label="search(resource, filter, **kwargs)"]
+    create_binary [label="create_binary(resource, file_path, file_name)"]
+    _save [label="_save(file_name, data)"]
+    get_data [label="get_data(resource, **kwargs)"]
+    remove_file [label="remove_file(file_path)"]
+    get_apis [label="get_apis()"]
+    get_languages_schema [label="get_languages_schema()"]
+    upload_image_async [label="upload_image_async(resource, resource_id, img_url, img_name)"]
+    upload_image [label="upload_image(resource, resource_id, img_url, img_name)"]
+    get_product_images [label="get_product_images(product_id)"]
+
+    Prestashop -> _exec
+    Prestashop -> _parse
+    Prestashop -> create
+    Prestashop -> read
+    Prestashop -> write
+    Prestashop -> unlink
+    Prestashop -> search
+    Prestashop -> create_binary
+    Prestashop -> _save
+    Prestashop -> get_data
+    Prestashop -> remove_file
+    Prestashop -> get_apis
+    Prestashop -> get_languages_schema
+    Prestashop -> upload_image_async
+    Prestashop -> upload_image
+    Prestashop -> get_product_images
+
+    _exec -> _prepare
+    _exec -> _check_response
+    _exec -> _parse
+    _exec -> client_request
+    _exec -> dict2xml
+    _exec -> save_text_file
+    _exec -> j_dumps
+    _exec -> os_remove
+    _exec -> save_png_from_url
+
+    _parse -> response_json
+    _parse -> ElementTree_fromstring
+    _parse -> logger_error
+
+    create_binary -> open
+    create_binary -> client_post
+    create_binary -> response_json
+
+    _save -> save_text_file
+    _save -> j_dumps
+
+    get_data -> _exec
+    get_data -> _save
+
+    remove_file -> os_remove
+    remove_file -> logger_error
+
+    upload_image_async -> save_png_from_url
+    upload_image_async -> create_binary
+    upload_image_async -> remove_file
+
+    upload_image -> save_png_from_url
+    upload_image -> create_binary
+    upload_image -> remove_file
+
+    get_product_images -> _exec
+}

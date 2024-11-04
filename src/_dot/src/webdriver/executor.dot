@@ -1,0 +1,71 @@
+digraph DependencyTree {
+    rankdir=LR;
+    node [shape=box, style=rounded];
+
+    subgraph cluster_0 {
+        label = "src.webdriver.executor";
+        color=lightgrey;
+        style=dashed;
+
+        subgraph cluster_imports {
+            label = "Imports";
+            color=lightblue;
+
+            sqlite3_Binary [label="sqlite3.Binary"];
+            sys;
+            asyncio;
+            re;
+            pathlib_Path [label="pathlib.Path"];
+            time;
+            typing [label="typing (List, Union, Dict)"];
+            types_SimpleNamespace [label="types.SimpleNamespace"];
+            enum_Enum [label="enum.Enum"];
+
+            selenium_keys [label="selenium.webdriver.common.keys.Keys"];
+            selenium_by [label="selenium.webdriver.common.by.By"];
+            selenium_webelement [label="selenium.webdriver.remote.webelement.WebElement"];
+            selenium_webdriver_wait [label="selenium.webdriver.support.ui.WebDriverWait"];
+            selenium_expected_conditions [label="selenium.webdriver.support.expected_conditions as EC"];
+            selenium_action_chains [label="selenium.webdriver.common.action_chains.ActionChains"];
+            selenium_exceptions [label="selenium.common.exceptions (NoSuchElementException, TimeoutException)"];
+
+            src_settings [label="src.settings.gs"];
+            src_utils [label="src.utils.pprint, j_loads, j_loads_ns, j_dumps, save_png"];
+            src_utils_string [label="src.utils.string.StringFormatter"];
+            src_logger [label="src.logger.logger"];
+            src_exceptions [label="src.exceptions.exceptions (DefaultSettingsException, WebDriverException, ExecuteLocatorException)"];
+        }
+
+        subgraph cluster_classes {
+            label = "Classes";
+            color=lightgreen;
+
+            execute_locator [label="ExecuteLocator"];
+        }
+
+        subgraph cluster_methods {
+            label = "Methods";
+            color=lightyellow;
+
+            execute_locator_init [label="__init__(self, driver, *args, **kwargs)"];
+            execute_locator_execute_locator [label="execute_locator(self, locator: dict, message: str = None, typing_speed: float = 0, continue_on_error: bool = True) -> Union[str, list, dict, WebElement, bool]"];
+            execute_locator_get_webelement_by_locator [label="get_webelement_by_locator(self, locator: dict | SimpleNamespace, message: str = None) -> WebElement | List[WebElement] | bool"];
+            execute_locator_get_attribute_by_locator [label="get_attribute_by_locator(self, locator: dict | SimpleNamespace, message: str = None) -> str | list | dict | bool"];
+            execute_locator__get_element_attribute [label="_get_element_attribute(self, element: WebElement, attribute: str) -> Union[str, None]"];
+            execute_locator_send_message [label="send_message(self, locator: dict | SimpleNamespace, message: str, typing_speed: float, continue_on_error: bool) -> bool"];
+            execute_locator_evaluate_locator [label="evaluate_locator(self, attribute: str | list | dict) -> str"];
+            execute_locator__evaluate [label="_evaluate(self, attribute: str) -> Union[str, None]"];
+            execute_locator_get_locator_keys [label="get_locator_keys() -> list"];
+        }
+    }
+
+    execute_locator -> execute_locator_init;
+    execute_locator -> execute_locator_execute_locator;
+    execute_locator -> execute_locator_get_webelement_by_locator;
+    execute_locator -> execute_locator_get_attribute_by_locator;
+    execute_locator -> execute_locator__get_element_attribute;
+    execute_locator -> execute_locator_send_message;
+    execute_locator -> execute_locator_evaluate_locator;
+    execute_locator -> execute_locator__evaluate;
+    execute_locator -> execute_locator_get_locator_keys;
+}

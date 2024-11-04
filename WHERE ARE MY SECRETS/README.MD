@@ -1,3 +1,6 @@
+Here’s the updated version of the README.md with the additional instructions for creating the `secrets` folder and copying the example files, along with the PowerShell commands to perform these operations:
+
+---
 
 # Service Folder
 
@@ -72,3 +75,23 @@ For a visual representation of the KeePass structure, please refer to the follow
 <br>
 <img src="../images/kepass_main_structure.png" alt="Feature Image"  />
 <br>
+
+## Initial Setup
+
+Before starting to work and program in the system, create a folder named `secrets` at the root of the project and copy the files `credentials.kdbx.example` and `password.txt` from the current directory into it. Then, remove the `.example` suffix from the filenames.
+
+### PowerShell Commands
+
+You can perform these operations using the following PowerShell commands:
+
+```powershell
+# Create the 'secrets' folder in the root of the project
+New-Item -ItemType Directory -Path ".\secrets"
+
+# Copy the example files to the 'secrets' folder
+Copy-Item -Path ".\credentials.kdbx.example" -Destination ".\secrets\credentials.kdbx"
+Copy-Item -Path ".\password.txt" -Destination ".\secrets\password.txt"
+
+# Remove the .example suffix from the credentials file
+Rename-Item -Path ".\secrets\credentials.kdbx.example" -NewName ".\secrets\credentials.kdbx"
+```
