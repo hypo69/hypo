@@ -18,6 +18,7 @@ build:
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
   configuration: docs/conf.py  # Указываем путь к файлу конфигурации
+  source: docs                  # Указываем директорию с исходными файлами документации
 
 # Optionally build your docs in additional formats such as PDF and ePub
 # formats:
