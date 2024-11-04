@@ -92,7 +92,10 @@ Furthermore, the project includes a parser and scraper designed to gather and pr
 
 
 
-1. - Download repository from github.com
+1. - Download repository from github.com в удобное для дла вас место на диске. (Педполагаю, что удобно пометить папку 
+   рядом с башими преоктами). <b>Важно! имя корневой директории проектта должно быть `hyporez`. 
+   В другом случае будет необходимо изменить имя в файле конфигурации `setting.json` который находится в корне проекта 
+)
     ```powershell
     git+https://github.com/hypo69/hypo.git
     ```
@@ -102,6 +105,7 @@ Furthermore, the project includes a parser and scraper designed to gather and pr
 2.  - Download the `bin` directory with all the necessary binaries from this link:
        https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo
      -  Unzip the file inside the `hypotez` folder.
+      у вас должна полуичится такая структура: `hypotez/bin`
 
 3. - Установите политику 
    ```powershell

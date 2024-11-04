@@ -27,7 +27,14 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.file import read_text_file
 from src.utils.printer import pprint
 from src.logger import logger
-from src.logger.exceptions import KeePassException, DefaultSettingsException
+from src.logger.exceptions import (CredentialsError, 
+                                    BinaryError,                            
+                                    HeaderChecksumError, 
+                                    PayloadChecksumError, 
+                                    UnableToSendToRecycleBin,
+                                    KeePassException, 
+                                    DefaultSettingsException
+                                    )
 
 
 class SingletonMeta(type):
