@@ -73,7 +73,7 @@ The `credentials.kdbx` file serves as a password database in the KeePass format.
 
 For a visual representation of the KeePass structure, please refer to the following image: ![KeePass Main Structure](keepass_main_structure.png).
 <br>
-<img src="../images/kepass_main_structure.png" alt="Feature Image"  />
+<img src="..\images\kepass_main_structure.png" alt="Feature Image"  />
 <br>
 
 ## Initial Setup
