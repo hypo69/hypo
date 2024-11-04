@@ -40,7 +40,7 @@ class TestDriverBase:
             driver_base.driver_payload()
 
             assert driver_base.get_page_lang == mock_js_instance.get_page_lang
-            assert driver_base.get_ready_state == mock_js_instance.get_ready_state
+            assert driver_base.ready_state == mock_js_instance.ready_state
             assert driver_base.get_referrer == mock_js_instance.get_referrer
             assert driver_base.unhide_DOM_element == mock_js_instance.unhide_DOM_element
             assert driver_base.window_focus == mock_js_instance.window_focus
@@ -86,7 +86,7 @@ class TestDriverBase:
     def test_get_url(self, driver_base):
         """Test get_url method."""
         driver_base.get = Mock()
-        driver_base.get_ready_state = Mock(return_value='complete')
+        driver_base.ready_state = Mock(return_value='complete')
         driver_base.wait = Mock()
         driver_base._save_cookies_localy = Mock()
 

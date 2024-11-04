@@ -24,7 +24,7 @@ from src.logger import logger
 from src.utils import j_loads, j_dumps,  pprint
 from src.db import ProductTranslationsManager
 from src.ai.openai import translate
-from src.prestashop import Prestashop
+from src.endpoints.prestashop import Prestashop
 
 # def record(presta_fields:Dict, i18n:str = None, i:int = 0) -> Dict:
 #     """ Вытаскивает из словаря полей престашоп 

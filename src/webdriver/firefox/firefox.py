@@ -136,8 +136,8 @@ class Firefox(WebDriver):
         ...
         j = JavaScript(self)
         self.get_page_lang = j.get_page_lang
-        self.get_ready_state = j.get_ready_state
-        self.get_referrer = j.get_ready_state
+        self.ready_state = j.ready_state
+        self.get_referrer = j.ready_state
         self.unhide_DOM_element = j.unhide_DOM_element
         self.window_focus = j.window_focus
 

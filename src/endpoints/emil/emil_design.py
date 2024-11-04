@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import time
 
 from src import gs, logger
-from src.prestashop.api.api import Prestashop
+from src.endpoints.prestashop.api.api import Prestashop
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel

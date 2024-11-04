@@ -44,7 +44,7 @@ digraph DependencyTree {
             previous_url [label="previous_url: str"];
             referrer [label="referrer: str"];
             page_lang [label="page_lang: str"];
-            get_ready_state [label="get_ready_state"];
+            ready_state [label="ready_state"];
             get_page_lang [label="get_page_lang"];
             unhide_DOM_element [label="unhide_DOM_element"];
             get_referrer [label="get_referrer"];
@@ -85,7 +85,7 @@ digraph DependencyTree {
     driver_class -> driver_init;
     driver_class -> driver_payload_method;
 
-    driver_payload -> get_ready_state;
+    driver_payload -> ready_state;
     driver_payload -> get_page_lang;
     driver_payload -> unhide_DOM_element;
     driver_payload -> get_referrer;

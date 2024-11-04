@@ -18,8 +18,8 @@ from src import gs
 from src.logger import  logger 
 from src.utils import j_loads, j_dumps,  pprint
 from src.utils.string import StringFormatter
-from src.prestashop import Prestashop
-from src.prestashop import PrestaCategory 
+from src.endpoints.prestashop import Prestashop
+from src.endpoints.prestashop import PrestaCategory 
 
 
 class Category (PrestaCategory):

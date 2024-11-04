@@ -24,7 +24,7 @@ from pathlib import Path
 from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_prestashop_insert, execute_prestashop_insert_async, add_coupon
 from src.utils import j_loads
 from src.product import ProductFields
-from src.prestashop import Prestashop
+from src.endpoints.prestashop import Prestashop
 
 # Assuming `Supplier` class is available and has necessary methods and attributes
 class MockSupplier:

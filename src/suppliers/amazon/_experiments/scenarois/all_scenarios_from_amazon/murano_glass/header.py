@@ -18,7 +18,7 @@ from src.category import Category
 from src.utils import StringFormatter, StringNormalizer
 from src.utils import  pprint
 
-from src.prestashop import PrestaAPIV, upload_image
+from src.endpoints.prestashop import PrestaAPIV, upload_image
 # ----------------
 
 def start_supplier(supplier_prefix: str = 'amazon' ):

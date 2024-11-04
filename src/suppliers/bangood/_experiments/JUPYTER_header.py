@@ -23,7 +23,7 @@ from src.product import Product, ProductFields
 from src.category import Category
 from src.utils import StringFormatter, StringNormalizer
 from src.utils import  pprint
-from src.prestashop import Product as PrestaProduct
+from src.endpoints.prestashop import Product as PrestaProduct
 , save_text_file
 # ----------------
 

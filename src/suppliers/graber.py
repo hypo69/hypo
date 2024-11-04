@@ -22,7 +22,7 @@ from src.utils.image import save_png_from_url
 from src.utils import pprint
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
-from src.prestashop import Prestashop
+from src.endpoints.prestashop import Prestashop
 
 d: Driver = None
 l: Locator = None

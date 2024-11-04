@@ -17,7 +17,7 @@ from typing import Union
 from src import gs
 from src.utils import  pprint
 
-from src.prestashop import PrestaCategory
+from src.endpoints.prestashop import PrestaCategory
 # -----------------------------------
 
 def get_parent_categories_list(id_category):

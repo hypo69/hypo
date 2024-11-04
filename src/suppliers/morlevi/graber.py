@@ -74,7 +74,7 @@ class Graber(Grbr):
             ProductFields: The grabbed product fields.
         """
         global d
-        self.d = driver  
+        d = self.d = driver  
         
         ...
         # Logic for extracting data

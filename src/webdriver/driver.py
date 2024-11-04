@@ -171,7 +171,7 @@ class Driver:
         try:
             self.driver.get(url)
             
-            while self.get_ready_state() != 'complete':
+            while self.ready_state != 'complete':
                 """ Wait until the whole page loads """
 
             if url != _previous_url:
@@ -350,7 +350,7 @@ class Driver:
         Raises:
             Exception: If an error occurs while returning focus.
         """
-        self.get_ready_state()
+        self.ready_state()
 
     def wait(self, interval: float = 0) -> None:
         """ Waits for a specified time interval.

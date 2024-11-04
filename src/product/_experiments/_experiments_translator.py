@@ -7,7 +7,7 @@ import header
 from header import gs, j_dumps, j_loads
 from src.db import ProductTranslationsManager
 from src.ai import translate
-from src.prestashop import Prestashop
+from src.endpoints.prestashop import Prestashop
 from src.webdriver import Driver
 from header import ecat_api_credentials,emil_api_credentials
 from src.db import ProductTranslationsManager

@@ -17,7 +17,7 @@
 from src import gs
 from src.utils import  pprint
 
-from src.prestashop import Product as PrestaProduct, Category as PrestaCategory
+from src.endpoints.prestashop import Product as PrestaProduct, Category as PrestaCategory
 # ---------------------------------
 
 import requests

@@ -9,9 +9,9 @@ import header
 from header import  ecat_api_credentials, emil_api_credentials
 from src import gs
 from prestapyt import PrestaShopWebServiceDict
-from src.prestashop.presta_apis.client import Prestashop 
-from src.prestashop.presta_apis.presta_python_api_v2 import PrestaAPIV2
-from src.prestashop.presta_apis.presta_python_api_v3 import PrestaAPIV3, PrestaAPIV3Format, PrestaShopException, PrestaShopAuthenticationError
+from src.endpoints.prestashop.presta_apis.client import Prestashop 
+from src.endpoints.prestashop.presta_apis.presta_python_api_v2 import PrestaAPIV2
+from src.endpoints.prestashop.presta_apis.presta_python_api_v3 import PrestaAPIV3, PrestaAPIV3Format, PrestaShopException, PrestaShopAuthenticationError
 
 
 connector = Prestashop(ecat_api_credentials)

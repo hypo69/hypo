@@ -5,7 +5,7 @@ from pathlib import Path
 import header
 from header import gs, j_loads, j_dumps, save_text_file
 from header import logger
-from src.prestashop.presta_apis.presta_python_api_v3 import dict2xml,xml2dict
+from src.endpoints.prestashop.presta_apis.presta_python_api_v3 import dict2xml,xml2dict
 
 
 """Перед проверками загрузи свежий слловарь """

@@ -634,7 +634,7 @@ src.webdriver.driver
 │   │   ├── previous_url: str
 │   │   ├── referrer: str
 │   │   ├── page_lang: str
-│   │   ├── get_ready_state
+│   │   ├── ready_state
 │   │   ├── get_page_lang
 │   │   ├── unhide_DOM_element
 │   │   ├── get_referrer

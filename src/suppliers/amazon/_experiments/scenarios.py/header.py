@@ -17,7 +17,7 @@ from categories import Category
 from src.utils import StringFormatter, StringNormalizer, translate
 from src.utils import  pprint
 
-from src.prestashop import Product as PrestaProduct
+from src.endpoints.prestashop import Product as PrestaProduct
 
 def start_supplier(supplier_prefix: str = 'amazon' ):
     """ Старт поставщика (amazon)"""

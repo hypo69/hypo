@@ -7,7 +7,7 @@
 # /path/to/interpreter/python
 
 from src import gs
-from src.prestashop import Prestashop
+from src.endpoints.prestashop import Prestashop
 from src.category import Category
 from src.product.product_fields import ProductFields
 from src.logger import logger

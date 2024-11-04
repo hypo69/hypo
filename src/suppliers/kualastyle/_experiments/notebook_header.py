@@ -18,7 +18,7 @@ from categories import Category
 from src.utils import StringFormatter, StringNormalizer, translate
 from src.utils import  pprint
 
-#from src.prestashop import Product as PrestaProduct, PrestaAPIV1, PrestaAPIV2, PrestaAPIV3
+#from src.endpoints.prestashop import Product as PrestaProduct, PrestaAPIV1, PrestaAPIV2, PrestaAPIV3
 # ----------------
 
 def start_supplier(supplier_prefix: str = 'kualastyle' ):

@@ -21,12 +21,12 @@ from src.utils import  pprint
 from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate
-from src.prestashop import Prestashop
+from src.endpoints.prestashop import Prestashop
 from src import gs
 from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate
-from src.prestashop import Prestashop
+from src.endpoints.prestashop import Prestashop
 
 def get_translations_from_presta_translations_table(product_reference: str, credentials: dict, i18n: str = None) -> list:
     """Функция возвращает словарь переводов полей товара."""
