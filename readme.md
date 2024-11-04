@@ -127,10 +127,10 @@ Furthermore, a parser and scraper are built into the project for data gathering 
    ```
 
 8. **Install npm and web-ext**:
-	   ```powershell
-	   npm install -g npm
-	   npm install -g web-ext
-	   ```
+	```powershell
+	npm install -g npm
+	npm install -g web-ext
+	```
 
 9. **Install Jupyter Lab extensions**:
 	```powershell
