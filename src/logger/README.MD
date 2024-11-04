@@ -1,18 +1,3 @@
-Here’s a structured `README.md` file tailored for your project that includes `logger.py`, `exceptions.py`, and `beeper.py`:
-
-```markdown
-# Logger Module
-
-The Logger Module is a comprehensive logging solution designed for Python applications, integrating auditory feedback, structured logging levels, and robust exception handling. It aims to enhance the user experience by providing immediate auditory signals for various logging events.
-
-## Project Structure
-
-```
-|- logger.py        # Main logging functionality
-|- exceptions.py    # Custom exceptions for logging
-|- beeper.py        # Sound notification management
-|- README.md        # Project documentation
-```
 
 ## Overview
 
