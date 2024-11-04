@@ -17,6 +17,8 @@ To securely store credentials such as passwords and API keys, use KeePass. Follo
      ├── data
      ├── secrets
      │   └── credentials.kdbx  # <-- KeePass database file
+     |   └── passowrd.txt
+     |   └── <googke api josn kes>.json
      ├── src
      └── ...
      ```

@@ -157,7 +157,9 @@ Furthermore, the project includes a parser and scraper designed to gather and pr
    playwright install
    ```
 
-For more details, please check out the [codebase in the `src/readme.md`](src/readme.md).
+For more details, please check out the [codebase in the `src/readme.md`](src/readme.md). 
+Instructions for setting up passwords and secrets are documented in the [SECURITY.md](SECURITY.md) file.
+
 
 ---
 
