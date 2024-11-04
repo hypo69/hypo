@@ -14,7 +14,7 @@ Furthermore, the project includes a parser and scraper designed to gather and pr
 **In a Nutshell**:
 
 <br>
-<img src="now_feature.png" alt="Feature Image" width="270" height="320" />
+<img src="images/now_feature.png" alt="Feature Image" width="270" height="320" />
 <br>
 
 ---

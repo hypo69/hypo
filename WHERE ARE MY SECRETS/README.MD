@@ -67,4 +67,8 @@ The `credentials.kdbx` file serves as a password database in the KeePass format.
 - It is recommended to delete the `password.txt` file from computers that can be accessed by unauthorized users.
 - When changing the database password manually, the `password.txt` file must also be updated manually. **This is MANDATORY!**
 - Ensure that the structure and group names match the expected format so that the application can correctly load the sensitive data.
-!
+
+For a visual representation of the KeePass structure, please refer to the following image: ![KeePass Main Structure](keepass_main_structure.png).
+<br>
+<img src="images/kepass_main_structure.png" alt="Feature Image" width="270" height="320" />
+<br>

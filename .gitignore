@@ -182,13 +182,15 @@ statistic/
 storage/
 docs/
 secrets/
-#*(*).*
+*(*).*
 *.exe
 *.zip
 *.taz
 *.7z
 .git/
 e-cat-346312-137284f4419e.json
+hypo69-c32c8736ca62.json
+password.txt
 *.kdbx
 ___*.*
 
