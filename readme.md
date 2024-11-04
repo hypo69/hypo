@@ -90,8 +90,8 @@ Furthermore, the project includes a parser and scraper designed to gather and pr
 - **`edge drivers`** - Drivers for Microsoft Edge, enabling automation testing for applications running in the Edge browser.
 - **`gtk`** - Toolkit for creating graphical user interfaces, used to develop applications with a rich user interface.
 
-#### You can download the `bin` directory with all the necessary binaries from this link on 
-[mega.nz](https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo).
+#### You can download the `bin` directory with all the necessary binaries from this link 
+https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo
 
 ### Easy Way Install
 
