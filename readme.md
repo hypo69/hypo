@@ -90,58 +90,22 @@ Furthermore, the project includes a parser and scraper designed to gather and pr
 - **`edge drivers`** - Drivers for Microsoft Edge, enabling automation testing for applications running in the Edge browser.
 - **`gtk`** - Toolkit for creating graphical user interfaces, used to develop applications with a rich user interface.
 
-#### You can download the `bin` directory with all the necessary binaries from this link 
-https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo
 
-### Easy Way Install
 
-**Download full project from mega.nz**
+1. - Download repository from github.com
+    ```powershell
+    git+https://github.com/hypo69/hypo.git
+    ```
+   - перейдите в директорию `hypotez`
 
-1. Download the file from mega.nz/<>.
-2. Extract the file and navigate to the `hypotez` directory.
-3. Enter the virtual environment by running:
 
+2.  - Download the `bin` directory with all the necessary binaries from this link:
+       https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo
+     -  Unzip the file inside the `hypotez` folder.
+
+3. - Установите политику 
    ```powershell
-   ps
-   venv\scripts\activate.ps1
-   ```
-
-4. Execute the quick start script:
-
-   ```powershell
-   ps
-   py quick_start.py
-   ```
-
-**Or Download repository from github.com**
-
-   ```powershell
-   ps
-   git+https://github.com/hypo69/hypo.git
-   cd hypotez
-   setup.ps1
-   ```
-
-### Manual install
-
-1. Set the execution policy:
-
-   ```powershell
-   ps
    Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-   ```
-
-2. Clone the repository from GitHub:
-
-   ```powershell
-   ps
-   git clone https://github.com/hypo69/hypo.git
-   ```
-
-3. Navigate to the `hypotez` directory:
-
-   ```powershell
-   cd hypotez
    ```
 
 4. Create a virtual environment:
@@ -176,23 +140,11 @@ https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo
     New-Item -ItemType Directory -Path .\export
     New-Item -ItemType Directory -Path .\log
     New-Item -ItemType Directory -Path .\tmp
-    New-Item -ItemType Directory -Path .\bin
+    # New-Item -ItemType Directory -Path .\bin <- Не надо, если сделан шаг 2.
     New-Item -ItemType Directory -Path .\sandbox
     ```
 
-9. Clone the `docs` repository inside the hypotez directory:
 
-    ```powershell
-    ps
-    git clone https://github.com/hypo69/docs.git
-    ```
-
-10. Run doxyrun (from `hypotez`):
-
-    ```powershell
-    ps
-    ./doxyrun
-    ```
 
 11. Install npm and web-ext:
 
@@ -213,72 +165,6 @@ jupyter labextension install @jupyter-widgets/jupyterlab-manager
 playwright install
 ```
 
-### Script Reference
 
-The following is the content of the `setup.ps1` script referenced in the medium complexity setup:
-
-```powershell
-### Hypotez
-# The name of the project folder is important.
-
-# Setting the execution policy
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-
-# Cloning the `hypotez` repository
-#git clone https://github.com/hypo69/hypo.git
-
-# Navigating to the hypotez directory
-#cd hypotez
-
-# Creating a virtual environment `venv`. The name of the environment is specified in the code.
-# It is advisable not to change it
-python -m venv venv
-
-# Setting the path to the directory with the code
-# Getting the path to the directory containing activate.ps1
-$venvDir = Get-Item -LiteralPath (Split-Path $MyInvocation.MyCommand.Path)
-
-# Full path to activate.ps1
-$activatePath = Join-Path -Path $venvDir -ChildPath "Scripts\Activate.ps1"
-
-# Line we want to add
-$lineToAdd = '$env:PYTHONPATH += ";$PSScriptRoot\src"'
-
-# Adding the line to the end of the file
-Add-Content -Path $activatePath -Value $lineToAdd
-
-# Navigating to the hypotez directory
-Set-Location hypotez
-
-# Activating the virtual environment
-. .\venv\Scripts\Activate.ps1
-
-# Updating `pip`
-pip install --upgrade pip setuptools wheel
-
-# Installing dependencies from requirements.txt. The `--ignore-installed` flag allows other dependencies to be installed,
-# even if one of them causes an error.
-pip install -r requirements.txt --ignore-installed
-
-# Creating project folders
-New-Item -ItemType Directory -Path .\docs
-New-Item -ItemType Directory -Path .\export
-New-Item -ItemType Directory -Path .\log
-New-Item -ItemType Directory -Path .\tmp
-New-Item -ItemType Directory -Path .\bin
-New-Item -ItemType Directory -Path .\sandbox
-
-# Cloning the `docs` repository inside the hypotez directory
-git clone https://github.com/hypo69/docs.git
-# Running doxyrun (from `hypotez`)
-./doxyrun
-
-# Installing npm and web-ext
-# Install npm
-npm install -g npm
-
-# Install web-ext using npm
-npm install -g web-ext
-```
 
 For more details, please check out the [codebase in the `src/readme.md`](src/readme.md).
