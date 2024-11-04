@@ -1,0 +1,33 @@
+digraph G {
+    // Set graph properties for vertical layout and specific size
+    graph [rankdir=TB, size="10,8", ratio=fill];
+    
+    // Node styles
+    node [shape=box, style="rounded,filled", color="#E5E5E5", fontname="Helvetica"];
+    edge [arrowhead=vee, color="#333333", fontname="Helvetica"];
+    
+    // Define nodes with process steps
+    start [label="Start", shape=ellipse, style=filled, fillcolor="#A4C2F4", width=2, height=1];
+    check_input [label="Check Input Type", width=3, height=1];
+    read_file [label="Read File", width=3, height=1];
+    handle_string [label="Handle String", width=3, height=1];
+    handle_dict [label="Handle Dictionary", width=3, height=1];
+    handle_list [label="Handle List", width=3, height=1];
+    handle_object [label="Handle Object", width=3, height=1];
+    print_output [label="Print Output", width=3, height=1];
+    end [label="End", shape=ellipse, style=filled, fillcolor="#A4C2F4", width=2, height=1];
+
+    // Define the workflow steps and connections
+    start -> check_input;
+    check_input -> read_file [label="If path"];
+    check_input -> handle_string [label="If string"];
+    check_input -> handle_dict [label="If dict"];
+    check_input -> handle_list [label="If list"];
+    check_input -> handle_object [label="If object"];
+    read_file -> print_output;
+    handle_string -> print_output;
+    handle_dict -> print_output;
+    handle_list -> print_output;
+    handle_object -> print_output;
+    print_output -> end;
+}

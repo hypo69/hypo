@@ -180,7 +180,8 @@ export/
 data/
 statistic/
 storage/
-docs/
+#docs/
+materials/
 secrets/
 *(*).*
 *.exe
@@ -195,3 +196,4 @@ password.txt
 ___*.*
 
 
+-

@@ -1,0 +1,181 @@
+utils package
+=============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   utils.convertors
+
+Submodules
+----------
+
+utils.csv module
+----------------
+
+.. automodule:: utils.csv
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.csv \(2\) module
+----------------------
+
+.. automodule:: utils.csv (2)
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.cursor\_spinner module
+----------------------------
+
+.. automodule:: utils.cursor_spinner
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.file module
+-----------------
+
+.. automodule:: utils.file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.file \(2\) module
+-----------------------
+
+.. automodule:: utils.file (2)
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.ftp module
+----------------
+
+.. automodule:: utils.ftp
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.header module
+-------------------
+
+.. automodule:: utils.header
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.image module
+------------------
+
+.. automodule:: utils.image
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.image \(2\) module
+------------------------
+
+.. automodule:: utils.image (2)
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.jjson module
+------------------
+
+.. automodule:: utils.jjson
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.printer module
+--------------------
+
+.. automodule:: utils.printer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.printer \(2\) module
+--------------------------
+
+.. automodule:: utils.printer (2)
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.rst\_indexer module
+-------------------------
+
+.. automodule:: utils.rst_indexer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.smtp module
+-----------------
+
+.. automodule:: utils.smtp
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.version module
+--------------------
+
+.. automodule:: utils.version
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.video module
+------------------
+
+.. automodule:: utils.video
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.video \(2\) module
+------------------------
+
+.. automodule:: utils.video (2)
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.xls module
+----------------
+
+.. automodule:: utils.xls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.xls \(2\) module
+----------------------
+
+.. automodule:: utils.xls (2)
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.xls \(3\) module
+----------------------
+
+.. automodule:: utils.xls (3)
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
