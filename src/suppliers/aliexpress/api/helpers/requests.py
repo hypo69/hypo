@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/helpers/requests.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/helpers/requests.py
-## \file src/suppliers/aliexpress/api/helpers/requests.py
 from types import SimpleNamespace
 from time import sleep
 from src.logger import logger

@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/convertors/base64_to_tmpfile.py
-## \file /src/utils/convertors/base64.py
+## \file ./src/utils/convertors/base64.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /path/to/python/interpreter
 """
 Convert Base64 encoded content to a temporary file.

@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/advertisement/facebook/facebook_groups_widgets.py
+## \file ./src/endpoints/advertisement/facebook/facebook_groups_widgets.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Раскрывающеся меню выбора групп для подачи объвления"""
 

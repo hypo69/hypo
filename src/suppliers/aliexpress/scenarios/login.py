@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/scenarios/login.py
-## \file /src/suppliers/aliexpress/scenarios/login.py
+## \file ./src/suppliers/aliexpress/scenarios/login.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Сценарии логина на сайт aliexpress.com 
 Заменено на куки

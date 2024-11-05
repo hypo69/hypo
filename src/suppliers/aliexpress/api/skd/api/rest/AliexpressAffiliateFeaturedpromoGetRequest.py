@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
-## \file src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
 """
 Created by auto_sdk on 2020.09.25
 """

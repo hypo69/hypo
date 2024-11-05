@@ -1,6 +1,7 @@
+## \file ./src/templates/_experiments/header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/templates/_experiments/header.py
-## \file src/templates/_experiments/header.py
 import os
 import sys
 from pathlib import Path
@@ -11,5 +12,5 @@ dir_src = Path (dir_root, 'src')
 sys.path.append (str (dir_root) ) # Добавляю рабочую директорию в sys.path 
  
 from src import gs
-from src.advertisement.facebook import  facebook
+from src.endpoints.advertisement.facebook import  facebook
 

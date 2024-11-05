@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/ai/_examples/version.py
-## \file /src/ai/openai/_examples/version.py
+## \file ./src/ai/openai/_examples/version.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ @namespace src.ai._examples """
 # /path/to/interpreter/python
 """

@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Менеджер скидок, купонов и т.п. в Prestashop  """
-...
-## \file /src/db/manager_coupons_and_sales/__init__.py
+## \file ./src/db/manager_coupons_and_sales/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Менеджер скидок, купонов и т.п. в Prestashop  """
+...
 # /path/to/interpreter/python
 ...
 from packaging.version import Version

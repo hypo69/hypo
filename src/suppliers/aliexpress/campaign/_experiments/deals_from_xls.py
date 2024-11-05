@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/campaign/_experiments/deals_from_xls.py
-## \file /src/suppliers/aliexpress/campaign/_experiments/deals_from_xls.py
+## \file ./src/suppliers/aliexpress/campaign/_experiments/deals_from_xls.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Парсер таблицы xls, сгенегированной в личном кабинете portals.aliexpress.com"""
 ...

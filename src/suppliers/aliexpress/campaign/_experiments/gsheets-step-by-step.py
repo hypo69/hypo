@@ -1,7 +1,8 @@
+## \file ./src/suppliers/aliexpress/campaign/_experiments/gsheets-step-by-step.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Эксперименты с гугл таблицами """
-## \file /src/suppliers/aliexpress/campaign/_experiments/gsheets-step-by-step.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import header

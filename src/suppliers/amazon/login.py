@@ -1,11 +1,11 @@
+## \file ./src/suppliers/amazon/login.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/suppliers/amazon/login.py
 """   Интерфейс авторизации. Реализация для вебдрайвера
 
 @image html login.png
 """
-## \file /src/suppliers/amazon/login.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from src.logger import logger

@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/product/product_fields/utils/product_fields_normalizer.py
+## \file ./src/product/product_fields/utils/product_fields_normalizer.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 

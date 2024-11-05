@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/advertisement/facebook/start_sergey.py
+## \file ./src/endpoints/advertisement/facebook/start_sergey.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """Отправка рекламных объявлений в группы фейсбук."""
 import header
@@ -12,7 +13,7 @@ from pathlib import Path
 from src import gs
 from src.utils.file import get_directory_names, get_filenames
 from src.webdriver import Driver, Chrome
-from src.advertisement.facebook import FacebookPromoter
+from src.endpoints.advertisement.facebook import FacebookPromoter
 from src.logger import logger
 from src.utils.date_time import interval
 

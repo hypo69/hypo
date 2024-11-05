@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/models/languages.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/models/languages.py
-## \file src/suppliers/aliexpress/api/models/languages.py
 class Language:
     EN = 'EN'
     RU = 'RU'

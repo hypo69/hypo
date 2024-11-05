@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/kazarinov/react/pricelist_generator.py
+## \file ./src/endpoints/kazarinov/react/pricelist_generator.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 
 #https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c

@@ -1,5 +1,7 @@
+## \file ./src/endpoints/prestashop/_experiments/categories/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/prestashop/_experiments/categories/__init__.py
 """   Модуль распределения категорий товара.  
 @details Модуль переводит категории поставщика `Supplier` в категории `Prestashop`
 Изначально все категории строятся из гугл таблиц 
@@ -13,8 +15,6 @@
 
 @file
 """
-## \file /src/endpoints/prestashop/_experiments/categories/__init__.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from .category import Category

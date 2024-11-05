@@ -1,11 +1,12 @@
+## \file ./src/suppliers/aliexpress/utils/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" модули управления рекламной кампанией Aliexpress:
+""" модули управления рекламной кампанией Aliexpress:
 
  
 """
 ...
-## \file /src/suppliers/aliexpress/utils/__init__.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...
 from packaging.version import Version

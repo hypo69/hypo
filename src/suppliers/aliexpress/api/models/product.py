@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/models/product.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/models/product.py
-## \file src/suppliers/aliexpress/api/models/product.py
 from typing import List
 
 

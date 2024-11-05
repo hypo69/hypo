@@ -1,8 +1,9 @@
+## \file ./src/suppliers/aliexpress/gui/campaign.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Window editor for campaigns """
 
-## \file /src/suppliers/aliexpress/gui/campaign.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import header

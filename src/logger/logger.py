@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/logger/logger.py
+## \file ./src/logger/logger.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 Logger Module

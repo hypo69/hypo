@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/utils/powershell/examples/pprint/header.py
+## \file ./src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """! Absolute path to modules  """
 

@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/kazarinov/_experiments/pricelist_generator.py
+## \file ./src/endpoints/kazarinov/_experiments/pricelist_generator.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
 https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b

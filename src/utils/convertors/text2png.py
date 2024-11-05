@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/convertors/text2png.py
-## \file /src/utils/convertors/text2png.py
+## \file ./src/utils/convertors/text2png.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /path/to/python/interpreter
 """
 This module reads text from a file, generates PNG images for each line of text using Pillow,

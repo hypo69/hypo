@@ -1,3 +1,6 @@
+## \file ./docs/conf.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 import json
 import os
 import sys

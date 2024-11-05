@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/xls.py
-## \file /src/utils/xls.py
+## \file ./src/utils/xls.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /path/to/python/interpreter
 """
 Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`).

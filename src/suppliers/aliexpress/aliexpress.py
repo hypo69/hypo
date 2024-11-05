@@ -1,5 +1,8 @@
+## \file ./src/suppliers/aliexpress/aliexpress.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" Base class for the supplier. 
+""" Base class for the supplier. 
 This class inherits from `Supplier`.
 It allows interaction with AliExpress in three ways:
 - webdriver
@@ -16,8 +19,6 @@ Examples:
     @endcode
 """
 
-## \file /src/suppliers/aliexpress/aliexpress.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import pickle

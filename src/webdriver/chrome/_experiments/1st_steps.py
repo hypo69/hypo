@@ -1,6 +1,7 @@
+## \file ./src/webdriver/chrome/_experiments/1st_steps.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/webdriver/chrome/_experiments/1st_steps.py
-## \file src/webdriver/chrome/_experiments/1st_steps.py
 
 
 from selenium import webdriver

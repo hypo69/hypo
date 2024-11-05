@@ -1,5 +1,7 @@
+## \file ./src/webdriver/edge/edge.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/webdriver/edge/edge.py
 """ Custom Edge WebDriver class with simplified configuration using fake_useragent."""
 
 from pathlib import Path

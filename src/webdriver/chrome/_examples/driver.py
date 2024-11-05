@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/chrome/_examples/driver.py
-## \file /src/webdriver/chrome/_examples/driver.py
+## \file ./src/webdriver/chrome/_examples/driver.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Examples for using `Driver` and `Chrome` classes """
 

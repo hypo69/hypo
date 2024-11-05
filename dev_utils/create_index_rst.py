@@ -1,5 +1,6 @@
-## \file /src/utils/rst_indexer.py
+## \file ./dev_utils/create_index_rst.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /path/to/python/interpreter
 """
 This module recursively traverses subdirectories from the current directory,

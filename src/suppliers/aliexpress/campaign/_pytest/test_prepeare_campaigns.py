@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
-## \file src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
 import pytest
 import asyncio
 from pathlib import Path

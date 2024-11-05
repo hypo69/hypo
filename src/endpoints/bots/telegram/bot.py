@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/bots/telegram/bot.py
+## \file ./src/endpoints/bots/telegram/bot.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Module for interacting with Telegram using a simple bot interface. """
 

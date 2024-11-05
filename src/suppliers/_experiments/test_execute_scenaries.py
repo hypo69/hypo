@@ -1,6 +1,7 @@
+## \file ./src/suppliers/_experiments/test_execute_scenaries.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/_experiments/test_execute_scenaries.py
-## \file src/suppliers/_experiments/test_execute_scenaries.py
 import unittest
 from unittest.mock import MagicMock
 from execute_scenarios import run_scenarios,run_scenario_file,run_scenario,grab_product_page

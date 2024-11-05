@@ -1,5 +1,8 @@
+## \file ./src/goog/quickstart.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿"""
+"""
 Shows basic usage of the Apps Script API.
 Call the Apps Script API to create a new script project, upload a file to the
 project, and log the script's URL to the user.
@@ -7,8 +10,6 @@ project, and log the script's URL to the user.
 https://developers.google.com/apps-script/api/quickstart/python
 """
 
-## \file /src/goog/quickstart.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from pathlib import Path

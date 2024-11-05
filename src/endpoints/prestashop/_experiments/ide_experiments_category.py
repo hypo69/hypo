@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/_experiments/ide_experiments_category.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/_experiments/ide_experiments_category.py
-## \file src/prestashop/_experiments/ide_experiments_category.py
 import ide_header
 from ide_header import  gs
 from src.category import  Category

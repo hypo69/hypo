@@ -1,7 +1,8 @@
-#! /usr/bin/python
-﻿""" Установкя кораня проекта в системный путь """
-## \file /src/webdriver/firefox/_experiments/header.py
+## \file ./src/webdriver/firefox/_experiments/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Установкя кораня проекта в системный путь """
 # /path/to/interpreter/python
 import sys,os
 from pathlib import Path

@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/prestashop/language.py
-## \file /src/endpoints/prestashop/language.py
+## \file ./src/endpoints/prestashop/language.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """   класс языка в `Prestashop` """
 ...

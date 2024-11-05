@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/product/product_fields/product_fields_translator.py
-## \file /src/product/product_fields/product_fields_translator.py
+## \file ./src/product/product_fields/product_fields_translator.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Модуль перевода полей товара на языки клиентской базы данных """
 ...
@@ -13,8 +13,8 @@ from src import gs
 from src.utils import pprint
 from src.logger import logger
 #from src.db import ProductTranslationsManager
-from src.translator import get_translations_from_presta_translations_table
-from src.translator import insert_new_translation_to_presta_translations_table
+#from src.translator import get_translations_from_presta_translations_table
+#from src.translator import insert_new_translation_to_presta_translations_table
 from src.logger.exceptions import ProductFieldException
 ...
 

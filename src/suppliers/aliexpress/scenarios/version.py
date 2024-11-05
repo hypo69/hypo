@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/scenarios/version.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/scenarios/version.py
-﻿# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """
 - `__version__`: This variable holds the version of the module or package.

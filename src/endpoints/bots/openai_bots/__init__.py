@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/bots/openai/__init__.py
-## \file /src/endpoints/bots/openai_bots/__init__.py
+## \file ./src/endpoints/bots/openai_bots/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 
 from packaging.version import Version

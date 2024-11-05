@@ -1,6 +1,8 @@
+## \file ./src/fast_api/main.first_version.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/fast_api/main.first_version.py
-﻿
+
 # /path/to/interpreter/python
 """ Start FastAPI 
 uvicorn main:app --reload

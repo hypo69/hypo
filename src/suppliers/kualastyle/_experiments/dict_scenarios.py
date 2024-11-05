@@ -1,6 +1,7 @@
+## \file ./src/suppliers/kualastyle/_experiments/dict_scenarios.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/kualastyle/_experiments/dict_scenarios.py
-## \file src/suppliers/kualastyle/_experiments/dict_scenarios.py
 scenarios: dict = {
     "Sofas and Sectionals": {
         "url": "https://kualastyle.com/collections/%D7%A1%D7%A4%D7%95%D7%AA-%D7%9E%D7%A2%D7%95%D7%A6%D7%91%D7%95%D7%AA",

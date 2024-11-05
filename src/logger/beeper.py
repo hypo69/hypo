@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/logger/beeper.py
-## \file /src/logger/beeper.py
+## \file ./src/logger/beeper.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """  бииип 
 @todo

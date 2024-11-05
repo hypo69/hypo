@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/printer.py
-## \file /src/utils/printer.py
+## \file ./src/utils/printer.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """
 This module provides enhanced print formatting for better readability of data structures.
 It supports pretty-printing of dictionaries, lists, objects, and reading from CSV/XLS/XLSX files 
@@ -38,8 +38,6 @@ BOLD = "\033[1m"
 UNDERLINE = "\033[4m"
 ITALIC = "\033[3m"
 
-## \file src/utils/printer.py
-# -*- coding: utf-8 -*-
 """
 This module provides enhanced print formatting for better readability of data structures.
 It supports pretty-printing of dictionaries, lists, objects, and reading from CSV/XLS/XLSX files 

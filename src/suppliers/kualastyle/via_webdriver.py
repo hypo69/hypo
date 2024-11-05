@@ -1,5 +1,7 @@
+## \file ./src/suppliers/kualastyle/via_webdriver.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/suppliers/kualastyle/via_webdriver.py
 """    parsing kualastyle via webdriver
 
 @namespace src: src
@@ -16,8 +18,6 @@ Author(s):
 """
 
 
-## \file /src/suppliers/kualastyle/via_webdriver.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 

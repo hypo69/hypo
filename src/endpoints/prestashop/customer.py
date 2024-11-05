@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/prestashop/customer.py
-## \file /src/endpoints/prestashop/customer.py
+## \file ./src/endpoints/prestashop/customer.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """  Класс клиента в `Prestashop`"""
 ...

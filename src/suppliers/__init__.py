@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/__init__.py
-## \file /src/suppliers/__init__.py
+## \file ./src/suppliers/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """  Модуль поставщика. Class `Supplier`
 - для каждого конкретного поставщика есть свои специфичные методы (функции) извлечения информации. 

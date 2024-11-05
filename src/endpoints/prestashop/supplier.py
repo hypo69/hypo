@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/prestashop/supplier.py
-## \file /src/endpoints/prestashop/supplier.py
+## \file ./src/endpoints/prestashop/supplier.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ @namespace src.pestashop 
 Класс поставщика в `Prestashop`"""

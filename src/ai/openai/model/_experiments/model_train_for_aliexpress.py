@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/ai/openai/model/_experiments/model_train_for_aliexpress.py
+## \file ./src/ai/openai/model/_experiments/model_train_for_aliexpress.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 

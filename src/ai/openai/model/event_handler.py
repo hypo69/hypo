@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/ai/openai/model/event_handler.py
+## \file ./src/ai/openai/model/event_handler.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """
 

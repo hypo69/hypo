@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/convertors/csv.py
-## \file /src/utils/convertors/csv.py
+## \file ./src/utils/convertors/csv.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 CSV and JSON conversion utilities.

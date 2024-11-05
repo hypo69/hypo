@@ -1,6 +1,7 @@
+## \file ./src/suppliers/kualastyle/_experiments/notebook_header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/kualastyle/_experiments/notebook_header.py
-## \file src/suppliers/kualastyle/_experiments/notebook_header.py
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]

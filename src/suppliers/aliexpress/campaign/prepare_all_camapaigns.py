@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
+## \file ./src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Проверка создания affiliate для рекламной кампании  
 Если текой рекламной кампании не существует - будет создана новая"""

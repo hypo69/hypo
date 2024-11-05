@@ -1,7 +1,7 @@
 Вот оптимизированный текст скрипта с комментариями в формате RST:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """
@@ -33,7 +33,7 @@ def function_name(param1: type, param2: Optional[type] = default) -> return_type
 Если вы видите следующую абстрактную структуру кода:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """
@@ -47,7 +47,7 @@ def operate(param1: int, param2: int) -> int:
 Ваш ответ должен быть:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """
@@ -77,7 +77,7 @@ def operate(param1: int, param2: int) -> int:
 Если вы видите следующую абстрактную структуру класса:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """
@@ -116,7 +116,7 @@ class ExampleClass:
 Ваш ответ должен быть:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """

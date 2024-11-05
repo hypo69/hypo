@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/suppliers/aliexpress/campaign/prepare_campaigns.py
+## \file ./src/suppliers/aliexpress/campaign/prepare_campaigns.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 This module prepares AliExpress campaigns by processing categories, handling campaign data, and generating promotional materials.

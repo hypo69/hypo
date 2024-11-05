@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/_examples/_example_executor.py
-## \file /src/webdriver/_examples/_example_executor.py
+## \file ./src/webdriver/_examples/_example_executor.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ Extend the Driver Class
 <pre>
 src.webdriver.excecutor

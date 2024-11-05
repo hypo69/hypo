@@ -1,9 +1,9 @@
+## \file ./src/endpoints/prestashop/_experiments/ide_header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/prestashop/_experiments/ide_header.py
 """ Файл заголовок, подключаемый к ide тестовым модулям """
 
-## \file /src/endpoints/prestashop/_experiments/ide_header.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import json

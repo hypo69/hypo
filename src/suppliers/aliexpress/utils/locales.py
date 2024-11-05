@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/suppliers/aliexpress/utils/locales.py
+## \file ./src/suppliers/aliexpress/utils/locales.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/bin/python3
 """ Module for loading locales data from JSON file.
 

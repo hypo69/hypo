@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/kazarinov/gemini_chat.py
+## \file ./src/endpoints/kazarinov/gemini_chat.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ 
 Module that handles model training using GoogleGenerativeAI for the Kazarinov project.

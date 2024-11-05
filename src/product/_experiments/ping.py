@@ -1,6 +1,7 @@
+## \file ./src/product/_experiments/ping.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/product/_experiments/ping.py
-## \file src/product/_experiments/ping.py
 import header
 from header import  ecat_api_credentials, emil_api_credentials
 from header import pprint, jprint

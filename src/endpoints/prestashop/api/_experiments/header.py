@@ -1,11 +1,11 @@
+## \file ./src/endpoints/prestashop/api/_experiments/header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/prestashop/api/_experiments/header.py
 """ Тестовые настройки для проверки PrestaAPIV.
 создает словари подключеня к API Prestashop из списка `gs.presta_credentials`
 
 """
-## \file /src/endpoints/prestashop/api/_experiments/header.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python 
 import os, sys
 from pathlib import Path

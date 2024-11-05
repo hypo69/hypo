@@ -1,5 +1,7 @@
+## \file ./src/utils/convertors/html2text.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/utils/convertors/html2text.py
 #!/usr/bin/env python
 """html2text: Turn HTML into equivalent Markdown-structured text."""
 __version__ = "3.1"

@@ -1,5 +1,8 @@
+## \file ./src/ai/openai/model/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" Темплейты даля создания новых сущностей (новый поставщик) 
+""" Темплейты даля создания новых сущностей (новый поставщик) 
 
 @todo
     1. получить данные:
@@ -10,8 +13,6 @@
 обновить записи в престашоп и гугл таблице
 """
 ...
-## \file /src/ai/openai/model/__init__.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from packaging.version import Version

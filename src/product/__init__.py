@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/product/__init__.py
-## \file /src/product/__init__.py
+## \file ./src/product/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ Product module
 External classes and attributes:
 - `Product`: Methods and attributes of the product. Detailed description in `product.py`

@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/suppliers/aliexpress/campaign/_experiments/prepare_new_campaign.py
+## \file ./src/suppliers/aliexpress/campaign/_experiments/prepare_new_campaign.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 
 """ Эксперименты над сценарием новой рекламной камании """

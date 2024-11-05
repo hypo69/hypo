@@ -1,8 +1,9 @@
+## \file ./src/db/manager_translations/category_translations.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Менджер переводов категорий """
 
-## \file /src/db/manager_translations/category_translations.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from sqlalchemy import create_engine, Column, Integer, String, Text

@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/advertisement/facebook/scenarios/post_ad.py
+## \file ./src/endpoints/advertisement/facebook/scenarios/post_ad.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Публикация рекламного сообщения группах фейсбук"""
 from socket import timeout
@@ -13,7 +14,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from src import gs
 from src.webdriver import Driver
-from src.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
+from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
 from src.utils import j_loads_ns, pprint
 from src.logger import logger
 

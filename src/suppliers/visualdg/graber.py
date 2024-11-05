@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/suppliers/visualdg/graber.py
+## \file ./src/suppliers/visualdg/graber.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 
 

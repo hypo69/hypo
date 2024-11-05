@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/ai/openai/header.py
-## \file /src/gui/context_menu/tkinter/header.py
+## \file ./src/gui/context_menu/tkinter/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 
 import sys,os

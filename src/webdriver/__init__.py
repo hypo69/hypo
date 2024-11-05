@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/__init__.py
-## \file /src/webdriver/__init__.py
+## \file ./src/webdriver/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """  Модуль вебдрайвера
 Я объединил в класс `Driver` все, что взаимодействует по протоколу `HTTP`:

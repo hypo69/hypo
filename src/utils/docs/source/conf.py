@@ -1,5 +1,7 @@
+## \file ./src/utils/docs/source/conf.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/utils/docs/source/conf.py
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:

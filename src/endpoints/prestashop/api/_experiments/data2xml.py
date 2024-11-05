@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/api/_experiments/data2xml.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/api/_experiments/data2xml.py
-## \file src/prestashop/api/_experiments/data2xml.py
 """ Проверка валидности словаря престасшоп """
 from pathlib import Path
 import header

@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file /src/ai/gemini/header.py
-## \file /src/ai/gemini/header.py
+## \file ./src/ai/gemini/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 from pathlib import Path
 import sys

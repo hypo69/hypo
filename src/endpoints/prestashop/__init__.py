@@ -1,10 +1,11 @@
+## \file ./src/endpoints/prestashop/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" Модуль обработки запросов к базам данных Prestashop.
+""" Модуль обработки запросов к базам данных Prestashop.
 Адаптер для API
 """
 ...
-## \file /src/endpoints/prestashop/__init__.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...
 from packaging.version import Version

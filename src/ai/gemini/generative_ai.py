@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/ai/gemini/generative_ai.py
+## \file ./src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """Google generative AI integration."""
 
 import time

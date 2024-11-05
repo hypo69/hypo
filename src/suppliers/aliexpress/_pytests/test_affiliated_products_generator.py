@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
-## \file /src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
+## \file ./src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ YOU MUST WRITE A DESCRIPTION !
 This script contains the following:

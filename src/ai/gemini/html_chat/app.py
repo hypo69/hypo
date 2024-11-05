@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/ai/gemini/html_chat/app.py
+## \file ./src/ai/gemini/html_chat/app.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 

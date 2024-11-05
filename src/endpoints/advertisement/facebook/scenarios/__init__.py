@@ -1,7 +1,8 @@
-#! /usr/bin/python
-﻿""" Сценарии фейсбука """
-## \file /src/endpoints/advertisement/facebook/scenarios/__init__.py
+## \file ./src/endpoints/advertisement/facebook/scenarios/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Сценарии фейсбука """
 # /path/to/interpreter/python
 
 from packaging.version import Version

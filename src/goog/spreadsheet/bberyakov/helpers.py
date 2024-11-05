@@ -1,6 +1,7 @@
+## \file ./src/goog/spreadsheet/bberyakov/helpers.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/goog/spreadsheet/bberyakov/helpers.py
-## \file src/utils/interface/goog/helpers.py
 """ перевод цветовых форматов.
 Перевод:
 - HEX->DECIMAL

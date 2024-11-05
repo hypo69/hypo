@@ -1,7 +1,6 @@
-#! /usr/bin/python
-﻿## \file src/utils/file.py
-## \file /src/utils/file.py
+## \file ./src/utils/file.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 # /path/to/interpreter/python
 """
 Module for file operations.
@@ -311,3 +310,150 @@ def recursive_read_text_files(
                     logger.warning(f"Failed to read file '{file_path}'.", exc_info=exc_info)
 
     return matches
+
+
+def remove_bom(file_path: str) -> None:
+    """Removes all BOM (U+FEFF) characters from the specified Python file.
+
+    This function reads the content of a Python file, removes all occurrences of
+    the BOM character (U+FEFF), and writes the modified content back to the file.
+
+    Args:
+        file_path (str): The path to the Python file to be processed.
+
+    Returns:
+        None: This function does not return any value.
+
+    Example:
+        >>> remove_bom_from_file('example.py')
+        Processing file: example.py
+        BOM character(s) removed from example.py.
+        Updated example.py successfully.
+    """
+    print(f"Processing file: {file_path}")
+    
+    try:
+        with open(file_path, 'r+', encoding='utf-8') as file:
+            content = file.read()
+
+            # Check for and remove all occurrences of the BOM character
+            new_content = content.replace('\ufeff', '')
+            if new_content != content:
+                print("BOM character(s) removed.")
+                
+                # Write the cleaned content back to the file
+                file.seek(0)  # Move to the start of the file
+                file.write(new_content)
+                file.truncate()  # Remove any leftover content after the new end of file
+                print(f"Updated {file_path} successfully.")
+            else:
+                print("No BOM character found.")
+
+    except IOError as ex:
+        print(f"Error processing file {file_path}: {ex}")
+
+def traverse_directory(directory: str) -> None:
+    """Recursively traverses the directory and processes Python files to remove BOM.
+
+    This function walks through the given directory and all its subdirectories,
+    identifying and processing each Python file to remove any BOM characters
+    using the `remove_bom_from_file` function.
+
+    Args:
+        directory (str): The root directory to start traversing.
+
+    Returns:
+        None: This function does not return any value.
+
+    Example:
+        >>> traverse_directory('/path/to/directory')
+        Traversing directory: /path/to/directory
+        Found Python file: /path/to/directory/example.py
+        Processing file: /path/to/directory/example.py
+        BOM character(s) removed.
+        Updated /path/to/directory/example.py successfully.
+    """
+    print(f"Traversing directory: {directory}")
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.py'):
+                file_path = os.path.join(root, file)
+                print(f"Found Python file: {file_path}")
+                remove_bom_from_file(file_path)
+
+
+def yield_files_content(
+    root_dir: str | Path,
+    patterns: str | list[str],
+    as_list: bool = False,
+    exc_info: bool = True
+):
+    """
+    Генератор, рекурсивно ищущий файлы по заданным шаблонам и возвращающий содержимое каждого файла по одному при каждом запросе.
+
+    Args:
+        root_dir (str | Path): Путь к корневой директории для поиска.
+        patterns (str | list[str]): Шаблон(ы) имен файлов для фильтрации.
+                                    Может быть один шаблон (например, '*.txt') или список шаблонов.
+        as_list (bool, optional): Если True, возвращает содержимое файла построчно.
+                                  По умолчанию False.
+        exc_info (bool, optional): Если True, включает информацию об исключении в предупреждения.
+                                   По умолчанию True.
+
+    Yields:
+        str | list[str]: Содержимое каждого файла (список строк, если `as_list=True`, или весь текст файла).
+    """
+    root_path = Path(root_dir)
+
+    # Проверка существования корневой директории
+    if not root_path.is_dir():
+        logger.debug(f"The root directory '{root_path}' does not exist or is not a directory.")
+        return
+
+    # Преобразуем patterns в список, если передана одна строка
+    if isinstance(patterns, str):
+        patterns = [patterns]
+
+    # Рекурсивно ищем файлы, соответствующие шаблонам
+    for root, dirs, files in os.walk(root_path):
+        for filename in files:
+            if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
+                file_path = Path(root) / filename
+
+                try:
+                    with file_path.open("r", encoding="utf-8") as file:
+                        # Возвращаем содержимое файла в зависимости от `as_list`
+                        if as_list:
+                            yield file.readlines()
+                        else:
+                            yield file.read()
+                except Exception as ex:
+                    logger.warning(f"Failed to read file '{file_path}'.", exc_info=exc_info)
+
+
+def main() -> None:
+    """Main function to execute the BOM removal script.
+
+    This function sets the root directory for the script to start processing
+    Python files to remove BOM characters by invoking the `traverse_directory`
+    function.
+
+    Returns:
+        None: This function does not return any value.
+
+    Example:
+        >>> main()
+        Starting script to remove BOM from Python files in: ../src
+        Traversing directory: ../src
+        Found Python file: ../src/example.py
+        Processing file: ../src/example.py
+        BOM character(s) removed.
+        Updated ../src/example.py successfully.
+    """
+    root_dir = Path('..', 'src')  # Set your target directory here
+    print(f"Starting script to remove BOM from Python files in: {root_dir}")
+    traverse_directory(str(root_dir))
+
+if __name__ == "__main__":
+    main()
+

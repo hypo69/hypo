@@ -1,5 +1,6 @@
-## \file /src/utils/convertors/__init__.py
+## \file ./src/utils/convertors/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 # /path/to/interpreter/python
 """ Convertors
 """

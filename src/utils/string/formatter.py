@@ -1,8 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/string/formatter.py
-## \file /src/utils/string/formatter.py
+## \file ./src/utils/string/formatter.py
 # -*- coding: utf-8 -*-
-#! /path/to/interpreter/python
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """
 String formatting functions.
 

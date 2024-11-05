@@ -1,6 +1,7 @@
+## \file ./src/category/_examples/header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/category/_examples/header.py
-## \file src/category/_examples/header.py
 """ @namespace src.category._examples """
 import sys
 import os

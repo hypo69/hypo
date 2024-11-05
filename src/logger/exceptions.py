@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/logger/exceptions.py
+## \file ./src/logger/exceptions.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Program Exceptions """
 from typing import Optional

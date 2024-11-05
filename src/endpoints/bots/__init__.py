@@ -1,7 +1,6 @@
-#! /usr/bin/python
-﻿## \file src/bots/__init__.py
-## \file /src/endpoints/bots/__init__.py
+## \file ./src/endpoints/bots/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 # /path/to/interpreter/python
 
 from packaging.version import Version

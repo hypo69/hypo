@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/_experiments/notebook_header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/_experiments/notebook_header.py
-## \file src/prestashop/_experiments/notebook_header.py
 import sys
 import os
 from pathlib import Path

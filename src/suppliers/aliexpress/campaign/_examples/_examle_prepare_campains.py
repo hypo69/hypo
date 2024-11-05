@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
-## \file src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
 from ..prepare_campaigns import *
 
 # Example 1: Process a Single Campaign Category

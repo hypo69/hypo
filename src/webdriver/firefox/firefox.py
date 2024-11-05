@@ -1,5 +1,8 @@
+## \file ./src/webdriver/firefox/firefox.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" Firefox WebDriver
+""" Firefox WebDriver
 
 This code defines a subclass of `webdriver.Firefox` called `Firefox`. 
 It provides additional functionality such as the ability to launch Firefox 
@@ -18,8 +21,6 @@ if __name__ == "__main__":
 @endcode
 @image html class_firefox.png
 """
-## \file /src/webdriver/firefox/firefox.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import os

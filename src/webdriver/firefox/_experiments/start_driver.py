@@ -1,3 +1,6 @@
+## \file ./src/webdriver/firefox/_experiments/start_driver.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ вебдрайвер Firefox
 
@@ -7,8 +10,6 @@ in kiosk mode and the ability to set up a Firefox profile for the webdriver.
 
 @image html class_firefox.png
 """
-## \file /src/webdriver/firefox/_experiments/start_driver.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import os

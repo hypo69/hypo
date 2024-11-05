@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/utils/ensure_https.py
-## \file /src/suppliers/aliexpress/utils/ensure_https.py
+## \file ./src/suppliers/aliexpress/utils/ensure_https.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 
 """ Ensures that the provided URL string(s) contain the https:// prefix. 

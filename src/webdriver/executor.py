@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/webdriver/executor.py
+## \file ./src/webdriver/executor.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 

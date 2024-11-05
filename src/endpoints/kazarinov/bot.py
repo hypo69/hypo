@@ -1,5 +1,6 @@
-## \file /src/endpoints/kazarinov/bot.py
+## \file ./src/endpoints/kazarinov/bot.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 """! Kazarinov's specific bot with customized behavior."""
 import header
 

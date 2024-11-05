@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/utils/date_time.py
+## \file ./src/utils/date_time.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """! This module contains a function to check if the current time is within a specified interval with an optional timeout.
 

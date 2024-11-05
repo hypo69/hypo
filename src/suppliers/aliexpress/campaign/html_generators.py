@@ -1,7 +1,8 @@
+## \file ./src/suppliers/aliexpress/campaign/html_generators.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Генератор HTML контента рекламной кампании """
-## \file /src/suppliers/aliexpress/campaign/html_generators.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import header   
 

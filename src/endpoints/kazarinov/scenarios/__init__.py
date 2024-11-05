@@ -1,5 +1,7 @@
+## \file ./src/endpoints/kazarinov/scenarios/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/kazarinov/scenarios/__init__.py
 """Сценарии Казаринова"""
 ...
 from packaging.version import Version

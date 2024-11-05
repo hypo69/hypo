@@ -1,6 +1,7 @@
+## \file ./src/webdriver/edge/_experiments/edge.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/webdriver/edge/_experiments/edge.py
-## \file src/webdriver/edge/_experiments/edge.py
 from pathlib import Path
 import os
 import json

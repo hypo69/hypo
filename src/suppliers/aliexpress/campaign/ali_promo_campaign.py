@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/suppliers/aliexpress/campaign/ali_promo_campaign.py
+## \file ./src/suppliers/aliexpress/campaign/ali_promo_campaign.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 @dotfile suppliers/aliexpress/campaigns/_dot/aliexpress_campaign.dot

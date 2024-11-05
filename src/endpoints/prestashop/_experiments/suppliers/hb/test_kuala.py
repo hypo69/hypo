@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/_experiments/suppliers/hb/test_kuala.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_kuala.py
-## \file src/prestashop/_experiments/suppliers/hb/test_kuala.py
 from urllib import response
 import header
 from header import pprint,  logger

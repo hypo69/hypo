@@ -1,8 +1,8 @@
-#! /usr/bin/python
-﻿## \file src/prestashop/api/__init__.py
-""" @namespace src.prestashop """
-## \file /src/endpoints/prestashop/api/__init__.py
+## \file ./src/endpoints/prestashop/api/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" @namespace src.prestashop """
 # /path/to/interpreter/python
 """ Prestashop module 
 """

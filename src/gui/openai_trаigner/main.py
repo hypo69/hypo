@@ -1,5 +1,7 @@
+## \file ./src/gui/openai_trаigner/main.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/gui/openai_trаigner/main.py
 import sys
 import os
 from PyQt6.QtCore import Qt, QUrl

@@ -1,6 +1,7 @@
+## \file ./src/scenario/_experiments/test_scenario.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/scenario/_experiments/test_scenario.py
-## \file src/scenario/_experiments/test_scenario.py
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')]

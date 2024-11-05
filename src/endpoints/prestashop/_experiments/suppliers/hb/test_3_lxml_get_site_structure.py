@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/_experiments/suppliers/hb/test_3_lxml_get_site_structure.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_3_lxml_get_site_structure.py
-## \file src/prestashop/_experiments/suppliers/hb/test_3_lxml_get_site_structure.py
 import requests
 import re
 import json

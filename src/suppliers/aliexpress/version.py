@@ -1,5 +1,7 @@
+## \file ./src/suppliers/aliexpress/version.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/version.py
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

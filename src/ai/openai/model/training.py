@@ -1,6 +1,7 @@
+## \file ./src/ai/openai/model/training.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/ai/openai/model/training.py
-# -*- coding: utf-8 -*- 
 # /path/to/interpreter/python
 
 """ OpenAI Model Class for handling communication with the OpenAI API and training the model. """

@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/convertors/xml2dict.py
-## \file /src/utils/convertors/xml2dict.py
+## \file ./src/utils/convertors/xml2dict.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 This module provides utilities for converting XML data into dictionaries. It includes functions for parsing XML strings and converting XML element trees into dictionary representations.

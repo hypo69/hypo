@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/campaign/ali_campaign_editor.py
-## \file /src/suppliers/aliexpress/campaign/ali_campaign_editor.py
+## \file ./src/suppliers/aliexpress/campaign/ali_campaign_editor.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts/python
 """ This module provides the editor for advertising campaigns.
 """

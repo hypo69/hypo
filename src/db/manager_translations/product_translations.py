@@ -1,8 +1,9 @@
+## \file ./src/db/manager_translations/product_translations.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Менеджер переводов параметров товара"""
 ...
-## \file /src/db/manager_translations/product_translations.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...
 import sys

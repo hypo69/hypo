@@ -1,5 +1,7 @@
+## \file ./src/templates/version.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/templates/version.py
 import json
 
 settings:dict = None

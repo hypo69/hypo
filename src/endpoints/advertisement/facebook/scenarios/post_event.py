@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/advertisement/facebook/scenarios/post_event.py
+## \file ./src/endpoints/advertisement/facebook/scenarios/post_event.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Публикация календарного события v группах фейсбук"""
 from socket import timeout

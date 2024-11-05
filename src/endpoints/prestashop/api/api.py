@@ -1,13 +1,14 @@
+## \file ./src/endpoints/prestashop/api/api.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿
+
 """ Prestashop API connector - interact with Prestashop webservice API, using JSON and XML for message 
 
 
 @dotfile prestashop//api//prestashop.dot
 
 """
-## \file /src/endpoints/prestashop/api/api.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import os
 import sys

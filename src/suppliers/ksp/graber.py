@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/ksp/ksp.py
-## \file /src/suppliers/ksp/graber.py
+## \file ./src/suppliers/ksp/graber.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 
 

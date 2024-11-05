@@ -1,7 +1,7 @@
-#! /usr/bin/python
-## \file /src/utils/image.py
+## \file ./src/utils/image.py
 # -*- coding: utf-8 -*-
-#! /path/to/interpreter/python
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """
 Image Saving Utilities.
 

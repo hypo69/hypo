@@ -1,5 +1,7 @@
+## \file ./src/suppliers/bangood/via_webdriver.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/suppliers/bangood/via_webdriver.py
 """  Модуль сбора товаров со страницы категорий поставщика bangood.co.il через вебдрайвер
 У каждого поставщика свой сценарий обреботки категорий
 
@@ -13,8 +15,6 @@
 
 """
 
-## \file /src/suppliers/bangood/via_webdriver.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 

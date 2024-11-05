@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
-## \file /src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
+## \file ./src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 
 import sys

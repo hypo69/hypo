@@ -1,5 +1,8 @@
+## \file ./src/main.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" <b> Module for launching the program. </b>
+""" <b> Module for launching the program. </b>
 
 Here I set the order of launching suppliers (in threads or sequentially), the user interface (`GUI`, `JUPYTER`, `CMD`). \n 
             Extended launch parameters for suppliers can be specified when calling the `launcher()` function. See details 
@@ -32,8 +35,6 @@ main.py
 @image html main.png
 """
 ...
-## \file /src/main.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...
 import sys

@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/jjson.py
-## \file /src/utils/.py
+## \file ./src/utils/.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 Module for handling JSON and CSV files, including loading, dumping, and merging data.

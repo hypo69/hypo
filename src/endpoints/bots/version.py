@@ -1,6 +1,8 @@
+## \file ./src/endpoints/bots/version.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/bots/version.py
-﻿import json
+import json
 
 settings:dict = None
 

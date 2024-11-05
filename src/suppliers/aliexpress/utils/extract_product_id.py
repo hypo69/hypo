@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/utils/extract_product_id.py
-## \file /src/suppliers/aliexpress/utils/extract_product_id.py
+## \file ./src/suppliers/aliexpress/utils/extract_product_id.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 import re
 from src.logger import logger

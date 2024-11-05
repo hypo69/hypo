@@ -1,5 +1,7 @@
+## \file ./src/suppliers/aliexpress/affiliated_products_generator.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/affiliated_products_generator.py
 import asyncio
 from datetime import datetime
 import html

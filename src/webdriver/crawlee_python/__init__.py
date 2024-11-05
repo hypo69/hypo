@@ -1,7 +1,8 @@
-#! /usr/bin/python
-﻿""" Обёртка для Crawlee"""
-## \file /src/webdriver/crawlee_python/__init__.py
+## \file ./src/webdriver/crawlee_python/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Обёртка для Crawlee"""
 # /path/to/interpreter/python
 ...
 from packaging.version import Version

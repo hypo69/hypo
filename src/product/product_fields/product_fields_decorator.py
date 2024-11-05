@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/product_fields_decorator.py
-## \file /src/product/product_fields/product_fields_decorator.py
+## \file ./src/product/product_fields/product_fields_decorator.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ 
 @file src/suppliers/product_fields_decorator.py

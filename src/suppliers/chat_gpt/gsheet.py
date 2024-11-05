@@ -1,8 +1,9 @@
+## \file ./src/suppliers/chat_gpt/gsheet.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ AliExpress Campaign Editor via Google Sheets """
 
-## \file /src/suppliers/chat_gpt/gsheet.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from lib2to3.pgen2.driver import Driver

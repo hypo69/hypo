@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateOrderGetRequest.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateOrderGetRequest.py
-## \file src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateOrderGetRequest.py
 """
 Created by auto_sdk on 2021.03.05
 """

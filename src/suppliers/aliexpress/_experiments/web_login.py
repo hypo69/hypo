@@ -1,7 +1,8 @@
-#! /usr/bin/python
-﻿""" Aliexpress Проверки логин, кукис итп. """
-## \file /src/suppliers/aliexpress/_experiments/web_login.py
+## \file ./src/suppliers/aliexpress/_experiments/web_login.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Aliexpress Проверки логин, кукис итп. """
 # /path/to/interpreter/python
 
 

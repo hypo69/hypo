@@ -1,8 +1,9 @@
+## \file ./src/db/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Модуль работы с базами данных """
 ...
-## \file /src/db/__init__.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...
 from .manager_translations import ProductTranslationsManager

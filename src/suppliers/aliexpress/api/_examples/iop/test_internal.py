@@ -1,5 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/_examples/iop/test_internal.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/api/_examples/iop/test_internal.py
 """   [File's Description]
 
  
@@ -10,8 +12,6 @@ Author(s):
   - Created by Davidka on 09.11.2023 .
 """
 
-## \file /src/suppliers/aliexpress/api/_examples/iop/test_internal.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import iop
 import time

@@ -1,7 +1,8 @@
+## \file ./src/suppliers/aliexpress/campaign/_experiments/prepare_campaign_json_file.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Проверка создания рекламной кампании """
-## \file /src/suppliers/aliexpress/campaign/_experiments/prepare_campaign_json_file.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 

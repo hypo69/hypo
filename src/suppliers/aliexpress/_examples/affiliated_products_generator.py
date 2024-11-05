@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/_examples/affiliated_products_generator.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/_examples/affiliated_products_generator.py
-## \file src/suppliers/aliexpress/_examples/affiliated_products_generator.py
 # пример_использования.py
 
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts

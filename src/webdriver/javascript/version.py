@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/version.py
-## \file /src/webdriver/javascript/version.py
+## \file ./src/webdriver/javascript/version.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 __name__ = '' 
 __version__="3.12.0.0.0.4"

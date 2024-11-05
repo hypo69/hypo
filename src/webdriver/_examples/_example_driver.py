@@ -1,6 +1,7 @@
+## \file ./src/webdriver/_examples/_example_driver.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/webdriver/_examples/_example_driver.py
-## \file src/webdriver/_examples/_example_driver.py
 # example.py
 
 from src.webdriver import Driver, Chrome, Firefox, Edge

@@ -1,6 +1,7 @@
+## \file ./src/product/_experiments/_experiments_locators.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/product/_experiments/_experiments_locators.py
-## \file src/product/_experiments/_experiments_locators.py
 import header
 from header import ProductFieldsLocators, gs, j_dumps, j_loads
 from pathlib import Path

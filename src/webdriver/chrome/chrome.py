@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/chrome/chrome.py
-## \file /src/webdriver/chrome/chrome.py
+## \file ./src/webdriver/chrome/chrome.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Chrome WebDriver.
 Implemented using Chrome for Developers.

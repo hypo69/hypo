@@ -1,7 +1,8 @@
+## \file ./src/suppliers/aliexpress/campaign/gsheets_check_this_code.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Редактор рекламной кампании через гугл таблицами """
-## \file /src/suppliers/aliexpress/campaign/gsheets_check_this_code.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import time

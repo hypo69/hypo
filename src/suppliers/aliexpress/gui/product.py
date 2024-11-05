@@ -1,8 +1,9 @@
+## \file ./src/suppliers/aliexpress/gui/product.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Window editor for products """
 
-## \file /src/suppliers/aliexpress/gui/product.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import header

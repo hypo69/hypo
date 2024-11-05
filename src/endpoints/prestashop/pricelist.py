@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/pricelist.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/pricelist.py
-## \file src/prestashop/pricelist.py
 import sys
 import os
 from attr import attr, attrs

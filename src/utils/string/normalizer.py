@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/utils/string/normalizer.py
+## \file ./src/utils/string/normalizer.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """Module for normalizing product fields and handling various data types."""
 

@@ -1,6 +1,7 @@
+## \file ./src/suppliers/visualdg/version.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/visualdg/version.py
-﻿## \file src/suppliers/visualdg/version.py
 import json
 
 settings:dict = None

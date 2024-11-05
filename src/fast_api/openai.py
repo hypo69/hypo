@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/fast_api/openai.py
+## \file ./src/fast_api/openai.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 This module provides a FastAPI application for interacting with the OpenAI model.

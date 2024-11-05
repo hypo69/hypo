@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/amazon/api/version.py
-## \file /src/suppliers/amazon/api/version.py
+## \file ./src/suppliers/amazon/api/version.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 - `__version__`: This variable holds the version of the module or package.

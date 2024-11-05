@@ -1,6 +1,7 @@
+## \file ./src/goog/spreadsheet/bberyakov/gspreadsheet.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/goog/spreadsheet/bberyakov/gspreadsheet.py
-## \file src/utils/interface/goog/gspreadsheet.py
 """  [File's Description]
 
 @namespace src: src

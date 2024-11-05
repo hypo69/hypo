@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/category/_examples/__init__.py
-## \file /src/category/_examples/__init__.py
+## \file ./src/category/_examples/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ @namespace src.category._examples """
 # /path/to/interpreter/python
 """ """

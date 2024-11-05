@@ -1,5 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/helpers/arguments.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/helpers/arguments.py
 
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException

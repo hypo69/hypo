@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Обёртка для Хрома """
-...
-## \file /src/webdriver/chrome/__init__.py
+## \file ./src/webdriver/chrome/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Обёртка для Хрома """
+...
 # /path/to/interpreter/python
 ...
 from packaging.version import Version

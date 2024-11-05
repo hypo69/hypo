@@ -1,3 +1,6 @@
+## \file ./src/webdriver/playwright/playwrid.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Playwrid Crawler
 
@@ -11,8 +14,6 @@ if __name__ == "__main__":
     browser.start("https://www.example.com")
 @endcode
 """
-## \file /src/webdriver/playwright/playwrid.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from pathlib import Path

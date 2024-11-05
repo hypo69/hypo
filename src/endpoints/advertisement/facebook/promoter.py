@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/advertisement/facebook/promoter.py
-## \file /src/endpoints/advertisement/facebook/promoter.py
+## \file ./src/endpoints/advertisement/facebook/promoter.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 This module handles the promotion of messages and events in Facebook groups.
@@ -18,10 +18,10 @@ from types import SimpleNamespace
 from typing import Optional
 
 from src import gs
-from src.advertisement import facebook
+from src.endpoints.advertisement import facebook
 from src.webdriver import Driver, Chrome
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
-from src.advertisement.facebook.scenarios import (post_message, 
+from src.endpoints.advertisement.facebook.scenarios import (post_message, 
                                                   post_event, 
                                                   post_message_title, 
                                                   upload_post_media,

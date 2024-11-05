@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/utils/rst_indexer.py
+## \file ./src/utils/rst_indexer.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /path/to/python/interpreter
 """
 This module recursively traverses subdirectories from the current directory,

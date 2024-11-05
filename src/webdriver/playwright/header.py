@@ -1,7 +1,8 @@
+## \file ./src/webdriver/playwright/header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Эксперименты с библиотекой crawlee-python """
-## \file /src/webdriver/playwright/header.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import sys,os
 from pathlib import Path

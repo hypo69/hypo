@@ -1,6 +1,7 @@
+## \file ./src/suppliers/cdata/login.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/cdata/login.py
-## \file src/suppliers/cdata/login.py
 """   Интерфейс авторизации. Реализация для вебдрайвера
 
 @image html login.png

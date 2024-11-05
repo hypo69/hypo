@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductQueryRequest.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductQueryRequest.py
-## \file src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductQueryRequest.py
 '''
 Created by auto_sdk on 2021.05.20
 '''

@@ -1,7 +1,8 @@
+## \file ./src/suppliers/aliexpress/campaign/_experiments/gsheets-quick.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Работа с гугл таблицами """
-## \file /src/suppliers/aliexpress/campaign/_experiments/gsheets-quick.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from unicodedata import category

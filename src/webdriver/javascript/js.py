@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/javascript/js.py
-## \file /src/webdriver/javascript/js.py
+## \file ./src/webdriver/javascript/js.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """Module containing JavaScript helper functions for Selenium WebDriver.
 

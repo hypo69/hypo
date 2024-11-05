@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/amazon/aliexpress.py
-## \file /src/suppliers/aliexpress/graber.py
+## \file ./src/suppliers/aliexpress/graber.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 
 

@@ -1,5 +1,7 @@
+## \file ./src/suppliers/etzmaleh/via_webdriver.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/suppliers/etzmaleh/via_webdriver.py
 """   [File's Description]
 
 @namespace src: src
@@ -13,8 +15,6 @@
 Author(s):
   - Created by Davidka on 09.11.2023 .
 """
-## \file /src/suppliers/etzmaleh/via_webdriver.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from src.logger import logger

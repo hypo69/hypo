@@ -1,13 +1,14 @@
-#! /usr/bin/python
-## \file /src/endpoints/advertisement/facebook/start_posting_my_groups.py
+## \file ./src/endpoints/advertisement/facebook/start_posting_my_groups.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """Отправка рекламных объявлений в группы фейсбук """
 
 import header 
 import copy
 from src.webdriver import Driver, Chrome
-from src.advertisement.facebook.promoter import FacebookPromoter
+from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
 from src.logger import logger
 
 d = Driver(Chrome)

@@ -1,6 +1,7 @@
+## \file ./src/suppliers/hb/_experiments/ide_experiments_scenario_.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/hb/_experiments/ide_experiments_scenario_.py
-## \file src/suppliers/hb/_experiments/ide_experiments_scenario_.py
 """  Файл проверки наполнения полей HB -> product_fields """
 
 

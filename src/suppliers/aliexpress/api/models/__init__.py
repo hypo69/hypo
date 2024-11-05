@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/models/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/models/__init__.py
-## \file src/suppliers/aliexpress/api/models/__init__.py
 from .languages import Language
 from .currencies import Currency
 from .request_parameters import ProductType, SortBy, LinkType

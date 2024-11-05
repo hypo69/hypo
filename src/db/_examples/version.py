@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/db/_examples/version.py
-## \file /src/db/_examples/version.py
+## \file ./src/db/_examples/version.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ @namespace src.db._examples """
 # /path/to/interpreter/python
 """

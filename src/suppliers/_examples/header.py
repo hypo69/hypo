@@ -1,6 +1,7 @@
+## \file ./src/suppliers/_examples/header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/_examples/header.py
-## \file src/suppliers/_examples/header.py
 import os
 import sys
 from pathlib import Path

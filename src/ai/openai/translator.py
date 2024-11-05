@@ -1,5 +1,8 @@
+## \file ./src/ai/openai/translator.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" Переводчик 
+""" Переводчик 
 @code
 # Пример использования функции
 source_text = "Привет, как дела?"
@@ -10,8 +13,6 @@ print(f"Translated text: {translation}")
 @endcode
 """
 
-## \file /src/ai/openai/translator.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 

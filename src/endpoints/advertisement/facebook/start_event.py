@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/advertisement/facebook/start_event.py
+## \file ./src/endpoints/advertisement/facebook/start_event.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """Отправка мероприятий в группы фейсбук """
 
@@ -9,7 +10,7 @@ import header
 import time
 from src.utils.jjson import j_loads
 from src.webdriver import Driver, Chrome
-from src.advertisement.facebook import FacebookPromoter
+from src.endpoints.advertisement.facebook import FacebookPromoter
 from src.logger import logger
 
 d = Driver(Chrome)

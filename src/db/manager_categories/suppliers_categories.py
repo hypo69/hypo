@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/db/manager_categories/suppliers_categories.py
-## \file /src/db/manager_categories/suppliers_categories.py
+## \file ./src/db/manager_categories/suppliers_categories.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ @namespace src.db.manager_categories """
 # /path/to/interpreter/python
 """ Модуль обработки категорий.

@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Main window interface for managing advertising campaigns """
-
-## \file /src/suppliers/aliexpress/gui/main.py
+## \file ./src/suppliers/aliexpress/gui/main.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Main window interface for managing advertising campaigns """
+
 # /path/to/interpreter/python
 
 import header

@@ -1,5 +1,6 @@
-## \file utils/clear_files_for_chat_gpt.py
+## \file ./dev_utils/code2file_for_chat_gpt.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Этот скрипт рекурсивно читает и обрабатывает все указанные текстовые и данные файлы в каталоге 
 и сохраняет объединенное содержимое в один файл. Скрипт также позволяет удалять блоки с тройными кавычками 

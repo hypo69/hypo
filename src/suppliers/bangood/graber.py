@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/bangood/bangood.py
-## \file /src/suppliers/bangood/graber.py
+## \file ./src/suppliers/bangood/graber.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 
 

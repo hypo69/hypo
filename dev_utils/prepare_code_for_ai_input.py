@@ -1,3 +1,6 @@
+## \file ./dev_utils/prepare_code_for_ai_input.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 """! This script collects the contents of specific files in the 'src' directory, 
 saves them in a single text file for machine learning model input, excluding 
 specific directories and files, and including only .py, .json, .md, .dot, and .mer files.

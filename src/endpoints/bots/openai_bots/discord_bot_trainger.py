@@ -1,5 +1,7 @@
+## \file ./src/endpoints/bots/openai_bots/discord_bot_trainger.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/bots/openai_bots/discord_bot_trainger.py
 import discord
 from discord.ext import commands
 from pathlib import Path

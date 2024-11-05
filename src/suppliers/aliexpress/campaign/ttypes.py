@@ -1,7 +1,8 @@
+## \file ./src/suppliers/aliexpress/campaign/ttypes.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Определение типов `campaign`, `category`, `product` """
-## \file /src/suppliers/aliexpress/campaign/ttypes.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from types import SimpleNamespace

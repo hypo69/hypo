@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/_experiments/suppliers/hb/test_4_lxml_get_unique_links.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_4_lxml_get_unique_links.py
-## \file src/prestashop/_experiments/suppliers/hb/test_4_lxml_get_unique_links.py
 import requests
 import re
 import json

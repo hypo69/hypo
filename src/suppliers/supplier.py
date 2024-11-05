@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/supplier.py
-## \file /src/suppliers/supplier.py
+## \file ./src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ <b>Class</b> `Supplier` <b>Base class for all suppliers</b>
 Provides methods and attributes for a specific

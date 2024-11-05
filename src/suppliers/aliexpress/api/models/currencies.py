@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/models/currencies.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/models/currencies.py
-## \file src/suppliers/aliexpress/api/models/currencies.py
 class Currency:
     USD = 'USD'
     GBP = 'GBP'

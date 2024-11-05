@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/_pytest/test_driver_executor.py
-## \file /src/webdriver/_pytest/test_driver_executor.py
+## \file ./src/webdriver/_pytest/test_driver_executor.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Общий тест для driver и executor
 test_navigate_to_page: Проверяет, что WebDriver корректно загружает указанную страницу.

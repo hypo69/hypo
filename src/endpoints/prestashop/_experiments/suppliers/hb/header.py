@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/prestashop/_experiments/suppliers/hb/header.py
-## \file /src/endpoints/prestashop/_experiments/suppliers/hb/header.py
+## \file ./src/endpoints/prestashop/_experiments/suppliers/hb/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 import json
 from pathlib import Path

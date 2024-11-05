@@ -1,6 +1,7 @@
+## \file ./src/suppliers/_experiments/Supplier/test_absolute_paths.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/_experiments/Supplier/test_absolute_paths.py
-## \file src/suppliers/_experiments/Supplier/test_absolute_paths.py
 import unittest
 from pathlib import Path
 from src.suppliers import Supplier

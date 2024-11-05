@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/prestashop/shop.py
-## \file /src/endpoints/prestashop/shop.py
+## \file ./src/endpoints/prestashop/shop.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """  Класс магазина в `Prestashop` """
 ...

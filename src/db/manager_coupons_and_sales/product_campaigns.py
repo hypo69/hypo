@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Купоны, скидки и т.п. для товаров Prestashop"""
-...
-## \file /src/db/manager_coupons_and_sales/product_campaigns.py
+## \file ./src/db/manager_coupons_and_sales/product_campaigns.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Купоны, скидки и т.п. для товаров Prestashop"""
+...
 # /path/to/interpreter/python
 ...
 from sqlalchemy import create_engine

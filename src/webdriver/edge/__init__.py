@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/edge/__init__.py
-## \file /src/webdriver/edge/__init__.py
+## \file ./src/webdriver/edge/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Драйвер Edge """
 ...

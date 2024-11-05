@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/emil/emil_design.py
+## \file ./src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Module for managing and processing images and promoting to Facebook and Prestashop. """
 
@@ -15,7 +16,7 @@ from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
 from src.product import Product
-from src.advertisement.facebook.scenarios.post_message import post_message, post_title, upload_media
+from src.endpoints.advertisement.facebook.scenarios.post_message import post_message, post_title, upload_media
 from src.utils.file import read_text_file, save_text_file, get_filenames
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.logger import logger

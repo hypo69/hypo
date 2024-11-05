@@ -1,5 +1,7 @@
+## \file ./src/endpoints/kazarinov/scenarios/untitled.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/kazarinov/scenarios/untitled.py
 def j_loads(
         jjson: dict | SimpleNamespace | str | Path | list[dict] | list[SimpleNamespace],
         ordered: bool = True,

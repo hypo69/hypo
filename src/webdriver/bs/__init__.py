@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Обёртка для Супа """
-...
-## \file /src/webdriver/bs/__init__.py
+## \file ./src/webdriver/bs/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Обёртка для Супа """
+...
 # /path/to/interpreter/python
 ...
 from packaging.version import Version

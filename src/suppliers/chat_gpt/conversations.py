@@ -1,5 +1,7 @@
+## \file ./src/suppliers/chat_gpt/conversations.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/chat_gpt/conversations.py
 
 import re
 import argparse

@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/header.py
-## \file /src/suppliers/header.py
+## \file ./src/suppliers/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """! Absolute path to modules  """
 

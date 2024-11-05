@@ -1,8 +1,9 @@
+## \file ./src/suppliers/aliexpress/campaign/_experiments/header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ Header  """
 
-## \file /src/suppliers/aliexpress/campaign/_experiments/header.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 import sys,os

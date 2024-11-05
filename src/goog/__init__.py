@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/goog/__init__.py
-## \file /src/goog/__init__.py
+## \file ./src/goog/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Google API.
 ИИ Generative AI находится в src.ai."""

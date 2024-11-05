@@ -1,6 +1,7 @@
+## \file ./src/translators/translate_product_fields.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/translators/translate_product_fields.py
-## \file src/translators_api/translate_product_fields.py
 """ Модуль управления переводами.
 Слой связи между словарем полей товара, таблицей переводов и переводчиками
 

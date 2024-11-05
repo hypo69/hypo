@@ -1,8 +1,8 @@
-#! /usr/bin/python
-﻿## \file src/prestashop/api_schemas/api_resourses_list.py
-""" Список всех доступных ресурсов для API вызовов"""
-## \file /src/endpoints/prestashop/api_schemas/api_resourses_list.py
+## \file ./src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Список всех доступных ресурсов для API вызовов"""
 # /path/to/interpreter/python
 resource:list = [
     'products', 

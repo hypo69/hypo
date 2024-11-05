@@ -1,9 +1,10 @@
+## \file ./src/webdriver/crawlee_python/crawlee_python.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ crawlee python module 
 
 """
-## \file /src/webdriver/crawlee_python/crawlee_python.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from pathlib import Path

@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/interface/smtp.py
-## \file /src/utils/smtp.py
+## \file ./src/utils/smtp.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 
 """

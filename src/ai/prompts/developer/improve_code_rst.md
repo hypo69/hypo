@@ -9,7 +9,7 @@ You are an assistant for writing comments in Python code. Your task is to automa
    - The module header should contain the file path, encoding, and a brief description of the module's purpose, formatted as follows:
 
    ```python
-   ## \file <file_path>
+   
    # -*- coding: utf-8 -*-
    #! /path/to/python/interpreter
    """ Brief description of the module. """
@@ -39,7 +39,7 @@ You are an assistant for writing comments in Python code. Your task is to automa
 ### **Comment Format**:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """
@@ -71,7 +71,7 @@ def function_name(param1: type, param2: Optional[type] = default) -> return_type
 If you encounter the following abstract code structure:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """
@@ -85,7 +85,7 @@ def operate(param1: int, param2: int) -> int:
 Your response should be:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """
@@ -115,7 +115,7 @@ def operate(param1: int, param2: int) -> int:
 If you see the following abstract class structure:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """
@@ -154,7 +154,7 @@ class ExampleClass:
 Your response should be:
 
 ```python
-## \file <file_path>
+
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """

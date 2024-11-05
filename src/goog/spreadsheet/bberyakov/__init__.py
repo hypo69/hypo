@@ -1,6 +1,7 @@
+## \file ./src/goog/spreadsheet/bberyakov/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/goog/spreadsheet/bberyakov/__init__.py
-## \file src/utils/interface/goog/__init__.py
 """  Google tables manipulation
 
 @namespace src: src

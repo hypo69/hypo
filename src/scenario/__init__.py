@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/scenario/__init__.py
-## \file /src/scenario/__init__.py
+## \file ./src/scenario/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """   Module with scenario execution functions: `run_scenario_files`, `run_scenarios`  
 Scenario executor for suppliers.

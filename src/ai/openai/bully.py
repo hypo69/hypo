@@ -1,6 +1,7 @@
+## \file ./src/ai/openai/bully.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/ai/openai/bully.py
-## \file src/ai/bully.py
 """ @namespace src.ai """
 """   - Пример, как развести chatGPT на грубости
 """

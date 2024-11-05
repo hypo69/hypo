@@ -1,6 +1,7 @@
+## \file ./src/suppliers/amazon/_experiments/header.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/amazon/_experiments/header.py
-## \file src/suppliers/amazon/_experiments/header.py
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]

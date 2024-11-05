@@ -1,8 +1,8 @@
-#! /usr/bin/python
-﻿## \file src/utils/__init__.py
-## \file /src/utils/__init__.py
+## \file ./src/utils/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 # /path/to/interpreter/python
+
 """
 # tiny_utils Module
 
@@ -64,6 +64,8 @@ from .file import (
     recursive_get_filenames,
     recursive_read_text_files,
     save_text_file,
+    yield_files_content,
+    remove_bom,
 )
 
 from .image import (

@@ -1,6 +1,7 @@
+## \file ./src/db/manager_translations/_tests/ProductTranslationsManager.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/db/manager_translations/_tests/ProductTranslationsManager.py
-## \file src/db/manager_translations/_tests/ProductTranslationsManager.py
 """ @namespace src.db.manager_translations._tests """
 import unittest
 from unittest.mock import MagicMock, patch

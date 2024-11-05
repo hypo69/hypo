@@ -1,8 +1,9 @@
+## \file ./src/ai/helicone/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ OpenAI """
 
-## \file /src/ai/helicone/__init__.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 

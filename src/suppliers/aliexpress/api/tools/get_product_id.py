@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/tools/get_product_id.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/tools/get_product_id.py
-## \file src/suppliers/aliexpress/api/tools/get_product_id.py
 """Some useful tools."""
 
 from ..errors import ProductIdNotFoundException

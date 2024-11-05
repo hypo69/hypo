@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/prestashop/_examples/version.py
-## \file /src/endpoints/prestashop/_examples/version.py
+## \file ./src/endpoints/prestashop/_examples/version.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 - `__version__`: This variable holds the version of the module or package.

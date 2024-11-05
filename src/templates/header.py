@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/templates/header.py
+## \file ./src/templates/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Module to set the project root path """
 

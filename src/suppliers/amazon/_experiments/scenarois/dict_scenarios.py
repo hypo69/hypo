@@ -1,6 +1,7 @@
+## \file ./src/suppliers/amazon/_experiments/scenarois/dict_scenarios.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/amazon/_experiments/scenarois/dict_scenarios.py
-## \file src/suppliers/amazon/_experiments/scenarois/dict_scenarios.py
 scenario: dict = {
 
     "Murano Glass": {

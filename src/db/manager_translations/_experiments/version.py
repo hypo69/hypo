@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/db/manager_translations/_experiments/version.py
-## \file /src/db/manager_translations/_experiments/version.py
+## \file ./src/db/manager_translations/_experiments/version.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ @namespace src.db.manager_translations._experiments """
 # /path/to/interpreter/python
 """

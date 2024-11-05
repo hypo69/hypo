@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
-## \file /src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
+## \file ./src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 

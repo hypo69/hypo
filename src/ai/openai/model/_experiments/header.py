@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Модуль управления моделью OpenAI 
-"""
-## \file /src/ai/openai/model/_experiments/header.py
+## \file ./src/ai/openai/model/_experiments/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Модуль управления моделью OpenAI 
+"""
 # /path/to/interpreter/python
 
 import sys,os

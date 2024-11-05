@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file ./utils/examples/header.py
-## \file /src/fast_api/header.py
+## \file ./src/fast_api/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Module to set the project root path """
 

@@ -1,11 +1,12 @@
+## \file ./src/goog/spreadsheet/reach_spreadsheet.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿
+
 """ 
    https://habr.com/ru/post/305378/    
 """
 
-## \file /src/goog/spreadsheet/reach_spreadsheet.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 

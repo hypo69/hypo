@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/suppliers/chat_gpt/__init__.py
+## \file ./src/suppliers/chat_gpt/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Веб интерфейс взаимодействия с chatGPT.
 реализует логику получения диалога, радакцию в гугл таблицах и обучение модели

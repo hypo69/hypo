@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/kazarinov/scenarios/scenario_pricelist.py
+## \file ./src/endpoints/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Module for handling suppliers (morlevi, grandadvance, ivory, ksp) product data extraction and saving."""
 
@@ -16,7 +17,7 @@ from src import gs
 from src.product.product_fields import ProductFields
 from src.webdriver import Driver
 from src.ai.gemini import GoogleGenerativeAI
-from src.advertisement.facebook.scenarios import (
+from src.endpoints.advertisement.facebook.scenarios import (
     post_message_title, 
     upload_post_media, 
     message_publish

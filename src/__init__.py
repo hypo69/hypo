@@ -1,7 +1,6 @@
-#! /usr/bin/python
-﻿
-## \file /src/__init__.py
+## \file ./src/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 # /path/to/interpreter/python
 """  **Это корневая директория проекта** """ 
 

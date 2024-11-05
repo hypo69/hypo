@@ -1,6 +1,7 @@
+## \file ./src/webdriver/_experiments/start_driver.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/webdriver/_experiments/start_driver.py
-## \file src/webdriver/_experiments/start_driver.py
 import header
 from src.webdriver import Driver, Firefox, Chrome, Edge
 

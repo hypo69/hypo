@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/bangood/__init__.py
-## \file /src/suppliers/bangood/__init__.py
+## \file ./src/suppliers/bangood/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """  Постaвщик <i>wallmart</i>
 """

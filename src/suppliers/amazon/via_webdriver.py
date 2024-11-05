@@ -1,5 +1,7 @@
+## \file ./src/suppliers/amazon/via_webdriver.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/suppliers/amazon/via_webdriver.py
 """  Модуль сбора товаров со страницы категорий поставщика aliexpress.com через вебдрайвер
 
 У каждого поставщика свой сценарий обреботки категорий
@@ -14,8 +16,6 @@
 
 """
 
-## \file /src/suppliers/amazon/via_webdriver.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from typing import Union

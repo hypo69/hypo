@@ -1,4 +1,6 @@
-## \file ../src/version.py
+## \file ./version.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 import json
 
 settings:dict = None

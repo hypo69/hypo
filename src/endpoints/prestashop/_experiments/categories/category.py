@@ -1,11 +1,11 @@
+## \file ./src/endpoints/prestashop/_experiments/categories/category.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/prestashop/_experiments/categories/category.py
 """  Работа с категориями товара 
 
 """
 
-## \file /src/endpoints/prestashop/_experiments/categories/category.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 

@@ -1,5 +1,8 @@
+## \file ./src/db/manager_coupons_and_sales/product_group_reduction_cache_manager.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" 
+""" 
 @code
 # Create an instance of the manager
 manager = ProductGroupReductionCacheManager()
@@ -29,8 +32,6 @@ manager.delete_record(1, 2)
 @endcode
 """
 ...
-## \file /src/db/manager_coupons_and_sales/product_group_reduction_cache_manager.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...
 import sys

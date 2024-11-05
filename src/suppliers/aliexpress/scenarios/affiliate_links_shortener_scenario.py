@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
-## \file /src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
+## \file ./src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ Сокращатель ссылок через веббраузер """
 

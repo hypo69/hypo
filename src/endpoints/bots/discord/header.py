@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/bots/openai/header.py
-## \file /src/endpoints/bots/discord/header.py
+## \file ./src/endpoints/bots/discord/header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 
 import sys,os

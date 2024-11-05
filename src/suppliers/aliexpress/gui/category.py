@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Window interface for preparing advertising campaigns """
-
-## \file /src/suppliers/aliexpress/gui/category.py
+## \file ./src/suppliers/aliexpress/gui/category.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Window interface for preparing advertising campaigns """
+
 # /path/to/interpreter/python
 
 import header

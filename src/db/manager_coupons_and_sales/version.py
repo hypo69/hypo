@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/db/manager_coupons_and_sales/version.py
-## \file /src/db/manager_coupons_and_sales/version.py
+## \file ./src/db/manager_coupons_and_sales/version.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ @namespace src.db.manager_coupons_and_sales """
 # /path/to/interpreter/python
 """

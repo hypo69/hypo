@@ -1,7 +1,8 @@
+## \file ./src/suppliers/aliexpress/_experiments/alirequests.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
-## \file /src/suppliers/aliexpress/_experiments/alirequests.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import header   
 

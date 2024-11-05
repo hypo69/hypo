@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Facebook"""
-
-## \file /src/endpoints/advertisement/__init__.py
+## \file ./src/endpoints/advertisement/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Facebook"""
+
 # /path/to/interpreter/python
 
 from packaging.version import Version

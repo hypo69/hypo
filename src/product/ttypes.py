@@ -1,5 +1,7 @@
+## \file ./src/product/ttypes.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/product/ttypes.py
 """ Определение типa `product` """
 from typing import TypedDict, Optional
 

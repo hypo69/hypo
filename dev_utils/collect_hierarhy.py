@@ -1,4 +1,6 @@
-## \file ../src/utils/create_build.py
+## \file ./dev_utils/collect_hierarhy.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 """Этот код выполняет следующую задачу:
 
 1. **Описание функциональности**:

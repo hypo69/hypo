@@ -1,8 +1,9 @@
-#! /usr/bin/python
-﻿""" Примеры создания рекламной кампании """
-
-## \file /src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
+## \file ./src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
+""" Примеры создания рекламной кампании """
+
 # /path/to/interpreter/python
 
 ...

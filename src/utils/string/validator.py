@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/string/validator.py
-## \file /src/utils/string/validator.py
+## \file ./src/utils/string/validator.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """  
  Модуль валидации строк

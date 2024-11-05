@@ -1,9 +1,10 @@
+## \file ./src/webdriver/javascript/__init__.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿"""  Модуль Javasript
+"""  Модуль Javasript
 Выполнает операции javasript для драйвера
 """
-## \file /src/webdriver/javascript/__init__.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from packaging.version import Version

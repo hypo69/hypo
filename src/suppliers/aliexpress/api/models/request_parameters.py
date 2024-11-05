@@ -1,6 +1,7 @@
+## \file ./src/suppliers/aliexpress/api/models/request_parameters.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/aliexpress/api/models/request_parameters.py
-## \file src/suppliers/aliexpress/api/models/request_parameters.py
 class ProductType:
     ALL = 'ALL'
     PLAZA = 'PLAZA'

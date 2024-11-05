@@ -1,6 +1,7 @@
+## \file ./src/suppliers/hb/_experiments/ide_experiments_grabber.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/hb/_experiments/ide_experiments_grabber.py
-## \file src/suppliers/hb/_experiments/ide_experiments_grabber.py
 """  Проверки исполнения сценариев HB.
 проверки:
 - получить заполненный словарь product_fields

@@ -1,6 +1,7 @@
+## \file ./src/db/manager_translations/_experiments/ProductTranslationsManager.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/db/manager_translations/_experiments/ProductTranslationsManager.py
-## \file src/db/manager_translations/_experiments/ProductTranslationsManager.py
 
 """ @namespace src.db.manager_translations._experiments """
 from sqlalchemy import create_engine, Column, String, Text

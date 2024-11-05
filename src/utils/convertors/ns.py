@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/utils/convertors/ns.py
+## \file ./src/utils/convertors/ns.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """
 Module to convert SimpleNamespace (ns) into various formats: dict, JSON, CSV, XML, and XLS.

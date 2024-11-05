@@ -1,5 +1,7 @@
+## \file ./src/endpoints/bots/openai_bots/telegram_bot_trainger.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/bots/openai_bots/telegram_bot_trainger.py
 """ This script creates a simple Telegram bot using the python-telegram-bot library."""
 
 from pathlib import Path

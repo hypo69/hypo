@@ -1,5 +1,8 @@
+## \file ./src/translators/product_translator.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿
+
 """ Модуль управления переводами.
 Слой связи между словарем полей товара, таблицей переводов и переводчиками
 
@@ -12,8 +15,6 @@
 @todo
     1. Продумать какой нибудж парсер для en_EN, he_HE, ru-RU
 """
-## \file /src/translators/product_translator.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...
 

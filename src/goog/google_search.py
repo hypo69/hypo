@@ -1,5 +1,7 @@
+## \file ./src/goog/google_search.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿## \file src/google/google_search.py
 """ @namespace src.google """
 """  Пример парсера поискового запроса Гугл
 
@@ -9,8 +11,6 @@
 
 """
 
-## \file /src/goog/google_search.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 

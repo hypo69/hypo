@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/_experiments/suppliers/hb_get_site_structure.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/_experiments/suppliers/hb_get_site_structure.py
-## \file src/prestashop/_experiments/suppliers/hb_get_site_structure.py
 """  [File's Description]
 
  @section libs imports:

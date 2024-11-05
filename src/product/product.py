@@ -1,10 +1,11 @@
+## \file ./src/product/product.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿"""  Class `Product`. Interaction between website, product, and PrestaShop.
+"""  Class `Product`. Interaction between website, product, and PrestaShop.
 @details Defines the behavior of a product in the project.
 """
 
-## \file /src/product/product.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from src import gs

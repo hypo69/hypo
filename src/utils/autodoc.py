@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/utils/autodoc.py
+## \file ./src/utils/autodoc.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ HERE MUST BE DESCRIPTION OF MODULE """
 import functools

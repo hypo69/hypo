@@ -1,9 +1,10 @@
+## \file ./src/endpoints/advertisement/facebook/scenarios/switch_account.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" Переключение на аккунт. 
+""" Переключение на аккунт. 
 Если есть кнопка `Переключить` - нажимаю её """
 
-## \file /src/endpoints/advertisement/facebook/scenarios/switch_account.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 ...

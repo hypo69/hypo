@@ -1,6 +1,7 @@
+## \file ./src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
-## \file src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
 import header
 from header import Product, ProductFields, start_supplier
 s = start_supplier('kualastyle')

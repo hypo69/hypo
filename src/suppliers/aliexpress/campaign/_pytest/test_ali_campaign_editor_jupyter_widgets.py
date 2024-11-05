@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/suppliers/aliexpress/campaign/_pytest/test_ali_campaign_editor_jupyter_widgets.py
+## \file ./src/suppliers/aliexpress/campaign/_pytest/test_ali_campaign_editor_jupyter_widgets.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ file.py tests """
 

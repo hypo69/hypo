@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/webdriver/driver.py
+## \file ./src/webdriver/driver.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """ `WebDriver` 
 @code

@@ -1,3 +1,6 @@
+## \file ./dev_utils/file_counter.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 import os
 import sys
 from pathlib import Path

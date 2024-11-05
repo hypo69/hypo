@@ -1,5 +1,8 @@
+## \file ./src/suppliers/aliexpress/alirequests.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" AliExpress requests handling.
+""" AliExpress requests handling.
 alirequests.py
 │
 ├── pickle
@@ -32,8 +35,6 @@ alirequests.py
     ├── Supplier.__init__()
 
 """
-## \file /src/suppliers/aliexpress/alirequests.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import pickle
 import requests

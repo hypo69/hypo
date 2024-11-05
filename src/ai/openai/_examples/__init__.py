@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/openai/__init__.py
-## \file /src/ai/openai/_examples/__init__.py
+## \file ./src/ai/openai/_examples/__init__.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 ...
 

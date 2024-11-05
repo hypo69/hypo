@@ -1,5 +1,6 @@
-﻿## \file header.py
+## \file ./header.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 # /path/to/interpreter/python
 """! Module to set the project root path """
 import json

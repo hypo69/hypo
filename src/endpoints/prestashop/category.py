@@ -1,5 +1,8 @@
+## \file ./src/endpoints/prestashop/category.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-﻿""" Class of product category in `Prestashop`
+""" Class of product category in `Prestashop`
 The class provides methods for adding, deleting, updating categories, 
 as well as obtaining a list of parent categories from a given one.
 
@@ -11,8 +14,6 @@ Product binding to category is described in supplier scenarios
 @image html categories_tree.png 
 """
 ...
-## \file /src/endpoints/prestashop/category.py
-# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...
 import requests

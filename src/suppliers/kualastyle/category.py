@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/suppliers/kualastyle/category.py
-## \file /src/suppliers/kualastyle/category.py
+## \file ./src/suppliers/kualastyle/category.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """  Модуль сбора товаров со страницы категорий поставщика hb.co.il через вебдрайвер
 У каждого поставщика свой сценарий обреботки категорий

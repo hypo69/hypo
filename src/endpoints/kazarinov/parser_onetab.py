@@ -1,6 +1,7 @@
-#! /usr/bin/python
-## \file /src/endpoints/kazarinov/parser_onetab.py
+## \file ./src/endpoints/kazarinov/parser_onetab.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 #! /usr/share/projects/hypotez/venv/scripts python
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 

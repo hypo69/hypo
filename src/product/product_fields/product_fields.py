@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/product/product_fields/product_fields.py
-## \file /src/product/product_fields/product_fields.py
+## \file ./src/product/product_fields/product_fields.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """    <b>Kласс `ProductFields` Расписано каждое поле товара для таблиц престашоп.</b> 
  langdetect в Python используется для определения языка текста. Он основан на библиотеке language-detection, 

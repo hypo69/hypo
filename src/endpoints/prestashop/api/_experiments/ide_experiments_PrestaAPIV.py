@@ -1,6 +1,7 @@
+## \file ./src/endpoints/prestashop/api/_experiments/ide_experiments_PrestaAPIV.py
+# -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 #! /usr/bin/python
-## \file /src/endpoints/prestashop/api/_experiments/ide_experiments_PrestaAPIV.py
-## \file src/prestashop/api/_experiments/ide_experiments_PrestaAPIV.py
 """  Прослойка между разными вериями модулей взаимммодействия с престашоп 
 Есть проблемы с аутентификацией на сайте клиента. Вполне возможно, 
 что это связано с настройками PHP. В восьмой версии (e-cat.co.il) я получаю 401

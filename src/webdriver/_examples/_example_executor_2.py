@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/webdriver/_examples/_example_executor_2.py
-## \file /src/webdriver/_examples/_example_executor_2.py
+## \file ./src/webdriver/_examples/_example_executor_2.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ Примеры использования класса `ExecuteLocator` для различных сценариев тестирования.
 @details В этом файле приведены примеры создания экземпляра `ExecuteLocator` и выполнения различных задач с его помощью.
 """

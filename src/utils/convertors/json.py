@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/utils/convertors/json.py
-## \file /src/utils/convertors/json.py
+## \file ./src/utils/convertors/json.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 # /path/to/interpreter/python
 """
 Module to convert JSON data into various formats: CSV, SimpleNamespace, XML, and XLS.

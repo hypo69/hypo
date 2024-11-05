@@ -1,7 +1,7 @@
-#! /usr/bin/python
-﻿## \file src/advertisement/facebook/scenarios/login.py
-## \file /src/endpoints/advertisement/facebook/scenarios/login.py
+## \file ./src/endpoints/advertisement/facebook/scenarios/login.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
+#! /usr/bin/python
 """ Facebook login scenario """
 
 from pathlib import Path
