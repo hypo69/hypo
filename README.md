@@ -117,22 +117,20 @@ Here's a brief overview of each software tool or library located in the bin fold
 2. **Download the `bin` directory**:
    [Download bin directory](https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo)
    - Unzip the downloaded compressed file into the `hypotez` folder .
-	- Here’s the translation and adjustment for clarity:
 
-Make sure to **unzip directly into the project folder**, similar to selecting "Extract Here" in a context menu. The archive already contains a `bin` folder with all necessary binaries, so unzipping it in the project root will place everything in the correct directory structure automatically.
-   - Your directory structure should look like this:
-   ```
-   hypotez
-   └─ bin
-      ├─ wkhtmltopdf
-      ├─ ffmpeg
-      ├─ graphviz
-      ├─ gtk
-      ├─ keepass-2.55
-      └─ webdrivers
-   ``` 
+		Make sure to **unzip directly into the project folder**, similar to selecting "Extract Here" in a context menu. The archive already contains a `bin` folder with all necessary binaries, so unzipping it in the project root will place everything in the correct directory structure automatically.
+		   - Your directory structure should look like this:
+		   ```
+		   hypotez
+		   └─ bin
+			  ├─ wkhtmltopdf
+			  ├─ ffmpeg
+			  ├─ graphviz
+			  ├─ gtk
+			  ├─ keepass-2.55
+			  └─ webdrivers
+		   ``` 
 
-Let me know if you'd like further adjustments!
 	- - Easy Way to continue installation: 								
 	Execute the install script `.\INSTALL.PS1`.
 
