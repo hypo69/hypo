@@ -195,5 +195,7 @@ password.txt
 *.kdbx
 ___*.*
 
-
--
+# Sphinx .rst files
+*.rst
+*.doctree
+_build/

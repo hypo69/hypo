@@ -20,4 +20,4 @@ Get-ChildItem -Filter *.rst | Where-Object { $_.Name -ne "index.rst" } | ForEach
 Set-Location -Path "../.."
 
 # Создание HTML-документации с явным указанием пути к conf.py
-sphinx-build -b html -c docs/conf docs/sphinx docs/sphinx/_build/html
+sphinx-build -b html -c docs/ docs/sphinx docs/sphinx/_build/html

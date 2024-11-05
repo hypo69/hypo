@@ -29,7 +29,7 @@ sphinx:
 # See https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
 python:
   install:
-    - requirements: docs/requirements.txt  # Path to your requirements file
+    - requirements: docs/requirements  # Path to your requirements file
 
 # Make sure your requirements.txt includes necessary packages
 # such as sphinx and sphinx_rtd_theme:
