@@ -117,50 +117,50 @@ Here's a brief overview of each software tool or library located in the bin fold
    [Download bin directory](https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo)
    - Unzip into the `hypotez` folder (`hypotez/bin`).
 	
-	#### Easy Way 								
+	- - Easy Way to continue installation: 								
 	Execute the install script `.\INSTALL.PS1`.
 
     The script will guide you through the steps to set up hypotez efficiently. After completion, continue to the Configuration section below to add your credentials and any other specific settings.
 
-Continue to manual install:
+3. Continue to manual install:
 
-3. **Set execution policy**:
+4. **Set execution policy**:
    ```powershell
    Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
    ```
 
-4. **Create a virtual environment**:
+5. **Create a virtual environment**:
    ```powershell
    python -m venv venv
    ```
 
-5. **Activate the virtual environment**:
+6. **Activate the virtual environment**:
    ```powershell
    venv\Scripts\Activate.ps1
    ```
 
-6. **Upgrade `pip`**:
+7. **Upgrade `pip`**:
    ```powershell
    pip install --upgrade pip setuptools wheel
    ```
 
-7. **Install dependencies**:
+8. **Install dependencies**:
    ```powershell
    pip install -r requirements.txt --ignore-installed
    ```
 
-8. **Install npm and web-ext**:
+9. **Install npm and web-ext**:
 	```powershell
 	npm install -g npm
 	npm install -g web-ext
 	```
 
-9. **Install Jupyter Lab extensions**:
+10. **Install Jupyter Lab extensions**:
 	```powershell
 	jupyter labextension install @jupyter-widgets/jupyterlab-manager
 	```
 
-10. **Install Playwright**:
+11. **Install Playwright**:
 	```powershell
 	playwright install
 	```
