@@ -117,7 +117,7 @@ Here's a brief overview of each software tool or library located in the bin fold
    [Download bin directory](https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo)
    - Unzip into the `hypotez` folder (`hypotez/bin`).
 	
-	### Easy Way 								
+	#### Easy Way 								
 	Execute the install script `.\INSTALL.PS1`.
 
     The script will guide you through the steps to set up hypotez efficiently. After completion, continue to the Configuration section below to add your credentials and any other specific settings.
