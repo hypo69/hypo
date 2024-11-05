@@ -74,5 +74,6 @@ from .tts import (
                     speech_recognizer, 
                     text2speech,
                 )
+from .dot import dot2png
 
 

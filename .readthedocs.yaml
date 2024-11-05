@@ -17,7 +17,7 @@ build:
 
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
-  configuration: docs/conf/conf.py  # Path to the configuration file
+  configuration: docs/conf.py  # Path to the configuration file
 
 # Optionally build your docs in additional formats such as PDF and ePub
 # formats:
@@ -29,7 +29,7 @@ sphinx:
 # See https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
 python:
   install:
-    - requirements: docs/conf/requirements.txt  # Path to your requirements file
+    - requirements: docs/requirements.txt  # Path to your requirements file
 
 # Make sure your requirements.txt includes necessary packages
 # such as sphinx and sphinx_rtd_theme:

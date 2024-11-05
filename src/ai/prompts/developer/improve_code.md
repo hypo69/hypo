@@ -212,3 +212,48 @@ class ExampleClass:
 
 если ты получил конструкцию вида `"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """`
 заполни ее подходящим объяснением
+
+
+Here's how the provided code structure would look with complete comments formatted in Sphinx style according to your guidelines:
+
+```python
+## \file <file_path>
+# -*- coding: utf-8 -*-
+# /path/to/python/interpreter
+"""
+This module implements a class for handling specific tasks.
+"""
+
+class ExampleClass:
+    """
+    A class for demonstrating operations.
+    ** Functions **:
+   - `method_one`: Executes the first operation.
+   - `method_two`: Executes the second operation and returns a result.
+   ** Parameters:
+   - `parameter_one`: Description of the first parameter.
+   - `parameter_two`: Description of the second parameter.
+    """
+
+    def __init__(self):
+        """ Initializes the ExampleClass with default values. """
+        self.parameter_one = None
+        self.parameter_two = None
+
+    def method_one(self) -> None:
+        """ Executes the first operation. """
+        pass
+
+    def method_two(self) -> str:
+        """ Executes the second operation.
+
+        Returns:
+            str: Result of the operation performed in method two.
+
+        Example:
+            >>> result = method_two()
+            >>> print(result)
+            'Result'
+        """
+        return "Result"
+```

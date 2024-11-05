@@ -1,8 +1,8 @@
 # Генерация документации с помощью sphinx-apidoc
-sphinx-apidoc -o docs src --force --separate
+sphinx-apidoc -o docs/sphinx src --force --separate
 
-# Переходим в директорию docs
-Set-Location -Path "docs"
+# Переходим в директорию docs/sphinx
+Set-Location -Path "docs/sphinx"
 
 # Перезаписываем index.rst, добавляя базовые директивы
 @"
@@ -17,7 +17,7 @@ Get-ChildItem -Filter *.rst | Where-Object { $_.Name -ne "index.rst" } | ForEach
 }
 
 # Возвращаемся в корневую директорию проекта
-Set-Location -Path ".."
+Set-Location -Path "../.."
 
-# Создание HTML-документации
-sphinx-build -b html docs docs/_build/html
+# Создание HTML-документации с явным указанием пути к conf.py
+sphinx-build -b html -c docs/conf docs/sphinx docs/sphinx/_build/html

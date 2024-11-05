@@ -23,6 +23,7 @@ from .convertors import (
     dict2ns,
     dict2xls,
     dict2xml,
+    dot2png,
     escape2html,
     html2dict,
     html2escape,
