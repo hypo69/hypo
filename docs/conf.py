@@ -2,11 +2,6 @@ import json
 import os
 import sys
 import fnmatch
-import os
-import sys
-
-#sys.path.insert(0, os.path.abspath('..'))  # Adjust path if needed
-
 
 # -----------------------------------------------------------------------------------
 # Загрузка данных проекта из файла settings.json
@@ -76,10 +71,10 @@ def skip_files(app, what, name, obj, skip, options):
     Returns:
         bool: True, если член должен быть пропущен; иначе возвращает значение `skip`
     """
-    # Проверяем, соответствует ли имя файла шаблону с круглыми скобками
-    if fnmatch.fnmatch(name, '*(*).*'):
+    # Проверяем, содержит ли имя члена круглые скобки или соответствует другим шаблонам
+    if fnmatch.fnmatch(name, '*(*.*)') or fnmatch.fnmatch(name, '*(*).*'):
         return True  # Пропускаем этот член документации
-    return skip       # Возвращаем исходное решение Sphinx о пропуске
+    return skip  # Возвращаем исходное решение Sphinx о пропуске
 
 # -----------------------------------------------------------------------------------
 # Подключение функции игнорирования к событию Sphinx
