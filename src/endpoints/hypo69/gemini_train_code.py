@@ -1,5 +1,6 @@
-## \file ..
+## \file ./src/endpoints/hypo69/gemini_train_code.py
 # -*- coding: utf-8 -*-
+#! /venv/Scripts/python.exe
 # /path/to/interpreter/python
 """ HERE MUST BE DESCRIPTION OF MODULE 
 https://stackoverflow.com/questions/78382534/googlegenerativeaierror-error-embedding-contentmodels-embeddings-001-is-not-fo

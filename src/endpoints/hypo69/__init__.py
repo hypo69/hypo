@@ -1,4 +1,4 @@
-## \file ./src/endpoints/__init__.py
+## \file ./src/endpoints/hypo69/__init__.py
 # -*- coding: utf-8 -*-
 #! /venv/Scripts/python.exe
 #! /usr/bin/python
