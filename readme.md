@@ -113,10 +113,13 @@ Here's a brief overview of each software tool or library located in the bin fold
    ```
    - Navigate to the `hypotez` directory.
 
-2. **Download and set up the `bin` directory**:
+
+2. **Download the `bin` directory**:
    [Download bin directory](https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo)
-   - Unzip into the `hypotez` folder (`hypotez/bin`).
-	
+   - Unzip the downloaded compressed file into the `hypotez` folder .
+
+	Make sure to **unzip directly into the project folder**, similar to selecting "Extract Here" in a context menu. The archive already contains a `bin` folder with all necessary binaries, so unzipping it in the project root will place everything in the correct directory structure automatically.
+		- Your directory structure should look like this:<img src="dia/bin.png">
 	- - Easy Way to continue installation: 								
 	Execute the install script `.\INSTALL.PS1`.
 
