@@ -71,19 +71,35 @@ Furthermore, a parser and scraper are built into the project for data gathering 
 ## Setup Instructions
 
 ### Required Software (Pre-installed on your computer)
+Here’s the list of required, pre-installed software for the project:
 
-1. **Web Browsers**: `Firefox`, `Chrome`, and/or `Edge`.
-2. **PowerShell**: Command-line shell for task automation (for `Windows`).
-3. **Python 3.12**: Required version of Python.
+1. **Web Browsers**: One or more of the following:
+   - **Firefox**
+   - **Chrome**
+   - **Edge**
+   These are used in conjunction with browser drivers (in the `bin` folder) for testing and automation purposes.
 
-### Software Used in the Project (No Installation Required, Located in the `bin` Folder)
+2. **PowerShell**: A task automation and configuration management framework from Microsoft, essential for executing scripts and managing workflows, especially in Windows environments.
 
-- **`ffmpeg.exe`**: Tool for multimedia file processing.
-- **`chrome drivers`**: Drivers for Google Chrome.
-- **`chrome for developers`**: Developer version of Chrome.
-- **`geckodriver`**: Driver for Firefox.
-- **`edge drivers`**: Drivers for Microsoft Edge.
-- **`gtk`**: Toolkit for GUI development.
+3. **Python 3.12**: This specific version of Python is required for the project, likely due to compatibility with certain libraries or dependencies.
+
+4. **`npm`**: Node Package Manager for managing JavaScript project dependencies, allowing installation, updating, and managing of libraries and development tools.
+
+# Software tools and library located in the `bin` folder:
+Here's a brief overview of each software tool or library located in the bin folder:
+
+1. **`ffmpeg.exe`**: A comprehensive tool for handling multimedia files. It's commonly used for video and audio encoding, decoding, transcoding, and streaming. It supports many formats and can convert media files, apply filters, and modify encoding settings.
+
+2. **`chrome drivers`**: Web drivers for controlling the Google Chrome browser, mainly used for automated browser testing. These are often integrated into testing frameworks like Selenium for simulating browser interactions.
+
+3. **`chrome for developers`**: This is a version of Google Chrome specifically for developers, often including beta or experimental features. It's useful for web development testing and debugging in real-world browser environments.
+
+4. **`geckodriver`**: A driver for Mozilla Firefox, used to control Firefox in automated testing scenarios. It enables interaction with the Firefox browser through automation tools, allowing for cross-browser testing in conjunction with other drivers.
+
+5. **`edge drivers`**: Drivers for Microsoft Edge browser control, useful in automated testing environments, similar to Chrome and Firefox drivers. It's part of Microsoft's WebDriver toolset and allows testing web applications in the Edge browser.
+
+6. **`gtk`**: The GIMP Toolkit, a library for developing graphical user interfaces. Widely used in Linux applications, it provides a collection of controls and widgets for creating windows, buttons, and other interface elements.
+
 
 ### Installation Steps
 

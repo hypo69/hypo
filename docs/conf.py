@@ -5,11 +5,11 @@ import fnmatch
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('..'))  # Adjust path if needed
+#sys.path.insert(0, os.path.abspath('..'))  # Adjust path if needed
 
 
 # -----------------------------------------------------------------------------------
-# Загрузка имени проекта из файла settings.json
+# Загрузка данных проекта из файла settings.json
 # -----------------------------------------------------------------------------------
 try:
     # Открываем файл settings.json в режиме чтения

@@ -1,5 +1,5 @@
 ## \file ../src/logger/exceptions.py
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Program Exceptions """
 from typing import Optional

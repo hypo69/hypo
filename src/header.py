@@ -1,21 +1,15 @@
-﻿## \file header.py
-## \file ../src/header.py
+﻿## \file ../src/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
-"""! Absolute path to modules and GTK & FFPMEG bin directory """
 
-import json
-import sys
 from pathlib import Path
+import sys
 
-# Load the project name from settings.json
-with open('settings.json', 'r') as settings_file:
-    settings = json.load(settings_file)
-    project_name = settings.get("project_name", "hypotez")  
+__root__ = Path('..').resolve()  # Получаем абсолютный путь к текущей директории
 
-# Define the root path of the project
-__root__: Path = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
-sys.path.append(str(__root__))
+if str(__root__) not in sys.path:
+    sys.path.insert(0, str(__root__)) 
+
 
 # Paths to bin directories
 gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
@@ -32,8 +26,7 @@ for bin_path in paths_to_add:
 
 # Set the variable for WeasyPrint
 sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES"
-if sys_path_env_var not in sys.path:
-    sys.path.insert(0, str(gtk_bin_path))
+
 
 """Suppress GTK log output to the console"""
 import warnings
