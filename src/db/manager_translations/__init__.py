@@ -1,6 +1,7 @@
+#! /usr/bin/python
 ﻿""" Менеджер переводов """
 ...
-## \file ../src/db/manager_translations/__init__.py
+## \file /src/db/manager_translations/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

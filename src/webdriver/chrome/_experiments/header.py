@@ -1,5 +1,6 @@
+#! /usr/bin/python
 """ Установкя кораня проекта в системный путь """
-## \file ../src/webdriver/chrome/_experiments/header.py
+## \file /src/webdriver/chrome/_experiments/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import sys,os

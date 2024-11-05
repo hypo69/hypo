@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/campaign/ali_promo_campaign.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/campaign/ali_promo_campaign.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

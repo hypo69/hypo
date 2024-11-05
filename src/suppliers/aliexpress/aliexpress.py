@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿""" Base class for the supplier. 
 This class inherits from `Supplier`.
 It allows interaction with AliExpress in three ways:
@@ -15,7 +16,7 @@ Examples:
     @endcode
 """
 
-## \file ../src/suppliers/aliexpress/aliexpress.py
+## \file /src/suppliers/aliexpress/aliexpress.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

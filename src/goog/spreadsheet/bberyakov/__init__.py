@@ -1,4 +1,5 @@
-## \file ../src/goog/spreadsheet/bberyakov/__init__.py
+#! /usr/bin/python
+## \file /src/goog/spreadsheet/bberyakov/__init__.py
 ## \file src/utils/interface/goog/__init__.py
 """  Google tables manipulation
 

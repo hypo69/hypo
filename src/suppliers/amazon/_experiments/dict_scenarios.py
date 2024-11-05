@@ -1,4 +1,5 @@
-## \file ../src/suppliers/amazon/_experiments/dict_scenarios.py
+#! /usr/bin/python
+## \file /src/suppliers/amazon/_experiments/dict_scenarios.py
 ## \file src/suppliers/amazon/_experiments/dict_scenarios.py
 scenario: dict = {
     "Apple Wathes": {

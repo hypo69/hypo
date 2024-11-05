@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/webdriver/__init__.py
-## \file ../src/webdriver/__init__.py
+## \file /src/webdriver/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Модуль вебдрайвера

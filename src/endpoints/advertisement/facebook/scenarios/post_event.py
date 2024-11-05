@@ -1,4 +1,5 @@
-## \file ../src/endpoints/advertisement/facebook/scenarios/post_event.py
+#! /usr/bin/python
+## \file /src/endpoints/advertisement/facebook/scenarios/post_event.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Публикация календарного события v группах фейсбук"""

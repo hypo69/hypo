@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/bangood/version.py
-## \file ../src/suppliers/cdata/version.py
+## \file /src/suppliers/cdata/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/prestashop/api/version.py
-## \file ../src/endpoints/prestashop/api/version.py
+## \file /src/endpoints/prestashop/api/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

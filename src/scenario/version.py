@@ -1,4 +1,5 @@
-## \file ../src/scenario/version.py
+#! /usr/bin/python
+## \file /src/scenario/version.py
 import json
 
 settings:dict = None

@@ -1,4 +1,5 @@
-## \file ../src/webdriver/_experiments/IDE_experiments_driver.py
+#! /usr/bin/python
+## \file /src/webdriver/_experiments/IDE_experiments_driver.py
 ## \file src/webdriver/_experiments/IDE_experiments_driver.py
 import sys, os
 from pathlib import Path

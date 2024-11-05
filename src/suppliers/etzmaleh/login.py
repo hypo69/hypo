@@ -1,9 +1,10 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/etzmaleh/login.py
 """   Интерфейс авторизации. Реализация для вебдрайвера
 
 @image html login.png
 """
-## \file ../src/suppliers/etzmaleh/login.py
+## \file /src/suppliers/etzmaleh/login.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/morlevi/__morlevi__.py
 """    Supplier: morlevi
 
@@ -20,7 +21,7 @@ Author(s):
   - Created by [Name] [Last Name] on 07.11.2023 .
 """
 
-## \file ../src/suppliers/ivory/__morlevi__.py
+## \file /src/suppliers/ivory/__morlevi__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/aliexpress/category.py
-## \file ../src/suppliers/aliexpress/category.py
+## \file /src/suppliers/aliexpress/category.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ управление категориями поставщиика """

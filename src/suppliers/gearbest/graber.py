@@ -1,4 +1,5 @@
-## \file ../src/suppliers/gearbest/graber.py
+#! /usr/bin/python
+## \file /src/suppliers/gearbest/graber.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 

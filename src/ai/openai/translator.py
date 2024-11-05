@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿""" Переводчик 
 @code
 # Пример использования функции
@@ -9,7 +10,7 @@ print(f"Translated text: {translation}")
 @endcode
 """
 
-## \file ../src/ai/openai/translator.py
+## \file /src/ai/openai/translator.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

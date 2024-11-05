@@ -1,4 +1,5 @@
-## \file ../src/goog/drive/drive.py
+#! /usr/bin/python
+## \file /src/goog/drive/drive.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Minimal library for working with Google Drive.

@@ -1,9 +1,10 @@
+#! /usr/bin/python
 ﻿""" модули управления рекламной кампанией Aliexpress:
 
  
 """
 ...
-## \file ../src/suppliers/aliexpress/utils/__init__.py
+## \file /src/suppliers/aliexpress/utils/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

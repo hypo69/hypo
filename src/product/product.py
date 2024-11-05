@@ -1,8 +1,9 @@
+#! /usr/bin/python
 ﻿"""  Class `Product`. Interaction between website, product, and PrestaShop.
 @details Defines the behavior of a product in the project.
 """
 
-## \file ../src/product/product.py
+## \file /src/product/product.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

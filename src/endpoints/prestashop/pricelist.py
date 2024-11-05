@@ -1,4 +1,5 @@
-## \file ../src/endpoints/prestashop/pricelist.py
+#! /usr/bin/python
+## \file /src/endpoints/prestashop/pricelist.py
 ## \file src/prestashop/pricelist.py
 import sys
 import os

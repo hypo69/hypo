@@ -1,6 +1,7 @@
+#! /usr/bin/python
 ﻿""" Обёртка для Хрома """
 ...
-## \file ../src/webdriver/chrome/__init__.py
+## \file /src/webdriver/chrome/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

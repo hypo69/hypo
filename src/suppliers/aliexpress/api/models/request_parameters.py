@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/models/request_parameters.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/models/request_parameters.py
 ## \file src/suppliers/aliexpress/api/models/request_parameters.py
 class ProductType:
     ALL = 'ALL'

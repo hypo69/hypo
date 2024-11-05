@@ -1,4 +1,5 @@
-## \file ../src/webdriver/executor.py
+#! /usr/bin/python
+## \file /src/webdriver/executor.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

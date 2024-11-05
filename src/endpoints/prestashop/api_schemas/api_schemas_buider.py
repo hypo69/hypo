@@ -1,3 +1,4 @@
-## \file ../src/endpoints/prestashop/api_schemas/api_schemas_buider.py
+#! /usr/bin/python
+## \file /src/endpoints/prestashop/api_schemas/api_schemas_buider.py
 ## \file src/prestashop/api_schemas/api_schemas_buider.py
 

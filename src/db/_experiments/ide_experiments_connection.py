@@ -1,4 +1,5 @@
-## \file ../src/db/_experiments/ide_experiments_connection.py
+#! /usr/bin/python
+## \file /src/db/_experiments/ide_experiments_connection.py
 ## \file src/db/_experiments/ide_experiments_connection.py
 """ @namespace src.db._experiments """
 import header

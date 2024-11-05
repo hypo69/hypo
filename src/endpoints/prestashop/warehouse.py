@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/prestashop/warehouse.py
-## \file ../src/endpoints/prestashop/warehouse.py
+## \file /src/endpoints/prestashop/warehouse.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Класс склада (warwehouse) `Prestashop`"""

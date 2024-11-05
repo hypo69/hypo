@@ -1,4 +1,5 @@
-## \file ../src/endpoints/prestashop/_experiments/suppliers/hb/test_4_lxml_get_unique_links.py
+#! /usr/bin/python
+## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_4_lxml_get_unique_links.py
 ## \file src/prestashop/_experiments/suppliers/hb/test_4_lxml_get_unique_links.py
 import requests
 import re

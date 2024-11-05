@@ -1,4 +1,5 @@
-## \file ../src/ai/version.py
+#! /usr/bin/python
+## \file /src/ai/version.py
 import json
 
 settings:dict = None

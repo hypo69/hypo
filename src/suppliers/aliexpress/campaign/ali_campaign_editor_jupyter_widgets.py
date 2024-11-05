@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/campaign/ali_campaign_editor_jupyter_widgets.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/campaign/ali_campaign_editor_jupyter_widgets.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Jupyter widgets for the AliExpress campaign editor.

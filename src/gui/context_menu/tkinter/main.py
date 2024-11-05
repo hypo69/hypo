@@ -1,4 +1,5 @@
-## \file ../src/gui/context_menu/tkinter/main.py
+#! /usr/bin/python
+## \file /src/gui/context_menu/tkinter/main.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """Module to add or remove context menu items for the desktop and folder background.

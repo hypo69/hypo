@@ -1,4 +1,5 @@
-## \file ../src/suppliers/chat_gpt/conversations.py
+#! /usr/bin/python
+## \file /src/suppliers/chat_gpt/conversations.py
 
 import re
 import argparse

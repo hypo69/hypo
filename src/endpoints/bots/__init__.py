@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/bots/__init__.py
-## \file ../src/endpoints/bots/__init__.py
+## \file /src/endpoints/bots/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

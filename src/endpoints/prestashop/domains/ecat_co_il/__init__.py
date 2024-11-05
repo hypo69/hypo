@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿## \file src/prestashop/domains/ecat_co_il/__init__.py
 """    Client's websites
 @namespace src: pestashop.domains
@@ -7,6 +8,6 @@ Author(s):
   - Created by [Name] [Last Name] on 07.11.2023 .
 """
 
-## \file ../src/endpoints/prestashop/domains/ecat_co_il/__init__.py
+## \file /src/endpoints/prestashop/domains/ecat_co_il/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/pythonn

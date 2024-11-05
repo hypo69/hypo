@@ -1,6 +1,7 @@
+#! /usr/bin/python
 ﻿""" Модуль управления моделью OpenAI 
 """
-## \file ../src/suppliers/chat_gpt/header.py
+## \file /src/suppliers/chat_gpt/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

@@ -1,9 +1,10 @@
+#! /usr/bin/python
 ﻿## \file src/prestashop/_experiments/categories/category.py
 """  Работа с категориями товара 
 
 """
 
-## \file ../src/endpoints/prestashop/_experiments/categories/category.py
+## \file /src/endpoints/prestashop/_experiments/categories/category.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

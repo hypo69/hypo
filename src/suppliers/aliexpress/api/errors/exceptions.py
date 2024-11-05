@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/errors/exceptions.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/errors/exceptions.py
 ## \file src/suppliers/aliexpress/api/errors/exceptions.py
 """Custom exceptions module"""
 

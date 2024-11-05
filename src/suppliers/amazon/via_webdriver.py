@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/amazon/via_webdriver.py
 """  Модуль сбора товаров со страницы категорий поставщика aliexpress.com через вебдрайвер
 
@@ -13,7 +14,7 @@
 
 """
 
-## \file ../src/suppliers/amazon/via_webdriver.py
+## \file /src/suppliers/amazon/via_webdriver.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

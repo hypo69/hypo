@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/aliexpress/campaign/_experiments/prepare_campaign.py
-## \file ../src/suppliers/aliexpress/campaign/_experiments/prepare_all_campaigns.py
+## \file /src/suppliers/aliexpress/campaign/_experiments/prepare_all_campaigns.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Прогоняет все рекламные кампании для всех языков с поиском названий категорий из директорий """

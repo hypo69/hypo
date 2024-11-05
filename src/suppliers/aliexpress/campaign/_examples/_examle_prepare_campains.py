@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
 ## \file src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
 from ..prepare_campaigns import *
 

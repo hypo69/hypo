@@ -1,4 +1,5 @@
-## \file ../src/fast_api/openai.py
+#! /usr/bin/python
+## \file /src/fast_api/openai.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

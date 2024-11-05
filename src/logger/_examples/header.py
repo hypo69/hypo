@@ -1,4 +1,5 @@
-## \file ../src/logger/_examples/header.py
+#! /usr/bin/python
+## \file /src/logger/_examples/header.py
 ## \file src/logger/_examples/header.py
 import sys
 import os

@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/visualdg/__visualdg__.py
 """    Supplier: visualdg.co.il
 
@@ -14,7 +15,7 @@ Author(s):
   - Created by [Name] [Last Name] on 07.11.2023 .
 """
 
-## \file ../src/suppliers/visualdg/__visualdg__.py
+## \file /src/suppliers/visualdg/__visualdg__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

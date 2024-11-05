@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/utils/string/html_escapes.py
-## \file ../src/utils/string/html_escapes.py
+## \file /src/utils/string/html_escapes.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """    dictionary {UTF-8 : HTML ESCAPE}

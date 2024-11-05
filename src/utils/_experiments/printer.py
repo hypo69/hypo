@@ -1,4 +1,5 @@
-## \file ../src/utils/_experiments/printer.py
+#! /usr/bin/python
+## \file /src/utils/_experiments/printer.py
 # @title # function code
 
 import json

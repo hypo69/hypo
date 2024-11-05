@@ -1,4 +1,5 @@
-## \file ../src/endpoints/kazarinov/gemini_chat.py
+#! /usr/bin/python
+## \file /src/endpoints/kazarinov/gemini_chat.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ 

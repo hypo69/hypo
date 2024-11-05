@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/openai/__init__.py
-## \file ../src/ai/openai/_examples/__init__.py
+## \file /src/ai/openai/_examples/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

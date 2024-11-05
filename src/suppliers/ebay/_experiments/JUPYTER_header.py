@@ -1,4 +1,5 @@
-## \file ../src/suppliers/ebay/_experiments/JUPYTER_header.py
+#! /usr/bin/python
+## \file /src/suppliers/ebay/_experiments/JUPYTER_header.py
 ## \file src/suppliers/ebay/_experiments/JUPYTER_header.py
 import sys
 import os

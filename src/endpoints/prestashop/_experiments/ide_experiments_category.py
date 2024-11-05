@@ -1,4 +1,5 @@
-## \file ../src/endpoints/prestashop/_experiments/ide_experiments_category.py
+#! /usr/bin/python
+## \file /src/endpoints/prestashop/_experiments/ide_experiments_category.py
 ## \file src/prestashop/_experiments/ide_experiments_category.py
 import ide_header
 from ide_header import  gs

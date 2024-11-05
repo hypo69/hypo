@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/prestashop/supplier.py
-## \file ../src/endpoints/prestashop/supplier.py
+## \file /src/endpoints/prestashop/supplier.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ @namespace src.pestashop 

@@ -1,4 +1,5 @@
-## \file ../src/webdriver/edge/_experiments/edge.py
+#! /usr/bin/python
+## \file /src/webdriver/edge/_experiments/edge.py
 ## \file src/webdriver/edge/_experiments/edge.py
 from pathlib import Path
 import os

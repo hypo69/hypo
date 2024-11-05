@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/webdriver/_pytest/test_driver.py
-## \file ../src/webdriver/_pytest/test_driver.py
+## \file /src/webdriver/_pytest/test_driver.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ тестовый файл test_driver.py включает тесты для следующих методов класса DriverBase:

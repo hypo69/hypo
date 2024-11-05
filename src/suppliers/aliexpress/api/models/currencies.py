@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/models/currencies.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/models/currencies.py
 ## \file src/suppliers/aliexpress/api/models/currencies.py
 class Currency:
     USD = 'USD'

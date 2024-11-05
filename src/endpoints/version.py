@@ -1,4 +1,5 @@
-## \file ../src/endpoints/version.py
+#! /usr/bin/python
+## \file /src/endpoints/version.py
 import json
 
 settings:dict = None

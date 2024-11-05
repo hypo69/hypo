@@ -1,4 +1,5 @@
-## \file src/utils/convertors/dot.py
+#! /usr/bin/python
+## \file /src/utils/convertors/dot.py
 # -*- coding: utf-8 -*-
 #! /usr/bin/env python3
 """

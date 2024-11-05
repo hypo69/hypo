@@ -1,5 +1,6 @@
+#! /usr/bin/python
 """ Google TTS """
-## \file ../src/goog/text_to_speech/__init__.py
+## \file /src/goog/text_to_speech/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import header   

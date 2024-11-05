@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿""" Темплейты даля создания новых сущностей (новый поставщик) 
 
 @todo
@@ -9,7 +10,7 @@
 обновить записи в престашоп и гугл таблице
 """
 ...
-## \file ../src/ai/openai/model/__init__.py
+## \file /src/ai/openai/model/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

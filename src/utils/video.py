@@ -1,4 +1,5 @@
-## \file ../src/utils/video.py
+#! /usr/bin/python
+## \file /src/utils/video.py
 # -*- coding: utf-8 -*-
 #! /path/to/interpreter/python
 """

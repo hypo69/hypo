@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/gui/styles.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/gui/styles.py
 """ Common styling functions for UI elements """
 
 from PyQt6 import QtWidgets

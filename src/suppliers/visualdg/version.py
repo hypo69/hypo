@@ -1,4 +1,5 @@
-## \file ../src/suppliers/visualdg/version.py
+#! /usr/bin/python
+## \file /src/suppliers/visualdg/version.py
 ﻿## \file src/suppliers/visualdg/version.py
 import json
 

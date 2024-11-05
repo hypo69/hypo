@@ -1,5 +1,4 @@
-﻿## \file src/utils/jjson.py
-## \file ../src/utils/jjson.py
+## \file /src/utils/jjson.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/gui/context_menu/header.py
-## \file ../src/gui/context_menu/header.py
+## \file /src/gui/context_menu/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """! Absolute path to modules and GTK & FFPMEG bin directory """

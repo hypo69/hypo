@@ -1,4 +1,5 @@
-## \file ../src/suppliers/kualastyle/_experiments/dict_scenarios.py
+#! /usr/bin/python
+## \file /src/suppliers/kualastyle/_experiments/dict_scenarios.py
 ## \file src/suppliers/kualastyle/_experiments/dict_scenarios.py
 scenarios: dict = {
     "Sofas and Sectionals": {

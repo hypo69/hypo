@@ -1,6 +1,7 @@
+#! /usr/bin/python
 """ Window editor for campaigns """
 
-## \file ../src/suppliers/aliexpress/gui/campaign.py
+## \file /src/suppliers/aliexpress/gui/campaign.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

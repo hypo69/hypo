@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/skd/api/rest/__init__.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/skd/api/rest/__init__.py
 ## \file src/suppliers/aliexpress/api/skd/api/rest/__init__.py
 from .AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
 from .AliexpressAffiliateOrderGetRequest import AliexpressAffiliateOrderGetRequest

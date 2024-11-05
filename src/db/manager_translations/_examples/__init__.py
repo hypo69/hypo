@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/db/manager_translations/_examples/__init__.py
-## \file ../src/db/manager_translations/_examples/__init__.py
+## \file /src/db/manager_translations/_examples/__init__.py
 # -*- coding: utf-8 -*-
 """ @namespace src.db.manager_translations._examples """
 # /path/to/interpreter/python

@@ -1,7 +1,8 @@
+#! /usr/bin/python
 ﻿"""  Модуль Javasript
 Выполнает операции javasript для драйвера
 """
-## \file ../src/webdriver/javascript/__init__.py
+## \file /src/webdriver/javascript/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

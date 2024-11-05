@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/aliexpress/api/helpers/categories.py
-## \file ../src/suppliers/aliexpress/api/helpers/categories.py
+## \file /src/suppliers/aliexpress/api/helpers/categories.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  функции для фильтрации категорий и подкатегорий API Aliexpress"""

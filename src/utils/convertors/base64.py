@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/utils/convertors/base64_to_tmpfile.py
-## \file ../src/utils/convertors/base64.py
+## \file /src/utils/convertors/base64.py
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """

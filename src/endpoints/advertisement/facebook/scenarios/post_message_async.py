@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/advertisement/facebook/scenarios/post_message.py
-## \file ../src/endpoints/advertisement/facebook/scenarios/post_message_async.py
+## \file /src/endpoints/advertisement/facebook/scenarios/post_message_async.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Публикация сообщения из алиэкспресс промо """

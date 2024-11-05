@@ -1,4 +1,5 @@
-## \file ../src/utils/cursor_spinner.py
+#! /usr/bin/python
+## \file /src/utils/cursor_spinner.py
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """

@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateHotproductQueryRequest.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateHotproductQueryRequest.py
 ## \file src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateHotproductQueryRequest.py
 """
 Created by auto_sdk on 2021.05.20

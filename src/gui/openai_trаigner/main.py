@@ -1,4 +1,5 @@
-## \file ../src/gui/openai_trаigner/main.py
+#! /usr/bin/python
+## \file /src/gui/openai_trаigner/main.py
 import sys
 import os
 from PyQt6.QtCore import Qt, QUrl

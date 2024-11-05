@@ -1,4 +1,5 @@
-## \file ../src/goog/spreadsheet/bberyakov/gspreadsheet.py
+#! /usr/bin/python
+## \file /src/goog/spreadsheet/bberyakov/gspreadsheet.py
 ## \file src/utils/interface/goog/gspreadsheet.py
 """  [File's Description]
 

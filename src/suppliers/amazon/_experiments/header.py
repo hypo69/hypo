@@ -1,4 +1,5 @@
-## \file ../src/suppliers/amazon/_experiments/header.py
+#! /usr/bin/python
+## \file /src/suppliers/amazon/_experiments/header.py
 ## \file src/suppliers/amazon/_experiments/header.py
 import sys
 import os

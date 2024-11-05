@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateLinkGenerateRequest.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateLinkGenerateRequest.py
 ## \file src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateLinkGenerateRequest.py
 '''
 Created by auto_sdk on 2020.03.09

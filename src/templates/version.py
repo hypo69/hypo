@@ -1,4 +1,5 @@
-## \file ../src/templates/version.py
+#! /usr/bin/python
+## \file /src/templates/version.py
 import json
 
 settings:dict = None

@@ -1,4 +1,5 @@
-## \file ../src/endpoints/bots/version.py
+#! /usr/bin/python
+## \file /src/endpoints/bots/version.py
 ﻿import json
 
 settings:dict = None

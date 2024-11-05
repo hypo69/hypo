@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
-## \file ../src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
+## \file /src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

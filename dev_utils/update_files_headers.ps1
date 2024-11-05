@@ -2,10 +2,10 @@
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 # Define the base path as the parent directory of the current location
-$basePath = Split-Path -Path (Get-Location) -Parent
-
+#$basePath = Split-Path -Path (Get-Location) -Parent
+$basePath = "C:\Users\user\Documents\repos\hypotez"
 # Set path to the Python interpreter relative to the base path, if needed
-$pythonPath = Join-Path -Path $basePath -ChildPath "venv\scripts\python.exe"
+$pythonPath = Join-Path -Path $basePath -ChildPath "venv\Scripts\python.exe"
 
 # Set path to the Python script relative to the base path
 $scriptPath = Join-Path -Path $basePath -ChildPath "dev_utils\update_files_headers.py"

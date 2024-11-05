@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/product/_examples/version.py
-## \file ../src/product/_examples/version.py
+## \file /src/product/_examples/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

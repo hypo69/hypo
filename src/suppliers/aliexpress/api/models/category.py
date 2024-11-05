@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/models/category.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/models/category.py
 ## \file src/suppliers/aliexpress/api/models/category.py
 class Category:
     category_id: int

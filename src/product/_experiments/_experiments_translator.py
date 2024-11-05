@@ -1,4 +1,5 @@
-## \file ../src/product/_experiments/_experiments_translator.py
+#! /usr/bin/python
+## \file /src/product/_experiments/_experiments_translator.py
 ## \file src/product/_experiments/_experiments_translator.py
 """ Переводы мультиязычных полей """
 from pathlib import Path

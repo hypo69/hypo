@@ -1,4 +1,5 @@
-## \file ../src/endpoints/advertisement/facebook/header.py
+#! /usr/bin/python
+## \file /src/endpoints/advertisement/facebook/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Absolute path to modules  """

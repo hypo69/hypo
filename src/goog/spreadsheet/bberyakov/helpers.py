@@ -1,4 +1,5 @@
-## \file ../src/goog/spreadsheet/bberyakov/helpers.py
+#! /usr/bin/python
+## \file /src/goog/spreadsheet/bberyakov/helpers.py
 ## \file src/utils/interface/goog/helpers.py
 """ перевод цветовых форматов.
 Перевод:

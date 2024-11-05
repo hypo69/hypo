@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/aliexpress/gui/version.py
-## \file ../src/suppliers/aliexpress/gui/version.py
+## \file /src/suppliers/aliexpress/gui/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

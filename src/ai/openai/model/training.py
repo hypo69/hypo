@@ -1,4 +1,5 @@
-## \file ../src/ai/openai/model/training.py
+#! /usr/bin/python
+## \file /src/ai/openai/model/training.py
 # -*- coding: utf-8 -*- 
 # /path/to/interpreter/python
 

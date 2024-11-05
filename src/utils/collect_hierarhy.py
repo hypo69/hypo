@@ -1,4 +1,5 @@
-## \file ../src/utils/collect_hierarhy.py
+#! /usr/bin/python
+## \file /src/utils/collect_hierarhy.py
 """! This script recursively traverses the 'src' directory, collects the file hierarchy, and saves it as a JSON file, excluding specific directories and files, and including only .py, .json, .md, .dot, and .mer files. It also copies the found files to the 'project_structure' directory, maintaining the hierarchy."""
 import header
 from pathlib import Path

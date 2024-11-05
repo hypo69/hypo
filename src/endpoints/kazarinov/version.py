@@ -1,4 +1,5 @@
-## \file ../src/endpoints/kazarinov/version.py
+#! /usr/bin/python
+## \file /src/endpoints/kazarinov/version.py
 import json
 
 settings:dict = None

@@ -1,4 +1,5 @@
-## \file ../src/suppliers/chat_gpt/version.py
+#! /usr/bin/python
+## \file /src/suppliers/chat_gpt/version.py
 ﻿__version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

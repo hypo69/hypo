@@ -1,4 +1,5 @@
-## \file ../src/endpoints/prestashop/_examples/header.py
+#! /usr/bin/python
+## \file /src/endpoints/prestashop/_examples/header.py
 ## \file src/prestashop/_examples/header.py
 import sys
 import os

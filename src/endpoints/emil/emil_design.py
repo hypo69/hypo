@@ -1,4 +1,5 @@
-## \file ../src/endpoints/emil/emil_design.py
+#! /usr/bin/python
+## \file /src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """! Module for managing and processing images and promoting to Facebook and Prestashop. """

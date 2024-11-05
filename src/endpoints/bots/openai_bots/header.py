@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/bots/openai/header.py
-## \file ../src/endpoints/bots/openai_bots/header.py
+## \file /src/endpoints/bots/openai_bots/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

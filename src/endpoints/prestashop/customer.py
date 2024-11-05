@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/prestashop/customer.py
-## \file ../src/endpoints/prestashop/customer.py
+## \file /src/endpoints/prestashop/customer.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Класс клиента в `Prestashop`"""

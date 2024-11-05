@@ -1,4 +1,5 @@
-## \file ../src/suppliers/_experiments/test_supplier.py
+#! /usr/bin/python
+## \file /src/suppliers/_experiments/test_supplier.py
 ## \file src/suppliers/_experiments/test_supplier.py
 import unittest
 from pathlib import Path

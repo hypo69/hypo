@@ -1,4 +1,5 @@
-## \file ../src/suppliers/cdata/login.py
+#! /usr/bin/python
+## \file /src/suppliers/cdata/login.py
 ## \file src/suppliers/cdata/login.py
 """   Интерфейс авторизации. Реализация для вебдрайвера
 

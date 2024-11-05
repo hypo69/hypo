@@ -1,4 +1,5 @@
-## \file ../src/utils/convertors/webp2png.py
+#! /usr/bin/python
+## \file /src/utils/convertors/webp2png.py
 # -*- coding: utf-8 -*-
 #! /path/to/python/interpreter
 """

@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿""" Установка корня проекта """
-## \file ../src/webdriver/chrome/header.py
+## \file /src/webdriver/chrome/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import sys,os

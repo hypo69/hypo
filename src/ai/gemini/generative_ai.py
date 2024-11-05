@@ -1,4 +1,5 @@
-## \file ../src/ai/gemini/generative_ai.py
+#! /usr/bin/python
+## \file /src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
 """Google generative AI integration."""
 

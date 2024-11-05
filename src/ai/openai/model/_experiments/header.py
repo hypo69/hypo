@@ -1,6 +1,7 @@
+#! /usr/bin/python
 ﻿""" Модуль управления моделью OpenAI 
 """
-## \file ../src/ai/openai/model/_experiments/header.py
+## \file /src/ai/openai/model/_experiments/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

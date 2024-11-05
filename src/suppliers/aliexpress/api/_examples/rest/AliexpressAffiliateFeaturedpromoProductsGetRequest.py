@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateFeaturedpromoProductsGetRequest.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateFeaturedpromoProductsGetRequest.py
 ## \file src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateFeaturedpromoProductsGetRequest.py
 '''
 Created by auto_sdk on 2021.05.17

@@ -1,7 +1,6 @@
-## \file ..
+## \file <file_path>
 # -*- coding: utf-8 -*-
-#! /usr/share/projects/hypotez/venv/scripts python
-
+# /path/to/python/interpreter
 """
 This module provides functionality to add or replace headers and interpreter lines
 in Python files within a specified directory. It ensures that each Python file has
@@ -9,20 +8,18 @@ a consistent header and interpreter declaration.
 """
 
 import header
-
 import os
 from pathlib import Path
 
 def add_or_replace_file_header(file_path: str):
-    """Adds or replaces a header and interpreter line in the specified Python file.
+    """ Adds or replaces a header and interpreter line in the specified Python file.
 
     This function adds a header indicating the file path and ensures that the
     correct interpreter line is present at the top of the specified Python file.
     
     If the file already contains a header, it will be replaced. If the file lacks
-    a coding declaration, the header will be added at the beginning. The function
-    also checks if the interpreter line exists and matches the expected format,
-    and adds it if missing or incorrect.
+    a coding declaration or an interpreter line, they will be added in the specified order:
+    header, coding declaration, interpreter line.
 
     Args:
         file_path (str): The path to the Python file to be processed.
@@ -33,45 +30,39 @@ def add_or_replace_file_header(file_path: str):
     """
     # Convert backslashes to forward slashes for the file path
     file_path = file_path.replace('\\', '/')
-    header_line = f"## \\file {file_path}\n"
-    interpreter_line = '#! /usr/bin/python\n'  # Specify the desired interpreter line
+    header_line = f'## \\file {file_path}\n'
+    coding_index = '# -*- coding: utf-8 -*-\n'
+    interpreter_line = '# /path/to/interpreter/python\n'  # Specify the desired interpreter line
 
     try:
         with open(file_path, 'r+', encoding='utf-8', newline='') as file:
             lines = file.readlines()
 
-            # Check if the coding declaration exists
-            coding_index = next((i for i, line in enumerate(lines) if line.strip() == '# -*- coding: utf-8 -*-'), None)
+            # Flags to track the presence of lines
+            has_header = any(line.startswith('## \\file ') for line in lines)
+            has_coding = any(line.strip() == coding_index.strip() for line in lines)
+            has_interpreter = any(line.startswith('# /path/to/interpreter/python') for line in lines)
 
-            # Check if the interpreter line exists
-            interpreter_index = next((i for i, line in enumerate(lines) if line.startswith('#!')), None)
+            # Prepare the lines to be added in order
+            new_lines = []
+            if not has_header:
+                new_lines.append(header_line)
+            if not has_coding:
+                new_lines.append(coding_index)
+            if not has_interpreter:
+                new_lines.append(interpreter_line)
 
-            # If coding declaration exists, update or add the header before it
-            if coding_index is not None:
-                if lines[coding_index - 1].startswith('## \\file '):
-                    lines[coding_index - 1] = header_line  # Replace existing header with the new one
-                else:
-                    lines.insert(coding_index, header_line)  # Add the header before the coding declaration
-            else:
-                # If no coding declaration is found, just add the header at the top
-                if lines and lines[0].startswith('## \\file '):
-                    lines[0] = header_line  # Replace existing header with the new one
-                else:
-                    lines.insert(0, header_line)  # Add the header to the beginning of the file
-            
-            # Check and add the interpreter line if it doesn't exist or is incorrect
-            if interpreter_index is None or lines[interpreter_index].strip() != interpreter_line.strip():
-                lines.insert(0, interpreter_line)  # Add interpreter line at the top if missing or incorrect
-            
-            file.seek(0, 0)  # Move the cursor to the beginning of the file
-            file.writelines(lines)
-            file.truncate()  # Truncate the file to the new length
+            # Insert new lines at the beginning if any are missing
+            if new_lines:
+                file.seek(0, 0)  # Move the cursor to the beginning of the file
+                file.writelines(new_lines + lines)  # Write new lines followed by existing lines
+                file.truncate()  # Truncate the file to the new length
 
     except IOError as ex:
         print(f"Error processing file {file_path}: {ex}")
 
 def traverse_directory(directory: str):
-    """Recursively traverses the directory and processes Python files.
+    """ Recursively traverses the directory and processes Python files.
 
     This function walks through the given directory and all its subdirectories,
     processing each Python file found. It calls `add_or_replace_file_header`
@@ -91,7 +82,7 @@ def traverse_directory(directory: str):
                 add_or_replace_file_header(file_path)
 
 def main():
-    """Main function to execute the script.
+    """ Main function to execute the script.
 
     This function sets the root directory for the script to start processing
     Python files and invokes the `traverse_directory` function.

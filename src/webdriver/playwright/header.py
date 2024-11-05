@@ -1,5 +1,6 @@
+#! /usr/bin/python
 """ Эксперименты с библиотекой crawlee-python """
-## \file ../src/webdriver/playwright/header.py
+## \file /src/webdriver/playwright/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 import sys,os

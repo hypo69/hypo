@@ -1,4 +1,6 @@
-﻿## \file ../src/ai/gemini/header.py
+#! /usr/bin/python
+﻿## \file /src/ai/gemini/header.py
+## \file /src/ai/gemini/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 from pathlib import Path

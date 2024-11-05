@@ -1,11 +1,12 @@
-﻿## \file ../src/header.py
+## \file /src/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 
 from pathlib import Path
 import sys
 
-__root__ = Path('..').resolve()  # Получаем абсолютный путь к текущей директории
+from .. import header
+
 
 if str(__root__) not in sys.path:
     sys.path.insert(0, str(__root__)) 

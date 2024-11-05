@@ -1,4 +1,5 @@
-## \file ../src/ai/helicone/version.py
+#! /usr/bin/python
+## \file /src/ai/helicone/version.py
 import json
 
 settings:dict = None

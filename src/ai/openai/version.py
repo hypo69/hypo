@@ -1,4 +1,5 @@
-## \file ../src/ai/openai/version.py
+#! /usr/bin/python
+## \file /src/ai/openai/version.py
 import json
 
 settings:dict = None

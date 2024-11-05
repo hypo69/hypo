@@ -1,4 +1,5 @@
-## \file ../src/endpoints/prestashop/api/_experiments/ping.py
+#! /usr/bin/python
+## \file /src/endpoints/prestashop/api/_experiments/ping.py
 ## \file src/prestashop/api/_experiments/ping.py
 import header
 from header import  ecat_api_credentials, emil_api_credentials

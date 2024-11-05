@@ -1,4 +1,5 @@
-## \file ../src/logger/version.py
+#! /usr/bin/python
+## \file /src/logger/version.py
 import json
 
 settings:dict = None

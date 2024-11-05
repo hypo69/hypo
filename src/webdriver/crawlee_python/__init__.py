@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿""" Обёртка для Crawlee"""
-## \file ../src/webdriver/crawlee_python/__init__.py
+## \file /src/webdriver/crawlee_python/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

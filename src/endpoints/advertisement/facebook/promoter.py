@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/advertisement/facebook/promoter.py
-## \file ../src/endpoints/advertisement/facebook/promoter.py
+## \file /src/endpoints/advertisement/facebook/promoter.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

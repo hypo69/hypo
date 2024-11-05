@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿""" Сценарии фейсбука """
-## \file ../src/endpoints/advertisement/facebook/scenarios/__init__.py
+## \file /src/endpoints/advertisement/facebook/scenarios/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

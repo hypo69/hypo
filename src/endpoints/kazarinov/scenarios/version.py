@@ -1,4 +1,5 @@
-## \file ../src/endpoints/kazarinov/scenarios/version.py
+#! /usr/bin/python
+## \file /src/endpoints/kazarinov/scenarios/version.py
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

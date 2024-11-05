@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/aliexpress/api/_examples/iop/test_get.py
-## \file ../src/suppliers/aliexpress/api/_examples/iop/test_get.py
+## \file /src/suppliers/aliexpress/api/_examples/iop/test_get.py
 # -*- coding: utf-8 -*-
 
 import iop

@@ -1,6 +1,7 @@
+#! /usr/bin/python
 """ Window editor for products """
 
-## \file ../src/suppliers/aliexpress/gui/product.py
+## \file /src/suppliers/aliexpress/gui/product.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

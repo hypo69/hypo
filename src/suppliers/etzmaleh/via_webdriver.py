@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/etzmaleh/via_webdriver.py
 """   [File's Description]
 
@@ -12,7 +13,7 @@
 Author(s):
   - Created by Davidka on 09.11.2023 .
 """
-## \file ../src/suppliers/etzmaleh/via_webdriver.py
+## \file /src/suppliers/etzmaleh/via_webdriver.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

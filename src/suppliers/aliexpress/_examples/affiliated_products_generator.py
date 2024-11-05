@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/_examples/affiliated_products_generator.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/_examples/affiliated_products_generator.py
 ## \file src/suppliers/aliexpress/_examples/affiliated_products_generator.py
 # пример_использования.py
 

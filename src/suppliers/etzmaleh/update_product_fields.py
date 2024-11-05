@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/etzmaleh/update_product_fields.py
 """   [File's Description]
 
@@ -18,7 +19,7 @@ Author(s):
   - Created by Davidka on 09.11.2023 .
 """
 
-## \file ../src/suppliers/etzmaleh/update_product_fields.py
+## \file /src/suppliers/etzmaleh/update_product_fields.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

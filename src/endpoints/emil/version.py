@@ -1,4 +1,5 @@
-## \file ../src/endpoints/emil/version.py
+#! /usr/bin/python
+## \file /src/endpoints/emil/version.py
 import json
 
 settings:dict = None

@@ -1,6 +1,7 @@
+#! /usr/bin/python
 """ Experiments with aliexpress campaign  """
 
-## \file ../src/utils/string/header.py
+## \file /src/utils/string/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

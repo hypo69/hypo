@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/ebay/__ebay__.py
 """  [File's Description]
 
@@ -16,7 +17,7 @@
 Author(s):
   - Created by Davidka on 09.11.2023 .
 """
-## \file ../src/suppliers/ebay/__ebay__.py
+## \file /src/suppliers/ebay/__ebay__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/ivory/__init__.py
-## \file ../src/suppliers/ivory/__init__.py
+## \file /src/suppliers/ivory/__init__.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Постaвщик <i>wallmart</i>

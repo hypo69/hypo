@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/supplier.py
-## \file ../src/suppliers/supplier.py
+## \file /src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ <b>Class</b> `Supplier` <b>Base class for all suppliers</b>

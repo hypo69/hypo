@@ -1,4 +1,5 @@
-## \file ../src/endpoints/advertisement/facebook/facebook_fields.py
+#! /usr/bin/python
+## \file /src/endpoints/advertisement/facebook/facebook_fields.py
 # -*- coding: utf-8 -*-
 #! /usr/share/projects/hypotez/venv/scripts python
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

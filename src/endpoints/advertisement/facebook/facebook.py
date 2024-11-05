@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/advertisement/facebook/facebook.py
-## \file ../src/endpoints/advertisement/facebook/facebook.py
+## \file /src/endpoints/advertisement/facebook/facebook.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Модуль рекламы на фейсбук

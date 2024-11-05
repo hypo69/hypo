@@ -1,4 +1,5 @@
-## \file ../src/scenario/_experiments/dict_scenarios.py
+#! /usr/bin/python
+## \file /src/scenario/_experiments/dict_scenarios.py
 ## \file src/scenario/_experiments/dict_scenarios.py
 scenario: dict = {
     "Apple Wathes": {

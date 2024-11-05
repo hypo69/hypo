@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿"""
 - `__version__`: This variable holds the version of the module or package.
 - `__name__`: Contains the name of the module. If the script is being run directly, the value will be `"__main__"`.
@@ -7,7 +8,7 @@
 - `__author__`: The name(s) of the author(s) of the module.
 """
 
-## \file ../src/suppliers/aliexpress/gapi/version.py
+## \file /src/suppliers/aliexpress/gapi/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

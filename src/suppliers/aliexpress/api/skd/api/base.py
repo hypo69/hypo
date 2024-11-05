@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/aliexpress/api/skd/api/base.py
-## \file ../src/suppliers/aliexpress/api/skd/api/base.py
+## \file /src/suppliers/aliexpress/api/skd/api/base.py
 # -*- coding: utf-8 -*-
 """
 Created on 2012-7-3

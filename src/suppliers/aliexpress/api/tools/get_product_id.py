@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/tools/get_product_id.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/tools/get_product_id.py
 ## \file src/suppliers/aliexpress/api/tools/get_product_id.py
 """Some useful tools."""
 

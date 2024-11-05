@@ -1,4 +1,5 @@
-## \file ../src/ai/gemini/version.py
+#! /usr/bin/python
+## \file /src/ai/gemini/version.py
 import json
 
 settings:dict = None

@@ -1,4 +1,5 @@
-## \file ../src/goog/spreadsheet/_examples/google_sample.py
+#! /usr/bin/python
+## \file /src/goog/spreadsheet/_examples/google_sample.py
 ## \file src/utils/interface/google_sample.py
 """  Всякие манипуляции с гуглем
 

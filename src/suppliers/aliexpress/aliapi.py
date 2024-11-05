@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿""" AliExpress API Scenario
 \rst
 aliapi.py
@@ -58,7 +59,7 @@ processing XLS files from the `scenarios\\api\\sources` directory.
 `start()` processes only one XLS file if specified, or all files in the directory if no specific file is provided.
 """
 ...
-## \file ../src/suppliers/aliexpress/aliapi.py
+## \file /src/suppliers/aliexpress/aliapi.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 ...

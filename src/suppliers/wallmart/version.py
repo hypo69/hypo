@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/morlevi/version.py
-## \file ../src/suppliers/wallmart/version.py
+## \file /src/suppliers/wallmart/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

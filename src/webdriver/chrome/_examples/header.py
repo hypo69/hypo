@@ -1,4 +1,5 @@
-## \file ../src/webdriver/chrome/_examples/header.py
+#! /usr/bin/python
+## \file /src/webdriver/chrome/_examples/header.py
 ## \file src/webdriver/chrome/_examples/header.py
 import sys
 import os

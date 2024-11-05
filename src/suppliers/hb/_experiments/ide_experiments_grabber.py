@@ -1,4 +1,5 @@
-## \file ../src/suppliers/hb/_experiments/ide_experiments_grabber.py
+#! /usr/bin/python
+## \file /src/suppliers/hb/_experiments/ide_experiments_grabber.py
 ## \file src/suppliers/hb/_experiments/ide_experiments_grabber.py
 """  Проверки исполнения сценариев HB.
 проверки:

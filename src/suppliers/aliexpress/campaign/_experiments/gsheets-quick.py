@@ -1,5 +1,6 @@
+#! /usr/bin/python
 """ Работа с гугл таблицами """
-## \file ../src/suppliers/aliexpress/campaign/_experiments/gsheets-quick.py
+## \file /src/suppliers/aliexpress/campaign/_experiments/gsheets-quick.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

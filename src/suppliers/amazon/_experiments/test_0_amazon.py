@@ -1,4 +1,5 @@
-## \file ../src/suppliers/amazon/_experiments/test_0_amazon.py
+#! /usr/bin/python
+## \file /src/suppliers/amazon/_experiments/test_0_amazon.py
 ## \file src/suppliers/amazon/_experiments/test_0_amazon.py
 import header
 from header import start_supplier

@@ -1,4 +1,5 @@
-## \file ../src/db/manager_translations/_experiments/header.py
+#! /usr/bin/python
+## \file /src/db/manager_translations/_experiments/header.py
 ## \file src/db/manager_translations/_experiments/header.py
 """ @namespace src.db.manager_translations._experiments """
 import sys

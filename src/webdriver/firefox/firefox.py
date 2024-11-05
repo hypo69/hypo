@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ﻿""" Firefox WebDriver
 
 This code defines a subclass of `webdriver.Firefox` called `Firefox`. 
@@ -17,7 +18,7 @@ if __name__ == "__main__":
 @endcode
 @image html class_firefox.png
 """
-## \file ../src/webdriver/firefox/firefox.py
+## \file /src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

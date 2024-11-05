@@ -1,4 +1,5 @@
-## \file ../src/suppliers/hb/_experiments/notebook_header.py
+#! /usr/bin/python
+## \file /src/suppliers/hb/_experiments/notebook_header.py
 ## \file src/suppliers/hb/_experiments/notebook_header.py
 import sys
 import os

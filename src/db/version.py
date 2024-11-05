@@ -1,4 +1,5 @@
-## \file ../src/db/version.py
+#! /usr/bin/python
+## \file /src/db/version.py
 ﻿## \file src/db/version.py
 import json
 

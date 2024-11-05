@@ -1,4 +1,5 @@
-## \file ../src/ai/dialogflow/version.py
+#! /usr/bin/python
+## \file /src/ai/dialogflow/version.py
 import json
 
 settings:dict = None

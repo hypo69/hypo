@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/_examples/iop/test_upload.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/_examples/iop/test_upload.py
 ## \file src/suppliers/aliexpress/api/_examples/iop/test_upload.py
 # # -*- coding: utf-8 -*-
 #

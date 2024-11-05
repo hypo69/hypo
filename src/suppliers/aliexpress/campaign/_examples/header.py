@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/campaign/_examples/header.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/campaign/_examples/header.py
 ## \file src/suppliers/aliexpress/campaign/_examples/header.py
 import os
 import sys

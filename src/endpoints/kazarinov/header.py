@@ -1,5 +1,4 @@
-﻿## \file src/suppliers/kazarinov/header.py
-## \file ../src/endpoints/kazarinov/header.py
+## \file /src/endpoints/kazarinov/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """! Absolute path to modules and GTK bin directory setup """

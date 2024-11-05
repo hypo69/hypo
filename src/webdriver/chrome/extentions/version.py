@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/webdriver/chrome/extentions/version.py
-## \file ../src/webdriver/chrome/extentions/version.py
+## \file /src/webdriver/chrome/extentions/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

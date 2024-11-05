@@ -1,4 +1,5 @@
-## \file ../src/goog/version.py
+#! /usr/bin/python
+## \file /src/goog/version.py
 import json
 
 settings:dict = None

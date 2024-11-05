@@ -1,6 +1,7 @@
+#! /usr/bin/python
 """ Менджер переводов категорий """
 
-## \file ../src/db/manager_translations/category_translations.py
+## \file /src/db/manager_translations/category_translations.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 

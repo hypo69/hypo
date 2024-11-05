@@ -1,4 +1,5 @@
-## \file ../src/category/version.py
+#! /usr/bin/python
+## \file /src/category/version.py
 import json
 
 settings:dict = None

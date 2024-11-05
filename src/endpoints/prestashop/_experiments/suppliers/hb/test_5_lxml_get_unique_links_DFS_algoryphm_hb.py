@@ -1,4 +1,5 @@
-## \file ../src/endpoints/prestashop/_experiments/suppliers/hb/test_5_lxml_get_unique_links_DFS_algoryphm_hb.py
+#! /usr/bin/python
+## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_5_lxml_get_unique_links_DFS_algoryphm_hb.py
 ## \file src/prestashop/_experiments/suppliers/hb/test_5_lxml_get_unique_links_DFS_algoryphm_hb.py
 """ FROM openAI:
 Если вам необходимо углубиться до глубины depth = 5, то вам понадобится оптимизировать рекурсивный алгоритм,

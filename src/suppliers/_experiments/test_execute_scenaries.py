@@ -1,4 +1,5 @@
-## \file ../src/suppliers/_experiments/test_execute_scenaries.py
+#! /usr/bin/python
+## \file /src/suppliers/_experiments/test_execute_scenaries.py
 ## \file src/suppliers/_experiments/test_execute_scenaries.py
 import unittest
 from unittest.mock import MagicMock

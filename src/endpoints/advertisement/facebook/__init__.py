@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/advertisement/facebook/__init__.py
-## \file ../src/endpoints/advertisement/facebook/__init__.py
+## \file /src/endpoints/advertisement/facebook/__init__.py
 # -*- coding: utf-8 -*-
 
 from packaging.version import Version

@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateCategoryGetRequest.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateCategoryGetRequest.py
 ## \file src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateCategoryGetRequest.py
 """
 Created by auto_sdk on 2020.03.09

@@ -1,4 +1,5 @@
-## \file ../src/fast_api/version.py
+#! /usr/bin/python
+## \file /src/fast_api/version.py
 import json
 
 settings:dict = None

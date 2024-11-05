@@ -1,4 +1,5 @@
-## \file ../src/utils/convertors/dict.py
+#! /usr/bin/python
+## \file /src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

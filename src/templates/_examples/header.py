@@ -1,4 +1,5 @@
-## \file ../src/templates/_examples/header.py
+#! /usr/bin/python
+## \file /src/templates/_examples/header.py
 ## \file src/templates/_examples/header.py
 import sys
 import os

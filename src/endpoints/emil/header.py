@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/advertisement/facebook/_experiments/header.py
-## \file ../src/endpoints/emil/header.py
+## \file /src/endpoints/emil/header.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """ Absolute path to modules  """

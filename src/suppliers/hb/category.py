@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/hb/category.py
-## \file ../src/suppliers/hb/category.py
+## \file /src/suppliers/hb/category.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """  Модуль сбора товаров со страницы категорий поставщика hb.co.il через вебдрайвер

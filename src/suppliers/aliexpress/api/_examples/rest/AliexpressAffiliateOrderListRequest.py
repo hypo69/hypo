@@ -1,4 +1,5 @@
-## \file ../src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderListRequest.py
+#! /usr/bin/python
+## \file /src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderListRequest.py
 ## \file src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderListRequest.py
 '''
 Created by auto_sdk on 2021.06.02

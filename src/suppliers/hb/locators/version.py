@@ -1,5 +1,6 @@
+#! /usr/bin/python
 ﻿## \file src/suppliers/hb/locators/version.py
-## \file ../src/suppliers/hb/locators/version.py
+## \file /src/suppliers/hb/locators/version.py
 # -*- coding: utf-8 -*-
 # /path/to/interpreter/python
 """

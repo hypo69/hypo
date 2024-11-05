@@ -1,4 +1,5 @@
-## \file ../src/webdriver/edge/_examples/header.py
+#! /usr/bin/python
+## \file /src/webdriver/edge/_examples/header.py
 ## \file src/webdriver/edge/_examples/header.py
 import sys
 import os
