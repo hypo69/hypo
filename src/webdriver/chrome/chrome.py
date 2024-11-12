@@ -1,8 +1,12 @@
-## \file ./src/webdriver/chrome/chrome.py
+## \file hypotez/src/webdriver/chrome/chrome.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver.chrome """
+
 """ Chrome WebDriver.
 Implemented using Chrome for Developers.
 Chrome WebDriver  settings defined in the `chrome.json` file.

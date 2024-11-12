@@ -1,8 +1,11 @@
-## \file ./src/utils/convertors/dot.py
+## \file hypotez/src/utils/convertors/dot.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /usr/bin/env python3
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.convertors """
 """
 This script converts DOT files into PNG images using the Graphviz library.
 """

@@ -1,13 +1,17 @@
-## \file ./src/suppliers/visualdg/version.py
+## \file hypotez/src/suppliers/visualdg/version.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.visualdg """
 import json
 
 settings:dict = None
 
 try:
-    with open('../../settings.json', 'r') as settings_file:
+    with open(__root__ / 'src' /  'settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
 except (FileNotFoundError, json.JSONDecodeError):
     ...

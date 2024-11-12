@@ -1,8 +1,12 @@
-## \file ./src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
+## \file hypotez/src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.scenarios """
+
 """ Сокращатель ссылок через веббраузер """
 
 from pathlib import Path

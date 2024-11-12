@@ -1,10 +1,14 @@
-## \file ./src/suppliers/aliexpress/campaign/_experiments/prepare_campaign.py
+## \file hypotez/src/suppliers/aliexpress/campaign/_experiments/prepare_campaign.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.campaign._experiments """
 """ Проверка создания affiliate для рекламной кампании  
 Если текой рекламной кампании не существует - будет создана новая"""
-# /path/to/interpreter/python
+
 ...
 import header
 from src.suppliers.aliexpress.campaign import process_campaign

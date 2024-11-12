@@ -1,7 +1,11 @@
-## \file ./src/suppliers/etzmaleh/product_fields.py
+## \file hypotez/src/suppliers/etzmaleh/product_fields.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.etzmaleh """
 """   [File's Description]
 
 @namespace src: src
@@ -22,7 +26,7 @@
 Author(s):
   - Created by Davidka on 09.11.2023 .
 """
-# /path/to/interpreter/python
+
 
 from sqlite3 import Date
 from typing import Union

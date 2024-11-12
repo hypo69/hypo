@@ -1,8 +1,12 @@
-## \file ./src/ai/gemini/html_chat/header.py
+## \file hypotez/src/ai/gemini/html_chat/header.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.ai.gemini.html_chat """
+
 """ Absolute path to modules  """
 
 import sys,os

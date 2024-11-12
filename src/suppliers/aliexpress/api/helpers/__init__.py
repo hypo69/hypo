@@ -1,7 +1,11 @@
-## \file ./src/suppliers/aliexpress/api/helpers/__init__.py
+## \file hypotez/src/suppliers/aliexpress/api/helpers/__init__.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.api.helpers """
 from .requests import api_request
 from .arguments import get_list_as_string, get_product_ids
 from .products import parse_products

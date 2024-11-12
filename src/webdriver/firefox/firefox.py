@@ -1,7 +1,11 @@
-## \file ./src/webdriver/firefox/firefox.py
+## \file hypotez/src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver.firefox """
 """ Firefox WebDriver
 
 This code defines a subclass of `webdriver.Firefox` called `Firefox`. 
@@ -21,7 +25,7 @@ if __name__ == "__main__":
 @endcode
 @image html class_firefox.png
 """
-# /path/to/interpreter/python
+
 
 import os
 from pathlib import Path

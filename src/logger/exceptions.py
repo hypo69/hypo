@@ -1,8 +1,12 @@
-## \file ./src/logger/exceptions.py
+## \file hypotez/src/logger/exceptions.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.logger """
+
 """ Program Exceptions """
 from typing import Optional
 from src.logger import logger

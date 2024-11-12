@@ -1,8 +1,12 @@
-## \file ./src/suppliers/aliexpress/_experiments/affiliate_links_shortener.py
+## \file hypotez/src/suppliers/aliexpress/_experiments/affiliate_links_shortener.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress._experiments """
+
 """ Short affiliate links """
 
 import header

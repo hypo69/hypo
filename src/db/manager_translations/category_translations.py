@@ -1,10 +1,14 @@
-## \file ./src/db/manager_translations/category_translations.py
+## \file hypotez/src/db/manager_translations/category_translations.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.db.manager_translations """
 """ Менджер переводов категорий """
 
-# /path/to/interpreter/python
+
 
 from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.orm import sessionmaker

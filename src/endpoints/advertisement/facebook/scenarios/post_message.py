@@ -1,8 +1,12 @@
-## \file ./src/endpoints/advertisement/facebook/scenarios/post_message.py
+## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.advertisement.facebook.scenarios """
+
 """ Публикация сообщения """
 ...
 import time

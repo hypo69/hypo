@@ -1,8 +1,11 @@
-## \file ./src/fast_api/gemini.py
+## \file hypotez/src/fast_api/gemini.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /usr/share/projects/hypotez/venv/scripts python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.fast_api """
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header 

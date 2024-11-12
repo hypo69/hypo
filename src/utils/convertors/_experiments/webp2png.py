@@ -1,8 +1,11 @@
-## \file ./src/utils/convertors/_experiments/webp2png.py
+## \file hypotez/src/utils/convertors/_experiments/webp2png.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /usr/share/projects/hypotez/venv/scripts python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.convertors._experiments """
 """! This module converts WebP images to PNG format.
 
 It retrieves WebP files from a specified directory and converts them to PNG format, 

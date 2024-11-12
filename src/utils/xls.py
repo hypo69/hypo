@@ -1,8 +1,11 @@
-## \file ./src/utils/xls.py
+## \file hypotez/src/utils/xls.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /path/to/python/interpreter
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils """
 """
 Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`).
 This module provides functions to convert Excel files to JSON format, handle multiple sheets, and save JSON data back to Excel files.

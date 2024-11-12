@@ -1,6 +1,11 @@
-## \file ./version.py
+## \file hypotez/version.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: . """
 import json
 
 settings:dict = None

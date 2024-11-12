@@ -1,12 +1,16 @@
-## \file ./src/endpoints/prestashop/_experiments/categories/category.py
+## \file hypotez/src/endpoints/prestashop/_experiments/categories/category.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.prestashop._experiments.categories """
 """  Работа с категориями товара 
 
 """
 
-# /path/to/interpreter/python
+
 
 
 

@@ -1,7 +1,11 @@
-## \file ./src/goog/quickstart.py
+## \file hypotez/src/goog/quickstart.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.goog """
 """
 Shows basic usage of the Apps Script API.
 Call the Apps Script API to create a new script project, upload a file to the
@@ -10,7 +14,7 @@ project, and log the script's URL to the user.
 https://developers.google.com/apps-script/api/quickstart/python
 """
 
-# /path/to/interpreter/python
+
 
 from pathlib import Path
 

@@ -1,7 +1,11 @@
-## \file ./src/suppliers/_experiments/test_execute_scenaries.py
+## \file hypotez/src/suppliers/_experiments/test_execute_scenaries.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers._experiments """
 import unittest
 from unittest.mock import MagicMock
 from execute_scenarios import run_scenarios,run_scenario_file,run_scenario,grab_product_page

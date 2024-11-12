@@ -1,7 +1,11 @@
-## \file ./src/suppliers/ebay/__ebay__.py
+## \file hypotez/src/suppliers/ebay/__ebay__.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.ebay """
 """  [File's Description]
 
 @namespace src: src
@@ -19,7 +23,7 @@
 Author(s):
   - Created by Davidka on 09.11.2023 .
 """
-# /path/to/interpreter/python
+
 
 from pathlib import Path
 from selenium.webdriver.remote.webelement import WebElement 

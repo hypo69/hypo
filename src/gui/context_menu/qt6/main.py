@@ -1,8 +1,12 @@
-## \file ./src/gui/context_menu/qt6/main.py
+## \file hypotez/src/gui/context_menu/qt6/main.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.gui.context_menu.qt6 """
+
 """Module to add or remove context menu items for the desktop and folder background using PyQt6.
 
 This module provides functions to add or remove a custom context menu item called 

@@ -1,8 +1,12 @@
-## \file ./src/webdriver/javascript/_examples/version.py
+## \file hypotez/src/webdriver/javascript/_examples/version.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver.javascript._examples """
+
 """
 - `__version__`: This variable holds the version of the module or package.
 - `__name__`: Contains the name of the module. If the script is being run directly, the value will be `"__main__"`.

@@ -1,6 +1,6 @@
-## \file ./docs/conf.py
+## \file hypotez/docs/conf.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
+#! C:\Users\user\Documents\repos\hypotez\venv\Scripts\python.exe
 import json
 import os
 import sys

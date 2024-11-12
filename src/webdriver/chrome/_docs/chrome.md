@@ -2,7 +2,7 @@ Here’s the `chrome.py` file with Doxygen comments translated to English and fo
 
 ```python
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
+
 """ Chrome WebDriver.
 Implemented using Chrome for Developers.
 The version is defined in the `chrome.json` file.

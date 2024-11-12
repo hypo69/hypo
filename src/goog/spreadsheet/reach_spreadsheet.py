@@ -1,13 +1,17 @@
-## \file ./src/goog/spreadsheet/reach_spreadsheet.py
+## \file hypotez/src/goog/spreadsheet/reach_spreadsheet.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.goog.spreadsheet """
 
 """ 
    https://habr.com/ru/post/305378/    
 """
 
-# /path/to/interpreter/python
+
 
 
 

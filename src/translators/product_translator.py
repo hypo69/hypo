@@ -1,7 +1,11 @@
-## \file ./src/translators/product_translator.py
+## \file hypotez/src/translators/product_translator.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.translators """
 
 """ Модуль управления переводами.
 Слой связи между словарем полей товара, таблицей переводов и переводчиками
@@ -15,7 +19,7 @@
 @todo
     1. Продумать какой нибудж парсер для en_EN, he_HE, ru-RU
 """
-# /path/to/interpreter/python
+
 ...
 
 from pathlib import Path

@@ -1,7 +1,12 @@
-## \file ./src/utils/jjson.py
+## \file hypotez/src/utils/jjson.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils """
+
 """
 Module for handling JSON and CSV files, including loading, dumping, and merging data.
 

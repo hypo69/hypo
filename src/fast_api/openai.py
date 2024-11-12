@@ -1,8 +1,12 @@
-## \file ./src/fast_api/openai.py
+## \file hypotez/src/fast_api/openai.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.fast_api """
+
 """
 This module provides a FastAPI application for interacting with the OpenAI model.
 It includes API endpoints for querying the model and training it based on provided data.

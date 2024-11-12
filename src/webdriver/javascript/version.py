@@ -1,8 +1,12 @@
-## \file ./src/webdriver/javascript/version.py
+## \file hypotez/src/webdriver/javascript/version.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver.javascript """
+
 __name__ = '' 
 __version__="3.12.0.0.0.4"
 __doc__ = ''

@@ -1,7 +1,11 @@
-## \file ./src/product/__init__.py
+## \file hypotez/src/product/__init__.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.product """
 """ Product module
 External classes and attributes:
 - `Product`: Methods and attributes of the product. Detailed description in `product.py`

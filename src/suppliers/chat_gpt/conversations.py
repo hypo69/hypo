@@ -1,7 +1,11 @@
-## \file ./src/suppliers/chat_gpt/conversations.py
+## \file hypotez/src/suppliers/chat_gpt/conversations.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.chat_gpt """
 
 import re
 import argparse

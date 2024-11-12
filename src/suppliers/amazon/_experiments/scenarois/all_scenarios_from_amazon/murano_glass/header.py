@@ -1,7 +1,11 @@
-## \file ./src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/header.py
+## \file hypotez/src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/header.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass """
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]

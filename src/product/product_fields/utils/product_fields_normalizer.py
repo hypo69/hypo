@@ -1,8 +1,11 @@
-## \file ./src/product/product_fields/utils/product_fields_normalizer.py
+## \file hypotez/src/product/product_fields/utils/product_fields_normalizer.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /usr/share/projects/hypotez/venv/scripts python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.product.product_fields.utils """
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 from typing import Dict, Union

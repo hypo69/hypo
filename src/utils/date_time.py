@@ -1,8 +1,11 @@
-## \file ./src/utils/date_time.py
+## \file hypotez/src/utils/date_time.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /usr/share/projects/hypotez/venv/scripts python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils """
 """! This module contains a function to check if the current time is within a specified interval with an optional timeout.
 
 The `interval` function allows for determining whether the current time falls within the 

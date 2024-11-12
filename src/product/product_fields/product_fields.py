@@ -1,8 +1,12 @@
-## \file ./src/product/product_fields/product_fields.py
+## \file hypotez/src/product/product_fields/product_fields.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.product.product_fields """
+
 """    <b>Kласс `ProductFields` Расписано каждое поле товара для таблиц престашоп.</b> 
  langdetect в Python используется для определения языка текста. Он основан на библиотеке language-detection, 
  которая была разработана компанией Google и использует метод Naive Bayes для классификации текста по языку.
@@ -216,6 +220,10 @@ from types import MappingProxyType
 from langdetect import detect
 from functools import wraps
 from typing import Callable
+from pydantic import BaseModel, Field, validator
+from typing import Optional, Any
+from pathlib import Path
+import sys
 ...
 from src import gs
 from src.utils import j_loads
@@ -235,7 +243,7 @@ from src.logger import logger
 
 
 @dataclass
-class ProductFields:
+class ProductFields(BaseModel):
     """ Класс, описывающий поля товара в формате API PRESTASHOP 
     @details Поля могут быть членами разных таблиц или добавленных мной для удобства обработки.
     Названия полей (геттеров) соответствуют названиям полей в таблицах. Вначале идут поля из таблицы `ps_product`,
@@ -248,8 +256,6 @@ class ProductFields:
     product_fields_list: List[str] = field(default_factory=lambda: [
         read_text_file(gs.path.src / 'product' / 'product_fields' / 'fields_list.txt', as_list = True)
     ])
-
-    """ Список ключей словаря API Prestashop """
 
     language: Dict[str, int] = field(default_factory=lambda: {'en': 1, 'he': 2, 'ru': 3})
     presta_fields: SimpleNamespace = field(init=False)

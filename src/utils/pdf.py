@@ -1,8 +1,11 @@
-## \file ./src/utils/pdf.py
+## \file hypotez/src/utils/pdf.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /usr/share/projects/hypotez/venv/scripts python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils """
 
 
 """
@@ -13,25 +16,25 @@
 - https://habr.com/ru/companies/bothub/articles/853490/
 """
 
-import header
 import pdfkit
 from pathlib import Path
 import os
 from reportlab.pdfgen import canvas
-import header
 from src.logger import logger
-from src import gs
 from fpdf import FPDF
 
-if not (gs.path.bin / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe').exists():
+from . import wkhtmltopdf_bin_path        
+wkhtmltopdf_exe = wkhtmltopdf_bin_path /  'wkhtmltopdf.exe'
+
+if not wkhtmltopdf_exe.exists():
     logger.error("Не найден wkhtmltopdf.exe по указанному пути.")
     raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
 
 configuration = pdfkit.configuration(
-    wkhtmltopdf=str(gs.path.bin / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe')
+    wkhtmltopdf=str(wkhtmltopdf_exe)
 )
-options = {"enable-local-file-access": ""}
 
+options = {"enable-local-file-access": ""}
 
 
 class PDFUtils:

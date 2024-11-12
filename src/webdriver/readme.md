@@ -41,7 +41,7 @@ The module provides an execution framework for navigating and interacting with w
 Feel free to adjust any specifics or add more details based on the actual implementation and requirements.
 ```python
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
+
 """ Examples for using `Driver` and `Chrome` classes """
 
 from src.webdriver import Driver, Chrome

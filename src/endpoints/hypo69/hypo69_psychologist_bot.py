@@ -1,7 +1,13 @@
-## \file ./src/endpoints/kazarinov/bot.py
+## \file hypotez/src/endpoints/hypo69/hypo69_psychologist_bot.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-"""! Kazarinov's specific bot with customized behavior."""
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.hypo69 """
+...
+"""! t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 import header
 
 import asyncio
@@ -16,19 +22,16 @@ from src import gs
 from src.endpoints.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
-from src.endpoints.kazarinov.parser_onetab import fetch_target_urls_onetab
-from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
 from src.utils.file import read_text_file, recursive_read_text_files, save_text_file
 from src.utils.string.url import is_url
 from src.logger import logger
 
 @dataclass
-class KazarinovTelegram(TelegramBot):
+class PsychologistTelgrambot(TelegramBot):
     """Telegram bot with custom behavior for Kazarinov."""
 
     token: str = field(init=False)
     d: Driver = field(init=False)
-    mexiron: Mexiron = field(init=False)
     model: GoogleGenerativeAI = field(init=False)
     system_instruction: str = field(init=False)
     questions_list: list = field(init=False)
@@ -36,21 +39,21 @@ class KazarinovTelegram(TelegramBot):
 
     def __post_init__(self):
         mode = 'test'
-        self.token = gs.credentials.telegram.hypo69_test_bot if mode == 'test' else gs.credentials.telegram.hypo69_kazarinov_bot
+        #self.token = gs.credentials.telegram.hypo69_test_bot if mode == 'test' else gs.credentials.telegram.hypo69_psychologist_bot
+        self.token = gs.credentials.telegram.hypo69_psychologist_bot
         super().__init__(self.token)
 
         self.d = Driver(Chrome)
-        self.mexiron = Mexiron(self.d)
-
+        
         self.system_instruction = read_text_file(
-            gs.path.google_drive / 'kazarinov' / 'prompts' / 'chat_system_instruction.txt'
+            gs.path.google_drive / 'hypo69_psychologist_bot' / 'prompts' / 'chat_system_instruction.txt'
         )
         self.questions_list = recursive_read_text_files(
-            gs.path.google_drive / 'kazarinov' / 'prompts' / 'train_data' / 'q', ['*.*'], as_list=True
+            gs.path.google_drive / 'hypo69_psychologist_bot' / 'prompts' / 'train_data' / 'q', ['*.*'], as_list=True
         )
 
         self.model = GoogleGenerativeAI(
-            api_key=gs.credentials.gemini.kazarinov,
+            api_key=gs.credentials.gemini.hypo69_psychologist_bot,
             system_instruction=self.system_instruction,
             generation_config={"response_mime_type": "text/plain"}
         )
@@ -67,7 +70,7 @@ class KazarinovTelegram(TelegramBot):
 
     async def start(self, update: Update, context: CallbackContext) -> None:
         """Handle /start command."""
-        await update.message.reply_text('Hello! This is Kazarinov’s custom bot.')
+        await update.message.reply_text('Hi! I am a smart assistant psychologist.')
         await super().start(update, context)
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
@@ -77,16 +80,8 @@ class KazarinovTelegram(TelegramBot):
 
         log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
         save_text_file(f"User {user_id}: {response}\n", Path(log_path))
-
-        if handler := self.get_handler_for_url(response):
-            return await handler(update, response)
-
-        if response in ('--next', '-next', '__next', '-n', '-q'):
-            return await self.handle_next_command(update)
-
-        if not is_url(response):
-            answer = self.model.ask(q=response, history_file=f'{user_id}.txt')
-            return await update.message.reply_text(answer)
+        answer = self.model.ask(q=response, history_file=f'{user_id}.txt')
+        return await update.message.reply_text(answer)
 
     def get_handler_for_url(self, response: str):
         """Map URLs to specific handlers."""
@@ -114,13 +109,7 @@ class KazarinovTelegram(TelegramBot):
 
     async def handle_onetab_response(self, update: Update, response: str) -> None:
         """Handle OneTab URLs."""
-        price, mexiron_name, urls = fetch_target_urls_onetab(response)
 
-        if not all([price, mexiron_name, urls]):
-            error_message = (
-                'Ошибка на сервере OneTab. Попробуй ещё раз через часок.'
-            )
-            return await update.message.reply_text(error_message)
 
         if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
             await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
@@ -146,5 +135,5 @@ class KazarinovTelegram(TelegramBot):
         await update.message.reply_text(f'Received your document. Content: {file_content}')
 
 if __name__ == "__main__":
-    kt = KazarinovTelegram()
+    kt = PsychologistTelgrambot()
     asyncio.run(kt.application.run_polling())

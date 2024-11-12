@@ -1,8 +1,12 @@
-## \file ./src/product/product_fields/product_fields_translator.py
+## \file hypotez/src/product/product_fields/product_fields_translator.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.product.product_fields """
+
 """ Модуль перевода полей товара на языки клиентской базы данных """
 ...
 

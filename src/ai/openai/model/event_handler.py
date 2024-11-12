@@ -1,8 +1,12 @@
-## \file ./src/ai/openai/model/event_handler.py
+## \file hypotez/src/ai/openai/model/event_handler.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.ai.openai.model """
+
 """ https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """
 
 from typing_extensions import override

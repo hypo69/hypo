@@ -1,7 +1,11 @@
-## \file ./src/suppliers/amazon/product_fields.py
+## \file hypotez/src/suppliers/amazon/product_fields.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.amazon """
 """   [File's Description]
 
 @namespace src: src
@@ -20,7 +24,7 @@
 Author(s):
   - Created by Davidka on 09.11.2023 .
 """
-# /path/to/interpreter/python
+
 
 """ Я добавляю в базу данных престашоп товар путем нескольких последовательных действий
 1. Заполняю поля, необходимые для создания нового товара

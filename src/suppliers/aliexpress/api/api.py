@@ -1,7 +1,11 @@
-## \file ./src/suppliers/aliexpress/api/api.py
+## \file hypotez/src/suppliers/aliexpress/api/api.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.api """
 """ AliExpress API wrapper for Python
 
 A simple Python wrapper for the AliExpress Open Platform API. This module allows
@@ -9,7 +13,7 @@ to get product information and affiliate links from AliExpress using the officia
 API in an easier way.
 """
 ...
-# /path/to/interpreter/python
+
 ...
 
 from typing import List, Union

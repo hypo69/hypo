@@ -1,8 +1,12 @@
-## \file ./src/endpoints/kazarinov/react/__init__.py
+## \file hypotez/src/endpoints/kazarinov/react/__init__.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.kazarinov.react """
+
 """  Модуль поставщика. Class `Supplier`
 - для каждого конкретного поставщика есть свои специфичные методы (функции) извлечения информации. 
 Эти функции дополняют базовый класс `Supplier` и подключаются через интерфейс  `supplier.related_functions`

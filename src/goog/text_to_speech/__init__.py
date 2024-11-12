@@ -1,9 +1,13 @@
-## \file ./src/goog/text_to_speech/__init__.py
+## \file hypotez/src/goog/text_to_speech/__init__.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.goog.text_to_speech """
 """ Google TTS """
-# /path/to/interpreter/python
+
 import header   
 
 from attr import attr, attrs

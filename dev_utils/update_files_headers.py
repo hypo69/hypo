@@ -1,76 +1,139 @@
-## \file ./dev_utils/update_files_headers.py
+## \file hypotez/dev_utils/update_files_headers.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: dev_utils """
+
 import os
+import argparse
 from pathlib import Path
+import sys
+import platform
 
-def add_or_replace_file_header(file_path: str):
-    """Adds or replaces a header and interpreter line in the specified Python file.
+PROJECT_ROOT_FOLDER = 'hypotez'
 
-    This function ensures that the Python file has a consistent header, coding declaration, 
-    and interpreter line by removing any existing lines that match these patterns 
-    and replacing them with new ones in the specified order.
+EXCLUDE_DIRS = ['venv', 'tmp', 'docs', 'data', '__pycache__']  # Добавим дополнительные папки для исключения
 
-    Additionally, it removes any BOM (U+FEFF) characters if they exist.
+def find_project_root(start_path: Path, project_root_folder: str) -> Path:
+    """Find the project root directory by searching for the specified folder."""
+    current_path = start_path
+    while current_path != current_path.parent:
+        if (current_path / project_root_folder).exists():
+            return current_path / project_root_folder
+        current_path = current_path.parent
+    raise FileNotFoundError(f"Project root folder '{project_root_folder}' not found.")
+
+def get_interpreter_paths(project_root: Path) -> tuple:
+    """Returns paths to all relevant Python interpreters for both Windows and Linux/macOS.
 
     Args:
-        file_path (str): The path to the Python file to be processed.
-
-    Example:
-        >>> add_or_replace_file_header('example.py')
-        This will add or update the header, coding declaration, and interpreter line in 'example.py'.
+        project_root (Path): The root directory of the project (contains the virtual environment).
+    
+    Returns:
+        tuple: A tuple with paths to the Python interpreter for Windows (venv and system) and Linux/macOS (venv and system).
     """
-    # Convert backslashes to forward slashes for the file path
-    file_path = file_path.replace('\\', '/')
-    header_line = f'## \\file {file_path}\n'
+
+    # Пути для Windows
+    # w_venv_interpreter = project_root / 'venv' / 'Scripts' / 'python.exe'
+    w_venv_interpreter = fr'venv/Scripts/python.exe'
+    w_system_interpreter = fr'py'
+    
+    # Пути для Linux/macOS
+    # linux_venv_interpreter = project_root / 'venv' / 'bin' / 'python'
+    linux_venv_interpreter = fr'venv/bin/python'
+    linux_system_interpreter = fr'/usr/bin/python'
+    
+    return (
+        str(w_venv_interpreter), str(w_system_interpreter),
+        str(linux_venv_interpreter), str(linux_system_interpreter)
+    )
+
+def add_or_replace_file_header(file_path: str, project_root: Path, force_update: bool):
+    """Adds or replaces a header, interpreter lines, and module docstring in the specified Python file.
+
+    Args:
+        file_path (str): Path to the Python file being processed.
+        project_root (Path): The root directory of the project.
+        force_update (bool): If True, forces update even if headers already exist.
+    """
+    # Определяем относительный путь от корня проекта
+    relative_path = Path(file_path).resolve().relative_to(project_root)
+    header_line = f'## \\file hypotez/{relative_path.as_posix()}\n'
     coding_index = '# -*- coding: utf-8 -*-\n'
-    interpreter_line = '#! /venv/Scripts/python.exe\n'  # Specify the desired interpreter line
+    
+    # Получаем пути к интерпретаторам
+    w_venv_interpreter, w_system_interpreter, linux_venv_interpreter, linux_system_interpreter = get_interpreter_paths(project_root)
+    
+    # Формируем строки для интерпретаторов
+    w_venv_interpreter_line = f'#! {w_venv_interpreter} # <- venv win\n'
+    w_system_interpreter_line = f'#! {w_system_interpreter} # <- system win\n'
+    linux_venv_interpreter_line = f'#! {linux_venv_interpreter} # <- venv linux/macos\n'
+    linux_system_interpreter_line = f'#! {linux_system_interpreter} # <- system linux/macos\n'
+    closing_line = '## ~~~~~~~~~~~~~\n'
+    
+    # Создаем строку документации модуля и заменяем символы `/` на `.`
+    module_path = relative_path.parent.as_posix().replace('/', '.')
+    module_docstring = f'""" module: {module_path} """\n'
 
     print(f"Processing file: {file_path}")
-    
+
     try:
         with open(file_path, 'r+', encoding='utf-8', newline='') as file:
             lines = file.readlines()
 
-            # Remove BOM from each line if present
-            cleaned_lines = [line.lstrip('\ufeff') for line in lines]
-
-            # Remove existing lines that match the specified patterns
+            # Удаляем BOM и ненужные строки заголовка, кодировки и интерпретатора
+            cleaned_lines = [line.lstrip('\ufeff') for line in lines]  # Удаление BOM
             filtered_lines = [
-                line for line in cleaned_lines 
-                if not (line.startswith("## \\file") 
+                line for line in cleaned_lines
+                if not (line.startswith("## \\file")
                         or line.startswith("# -*- coding")
-                        or line.startswith("#! /path/to/interpreter/python")
-                        or line.startswith("#! /venv/Scripts/python.exe"))
+                        or line.startswith("#!")
+                        or line.startswith("## ~~~~~~~~~~~~~")
+                        or line.strip().startswith('""" module:'))
             ]
 
-            # Flags to check if lines need to be added
+            # Проверка необходимости обновления
             header_needs_update = not any(line == header_line for line in filtered_lines)
             coding_needs_update = not any(line == coding_index for line in filtered_lines)
-            interpreter_needs_update = not any(line == interpreter_line for line in filtered_lines)
+            venv_interpreter_needs_update = not any(line == w_venv_interpreter_line or line == linux_venv_interpreter_line for line in filtered_lines)
+            system_interpreter_needs_update = not any(line == w_system_interpreter_line or line == linux_system_interpreter_line for line in filtered_lines)
+            closing_needs_update = not any(line == closing_line for line in filtered_lines)
+            module_docstring_needs_update = not any(line.strip() == module_docstring.strip() for line in filtered_lines)
 
-            print(f"Header needs update: {header_needs_update}")
-            print(f"Coding declaration needs update: {coding_needs_update}")
-            print(f"Interpreter line needs update: {interpreter_needs_update}")
+            # Если force_update включен, всегда обновляем
+            if force_update:
+                header_needs_update = True
+                coding_needs_update = True
+                venv_interpreter_needs_update = True
+                system_interpreter_needs_update = True
+                closing_needs_update = True
+                module_docstring_needs_update = True
 
-            # Prepare the lines to be added in order
+            # Добавляем новые строки заголовка, если это необходимо
             new_lines = []
             if header_needs_update:
-                print("Adding header line.")
                 new_lines.append(header_line)
             if coding_needs_update:
-                print("Adding coding declaration line.")
                 new_lines.append(coding_index)
-            if interpreter_needs_update:
-                print("Adding interpreter line.")
-                new_lines.append(interpreter_line)
+            if venv_interpreter_needs_update:
+                new_lines.append(w_venv_interpreter_line)
+                new_lines.append(linux_venv_interpreter_line)
+            if system_interpreter_needs_update:
+                new_lines.append(w_system_interpreter_line)
+                new_lines.append(linux_system_interpreter_line)
+            if closing_needs_update:
+                new_lines.append(closing_line)
+            if module_docstring_needs_update:
+                new_lines.append(module_docstring)
 
-            # Insert new lines at the beginning of filtered lines
+            # Запись изменений в файл
             if new_lines:
-                print("Writing new lines to the file.")
-                file.seek(0)  # Move to the start of the file
-                file.writelines(new_lines + filtered_lines)  # Write new lines followed by remaining content
-                file.truncate()  # Remove any leftover content after the new end of file
+                file.seek(0)  # Перемещаем указатель в начало файла
+                file.writelines(new_lines + filtered_lines)  # Записываем новые строки и оставшиеся строки файла
+                file.truncate()  # Обрезаем файл после добавленных строк
                 print(f"Updated {file_path} successfully.")
             else:
                 print(f"No updates necessary for {file_path}.")
@@ -78,41 +141,48 @@ def add_or_replace_file_header(file_path: str):
     except IOError as ex:
         print(f"Error processing file {file_path}: {ex}")
 
-def traverse_directory(directory: str):
-    """Recursively traverses the directory and processes Python files.
 
-    This function walks through the given directory and all its subdirectories,
-    processing each Python file found by calling `add_or_replace_file_header` 
-    to ensure consistent headers.
-
-    Args:
-        directory (str): The root directory to start traversing.
-
-    Example:
-        >>> traverse_directory('/path/to/directory')
-        This will recursively process all Python files in '/path/to/directory'.
-    """
+def traverse_and_update(directory: Path, force_update: bool, exclude_venv: bool):
+    """Traverses downwards from the given directory ('hypotez') and processes Python files."""
     print(f"Traversing directory: {directory}")
-    for root, _, files in os.walk(directory):
+
+    for root, dirs, files in os.walk(directory):
+        # Исключаем папки из EXCLUDE_DIRS
+        dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
+
         for file in files:
             if file.endswith('.py'):
                 file_path = os.path.join(root, file)
-                print(f"Found Python file: {file_path}")
-                add_or_replace_file_header(file_path)
+                add_or_replace_file_header(file_path, directory, force_update)
 
 def main():
-    """Main function to execute the script.
+    """Main function to execute the script."""
+    parser = argparse.ArgumentParser(description="Process Python files in the 'hypotez' project.")
+    parser.add_argument('--force-update', action='store_true', help="Force update the headers and interpreter lines even if they already match.")
+    parser.add_argument('-p', '--project-dir', type=str, help="Path to the project directory.")
+    parser.add_argument('--exclude-venv', action='store_true', default=True, help="Exclude 'venv' directory from processing. Default is True.")
 
-    This function sets the root directory for the script to start processing
-    Python files by invoking `traverse_directory`.
+    args = parser.parse_args()
 
-    Example:
-        >>> main()
-        This will start processing Python files in the specified root directory.
-    """
-    root_dir = Path('.')  # Set your target directory here
-    print(f"Starting script to process Python files in: {root_dir}")
-    traverse_directory(root_dir)
+    # Преобразуем путь к проекту в объект Path
+    if args.project_dir:
+        project_dir = Path(args.project_dir).resolve()
+    else:
+        # Если проектная директория не указана, ищем проект выше
+        try:
+            project_dir = find_project_root(Path(__file__).parent, PROJECT_ROOT_FOLDER)
+        except FileNotFoundError as ex:
+            print(ex)
+            return
+
+    # Проверка существования директории проекта
+    if not project_dir.exists():
+        print(f"Error: The specified project directory does not exist: {project_dir}")
+        return
+
+    print(f"Starting downward traversal from: {project_dir}")
+    traverse_and_update(project_dir, args.force_update, args.exclude_venv)
+
 
 if __name__ == "__main__":
     main()

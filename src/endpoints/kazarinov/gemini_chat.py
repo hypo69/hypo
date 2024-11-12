@@ -1,8 +1,12 @@
-## \file ./src/endpoints/kazarinov/gemini_chat.py
+## \file hypotez/src/endpoints/kazarinov/gemini_chat.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.kazarinov """
+
 """ 
 Module that handles model training using GoogleGenerativeAI for the Kazarinov project.
 Logs dialogs into JSON files and processes training prompts.

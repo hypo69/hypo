@@ -1,4 +1,3 @@
-# Генерация документации с помощью sphinx-apidoc
 sphinx-apidoc -o docs/sphinx src --force --separate
 
 # Переходим в директорию docs/sphinx

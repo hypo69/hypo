@@ -1,7 +1,11 @@
-## \file ./src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/dict_scenarios.py
+## \file hypotez/src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/dict_scenarios.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass """
 scenario: dict = {
     "Murano Glass": {
         "url": "https://www.amazon.com/s?k=Art+Deco+murano+glass&crid=24Q0ZZYVNOQMP&sprefix=art+deco+murano+glass%2Caps%2C230&ref=nb_sb_noss",

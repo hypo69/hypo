@@ -1,9 +1,13 @@
-## \file ./src/db/manager_categories/suppliers_categories.py
+## \file hypotez/src/db/manager_categories/suppliers_categories.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.db.manager_categories """
 """ @namespace src.db.manager_categories """
-# /path/to/interpreter/python
+
 """ Модуль обработки категорий.
 сервер: davidka.net
 db: u177424397_splr_catgories

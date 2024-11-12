@@ -1,9 +1,13 @@
-## \file ./src/suppliers/aliexpress/campaign/ttypes.py
+## \file hypotez/src/suppliers/aliexpress/campaign/ttypes.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.campaign """
 """ Определение типов `campaign`, `category`, `product` """
-# /path/to/interpreter/python
+
 
 from types import SimpleNamespace
 from typing import List, TypedDict, Optional

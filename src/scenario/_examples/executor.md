@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
+
 
 """
 Examples for the `executor` module from `src.scenario.executor`.

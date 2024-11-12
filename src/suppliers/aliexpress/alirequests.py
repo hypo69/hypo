@@ -1,7 +1,11 @@
-## \file ./src/suppliers/aliexpress/alirequests.py
+## \file hypotez/src/suppliers/aliexpress/alirequests.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress """
 """ AliExpress requests handling.
 alirequests.py
 │
@@ -35,7 +39,7 @@ alirequests.py
     ├── Supplier.__init__()
 
 """
-# /path/to/interpreter/python
+
 import pickle
 import requests
 from pathlib import Path

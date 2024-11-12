@@ -1,9 +1,13 @@
-## \file ./src/category/category.py
+## \file hypotez/src/category/category.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.category """
 """ @namespace src.category """
-# /path/to/interpreter/python
+
 """ Модуль работы с категориями 
 На сегодняшний день модуль заточен в основном под Престашоп
 """

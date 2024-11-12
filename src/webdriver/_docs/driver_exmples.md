@@ -1,7 +1,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
+
 """ Examples for using `Driver` and `Chrome` classes """
 
 from src.webdriver import Driver, Chrome

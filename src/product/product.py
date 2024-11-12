@@ -1,12 +1,16 @@
-## \file ./src/product/product.py
+## \file hypotez/src/product/product.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.product """
 """  Class `Product`. Interaction between website, product, and PrestaShop.
 @details Defines the behavior of a product in the project.
 """
 
-# /path/to/interpreter/python
+
 
 from src import gs
 from src.endpoints.prestashop import Prestashop

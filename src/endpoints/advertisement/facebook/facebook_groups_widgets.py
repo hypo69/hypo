@@ -1,8 +1,12 @@
-## \file ./src/endpoints/advertisement/facebook/facebook_groups_widgets.py
+## \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.advertisement.facebook """
+
 """ Раскрывающеся меню выбора групп для подачи объвления"""
 
 import header 

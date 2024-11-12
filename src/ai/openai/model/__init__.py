@@ -1,22 +1,20 @@
-## \file ./src/ai/openai/model/__init__.py
+## \file hypotez/src/ai/openai/model/__init__.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-""" Темплейты даля создания новых сущностей (новый поставщик) 
-
-@todo
-    1. получить данные:
-        - имя поставщика. Например, `aliexpress`
-        - вебсайт поставщика. 
-        - имя/пароль (если требуются для входа на сайт)
-    1. создать диркторию поставщика в директории `src.suppliers`
-обновить записи в престашоп и гугл таблице
-"""
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.ai.openai.model """
 ...
-# /path/to/interpreter/python
 
 from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
+from .version import (__project_name__, 
+                      __version__, 
+                      __doc__, 
+                      __details__, 
+                      __author__
+                    )
 
 from .training import OpenAIModel
 

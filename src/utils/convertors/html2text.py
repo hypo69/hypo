@@ -1,8 +1,11 @@
-## \file ./src/utils/convertors/html2text.py
+## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#!/usr/bin/env python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.convertors """
 """html2text: Turn HTML into equivalent Markdown-structured text."""
 __version__ = "3.1"
 __author__ = "Aaron Swartz (me@aaronsw.com)"
@@ -89,7 +92,7 @@ def charref(name):
         return unifiable_n[c]
     else:
         try:
-            return unichr(c)
+            return chr(c)
         except NameError: #Python3
             return chr(c)
 
@@ -101,7 +104,7 @@ def entityref(c):
         except KeyError: return "&" + c + ';'
         else:
             try:
-                return unichr(name2cp(c))
+                return chr(name2cp(c))
             except NameError: #Python3
                 return chr(name2cp(c))
 

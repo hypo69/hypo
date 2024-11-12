@@ -1,7 +1,11 @@
-## \file ./src/utils/convertors/html.py
+## \file hypotez/src/utils/convertors/html.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.convertors """
 """
 HTML conversion utilities.
 Functions:
@@ -11,16 +15,22 @@ Functions:
     - `html2ns`: Convert HTML to SimpleNamespace objects.
     https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err
 https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b
-"""         
-import header
+"""
+
 import re
 from typing import Dict
 from pathlib import Path
+from venv import logger
 from src.utils.string import StringFormatter
+from src.logger import logger
 from types import SimpleNamespace
 from html.parser import HTMLParser
 from xhtml2pdf import pisa
-from weasyprint import HTML
+try:
+    from weasyprint import HTML
+except Exception as ex:
+    logger.error(ex)
+    ...
 
 def html2escape(input_str: str) -> str:
     """

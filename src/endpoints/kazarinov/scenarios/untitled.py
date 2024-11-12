@@ -1,7 +1,11 @@
-## \file ./src/endpoints/kazarinov/scenarios/untitled.py
+## \file hypotez/src/endpoints/kazarinov/scenarios/untitled.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.kazarinov.scenarios """
 def j_loads(
         jjson: dict | SimpleNamespace | str | Path | list[dict] | list[SimpleNamespace],
         ordered: bool = True,

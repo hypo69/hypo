@@ -2,7 +2,7 @@
 ```python
 ## \file src/suppliers/aliexpress/campaigns/prepare_campaigns.py
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
+
 """ Prepare all material in the 'aliexpress/campaigns' directories for advertising campaigns 
 <pre>
 +-------------------------+

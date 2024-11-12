@@ -1,7 +1,11 @@
-## \file ./src/suppliers/_experiments/test_categories_from_template.py
+## \file hypotez/src/suppliers/_experiments/test_categories_from_template.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers._experiments """
 """ класс проверки создания шаблонов категорий.
 @deprecated Это какая-то старая версия. Сейчас в файле сценария записана дефолтная категория
 собираемого товара. От нее строится дерево вверх. при необходимости в сценарии можно

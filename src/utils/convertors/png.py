@@ -1,9 +1,13 @@
-## \file ./src/utils/convertors/text2png.py
+## \file hypotez/src/utils/convertors/png.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /path/to/python/interpreter
-"""
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.convertors """
+"""module: `src.utils.png`
+png convertors 
 This module reads text from a file, generates PNG images for each line of text using Pillow,
 and saves them to an output directory with customizable options for image appearance.
 """
@@ -189,3 +193,25 @@ class TextToImageGenerator:
         background.paste(overlay, position, overlay)
 
         return background
+
+def webp2png(webp_path: str, png_path: str) -> bool:
+    """
+    Converts a WEBP image to PNG format.
+
+    Args:
+        webp_path (str): Path to the input WEBP file.
+        png_path (str): Path to save the converted PNG file.
+
+    Example:
+        webp2png('image.webp', 'image.png')
+    """
+    try:
+        # Open the webp image
+        with Image.open(webp_path) as img:
+            # Convert to PNG and save
+            img.save(png_path, 'PNG')
+        return True
+    except Exception as e:
+        print(f"Error during conversion: {e}")
+        return
+

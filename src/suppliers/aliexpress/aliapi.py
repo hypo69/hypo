@@ -1,7 +1,11 @@
-## \file ./src/suppliers/aliexpress/aliapi.py
+## \file hypotez/src/suppliers/aliexpress/aliapi.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress """
 """ AliExpress API Scenario
 \rst
 aliapi.py
@@ -62,7 +66,7 @@ processing XLS files from the `scenarios\\api\\sources` directory.
 `start()` processes only one XLS file if specified, or all files in the directory if no specific file is provided.
 """
 ...
-# /path/to/interpreter/python
+
 ...
 import re
 import json

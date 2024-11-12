@@ -1,14 +1,19 @@
-## \file ./src/endpoints/kazarinov/header.py
+## \file hypotez/src/endpoints/kazarinov/header.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.kazarinov """
+
 """! Module to set the project root path """
 import json
 import sys
 import os
 from pathlib import Path
 
-def find_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')):
+def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')):
     """! Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
     
@@ -32,7 +37,7 @@ def find_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git'
     return current_path
 
 # Call the function to find the project root
-__root__: Path = find_project_root()
+__root__: Path = get_project_root()
 
 # Add the project root to `sys.path` to allow importing modules from the project root
 sys.path.append(str(__root__))
@@ -42,7 +47,7 @@ project_name = __root__.name  # This will get the name of the directory in __roo
 
 # Alternatively, if you want to keep the logic of reading from settings.json
 try:
-    with open('../../settings.json', 'r') as settings_file:
+    with open(__root__ / 'src' /'settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
         project_name = settings.get("project_name", project_name)  # Fallback to folder name if not found
         
@@ -68,7 +73,6 @@ for bin_path in paths_to_add:
         sys.path.insert(0, str(bin_path))
 
 os.environ['WEASYPRINT_DLL_DIRECTORIES'] = str(gtk_bin_path)
-
 
 """Suppress GTK log output to the console"""
 import warnings

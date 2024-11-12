@@ -1,7 +1,11 @@
-## \file ./src/db/manager_coupons_and_sales/product_group_reduction_cache_manager.py
+## \file hypotez/src/db/manager_coupons_and_sales/product_group_reduction_cache_manager.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.db.manager_coupons_and_sales """
 """ 
 @code
 # Create an instance of the manager
@@ -32,7 +36,7 @@ manager.delete_record(1, 2)
 @endcode
 """
 ...
-# /path/to/interpreter/python
+
 ...
 import sys
 import traceback

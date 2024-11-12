@@ -1,9 +1,13 @@
-## \file ./src/suppliers/aliexpress/campaign/html_generators.py
+## \file hypotez/src/suppliers/aliexpress/campaign/html_generators.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.campaign """
 """ Генератор HTML контента рекламной кампании """
-# /path/to/interpreter/python
+
 import header   
 
 from pathlib import Path

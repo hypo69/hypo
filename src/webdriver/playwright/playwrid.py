@@ -1,7 +1,11 @@
-## \file ./src/webdriver/playwright/playwrid.py
+## \file hypotez/src/webdriver/playwright/playwrid.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver.playwright """
 """ Playwrid Crawler
 
 This code defines a subclass of `PlaywrightCrawler` called `Playwrid`. 
@@ -14,7 +18,7 @@ if __name__ == "__main__":
     browser.start("https://www.example.com")
 @endcode
 """
-# /path/to/interpreter/python
+
 
 from pathlib import Path
 from turtle import pen

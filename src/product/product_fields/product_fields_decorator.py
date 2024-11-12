@@ -1,8 +1,12 @@
-## \file ./src/product/product_fields/product_fields_decorator.py
+## \file hypotez/src/product/product_fields/product_fields_decorator.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.product.product_fields """
+
 """ 
 @file src/suppliers/product_fields_decorator.py
 Декоратор для функций заполнения полей в файле `graber.py` поставщика

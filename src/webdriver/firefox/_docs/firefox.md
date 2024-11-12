@@ -15,7 +15,7 @@
 ```python
 ## \file src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
+
 """ вебдрайвер Firefox
 
  This code defines a subclass of webdriver.Firefox called Firefox. 

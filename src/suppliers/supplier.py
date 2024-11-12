@@ -1,8 +1,12 @@
-## \file ./src/suppliers/supplier.py
+## \file hypotez/src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers """
+
 """ <b>Class</b> `Supplier` <b>Base class for all suppliers</b>
 Provides methods and attributes for a specific
 data supplier: e.g., amazon.com, walmart.com, mouser.com, digikey.com, or custom ones.

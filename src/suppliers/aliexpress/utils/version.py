@@ -1,7 +1,11 @@
-## \file ./src/suppliers/aliexpress/utils/version.py
+## \file hypotez/src/suppliers/aliexpress/utils/version.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.utils """
 """
 - `__version__`: This variable holds the version of the module or package.
 - `__name__`: Contains the name of the module. If the script is being run directly, the value will be `"__main__"`.
@@ -93,4 +97,3 @@ process_all_campaigns(language="EN", currency="USD", force=True)
 
 __author__='hypotez'
 
-# /path/to/interpreter/python

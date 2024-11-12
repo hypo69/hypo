@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# /path/to/interpreter/python
+
 """ Aliexpress  API Scenario
 функция `start()` начинает сбор сценария по API, 
 обрабатывая файлы XLS из директории `scenanarios\\api\\sources`. 

@@ -1,8 +1,12 @@
-## \file ./src/utils/string/html_escapes.py
+## \file hypotez/src/utils/string/html_escapes.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.string """
+
 """    dictionary {UTF-8 : HTML ESCAPE}
  Словарь {UTF-8 : HTML ESCAPE}
 """

@@ -1,7 +1,11 @@
-## \file ./src/scenario/_experiments/amazon_murano_glass.py
+## \file hypotez/src/scenario/_experiments/amazon_murano_glass.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.scenario._experiments """
 import header
 #from header import j_dumps, j_loads,  logger, Category, Product, Supplier, gs, start_supplier
 from header import start_supplier

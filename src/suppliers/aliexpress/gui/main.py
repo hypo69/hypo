@@ -1,10 +1,14 @@
-## \file ./src/suppliers/aliexpress/gui/main.py
+## \file hypotez/src/suppliers/aliexpress/gui/main.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.gui """
 """ Main window interface for managing advertising campaigns """
 
-# /path/to/interpreter/python
+
 
 import header
 import asyncio

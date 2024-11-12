@@ -1,7 +1,11 @@
-## \file ./src/webdriver/bs/bs.py
+## \file hypotez/src/webdriver/bs/bs.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver.bs """
 """ parse pages with `BeautifulSoup` and XPath 
 @code
 if __name__ == "__main__":
@@ -15,7 +19,7 @@ if __name__ == "__main__":
 
 """
 
-# /path/to/interpreter/python
+
 import re
 from math import log
 from bs4 import BeautifulSoup

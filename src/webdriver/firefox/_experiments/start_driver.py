@@ -1,7 +1,11 @@
-## \file ./src/webdriver/firefox/_experiments/start_driver.py
+## \file hypotez/src/webdriver/firefox/_experiments/start_driver.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver.firefox._experiments """
 """ вебдрайвер Firefox
 
 This code defines a subclass of webdriver.Firefox called Firefox. 
@@ -10,7 +14,7 @@ in kiosk mode and the ability to set up a Firefox profile for the webdriver.
 
 @image html class_firefox.png
 """
-# /path/to/interpreter/python
+
 
 import os
 from pathlib import Path

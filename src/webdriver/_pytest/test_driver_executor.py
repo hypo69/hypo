@@ -1,8 +1,12 @@
-## \file ./src/webdriver/_pytest/test_driver_executor.py
+## \file hypotez/src/webdriver/_pytest/test_driver_executor.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver._pytest """
+
 """ Общий тест для driver и executor
 test_navigate_to_page: Проверяет, что WebDriver корректно загружает указанную страницу.
 test_get_webelement_by_locator_single_element: Проверяет, что метод get_webelement_by_locator корректно возвращает элемент по локатору.

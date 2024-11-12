@@ -1,13 +1,17 @@
-## \file ./src/scenario/_experiments/header.py
+## \file hypotez/src/scenario/_experiments/header.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.scenario._experiments """
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]
 sys.path.append(path)  # Добавляю корневую папку в sys.path
 # ----------------
-# /path/to/interpreter/python
+
 
 from pathlib import Path
 import json

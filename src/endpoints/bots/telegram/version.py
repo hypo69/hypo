@@ -1,7 +1,11 @@
-## \file ./src/endpoints/bots/telegram/version.py
+## \file hypotez/src/endpoints/bots/telegram/version.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.bots.telegram """
 """
 - `__version__`: This variable holds the version of the module or package.
 - `__name__`: Contains the name of the module. If the script is being run directly, the value will be `"__main__"`.

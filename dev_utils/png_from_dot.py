@@ -1,6 +1,11 @@
-## \file ./dev_utils/utils/generate_png_from_dot_links.py
+## \file hypotez/dev_utils/png_from_dot.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: dev_utils """
 # /path/to/interpreter/python
 """ HERE MUST BE DESCRIPTION OF MODULE """
 import os

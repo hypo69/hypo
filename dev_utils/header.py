@@ -1,9 +1,14 @@
-## \file ./dev_utils/header.py
+## \file hypotez/dev_utils/header.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-# /path/to/interpreter/python
-"""! Module to set the project root path """
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: dev_utils """
 
+"""! Module to set the project root path """
+import json
 import sys
 import os
 from pathlib import Path
@@ -36,3 +41,6 @@ __root__: Path = find_project_root()
 
 # Add the project root to `sys.path` to allow importing modules from the project root
 sys.path.append(str(__root__))
+
+from src import header
+ 

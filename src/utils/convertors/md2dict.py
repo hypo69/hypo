@@ -1,8 +1,11 @@
-## \file ./src/utils/convertors/md2dict.py
+## \file hypotez/src/utils/convertors/md2dict.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /usr/share/projects/hypotez/venv/scripts python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.convertors """
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header 

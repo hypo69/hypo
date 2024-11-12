@@ -1,7 +1,11 @@
-## \file ./src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
+## \file hypotez/src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.kualastyle._experiments """
 import header
 from header import Product, ProductFields, start_supplier
 s = start_supplier('kualastyle')

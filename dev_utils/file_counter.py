@@ -1,6 +1,11 @@
-## \file ./dev_utils/file_counter.py
+## \file hypotez/dev_utils/file_counter.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: dev_utils """
 import os
 import sys
 from pathlib import Path

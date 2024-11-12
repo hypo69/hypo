@@ -1,7 +1,11 @@
-## \file ./dev_utils/create_index_rst.py
+## \file hypotez/dev_utils/create_index_rst.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /path/to/python/interpreter
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: dev_utils """
 """
 This module recursively traverses subdirectories from the current directory,
 reads all *.py files, and creates an index.rst file in the `docs` directory that lists all these files.

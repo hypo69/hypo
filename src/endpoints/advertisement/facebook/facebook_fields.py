@@ -1,8 +1,11 @@
-## \file ./src/endpoints/advertisement/facebook/facebook_fields.py
+## \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-#! /usr/share/projects/hypotez/venv/scripts python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.advertisement.facebook """
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 from pathlib import Path
 from src import gs

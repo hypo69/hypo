@@ -1,7 +1,11 @@
-## \file ./src/webdriver/_examples/_example_driver.py
+## \file hypotez/src/webdriver/_examples/_example_driver.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.webdriver._examples """
 # example.py
 
 from src.webdriver import Driver, Chrome, Firefox, Edge

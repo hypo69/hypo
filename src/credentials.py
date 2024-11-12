@@ -1,7 +1,11 @@
-## \file ./src/credentials.py
+## \file hypotez/src/credentials.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/env python3
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src """
 """ Global Project Settings: paths, passwords, logins, and API settings.
 
 Start-up settings for the program.
@@ -12,63 +16,64 @@ are stored in `credentials.kdbx` and need the master password to open the databa
 To ensure cross-OS compatibility of paths, all paths are declared as `Path` objects.
 @todo The root directory can have any name. Currently, it is hardcoded as `hypotez`. Need to add the option to choose the name of the root directory in the configuration file.
 """
-
-import sys
-import getpass
+# Встроенные библиотеки
 import datetime
+import getpass
+import os
+import sys
+import json
+import warnings
+from dataclasses import dataclass, field
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Optional
+
+# Сторонние библиотеки
+from pydantic import BaseModel, Field
+
 from pykeepass import PyKeePass
-from dataclasses import dataclass, field
 
-import header
-from header import __root__
-from src.check_relise import check_latest_release 
-from src.utils.jjson import j_loads, j_loads_ns
-from src.utils.file import read_text_file
-from src.utils.printer import pprint
+# Локальные модули
+from src.check_relise import check_latest_release
 from src.logger import logger
-from src.logger.exceptions import (CredentialsError, 
-                                    BinaryError,                            
-                                    HeaderChecksumError, 
-                                    PayloadChecksumError, 
-                                    UnableToSendToRecycleBin,
-                                    KeePassException, 
-                                    DefaultSettingsException
-                                    )
+from src.logger.exceptions import (
+    BinaryError,
+    CredentialsError,
+    DefaultSettingsException,
+    HeaderChecksumError,
+    KeePassException,
+    PayloadChecksumError,
+    UnableToSendToRecycleBin,
+)
+from src.utils.file import read_text_file
+from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.printer import pprint
 
+def singleton(cls):
+    """Декоратор для реализации Singleton."""
+    instances = {}
 
-class SingletonMeta(type):
-    _instances = {}
+    def get_instance(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
 
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            instance = super().__call__(*args, **kwargs)
-            cls._instances[cls] = instance
-        return cls._instances[cls]
+    return get_instance
 
-
-@dataclass
-class ProgamSettings(metaclass=SingletonMeta):
-    """ `ProgamSettings` - Defines program launch parameters.
-    A singleton class that stores the main parameters and settings of the project.
-    Designed to ensure that only one instance of it exists in the program.
+@singleton
+class ProgramSettings(BaseModel):
+    """ 
+    `ProgramSettings` - класс настроек программы.
+    
+    Синглтон, хранящий основные параметры и настройки проекта.
     """
-    dev_null: str = field(default='nul' if Path().drive else '/dev/null')
-    __root__: Path = field(default=Path(__root__))
-    settings: SimpleNamespace = field(default_factory=lambda: j_loads_ns(__root__ / 'src' / 'settings.json'))
-    mode:str = field(default = 'debug')
-    path: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
-        root=Path(__root__),
-        src=Path(__root__ / 'src'),
-        bin=Path(__root__ / 'bin'),
-        log=Path(__root__ / 'log'),
-        tmp=Path(__root__ / 'tmp'),
-        data=Path(__root__ / 'data'), 
-        secrets=Path(__root__ / 'secrets'),
-        google_drive=Path(__root__ / 'data'),  # <- ~~~~~~~~~ DEBUG
-    ))
+    
+    model_config = {
+        "arbitrary_types_allowed": True
+    }
 
+    base_dir: Path = Field(default_factory=lambda: Path(__file__).resolve().parent.parent)
+    settings: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
     credentials: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         aliexpress=SimpleNamespace(
             api_key=None,
@@ -94,25 +99,93 @@ class ProgamSettings(metaclass=SingletonMeta):
                 password=None,
             )]
         ),
-        openai=SimpleNamespace(api_key=None, assistant=SimpleNamespace(), project_api=None),
+        openai=SimpleNamespace(
+            api_key=None, 
+            assistant=SimpleNamespace(), 
+            project_api=None
+        ),
         gemini=SimpleNamespace(api_key=SimpleNamespace()),
-        discord=SimpleNamespace(application_id=None, public_key=None, bot_token=None),
-        telegram=SimpleNamespace(bot=SimpleNamespace()),
+        discord=SimpleNamespace(
+            application_id=None, 
+            public_key=None, 
+            bot_token=None
+        ),
+        telegram=SimpleNamespace(
+            bot=SimpleNamespace()
+        ),
         smtp=[],
         facebook=[],
         gapi={}
     ))
+    mode: str = Field(default='debug')
+    path: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(
+        root = None,
+        src = None,
+        bin = None,
+        log = None,
+        tmp = None,
+        data = None,
+        secrets = None,
+        google_drive = None,
+        dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
+    ))
 
-    def __post_init__(self) -> None:
-        """Initialization routine after the instance is created."""
-        if check_latest_release(self.settings.git_user, self.settings.git):
-            ...
-        self.mode = self.settings.mode
-        self._load_credentials()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Ваш код для выполнения __post_init__
+
+        """! Выполняет инициализацию после создания экземпляра класса."""
         
+        def _get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')):
+            """! Находит корневую директорию проекта, начиная с текущей директории."""
+            current_path = Path(__file__).resolve().parent
+            for parent in [current_path] + list(current_path.parents):
+                if any((parent / marker).exists() for marker in marker_files):
+                    return parent
+            return current_path
+
+        self.base_dir = _get_project_root()
+        sys.path.append(str(self.base_dir))
+        self.settings = j_loads_ns(Path(self.base_dir) / 'src' / 'settings.json')
+
+        self.settings.project_name = self.base_dir.name
+        
+        self.path = SimpleNamespace(
+            root=Path(self.base_dir),
+            src=Path(self.base_dir) / 'src',
+            bin=Path(self.base_dir) / 'bin',
+            log=Path(self.base_dir) / 'log',
+            tmp=Path(self.base_dir) / 'tmp',
+            data=Path(self.base_dir) / 'data',
+            secrets=Path(self.base_dir) / 'secrets',
+            google_drive=Path(self.base_dir) / 'data',  # <- DEBUG path
+        )
+
+        if check_latest_release(self.settings.git_user, self.settings.git):
+            ...  # Логика для новой версии
+
+        self.mode = self.settings.mode
+
+        # Paths to bin directories
+        gtk_bin_dir = self.base_dir / 'bin' / 'gtk' / 'gtk-nsis-pack' / 'bin'
+        ffmpeg_bin_dir = self.base_dir / 'bin' / 'ffmpeg' / 'bin'
+        graphviz_bin_dir = self.base_dir / 'bin' / 'graphviz' / 'bin'
+        wkhtmltopdf_bin_dir = self.base_dir / 'bin' / 'wkhtmltopdf' / 'files' / 'bin'
+
+        for bin_path in [self.base_dir, gtk_bin_dir, ffmpeg_bin_dir, graphviz_bin_dir, wkhtmltopdf_bin_dir]:
+            if bin_path not in sys.path:
+                sys.path.insert(0, str(bin_path))
+
+        os.environ['WEASYPRINT_DLL_DIRECTORIES'] = str(gtk_bin_dir)
+
+        # Suppress GTK log output to the console
+        warnings.filterwarnings("ignore", category=UserWarning)
+        self._load_credentials()
+
 
     def _load_credentials(self) -> None:
-        """ Loads credentials from the KeePass database"""
+        """! Загружает учетные данные из настроек."""
+
         kp = self._open_kp(3)
         if not kp:
             logger.error(" :( ")
@@ -149,19 +222,20 @@ class ProgamSettings(metaclass=SingletonMeta):
         if not self._load_gapi_credentials(kp):
             raise DefaultSettingsException('Failed to load GAPI credentials')
 
-    
     def _open_kp(self, retry: int = 3) -> PyKeePass | None:
         """ Open KeePass database
-        @param retry: Number of retries
+        Args:
+            retry (int): Number of retries
         """
         while retry > 0:
             try:
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                password:str = read_text_file( self.path.secrets / 'password.txt')
+                password:str = read_text_file( self.path.secrets / 'password.txt') or None
+                """password: содержит строку пароля в открытом виде. Можно удалить или сам файл или вытереть его содржимое """
+                
                 kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), 
-                               password = password or getpass.getpass(pprint('Enter KeePass master password: ', text_color='ligt_blue', bg_color='dark_gray')))
-                #kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), password=getpass.getpass('Enter KeePass master password: ').lower())  # <- `.lower()` for debug only!
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                               password = password or getpass.getpass(pprint('Enter KeePass master password: ', text_color='ligt_blue', bg_color='dark_gray').lower()))
+               
                 return kp
             except Exception as ex:
                 logger.error(f"Failed to open KeePass database, {retry-1} retries left.", ex, False)
@@ -174,7 +248,13 @@ class ProgamSettings(metaclass=SingletonMeta):
 
     # Define methods for loading various credentials
     def _load_aliexpress_credentials(self, kp: PyKeePass) -> bool:
-        """ Load Aliexpress API credentials from KeePass"""
+        """ Load Aliexpress API credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             entry = kp.find_groups(path=['suppliers', 'aliexpress', 'api']).entries[0]
             self.credentials.aliexpress.api_key = entry.custom_properties.get('api_key', None)
@@ -189,7 +269,13 @@ class ProgamSettings(metaclass=SingletonMeta):
             return False
 
     def _load_openai_credentials(self, kp: PyKeePass) -> bool:
-        """ Load OpenAI credentials from KeePass"""
+        """ Load OpenAI credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             entries = kp.find_groups(path=['openai']).entries
 
@@ -199,17 +285,17 @@ class ProgamSettings(metaclass=SingletonMeta):
         except DefaultSettingsException as ex:
             ...
             logger.error("Failed to extract GoogleAI credentials from KeePass", ex)
-            return False          
+            return           
 
-            
-            return True
-        except DefaultSettingsException as ex:
-            logger.error("Failed to extract OpenAI credentials from KeePass", ex)
-            ...
-            return False
 
     def _load_gemini_credentials(self, kp: PyKeePass) -> bool:
-        """ Load GoogleAI credentials from KeePass"""
+        """ Load GoogleAI credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             entries = kp.find_groups(path=['gemini']).entries
 
@@ -219,7 +305,7 @@ class ProgamSettings(metaclass=SingletonMeta):
         except DefaultSettingsException as ex:
             ...
             logger.error("Failed to extract GoogleAI credentials from KeePass", ex)
-            return False
+            return 
 
     def _load_telegram_credentials(self, kp: PyKeePass) -> bool:
         """Load Telegram credentials from KeePass.
@@ -238,10 +324,16 @@ class ProgamSettings(metaclass=SingletonMeta):
         except DefaultSettingsException as ex:
             logger.error("Failed to extract Telegram credentials from KeePass", ex)
             ...
-            return False
+            return 
 
     def _load_discord_credentials(self, kp: PyKeePass) -> bool:
-        """ Load Discord credentials from KeePass"""
+        """ Load Discord credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             entry = kp.find_groups(path=['discord']).entries[0]
             self.credentials.discord.application_id = entry.custom_properties.get('application_id', None)
@@ -251,10 +343,16 @@ class ProgamSettings(metaclass=SingletonMeta):
         except DefaultSettingsException as ex:
             logger.error("Failed to extract Discord credentials from KeePass", ex)
             ...
-            return False
+            return 
 
     def _load_prestashop_credentials(self, kp: PyKeePass) -> bool:
-        """ Load Prestashop credentials from KeePass"""
+        """ Load Prestashop credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             entries = kp.find_groups(path=['prestashop']).entries
             for entry in entries:
@@ -263,7 +361,7 @@ class ProgamSettings(metaclass=SingletonMeta):
         except DefaultSettingsException as ex:
             logger.error("Failed to extract Telegram credentials from KeePass", ex)
             ...
-            return False
+            return 
         try:
             for entry in kp.find_groups(path=['prestashop', 'clients']).entries:
                 self.credentials.presta.client.append(SimpleNamespace(
@@ -277,10 +375,16 @@ class ProgamSettings(metaclass=SingletonMeta):
         except DefaultSettingsException as ex:
             logger.error("Failed to extract Prestashop credentials from KeePass", ex)
             ...
-            return False
+            return 
         
     def _load_presta_translations_credentials(self, kp: PyKeePass) -> bool:
-        """ Load Translations credentials from KeePass"""
+        """ Load Translations credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             entry = kp.find_groups(path=['prestashop','translation']).entries[0]
             self.credentials.presta.translations.server = entry.custom_properties.get('server', None)
@@ -290,12 +394,18 @@ class ProgamSettings(metaclass=SingletonMeta):
             self.credentials.presta.translations.password = entry.custom_properties.get('password', None)
             return True
         except DefaultSettingsException as ex:
-            ...
             logger.error("Failed to extract Translations credentials from KeePass", ex)
-            return False
+            ...
+            return 
         
     def _load_smtp_credentials(self, kp: PyKeePass) -> bool:
-        """ Load SMTP credentials from KeePass"""
+        """ Load SMTP credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             for entry in kp.find_groups(path=['smtp']).entries:
                 self.credentials.smtp.append(SimpleNamespace(
@@ -306,12 +416,18 @@ class ProgamSettings(metaclass=SingletonMeta):
                 ))
             return True
         except DefaultSettingsException as ex:
-            ...
             logger.error("Failed to extract SMTP credentials from KeePass", ex)
-            return False
+            ...
+            return 
 
     def _load_facebook_credentials(self, kp: PyKeePass) -> bool:
-        """ Load Facebook credentials from KeePass"""
+        """ Load Facebook credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             for entry in kp.find_groups(path=['facebook']).entries:
                 self.credentials.facebook.append(SimpleNamespace(
@@ -323,25 +439,40 @@ class ProgamSettings(metaclass=SingletonMeta):
         except DefaultSettingsException as ex:
             ...
             logger.error("Failed to extract Facebook credentials from KeePass", ex)
-            return False
+            return 
 
     def _load_gapi_credentials(self, kp: PyKeePass) -> bool:
-        """ Load Google API credentials from KeePass"""
+        """ Load Google API credentials from KeePass
+        Args:
+            kp (PyKeePass): The KeePass database instance.
+
+        Returns:
+            bool: True if loading was successful, False otherwise.
+        """
         try:
             entry = kp.find_groups(path=['google','gapi']).entries[0]
             self.credentials.gapi['api_key'] = entry.custom_properties.get('api_key', None)
             return True
         except DefaultSettingsException as ex:
-            logger.error("Failed to extract GAPI credentials from KeePass", ex)
-            return False
+            logger.error("Failed to extract GAPI credentials from KeePass", ex) 
+            ...
+            return 
 
     @property
-    def now(self) -> str:
-        """  Returns a datestamp in the chosen format
-        @details Returns a datestamp in the chosen format
+    def now(self, dformat: str = '%Y%m%d%H%M') -> str:
+        """ Returns the current timestamp in the specified format and sets up paths for binary files.
+
+        This method returns a string representing the current timestamp in the format `YYYYMMDDHHMM`. It also checks and adds the necessary binary file paths to the system if they haven't been added already.
+
+        Args:
+            dformat (str, optional): The format for the timestamp. Defaults to `'%Y%m%d%H%M'`.
+
+        Returns:
+            str: The current timestamp in string format.
         """
-        dformat: str = '%Y%m%d%H%M'
+    
         return datetime.datetime.now().strftime(dformat)
 
+
 # Global instance of ProgamSettings
-gs: ProgamSettings = ProgamSettings()
+gs: ProgramSettings = ProgramSettings()

@@ -1,8 +1,12 @@
-## \file ./src/utils/convertors/dict.py
+## \file hypotez/src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.convertors """
+
 """
 Converter for converting between dict and SimpleNamespace objects.
 
@@ -49,7 +53,7 @@ from src.utils.xls import save_xls_file
 #     elif isinstance(data, list):
 #         return [dict2ns(item) if isinstance(item, dict) else item for item in data]
 #     return data
-# /path/to/interpreter/python
+
 
 
 # Функция для конвертации словаря в PDF

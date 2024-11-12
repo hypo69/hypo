@@ -1,7 +1,11 @@
-## \file ./src/product/_experiments/_experiments_locators.py
+## \file hypotez/src/product/_experiments/_experiments_locators.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.product._experiments """
 import header
 from header import ProductFieldsLocators, gs, j_dumps, j_loads
 from pathlib import Path

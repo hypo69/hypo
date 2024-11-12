@@ -1,9 +1,13 @@
-## \file ./src/endpoints/prestashop/api_schemas/api_resourses_list.py
+## \file hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.endpoints.prestashop.api_schemas """
 """ Список всех доступных ресурсов для API вызовов"""
-# /path/to/interpreter/python
+
 resource:list = [
     'products', 
     'categories', 

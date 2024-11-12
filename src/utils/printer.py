@@ -1,8 +1,11 @@
-## \file ./src/utils/printer.py
+## \file hypotez/src/utils/printer.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-"""
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils 
 This module provides enhanced print formatting for better readability of data structures.
 It supports pretty-printing of dictionaries, lists, objects, and reading from CSV/XLS/XLSX files 
 with customization for handling `Path` objects and class instances, along with color, background, and font styling.
@@ -15,35 +18,6 @@ import pandas as pd
 from pathlib import Path
 from typing import Any
 from pprint import pprint as pretty_print
-
-# ANSI escape codes for colors, background, and styles
-RESET = "\033[0m"
-
-# Text colors
-RED = "\033[31m"
-GREEN = "\033[32m"
-BLUE = "\033[34m"
-YELLOW = "\033[33m"
-WHITE = "\033[37m"
-
-# Background colors
-BG_RED = "\033[41m"
-BG_GREEN = "\033[42m"
-BG_BLUE = "\033[44m"
-BG_YELLOW = "\033[43m"
-BG_WHITE = "\033[47m"
-
-# Font styles
-BOLD = "\033[1m"
-UNDERLINE = "\033[4m"
-ITALIC = "\033[3m"
-
-"""
-This module provides enhanced print formatting for better readability of data structures.
-It supports pretty-printing of dictionaries, lists, objects, and reading from CSV/XLS/XLSX files 
-with customization for handling `Path` objects and class instances, along with color, background, and font styling.
-Examples: https://colab.research.google.com/drive/1uBcZuMabkix2qpNJtNkMImF1BX7e6Eqd
-"""
 
 import json
 import csv

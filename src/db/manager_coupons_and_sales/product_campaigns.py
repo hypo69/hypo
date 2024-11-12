@@ -1,10 +1,14 @@
-## \file ./src/db/manager_coupons_and_sales/product_campaigns.py
+## \file hypotez/src/db/manager_coupons_and_sales/product_campaigns.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.db.manager_coupons_and_sales """
 """ Купоны, скидки и т.п. для товаров Prestashop"""
 ...
-# /path/to/interpreter/python
+
 ...
 from sqlalchemy import create_engine
 from sqlalchemy import select

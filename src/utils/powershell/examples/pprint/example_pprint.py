@@ -1,8 +1,12 @@
-## \file ./src/utils/powershell/examples/pprint/example_pprint.py
+## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.utils.powershell.examples.pprint """
+
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 ...
 import header

@@ -1,8 +1,12 @@
-## \file ./src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
+## \file hypotez/src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress._pytests """
+
 """ YOU MUST WRITE A DESCRIPTION !
 This script contains the following:
 

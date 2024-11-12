@@ -1,7 +1,6 @@
-## \file ./src/utils/docs/source/conf.py
+## \file hypotez/src/utils/docs/source/conf.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! C:\Users\user\Documents\repos\hypotez\venv\Scripts\python.exe
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:

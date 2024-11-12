@@ -1,7 +1,11 @@
-## \file ./src/gui/version.py
+## \file hypotez/src/gui/version.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.gui """
 import json
 
 settings:dict = None

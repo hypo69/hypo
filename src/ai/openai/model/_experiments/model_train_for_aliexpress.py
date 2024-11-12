@@ -1,8 +1,12 @@
-## \file ./src/ai/openai/model/_experiments/model_train_for_aliexpress.py
+## \file hypotez/src/ai/openai/model/_experiments/model_train_for_aliexpress.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.ai.openai.model._experiments """
+
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header 

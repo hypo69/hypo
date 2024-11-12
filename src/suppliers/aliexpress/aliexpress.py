@@ -1,7 +1,11 @@
-## \file ./src/suppliers/aliexpress/aliexpress.py
+## \file hypotez/src/suppliers/aliexpress/aliexpress.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress """
 """ Base class for the supplier. 
 This class inherits from `Supplier`.
 It allows interaction with AliExpress in three ways:
@@ -19,7 +23,7 @@ Examples:
     @endcode
 """
 
-# /path/to/interpreter/python
+
 
 import pickle
 import requests

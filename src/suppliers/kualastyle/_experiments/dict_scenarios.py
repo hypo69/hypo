@@ -1,7 +1,11 @@
-## \file ./src/suppliers/kualastyle/_experiments/dict_scenarios.py
+## \file hypotez/src/suppliers/kualastyle/_experiments/dict_scenarios.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.kualastyle._experiments """
 scenarios: dict = {
     "Sofas and Sectionals": {
         "url": "https://kualastyle.com/collections/%D7%A1%D7%A4%D7%95%D7%AA-%D7%9E%D7%A2%D7%95%D7%A6%D7%91%D7%95%D7%AA",

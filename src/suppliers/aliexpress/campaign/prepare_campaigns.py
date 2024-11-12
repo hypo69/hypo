@@ -1,8 +1,12 @@
-## \file ./src/suppliers/aliexpress/campaign/prepare_campaigns.py
+## \file hypotez/src/suppliers/aliexpress/campaign/prepare_campaigns.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
-# /path/to/interpreter/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.campaign """
+
 """
 This module prepares AliExpress campaigns by processing categories, handling campaign data, and generating promotional materials.
 

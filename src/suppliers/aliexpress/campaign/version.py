@@ -1,7 +1,11 @@
-## \file ./src/suppliers/aliexpress/campaign/version.py
+## \file hypotez/src/suppliers/aliexpress/campaign/version.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.campaign """
 """
 - `__version__`: This variable holds the version of the module or package.
 - `__name__`: Contains the name of the module. If the script is being run directly, the value will be `"__main__"`.
@@ -10,7 +14,7 @@
 - `__annotations__`: Contains type annotations for variables and functions in the module.
 - `__author__`: The name(s) of the author(s) of the module.
 """
-# /path/to/interpreter/python
+
 __name__=''
 __version__="3.12.0.0.0.4"
 __doc__=f"""

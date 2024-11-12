@@ -1,7 +1,11 @@
-## \file ./src/suppliers/kualastyle/via_webdriver.py
+## \file hypotez/src/suppliers/kualastyle/via_webdriver.py
 # -*- coding: utf-8 -*-
-#! /venv/Scripts/python.exe
-#! /usr/bin/python
+#! venv/Scripts/python.exe # <- venv win
+#! venv/bin/python # <- venv linux/macos
+#! py # <- system win
+#! /usr/bin/python # <- system linux/macos
+## ~~~~~~~~~~~~~
+""" module: src.suppliers.kualastyle """
 """    parsing kualastyle via webdriver
 
 @namespace src: src
@@ -18,7 +22,7 @@ Author(s):
 """
 
 
-# /path/to/interpreter/python
+
 
 
 from src.logger import logger
