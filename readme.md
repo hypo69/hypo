@@ -119,11 +119,11 @@ Here's a brief overview of each software tool or library located in the bin fold
    - Unzip the downloaded compressed file into the `hypotez` folder .
 
 	Make sure to **unzip directly into the project folder**, similar to selecting "Extract Here" in a context menu. The archive already contains a `bin` folder with all necessary binaries, so unzipping it in the project root will place everything in the correct directory structure automatically.
-		- Your directory structure should look like this:<img src="dia/bin.png">
+		- Your directory structure should look like this:  <img src="imasges/bin.png" alt="`bin` directory structute">
 	- - Easy Way to continue installation: 								
 	Execute the install script `.\INSTALL.PS1`.
 
-    The script will guide you through the steps to set up hypotez efficiently. After completion, continue to the Configuration section below to add your credentials and any other specific settings.
+    The script will guide you through the steps to set up `hypotez` efficiently. After completion, continue to the Configuration section below to add your credentials and any other specific settings.
 
 3. Continue to manual install:
 
