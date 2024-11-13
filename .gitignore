@@ -194,6 +194,7 @@ hypo69-c32c8736ca62.json
 password.txt
 *.kdbx
 ___*.*
+*.bak
 
 # Sphinx .rst files
 *.rst

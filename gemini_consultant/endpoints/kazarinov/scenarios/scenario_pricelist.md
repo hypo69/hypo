@@ -34,103 +34,112 @@ from src.utils.image import save_png_from_url, save_png
 from src.utils import pprint
 from src.logger import logger
 
-# Use dataclass for better structure and type hinting
+
 @dataclass
-class ProductData:
-    product_id: str
-    name: str
-    description_short: str
-    description: str
-    specification: str
-    local_saved_image: str
-
 class Mexiron:
-    # ... (rest of the class is the same)
+    """! Handles Morlevi product extraction, parsing, and saving processes."""
+    d: Driver
+    base_path: Path
+    timestamp: str
+    model: GoogleGenerativeAI
 
-    def __init__(self, d: Driver):
-        # ... (rest of the init is the same)
-        self.products_list: List[ProductData] = field(default_factory=list)  # Correct type annotation
-        # ... (rest of the init is the same)
-    
+    products_list: list = field(default_factory=list)
+    product_titles: list = field(default_factory=list)  # Separate list for titles
 
-    async def run_scenario(self, system_instruction: Optional[str] = None, price: Optional[str] = None, mexiron_name: str = None, urls: Optional[str | list] = None) -> bool:
-        # ... (rest of the function is the same)
-        
-        # Crucial change: collect only valid ProductData objects
-        valid_products = [p for p in products_list if all(value is not None for value in p.values())]
+    def __post_init__(self):
+        self.timestamp = gs.now
+        self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' / self.timestamp
+
+        system_instruction_path = gs.path.google_drive / 'kazarinov' / 'prompts' /  'buid_mexiron.txt'
+        system_instruction = read_text_file(system_instruction_path)
+        api_key = gs.credentials.gemini.kazarinov
+
+        self.model = GoogleGenerativeAI(api_key = api_key, system_instruction = system_instruction, generation_config = {"response_mime_type": "application/json"})
 
 
+    async def run_scenario(self, price: Optional[str] = None, urls: Optional[list] = None, mexiron_name: str = None) -> bool:
+        """Prepares product data by parsing and saving product pages."""
+
+        # ... (rest of the function, with improvements below)
+        # ...
+
+
+        # Crucial fix: Use the initialized products_list and avoid overwriting
+        if not urls_list:
+            logger.debug("No URLs provided for product pages.")
+            return False  # Indicate failure
+
+
+        for url in urls_list:
+            # ... (graber logic)
+
+            if not f:
+                logger.warning(f"Failed to extract product fields for {url}.")
+                continue
+
+            self.product_titles.append(f.product_title)  # Store title separately
+            # ... rest of the saving logic ...
+            self.products_list.append({'product_id': f.product_id, ...}) 
+
+
+        if not self.products_list:
+            logger.warning("No products were successfully extracted.")
+            return False  # Indicate failure
+
+        ru, he = await self.ask_gemini(self.products_list)
         # ... (rest of the function)
+
+
+    async def ask_gemini(self, products_list: list) -> tuple:
+        response = await self.model.ask(j_dumps(products_list))
+        if not response:
+            logger.error("No response from Gemini.")
+            return None, None  # Indicate failure
         
-        
-        # ... (rest of the function is the same)
-
-
-    def convert_product_fields(self, f: ProductFields) -> Optional[ProductData]:
-        image_path = self.base_path / 'images' / f'{f.id_product}.png'
-        if isinstance(f.default_image_url, (Path, str)):
-            try:
-                asyncio.run(save_png_from_url(f.default_image_url, image_path))
-            except Exception as e:
-                logger.error(f"Error saving image {image_path}: {e}")
-                return None  # Return None if image saving fails
-        elif not asyncio.run(save_png(f.default_image_url, image_path)):
-            logger.error(f"Error saving image {image_path}")
-            return None
-
-        # Return ProductData only if all conversions were successful
         try:
-            return ProductData(
-                product_id=f.id_product,
-                name=str(f.name['language'][0]['value']).strip(),
-                description_short=f.description_short['language'][0]['value'].strip(),
-                description=f.description['language'][0]['value'].strip(),
-                specification=f.specification['language'][0]['value'].strip(),
-                local_saved_image=fr'file:///{str(image_path)}',
-            )
-        except (IndexError, KeyError) as e:
-            logger.error(f"Error converting product fields: {e}, {f}")
-            return None  # Return None if conversion fails
+            data: SimpleNamespace = j_loads_ns(response)
+            if not data:
+                logger.error("Invalid response from Gemini.")
+                return None, None
+            return data.ru, data.he
+        except (KeyError, AttributeError) as e:
+            logger.error(f"Error parsing Gemini response: {e}")
+            return None, None
 
 
-        # ... (rest of the function is the same)
-
+    # ... (rest of the function)
 
 
 ```
 
-**Explanation of Changes and Improvements:**
+**Key Improvements and Explanations:**
 
-* **`ProductData` dataclass:** Introduced a `ProductData` dataclass to represent product information. This makes the code more structured, readable, and allows for better type hinting.
+* **`@dataclass` Decorator:**  Using `@dataclass` for the `Mexiron` class greatly simplifies the initialization process.  It automatically generates `__init__`, `__repr__`, and other methods, making the code more concise and easier to maintain.
+* **`__post_init__` Method:** Moved initialization of `timestamp`, `base_path`, and `model` into `__post_init__` which is executed *after* the `__init__` parameters are set.
+* **`products_list` Initialization**: Removed the redundant `products_list` definition inside the function. The default factory list now works correctly.
+* **Error Handling and Return Values**: Added more robust error handling. Functions now return `False` to indicate failure to the calling function instead of relying on side effects. `ask_gemini` now handles potential `KeyError` and `AttributeError` to prevent crashes from malformed Gemini responses.
+* **Separate Title List**: Created a separate `product_titles` list to store the product titles.  Storing them separately improves clarity and maintainability.
+* **`ask_gemini` Function:**  Extracted the Gemini interaction into a separate, asynchronous function. This improves structure and makes it easier to test the Gemini interaction separately from the other tasks in the `run_scenario` method. It also handles potential errors from Gemini.
+* **Clearer Logging**: Added more informative logging messages to help track errors and progress.
 
-* **Type Hinting:** Improved type hints throughout the code for better code clarity and maintainability.
-
-* **Error Handling (Crucial):** Added `try...except` blocks to handle potential errors during image saving and product field conversion.  Critically, if an error occurs, it now returns `None` from `convert_product_fields`, preventing the creation of invalid `ProductData` objects.
-
-* **Validating `ProductData` objects:** The `run_scenario` method now filters out invalid `ProductData` objects. This prevents `products_list` from containing items with missing or incorrect data, which could lead to errors in the Gemini requests.
-
-* **Robust Error Handling in `convert_product_fields`:** The `convert_product_fields` now handles potential `IndexError` and `KeyError` exceptions that can arise from inconsistent or missing data in the `ProductFields` object, ensuring that invalid data does not cause unexpected behavior.
-
-
-* **`Optional` type hints:** Added `Optional` type hints to parameters that might accept `None` values.
-
-* **Logging:**  Used more informative logging messages to help with debugging.
 
 **How to use the improved code:**
 
 ```python
-# ... (Import necessary modules)
-
-# ... (Instantiate your Driver object)
+# ... (other imports and setup)
 
 async def main():
-    driver = Driver()
-    mexiron = Mexiron(driver)
-    await mexiron.run_scenario(urls=["your_url"])
-
+    driver = await Driver.get_driver()  # Your driver initialization
+    mexiron = Mexiron(d=driver, base_path=Path("..."))  # Use the improved constructor
+    success = await mexiron.run_scenario(price="1200", urls=["url1", "url2"])
+    if success:
+        print("Scenario executed successfully.")
+    else:
+        print("Scenario execution failed.")
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 ```
 
-By incorporating these changes, the code becomes significantly more robust and less prone to unexpected errors caused by issues during data processing.  This prevents corrupted data from propagating through the rest of the process, enhancing the reliability of the script. Remember to install the required libraries.
+This improved version is significantly more robust, easier to read, and less prone to errors.  Critically, it now handles potential failure scenarios during data extraction and processing in a structured way, preventing unexpected program crashes. Remember to replace placeholders like `"url1"` and `"url2"` with the actual URLs.  Importantly, you need to replace the placeholder `Path("...")` with the correct path to your base directory.
