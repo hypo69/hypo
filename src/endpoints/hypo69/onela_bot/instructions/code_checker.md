@@ -44,7 +44,3 @@
    - Added Sphinx comments for function description, arguments, return type, and example.
    - Maintained original functionality and comments.
    ```
-
----
-
-This is a streamlined instruction set that focuses on Python code processing while also noting the need to retain original content where relevant.
