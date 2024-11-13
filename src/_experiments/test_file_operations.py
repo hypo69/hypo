@@ -1,9 +1,6 @@
 ## \file hypotez/src/_experiments/test_file_operations.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src._experiments """
 import os

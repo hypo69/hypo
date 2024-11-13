@@ -1,15 +1,14 @@
 ## \file hypotez/src/check_relise.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src """
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 
 import requests
+from src.logger import logger
+"""@AI: у меня есть свой модуль `src.logger` который  обеспечивает логирование в проекте """
 
 def check_latest_release(owner: str, repo: str):
     """Check the latest release version of a GitHub repository.
@@ -28,6 +27,7 @@ def check_latest_release(owner: str, repo: str):
         latest_release = response.json()
         return latest_release['tag_name']
     else:
-        print(f"Error fetching data: {response.status_code}")
+        #logger.error(f"Error fetching data: {response.status_code}")
+        #TODO: Код не проверен
         return 
 

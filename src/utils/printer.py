@@ -1,11 +1,9 @@
 ## \file hypotez/src/utils/printer.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
-""" module: src.utils 
+""" module: src.utils """
+"""
 This module provides enhanced print formatting for better readability of data structures.
 It supports pretty-printing of dictionaries, lists, objects, and reading from CSV/XLS/XLSX files 
 with customization for handling `Path` objects and class instances, along with color, background, and font styling.

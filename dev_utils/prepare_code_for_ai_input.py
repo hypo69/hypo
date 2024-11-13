@@ -1,9 +1,6 @@
 ## \file hypotez/dev_utils/prepare_code_for_ai_input.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: dev_utils """
 """! This script collects the contents of specific files in the 'src' directory, 

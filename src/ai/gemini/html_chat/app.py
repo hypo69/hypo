@@ -1,9 +1,6 @@
 ## \file hypotez/src/ai/gemini/html_chat/app.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.ai.gemini.html_chat """
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

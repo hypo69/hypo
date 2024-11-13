@@ -1,9 +1,6 @@
 ## \file hypotez/src/suppliers/hb/_experiments/ide_experiments_grabber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.hb._experiments """
 """  Проверки исполнения сценариев HB.

@@ -1,9 +1,6 @@
 ## \file hypotez/src/endpoints/bots/openai_bots/telegram_bot_trainger.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.bots.openai_bots """
 """ This script creates a simple Telegram bot using the python-telegram-bot library."""

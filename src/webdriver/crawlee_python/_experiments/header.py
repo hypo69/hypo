@@ -1,9 +1,6 @@
 ## \file hypotez/src/webdriver/crawlee_python/_experiments/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.webdriver.crawlee_python._experiments """
 """ Эксперименты с библиотекой crawlee-python """

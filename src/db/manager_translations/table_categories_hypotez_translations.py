@@ -1,9 +1,6 @@
 ## \file hypotez/src/db/manager_translations/table_categories_hypotez_translations.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_translations """
 """ @namespace src.db.manager_translations """

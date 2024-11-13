@@ -1,9 +1,6 @@
 ## \file hypotez/src/utils/convertors/_experiments/html2text.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.utils.convertors._experiments """
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

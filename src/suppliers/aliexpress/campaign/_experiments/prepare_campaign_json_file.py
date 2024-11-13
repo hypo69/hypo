@@ -1,9 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/_experiments/prepare_campaign_json_file.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.campaign._experiments """
 """ Проверка создания рекламной кампании """

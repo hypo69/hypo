@@ -1,9 +1,6 @@
 ## \file hypotez/src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.ai.gemini """
 """Google generative AI integration."""
@@ -91,7 +88,8 @@ class GoogleGenerativeAI(BaseModel):
     def _save_dialogue(self, dialogue: list):
         """Save dialogue to both txt and json files with size management."""
         save_text_file(dialogue, self.history_txt_file, mode='+a')
-        j_dumps(data=dialogue, file_path=self.history_json_file, mode='+a')
+        for message in dialogue:
+            j_dumps(data=message, file_path=self.history_json_file, mode='+a')
 
     def ask(self, q: str, attempts: int = 3) -> Optional[str]:
         """Send a prompt to the model and get the response."""

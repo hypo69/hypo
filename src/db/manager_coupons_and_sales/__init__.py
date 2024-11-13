@@ -1,9 +1,6 @@
 ## \file hypotez/src/db/manager_coupons_and_sales/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_coupons_and_sales """
 """ Менеджер скидок, купонов и т.п. в Prestashop  """

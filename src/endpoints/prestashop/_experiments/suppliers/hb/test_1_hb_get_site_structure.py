@@ -1,9 +1,6 @@
 ## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb/test_1_hb_get_site_structure.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop._experiments.suppliers.hb """
 

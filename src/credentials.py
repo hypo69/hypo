@@ -1,9 +1,6 @@
 ## \file hypotez/src/credentials.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src """
 """ Global Project Settings: paths, passwords, logins, and API settings.
@@ -303,8 +300,8 @@ class ProgramSettings(BaseModel):
                 setattr(self.credentials.gemini, entry.title, entry.custom_properties.get('api_key', None))
             return True
         except DefaultSettingsException as ex:
-            ...
             logger.error("Failed to extract GoogleAI credentials from KeePass", ex)
+            ...
             return 
 
     def _load_telegram_credentials(self, kp: PyKeePass) -> bool:
@@ -437,8 +434,8 @@ class ProgramSettings(BaseModel):
                 ))
             return True
         except DefaultSettingsException as ex:
-            ...
             logger.error("Failed to extract Facebook credentials from KeePass", ex)
+            ...
             return 
 
     def _load_gapi_credentials(self, kp: PyKeePass) -> bool:

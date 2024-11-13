@@ -1,9 +1,6 @@
 ## \file hypotez/dev_utils/update_files_headers.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: dev_utils """
 
@@ -120,10 +117,11 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
                 new_lines.append(coding_index)
             if venv_interpreter_needs_update:
                 new_lines.append(w_venv_interpreter_line)
-                new_lines.append(linux_venv_interpreter_line)
+                #new_lines.append(linux_venv_interpreter_line)
             if system_interpreter_needs_update:
-                new_lines.append(w_system_interpreter_line)
-                new_lines.append(linux_system_interpreter_line)
+                # new_lines.append(w_system_interpreter_line)
+                # new_lines.append(linux_system_interpreter_line)
+                ...
             if closing_needs_update:
                 new_lines.append(closing_line)
             if module_docstring_needs_update:

@@ -1,9 +1,6 @@
 ## \file hypotez/dev_utils/code2file_for_chat_gpt.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: dev_utils """
 """! Этот скрипт рекурсивно читает и обрабатывает все указанные текстовые и данные файлы в каталоге 

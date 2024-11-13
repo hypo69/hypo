@@ -1,9 +1,6 @@
 ## \file hypotez/src/suppliers/chat_gpt/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.chat_gpt """
 __version__: str = 'v1.1'

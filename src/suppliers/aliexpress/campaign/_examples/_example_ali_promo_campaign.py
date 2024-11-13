@@ -1,9 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-#! venv/bin/python # <- venv linux/macos
-#! py # <- system win
-#! /usr/bin/python # <- system linux/macos
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.campaign._examples """
 """ Примеры создания рекламной кампании """
