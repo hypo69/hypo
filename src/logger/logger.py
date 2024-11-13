@@ -58,7 +58,6 @@ Examples:
 
 """
 ...
-import header
 
 import threading
 import traceback

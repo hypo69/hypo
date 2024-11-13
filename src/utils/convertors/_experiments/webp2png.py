@@ -11,7 +11,7 @@ saving the output to another directory. The conversion is handled by the `webp2p
 
 import header
 from pathlib import Path
-from src import gs
+from __init__ import gs
 from src.utils.convertors.webp2png import webp2png
 from src.utils.file import get_filenames
 

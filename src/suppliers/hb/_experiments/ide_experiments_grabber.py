@@ -27,7 +27,7 @@ from src.webdriver import executor
 ####################################################################################################
 
 
-from src import gs
+from __init__ import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields
 from src.scenario import run_scenarios

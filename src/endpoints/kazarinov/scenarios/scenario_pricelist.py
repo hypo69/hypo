@@ -13,7 +13,7 @@ from typing import Optional, List
 from types import SimpleNamespace
 from dataclasses import field
 
-from src import gs
+from __init__ import gs
 from src.product.product_fields import ProductFields
 from src.webdriver import Driver
 from src.ai.gemini import GoogleGenerativeAI

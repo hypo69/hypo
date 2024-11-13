@@ -46,7 +46,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import List, Optional, Dict
 import header
-from src import gs
+from __init__ import gs
 from src.suppliers.aliexpress import campaign
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
 from src.suppliers.aliexpress.utils import locales

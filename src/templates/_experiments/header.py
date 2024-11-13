@@ -12,6 +12,6 @@ sys.path.append (str (dir_root) )  # Добавляю корневую дире�
 dir_src = Path (dir_root, 'src') 
 sys.path.append (str (dir_root) ) # Добавляю рабочую директорию в sys.path 
  
-from src import gs
+from __init__ import gs
 from src.endpoints.advertisement.facebook import  facebook
 

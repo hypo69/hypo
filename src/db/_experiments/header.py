@@ -12,4 +12,4 @@ sys.path.append (str (dir_root) )  # Добавляю корневую папк�
 dir_src = Path (dir_root, 'src')
 sys.path.append (str (dir_root) ) 
 # ----------------
-from src import gss
+from __init__ import gss

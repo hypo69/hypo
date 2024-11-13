@@ -13,7 +13,6 @@ Functions:
     - `json2xls`: Convert JSON data to XLS format.
 """
 
-import header
 import json
 import csv
 from types import SimpleNamespace

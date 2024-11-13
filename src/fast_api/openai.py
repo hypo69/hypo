@@ -19,7 +19,7 @@ from pydantic import BaseModel
 from pathlib import Path
 import uvicorn
 
-from src import gs
+from __init__ import gs
 from src.utils import j_loads
 from src.logger import logger  # Используем ваш класс логгирования
 

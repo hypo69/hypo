@@ -21,7 +21,7 @@
    from selenium.webdriver.common.action_chains import ActionChains
    from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
-   from src import gs 
+   from __init__ import gs 
    from src.utils import pprint, j_loads, j_loads_ns, j_dumps, save_png
    from src.utils.string import StringFormatter
    from src.logger import logger

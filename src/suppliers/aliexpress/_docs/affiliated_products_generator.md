@@ -17,7 +17,7 @@ from typing import List, Union, Optional
 from types import SimpleNamespace
 from urllib.parse import urlparse, parse_qs
 
-from src import gs
+from __init__ import gs
 from src.suppliers.aliexpress import AliApi
 from src.suppliers.aliexpress import Aliexpress
 from src.suppliers.aliexpress.affiliate_links_shortener_via_webdriver import AffiliateLinksShortener

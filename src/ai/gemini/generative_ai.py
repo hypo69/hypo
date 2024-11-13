@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional, List, Dict
 import google.generativeai as genai
 from src.logger import logger
-from src import gs
+from __init__ import gs
 from src.utils import pprint
 from src.utils.file import read_text_file, save_text_file
 from src.utils.date_time import TimeoutCheck

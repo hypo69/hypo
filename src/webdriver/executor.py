@@ -47,7 +47,7 @@ from selenium.common.exceptions import (
     ElementClickInterceptedException
 )
 
-from src import gs
+from __init__ import gs
 from src.suppliers.locator import Locator
 from src.utils import pprint, j_loads, j_loads_ns, j_dumps, save_png
 

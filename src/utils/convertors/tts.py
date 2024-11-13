@@ -5,7 +5,6 @@
 """ module: src.utils.convertors """
 """! Module for speech recognition and text-to-speech conversion. """
 
-import header
 from pathlib import Path
 import tempfile
 import asyncio

@@ -28,7 +28,7 @@ from types import SimpleNamespace
 from src.suppliers.aliexpress.campaign.ali_promo_campaign import AliPromoCampaign
 from src.utils import j_dumps, j_loads_ns
 from src.utils.file import save_text_file
-from src import gs
+from __init__ import gs
 
 # Sample data for testing
 campaign_name = "test_campaign"

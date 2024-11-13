@@ -16,7 +16,7 @@ import os
 from typing import Union
 
 
-from src import gs
+from __init__ import gs
 from src.utils import  pprint
 
 from src.endpoints.prestashop import PrestaCategory

@@ -11,7 +11,7 @@
 ...
 from pathlib import Path
 
-from src import gs
+from __init__ import gs
 from src.webdriver import Driver
 from src.utils import j_loads_ns
 

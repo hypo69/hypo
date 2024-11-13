@@ -5,7 +5,7 @@
 """ module: src.endpoints.advertisement.facebook """
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 from pathlib import Path
-from src import gs
+from __init__ import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 

@@ -136,7 +136,7 @@ from math import log, prod
 from pathlib import Path
 from typing import Dict, List
 
-from src import gs
+from __init__ import gs
 from src.utils import pprint, j_loads, j_dumps
 from src.product import Product, ProductFields, translate_presta_fields_dict
 from src.endpoints.prestashop import Prestashop

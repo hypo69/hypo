@@ -32,7 +32,7 @@ from typing import Union
 from requests.cookies import RequestsCookieJar
 from urllib.parse import urlparse
 
-from src import gs  
+from __init__ import gs  
 from src.suppliers.supplier import Supplier
 from .alirequests import AliRequests
 from .aliapi import AliApi

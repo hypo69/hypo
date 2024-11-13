@@ -23,7 +23,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from fake_useragent import UserAgent
 
 from selenium.common.exceptions import WebDriverException
-from src import gs
+from __init__ import gs
 from src.utils import j_loads
 from src.logger import logger
 

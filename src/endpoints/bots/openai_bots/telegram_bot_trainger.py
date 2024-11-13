@@ -12,7 +12,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 import header
-from src import gs
+from __init__ import gs
 from src.ai.openai.model.training import Model
 from src.utils import j_loads, j_loads_ns, j_dumps
 from src.logger import logger

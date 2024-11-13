@@ -13,7 +13,7 @@ from lxml import etree
 from pathlib import Path
 
 import header
-from src import gs
+from __init__ import gs
 from src.utils.jjson import j_loads_ns
 from src.utils import pprint
 from src.logger import logger

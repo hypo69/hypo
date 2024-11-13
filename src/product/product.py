@@ -9,7 +9,7 @@
 
 
 
-from src import gs
+from __init__ import gs
 from src.endpoints.prestashop import Prestashop
 from src.category import Category
 from src.product.product_fields import ProductFields

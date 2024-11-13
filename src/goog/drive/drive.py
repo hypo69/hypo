@@ -33,7 +33,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 import header
-from src import gs
+from __init__ import gs
 from src.utils import pprint
 from src.logger import logger
 

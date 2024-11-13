@@ -18,7 +18,7 @@
 """
 import header
 from dataclasses import dataclass, field
-from src import gs
+from __init__ import gs
 import json
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader

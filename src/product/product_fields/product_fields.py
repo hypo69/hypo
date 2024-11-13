@@ -222,7 +222,7 @@ from typing import Optional, Any
 from pathlib import Path
 import sys
 ...
-from src import gs
+from __init__ import gs
 from src.utils import j_loads
 from src.category import Category
 from src.product.ttypes import ProductType

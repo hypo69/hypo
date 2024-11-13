@@ -4,7 +4,7 @@
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers """
 from types import SimpleNamespace
-from src import gs
+from __init__ import gs
 from src.utils.jjson import j_loads_ns
 
 class Locator:

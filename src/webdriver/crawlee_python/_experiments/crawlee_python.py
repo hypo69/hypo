@@ -7,7 +7,7 @@
 
 from pathlib import Path
 import header 
-from src import gs
+from __init__ import gs
 import asyncio
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
 

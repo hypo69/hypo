@@ -11,7 +11,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Dict, List, Optional
 from selenium.webdriver.remote.webelement import WebElement
-from src import gs
+from __init__ import gs
 from src.webdriver import Driver
 from src.utils import j_loads_ns, pprint
 from src.logger import logger
@@ -228,7 +228,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Dict, List
 from selenium.webdriver.remote.webelement import WebElement
-from src import gs
+from __init__ import gs
 from src.webdriver import Driver
 from src.utils import j_loads_ns, pprint
 from src.logger import logger

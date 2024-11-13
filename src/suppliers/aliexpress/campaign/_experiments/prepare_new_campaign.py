@@ -11,7 +11,7 @@ import header
 
 from pathlib import Path
 
-from src import gs
+from __init__ import gs
 
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.utils import get_filenames, get_directory_names

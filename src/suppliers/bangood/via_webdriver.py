@@ -22,7 +22,7 @@
 from typing import Union
 from pathlib import Path
 
-from src import gs
+from __init__ import gs
 from src.logger import logger
 
 def get_list_products_in_category (s) -> list[str, str, None]:    

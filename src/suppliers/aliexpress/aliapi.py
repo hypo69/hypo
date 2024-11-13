@@ -73,7 +73,7 @@ from typing import List, Dict
 from types import SimpleNamespace
 from requests import get, post
 
-from src import gs
+from __init__ import gs
 from src.utils import jjson, j_loads, j_dumps, pprint
 from src.utils.convertors import json2csv
 from src.logger import logger

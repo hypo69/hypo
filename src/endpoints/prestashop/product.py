@@ -12,7 +12,7 @@ from attr import attr, attrs
 from pathlib import Path
 from typing import Dict, List
 # ----------------------------------
-from src import gs
+from __init__ import gs
 from src.utils import  pprint
 from .api import Prestashop
 from src.logger import logger

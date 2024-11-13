@@ -13,7 +13,7 @@ import json
 import re
 
 # ----------------
-from src import gs
+from __init__ import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields
 from src.webdriver import Driver

@@ -22,7 +22,7 @@
 from pathlib import Path
 from typing import List, Dict
 ...
-from src import gs
+from __init__ import gs
 from src.logger import logger
 from src.utils import j_loads, j_dumps,  pprint
 from src.db import ProductTranslationsManager

@@ -10,7 +10,7 @@ from selenium.webdriver import Edge as WebDriver
 from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.common.exceptions import WebDriverException
-from src import gs
+from __init__ import gs
 from src.utils import pprint,  j_loads
 from src.logger import logger
 from src.logger.exceptions import WebDriverException 

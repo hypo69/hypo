@@ -12,7 +12,7 @@ from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
 
-from src import gs
+from __init__ import gs
 
 from src.suppliers import Graber as Grbr, Locator
 from src.product import ProductFields

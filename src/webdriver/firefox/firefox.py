@@ -39,7 +39,7 @@ from src.webdriver.javascript.js import JavaScript
 
 from fake_useragent import UserAgent
 
-from src import gs
+from __init__ import gs
 from src.utils import j_loads_ns
 from src.logger import logger
 

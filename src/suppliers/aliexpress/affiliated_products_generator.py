@@ -12,7 +12,7 @@ from types import SimpleNamespace
 from typing import List
 
 from src.logger import logger
-from src import gs
+from __init__ import gs
 from src.suppliers.aliexpress import AliApi
 from src.suppliers.aliexpress.campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerator, CampaignHTMLGenerator 
 from src.suppliers.aliexpress.utils.ensure_https import ensure_https

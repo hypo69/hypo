@@ -18,7 +18,7 @@ print(f"Translated text: {translation}")
 
 
 import openai
-from src import gs
+from __init__ import gs
 from src.logger import logger
 
 openai.api_key = gs.credentials.openai

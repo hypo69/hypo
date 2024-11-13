@@ -9,7 +9,7 @@
 
 
 from pathlib import Path
-from src import gs
+from __init__ import gs
 import asyncio
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
 from src.logger import logger

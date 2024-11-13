@@ -14,7 +14,6 @@ Functions:
     - ns2xls: Convert SimpleNamespace object to XLS format.
 """
 
-import header
 import json
 import csv
 from types import SimpleNamespace

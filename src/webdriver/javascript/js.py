@@ -16,7 +16,7 @@ Examples:
     referrer = js_helper.get_referrer()
 """
 
-from src import gs
+from __init__ import gs
 from src.logger import logger
 
 

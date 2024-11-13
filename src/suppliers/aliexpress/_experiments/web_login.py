@@ -12,7 +12,7 @@ from pathlib import Path
 import pickle
 import requests
 
-from src import gs
+from __init__ import gs
 from src.suppliers import Supplier
 from src.utils import pprint
 

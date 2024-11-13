@@ -1,7 +1,7 @@
 sphinx-apidoc -o docs/sphinx src --force --separate
 
 # Переходим в директорию docs/sphinx
-Set-Location -Path "docs/sphinx"
+Set-Location -Path "../docs/sphinx"
 
 # Перезаписываем index.rst, добавляя базовые директивы
 @"

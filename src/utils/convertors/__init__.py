@@ -12,12 +12,6 @@ import json
 import warnings
 from pathlib import Path
 
-from packaging.version import Version
-from .version import (
-    __version__,
-    __doc__,
-    __details__
-)
 
 # Suppress GTK log output to the console
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -78,7 +72,7 @@ for bin_path in paths_to_add:
 os.environ['WEASYPRINT_DLL_DIRECTORIES'] = str(gtk_bin_path)
 
 from packaging.version import Version
-from .version import __version__, __doc__, __details__  
+#from .version import __version__, __doc__, __details__  
 
 from .csv import (
                     csv2dict, 

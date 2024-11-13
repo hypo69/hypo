@@ -8,7 +8,7 @@
 Класс поставщика в `Prestashop`"""
 ...
 from types import SimpleNamespace
-from src import gs
+from __init__ import gs
 from src.logger import logger
 from src.utils import j_loads as j_loads
 from .api import Prestashop

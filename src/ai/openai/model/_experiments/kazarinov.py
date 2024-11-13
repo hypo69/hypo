@@ -7,7 +7,7 @@
 
 import header 
 import openai
-from src import gs
+from __init__ import gs
 from src.utils.file import read_text_file
 from src.logger import logger
 from pathlib import Path

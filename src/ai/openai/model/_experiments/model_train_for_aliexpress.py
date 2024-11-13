@@ -8,7 +8,7 @@
 
 import header 
 
-from src import gs
+from __init__ import gs
 from src.ai import OpenAIModel, GoogleGenerativeAI
 from src.utils.file import recursive_get_filenames, read_text_file
 from src.utils.convertors import csv2json_csv2dict

@@ -8,11 +8,11 @@
 https://stackoverflow.com/questions/78382534/googlegenerativeaierror-error-embedding-contentmodels-embeddings-001-is-not-fo
 """
 ...
+import re
 from pathlib import Path
 import time
 
-import header
-from src import gs
+from __init__ import gs
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import yield_files_content, read_text_file
 from src.logger import logger
@@ -45,7 +45,7 @@ def main() -> None:
 
     # Read the comment for model input from a markdown file
     comment_for_model_about_piece_of_code: str = read_text_file(
-        gs.path.src / "endpoints" / "hypo69" / "instructions" / "input_output.md"
+        gs.path.src / 'endpoints' / 'hypo69' / 'onela_bot' / 'instructions' / 'input_output.md'
     )
 
     # Process each file based on the specified patterns
@@ -74,7 +74,7 @@ def main() -> None:
 
 
 def save_response(file_path: Path, response: str) -> None:
-    """! Save the model's response to a markdown file.
+    """! Save the model's response to a markdown file with updated path.
 
     Args:
         file_path (Path): The original file path being processed.
@@ -82,15 +82,32 @@ def save_response(file_path: Path, response: str) -> None:
 
     This function modifies the original file path's suffix to `.md` and saves the response as a markdown file.
     """
-    output_path = file_path.with_suffix(".md")
-    output_path.write_text(response, encoding="utf-8")
-    print(f"Response saved to: {output_path}")
+    # Заменить часть пути 'src' на 'gemini_consultatnt'
+    export_file_path = file_path.parts
+    new_parts = []
+    
+    for part in export_file_path:
+        if part == 'src':
+            new_parts.append('gemini_consultant')
+        else:
+            new_parts.append(part)
+    
+    # Сформировать новый путь с замененной частью
+    export_file_path = Path(*new_parts)
+    
+    # Убедиться, что директория существует
+    export_file_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Сохранить ответ в новый файл
+    export_file_path.write_text(response, encoding="utf-8")
+    print(f"Response saved to: {export_file_path}")
+
 
 
 def yield_files_content(
     src_path: Path, patterns: list[str]
 ) -> Iterator[tuple[Path, str]]:
-    """! Yield file content based on patterns from the source directory.
+    """! Yield file content based on patterns from the source directory, excluding certain patterns.
 
     Args:
         src_path (Path): The base directory to search for files.
@@ -99,8 +116,19 @@ def yield_files_content(
     Yields:
         Iterator[tuple[Path, str]]: A tuple of file path and its content as a string.
     """
+    # Регулярные выражения для исключаемых файлов
+    exclude_patterns = [
+        re.compile(r'.*\(.*\).*'),  # Файлы с круглыми скобками
+        re.compile(r'___.*\..*'),   # Файлы, начинающиеся с трех подчеркиваний
+    ]
+    
     for pattern in patterns:
         for file_path in src_path.rglob(pattern):
+            # Пропустить файлы, которые соответствуют исключаемым паттернам
+            if any(exclude.match(str(file_path)) for exclude in exclude_patterns):
+                continue
+
+            # Чтение содержимого файла
             content = file_path.read_text(encoding="utf-8")
             yield file_path, content
 
