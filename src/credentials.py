@@ -158,7 +158,7 @@ class ProgramSettings(BaseModel):
             tmp=Path(self.base_dir) / 'tmp',
             data=Path(self.base_dir) / 'data',
             secrets=Path(self.base_dir) / 'secrets',
-            google_drive=Path(self.base_dir) / 'data',  # <- DEBUG path
+            google_drive=Path(self.settings.google_drive)  # <- DEBUG path
         )
 
         if check_latest_release(self.settings.git_user, self.settings.git):

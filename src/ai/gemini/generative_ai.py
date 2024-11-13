@@ -13,7 +13,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 import base64
-from dataclasses import dataclass, field
+from pydantic import BaseModel, Field, validator
 from typing import Optional, List, Dict
 import google.generativeai as genai
 from src.logger import logger
@@ -25,103 +25,91 @@ from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 
 timeout_check = TimeoutCheck()
 
-@dataclass
-class GoogleGenerativeAI:
+class GoogleGenerativeAI(BaseModel):
     """Class to interact with Google Generative AI models."""
+    model_config = {
+        "arbitrary_types_allowed": True
+    }
 
-    api_key: str
-    model_name: str = "gemini-1.5-flash-8b"
-    system_instruction: Optional[str] = None
-    history_file: Optional[Path] = None
-    generation_config: Dict = field(default_factory=lambda: {"response_mime_type": "text/plain"})
-
-    MODELS: List[str] = field(default_factory=lambda: [
+    MODELS: List[str] = Field(default_factory=lambda: [
         "gemini-1.5-flash-8b",
         "gemini-2-13b",
         "gemini-3-20b"
     ])
-    mode: str = 'debug'
 
-    dialogue_log_path: Path = field(init=False)
-    dialogue_txt_path: Path = field(init=False)
-    history_dir: Path = field(init=False)
-    history_txt_file: Path = field(init=False)
-    history_json_file: Path = field(init=False)
+    api_key: str = Field(default='')
+    model_name: str = Field(default="gemini-1.5-flash-8b")
+    generation_config: Dict = Field(default_factory=lambda: {"response_mime_type": "text/plain"})
+    mode: str = Field(default='debug')
+    
+    dialogue_log_path: Optional[Path] = None
+    dialogue_txt_path: Optional[Path] = None
+    history_dir: Path = Field(default = gs.path.google_drive / 'AI' / 'history' )
+    history_txt_file: Optional[Path] = None
+    history_json_file: Optional[Path] = None
+    model: Optional[genai.GenerativeModel] = None
+    system_instruction: Optional[str] = None 
 
-    def __post_init__(self):
-        """Initialize paths and configure the model."""
-        if self.model_name not in self.MODELS:
-            raise ValueError(f"Invalid model name. Choose from {', '.join(self.MODELS)}")
+    def __init__(self, 
+                 api_key: str, 
+                 model_name: Optional[str] = None, 
+                 generation_config: Optional[Dict] = None, 
+                 system_instruction: Optional[str] = None, 
+                 **kwargs):
+        """Initialize the GoogleGenerativeAI model with additional settings."""
+        super().__init__(**kwargs)  # Инициализация Pydantic полей
 
-        self.dialogue_log_path = gs.path.google_drive / 'AI' / f"gemini_{gs.now}.json"
-        self.dialogue_txt_path = gs.path.google_drive / 'AI' / 'history' / f"gemini_{gs.now}.txt"
-        self.history_dir = gs.path.google_drive / 'AI' / 'history'
+        # Инициализация дополнительных атрибутов
+        self.dialogue_log_path = gs.path.google_drive / 'AI' / 'log'
+        self.dialogue_txt_path = self.dialogue_log_path / f"gemini_{gs.now}.txt"
+        self.history_txt_file = self.history_dir / f"gemini_{gs.now}.txt"
+        self.history_json_file = self.history_dir / f"gemini_{gs.now}.json"
 
-        self.history_txt_file = self.history_dir / self.history_file if self.history_file else self.history_dir / f'{gs.now}.txt'
-        self.history_json_file = self.history_dir / self.history_file if self.history_file else self.history_dir / f'{gs.now}.json'
+        # Инициализация модели
+        self.model_name = model_name or "gemini-1.5-flash-8b"
+        self.generation_config = generation_config or {"response_mime_type": "text/plain"}
+        self.system_instruction = system_instruction
 
-        genai.configure(api_key=self.api_key)
+        # Настройка модели
+        genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel(
-            self.model_name,
-            generation_config=self.generation_config,
-            system_instruction=self.system_instruction
+            model_name = self.model_name,
+            generation_config = self.generation_config
         )
 
+    # Этот метод должен вызываться после того, как объект полностью инициализирован
+    def __post_init__(self):
+        # Инициализация модели и других параметров после создания экземпляра
+        if self.api_key and not self.model:
+            genai.configure(api_key=self.api_key)
+            self.model = genai.GenerativeModel(
+                model_name = self.model_name,
+                generation_config = self.generation_config,
+                system_instruction = self.system_instruction,       
+            )
+
     def _save_dialogue(self, dialogue: list):
-        """Save dialogue to both txt and json files with size management.
+        """Save dialogue to both txt and json files with size management."""
+        save_text_file(dialogue, self.history_txt_file, mode='+a')
+        j_dumps(data=dialogue, file_path=self.history_json_file, mode='+a')
 
-        Args:
-            dialogue (list): Dialogue content to save.
-        """
-        existing_content = read_text_file(self.history_txt_file)
-        new_content = f"{existing_content}\n{str(dialogue)}"
-
-        if len(new_content) > 100_000:
-            saved_file_name = f"{gs.now}_{self.history_txt_file.name}"
-            new_txt_file_path: Path = self.history_txt_file.parent / saved_file_name
-            save_text_file(existing_content, new_txt_file_path, mode='w')
-            new_content += str(dialogue)
-
-        save_text_file(new_content, self.history_txt_file, mode='w')
-
-    def ask(self, q: str, history_file: str = None, attempts: int = 3) -> Optional[str]:
-        """Send a prompt to the model and get the response.
-
-        Args:
-            q (str): The prompt to send.
-            history_file (str, optional): History file to use. Defaults to None.
-            attempts (int, optional): Number of retry attempts. Defaults to 3.
-
-        Returns:
-            Optional[str]: The model's response or None if an error occurs.
-        """
-      
-        self.history_file = self.history_dir / history_file if history_file else self.history_txt_file
-
+    def ask(self, q: str, attempts: int = 3) -> Optional[str]:
+        """Send a prompt to the model and get the response."""
+        
         try:
-            history = read_text_file(self.history_file)
-            complete_prompt = f"{history}\n* question *\n{q}\n* answer **\n"
-
-            if gs.mode == 'debug':
-                pprint(f"INPUT > {q}", text_color='light_blue')
-                pprint(f"HISTORY FILE: > {self.history_file}", text_color='light_green')
-                pprint(f"PROMPT: > {complete_prompt}", text_color='green')
-
-            messages = [
-                {"role": "system", "content": self.system_instruction},
-                {"role": "user", "content": q}
-            ]
-
-            response = self.model.generate_content(str(complete_prompt))
+            
+            response = self.model.generate_content(q)
 
             if not response:
                 logger.debug("No response from the model.")
-                return
+                ...
+                return 
 
-            if gs.mode == 'debug':
-                pprint(f"RESPONSE: > {response}", text_color='cyan')
+            messages = [
+                {"role": "user", "content": q},
+                {"role": "assistant", "content": response.text}
+                ]
 
-            messages.append({"role": "assistant", "content": response.text})
             self._save_dialogue([messages])
 
             return response.text
@@ -130,18 +118,12 @@ class GoogleGenerativeAI:
             logger.error("Error during request", ex)
             if attempts > 0:
                 time.sleep(15)
-                return self.ask(q, attempts=attempts - 1)
-            return
+                return self.ask(q, attempts = attempts - 1)
+            ...
+            return 
 
     def describe_image(self, image_path: Path) -> Optional[str]:
-        """Generate a description of an image.
-
-        Args:
-            image_path (Path): Path to the image file.
-
-        Returns:
-            Optional[str]: Description of the image or None if an error occurs.
-        """
+        """Generate a description of an image."""
         try:
             with image_path.open('rb') as f:
                 encoded_image = base64.b64encode(f.read()).decode('utf-8')
@@ -151,14 +133,17 @@ class GoogleGenerativeAI:
 
         except Exception as ex:
             logger.error(f"Error describing image: {ex}")
-            return
+            return None
+
 
 def chat():
     """Run the interactive chat session."""
-    logger.debug("Hello, I am the AI assistant of Sergey Kazarinov. Ask your questions.")
+    logger.debug("Hello, I am the AI assistant. Ask your questions.")
     print("Type 'exit' to end the chat.\n")
 
     system_instruction = input("Enter system instruction (or press Enter to skip): ")
+    
+    # Передаем значение api_key и system_instruction при инициализации
     ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction=system_instruction or None)
 
     while True:

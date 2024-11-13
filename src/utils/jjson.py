@@ -56,7 +56,7 @@ def j_dumps(
         data (Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]): JSON-compatible data or SimpleNamespace objects to dump.
         file_path (Optional[Path], optional): Path to the output file. If None, returns JSON as a dictionary. Defaults to None.
         ensure_ascii (bool, optional): If True, escapes non-ASCII characters in output. Defaults to True.
-        mode (str, optional): File open mode ('w' for overwrite, 'a' for append, 'a+' for merge). Defaults to 'w'.
+        mode (str, optional): File open mode ('w', 'a+', '+a'). Defaults to 'w'.
         exc_info (bool, optional): If True, logs exceptions with traceback. Defaults to True.
 
     Returns:
@@ -64,14 +64,10 @@ def j_dumps(
 
     Raises:
         ValueError: If the file mode is unsupported.
-
-    Examples:
-        >>> j_dumps({"key": "value"}, "output.json")
-        {"key": "value"}
     """
-    
+
     path = Path(file_path) if isinstance(file_path, (str, Path)) else None
-    
+
     def convert_to_dict(data):
         """Convert SimpleNamespace instances to dictionaries recursively."""
         if isinstance(data, SimpleNamespace):
@@ -81,37 +77,58 @@ def j_dumps(
         if isinstance(data, dict):
             return {key: convert_to_dict(value) for key, value in data.items()}
         return data
-    
+
     data = convert_to_dict(data)
 
-    if mode not in {"w", "a", "a+"}:
-        raise ValueError(f"Unsupported file mode '{mode}'. Use 'w', 'a', or 'a+'.")
+    if mode not in {"w", "a+", "+a"}:
+        #raise ValueError(f"Unsupported file mode '{mode}'. Use 'w', 'a+', or '+a'.")
+        mode = 'w'
 
-    if path and mode in {"a", "a+"}:
+    # Чтение существующих данных из файла (если файл существует и режим 'a+' или '+a')
+    existing_data = {}
+    if path and path.exists() and mode in {"a+", "+a"}:
         try:
             existing_data = j_loads(path)
-            if existing_data:
-                if mode == "a+":
-                    data.update(existing_data)
-                else:
-                    existing_data.update(data)
-                    data = existing_data
+            if not isinstance(existing_data, dict):
+                existing_data = {}
         except Exception as ex:
             logger.error(f"Error reading {path=}: {ex}", exc_info=exc_info)
             return
 
+    # Обработка данных в зависимости от режима
+    if mode == "a+":
+        # Добавляем новые данные в начало существующего словаря
+        try:
+            data.update(existing_data)
+        except Exception as ex:
+            logger.error(ex)
+            ...
+
+    elif mode == "+a":
+        # Добавляем новые данные в конец существующего словаря
+        try:
+            existing_data.update(data)
+            data = existing_data
+        except Exception as ex:
+            logger.error(ex)
+            ...
+
+
+    # Режим 'w' - просто перезаписываем файл новыми данными
+
     if path:
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
-            with path.open(mode, encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=ensure_ascii)
+            with path.open("w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=ensure_ascii, indent=4)
         except Exception as ex:
             logger.error(f"Failed to write to {path}: {ex}", exc_info=exc_info)
             return
     else:
         return data
-    
+
     return data
+
 
 def j_loads(
     jjson: dict | SimpleNamespace | str | Path | list[dict] | list[SimpleNamespace],

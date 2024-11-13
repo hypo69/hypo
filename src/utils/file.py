@@ -429,9 +429,9 @@ def yield_files_content(
                     with file_path.open("r", encoding="utf-8") as file:
                         # Возвращаем содержимое файла в зависимости от `as_list`
                         if as_list:
-                            yield file.readlines()
+                            yield file_path, file.readlines()
                         else:
-                            yield file.read()
+                            yield file_path, file.read()
                 except Exception as ex:
                     logger.warning(f"Failed to read file '{file_path}'.", exc_info=exc_info)
 
