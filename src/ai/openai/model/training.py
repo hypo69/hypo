@@ -48,9 +48,10 @@ class OpenAIModel:
             system_instruction (str, optional): An optional system instruction for the model.
             assistant_id (str, optional): An optional assistant ID. Defaults to 'asst_dr5AgQnhhhnef5OSMzQ9zdk9'.
         """
-        self.client = OpenAI(api_key = gs.credentials.openai.project_api)
+        #self.client = OpenAI(api_key = gs.credentials.openai.project_api)
+        self.client = OpenAI(api_key = gs.credentials.openai.api_key)
         self.current_job_id = None
-        self.assistant_id = assistant_id #or gs.credentials.openai.assistant.category_descriptions
+        self.assistant_id = assistant_id or gs.credentials.openai.assistant_id.code_assistant
         self.system_instruction = system_instruction
 
         # Load assistant and thread during initialization

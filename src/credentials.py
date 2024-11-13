@@ -309,7 +309,7 @@ class ProgramSettings(BaseModel):
         ),
         openai=SimpleNamespace(
             api_key=None, 
-            assistant=SimpleNamespace(), 
+            assistant_id=SimpleNamespace(), 
             project_api=None
         ),
         gemini=SimpleNamespace(api_key=SimpleNamespace()),
@@ -497,12 +497,11 @@ class ProgramSettings(BaseModel):
             openai_api_keys = kp.find_groups(path=['openai']).entries
             assistants = kp.find_groups(path=['openai','assistants']).entries
 
-            #setattr(self.credentials.openai,'assistant',SimpleNamespace())
             for entry in openai_api_keys:
                 setattr(self.credentials.openai, entry.title, entry.custom_properties.get('api_key', None))
                 setattr(self.credentials.openai, entry.title, entry.custom_properties.get('project_api', None))
             for assistant in assistants:
-                setattr(self.credentials.openai.assistant, assistant.title, assistant.custom_properties.get('assistant_id', None))
+                setattr(self.credentials.openai.assistant_id, assistant.title, assistant.custom_properties.get('assistant_id', None))
             return True
         except Exception as ex:
             print(f"Failed to extract OpenAI credentials from KeePass {ex}" )
