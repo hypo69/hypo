@@ -109,15 +109,10 @@ class GoogleGenerativeAI(BaseModel):
                 ]
 
             self._save_dialogue([messages])
-
             return response.text
 
         except Exception as ex:
             logger.error("Error during request", ex)
-            if attempts > 0:
-                time.sleep(15)
-                return self.ask(q, attempts = attempts - 1)
-            ...
             return 
 
     def describe_image(self, image_path: Path) -> Optional[str]:

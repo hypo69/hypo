@@ -94,12 +94,14 @@ def main() -> None:
         system_instruction=system_instruction,
         generation_config=gemini_generation_config,
     )
+    ...
+    # openai_model = OpenAIModel(
+    #     system_instruction=system_instruction,
+    #     model_name=openai_model_name,
+    #     assistant_id=openai_assistant_id
+    # )
+    ...
 
-    openai_model = OpenAIModel(
-        system_instruction=system_instruction,
-        model_name=openai_model_name,
-        assistant_id=openai_assistant_id
-    )
 
     # Process each file based on the specified patterns
     for file_path, content in yield_files_content(
@@ -113,26 +115,20 @@ def main() -> None:
             "Код:\n\n"
             f"```{content}```\n"
         )
-        try:
-            # Get the response from the model
-            gemini_response = gemini_model.ask(content)
 
-            # Save the model's response, changing the file suffix to `.md`
+        gemini_response = gemini_model.ask(content)
+        if gemini_response:
             save_response(file_path = file_path, response = gemini_response, from_model = 'gemini')
-        except Exception as ex:
-            logger.error(ex)
-            # Optional: handle error more gracefully
-        try:
-            # Get the response from the model
-            openai_response = openai_model.ask(content)
+        else:
+            ... # <- add logic for failed response
 
-            # Save the model's response, changing the file suffix to `.md`
+        openai_response = openai_model.ask(content)
+        if openai_response:
             save_response(file_path = file_path, response = openai_response, from_model = 'openai')
-        except Exception as ex:
-            logger.error(ex)
-            # Optional: handle error more gracefully
-        # Optional sleep to prevent API rate limits or throttling
-        time.sleep(20)
+        else:
+            ... # <- add logic for failed response
+
+        time.sleep(120) # <- Optional sleep to prevent API rate limits or throttling
 
 
 def save_response(file_path: Path, response: str, from_model:str) -> None:
@@ -146,7 +142,7 @@ def save_response(file_path: Path, response: str, from_model:str) -> None:
 
     # Словарь, ассоциирующий роли с директориями
     role_directories = {
-        'doc_creator': f'docs/{from_model}/raw_rst_from_ai',
+        'doc_creator': f'docs/raw_rst_from_{from_model}',
         'code_checker': f'consultant/{from_model}',
     }
 
@@ -181,7 +177,6 @@ def save_response(file_path: Path, response: str, from_model:str) -> None:
     export_file_path.write_text(response, encoding="utf-8")
     print(f"Response saved to: {export_file_path}")
 
-
 def yield_files_content(
     src_path: Path, patterns: list[str]
 ) -> Iterator[tuple[Path, str]]:
@@ -204,6 +199,19 @@ def yield_files_content(
     # Список служебных директорий, которые необходимо исключить
     exclude_dirs = {'.ipynb_checkpoints', '_experiments', '__pycache__', '.git', '.venv'}
 
+    # Словарь с путями к целевым директориям, где будут сохраняться файлы
+    role_directories = {
+        'doc_creator': 'docs/openai/raw_rst_from_ai',
+        'code_checker': 'consultant/gemini',
+    }
+
+    # Получаем директорию, соответствующую роли
+    target_directory = role_directories.get(role, None)
+
+    if target_directory is None:
+        logger.error(f"Неизвестная роль: {role}. Пропускаем обработку файлов.")
+        return
+
     for pattern in patterns:
         for file_path in src_path.rglob(pattern):
             # Пропустить файлы, которые находятся в исключаемых директориях
@@ -212,6 +220,23 @@ def yield_files_content(
 
             # Пропустить файлы, соответствующие исключаемым паттернам
             if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
+                continue
+
+            # Формируем путь, куда будет сохранен обработанный файл
+            export_file_path = file_path.parts
+            new_parts = []
+
+            for part in export_file_path:
+                if part == 'src':
+                    new_parts.append(target_directory)
+                else:
+                    new_parts.append(part)
+
+            export_file_path = Path(*new_parts).with_suffix(".md")
+
+            # Пропускать файлы, если они уже существуют в целевой папке
+            if export_file_path.exists():
+                print(f"Файл уже обработан и существует: {export_file_path}. Пропускаем.")
                 continue
 
             # Чтение содержимого файла
