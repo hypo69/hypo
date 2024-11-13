@@ -45,12 +45,13 @@ def main() -> None:
 
     # Read the comment for model input from a markdown file
     comment_for_model_about_piece_of_code: str = read_text_file(
-        gs.path.src / "endpoints" / "hypo69" / "instructions" / "comment_file.md"
+        gs.path.src / "endpoints" / "hypo69" / "instructions" / "input_output.md"
     )
 
     # Process each file based on the specified patterns
     for file_path, content in yield_files_content(
-        gs.path.src, ["*.py", "*.txt", "*.md", "*.json", "*.dot"]
+        #gs.path.src, ["*.py", "*.txt", "*.md", "*.json", "*.dot"]
+        gs.path.src, ["*.py"]
     ):
         # Construct the input content for the model
         content: str = (
