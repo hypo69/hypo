@@ -1,4 +1,5 @@
 ```python
+## \file hypotez/src/utils/pdf.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
@@ -19,21 +20,20 @@ import os
 from reportlab.pdfgen import canvas
 from src.logger import logger
 from fpdf import FPDF
-from fpdf import  FONT_PATH
-from fpdf import  FONT_DEJAVU_REGULAR
 
-# Важно!  Укажите правильный путь к wkhtmltopdf.exe
-from . import wkhtmltopdf_bin_path  
-wkhtmltopdf_exe = wkhtmltopdf_bin_path / 'wkhtmltopdf.exe'
+from . import wkhtmltopdf_bin_path  # Import the function from the correct place
+
+# Make sure wkhtmltopdf_bin_path is a Path object
+wkhtmltopdf_exe = Path(wkhtmltopdf_bin_path) / 'wkhtmltopdf.exe'
 
 
 if not wkhtmltopdf_exe.exists():
-    logger.error("Не найден wkhtmltopdf.exe по указанному пути. Проверьте настройку wkhtmltopdf_bin_path в utils/pdf.py.")
+    logger.error("Не найден wkhtmltopdf.exe по указанному пути.")
     raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
 
-
-configuration = pdfkit.configuration(wkhtmltopdf=str(wkhtmltopdf_exe))
-
+configuration = pdfkit.configuration(
+    wkhtmltopdf=str(wkhtmltopdf_exe)
+)
 
 options = {"enable-local-file-access": ""}
 
@@ -63,9 +63,13 @@ class PDFUtils:
             if isinstance(data, str):
                 # Преобразование HTML-контента в PDF
                 pdfkit.from_string(data, str(pdf_file), configuration=configuration, options=options)
-            else:
+            elif isinstance(data, Path):
                 # Преобразование HTML-файла в PDF
                 pdfkit.from_file(str(data), str(pdf_file), configuration=configuration, options=options)
+            else:
+                logger.error("Неверный тип данных для data. Ожидается str или Path.")
+                return False
+
             logger.info(f"PDF успешно сохранен: {pdf_file}")
             return True
         except (pdfkit.PDFKitError, OSError) as ex:
@@ -74,7 +78,6 @@ class PDFUtils:
         except Exception as ex:
             logger.error(f"Неожиданная ошибка: {ex}", exc_info=True)
             return False
-
 
     @staticmethod
     def save_pdf_v2(data: str, pdf_file: str | Path) -> bool:
@@ -91,7 +94,15 @@ class PDFUtils:
         try:
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_font("Arial", size=12)  # Установите шрифт по умолчанию
+            pdf.set_auto_page_break(auto=True, margin=15)
+            # Важно: Установите шрифт, если он не встроен
+            try:
+                pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True) # Укажите корректный путь
+            except Exception as ex:
+                logger.error(f"Ошибка добавления шрифта: {ex}")
+                return False
+
+            pdf.set_font('DejaVu', size=12)
             pdf.multi_cell(0, 10, data)
             pdf.output(str(pdf_file))
             logger.info(f"PDF отчет успешно сохранен: {pdf_file}")
@@ -99,53 +110,46 @@ class PDFUtils:
         except Exception as ex:
             logger.error(f"Ошибка при сохранении PDF через FPDF: {ex}", exc_info=True)
             return False
-
-
 ```
 
-**Изменения и объяснения:**
+**Изменения и улучшения:**
 
-* **Путь к wkhtmltopdf:**  Теперь код явно ищет `wkhtmltopdf.exe` в папке, указанной в `wkhtmltopdf_bin_path`.  Это **критически важно** для корректной работы.  Если вы используете `Path` для `wkhtmltopdf_bin_path`, убедитесь, что этот путь корректен и `wkhtmltopdf.exe` действительно там.  Комментированная строка `from . import wkhtmltopdf_bin_path`  означает, что вы должны создать соответствующую переменную в файле, где вы импортируете `utils.pdf`.  **Это самая важная часть исправления.**
-* **Обработка ошибок:**  Добавлены более подробные сообщения об ошибках, особенно для `FileNotFoundError`.  Они будут помогать в отладке.
-* **Улучшенная обработка путей:** Теперь в `save_pdf`  используется `str()` при передаче пути в `pdfkit.from_string` и `pdfkit.from_file`. Это избавляет от возможных проблем с типом данных.
-* **Шрифт по умолчанию для FPDF:**  В `save_pdf_v2`  установлен шрифт Arial по умолчанию. Это делает вывод более надежным, если шрифт DejaVu отсутствует или не настроен.
+* **Тип данных `data`:** Теперь `save_pdf` корректно обрабатывает как строки, так и объекты `Path` для `data`.  Добавлена проверка типа, чтобы избежать ошибок.
+* **Обработка путей:** Метод `save_pdf` теперь преобразует пути к файлам в строки для корректной работы `pdfkit.from_file`.
+* **Добавление шрифта:** В `save_pdf_v2` добавлен обработчик ошибок при добавлении шрифта.  Важно:  **Убедитесь, что файл шрифта `DejaVuSans.ttf` находится в той же папке, что и ваш скрипт или укажите корректный путь.**  Не используйте `путь/к/DejaVuSans.ttf`.
+* **Использование `Path`:** `wkhtmltopdf_exe` теперь корректно создается как объект `Path`, что делает код более устойчивым к различным вариантам ввода путей.
+* **Улучшенная логика ошибок:** Добавлены более информативные сообщения об ошибках и обработка исключений `Exception` для лучшей диагностики проблем.
 
 
 **Как использовать:**
 
-1.  **Установите необходимые библиотеки:**
-    ```bash
-    pip install pdfkit fpdf reportlab
-    ```
-
-2.  **Установите wkhtmltopdf:** (Если не установлено)
-    **Для Windows:** скачайте `wkhtmltopdf.exe` с сайта https://wkhtmltopdf.org/ и положите его в папку `wkhtmltopdf_bin_path`, которую вы должны создать в вашей `utils/` папке.
-
-3.  **Настройте `wkhtmltopdf_bin_path`:**  В файле, где вы импортируете `utils.pdf`, создайте переменную:
 ```python
-from utils import pdf
-pdf.wkhtmltopdf_bin_path = Path("C:/путь/к/вашей/папке/wkhtmltopdf/") # Замените на ваш путь
+from utils import pdf  # Assuming your utils module is in the correct location
+
+html_content = "<html><body><h1>Мой HTML-контент</h1></body></html>"
+
+# Сохранение из контента
+success = pdf.PDFUtils.save_pdf(html_content, "output.pdf")
+if success:
+    print("PDF успешно сохранен")
+
+# Сохранение из файла
+file_path = Path("input.html")  # Create input.html file with html content
+success = pdf.PDFUtils.save_pdf(file_path, "output2.pdf")
+if success:
+    print("PDF успешно сохранен")
+
+
+text_to_save = "Это текст, который нужно сохранить в PDF"
+success = pdf.PDFUtils.save_pdf_v2(text_to_save, "output_text.pdf")
+if success:
+    print("Текст успешно сохранен в PDF")
 ```
 
+**Важно:**
 
-4. **Пример использования:**
-```python
-from utils import pdf
-import os
-html_content = "<html><body><h1>Hello, PDF!</h1></body></html>"
-pdf_file = Path("output.pdf")
-if pdf.PDFUtils.save_pdf(html_content, pdf_file):
-    print(f"PDF файл успешно создан: {pdf_file}")
-else:
-    print("Ошибка при создании PDF файла.")
+- Установите необходимые библиотеки: `pdfkit`, `reportlab`, `fpdf`.
+- Убедитесь, что `wkhtmltopdf.exe` находится в указанной папке.
+- Предоставьте корректный путь к шрифту (`DejaVuSans.ttf`) в `save_pdf_v2`.
 
-
-text_to_save = "This is some text to save in a PDF."
-pdf_file2 = Path("output2.pdf")
-if pdf.PDFUtils.save_pdf_v2(text_to_save, pdf_file2):
-    print(f"PDF файл успешно создан: {pdf_file2}")
-else:
-    print("Ошибка при создании PDF файла.")
-```
-
-Теперь вы должны иметь возможность создать PDF-файлы с помощью обоих методов.  Обратите внимание на важность корректного указания пути `wkhtmltopdf.exe` и  `wkhtmltopdf_bin_path`.
+Этот улучшенный код более надежен и устойчив к различным ошибкам, связанным с путями к файлам и обработкой данных.

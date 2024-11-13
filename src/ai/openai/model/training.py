@@ -41,7 +41,7 @@ class OpenAIModel:
     assistants: List[SimpleNamespace]
     models_list: List[str]
 
-    def __init__(self, system_instruction: str = None, assistant_id: str = None):
+    def __init__(self, system_instruction: str = None, model_name:str = 'gpt-4o-mini', assistant_id: str = None):
         """Initialize the Model object with API key, assistant ID, and load available models and assistants.
 
         Args:
@@ -50,7 +50,7 @@ class OpenAIModel:
         """
         self.client = OpenAI(api_key = gs.credentials.openai.project_api)
         self.current_job_id = None
-        self.assistant_id = assistant_id or gs.credentials.openai.assistant.category_descriptions
+        self.assistant_id = assistant_id #or gs.credentials.openai.assistant.category_descriptions
         self.system_instruction = system_instruction
 
         # Load assistant and thread during initialization

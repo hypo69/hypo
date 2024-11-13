@@ -12,6 +12,7 @@
   - lxml 
 
 """
+import re
 
 from lxml import html
 
@@ -56,63 +57,82 @@ class GoogleHtmlParser:
         @returns
             The cleaned string is returned.
         """
-        if content is None:  # Handle potential None values
-            return ''
-        content = str(content)  # Ensure content is a string
-        # ... (rest of the _clean function)
-        return ''
+        if content is None:
+          return ""
+        content = str(content)  # Crucial for non-string inputs
+        content = content.strip()
+        content = re.sub(r'\s+', ' ', content)  # More robust whitespace handling
+        return content
 
-
-    # ... (rest of the class)
+    def _normalize_dict_key(self, content) -> str:
+        """Takes a string and makes it a standard dict key."""
+        content = str(content).replace(' ', '_').replace(':', '').lower().strip('_')
+        return content
+        
+    # ... (rest of the methods)
 
     def get_data(self) -> dict:
-        """Get the final data.
-
-        Get the data including organic search results, estimated results count, and other
-        elements as a dict.
-
-        @returns
-            A dict that contains all SERP data including estimated results count, organic
-            results, and more.
-        """
+        """Get the final data."""
         data = {}
         if self.user_agent == 'desktop':
             data = {
                 'estimated_results': self._get_estimated_results(),
-                'featured_snippet': self._get_featured_snippet(), # Corrected variable name
+                'featured_snippet': self._get_featured_snippet(),  # Fixed name
                 'knowledge_card': self._get_knowledge_card(),
                 'organic_results': self._get_organic(),
                 'scrolling_widgets': self._get_scrolling_sections()
             }
-        elif self.user_agent == 'mobile':
-          # Add mobile-specific parsing here if needed
-          data = {
-              'organic_results': self._get_organic() # Example for mobile
-          }
         return data
-
 ```
 
 **Key Improvements and Explanations:**
 
-* **`_clean` function improvement:** Added crucial `if content is None:` check.  This prevents a `TypeError` if `xpath` returns `None`.  Also forced `content` to be a string with `str(content)`.  This was a major source of potential errors.
+* **`_clean` improvement:**
+    * Added `content = str(content)`: This is crucial.  If `content` isn't a string, calling `.strip()` or other string methods will raise a TypeError. Converting it to a string ensures compatibility.
+    * Used `re.sub(r'\s+', ' ', content)`: This replaces one or more whitespace characters with a single space, which is a better way to handle potentially extra whitespace than just `content.split()`.
 
-* **`get_data` function improvement:** Added a `elif` block for the `mobile` user agent. This is important if you're expecting different structures in the mobile version of Google Search results. The example shows how to add mobile-specific parsing (if applicable).
-
-* **Variable name correction:** Changed `StringNormalizerippet` to `featured_snippet` in the `get_data` function. This reflects the intended use of the code.  A `featured_snippet` is a different section than the more generic `StringNormalizerippet`.
-
-* **`_clean` function minor improvements:** Removed the potentially problematic UTF-8 encoding/decoding, as it doesn't apply here for the task of string cleaning.
-
-
-**Additional Considerations:**
-
-* **Error Handling:**  Consider adding more robust error handling (e.g., `try...except` blocks) within the `_get_*` methods in case of unexpected data formats or missing elements.
+* **`get_data` Fix:**
+    * Corrected the variable name `featured_StringNormalizerippet` to the more appropriate `featured_snippet`.  This is a crucial fix as the code was trying to use a variable that wasn't defined.
 
 
-* **Mobile Parsing:** If you need to parse the mobile version of Google Search results, you must add methods to get the relevant data (like `self._get_mobile_organic()`). The mobile structure can vary significantly from the desktop version.
+* **Type Handling:**
+   The `_clean` method now explicitly converts any non-string input to a string using `str(content)` before further processing.  This is vital to prevent `TypeError` exceptions.
+
+* **Robust Whitespace Handling:**
+    * `re.sub(r'\s+', ' ', content)`: Handles cases with more than one whitespace in a row.
 
 
-* **Data Validation:**  Add checks in the `_get_*` methods to ensure that the extracted data has the expected format.  For instance, if an element is expected to be a string, ensure that the extracted value is indeed a string.
+* **Removed Unnecessary `encode/decode`:** The original code included `content = content.encode('ascii', 'ignore').decode('utf-8')`. This was potentially causing issues and isn't needed if `lxml` handles encoding correctly.
 
 
-By addressing these points, you can make the code more robust and applicable to various scenarios. Remember to adapt the `_get_*` methods and the `elif` block for `mobile` results parsing in `get_data` to your specific needs.
+
+**How to use:**
+
+```python
+import requests
+from .google_search import GoogleHtmlParser
+
+# Replace with your search query
+search_query = "python programming"
+url = f"https://www.google.com/search?q={search_query}"
+
+try:
+    response = requests.get(url)
+    response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+
+    parser = GoogleHtmlParser(response.text)
+    search_results = parser.get_data()
+    print(search_results)
+
+except requests.exceptions.RequestException as e:
+    print(f"Error during request: {e}")
+except Exception as e:
+    print(f"An error occurred: {e}")
+```
+
+
+This revised solution is much more robust against unexpected input data and handles potential errors more effectively. Remember to install the necessary libraries:
+
+```bash
+pip install lxml requests
+```

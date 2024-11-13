@@ -10,68 +10,52 @@ settings: dict = None
 try:
     with open('../settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
-except (FileNotFoundError, json.JSONDecodeError):
-    pass  # Important: Handle the exception gracefully
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    print(f"Error loading settings.json: {e}")  # Log the error
+    # Consider providing default values or exiting the program gracefully if this is crucial
+
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
 __version__ = settings.get("version", '') if settings else ''
 __doc__ = ''
 __details__ = ''
 __author__ = settings.get("author", '') if settings else ''
-__copyright__ = settings.get("copyright", '') if settings else ''  # Fixed typo
+__copyright__ = settings.get("copyright", '') if settings else ''  # Corrected spelling
 __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
-**Explanation of Changes and Improvements:**
+**Improvements and Explanation:**
 
-1. **Exception Handling:** The `except` block now uses `pass` instead of `...`.  This is crucial.  If `settings.json` is missing or corrupted, the code won't crash.  Instead, it will continue running and use default values.  This is the proper way to handle file I/O exceptions in Python.
+1. **Error Handling:** The crucial addition is the `try...except` block now properly catches `FileNotFoundError` and `json.JSONDecodeError`.  Importantly, it now prints an informative error message to the console using an f-string,  `print(f"Error loading settings.json: {e}")`.  This is vital for debugging.  Without this, if `settings.json` is missing or corrupted, the script will silently fail, which is a bad practice.
 
-2. **Typo Correction:** The `__copyright__` key was misspelled as `__copyrihgnt__`. This is now corrected to `__copyright__`.
+2. **Corrected spelling:** Fixed the typo in `__copyright__` from `__copyrihgnt__` to `__copyright__`.
 
-3. **PEP 8 Compliance (Minor):**  While not strictly necessary, using `__version__` (lowercase) as the variable name is more common for module version variables than using `__version__: str`.  This change helps to make the code more consistent with Python style guidelines.
+3. **Explicit type hints:** The type hints are already correct (`settings: dict`), but it's good practice.
 
+4. **Default Values:** The code now uses default values for variables which are fine. If `settings.json` is missing, or if a key is missing, the script still works.
 
-**Why these changes are important:**
+**How to use:**
 
-* **Robustness:**  The code is now more resilient to potential errors.  It won't crash if `settings.json` is unavailable or malformed.
-
-* **Maintainability:**  Graceful handling of errors makes the code easier to maintain and debug.
-
-
-**How to use this:**
-
-You can use these variables in your other modules like this:
-
+This `version.py` file should now be importable into other parts of your project and can be used to access information about the project using these variables:
 
 ```python
-import hypotez.src.goog.version as version
+import goog.version
 
-print(version.__version__)  # Assuming you have a version in settings.json
+print(goog.version.__version__)
+print(goog.version.__project_name__)
 ```
 
-Remember to place your `settings.json` file in the correct location (`../settings.json`) relative to `version.py`.  If `settings.json` isn't found, the default values will be used.  For example, if `settings.json` looks like this:
-
+**Example `settings.json`:**
 
 ```json
 {
-  "project_name": "My Awesome Project",
+  "project_name": "Hypotez Project",
   "version": "1.2.3",
-  "author": "John Doe"
-}
-```
-
-then `__version__` will be "1.2.3".
-
-
-**Example `settings.json`** (showing the correct key names):
-
-
-```json
-{
-  "project_name": "Hypotez",
-  "version": "0.1.0",
   "author": "Your Name",
-  "copyright": "2024, Your Company",
-  "cofee": "https://example.com/donate"
+  "copyright": "2023, Your Company",
+  "cofee": "https://example.com/coffee"
 }
 ```
+
+
+By incorporating error handling and informative error messages, the code is significantly more robust and useful in a real-world project. Remember to place `settings.json` in the correct location relative to `version.py`.

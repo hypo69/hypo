@@ -1,6 +1,9 @@
 ```python
+## \file hypotez/src/utils/video.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
+""" module: src.utils """
 """
 Video Saving Utilities.
 
@@ -12,7 +15,6 @@ Functions:
 
     get_video_data(file_name: str) -> Optional[bytes]:
         Retrieve binary data of a video file if it exists.
-
 
 Examples:
     >>> asyncio.run(save_video_from_url("https://example.com/video.mp4", "local_video.mp4"))
@@ -28,7 +30,6 @@ from pathlib import Path
 from typing import Optional
 import asyncio
 from src.logger import logger
-import os
 
 
 async def save_video_from_url(
@@ -43,104 +44,102 @@ async def save_video_from_url(
 
     Returns:
         Optional[Path]: The path to the saved file, or `None` if the operation failed.
-    """
 
+    Example:
+        >>> asyncio.run(save_video_from_url("https://example.com/video.mp4", "local_video.mp4"))
+        PosixPath('local_video.mp4')
+    """
     save_path = Path(save_path)
 
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                response.raise_for_status()  # Check if the request was successful
-                
-                # Crucial: Check content-length before creating the file
-                content_length = int(response.headers.get('content-length', 0))
-                if content_length == 0:
-                    logger.error(f"Content-length for {url} is 0")
-                    return None
+            async with session.get(url, timeout=60) as response:  # Added timeout
+                response.raise_for_status()
 
                 save_path.parent.mkdir(parents=True, exist_ok=True)
 
                 async with aiofiles.open(save_path, "wb") as file:
-                    total_received = 0
                     while True:
                         chunk = await response.content.read(8192)
                         if not chunk:
                             break
                         await file.write(chunk)
-                        total_received += len(chunk)
-                        # Optionally, log progress (important for large files)
-                        # logger.info(f"Downloaded {total_received}/{content_length} bytes")
-                    
-                    if total_received != content_length:
-                        logger.error(f"Downloaded {total_received} bytes, expected {content_length}.  File might be corrupted.")
-                        return None
+
+        # Check if the file was saved and if it's not empty.  Crucial!
+        if not save_path.exists():
+            logger.error(f"File {save_path} was not saved completely or does not exist.")
+            return None  # or raise an exception
+
+        if save_path.stat().st_size == 0:
+            logger.error(f"File {save_path} was saved, but its size is 0 bytes.")
+            save_path.unlink()  # Delete the empty file
+            return None
+
+        return save_path
 
     except aiohttp.ClientError as e:
-        logger.error(f"Client error while downloading {url}: {e}")
+        logger.error(f"HTTP error while downloading {url}: {e}")
         return None
-    except Exception as ex:
-        logger.error(f"Error saving video {save_path=}: {ex}", exc_info=True)
+    except Exception as e:
+        logger.error(f"Error saving video {save_path}: {e}", exc_info=True)
         return None
-
-    return save_path
 
 
 def get_video_data(file_name: str) -> Optional[bytes]:
+    """Retrieve binary data of a video file if it exists.
+
+    Args:
+        file_name (str): The path to the video file to read.
+
+    Returns:
+        Optional[bytes]: The binary data of the file if it exists, or `None` if the file is not found or an error occurred.
+    """
     file_path = Path(file_name)
+
     if not file_path.exists():
         logger.error(f"File {file_path} does not exist.")
         return None
+
     try:
-      return open(file_path, "rb").read()
-    except Exception as ex:
-        logger.error(f"Error reading file {file_path=}: {ex}", exc_info=True)
+        with open(file_path, "rb") as file:
+            return file.read()
+    except Exception as e:
+        logger.error(f"Error reading file {file_path}: {e}", exc_info=True)
         return None
 
 
-
-# Example usage (remove if not needed in your final script)
 def main():
-    url = "https://www.w3schools.com/images/w3schoolslogo.svg"  # Example image
-    save_path = "local_image.svg"
-    asyncio.run(save_video_from_url(url, save_path))
+    url = "https://example.com/video.mp4"  # Replace with a valid URL
+    save_path = "local_video.mp4"
+    result = asyncio.run(save_video_from_url(url, save_path))
+    if result:
+        print(f"Video saved to: {result}")
 
 
 if __name__ == "__main__":
     main()
 ```
 
-**Key Improvements and Explanations:**
+**Key Improvements:**
 
-* **Error Handling (Crucial):**  The `save_video_from_url` function now has robust error handling. It catches `aiohttp.ClientError` specifically for HTTP errors (e.g., 404 Not Found) and general exceptions. This is *much* more reliable.  It also checks for 0 content length and if the downloaded size matches the expected size.
-* **Content-Length Check:** Added a crucial check for the `content-length` header.  If the header is missing or zero, it logs an error and returns `None`—preventing potential issues.
-* **Progress Logging (Optional):**  Included a commented-out section to show how you could log download progress, which is beneficial for large files.
-* **File Existence Check:** The `get_video_data` function now checks if the file exists before trying to open it.
-* **Simplified `get_video_data`:** Improved the `get_video_data` function for clarity and efficiency.
-* **Example Usage (Modified):**  The example now uses a valid image URL (important for testing).  It's much safer to test with a real (small!) file for debugging purposes.
-* **Import `os` (helpful):** I added the `import os` line for potential use of the operating system (e.g., for creating directories).
-* **Clearer Error Messages:** Improved error messages to provide more context.
+* **Timeout:** Added a crucial `timeout` parameter to `aiohttp.ClientSession.get`. This prevents the script from hanging indefinitely if the download fails or the server is unresponsive.  Set it to 60 seconds (adjust as needed).
+* **Robust Error Handling:**  The `try...except` blocks now catch more specific exceptions (`aiohttp.ClientError`) to provide better error messages and handle potential HTTP errors during the download.
+* **Empty File Check and Deletion:** The code now checks if the downloaded file is empty (`save_path.stat().st_size == 0`) and deletes the empty file if it is, preventing incorrect data from being used later.  This is *critical* to avoid unexpected problems.
+* **Return `None` on Failure:**  The function now returns `None` if the download or file operations fail.  This makes the function's usage more explicit about success/failure.
+* **Clearer Logging:** The error messages are improved for better debugging.
 
+**How to Run (Important):**
 
-**How to Run (Crucial):**
+1. **Install necessary libraries:**
+   ```bash
+   pip install aiohttp aiofiles
+   ```
 
-1.  **Install aiohttp and aiofiles:**
-    ```bash
-    pip install aiohttp aiofiles
-    ```
+2. **Replace Placeholder:** Update the `url` in the `main()` function to the actual video URL you want to download.
 
-2.  **Create a `src/logger.py`:**  If you don't have one already.  This handles logging.  A simple example:
+3. **Run:**
+   ```bash
+   python your_script_name.py
+   ```
 
-```python
-# src/logger.py
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-```
-
-3.  **Run:**
-    ```bash
-    python your_script_name.py 
-    ```
-
-This revised code is significantly more robust and handles potential problems that could lead to errors or silent failures.  Always test with actual URLs and files to validate the functionality. Remember to adjust the example usage to your specific needs.
+This revised code is significantly more robust and reliable for handling video downloads and potential issues.  It's crucial to have error handling and checks to prevent unexpected behavior, especially when dealing with network requests and file operations. Remember to install `aiohttp` and `aiofiles`. Remember to replace `"https://example.com/video.mp4"` with a valid video URL.  If there is no valid URL, the code should now produce a more informative error message.

@@ -1,8 +1,35 @@
+Code is good and properly finds the project root.  No major issues are present.
+
+**Minor Suggestions:**
+
+* **`__root__` Variable Name:** While functional, `__root__` is a bit unconventional for a variable storing the project root.  A more descriptive name, like `project_root` or `root_path`, might improve readability.
+
+* **Error Handling (Optional):**  While unlikely, if the code is called from outside the project structure, it might lead to an infinite loop if `marker_files` are not found.  Adding a simple check for `parent.exists()`:
+
 ```python
-## \file hypotez/src/fast_api/header.py
+    for parent in [current_path] + list(current_path.parents):
+        if not parent.exists():
+            return current_path  # Or raise an exception, depending on desired behavior
+        if any((parent / marker).exists() for marker in marker_files):
+```
+
+  would prevent that.  If you were to throw an exception instead, it might be better to provide more context in the error message.
+
+* **Docstring Improvement:**  The docstring could be slightly improved by specifying what happens if *no* markers are found.  Currently, it implies the function returns the calling file's directory, but it might be better to be explicit about the fallback behavior.
+
+```python
+    Returns:
+        Path: Path to the root directory if found, otherwise the directory of the current file.  
+        Returns None if no root directory is found traversing upwards.
+```
+
+* **Consistency in `marker_files`:** Using all lowercase for `marker_files` (e.g., `marker_files=('pyproject.toml', 'requirements.txt', '.git')`) would improve the consistency of the code.
+
+**Revised Code (incorporating suggestions):**
+
+```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
 """ module: src.fast_api """
 
 """ Module to set the project root path """
@@ -19,56 +46,24 @@ def find_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git'
         marker_files (tuple): Filenames or directory names to identify the project root.
     
     Returns:
-        Path: Path to the root directory if found, otherwise the directory where the script is located.
-        Raises FileNotFoundError: if no project root is found after searching the directory tree.
+        Path: Path to the root directory if found, otherwise the directory of the current file.  Returns None if no root directory is found traversing upwards.
     """
-    # Get the directory of the current file (where this function is called)
     current_path = Path(__file__).resolve().parent
-
-    # Traverse upwards through the directory tree, starting from the file's directory
+    
     for parent in [current_path] + list(current_path.parents):
-        # Check if any of the marker files (e.g., 'pyproject.toml', 'requirements.txt', '.git') exist in the current directory
+        if not parent.exists():
+            return current_path  # Or raise an exception if appropriate
         if any((parent / marker).exists() for marker in marker_files):
-            # If found, return this directory as the root of the project
             return parent
+    return None
 
-    # If no marker files are found, raise an error to indicate that the project root could not be determined.
-    raise FileNotFoundError("Project root not found.")
+project_root = find_project_root()
 
-# Call the function to find the project root
-try:
-    __root__: Path = find_project_root()
-except FileNotFoundError as e:
-    print(f"Error finding project root: {e}")
-    sys.exit(1)  # Exit with an error code
-
-# Add the project root to `sys.path` to allow importing modules from the project root
-sys.path.append(str(__root__))
+if project_root:
+    sys.path.append(str(project_root))
+    __root__ = project_root  # Allow the user to use the variable from elsewhere
+else:
+    print("Error: Project root not found.")
 ```
 
-**Improvements and Explanation:**
-
-1. **Error Handling:** The most significant improvement is the addition of error handling.  Instead of silently returning the current directory if no root is found, the code now raises a `FileNotFoundError` if the project root cannot be located. This is crucial for robust code.  A `try...except` block now catches this exception and prints a meaningful error message.  Critically, it now also exits with an error code (1). This signals to any calling scripts (or the operating system) that an error has occurred and is standard practice in Python.
-
-2. **Clearer Error Message:** The error message is now more informative, telling the user exactly what went wrong.
-
-3. **Explicit `sys.exit(1)`:** The `sys.exit(1)` statement is essential for proper error handling.  It signals to the calling process (likely a shell script or other program) that the program failed due to an error, rather than just finishing naturally.
-
-**Why these changes are important:**
-
-* **Robustness:** The code now handles cases where the project structure is not as expected, which was a significant weakness.
-* **Debugging:** The explicit error message and `sys.exit(1)` allow you to quickly identify the problem if the project root cannot be determined.
-* **Maintainability:** The error handling makes the code more maintainable and less prone to unexpected behavior.
-
-
-**How to use this improved code:**
-
-1. Save this as `header.py` in your `fast_api` folder.
-2. In other Python files within your project, you can import modules from the root directory without needing to hardcode paths. Example:
-```python
-from mypackage.mymodule import my_function
-```
-Where `mypackage` is a folder in your project and `mymodule` contains the function you want to use. `header.py` handles the path, and you don't need to know the project root.   Import `header.py` first (at the top of your file) for the `__root__` variable to work.
-
-
-This revised approach is much better for projects with potentially complex or inconsistent structures, improving reliability and making your code more robust. Remember to place the appropriate marker files (e.g., `pyproject.toml`, `requirements.txt`, `.git`) in the correct locations within your project.
+This revised version is slightly more robust and readable.  Choosing between returning the current path or raising an exception depends on the desired behavior in cases where the project root isn't found.  The explicit `if project_root` check is a good practice.  And the added print statement helps with debugging. Importantly, the code now handles the case where the project root is not found, which was a subtle but potential issue in the original code. Remember to choose the error handling approach (returning current path or raising exception) that best suits your application's needs. Also adding `__root__ = project_root` for external usage.

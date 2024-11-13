@@ -1,94 +1,76 @@
-```python
-# \file hypotez/src/utils/cursor_spinner.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.utils """
-"""
-This module provides a utility to show a spinning cursor in the console 
-to simulate a loading or waiting process.
-"""
+```
+Code Review: hypotez/src/utils/cursor_spinner.py
 
+This file provides a function to display a spinning cursor in the console, useful for indicating ongoing tasks. The code is well-structured and readable.
+
+**Strengths:**
+
+* **Clear docstrings:** The docstrings accurately describe the purpose, arguments, and return values of the functions.
+* **Informative example usage:** The example `if __name__ == "__main__":` block demonstrates how to use the `show_spinner` function.
+* **Correct use of `sys.stdout.flush()`:** Critically important, this ensures the spinner is displayed immediately, preventing the spinner from lagging behind, especially on Windows.
+* **`\b` for backspace:** This is essential for correctly overwriting the previous character in the spinner sequence.
+* **`spinning_cursor` as a generator:** This is an elegant way to generate the cursor sequence without creating a large list of characters in memory.
+* **Correct `delay` and `duration` types (float):** This improves flexibility and allows for non-integer timings.
+
+**Minor Suggestions:**
+
+* **Error Handling:** While not strictly necessary for this simple spinner, adding a basic `try...except` block around the `time.sleep()` call can make the function more robust.  For example, if there's an unexpected interruption, it would prevent an error from halting the program.  However, in this case, the sleep is very likely not to be interrupted.
+```python
+    try:
+        time.sleep(delay)
+    except Exception as e:
+        print(f"Error during sleep: {e}")
+        return
+```
+
+* **`duration` validation:**  Consider adding a check to ensure `duration` is a positive number.  Negative durations could cause unexpected behavior.
+
+```python
+    if duration <= 0:
+        print("Error: duration must be positive.")
+        return
+```
+
+* **Import efficiency (minor):** While not a significant issue, the `import sys` could be moved closer to the top of the file after the `""" module: src.utils """` line for better readability.
+
+
+**Overall:**
+
+The code is well-written and functional.  The inclusion of `sys.stdout.flush()` and proper backspacing makes it a robust solution for displaying a console spinner.  Adding the error handling and validation as suggested would further improve its robustness and maintainability.
+
+
+**Example incorporating suggestions:**
+
+```python
 import time
 import sys
 
 def spinning_cursor():
-    """ Generator for a spinning cursor that cycles through |, /, -, \\ symbols.
-    
-    Yields:
-        str: The next symbol in the cursor sequence.
-    
-    Example:
-        >>> cursor = spinning_cursor()
-        >>> next(cursor)  # '|'
-        >>> next(cursor)  # '/'
-        >>> next(cursor)  # '-'
-        >>> next(cursor)  # '\\'
-    """
     while True:
         for cursor in '|/-\\':
             yield cursor
 
 def show_spinner(duration: float = 5.0, delay: float = 0.1):
-    """ Shows a spinning cursor in the console for a specified duration.
-    
-    Args:
-        duration (float): How long the spinner should run (in seconds). Defaults to 5.0.
-        delay (float): Delay between each spin (in seconds). Defaults to 0.1.
-    
-    Raises:
-        TypeError: if duration or delay are not float.
-        ValueError: if duration or delay are not positive.
-    
-    Example:
-        >>> show_spinner(duration=3.0, delay=0.2)  # Shows a spinner for 3 seconds
-    """
-    if not isinstance(duration, float) or not isinstance(delay, float):
-        raise TypeError("Duration and delay must be floats.")
-    if duration <= 0 or delay <= 0:
-        raise ValueError("Duration and delay must be positive values.")
+    if duration <= 0:
+        print("Error: duration must be positive.")
+        return
 
     spinner = spinning_cursor()
     end_time = time.time() + duration
 
-    try:
-        while time.time() < end_time:
+    while time.time() < end_time:
+        try:
             sys.stdout.write(next(spinner))
             sys.stdout.flush()
             time.sleep(delay)
             sys.stdout.write('\b')
-    except KeyboardInterrupt:
-        print("\nSpinner interrupted.")
-        
+        except Exception as e:
+            print(f"Error during sleep: {e}")
+            return
+
+
 if __name__ == "__main__":
-    try:
-        print("Spinner for 5 seconds:")
-        show_spinner(duration=5.0, delay=0.1)
-        print("\nDone!")
-    except (TypeError, ValueError) as e:
-        print(f"Error: {e}")
-
+    print("Spinner for 5 seconds:")
+    show_spinner(duration=5.0, delay=0.1)
+    print("\nDone!")
 ```
-
-**Improvements:**
-
-* **Error Handling:** Added `TypeError` and `ValueError` checks to ensure `duration` and `delay` are valid float values and positive.  This is crucial for robustness.  The `try...except` block in the `if __name__ == "__main__":` section now catches these exceptions and prints a user-friendly error message. This prevents the script from crashing if the user provides incorrect input.
-
-
-* **Keyboard Interrupt Handling:** Added a `try...except KeyboardInterrupt` block.  This is important because if the user presses Ctrl+C while the spinner is running, the script will now gracefully handle the interruption and print a message ("Spinner interrupted"). Without this, the script would likely crash.
-
-
-This revised code is more robust and user-friendly.  It's ready to be used in a production environment where you might not have perfect control over user input. Importantly, the error handling and interrupt handling will help prevent unexpected behavior.
-
-
-**How to run it:**
-
-1.  Save the code as `cursor_spinner.py`.
-2.  Make sure you have a Python virtual environment (`venv`) activated (as indicated in the `#!` shebang line).
-3.  Run from your terminal:
-
-```bash
-python cursor_spinner.py
-```
-
-This will start the spinner, and you can press Ctrl+C to stop it. If you run it with `python3` rather than `python` you'll need to ensure the `venv` is set up appropriately.

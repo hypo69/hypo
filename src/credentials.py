@@ -243,19 +243,19 @@ from pykeepass import PyKeePass
 
 # # Локальные модули
 from src.check_relise import check_latest_release
-# from src.logger.logger import logger
-# from src.logger.exceptions import (
-#     BinaryError,
-#     CredentialsError,
-#     DefaultSettingsException,
-#     HeaderChecksumError,
-#     KeePassException,
-#     PayloadChecksumError,
-#     UnableToSendToRecycleBin,
-# )
-# from src.utils.file import read_text_file
-# from src.utils.jjson import j_loads, j_loads_ns
-# from src.utils.printer import pprint
+from src.logger.logger import logger
+from src.logger.exceptions import (
+    BinaryError,
+    CredentialsError,
+    DefaultSettingsException,
+    HeaderChecksumError,
+    KeePassException,
+    PayloadChecksumError,
+    UnableToSendToRecycleBin,
+)
+from src.utils.file import read_text_file
+from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.printer import pprint
 
 def singleton(cls):
     """Декоратор для реализации Singleton."""
@@ -494,14 +494,19 @@ class ProgramSettings(BaseModel):
             bool: True if loading was successful, False otherwise.
         """
         try:
-            entries = kp.find_groups(path=['openai']).entries
+            openai_api_keys = kp.find_groups(path=['openai']).entries
+            assistants = kp.find_groups(path=['openai','assistants']).entries
 
-            for entry in entries:
+            #setattr(self.credentials.openai,'assistant',SimpleNamespace())
+            for entry in openai_api_keys:
                 setattr(self.credentials.openai, entry.title, entry.custom_properties.get('api_key', None))
+                setattr(self.credentials.openai, entry.title, entry.custom_properties.get('project_api', None))
+            for assistant in assistants:
+                setattr(self.credentials.openai.assistant, assistant.title, assistant.custom_properties.get('assistant_id', None))
             return True
         except Exception as ex:
+            print(f"Failed to extract OpenAI credentials from KeePass {ex}" )
             ...
-            print(f"Failed to extract GoogleAI credentials from KeePass {ex}" )
             return           
 
 

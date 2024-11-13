@@ -46,7 +46,7 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 # Get the root directory of the project
 __root__: Path = get_project_root()
 """__root__ (Path): Path to the root directory of the project"""
-from src import gs
+#from src import gs
 
 from packaging.version import Version
 from .version import (

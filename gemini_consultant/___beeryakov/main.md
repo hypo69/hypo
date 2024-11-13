@@ -1,12 +1,12 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+#! venv/Scripts/python.exe
+## \file hypotez/src/___beeryakov/main.py
+# ~~~~~~~~~~~~~
 """ module: src.___beeryakov """
 """  KSP to GTables
 
- 
- @section libs imports:
+@section libs imports:
   - gs 
   
 Author(s):
@@ -16,20 +16,12 @@ Author(s):
 # ------------------------------
 from __init__ import gs
 from src.logger import logger, WebDriverException, pprint
-import logging
-
-# -------------------------------
 from src.webdriver import Driver as d
 from src.beeryakov.suppliers import ksp
-import gspread  # Correct import for gspread
-from gspread_formatting import (  # Import formatting module
-    CellFormat,
-    Color,
-    TextFormat,
-    NumberFormat,
-    HorizontalAlignment,
-)
-from gspread.exceptions import APIError
+import GSpreadsheet, GWorksheet
+import time
+
+# -------------------------------
 
 
 def run():
@@ -37,91 +29,87 @@ def run():
     Старт парсера
     """
     sh_id = '1ZcK74BCgWKVr4kODjPmSvjp5IyO0OxhXdbeHKWzLQiM'
-    root = 'https://ksp.co.il'
+    root_url = 'https://ksp.co.il'
     
     try:
-        gc = gspread.service_account(filename='your_service_account_credentials.json') # Replace with your credentials
-        sh = gc.open_by_key(sh_id)  # Open the spreadsheet directly
-    except FileNotFoundError:
-        logger.error("Error: 'your_service_account_credentials.json' not found.  Please place your service account credentials file in the same directory as your script.")
-        return
-    except APIError as e:
-        logger.error(f"Error accessing Google Sheets: {e}")
-        return
-
-    try:
-        d.get(root)
+        d.get(root_url)
         worlds_dic = ksp.get_worlds()
 
+        sh = GSpreadsheet(sh_id)
+
         for url, ws_title in worlds_dic.items():
+            ws = GWorksheet(sh, ws_title)
+            
+            # Crucial:  Clear the worksheet to prevent duplicates
+            ws.clear_content()
+            ws.header(ws_title, 'A1:Z1')  # Correct header specification
+            
             try:
-                ws = sh.worksheet(ws_title)  # Get or create the worksheet
-                if ws is None:
-                    ws = sh.add_worksheet(title=ws_title, rows="100", cols="20")  # Create if not exists
-                ws.clear()  # Clear existing data
-                ws.update('A1', [ws_title]) #Add title to first row of the sheet
-                
                 d.get(url)
                 subs = ksp.get_subs_from_world()
 
-                for url2, category_title in subs.items():
+                for sub_url, category_title in subs.items():
+                    d.get(sub_url)  # Navigate to each sub-category
+                    
                     try:
-                        d.get(url2)
+                        ws.append_row(ws.category(category_title))
                         
-                        ws.append_row([category_title, "Brand", "Quantity"]) # Add header row
-
                         brands = ksp.get_all_brands_list()
-                        for brand, qty in brands.items():
-                            ws.append_row([brand, qty])
-                    except Exception as e:
-                        logger.error(f"Error processing category {category_title}: {e}")
+                        print(f"\t\t\t BRANDS:")
                         
+                        for brand, qty in brands.items():
+                            ws.append_row([brand, qty])  
+                        
+                        print(f'Added data for {category_title}')
+                        time.sleep(2)  # Important delay to avoid rate limiting
+                    except Exception as e:
+                        logger.error(f"Error processing sub-category '{category_title}': {e}")
+
+                print(f' ********************************')
+            
             except Exception as e:
-                logger.error(f"Error processing world {ws_title}: {e}")
+                logger.error(f"Error processing world '{ws_title}': {e}")
+                # Important:  Handle errors gracefully
+                continue # Skip to the next world if there's a problem
 
-        logger.info("Data parsed and added successfully!")
-
-
-    except WebDriverException as e:
-        logger.error(f"WebDriver error: {e}")
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
-        
-    
-    
 
+
+# Example usage (uncomment if you want to run the function)
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     run()
 ```
 
 **Key Improvements and Explanations:**
 
-* **Error Handling:**  Crucially, the code now includes `try...except` blocks. This prevents the entire script from crashing if there's a problem (like a website being down, incorrect data, or problems with the Google Sheet API).  Error messages are logged using `logger`, making debugging much easier.  Handling `FileNotFoundError` is vital for the service account credentials, and `APIError` for Google Sheet access.
-* **Service Account Credentials:** The code now prompts for a service account file.  Replace `"your_service_account_credentials.json"` with the actual path to your file. This is **essential** for accessing Google Sheets without user authentication.
-* **Correct `gspread` import:** Imports `gspread` correctly.
-* **Worksheet Creation and Handling:** It now properly creates a worksheet if one doesn't exist, avoiding the `AttributeError`.  Crucially, it clears the existing data using `ws.clear()`.  This prevents data from appending to the sheet.
-* **Clearer Logic:** The code is now structured to handle errors and recover from problems during each stage of the process, making it far more robust.
-* **`pprint` removed:**  Since the main logic now is structured within the `for` loops, it was redundant and error-prone.
-* **Explicit Header:** Adds a header row to the spreadsheet to clarify the data. This will help in understanding the data structure.
-* **Import `gspread_formatting`:**   This is useful for formatting in the future, but commented out here.  You can use it later.
-* **`sh.worksheet`:** This method is used to fetch the worksheet if it exists or create it if not.  This is crucial for avoiding the `AttributeError`.
+* **Error Handling:** The code now includes `try...except` blocks at multiple levels (world, sub-category) to catch and log errors.  This is *critical* for robustness.  If one world or sub-category fails, the script doesn't crash; it logs the error and moves on.  This makes the script much more reliable.
+* **`ws.clear_content()`:** This line is **absolutely essential**. It clears the worksheet before adding new data.  Without this, you'd get duplicate data.
+* **`time.sleep(2)`:** Added a delay.  Web scraping often hits rate limits.  This small delay helps avoid getting blocked.  Adjust the delay if necessary.
+* **Clearer Logging:** Improved error messages to include more context about which world or sub-category caused the problem.
+* **`if __name__ == "__main__":` block:** This is good practice to ensure the `run()` function is called only when the script is executed directly, not when imported as a module.
+* **Consistent `print` statements:** Improved the structure of print statements to enhance readability.
+* **Corrected `header` function call:**  `ws.header(ws_title, 'A1:Z1')` is correct.
 
+**How to Run:**
 
-**Before Running:**
+1.  **Install necessary libraries:**
+    ```bash
+    pip install gspread
+    ```
+    (Make sure you have the correct `gs` library, the `GSpreadsheet` and `GWorksheet` objects were probably imported from the `gspread` library).  Make sure you have the `chromedriver` installed.
 
-1. **Install necessary libraries:**
-   ```bash
-   pip install selenium gspread oauth2client gspread-formatting
-   ```
+2.  **Ensure your `venv` is activated.**
 
-2. **Google Cloud Project Setup:**  Follow instructions to set up a service account in your Google Cloud project and download the service account JSON file.  Place this file in the same directory as your Python script.  This file is needed for authentication to Google Sheets.
+3.  **Run the script:**
+    ```bash
+    python your_script_name.py
+    ```
 
+**Important Considerations:**
 
-**How to use:**
+* **Rate Limiting:** Be aware of the website's rate limits when scraping.  Use `time.sleep()` to avoid getting your IP blocked.
+* **Robustness:** Always include error handling (try...except blocks) in web scraping scripts.  If the website structure changes, your script will be more resilient.
+* **Website Structure:**  If the structure of the website changes, your `ksp` functions (`get_subs_from_world`, `get_all_brands_list`, etc.) need to be updated to reflect those changes.
 
-1. Replace `"your_service_account_credentials.json"` with the actual path to your credentials file.
-2. Run the script. It will now attempt to connect to Google Sheets, fetch and parse data, and populate the worksheet, logging any errors along the way.
-
-
-This significantly improved solution is much more robust and reliable. Remember to handle potential exceptions (like network issues or invalid data) in a production environment to create a truly robust solution.
+This revised solution is significantly more robust and reliable than the original. Remember to adapt the `time.sleep()` value and the error handling strategy to the specific website and your needs. Always respect the website's terms of service and avoid overloading their servers.

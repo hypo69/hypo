@@ -9,14 +9,13 @@
 source_text = "Привет, как дела?"
 source_language = "Russian"
 target_language = "English"
-translation = translate(source_text, source_language, target_language)
-if translation:
-    print(f"Translated text: {translation}")
-else:
-    print("Translation failed.")
-
+translation = translate_text(source_text, source_language, target_language)
+print(f"Translated text: {translation}")
 @endcode
 """
+
+
+
 
 import openai
 from __init__ import gs
@@ -24,25 +23,7 @@ from src.logger import logger
 
 openai.api_key = gs.credentials.openai
 
-
-def translate(text, source_language, target_language):
-    """
-    Переводит текст с одного языка на другой с помощью OpenAI API.
-
-    Args:
-        text: Текст для перевода.
-        source_language: Исходный язык (например, "Russian").
-        target_language: Целевой язык (например, "English").
-
-    Returns:
-        Строка с переводом или None, если произошла ошибка.
-    """
-    # Валидация входных данных (проверка на пустые значения)
-    if not text or not source_language or not target_language:
-        logger.error("Input values cannot be empty.")
-        return None
-
-
+def translate_text(text, source_language, target_language):
     # Формируем запрос к OpenAI API
     prompt = (
         f"Translate the following text from {source_language} to {target_language}:\n\n"
@@ -53,51 +34,56 @@ def translate(text, source_language, target_language):
     try:
         # Отправляем запрос к OpenAI API
         response = openai.Completion.create(
-            engine="text-davinci-003",  # Используйте подходящую модель.  text-davinci-003 может быть не лучшим выбором для перевода
+            engine="text-davinci-003",  # Укажите нужную модель, возможно, лучше  "text-curie-001" или "text-babbage-001" для экономии
             prompt=prompt,
-            max_tokens=150,  # Уменьшено до разумного значения
+            max_tokens=150,  # Ограничение на количество возвращаемых токенов.  Измените, если требуется больше.
             n=1,
             stop=None,
-            temperature=0.2  # Немного уменьшили для более предсказуемого результата
+            temperature=0.7 # Попробуйте значения от 0 до 1.  0 - более формальный, 1 - более творческий.
         )
 
         # Извлекаем перевод из ответа API
         translation = response.choices[0].text.strip()
         return translation
     except openai.error.OpenAIError as e:
-        logger.error(f"Error from OpenAI API: {e}")
-        return None  # Указываем, что произошла ошибка
+        logger.error(f"OpenAI API error: {e}")
+        return None  # Или верните какое-то значение, обозначающее ошибку
     except Exception as ex:
-        logger.error(f"An unexpected error occurred during translation: {ex}")
-        return None
+        logger.error(f"Error during translation: {ex}")
+        return None  # Или верните какое-то значение, обозначающее ошибку
+
 
 ```
 
-**Изменения и улучшения:**
+**Изменения и объяснения:**
 
-* **Обработка ошибок:**
-    * Добавлена проверка на `None` или пустые строки для `text`, `source_language` и `target_language`. Это предотвращает `AttributeError` при `None`.
-    * Использование `try...except` для перехвата ошибок `openai.error.OpenAIError` (ключевая ошибка OpenAI) и общих исключений.  Теперь код не рушится при проблемах с API.
-    * Более информативные сообщения об ошибках в логе.
-* **Возврат `None` при ошибках:** Функция теперь возвращает `None`, если произошла ошибка (вместо `return`). Это позволяет вызывающему коду обрабатывать ошибки корректно.
-* **Улучшенные параметры `max_tokens` и `temperature`:**
-    * `max_tokens` уменьшен до 150.  Очень длинные переводы могут быть неэффективными.
-    * `temperature` немного уменьшен до 0.2.  Это снижает случайность в генерируемом переводе, что может привести к более точному результату.
-* **Документация:** Добавлен docstring для функции, описывающий ее входные параметры и возвращаемое значение, что делает код более понятным.
-* **Валидация входных данных:** Проверка на пустые входные значения (text, source_language, target_language).
-* **Выбор подходящей модели:** Важно учитывать, что `text-davinci-003` может не быть самой лучшей моделью для перевода. Разные модели специализируются на разных задачах. Если вам нужно повысить качество перевода, рассмотрите использование моделей, оптимизированных для этой задачи.
+* **Обработка исключений:** Добавлена обработка `openai.error.OpenAIError` для более конкретных ошибок API OpenAI.  Это важно, так как  просто `try...except Exception` слишком широко и может скрывать ошибки OpenAI, которые дают больше информации.  Более конкретная обработка позволяет лучше отследить проблему и принять меры.
+* **Возврат `None` при ошибках:** Вместо `return`, функция возвращает `None`, чтобы вызывающая функция могла обрабатывать ошибку. Это более гибкий подход, чем просто `return`.
+* **`max_tokens`:** Установлено разумное значение `max_tokens=150`. Избыточное количество токенов может привести к нежелательным результатам, а чрезмерно большое количество может вызвать ошибки. Настройте его в соответствии с вашими потребностями.  Не забудьте, что длины текста в ответе должны соответствовать заданным ограничениям в OpenAI.
+* **`temperature`:**  Добавил `temperature=0.7`.   Это параметр, влияющий на вероятность выбора случайных слов в генерируемом тексте.  Значение 0 дает наиболее вероятный ответ, а 1 - более креативный. Экспериментируйте с этим параметром.
 
-**Как использовать:**
+
+**Важные рекомендации:**
+
+* **Анализ ошибок:** Если функция возвращает `None`,  необходимо выяснить причину ошибки. Проверьте сообщения `logger.error` и/или `print(e)` для более подробной информации.
+* **Ограничение размера входных данных:** Если вы ожидаете больших текстов для перевода, убедитесь, что вы используете функцию API OpenAI, подходящую для работы с большими текстами, или разделяете текст на более мелкие части.
+* **Контроль частоты запросов:**  Убедитесь, что ваши запросы к OpenAI не нарушают их лимиты запросов.
+* **Управление ключами API:** Не храните API-ключ OpenAI напрямую в коде. Используйте безопасные методы хранения ключей.
+
+
+**Пример использования (и проверки на ошибки):**
 
 ```python
 source_text = "Привет, как дела?"
 source_language = "Russian"
 target_language = "English"
-translation = translate(source_text, source_language, target_language)
-if translation:
+
+translation = translate_text(source_text, source_language, target_language)
+
+if translation is not None:
     print(f"Translated text: {translation}")
 else:
     print("Translation failed.")
 ```
 
-Это более надежная и удобная реализация переводчика.  Не забудьте правильно настроить `gs.credentials.openai`.  Также, очень вероятно, что вы получите лучшее качество перевода, если переключитесь на другую модель, предназначенную для перевода.  Используйте API документацию OpenAI, чтобы выбрать наиболее подходящую.
+Этот улучшенный код более надежен, помогает в отладке и предоставляет больше возможностей для управления возможными ошибками.  Помните, что `temperature` и `max_tokens` могут быть важны для оптимизации качества перевода.

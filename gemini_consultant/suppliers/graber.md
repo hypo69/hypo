@@ -27,12 +27,11 @@ from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 from src.endpoints.prestashop import Prestashop
 
-# Initialize global variables outside the class.  Crucially,
-# ensure they are assigned to a value before they're used.
+# Use a global variable for Driver and Locator; important!
 d: Driver = None
 l: Locator = None
 
-# Определение декоратора для закрытия всплывающих окон
+
 def close_popup(value: Any = None) -> Callable:
     """Creates a decorator to close pop-ups before executing the main function logic.
 
@@ -46,33 +45,39 @@ def close_popup(value: Any = None) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await args[0].d.execute_locator(args[0].l.close_popup)  # Await async pop-up close
+                if d and l and hasattr(l, "close_popup"):  # Crucial check!
+                    await d.execute_locator(l.close_popup)
             except ExecuteLocatorException as e:
                 logger.debug(f"Error executing locator: {e}")
-            return await func(*args, **kwargs)  # Await the main function
+            return await func(*args, **kwargs)
         return wrapper
     return decorator
 
 
 class Graber:
     """Базовый класс сбора данных со страницы для всех поставщиков."""
-
+    
     def __init__(self, supplier_prefix: str, locator: Locator, driver: Driver):
         """Инициализация класса Graber.
 
         Args:
             supplier_prefix (str): Префикс поставщика.
             locator (Locator): Экземпляр класса Locator.
-            driver (Driver): Экземпляр класса Driver.  **MUST** be passed in.
+            driver (Driver): Экземпляр класса Driver.
         """
         self.supplier_prefix = supplier_prefix
-        self.l = locator
-        self.d = driver  # Store the driver
+        global l, d
+        l = locator
+        d = driver
         self.fields = ProductFields()
 
-    # ... (rest of your code is mostly the same)
+    async def error(self, field: str):
+        """Обработчик ошибок для полей."""
+        logger.debug(f"Ошибка заполнения поля {field}")
+        # Important:  Returning None or something similar here is vital
+        return None
 
-    # Crucial:  Use self.d instead of global d
+
     async def set_field_value(
         self,
         value: Any,
@@ -80,54 +85,78 @@ class Graber:
         field_name: str,
         default: Any = ''
     ) -> Any:
-        # Use self.d, not global d!
-        locator_result = await asyncio.to_thread(locator_func)
-        if value:
-            return value
-        if locator_result:
-            return locator_result
-        self.error(field_name)  # Call the error method
-        return default
-
-    async def error(self, field: str):
-        """Обработчик ошибок для полей."""
-        logger.debug(f"Ошибка заполнения поля {field}")
+        """Универсальная функция для установки значений полей с обработкой ошибок.
+        """
+        try:
+            locator_result = await asyncio.to_thread(locator_func)
+            return value if value else locator_result if locator_result else default
+        except Exception as e:
+            logger.error(f"Error in set_field_value for {field_name}: {e}")
+            await self.error(field_name)  # Log the error and return default
+            return default
 
 
     # ... (rest of your code)
 
 
-    # ... (rest of your methods, all now correctly using self.d and self.l)
+    # ... other methods ...
+
+    @close_popup()
+    async def local_saved_image(self, value: Any = None):
+        if not d or not l or not hasattr(l, "default_image_url"):
+            logger.error("Driver or locator not properly initialized.")
+            return None  # Important: return None on error
+        try:
+            self.fields.local_saved_image = save_png_from_url(
+                d.execute_locator(l.default_image_url), self.fields.id_product
+            )
+        except Exception as e:
+            logger.error(f"Error saving image: {e}")
+            return None  # Return None to signal error
+
+    # ...
+
+
 ```
 
 **Key Improvements and Explanations:**
 
-* **`self.d` and `self.l`:** The `d` and `l` variables were global. This is a significant problem in Python, as global variables make code harder to reason about, reuse, and test.  Inside the `Graber` class, the driver and locator are now correctly associated using `self.d` and `self.l`, making the class more self-contained.
+* **Global `d` and `l` variables:**  Crucially, these are _global_ variables and will work as expected because they're defined at the module scope.  This is critical if they are used across methods within your script.
+* **Driver and Locator Check:** Added `if d and l` and checks for `hasattr(l, "close_popup")` to avoid `AttributeError` exceptions.  This is a *very* important defensive programming practice.
+* **Error Handling in `set_field_value`:** The `try...except` block in `set_field_value` catches any exceptions that might arise during the asynchronous operation and logs the error.  This is vital to prevent your script from crashing.  Now, it returns `default` in case of errors, avoiding a potential crash.
+* **Error Handling in `local_saved_image`:** Similar error handling for `local_saved_image` is included. Now it returns `None` on errors.
 
-* **Driver as Parameter:**  The `__init__` method now takes a `driver` object as a parameter.  **You MUST pass in the Driver object** in order to use the class correctly.
 
-* **Using `self` consistently:** All calls to `d.execute_locator` and `self.l` properties now use `self.d` and `self.l` inside the `Graber` class, ensuring that the driver and locator are always accessed through the instance of the class and not via the global variable.
+* **Return `None` on Error:**  All methods should return a meaningful value, even in case of errors (e.g., `None`, an empty string, a specific error code). This is essential for proper error handling in your calling code.
 
 
-**How to Use:**
+**How to use:**
 
 ```python
-# Assuming you have initialized your Driver correctly
-driver = await Driver.initialize() # Or some other method to get your driver object
-locator = await Locator.initialize(driver)
+import asyncio
+# ... import your other modules ...
+from your_module import Graber, Locator, Driver
 
-# ... (other imports and setups)
 
-graber_instance = Graber("graber", locator, driver)  # Pass in initialized driver
-
-try:
-    result = await graber_instance.grab_page()
-    print(result)
-except Exception as e:
+async def main():
+  # Initialize your driver and locator
+  driver = Driver() # Replace with your actual driver initialization
+  locator = Locator(driver) # Replace with your actual locator initialization
+  graber = Graber("myprefix", locator, driver)
+  # ... (code to fetch the product page URL etc.) ...
+  product_url = "your_product_url"
+  try:
+    await driver.open_url(product_url)
+    products_data = await graber.grab_page()  # Run the grab_page function
+    if products_data:  # Important: check for error conditions
+       print(products_data.fields)
+  except Exception as e:
     print(f"An error occurred: {e}")
 
-# ... (close your driver at the end)
-await driver.close()
+
+if __name__ == "__main__":
+  asyncio.run(main())
 ```
 
-This revised code is significantly more robust, maintainable, and follows best practices for Python object-oriented programming. Remember to replace placeholders like `await Driver.initialize()` with your actual driver initialization.  Crucially, make sure your driver is being initialized and closed correctly, and that your `Locator` is also properly connected to it.
+
+This revised code is more robust and reliable, handling potential errors and ensuring that functions return predictable values.  Remember to replace placeholders like `"your_product_url"` with your actual values. This is crucial for production-ready code.  Critically, make sure your `Locator` and `Driver` classes are properly initialized and that the locators themselves are valid.

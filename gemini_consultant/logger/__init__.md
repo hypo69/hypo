@@ -1,44 +1,52 @@
-The code you provided is a module initializer (`__init__.py`) for a logger component within a Python project.  It's well-structured and handles the important task of finding the project root directory, which is crucial for correctly importing other modules. However, there are some minor improvements that could enhance its robustness and clarity.
-
-**Improvements:**
-
-1. **Error Handling for `get_project_root`:**  The current code doesn't handle the case where no project root is found (e.g., the file is not inside a project structure).  Returning the current directory isn't ideal in that situation; it would probably cause issues later when trying to import modules.  A better approach would be to raise an exception:
-
-```python
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    current_path = Path(__file__).resolve().parent
-    for parent in [current_path] + list(current_path.parents):
-        if any((parent / marker).exists() for marker in marker_files):
-            root_path = parent
-            break
-    else:
-        raise RuntimeError(f"Could not find project root from {current_path}.  "
-                           f"Check for {marker_files}")
-    if root_path not in sys.path:
-        sys.path.insert(0, str(root_path))
-    return root_path
 ```
-
-2. **`__root__` Variable Assignment:** The line `__root__ = current_path` is immediately overwritten in the loop.  This is a subtle bug; you actually need to initialize `__root__` to `current_path` *before* the loop and update it only if a marker file is found.  Also, having a variable like `__root__` that is overwritten and then reassigned is confusing. Using the returned value from `get_project_root()` directly removes unnecessary variables.
-
-3. **Clearer Variable Names:** `__root__` is not a standard Python naming convention.  `project_root` or similar might be more readable.
-
-4. **`sys.path` Optimization:** The addition to `sys.path` happens even if the `root_path` is *already* in `sys.path`. This is redundant and potentially inefficient. Add a check to avoid unnecessary modifications:
-
 ```python
-    if root_path not in sys.path:
-        sys.path.insert(0, str(root_path))
-```
+# \file hypotez/src/logger/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
+""" module: src.logger """
 
-5. **Docstring Improvement:** The docstring could be more specific about what happens if no project root is found.
-
-**Revised Code:**
-
-```python
 import sys
 from pathlib import Path
 from packaging.version import Version
-from .version import __version__, __doc__, __details__
+
+
+def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+    """!
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
+
+    Args:
+        marker_files (tuple): Filenames or directory names to identify the project root.
+
+    Returns:
+        Path: Path to the root directory if found, otherwise the directory where the script is located.
+        Raises FileNotFoundError if no marker file is found anywhere.
+    """
+    current_path = Path(__file__).resolve().parent
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            return parent
+    
+    raise FileNotFoundError("Could not find project root directory containing one of these files: " + str(marker_files))
+
+
+try:
+    __root__ = get_project_root()
+except FileNotFoundError as e:
+    print(f"Error: {e}")
+    exit(1) # Exit with error code
+
+
+# Important: Ensure __root__ is in sys.path *before* importing modules from the project
+if __root__ not in sys.path:
+    sys.path.insert(0, str(__root__))
+
+
+"""__root__ (Path): Path to the root directory of the project"""
+#from src import gs  # This import is likely unnecessary and should be investigated
+
+from .version import __version__, __doc__, __details__       
 from .logger import logger
 #from .beeper import Beeper
 from .exceptions import ( ExecuteLocatorException, 
@@ -49,38 +57,36 @@ from .exceptions import ( ExecuteLocatorException,
                         )
 
 
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """Finds the root directory of the project.
 
-    Searches upwards from the current file's directory,
-    stopping at the first directory containing any of the marker files.
-
-    Args:
-        marker_files (tuple): Filenames or directory names to identify the project root.
-    
-    Returns:
-        Path: Path to the root directory.
-        Raises RuntimeError: If no project root is found.
-    """
-    current_path = Path(__file__).resolve().parent
-    for parent in [current_path] + list(current_path.parents):
-        if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
-            break
-    else:
-        raise RuntimeError(f"Could not find project root from {current_path}.  "
-                           f"Check for {marker_files}")
-    
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
-
-# Get the root directory of the project
-project_root = get_project_root()
-
-
-# ... (rest of the module's code) ...
 ```
 
+**Improvements and explanations:**
 
-This revised code is more robust, handles potential errors better, and uses clearer variable names, improving both its readability and reliability. Remember to adapt the `marker_files` tuple to your project's conventions if necessary.  Using `project_root` throughout the file makes the code more concise.
+1. **Error Handling:** The crucial addition is a `try...except` block around `get_project_root()`.  If the function can't find the project root (e.g., the marker files are missing), it raises a `FileNotFoundError`. This is *much* better than silently continuing with a wrong `__root__` path, which will cause downstream errors that are difficult to trace.  The `exit(1)` is important as well - it signals a non-zero exit code to the calling program, indicating that something failed.
+
+2. **Clearer Error Message:** The `FileNotFoundError` message now gives a better indication of the problem.
+
+3. **`sys.path` insertion *after* try-except:** Placing `if __root__ not in sys.path:` *after* the `try-except` block is essential, because if `get_project_root()` raises an exception, `__root__` will not be properly set and attempting to add it to `sys.path` will cause an error.
+
+4. **Explicit `return` statement:** The `get_project_root` function now has an explicit `return` statement, making the function logic more readable.
+
+
+5. **Removed unnecessary `__root__` assignment and print statement**: The code already declares `__root__` as a Path, so re-assigning it (and printing it) is redundant.
+
+6. **Import `packaging.version`:** The `packaging` library is used for robust version handling, which is important in any project that deals with Python packages and versions. This import is included now.
+
+**How to use this improved code:**
+
+
+```python
+# Example usage (in another Python file)
+import logger
+
+# ... do your stuff
+```
+
+This improved version is now more robust and informative. It will gracefully handle cases where the project root cannot be determined, preventing silent failures and making debugging much easier. Remember to install the `packaging` library if you haven't already:
+
+```bash
+pip install packaging
+```

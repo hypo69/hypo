@@ -35,48 +35,55 @@ if __root__ not in sys.path:
 settings: dict = None
 
 try:
-    with open(__root__ / 'src' / 'settings.json', 'r', encoding='utf-8') as settings_file:  # Added encoding='utf-8'
+    with open(__root__ / 'src' / 'settings.json', 'r', encoding='utf-8') as settings_file:  # Add encoding
         settings = json.load(settings_file)
-except (FileNotFoundError, json.JSONDecodeError):
-    print("Warning: settings.json not found or invalid. Using defaults.")
-    settings = {}  # Important: Handle the exception by creating an empty dict.
-
-
-__project_name__ = settings.get("project_name", 'hypotez')
-__version__ = settings.get("version", '')
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    print(f"Warning: settings.json not found or invalid: {e}")  # Handle errors more gracefully
+    # Consider using logging for better error handling in production code
+    # import logging
+    # logging.error(f"Error loading settings.json: {e}")
+    
+    
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__ = settings.get("version", '') if settings else ''
 __doc__ = ''
 __details__ = ''
-__author__ = settings.get("author", '')
-__copyright__ = settings.get("copyright", '')  # Fixed typo
-__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
+__author__ = settings.get("author", '') if settings else ''
+__copyright__ = settings.get("copyright", '') if settings else ''  # Corrected "copyrihgnt"
+__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 
 
 ```
 
-**Improvements and explanations:**
+**Improvements and Explanation:**
 
-* **Error Handling:** The crucial addition is handling the `FileNotFoundError` and `json.JSONDecodeError`.  The original code would crash if `settings.json` wasn't found or was malformed. Now, it prints a warning and sets `settings` to an empty dictionary. This prevents the script from failing.  **Critically important** for robustness.
-* **Encoding:** Added `encoding='utf-8'` to the `open()` function. This is essential to correctly handle files with characters outside the ASCII range, which is very common in JSON files.
-* **Empty Settings:** If the `settings.json` file is missing or the data within is corrupted, the code now assigns an empty dictionary to `settings`. This prevents errors later when trying to access keys that might not exist.
-* **Typo Fix:** Corrected the typo in `__copyright__` to `copyright`.
-* **Readability (optional but recommended):** Removed redundant `if settings` checks. The use of `settings.get()` implicitly handles cases where the `settings` dictionary might be `None` or don't have the specific key.
+* **Error Handling:** The `try...except` block now catches `FileNotFoundError` and `json.JSONDecodeError`.  Critically, it prints a warning message indicating that the file was not found or couldn't be parsed. This prevents the script from crashing silently.  A better approach in production code would be to use the Python logging module.
 
+* **Encoding:** Added `encoding='utf-8'` to the `open()` function. This is crucial because it ensures proper handling of different character encodings in the `settings.json` file.  Without it, you might get errors if the file contains characters outside the ASCII range.
 
-**How to use this improved code:**
+* **Corrected Variable Name:** Changed `"copyrihgnt"` to `"copyright"` in the `settings.get()` call.
 
-1.  **Create `settings.json`:**  Make sure you have a `settings.json` file in the `src` directory of your project. This file should contain valid JSON, and look like this:
+* **Clearer Error Message:**  The error message now explains what went wrong.
+
+* **PEP 8 Compliance (minor):**  Consistent variable naming convention (`__version__`).
+
+**How to Use the Improved Code:**
+
+1.  Make sure you have a `settings.json` file in the `src/` directory of your project.  It should have a structure like this (example):
 
 ```json
 {
-  "project_name": "Hypotez",
-  "version": "1.2.3",
+  "project_name": "hypotez",
+  "version": "1.0.0",
   "author": "Your Name",
-  "copyright": "Your Copyright",
-  "cofee": "https://anotherlink.com"
+  "copyright": "Copyright 2024, Your Company",
+  "cofee": "https://example.com/coffee"
 }
 ```
 
-2.  **Run the script:**  The `version.py` file will now function correctly even if there are no settings.  This means your other modules that import it won't unexpectedly fail, which is excellent!
+2.  Place this `version.py` file in your `hypotez/src/ai/openai` directory.
+
+3.  Run your Python script from a directory within the `hypotez` project, making sure that the `pyproject.toml` or `requirements.txt` or `.git` directory is present in the upper levels of the directory tree.
 
 
-This revised code is far more robust and reliable in handling potential issues. Remember to adjust the `settings.json` example with your actual project data.
+This improved version is more robust and informative, providing a better user experience and preventing unexpected errors. Remember to use logging in production to properly track errors and manage your application's behavior.
