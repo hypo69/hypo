@@ -6,22 +6,25 @@
 """
 Video Saving Utilities.
 
-This module provides asynchronous functions for downloading and saving video files, as well as retrieving video data.
+This module provides asynchronous functions for downloading and saving video files, as well as retrieving video data.  It includes error handling and logging for robust operation.
 
 Functions:
     save_video_from_url(url: str, save_path: str) -> Optional[Path]:
-        Download a video from a URL and save it locally asynchronously.
+        Download a video from a URL and save it locally asynchronously.  Handles potential network issues and file saving errors.
 
     get_video_data(file_name: str) -> Optional[bytes]:
-        Retrieve binary data of a video file if it exists.
+        Retrieve binary data of a video file if it exists.  Handles file not found and read errors.
 
 Examples:
+    >>> import asyncio
     >>> asyncio.run(save_video_from_url("https://example.com/video.mp4", "local_video.mp4"))
-    PosixPath('local_video.mp4')
+    PosixPath('local_video.mp4')  # or None if failed
 
-    >>> get_video_data("local_video.mp4")
+    >>> data = get_video_data("local_video.mp4")
+    >>> if data:
+    ...     print(data[:10])  # Print first 10 bytes to check
     b'\x00\x00\x00...'
-"""
+    """
 
 import aiohttp
 import aiofiles
@@ -30,8 +33,9 @@ from typing import Optional
 import asyncio
 from src.logger import logger
 
+
 async def save_video_from_url(
-    url: str, 
+    url: str,
     save_path: str
 ) -> Optional[Path]:
     """Download a video from a URL and save it locally asynchronously.
@@ -41,19 +45,19 @@ async def save_video_from_url(
         save_path (str): The path to save the downloaded video.
 
     Returns:
-        Optional[Path]: The path to the saved file, or `None` if the operation failed.
+        Optional[Path]: The path to the saved file, or `None` if the operation failed.  Returns None on errors and if file is 0 bytes.
 
-    Example:
-        >>> asyncio.run(save_video_from_url("https://example.com/video.mp4", "local_video.mp4"))
-        PosixPath('local_video.mp4')
+    Raises:
+        aiohttp.ClientError: on network issues during the download.
     """
     save_path = Path(save_path)
 
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
-                response.raise_for_status()  # Check if the request was successful
+                response.raise_for_status()  # Check for HTTP errors
 
+                # Create parent directories if they don't exist
                 save_path.parent.mkdir(parents=True, exist_ok=True)
 
                 async with aiofiles.open(save_path, "wb") as file:
@@ -63,20 +67,25 @@ async def save_video_from_url(
                             break
                         await file.write(chunk)
 
-        # Check if the file was saved
+
+        # Crucial checks after saving
         if not save_path.exists():
-            logger.error(f"File {save_path=} was not saved.")
-            return
+            logger.error(f"File {save_path} not saved successfully.")
+            return None
 
         if save_path.stat().st_size == 0:
-            logger.error(f"File {save_path=} was saved, but its size is 0 bytes.")
-            return
+            logger.error(f"Downloaded file {save_path} is empty.")
+            return None
 
-    except Exception as ex:
-        logger.error(f"Error saving video {save_path=}: {ex}", exc_info=True)
-        return
+        return save_path
 
-    return save_path
+    except aiohttp.ClientError as e:
+        logger.error(f"Network error downloading video: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Error saving video {save_path}: {e}", exc_info=True)
+        return None
+
 
 def get_video_data(file_name: str) -> Optional[bytes]:
     """Retrieve binary data of a video file if it exists.
@@ -86,28 +95,27 @@ def get_video_data(file_name: str) -> Optional[bytes]:
 
     Returns:
         Optional[bytes]: The binary data of the file if it exists, or `None` if the file is not found or an error occurred.
-
-    Example:
-        >>> get_video_data("local_video.mp4")
-        b'\x00\x00\x00...'
     """
     file_path = Path(file_name)
 
     if not file_path.exists():
-        logger.error(f"File {file_path=} does not exist.")
-        return
+        logger.error(f"File {file_name} not found.")
+        return None
 
     try:
         with open(file_path, "rb") as file:
             return file.read()
-    except Exception as ex:
-        logger.error(f"Error reading file {file_path=}: {ex}", exc_info=True)
-        return
+    except Exception as e:
+        logger.error(f"Error reading file {file_name}: {e}", exc_info=True)
+        return None
+
 
 def main():
-    url = "https://example.com/video.mp4"
+    url = "https://example.com/video.mp4"  # Replace with a valid URL!
     save_path = "local_video.mp4"
-    asyncio.run(save_video_from_url(url, save_path))
+    result = asyncio.run(save_video_from_url(url, save_path))
+    if result:
+        print(f"Video saved to {result}")
 
 if __name__ == "__main__":
     main()

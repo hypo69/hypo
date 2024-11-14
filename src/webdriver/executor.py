@@ -22,57 +22,48 @@ with one or several web elements simultaneously.
 
 This module provides flexibility and versatility in working with web elements, enabling the automation of complex web interaction scenarios.
 """
-
-
-import sys
+...
 import asyncio
 import re
-from types import SimpleNamespace
-from typing import ByteString, BinaryIO, Optional
-from pathlib import Path
+import sys
 import time
-from typing import List, Union, Dict
+from dataclasses import dataclass, field
 from enum import Enum
+from pathlib import Path
+from types import SimpleNamespace
+from typing import BinaryIO, ByteString, Dict, List, Optional, Union
 
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import (
+    ElementClickInterceptedException,
     JavascriptException,
     NoSuchElementException,
+    StaleElementReferenceException,  # Этот импорт был добавлен
     TimeoutException,
-    ElementClickInterceptedException
 )
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from __init__ import gs
-from src.suppliers.locator import Locator
-from src.utils import pprint, j_loads, j_loads_ns, j_dumps, save_png
-
 from src.logger import logger
 from src.logger.exceptions import (
     DefaultSettingsException,
-    WebDriverException,
     ExecuteLocatorException,
+    WebDriverException,
 )
+from src.suppliers.locator import locator
+from src.utils.jjson import j_dumps, j_loads, j_loads_ns
+from src.utils.printer import pprint
+from src.utils.image import save_png
 
 
-from dataclasses import dataclass, field
-from typing import Optional, Union, List
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from types import SimpleNamespace
-import re
 
 @dataclass
 class ExecuteLocator:
-    """ Locator handler for web elements using Selenium."""
-    
+    """Locator handler for web elements using Selenium."""
     driver: Optional[object] = None
     actions: ActionChains = field(init=False)
     by_mapping: dict = field(default_factory=lambda: {
@@ -88,31 +79,31 @@ class ExecuteLocator:
     mode: str = 'debug'
 
     def __post_init__(self):
-        """Initializes the actions with the provided driver."""
         if self.driver:
             self.actions = ActionChains(self.driver)
 
-    async def execute_locator(
+
+    async def execute_locator( # Improved docstring
         self,
-        locator: dict | SimpleNamespace | Locator,
+        locator: Union[dict, SimpleNamespace, Locator],
         timeout: float = 0,
         timeout_for_event: str = 'presence_of_element_located',
         message: Optional[str] = None,
         typing_speed: float = 0,
         continue_on_error: bool = True,
-    ) -> str | list | dict | WebElement | bool | None:
-        """! Executes the logic specified in the locator dictionary to interact with web elements.
+    ) -> Union[str, list, dict, WebElement, bool, None]:
+        """Executes actions on a web element based on the provided locator.
 
         Args:
-            locator (dict | SimpleNamespace | Locator): Locator data to identify the web element.
-            timeout (float): Max time to wait for the element.
-            timeout_for_event (str): Event to wait for ('presence_of_element_located' or 'element_to_be_clickable').
-            message (str, optional): Message to send to the element. Defaults to None.
-            typing_speed (float): Speed of typing for send message events.
-            continue_on_error (bool): Whether to continue in case of an error.
+            locator: Locator data (dict, SimpleNamespace, or Locator).
+            timeout: Timeout for locating the element.
+            timeout_for_event: The wait condition ('presence_of_element_located', 'element_to_be_clickable').
+            message: Optional message to send.
+            typing_speed: Typing speed for send_keys events.
+            continue_on_error: Whether to continue on error.
 
         Returns:
-            Union[str, list, dict, WebElement, bool]: Outcome based on locator instructions.
+            str | list | dict | WebElement | bool: Outcome based on locator instructions.
         """
         locator = (
             locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None

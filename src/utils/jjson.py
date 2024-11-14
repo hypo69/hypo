@@ -85,12 +85,14 @@ def j_dumps(
     existing_data = {}
     if path and path.exists() and mode in {"a+", "+a"}:
         try:
-            existing_data = j_loads(path)
-            if not isinstance(existing_data, dict):
-                existing_data = {}
+            with path.open("r", encoding="utf-8") as f:  # Fixed: read in 'r' mode
+                existing_data = json.load(f)
+        except json.JSONDecodeError as e:
+            logger.error(f"Error decoding existing JSON in {path}: {e}", exc_info=exc_info)
+            existing_data = {}
         except Exception as ex:
             logger.error(f"Error reading {path=}: {ex}", exc_info=exc_info)
-            return
+            return None
 
     # Обработка данных в зависимости от режима
     if mode == "a+":

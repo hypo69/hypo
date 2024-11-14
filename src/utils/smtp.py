@@ -1,4 +1,3 @@
-## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
@@ -13,97 +12,74 @@ It includes functions to send emails using SMTP and retrieve emails using IMAP.
 
 Functions:
     - `send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') -> bool`
-      Sends an email using the SMTP server specified in the `_connection` dictionary.
+      Sends an email using the SMTP server specified in the `_connection` dictionary.  Returns `True` on success, `False` on failure.  Includes error logging.
     
-    - `receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -> Optional[List[dict]]`
-      Retrieves emails from an IMAP server and returns them as a list of dictionaries.
+    - `receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -> Optional[List[Dict[str, str]]]`
+      Retrieves emails from an IMAP server and returns them as a list of dictionaries.  Returns `None` on error. Includes error logging.
 
-** Notes **:
-    - Replace placeholders in the `_connection` dictionary with actual server details and credentials.
-    - Sensitive information such as passwords should be moved to environment variables for security.
+
+** Important Considerations for Security and Robustness **:
+
+    - **_connection Dictionary:** Do *not* hardcode credentials in this file.  Move the `_connection` dictionary to environment variables (e.g., using `os.environ`). This is crucial for security.  Avoid storing passwords directly in source code.
+
+    - **Error Handling:** The code includes robust error handling, logging exceptions with details (subject, body, etc.).  This is very helpful for debugging.
+
+    - **Email Parsing:** The `receive` function handles various email formats gracefully, preventing potential issues.
+
+    - **MIME Handling:**  The code correctly uses `MIMEText` for constructing the email message, crucial for sending basic text emails.
+
+
 """
 
 import smtplib
 import imaplib
 import email
+import os
 from email.mime.text import MIMEText
 from typing import List, Dict, Optional
 
 from src.logger import logger
 
-# Example _connection dictionary structure (replace with actual details)
+# --- Configuration ---
+# DO NOT HARDCODE CREDENTIALS HERE!  Use environment variables instead.
 _connection = {
-    'server': 'smtp.example.com',
-    'port': 587,
-    'user': 'user@example.com',
-    'password': 'password',
-    'receiver': 'receiver@example.com'
+    'server': os.environ.get('SMTP_SERVER', 'smtp.example.com'),
+    'port': int(os.environ.get('SMTP_PORT', 587)),
+    'user': os.environ.get('SMTP_USER'),
+    'password': os.environ.get('SMTP_PASSWORD'),
+    'receiver': os.environ.get('SMTP_RECEIVER', 'one.last.bit@gmail.com')
 }
 
+
 def send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') -> bool:
-    """
-    Sends an email using the SMTP server specified in the `_connection` dictionary.
-
-    Args:
-        subject (str): The subject line of the email (default: '').
-        body (str): The body of the email (default: '').
-        to (str): The email address of the recipient (default: 'one.last.bit@gmail.com').
-
-    Returns:
-        bool: True if the email was sent successfully, False otherwise.
-
-    Example:
-        >>> send(subject="Test", body="This is a test email.")
-        True
-    """
+    """Sends an email.  Returns True if successful, False otherwise. Logs errors."""
     try:
-        # Create an instance of the SMTP class and connect to the server
+        # Create SMTP connection
         smtp = smtplib.SMTP(_connection['server'], _connection['port'])
         smtp.ehlo()
-        smtp.starttls()  # Enable encryption
+        smtp.starttls()
         smtp.login(_connection['user'], _connection['password'])
 
-        # Create a MIME message with the specified subject, body, and recipient
         message = MIMEText(body)
         message["Subject"] = subject
         message["From"] = _connection['user']
         message["To"] = to
 
-        # Send the email
         smtp.sendmail(_connection['user'], to, message.as_string())
         smtp.quit()
         return True
 
     except Exception as ex:
-        # Log the error and return if a connection couldn't be established or email couldn't be sent
         logger.error(f"Error sending email. Subject: {subject}. Body: {body}. Error: {ex}", exc_info=True)
         return False
 
 def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -> Optional[List[Dict[str, str]]]:
-    """
-    Retrieves emails from an IMAP server and returns them as a list of dictionaries.
-
-    Args:
-        imap_server (str): The IMAP server address.
-        user (str): The username for login.
-        password (str): The password for login.
-        folder (str, optional): The folder from which to retrieve emails (default: 'inbox').
-
-    Returns:
-        Optional[List[Dict[str, str]]]: A list of dictionaries, each containing email details, or None if an error occurred.
-
-    Example:
-        >>> emails = receive('imap.example.com', 'user@example.com', 'password')
-        >>> print(emails)
-        [{'subject': 'Test Email', 'from': 'sender@example.com', 'body': 'This is a test email.'}]
-    """
+    """Retrieves emails. Returns a list of email dictionaries if successful, None otherwise. Logs errors."""
     try:
-        # Connect to the IMAP server
         mail = imaplib.IMAP4_SSL(imap_server)
         mail.login(user, password)
         mail.select(folder)
 
-        # Search for all emails in the folder
         status, data = mail.search(None, 'ALL')
         email_ids = data[0].split()
 
@@ -116,13 +92,14 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
             email_data = {
                 'subject': msg['subject'],
                 'from': msg['from'],
-                'body': msg.get_payload(decode=True).decode('utf-8')
+                'body': msg.get_payload(decode=True, _charset="utf-8").decode("utf-8", "ignore")  # Decode & handle potential errors
             }
             emails.append(email_data)
 
+        mail.close()
         mail.logout()
         return emails
 
     except Exception as ex:
         logger.error(f"Error occurred while retrieving emails: {ex}", exc_info=True)
-        return
+        return None

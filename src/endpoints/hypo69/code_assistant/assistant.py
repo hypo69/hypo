@@ -95,7 +95,7 @@ class CodeAssistant(BaseModel):
     def yield_files_content(self, src_path: Path, patterns: list[str], from_model: str) -> Iterator[tuple[Path, str]]:
         """Итерация по файлам, соответствующим паттернам, и их содержимому."""
         exclude_file_patterns = [re.compile(r'.*\(.*\).*'), re.compile(r'___+.*')]
-        exclude_dirs = {'.ipynb_checkpoints', '_experiments', '__pycache__', '.git', '.venv'}
+        exclude_dirs = {'.ipynb_checkpoints', '_experiments', 'db', '__pycache__', '_examples', '.git', '.venv'}
         exclude_files = {'version.py'}
 
         role_directories = {

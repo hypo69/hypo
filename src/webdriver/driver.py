@@ -36,32 +36,33 @@ from src.logger.exceptions import ExecuteLocatorException, WebDriverException
 
 class Driver:
     """
-    `Driver` Class for interacting with web browsers using Selenium WebDriver.
+    Класс `Driver` для взаимодействия с веб-браузерами с помощью Selenium WebDriver.
 
-    This class provides a unified interface for different web drivers such as Chrome, Firefox, and Edge. 
-    It includes methods for navigating to URLs, scrolling pages, extracting content, and handling cookies.
+    Этот класс обеспечивает унифицированный интерфейс для различных веб-драйверов, таких как Chrome, Firefox и Edge.
+    Он включает методы для навигации по URL-адресам, прокрутки страниц, извлечения контента и обработки куки.
 
-    Attributes:
-        driver (selenium.webdriver): An instance of the WebDriver to control the browser.
+    Атрибуты:
+        driver (selenium.webdriver): Экземпляр WebDriver для управления браузером.
     """
 
     def __init__(self, webdriver_cls, *args, **kwargs):
-        """ Initializes the Driver class with the specified web driver.
+        """ Инициализирует класс Driver указанным веб-драйвером.
 
         Args:
-            webdriver_cls (type): A WebDriver class from `selenium.webdriver` such as `Chrome`, `Firefox`, or `Edge`.
-            *args: Additional positional arguments passed to the WebDriver constructor.
-            **kwargs: Additional keyword arguments passed to the WebDriver constructor.
+            webdriver_cls (type): Класс WebDriver из `selenium.webdriver`, такой как `Chrome`, `Firefox` или `Edge`.
+            *args: Дополнительные позиционные аргументы, передаваемые в конструктор WebDriver.
+            **kwargs: Дополнительные ключевые аргументы, передаваемые в конструктор WebDriver.
 
-        Returns:
-            None: This method does not return any value.
+        Возвращает:
+            None
 
-        Raises:
-            TypeError: If `webdriver_cls` is not a valid WebDriver class.
+        Исключения:
+            TypeError: Если `webdriver_cls` не является допустимым классом WebDriver.
         """
         if not hasattr(webdriver_cls, 'get'):
-            raise TypeError("`webdriver_cls` must be a valid WebDriver class.")
+            raise TypeError("`webdriver_cls` должен быть допустимым классом WebDriver.")
         self.driver = webdriver_cls(*args, **kwargs)
+
 
     def __getattr__(self, item):
         """ Proxy for accessing WebDriver attributes.
