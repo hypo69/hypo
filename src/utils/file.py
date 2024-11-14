@@ -1,5 +1,8 @@
 ## \file hypotez/src/utils/file.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
+""" module: src.utils """
 """ Module for file operations. """
 
 import os

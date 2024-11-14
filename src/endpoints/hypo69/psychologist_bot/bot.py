@@ -1,8 +1,8 @@
-## \file hypotez/src/endpoints/hypo69/hypo69_psychologist_bot.py
+## \file hypotez/src/endpoints/hypo69/psychologist_bot/bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
-""" module: src.endpoints.hypo69 """
+""" module: src.endpoints.hypo69.psychologist_bot """
 ...
 """! t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 

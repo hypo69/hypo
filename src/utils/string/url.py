@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
+""" module: src.utils.string """
 """! module: src.utils.string 
 
     Модуль для работы с URL строками, включая извлечение параметров запроса и проверку на валидность URL.

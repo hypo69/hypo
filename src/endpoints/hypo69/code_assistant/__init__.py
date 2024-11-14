@@ -1,8 +1,8 @@
-## \file hypotez/src/endpoints/hypo69/__init__.py
+## \file hypotez/src/endpoints/hypo69/code_assistant/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
-""" module: src.endpoints.hypo69 """
+""" module: src.endpoints.hypo69.code_assistant """
 
 from pathlib import Path
 import sys
@@ -36,5 +36,6 @@ __root__: Path = get_project_root()
 
 from src import gs
 
-from packaging.version import Version
+#from packaging.version import Version
 #from .version import __version__, __doc__, __details__  
+

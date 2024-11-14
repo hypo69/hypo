@@ -1,8 +1,8 @@
-## \file hypotez/src/endpoints/hypo69/version.py
+## \file hypotez/src/endpoints/hypo69/code_assistant/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
-""" module: src.endpoints.hypo69 """
+""" module: src.endpoints.hypo69.code_assistant """
 import json
 
 settings:dict = None

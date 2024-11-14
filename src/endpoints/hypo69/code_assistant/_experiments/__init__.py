@@ -1,8 +1,8 @@
-## \file hypotez/src/endpoints/hypo69/__init__.py
+## \file hypotez/src/endpoints/hypo69/code_assistant/_experiments/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
-""" module: src.endpoints.hypo69 """
+""" module: src.endpoints.hypo69.code_assistant._experiments """
 
 from pathlib import Path
 import sys
