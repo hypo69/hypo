@@ -45,7 +45,100 @@ class CodeAssistant(BaseModel):
         logger.info("\nПрограмма завершена пользователем.")
         sys.exit(0)
 
-    def initialize_models(self):
+def initialize_models(self, role: str, lang: str):
+    """Инициализация моделей на основе роли и языка."""
+    if role == 'code_checker':
+        comment_for_model_about_piece_of_code = f'code_checker_{lang}.md'
+        system_instruction: str = f'improve_code.md'
+        # model = gemini_model  # Используем модель Gemini для проверки кода
+    elif role == 'doc_creator':
+        comment_for_model_about_piece_of_code = f'doc_creator_{lang}.md'
+        system_instruction: str = f'create_documentation.md'
+        # model = openai_model  # Используем модель OpenAI для создания документации
+
+    # Чтение инструкций для модели
+    comment_for_model_about_piece_of_code = read_text_file(
+        gs.path.src / 'endpoints' / 'hypo69' / 'onela_bot' / 'instructions' / comment_for_model_about_piece_of_code
+    )
+    system_instruction = read_text_file(gs.path.src / "ai" / "prompts" / "developer" / system_instruction)
+
+    gemini_model = GoogleGenerativeAI(
+        api_key=gs.credentials.gemini.onela,
+        model_name=self.gemini_model_name,
+        system_instruction=system_instruction,
+        generation_config=self.gemini_generation_config,
+    )
+
+    # Для OpenAI модели
+    openai_model = OpenAIModel(
+        system_instruction=system_instruction,
+        model_name=self.openai_model_name,
+        assistant_id=self.openai_assistant_id
+    )
+
+    return gemini_model, openai_model, comment_for_model_about_piece_of_code
+
+    def initialize_models(self, role: str, lang: str):
+        """Инициализация моделей на основе роли и языка."""
+        if role == 'code_checker':
+            comment_for_model_about_piece_of_code = f'code_checker_{lang}.md'
+            system_instruction: str = f'improve_code.md'
+            # model = gemini_model  # Используем модель Gemini для проверки кода
+        elif role == 'doc_creator':
+            comment_for_model_about_piece_of_code = f'doc_creator_{lang}.md'
+            system_instruction: str = f'create_documentation.md'
+            # model = openai_model  # Используем модель OpenAI для создания документации
+
+        # Чтение инструкций для модели
+        comment_for_model_about_piece_of_code = read_text_file(
+            gs.path.src / 'endpoints' / 'hypo69' / 'onela_bot' / 'instructions' / comment_for_model_about_piece_of_code
+        )
+        system_instruction = read_text_file(gs.path.src / "ai" / "prompts" / "developer" / system_instruction)
+
+        gemini_model = GoogleGenerativeAI(
+            api_key=gs.credentials.gemini.onela,
+            model_name=self.gemini_model_name,
+            system_instruction=system_instruction,
+            generation_config=self.gemini_generation_config,
+        )
+
+        # Для OpenAI модели
+        openai_model = OpenAIModel(
+            system_instruction=system_instruction,
+            model_name=self.openai_model_name,
+            assistant_id=self.openai_assistant_id
+        )
+
+        return gemini_model, openai_model, comment_for_model_about_piece_of_code
+
+    def process_files(self):
+        """Основной процесс обработки файлов и взаимодействия с моделями."""
+        gemini_model, openai_model, comment_for_model_about_piece_of_code = self.initialize_models(self.role, self.lang)
+
+        for file_path, content in self.yield_files_content(gs.path.src, ['*.py', 'README.MD'], self.role):
+            # Конструируем входные данные для модели
+            content = (
+                f"{comment_for_model_about_piece_of_code}\n"
+                f"Расположение файла в проекте: `{file_path}`.\n"
+                f"Роль выполнения: `{self.role}`.\n"
+                "Код:\n\n"
+                f"```{content}```\n"
+            )
+
+            # Обработка через Gemini модель
+            if gemini_model:
+                gemini_response = gemini_model.ask(content)
+                if gemini_response:
+                    self.save_response(file_path, gemini_response, 'gemini')
+
+            # Обработка через OpenAI модель
+            if openai_model:
+                openai_response = openai_model.ask(content)
+                if openai_response:
+                    self.save_response(file_path, openai_response, 'openai')
+
+            time.sleep(120)
+
         """Инициализация моделей на основе указанных в self.models."""
         if 'gemini' in self.models:
             self.gemini_model = GoogleGenerativeAI(
@@ -94,7 +187,11 @@ class CodeAssistant(BaseModel):
 
     def yield_files_content(self, src_path: Path, patterns: list[str], from_model: str) -> Iterator[tuple[Path, str]]:
         """Итерация по файлам, соответствующим паттернам, и их содержимому."""
-        exclude_file_patterns = [re.compile(r'.*\(.*\).*'), re.compile(r'___+.*')]
+        exclude_file_patterns = [
+                    re.compile(r'.*\(.*\).*'),
+                    re.compile(r'___+.*'),
+                    re.compile(r'___+')
+                    ]
         exclude_dirs = {'.ipynb_checkpoints', '_experiments', 'db', '__pycache__', '_examples', '.git', '.venv'}
         exclude_files = {'version.py'}
 
@@ -106,7 +203,8 @@ class CodeAssistant(BaseModel):
         target_directory = role_directories.get(self.role, None)
         if not target_directory:
             logger.info(f"Неизвестная роль: {self.role}. Пропускаем обработку файлов.")
-            return
+            ...
+            #return
 
         for pattern in patterns:
             for file_path in src_path.rglob(pattern):
