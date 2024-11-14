@@ -679,20 +679,23 @@ class ProgramSettings(BaseModel):
             ...
             return 
 
+
     @property
-    def now(self, dformat: str = '%Y%m%d%H%M') -> str:
-        """ Returns the current timestamp in the specified format and sets up paths for binary files.
+    def now(self, dformat: str = '%y_%m_%d_%H_%M_%S_%f') -> str:
+        """Возвращает текущую метку времени в формате год-месяц-день-часы-минуты-секунды-милисекунды.
 
-        This method returns a string representing the current timestamp in the format `YYYYMMDDHHMM`. It also checks and adds the necessary binary file paths to the system if they haven't been added already.
-
-        Args:
-            dformat (str, optional): The format for the timestamp. Defaults to `'%Y%m%d%H%M'`.
-
-        Returns:
-            str: The current timestamp in string format.
-        """
+        Этот метод возвращает строку, представляющую текущую метку времени, в формате `год_месяц_день_часы_минуты_секунды_миллисекунды`.
     
-        return datetime.datetime.now().strftime(dformat)
+        Args:
+            dformat (str, optional): Формат для метки времени. По умолчанию `'%y_%m_%d_%H_%M_%S_%f'`.
+        
+        Returns:
+            str: Текущая метка времени в строковом формате.
+        """
+        timestamp = datetime.now().strftime(dformat)
+        # Вернём только первые 3 цифры миллисекунд, т.к. %f возвращает микросекунды (6 цифр)
+        return f"{timestamp[:-3]}"
+
 
 
 # Global instance of ProgamSettings
