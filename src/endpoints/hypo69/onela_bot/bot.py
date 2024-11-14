@@ -96,7 +96,7 @@ def main() -> None:
             save_response(file_path = file_path, response = gemini_response, from_model = 'gemini')
         else:
             timeout:int = 3600
-            print(f'{timeout=}')
+            print(f'pause at: {gs.now}\ntimeout: {timeout/60=} min')
             time.sleep(timeout)
             ... # <- add logic for failed response
 
