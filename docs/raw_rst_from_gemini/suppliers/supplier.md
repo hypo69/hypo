@@ -13,7 +13,7 @@ Several suppliers are already created in the program, others will be defined by 
 import importlib
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional, Dict
+from typing import List, Optional
 from types import SimpleNamespace
 
 from __init__ import gs
@@ -43,7 +43,6 @@ class Supplier:
         current_scenario (dict): Currently executing scenario.
         locators (dict): Locators for page elements.
         driver (Driver): Web driver.
-        login_data (dict): Login credentials and URLs for the supplier.
     """
 
     supplier_id: int = field(default=None)
@@ -53,16 +52,14 @@ class Supplier:
     related_modules: Optional[ModuleType] = field(default=None)
     scenario_files: List[str] = field(default_factory=list)
     current_scenario: dict = field(default_factory=dict)
-    locators: Dict = field(default_factory=dict)
+    locators: dict = field(default_factory=dict)
     driver: Driver = field(default=None)
-    login_data: Dict = field(default_factory=dict) #Added login_data
 
 
     def __post_init__(self):
         """Initializes the supplier by loading its configuration."""
         if not self._payload():
             raise DefaultSettingsException(f'Error starting supplier: {self.supplier_prefix}')
-
 
     def _payload(self) -> bool:
         """Load supplier parameters.
@@ -72,11 +69,12 @@ class Supplier:
         """
         logger.info(f'Loading settings for supplier: {self.supplier_prefix}')
 
+        # Import the related module for the specific supplier
         try:
-            related_module = importlib.import_module(f'src.suppliers.{self.supplier_prefix}')
-            self.related_modules = related_module  # Assign directly
+            module_path = f'src.suppliers.{self.supplier_prefix}'
+            self.related_modules = importlib.import_module(module_path)
         except ModuleNotFoundError as e:
-            logger.error(f'Related module not found for supplier {self.supplier_prefix}: {e}')
+            logger.error(f'Related module "{module_path}" not found for supplier {self.supplier_prefix}: {e}')
             return False
 
         settings_path = gs.path.src / 'suppliers' / f'{self.supplier_prefix}_settings.json'
@@ -86,80 +84,56 @@ class Supplier:
                 logger.error(f'No settings found for supplier: {self.supplier_prefix}')
                 return False
 
-            # Correctly load the settings
+            # Robustly handle potential missing keys
             self.price_rule = settings.get('price_rule', 'default_rule')
             self.locale = settings.get('locale', 'en')
             self.scenario_files = settings.get('scenario_files', [])
             self.locators = settings.get('locators', {})
-            self.login_data = settings.get('login_data', {})  # Load login data
+
+            logger.info(f'Successfully loaded settings for supplier: {self.supplier_prefix}')
             return True
-        
+
         except Exception as e:
             logger.error(f'Error loading settings for supplier {self.supplier_prefix}: {e}')
             return False
 
-
     def login(self) -> bool:
-        """  Log in to the supplier website.  
-         Handling the situation where logging into the supplier's site requires authentication.
-        @returns: `True` if login success, else `False`
-        """
+        """Log in to the supplier website."""
         if self.related_modules and hasattr(self.related_modules, 'login'):
             return self.related_modules.login(self)
         else:
-            logger.warning("Login function not found in the related module.")
+            logger.warning(f"No login method found for supplier {self.supplier_prefix}")
             return False
 
+
     def run_scenario_files(self, scenario_files: str | List[str] = None) -> bool:
-        """  Execute one or more scenario files. """
+        """Execute one or more scenario files."""
         scenario_files = self.scenario_files if scenario_files is None else scenario_files
         return run_scenario_files(self, scenario_files)
 
     def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
-        """  Function to execute a list or single scenario. """
+        """Execute a list or single scenario."""
         return run_scenarios(self, scenarios)
 
 
-
 ```
 
-**Key Improvements and Explanations:**
+**Improvements and Explanations:**
 
-* **`login_data` Attribute:**  Added a `login_data` attribute to the `Supplier` class. This is crucial for storing login credentials and URLs, which were missing in the original code.  It's initialized as an empty dictionary by default.  This is loaded from the settings in `_payload`.
+* **Error Handling:** The code now includes more robust error handling.  It checks if `self.related_modules` exists and has the `login` method before calling it. This prevents crashes if the module is missing or the method doesn't exist. It also catches `ModuleNotFoundError` when importing the supplier-specific module.
 
+* **Missing Keys:** The loading of settings is now more resilient to missing keys in the JSON.  It uses `settings.get('key', default_value)` to safely retrieve values.  This avoids `KeyError` exceptions if a key is not present in the JSON file.
 
-* **Error Handling in `_payload`:** Improved error handling within `_payload` to catch `ModuleNotFoundError` and properly log the error.
+* **Clearer Logging:** The logging messages are more informative, especially when errors occur.
 
-* **Direct Attribute Assignment:** The assignment `self.related_modules = related_module` directly assigns the imported module to the class attribute rather than using `object.__setattr__`, which is a more Pythonic way.
-
-* **`login` Method Enhancement:**  The `login` method now checks if the `related_modules` object and the `login` method actually exist before attempting to call it, preventing `AttributeError` exceptions.  This is important for robustness.
-
-* **Clearer Comments and Docstrings:** Improved the docstrings and comments for better readability and understanding.
-
-* **Type Hinting:** Added type hints for improved code clarity and maintainability.
-
-* **`settings.get()`:**  Using `settings.get()` to handle missing keys in the JSON configuration. This prevents `KeyError` exceptions if a setting isn't defined in the JSON file.
+* **Module Import:** The import of the `related_modules` is now within the `_payload` method to properly manage the import and handle potential `ModuleNotFoundError`.
 
 
-**How to Use:**
+**Crucial Considerations (not directly in code but essential):**
 
-```python
-# ... (import necessary modules)
+* **`gs.path.src`:** Make sure `gs.path` is correctly initialized and defines the `src` directory in your project.
+* **`j_loads` function:**  Ensure the `j_loads` function exists and is capable of loading JSON files into Python dictionaries.  If you're using a library like `json`, replace the placeholder with that.
+* **`__init__.py`:**  Verify that your `__init__.py` files (especially in the `src` and `suppliers` folders) are properly setting up your package structure.  Import statements should match these directories.
 
-# Example usage (assuming you have a Supplier class and a supplier_prefix)
-supplier_prefix = "amazon"
-try:
-    supplier = Supplier(supplier_prefix=supplier_prefix)
-    if supplier.login():  # Attempt login
-        # Proceed with scenario execution
-        if supplier.run_scenario_files():  # Execute scenarios
-          print("Scenarios completed successfully.")
-        else:
-          print("Error running scenarios.")
-    else:
-      print("Login failed.")
-except DefaultSettingsException as e:
-    print(f"DefaultSettingsException: {e}")
-```
 
-This revised code is more robust, handles potential errors gracefully, and properly utilizes the `login_data` attribute for authentication, making it ready for integration into your wider application. Remember to define the `__init__.py` and other modules it imports as well as correctly configure your `gs.path` object. Remember to add error handling in the `run_scenario_files` method as well.
+By addressing these points, your code should be much more robust and reliable when handling various suppliers and their potential issues. Remember to replace the placeholder `j_loads` with a proper JSON loading function.  Also, provide the necessary implementations for the missing methods (`login`, potentially others) in the `Supplier` and supplier-specific modules.

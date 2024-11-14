@@ -17,8 +17,7 @@ def find_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git'
         marker_files (tuple): Filenames or directory names to identify the project root.
 
     Returns:
-        Path: Path to the root directory if found, otherwise the directory where the script is located.
-        Raises FileNotFoundError: If no suitable marker files are found in any parent directories.
+        Path: Path to the root directory if found, otherwise the directory where the script is located.  Raises ValueError if no root is found after checking all parents.
     """
     current_path = Path(__file__).resolve().parent
 
@@ -26,43 +25,46 @@ def find_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git'
         if any((parent / marker).exists() for marker in marker_files):
             return parent
     
-    raise FileNotFoundError("Could not find project root directory.  Ensure 'pyproject.toml', 'requirements.txt', or '.git' exist in a parent directory.")
+    raise ValueError("Project root not found.  Ensure a pyproject.toml, requirements.txt or .git directory exists in the project tree.")
 
-
-__root__: Path = find_project_root()
+# Call the function to find the project root
+try:
+    __root__: Path = find_project_root()
+except ValueError as e:
+    print(f"Error finding project root: {e}")
+    sys.exit(1)  # Exit with an error code
 
 # Add the project root to `sys.path` to allow importing modules from the project root
 sys.path.append(str(__root__))
-
-
 ```
 
 **Improvements and Explanation:**
 
-* **Error Handling:** The most critical improvement is adding error handling.  The previous code silently returned the current directory if no marker files were found.  This is **extremely dangerous** in a project.  If the current file is not actually part of the project, your code will fail in unexpected ways later on.  The `FileNotFoundError` will now raise an exception if the project root cannot be found, allowing your calling code to handle the error gracefully.
+1. **Error Handling:** The original code lacked error handling.  If `find_project_root` fails to locate a project root after checking all parent directories, it silently returns the current directory, which is likely incorrect and can lead to import failures.  The corrected code now raises a `ValueError` if the root isn't found, allowing calling code to handle the error appropriately. Critically, it now exits with an error code (1), which is standard practice for indicating a failure.
 
-* **Docstring Enhancement:** The docstring now includes a `Raises` section explaining the potential `FileNotFoundError`. This is good practice for a robust function.
+2. **Clarity and Robustness:** The error message is now more informative, explicitly stating the reason for failure and what needs to be checked.
 
-* **Style:**  Minor improvements to spacing and clarity within the code.
+3. **Docstring Enhancement:** The docstring now includes a crucial addition: a return value describing the potential exception. This makes the function's usage clearer to anyone working with it.
 
 **How to Use:**
 
-This `header.py` file should be placed at the `hypotez/src/fast_api` directory.  Then, in any other Python file in your `hypotez` project, you can import modules from the correct directory hierarchy without needing explicit paths.
-
-**Example in a different file (e.g., `hypotez/src/fast_api/my_module.py`):**
+This `header.py` script should be placed in the `fast_api` directory of your project.  Import it into your main application and it will handle finding the root directory.
 
 ```python
-from fast_api.models import MyModel  # Import a model from a module in the project
+# in a file within your project, e.g. app.py
+from fast_api.header import __root__
+import some_module_in_my_project  # Should work after importing header.py
+
+# Example usage that checks for the root
+if __root__:
+    # Do something with __root__
+    print(f"Project root: {__root__}")
 ```
 
-This will correctly import `MyModel` if it is defined in a module within the `src/fast_api/` directory and its subdirectories in the properly identified project root directory.
+**Crucial considerations**
 
-**Important Considerations:**
-
-* **Project Structure:**  This code relies on standard project layouts that include `pyproject.toml` and/or `requirements.txt`. If your project structure is radically different, you might need to adjust the `marker_files` tuple.
-
-* **Error Handling in Your Application:** Your `fast_api` application should handle the potential `FileNotFoundError` by gracefully exiting or taking alternative actions.
-
-With these changes, your code is more robust and provides a more reliable mechanism for discovering the project root.  This is crucial for maintaining the integrity and maintainability of your project, especially as it grows in size and complexity. Remember to run the code in your virtual environment to use this `header.py`.
+- **`sys.exit(1)`:** This is vital. If the project root cannot be found, it's crucial for the script to exit with an error code so the caller can be notified.
+- **Error Handling Design**: Robust scripts always handle unexpected cases like not finding a root.
 
 
+By incorporating these changes, the `header.py` module becomes more reliable and user-friendly, effectively preventing silent failures and aiding in debugging. Remember to adapt the `marker_files` if your project uses different conventions.  For example, if you use a `.repo` folder instead of `.git`, you would modify this accordingly.

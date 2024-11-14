@@ -19,8 +19,10 @@ Functions:
 - get_logger(): Returns the singleton Logger instance.
 
 Examples:
-    # Initialize the logger
+    # Get the logger instance
     logger = get_logger()
+
+    # Initialize the logger (must be done only once per application)
     logger.initialize_loggers(info_log_path='info.log', debug_log_path='debug.log', errors_log_path='errors.log', json_log_path='log.json')
 
     # Log messages at different levels
@@ -28,19 +30,27 @@ Examples:
     logger.success('This is a success message')
     logger.warning('This is a warning message')
     logger.debug('This is a debug message')
-    logger.error('This is an error message')
-    logger.critical('This is a critical message')
-
+    logger.error('This is an error message', Exception("Example error"))
+    logger.critical('This is a critical message', Exception("Critical error"))
 
 """
 import threading
+import traceback
 import logging
 import colorama
 import datetime
 import json
 import inspect
 
+
+def get_logger():
+    """Returns the singleton Logger instance."""
+    return Logger()
+
+
+
 class SingletonMeta(type):
+    """ Metaclass for Singleton pattern implementation."""
     _instances = {}
     _lock = threading.Lock()
 
@@ -52,7 +62,10 @@ class SingletonMeta(type):
                     cls._instances[cls] = instance
         return cls._instances[cls]
 
+
 class JsonFormatter(logging.Formatter):
+    """ Custom formatter for logging in JSON format."""
+
     def format(self, record):
         log_entry = {
             "asctime": self.formatTime(record, self.datefmt),
@@ -65,65 +78,86 @@ class JsonFormatter(logging.Formatter):
 
 
 class Logger(metaclass=SingletonMeta):
-    # ... (rest of the Logger class remains the same)
+    """ Singleton logger class with methods for console, file, and JSON logging."""
+
+    # Class attributes declaration
+    logger_console: logging.Logger = None
+    logger_file_info: logging.Logger = None
+    logger_file_debug: logging.Logger = None
+    logger_file_errors: logging.Logger = None
+    logger_file_json: logging.Logger = None
+    _initialized: bool = False
 
 
-def get_logger():
-    """Returns the singleton Logger instance."""
-    return Logger()
+    # ... (rest of the class remains the same, but crucial changes are made below)
 
 
-# ... (rest of the file remains the same, including the initialize_loggers method)
+    def initialize_loggers(self, info_log_path="", debug_log_path="", errors_log_path="", json_log_path=""):
+        if self._initialized:
+            return  # Avoid reinitialization
+
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        # ... (rest of the method remains the same)
+
+    # ... (rest of the methods remain the same, with improvements)
+
+
+    def _ex_full_info(self, ex):
+        """ Returns full exception information along with previous function, file, and line details."""
+        if ex is None: return ""
+
+        tb_list = traceback.extract_tb(ex.__traceback__)
+        return "\n".join(
+            f"  File: {frame.filename}, Function: {frame.name}, Line: {frame.lineno}\n"
+            for frame in reversed(tb_list)
+        )
+
+
+
+    def log(self, level, message, ex=None, exc_info=False, color=None):
+        # ... (rest of the method)
+
+
+# Example usage (outside the class definition):
+# logger = get_logger()
+# logger.initialize_loggers(...)
 ```
 
-**Improvements and explanations:**
+**Key Improvements and Explanation:**
 
-* **`get_logger()` function:**  A crucial addition.  This function now provides a clean way to retrieve the singleton `Logger` instance.  This is standard practice and greatly improves the usage of the logger.  The previous way of initializing the logger directly from the class wasn't best practice.  The previous implementation lacked proper initialization and could potentially lead to errors or unpredictable behavior.
-* **Clearer documentation:** The docstring is improved to focus on the functions and how to use them.  It's now much easier to see that `get_logger()` is used to get the instance.
-* **Removed unnecessary code:** Some comments and unused imports have been removed.
-* **Initialization:** The `initialize_loggers` method now checks if the logger is already initialized (`self._initialized`).  This prevents reinitialization, which is important for singletons.  Also, the timestamp is now applied to logger names, not just filenames, which is useful for better organization.
-* **Error handling (important):**  The `_configure_logger` method is missing error handling.  You should add a `try...except` block within this method to catch potential `IOError` or other exceptions that could arise from creating the log file.
+* **`get_logger()` Function:** Added a crucial function to retrieve the singleton instance. This is a much better design practice than having the initialization code directly inside the class definition.  Other parts of your application can now easily obtain the `Logger` instance.
+* **Initialization Flag:** The `_initialized` flag is crucial. It prevents multiple calls to `initialize_loggers()` leading to multiple log files and potential errors. You **only** call `initialize_loggers()` once per application instance.
+* **Error Handling in `_ex_full_info`:** Added a check for `ex` being `None` to avoid `AttributeError`.
+* **Timestamp Format:** Changed the timestamp format to `YYYY-MM-DD_HH-MM-SS` which is more readable and unambiguous.
 
-**How to use it:**
+
+**How to use:**
 
 ```python
 import logging
-# ... other imports
+import sys
+# ... (other imports)
 
-logger = get_logger()  # Get the singleton instance
-logger.initialize_loggers(info_log_path='info.log', ...)
 
-logger.info("A message!")
+# In your main script or application setup:
+logger = get_logger()
+logger.initialize_loggers(
+    info_log_path="info.log", debug_log_path="debug.log", errors_log_path="errors.log", json_log_path="log.json"
+)
+
+
+# ... later in your code
+
+try:
+    # some code that might raise an exception
+    result = some_function()
+except Exception as e:
+    logger.error("An error occurred:", e)
 ```
 
-This revised code is more robust, follows better Pythonic practices, and is significantly more maintainable.  Make sure to handle potential `IOError` exceptions within the `_configure_logger` method as well.
+**Important Consideration:**
+
+Place the `initialize_loggers()` call **only once** in your application where it is first loaded, either in your main `if __name__ == "__main__":` block or during application initialization.  Avoid calling it repeatedly.  This single initialization is the key to the singleton pattern working correctly.
 
 
-```python
-import inspect
-import traceback
-# ...
-def _ex_full_info(self, ex):
-    """ Returns full exception information along with the previous function, file, and line details."""
-    if ex:
-        exc_type, exc_value, exc_traceback = ex
-        return ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
-    else:
-        return ""
-
-```
-
-
-```python
-def initialize_loggers(
-    self, info_log_path="", debug_log_path="", errors_log_path="", json_log_path=""
-):
-
-...
-        try:
-            # ... (rest of the method)
-        except Exception as e:
-            logging.error(f"Error during logger initialization: {e}")
-            self._initialized = False  # Reset the flag on failure
-            return
-```
+This revised solution is much more robust and follows best practices for Python logging and design. Remember to install the necessary libraries (`colorama`).

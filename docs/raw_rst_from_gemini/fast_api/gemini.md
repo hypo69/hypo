@@ -5,74 +5,90 @@
 """
 Module: src.fast_api.gemini.py
 
-This module implements a FastAPI endpoint for interacting with a language model,
-specifically Google Generative AI.  It exposes a `/ask` endpoint that accepts a
-JSON payload containing a 'prompt' field and returns the model's response.  Error
-handling is included to gracefully manage potential issues during the interaction.
+This module exposes a FastAPI endpoint for interacting with a Google Generative AI model.
+It receives a prompt via a POST request to the '/ask' endpoint and returns the generated
+response or an error message.  Uses the GoogleGenerativeAI class from the `src.ai.google_generativeai` module.
 """
 
-import header  # Assuming this module handles imports or configuration
-from fastapi import FastAPI, HTTPException
-from fastapi.encoders import jsonable_encoder
+import header  # Import any necessary header file
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
 
-# Replace with FastAPI import if needed
-# from flask import Flask, request, jsonify
+# Instantiate the FastAPI app
 app = FastAPI()
+
+# Instantiate the AI model (assuming GoogleGenerativeAI is properly configured)
 ai_model = GoogleGenerativeAI()
 
-@app.post("/ask")
-async def ask():
-    """
-    Endpoint for querying the language model.
 
-    Expects a JSON payload with a 'prompt' field. Returns the model's response
-    or an appropriate error response.
+@app.post("/ask")
+async def ask(request: Request):
+    """
+    Endpoint to receive a prompt and generate a response using Google Generative AI.
+
+    Args:
+        request: The request object containing the prompt data.
+
+    Returns:
+        JSONResponse: A JSON response containing the generated reply or an error message.
+        Raises HTTPException: If no prompt is provided or an error occurs during generation.
     """
     try:
-        payload = await request.json()
-        prompt = payload.get("prompt")
+        # Attempt to parse the request body as JSON
+        data = await request.json()
+    except ValueError:
+        return JSONResponse(
+            content={"error": "Invalid JSON input"}, status_code=400
+        )
 
-        if not prompt:
-            raise HTTPException(status_code=400, detail="No prompt provided")
+    prompt = data.get("prompt")
 
-        reply = await ai_model.ask(prompt)
-        return jsonable_encoder({"reply": reply})  # Use jsonable_encoder for better handling
-
-    except HTTPException as e:
-        raise e
+    # Validate the prompt.  Raise an HTTPException for clarity
+    if not prompt:
+        raise HTTPException(
+            status_code=400, detail="No prompt provided"
+        )
+    
+    try:
+        reply = ai_model.ask(prompt)
+        return JSONResponse({"reply": reply})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+        # Provide more specific error messages
+        error_message = f"Error generating response: {str(e)}"
+        raise HTTPException(status_code=500, detail=error_message)
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+# IMPORTANT: Remove the if __name__ == '__main__': block for FastAPI
 ```
 
-**Improvements and Explanations:**
+**Explanation of Improvements:**
 
-* **FastAPI:**  The code now correctly uses FastAPI.  Import statements have been adjusted.
-* **Error Handling (HTTPExceptions):**  Instead of `try...except` blocks returning `jsonify`, it now leverages FastAPI's built-in `HTTPException` for better structured error responses.  This is crucial for proper API interactions.
-* **Clearer Docstrings:**  The docstrings now describe the module's purpose, the endpoint's functionality, and expected input/output.  More descriptive docstrings are always beneficial.
-* **`jsonable_encoder`:**  The `jsonable_encoder` function from `fastapi.encoders` is used. This ensures that the response data is properly serialized into JSON, handling potential issues with complex data types.
-* **Asynchronous Operations:**  The `async` and `await` keywords are added for asynchronous operations.  This is crucial for enhancing performance with FastAPI and potentially handling large inputs or long-running tasks.
-* **`if __name__ == "__main__":` block:** The code now uses `uvicorn` to run the FastAPI application. This is a standard and recommended way to start a FastAPI server.
-* **Explicit Port:**  The `uvicorn.run` function now explicitly specifies the port (8000). This is important for production deployments to avoid conflicts with other applications using the default port.
-* **`detail` for better error messages**: Error messages now include more context using the `detail` parameter within the `HTTPException`, improving debugging.
+* **FastAPI Structure:** Replaced Flask with FastAPI. This is the recommended framework for modern API development in Python.
+* **Asynchronous Handling:** Used `async def` and `await request.json()` to handle requests asynchronously. This is crucial for better performance and responsiveness, especially with potential large or complex prompts.
+* **Error Handling with HTTPExceptions:**  Used `HTTPException` instead of `return jsonify(...)`.  This gives cleaner, more structured error responses with specific HTTP status codes. It also provides more context in the error message.
+* **Explicit Error Handling:**  The `try...except` block now catches `ValueError` for invalid JSON input, returning a 400 Bad Request with a clear error message.
+* **Clearer Docstrings:** Updated the docstrings to be more comprehensive and informative about the function's purpose, arguments, return values, and potential errors.  Docstrings are crucial for code maintainability and usability.
+* **Removed `if __name__ == '__main__':`:** This block is unnecessary and incorrect for FastAPI applications.  FastAPI apps are run using a dedicated server.
 
 **How to Run:**
 
-1.  Install necessary packages:
+1.  Install necessary libraries:
     ```bash
     pip install fastapi uvicorn
     ```
-
-2.  Make sure `header` and `src.ai.google_generativeai.generative_ai` are correctly imported and/or implemented.
-
-3.  Run the server:
+2.  Create a `main.py` file (or similar) in the same directory and replace the content with the updated `gemini.py` code provided here.
+3.  Run the application:
     ```bash
-    uvicorn your_module_file:app --reload  # Replace your_module_file with the file name
+    uvicorn main:app --reload
     ```
+    This will start a development server. Access the `/ask` endpoint with a valid JSON payload (containing the `prompt` key) via a POST request from a tool like `curl` or Postman.
 
-This improved code adheres to best practices for FastAPI development, providing more robust error handling and better structuring for deployment.  Remember to adapt the `header` and `GoogleGenerativeAI` imports to your project structure. Also, make sure to replace `your_module_file` with the actual name of your Python file. Note:  If you're using a `requirements.txt` file, the `fastapi`, and `uvicorn` packages should be listed there.
+This revised solution addresses the shortcomings of the previous example and provides a more robust, production-ready FastAPI endpoint for interacting with your AI model. Remember to replace `"src.ai.google_generativeai.generative_ai"` with the actual path to your AI model if it's in a different location.
+
+
+**Example POST Request (using curl):**
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"prompt": "Tell me a joke."}' http://localhost:8000/ask
+```

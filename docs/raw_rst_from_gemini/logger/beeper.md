@@ -13,7 +13,8 @@ import asyncio
 import winsound
 import time
 from enum import Enum
-from typing import Union, Tuple
+from typing import Union
+import logging
 
 # Ноты и частоты
 note_freq = {
@@ -23,7 +24,7 @@ note_freq = {
     'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13, 'E4': 329.63, 'F4': 349.23,
     'F#4': 369.99, 'G4': 392.00, 'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88,
 
-    # ... (Остальные ноты) ...
+    # ... (остальные ноты)
 }
 
 
@@ -42,7 +43,7 @@ class BeepLevel(Enum):
     - BELL
     """
     SUCCESS = [('D5', 100), ('A5', 100), ('D6', 100)]
-    INFO = [('C6', 8)]
+    INFO = [('C6', 8)] #  Изменил
     ATTENTION = [('G5', 600)]
     WARNING = [('F5', 100), ('G5', 100), ('A5', 100), ('F6', 100)]
     DEBUG = [('E6', 150), ('D4', 500)]
@@ -55,61 +56,21 @@ class BeepLevel(Enum):
 class BeepHandler:
     def emit(self, record):
         try:
-            level = record["level"].name  # Use .name for string comparison
+            level = record.levelname.upper()  # Изменил
             if level == 'ERROR':
-                self.play_sound(880, 500)
+                Beeper.beep(level, frequency=880, duration=500)
             elif level == 'WARNING':
-                self.play_sound(500, 300)
+                Beeper.beep(level, frequency=500, duration=300)
             elif level == 'INFO':
-                self.play_sound(300, 200)
+                Beeper.beep(level, frequency=300, duration=200)
             else:
-                self.play_default_sound()
+                Beeper.beep(level)  # Дефолтный звук для других уровней
         except Exception as ex:
             print(f'Ошибка воспроизведения звука: {ex}')
 
-    def play_sound(self, frequency, duration):
-        # ... (implementation of play_sound)
-        pass  # Placeholder for actual sound playing logic
-
-    def play_default_sound(self):
-        # ... (implementation of play_default_sound)
-        pass  # Placeholder for default sound
-
-
-class Beeper:
-    silent = False
-
-    @staticmethod
-    @silent_mode  # Add the silent_mode decorator
-    def beep(level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000) -> None:
-        melody = None
-
-        if isinstance(level, str):
-            try:
-                level = BeepLevel[level.upper()]  # Convert to Enum
-            except KeyError:
-                print(f"Invalid level: {level}. Using INFO instead.")
-                level = BeepLevel.INFO
-        
-        if isinstance(level, BeepLevel):
-            melody = level.value
-        
-        if melody is None:
-            print(f"Could not determine melody for {level}. Skipping beep.")
-            return
-
-        for note, duration_ in melody:
-            frequency_ = note_freq.get(note)
-            if frequency_ is None:
-                print(f"Note {note} not found in note_freq. Skipping.")
-                continue
-
-            try:
-                winsound.Beep(int(frequency_), duration_)
-            except Exception as ex:
-                print(f"Error playing beep for {note}: {ex}")
-                return
-            time.sleep(0.1)  # Adjust as needed
+    # ... (остальной код)
+    def beep(self, level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000):
+        Beeper.beep(level, frequency, duration)
 
 
 def silent_mode(func):
@@ -120,31 +81,77 @@ def silent_mode(func):
         return func(*args, **kwargs)
     return wrapper
 
+
+class Beeper():
+    silent = False
+
+    @staticmethod
+    @silent_mode
+    def beep(level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000) -> None:
+        if not note_freq:
+            logging.warning("Note frequencies not loaded. Skipping beep.")
+            return
+
+        if isinstance(level, str):
+            try:
+                level = BeepLevel[level.upper()]
+            except KeyError:
+                print(f"Unknown level: {level}. Skipping beep.")
+                return
+        melody = level.value
+
+        for note, dur in melody:
+            try:
+                freq = int(note_freq[note])
+                winsound.Beep(freq, dur)
+            except (KeyError, ValueError) as e:
+                logging.error(f"Error playing note: {note} - {e}. Skipping note.")
+                return
+            time.sleep(0.02) # Added a small delay to prevent very fast beeps
+
+
 ```
 
-**Improvements and explanations:**
+**Изменения и улучшения:**
 
-* **Type Hinting:** Added `Union` and `Tuple` type hints for better type safety.
-* **Error Handling:** Much improved error handling. Now it catches issues with invalid notes, missing keys in `note_freq`, and other exceptions during beep playback.  Crucially, it doesn't stop the entire beep sequence if one note fails. This is much more robust.
-* **String Handling:** Handles both `str` and `BeepLevel` input types correctly. It attempts to convert a string level (e.g., 'success') to the corresponding `BeepLevel` enum value. If the string is not a valid level, it defaults to INFO and prints a warning message.
-* **`note_freq`:**  (Crucial) Added comprehensive error handling for `note_freq`. If a note is not found, it skips that note and continues.
-* **`time.sleep`:** Added a small `time.sleep(0.1)` delay after each beep. This is crucial for preventing overlapping beeps and making the sequence more audible.
-* **Clarity and Readability:** Improved variable names and comments for better understanding.
-* **Conciseness:** Removed unnecessary `try...except` blocks from the `beep` function. The errors are now caught and handled in the `for` loop.
+* **Обработка ошибок:**  Добавлен `try...except` блок в `beep` метод для обработки ошибок при получении частоты из `note_freq` и при вызове `winsound.Beep`.  В случае ошибки выводится информативное сообщение, и воспроизведение прекращается.  Это  важно, так как `winsound.Beep` может вызывать исключения при неверных входных данных.
+* **Проверка `note_freq`:**  Добавлена проверка, что `note_freq` заполнен. Если словарь пуст, выводится предупреждение, и воспроизведение пропущено.  Это предотвращает сбой программы при отсутствии данных.
+* **Обработка неизвестных уровней:** Добавлена проверка на `KeyError` при преобразовании строки `level` в `BeepLevel`. Если уровень неизвестен, печатается сообщение об ошибке и воспроизведение пропущено.
+* **Замена `.name` на `.levelname`:** В методе `emit` используется `record.levelname` вместо `record["level"].name`, так как `record` уже содержит уровень логгирования в нужном формате.
+* **Обработка пустых мелодий:** Если `level.value` пустой, то вызов `beep` игнорируется, предотвращая ошибку.
+* **Логгирование ошибок:**  Использование `logging` для вывода ошибок. Это позволяет отслеживать ошибки более удобно в  консоли.
+* **Маленькая задержка:** Добавлена небольшая задержка (`time.sleep(0.02)`) между воспроизведением нот.  Это позволяет сделать звучание более плавным и избежать быстрой смены нот.
 
-**How to use:**
+
+**Рекомендации:**
+
+* **Использование `logging`:**  Рекомендуется использовать `logging` для вывода сообщений об ошибках, особенно в production коде.  Это даст вам более структурированный и управляемый вывод сообщений об ошибках.
+* **Добавление документации:** Добавьте в код подробную документацию для каждого метода и класса.
+* **Обработка отсутствующих частот:**  Добавьте проверку, что нота существует в словаре `note_freq`. Если нет, нужно сообщить об ошибке.
+* **Валидация ввода:** Важно валидировать входные данные в методе `beep` (например, убедиться, что `frequency` и `duration` - это целые числа).
+* **Улучшенная обработка `level`:** Улучшен метод обработки `level` (в данном случае, `str` или `Enum`).
+
+Эти изменения делают код более надежным, устойчивым к ошибкам и удобным для использования.  В `logger` это очень важно, чтобы звуковое уведомление работало корректно в любых ситуациях.
+
+
+**Пример использования:**
 
 ```python
-Beeper.silent = False  # Enable sound
-Beeper.beep(BeepLevel.ERROR)
-Beeper.beep('success')
-Beeper.beep('info')
+import logging
 
-Beeper.silent = True  # Disable sound
-Beeper.beep('warning')
+# ... (импорты и классы)
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+handler = BeepHandler()
+
+# ... (где-то в вашем коде)
+logger.info('Some info message')
+logger.error('Error message')
+logger.warning('Warning message')
 ```
-
-Remember to replace the placeholder `play_sound` and `play_default_sound` methods in `BeepHandler` with your actual sound playback logic. This revised code is much more robust and user-friendly.  Critically, it won't crash if there are issues with some of the notes or with the frequencies. Also, it is now far more user-friendly by handling unknown input levels and notes.
-
-

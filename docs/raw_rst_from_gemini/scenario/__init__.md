@@ -53,7 +53,7 @@ list_of_scenarios = [scenario1, ...]
 run_scenarios(s, list_of_scenarios)
 
 @endcode
-Example of a scenario file:
+Example of a scenario file (e.g., file1.json):
 @code
 {
   "scenarios": {
@@ -80,100 +80,109 @@ Example of a scenario file:
 }
 @endcode
 
-For detailed information on the scenario dictionary, read here: ...
+For detailed information on the scenario dictionary, read here: [Link to documentation]
 
-**Important:**  The `Supplier` class is *not* defined in this file.  You need to import it from another module.  This is a crucial missing piece.
+**Important Considerations:**
 
+*   **Supplier Class:** The code assumes a `Supplier` class exists.  This class should handle the interaction with the specific supplier (e.g., PrestaShop).  Ensure the `Supplier` class has a `run()` method (or similar) to initiate the execution.
+*   **Error Handling:** The code lacks error handling.  Implement `try...except` blocks to catch potential exceptions (e.g., file not found, invalid JSON, API errors from PrestaShop).  Logging is highly recommended.
+*   **Dependency Management:**  Make sure the `packaging` library is installed. Use `pip install packaging`.
+*   **File Paths:** The provided path `C:\Users\user\Documents\repos\hypotez\src\scenario\__init__.py` is a python file. The scenarios themselves are likely in separate JSON files.  The code should be adapted to handle these JSON files.
 
 When the program is started via main(), the following sequence of execution occurs:
 @code
-# Example of how to use it - assumes a Supplier class exists
 s = Supplier('aliexpress')
 
 
-s.run()
+s.run()  # Assumed to trigger general scenario execution
 
 
-s.run('file1')
+s.run('file1.json')  # Assumed to trigger scenario execution with file1.json
 
 
-scenario_files = ['file1', ...]
-s.run(scenario_files)
+scenario_files = ['file1.json', ...]
+s.run(scenario_files)  # Assumed to trigger scenario execution with a list
 
 
 scenario1 = {'key': 'value'}
-s.run(scenario1)
+# This scenario does not make sense in the context of file execution
 
 
-list_of_scenarios = [scenario1, ...]
-s.run(list_of_scenarios)
+list_of_scenarios = [{'key': 'value'}, ...]
+s.run(list_of_scenarios) # Assumed to trigger scenario execution with list of dictionaries
+
 
 @endcode
 """
 from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
-
+from .version import __version__, __doc__, __details__
 from .executor import (
-    run_scenario, 
-    run_scenarios, 
-    run_scenario_file, 
-    run_scenario_files, 
-    execute_prestashop_insert, 
+    run_scenario,
+    run_scenarios,
+    run_scenario_file,
+    run_scenario_files,
+    execute_prestashop_insert,
     execute_prestashop_insert_async,
 )
-from .supplier import Supplier # Import Supplier class!
-
-
-# Add error handling (e.g., FileNotFoundError) to make it more robust.
-# Example of how to add handling for missing files/invalid inputs
-# ... (error handling code) ...
 ```
 
-**Explanation of Changes and Crucial Considerations:**
+**Explanation of Improvements and Crucial Considerations:**
 
-1. **Missing `Supplier` Class:** The original code was incomplete.  The example usage showed `s = Supplier('aliexpress')`, but the `Supplier` class was not defined.  I've added `from .supplier import Supplier` to fix this.  Critically, you need to create a separate Python file (e.g., `hypotez/src/scenario/supplier.py`) containing the `Supplier` class.
+* **Clearer Documentation:**  Added important considerations and clarified the intended use of the code, including the need for a `Supplier` class.  Corrected examples to better represent how scenarios are likely handled.
+* **Error Handling (Crucial):** The original code lacked error handling, making it brittle.  Add `try...except` blocks to manage file-reading, JSON parsing, and potential errors during supplier interactions.
+* **Explicit JSON handling:** The example now clearly shows scenarios are likely stored in JSON files, not directly in code.
+* **Supplier Class Requirement:** The code now explicitly states the need for a `Supplier` class.  The `Supplier` class should handle the connection and interaction with the specific supplier (e.g., PrestaShop).  It should have a method to run scenarios.
+* **Correct Example Usage:** Updated the examples to reflect the realistic scenario loading (from files) and clarified that using a single dictionary (`scenario1 = {'key': 'value'}`) doesn't make sense in the context of scenario files.
 
-
-2. **Error Handling (Crucial):** The code now *strongly* encourages better error handling.  The commented-out section provides a placeholder for handling file not found, bad input data (incorrect file format), and other potential issues.  Robust error handling in a production setting is vital.  Implement `try...except` blocks to catch exceptions appropriately and report meaningful errors to the user. This prevents the program from crashing unexpectedly.
-
-
-3. **Docstring Improvement:** I've added a crucial note about the missing `Supplier` class, highlighting the need for the separate file.
-
-
-4. **Missing `Supplier` Class Example (supplier.py):**  You need a file named `supplier.py` (or a similar name) in the `hypotez/src/scenario` directory containing the `Supplier` class:
+**How to Use (Illustrative Example - `Supplier` Class):**
 
 ```python
-# hypotez/src/scenario/supplier.py
-class Supplier:
-    def __init__(self, supplier_name):
-        self.name = supplier_name
+from . import scenario  # Assuming your file is scenario.py
+import json
 
-    def run(self, *args):
-        """Placeholder method.  Implement the logic to run scenarios."""
-        # Add your scenario running logic here
-        print(f"Running scenarios for {self.name} with arguments: {args}")
+class PrestaSupplier:
+    def __init__(self, api_key):
+        self.api_key = api_key
+        # ... your PrestaShop API initialization ...
 
-        # Example:
-        if args:
-            if isinstance(args[0], str):
-                # Treat as file name
-                print("Running scenario from file")
-            elif isinstance(args[0], list):
-                #Treat as list of filenames
-                print("Running list of scenario files")
-            else:
-              print("Running other scenarios")
+    def run(self, scenarios):
+        if isinstance(scenarios, str):
+            try:
+                with open(scenarios, 'r') as f:
+                    data = json.load(f)
+            except FileNotFoundError:
+                print(f"Error: File '{scenarios}' not found.")
+                return
+            except json.JSONDecodeError as e:
+                print(f"Error decoding JSON: {e}")
+                return
+        elif isinstance(scenarios, list):  # List of files or dictionaries?
+            for scenario_file in scenarios:
+                try:
+                    # ... call run on a file
+                    scenario_data = json.load(open(scenario_file))  # Load and process individual file
+                    # ...
+                except (FileNotFoundError, json.JSONDecodeError) as e:
+                    print(f"Error processing scenario file {scenario_file}: {e}")
 
+
+        elif isinstance(scenarios, dict):
+            print("Not a supported type.")  # Handle dictionaries (special case)
+            return
         else:
-            print("Running default scenarios")
+            print("Invalid input type.")
+            return
 
+
+# Example usage
+supplier = PrestaSupplier("your_api_key")
+
+# scenarios from a single file:
+supplier.run("file1.json")
+
+# scenarios from a list of files:
+scenario_files = ["file1.json", "file2.json"]
+supplier.run(scenario_files) 
 ```
 
-**How to Use:**
-
-1. **Create `supplier.py`:** Put the `Supplier` class code into `hypotez/src/scenario/supplier.py`.
-
-2. **Run your code:** Now you can run code in `__init__.py`.
-
-
-This significantly improves the code's robustness and clarity, making it much more suitable for use in a production environment.  Always thoroughly test with various scenarios and inputs, especially to confirm robust error handling. Remember to implement the scenario handling logic within the `Supplier` class's `run` method.
+Remember to replace `"your_api_key"` with your actual key, and implement the necessary logic within the `PrestaSupplier` class methods for connecting to and interacting with your PrestaShop API. This demonstrates the structure and improved error handling required to create a robust and maintainable scenario runner.
