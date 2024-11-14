@@ -8,7 +8,7 @@
 
 import requests
 from src.logger import logger
-"""@AI: у меня есть свой модуль `src.logger` который  обеспечивает логирование в проекте """
+"""!AI PROMPT: у меня есть свой модуль `src.logger` который  обеспечивает логирование в проекте """
 
 def check_latest_release(owner: str, repo: str):
     """Check the latest release version of a GitHub repository.

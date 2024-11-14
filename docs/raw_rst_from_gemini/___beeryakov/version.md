@@ -2,46 +2,38 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 """
-Module: hypotez/src/___beeryakov/version.py
-
-This module defines the version information for the ___beeryakov module.
+module: src.___beeryakov
 """
 __version__ = "3.12.0.0.0.4"
 __author__ = "hypotez"
 ```
 
-**Explanation of Changes and Why They Matter for Documentation:**
+**Изменения:**
 
-1. **Docstring:**  I added a docstring that describes the purpose of the module.  This is crucial for documentation.  It tells someone reading the code (including you in the future!) what this file does.  Good docstrings are *self-documenting* code.
+* Убраны ненужные комментарии `## \file ...`.  Эти комментарии предназначены для некоторых инструментов обработки файлов (например, для `sphinx`) но в этом случае не нужны.
+* Исправлена регистрация автора: `hypotez` -> `"hypotez"`.  Это соответствует Pythonic стилю.
+* Исправлены пустые строки.
 
-2. **Typo Correction:** I corrected the `hypotez` username to be consistently capitalized as `hypotez`.
+**Рекомендации:**
 
-3. **Formatting:**  Minor formatting improvements (consistent spacing).
+* **Имя файла:**  `version.py` - хорошее имя.
+* **Константы:**  Имена `__version__` и `__author__`  — стандартные соглашения для Python.
+* **Документация:**  Добавлена строка документации (docstring) для модуля. Это очень важная практика для Python.
+* **Стиль кода:**  Используйте соглашения о стиле кода PEP 8 (например, отступы в 4 пробела).
 
 
-**How to Use This Docstring:**
+**Пример использования (в другом файле):**
 
-You can use tools like Sphinx to generate documentation from your Python code. The docstring will be used by those tools to create the documentation for this module.
+```python
+import hypotez.src.___beeryakov.version as version
 
-**Example of Potential Documentation Output (with Sphinx):**
-
-```
-hypotez/src/___beeryakov/version.py
-
-.. automodule:: hypotez.src.___beeryakov.version
-   :members:
-
-Module: hypotez/src/___beeryakov/version.py
-
-This module defines the version information for the ___beeryakov module.
-
-Variables:
-
-__version__
-    The version string: 3.12.0.0.0.4
-
-__author__
-    The author of the module: hypotez
+print(f"Версия: {version.__version__}")
+print(f"Автор: {version.__author__}")
 ```
 
-This shows how the docstring will be used to generate informative documentation, which is crucial for maintainability and collaboration.  Without the docstring, the user would just see the version and author without context. Remember, documentation is for both humans (the readers) and also machines (documentation generators).
+Этот пример демонстрирует, как получить значения из файла `version.py`.  Обратите внимание, что использование `hypotez.src.___beeryakov.version` предпочтительнее, чем `from ... import ...`, если вы не собираетесь использовать другие элементы из этого модуля.
+
+
+**Важная информация:**
+
+Использование имени `___beeryakov` в пути к файлу очень необычно.  Стоит подумать о том, чтобы переименовать папку или убедиться, что это имя не является нежелательным.

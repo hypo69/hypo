@@ -150,11 +150,15 @@ def save_response(file_path: Path, response: str, from_model:str) -> None:
     export_file_path.write_text(response, encoding="utf-8")
     print(f"Response saved to: {export_file_path} at: {gs.now}")
 
+import re
+from pathlib import Path
+from typing import Iterator
 
 def yield_files_content(
-    src_path: Path, patterns: list[str]
+    src_path: Path, patterns: list[str], role: str
 ) -> Iterator[tuple[Path, str]]:
-    """ Yield file content based on patterns from the source directory, excluding certain patterns and directories. """
+    """Yield file content based on patterns from the source directory, excluding certain patterns, directories, and files."""
+
     # Регулярные выражения для исключаемых файлов и директорий
     exclude_file_patterns = [
         re.compile(r'.*\(.*\).*'),  # Файлы и директории, содержащие круглые скобки
@@ -163,6 +167,7 @@ def yield_files_content(
 
     # Список служебных директорий, которые необходимо исключить
     exclude_dirs = {'.ipynb_checkpoints', '_experiments', '__pycache__', '.git', '.venv'}
+    exclude_files = {'version.py'}  # Список файлов, которые нужно исключить
 
     # Словарь с путями к целевым директориям, где будут сохраняться файлы
     role_directories = {
@@ -174,7 +179,7 @@ def yield_files_content(
     target_directory = role_directories.get(role, None)
 
     if target_directory is None:
-        logger.error(f"Неизвестная роль: {role}. Пропускаем обработку файлов.")
+        print(f"Неизвестная роль: {role}. Пропускаем обработку файлов.")
         return
 
     for pattern in patterns:
@@ -185,6 +190,11 @@ def yield_files_content(
 
             # Пропустить файлы, соответствующие исключаемым паттернам
             if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
+                continue
+
+            # Пропустить файлы, которые есть в списке `exclude_files`
+            if file_path.name in exclude_files:
+                print(f"Исключён файл: {file_path}. Пропускаем.")
                 continue
 
             # Формируем путь, куда будет сохранен обработанный файл
@@ -207,7 +217,6 @@ def yield_files_content(
             # Чтение содержимого файла
             content = file_path.read_text(encoding="utf-8")
             yield file_path, content
-
 
 if __name__ == "__main__":
     print("Starting training ...")

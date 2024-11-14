@@ -1,62 +1,42 @@
 ## \file hypotez/src/utils/file.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.utils """
-
-"""
-Module for file operations.
-
-
-"""
+""" Module for file operations. """
 
 import os
 import json
 import fnmatch
-from typing import List, Optional, Union
 from pathlib import Path
+from typing import List, Optional, Union, Generator
 from src.logger import logger
 
 
 def save_text_file(
-    data: str | list | dict,
-    file_path: str | Path,
+    data: str | list[str] | dict,
+    file_path: Union[str, Path],
     mode: str = "w",
     exc_info: bool = True,
 ) -> bool:
     """
-    Saves the provided data to a file at the specified file path.
+    Save data to a text file.
 
     Args:
-        data (str | list | dict): The data to be written to the file. It can be a string, list, or dictionary.
-        file_path (str | Path): The full path to the file where the data should be saved.
-        mode (str, optional): The file mode for writing, defaults to 'w'. Options include:
-            - 'w': Write mode, which overwrites the file.
-            - 'a': Append mode, which appends to the file.
-        exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
+        data (str | list[str] | dict): Data to write (can be string, list of strings, or dictionary).
+        file_path (str | Path): Path where the file will be saved.
+        mode (str, optional): Write mode (`w` for write, `a` for append). Defaults to 'w'.
+        exc_info (bool, optional): If True, logs traceback on error. Defaults to True.
 
     Returns:
-        bool: Returns True if the file is successfully saved, otherwise returns False.
-
-    Example:
-        >>> success: bool = save_text_file(data="Hello, World!", file_path="output.txt")
-        >>> print(success)
-        True
-
-        >>> success: bool = save_text_file(data="This will fail", file_path="/invalid/path/output.txt")
-        >>> print(success)
-        False
-        
-    More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#save_text_file
+        bool: True if the file was successfully saved, False otherwise.
     """
     try:
         file_path = Path(file_path)
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        with file_path.open(mode, encoding="utf-8") as file:  # Ensure UTF-8 encoding
+
+        with file_path.open(mode, encoding="utf-8") as file:
             if isinstance(data, list):
-                for line in data:
-                    file.write(f"{line}\n")
-                    #logger.debug(f"{file_path=}", None, False)
+                file.writelines(f"{line}\n" for line in data)
+            elif isinstance(data, dict):
+                json.dump(data, file, ensure_ascii=False, indent=4)
             else:
                 file.write(data)
         return True
@@ -66,396 +46,152 @@ def save_text_file(
 
 
 def read_text_file(
-    file_path: str | Path, as_list: bool = False, extensions: list[str] = None, exc_info: bool = True
-) -> list[str] | str | None:
+    file_path: Union[str, Path],
+    as_list: bool = False,
+    extensions: Optional[list[str]] = None,
+    exc_info: bool = True,
+) -> Union[str, list[str], None]:
     """
-    Reads the content of a text file or, if a directory is provided, reads all files within it (with optional extensions).
+    Read the contents of a file.
 
     Args:
-        file_path (str | Path): Path to the text file or directory.
-        as_list (bool, optional): If True, returns the content as a list of lines. If False, returns the content as a single string. Defaults to False.
-        extensions (list[str], optional): List of file extensions to include (e.g., ['.txt', '.md']). If None, reads all files. Defaults to None.
-        exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
+        file_path (str | Path): Path to the file or directory.
+        as_list (bool, optional): If True, returns content as list of lines. Defaults to False.
+        extensions (list[str], optional): List of file extensions to include if reading a directory. Defaults to None.
+        exc_info (bool, optional): If True, logs traceback on error. Defaults to True.
 
     Returns:
-        list[str] | str | None: If `as_list` is True, returns a list of lines. Otherwise, returns concatenated content as a string.
+        str | list[str] | None: File content as a string or list of lines, or None if an error occurs.
     """
-    path = Path(file_path)
-
-    if path.is_file():
-        try:
+    try:
+        path = Path(file_path)
+        if path.is_file():
             with path.open("r", encoding="utf-8") as f:
-                return [line.strip() for line in f][0]
-        except Exception as ex:
-            if exc_info:
-                logger.error(f"Failed to read file {file_path}.", exc_info=exc_info)
-            return
-    elif path.is_dir():
-        try:
-            content = []
-            for file in path.iterdir():
-                if file.is_file() and (not extensions or file.suffix in extensions):
-                    with file.open("r", encoding="utf-8") as f:
-                        if as_list:
-                            content.extend(line.strip() for line in f)
-                        else:
-                            content.append(f.read())
-            
-            return content if as_list else "\n".join(content)
-        except Exception as ex:
-            if exc_info:
-                logger.error(f"Failed to read files in directory {file_path}.", exc_info=exc_info)
-            return
-    else:
-        logger.warning(f"File or directory '{file_path}' does not exist.")
-        return
-
+                return f.readlines() if as_list else f.read()
+        elif path.is_dir():
+            files = [
+                p for p in path.rglob("*") if p.is_file() and (not extensions or p.suffix in extensions)
+            ]
+            contents = [read_text_file(p, as_list) for p in files]
+            return [item for sublist in contents if sublist for item in sublist] if as_list else "\n".join(filter(None, contents))
+        else:
+            logger.warning(f"Path '{file_path}' is invalid.")
+            return None
+    except Exception as ex:
+        logger.error(f"Failed to read file {file_path}.", ex, exc_info=exc_info)
+        return None
 
 
 def get_filenames(
-    directory: str | Path, extensions: str | List[str] = "*", exc_info: bool = True
+    directory: Union[str, Path], extensions: Union[str, list[str]] = "*", exc_info: bool = True
 ) -> list[str]:
     """
-    Retrieves all filenames from the specified directory, optionally filtered by file extensions.
+    Get filenames in a directory optionally filtered by extension.
 
     Args:
-        directory (str | Path): Path to the directory from which filenames should be retrieved.
-        extensions (str | List[str], optional): File extension(s) to filter the filenames. It can be a single extension (e.g., '*.txt') or a list of extensions (e.g., ['*.txt', '*.py']). If '*' is specified, all files are returned. Defaults to '*'..
-        exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
+        directory (str | Path): Directory to search.
+        extensions (str | list[str], optional): Extensions to filter. Defaults to '*'.
 
     Returns:
-        list[str]: List of filenames found in the directory, optionally filtered by the provided extensions.
-
-    Example:
-        >>> files: list[str] = get_filenames(directory=".", extensions="*.py")
-        >>> print(files)
-        ['file1.py', 'file2.py']
-
-    More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#get_filenames
+        list[str]: Filenames found in the directory.
     """
     try:
         path = Path(directory)
         if isinstance(extensions, str):
-            if extensions == "*":
-                extensions = []  # If '*' is specified, no filtering by extension
-            else:
-                extensions = [extensions]  # Convert a single extension to a list
-
-        # Normalize extensions to include a leading dot if necessary
+            extensions = [extensions] if extensions != "*" else []
         extensions = [ext if ext.startswith(".") else f".{ext}" for ext in extensions]
 
-        filenames = []
-        for file in path.iterdir():
-            if file.is_file() and (not extensions or file.suffix in extensions):
-                filenames.append(file.name)
-        return filenames
+        return [
+            file.name
+            for file in path.iterdir()
+            if file.is_file() and (not extensions or file.suffix in extensions)
+        ]
     except Exception as ex:
-        if exc_info:
-            logger.warning(
-                f"Failed to get filenames from directory '{directory}'.",
-                ex,
-                exc_info=exc_info,
-            )
+        logger.warning(f"Failed to list filenames in '{directory}'.", ex, exc_info=exc_info)
         return []
 
 
-def get_directory_names(directory: str | Path, exc_info: bool = True) -> list[str]:
+def recursively_get_files(
+    root_dir: Union[str, Path], patterns: Union[str, list[str]] = "*", exc_info: bool = True
+) -> Generator[Path, None, None]:
     """
-    Retrieves all directory names from the specified directory.
+    Recursively yield file paths matching given patterns.
 
     Args:
-        directory (str | Path): Path to the directory from which directory names should be retrieved.
-        exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
-
-    Returns:
-        list[str]: List of directory names found in the specified directory.
-
-    Example:
-        >>> directories: list[str] = get_directory_names(directory=".") 
-        >>> print(directories)
-        ['dir1', 'dir2']
-    
-    More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#get_directory_names
-    """
-    try:
-        return [entry.name for entry in Path(directory).iterdir() if entry.is_dir()]
-    except Exception as ex:
-        if exc_info:
-            logger.warning(
-                f"Failed to get directory names from '{directory}'.",
-                ex,
-                exc_info=exc_info,
-            )
-        return 
-
-
-def recursive_get_filenames(root_dir: str | Path, pattern: str) -> List[str]:
-    """
-    Recursively searches directories and gathers file paths matching the given pattern.
-
-    Args:
-        root_dir (str | Path): The root directory to start the search.
-        pattern (str): The pattern to match files against (e.g., '*.txt').
-
-    Returns:
-        List[str]: A list of file paths matching the specified pattern.
-
-    Example:
-        >>> matched_files: list[str] = recursive_get_filenames(root_dir=".", pattern="*.py")
-        >>> print(matched_files)
-        ['script1.py', 'script2.py']
-
-    More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#recursive_get_filenames
-    """
-    matches = []
-    for dirpath, _, filenames in os.walk(root_dir):
-        for filename in fnmatch.filter(filenames, pattern):
-            matches.append(os.path.join(dirpath, filename))
-    return matches
-
-def recursively_get_filepath(
-    root_dir: str | Path, 
-    patterns: str | List[str] = '*', 
-    exc_info: bool = True
-) -> List[str] | None:
-    """
-    Recursively retrieves all file paths in the directory matching the specified pattern or patterns.
-
-    Args:
-        root_dir (str | Path): The root directory to start the recursive search.
-        patterns (str | List[str], optional): A pattern or list of patterns to filter files. 
-            Defaults to '*', which matches all files.
-        exc_info (bool, optional): If True, logs traceback information in case of an error.
-
-    Returns:
-        List[str]: A list of file paths matching the specified pattern(s).
-
-    Example:
-        >>> files = recursively_get_filepath('.', ['*.txt', '*.md'])
-        >>> print(files)
-        ['./file1.txt', './file2.md']
-    """
-    try:
-        if isinstance(patterns, str):
-            patterns = [patterns]  # Convert single string pattern to list
-
-        file_paths = []
-        for pattern in patterns:
-            file_paths.extend(Path(root_dir).rglob(pattern))
-
-        return [str(file) for file in file_paths]
-    except Exception as ex:
-        if exc_info:
-            logger.error(
-                f"Failed to recursively get file paths from '{root_dir}'.", 
-                ex, 
-                exc_info=exc_info
-            )
-        return 
-
-
-def recursive_read_text_files(
-    root_dir: str | Path, 
-    patterns: str | list[str], 
-    as_list: bool = False, 
-    exc_info: bool = True
-) -> list[str]:
-    """
-    Recursively reads text files from the specified root directory that match the given patterns.
-
-    Args:
-        root_dir (str | Path): Path to the root directory for the search.
-        patterns (str | list[str]): Filename pattern(s) to filter the files.
-                                    Can be a single pattern (e.g., '*.txt') or a list of patterns.
-        as_list (bool, optional): If True, returns the file content as a list of lines.
-                                  Defaults to False.
-        exc_info (bool, optional): If True, includes exception information in warnings. Defaults to True.
-
-    Returns:
-        list[str]: List of file contents (or lines if `as_list=True`) that match the specified patterns.
-
-    Example:
-        >>> contents = recursive_read_text_files("/path/to/root", ["*.txt", "*.md"], as_list=True)
-        >>> for line in contents:
-        ...     print(line)
-        This will print each line from all matched text files in the specified directory.
-    """
-    matches = []
-    root_path = Path(root_dir)
-
-    # Check if the root directory exists
-    if not root_path.is_dir():
-        logger.debug(f"The root directory '{root_path}' does not exist or is not a directory.")
-        return []
-
-    print(f"Searching in directory: {root_path}")
-
-    # Normalize patterns to a list if it's a single string
-    if isinstance(patterns, str):
-        patterns = [patterns]
-
-    for root, dirs, files in os.walk(root_path):
-        for filename in files:
-            # Check if the filename matches any of the specified patterns
-            if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
-                file_path = Path(root) / filename
-
-                try:
-                    with file_path.open("r", encoding="utf-8") as file:
-                        if as_list:
-                            # Read lines if `as_list=True`
-                            matches.extend(file.readlines())
-                        else:
-                            # Read entire content otherwise
-                            matches.append(file.read())
-                except Exception as ex:
-                    logger.warning(f"Failed to read file '{file_path}'.", exc_info=exc_info)
-
-    return matches
-
-
-def remove_bom(file_path: str) -> None:
-    """Removes all BOM (U+FEFF) characters from the specified Python file.
-
-    This function reads the content of a Python file, removes all occurrences of
-    the BOM character (U+FEFF), and writes the modified content back to the file.
-
-    Args:
-        file_path (str): The path to the Python file to be processed.
-
-    Returns:
-        None: This function does not return any value.
-
-    Example:
-        >>> remove_bom_from_file('example.py')
-        Processing file: example.py
-        BOM character(s) removed from example.py.
-        Updated example.py successfully.
-    """
-    print(f"Processing file: {file_path}")
-    
-    try:
-        with open(file_path, 'r+', encoding='utf-8') as file:
-            content = file.read()
-
-            # Check for and remove all occurrences of the BOM character
-            new_content = content.replace('\ufeff', '')
-            if new_content != content:
-                print("BOM character(s) removed.")
-                
-                # Write the cleaned content back to the file
-                file.seek(0)  # Move to the start of the file
-                file.write(new_content)
-                file.truncate()  # Remove any leftover content after the new end of file
-                print(f"Updated {file_path} successfully.")
-            else:
-                print("No BOM character found.")
-
-    except IOError as ex:
-        print(f"Error processing file {file_path}: {ex}")
-
-def traverse_directory(directory: str) -> None:
-    """Recursively traverses the directory and processes Python files to remove BOM.
-
-    This function walks through the given directory and all its subdirectories,
-    identifying and processing each Python file to remove any BOM characters
-    using the `remove_bom_from_file` function.
-
-    Args:
-        directory (str): The root directory to start traversing.
-
-    Returns:
-        None: This function does not return any value.
-
-    Example:
-        >>> traverse_directory('/path/to/directory')
-        Traversing directory: /path/to/directory
-        Found Python file: /path/to/directory/example.py
-        Processing file: /path/to/directory/example.py
-        BOM character(s) removed.
-        Updated /path/to/directory/example.py successfully.
-    """
-    print(f"Traversing directory: {directory}")
-    for root, _, files in os.walk(directory):
-        for file in files:
-            if file.endswith('.py'):
-                file_path = os.path.join(root, file)
-                print(f"Found Python file: {file_path}")
-                remove_bom_from_file(file_path)
-
-
-def yield_files_content(
-    root_dir: str | Path,
-    patterns: str | list[str],
-    as_list: bool = False,
-    exc_info: bool = True
-):
-    """
-    Генератор, рекурсивно ищущий файлы по заданным шаблонам и возвращающий содержимое каждого файла по одному при каждом запросе.
-
-    Args:
-        root_dir (str | Path): Путь к корневой директории для поиска.
-        patterns (str | list[str]): Шаблон(ы) имен файлов для фильтрации.
-                                    Может быть один шаблон (например, '*.txt') или список шаблонов.
-        as_list (bool, optional): Если True, возвращает содержимое файла построчно.
-                                  По умолчанию False.
-        exc_info (bool, optional): Если True, включает информацию об исключении в предупреждения.
-                                   По умолчанию True.
+        root_dir (str | Path): Root directory to search.
+        patterns (str | list[str]): Patterns to filter files.
 
     Yields:
-        str | list[str]: Содержимое каждого файла (список строк, если `as_list=True`, или весь текст файла).
+        Path: File paths matching the patterns.
     """
-    root_path = Path(root_dir)
+    try:
+        patterns = [patterns] if isinstance(patterns, str) else patterns
+        for pattern in patterns:
+            yield from Path(root_dir).rglob(pattern)
+    except Exception as ex:
+        logger.error(f"Failed to search files in '{root_dir}'.", ex, exc_info=exc_info)
 
-    # Проверка существования корневой директории
-    if not root_path.is_dir():
-        logger.debug(f"The root directory '{root_path}' does not exist or is not a directory.")
-        return
 
-    # Преобразуем patterns в список, если передана одна строка
-    if isinstance(patterns, str):
-        patterns = [patterns]
+def read_files_content(
+    root_dir: Union[str, Path],
+    patterns: Union[str, list[str]],
+    as_list: bool = False,
+    exc_info: bool = True,
+) -> list[str]:
+    """
+    Read contents of files matching patterns.
 
-    # Рекурсивно ищем файлы, соответствующие шаблонам
-    for root, dirs, files in os.walk(root_path):
-        for filename in files:
-            if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
-                file_path = Path(root) / filename
+    Args:
+        root_dir (str | Path): Root directory to search.
+        patterns (str | list[str]): File patterns to match.
+        as_list (bool, optional): Return content as list of lines. Defaults to False.
 
-                try:
-                    with file_path.open("r", encoding="utf-8") as file:
-                        # Возвращаем содержимое файла в зависимости от `as_list`
-                        if as_list:
-                            yield file_path, file.readlines()
-                        else:
-                            yield file_path, file.read()
-                except Exception as ex:
-                    logger.warning(f"Failed to read file '{file_path}'.", exc_info=exc_info)
+    Returns:
+        list[str]: List of file contents.
+    """
+    content = []
+    for file_path in recursively_get_files(root_dir, patterns, exc_info):
+        file_content = read_text_file(file_path, as_list, exc_info=exc_info)
+        if file_content:
+            content.extend(file_content if as_list else [file_content])
+    return content
+
+
+def remove_bom(file_path: Union[str, Path]) -> None:
+    """
+    Remove BOM from a text file.
+
+    Args:
+        file_path (str | Path): File to process.
+    """
+    path = Path(file_path)
+    try:
+        with path.open("r+", encoding="utf-8") as file:
+            content = file.read().replace("\ufeff", "")
+            file.seek(0)
+            file.write(content)
+            file.truncate()
+    except Exception as ex:
+        logger.error(f"Failed to remove BOM from '{file_path}'.", ex)
+
+
+def traverse_and_clean(directory: Union[str, Path]) -> None:
+    """
+    Traverse directory and remove BOM from Python files.
+
+    Args:
+        directory (str | Path): Root directory to process.
+    """
+    for file in recursively_get_files(directory, "*.py"):
+        remove_bom(file)
 
 
 def main() -> None:
-    """Main function to execute the BOM removal script.
+    """Entry point for BOM removal in Python files."""
+    root_dir = Path("..", "src")
+    logger.info(f"Starting BOM removal in {root_dir}")
+    traverse_and_clean(root_dir)
 
-    This function sets the root directory for the script to start processing
-    Python files to remove BOM characters by invoking the `traverse_directory`
-    function.
-
-    Returns:
-        None: This function does not return any value.
-
-    Example:
-        >>> main()
-        Starting script to remove BOM from Python files in: ../src
-        Traversing directory: ../src
-        Found Python file: ../src/example.py
-        Processing file: ../src/example.py
-        BOM character(s) removed.
-        Updated ../src/example.py successfully.
-    """
-    root_dir = Path('..', 'src')  # Set your target directory here
-    print(f"Starting script to remove BOM from Python files in: {root_dir}")
-    traverse_directory(str(root_dir))
 
 if __name__ == "__main__":
     main()
-

@@ -18,7 +18,7 @@ TODO: The root directory can have any name. Currently, it is hardcoded as `hypot
 """
 
 ...
-"""@AI
+"""!AI PROMPT
 Не требуется изменение логики для паролей. Она настроена правильно!
 
 В файле `.gitignore` учтено игнорирование папки `secrets`

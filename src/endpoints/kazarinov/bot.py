@@ -37,7 +37,7 @@ class KazarinovTelegramBot(TelegramBot):
     timestamp: str = field(default_factory=lambda: gs.now)
 
     def __post_init__(self):
-        mode = 'test'
+        mode = 'test'   # <- Тест идет через бота - `hypo69_test`; prod - `hypo_69_kazarinov`
         self.token = gs.credentials.telegram.hypo69_test_bot if mode == 'test' else gs.credentials.telegram.hypo69_kazarinov_bot
         super().__init__(self.token)
 

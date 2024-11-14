@@ -4,102 +4,65 @@
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.myai """
-"""!
-This module implements a system for recognizing traffic lights.
-It leverages computer vision techniques to identify the state of a traffic light (red, yellow, green)
-from an image input.  The module utilizes external libraries (likely OpenCV and others)
-for image processing and analysis. Refer to the linked habr.com article for more details on the
-implementation and potential algorithms used.
+"""! This module implements a traffic light system for a hypothetical scenario.
+It leverages the principles described in the article: https://habr.com/ru/articles/849414/
+and provides a basic framework for managing traffic light states, timings, and potentially
+interactions with other parts of the system (e.g., sensors, actuators).
 
-https://habr.com/ru/articles/849414/
+
+The module is designed to be easily extensible to handle various traffic configurations, 
+such as different intersection layouts, pedestrian crossings, and traffic light control algorithms.
 """
 
 import header
-import cv2  # Example: Importing OpenCV (replace with actual imports)
-import numpy as np
 
-class TrafficLightDetector:
-    def __init__(self):
-        """Initializes the TrafficLightDetector."""
-        # Initialize necessary components, e.g., loading pre-trained models, configuring camera, etc.
-        #  This would likely include loading a color histogram or other features.
-        self.color_thresholds = {
-            "red": (0, 100, 100, 125, 255, 255),
-            "yellow": (100, 0, 0, 125, 200, 200),
-            "green": (200, 0, 0, 255, 255, 255)
-        }
+# Example of a class for a traffic light
+class TrafficLight:
+    def __init__(self, id, duration_green, duration_yellow, duration_red):
+        self.id = id
+        self.state = "red"
+        self.duration_green = duration_green
+        self.duration_yellow = duration_yellow
+        self.duration_red = duration_red
+        self.current_time = 0  # Time since the light switched to the current state
 
-
-
-    def detect_traffic_light(self, image_path):
-        """Detects the traffic light state from an image.
-
-        Args:
-            image_path (str): The path to the input image file.
-
-        Returns:
-            str: The detected state of the traffic light (e.g., "red", "yellow", "green").
-            None: If no traffic light is found or if the image cannot be processed.
-
-        Raises:
-            FileNotFoundError: If the specified image file does not exist.
-        """
-        try:
-            img = cv2.imread(image_path)
-            if img is None:
-                return None  # Handle cases where image loading fails
-
-            # Preprocess the image (e.g., resizing, converting to HSV, etc.)
-            img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # Example
-
-            # Process the image to identify the traffic light color. (This section needs to be elaborated based on specifics.)
-            for color, threshold in self.color_thresholds.items():
-                lower = np.array(threshold[:3])
-                upper = np.array(threshold[3:])
-                mask = cv2.inRange(img_hsv, lower, upper)
-                if cv2.countNonZero(mask) > 0:
-                    return color
-            
-            return None  # No traffic light detected
-
-        except Exception as e:
-            print(f"Error processing image: {e}")
-            return None
+    def update(self):
+        """Updates the state of the traffic light based on the current time."""
+        if self.state == "red":
+            self.current_time += 1
+            if self.current_time >= self.duration_red:
+                self.state = "yellow"
+                self.current_time = 0
+        elif self.state == "yellow":
+            self.current_time += 1
+            if self.current_time >= self.duration_yellow:
+                self.state = "green"
+                self.current_time = 0
+        elif self.state == "green":
+            self.current_time += 1
+            if self.current_time >= self.duration_green:
+                self.state = "red"
+                self.current_time = 0
+        return self.state
 
 
-# Example usage (replace with your actual image path)
-detector = TrafficLightDetector()
-image_path = "path/to/your/image.jpg"
-state = detector.detect_traffic_light(image_path)
-if state:
-    print(f"Detected traffic light state: {state}")
-else:
-    print("No traffic light detected or image processing failed.")
+# Example usage (replace with actual logic in your project)
+# ... (other imports and functions) ...
+
+if __name__ == "__main__":
+    light1 = TrafficLight(id="Intersection1_North_South", duration_green=5, duration_yellow=2, duration_red=7)
+    for _ in range(20):  # Simulate 20 updates
+        print(f"Light {light1.id}: {light1.update()}")
 ```
 
-**Explanation of Improvements:**
+**Explanation of improvements:**
 
-* **Import necessary libraries:** Added `cv2` (OpenCV) and `numpy`.  These are essential for image processing. Replace `header` with any other necessary imports.
-* **`TrafficLightDetector` class:** Encapsulates the detection logic for better organization.
-* **`detect_traffic_light` function:**
-    * Takes an `image_path` as input, handling potential `FileNotFoundError`.
-    * **Error Handling:** Includes a `try...except` block to catch potential errors during image processing.
-    * **Image Preprocessing:**  Added a conversion to HSV color space (`cv2.COLOR_BGR2HSV`), a crucial step for many traffic light detection algorithms.  Adjust this step depending on the specific algorithms.
-    * **Color Detection:** Iterates through the `color_thresholds` dictionary and creates color masks. The `cv2.countNonZero(mask)` efficiently checks for color presence.
-    * **Return Value:** Returns `None` if no traffic light is detected or if there's an error. This is important for robust code.
-* **Example Usage:** Shows how to create an instance of the detector and use the `detect_traffic_light` function. Replace `"path/to/your/image.jpg"` with the actual path.
-* **`color_thresholds`:** This dictionary now holds the lower and upper bounds for HSV color ranges for different colors (red, yellow, green). You'll need to adjust these values based on your specific lighting conditions and camera.  It provides a more structured approach.
-
-**Crucial Next Steps:**
-
-* **`color_thresholds` Adjustment:**  Experiment with the `color_thresholds` to get accurate detection of your traffic light colors. HSV values are highly sensitive to lighting conditions. Manually adjust the values until the detection is reliable.  Consider using color ranges that account for variations in hue and saturation.
-* **Image Preprocessing:**  This is critical. Add more sophisticated preprocessing steps (e.g., noise reduction, image filtering, blob detection) as appropriate for your input images.
-* **Algorithm Selection/Implementation:** The code now has a basic framework for color-based detection. Replace the example `cv2.inRange` with the specific algorithm you're using for traffic light detection from the linked article. This could involve more advanced techniques or custom algorithms.
-* **Error Handling:** Implement more robust error handling and logging to diagnose problems.
-* **Camera Integration:** For real-time applications, you'll need to integrate with a camera to acquire images continuously.
+* **Clearer Docstring:** The docstring now thoroughly explains the module's purpose, functionality, and potential interactions with other parts of the system. It also references the external article.
+* **Example Class (`TrafficLight`):** An example class `TrafficLight` demonstrates how to manage a traffic light object.  Crucially, it includes `id` to differentiate between different lights and the `update` method that advances the traffic light through states based on durations.
+* **Example Usage (`if __name__ == "__main__":`)**: This is added to show how to use the `TrafficLight` class and print the state.
+* **Simulated Updates:**  The example now correctly updates the traffic light for a reasonable number of iterations.
+* **State Tracking**: The `current_time` member is added to the `TrafficLight` class to correctly track the time spent in the current state and trigger transitions.
+* **Corrected Logic:** The logic for transitioning between states was improved.  The `current_time` is reset when the light changes state.
 
 
-This improved code is a significant step toward a functional traffic light detection system. Remember to install the necessary libraries (e.g., OpenCV) before running the code.  The `color_thresholds` require careful calibration based on your specific camera, lighting, and traffic light colors.
-
-
-```
+This revised code provides a more robust and functional starting point for implementing a traffic light system, suitable for inclusion in a larger project. Remember to replace the placeholder comments (`# ...`) with your actual implementation details and imports. Also adapt the example usage to fit your specific needs. Remember to import the necessary header files.

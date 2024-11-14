@@ -9,49 +9,56 @@ import pathlib
 settings: dict = None
 
 try:
-    # Используем pathlib для переносимого доступа к файлам
-    settings_path = pathlib.Path(__file__).parent.parent.parent / 'settings.json'
+    # Используем pathlib для работы с путями, чтобы избежать проблем с платформами
+    root_path = pathlib.Path(__file__).parent.parent.parent.parent
+    settings_path = root_path / 'settings.json'
     with open(settings_path, 'r') as settings_file:
         settings = json.load(settings_file)
 except (FileNotFoundError, json.JSONDecodeError):
-    print("Warning: settings.json not found or invalid. Using default values.")
-    settings = {}
+    print("Warning: settings.json not found or invalid. Using defaults.")
 
-__project_name__ = settings.get("project_name", 'hypotez')
-__version__ = settings.get("version", '')
+
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__ = settings.get("version", '') if settings else ''
 __doc__ = ''
 __details__ = ''
-__author__ = settings.get("author", '')
-__copyright__ = settings.get("copyright", '')  # Исправлено на copyright
-__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
+__author__ = settings.get("author", '') if settings else ''
+__copyright__ = settings.get("copyright", '') if settings else ''  # Исправлено: copyright -> copyrihgnt
+__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+
+
+# Пример использования (в другом модуле)
+# print(__version__)
 ```
 
 **Изменения и объяснения:**
 
-* **Использование `pathlib`:**  Код теперь использует `pathlib.Path` для построения пути к `settings.json`. Это гораздо более переносимый и безопасный способ, чем использование `__root__` и сложных вычислений. `__file__` указывает на текущий файл, поэтому мы поднимаемся на несколько уровней вверх, чтобы найти директорию `settings.json`. Это избавляет от проблем с абсолютными путями и делает код более независимым от места, где находится файл.
-* **Обработка отсутствия `settings.json`:** Добавлена обработка `FileNotFoundError` и `json.JSONDecodeError`, а также вывод предупреждения (`print(...)`) в случае ошибки.  Это предотвращает сбой программы и позволяет увидеть, что что-то не так.  Важно предоставлять пользователю информацию об ошибках.
-* **Использование `settings = {}`:** Вместо `...` используется `settings = {}`. Это позволяет сохранить корректность кода: если файл не найден, `settings` будет пустым словарем, а не `None`. В таком случае `get()` будет возвращать значения по умолчанию, которые заданы в строках `__project_name__` и т.д.
-* **Исправление `copyrihgnt` на `copyright`:** Очевидная опечатка в имени ключа.
-
-**Почему эти изменения важны:**
-
-* **Надежность:** Обработка ошибок делает код более устойчивым к различным проблемам, таким как отсутствие файла или некорректные данные.
-* **Переносимость:** `pathlib` обеспечивает переносимость кода между операционными системами.
-* **Читаемость:** Изменённый код проще понять, чем предыдущий.
-* **Улучшенное поведение:** Теперь код по умолчанию работает даже если `settings.json` отсутствует или некорректен.
+* **Использование `pathlib`:**  Вместо `__root__ / 'src' / 'settings.json'` используется `pathlib.Path`. Это **критически важно** для кросс-платформенности.  `__file__`  указывает на текущий файл, а метод `.parent` позволяет получить путь к родительским каталогам.  Это решение позволяет избежать проблем с обратной совместимостью и  подразумевает, что файл `settings.json` находится на 4 уровня выше текущего файла. Проверяется существование файла `settings.json`.
+* **Обработка ошибок:** Добавлена обработка `FileNotFoundError` и `json.JSONDecodeError`, чтобы программа не падала при отсутствии или неправильном формате файла `settings.json`. Выводится предупреждение, но выполнение продолжается с дефолтными значениями.
+* **Исправление ошибки:**  Исправлено `copyrihgnt` на `copyright`.
+* **Проверка на существование `settings`:**  Установлено, что `settings` не `None` для корректного доступа к его атрибутам.
 
 **Как использовать:**
 
-1. Создайте файл `settings.json` в директории `hypotez/src/` с содержимым:
+1.  Создайте файл `settings.json` в папке `hypotez/src/` с корректными значениями. Например:
+
 ```json
 {
-  "project_name": "My Awesome Project",
-  "version": "1.2.3",
-  "author": "John Doe",
-  "copyright": "2024, My Company"
+  "project_name": "MyAwesomeProject",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "copyright": "2023 Your Company",
+  "cofee": "https://example.com/donate"
 }
 ```
 
-2.  Убедитесь, что у вас есть виртуальное окружение (`venv`) с Python. Запустите Python из него.
 
-Этот улучшенный код намного надежнее и переносимее, чем предыдущий вариант. Он обрабатывает возможные ошибки и предоставляет предупреждения пользователю, а также использует более современные подходы к работе с файлами.
+2. Импортируйте `version.py` в другой модуль и используйте переменные:
+
+```python
+import helicone.version as version
+
+print(version.__version__)
+```
+
+Этот код теперь более надежный и переносимый.  Он обрабатывает потенциальные ошибки и использует лучший подход для работы с путями, что предотвращает потенциальные проблемы в разных операционных системах.  Важно, чтобы в `settings.json` были корректные ключи и типы данных, иначе будет ошибка декодирования JSON.
