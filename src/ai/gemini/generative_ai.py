@@ -112,7 +112,7 @@ class GoogleGenerativeAI(BaseModel):
             return response.text
 
         except Exception as ex:
-            logger.error("Error during request", ex)
+            logger.error("Error during request", ex, False)
             return 
 
     def describe_image(self, image_path: Path) -> Optional[str]:

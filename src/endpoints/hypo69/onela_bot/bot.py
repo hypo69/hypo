@@ -1,34 +1,10 @@
-## \file hypotez/src/endpoints/hypo69/onela_bot.py
-# -*- coding: utf-8 -*- 
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~ 
-""" module: src.endpoints.hypo69
-
-Модуль для взаимодействия с моделями AI (Gemini и OpenAI). Он обрабатывает исходный код или документацию, отправляет его в выбранную модель для анализа и получения ответов.
-
-Процесс работы:
-1. Модуль получает аргумент командной строки `--role`, который определяет роль выполнения (например, `code_checker` для проверки кода или `doc_creator` для создания документации).
-2. В зависимости от роли, выбирается соответствующая модель:
-    - Для роли `code_checker` используется модель **Google Gemini** для анализа и улучшения кода.
-    - Для роли `doc_creator` используется модель **OpenAI** (например, GPT-4) для генерации документации или других текстов.
-3. Входные данные для модели включают комментарии и код/документацию, которые передаются в модель для обработки.
-4. Ответ модели сохраняется в файл с расширением `.md` в зависимости от роли.
-   
-Используемые модели:
-- **Gemini** (Google Generative AI): Используется для анализа и улучшения кода.
-- **OpenAI GPT-4**: Используется для создания документации и других текстовых материалов.
-
-Ссылки на документацию моделей:
-- Gemini: https://cloud.google.com/ai/generative/gemini
-- OpenAI: https://platform.openai.com/docs
-
-"""
-
 import re
 from pathlib import Path
 import time
 import argparse
 from typing import Iterator
+import signal
+import sys
 
 from __init__ import gs
 from src.ai.gemini import GoogleGenerativeAI
@@ -48,10 +24,7 @@ openai_assistant_id = gs.credentials.openai.assistant_id.code_assistant
 
 
 def parse_args() -> None:
-    """ Парсинг аргументов командной строки для задания роли.
-
-    Присваивает значение глобальной переменной `role` на основе переданного ключа `--role`.
-    """
+    """Парсинг аргументов командной строки для задания роли."""
     global role
     parser = argparse.ArgumentParser(description="Запуск onela_bot с указанием роли")
     parser.add_argument("--role", type=str, required=True, help="Укажите роль (например, code_checker)")
@@ -63,12 +36,14 @@ def parse_args() -> None:
     print(f'{role=}')
 
 
-def main() -> None:
-    """ Main function to process files and interact with the model.
+def signal_handler(sig, frame):
+    """Обработчик сигнала для завершения работы программы через CTRL+C."""
+    print("\nПрограмма завершена пользователем.")
+    sys.exit(0)
 
-    This function reads a comment file, iterates over specified files in the source directory,
-    and sends the file content to a model for analysis. It then processes the model's response.
-    """
+
+def main() -> None:
+    """ Main function to process files and interact with the model. """
     global gemini_model, openai_model, role
 
     role = role if role else 'doc_creator'
@@ -120,24 +95,22 @@ def main() -> None:
         if gemini_response:
             save_response(file_path = file_path, response = gemini_response, from_model = 'gemini')
         else:
+            timeout:int = 3600
+            print(f'{timeout=}')
+            time.sleep(timeout)
             ... # <- add logic for failed response
 
-        openai_response = openai_model.ask(content)
-        if openai_response:
-            save_response(file_path = file_path, response = openai_response, from_model = 'openai')
-        else:
-            ... # <- add logic for failed response
+        # openai_response = openai_model.ask(content)
+        # if openai_response:
+        #     save_response(file_path = file_path, response = openai_response, from_model = 'openai')
+        # else:
+        #     ... # <- add logic for failed response
 
         time.sleep(120) # <- Optional sleep to prevent API rate limits or throttling
 
 
 def save_response(file_path: Path, response: str, from_model:str) -> None:
-    """ Save the model's response to a markdown file with updated path based on role.
-
-    Args:
-        file_path (Path): The original file path being processed.
-        response (str): The response from the model to be saved.
-    """
+    """ Save the model's response to a markdown file with updated path based on role. """
     global role
 
     # Словарь, ассоциирующий роли с директориями
@@ -177,19 +150,11 @@ def save_response(file_path: Path, response: str, from_model:str) -> None:
     export_file_path.write_text(response, encoding="utf-8")
     print(f"Response saved to: {export_file_path}")
 
+
 def yield_files_content(
     src_path: Path, patterns: list[str]
 ) -> Iterator[tuple[Path, str]]:
-    """ Yield file content based on patterns from the source directory, excluding certain patterns and directories.
-
-    Args:
-        src_path (Path): The base directory to search for files.
-        patterns (list[str]): List of file patterns to include (e.g., ['*.py', '*.txt']).
-
-    Yields:
-        Iterator[tuple[Path, str]]: A tuple of file path and its content as a string.
-    """
-
+    """ Yield file content based on patterns from the source directory, excluding certain patterns and directories. """
     # Регулярные выражения для исключаемых файлов и директорий
     exclude_file_patterns = [
         re.compile(r'.*\(.*\).*'),  # Файлы и директории, содержащие круглые скобки
@@ -246,9 +211,11 @@ def yield_files_content(
 
 if __name__ == "__main__":
     print("Starting training ...")
+    signal.signal(signal.SIGINT, signal_handler)  #  обработчик сигнала (`CTRL+C` etc)
     try:
         parse_args()  # Парсим аргументы командной строки
     except Exception as ex:
         #При запуске из IDE
         role = 'doc_creator'
-    main()
+    while True:
+        main()
