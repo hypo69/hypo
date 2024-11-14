@@ -148,7 +148,7 @@ def save_response(file_path: Path, response: str, from_model:str) -> None:
 
     # Сохранить ответ в новый файл
     export_file_path.write_text(response, encoding="utf-8")
-    print(f"Response saved to: {export_file_path}")
+    print(f"Response saved to: {export_file_path} at: {gs.now}")
 
 
 def yield_files_content(
