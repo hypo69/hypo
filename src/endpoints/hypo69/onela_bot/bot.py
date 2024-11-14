@@ -9,11 +9,12 @@ import sys
 from __init__ import gs
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
-from src.utils.file import yield_files_content, read_text_file
+from src.utils.file import read_text_file
 from src.logger import logger
 
 # Глобальная переменная для роли
 role: str = None
+lang:str = 'EN'
 
 gemini_generation_config: dict = {"response_mime_type": "text/plain"}
 gemini_model_name: str = "gemini-1.5-flash-8b"
@@ -49,12 +50,12 @@ def main() -> None:
     role = role if role else 'doc_creator'
 
     if role == 'code_checker':
-        comment_for_model_about_piece_of_code = 'code_checker.md'
-        system_instruction: str = 'improve_code.md'
+        comment_for_model_about_piece_of_code = f'code_checker_{lang}.md'
+        system_instruction: str = f'improve_code.md'
         #model = gemini_model  # Use Gemini model for code checking
     elif role == 'doc_creator':
-        comment_for_model_about_piece_of_code = 'doc_creator.md'
-        system_instruction: str = 'create_documentation.md'
+        comment_for_model_about_piece_of_code = f'doc_creator_{lang}.md'
+        system_instruction: str = f'create_documentation.md'
         #model = openai_model  # Use OpenAI model for documentation creation
 
     # Read the comment for model input from a markdown file
@@ -80,7 +81,7 @@ def main() -> None:
 
     # Process each file based on the specified patterns
     for file_path, content in yield_files_content(
-        gs.path.src, ['*.py', 'README.MD']
+        gs.path.src, ['*.py', 'README.MD'], role
     ):
         # Construct the input content for the model
         content = (
@@ -115,8 +116,8 @@ def save_response(file_path: Path, response: str, from_model:str) -> None:
 
     # Словарь, ассоциирующий роли с директориями
     role_directories = {
-        'doc_creator': f'docs/raw_rst_from_{from_model}',
-        'code_checker': f'consultant/{from_model}',
+        'doc_creator': f'docs/raw_rst_from_{from_model}/{lang}',
+        'code_checker': f'consultant/{from_model}/{lang}',
     }
 
     # Проверка наличия роли в словаре
@@ -150,12 +151,10 @@ def save_response(file_path: Path, response: str, from_model:str) -> None:
     export_file_path.write_text(response, encoding="utf-8")
     print(f"Response saved to: {export_file_path} at: {gs.now}")
 
-import re
-from pathlib import Path
-from typing import Iterator
+
 
 def yield_files_content(
-    src_path: Path, patterns: list[str], role: str
+    src_path: Path, patterns: list[str], role: str, from_model:str
 ) -> Iterator[tuple[Path, str]]:
     """Yield file content based on patterns from the source directory, excluding certain patterns, directories, and files."""
 
@@ -171,8 +170,8 @@ def yield_files_content(
 
     # Словарь с путями к целевым директориям, где будут сохраняться файлы
     role_directories = {
-        'doc_creator': 'docs/openai/raw_rst_from_ai',
-        'code_checker': 'consultant/gemini',
+        'doc_creator': f'docs/raw_rst_from_{from_model}',
+        'code_checker': f'consultant/{from_model}',
     }
 
     # Получаем директорию, соответствующую роли
