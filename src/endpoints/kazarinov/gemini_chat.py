@@ -18,7 +18,7 @@ from pathlib import Path
 from __init__ import gs
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
-from src.utils.file import get_filenames, read_text_file, recursive_read_text_files, recursively_get_filepath
+from src.utils.file import get_filenames, read_text_file, recursively_read_text_files, recursively_get_filepath
 from src.utils.jjson import j_dumps
 from src.utils.printer import pprint
 from src.logger import logger
@@ -31,8 +31,8 @@ class KazarinovAI:
     api_key = gs.credentials.gemini.kazarinov
     # Base paths for system instructions and training files
     base_path = gs.path.google_drive / 'kazarinov' 
-    system_instruction_list: list = recursive_read_text_files(base_path, ['*.txt','*.md'])
-    #questions_list:list = recursive_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'])
+    system_instruction_list: list = recursively_read_text_files(base_path, ['*.txt','*.md'])
+    #questions_list:list = recursively_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'])
     history_file = f'{gs.now}.txt'
 
 
@@ -80,7 +80,7 @@ class KazarinovAI:
         """
         chunk_size = 500000
         all_chunks = []  # List to hold all chunks
-        train_data_list: list = recursive_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'train_data', ['*.*'], as_list = True)
+        train_data_list: list = recursively_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'train_data', ['*.*'], as_list = True)
     
         current_chunk = ""  # String to accumulate text for the current chunk
 
@@ -131,7 +131,7 @@ class KazarinovAI:
         Args:
             train_files (list | str): A list or single file name for training questions.
         """
-        questions = recursive_read_text_files(self.base_path / 'prompts' / 'train_data' / 'q', as_list=True)
+        questions = recursively_read_text_files(self.base_path / 'prompts' / 'train_data' / 'q', as_list=True)
 
         for q in questions:
             pprint(self.gemini_1.ask(q))
@@ -140,7 +140,7 @@ class KazarinovAI:
         """
         Runs a dialog based on pre-defined questions, shuffling questions from different languages.
         """
-        questions = recursive_read_text_files(self.base_path / 'prompts' / 'train_data' / 'q', patterns=['*.*'], as_list=True)
+        questions = recursively_read_text_files(self.base_path / 'prompts' / 'train_data' / 'q', patterns=['*.*'], as_list=True)
         
         random.shuffle(questions)
 
@@ -176,7 +176,7 @@ def chat():
     # k = KazarinovAI(system_instruction=system_instruction_list[random.randint(0, len(system_instruction_list) - 1)], 
     #               generation_config={'response_mime_type': 'text/plain'})   
     
-    questions_list:list = recursive_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'])
+    questions_list:list = recursively_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q', ['*.*'])
 
     print(f"""
     Чтобы завершить чат, напишите `--q`

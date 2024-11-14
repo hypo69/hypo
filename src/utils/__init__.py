@@ -156,12 +156,13 @@ from .file import (
     get_directory_names,
     get_filenames,
     read_text_file,
-    recursive_get_filenames,
-    recursive_read_text_files,
+    recursively_get_filenames,
+    recursively_read_text_files,
     save_text_file,
-    yield_files_content,
+    recursively_yield_file_path,  
     remove_bom
 )
+
 
 from .image import (
     save_png_from_url,

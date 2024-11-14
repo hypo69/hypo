@@ -1,16 +1,13 @@
 ## \file hypotez/src/endpoints/kazarinov/hypo69_kazarinov_bot.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov """
-"""! Kazarinov's specific bot with customized behavior."""
-import header
+""" Kazarinov's specific bot with customized behavior."""
 
 import asyncio
-from pathlib import Path
-from typing import Optional
-from dataclasses import dataclass, field
 import random
+from pathlib import Path
+from typing import List
+from pydantic import BaseModel, Field
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 
@@ -20,34 +17,37 @@ from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.parser_onetab import fetch_target_urls_onetab
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
-from src.utils.file import read_text_file, recursive_read_text_files, save_text_file
+from src.utils.file import recursively_read_text_files, save_text_file
 from src.utils.string.url import is_url
 from src.logger import logger
 
-@dataclass
-class KazarinovTelegramBot(TelegramBot):
+
+class KazarinovTelegramBot(TelegramBot, BaseModel):
     """Telegram bot with custom behavior for Kazarinov."""
 
-    token: str = field(init=False)
-    d: Driver = field(init=False)
-    mexiron: Mexiron = field(init=False)
-    model: GoogleGenerativeAI = field(init=False)
-    system_instruction: str = field(init=False)
-    questions_list: list = field(init=False)
-    timestamp: str = field(default_factory=lambda: gs.now)
+    token: str
+    d: Driver
+    mexiron: Mexiron
+    model: GoogleGenerativeAI
+    system_instruction: str
+    questions_list: List[str]
+    timestamp: str = Field(default_factory=lambda: gs.now)
 
-    def __post_init__(self):
-        mode = 'test'   # <- Тест идет через бота - `hypo69_test`; prod - `hypo_69_kazarinov`
-        self.token = gs.credentials.telegram.hypo69_test_bot if mode == 'test' else gs.credentials.telegram.hypo69_kazarinov_bot
-        super().__init__(self.token)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.token = (
+            gs.credentials.telegram.hypo69_test_bot
+            if kwargs.get('mode', 'test') == 'test'
+            else gs.credentials.telegram.hypo69_kazarinov_bot
+        )
 
         self.d = Driver(Chrome)
         self.mexiron = Mexiron(self.d)
 
-        self.system_instruction = read_text_file(
+        self.system_instruction = recursively_read_text_files(
             gs.path.google_drive / 'kazarinov' / 'prompts' / 'chat_system_instruction.txt'
         )
-        self.questions_list = recursive_read_text_files(
+        self.questions_list = recursively_read_text_files(
             gs.path.google_drive / 'kazarinov' / 'prompts' / 'train_data' / 'q', ['*.*'], as_list=True
         )
 
@@ -56,7 +56,7 @@ class KazarinovTelegramBot(TelegramBot):
             system_instruction=self.system_instruction,
             generation_config={"response_mime_type": "text/plain"}
         )
-        
+
         self.register_handlers()
 
     def register_handlers(self):
@@ -70,7 +70,6 @@ class KazarinovTelegramBot(TelegramBot):
     async def start(self, update: Update, context: CallbackContext) -> None:
         """Handle /start command."""
         await update.message.reply_text('Hello! This is Kazarinov’s custom bot.')
-        await super().start(update, context)
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
         """Handle text messages with URL-based routing."""
@@ -88,7 +87,7 @@ class KazarinovTelegramBot(TelegramBot):
 
         if not is_url(response):
             answer = self.model.ask(q=response, history_file=f'{user_id}.txt')
-            return await update.message.reply_text(answer)
+            await update.message.reply_text(answer)
 
     def get_handler_for_url(self, response: str):
         """Map URLs to specific handlers."""
@@ -112,22 +111,19 @@ class KazarinovTelegramBot(TelegramBot):
         if await self.mexiron.run_scenario(response, update):
             await update.message.reply_text('Готово!')
         else:
-            await update.message.reply_text('Хуёвенько. Попробуй еще раз')
+            await update.message.reply_text('Ошибка. Попробуй ещё раз.')
 
     async def handle_onetab_response(self, update: Update, response: str) -> None:
         """Handle OneTab URLs."""
         price, mexiron_name, urls = fetch_target_urls_onetab(response)
 
         if not all([price, mexiron_name, urls]):
-            error_message = (
-                'Ошибка на сервере OneTab. Попробуй ещё раз через часок.'
-            )
-            return await update.message.reply_text(error_message)
-
-        if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
+            error_message = 'Ошибка на сервере OneTab. Попробуй ещё раз через часок.'
+            await update.message.reply_text(error_message)
+        elif await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
             await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
         else:
-            await update.message.reply_text('Хуёвенько. Попробуй ещё раз')
+            await update.message.reply_text('Ошибка. Попробуй ещё раз.')
 
     async def handle_next_command(self, update: Update) -> None:
         """Handle '--next' and related commands."""
@@ -139,7 +135,7 @@ class KazarinovTelegramBot(TelegramBot):
                 update.message.reply_text(answer)
             )
         except Exception as ex:
-            logger.debug("Ошибка чтения вопросов")
+            logger.debug("Ошибка чтения вопросов: %s", ex)
             await update.message.reply_text('Произошла ошибка при чтении вопросов.')
 
     async def handle_document(self, update: Update, context: CallbackContext) -> None:
@@ -147,6 +143,7 @@ class KazarinovTelegramBot(TelegramBot):
         file_content = await super().handle_document(update, context)
         await update.message.reply_text(f'Received your document. Content: {file_content}')
 
+
 if __name__ == "__main__":
-    kt = KazarinovTelegram()
+    kt = KazarinovTelegramBot(mode = 'test') # или mode='prod' для рабочего токена
     asyncio.run(kt.application.run_polling())

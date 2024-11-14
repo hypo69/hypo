@@ -18,7 +18,7 @@ from __init__ import gs
 from src.endpoints.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
-from src.utils.file import read_text_file, recursive_read_text_files, save_text_file
+from src.utils.file import read_text_file, recursively_read_text_files, save_text_file
 from src.utils.string.url import is_url
 from src.logger import logger
 
@@ -44,7 +44,7 @@ class PsychologistTelgrambot(TelegramBot):
         self.system_instruction = read_text_file(
             gs.path.google_drive / 'hypo69_psychologist_bot' / 'prompts' / 'chat_system_instruction.txt'
         )
-        self.questions_list = recursive_read_text_files(
+        self.questions_list = recursively_read_text_files(
             gs.path.google_drive / 'hypo69_psychologist_bot' / 'prompts' / 'train_data' / 'q', ['*.*'], as_list=True
         )
 

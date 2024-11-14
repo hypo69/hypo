@@ -44,7 +44,6 @@ def save_text_file(
         logger.error(f"Failed to save file {file_path}.", ex, exc_info=exc_info)
         return False
 
-
 def read_text_file(
     file_path: Union[str, Path],
     as_list: bool = False,
@@ -81,7 +80,6 @@ def read_text_file(
         logger.error(f"Failed to read file {file_path}.", ex, exc_info=exc_info)
         return None
 
-
 def get_filenames(
     directory: Union[str, Path], extensions: Union[str, list[str]] = "*", exc_info: bool = True
 ) -> list[str]:
@@ -110,8 +108,7 @@ def get_filenames(
         logger.warning(f"Failed to list filenames in '{directory}'.", ex, exc_info=exc_info)
         return []
 
-
-def recursively_get_files(
+def recursively_yield_file_path(
     root_dir: Union[str, Path], patterns: Union[str, list[str]] = "*", exc_info: bool = True
 ) -> Generator[Path, None, None]:
     """
@@ -131,6 +128,118 @@ def recursively_get_files(
     except Exception as ex:
         logger.error(f"Failed to search files in '{root_dir}'.", ex, exc_info=exc_info)
 
+def recursively_get_filenames(
+    root_dir: Union[str, Path], 
+    patterns: Union[str, list[str]] = "*", 
+    exc_info: bool = True
+) -> list[Path]:
+    """
+    Recursively get file paths matching given patterns.
+
+    Args:
+        root_dir (str | Path): Root directory to search.
+        patterns (str | list[str]): Patterns to filter files.
+
+    Returns:
+        list[Path]: List of file paths matching the patterns.
+    """
+    try:
+        file_paths = []
+        patterns = [patterns] if isinstance(patterns, str) else patterns
+        for pattern in patterns:
+            file_paths.extend(Path(root_dir).rglob(pattern))
+        return file_paths
+    except Exception as ex:
+        logger.error(f"Failed to search files in '{root_dir}'.", ex, exc_info=exc_info)
+        return []
+
+def recursively_read_text_files(
+    root_dir: str | Path, 
+    patterns: str | list[str], 
+    as_list: bool = False, 
+    exc_info: bool = True
+) -> list[str]:
+    """
+    Recursively reads text files from the specified root directory that match the given patterns.
+
+    Args:
+        root_dir (str | Path): Path to the root directory for the search.
+        patterns (str | list[str]): Filename pattern(s) to filter the files.
+                                    Can be a single pattern (e.g., '*.txt') or a list of patterns.
+        as_list (bool, optional): If True, returns the file content as a list of lines.
+                                  Defaults to False.
+        exc_info (bool, optional): If True, includes exception information in warnings. Defaults to True.
+
+    Returns:
+        list[str]: List of file contents (or lines if `as_list=True`) that match the specified patterns.
+
+    Example:
+        >>> contents = recursively_read_text_files("/path/to/root", ["*.txt", "*.md"], as_list=True)
+        >>> for line in contents:
+        ...     print(line)
+        This will print each line from all matched text files in the specified directory.
+    """
+    matches = []
+    root_path = Path(root_dir)
+
+    # Check if the root directory exists
+    if not root_path.is_dir():
+        logger.debug(f"The root directory '{root_path}' does not exist or is not a directory.")
+        return []
+
+    print(f"Searching in directory: {root_path}")
+
+    # Normalize patterns to a list if it's a single string
+    if isinstance(patterns, str):
+        patterns = [patterns]
+
+    for root, dirs, files in os.walk(root_path):
+        for filename in files:
+            # Check if the filename matches any of the specified patterns
+            if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
+                file_path = Path(root) / filename
+
+                try:
+                    with file_path.open("r", encoding="utf-8") as file:
+                        if as_list:
+                            # Read lines if `as_list=True`
+                            matches.extend(file.readlines())
+                        else:
+                            # Read entire content otherwise
+                            matches.append(file.read())
+                except Exception as ex:
+                    logger.warning(f"Failed to read file '{file_path}'.", exc_info=exc_info)
+
+    return matches
+
+def get_directory_names(directory: str | Path, exc_info: bool = True) -> list[str]:
+    """
+    Retrieves all directory names from the specified directory.
+
+    Args:
+        directory (str | Path): Path to the directory from which directory names should be retrieved.
+        exc_info (bool, optional): If True, logs traceback information in case of an error. Defaults to True.
+
+    Returns:
+        list[str]: List of directory names found in the specified directory.
+
+    Example:
+        >>> directories: list[str] = get_directory_names(directory=".") 
+        >>> print(directories)
+        ['dir1', 'dir2']
+    
+    More documentation: https://github.com/hypo69/tiny-utils/wiki/Files-and-Directories#get_directory_names
+    """
+    try:
+        return [entry.name for entry in Path(directory).iterdir() if entry.is_dir()]
+    except Exception as ex:
+        if exc_info:
+            logger.warning(
+                f"Failed to get directory names from '{directory}'.",
+                ex,
+                exc_info=exc_info,
+            )
+        return 
 
 def read_files_content(
     root_dir: Union[str, Path],
@@ -156,7 +265,6 @@ def read_files_content(
             content.extend(file_content if as_list else [file_content])
     return content
 
-
 def remove_bom(file_path: Union[str, Path]) -> None:
     """
     Remove BOM from a text file.
@@ -173,7 +281,6 @@ def remove_bom(file_path: Union[str, Path]) -> None:
             file.truncate()
     except Exception as ex:
         logger.error(f"Failed to remove BOM from '{file_path}'.", ex)
-
 
 def traverse_and_clean(directory: Union[str, Path]) -> None:
     """
