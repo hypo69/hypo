@@ -1,8 +1,10 @@
 ## \file hypotez/src/product/product_fields/product_fields.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.product.product_fields """
+MODE = 'debug'
+""" module: src.product.product_fields """
+MODE = 'debug'
 
 """    <b>Kласс `ProductFields` Расписано каждое поле товара для таблиц престашоп.</b> 
  langdetect в Python используется для определения языка текста. Он основан на библиотеке language-detection, 

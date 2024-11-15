@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/product/_experiments/_experiments_locators.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.product._experiments """
+MODE = 'debug'
+```python
 """ module: src.product._experiments """
 import header
 from header import ProductFieldsLocators, gs, j_dumps, j_loads

@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/api/skd/api/rest/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.api.skd.api.rest """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.api.skd.api.rest """
+MODE = 'debug'
 from .AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
 from .AliexpressAffiliateOrderGetRequest import AliexpressAffiliateOrderGetRequest
 from .AliexpressAffiliateOrderListRequest import AliexpressAffiliateOrderListRequest

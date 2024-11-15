@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.openai._examples """
 """ @namespace src.ai._examples """

@@ -1,5 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/goog/spreadsheet/_examples/google_sample.md
 # -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.goog.spreadsheet._examples """
+MODE = 'debug'
+```python
 import os.path
 from pathlib import Path
 from google.auth.transport.requests import Request

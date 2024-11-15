@@ -1,10 +1,15 @@
+## \file hypotez/consultant/gemini/fast_api/gemini/backend/main.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.fast_api.gemini.backend """
+MODE = 'debug'
 The provided code is a Python file header, specifically a docstring and shebang line.  It's crucial for good Python coding practices.
 
 **Explanation:**
 
 * **`# -*- coding: utf-8 -*-`:** This line declares the encoding of the file as UTF-8.  Crucial for handling characters like accented letters correctly.
 
-* **`#! venv/Scripts/python.exe`:**  This is a shebang line,  used by some operating systems (like Windows) to specify the interpreter to execute the script.  It tells the system to use the Python interpreter located in the `venv/Scripts/python.exe` directory.  This is critical if you want to execute this script directly from the command line.  **Crucially, this implies that a virtual environment (venv) is used and configured correctly.**
+* **``:**  This is a shebang line,  used by some operating systems (like Windows) to specify the interpreter to execute the script.  It tells the system to use the Python interpreter located in the `venv/Scripts/python.exe` directory.  This is critical if you want to execute this script directly from the command line.  **Crucially, this implies that a virtual environment (venv) is used and configured correctly.**
 
 * **`## \file hypotez/src/fast_api/gemini/backend/main.py`:**  This is a comment, likely used for documentation or to denote the file location within the project.
 

@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/kazarinov/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov """
+MODE = 'debug'
+""" module: src.endpoints.kazarinov """
+MODE = 'debug'
 
 import sys
 from pathlib import Path

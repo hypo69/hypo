@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/endpoints/bots/discord/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.bots.discord """
+MODE = 'debug'
 ```
 # \file hypotez/src/endpoints/bots/discord/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.bots.discord """
 

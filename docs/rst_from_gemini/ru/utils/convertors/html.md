@@ -4,7 +4,7 @@
 @@ -1,6 +1,6 @@
  ## \file hypotez/src/utils/convertors/html.py
  # -*- coding: utf-8 -*-
--#! venv/Scripts/python.exe # <- venv win
+- # <- venv win
 +
  ## ~~~~~~~~~~~~~
  """ module: src.utils.convertors """
@@ -106,7 +106,7 @@
 
 **Explanation of Improvements and Considerations:**
 
-1. **Removed Redundant `#!` Line:** The `#! venv/Scripts/python.exe # <- venv win` line is typically used for shebangs in scripts run from the command line.  It's not needed for a Python module.
+1. **Removed Redundant `#!` Line:** The ` # <- venv win` line is typically used for shebangs in scripts run from the command line.  It's not needed for a Python module.
 
 2. **Improved `html2simple_namespace`:** Renamed to be more descriptive and consistent with the other functions.
 

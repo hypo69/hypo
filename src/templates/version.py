@@ -1,8 +1,10 @@
 ## \file hypotez/src/templates/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.templates """
+MODE = 'debug'
+""" module: src.templates """
+MODE = 'debug'
 import json
 
 settings:dict = None

@@ -1,3 +1,8 @@
+## \file hypotez/launchers/doxyrun.ps1
+# -*- coding: utf-8 -*-
+
+""" module: launchers """
+MODE = 'debug'
 #Установить политику выполнения для текущего пользователя, разрешив выполнение всех скриптов:
 Set-ExecutionPolicy Unrestricted -Scope CurrentUser
 

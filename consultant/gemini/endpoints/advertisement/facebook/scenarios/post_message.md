@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/scenarios/post_message.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement.facebook.scenarios """
+MODE = 'debug'
 ```python
 # hypotez/src/endpoints/advertisement/facebook/scenarios/post_message.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 """ module: src.endpoints.advertisement.facebook.scenarios """
 
 """ Публикация сообщения """

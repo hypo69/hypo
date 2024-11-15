@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/supplier.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop """
+MODE = 'debug'
 ```
 ```
 **Результат проверки:**
@@ -51,9 +56,6 @@ class PrestaSupplier (Prestashop):
 
 
 ```python
-## \file hypotez/src/endpoints/prestashop/supplier.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop """
 

@@ -1,136 +1,57 @@
-```python
-## \file hypotez/src/suppliers/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.suppliers """
-""" Базовый класс сбора данных со старницы для всех поставщиков.
-    Этот модуль предоставляет базовый класс Graber для сбора данных с веб-страниц
-    различных поставщиков.  Он использует асинхронный подход и обрабатывает ошибки.
-"""
+```markdown
+# File: hypotez/src/suppliers/graber.py
 
-import os
-import sys
-import asyncio
-from pathlib import Path
-from typing import Any, Callable
-from langdetect import detect
-from functools import wraps
+This Python file contains the `Graber` class, responsible for extracting product data from web pages (likely for a specific e-commerce platform like Graber).  It uses Selenium (through the `Driver` and `Locator` classes) and utilizes asynchronous operations (asyncio) for efficient web scraping.
 
-from __init__ import gs
-from src.suppliers.locator import Locator
-from src.product.product_fields import ProductFields
-from src.category import Category
-from src.webdriver import Driver
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import save_png_from_url
-from src.utils import pprint
-from src.logger import logger
-from src.logger.exceptions import ExecuteLocatorException
-from src.endpoints.prestashop import Prestashop
+## Class `Graber`
 
-d: Driver = None
-l: Locator = None
+This class acts as a base for fetching data from various suppliers.  Critically, it leverages the `Locator` class to abstract the interaction with the web page's elements. This modular design facilitates reuse and maintainability.
 
-# Определение декоратора для закрытия всплывающих окон
-def close_popup(value: Any = None) -> Callable:
-    """Декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+**Constructor (`__init__`)**:
 
-    Args:
-        value: Неиспользуемое значение, но используется в соответствии с шаблоном.
+- Takes `supplier_prefix` (string): A prefix identifying the data source.
+- Takes `locator` (Locator object): An instance of the `Locator` class, containing locators for web elements.
+- *Internally stores `l` (Locator):* Stores the locator for easy access throughout the class. This is important for DRY coding.
+- Initializes `self.fields` with a `ProductFields` object, used to collect the extracted data.
 
-    Returns:
-        Callable: Декоратор, который обёртывает функцию.
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                await d.execute_locator(l.close_popup)
-            except ExecuteLocatorException as e:
-                logger.debug(f"Ошибка выполнения локатора: {e}")
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
+**Methods**:
+
+* **`error(self, field: str)`**: Handles errors during field extraction. Logs a debug message indicating the failed field.  Improved logging is better than silently failing.
+
+* **`set_field_value(self, value: Any, locator_func: Callable[[], Any], field_name: str, default: Any = '') -> Any`**:
+    - A crucial, reusable function for setting field values.
+    - Accepts a `locator_func` (a lambda function that returns the element) to retrieve values using locators.  This is the heart of the Graber functionality.
+    - Handles potential errors (e.g., missing elements) gracefully.
+    - Uses `asyncio.to_thread` to ensure that the element retrieval doesn't block the main thread. This avoids freezing the application during long operations.
+    - Returns the extracted value (or a default if nothing found) or handles errors.
+
+* **`grab_page(self) -> ProductFields`**:  The core function for fetching all product data for a given page.
+    - **`fetch_all_data(**kwargs)`**: This method is designed to be expanded with your data extraction functions. The current version is a placeholder, and the commented-out `await self.fetch_specific_data(**kwargs)` suggests future expansion.  This is great for extensibility.
+    - **Missing Critical Logic**: The `fetch_all_data` function is completely empty, missing the implementation to actually *retrieve the data* from the page.   This is where the core scraping logic needs to be implemented.  Crucially, the function calls other functions like `self.id_product`, etc. that will be needed to gather the data from the HTML.  Importantly, it also seems to be designed to collect data using `kwargs` to pass in additional parameters for the data fetch functions, which is also good for flexibility.  However, a better name for this function might be something like `collect_product_data`.
+    - Returns a `ProductFields` object containing all extracted data.
 
 
-class Graber:
-    """Базовый класс для сбора данных со страницы продукта для всех поставщиков."""
-
-    def __init__(self, supplier_prefix: str, locator: Locator, driver: Driver):
-        """Инициализация класса Graber.
-
-        Args:
-            supplier_prefix (str): Префикс поставщика.
-            locator (Locator): Экземпляр класса Locator.
-            driver (Driver): Экземпляр класса Driver.
-        """
-        self.supplier_prefix = supplier_prefix
-        global l
-        self.l = locator
-        self.d = driver  # Принимаем driver в конструктор
-        self.fields = ProductFields()
-
-    async def error(self, field: str):
-        """Обработчик ошибок для полей."""
-        logger.debug(f"Ошибка заполнения поля: {field}")
-        # Возможно, добавим логирование ошибки и/или прерывание обработки.
-
-    async def set_field_value(
-        self,
-        value: Any,
-        locator_func: Callable[[], Any],
-        field_name: str,
-        default: Any = '',
-    ) -> Any:
-        """Универсальная функция для установки значений полей с обработкой ошибок.
-
-        Args:
-            value: Значение для установки.
-            locator_func: Функция для получения значения из локатора.
-            field_name: Название поля.
-            default: Значение по умолчанию.
-
-        Returns:
-            Any: Установленное значение.
-        """
-        try:
-            locator_result = await asyncio.to_thread(locator_func)
-            if value:
-                return value
-            elif locator_result:
-                return locator_result
-            else:
-                await self.error(field_name)
-                return default
-        except Exception as e:
-            logger.error(f"Ошибка в set_field_value для поля {field_name}: {e}")
-            return default
-
-    # ... (rest of your code)
-
-```
-
-**Изменения и улучшения:**
-
-* **Документация:** Добавлены более подробные и точные комментарии к методам и классу, объясняющие их назначение и возможные ошибки.
-* **Обработка исключений:** Добавлена обработка `try...except` в `set_field_value`, чтобы ловить и логировать любые исключения, которые могут возникнуть при выполнении `locator_func`.
-* **Передача `driver`:**  Важный момент: класс `Graber` теперь принимает экземпляр `Driver` в конструктор и сохраняет его в `self.d`. Это необходимо, чтобы `d` был доступен в методах.
-* **Логирование ошибок:** Добавлены логирование ошибок в `set_field_value` и `error` методах.
-* **Улучшенная логика `set_field_value`:**  Улучшен код `set_field_value` — теперь он обрабатывает случаи, когда `locator_func` возвращает `None` или `[]`, и возвращает `default` в случае ошибки.
-* **Управление `global l`:** Избегайте глобальных переменных, если это возможно.  Вместо `global l` передавайте `locator` в конструктор.
-* **Ошибки в `grab_page`:**  Проверено и исправлено использование `kwards`  вместо `kwargs`.
+* **Methods like `additional_shipping_cost`, `delivery_in_stock`, etc.**: These methods are specific to Graber and extract values from different locators.
+    - Use the `@close_popup` decorator to attempt to close any pop-up windows. This prevents these from interfering with data collection.
+    - Call `self.set_field_value` to obtain data and handle errors.
+    - **Highly repetitive**:  The repeated `@close_popup`, `async def ...`, `self.set_field_value` pattern is inefficient and cries out for a better abstraction.
 
 
-**Важные замечания:**
+**Decorator `close_popup`**:
 
-* **`asyncio.to_thread`:** Убедитесь, что методы, которые вы вызываете с помощью `asyncio.to_thread`, действительно являются асинхронными.  Если они синхронные, то это может привести к проблемам.
-* **Зависимости:**  Убедитесь, что все импортированные модули (например, `gs`, `ProductFields`, `Driver`, `Locator`, `pprint`, `logger`) доступны в вашем проекте.
-* **Оптимизация:**  Разделите код на отдельные функции для каждой операции, чтобы код был более читабельным и  легче тестировался.
-* **Тестирование:**  Добавьте тесты для проверки корректности работы класса `Graber`, особенно для обработки ошибок.
+- A decorator to try and close pop-up windows before executing a function.
+- Catches exceptions when trying to close popups. This approach makes the code robust for scenarios where there are no pop-ups or other errors during pop-up interaction.
 
 
-Изменения в `grab_page` не показаны, так как нужно знать, какие функции вы вызываете внутри.  Пожалуйста, предоставьте `fetch_specific_data` и другие функции, чтобы я смог оптимизировать их.
+**Critical Improvements Needed**:
+
+- **Implement `fetch_specific_data` and other data collection functions:**  The core data extraction logic is missing. The method definitions are there, but there are no calls to functions like `self.d.execute_locator` or `self.l.locator_function` with the appropriate locators.
+- **Replace the large number of near-identical methods:**  Consolidate the `async def` functions.  There are repeated patterns in these data extraction methods (`set_field_value` and `@close_popup`).  Consider a function that extracts values dynamically based on parameter names.
+- **Robust error handling:** While error handling is present, consider more specific exception handling or logging for different types of errors.
+- **Type hinting:** Use more descriptive type hints for better code readability and maintainability. For example, return types for `set_field_value`.
+- **Clearer variable names:** Some variable names like `d` and `l` are too short.
+- **Data validation:** Implement validation to ensure that the data extracted is in the expected format.
+- **Global Variables:** Using global variables `d` and `l` is not ideal.  Consider passing them to the class instances.  This is a simple change that can improve code organization.
 
 
-Этот улучшенный код является более надежным, читаемым и удобным в использовании.  Это поможет в дальнейшем расширять класс и поддерживать его. Не стесняйтесь добавлять новые методы и функционал.
+**Overall:** The code has a good structure for an asynchronous web scraper. However, implementing the core data collection logic and optimizing it for better maintainability, efficiency, and robustness is crucial for a functional scraper.

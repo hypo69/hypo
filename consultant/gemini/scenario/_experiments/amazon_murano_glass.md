@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/scenario/_experiments/amazon_murano_glass.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.scenario._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.scenario._experiments """
 import header

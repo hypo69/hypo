@@ -1,8 +1,10 @@
 ## \file hypotez/src/gui/openai_trаigner/main.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.gui.openai_trаigner """
+MODE = 'debug'
+""" module: src.gui.openai_trаigner """
+MODE = 'debug'
 import sys
 import os
 from PyQt6.QtCore import Qt, QUrl

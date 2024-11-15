@@ -1,8 +1,10 @@
 ## \file hypotez/src/db/manager_coupons_and_sales/product_group_reduction_cache_manager.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db.manager_coupons_and_sales """
+MODE = 'debug'
+""" module: src.db.manager_coupons_and_sales """
+MODE = 'debug'
 """ 
 @code
 # Create an instance of the manager

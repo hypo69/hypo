@@ -1,3 +1,8 @@
+## \file hypotez/src/suppliers/aliexpress/campaign/_docs/code_instructions.md
+# -*- coding: utf-8 -*-
+
+""" module: src.suppliers.aliexpress.campaign._docs """
+MODE = 'debug'
 
 ### Инструкция для программиста по поддержке кода для создания и редактирования рекламных кампаний
 

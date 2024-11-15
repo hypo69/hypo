@@ -1,8 +1,10 @@
 ## \file hypotez/src/scenario/_experiments/test_scenario.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.scenario._experiments """
+MODE = 'debug'
+""" module: src.scenario._experiments """
+MODE = 'debug'
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')]

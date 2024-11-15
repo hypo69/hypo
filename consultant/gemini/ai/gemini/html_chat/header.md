@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/ai/gemini/html_chat/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai.gemini.html_chat """
+MODE = 'debug'
 Проблема в строке:
 
 ```python

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/manager_translations/table_categories_hypotez_translations.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db.manager_translations """
+MODE = 'debug'
 ```diff
 --- a/hypotez/src/db/manager_translations/table_categories_hypotez_translations.py
 +++ b/hypotez/src/db/manager_translations/table_categories_hypotez_translations.py

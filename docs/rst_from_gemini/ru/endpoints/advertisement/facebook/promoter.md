@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/promoter.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.advertisement.facebook """
 

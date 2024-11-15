@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db """
+MODE = 'debug'
 ```
 Проблемы в файле `hypotez/src/db/version.py`:
 
@@ -13,8 +18,6 @@
 **Измененный код:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db """
 import json

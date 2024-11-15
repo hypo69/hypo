@@ -1,8 +1,10 @@
 ## \file hypotez/src/logger/exceptions.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.logger """
+MODE = 'debug'
+""" module: src.logger """
+MODE = 'debug'
 
 """ Program Exceptions """
 from typing import Optional

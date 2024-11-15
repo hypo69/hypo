@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/_experiments/gsheets-quick.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.campaign._experiments """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.campaign._experiments """
+MODE = 'debug'
 """ Работа с гугл таблицами """
 
 

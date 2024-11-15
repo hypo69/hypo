@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/hypo69/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.hypo69 """
+MODE = 'debug'
 **Проблемы:**
 
 1. **Необработанное исключение `FileNotFoundError`:**  Код пытается прочитать файл `../settings.json`, но не обрабатывает случай, когда файла нет. Это может привести к аварийному завершению программы.  Нужно добавить обработку `FileNotFoundError` для корректного завершения и предотвращения ошибок.
@@ -14,9 +19,6 @@
 **Измененный код:**
 
 ```python
-## \file hypotez/src/endpoints/hypo69/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.hypo69 """
 import json

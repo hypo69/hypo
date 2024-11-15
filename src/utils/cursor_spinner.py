@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/cursor_spinner.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
+MODE = 'debug'
+""" module: src.utils """
+MODE = 'debug'
 """
 This module provides a utility to show a spinning cursor in the console 
 to simulate a loading or waiting process.

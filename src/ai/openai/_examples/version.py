@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/openai/_examples/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.openai._examples """
+MODE = 'debug'
+""" module: src.ai.openai._examples """
+MODE = 'debug'
 """ @namespace src.ai._examples """
 
 """

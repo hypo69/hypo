@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/goog/spreadsheet/_experiments/spreadsheets.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog.spreadsheet._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog.spreadsheet._experiments """
 """ Эксперименты с гугл таблицами """

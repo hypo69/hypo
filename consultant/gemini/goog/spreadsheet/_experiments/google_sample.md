@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/goog/spreadsheet/_experiments/google_sample.py
+## \file hypotez/consultant/gemini/goog/spreadsheet/_experiments/google_sample.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog.spreadsheet._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog.spreadsheet._experiments """
 """ @namespace src.google.spreadsheets """

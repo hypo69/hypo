@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/amazon/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.amazon """
+MODE = 'debug'
+""" module: src.suppliers.amazon """
+MODE = 'debug'
 
 """  Постaвщик <i>wallmart</i>
 """

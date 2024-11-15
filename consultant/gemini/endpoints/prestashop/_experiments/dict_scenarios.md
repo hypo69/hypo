@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/dict_scenarios.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop._experiments """
+MODE = 'debug'
 This Python script defines a dictionary `scenario` containing product information, likely for use in an automated testing or data processing pipeline, specifically for a PrestaShop e-commerce platform.
 
 **Analysis:**

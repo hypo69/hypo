@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/bots/openai_bots/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.bots.openai_bots """
+MODE = 'debug'
 **Результат проверки:**
 
 Файл `version.py` содержит переменные, типичные для метаданных модуля Python, но имеет несколько проблем:

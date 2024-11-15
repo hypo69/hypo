@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_ad.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook.scenarios """
+MODE = 'debug'
+""" module: src.endpoints.advertisement.facebook.scenarios """
+MODE = 'debug'
 
 """ Публикация рекламного сообщения группах фейсбук"""
 from socket import timeout

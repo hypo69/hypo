@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/prestashop/api/_experiments/data2xml.py
+## \file hypotez/consultant/gemini/endpoints/prestashop/api/_experiments/data2xml.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop.api._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop.api._experiments """
 """ Проверка валидности словаря престасшоп """

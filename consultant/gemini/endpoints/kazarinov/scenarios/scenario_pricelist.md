@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/kazarinov/scenarios/scenario_pricelist.py
+## \file hypotez/consultant/gemini/endpoints/kazarinov/scenarios/scenario_pricelist.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.kazarinov.scenarios """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov.scenarios """
 """! Module for handling suppliers (morlevi, grandadvance, ivory, ksp) product data extraction and saving."""

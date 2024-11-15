@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/goog/spreadsheet/spreadsheet.py
+## \file hypotez/consultant/gemini/goog/spreadsheet/spreadsheet.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog.spreadsheet """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog.spreadsheet """
 

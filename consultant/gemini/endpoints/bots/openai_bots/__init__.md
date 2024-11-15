@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/bots/openai_bots/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.bots.openai_bots """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `__init__.py` в папке `openai_bots` служит для инициализации пакета.  Код достаточно минималистичен и корректен. Он импортирует необходимые модули из папки `version`.
@@ -15,7 +20,6 @@
 **Пример улучшенного кода:**
 
 ```python
-# -*- coding: utf-8 -*-
 """
 Module: src.endpoints.bots.openai_bots
 """

@@ -1,8 +1,10 @@
 ## \file hypotez/src/product/product_fields/product_fields_translator.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.product.product_fields """
+MODE = 'debug'
+""" module: src.product.product_fields """
+MODE = 'debug'
 
 """ Модуль перевода полей товара на языки клиентской базы данных """
 ...

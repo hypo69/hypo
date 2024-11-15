@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/utils/date_time.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
+""" module: consultant.gemini.utils """
+MODE = 'debug'
+```python
 """ module: src.utils """
 """! This module contains a function to check if the current time is within a specified interval with an optional timeout.
 

@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/ai/gemini/version.py
+## \file hypotez/consultant/gemini/ai/gemini/version.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.ai.gemini """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.ai.gemini """
 import json

@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/ivory/graber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.ivory """
 

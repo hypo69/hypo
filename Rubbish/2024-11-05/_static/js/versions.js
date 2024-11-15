@@ -1,3 +1,8 @@
+## \file hypotez/Rubbish/2024-11-05/_static/js/versions.js
+# -*- coding: utf-8 -*-
+
+""" module: Rubbish.2024-11-05._static.js """
+MODE = 'debug'
 const themeFlyoutDisplay = "hidden";
 const themeVersionSelector = "True";
 const themeLanguageSelector = "True";

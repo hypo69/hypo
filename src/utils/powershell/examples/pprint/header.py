@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils.powershell.examples.pprint """
+MODE = 'debug'
+""" module: src.utils.powershell.examples.pprint """
+MODE = 'debug'
 
 """! Absolute path to modules  """
 

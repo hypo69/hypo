@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.product.product_fields """
 
 """ Модуль перевода полей товара на языки клиентской базы данных """

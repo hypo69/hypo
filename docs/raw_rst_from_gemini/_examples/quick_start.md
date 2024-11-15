@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## \file hypotez/src/_examples/quick_start.py
 # ~~~~~~~~~~~~~
 """ module: src._examples """

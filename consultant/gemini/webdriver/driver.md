@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/webdriver/driver.py
+## \file hypotez/consultant/gemini/webdriver/driver.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.webdriver """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.webdriver """
 

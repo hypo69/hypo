@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.api.skd.api.rest """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.api.skd.api.rest """
+MODE = 'debug'
 """
 Created by auto_sdk on 2020.09.25
 """

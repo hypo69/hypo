@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/_examples/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db._examples """
+MODE = 'debug'
 **Результат проверки:**
 
 Файл `version.py` содержит несколько переменных, используемых для метаданных модуля (версия, автор, описание).  Однако, есть несколько проблем:
@@ -17,8 +22,6 @@
 **Рекомендации по исправлению:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 """ module: src.db._examples """
 
 """

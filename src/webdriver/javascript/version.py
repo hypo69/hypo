@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/javascript/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.javascript """
+MODE = 'debug'
+""" module: src.webdriver.javascript """
+MODE = 'debug'
 
 __name__ = '' 
 __version__="3.12.0.0.0.4"

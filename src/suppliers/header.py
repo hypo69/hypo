@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers """
+MODE = 'debug'
+""" module: src.suppliers """
+MODE = 'debug'
 import sys
 from pathlib import Path
 from packaging.version import Version

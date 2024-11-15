@@ -1,7 +1,7 @@
 ```markdown
 # \file hypotez/src/suppliers/kualastyle/via_webdriver.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ Модуль: src.suppliers.kualastyle """
 """ Парсинг kualastyle с использованием webdriver

@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 """
 Module: `src.utils`
 

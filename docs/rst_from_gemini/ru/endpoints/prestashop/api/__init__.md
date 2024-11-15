@@ -10,7 +10,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/api/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ Модуль: src.endpoints.prestashop.api """
 """ @namespace src.prestashop """

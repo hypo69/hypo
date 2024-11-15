@@ -1,3 +1,8 @@
+## \file hypotez/src/suppliers/aliexpress/campaign/_docs/campaign.md
+# -*- coding: utf-8 -*-
+
+""" module: src.suppliers.aliexpress.campaign._docs """
+MODE = 'debug'
 
 ### Overview
 

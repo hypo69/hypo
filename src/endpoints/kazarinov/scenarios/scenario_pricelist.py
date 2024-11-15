@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov.scenarios """
+MODE = 'debug'
+""" module: src.endpoints.kazarinov.scenarios """
+MODE = 'debug'
 """! Module for handling suppliers (morlevi, grandadvance, ivory, ksp) product data extraction and saving."""
 
 import asyncio

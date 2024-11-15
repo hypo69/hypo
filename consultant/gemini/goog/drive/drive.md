@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/goog/drive/drive.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.goog.drive """
+MODE = 'debug'
 ```python
 import pickle
 import os

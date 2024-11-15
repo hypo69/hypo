@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/kazarinov/react/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.kazarinov.react """
+MODE = 'debug'
 ```
 Code review of hypotez/src/endpoints/kazarinov/react/version.py:
 
@@ -7,7 +12,7 @@ The file is well-structured and adheres to Python coding conventions.  It define
 
 **Specific comments:**
 
-* **Shebang (`#! venv/Scripts/python.exe`)**: The shebang line (`#! venv/Scripts/python.exe`) is unnecessary and potentially problematic in a Python file intended for use within a project. It tells the operating system how to run the script, and is only needed if the file is invoked directly, which isn't the typical use case for a Python module.  The presence of this line will be interpreted by many linters/formatters as a source of errors, or potentially cause unintended issues.
+* **Shebang (``)**: The shebang line (``) is unnecessary and potentially problematic in a Python file intended for use within a project. It tells the operating system how to run the script, and is only needed if the file is invoked directly, which isn't the typical use case for a Python module.  The presence of this line will be interpreted by many linters/formatters as a source of errors, or potentially cause unintended issues.
 
 * **Docstrings:** While the docstrings are present, they are currently empty (`__doc__` and `__details__`).  Adding descriptive docstrings will significantly improve the readability and usability of the module. Especially for `__details__`, which should explain the intended functionality or purpose of the module.
 
@@ -20,7 +25,7 @@ The file is well-structured and adheres to Python coding conventions.  It define
 
 **Recommendations:**
 
-1. **Remove the shebang line (`#! venv/Scripts/python.exe`).**
+1. **Remove the shebang line (``).**
 
 2. **Fill in the docstrings (`__doc__`, `__details__`) with informative descriptions.**
 
@@ -33,7 +38,6 @@ The file is well-structured and adheres to Python coding conventions.  It define
 Example of improved `version.py` (with some docstrings):
 
 ```python
-# -*- coding: utf-8 -*-
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov.react """
 __version__: str = 'v1.1'

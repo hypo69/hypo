@@ -1,8 +1,10 @@
 ## \file hypotez/src/category/_examples/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.category._examples """
+MODE = 'debug'
+""" module: src.category._examples """
+MODE = 'debug'
 """ @namespace src.category._examples """
 import sys
 import os

@@ -1,6 +1,10 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement """
+MODE = 'debug'
 ```
 # \file hypotez/src/endpoints/advertisement/__init__.py
-# -*- coding: utf-8 -*-
 #  This file is part of Hypotez.
 #
 #  (C) Copyright [Year] [Your Name/Organization]

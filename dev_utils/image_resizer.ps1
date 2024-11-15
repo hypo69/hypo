@@ -1,3 +1,8 @@
+## \file hypotez/dev_utils/image_resizer.ps1
+# -*- coding: utf-8 -*-
+
+""" module: dev_utils """
+MODE = 'debug'
 # Запрашиваем у пользователя ввод пути к корневой директории
 $rootPath = Read-Host "Введите путь к корневой директории"
 

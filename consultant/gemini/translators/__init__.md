@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/translators/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.translators """
+MODE = 'debug'
 **Результат проверки:**
 
 Файл `hypotez/src/translators/__init__.py` импортирует переменные `__version__`, `__doc__`, и `__details__` из модуля `hypotez/src/translators/version.py`.  Это стандартная практика для определения версии пакета и его описания.  
@@ -8,13 +13,12 @@
 * **Проверка существования `version.py`:** Код подразумевает существование файла `hypotez/src/translators/version.py`, содержащего определения `__version__`, `__doc__`, и `__details__`. Необходимо убедиться, что этот файл существует и содержит корректные значения.
 * **PEP 8 Style Guide:** Следуйте стилю PEP 8 для форматирования кода.
 * **Docstrings:**  Документируйте импортируемые переменные в `__init__.py`.  
-* **`#! venv/Scripts/python.exe`:** Строка `#! venv/Scripts/python.exe` в начале файла не является стандартной для Python и обычно не нужна в `__init__.py`.  Она предназначена для интерпретатора. Если этот файл является точкой входа в скрипт, то нужно использовать `if __name__ == "__main__":`.
+* **``:** Строка `` в начале файла не является стандартной для Python и обычно не нужна в `__init__.py`.  Она предназначена для интерпретатора. Если этот файл является точкой входа в скрипт, то нужно использовать `if __name__ == "__main__":`.
 
 
 **Пример улучшенного `hypotez/src/translators/__init__.py`:**
 
 ```python
-# -*- coding: utf-8 -*-
 """ module: src.translators """
 
 from packaging.version import Version

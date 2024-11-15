@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/suppliers/locator.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.suppliers """
+MODE = 'debug'
 ## Анализ кода `locator.py`
 
 Код выглядит корректным и хорошо структурированным для загрузки настроек локатора из файла JSON.  Вот несколько замечаний и предложений по улучшению:

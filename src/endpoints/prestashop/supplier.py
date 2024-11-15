@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/supplier.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop """
+MODE = 'debug'
+""" module: src.endpoints.prestashop """
+MODE = 'debug'
 
 """ @namespace src.pestashop 
 Класс поставщика в `Prestashop`"""

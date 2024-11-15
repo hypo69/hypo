@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/manager_translations/_examples/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db.manager_translations._examples """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `header.py` содержит инициализацию проекта, добавляя директории в `sys.path`. Это типичная практика для проектов с модульной структурой, позволяющая импортировать модули из разных директорий проекта.  Однако, код содержит некоторые проблемы и потенциальные ошибки:

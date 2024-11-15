@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/amazon/via_webdriver.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.amazon """
+MODE = 'debug'
+""" module: src.suppliers.amazon """
+MODE = 'debug'
 """  Модуль сбора товаров со страницы категорий поставщика aliexpress.com через вебдрайвер
 
 У каждого поставщика свой сценарий обреботки категорий

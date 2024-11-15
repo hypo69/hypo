@@ -1,3 +1,8 @@
+## \file hypotez/src/webdriver/_docs/driver_1.md
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver._docs """
+MODE = 'debug'
 This code defines a metaclass `DriverMeta` for dynamically creating a `Driver` class that inherits from both the base `Driver` class and a specified Selenium WebDriver class (`Chrome`, `Firefox`, or `Edge`). The metaclass is responsible for instantiating the correct combination of these classes. Here's a breakdown of what each part of this code does:
 
 ### `DriverMeta` Metaclass

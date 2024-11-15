@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/executor.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver """
+MODE = 'debug'
+""" module: src.webdriver """
+MODE = 'debug'
 
 """
 The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 

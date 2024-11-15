@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.utils """
 """
 Converter for Excel (`xls`/`xlsx`) to JSON and JSON to Excel (`xls`/`xlsx`).

@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/kazarinov/_experiments/get_images.py
+## \file hypotez/consultant/gemini/endpoints/kazarinov/_experiments/get_images.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.kazarinov._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov._experiments """
 """! This module retrieves a list of image file paths from a Google Drive folder.  It uses the recursively_get_filepath function from src.utils.file to find all JPEG, JPG, and PNG files within a specified Google Drive path. The resulting list of file paths is printed to the console. """

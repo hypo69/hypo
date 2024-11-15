@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/grandadvance/graber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.grandadvance """
+MODE = 'debug'
+""" module: src.suppliers.grandadvance """
+MODE = 'debug'
 
 
 import asyncio

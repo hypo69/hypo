@@ -7,7 +7,7 @@
 ```python
 ## \file hypotez/src/ai/dialogflow/dialogflow.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.dialogflow """
 """! Модуль предоставляет интерфейс для взаимодействия с сервисом Dialogflow.
@@ -39,7 +39,7 @@ import header
 ```python
 ## \file hypotez/src/ai/dialogflow/dialogflow.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.dialogflow """
 """! Модуль предоставляет интерфейс для взаимодействия с сервисом Dialogflow.

@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/utils/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.utils """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.utils """
+MODE = 'debug'
 """ модули управления рекламной кампанией Aliexpress:
 
  

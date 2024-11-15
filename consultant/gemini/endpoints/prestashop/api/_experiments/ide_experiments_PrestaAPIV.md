@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/prestashop/api/_experiments/ide_experiments_PrestaAPIV.py
+## \file hypotez/consultant/gemini/endpoints/prestashop/api/_experiments/ide_experiments_PrestaAPIV.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop.api._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop.api._experiments """
 """  Прослойка между разными вериями модулей взаимммодействия с престашоп 

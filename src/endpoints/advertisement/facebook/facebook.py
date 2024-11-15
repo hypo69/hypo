@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
+""" module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
 
 """  Модуль рекламы на фейсбук
 

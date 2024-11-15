@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon """
+MODE = 'debug'
+""" module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon """
+MODE = 'debug'
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]

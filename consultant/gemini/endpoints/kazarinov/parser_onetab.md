@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/kazarinov/parser_onetab.py
+## \file hypotez/consultant/gemini/endpoints/kazarinov/parser_onetab.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.kazarinov """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov """
 """! Extracts target URLs and metadata from a OneTab page. """

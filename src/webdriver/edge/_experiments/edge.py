@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/edge/_experiments/edge.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.edge._experiments """
+MODE = 'debug'
+""" module: src.webdriver.edge._experiments """
+MODE = 'debug'
 from pathlib import Path
 import os
 import json

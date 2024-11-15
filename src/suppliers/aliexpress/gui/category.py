@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/gui/category.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.gui """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.gui """
+MODE = 'debug'
 """ Window interface for preparing advertising campaigns """
 
 

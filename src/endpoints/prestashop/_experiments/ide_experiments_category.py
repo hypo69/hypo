@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/_experiments/ide_experiments_category.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop._experiments """
+MODE = 'debug'
+""" module: src.endpoints.prestashop._experiments """
+MODE = 'debug'
 import ide_header
 from ide_header import  gs
 from src.category import  Category

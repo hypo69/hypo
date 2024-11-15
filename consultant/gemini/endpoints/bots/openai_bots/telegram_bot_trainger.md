@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/bots/openai_bots/telegram_bot_trainger.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.bots.openai_bots """
+MODE = 'debug'
+```python
 """ module: src.endpoints.bots.openai_bots """
 """ This script creates a simple Telegram bot using the python-telegram-bot library."""
 

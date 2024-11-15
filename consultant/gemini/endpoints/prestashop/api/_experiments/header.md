@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/prestashop/api/_experiments/header.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop.api._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop.api._experiments """
 """ Тестовые настройки для проверки PrestaAPIV.

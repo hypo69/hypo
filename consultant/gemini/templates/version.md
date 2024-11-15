@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/templates/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.templates """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` предназначен для хранения метаданных о проекте (имя, версия, автор, и т.д.).  Он пытается загрузить настройки из файла `settings.json` в папке выше, но имеет несколько проблем:
@@ -11,7 +16,6 @@
 **Измененный код:**
 
 ```python
-# -*- coding: utf-8 -*-
 import json
 
 settings = None

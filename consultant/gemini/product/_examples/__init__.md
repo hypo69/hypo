@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/product/_examples/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.product._examples """
+MODE = 'debug'
+```python
 """
 module: src.product._examples
 """
@@ -18,7 +21,7 @@ from .version import __version__, __doc__, __details__
 * **Docstrings:** The original code had empty docstrings.  Docstrings are crucial for documenting Python modules and classes.  I've added a descriptive docstring for the module.  Consider adding a more detailed docstring describing the purpose and usage of the module.
 * **Import Statements:**  The import statements look correct.  Make sure the `__init__.py` file is located in the intended directory structure and that the `version.py` file (where `__version__`, `__doc__`, and `__details__` are defined) is correctly located within the `_examples` directory.
 * **Example Placeholder:** I've added a placeholder import (`from .my_example_module import MyExampleClass`).  This is important.  If this file is intended to serve as the entry point for an example package or modules, then you'll need to import the actual examples.  Comment out or remove this line if no such files exist.
-* **File Header:**  The `#! venv/Scripts/python.exe` line is a shebang line.  It specifies the interpreter to execute the file.  If your project is designed to run from the command line, this may be needed for Windows. But it's often better practice to manage virtual environments within the IDE.  Often, you can omit it.
+* **File Header:**  The `` line is a shebang line.  It specifies the interpreter to execute the file.  If your project is designed to run from the command line, this may be needed for Windows. But it's often better practice to manage virtual environments within the IDE.  Often, you can omit it.
 * **`__init__.py` Purpose:**  The `__init__.py` file is a crucial part of Python package structure.  Without it, Python won't recognize the directory as a package.
 
 

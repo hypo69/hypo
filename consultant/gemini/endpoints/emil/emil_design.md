@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/emil/emil_design.py
+## \file hypotez/consultant/gemini/endpoints/emil/emil_design.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.emil """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.emil """
 """! Module for managing and processing images and promoting to Facebook and Prestashop. """

@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_event.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.advertisement.facebook.scenarios """
 

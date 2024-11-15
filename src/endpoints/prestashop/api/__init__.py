@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/api/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop.api """
+MODE = 'debug'
+""" module: src.endpoints.prestashop.api """
+MODE = 'debug'
 """ @namespace src.prestashop """
 
 """ Prestashop module 

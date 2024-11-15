@@ -7,7 +7,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gapi/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.gapi """
 
@@ -40,7 +40,7 @@ from .version import __version__, __doc__, __details__
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gapi/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.suppliers.aliexpress.gapi """
 
 """ Этот модуль предоставляет функции для работы с API АлиЭкспресс.

@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/suppliers/amazon/via_webdriver.py
+## \file hypotez/consultant/gemini/suppliers/amazon/via_webdriver.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.suppliers.amazon """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.amazon """
 """  Модуль сбора товаров со страницы категорий поставщика amazon.com через вебдрайвер

@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/kazarinov/_experiments/get_images.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov._experiments """
+MODE = 'debug'
+""" module: src.endpoints.kazarinov._experiments """
+MODE = 'debug'
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header

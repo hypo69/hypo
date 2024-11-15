@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/bots/telegram/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.bots.telegram """
+MODE = 'debug'
 ```
 # flake8: noqa
 import sys

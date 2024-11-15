@@ -12,7 +12,7 @@
 ```python
 ## \file hypotez/src/_examples/quick_start.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src._examples """
 """ Quick start to `hypotez`
@@ -28,7 +28,7 @@
 
 * `## \file hypotez/src/_examples/quick_start.py`:  Это заголовок, используемый для автоматической генерации документации. Он сообщает о том, что это файл (`.py`).
 * `# -*- coding: utf-8 -*-`: Устанавливает кодировку файла в UTF-8.
-* `#! venv/Scripts/python.exe`:  Эта строка используется для указания интерпретатора Python для выполнения скрипта.  `venv` указывает на виртуальное окружение.  Важно для корректной работы на Windows.
+* ``:  Эта строка используется для указания интерпретатора Python для выполнения скрипта.  `venv` указывает на виртуальное окружение.  Важно для корректной работы на Windows.
 * `## ~~~~~~~~~~~~~`: Вероятно, просто для форматирования документации.
 * `""" module: src._examples """`:  Определяет модуль как `src._examples`.
 * `""" Quick start to `hypotez`

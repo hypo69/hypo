@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.campaign """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.campaign """
+MODE = 'debug'
 
 """ Проверка создания affiliate для рекламной кампании  
 Если текой рекламной кампании не существует - будет создана новая"""

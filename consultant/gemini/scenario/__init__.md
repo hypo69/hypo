@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/scenario/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.scenario """
+MODE = 'debug'
 Code Review of `hypotez/src/scenario/__init__.py`
 
 This file initializes the `scenario` module, defining functions for executing scenarios.  The docstrings are quite detailed and provide a good overview of the intended functionality.  However, there are some areas for improvement:
@@ -15,7 +20,7 @@ This file initializes the `scenario` module, defining functions for executing sc
 * **Inconsistent Use of `Supplier`:** The examples show `s.run(...)`, but the functions defined are `run_scenario`, `run_scenarios`, etc.  This lack of consistency between the examples and the actual functions makes it difficult to understand the expected method calls.
 * **Missing Error Handling:**  The code lacks error handling. What happens if a scenario file is malformed? Or if a file is not found?  A scenario execution function should ideally return a result (success/failure, error messages) instead of silently failing.
 * **Import Statements Ordering:** The order of the import statements is not ideal. Imports from the current package (`__init__.py`) should be placed before imports from other packages (`executor`).
-* **Unnecessary Comments:** The shebang (`#! venv/Scripts/python.exe`) is rarely necessary and might cause problems with portability.
+* **Unnecessary Comments:** The shebang (``) is rarely necessary and might cause problems with portability.
 
 
 **Specific Recommendations:**

@@ -1,3 +1,8 @@
+## \file hypotez/launchers/code_launcher.ps1
+# -*- coding: utf-8 -*-
+
+""" module: launchers """
+MODE = 'debug'
 # Получаем все аргументы командной строки
 $arguments = $args
 

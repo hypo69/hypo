@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/ide_header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop._experiments """
+MODE = 'debug'
 Этот код устанавливает корневой путь проекта и добавляет его в `sys.path`, что позволяет импортировать модули из других директорий проекта.  Однако, он имеет несколько проблем и может быть улучшен.
 
 **Проблемы:**
@@ -13,8 +18,6 @@
 **Улучшенный код:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop._experiments """
 """ Файл заголовок, подключаемый к ide тестовым модулям """

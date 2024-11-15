@@ -1,8 +1,10 @@
 ## \file hypotez/src/db/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db """
+MODE = 'debug'
+""" module: src.db """
+MODE = 'debug'
 """ Модуль работы с базами данных """
 ...
 

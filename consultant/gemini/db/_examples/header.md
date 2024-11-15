@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/_examples/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db._examples """
+MODE = 'debug'
 ```
 ## Проблемы в коде header.py
 

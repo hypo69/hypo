@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/bots/openai_bots/header.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.bots.openai_bots """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.bots.openai_bots """
 

@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/kazarinov/parser_onetab.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov """
+MODE = 'debug'
+""" module: src.endpoints.kazarinov """
+MODE = 'debug'
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import requests

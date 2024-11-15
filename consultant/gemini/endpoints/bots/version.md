@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/bots/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.bots """
+MODE = 'debug'
 ```
 # File: hypotez/src/endpoints/bots/version.py
 # Linter Issues:
@@ -20,8 +25,6 @@
 ```
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 """ module: src.endpoints.bots """
 import json
 import pathlib

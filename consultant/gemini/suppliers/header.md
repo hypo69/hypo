@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/suppliers/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.suppliers """
+MODE = 'debug'
 **Анализ кода:**
 
 Код определяет функцию `get_project_root`, которая находит корневой каталог проекта, начиная с текущей директории и поднимаясь вверх по дереву директорий.  Функция возвращает `Path` объект корневого каталога. Важно, что она добавляет найденный корневой каталог в `sys.path`, что критично для импорта модулей из проекта.
@@ -22,8 +27,6 @@
 **Измененный код:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers """
 import sys

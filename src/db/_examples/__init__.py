@@ -1,8 +1,10 @@
 ## \file hypotez/src/db/_examples/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db._examples """
+MODE = 'debug'
+""" module: src.db._examples """
+MODE = 'debug'
 """ @namespace src.db._examples """
 
 """ """

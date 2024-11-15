@@ -1,3 +1,8 @@
+## \file hypotez/src/endpoints/prestashop/_doc/overwiev.md
+# -*- coding: utf-8 -*-
+
+""" module: src.endpoints.prestashop._doc """
+MODE = 'debug'
 ### Directory Structure
 
 1. **Main Directory (`prestashop`)**:

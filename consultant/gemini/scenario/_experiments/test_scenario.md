@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/scenario/_experiments/test_scenario.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.scenario._experiments """
+MODE = 'debug'
 ```python
 # \file hypotez/src/scenario/_experiments/test_scenario.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.scenario._experiments """
 import sys

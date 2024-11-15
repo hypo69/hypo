@@ -1,5 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/utils/__init__.md
 # -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.utils """
+MODE = 'debug'
+```python
 """ module: src.utils """
 
 """

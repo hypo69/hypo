@@ -1,7 +1,9 @@
+## \file hypotez/consultant/gemini/endpoints/hypo69/onela_bot/bot.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.hypo69.onela_bot """
+MODE = 'debug'
 ```python
-## \file hypotez/src/endpoints/hypo69/onela_bot.py
-# -*- coding: utf-8 -*- 
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~ 
 """ module: src.endpoints.hypo69
 

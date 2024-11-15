@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/prestashop/_examples/header.py
+## \file hypotez/consultant/gemini/endpoints/prestashop/_examples/header.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop._examples """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop._examples """
 import sys

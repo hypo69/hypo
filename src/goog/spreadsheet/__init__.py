@@ -1,8 +1,10 @@
 ## \file hypotez/src/goog/spreadsheet/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog.spreadsheet """
+MODE = 'debug'
+""" module: src.goog.spreadsheet """
+MODE = 'debug'
 """ Google API """
 
 

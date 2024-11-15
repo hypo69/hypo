@@ -1,8 +1,13 @@
+## \file hypotez/consultant/gemini/goog/spreadsheet/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.goog.spreadsheet """
+MODE = 'debug'
 This Python code defines an initialization module (`__init__.py`) for a Google Spreadsheet API library within a project. Let's break down the code and what it implies:
 
 * **`# -*- coding: utf-8 -*-`**: This line specifies the encoding for the file as UTF-8, handling various characters correctly.  Good practice.
 
-* **`#! venv/Scripts/python.exe`**: This shebang line is problematic and likely unnecessary within the `__init__.py` file.  It tells the operating system which interpreter to use to execute the file (Python in this case).  It's *usually* put in the top-level script, not within a module.  The `venv` path should point to the correct Python interpreter within your virtual environment. *If this is from a shell script that runs the code, it's okay.  But in a module's `__init__.py`, it's incorrect*
+* **``**: This shebang line is problematic and likely unnecessary within the `__init__.py` file.  It tells the operating system which interpreter to use to execute the file (Python in this case).  It's *usually* put in the top-level script, not within a module.  The `venv` path should point to the correct Python interpreter within your virtual environment. *If this is from a shell script that runs the code, it's okay.  But in a module's `__init__.py`, it's incorrect*
 
 * **`""" module: src.goog.spreadsheet """`**: This is a docstring explaining the module's purpose. It's good practice, but not strictly necessary.
 
@@ -20,7 +25,7 @@ This Python code defines an initialization module (`__init__.py`) for a Google S
 
 **Potential Improvements and Considerations:**
 
-1. **Remove the shebang:** The `#! venv/Scripts/python.exe` is not needed and can cause issues if executed directly.  Leave it only in scripts that run the module.
+1. **Remove the shebang:** The `` is not needed and can cause issues if executed directly.  Leave it only in scripts that run the module.
 
 2. **Improve Docstrings:** The docstrings could be more descriptive and informative, particularly for the exported classes (e.g., what methods does `SpreadSheet` have? What makes `ReachSpreadsheet` different?).
 

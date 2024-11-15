@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/suppliers/aliexpress/aliexpress.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.suppliers.aliexpress """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress """
 """ Base class for the supplier. 

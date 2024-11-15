@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/categories/category.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop._experiments.categories """
+MODE = 'debug'
 ```python
 # hypotez/src/endpoints/prestashop/_experiments/categories/category.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 """ module: src.endpoints.prestashop._experiments.categories """
 """ Работа с категориями товара """
 

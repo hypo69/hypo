@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/ide_experiments_category.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop._experiments """
 import ide_header

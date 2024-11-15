@@ -1,3 +1,8 @@
+## \file hypotez/src/webdriver/firefox/extentions/test_extention/scripts/send_data.js
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver.firefox.extentions.test_extention.scripts """
+MODE = 'debug'
 // Создаем обработчик события для загрузки страницы
 function onPageLoad() {
     // Собираем информацию о странице

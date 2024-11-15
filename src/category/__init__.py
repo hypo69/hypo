@@ -1,8 +1,10 @@
 ## \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.category """
+MODE = 'debug'
+""" module: src.category """
+MODE = 'debug'
 """ Manege product categories for Prestashop"""
 
 import sys

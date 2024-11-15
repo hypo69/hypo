@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/kazarinov/scenarios/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov.scenarios """
+MODE = 'debug'
+""" module: src.endpoints.kazarinov.scenarios """
+MODE = 'debug'
 
 """! Absolute path to modules  """
 

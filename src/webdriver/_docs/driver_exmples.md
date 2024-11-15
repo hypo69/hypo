@@ -1,6 +1,10 @@
+## \file hypotez/src/webdriver/_docs/driver_exmples.md
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver._docs """
+MODE = 'debug'
 
 ```python
-# -*- coding: utf-8 -*-
 
 """ Examples for using `Driver` and `Chrome` classes """
 

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/_experiments/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement.facebook._experiments """
+MODE = 'debug'
 Этот код устанавливает абсолютный путь к корневой директории проекта `hypotez` в переменную `__root__` и добавляет его в системный путь `sys.path`.
 
 **Анализ кода:**

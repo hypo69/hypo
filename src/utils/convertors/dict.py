@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils.convertors """
+MODE = 'debug'
+""" module: src.utils.convertors """
+MODE = 'debug'
 
 """
 Converter for converting between dict and SimpleNamespace objects.

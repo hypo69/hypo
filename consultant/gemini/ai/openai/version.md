@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/ai/openai/version.py
+## \file hypotez/consultant/gemini/ai/openai/version.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.ai.openai """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.ai.openai """
 import json

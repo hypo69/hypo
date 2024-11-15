@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop """
 """ Class of product category in `Prestashop`

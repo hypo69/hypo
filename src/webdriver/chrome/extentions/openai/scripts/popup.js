@@ -1,3 +1,8 @@
+## \file hypotez/src/webdriver/chrome/extentions/openai/scripts/popup.js
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver.chrome.extentions.openai.scripts """
+MODE = 'debug'
 // Инициализируем Angular приложение
 const app = angular.module('openaiApp', []);
 

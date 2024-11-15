@@ -1,3 +1,8 @@
+## \file hypotez/src/suppliers/aliexpress/_docs/affiliated_products_generator.md
+# -*- coding: utf-8 -*-
+
+""" module: src.suppliers.aliexpress._docs """
+MODE = 'debug'
 Certainly! Here’s a detailed breakdown of the `affiliated_products_generator.py` file from the `src.suppliers.aliexpress` module:
 
 ---

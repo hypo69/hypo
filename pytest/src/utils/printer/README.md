@@ -1,3 +1,8 @@
+## \file hypotez/pytest/src/utils/printer/README.md
+# -*- coding: utf-8 -*-
+
+""" module: pytest.src.utils.printer """
+MODE = 'debug'
 Here's a set of `pytest` tests for the `pprint` function based on the examples provided. These tests cover various data types such as strings, lists, dictionaries, objects, and file reading. I'll assume that the function `pprint` is defined in a file called `printer.py` in your project structure.
 
 ### Test file: `test_printer.py`

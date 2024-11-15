@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/category.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop """
+MODE = 'debug'
 ```python
 import requests
 from attr import attr, attrs

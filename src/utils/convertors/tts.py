@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/convertors/tts.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils.convertors """
+MODE = 'debug'
+""" module: src.utils.convertors """
+MODE = 'debug'
 """! Module for speech recognition and text-to-speech conversion. """
 
 from pathlib import Path

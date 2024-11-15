@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/product/product_fields/utils/product_fields_normalizer.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.product.product_fields.utils """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.product.product_fields.utils """
 """! This module provides functions for normalizing product field data.  

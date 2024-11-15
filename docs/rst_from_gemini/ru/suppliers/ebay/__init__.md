@@ -16,7 +16,7 @@
 ```python
 ## \file hypotez/src/suppliers/ebay/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.ebay """
 
@@ -32,7 +32,7 @@ from .graber import Graber
 **Анализ:**
 
 * **`# -*- coding: utf-8 -*-`**: Указание кодировки файла как UTF-8.
-* **`#! venv/Scripts/python.exe`**: Вероятно, указание интерпретатора Python, используемого в виртуальном окружении (venv).
+* **``**: Вероятно, указание интерпретатора Python, используемого в виртуальном окружении (venv).
 * **`""" module: src.suppliers.ebay """`**: Документационная строка, описывающая модуль.
 * **`"""  Поставщик <i>wallmart</i> """`**: Некорректная документация.  Следует заменить `wallmart` на `ebay`.  В идеале, нужно описать функциональность поставщика, а не просто перечислить его название.
 * **`from packaging.version import Version`**: Импорт класса `Version` для работы с версиями пакетов.

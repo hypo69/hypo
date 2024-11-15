@@ -1,3 +1,8 @@
+## \file hypotez/src/endpoints/hypo69/code_assistant/instructions/insruction_code_checker_ru.md
+# -*- coding: utf-8 -*-
+
+""" module: src.endpoints.hypo69.code_assistant.instructions """
+MODE = 'debug'
 ** PROMPT **
 
 **Контекст**:  

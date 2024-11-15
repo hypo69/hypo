@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/ai/openai/model/event_handler.py
+## \file hypotez/consultant/gemini/ai/openai/model/event_handler.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.ai.openai.model """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.ai.openai.model """
 

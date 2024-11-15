@@ -1,8 +1,10 @@
 ## \file hypotez/src/gui/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.gui """
+MODE = 'debug'
+""" module: src.gui """
+MODE = 'debug'
 """ @namespace src.fast_api """
 
 """ """

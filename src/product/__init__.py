@@ -1,8 +1,10 @@
 ## \file hypotez/src/product/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.product """
+MODE = 'debug'
+""" module: src.product """
+MODE = 'debug'
 """ Product module
 External classes and attributes:
 - `Product`: Methods and attributes of the product. Detailed description in `product.py`

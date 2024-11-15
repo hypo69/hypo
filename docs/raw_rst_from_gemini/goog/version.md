@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.goog """
 import json
@@ -53,7 +53,7 @@ print(v.__author__)
 
 * **`settings.json`:**  This file is critical.  Make sure it exists in the correct location (`../settings.json`) relative to `version.py` and contains valid JSON data.
 * **Error Handling:**  The error handling is very important.  It helps prevent unexpected crashes if `settings.json` is missing or if it's not correctly formatted.
-* **`venv`:**  The `#! venv/Scripts/python.exe` shebang line is essential if you're using a virtual environment.  This ensures the correct Python interpreter is used.
+* **`venv`:**  The `` shebang line is essential if you're using a virtual environment.  This ensures the correct Python interpreter is used.
 
 This revised code is much more robust and user-friendly. Remember to adapt the code to your specific project structure if necessary. Remember to add a `settings.json` file in the correct location to test the code.
 

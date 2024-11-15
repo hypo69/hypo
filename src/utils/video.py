@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/video.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
+MODE = 'debug'
+""" module: src.utils """
+MODE = 'debug'
 """
 Video Saving Utilities.
 

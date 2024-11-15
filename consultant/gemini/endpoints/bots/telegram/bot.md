@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/bots/telegram/bot.py
+## \file hypotez/consultant/gemini/endpoints/bots/telegram/bot.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.bots.telegram """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.bots.telegram """
 """! Module for interacting with Telegram using a simple bot interface. """

@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/suppliers/graber.py
+## \file hypotez/consultant/gemini/suppliers/graber.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.suppliers """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers """
 """ Базовый класс сбора данных со старницы для всех поставщиков

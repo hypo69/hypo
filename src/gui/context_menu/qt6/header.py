@@ -1,8 +1,10 @@
 ## \file hypotez/src/gui/context_menu/qt6/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.gui.context_menu.qt6 """
+MODE = 'debug'
+""" module: src.gui.context_menu.qt6 """
+MODE = 'debug'
 
 
 import sys,os

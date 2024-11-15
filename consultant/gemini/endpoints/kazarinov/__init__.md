@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/kazarinov/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.kazarinov """
+MODE = 'debug'
 ```
 Code Style Issues:
 
@@ -16,8 +21,6 @@ Code Style Issues:
 Refactored Code:
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov """
 

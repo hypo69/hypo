@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/kazarinov/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov """
+MODE = 'debug'
+""" module: src.endpoints.kazarinov """
+MODE = 'debug'
 
 """! Module to set the project root path """
 import json

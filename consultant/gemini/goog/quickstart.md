@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/goog/quickstart.py
+## \file hypotez/consultant/gemini/goog/quickstart.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog """
 """

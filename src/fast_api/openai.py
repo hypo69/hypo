@@ -1,8 +1,10 @@
 ## \file hypotez/src/fast_api/openai.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.fast_api """
+MODE = 'debug'
+""" module: src.fast_api """
+MODE = 'debug'
 
 """
 This module provides a FastAPI application for interacting with the OpenAI model.

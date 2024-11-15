@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/gui/context_menu/qt6/main.py
+## \file hypotez/consultant/gemini/gui/context_menu/qt6/main.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.gui.context_menu.qt6 """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.gui.context_menu.qt6 """
 

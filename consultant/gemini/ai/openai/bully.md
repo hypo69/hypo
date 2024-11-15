@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/ai/openai/bully.py
+## \file hypotez/consultant/gemini/ai/openai/bully.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.ai.openai """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.ai.openai """
 """ @namespace src.ai """

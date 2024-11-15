@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/gworksheets.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.goog.spreadsheet.bberyakov """
 """  Модуль для работы с Google Spreadsheets.  Создание и управление листами.

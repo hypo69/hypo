@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/check_relise.py
+## \file hypotez/consultant/gemini/check_relise.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src """
 """! Checks the latest release version of a GitHub repository. """

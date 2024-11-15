@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/db/manager_translations/category_translations.py
+## \file hypotez/consultant/gemini/db/manager_translations/category_translations.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.db.manager_translations """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_translations """
 """ Менджер переводов категорий """

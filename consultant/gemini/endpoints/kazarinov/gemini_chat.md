@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/kazarinov/gemini_chat.py
+## \file hypotez/consultant/gemini/endpoints/kazarinov/gemini_chat.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.kazarinov """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov """
 

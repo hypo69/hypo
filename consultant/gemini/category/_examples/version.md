@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/category/_examples/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.category._examples """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` содержит метаданные о версии модуля.  Это типичный подход для управления версиями Python-модулей. Однако код имеет ряд проблем:
@@ -12,7 +17,6 @@
 **Рекомендации по улучшению:**
 
 ```python
-# -*- coding: utf-8 -*-
 # ! venv/Scripts/python.exe  # <- venv win
 
 """

@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/start_event.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement.facebook """
+MODE = 'debug'
 ```python
 # hypotez/src/endpoints/advertisement/facebook/start_event.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 """Отправка мероприятий в группы фейсбук """
 
 import logging

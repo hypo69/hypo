@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/utils/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.utils """
+MODE = 'debug'
 ```
 File: hypotez/src/utils/version.py
 
@@ -7,9 +12,9 @@ Issues:
 
 2. **Inconsistent use of quotes:** While the current use of single quotes in string assignments is fine, using double quotes for docstrings and multiline strings is more common and often preferred for readability.
 
-3. **Redundant `#!` shebang:**  The `#! venv/Scripts/python.exe` line is likely unnecessary and possibly problematic if the script is not intended to be run directly from the command line, as it only applies to the first line of the file. It implies the script is meant to be an executable, but the contents indicate it is only a module.
+3. **Redundant `#!` shebang:**  The `` line is likely unnecessary and possibly problematic if the script is not intended to be run directly from the command line, as it only applies to the first line of the file. It implies the script is meant to be an executable, but the contents indicate it is only a module.
 
-4. **Potential venv issues:** The `#! venv/Scripts/python.exe` line, if used for execution, requires the `venv` to be in the correct location in the user's system path. If this file is a module imported by another script in the same project, this is probably not a relevant concern and should be omitted.
+4. **Potential venv issues:** The `` line, if used for execution, requires the `venv` to be in the correct location in the user's system path. If this file is a module imported by another script in the same project, this is probably not a relevant concern and should be omitted.
 
 5. **Missing `__all__`:** If you plan to expose any specific parts of the module through import statements (`from hypotez.src.utils.version import ...`), it's good to define a `__all__` variable to control those exports.
 
@@ -17,7 +22,6 @@ Issues:
 Suggested Improvements:
 
 ```python
-# -*- coding: utf-8 -*-
 """ module: src.utils """
 __version__ = 'v1.1'
 __date__ = '2024-10-27'  # Example date - replace with actual date

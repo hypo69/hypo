@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.openai """
+MODE = 'debug'
+""" module: src.ai.openai """
+MODE = 'debug'
 """ Переводчик 
 @code
 # Пример использования функции

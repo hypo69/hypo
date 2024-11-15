@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/hypo69/__init__.py
+## \file hypotez/consultant/gemini/endpoints/hypo69/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.hypo69 """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.hypo69 """
 

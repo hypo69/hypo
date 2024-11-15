@@ -1,3 +1,8 @@
+## \file hypotez/src/gui/context_menu/run.ps1
+# -*- coding: utf-8 -*-
+
+""" module: src.gui.context_menu """
+MODE = 'debug'
 # Определяем текущий путь
 $currentPath = (Get-Location).Path
 

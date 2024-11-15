@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/gui/openai_trаigner/main.py
+## \file hypotez/consultant/gemini/gui/openai_trаigner/main.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.gui.openai_trаigner """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.gui.openai_trаigner """
 import sys

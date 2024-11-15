@@ -12,7 +12,7 @@
 ```python
 ## \file hypotez/src/suppliers/_examples/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers._examples """
 import os
@@ -28,7 +28,7 @@ sys.path.append (str (dir_root) ) # Добавляю рабочую директ
 **Разбор кода:**
 
 * **`# -*- coding: utf-8 -*-`:**  Устанавливает кодировку файла в UTF-8.
-* **`#! venv/Scripts/python.exe # <- venv win`:**  Это шебанг (shebang), он указывает интерпретатор Python, который нужно использовать для выполнения скрипта (в данном случае из виртуального окружения `venv`).  Важно для Windows.
+* **` # <- venv win`:**  Это шебанг (shebang), он указывает интерпретатор Python, который нужно использовать для выполнения скрипта (в данном случае из виртуального окружения `venv`).  Важно для Windows.
 * **`""" module: src.suppliers._examples """`:**  Строка документации, описывающая модуль.
 * **`dir_root : Path = Path (os.getcwd()[:os.getcwd().rfind('hypotez')+7])`:** Определяет корневую директорию проекта.  Она находится по пути `os.getcwd()`, до первой вхождения строки `'hypotez'`. Это делает код более устойчивым к разным способам расположения проекта.
 * **`sys.path.append (str (dir_root))`:** Добавляет корневую директорию проекта в `sys.path`. Это необходимо, чтобы Python мог импортировать модули из других каталогов проекта.

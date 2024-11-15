@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/ai/openai/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai.openai """
+MODE = 'debug'
 ```
 code_checker:
 
@@ -5,7 +10,7 @@ File: hypotez/src/ai/openai/__init__.py
 
 Issues:
 
-1. **Unnecessary shebang:** The `#! venv/Scripts/python.exe` line is a shebang, typically used for specifying the interpreter for a script.  It's inappropriate and unnecessary within a Python module.  Python modules are not meant to be executed directly; they are imported by other scripts. Removing this line is recommended.
+1. **Unnecessary shebang:** The `` line is a shebang, typically used for specifying the interpreter for a script.  It's inappropriate and unnecessary within a Python module.  Python modules are not meant to be executed directly; they are imported by other scripts. Removing this line is recommended.
 
 2. **Redundant Docstrings:** The lines `""" module: src.ai.openai """` and `""" OpenAI """` are redundant. The top-level docstring (the multiline string right after the module docstring) already documents the module's purpose. Remove these lines.
 
@@ -14,7 +19,6 @@ Issues:
 Suggested improvements:
 
 ```python
-# -*- coding: utf-8 -*-
 
 """OpenAI module for hypotez."""
 

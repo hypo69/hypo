@@ -1,3 +1,8 @@
+## \file hypotez/src/suppliers/aliexpress/_dot/affiliated_products_generator.dot
+# -*- coding: utf-8 -*-
+
+""" module: src.suppliers.aliexpress._dot """
+MODE = 'debug'
 digraph dependencies {
     node [shape=box];
     

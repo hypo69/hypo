@@ -1,8 +1,10 @@
 ## \file hypotez/dev_utils/file_counter.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: dev_utils """
+MODE = 'debug'
+""" module: dev_utils """
+MODE = 'debug'
 import os
 import sys
 from pathlib import Path

@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/kazarinov/react/pricelist_generator.py
+## \file hypotez/consultant/gemini/endpoints/kazarinov/react/pricelist_generator.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.kazarinov.react """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov.react """
 

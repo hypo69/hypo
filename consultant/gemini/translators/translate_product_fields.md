@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/translators/translate_product_fields.py
+## \file hypotez/consultant/gemini/translators/translate_product_fields.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.translators """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.translators """
 """ Модуль управления переводами.

@@ -1,8 +1,10 @@
 ## \file hypotez/src/goog/drive/drive.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog.drive """
+MODE = 'debug'
+""" module: src.goog.drive """
+MODE = 'debug'
 
 """ Minimal library for working with Google Drive.
 

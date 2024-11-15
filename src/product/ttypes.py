@@ -1,8 +1,10 @@
 ## \file hypotez/src/product/ttypes.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.product """
+MODE = 'debug'
+""" module: src.product """
+MODE = 'debug'
 """ Определение типa `product` """
 from typing import TypedDict, Optional
 

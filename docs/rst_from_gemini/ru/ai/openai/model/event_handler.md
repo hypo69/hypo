@@ -50,7 +50,7 @@ response = openai.threads.run.create(
 * Файл использует типизацию из `typing_extensions` для ясности.
 * `flush=True` в `print`-вызовах гарантирует немедленный вывод данных в консоль.
 * Комментарий `# -*- coding: utf-8 -*-` устанавливает кодировку файла.
-* `#! venv/Scripts/python.exe` указывает интерпретатор Python. Важно для Windows.
+* `` указывает интерпретатор Python. Важно для Windows.
 
 
 **Улучшения:**

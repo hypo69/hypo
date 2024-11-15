@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers """
+MODE = 'debug'
+""" module: src.suppliers """
+MODE = 'debug'
 
 """ <b>Class</b> `Supplier` <b>Base class for all suppliers</b>
 Provides methods and attributes for a specific

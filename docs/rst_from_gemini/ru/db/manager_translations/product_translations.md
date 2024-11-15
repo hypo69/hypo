@@ -1,6 +1,6 @@
 ```
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Module: src.db.manager_translations.product_translations
 

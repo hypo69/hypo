@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/locator.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers """
+MODE = 'debug'
+""" module: src.suppliers """
+MODE = 'debug'
 from types import SimpleNamespace
 from __init__ import gs
 from src.utils.jjson import j_loads_ns

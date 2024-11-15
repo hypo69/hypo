@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/cdata/login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.cdata """
+MODE = 'debug'
+""" module: src.suppliers.cdata """
+MODE = 'debug'
 """   Интерфейс авторизации. Реализация для вебдрайвера
 
 @image html login.png

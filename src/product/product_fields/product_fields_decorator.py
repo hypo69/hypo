@@ -1,8 +1,10 @@
 ## \file hypotez/src/product/product_fields/product_fields_decorator.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.product.product_fields """
+MODE = 'debug'
+""" module: src.product.product_fields """
+MODE = 'debug'
 
 """ 
 @file src/suppliers/product_fields_decorator.py

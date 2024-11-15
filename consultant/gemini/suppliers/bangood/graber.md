@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/suppliers/bangood/graber.py
+## \file hypotez/consultant/gemini/suppliers/bangood/graber.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.suppliers.bangood """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.bangood """
 

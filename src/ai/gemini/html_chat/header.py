@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/gemini/html_chat/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.gemini.html_chat """
+MODE = 'debug'
+""" module: src.ai.gemini.html_chat """
+MODE = 'debug'
 
 """ Absolute path to modules  """
 

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/product/ttypes.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.product """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `ttypes.py` определяет тип данных `ProductType` используя `TypedDict` из `typing`. Это хороший подход для описания структуры данных для продукта.

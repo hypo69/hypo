@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/goog/drive/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.goog.drive """
+MODE = 'debug'
 Этот код определяет корневую директорию проекта `hypotez` и добавляет ее в путь поиска модулей Python (`sys.path`).  Проблема в том, как он это делает, и есть несколько потенциальных проблем:
 
 **Проблемы и улучшения:**
@@ -40,13 +45,12 @@
    * **Обработка ошибок:** Возвращает `None` при неудачном поиске, что предотвращает дальнейшую попытку использования неопределенного пути.  Обработка `RuntimeError` критически важна для надежности.
 
 
-2. **`#! venv/Scripts/python.exe`:**
+2. **``:**
    Эта часть кода (shebang) указывает интерпретатор Python, который нужно использовать. Это хорошо, но необходимо учитывать, что в Windows она не всегда работает корректно.  Если вы используете виртуальное окружение, предпочтительнее использовать `python` или `python3` без указания полного пути.
 
 **Полностью исправленный и улучшенный код:**
 
 ```python
-# -*- coding: utf-8 -*-
 import sys
 import os.path
 from pathlib import Path
@@ -62,8 +66,6 @@ if __root__ is None:
 sys.path.append(str(__root__))
 
 import os
-## \file hypotez/src/goog/drive/header.py
-# -*- coding: utf-8 -*-
 # ~~~~~~~~~~~~~
 """ module: src.goog.drive """
 

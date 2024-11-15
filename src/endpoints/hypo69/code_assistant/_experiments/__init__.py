@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/hypo69/code_assistant/_experiments/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.hypo69.code_assistant._experiments """
+MODE = 'debug'
+""" module: src.endpoints.hypo69.code_assistant._experiments """
+MODE = 'debug'
 
 from pathlib import Path
 import sys

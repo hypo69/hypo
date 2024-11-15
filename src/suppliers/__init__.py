@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers """
+MODE = 'debug'
+""" module: src.suppliers """
+MODE = 'debug'
 
 """
 Модуль поставщика. Класс `Supplier`

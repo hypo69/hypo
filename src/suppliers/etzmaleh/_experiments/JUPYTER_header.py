@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/etzmaleh/_experiments/JUPYTER_header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.etzmaleh._experiments """
+MODE = 'debug'
+""" module: src.suppliers.etzmaleh._experiments """
+MODE = 'debug'
 import sys
 import os
 from pathlib import Path

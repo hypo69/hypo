@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/_experiments/printer.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils._experiments """
+MODE = 'debug'
+""" module: src.utils._experiments """
+MODE = 'debug'
 # @title # function code
 
 import json

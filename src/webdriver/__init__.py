@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver """
+MODE = 'debug'
+""" module: src.webdriver """
+MODE = 'debug'
 
 
 import sys

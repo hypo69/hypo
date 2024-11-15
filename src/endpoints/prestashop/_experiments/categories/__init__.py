@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/_experiments/categories/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop._experiments.categories """
+MODE = 'debug'
+""" module: src.endpoints.prestashop._experiments.categories """
+MODE = 'debug'
 """   Модуль распределения категорий товара.  
 @details Модуль переводит категории поставщика `Supplier` в категории `Prestashop`
 Изначально все категории строятся из гугл таблиц 

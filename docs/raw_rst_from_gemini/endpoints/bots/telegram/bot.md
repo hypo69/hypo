@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.endpoints.bots.telegram """
 """! Module for interacting with Telegram using a simple bot interface. """
 

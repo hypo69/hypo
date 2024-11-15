@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/db/manager_coupons_and_sales/version.py
+## \file hypotez/consultant/gemini/db/manager_coupons_and_sales/version.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.db.manager_coupons_and_sales """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_coupons_and_sales """
 """ @namespace src.db.manager_coupons_and_sales """

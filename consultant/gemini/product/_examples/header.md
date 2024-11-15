@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/product/_examples/header.py
+## \file hypotez/consultant/gemini/product/_examples/header.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.product._examples """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.product._examples """
 import sys

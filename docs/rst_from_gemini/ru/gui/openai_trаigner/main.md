@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/gui/openai_trаigner/main.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ Модуль: src.gui.openai_trаigner """
 import sys

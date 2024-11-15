@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.settings """
 __version__: str = 'v1.1'
@@ -27,7 +27,7 @@ The missing part of the file path was `settings`.  I've replaced `_____________`
 
 * **File Structure:**  A well-structured project would likely have a `settings` directory. This directory would likely contain other configuration files, data or validation rules (and potentially more).
 
-* **`venv` Path:** The `#! venv/Scripts/python.exe` shebang line is crucial for executing scripts using a virtual environment.  The path should be correct for your setup.
+* **`venv` Path:** The `` shebang line is crucial for executing scripts using a virtual environment.  The path should be correct for your setup.
 
 * **Documentation:** While the example includes documentation placeholders, for a real-world project you would likely have more comprehensive `__doc__` and `__details__` information about the versioning scheme, its functionality or how it's used in the project.
 

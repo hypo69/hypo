@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` предназначен для определения метаданных проекта (имя, версия, автор и т.д.). Он пытается загрузить настройки из файла `settings.json` в директории `src`.  Это хороший подход, позволяющий централизовать конфигурацию.

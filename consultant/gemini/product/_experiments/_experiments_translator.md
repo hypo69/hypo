@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/product/_experiments/_experiments_translator.py
+## \file hypotez/consultant/gemini/product/_experiments/_experiments_translator.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.product._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.product._experiments """
 """ Переводы мультиязычных полей """

@@ -1,8 +1,10 @@
 ## \file hypotez/src/product/product_fields/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.product.product_fields """
+MODE = 'debug'
+""" module: src.product.product_fields """
+MODE = 'debug'
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

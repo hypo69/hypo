@@ -1,3 +1,8 @@
+## \file hypotez/src/webdriver/edge/extentions/test_extention/background.js
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver.edge.extentions.test_extention """
+MODE = 'debug'
 // background.js
 
 chrome.browserAction.onClicked.addListener(tab => {

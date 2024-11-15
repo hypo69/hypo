@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/db/_examples/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.db._examples """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.db._examples """
 """ @namespace src.db._examples """

@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_translations._tests """
 """ @namespace src.db.manager_translations._tests """
@@ -61,4 +61,4 @@ python version.py
 
 This will print the version, name, details, and author to the console.
 
-This improved version is much more robust and functional, as it now acts as a proper Python module. Remember to use a `venv` (virtual environment) for your project to isolate dependencies.  Using the correct `venv` path in `#! venv/Scripts/python.exe` is important.
+This improved version is much more robust and functional, as it now acts as a proper Python module. Remember to use a `venv` (virtual environment) for your project to isolate dependencies.  Using the correct `venv` path in `` is important.

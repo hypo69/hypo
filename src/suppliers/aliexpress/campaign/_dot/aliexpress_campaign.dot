@@ -1,3 +1,8 @@
+## \file hypotez/src/suppliers/aliexpress/campaign/_dot/aliexpress_campaign.dot
+# -*- coding: utf-8 -*-
+
+""" module: src.suppliers.aliexpress.campaign._dot """
+MODE = 'debug'
 digraph G {
     // Graph settings
     graph [rankdir=TB, size="8,10"];

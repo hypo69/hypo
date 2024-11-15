@@ -14,7 +14,7 @@
 ```python
 ## \file hypotez/src/endpoints/bots/discord/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.bots.discord """
 
@@ -29,7 +29,7 @@ sys.path.append (__root__)
 
 * **`# -*- coding: utf-8 -*-`:** Директива, указывающая интерпретатору Python использовать кодировку UTF-8 для файла.
 
-* **`#! venv/Scripts/python.exe # <- venv win`:**  Эта строка предназначена для Windows и указывает на интерпретатор Python, который нужно использовать.  `venv/Scripts/python.exe` предполагает, что у вас есть виртуальное окружение (`venv`).  Это важно для правильного запуска скрипта.
+* **` # <- venv win`:**  Эта строка предназначена для Windows и указывает на интерпретатор Python, который нужно использовать.  `venv/Scripts/python.exe` предполагает, что у вас есть виртуальное окружение (`venv`).  Это важно для правильного запуска скрипта.
 
 * **`""" module: src.endpoints.bots.discord """`:** Строка документации, описывающая модуль.  Хорошая практика для понимания назначения файла.
 

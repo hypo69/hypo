@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/graber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers """
+MODE = 'debug'
+""" module: src.suppliers """
+MODE = 'debug'
 """ Базовый класс сбора данных со старницы для всех поставщиков
 """
 

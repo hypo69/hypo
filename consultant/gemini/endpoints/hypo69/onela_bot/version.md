@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/hypo69/onela_bot/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.hypo69.onela_bot """
+MODE = 'debug'
 **Результат проверки:**
 
 Файл `version.py` пытается прочитать настройки из файла `settings.json` в родительской директории. Это потенциально хрупкий подход.

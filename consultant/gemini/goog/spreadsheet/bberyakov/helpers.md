@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
+## \file hypotez/consultant/gemini/goog/spreadsheet/bberyakov/helpers.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog.spreadsheet.bberyakov """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog.spreadsheet.bberyakov """
 """ перевод цветовых форматов.

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/goog/spreadsheet/bberyakov/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.goog.spreadsheet.bberyakov """
+MODE = 'debug'
 The provided Python code snippet is a module initialization file (`__init__.py`) for a package dedicated to manipulating Google Sheets.  Let's break down its strengths, weaknesses, and areas for improvement:
 
 **Strengths:**
@@ -9,7 +14,7 @@ The provided Python code snippet is a module initialization file (`__init__.py`)
 
 **Weaknesses:**
 
-* **Unnecessary `#! venv/Scripts/python.exe`:** This shebang line (`#!`) is only needed in scripts that you intend to run directly from the command line, not in module initialization files.  It's likely leftover from a script, and it's *not* required or appropriate for `__init__.py`.  Removing this line is crucial, especially when dealing with virtual environments.
+* **Unnecessary ``:** This shebang line (`#!`) is only needed in scripts that you intend to run directly from the command line, not in module initialization files.  It's likely leftover from a script, and it's *not* required or appropriate for `__init__.py`.  Removing this line is crucial, especially when dealing with virtual environments.
 * **Inconsistent Docstring Formatting:** While the docstring is useful, the formatting could be improved for better readability.  Use consistent formatting across all docstring lines and consider using Sphinx-compatible reStructuredText markup for better documentation.  For example, the `@namespace` and `@package` syntax is not standard Python docstring formatting.  Use standard Python docstring conventions for clarity.
 * **Missing `__all__` Variable:**  If you intend for the functions or classes to be directly accessible from `import *`, you must include the `__all__` variable.  This is standard practice. Without it, `import *` could lead to problems if it isn't expected.
 

@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/chrome/extentions/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.chrome.extentions """
+MODE = 'debug'
+""" module: src.webdriver.chrome.extentions """
+MODE = 'debug'
 
 """ """
 ...

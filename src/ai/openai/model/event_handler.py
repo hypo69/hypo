@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/openai/model/event_handler.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.openai.model """
+MODE = 'debug'
+""" module: src.ai.openai.model """
+MODE = 'debug'
 
 """ https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """
 

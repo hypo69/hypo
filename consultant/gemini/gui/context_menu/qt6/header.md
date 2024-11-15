@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/gui/context_menu/qt6/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.gui.context_menu.qt6 """
+MODE = 'debug'
 Этот код определяет переменную `__root__`, которая представляет собой путь к корню проекта "hypotez".  Он затем добавляет этот путь к пути поиска модулей Python (`sys.path`).  Это важно, чтобы Python мог импортировать модули, находящиеся в подпапках проекта.
 
 **Критические замечания:**

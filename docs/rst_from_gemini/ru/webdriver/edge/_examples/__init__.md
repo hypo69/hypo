@@ -14,7 +14,7 @@
 ```python
 ## \file hypotez/src/webdriver/edge/_examples/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.webdriver.edge._examples """
 
@@ -28,7 +28,7 @@ from .version import __version__, __doc__, __details__
 **Анализ:**
 
 * `# -*- coding: utf-8 -*-`: Указание кодировки файла как UTF-8.
-* `#! venv/Scripts/python.exe`:  Указание интерпретатора Python.  Это *очень* важно в Windows, указывается полная командная строка, используемая для запуска файла, как правило, из виртуального окружения.
+* ``:  Указание интерпретатора Python.  Это *очень* важно в Windows, указывается полная командная строка, используемая для запуска файла, как правило, из виртуального окружения.
 * `""" module: src.webdriver.edge._examples """`: Строка документации, описывающая модуль.
 * `""" """`:  Пустая строка документации, что указывает на возможную ошибку или пропуск в документировании.  Необходимо проверить, что такое пустое docstring нужно оставить, или нужно исправить.
 * `from packaging.version import Version`: Импортирует функцию `Version` из модуля `packaging.version` для работы с версиями.

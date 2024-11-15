@@ -1,8 +1,10 @@
 ## \file hypotez/src/db/_experiments/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db._experiments """
+MODE = 'debug'
+""" module: src.db._experiments """
+MODE = 'debug'
 """ @namespace src.db._experiments """
 import sys, os
 from pathlib import Path

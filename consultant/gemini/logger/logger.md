@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/logger/logger.py
+## \file hypotez/consultant/gemini/logger/logger.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.logger """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.logger """
 

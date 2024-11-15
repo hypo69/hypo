@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/ai/helicone/helicone.py
+## \file hypotez/consultant/gemini/ai/helicone/helicone.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.ai.helicone """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.ai.helicone """
 """! This module provides functionality for interacting with the Helicone AI API.  

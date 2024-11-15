@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/utils/collect_hierarhy.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.utils """
 """! This script recursively traverses the 'src' directory, collects the file hierarchy, and saves it as a JSON file, excluding specific directories and files, and including only .py, .json, .md, .dot, and .mer files. It also copies the found files to the 'project_structure' directory, maintaining the hierarchy."""

@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.gemini """
+MODE = 'debug'
+""" module: src.ai.gemini """
+MODE = 'debug'
 """Google generative AI integration."""
 
 import time

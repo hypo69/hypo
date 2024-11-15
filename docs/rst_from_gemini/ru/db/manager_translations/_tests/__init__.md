@@ -13,7 +13,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_translations._tests """
 """ @namespace src.db.manager_translations._tests """
@@ -28,7 +28,7 @@ from .version import __version__, __doc__, __details__
 **Комментарии:**
 
 * **`# -*- coding: utf-8 -*-`**:  Устанавливает кодировку файла в UTF-8.
-* **`#! venv/Scripts/python.exe`**:  Указывает интерпретатор Python.  Это важно для Windows, чтобы указать, какой исполняемый файл Python использовать.  Стоит убедиться, что в переменных окружения `PATH` указан корректный путь до `venv/Scripts/`.
+* **``**:  Указывает интерпретатор Python.  Это важно для Windows, чтобы указать, какой исполняемый файл Python использовать.  Стоит убедиться, что в переменных окружения `PATH` указан корректный путь до `venv/Scripts/`.
 * **`""" module: src.db.manager_translations._tests """`**:  Строка документации, определяющая модуль.
 * **`""" @namespace src.db.manager_translations._tests """`**:  Строка документации, определяющая пространство имён.
 * **`""" """`**:  Пустая строка документации. Возможно, она не нужна и должна быть удалена.

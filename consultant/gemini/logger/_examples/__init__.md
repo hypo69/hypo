@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/logger/_examples/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.logger._examples """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.logger._examples """
 
@@ -18,7 +21,7 @@ from .version import __version__, __doc__, __details__
 The original code snippet was incomplete and lacked essential parts for a Python module.  The improved code provides a basic structure, essential for any Python module:
 
 * **Correct File Header:** The `# -*- coding: utf-8 -*-` line is crucial for handling UTF-8 characters in the file.
-* **Shebang (Optional but good practice):**  The `#! venv/Scripts/python.exe` line is a shebang.  It's *optional* and useful for Windows systems. If you run your script from the command line, it tells the OS which Python interpreter to use.  Remove this line if you're not using a virtual environment or if you're sure the Python interpreter is correctly configured on your system.
+* **Shebang (Optional but good practice):**  The `` line is a shebang.  It's *optional* and useful for Windows systems. If you run your script from the command line, it tells the OS which Python interpreter to use.  Remove this line if you're not using a virtual environment or if you're sure the Python interpreter is correctly configured on your system.
 * **Docstring:** The docstring for the module is present, which is essential for documentation and helps in understanding the purpose of the module.
 * **Empty Docstring:** The  `""" """` block is now consistent with proper Python docstring syntax.  This will be ignored by the interpreter but is useful for documentation tools, especially for docstrings.
 * **Import Statements:** The import statements are now valid and complete.  This assumes the `__init__.py` file is part of a package and there's an `__init__.py` file in the parent directory (hypotez/src/logger) as well as a `version.py` file within the `_examples` directory.

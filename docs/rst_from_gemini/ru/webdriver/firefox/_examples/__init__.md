@@ -13,7 +13,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.webdriver.firefox._examples """
 """ Firefox examples """
@@ -26,7 +26,7 @@ from .version import __version__, __doc__, __details__
 **Примечания:**
 
 * `# -*- coding: utf-8 -*-`:  Устанавливает кодировку файла в UTF-8.
-* `#! venv/Scripts/python.exe`:  Устанавливает интерпретатор Python для этого файла (для Windows).  Это важная часть, если скрипт запускается напрямую.
+* ``:  Устанавливает интерпретатор Python для этого файла (для Windows).  Это важная часть, если скрипт запускается напрямую.
 * `""" module: src.webdriver.firefox._examples """` и `""" Firefox examples """`:  Строки документации для модуля.  Они важны для генерации документации и отображения информации о нём в системах помощи.
 * `from packaging.version import Version`: Импорт класса `Version` для работы с версиями.
 * `from .version import __version__, __doc__, __details__`: Импорт переменных `__version__`, `__doc__` и `__details__` из файла `version.py` (вероятно, в той же папке).  Это стандартная практика для хранения метаданных, таких как версия, описание и прочие детали модуля или пакета.

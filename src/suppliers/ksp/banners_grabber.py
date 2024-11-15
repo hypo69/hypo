@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/ksp/banners_grabber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.ksp """
+MODE = 'debug'
+""" module: src.suppliers.ksp """
+MODE = 'debug'
 """   Собираю баннеры ksp
 
 

@@ -1,3 +1,8 @@
+## \file hypotez/src/webdriver/firefox/extentions/test_extention/background.js
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver.firefox.extentions.test_extention """
+MODE = 'debug'
 // background.js
 
 browser.browserAction.onClicked.addListener((tab) => {

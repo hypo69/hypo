@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/gearbest/__gearbest__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.gearbest """
+MODE = 'debug'
+""" module: src.suppliers.gearbest """
+MODE = 'debug'
 """   [File's Description]
 
 

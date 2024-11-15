@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/goog/gtranslater/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog.gtranslater """
+MODE = 'debug'
+```python
 """ module: src.goog.gtranslater """
 """ This module handles language translation using Google Translate API. It includes a function to translate text with automatic language detection for the input text if not specified."""
 

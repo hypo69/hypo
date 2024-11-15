@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/scenario/_experiments/dict_scenarios.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.scenario._experiments """
+MODE = 'debug'
 Этот файл `dict_scenarios.py` определяет словарь `scenario`, содержащий конфигурацию сценариев для какой-то программы (вероятно, для парсинга товаров с Amazon и импорта в PrestaShop).
 
 **Анализ файла:**

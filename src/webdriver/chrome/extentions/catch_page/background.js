@@ -1,3 +1,8 @@
+## \file hypotez/src/webdriver/chrome/extentions/catch_page/background.js
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver.chrome.extentions.catch_page """
+MODE = 'debug'
 // background.js
 
 chrome.action.onClicked.addListener((tab) => {

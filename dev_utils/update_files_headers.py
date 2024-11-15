@@ -1,8 +1,38 @@
 ## \file hypotez/dev_utils/update_files_headers.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: dev_utils """
+MODE = 'debug'
+""" module: dev_utils """
+
+# Описание:
+# Этот скрипт предназначен для обработки Python файлов в проекте "hypotez" с целью добавления или замены 
+# заголовков, строк интерпретаторов и строк документации. Он выполняет обход всех файлов в проекте и 
+# при необходимости обновляет их, добавляя информацию о проекте, интерпретаторе и метаданных.
+#
+# Скрипт позволяет:
+# - Идентифицировать корневую папку проекта
+# - Найти и добавить строку кодировки
+# - Добавить строки с интерпретатором для Windows и Linux
+# - Добавить строку документации для модуля
+# - Установить значение режима работы проекта
+#
+# Примеры запуска:
+#
+# 1. Стандартный запуск (с обходом всех файлов в проекте):
+#    python update_files_headers.py
+#
+# 2. Принудительное обновление файлов, даже если заголовки уже присутствуют:
+#    python update_files_headers.py --force-update
+#
+# 3. Указание конкретной директории проекта для обработки:
+#    python update_files_headers.py -p /path/to/project
+#
+# 4. Исключение директории "venv" из обработки:
+#    python update_files_headers.py --exclude-venv
+#
+
+MODE = 'debug'
 
 import os
 import argparse
@@ -10,7 +40,7 @@ from pathlib import Path
 import sys
 import platform
 
-PROJECT_ROOT_FOLDER = 'hypotez'
+PROJECT_ROOT_FOLDER = os.path.abspath('../../hypotez')
 
 EXCLUDE_DIRS = ['venv', 'tmp', 'docs', 'data', '__pycache__']  # Добавим дополнительные папки для исключения
 
@@ -65,15 +95,17 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
     w_venv_interpreter, w_system_interpreter, linux_venv_interpreter, linux_system_interpreter = get_interpreter_paths(project_root)
     
     # Формируем строки для интерпретаторов
-    w_venv_interpreter_line = f'#! {w_venv_interpreter} # <- venv win\n'
-    w_system_interpreter_line = f'#! {w_system_interpreter} # <- system win\n'
-    linux_venv_interpreter_line = f'#! {linux_venv_interpreter} # <- venv linux/macos\n'
-    linux_system_interpreter_line = f'#! {linux_system_interpreter} # <- system linux/macos\n'
+    w_venv_interpreter_line = f'#! {w_venv_interpreter}\n'
+    # w_system_interpreter_line = f'#! {w_system_interpreter}
+    linux_venv_interpreter_line = f'#! {linux_venv_interpreter}\n'
+    # linux_system_interpreter_line = f'#! {linux_system_interpreter}
     closing_line = '## ~~~~~~~~~~~~~\n'
     
-    # Создаем строку документации модуля и заменяем символы `/` на `.`
+    # Создаем строку документации модуля и заменяем символы `/` на `.` 
     module_path = relative_path.parent.as_posix().replace('/', '.')
     module_docstring = f'""" module: {module_path} """\n'
+
+    mode_line = "MODE = 'debug'\n"
 
     print(f"Processing file: {file_path}")
 
@@ -87,18 +119,19 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
                 line for line in cleaned_lines
                 if not (line.startswith("## \\file")
                         or line.startswith("# -*- coding")
-                        or line.startswith("#!")
-                        or line.startswith("## ~~~~~~~~~~~~~")
-                        or line.strip().startswith('""" module:'))
+                        or line.startswith("#!"))
+                        or line.strip().startswith('""" module:')
+                        or line.strip().startswith('MODE:')
             ]
 
             # Проверка необходимости обновления
             header_needs_update = not any(line == header_line for line in filtered_lines)
             coding_needs_update = not any(line == coding_index for line in filtered_lines)
             venv_interpreter_needs_update = not any(line == w_venv_interpreter_line or line == linux_venv_interpreter_line for line in filtered_lines)
-            system_interpreter_needs_update = not any(line == w_system_interpreter_line or line == linux_system_interpreter_line for line in filtered_lines)
-            closing_needs_update = not any(line == closing_line for line in filtered_lines)
+            #system_interpreter_needs_update = not any(line == w_system_interpreter_line or line == linux_system_interpreter_line for line in filtered_lines)
+            #closing_needs_update = not any(line == closing_line for line in filtered_lines)
             module_docstring_needs_update = not any(line.strip() == module_docstring.strip() for line in filtered_lines)
+            mode_needs_update = not any(line.strip() == mode_line.strip() for line in filtered_lines)
 
             # Если force_update включен, всегда обновляем
             if force_update:
@@ -106,8 +139,9 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
                 coding_needs_update = True
                 venv_interpreter_needs_update = True
                 system_interpreter_needs_update = True
-                closing_needs_update = True
+                #closing_needs_update = True
                 module_docstring_needs_update = True
+                mode_needs_update = True
 
             # Добавляем новые строки заголовка, если это необходимо
             new_lines = []
@@ -118,14 +152,15 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
             if venv_interpreter_needs_update:
                 new_lines.append(w_venv_interpreter_line)
                 #new_lines.append(linux_venv_interpreter_line)
-            if system_interpreter_needs_update:
-                # new_lines.append(w_system_interpreter_line)
-                # new_lines.append(linux_system_interpreter_line)
-                ...
-            if closing_needs_update:
-                new_lines.append(closing_line)
+            # if system_interpreter_needs_update:
+            #     new_lines.append(w_system_interpreter_line)
+            #     new_lines.append(linux_system_interpreter_line)
+            # if closing_needs_update:
+            #     new_lines.append(closing_line)
             if module_docstring_needs_update:
                 new_lines.append(module_docstring)
+            if mode_needs_update:
+                new_lines.append(mode_line)
 
             # Запись изменений в файл
             if new_lines:
@@ -135,13 +170,13 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
                 print(f"Updated {file_path} successfully.")
             else:
                 print(f"No updates necessary for {file_path}.")
-
+                
     except IOError as ex:
         print(f"Error processing file {file_path}: {ex}")
 
 
 def traverse_and_update(directory: Path, force_update: bool, exclude_venv: bool):
-    """Traverses downwards from the given directory ('hypotez') and processes Python files."""
+    """Traverses downwards from the given directory ('hypotez') and processes Python files.""" 
     print(f"Traversing directory: {directory}")
 
     for root, dirs, files in os.walk(directory):
@@ -149,38 +184,28 @@ def traverse_and_update(directory: Path, force_update: bool, exclude_venv: bool)
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
 
         for file in files:
-            if file.endswith('.py'):
+            if file.endswith(('.py', '.ps1', '.md', '.html', '.js', '.dot')):  # Добавлено условие для новых типов файлов
                 file_path = os.path.join(root, file)
                 add_or_replace_file_header(file_path, directory, force_update)
 
+
+
 def main():
     """Main function to execute the script."""
+    print("Start updating files header")
     parser = argparse.ArgumentParser(description="Process Python files in the 'hypotez' project.")
     parser.add_argument('--force-update', action='store_true', help="Force update the headers and interpreter lines even if they already match.")
-    parser.add_argument('-p', '--project-dir', type=str, help="Path to the project directory.")
-    parser.add_argument('--exclude-venv', action='store_true', default=True, help="Exclude 'venv' directory from processing. Default is True.")
-
+    parser.add_argument('-p', '--project', type=Path, default=Path(os.getcwd()), help="Path to the project root folder.")
+    parser.add_argument('--exclude-venv', action='store_true', help="Exclude 'venv' directory from processing.")
     args = parser.parse_args()
 
-    # Преобразуем путь к проекту в объект Path
-    if args.project_dir:
-        project_dir = Path(args.project_dir).resolve()
-    else:
-        # Если проектная директория не указана, ищем проект выше
-        try:
-            project_dir = find_project_root(Path(__file__).parent, PROJECT_ROOT_FOLDER)
-        except FileNotFoundError as ex:
-            print(ex)
-            return
+    # Получаем корень проекта
+    try:
+        project_root = find_project_root(args.project, PROJECT_ROOT_FOLDER)
+        print(f'{project_root=}')
+        traverse_and_update(project_root, args.force_update, args.exclude_venv)
+    except FileNotFoundError as ex:
+        print(f"Error: {ex}")
 
-    # Проверка существования директории проекта
-    if not project_dir.exists():
-        print(f"Error: The specified project directory does not exist: {project_dir}")
-        return
-
-    print(f"Starting downward traversal from: {project_dir}")
-    traverse_and_update(project_dir, args.force_update, args.exclude_venv)
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

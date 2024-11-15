@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/utils/collect_hierarhy.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.utils """
+MODE = 'debug'
+```python
 """
 This script recursively traverses the 'src' directory, collects the file hierarchy,
 and saves it as a JSON file, excluding specific directories and files, and

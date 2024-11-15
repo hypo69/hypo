@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/scenarios/login.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.advertisement.facebook.scenarios """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.advertisement.facebook.scenarios """
 """ Facebook login scenario """

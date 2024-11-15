@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/locales.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.utils """
 """ Module for loading locales data from JSON file.

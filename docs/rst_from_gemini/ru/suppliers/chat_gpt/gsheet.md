@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/gsheet.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.chat_gpt """
 """ AliExpress Campaign Editor via Google Sheets """

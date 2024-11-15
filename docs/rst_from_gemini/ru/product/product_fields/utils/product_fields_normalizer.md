@@ -7,7 +7,7 @@
 ```python
 ## \file hypotez/src/product/product_fields/utils/product_fields_normalizer.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.product.product_fields.utils """
 """! Этот модуль содержит функции для нормализации данных о продуктах.  Он преобразует 

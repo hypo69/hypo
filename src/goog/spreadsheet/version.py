@@ -1,8 +1,10 @@
 ## \file hypotez/src/goog/spreadsheet/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog.spreadsheet """
+MODE = 'debug'
+""" module: src.goog.spreadsheet """
+MODE = 'debug'
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/hypo69/code_assistant/_experiments/openai_bot.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.hypo69.code_assistant._experiments """
+MODE = 'debug'
+""" module: src.endpoints.hypo69.code_assistant._experiments """
+MODE = 'debug'
 
 Модуль для экспериментов с моделью AI OpenAI. Он обрабатывает исходный код или документацию, отправляет его в модель для анализа и получения ответов.
 

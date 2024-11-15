@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/pricelist.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop """
+MODE = 'debug'
+""" module: src.endpoints.prestashop """
+MODE = 'debug'
 import sys
 import os
 from attr import attr, attrs

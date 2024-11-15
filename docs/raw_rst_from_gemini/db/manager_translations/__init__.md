@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_translations """
 """ Менеджер переводов """
@@ -32,7 +32,7 @@ from .category_translations import CategoryTranslationsManager
 
 3. **`if __name__ == "__main__":` block (optional):** This block is now included as a *template* to demonstrate how to use the `__version__` variable, which is often useful for scripts or testing.  Remove or modify as needed for your specific use case.
 
-4. **`#! venv/Scripts/python.exe`:** This shebang line is preserved as it's likely needed for your specific environment. However, it might be better to use an appropriate `python` file for your virtual environment.
+4. **``:** This shebang line is preserved as it's likely needed for your specific environment. However, it might be better to use an appropriate `python` file for your virtual environment.
 
 5. **Import order:**  Import `packaging.version` and then your internal modules.
 

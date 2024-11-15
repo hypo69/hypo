@@ -1,5 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/prestashop/api_schemas/__init__.md
 # -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop.api_schemas """
+MODE = 'debug'
+```python
 """
 Module: src.endpoints.prestashop.api_schemas
 Schemas for building PrestaShop API.

@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/wallmart/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.wallmart """
+MODE = 'debug'
+""" module: src.suppliers.wallmart """
+MODE = 'debug'
 
 """
 - `__version__`: This variable holds the version of the module or package.

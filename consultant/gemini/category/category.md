@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/category/category.py
+## \file hypotez/consultant/gemini/category/category.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.category """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.category """
 """ @namespace src.category """

@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/chrome/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.chrome """
+MODE = 'debug'
+""" module: src.webdriver.chrome """
+MODE = 'debug'
 import sys
 from pathlib import Path
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:

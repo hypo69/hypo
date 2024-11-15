@@ -1,5 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/prestashop/api_schemas/api_resourses_list.md
 # -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop.api_schemas """
+MODE = 'debug'
+```python
 """ module: src.endpoints.prestashop.api_schemas """
 """ Список всех доступных ресурсов для API вызовов"""
 

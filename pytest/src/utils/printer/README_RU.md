@@ -1,3 +1,8 @@
+## \file hypotez/pytest/src/utils/printer/README_RU.md
+# -*- coding: utf-8 -*-
+
+""" module: pytest.src.utils.printer """
+MODE = 'debug'
 ## Руководство для тестера
 
 ### Введение

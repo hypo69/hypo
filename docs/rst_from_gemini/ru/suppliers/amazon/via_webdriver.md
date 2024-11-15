@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/amazon/via_webdriver.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.amazon """
 """  Модуль сбора товаров со страницы категорий поставщика amazon.com через вебдрайвер.

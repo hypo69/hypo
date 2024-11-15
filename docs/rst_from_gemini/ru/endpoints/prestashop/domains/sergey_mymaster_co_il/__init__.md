@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop.domains.sergey_mymaster_co_il """
 """    Client's websites
@@ -46,7 +46,7 @@ And your `__init__.py` would import it:
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop.domains.sergey_mymaster_co_il """
 """    Client's websites

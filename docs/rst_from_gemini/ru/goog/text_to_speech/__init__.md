@@ -15,7 +15,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.goog.text_to_speech """
 """ Google TTS """

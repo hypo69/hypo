@@ -1,8 +1,11 @@
+## \file hypotez/consultant/gemini/ai/helicone/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai.helicone """
+MODE = 'debug'
 The code snippet has a potential issue in the path construction and a couple of stylistic improvements.
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.helicone """
 

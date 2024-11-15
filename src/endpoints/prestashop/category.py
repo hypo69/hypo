@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop """
+MODE = 'debug'
+""" module: src.endpoints.prestashop """
+MODE = 'debug'
 """ Class of product category in `Prestashop`
 The class provides methods for adding, deleting, updating categories, 
 as well as obtaining a list of parent categories from a given one.

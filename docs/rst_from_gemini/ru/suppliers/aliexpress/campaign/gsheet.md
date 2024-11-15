@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/gsheet.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.campaign """
 

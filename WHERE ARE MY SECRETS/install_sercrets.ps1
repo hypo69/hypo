@@ -1,3 +1,8 @@
+## \file hypotez/WHERE ARE MY SECRETS/install_sercrets.ps1
+# -*- coding: utf-8 -*-
+
+""" module: WHERE ARE MY SECRETS """
+MODE = 'debug'
 # Create the 'secrets' folder in the root of the project
 New-Item -ItemType Directory -Path "..\..\secrets"
 

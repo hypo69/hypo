@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/suppliers/aliexpress/affiliated_products_generator.py
+## \file hypotez/consultant/gemini/suppliers/aliexpress/affiliated_products_generator.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.suppliers.aliexpress """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress """
 import asyncio

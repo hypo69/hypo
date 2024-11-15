@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/playwright/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.playwright """
+MODE = 'debug'
+""" module: src.webdriver.playwright """
+MODE = 'debug'
 """ Обёртка для Playwrid crawler"""
 
 import sys

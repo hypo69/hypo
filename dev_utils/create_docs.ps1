@@ -1,3 +1,8 @@
+## \file hypotez/dev_utils/create_docs.ps1
+# -*- coding: utf-8 -*-
+
+""" module: dev_utils """
+MODE = 'debug'
 sphinx-apidoc -o docs/sphinx src --force --separate
 
 # Переходим в директорию docs/sphinx

@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_categories """
 """ This module provides classes for managing categories from different suppliers.
@@ -36,7 +36,7 @@ Example of a more detailed docstring (incorporating some of the above):
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_categories """
 """ This module provides classes for managing categories from different suppliers

@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/chrome/_experiments/1st_steps.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.chrome._experiments """
+MODE = 'debug'
+""" module: src.webdriver.chrome._experiments """
+MODE = 'debug'
 
 
 from selenium import webdriver

@@ -13,7 +13,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.iop """
 # # -*- coding: utf-8 -*-

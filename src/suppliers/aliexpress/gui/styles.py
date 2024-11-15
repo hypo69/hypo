@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/gui/styles.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.gui """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.gui """
+MODE = 'debug'
 """ Common styling functions for UI elements """
 
 from PyQt6 import QtWidgets

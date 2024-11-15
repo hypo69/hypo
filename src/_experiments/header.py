@@ -1,8 +1,10 @@
 ## \file hypotez/src/_experiments/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src._experiments """
+MODE = 'debug'
+""" module: src._experiments """
+MODE = 'debug'
 
 """ Absolute path to modules  """
 

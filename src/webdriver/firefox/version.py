@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/firefox/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.firefox """
+MODE = 'debug'
+""" module: src.webdriver.firefox """
+MODE = 'debug'
 
 """
 - `__version__`: This variable holds the version of the module or package.

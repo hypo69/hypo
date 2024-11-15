@@ -15,7 +15,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/shop.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop """
 

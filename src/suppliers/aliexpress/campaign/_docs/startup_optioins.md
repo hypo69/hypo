@@ -1,7 +1,10 @@
+## \file hypotez/src/suppliers/aliexpress/campaign/_docs/startup_optioins.md
+# -*- coding: utf-8 -*-
+
+""" module: src.suppliers.aliexpress.campaign._docs """
+MODE = 'debug'
 
 ```python
-## \file src/suppliers/aliexpress/campaigns/prepare_campaigns.py
-# -*- coding: utf-8 -*-
 
 """ Prepare all material in the 'aliexpress/campaigns' directories for advertising campaigns 
 <pre>

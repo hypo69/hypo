@@ -1,8 +1,10 @@
 ## \file hypotez/src/goog/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog """
+MODE = 'debug'
+""" module: src.goog """
+MODE = 'debug'
 
 """ Google API.
 ИИ Generative AI находится в src.ai."""

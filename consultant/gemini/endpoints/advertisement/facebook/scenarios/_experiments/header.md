@@ -1,8 +1,11 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/scenarios/_experiments/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement.facebook.scenarios._experiments """
+MODE = 'debug'
 The code you've provided attempts to add the project root directory to Python's module search path.  However, it has a few potential problems and areas for improvement:
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.advertisement.facebook.scenarios._experiments """
 

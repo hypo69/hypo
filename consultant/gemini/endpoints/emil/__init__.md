@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/emil/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.emil """
+MODE = 'debug'
 **Результат проверки:**
 
 Файл `hypotez/src/endpoints/emil/__init__.py` выглядит корректным.  Он импортирует необходимые модули, включая `EmilDesign` из подмодуля `emil_design`.
@@ -27,8 +32,6 @@ from .emil_design import EmilDesign
 **Пример улучшенного кода (с учетом рекомендаций):**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 """
 Module providing endpoints related to Emil.
 

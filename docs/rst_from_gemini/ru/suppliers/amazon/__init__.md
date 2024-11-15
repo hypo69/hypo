@@ -12,7 +12,7 @@
 ```python
 ## \file hypotez/src/suppliers/amazon/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.amazon """
 

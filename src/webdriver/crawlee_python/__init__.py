@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/crawlee_python/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.crawlee_python """
+MODE = 'debug'
+""" module: src.webdriver.crawlee_python """
+MODE = 'debug'
 import sys
 from pathlib import Path
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:

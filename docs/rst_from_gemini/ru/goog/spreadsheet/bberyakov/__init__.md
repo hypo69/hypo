@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ Module: src.goog.spreadsheet.bberyakov """
 """ Google Sheets manipulation library. """

@@ -1,3 +1,8 @@
+## \file hypotez/src/scenario/_dot/executor.dot
+# -*- coding: utf-8 -*-
+
+""" module: src.scenario._dot """
+MODE = 'debug'
 Here’s a detailed dependency tree for the `executor.py` module, showing how different functions and methods relate to one another:
 
 ### Dependency Tree for `executor.py`

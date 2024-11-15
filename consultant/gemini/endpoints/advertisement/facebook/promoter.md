@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/advertisement/facebook/promoter.py
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/promoter.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.advertisement.facebook """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.advertisement.facebook """
 

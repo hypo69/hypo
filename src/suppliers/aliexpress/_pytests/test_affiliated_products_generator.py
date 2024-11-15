@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress._pytests """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress._pytests """
+MODE = 'debug'
 
 """ YOU MUST WRITE A DESCRIPTION !
 This script contains the following:

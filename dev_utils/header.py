@@ -1,8 +1,10 @@
 ## \file hypotez/dev_utils/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: dev_utils """
+MODE = 'debug'
+""" module: dev_utils """
+MODE = 'debug'
 
 """! Module to set the project root path """
 import json

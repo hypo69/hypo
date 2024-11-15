@@ -13,7 +13,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop._examples """
 
@@ -27,7 +27,7 @@ from .version import __version__, __doc__, __details__
 **Разбор:**
 
 * `# -*- coding: utf-8 -*-`:  Указание кодировки файла как UTF-8.
-* `#! venv/Scripts/python.exe`:  Указание интерпретатора Python.  Это важно для Windows, так как скрипт может быть исполняемым.  `venv` указывает на виртуальное окружение Python.
+* ``:  Указание интерпретатора Python.  Это важно для Windows, так как скрипт может быть исполняемым.  `venv` указывает на виртуальное окружение Python.
 * `""" module: src.endpoints.prestashop._examples """`:  Строка документации, описывающая модуль.
 * `""" """`:  Пустая строка документации, потенциально означающая, что подробная документация может быть добавлена позже.
 * `from packaging.version import Version`: Импортирует класс `Version` для работы с версиями пакетов.

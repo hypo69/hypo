@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/credentials.py
+## \file hypotez/consultant/gemini/credentials.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src """
 """ Global Project Settings: paths, passwords, logins, and API settings.

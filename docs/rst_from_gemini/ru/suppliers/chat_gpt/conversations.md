@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/conversations.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.chat_gpt - Содержит класс для обработки и сохранения диалогов из чата GPT. """
 

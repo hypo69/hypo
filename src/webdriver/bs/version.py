@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/bs/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.bs """
+MODE = 'debug'
+""" module: src.webdriver.bs """
+MODE = 'debug'
 
 """
 - `__version__`: This variable holds the version of the module or package.

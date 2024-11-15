@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/gui/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.gui """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.gui """
+MODE = 'debug'
 
 """
 - `__version__`: This variable holds the version of the module or package.

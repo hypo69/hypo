@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/morlevi/graber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.morlevi """
+MODE = 'debug'
+""" module: src.suppliers.morlevi """
+MODE = 'debug'
 
 
 import asyncio

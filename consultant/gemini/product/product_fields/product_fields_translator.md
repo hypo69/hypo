@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/product/product_fields/product_fields_translator.py
+## \file hypotez/consultant/gemini/product/product_fields/product_fields_translator.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.product.product_fields """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.product.product_fields """
 

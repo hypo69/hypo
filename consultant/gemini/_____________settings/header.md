@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/_____________settings/header.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini._____________settings """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.settings """
 

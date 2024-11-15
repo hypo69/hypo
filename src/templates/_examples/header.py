@@ -1,8 +1,10 @@
 ## \file hypotez/src/templates/_examples/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.templates._examples """
+MODE = 'debug'
+""" module: src.templates._examples """
+MODE = 'debug'
 import sys
 import os
 from pathlib import Path

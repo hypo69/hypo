@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Shows basic usage of the Apps Script API.
 Call the Apps Script API to create a new script project, upload a file to the

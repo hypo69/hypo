@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/utils/ensure_https.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.utils """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.utils """
+MODE = 'debug'
 
 
 """ Ensures that the provided URL string(s) contain the https:// prefix. 

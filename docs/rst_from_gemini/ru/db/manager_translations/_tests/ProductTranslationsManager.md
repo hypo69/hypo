@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/db/manager_translations/_tests/ProductTranslationsManager.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ Модуль: src.db.manager_translations._tests """
 """ @namespace src.db.manager_translations._tests """
 import unittest

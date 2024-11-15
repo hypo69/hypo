@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/jjson.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
+MODE = 'debug'
+""" module: src.utils """
+MODE = 'debug'
 
 """
 Module for handling JSON and CSV files, including loading, dumping, and merging data.

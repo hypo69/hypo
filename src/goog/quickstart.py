@@ -1,8 +1,10 @@
 ## \file hypotez/src/goog/quickstart.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog """
+MODE = 'debug'
+""" module: src.goog """
+MODE = 'debug'
 """
 Shows basic usage of the Apps Script API.
 Call the Apps Script API to create a new script project, upload a file to the

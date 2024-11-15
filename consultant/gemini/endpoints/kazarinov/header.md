@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/kazarinov/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.kazarinov """
+MODE = 'debug'
 ```
 Code Review of hypotez/src/endpoints/kazarinov/header.py
 

@@ -1,3 +1,8 @@
+## \file hypotez/src/suppliers/_dot/supplier.dot
+# -*- coding: utf-8 -*-
+
+""" module: src.suppliers._dot """
+MODE = 'debug'
 digraph G {
     // Настройки стиля для всего графа
     graph [splines=ortho, rankdir=LR, fontsize=12, fontname="Helvetica"];

@@ -1,3 +1,8 @@
+## \file hypotez/src/webdriver/_pytest/guide_test_driver.md
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver._pytest """
+MODE = 'debug'
 ### Руководство для Тестера
 
 #### Введение

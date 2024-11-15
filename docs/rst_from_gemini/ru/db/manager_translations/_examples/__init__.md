@@ -9,7 +9,7 @@
 ```python
 ## \file hypotez/src/db/manager_translations/_examples/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_translations._examples """
 """ @namespace src.db.manager_translations._examples """
@@ -42,7 +42,7 @@ from .version import __version__, __doc__, __details__
 * **Примеры использования:**  Привести примеры того, как использовать примеры кода, включенные в подпакет.
 
 
-**Комментарий о `#! venv/Scripts/python.exe`:**
+**Комментарий о ``:**
 
 Эта строка в начале файла указывает интерпретатор Python, используемый для выполнения скрипта.  Она важна для корректной работы на разных системах, особенно если проект использует виртуальное окружение (`venv`).
 

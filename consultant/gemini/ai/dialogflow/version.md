@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/ai/dialogflow/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai.dialogflow """
+MODE = 'debug'
 ```
 Проблемы:
 
@@ -18,8 +23,6 @@
 **Изменённый код:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 # C:\Users\user\Documents\repos\hypotez\src/ai/dialogflow/version.py
 """ module: src.ai.dialogflow """
 import json

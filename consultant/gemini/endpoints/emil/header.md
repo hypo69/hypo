@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/emil/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.emil """
+MODE = 'debug'
 The code you've provided is good and correctly finds the project root.  It has a few areas where improvements can be made for robustness and clarity.
 
 **Issues and Improvements:**

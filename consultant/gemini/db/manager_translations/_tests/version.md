@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/manager_translations/_tests/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db.manager_translations._tests """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` в папке `_tests` внутри модуля `manager_translations` явно предназначен для хранения версии модуля.  Это стандартная практика для управления версиями в Python, особенно в библиотеках и фреймворках.
@@ -38,8 +43,6 @@ __author__ = 'hypotez '
 
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 __name__ = "version"
 __version__ = "1.0.0"  #  Пример с PEP 440
 __doc__ = "Version information for the manager_translations module"

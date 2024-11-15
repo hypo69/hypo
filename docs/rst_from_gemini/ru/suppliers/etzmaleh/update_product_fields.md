@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/update_product_fields.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.etzmaleh """
 """   This file updates product fields for Etzmaleh supplier.

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/emil/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.emil """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` определяет переменные, связанные с информацией о проекте (имя, версия, автор и т.д.).  Он пытается загрузить настройки из файла `settings.json` в папке `src`.

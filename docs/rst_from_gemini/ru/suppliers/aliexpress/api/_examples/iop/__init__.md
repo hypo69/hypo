@@ -14,7 +14,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.iop """
 from .base import **
@@ -23,7 +23,7 @@ from .base import **
 **Разбор кода:**
 
 * `# -*- coding: utf-8 -*-`: Устанавливает кодировку файла как UTF-8.
-* `#! venv/Scripts/python.exe # <- venv win`:  Строка shebang, указывающая интерпретатор Python (важно для Windows).  Она определяет, какой интерпретатор будет использован для запуска файла, если он вызывается как исполняемая программа.
+* ` # <- venv win`:  Строка shebang, указывающая интерпретатор Python (важно для Windows).  Она определяет, какой интерпретатор будет использован для запуска файла, если он вызывается как исполняемая программа.
 * `""" module: src.suppliers.aliexpress.api._examples.iop """`: Строка документации, описывающая модуль `iop`.
 * `from .base import **`:  Импортирует *все* имена из модуля `base`, находящегося в той же директории (`./base`).   Это не рекомендуется в общем случае, так как делает код сложным для понимания и поддержания.  Лучше перечислить конкретные импорты.
 

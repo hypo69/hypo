@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/translators/product_translator.py
+## \file hypotez/consultant/gemini/translators/product_translator.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.translators """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.translators """
 

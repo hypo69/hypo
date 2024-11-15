@@ -1,5 +1,10 @@
 ## \file hypotez/src/endpoints/hypo69/code_assistant/assistant.py
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
+
+""" module: src.endpoints.hypo69.code_assistant """
+MODE = 'debug'
+""" module: src.endpoints.hypo69.code_assistant """
+MODE = 'debug'
 """Класс обучения ассистента программиста."""
 import re
 import sys

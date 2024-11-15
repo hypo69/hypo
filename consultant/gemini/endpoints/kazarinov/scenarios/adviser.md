@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/kazarinov/scenarios/adviser.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.kazarinov.scenarios """
+MODE = 'debug'
 ```
 File: hypotez/src/endpoints/kazarinov/scenarios/adviser.py
 
@@ -5,7 +10,7 @@ Status:  Incomplete/Empty.
 
 Analysis:
 
-The file `adviser.py` is empty.  It contains only a shebang line (`#! venv/Scripts/python.exe`) and a docstring.  This suggests it's a placeholder or a starting point for a Python module within the `hypotez` project.  No actual code or functionality is defined.  Further development is needed to add the desired advisor logic.
+The file `adviser.py` is empty.  It contains only a shebang line (``) and a docstring.  This suggests it's a placeholder or a starting point for a Python module within the `hypotez` project.  No actual code or functionality is defined.  Further development is needed to add the desired advisor logic.
 
 Recommendations:
 
@@ -21,7 +26,6 @@ Recommendations:
 Example (Minimal):
 
 ```python
-# -*- coding: utf-8 -*-
 
 import datetime
 

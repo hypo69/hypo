@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/kazarinov/hypo69_kazarinov_bot.py
+## \file hypotez/consultant/gemini/endpoints/kazarinov/bot.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.kazarinov """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov """
 """! Kazarinov's specific bot with customized behavior."""

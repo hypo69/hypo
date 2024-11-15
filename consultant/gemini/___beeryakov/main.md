@@ -1,7 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/___beeryakov/main.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-## \file hypotez/src/___beeryakov/main.py
+
+""" module: consultant.gemini.___beeryakov """
+MODE = 'debug'
+```python
 # ~~~~~~~~~~~~~
 """ module: src.___beeryakov """
 """  KSP to GTables

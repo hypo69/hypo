@@ -1,3 +1,8 @@
+## \file hypotez/dev_utils/reduce_hypotez_files_access.ps1
+# -*- coding: utf-8 -*-
+
+""" module: dev_utils """
+MODE = 'debug'
 # Получаем текущую директорию, где запускается скрипт
 $currentDirectory = Get-Location
 

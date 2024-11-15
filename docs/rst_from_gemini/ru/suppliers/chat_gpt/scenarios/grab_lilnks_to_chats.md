@@ -27,7 +27,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/scenarios/grab_lilnks_to_chats.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.chat_gpt.scenarios
 

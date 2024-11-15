@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/hb/category.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.hb """
+MODE = 'debug'
+""" module: src.suppliers.hb """
+MODE = 'debug'
 
 """  Модуль сбора товаров со страницы категорий поставщика hb.co.il через вебдрайвер
 У каждого поставщика свой сценарий обреботки категорий

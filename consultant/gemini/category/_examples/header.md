@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/category/_examples/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.category._examples """
+MODE = 'debug'
 The code you've provided attempts to set up a Python module and adds the project root directory to the system path.  However, there are several potential issues and areas for improvement:
 
 **Issues and Improvements:**

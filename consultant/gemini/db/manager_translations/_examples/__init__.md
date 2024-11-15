@@ -1,10 +1,15 @@
+## \file hypotez/consultant/gemini/db/manager_translations/_examples/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db.manager_translations._examples """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `__init__.py` в папке `_examples` внутри модуля `manager_translations` проекта `hypotez`. Он импортирует переменные `__version__`, `__doc__`, и `__details__` из файла `version.py` в той же директории.
 
 **Комментарии:**
 
-* **`#! venv/Scripts/python.exe`**: Эта строка в начале файла определяет интерпретатор Python, который будет использоваться для запуска скрипта. Это важно для правильной работы в Windows, так как она указывает на исполняемый файл Python из вашей виртуальной среды (`venv`).  **Хорошая практика**.
+* **``**: Эта строка в начале файла определяет интерпретатор Python, который будет использоваться для запуска скрипта. Это важно для правильной работы в Windows, так как она указывает на исполняемый файл Python из вашей виртуальной среды (`venv`).  **Хорошая практика**.
 
 * **Документирование:**  Строки документации (`""" module: ... """, """ @namespace ... """, """ """) не содержат полезной информации.  Они должны быть заменены на осмысленные описания модуля и пространства имен.
 
@@ -18,7 +23,7 @@
    ```python
    ## \file hypotez/src/db/manager_translations/_examples/__init__.py
    # -*- coding: utf-8 -*-
-   #! venv/Scripts/python.exe # <- venv win
+    # <- venv win
    ## ~~~~~~~~~~~~~
    """ Module containing example implementations for the translation manager. """
    """ @namespace src.db.manager_translations._examples """

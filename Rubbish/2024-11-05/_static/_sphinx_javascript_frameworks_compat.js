@@ -1,3 +1,8 @@
+## \file hypotez/Rubbish/2024-11-05/_static/_sphinx_javascript_frameworks_compat.js
+# -*- coding: utf-8 -*-
+
+""" module: Rubbish.2024-11-05._static """
+MODE = 'debug'
 /* Compatability shim for jQuery and underscores.js.
  *
  * Copyright Sphinx contributors

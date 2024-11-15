@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/goog/spreadsheet/bberyakov/grender.py
+## \file hypotez/consultant/gemini/goog/spreadsheet/bberyakov/grender.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog.spreadsheet.bberyakov """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog.spreadsheet.bberyakov """
 """  Render Google Table

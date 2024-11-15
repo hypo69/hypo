@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/javascript/js.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.javascript """
+MODE = 'debug'
+""" module: src.webdriver.javascript """
+MODE = 'debug'
 
 """Module containing JavaScript helper functions for Selenium WebDriver.
 

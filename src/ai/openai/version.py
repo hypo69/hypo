@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/openai/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.openai """
+MODE = 'debug'
+""" module: src.ai.openai """
+MODE = 'debug'
 import json
 import sys
 from pathlib import Path

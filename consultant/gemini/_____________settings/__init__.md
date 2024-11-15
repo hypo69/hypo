@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/global_settings/__init__.py
+## \file hypotez/consultant/gemini/_____________settings/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini._____________settings """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.global_settings """
 """ Project settings: passwords, server addresses, and other sensitive information.

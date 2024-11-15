@@ -1,8 +1,10 @@
 ## \file hypotez/dev_utils/rst_indexer.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: dev_utils """
+MODE = 'debug'
+""" module: dev_utils """
+MODE = 'debug'
 """
 This module recursively traverses subdirectories from the current directory,
 reads all *.py files, and creates an index.rst file in the `docs` directory 

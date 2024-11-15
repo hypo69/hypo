@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.emil """
+MODE = 'debug'
+""" module: src.endpoints.emil """
+MODE = 'debug'
 """! Module for managing and processing images and promoting to Facebook and Prestashop. """
 
 import header

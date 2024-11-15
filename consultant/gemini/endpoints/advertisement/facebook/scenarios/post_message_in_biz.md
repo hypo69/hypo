@@ -1,8 +1,13 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/scenarios/post_message_in_biz.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement.facebook.scenarios """
+MODE = 'debug'
 ```diff
 --- a/hypotez/src/endpoints/advertisement/facebook/scenarios/post_message_in_biz.py
 +++ b/hypotez/src/endpoints/advertisement/facebook/scenarios/post_message_in_biz.py
 @@ -4,4 +4,11 @@
- #! venv/Scripts/python.exe # <- venv win
+  # <- venv win
  ## ~~~~~~~~~~~~~
  """ module: src.endpoints.advertisement.facebook.scenarios """
 +

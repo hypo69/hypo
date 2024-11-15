@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/_experiments/aliexpress_promote_deal.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress._experiments """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress._experiments """
+MODE = 'debug'
 """ Deal, event
 Подготовка объявления в формате для фейсбук
 """

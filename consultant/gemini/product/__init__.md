@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/product/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.product """
+MODE = 'debug'
 ```
 Code Review: hypotez/src/product/__init__.py
 
@@ -16,14 +21,13 @@ Code Review: hypotez/src/product/__init__.py
 
 * **`record` attribute:** The `record` attribute is declared in the docstring but not defined in the file. It is crucial to define `record` if it represents an actual data structure, to ensure that it is properly accessible when the module is imported.  Either define it (e.g., as an empty dictionary) or remove it from the docstring.  It might be a variable that will be populated in other functions.
 
-* **`#! venv/Scripts/python.exe`:** The shebang (`#!`) line is unusual within a Python file. Python interpreters are typically invoked by the operating system, not by the Python script itself.  If this was a shell script, it would be useful, but in Python, it is largely unnecessary and potentially misleading.
+* **``:** The shebang (`#!`) line is unusual within a Python file. Python interpreters are typically invoked by the operating system, not by the Python script itself.  If this was a shell script, it would be useful, but in Python, it is largely unnecessary and potentially misleading.
 
 * **Explicit `__all__` (recommended):** While the imports are clear, consider adding an `__all__` list to the module. This explicitly defines which members of the module should be accessible from other parts of the project, and is highly recommended for better maintainability and version control.
 
 **Example with Improvements:**
 
 ```python
-# -*- coding: utf-8 -*-
 ## ~~~~~~~~~~~~~
 """ module: src.product """
 """ Product module

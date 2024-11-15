@@ -14,7 +14,7 @@
 ```python
 ## \file hypotez/src/suppliers/wallashop/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.wallashop """
 
@@ -30,7 +30,7 @@ from .graber import Graber
 **Подробный разбор:**
 
 * `# -*- coding: utf-8 -*-`:  Указывает кодировку файла как UTF-8.
-* `#! venv/Scripts/python.exe`:  Указывает интерпретатор Python. Важно для запуска из командной строки на Windows.
+* ``:  Указывает интерпретатор Python. Важно для запуска из командной строки на Windows.
 * `""" module: src.suppliers.wallashop """`:  Строка документации, описывающая модуль.
 * `"""  Поставщик <i>wallmart</i> """`:  Неявная документация, описывающая поставщика.  **Важно:** Не рекомендуется использовать HTML-разметку (`<i>`) внутри docstrings, т.к. это не всегда корректно отображается в документации.  Более корректное описание — "Поставщик wallmart".
 * `from packaging.version import Version`: Импортирует класс `Version` из библиотеки `packaging` для работы с версиями.

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/product/product_fields/utils/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.product.product_fields.utils """
+MODE = 'debug'
 This Python file (`version.py`) defines some metadata about the module `src.product.product_fields.utils`.  It's a good practice to include this kind of information.
 
 **Analysis and potential improvements:**
@@ -14,7 +19,7 @@ This Python file (`version.py`) defines some metadata about the module `src.prod
 * **`__cofee__`:**  This is a bit unconventional.  While it's a nice gesture, you might want to consider if it's appropriate for every Python module or if it would be better placed in a dedicated README or separate file.  If there is an explicit intent to encourage donations/contributions, consider a more standard contribution workflow (e.g., using a `contributing.md` file).
 
 
-* **File shebang:** The `#! venv/Scripts/python.exe` line is a shebang. It's likely correct on Windows, but it's generally less portable than specifying an interpreter in a `.py` file directly.  In most cases, the interpreter specification is not needed within the file and is handled at the system level in the correct environment.
+* **File shebang:** The `` line is a shebang. It's likely correct on Windows, but it's generally less portable than specifying an interpreter in a `.py` file directly.  In most cases, the interpreter specification is not needed within the file and is handled at the system level in the correct environment.
 
 
 * **Encoding:** The `# -*- coding: utf-8 -*-` is crucial for handling Unicode characters correctly.
@@ -23,7 +28,6 @@ This Python file (`version.py`) defines some metadata about the module `src.prod
 **Example of improved `version.py` (incorporating suggestions):**
 
 ```python
-# -*- coding: utf-8 -*-
 """ module: src.product.product_fields.utils """
 __version__ = '1.1.0'  # Semantic versioning
 __doc__ = """

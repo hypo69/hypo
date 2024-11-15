@@ -1,8 +1,10 @@
 ## \file hypotez/src/goog/google_search.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog """
+MODE = 'debug'
+""" module: src.goog """
+MODE = 'debug'
 """ Пример парсера поискового запроса Google
 
 Либы:

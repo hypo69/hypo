@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/category.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress """
+MODE = 'debug'
 
 """ управление категориями поставщиика """
 from typing import Union

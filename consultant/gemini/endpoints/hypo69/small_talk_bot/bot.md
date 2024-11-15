@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/hypo69/hypo69_psychologist_bot.py
+## \file hypotez/consultant/gemini/endpoints/hypo69/small_talk_bot/bot.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.hypo69.small_talk_bot """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.hypo69 """
 # ... (other imports)

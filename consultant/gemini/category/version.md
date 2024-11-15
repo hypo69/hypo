@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/category/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.category """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` предназначен для хранения метаданных о проекте, таких как имя, версия, автор и т.д. Он пытается получить эти данные из файла `settings.json` в родительской директории.
@@ -14,8 +19,6 @@
 **Рекомендации по улучшению:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.category """
 import json

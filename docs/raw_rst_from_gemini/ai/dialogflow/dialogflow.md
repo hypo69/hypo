@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/ai/dialogflow/dialogflow.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.dialogflow """
 """! This module provides an interface for interacting with the Dialogflow API.

@@ -18,7 +18,7 @@ The provided Python code defines various metadata variables, effectively acting 
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.translators """
 __version__: str = 'v1.1'

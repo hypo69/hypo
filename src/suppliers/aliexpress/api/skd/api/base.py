@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/api/skd/api/base.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.api.skd.api """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.api.skd.api """
+MODE = 'debug'
 """
 Created on 2012-7-3
 

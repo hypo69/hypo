@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.campaign._examples """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.campaign._examples """
+MODE = 'debug'
 
 """ Редактор рекламной кампании
 """

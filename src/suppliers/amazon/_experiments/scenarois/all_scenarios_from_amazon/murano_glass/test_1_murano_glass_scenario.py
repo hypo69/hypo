@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/test_1_murano_glass_scenario.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass """
+MODE = 'debug'
+""" module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass """
+MODE = 'debug'
 from pathlib import Path
 from typing import Union
 

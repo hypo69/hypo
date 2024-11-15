@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/edge/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.edge """
+MODE = 'debug'
+""" module: src.webdriver.edge """
+MODE = 'debug'
 
 import sys
 from pathlib import Path

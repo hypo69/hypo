@@ -3,7 +3,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.webdriver.bs """
 """ парсер страниц с использованием `BeautifulSoup` и XPath.
 @code

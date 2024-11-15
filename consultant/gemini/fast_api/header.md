@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/fast_api/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.fast_api """
+MODE = 'debug'
 Code is good and properly finds the project root.  No major issues are present.
 
 **Minor Suggestions:**
@@ -28,8 +33,6 @@ Code is good and properly finds the project root.  No major issues are present.
 **Revised Code (incorporating suggestions):**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 """ module: src.fast_api """
 
 """ Module to set the project root path """

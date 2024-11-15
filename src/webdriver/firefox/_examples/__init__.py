@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/firefox/_examples/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.firefox._examples """
+MODE = 'debug'
+""" module: src.webdriver.firefox._examples """
+MODE = 'debug'
 """ Firefox examples """
 
 

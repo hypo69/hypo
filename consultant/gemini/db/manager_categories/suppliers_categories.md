@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/db/manager_categories/suppliers_categories.py
+## \file hypotez/consultant/gemini/db/manager_categories/suppliers_categories.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.db.manager_categories """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_categories """
 """ @namespace src.db.manager_categories """

@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/scenarios/login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.scenarios """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.scenarios """
+MODE = 'debug'
 
 """ Сценарии логина на сайт aliexpress.com 
 Заменено на куки

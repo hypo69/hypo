@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/_pytest/test_driver.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver._pytest """
+MODE = 'debug'
+""" module: src.webdriver._pytest """
+MODE = 'debug'
 
 """ тестовый файл test_driver.py включает тесты для следующих методов класса DriverBase:
 

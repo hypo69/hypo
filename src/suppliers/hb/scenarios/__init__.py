@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/hb/scenarios/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.hb.scenarios """
+MODE = 'debug'
+""" module: src.suppliers.hb.scenarios """
+MODE = 'debug'
 
 """  Поставщик <I>hb.co.il</I> """
 ...

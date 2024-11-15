@@ -1,10 +1,15 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/product.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop """
+MODE = 'debug'
 ```diff
 --- a/hypotez/src/endpoints/prestashop/product.py
 +++ b/hypotez/src/endpoints/prestashop/product.py
 @@ -1,7 +1,6 @@
  ## \file hypotez/src/endpoints/prestashop/product.py
  # -*- coding: utf-8 -*-
--#! venv/Scripts/python.exe # <- venv win
+- # <- venv win
 -## ~~~~~~~~~~~~~
 +
  """ module: src.endpoints.prestashop """

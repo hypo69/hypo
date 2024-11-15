@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/utils/string/normalizer.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.utils.string """
 """Module for normalizing product fields and handling various data types."""

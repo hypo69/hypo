@@ -11,7 +11,7 @@
 ```python
 ## \file hypotez/src/webdriver/javascript/_examples/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.webdriver.javascript._examples """
 
@@ -29,7 +29,7 @@ from .version import __version__, __doc__, __details__
 **Ключевые элементы:**
 
 * `# -*- coding: utf-8 -*-`: Указывает кодировку файла как UTF-8.
-* `#! venv/Scripts/python.exe`: Указывает интерпретатор Python (вероятно, виртуальное окружение).
+* ``: Указывает интерпретатор Python (вероятно, виртуальное окружение).
 * `""" module: src.webdriver.javascript._examples """`:  Строка документации, описывающая модуль.
 * `from packaging.version import Version`: Импортирует класс `Version` для работы с версиями пакетов.
 * `from .version import __version__, __doc__, __details__`: Импортирует переменные `__version__`, `__doc__` и `__details__` из файла `version.py` внутри пакета `_examples`.

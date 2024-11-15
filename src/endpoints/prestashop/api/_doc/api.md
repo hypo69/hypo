@@ -1,3 +1,8 @@
+## \file hypotez/src/endpoints/prestashop/api/_doc/api.md
+# -*- coding: utf-8 -*-
+
+""" module: src.endpoints.prestashop.api._doc """
+MODE = 'debug'
 <pre>
 Prestashop
 ├── _exec(resource, resource_id, method, data, search_filter, display, sort, limit, schema, io_format, language)

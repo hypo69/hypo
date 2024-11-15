@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/ai/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai """
+MODE = 'debug'
 ```
 Code Review: hypotez/src/ai/__init__.py
 
@@ -7,7 +12,7 @@ This file initializes the `ai` module, likely part of a larger project called `h
 
 **Observations:**
 
-* **Shebang:** The shebang (`#! venv/Scripts/python.exe`) is unusual and likely incorrect in this context.  It suggests an attempt to specify the interpreter for the file, but it's generally handled by the project's `requirements.txt` and the virtual environment setup.   **Removal or comment-out is recommended.**
+* **Shebang:** The shebang (``) is unusual and likely incorrect in this context.  It suggests an attempt to specify the interpreter for the file, but it's generally handled by the project's `requirements.txt` and the virtual environment setup.   **Removal or comment-out is recommended.**
 
 * **Docstrings:** The docstrings are good, clearly stating the module's purpose.  More detailed docstrings for the individual classes and functions would be beneficial.
 
@@ -19,7 +24,7 @@ This file initializes the `ai` module, likely part of a larger project called `h
 
 **Recommendations:**
 
-1. **Remove the shebang:** As mentioned, the shebang (`#! venv/Scripts/python.exe`) is likely not needed and might cause issues.  Python interpreters are usually handled by the operating system or virtual environment.
+1. **Remove the shebang:** As mentioned, the shebang (``) is likely not needed and might cause issues.  Python interpreters are usually handled by the operating system or virtual environment.
 
 2. **Add more detailed docstrings:** Expand docstrings to explain what each class does and any important parameters or return values. This is vital for maintainability and understanding.  For instance:
 
@@ -55,7 +60,6 @@ This file initializes the `ai` module, likely part of a larger project called `h
 **Example of improved `__init__.py` (incorporating some recommendations):**
 
 ```python
-# -*- coding: utf-8 -*-
 """ module: src.ai """
 """ AI Suppliers """
 

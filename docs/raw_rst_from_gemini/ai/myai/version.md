@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.ai.myai """
 __version__: str = 'v1.1'
 __doc__: str = ''

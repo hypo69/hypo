@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb/test_4_lxml_get_unique_links.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop._experiments.suppliers.hb """
+MODE = 'debug'
+""" module: src.endpoints.prestashop._experiments.suppliers.hb """
+MODE = 'debug'
 import requests
 import re
 import json

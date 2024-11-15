@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints """
+MODE = 'debug'
 **Результат проверки:**
 
 Файл `version.py` пытается загрузить настройки из файла `settings.json` в корневой папке проекта. Это может привести к ошибкам, если файл `settings.json` отсутствует или содержит некорректный JSON.

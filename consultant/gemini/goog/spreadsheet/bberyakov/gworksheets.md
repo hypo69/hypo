@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/goog/spreadsheet/bberyakov/gworksheets.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
+""" module: consultant.gemini.goog.spreadsheet.bberyakov """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog.spreadsheet.bberyakov """
 """  [File's Description]

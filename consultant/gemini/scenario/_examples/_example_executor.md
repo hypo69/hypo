@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/scenario/_examples/_example_executor.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.scenario._examples """
+MODE = 'debug'
 ```python
 # \file hypotez/src/scenario/_examples/_example_executor.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.scenario._examples """
 

@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/start_sergey.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
+""" module: consultant.gemini.endpoints.advertisement.facebook """
+MODE = 'debug'
+```python
 
 """Отправка рекламных объявлений в группы фейсбук."""
 import header

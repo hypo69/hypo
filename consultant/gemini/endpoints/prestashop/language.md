@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/prestashop/language.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop """
 
@@ -39,7 +42,7 @@ class PrestaLanguage(Prestashop):
 
 - **Docstrings:** The docstrings for the class and the `__init__` method are important but could be more informative.  What exactly does the `api_credentials` parameter represent?  What are the expected values?  What are `args` and `kwards` used for?  Explain the behavior of the class and the purpose of its methods in the docstrings.
 - **Error Handling:** The code appears to inherit from `Prestashop` which presumably deals with errors. However, a `PrestaLanguage` object could potentially throw errors of its own. Robust error handling is essential.  You should check the results of any API calls and log or raise exceptions appropriately.
-- **Dependency Management:** The `#! venv/Scripts/python.exe` shebang line is a good practice on Windows. Ensure the correct `venv` is activated before running the script.
+- **Dependency Management:** The `` shebang line is a good practice on Windows. Ensure the correct `venv` is activated before running the script.
 - **Testing:** This class needs thorough unit tests to ensure it works as expected.
 
 

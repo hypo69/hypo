@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/db/manager_coupons_and_sales/product_campaigns.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_coupons_and_sales """
 """ Купоны, скидки и т.п. для товаров Prestashop"""

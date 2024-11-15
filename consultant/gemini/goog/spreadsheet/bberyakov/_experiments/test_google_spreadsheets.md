@@ -1,5 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/goog/spreadsheet/bberyakov/_experiments/test_google_spreadsheets.md
 # -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.goog.spreadsheet.bberyakov._experiments """
+MODE = 'debug'
+```python
 """ module: src.goog.spreadsheet.bberyakov._experiments """
 from global_settingsh import GSpreadsheet
 

@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.suppliers.aliexpress """
 """ Base class for the AliExpress supplier. 
 This class inherits from `Supplier`.

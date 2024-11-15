@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/manager_categories/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db.manager_categories """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` содержит метаданные о версии модуля `src.db.manager_categories`. Это типичный способ хранения версионной информации в Python-проектах.
@@ -16,8 +21,6 @@
 **Рекомендации по улучшению:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 """
 Module: src.db.manager_categories
 

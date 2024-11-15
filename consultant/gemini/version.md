@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini """
+MODE = 'debug'
 ```
 ## Проверка файла version.py
 
@@ -15,8 +20,6 @@
 **Рекомендации по улучшению:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src """
 import json

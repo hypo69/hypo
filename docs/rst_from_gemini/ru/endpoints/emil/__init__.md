@@ -13,13 +13,13 @@
 ```python
 ## \file hypotez/src/endpoints/emil/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.emil """
 
 ## \file hypotez/src/endpoints/hypo69/code_assistant/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.hypo69.code_assistant """
 

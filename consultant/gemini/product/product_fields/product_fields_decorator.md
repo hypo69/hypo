@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/product/product_fields/product_fields_decorator.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.product.product_fields """
+MODE = 'debug'
 ```python
 # \file hypotez/src/product/product_fields/product_fields_decorator.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.product.product_fields """
 

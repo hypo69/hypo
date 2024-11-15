@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/api/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop.api """
+MODE = 'debug'
 The provided Python code defines a module (`version.py`) with some metadata about itself.  The use of `__version__`, `__doc__`, `__details__`, `__author__`, etc. is a common practice for better organization and documentation in Python projects.
 
 **Analysis and Potential Improvements:**
@@ -16,7 +21,6 @@ The provided Python code defines a module (`version.py`) with some metadata abou
 **Example of improved code:**
 
 ```python
-# -*- coding: utf-8 -*-
 # hypotez/src/endpoints/prestashop/api/version.py
 """
 Module for interacting with various PrestaShop API versions.

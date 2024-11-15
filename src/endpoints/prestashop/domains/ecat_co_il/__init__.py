@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/domains/ecat_co_il/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop.domains.ecat_co_il """
+MODE = 'debug'
+""" module: src.endpoints.prestashop.domains.ecat_co_il """
+MODE = 'debug'
 """    Client's websites
 @namespace src: pestashop.domains
 \file __init__.py

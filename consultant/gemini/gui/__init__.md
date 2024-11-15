@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/gui/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.gui """
+MODE = 'debug'
 ```
 # code_checker report for C:\Users\user\Documents\repos\hypotez\src\gui\__init__.py
 
@@ -61,8 +66,6 @@
 **Example of improved `__init__.py`:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 
 """
 Module containing GUI components for the Hypotez application.

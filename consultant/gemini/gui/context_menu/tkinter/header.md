@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/gui/context_menu/tkinter/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.gui.context_menu.tkinter """
+MODE = 'debug'
 Этот код устанавливает путь к корневому каталогу проекта `hypotez` в переменную `__root__` и добавляет этот путь в список модулей Python (`sys.path`).  Это делается для того, чтобы Python мог импортировать модули из других директорий проекта, не находящихся в текущем каталоге.
 
 **Анализ кода:**

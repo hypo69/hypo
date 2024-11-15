@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/string/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils.string """
+MODE = 'debug'
+""" module: src.utils.string """
+MODE = 'debug'
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

@@ -10,7 +10,7 @@
 ```python
 ## \file hypotez/src/suppliers/grandadvance/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.grandadvance """
 
@@ -33,7 +33,7 @@ from .graber import Graber
 
 **Комментарии:**
 
-* **`#! venv/Scripts/python.exe`:**  Эта строка указывает интерпретатор Python, который нужно использовать.  Важна для Windows, где часто нужно указать полный путь.
+* **``:**  Эта строка указывает интерпретатор Python, который нужно использовать.  Важна для Windows, где часто нужно указать полный путь.
 * **`""" module: src.suppliers.grandadvance """`:**  Строка документации, описывающая модуль.
 * **`""" Постaвщик <i>wallmart</i> """`:**  Строка документации, описывающая поставщика.  Возможно, некорректный перевод - `wallmart`  скорее всего должен быть `grandadvance`.
 

@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/fast_api/main.first_version.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.fast_api """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.fast_api """
 

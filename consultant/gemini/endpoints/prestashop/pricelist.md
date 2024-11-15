@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/prestashop/pricelist.py
+## \file hypotez/consultant/gemini/endpoints/prestashop/pricelist.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop """
 import sys

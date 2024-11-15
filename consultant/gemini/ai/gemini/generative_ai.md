@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/ai/gemini/generative_ai.py
+## \file hypotez/consultant/gemini/ai/gemini/generative_ai.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.ai.gemini """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.ai.gemini """
 """Google generative AI integration."""

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/ai/openai/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai.openai """
+MODE = 'debug'
 ```
 [code_checker]
 

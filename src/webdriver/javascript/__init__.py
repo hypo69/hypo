@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/javascript/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.javascript """
+MODE = 'debug'
+""" module: src.webdriver.javascript """
+MODE = 'debug'
 """  Модуль Javasript
 Выполнает операции javasript для драйвера
 """

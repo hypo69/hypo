@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/ai/myai/traffic_light.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.myai """
 """! This module implements a traffic light system for a hypothetical scenario.

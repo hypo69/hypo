@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/hb/locators/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.hb.locators """
+MODE = 'debug'
+""" module: src.suppliers.hb.locators """
+MODE = 'debug'
 
 """
 - `__version__`: This variable holds the version of the module or package.

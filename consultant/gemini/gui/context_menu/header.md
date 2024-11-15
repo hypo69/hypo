@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/gui/context_menu/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.gui.context_menu """
+MODE = 'debug'
 Этот код настраивает пути к библиотекам GTK, FFmpeg и Graphviz, а также добавляет их в `sys.path` для корректного импорта.  Он также обрабатывает потенциально проблемный файл `settings.json`.  Давайте разберем его по частям и укажем потенциальные проблемы и улучшения.
 
 **Проблемы и улучшения:**

@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop """
 """ Модуль обработки запросов к базам данных Prestashop.
@@ -46,7 +46,7 @@ __all__ = [
 
 * **Dependencies:** The `packaging` library is mentioned; make sure this dependency is declared in your project's requirements file (e.g., `requirements.txt`).
 
-* **Context:** The `#! venv/Scripts/python.exe` shebang line is a Windows-specific detail and is likely handled by your project's setup/execution mechanisms rather than needed directly within the Python source file.
+* **Context:** The `` shebang line is a Windows-specific detail and is likely handled by your project's setup/execution mechanisms rather than needed directly within the Python source file.
 
 **Example of improved docstring (module level):**
 

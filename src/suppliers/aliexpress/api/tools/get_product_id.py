@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.api.tools """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.api.tools """
+MODE = 'debug'
 """Some useful tools."""
 
 from ..errors import ProductIdNotFoundException

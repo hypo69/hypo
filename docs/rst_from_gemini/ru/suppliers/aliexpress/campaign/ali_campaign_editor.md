@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.suppliers.aliexpress.campaign """
 """ This module provides the editor for advertising campaigns on AliExpress.
 """

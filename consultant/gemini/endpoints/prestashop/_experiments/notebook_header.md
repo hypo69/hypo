@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/prestashop/_experiments/notebook_header.py
+## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/notebook_header.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop._experiments """
 import sys

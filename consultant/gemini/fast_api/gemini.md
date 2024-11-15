@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/fast_api/gemini.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.fast_api """
+MODE = 'debug'
 ```
 File: hypotez/src/fast_api/gemini.py
 
@@ -7,7 +12,7 @@ Issues:
 
 2. **Missing `header` import clarification:** The code imports `header`, but it's unclear where this module is defined.  You need to ensure `header.py` exists in the correct location (likely in the same directory or within a `src.utils` or similar location).  Add a comment or a more detailed import statement if necessary to specify the location of `header.py` in your project, for clarity and maintainability.
 
-3. **`venv/Scripts/python.exe` shebang line is incorrect for a standard Python project:** Shebang lines are usually unnecessary in Python source files.  They can cause issues when running your script in a virtual environment on Windows or different systems.  The line `#! venv/Scripts/python.exe` should be removed, as Flask and standard Python programs run from the interpreted Python environment and do not need this.
+3. **`venv/Scripts/python.exe` shebang line is incorrect for a standard Python project:** Shebang lines are usually unnecessary in Python source files.  They can cause issues when running your script in a virtual environment on Windows or different systems.  The line `` should be removed, as Flask and standard Python programs run from the interpreted Python environment and do not need this.
 
 4. **Missing docstrings:** While the module docstring is present, the function `ask` is missing a docstring. This significantly reduces the readability and maintainability of the code.
 
@@ -19,7 +24,6 @@ Issues:
 Suggested improved code:
 
 ```python
-# -*- coding: utf-8 -*-
 """ module: src.fast_api """
 """! This module provides a fastAPI endpoint for interacting with the Google Generative AI model. """
 

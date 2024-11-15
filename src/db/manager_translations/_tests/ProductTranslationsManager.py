@@ -1,8 +1,10 @@
 ## \file hypotez/src/db/manager_translations/_tests/ProductTranslationsManager.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db.manager_translations._tests """
+MODE = 'debug'
+""" module: src.db.manager_translations._tests """
+MODE = 'debug'
 """ @namespace src.db.manager_translations._tests """
 import unittest
 from unittest.mock import MagicMock, patch

@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.api.helpers """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.api.helpers """
+MODE = 'debug'
 
 """  функции для фильтрации категорий и подкатегорий API Aliexpress"""
 from typing import List, Union

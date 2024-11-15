@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/_experiments/categories/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop._experiments.categories """
+MODE = 'debug'
+""" module: src.endpoints.prestashop._experiments.categories """
+MODE = 'debug'
 
 """
 - `__version__`: This variable holds the version of the module or package.

@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/utils/printer.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.utils """
+MODE = 'debug'
+```python
 """ module: src.utils """
 """
 This module provides enhanced print formatting for better readability of data structures.

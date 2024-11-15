@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/kazarinov/scenarios/untitled.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.kazarinov.scenarios """
+MODE = 'debug'
 This Python code defines a function `j_loads` to load JSON or CSV data from various sources (files, directories, strings, lists). It's well-structured and handles different input types robustly, but could be improved for clarity and efficiency.
 
 **Improvements and Potential Issues:**

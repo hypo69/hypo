@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai """
+MODE = 'debug'
+""" module: src.ai """
+MODE = 'debug'
 """ AI Suppliers """
 
 

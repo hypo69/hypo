@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/scenarios/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement.facebook.scenarios """
+MODE = 'debug'
 ```
 ## Проверка файла hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py
 
@@ -17,8 +22,6 @@
 **Примеры исправленного кода:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.advertisement.facebook.scenarios """
 """ Сценарии фейсбука """

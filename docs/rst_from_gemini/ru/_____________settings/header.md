@@ -5,7 +5,7 @@
 -## \file hypotez/src/_____________settings/header.py
 +## \file hypotez/src/config/header.py
  # -*- coding: utf-8 -*-
- #! venv/Scripts/python.exe # <- venv win
+  # <- venv win
  ## ~~~~~~~~~~~~~
 -""" module: src._____________settings """
 +""" module: src.config """
@@ -49,5 +49,5 @@ This revised solution is much cleaner, more readable, and addresses the potentia
 **Important Considerations:**
 
 * **Project Structure:**  Ensure your `hypotez` project is structured correctly for Python modules.
-* **Virtual Environments:** The `#! venv/Scripts/python.exe` line is important. Ensure it points to the correct Python interpreter in your virtual environment.
+* **Virtual Environments:** The `` line is important. Ensure it points to the correct Python interpreter in your virtual environment.
 * **Error Handling:** You might want to add error handling (e.g., `try...except` blocks) to gracefully handle cases where `hypotez` isn't found in the current directory. For example, if the `hypotez` directory is not at a predictable path.

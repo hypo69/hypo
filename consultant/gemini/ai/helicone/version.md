@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/ai/helicone/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai.helicone """
+MODE = 'debug'
 **Проблемы:**
 
 1. **Некорректное имя переменной:** В строке `__copyright__` допущена опечатка, `copyrihgnt` должно быть `copyright`.
@@ -9,8 +14,6 @@
 **Измененный код:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.helicone """
 import json

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/logger/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.logger """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` определяет переменные, содержащие информацию о проекте (имя, версия, автор и т.д.).  Он пытается загрузить настройки из файла `settings.json` в корне проекта.  Если `settings.json` не найден или некорректно отформатирован, переменные инициализируются значением по умолчанию.
@@ -19,8 +24,6 @@
 **Изменённый код:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 """ module: src.logger """
 import json
 import os

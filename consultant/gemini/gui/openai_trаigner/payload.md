@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/gui/openai_trаigner/payload.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.gui.openai_trаigner """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.gui.openai_trаigner """
 # This file likely needs more content. It's a Python file

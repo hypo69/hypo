@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/suppliers/bangood/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.suppliers.bangood """
+MODE = 'debug'
 The Python file `version.py` in the `bangood` supplier directory of the `hypotez` project correctly defines version information.  It's well-structured and includes essential metadata.
 
 **Strengths:**

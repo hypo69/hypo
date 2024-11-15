@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
+""" module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 from pathlib import Path
 from __init__ import gs

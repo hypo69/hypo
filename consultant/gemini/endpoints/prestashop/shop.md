@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/shop.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop """
+MODE = 'debug'
 ```python
 # \file hypotez/src/endpoints/prestashop/shop.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop """
 

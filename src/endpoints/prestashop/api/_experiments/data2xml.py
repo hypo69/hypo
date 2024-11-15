@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/api/_experiments/data2xml.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop.api._experiments """
+MODE = 'debug'
+""" module: src.endpoints.prestashop.api._experiments """
+MODE = 'debug'
 """ Проверка валидности словаря престасшоп """
 from pathlib import Path
 import header

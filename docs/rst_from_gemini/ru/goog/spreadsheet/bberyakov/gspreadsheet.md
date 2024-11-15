@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """ module: src.goog.spreadsheet.bberyakov """
 """  Module for interacting with Google Sheets. """
 """ \package beeryakov.goog """

@@ -1,3 +1,8 @@
+## \file hypotez/dev_utils/reduce_xampp_files_access.ps1
+# -*- coding: utf-8 -*-
+
+""" module: dev_utils """
+MODE = 'debug'
 # Укажите путь к директории XAMPP
 $xamppPath = "C:\xampp"
 

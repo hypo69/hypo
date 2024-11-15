@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/api/models/languages.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.api.models """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.api.models """
+MODE = 'debug'
 class Language:
     EN = 'EN'
     RU = 'RU'

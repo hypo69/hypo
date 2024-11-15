@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
+""" module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
 
 """ Absolute path to modules  """
 

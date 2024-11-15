@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/suppliers/aliexpress/aliapi.py
+## \file hypotez/consultant/gemini/suppliers/aliexpress/aliapi.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.suppliers.aliexpress """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress """
 """ AliExpress API Scenario

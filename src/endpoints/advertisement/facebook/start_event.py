@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/start_event.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
+""" module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
 
 """Отправка мероприятий в группы фейсбук """
 

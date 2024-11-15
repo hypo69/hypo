@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/bots/telegram/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.bots.telegram """
+MODE = 'debug'
 ```
 ```code_checker_result
 ```
@@ -11,13 +16,12 @@ Issues:
 
 3. **Inconsistent Variable Type:** The variable `__name__` is declared as a string, but its content doesn't explicitly indicate that it will be a string. It's good practice to always have these kinds of assignments.
 
-4. **Redundant `#! venv/Scripts/python.exe` shebang:** The shebang (`#! venv/Scripts/python.exe`) is Windows-specific and might not be necessary or correctly interpreted in other environments. Python interpreters often handle the interpreter path correctly when importing the module. It's probably not needed and might cause problems in other environments.
+4. **Redundant `` shebang:** The shebang (``) is Windows-specific and might not be necessary or correctly interpreted in other environments. Python interpreters often handle the interpreter path correctly when importing the module. It's probably not needed and might cause problems in other environments.
 
 
 **Suggested improvements:**
 
 ```python
-# -*- coding: utf-8 -*-
 """ module: src.endpoints.bots.telegram """
 """
 - `__version__`: This variable holds the version of the module or package.

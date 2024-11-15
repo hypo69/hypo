@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/ebay/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.ebay """
+MODE = 'debug'
+""" module: src.suppliers.ebay """
+MODE = 'debug'
 
 """  Постaвщик <i>wallmart</i>
 """

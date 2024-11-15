@@ -1,8 +1,10 @@
 ## \file hypotez/src/product/_experiments/ping.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.product._experiments """
+MODE = 'debug'
+""" module: src.product._experiments """
+MODE = 'debug'
 import header
 from header import  ecat_api_credentials, emil_api_credentials
 from header import pprint, jprint

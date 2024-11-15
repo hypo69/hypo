@@ -1,8 +1,10 @@
 ## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog.spreadsheet.bberyakov """
+MODE = 'debug'
+""" module: src.goog.spreadsheet.bberyakov """
+MODE = 'debug'
 """ перевод цветовых форматов.
 Перевод:
 - HEX->DECIMAL

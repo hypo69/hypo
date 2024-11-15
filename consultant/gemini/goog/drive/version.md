@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/goog/drive/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.goog.drive """
+MODE = 'debug'
 The Python code you provided defines a module-level docstring and other metadata variables for a file named `version.py` within a Google Drive-related project.
 
 **Analysis:**
@@ -13,15 +18,12 @@ The Python code you provided defines a module-level docstring and other metadata
 * **Document the Module:**  The most important improvement would be to fill in `__doc__` and `__details__` with a comprehensive description of the `goog.drive` module. This should explain what functions and classes are in the module and what they do.
 * **Structure:** The current structure is fine for a small module.  However, a larger project might benefit from a more detailed structure and documentation system using tools like Sphinx.
 * **Coding Style:**  Adhering to standard Python coding style (PEP 8) can improve readability. This includes consistent naming conventions, spacing, and indentation.
-* **`#! venv/Scripts/python.exe`:** This shebang line assumes you have a virtual environment (`venv`) setup and `python.exe` in the `Scripts` folder.  This is correct for running the file from the command line.
+* **``:** This shebang line assumes you have a virtual environment (`venv`) setup and `python.exe` in the `Scripts` folder.  This is correct for running the file from the command line.
 * **File Structure:**  The file path (`C:\Users\user\Documents\repos\hypotez\src\goog\drive\version.py`) suggests a well-structured project.  The `src/goog/drive` directory structure implies a clear namespace.
 
 **Example of Filling `__doc__`:**
 
 ```python
-## \file hypotez/src/goog/drive/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.goog.drive """
 __version__: str = 'v1.1'

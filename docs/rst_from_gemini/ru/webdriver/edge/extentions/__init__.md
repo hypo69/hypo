@@ -14,7 +14,7 @@
 ```python
 ## \file hypotez/src/webdriver/edge/extentions/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.webdriver.edge.extentions """
 
@@ -28,7 +28,7 @@ from .version import __version__, __doc__, __details__
 **Комментарии:**
 
 * **`# -*- coding: utf-8 -*-`**: Указание кодировки файла как UTF-8.
-* **`#! venv/Scripts/python.exe`**: Указание интерпретатора Python, используемого для выполнения скрипта. Это важно для Windows, где используется виртуальное окружение `venv`.
+* **``**: Указание интерпретатора Python, используемого для выполнения скрипта. Это важно для Windows, где используется виртуальное окружение `venv`.
 * **`""" module: src.webdriver.edge.extentions """`**: Строка документации, описывающая модуль.
 * **`""" """`**: Пустая строка документации, вероятно, нуждается в доработке.  Важно заполнить эту строку  подробным описанием модуля `extentions`.
 * **`from packaging.version import Version`**: Импорт класса `Version` для работы с версиями.

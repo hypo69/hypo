@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.gemini """
+MODE = 'debug'
+""" module: src.ai.gemini """
+MODE = 'debug'
 """ AI Suppliers """
 import sys
 from pathlib import Path

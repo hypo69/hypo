@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/db/_examples/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db._examples """
 """ @namespace src.db._examples """

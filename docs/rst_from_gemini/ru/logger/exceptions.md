@@ -1,89 +1,66 @@
-```python
-## \file hypotez/src/logger/exceptions.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.logger """
+```markdown
+# exceptions.py
 
-""" Program Exceptions """
-from typing import Optional
-from src.logger import logger
-from selenium.common.exceptions import WebDriverException as WDriverException
-from pykeepass.exceptions import (CredentialsError, BinaryError,
-                                   HeaderChecksumError, PayloadChecksumError,
-                                   UnableToSendToRecycleBin)
-import traceback
+Файл: `hypotez/src/logger/exceptions.py`
 
-class CustomException(Exception):
-    """Base custom exception.  Includes logging and handling for original exceptions."""
-    
-    def __init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True):
-        super().__init__(message)
-        self.original_exception = e
-        self.exc_info = exc_info  # Flag to determine if traceback should be logged
-        self.log_exception()
+Этот файл определяет пользовательские исключения для модуля логирования `hypotez.src.logger`. Он расширяет стандартные исключения Python и предоставляет специфические классы для различных ситуаций, возникающих при работе с приложением.
 
-    def log_exception(self):
-        """Logs the exception and any original exceptions, including the traceback."""
-        try:
-            logger.error(f"Exception occurred: {self}, Message: {self.args[0]}")
-            if self.exc_info:
-                logger.debug("Full traceback info:", exc_info=True)
-            if self.original_exception:
-                logger.debug(f"Original exception: {self.original_exception}")
-                if self.exc_info and self.original_exception:
-                    logger.debug("Original exception's traceback:", exc_info=True)
-        except Exception as e:
-            logger.error(f"Error during exception logging: {e}")
+## Исключения
 
-# ... (rest of the code is the same) ...
+* **`CustomException`**: Базовое пользовательское исключение.
+    * Принимает сообщение об ошибке (`message`) и необязательное исходное исключение (`e`).
+    * Логирует ошибку с помощью `logger.error()`.
+    * Логирует исходное исключение, если оно предоставлено, с помощью `logger.debug()`.
+    * Метод `handle_exception()` предоставляет базовый обработчик исключений.  **Важно:** В реальных приложениях здесь должна быть добавлена логика для обработки исключений, например, повторных попыток, отслеживания проблем и т.д.
+    * Атрибут `exc_info` позволяет передавать информацию о стеке вызовов для более подробной диагностики (включая `traceback`).
 
-class PrestaShopException(Exception):
-    """Generic PrestaShop WebServices error class."""
-    def __init__(self, msg: str, error_code: Optional[int] = None,
-                 ps_error_msg: str = '', ps_error_code: Optional[int] = None):
-        self.msg = msg
-        self.error_code = error_code
-        self.ps_error_msg = ps_error_msg
-        self.ps_error_code = ps_error_code
-        super().__init__(self.get_full_message())
+* **`FileNotFoundError`**: Исключение, генерируемое, когда файл не найден. Наследуется от `CustomException` и `IOError`.
 
-    def get_full_message(self):
-      """Returns a user-friendly error message."""
-      if self.ps_error_msg:
-        return f"{self.msg} (PrestaShop Error Code: {self.ps_error_code}, Message: {self.ps_error_msg})"
-      else:
-        return f"{self.msg} (Error Code: {self.error_code})"
+* **`ProductFieldException`**: Исключение, связанное с ошибками обработки полей продукта. Наследуется от `CustomException`.
 
-    def __str__(self):
-      return self.get_full_message()
+* **`KeePassException`**: Исключение, связанное с проблемами подключения к базе данных KeePass. Наследуется от нескольких исключений `pykeepass`.
+
+* **`DefaultSettingsException`**: Исключение, связанное с проблемами при настройке стандартных значений. Наследуется от `CustomException`.
+
+* **`WebDriverException`**: Исключение, связанное с WebDriver. Наследуется от `selenium.common.exceptions.WebDriverException`.
+
+* **`ExecuteLocatorException`**: Исключение, связанное с ошибками выполнения локейторов. Наследуется от `CustomException`.
+
+* **`PrestaShopException`**: Общий класс ошибок для веб-сервисов PrestaShop.
+    * Содержит информацию об ошибке PrestaShop (код и сообщение) помимо общего сообщения.
+    * При вызове `str(exception)` возвращает сообщение PrestaShop или общее сообщение, если оно задано.
 
 
-
-```
-
-**Improvements and Explanations:**
-
-* **`log_exception()` method:** This centralizes exception logging within `CustomException`.  It's more organized and prevents potential errors if the logging logic is needed in multiple places. Critically, it now handles any potential errors during logging itself, preventing crashes.  Crucially, it now uses `exc_info=True`  for the original exception if the `exc_info` flag is set.
-* **`exc_info` parameter:**  The `CustomException` now accepts an `exc_info` parameter.  This allows the caller to control whether to include a full traceback of the original exception in the log.  This is particularly useful if you want to log detailed traceback for debugging but don't want that level of detail in production logs.
-* **Robust Logging:** The logging is now more robust to handle potential errors that might occur during logging. This is essential because if you get an error while logging an exception, it could cause your application to fail silently.
-* **`PrestaShopException` Enhancement:** The `PrestaShopException` now has a `get_full_message()` method. This method constructs a more user-friendly error message that includes the PrestaShop error code and message, if available, in a cleaner format.  This makes debugging easier.
+* **`PrestaShopAuthenticationError`**: Исключение для ошибок аутентификации PrestaShop (например, авторизации). Наследуется от `PrestaShopException`.
 
 
-**How to use the improved `CustomException`:**
+## Применение
+
+Для использования исключений нужно создать экземпляр класса и поднять его с помощью оператора `raise`:
 
 ```python
 try:
-    # ... some code that might raise an exception ...
-except SomeException as e:
-    raise CustomException("A problem occurred", e, exc_info=True) # Log full traceback
+    # Код, который может вызвать ошибку
+    ...
+except FileNotFoundError as e:
+    # Обработка ошибки
+    logger.error(f"Ошибка: {e}")
+    # ...
 ```
 
-```python
-try:
-    # ... some code that might raise an exception ...
-except SomeException as e:
-    raise CustomException("A problem occurred", e, exc_info=False) # Don't log full traceback
-```
+## Важные моменты:
 
-By setting `exc_info` to `True` or `False`, you choose whether or not to capture the traceback of the original exception when logging it.  This improved structure helps make your exception handling and logging cleaner, more robust, and more informative. Remember to adapt this structure to your specific error handling needs.
+* **Документация:** Добавлены подробные описания каждого исключения.
+* **Наследование:** Исключения структурированы по уровням наследования, что позволяет избежать дублирования кода и упростить обработку ошибок.
+* **`exc_info`:** Добавлена возможность передавать информацию о стеке вызовов (`traceback`) для лучшей диагностики.
+* **`PrestaShopException`:** Подробная обработка ошибок, исходящих из веб-сервисов PrestaShop.
+
+**Рекомендации:**
+
+* **Логирование:** Необходимо тщательно продумать стратегию логирования. Добавление более конкретных сообщений в `logger.error` и `logger.debug` будет полезно для анализа проблем.
+* **Обработка ошибок:** В `handle_exception` необходимо добавить логику обработки, чтобы избежать аварийного завершения программы. Это может включать повторные попытки, отмену операций и другие действия.
+* **Конкретные исключения:** Убедитесь, что вы используете наиболее подходящие исключения для каждой ситуации.  Более конкретные исключения часто ведут к более эффективной обработке.
+
+
+Этот улучшенный файл `exceptions.py` предоставляет более полную и удобную систему управления ошибками для вашего приложения.
+```

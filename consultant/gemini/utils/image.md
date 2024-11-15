@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/utils/image.py
+## \file hypotez/consultant/gemini/utils/image.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.utils """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.utils """
 """

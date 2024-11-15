@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*- 
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## \file hypotez/src/endpoints/hypo69/onela_bot.py
 # ~~~~~~~~~~~~~ 
 """ module: src.endpoints.hypo69

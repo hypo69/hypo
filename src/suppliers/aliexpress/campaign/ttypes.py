@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/ttypes.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.campaign """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.campaign """
+MODE = 'debug'
 """ Определение типов `campaign`, `category`, `product` """
 
 

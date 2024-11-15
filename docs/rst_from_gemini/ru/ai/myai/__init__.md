@@ -8,7 +8,7 @@
 ```python
 ## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ Модуль: src.ai.myai """
 """ Поставщики ИИ """

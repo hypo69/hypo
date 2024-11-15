@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/bots/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.bots """
+MODE = 'debug'
 **Результат анализа:**
 
 Код в `__init__.py` файла  `hypotez/src/endpoints/bots` имеет несколько потенциальных проблем и улучшений:
@@ -19,8 +24,6 @@
 
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 
 """ module: src.endpoints.bots """
 

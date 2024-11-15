@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/prestashop/api/api.py
+## \file hypotez/consultant/gemini/endpoints/prestashop/api/api.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop.api """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop.api """
 

@@ -12,7 +12,7 @@ This file defines version information for the Telegram bot component of the `hyp
 ```python
 ## \file hypotez/src/endpoints/bots/telegram/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.bots.telegram """
 """
@@ -39,14 +39,14 @@ The file is intended to store version information for the Telegram bot component
 * **Missing types:** `__name__`, `__doc__`, and `__details__` are declared as type `str` (which is correct for those variables). However, it lacks `__author__` type hints.
 * **Unused `__annotations__`:** The `__annotations__` variable is declared but not used. This is unnecessary and should be removed.
 * **Incomplete `__doc__`:** While the docstring explains the variables, it's not very informative about the actual function or role of the file.
-* **`#! venv/Scripts/python.exe`:** This line is a shebang for Windows systems, instructing the system to run the script with the Python interpreter in the virtual environment.
+* **``:** This line is a shebang for Windows systems, instructing the system to run the script with the Python interpreter in the virtual environment.
 
 **Suggested improvements:**
 
 ```python
 ## \file hypotez/src/endpoints/bots/telegram/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Module containing version information for the Telegram bot endpoint.
 """

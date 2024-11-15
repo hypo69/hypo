@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: hypotez/src/___beeryakov """
 """  Модуль для парсинга страниц в гугл таблицу.

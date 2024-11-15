@@ -1,8 +1,10 @@
 ## \file hypotez/src/_experiments/test_file_operations.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src._experiments """
+MODE = 'debug'
+""" module: src._experiments """
+MODE = 'debug'
 import os
 
 def test_file_operations():

@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/db/manager_coupons_and_sales/__init__.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db.manager_coupons_and_sales """
+MODE = 'debug'
 ```
 # \file hypotez/src/db/manager_coupons_and_sales/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_coupons_and_sales """
 """ Менеджер скидок, купонов и т.п. в Prestashop  """

@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 """
 hypotez/src/endpoints/advertisement/facebook/start_sergey.py
 

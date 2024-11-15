@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/hb/_experiments/ide_experiments_grabber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.hb._experiments """
+MODE = 'debug'
+""" module: src.suppliers.hb._experiments """
+MODE = 'debug'
 """  Проверки исполнения сценариев HB.
 проверки:
 - получить заполненный словарь product_fields

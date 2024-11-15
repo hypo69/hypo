@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
+""" module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

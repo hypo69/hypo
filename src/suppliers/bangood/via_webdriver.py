@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/bangood/via_webdriver.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.bangood """
+MODE = 'debug'
+""" module: src.suppliers.bangood """
+MODE = 'debug'
 """  Модуль сбора товаров со страницы категорий поставщика bangood.co.il через вебдрайвер
 У каждого поставщика свой сценарий обреботки категорий
 

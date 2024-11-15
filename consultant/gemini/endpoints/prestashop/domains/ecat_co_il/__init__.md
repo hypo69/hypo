@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/prestashop/domains/ecat_co_il/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop.domains.ecat_co_il """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop.domains.ecat_co_il """
 """    Client's websites
@@ -56,8 +59,6 @@ hypotez/
 In `ecat_co_il/__init__.py`:
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 
 """ module: src.endpoints.prestashop.domains.ecat_co_il """
 """ Client's websites for ecat_co_il. """

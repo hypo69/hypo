@@ -10,7 +10,7 @@
 ```python
 ## \file hypotez/src/ai/dialogflow/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ Модуль: src.ai.dialogflow """
 """ Поставщики ИИ """

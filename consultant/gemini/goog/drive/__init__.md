@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/goog/drive/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog.drive """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog.drive """
 """ Google API """
@@ -21,8 +24,6 @@ The provided code is already quite good.  It's a standard Python module initiali
 **Example of improved documentation (within the file):**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.goog.drive """
 """ Google API """

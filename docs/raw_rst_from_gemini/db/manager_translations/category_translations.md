@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/db/manager_translations/category_translations.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_translations """
 """ Менджер переводов категорий.  Управляет базой данных для переводов категорий. """

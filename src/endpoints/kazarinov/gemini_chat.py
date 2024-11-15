@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/kazarinov/gemini_chat.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov """
+MODE = 'debug'
+""" module: src.endpoints.kazarinov """
+MODE = 'debug'
 
 """ 
 Module that handles model training using GoogleGenerativeAI for the Kazarinov project.

@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/chat_gpt/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.chat_gpt """
+MODE = 'debug'
+""" module: src.suppliers.chat_gpt """
+MODE = 'debug'
 
 """ Веб интерфейс взаимодействия с chatGPT.
 реализует логику получения диалога, радакцию в гугл таблицах и обучение модели

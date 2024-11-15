@@ -1,8 +1,10 @@
 ## \file hypotez/src/scenario/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.scenario """
+MODE = 'debug'
+""" module: src.scenario """
+MODE = 'debug'
 
 """   Module with scenario execution functions: `run_scenario_files`, `run_scenarios`  
 Scenario executor for suppliers.

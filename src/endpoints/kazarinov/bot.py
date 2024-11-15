@@ -1,11 +1,14 @@
 ## \file hypotez/src/endpoints/kazarinov/bot.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov """
+MODE = 'debug'
+""" module: src.endpoints.kazarinov """
+MODE = 'debug'
 """ Kazarinov's specific bot with customized behavior."""
 
 import asyncio
+import json
 import random
 from pathlib import Path
 from typing import List
@@ -24,9 +27,23 @@ from src.utils.string.url import is_url
 from src.logger import logger
 
 
+class KazarinovBotConfig(BaseModel):
+    """Config model for KazarinovTelegramBot."""
+    
+    mode: str
+    driver: dict
+    mexiron: dict
+    system_instruction_path: str
+    questions_list_path: str
+    url_handlers: dict
+    generation_config: dict
+    telegram: dict
+
+
 class KazarinovTelegramBot(TelegramBot, BaseModel):
     """Telegram bot with custom behavior for Kazarinov."""
 
+    config: KazarinovBotConfig
     token: str
     d: Driver
     mexiron: Mexiron
@@ -35,30 +52,39 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
     questions_list: List[str]
     timestamp: str = Field(default_factory=lambda: gs.now)
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, config_path: str):
+        # Загружаем конфигурацию из JSON
+        with open(config_path, "r", encoding="utf-8") as file:
+            config_data = json.load(file)
+        
+        self.config = KazarinovBotConfig(**config_data)
+        
+        # Выбираем токен на основе режима
         self.token = (
             gs.credentials.telegram.hypo69_test_bot
-            if kwargs.get('mode', 'test') == 'test'
+            if self.config.mode == 'test'
             else gs.credentials.telegram.hypo69_kazarinov_bot
         )
-
-        self.d = Driver(Chrome)
+        
+        # Инициализация драйвера и Mexiron
+        self.d = Driver(Chrome, **self.config.driver.get("options", {}))
         self.mexiron = Mexiron(self.d)
-
+        
+        # Загрузка системных инструкций и вопросов
         self.system_instruction = recursively_read_text_files(
-            gs.path.google_drive / 'kazarinov' / 'prompts' / 'chat_system_instruction.txt'
+            gs.path.google_drive / self.config.system_instruction_path
         )
         self.questions_list = recursively_read_text_files(
-            gs.path.google_drive / 'kazarinov' / 'prompts' / 'train_data' / 'q', ['*.*'], as_list=True
+            gs.path.google_drive / self.config.questions_list_path, ['*.*'], as_list=True
         )
-
+        
+        # Инициализация модели
         self.model = GoogleGenerativeAI(
             api_key=gs.credentials.gemini.kazarinov,
             system_instruction=self.system_instruction,
-            generation_config={"response_mime_type": "text/plain"}
+            generation_config=self.config.generation_config
         )
-
+        
         self.register_handlers()
 
     def register_handlers(self):
@@ -93,20 +119,10 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
 
     def get_handler_for_url(self, response: str):
         """Map URLs to specific handlers."""
-        url_handlers = {
-            "suppliers": (
-                ('https://morlevi.co.il', 'https://www.morlevi.co.il',
-                 'https://grandadvance.co.il', 'https://www.grandadvance.co.il',
-                 'https://ksp.co.il', 'https://www.ksp.co.il',
-                 'https://ivory.co.il', 'https://www.ivory.co.il'),
-                self.handle_suppliers_response
-            ),
-            "onetab": (('https://www.one-tab.com',), self.handle_onetab_response),
-        }
-        for urls, handler_func in url_handlers.values():
-            if response.startswith(urls):
-                return handler_func
-        return
+        for key, (urls, handler_func) in self.config.url_handlers.items():
+            if any(response.startswith(url) for url in urls):
+                return getattr(self, handler_func)
+        return None
 
     async def handle_suppliers_response(self, update: Update, response: str) -> None:
         """Handle suppliers' URLs."""
@@ -120,8 +136,7 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
         price, mexiron_name, urls = fetch_target_urls_onetab(response)
 
         if not all([price, mexiron_name, urls]):
-            error_message = 'Ошибка на сервере OneTab. Попробуй ещё раз через часок.'
-            await update.message.reply_text(error_message)
+            await update.message.reply_text('Ошибка на сервере OneTab. Попробуй ещё раз через часок.')
         elif await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
             await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
         else:
@@ -147,5 +162,6 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
 
 
 if __name__ == "__main__":
-    kt = KazarinovTelegramBot(mode = 'test') # или mode='prod' для рабочего токена
+    config_path = "config/kazarinov.json"
+    kt = KazarinovTelegramBot(config_path=config_path)
     asyncio.run(kt.application.run_polling())

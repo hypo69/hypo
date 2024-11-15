@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/wallashop/graber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.wallashop """
+MODE = 'debug'
+""" module: src.suppliers.wallashop """
+MODE = 'debug'
 
 
 import asyncio

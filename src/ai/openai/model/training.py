@@ -1,8 +1,10 @@
 ## \file hypotez/src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.openai.model """
+MODE = 'debug'
+""" module: src.ai.openai.model """
+MODE = 'debug'
 
 
 """ OpenAI Model Class for handling communication with the OpenAI API and training the model. """

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/ai/openai/_examples/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai.openai._examples """
+MODE = 'debug'
 ```
 Code Review for version.py
 
@@ -11,7 +16,7 @@ Issues:
 
 3. **Inconsistent Style:**  The use of triple quotes for docstrings is inconsistent.  `__doc__` and `__details__` are documented using the triple-quoted block style (though __details__ is a bit cryptic), but other sections use the single-line style.
 
-4. **`#! venv/Scripts/python.exe` comment is problematic:** This shebang line (`#!`) is likely a relic from a previous setup and may not be necessary.  It's not part of how Python modules typically function. It's important to keep your module's structure as standard as possible.
+4. **`` comment is problematic:** This shebang line (`#!`) is likely a relic from a previous setup and may not be necessary.  It's not part of how Python modules typically function. It's important to keep your module's structure as standard as possible.
 
 5. **Missing Docstrings for module-level attributes**:  While the overall module-level docstring is there, there are no docstrings describing what `__version__`, `__details__`, `__author__` actually *represent* in terms of the *specific* context of this module.
 
@@ -49,7 +54,6 @@ __author__: str = "hypotez"      # Author of this module
 **Example of improved code:**
 
 ```python
-# -*- coding: utf-8 -*-
 
 """ module: src.ai.openai._examples """
 __name__: str = "version"

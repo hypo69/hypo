@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/utils/cursor_spinner.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.utils """
+MODE = 'debug'
 ```
 Code Review: hypotez/src/utils/cursor_spinner.py
 

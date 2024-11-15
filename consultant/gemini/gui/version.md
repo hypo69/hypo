@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/gui/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.gui """
+MODE = 'debug'
 ```
 ## Проверка файла hypotez/src/gui/version.py
 

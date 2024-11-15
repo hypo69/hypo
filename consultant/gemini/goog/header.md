@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/goog/header.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.goog """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `header.py` пытается определить абсолютный путь к корневому каталогу проекта `hypotez` и добавить его в `sys.path`. Это типичный шаблон для работы с модулями в Python, особенно в проектах, которые имеют иерархию папок.

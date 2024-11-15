@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/ai/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` предназначен для определения метаданных проекта (имя, версия, автор и т.д.). Он пытается загрузить настройки из файла `../settings.json`.

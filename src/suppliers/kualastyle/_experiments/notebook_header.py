@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/kualastyle/_experiments/notebook_header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.kualastyle._experiments """
+MODE = 'debug'
+""" module: src.suppliers.kualastyle._experiments """
+MODE = 'debug'
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]

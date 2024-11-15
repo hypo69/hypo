@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai """
 import json
@@ -46,7 +46,7 @@ This updated code sets up variables that can be used by documentation generators
 
 * **`settings.json` Structure:**  The code assumes `settings.json` is in a format compatible with `json.load()`, e.g., a Python dictionary.  Ensure the structure and contents of `settings.json` are correct.
 * **Error Handling:** While the `try...except` block is good, more robust error handling might involve logging errors to a file for detailed debugging later.
-* **`venv`:** Ensure your `venv` environment is activated when running this Python script, as the shebang (`#! venv/Scripts/python.exe`) line indicates.
+* **`venv`:** Ensure your `venv` environment is activated when running this Python script, as the shebang (``) line indicates.
 
 
 

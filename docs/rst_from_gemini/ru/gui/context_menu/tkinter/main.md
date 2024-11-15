@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/gui/context_menu/tkinter/main.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.gui.context_menu.tkinter """
 

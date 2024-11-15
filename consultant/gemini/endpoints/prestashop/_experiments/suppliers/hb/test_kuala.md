@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb/test_kuala.py
+## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/suppliers/hb/test_kuala.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop._experiments.suppliers.hb """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.prestashop._experiments.suppliers.hb """
 from urllib.parse import urlparse

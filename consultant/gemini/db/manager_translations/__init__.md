@@ -1,7 +1,9 @@
-```
-## \file hypotez/src/db/manager_translations/__init__.py
+## \file hypotez/consultant/gemini/db/manager_translations/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.db.manager_translations """
+MODE = 'debug'
+```
 """ module: src.db.manager_translations """
 """ Менеджер переводов """
 

@@ -1,3 +1,10 @@
+## \file hypotez/src/utils/printer.py
+# -*- coding: utf-8 -*-
+
+""" module: src.utils """
+MODE = 'debug'
+""" module: src.utils """
+MODE = 'debug'
 import json
 import csv
 import pandas as pd

@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/aliexpress/api/api.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress.api """
+MODE = 'debug'
+""" module: src.suppliers.aliexpress.api """
+MODE = 'debug'
 """ AliExpress API wrapper for Python
 
 A simple Python wrapper for the AliExpress Open Platform API. This module allows

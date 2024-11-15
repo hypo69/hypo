@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/product/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.product """
+MODE = 'debug'
 **Анализ кода:**
 
 Файл `version.py` определяет переменные, представляющие информацию о продукте (имя, версия, автор и т.д.).  Он пытается загрузить информацию из файла `settings.json`.
@@ -12,7 +17,6 @@
 **Рекомендации по улучшению:**
 
 ```python
-# -*- coding: utf-8 -*-
 import json
 import os
 

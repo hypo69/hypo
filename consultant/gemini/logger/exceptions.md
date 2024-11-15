@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/logger/exceptions.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.logger """
+MODE = 'debug'
 ```python
 # \file hypotez/src/logger/exceptions.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.logger """
 

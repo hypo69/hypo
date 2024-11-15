@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/_experiments/test_supplier.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers._experiments """
+MODE = 'debug'
+""" module: src.suppliers._experiments """
+MODE = 'debug'
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch

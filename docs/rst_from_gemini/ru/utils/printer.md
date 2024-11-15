@@ -4,7 +4,7 @@
 @@ -1,7 +1,7 @@
  ## \file hypotez/src/utils/printer.py
  # -*- coding: utf-8 -*-
- #! venv/Scripts/python.exe # <- venv win
+  # <- venv win
 -## ~~~~~~~~~~~~~
 +
  """ module: src.utils """

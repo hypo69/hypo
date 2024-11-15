@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/bs/bs.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.bs """
+MODE = 'debug'
+""" module: src.webdriver.bs """
+MODE = 'debug'
 """ parse pages with `BeautifulSoup` and XPath 
 @code
 if __name__ == "__main__":

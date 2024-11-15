@@ -1,7 +1,7 @@
 ```python
 ## \file hypotez/src/ai/helicone/helicone.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.ai.helicone """
 """! This module provides functionalities for interacting with the Helicone AI platform.

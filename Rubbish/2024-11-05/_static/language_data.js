@@ -1,3 +1,8 @@
+## \file hypotez/Rubbish/2024-11-05/_static/language_data.js
+# -*- coding: utf-8 -*-
+
+""" module: Rubbish.2024-11-05._static """
+MODE = 'debug'
 /*
  * language_data.js
  * ~~~~~~~~~~~~~~~~

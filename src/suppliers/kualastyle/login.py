@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/kualastyle/login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.kualastyle """
+MODE = 'debug'
+""" module: src.suppliers.kualastyle """
+MODE = 'debug'
 
 """  Функции авторизации поставщика """
 

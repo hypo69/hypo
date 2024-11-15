@@ -1,3 +1,8 @@
+## \file hypotez/src/webdriver/chrome/readme.md
+# -*- coding: utf-8 -*-
+
+""" module: src.webdriver.chrome """
+MODE = 'debug'
 
 ### How WebDriver and DevTools Work Together
 

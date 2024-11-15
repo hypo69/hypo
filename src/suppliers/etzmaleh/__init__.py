@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/etzmaleh/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.etzmaleh """
+MODE = 'debug'
+""" module: src.suppliers.etzmaleh """
+MODE = 'debug'
 
 """  Постaвщик <i>wallmart</i>
 """

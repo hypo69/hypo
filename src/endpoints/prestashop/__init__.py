@@ -1,8 +1,10 @@
 ## \file hypotez/src/endpoints/prestashop/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop """
+MODE = 'debug'
+""" module: src.endpoints.prestashop """
+MODE = 'debug'
 """ Модуль обработки запросов к базам данных Prestashop.
 Адаптер для API
 """

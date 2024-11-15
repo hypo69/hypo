@@ -1,6 +1,10 @@
+## \file hypotez/consultant/gemini/ai/gemini/html_chat/app.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.ai.gemini.html_chat """
+MODE = 'debug'
 ```python
 # hypotez/src/ai/gemini/html_chat/app.py
-# -*- coding: utf-8 -*-
 """ module: src.ai.gemini.html_chat """
 """! Модуль для веб-чата с моделью Kazarinov """
 

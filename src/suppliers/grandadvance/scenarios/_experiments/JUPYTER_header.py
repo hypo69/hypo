@@ -1,8 +1,10 @@
 ## \file hypotez/src/suppliers/grandadvance/scenarios/_experiments/JUPYTER_header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.grandadvance.scenarios._experiments """
+MODE = 'debug'
+""" module: src.suppliers.grandadvance.scenarios._experiments """
+MODE = 'debug'
 import sys
 import os
 from pathlib import Path

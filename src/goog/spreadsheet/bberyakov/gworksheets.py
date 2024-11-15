@@ -1,8 +1,10 @@
 ## \file hypotez/src/goog/spreadsheet/bberyakov/gworksheets.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog.spreadsheet.bberyakov """
+MODE = 'debug'
+""" module: src.goog.spreadsheet.bberyakov """
+MODE = 'debug'
 """  [File's Description]
 
 @namespace src: src

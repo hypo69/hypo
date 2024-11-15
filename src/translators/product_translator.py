@@ -1,8 +1,10 @@
 ## \file hypotez/src/translators/product_translator.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.translators """
+MODE = 'debug'
+""" module: src.translators """
+MODE = 'debug'
 
 """ Модуль управления переводами.
 Слой связи между словарем полей товара, таблицей переводов и переводчиками

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/manager_translations/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db.manager_translations """
+MODE = 'debug'
 ```
 File: C:\Users\user\Documents\repos\hypotez\src\db\manager_translations\version.py
 
@@ -25,8 +30,6 @@ Issues:
 **Revised Code (with fixes):**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.db.manager_translations """
 """ @namespace src.db.manager_translations """

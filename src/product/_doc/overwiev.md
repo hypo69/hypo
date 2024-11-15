@@ -1,3 +1,8 @@
+## \file hypotez/src/product/_doc/overwiev.md
+# -*- coding: utf-8 -*-
+
+""" module: src.product._doc """
+MODE = 'debug'
 I'll start by extracting the contents of the `product.zip` file to see what it contains. Let's proceed with that.
 
 I'll extract the contents of the `product.zip` file.

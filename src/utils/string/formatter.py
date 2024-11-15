@@ -1,8 +1,10 @@
 ## \file hypotez/src/utils/string/formatter.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils.string """
+MODE = 'debug'
+""" module: src.utils.string """
+MODE = 'debug'
 """
 String formatting functions.
 

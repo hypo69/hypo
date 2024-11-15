@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/start_posting_katia.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.advertisement.facebook """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.advertisement.facebook """
 

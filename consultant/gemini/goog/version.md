@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/goog/version.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog """
 import json

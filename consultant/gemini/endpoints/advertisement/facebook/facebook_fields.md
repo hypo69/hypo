@@ -1,7 +1,10 @@
+## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/facebook_fields.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.advertisement.facebook """
+MODE = 'debug'
 ```python
 # \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.advertisement.facebook """
 """! This module defines Facebook fields for advertisements and events.  It loads fields from a JSON file. """

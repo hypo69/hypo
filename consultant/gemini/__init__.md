@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
+""" module: consultant.gemini """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src """
 """  **Это корневая директория проекта**

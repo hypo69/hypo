@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/db/manager_translations/_tests/ProductTranslationsManager.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.db.manager_translations._tests """
+MODE = 'debug'
 The code is a good starting point for testing the `ProductTranslationsManager`.  However, there are some areas that could be improved for robustness and clarity.
 
 **Issues and Improvements:**

@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/goog/google_search.py
+## \file hypotez/consultant/gemini/goog/google_search.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog """
 """ @namespace src.google """

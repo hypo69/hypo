@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/ai/dialogflow/dialogflow.py
+## \file hypotez/consultant/gemini/ai/dialogflow/dialogflow.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.ai.dialogflow """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.ai.dialogflow """
 """! This module provides an interface to interact with the Dialogflow API.

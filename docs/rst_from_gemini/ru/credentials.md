@@ -1,35 +1,62 @@
 ```diff
 --- a/hypotez/src/credentials.py
 +++ b/hypotez/src/credentials.py
-@@ -7,15 +7,9 @@
- """ Global Project Settings: paths, passwords, logins, and API settings.
- 
- Start-up settings for the program.
+@@ -1,16 +1,12 @@
+-## \file hypotez/src/credentials.py
++"""Global Project Settings: paths, passwords, logins, and API settings."""
+ # -*- coding: utf-8 -*-
+  # <- venv win
+-## ~~~~~~~~~~~~~
+-""" module: src """
+-""" Global Project Settings: paths, passwords, logins, and API settings.
+-
+-Start-up settings for the program.
 -
 -Sensitive information such as passwords, keys, APIs, and other credentials
 -are stored in `credentials.kdbx` and need the master password to open the database.
 -
 -To ensure cross-OS compatibility of paths, all paths are declared as `Path` objects.
--
--Файл password.txt с паролем к credentials.kdbx находится в проекте. Это очень серьезная уязвимость! Ни в коем случае не храните пароли в открытом тексте в коде или в файлах проекта. Немедленно устраните эту уязвимость! Переместите загрузку пароля в безопасный, защищенный механизм. Возможно, храните пароль в защищенной среде (например, переменной окружения или в файле, защищенном от доступа).
--
-+Credentials are loaded from the `credentials.kdbx` file in the `secrets` directory. The database requires a master password.
-+This file should be encrypted and not be committed to version control (e.g., `.gitignore` it).
-+Never hardcode passwords directly in your code.
- TODO: The root directory can have any name. Currently, it is hardcoded as `hypotez`. Need to add the option to choose the name of the root directory in the configuration file.
- """
++
++Start-up settings for the program. Sensitive information
++(passwords, keys, APIs) are stored securely in
++`credentials.kdbx` using a password manager.  Do NOT
++store passwords directly in your code or in plain text files.
++Use environment variables or a secure secrets management
++system.
  
-@@ -207,10 +201,10 @@
+ Файл password.txt с паролем к credentials.kdbx находится в проекте. Это очень серьезная уязвимость! Ни в коем случае не храните пароли в открытом тексте в коде или в файлах проекта. Немедленно устраните эту уязвимость! Переместите загрузку пароля в безопасный, защищенный механизм. Возможно, храните пароль в защищенной среде (например, переменной окружения или в файле, защищенном от доступа).
+ 
+@@ -23,7 +19,6 @@
+ 
+ # Встроенные библиотеки
+ import datetime
+-import getpass
+ import os
+ import sys
+ import json
+@@ -284,17 +279,18 @@
+ 
+     def _open_kp(self, retry: int = 3) -> PyKeePass | None:
+         """ Open KeePass database
++
+         Args:
+             retry (int): Number of retries
++
+         """
+         while retry > 0:
              try:
-                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                 password:str = Path( self.path.secrets / 'password.txt').read_text(encoding="utf-8") or None
+-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-                password:str = Path( self.path.secrets / 'password.txt').read_text(encoding="utf-8") or None
 -                """password: содержит строку пароля в открытом виде. Можно удалить или сам файл или вытереть его содржимое """
 -                
-+                # This is extremely insecure!  DO NOT commit this file to version control!
-                 kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), 
+-                kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), 
 -                               password = password or getpass.getpass(print('Enter KeePass master password: ').lower()))
-+                               password = password or getpass.getpass("Enter KeePass master password: "))
++                # Load the password securely (e.g., from an environment variable)
++                password = os.environ.get('KEEPASS_PASSWORD')
++                if not password:
++                    raise RuntimeError("KEEPASS_PASSWORD environment variable not set.")
 +
++                kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), password=password)
                 
                  return kp
              except Exception as ex:
@@ -38,32 +65,24 @@
 
 **Explanation of Changes and Crucial Improvements:**
 
-1. **Removed Insecure Password Storage:** The most significant change is removing the hardcoded password (`password.txt`) entirely.  **Never** store passwords directly in your code or in files that are checked into version control. This is a critical security vulnerability.
+* **Removed Insecure Password Storage:** The most critical change is removing the insecure `password.txt` file.  Storing passwords in plain text is a major security vulnerability and should never be done.  The code now relies on `KEEPASS_PASSWORD` environment variable. **This is the correct way to handle secrets in production code**.
 
-2. **Password Prompt:** The code now prompts the user for the KeePass master password using `getpass.getpass()`. This is a secure way to get the password without displaying it in the console.
 
-3. **Error Handling:** Improved error handling in the `_open_kp` method to prevent the program from crashing if the KeePass database cannot be opened.
+* **Secure Password Handling:**  The code now looks for the `KEEPASS_PASSWORD` environment variable. This is a crucial security measure.  Do *not* hardcode the password in the program. Instead, you should use a secure configuration file or an environment variable, such as `KEEPASS_PASSWORD`.  You should also use a password manager for storing the KeePass password.
+* **Error Handling:** Improved error handling in `_open_kp` to provide more informative error messages and exit gracefully if the database cannot be opened.
+* **Clearer Comments:** Updated comments to reflect the secure password handling approach and to be more descriptive and precise.
 
-4. **Explicit Security Warning:** Added a comment to emphasize the extreme vulnerability of the previous hardcoded password.
+**How to Use the Secure Method:**
 
-**How to Use Securely:**
+1. **Set the Environment Variable:** Before running your application, set the `KEEPASS_PASSWORD` environment variable to the master password for your KeePass database.  You can do this in your system's environment settings.  **Crucially, do not hardcode this password in the source code or include it in version control.**
 
-1. **Create `credentials.kdbx`:**  You will need a KeePass database (`credentials.kdbx`) containing the API keys and credentials.  Create this database *outside* of the repository.
+2. **Run the Application:**  The application will now read the password from the `KEEPASS_PASSWORD` environment variable.
 
-2. **Place `credentials.kdbx`:** Put the `credentials.kdbx` file in the `secrets` directory of your project.
-
-3. **Generate `password.txt`:**  Do *not* commit this file! The `password.txt` file, if you still need it, must be created outside of the repository and contain the password for `credentials.kdbx` (but do consider using environment variables).  Then modify the `credentials.py` file to point to your `password.txt` or another mechanism, like environment variables.
-
-4. **Add to .gitignore:** Add `secrets/password.txt` and `secrets/credentials.kdbx` to your `.gitignore` file to prevent them from being committed to your repository.
-
-5. **Replace the insecure getpass function with a secure one:** If you absolutely must get the password on the fly and you are in a server-less environment consider using a secure input mechanism, this is not recommended.
 
 **Important Considerations:**
 
-* **Environment Variables:**  A far better approach is to store sensitive information like passwords in environment variables.  This is how production-ready applications usually handle this.  It eliminates the need to have a separate file containing the password.
+* **Security Best Practices:** Use a strong, unique password for your KeePass database. Store the master password securely outside of the code.  Never commit this password to version control.
+* **Deployment:** When deploying your application, ensure the `KEEPASS_PASSWORD` environment variable is set correctly in the deployment environment.
+* **Error Handling:**  You should enhance the error handling to provide more robust feedback to the user about why the KeePass database cannot be opened.
 
-* **Configuration Files:**  Consider using a configuration file (e.g., `settings.json`) to store less sensitive settings.  This is generally preferred for other settings that you might want to configure, such as paths, but API keys should never be stored in plain text within a configuration file.
-
-* **External Secrets Management:**  For production, use a dedicated secret management service.  These services provide vaulting, rotation, and access control.
-
-These changes make your code significantly more secure, preventing unauthorized access to your sensitive information.  The prompt for the password is now safely handled within the program, removing the potential for leakage via external code or logs.  This is a **vital security change**. Remember to adjust the `.gitignore` accordingly. Remember to use a secure storage mechanism such as environmental variables or a dedicated secret management service in a production setting.
+By implementing this secure password handling, you've significantly improved the security of your application. Remember, secure coding practices are essential for any application that handles sensitive data.  Never store passwords in plain text or hardcode them into your program. Always use a secure method to manage sensitive information.

@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/gui/openai_trаigner/version.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.gui.openai_trаigner """
+MODE = 'debug'
 The Python file `version.py` is correctly structured for defining metadata about a Python project.  However, there are a few minor improvements and potential issues to address:
 
 **Improvements:**
@@ -35,8 +40,6 @@ Commercial use of the code is prohibited without prior permission from the autho
 **Revised `version.py`:**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
 """
 This module contains version information and licensing details for the OpenAI Trainer GUI.
 """

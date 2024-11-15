@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/suppliers/supplier.py
+## \file hypotez/consultant/gemini/suppliers/supplier.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.suppliers """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers """
 

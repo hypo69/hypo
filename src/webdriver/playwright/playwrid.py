@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/playwright/playwrid.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.playwright """
+MODE = 'debug'
+""" module: src.webdriver.playwright """
+MODE = 'debug'
 """ Playwrid Crawler
 
 This code defines a subclass of `PlaywrightCrawler` called `Playwrid`. 

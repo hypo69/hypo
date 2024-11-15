@@ -1,6 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
 
 Список всех доступных ресурсов для API вызовов.
@@ -88,7 +88,7 @@ resource: list = [
 
 * **`resource` as a list:** Maintained the list structure.
 
-* **`#! venv/Scripts/python.exe`:** Kept the shebang line, which is crucial for Windows to execute the Python script using the correct interpreter within the virtual environment.
+* **``:** Kept the shebang line, which is crucial for Windows to execute the Python script using the correct interpreter within the virtual environment.
 
 
 These changes significantly improve the code's documentation and clarity, making it more useful and maintainable. Remember to always add comprehensive docstrings to your modules and functions!

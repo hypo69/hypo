@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/endpoints/prestashop/domains/emildesign_com/__init__.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.prestashop.domains.emildesign_com """
+MODE = 'debug'
+```python
 """
 Module: src.endpoints.prestashop.domains.emildesign_com
 """

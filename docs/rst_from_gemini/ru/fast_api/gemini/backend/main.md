@@ -12,7 +12,7 @@
 ```python
 ## \file hypotez/src/fast_api/gemini/backend/main.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.fast_api.gemini.backend """
 ```
@@ -24,7 +24,7 @@
 **Примечания:**
 
 * `# -*- coding: utf-8 -*-`: Устанавливает кодировку файла в UTF-8.
-* `#! venv/Scripts/python.exe`: Указывает интерпретатор Python для выполнения скрипта (вероятно, указывает на виртуальное окружение `venv`).
+* ``: Указывает интерпретатор Python для выполнения скрипта (вероятно, указывает на виртуальное окружение `venv`).
 * `""" module: src.fast_api.gemini.backend """`:  Docstring модуля, определяющий его назначение.
 
 **Дальнейшие шаги:**

@@ -11,7 +11,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.hb.scenarios """
 
@@ -39,7 +39,7 @@ from .login import login
 
 **Комментарии:**
 
-* Строка `#! venv/Scripts/python.exe # <- venv win` указывает интерпретатор Python, используемый в этом проекте (важно для Windows).
+* Строка ` # <- venv win` указывает интерпретатор Python, используемый в этом проекте (важно для Windows).
 * Комментарии документируют назначение модуля и поставщика.
 * Должны быть файлы `version.py`, `categories.py`, `grabber.py`, `login.py` в папке `scenarios`, содержащие реализацию функций, импортированных в `__init__.py`.
 

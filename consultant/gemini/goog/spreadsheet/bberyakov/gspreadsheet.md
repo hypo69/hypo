@@ -1,6 +1,9 @@
-```python
+## \file hypotez/consultant/gemini/goog/spreadsheet/bberyakov/gspreadsheet.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.goog.spreadsheet.bberyakov """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.goog.spreadsheet.bberyakov """
 """  This module provides a class for interacting with Google Sheets. """

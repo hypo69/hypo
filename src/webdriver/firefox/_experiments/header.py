@@ -1,8 +1,10 @@
 ## \file hypotez/src/webdriver/firefox/_experiments/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver.firefox._experiments """
+MODE = 'debug'
+""" module: src.webdriver.firefox._experiments """
+MODE = 'debug'
 """ Установкя кораня проекта в системный путь """
 
 import sys,os

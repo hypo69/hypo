@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/suppliers/hb/test_5_lxml_get_unique_links_DFS_algoryphm_hb.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop._experiments.suppliers.hb """
+MODE = 'debug'
 ```python
 import requests
 from lxml import etree

@@ -1,8 +1,10 @@
 ## \file hypotez/src/category/category.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.category """
+MODE = 'debug'
+""" module: src.category """
+MODE = 'debug'
 """ @namespace src.category """
 
 """ Модуль работы с категориями 

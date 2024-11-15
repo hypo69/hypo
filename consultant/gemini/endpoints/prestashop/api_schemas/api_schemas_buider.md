@@ -1,3 +1,8 @@
+## \file hypotez/consultant/gemini/endpoints/prestashop/api_schemas/api_schemas_buider.md
+# -*- coding: utf-8 -*-
+
+""" module: consultant.gemini.endpoints.prestashop.api_schemas """
+MODE = 'debug'
 Этот файл `api_schemas_buider.py` является пустым и служит скорее всего для будущей реализации.  Он находится в подпапке `api_schemas` папки `prestashop` в проекте `hypotez`.
 
 **Предполагаемое назначение:**
@@ -21,7 +26,6 @@
 **Пример (предварительный):**
 
 ```python
-# -*- coding: utf-8 -*-
 import json
 
 def build_prestashop_schemas(input_file):

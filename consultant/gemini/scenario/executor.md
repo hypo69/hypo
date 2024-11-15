@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/scenario/executor.py
+## \file hypotez/consultant/gemini/scenario/executor.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.scenario """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.scenario """
 

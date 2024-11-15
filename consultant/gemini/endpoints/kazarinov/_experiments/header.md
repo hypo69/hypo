@@ -1,7 +1,9 @@
-```python
-## \file hypotez/src/endpoints/kazarinov/_experiments/header.py
+## \file hypotez/consultant/gemini/endpoints/kazarinov/_experiments/header.md
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+
+""" module: consultant.gemini.endpoints.kazarinov._experiments """
+MODE = 'debug'
+```python
 ## ~~~~~~~~~~~~~
 """ module: src.endpoints.kazarinov._experiments """
 
