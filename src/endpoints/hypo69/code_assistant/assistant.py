@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Iterator, List, Optional
 from pydantic import BaseModel, Field
 
+from __init__ import gs
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
 from src.utils.file import read_text_file
@@ -71,6 +72,8 @@ class CodeAssistant(BaseModel):
     def process_files(self):
         """Обработка файлов и взаимодействие с моделями."""
         for file_path, content in self.yield_files_content(self.start_dirs, ['*.py', 'README.MD']):
+
+            code_instructions = read_text_file(gs.path.src.endponits / 'hypo69' / 'instructions' / f'instruction_doc_creator_{self.lang}.md' if self.role == 'doc_creator' else f'instruction_doc_creator_{self.lang}.md')
             content_request = (
                 f"Роль выполнения: `{self.role}`.\nКод:\n\n```{content}```\n"
             )

@@ -183,6 +183,7 @@ storage/
 #docs/
 materials/
 secrets/
+
 *(*).*
 *.exe
 *.zip
@@ -194,9 +195,11 @@ hypo69-c32c8736ca62.json
 password.txt
 *.kdbx
 ___*.*
+___*
 *.bak
+desktop.ini
+password.txt
 
-# Sphinx .rst files
-*.rst
-*.doctree
-_build/
+#Sphins
+docs/sphinx/
+
