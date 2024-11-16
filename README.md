@@ -76,7 +76,7 @@ Here’s the list of required, pre-installed software for the project:
 1. **Web Browsers**: One or more of the following:
    - **Firefox**
    - **Chrome**
-   - **Edge**
+   - **Edge**   
    These are used in conjunction with browser drivers (in the `bin` folder) for testing and automation purposes.
 
 2. **PowerShell**: A task automation and configuration management framework from Microsoft, essential for executing scripts and managing workflows, especially in Windows environments.
