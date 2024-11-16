@@ -18,7 +18,7 @@ import json
 import re
 # ----------------
 #from hypotez import gs, Supplier, Product
-from __init__ import gs
+from header import gs
 from src.suppliers import Supplier
 from src.product import Product
 from categories import Category

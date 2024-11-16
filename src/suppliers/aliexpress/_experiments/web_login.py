@@ -15,7 +15,7 @@ from pathlib import Path
 import pickle
 import requests
 
-from __init__ import gs
+from header import gs
 from src.suppliers import Supplier
 from src.utils import pprint
 

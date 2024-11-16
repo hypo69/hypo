@@ -19,7 +19,7 @@ from pydantic import BaseModel
 from src.ai.gooogle_generativeai.kazarinov import Kazarinov
 import random
 from pathlib import Path
-from __init__ import gs
+from header import gs
 
 # Инициализация FastAPI
 app = FastAPI()

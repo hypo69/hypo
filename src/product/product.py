@@ -12,7 +12,7 @@ MODE = 'debug'
 
 
 
-from __init__ import gs
+from header import gs
 from src.endpoints.prestashop import Prestashop
 from src.category import Category
 from src.product.product_fields import ProductFields

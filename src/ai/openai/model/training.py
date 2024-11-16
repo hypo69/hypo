@@ -20,7 +20,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-from __init__ import gs
+from header import gs
 from src.utils import j_loads, j_loads_ns, j_dumps
 from src.utils.csv import save_csv_file  
 from src.utils import pprint

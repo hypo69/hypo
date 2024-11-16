@@ -11,7 +11,7 @@ MODE = 'debug'
 from typing import Union
 from pathlib import Path
 
-from __init__ import gs
+from header import gs
 from src.utils import j_dumps, j_loads
 from src.logger import logger
 

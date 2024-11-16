@@ -25,7 +25,7 @@ MODE = 'debug'
 from typing import Union
 from pathlib import Path
 
-from __init__ import gs
+from header import gs
 from src.logger import logger
 
 

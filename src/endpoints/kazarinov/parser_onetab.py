@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from typing import Optional, List, Tuple
 from src.utils import pprint
 from src.logger import logger
-from __init__ import gs
+from header import gs
 
 
 def prepare_one_tab(target_page_url: str) -> Tuple[int, str, List[str]] | bool:

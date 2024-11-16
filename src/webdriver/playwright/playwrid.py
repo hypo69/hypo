@@ -25,7 +25,7 @@ from turtle import pen
 from typing import Optional, Dict, Any
 from types import SimpleNamespace
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
-from __init__ import gs
+from header import gs
 from src.utils import j_loads_ns
 from src.logger import logger
 

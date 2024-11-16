@@ -11,7 +11,7 @@ MODE = 'debug'
 
 import header 
 
-from __init__ import gs
+from header import gs
 from src.ai import OpenAIModel, GoogleGenerativeAI
 from src.utils.file import recursively_get_filenames, read_text_file
 from src.utils.convertors import csv2json_csv2dict

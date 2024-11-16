@@ -17,7 +17,7 @@ import json
 import re
 # ----------------
 
-from __init__ import gs
+from header import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields
 from categories import Category

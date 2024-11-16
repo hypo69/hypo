@@ -13,7 +13,7 @@ MODE = 'debug'
 
 import header
 from header import  ecat_api_credentials, emil_api_credentials
-from __init__ import gs
+from header import gs
 from prestapyt import PrestaShopWebServiceDict
 from src.endpoints.prestashop.presta_apis.client import Prestashop 
 from src.endpoints.prestashop.presta_apis.presta_python_api_v2 import PrestaAPIV2

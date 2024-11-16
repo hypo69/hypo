@@ -21,7 +21,7 @@ from urllib.parse import urlencode
 from types import SimpleNamespace
 from typing import Optional
 
-from __init__ import gs
+from header import gs
 from src.endpoints.advertisement import facebook
 from src.webdriver import Driver, Chrome
 from src.suppliers.aliexpress.campaign import AliCampaignEditor

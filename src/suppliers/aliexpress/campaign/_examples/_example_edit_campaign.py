@@ -15,7 +15,7 @@ import shutil
 from pathlib import Path
 from typing import List, Optional, Union
 from types import SimpleNamespace
-from __init__ import gs
+from header import gs
 from src.suppliers.aliexpress.scenarios.campaigns import AliPromoCampaign
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids

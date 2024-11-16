@@ -20,7 +20,7 @@ MODE = 'debug'
 
 """
 # ---------------------------------
-from __init__ import gs
+from header import gs
 from src.utils import  pprint
 
 from src.endpoints.prestashop import Product as PrestaProduct, Category as PrestaCategory

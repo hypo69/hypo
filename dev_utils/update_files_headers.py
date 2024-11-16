@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 
-""" module: dev_utils """
-"""
+""" module: dev_utils 
 Описание:
 скрипт предназначен для обработки Python файлов в проекте "hypotez" с целью добавления или замены 
 заголовков, строк интерпретаторов и строк документации. Он выполняет обход всех файлов в проекте и 
@@ -183,7 +182,7 @@ def traverse_and_update(directory: Path, force_update: bool, exclude_venv: bool)
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
 
         for file in files:
-            if file.endswith(('.py', '.ps1', '.md', '.html', '.js', '.dot')):  # Добавлено условие для новых типов файлов
+            if file.endswith(('.py')) #, '.ps1', '.md', '.html', '.js', '.dot')):  # Добавлено условие для новых типов файлов
                 file_path = os.path.join(root, file)
                 add_or_replace_file_header(file_path, directory, force_update)
 

@@ -21,7 +21,7 @@ MODE = 'debug'
 """
 import header
 from dataclasses import dataclass, field
-from __init__ import gs
+from header import gs
 import json
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader

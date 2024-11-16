@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import List, Union
 from types import SimpleNamespace
 import time
-from __init__ import gs
+from header import gs
 from src.utils import j_loads, j_loads_ns
 from src.logger import logger
 from src.webdriver import Driver

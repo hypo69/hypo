@@ -24,7 +24,7 @@ Author(s):
 from src.logger import logger
 from typing import Union
 
-from __init__ import gs, logger
+from header import gs, logger
 
 # def run_scenario_via_webdriver(s, scenario_files: list[str,str]) -> bool:
 #     """ runs scerarios for supplier

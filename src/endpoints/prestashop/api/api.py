@@ -25,7 +25,7 @@ from pathlib import Path
 from xml.etree import ElementTree
 from xml.parsers.expat import ExpatError
 
-from __init__ import gs
+from header import gs
 from src.utils.file import save_text_file
 from src.utils.convertors import dict2xml, xml2dict, base64_to_tmpfile
 from src.utils.image import save_png_from_url

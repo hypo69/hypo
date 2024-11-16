@@ -17,7 +17,7 @@ from typing import Any, Callable
 from langdetect import detect
 from functools import wraps
 
-from __init__ import gs
+from header import gs
 from src.suppliers.locator import Locator
 from src.product.product_fields import ProductFields
 from src.category import Category

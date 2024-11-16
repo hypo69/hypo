@@ -21,7 +21,7 @@ dir_src = Path (dir_root, 'src')
 sys.path.append (str (dir_root) ) 
 # ----------------
 
-from __init__ import gs
+from header import gs
 from src.utils import pprint,jprint
 #from src.suppliers import Supplier
 #from src.product import Product, ProductFields

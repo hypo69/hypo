@@ -9,7 +9,7 @@ MODE = 'debug'
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header
-from __init__ import gs
+from header import gs
 from src.utils.convertors import html2text, html2text_file
 from src.utils.file import read_text_file, save_text_file
 

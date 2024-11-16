@@ -11,7 +11,7 @@ MODE = 'debug'
 Класс поставщика в `Prestashop`"""
 ...
 from types import SimpleNamespace
-from __init__ import gs
+from header import gs
 from src.logger import logger
 from src.utils import j_loads as j_loads
 from .api import Prestashop

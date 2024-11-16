@@ -33,7 +33,7 @@ from selenium.common.exceptions import (InvalidArgumentException,
                                         ElementClickInterceptedException, 
                                         ElementNotInteractableException, 
                                         ElementNotVisibleException )
-from __init__ import gs
+from header import gs
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException, WebDriverException
 

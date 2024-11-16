@@ -36,7 +36,7 @@ Author(s):
 from typing import Union
 import time
 # ----------------------------
-from __init__ import gs
+from header import gs
 from src.logger import logger
 from src.utils import StringFormatter, StringNormalizer
 from src.product import Product, ProductFields

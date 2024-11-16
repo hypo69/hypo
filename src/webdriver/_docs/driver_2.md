@@ -31,7 +31,7 @@ from selenium.common.exceptions import (
     ElementNotVisibleException
 )
 
-from __init__ import gs
+from header import gs
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.javascript.js import JavaScript
 from src.utils import pprint

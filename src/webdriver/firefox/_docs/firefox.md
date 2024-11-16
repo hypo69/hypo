@@ -53,7 +53,7 @@ from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.common.exceptions import WebDriverException
 from fake_useragent import UserAgent
 
-from __init__ import gs
+from header import gs
 from src.utils import j_loads_ns
 from src.logger import logger
 

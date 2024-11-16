@@ -12,7 +12,7 @@ MODE = 'debug'
 
 
 from pathlib import Path
-from __init__ import gs
+from header import gs
 import asyncio
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
 from src.logger import logger

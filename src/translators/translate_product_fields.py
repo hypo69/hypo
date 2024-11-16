@@ -22,13 +22,13 @@ MODE = 'debug'
 from pathlib import Path
 from typing import List, Dict
 ...
-from __init__ import gs
+from header import gs
 from src.utils import  pprint
 from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate
 from src.endpoints.prestashop import Prestashop
-from __init__ import gs
+from header import gs
 from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate

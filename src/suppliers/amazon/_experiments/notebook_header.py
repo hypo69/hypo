@@ -23,7 +23,7 @@ import re
 
 
 
-from __init__ import gs
+from header import gs
 from src.webdriver import Driver, executor
 from src.suppliers import Supplier
 from src.product import Product, ProductFields

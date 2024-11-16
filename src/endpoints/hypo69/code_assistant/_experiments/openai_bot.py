@@ -28,7 +28,7 @@ from pathlib import Path
 import time
 from typing import Iterator
 
-from __init__ import gs
+from header import gs
 from src.ai.openai import OpenAIModel
 from src.utils.file import yield_files_content, read_text_file
 from src.logger import logger

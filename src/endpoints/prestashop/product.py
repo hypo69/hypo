@@ -15,7 +15,7 @@ from attr import attr, attrs
 from pathlib import Path
 from typing import Dict, List
 # ----------------------------------
-from __init__ import gs
+from header import gs
 from src.utils import  pprint
 from .api import Prestashop
 from src.logger import logger

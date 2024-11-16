@@ -17,7 +17,7 @@ import json
 import random
 from typing import Optional
 from pathlib import Path
-from __init__ import gs
+from header import gs
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import get_filenames, read_text_file, recursively_read_text_files, recursively_get_filepath

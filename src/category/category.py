@@ -19,7 +19,7 @@ from typing import List, Dict
 from lxml import html
 import requests
 
-from __init__ import gs
+from header import gs
 from src.logger import logger 
 from src.utils import j_loads, j_dumps, pprint
 from src.utils.string import StringFormatter

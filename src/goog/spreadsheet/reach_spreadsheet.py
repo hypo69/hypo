@@ -34,7 +34,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 import tempfile
 import header
-from __init__ import gs
+from header import gs
 from src.utils import j_loads,j_dumps
 from src.utils import pprint
 from src.logger import logger

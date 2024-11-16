@@ -9,7 +9,7 @@ MODE = 'debug'
 import header
 from header import  ecat_api_credentials, emil_api_credentials
 from header import pprint, jprint
-from __init__ import gs
+from header import gs
 from src.endpoints.prestashop.presta_apis.client import Prestashop
 
 client = Prestashop(ecat_api_credentials)

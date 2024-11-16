@@ -80,7 +80,7 @@ from types import SimpleNamespace
 import asyncio
 from pathlib import Path
 from typing import List, Optional
-from __init__ import gs
+from header import gs
 from src.suppliers.aliexpress.campaign import AliPromoCampaign
 from src.utils import get_directory_names, j_loads, j_loads_ns, j_dumps
 from src.logger import logger

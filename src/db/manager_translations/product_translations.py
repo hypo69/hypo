@@ -17,7 +17,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import or_
 
-from __init__ import gs
+from header import gs
 from src.logger import logger
 ...
 

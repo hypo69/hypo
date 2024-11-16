@@ -46,7 +46,7 @@ src.webdriver.excecutor
 
 from selenium import webdriver
 from src.webdriver.executor import ExecuteLocator
-from __init__ import gs
+from header import gs
 from src.logger.exceptions import ExecuteLocatorException
 
 def main():

@@ -10,7 +10,7 @@ MODE = 'debug'
 """   класс языка в `Prestashop` """
 ...
 from .api import Prestashop
-from __init__ import gs
+from header import gs
 from src.utils import  pprint
 from .api import Prestashop
 from src.logger import logger

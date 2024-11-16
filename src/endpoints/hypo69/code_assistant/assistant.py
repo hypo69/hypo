@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Iterator, List, Optional
 from pydantic import BaseModel, Field
 
-from __init__ import gs
+from header import gs
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
 from src.utils.jjson import j_loads  # Импортируем j_loads для загрузки перевода

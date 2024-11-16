@@ -16,7 +16,7 @@ from typing import Dict, List
 from urllib.parse import urlencode
 from selenium.webdriver.remote.webelement import WebElement
 
-from __init__ import gs
+from header import gs
 from src.webdriver import Driver
 from src.utils import j_loads_ns, pprint
 from src.logger import logger

@@ -60,7 +60,7 @@ from pathlib import Path
 from typing import List, Optional
 from types import SimpleNamespace
 
-from __init__ import gs
+from header import gs
 from src.utils import j_loads, j_loads_ns
 from src.webdriver import Driver
 from src.scenario import (
@@ -76,7 +76,7 @@ from typing import List, Optional
 from types import ModuleType
 import importlib
 
-from __init__ import gs
+from header import gs
 from src.utils import j_loads
 from src.webdriver import Driver
 from src.logger import logger

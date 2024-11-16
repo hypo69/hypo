@@ -12,7 +12,7 @@ from pathlib import Path
 import tempfile
 import asyncio
 import header
-from __init__ import gs
+from header import gs
 from src.ai.openai.model.training import Model
 from src.utils import j_loads, j_loads_ns, j_dumps
 from src.logger import logger

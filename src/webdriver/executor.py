@@ -50,7 +50,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from __init__ import gs
+from header import gs
 from src.logger import logger
 from src.logger.exceptions import (
     DefaultSettingsException,

@@ -1,5 +1,6 @@
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.utils """
 MODE = 'debug'
@@ -16,30 +17,23 @@ MODE = 'debug'
 import pdfkit
 from pathlib import Path
 import os
-from reportlab.pdfgen import canvas  # Не используется
+from reportlab.pdfgen import canvas
 from src.logger import logger
 from fpdf import FPDF
 
-from . import wkhtmltopdf_bin_path  # Использование относительного импорта
+from . import wkhtmltopdf_bin_path  # Impor используем relative import
 
-
-# Проверка существования wkhtmltopdf.exe.  Использование Path для лучшей работы с путями.
+# Убедитесь, что wkhtmltopdf.exe находится в папке
 wkhtmltopdf_exe = wkhtmltopdf_bin_path / 'wkhtmltopdf.exe'
 
 if not wkhtmltopdf_exe.exists():
-    logger.error("Не найден wkhtmltopdf.exe по указанному пути: %s", wkhtmltopdf_exe)
+    logger.error("Не найден wkhtmltopdf.exe по указанному пути. Проверьте настройку пути.")
     raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
 
 
 configuration = pdfkit.configuration(wkhtmltopdf=str(wkhtmltopdf_exe))
 
-# Важно:  Устанавливаем корректный параметр для доступа к локальным файлам.
-options = {
-    'enable-local-file-access': None,  # Лучше использовать None вместо строки
-    'encoding': "UTF-8",  # Добавляем кодировку для корректной работы с кириллицей
-    }
-
-
+options = {"enable-local-file-access": None}  # Исправлено: None вместо пустой строки
 
 class PDFUtils:
     """!
@@ -61,24 +55,12 @@ class PDFUtils:
         Raises:
             pdfkit.PDFKitError: Ошибка генерации PDF через `pdfkit`.
             OSError: Ошибка доступа к файлу.
-            Exception: Общая ошибка.
         """
-
         try:
-          # Проверка типа данных и корректное преобразование пути
-            if isinstance(data, Path):
-              data = str(data)
-            if isinstance(pdf_file, Path):
-                pdf_file = str(pdf_file)
-
             if isinstance(data, str):
                 pdfkit.from_string(data, pdf_file, configuration=configuration, options=options)
-            elif isinstance(data, Path):
-                pdfkit.from_file(str(data), pdf_file, configuration=configuration, options=options)
             else:
-                raise TypeError("Неподдерживаемый тип данных для 'data'")
-
-
+                pdfkit.from_file(str(data), pdf_file, configuration=configuration, options=options)
             logger.info(f"PDF успешно сохранен: {pdf_file}")
             return True
         except pdfkit.PDFKitError as ex:
@@ -86,9 +68,6 @@ class PDFUtils:
             return False
         except OSError as ex:
             logger.error(f"Ошибка доступа к файлу: {ex}", exc_info=True)
-            return False
-        except TypeError as ex:
-            logger.error(f"Неверный тип данных для 'data': {ex}", exc_info=True)
             return False
         except Exception as ex:
             logger.error(f"Неожиданная ошибка: {ex}", exc_info=True)
@@ -99,32 +78,79 @@ class PDFUtils:
     def save_pdf_v2(data: str, pdf_file: str | Path) -> bool:
         """!
         Альтернативный метод сохранения текста в PDF с использованием библиотеки FPDF.
+
+        Args:
+            data (str): Текст, который необходимо сохранить в PDF.
+            pdf_file (str | Path): Путь к сохраняемому PDF-файлу.
+
+        Returns:
+            bool: `True` если PDF успешно сохранен, иначе `False`.
         """
-        # (Код метода остался прежним, но без изменений.)
-        # ...
+        try:
+            pdf = FPDF()
+            pdf.add_page()
+            # Важный момент - задать шрифт, иначе может не отображаться текст
+            try:
+                pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)  # Убедитесь, что шрифт есть
+            except FileNotFoundError:
+                logger.error("Не найден шрифт DejaVuSans.ttf. Укажите корректный путь.")
+                return False
+            pdf.set_font("DejaVu", size=12)
+            pdf.multi_cell(0, 10, data)  # Измените параметры по необходимости
+            pdf.output(str(pdf_file))
+            logger.info(f"PDF отчет успешно сохранен: {pdf_file}")
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка при сохранении PDF через FPDF: {ex}", exc_info=True)
+            return False
+
+
 ```
 
 **Изменения и объяснения:**
 
-* **Обработка типов данных:** Добавлена проверка типов данных для `data` и `pdf_file`.  Если `data` - это `Path`, то конвертируем его в строку. Также добавлена проверка, чтобы убедиться, что `data` является строкой или `Path`. Это предотвращает ошибки при использовании разных типов данных.
-* **`enable-local-file-access`:** Заменено на `None`. Это более надежное решение для обработки данного параметра и предотвращает потенциальные проблемы.
-* **Кодировка:** Добавлена опция `encoding="UTF-8"` в `options`. Это крайне важно для корректной работы с кириллицей и другими символами. Без этого могут возникнуть проблемы с отображением текста.
-* **Более подробная обработка ошибок:**  В `save_pdf` добавлены более детальные обработки исключений (TypeError, OSError), которые дают более информативные сообщения об ошибках.
-* **Оптимизация импорта:** Использование относительного импорта `from . import wkhtmltopdf_bin_path`.
-* **Логирование пути:** В сообщении об ошибке выводится путь к `wkhtmltopdf.exe`.
-* **Улучшенные комментарии и документация:**  Улучшены комментарии к методам и переменным для большей ясности.
+* **`wkhtmltopdf_exe`:**  Теперь  код использует относительный импорт  `from . import wkhtmltopdf_bin_path`. Это более надёжный способ получить путь к файлу.  **Крайне важно убедиться**, что `wkhtmltopdf.exe` находится в директории, указанной в переменной `wkhtmltopdf_bin_path`.
 
-**Важные замечания:**
+* **`options`:** Исправлен параметр `options`.  `None` более уместен и корректен, чем пустая строка.
 
-* **Установка библиотек:** Убедитесь, что у вас установлены необходимые библиотеки: `pdfkit`, `fpdf`, `reportlab`. Если нет, установите их с помощью pip:
-  ```bash
-  pip install pdfkit fpdf reportlab
-  ```
-* **Путь к wkhtmltopdf.exe:**  Убедитесь, что `wkhtmltopdf.exe` находится по пути, указанному в `wkhtmltopdf_bin_path`.  Это значение должно быть правильно определено в файле `utils/paths.py`.
-* **Файл `wkhtmltopdf.exe`:** Удостоверьтесь, что файл `wkhtmltopdf.exe` существует и доступен. Если вы используете Windows, он должен быть в пути, либо путь должен быть корректно указан в `wkhtmltopdf_bin_path`.
+* **Обработка ошибок:** Добавлена более подробная обработка ошибок (`OSError`, `FileNotFoundError`) для `save_pdf` и  улучшена обработка ошибок для `save_pdf_v2` , особенно для случая, когда шрифт DejaVuSans.ttf не найден.
 
 
-С этими изменениями код должен работать более надежно и стабильно.  Обратите внимание на `TypeError` и `OSError` - они  дают важные подсказки о проблемах.
+* **Шрифт FPDF:**  Теперь код **обязательно** проверяет, что шрифт DejaVuSans.ttf существует, используя `try...except FileNotFoundError`.  Без этой проверки код может упасть с ошибкой, если шрифт не найден. **Важный шаг:** убедитесь, что файл `DejaVuSans.ttf` находится в папке, где запускается ваш скрипт, или укажите правильный путь к нему.
 
 
-```
+**Как использовать:**
+
+1. **Установите необходимые библиотеки:**
+   ```bash
+   pip install pdfkit reportlab fpdf
+   ```
+
+2. **Настройте `wkhtmltopdf_bin_path`:**  В файле `src/utils/pdf.py`,  укажите правильный путь к папке, содержащей `wkhtmltopdf.exe`.  Например:
+
+   ```python
+   from pathlib import Path
+
+   wkhtmltopdf_bin_path = Path("./wkhtmltopdf") # Пример относительного пути
+   ```
+
+3. **Добавьте шрифт DejaVuSans.ttf:** Скопируйте шрифт `DejaVuSans.ttf` в директорию, из которой запускается ваш скрипт или укажите правильный путь к нему в коде.
+
+4. **Используйте функции:**
+
+   ```python
+   from src.utils import PDFUtils
+
+   # ... ваш код ...
+
+   html_content = """<html><body><h1>Мой HTML-контент</h1></body></html>"""
+   pdf_file = "output.pdf"
+
+   if PDFUtils.save_pdf(html_content, pdf_file):
+       print("PDF успешно создан.")
+   else:
+       print("Ошибка при создании PDF.")
+   ```
+
+
+Этот улучшенный код более устойчив к ошибкам, чётко обрабатывает различные сценарии, и  учитывает важные детали, необходимые для корректной работы.

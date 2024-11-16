@@ -358,15 +358,11 @@ class ProgramSettings(BaseModel):
         self.base_dir = _get_project_root()
         sys.path.append(str(self.base_dir))
 
-        try:
-            with open(self.base_dir / 'src' / 'settings.json', 'r', encoding='utf-8') as file:
-                data = json.load(file)
-        except Exception as ex:
-            print(ex)
+        self.settings = j_loads_ns(self.base_dir / 'src' / 'settings.json')
+        if not self.settings:
+            logger.error('Ошибка при загрузке настроек', ex)
             ...
             return
-
-        self.settings = SimpleNamespace( **data  )
 
         self.settings.project_name = self.base_dir.name
         

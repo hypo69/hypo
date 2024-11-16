@@ -12,7 +12,7 @@ from attr import attr, attrs
 from pathlib import Path
 from typing import Union
 # ----------------------------------
-from __init__ import gs
+from header import gs
 from src.logger import logger
 from src.utils import j_loads as j_loads
 from .api import Prestashop

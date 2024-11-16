@@ -28,7 +28,7 @@ Author(s):
 from src.logger import logger
 from typing import Union
 
-from __init__ import gs
+from header import gs
 from src.logger import logger
 
 def get_list_products_in_category(s) -> list[str,str,None]:    

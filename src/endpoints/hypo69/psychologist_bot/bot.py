@@ -17,7 +17,7 @@ import random
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 
-from __init__ import gs
+from header import gs
 from src.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
