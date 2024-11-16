@@ -1,12 +1,9 @@
 ## \file hypotez/src/bots/telegram/bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
+""" module: src.bots.telegram """
+MODE = 'debug'
 
-""" module: src.bots.telegram """
-MODE = 'debug'
-""" module: src.bots.telegram """
-MODE = 'debug'
-"""! Module for interacting with Telegram using a simple bot interface. """
 
 from pathlib import Path
 import tempfile
@@ -14,8 +11,7 @@ import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
-import header
-from header import gs
+from  header import gs
 from src.utils import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 import requests  # For downloading files
