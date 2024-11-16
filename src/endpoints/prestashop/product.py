@@ -14,8 +14,8 @@ import os,sys
 from attr import attr, attrs
 from pathlib import Path
 from typing import Dict, List
-# ----------------------------------
-from header import gs
+import header
+from src import gs
 from src.utils import  pprint
 from .api import Prestashop
 from src.logger import logger

@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import or_
 ...
-from header import gs
+from src import gs
 credentials = gs.credentials.presta.translations
 
 

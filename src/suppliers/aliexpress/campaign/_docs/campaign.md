@@ -52,7 +52,7 @@ Imports:
 │   ├── from typing import List, Optional
 │   └── from types import SimpleNamespace
 ├── Project Settings
-│   └── from header import gs
+│   └── from src import gs
 ├── AliExpress Modules
 │   ├── from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
 │   ├── from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids

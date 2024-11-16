@@ -1,47 +1,39 @@
-## \file hypotez/src/product/product_fields/product_fields.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.product.product_fields """
-MODE = 'debug'
-""" module: src.product.product_fields """
-MODE = 'debug'
-
 """    <b>Kласс `ProductFields` Расписано каждое поле товара для таблиц престашоп.</b> 
- langdetect в Python используется для определения языка текста. Он основан на библиотеке language-detection, 
- которая была разработана компанией Google и использует метод Naive Bayes для классификации текста по языку.
- 
- ------
- 
- Вот пример того, как использовать langdetect для определения языка текста:
- @code
- from langdetect import detect, detect_langs
+langdetect в Python используется для определения языка текста. Он основан на библиотеке language-detection, 
+которая была разработана компанией Google и использует метод Naive Bayes для классификации текста по языку.
 
-# Определение языка текста
-text = "Bonjour tout le monde"
-language = detect(text)
-print(f"Detected language: {language}")
+------
 
-# Определение вероятностей нескольких языков
-languages = detect_langs(text)
-print(f"Detected languages: {languages}")
-@endcode
-@code
-from langdetect import detect, detect_langs, LangDetectException
+Вот пример того, как использовать langdetect для определения языка текста:
 
-try:
+.. code-block:: python
+
+    from langdetect import detect, detect_langs
+
+    # Определение языка текста
     text = "Bonjour tout le monde"
     language = detect(text)
     print(f"Detected language: {language}")
-    
+
+    # Определение вероятностей нескольких языков
     languages = detect_langs(text)
     print(f"Detected languages: {languages}")
-except LangDetectException as ex:
-    print("Error detecting language", ex)
 
+.. code-block:: python
 
- @endcode
-@todo: Внимательно посмотреть, как работает langdetect
+    from langdetect import detect, detect_langs, LangDetectException
+
+    try:
+        text = "Bonjour tout le monde"
+        language = detect(text)
+        print(f"Detected language: {language}")
+        
+        languages = detect_langs(text)
+        print(f"Detected languages: {languages}")
+    except LangDetectException as ex:
+        print("Error detecting language", ex)
+
+.. todo:: Внимательно посмотреть, как работает langdetect
 """
 
 """
@@ -49,7 +41,7 @@ except LangDetectException as ex:
 Порядок полей в этом файле соответствует номерам полей в таблице, 
 В коде программы в дальнейшем я использую алфавитный порядок
 
-@image html ps_model.png
+.. image:: ps_model.png
 
 ### product filelds in prestashop db 
 -------------------------------------------
@@ -69,7 +61,7 @@ except LangDetectException as ex:
   10      `isbn`                      varchar(32)
   11      `upc`                       varchar(12)
   12      `mpn`                       varchar(40)
-	13	    `ecotax`                    decimal(17,6)
+  13	    `ecotax`                    decimal(17,6)
   14      `quantity`                  int(10)
   15      `minimal_quantity`          int(10) unsigned
   16      `low_stock_threshold`       int(10)
@@ -115,11 +107,9 @@ except LangDetectException as ex:
   56      `product_type`              enum('standard','pack','virtual','combinations','')
   57      `link_to_video`             varchar(255) 
   
-  
-  ----------
-  
-  
-  empty fields template
+----------
+
+empty fields template
             f.active = 1
             f.additional_categories = None
             f.active = None
@@ -209,70 +199,59 @@ except LangDetectException as ex:
             f.wholesale_price = None
             f.width = None
 """
-...
 
-from sqlite3 import Date
-from typing import List, Dict
-from types import SimpleNamespace
+
 from pathlib import Path
-from enum import Enum
-from types import MappingProxyType
+from typing import List, Dict, Optional, Callable, Any
+from pydantic import BaseModel, Field, validator
+from types import SimpleNamespace, MappingProxyType
+from sqlite3 import Date
 from langdetect import detect
 from functools import wraps
-from typing import Callable
-from pydantic import BaseModel, Field, validator
-from typing import Optional, Any
-from pathlib import Path
-import sys
-...
-from header import gs
-from src.utils import j_loads
+from enum import Enum
+
+import header
+from src.utils.jjson import j_loads, j_loads_ns
 from src.category import Category
 from src.product.ttypes import ProductType
-from src.logger.exceptions import ProductFieldException
 from src.utils.string import StringNormalizer as sn
 from src.utils.string import StringFormatter as sf
 from src.product.product_fields.utils import (normalize_product_name,
-                                                normalize_bool,
-                                                )
+                                               normalize_bool,
+                                               )
 from src.utils.file import read_text_file
-from dataclasses import dataclass, field
-from typing import List, Dict, Optional
-from pathlib import Path
 from src.logger import logger
 
 
-@dataclass
+
 class ProductFields(BaseModel):
-    """ Класс, описывающий поля товара в формате API PRESTASHOP 
-    @details Поля могут быть членами разных таблиц или добавленных мной для удобства обработки.
+    """Класс, описывающий поля товара в формате API PRESTASHOP.
+
+    Поля могут быть членами разных таблиц или добавленных мной для удобства обработки.
     Названия полей (геттеров) соответствуют названиям полей в таблицах. Вначале идут поля из таблицы `ps_product`,
     а потом `ps_product_lang`. В таблицах с суффиксом `_lang` содержатся переводы на различные языки.
-    locator_description Важно проверять ID языков. Они могут различаться в разных магазинах у клиентов
-    'associations: dict = None ## <- Специальное поле, которое используется в словаре API PRESATSHOP для добавления всяких дополнительных полей
+    Важно проверять ID языков, так как они могут различаться в разных магазинах у клиентов.
+
+    `associations: dict = None` — Специальное поле, которое используется в словаре API PRESTASHOP для добавления всяких дополнительных полей.
     """
 
-    
-    product_fields_list: List[str] = field(default_factory=lambda: [
-        read_text_file(gs.path.src / 'product' / 'product_fields' / 'fields_list.txt', as_list = True)
+    product_fields_list: List[str] = Field(default_factory=lambda: [
+        read_text_file(gs.path.src / 'product' / 'product_fields' / 'fields_list.txt', as_list=True)
     ])
-
-    language: Dict[str, int] = field(default_factory=lambda: {'en': 1, 'he': 2, 'ru': 3})
-    presta_fields: SimpleNamespace = field(init=False)
-    assist_fields_dict: Dict[str, Optional[str]] = field(default_factory=lambda: {
+    language: Dict[str, int] = Field(default_factory=lambda: {'en': 1, 'he': 2, 'ru': 3})
+    presta_fields: SimpleNamespace = Field(init=False)
+    assist_fields_dict: Dict[str, Optional[str]] = Field(default_factory=lambda: {
         'default_image_url': '', 
         'images_urls': []
     })
 
     def __post_init__(self):
-        """ Класс работы с полями товара. Поля берутся состраницы HTML или другого источника
-        и форматируются в стандарте API Prestashop Dictonary. 
-        Поля можно в принципе форматировать как угодно """
+        """Класс работы с полями товара. Поля берутся со страниц HTML или другого источника и форматируются в стандарте API Prestashop Dictionary."""
         self.presta_fields = SimpleNamespace(**{key: None for key in self.product_fields_list})
         self._payload()
 
     def _payload(self) -> bool:
-        """ Загрузка дефолтных значений полей """
+        """Загрузка дефолтных значений полей."""
         data = j_loads(Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
         if not data:
             logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
@@ -283,8 +262,14 @@ class ProductFields(BaseModel):
 
     @property
     def associations(self) -> Optional[Dict]:
-        """ <sub>*[getter]*</sub> Возвращает словарь ключей ассоциаций. """
+        """Возвращает словарь ключей ассоциаций."""
         return self.presta_fields.associations or None
+
+    @associations.setter
+    def associations(self, value: Dict[str, Optional[str]]):
+        """Устанавливает словарь ассоциаций."""
+        self.presta_fields.associations = value
+
     
     @associations.setter
     def associations(self, value: Dict[str, Optional[str]]):

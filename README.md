@@ -1,19 +1,22 @@
 # Hypotez Project
 
 ## Project Description 
-The `hypotez` project involves developing a personal AI assistant capable of performing various tasks, such as those of an insurance agent, real estate agent, sales specialist, HR representative, postal secretary, and more. Each assistant requires specific training for its designated role, and models will be offered for different business types. The goal is to create an adaptive assistant that can handle complex tasks independently.
-
-In addition, the `hypotez` project includes tools for hypothesis analysis and data interpretation. It provides libraries for statistical analysis and data visualization, allowing users to conduct efficient analysis and make informed decisions based on collected insights.
-
-Furthermore, a parser and scraper are built into the project for data gathering and processing from various sources. These tools automate the extraction of relevant information from websites and documents, enabling efficient data collection for analysis and decision-making. The integrated assistant aims to enhance productivity across domains by streamlining workflows with timely and accurate data.
-
 **In a Nutshell**:
 
 <br>
 <img src="images/now_feature.png" alt="Feature Image" width="270" height="320" />
 <br>
 
+## Description
+
+The `hypotez` project is your personal AI assistant designed to help with a wide range of tasks. Whether you need a virtual insurance agent, a real estate assistant, a sales specialist, an HR representative, or even an email secretary, `hypotez` has you covered. Our goal is to create a versatile assistant that can adapt to different roles and handle complex tasks as if you have a personal helper for every situation.
+
+Additionally, `hypotez` is a powerful data analysis tool. It comes with various libraries for statistics and visualization, helping you quickly make sense of your data and make informed decisions.
+
+On top of that, the project features a handy parser and scraper that automatically gather data from websites and documents. This means you can skip the tedious data collection and get the insights you need for analysis and decision-making right away. In short, `hypotez` is your go-to assistant that speeds up your work and helps you make smart, well-informed choices.
+
 ---
+
 
 ### Key Features
 

@@ -25,7 +25,7 @@ MODE = 'debug'
 from typing import Union
 from pathlib import Path
 
-from header import gs
+from src import gs
 from src.logger import logger
 
 def get_list_products_in_category (s) -> list[str, str, None]:    

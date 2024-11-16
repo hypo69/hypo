@@ -245,7 +245,7 @@ from pydantic import BaseModel, Field
 from pykeepass import PyKeePass
 
 # # Локальные модули
-from src.check_relise import check_latest_release
+from src.check_release import check_latest_release
 from src.logger.logger import logger
 from src.logger.exceptions import (
     BinaryError,

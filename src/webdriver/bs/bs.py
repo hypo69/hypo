@@ -27,7 +27,7 @@ from types import SimpleNamespace
 from lxml import etree
 import requests
 from pathlib import Path
-from header import gs
+from src import gs
 from src.webdriver import Driver
 from src.logger import logger
 

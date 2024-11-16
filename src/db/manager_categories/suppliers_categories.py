@@ -20,7 +20,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
 
-from header import gs
+from src import gs
 from src.logger import logger
 from src.utils import pprint
 

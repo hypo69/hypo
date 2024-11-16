@@ -11,7 +11,8 @@ import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
-from  header import gs
+import header
+from  src import gs
 from src.utils import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 import requests  # For downloading files

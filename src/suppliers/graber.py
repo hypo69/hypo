@@ -1,12 +1,19 @@
-## \file hypotez/src/suppliers/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers """
-MODE = 'debug'
-""" module: src.suppliers """
-MODE = 'debug'
-""" Базовый класс сбора данных со старницы для всех поставщиков
+""" Базовый класс сбора данных со старницы для всех поставщиков. 
+Для нестендартной обработки полей товара просто переопределите функцию в своем классе.
+Пример:
+```python
+s = `suppler_prefix`
+from src.suppliers imoprt Graber
+locator = j_loads(gs.path.src.suppliers / f{s} / 'locators' / 'product.json`)
+
+class G(Graber):
+
+    @close_popup()
+    async def name(self, value: Any = None):
+        self.fields.name = <Ваша реализация>
+        )
+    
 """
 
 import os
@@ -17,7 +24,8 @@ from typing import Any, Callable
 from langdetect import detect
 from functools import wraps
 
-from header import gs
+import header
+from src import gs
 from src.suppliers.locator import Locator
 from src.product.product_fields import ProductFields
 from src.category import Category

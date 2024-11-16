@@ -1,25 +1,22 @@
 ```markdown
-# hypotez/src/endpoints/prestashop/product.py
+# doc_creator_ru.md
 
-**Расположение файла:** `C:\Users\user\Documents\repos\hypotez\src\endpoints\prestashop\product.py`
+Расположение файла в проекте: `C:\Users\user\Documents\repos\hypotez\src\endpoints\prestashop\product.py`
+Роль выполнения: `doc_creator`
 
-**Роль выполнения:** `doc_creator` (генерация документации)
-
-**Описание:**
-
-Файл `product.py` содержит класс `PrestaProduct`, представляющий собой взаимодействие с API Престашоп для работы с товарами.
-
-**Содержание:**
+## Файл `hypotez/src/endpoints/prestashop/product.py`
 
 ```python
+## \file hypotez/src/endpoints/prestashop/product.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop """
+""" Модуль: src.endpoints.prestashop """
 MODE = 'debug'
-""" module: src.endpoints.prestashop """
+""" Модуль: src.endpoints.prestashop """
 MODE = 'debug'
 
-""" Класс товара `Prestashop`"""
+""" Класс товара Prestashop"""
 ...
 
 import os,sys
@@ -27,7 +24,7 @@ from attr import attr, attrs
 from pathlib import Path
 from typing import Dict, List
 # ----------------------------------
-from __init__ import gs
+from src import gs
 from src.utils import  pprint
 from .api import Prestashop
 from src.logger import logger
@@ -37,40 +34,39 @@ from src.logger.exceptions import PrestaShopException
 class PrestaProduct(Prestashop):
     """
     Класс товара из модуля prestashop.
-
     Непосредственно выполняет все операции через API.
 
     Методы:
 
-    * `check(product_reference: str)`:
-        Проверка наличия товара в базе данных по `product_reference` (SKU, MKT).
-        Возвращает словарь товара, если товар найден, иначе `False`.
+    - `check(product_reference: str)`: Проверка наличия товара в базе данных
+      по `product_reference` (SKU, MKT).
+      Возвращает словарь товара, если товар найден, иначе `False`.
 
-    * `search(filter: str, value: str)`:
-        Расширенный поиск в базе данных по фильтрам.
+    - `search(filter: str, value: str)`: Расширенный поиск в базе данных
+      по заданным фильтрам.
 
-    * `get(id_product)`:
-        Возвращает информацию о товаре по `id_product`.
+    - `get(id_product)`: Возвращает информацию о товаре по его ID.
     """
 
-    def __init__(self, *args, **kwards):
-        super().__init__(*args, **kwards)
+    def __init__(self, *args,**kwards):
+        super().__init__( *args,**kwards)
 ```
 
-**Комментарии и улучшения:**
+**Описание:**
 
-* **Документированы методы:** Добавлены подробные описания методов `check`, `search` и `get`.
-* **Типизация:**  Добавлены типы аргументов для `check` (в примере `product_reference: str`) и т.д. где это возможно и целесообразно. (например, `typing.Dict`, `typing.List`).
-* **Описание параметров:** В документации к методам указаны типы параметров (`product_reference`, `filter`, `value`, `id_product`).
-* **Описание возвращаемых значений:** Указано, что метод `check` возвращает словарь или `False`.
-* **Использование docstrings:** Правильное использование `docstrings` для описания класса и методов.
+Этот файл содержит класс `PrestaProduct`, который наследуется от класса `Prestashop` (предположительно, из модуля `.api`).  Класс предназначен для работы с товарами в системе PrestaShop через её API.  Документация к методам `check`, `search` и `get` написана более подробно, включая типы возвращаемых значений.
 
-**Рекомендации:**
+**Рекомендации по улучшению:**
 
-* **Дополнить документацию:** Добавить примеры использования методов (если возможно).
-* **Уточнить поведение:**  Указать возможные исключения, которые могут возникнуть при вызове методов, и как с ними работать (например, `ValueError`, `PrestaShopException`).
-* **Описание аргументов `*args` и `**kwards`:** В `__init__` методе, описать назначение параметров `*args` и `**kwards`.
-* **Размещение комментариев:** Комментарии должны быть лаконичными и информативными, избегать лишних повторений.
+* **Более подробное описание методов:**  Добавьте описание параметров (`product_reference`, `filter`, `value`, `id_product`) для каждого метода с указанием типов данных и возможных значений.  Например, для `check` укажите, какой формат имеет `product_reference` (строка, число) и какие ошибки могут возникнуть при проверке. Также стоит указать, что будет возвращаться в случае ошибки (например, `None` или исключение).
+* **Примеры использования:** Привести примеры использования методов.  Это значительно упростит понимание работы класса.
+* **Описание атрибутов:** Если класс `PrestaProduct` имеет атрибуты (например, `_api_url`), опишите их назначение.
+* **Возможные исключения:** Укажите, какие исключения могут быть подняты методами и как с ними обращаться.
+* **Типы возвращаемых значений:** Более точно укажите типы возвращаемых значений, например,  `Dict[str, Any]` или `Optional[Dict[str, Any]]` для `check` и `get`.  
+* **Документирование `__init__`:**  Необходимо добавить описание к конструктору `__init__`, описать принимаемые аргументы и их назначение.
+* **Использование docstrings:** Применяйте docstrings в соответствии со стилем документации Python.
+* **Документация к `Prestashop`:**  Предполагается, что класс `Prestashop` также имеет свои docstrings. Если нет, необходимо их добавить.
 
 
-Этот улучшенный `docstring` делает файл более читаемым и полезным для других разработчиков,  позволяя быстро понять функциональность класса `PrestaProduct` без необходимости вникать в сам код.
+
+Добавление этой информации значительно улучшит читаемость и понимание кода.

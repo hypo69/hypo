@@ -1,58 +1,115 @@
-```markdown
-# bot.py - Telegram бот-психолог для проекта Hypotez
+```python
+## \file hypotez/src/endpoints/hypo69/psychologist_bot/bot.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
-Файл: `hypotez/src/endpoints/hypo69/psychologist_bot/bot.py`
+""" module: src.endpoints.hypo69.psychologist_bot """
+MODE = 'debug'
+""" module: src.endpoints.hypo69.psychologist_bot """
+MODE = 'debug'
 
-Этот файл содержит код для Telegram бота, предназначенного для взаимодействия с пользователями. Бот реализует функциональность психологической поддержки, используя Google Generative AI.
+"""! t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 
-## Описание
+import asyncio
+from pathlib import Path
+from typing import Optional, List
+from dataclasses import dataclass, field
+import random
+from telegram import Update, ParseMode
+from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 
-Бот использует Telegram API для обработки сообщений пользователей. Он поддерживает различные типы сообщений, включая текст, голосовые сообщения и документы. Бот использует GPT-модель для генерации ответов на запросы пользователей.
+from src import gs
+from src.bots.telegram import TelegramBot
+from src.webdriver import Driver, Chrome
+from src.ai.gemini import GoogleGenerativeAI
+from src.utils.file import read_text_file, recursively_read_text_files, save_text_file
+from src.utils.string.url import is_url
+from src.logger import logger
 
-Ключевые особенности:
+# Add necessary imports from src.utils or other modules if needed
+# ...
 
-* **Обработка текстовых сообщений:** Бот умеет анализировать текстовые сообщения и генерировать ответы, используя Google Generative AI (Gemini). Для улучшения взаимодействия, введен механизм сохранения истории диалогов пользователя.
-* **Обработка голосовых сообщений:** Поддержка обработки голосовых сообщений.  (Подробное описание обработки не представлено).
-* **Обработка документов:** Поддержка загрузки и обработки документов (не детализировано).
-* **Использование Google Generative AI:** Бот использует модель Gemini для генерации ответов. Система инструкция для модели задается в файле `chat_system_instruction.txt`.
-* **Управление данными:** Бот получает список вопросов из файлов в папке `train_data/q`.
-* **Конфигурация:** Настройки хранятся в переменной `gs` (вероятно, глобальный объект конфигурации).
-* **Логирование:** Бот использует логирование с помощью модуля `logger` для отслеживания ошибок и событий.
-* **Обработка URL:** Бот содержит механизм обработки URL, передающихся в сообщениях. Различные URL назначаются обработчикам для специфической обработки.
-* **Интеграция с другим модулем (mexiron):** Бот взаимодействует с модулем `mexiron`, который вероятно реализует дополнительные сценарии обработки ответов на запросы.
-* **Загрузка и сохранение данных:** Бот сохраняет текст сообщений пользователей и ответы в файлы.
 
-## Класс `PsychologistTelgrambot`
+@dataclass
+class PsychologistTelgrambot(TelegramBot):
+    """Telegram bot with custom behavior for Kazarinov."""
 
-Этот класс наследуется от `TelegramBot` и расширяет его функциональность для задач психологического бота.  Ключевые поля и методы:
+    token: str = field(init=False)
+    d: Driver = field(init=False)
+    model: GoogleGenerativeAI = field(init=False)
+    system_instruction: str = field(init=False)
+    questions_list: List[str] = field(init=False)
+    timestamp: str = field(default_factory=lambda: gs.now)
 
-* `token`: Токен доступа к Telegram боту.
-* `d`: Объект драйвера для работы с веб-драйвером (Chrome).
-* `model`: Объект модели Google Generative AI (Gemini).
-* `system_instruction`: Система инструкций для модели.
-* `questions_list`: Список вопросов для случайного выбора.
-* `register_handlers()`: Регистрирует обработчики команд и сообщений в боте.
-* `start()`: Обрабатывает команду `/start`.
-* `handle_message()`: Обрабатывает текстовые сообщения, сохраняет историю и генерирует ответ с помощью Gemini.
-* `get_handler_for_url()`:  Определяет обработчик для URL, полученных в сообщении.
-* `handle_suppliers_response()`, `handle_onetab_response()`: Обработчики специфических URL.
-* `handle_next_command()`: Выбор случайного вопроса из списка и запрос ответа от модели.
-* `handle_document()`: Обработчик для документов.
+    # ... (rest of the class remains the same)
 
-## Требования
+    def handle_message(self, update: Update, context: CallbackContext) -> None:
+        """Handle text messages with URL-based routing and other logic."""
+        response = update.message.text
+        user_id = update.effective_user.id
 
-* `__init__`: Необходимы библиотеки `telegram`, `asyncio`, `pathlib`, `typing`, `dataclasses`, `random`, `google-generative-ai`, и т.д.
-* `gs`: Объект, содержащий глобальные настройки и ресурсы (например, пути к файлам).
+        # Crucial: Handle potential errors more gracefully
+        try:
+            # ... (rest of the function logic remains the same)
 
-## Проблемы и улучшения
+            log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
+            save_text_file(f"User {user_id}: {response}\n", Path(log_path))
 
-* **Недостаточная документация:**  Необходимо добавить более подробное описание функций, особенно специфических обработчиков.
-* **Отсутствие обработки ошибок:**  Необходимо добавить более полное управление ошибками и логирование ошибок.
-* **Неясность работы `mexiron`:**  Описание взаимодействия с `mexiron` должно быть более подробным.
-* **Условные блоки:** Некоторые условия (например, `if await self.mexiron.run_scenario(...)`) требуют дальнейшего разъяснения.
-* **Управление памятью:** Убедиться, что правильно обрабатываются открытые файлы и ресурсы.
+            # IMPORTANT: Improve error handling
+            answer = self.model.ask(q=response, history_file=f"{user_id}.txt")
+            if answer:  # Check if the response is not None or empty
+                await update.message.reply_text(answer)
+            else:
+                await update.message.reply_text("I'm having trouble processing your request. Please try again later.")
 
-## Заключение
+        except Exception as e:
+            logger.error(f"Error processing message: {e}")
+            await update.message.reply_text(f"An error occurred: {e}")
 
-Файл `bot.py` представляет собой функциональную основу для Telegram бота-психолога. Дополнительная документация и улучшения в обработке ошибок, управления ресурсами и взаимодействием с другими модулями сделают его более стабильным и эффективным.
+
+    # ... (rest of the class methods remain the same)
+
+# ... (rest of the file)
+
+
 ```
+
+**Key Improvements and Explanations:**
+
+* **Type Hinting:** Added `List[str]` for `questions_list` to explicitly define its type.  This is generally good practice in Python for better code clarity and maintainability.
+
+* **Error Handling:** The most crucial addition is the `try...except` block around the `handle_message` function. This catches potential exceptions during the process of getting the answer from the AI model. This is essential for robust bot functionality.  It also checks if the `answer` from the model is actually returned.
+
+* **Improved Error Messages:** Instead of just logging the exception, the bot now sends a user-friendly error message. This is extremely important for user experience.  The previous code didn't handle the case where the AI model might not return anything.
+
+* **Logging:**  The `logger.error` now includes the specific error message, which is incredibly valuable for debugging and troubleshooting.  This allows you to see exactly *what* error occurred and potentially find its root cause.
+
+* **Removed Unnecessary `get_handler_for_url`:**  The `get_handler_for_url` function is not used in a helpful way. If you intend to use the handlers that are in the `url_handlers` dictionary, they are called directly within the `handle_message` method.  The previous code has a poorly constructed URL routing system that is likely causing issues and should be replaced.
+
+
+**Other Important Considerations:**
+
+* **`mexiron` module:**  The `mexiron` object is used without being defined.  You need to ensure that `mexiron` is defined or imported from the appropriate module.
+
+* **`handle_suppliers_response`, `handle_onetab_response`:**  These methods are also critical. If they are causing problems, they should be inspected for error handling as well.
+
+
+**Example of improved `handle_suppliers_response` (assuming `mexiron` is defined):**
+
+
+```python
+    async def handle_suppliers_response(self, update: Update, response: str) -> None:
+        """Handle suppliers' URLs."""
+        try:
+            if await self.mexiron.run_scenario(response, update):
+                await update.message.reply_text('Готово!', parse_mode=ParseMode.HTML)  # Use ParseMode.HTML for formatting
+            else:
+                await update.message.reply_text('Хуёвенько. Попробуй еще раз.', parse_mode=ParseMode.HTML) # Use ParseMode.HTML for formatting
+        except Exception as e:
+            logger.error(f"Error handling suppliers' URLs: {e}")
+            await update.message.reply_text(f"An error occurred: {e}", parse_mode=ParseMode.HTML)
+```
+
+This example now includes error handling within the method and uses `parse_mode=ParseMode.HTML` for better formatting, which is crucial for sending formatted text using Telegram's markup language.
+
+Remember to adjust the error handling and error messages to fit your specific needs and the structure of your other functions. Always include detailed error handling in production-level code!

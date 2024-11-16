@@ -16,7 +16,7 @@ import pickle
 import selenium.webdriver as WebDriver
 from pathlib import Path
 
-from header import gs
+from src import gs
 from src.logger import logger
 
 def login(s)->bool:

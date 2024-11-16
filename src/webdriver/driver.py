@@ -1,25 +1,3 @@
-## \file hypotez/src/webdriver/driver.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.webdriver """
-MODE = 'debug'
-""" module: src.webdriver """
-MODE = 'debug'
-
-""" `WebDriver` 
-@code
-# Пример использования
-from selenium.webdriver import Chrome
-d = Driver(Chrome)
-d.get_url('https://hypotez.com')-
-@ebdcode
-@html webdriver\\driver.md
-
-@dotfile webdriver\\driver.dot
-@image html webdriver.png
-@include  webdriver\\_example_driver.py
-"""
 
 
 import copy
@@ -33,7 +11,7 @@ from selenium.common.exceptions import (InvalidArgumentException,
                                         ElementClickInterceptedException, 
                                         ElementNotInteractableException, 
                                         ElementNotVisibleException )
-from header import gs
+from .header import gs
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException, WebDriverException
 

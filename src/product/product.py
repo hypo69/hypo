@@ -10,9 +10,8 @@ MODE = 'debug'
 @details Defines the behavior of a product in the project.
 """
 
-
-
-from header import gs
+import header
+from src import gs
 from src.endpoints.prestashop import Prestashop
 from src.category import Category
 from src.product.product_fields import ProductFields

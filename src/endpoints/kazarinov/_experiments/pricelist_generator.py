@@ -12,7 +12,7 @@ https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b
 
 from pathlib import Path
 import header 
-from header import gs
+from src import gs
 
 from src.endpoints.kazarinov.react import ReportGenerator
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps

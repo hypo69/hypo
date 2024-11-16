@@ -17,7 +17,7 @@ import pandas as pd
 from aioconsole import ainput
 
 import header
-from header import gs
+from src import gs
 from src.logger import logger
 from src.suppliers.chat_gpt import GptGs
 from src.webdriver import Driver, Chrome, Firefox, Edge

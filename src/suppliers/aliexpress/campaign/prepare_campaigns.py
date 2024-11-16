@@ -26,7 +26,7 @@ import copy
 from pathlib import Path
 from typing import List, Optional
 
-from header import gs
+from src import gs
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.suppliers.aliexpress.utils import locales
 from src.utils import pprint, get_directory_names

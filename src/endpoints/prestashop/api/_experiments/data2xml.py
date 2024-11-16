@@ -9,7 +9,7 @@ MODE = 'debug'
 """ Проверка валидности словаря престасшоп """
 from pathlib import Path
 import header
-from header import gs, j_loads, j_dumps, save_text_file
+from src import gs, j_loads, j_dumps, save_text_file
 from header import logger
 from src.endpoints.prestashop.presta_apis.presta_python_api_v3 import dict2xml,xml2dict
 

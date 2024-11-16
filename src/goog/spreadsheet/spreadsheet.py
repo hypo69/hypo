@@ -33,7 +33,7 @@ from gspread import Spreadsheet, Worksheet
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from src.logger import logger
-from header import gs
+from src import gs
 from src.utils import pprint
 
 

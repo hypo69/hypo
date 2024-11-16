@@ -20,7 +20,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Dict, List
 ...
-from header import gs
+from src import gs
 from src.webdriver import Driver
 from src.utils import j_loads, j_dumps, pprint
 from src.logger import logger

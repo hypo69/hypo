@@ -1,25 +1,5 @@
-## \file hypotez/src/webdriver/javascript/js.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.webdriver.javascript """
-MODE = 'debug'
-""" module: src.webdriver.javascript """
-MODE = 'debug'
-
-"""Module containing JavaScript helper functions for Selenium WebDriver.
-
-This module provides utility functions to interact with JavaScript through Selenium WebDriver.
-Examples:
-    # Initialize JavaScript helper
-    js_helper = JavaScript(driver_instance)
-    
-    # Use JavaScript methods
-    js_helper.window_focus()
-    referrer = js_helper.get_referrer()
-"""
-
-from header import gs
+import header
+from src import gs
 from src.logger import logger
 
 

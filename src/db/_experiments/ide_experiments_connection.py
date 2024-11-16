@@ -8,7 +8,7 @@ MODE = 'debug'
 MODE = 'debug'
 """ @namespace src.db._experiments """
 import header
-from header import gs
+from src import gs
 
 credentials = gs.db_translations_credentials
 

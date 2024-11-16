@@ -23,7 +23,7 @@ Examples:
 ...
 from pathlib import Path
 
-from header import gs
+from src import gs
 from src.utils import j_loads
 from src.utils.jjson import j_loads_ns
 

@@ -1,11 +1,3 @@
-## \file hypotez/src/webdriver/executor.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.webdriver """
-MODE = 'debug'
-""" module: src.webdriver """
-MODE = 'debug'
 
 """
 The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 
@@ -50,7 +42,8 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from header import gs
+import header
+from src import gs
 from src.logger import logger
 from src.logger.exceptions import (
     DefaultSettingsException,

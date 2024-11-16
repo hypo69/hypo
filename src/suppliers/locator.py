@@ -7,7 +7,7 @@ MODE = 'debug'
 """ module: src.suppliers """
 MODE = 'debug'
 from types import SimpleNamespace
-from header import gs
+from src import gs
 from src.utils.jjson import j_loads_ns
 
 class Locator:

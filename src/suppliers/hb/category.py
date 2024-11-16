@@ -24,7 +24,7 @@ MODE = 'debug'
 from typing import Dict, List
 from pathlib import Path
 
-from header import gs
+from src import gs
 from src.logger import logger
 from src.webdriver import Driver
 from src.suppliers import Supplier

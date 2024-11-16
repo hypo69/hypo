@@ -30,7 +30,7 @@ from src.webdriver import executor
 ####################################################################################################
 
 
-from header import gs
+from src import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields
 from src.scenario import run_scenarios

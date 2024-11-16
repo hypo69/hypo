@@ -24,7 +24,7 @@ import json
 import re
 # ----------------
 
-from header import gs
+from src import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields, ProductFieldsLocators
 from src.category import Category

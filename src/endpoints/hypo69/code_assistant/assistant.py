@@ -15,11 +15,23 @@ from pathlib import Path
 from typing import Iterator, List, Optional
 from pydantic import BaseModel, Field
 
-from header import gs
+import header
+from src import gs
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
-from src.utils.jjson import j_loads  # Импортируем j_loads для загрузки перевода
+from src.utils.jjson import j_loads
+from src.utils.file import (
+    read_text_file,
+    recursively_read_text_files,
+    get_filenames,
+    recursively_get_filenames,
+    get_directory_names,
+    save_text_file,
+    recursively_yield_file_path
+)
+from src.utils.printer import pprint
 from src.logger import logger
+
 
 
 class CodeAssistant(BaseModel):

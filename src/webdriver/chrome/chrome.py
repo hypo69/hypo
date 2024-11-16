@@ -1,11 +1,3 @@
-## \file hypotez/src/webdriver/chrome/chrome.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.webdriver.chrome """
-MODE = 'debug'
-""" module: src.webdriver.chrome """
-MODE = 'debug'
 
 """ Chrome WebDriver.
 Implemented using Chrome for Developers.
@@ -25,9 +17,11 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from fake_useragent import UserAgent
 from selenium.common.exceptions import WebDriverException
+
+import header
+from src import gs
 from src.webdriver.executor import ExecuteLocator
-from src.webdriver.javascript import JavaScript
-from header import gs
+from src.webdriver.js import JavaScript
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 

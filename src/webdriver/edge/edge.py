@@ -16,7 +16,7 @@ from selenium.common.exceptions import WebDriverException
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.javascript import JavaScript
 from fake_useragent import UserAgent
-from header import gs
+from src import gs
 from src.logger import logger
 
 class Edge(WebDriver):

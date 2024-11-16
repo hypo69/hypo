@@ -14,7 +14,7 @@ import time
 import copy
 from pathlib import Path 
 
-from header import gs
+from src import gs
 from src.utils.file import get_directory_names, get_filenames
 from src.webdriver import Driver, Chrome
 from src.endpoints.advertisement.facebook import FacebookPromoter

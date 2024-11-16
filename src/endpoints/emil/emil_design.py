@@ -13,7 +13,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import time
 
-from header import gs, logger
+from src import gs, logger
 from src.endpoints.prestashop.api.api import Prestashop
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI

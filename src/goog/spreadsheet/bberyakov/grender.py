@@ -21,7 +21,7 @@ Author(s):
   - Created by [Davidka] [BenAvraham] on 08.11.2023 .
 """
 # ------------------------------
-from header import gs
+from src import gs
 from src.helpers import logger, WebDriverException,  pprint
 
 # -------------------------------

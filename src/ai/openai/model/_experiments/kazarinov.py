@@ -10,7 +10,7 @@ MODE = 'debug'
 
 import header 
 import openai
-from header import gs
+from src import gs
 from src.utils.file import read_text_file
 from src.logger import logger
 from pathlib import Path

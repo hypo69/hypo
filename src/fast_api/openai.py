@@ -22,7 +22,7 @@ from pydantic import BaseModel
 from pathlib import Path
 import uvicorn
 
-from header import gs
+from src import gs
 from src.utils import j_loads
 from src.logger import logger  # Используем ваш класс логгирования
 

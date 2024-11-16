@@ -13,7 +13,7 @@ MODE = 'debug'
 from pathlib import Path
 from typing import List
 ...
-from header import gs
+from src import gs
 from src.utils import pprint
 from src.logger import logger
 #from src.db import ProductTranslationsManager

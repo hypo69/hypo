@@ -24,8 +24,8 @@ import requests
 from attr import attr, attrs
 from pathlib import Path
 from typing import List, Dict
-
-from header import gs
+import header
+from src import gs
 from src.utils import j_loads
 from .api import Prestashop
 from src.logger import logger

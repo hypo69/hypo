@@ -21,7 +21,7 @@ import tkinter as tk  # Module for GUI creation
 from tkinter import messagebox  # Submodule for GUI message boxes
 
 import header  # Custom import, assuming it initializes settings or constants
-from header import gs  # Custom import, likely for path settings or project structure
+from src import gs  # Custom import, likely for path settings or project structure
 
 def add_context_menu_item():
     """Adds a context menu item to the desktop and folder background.

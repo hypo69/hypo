@@ -1,11 +1,3 @@
-## \file hypotez/src/scenario/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.scenario """
-MODE = 'debug'
-""" module: src.scenario """
-MODE = 'debug'
 
 """   Module with scenario execution functions: `run_scenario_files`, `run_scenarios`  
 Scenario executor for suppliers.
@@ -14,7 +6,7 @@ Scenario executor for suppliers.
 
 The logic executed is as follows:
 <pre>
-   +-----------+
+  +-----------+
   |  Scenario |
   +-----------+
         |
@@ -110,10 +102,6 @@ s.run(list_of_scenarios)
 
 @endcode
 """
-
-
-from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
 
 from .executor import (
     run_scenario, 

@@ -25,7 +25,7 @@ from googleapiclient import errors
 from googleapiclient.discovery import build
 
 import header
-from header import gs
+from src import gs
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/script.projects']

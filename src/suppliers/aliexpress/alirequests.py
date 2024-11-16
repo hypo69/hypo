@@ -48,7 +48,7 @@ from requests.cookies import RequestsCookieJar
 from urllib.parse import urlparse
 from fake_useragent import UserAgent
 
-from header import gs
+from src import gs
 from src.utils import j_dumps
 from src.logger import logger
 

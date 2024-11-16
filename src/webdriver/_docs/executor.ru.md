@@ -27,7 +27,7 @@ MODE = 'debug'
    from selenium.webdriver.common.action_chains import ActionChains
    from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
-   from header import gs 
+   from src import gs 
    from src.utils import pprint, j_loads, j_loads_ns, j_dumps, save_png
    from src.utils.string import StringFormatter
    from src.logger import logger

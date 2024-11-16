@@ -16,7 +16,7 @@ from types import SimpleNamespace
 from typing import List, Optional
 
 import header
-from header import gs
+from src import gs
 from src.suppliers.aliexpress.campaign.ali_promo_campaign import AliPromoCampaign
 from src.suppliers.aliexpress.campaign.gsheet import AliCampaignGoogleSheet
 from src.suppliers.aliexpress.utils import extract_prod_ids, ensure_https

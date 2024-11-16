@@ -10,7 +10,7 @@ MODE = 'debug'
 from pathlib import Path
 from typing import Dict, List
 import header
-from header import gs, j_dumps, j_loads
+from src import gs, j_dumps, j_loads
 from src.db import ProductTranslationsManager
 from src.ai import translate
 from src.endpoints.prestashop import Prestashop

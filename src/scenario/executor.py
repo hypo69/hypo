@@ -1,12 +1,3 @@
-## \file hypotez/src/scenario/executor.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.scenario """
-MODE = 'debug'
-""" module: src.scenario """
-MODE = 'debug'
-
 
 """
 Script Executor
@@ -139,7 +130,8 @@ from math import log, prod
 from pathlib import Path
 from typing import Dict, List
 
-from header import gs
+import header
+from src import gs
 from src.utils import pprint, j_loads, j_dumps
 from src.product import Product, ProductFields, translate_presta_fields_dict
 from src.endpoints.prestashop import Prestashop

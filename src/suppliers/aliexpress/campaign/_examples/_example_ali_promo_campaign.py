@@ -14,7 +14,7 @@ MODE = 'debug'
 import header
 from pathlib import Path
 from types import SimpleNamespace
-from header import gs
+from src import gs
 from src.suppliers.aliexpress import AliPromoCampaign
 from src.suppliers.aliexpress import AliAffiliatedProducts
 from src.utils import get_filenames, get_directory_names, read_text_file, csv2dict

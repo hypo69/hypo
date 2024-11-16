@@ -1,13 +1,3 @@
-## \file hypotez/src/check_relise.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src """
-MODE = 'debug'
-""" module: src """
-MODE = 'debug'
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
-
 
 import requests
 from src.logger import logger

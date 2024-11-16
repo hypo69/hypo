@@ -12,7 +12,7 @@ MODE = 'debug'
 
 from selenium import webdriver
 from src.webdriver.executor import ExecuteLocator
-from header import gs
+from src import gs
 from src.logger.exceptions import ExecuteLocatorException
 
 # Создание экземпляра WebDriver (например, Chrome)
