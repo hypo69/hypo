@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/ksp/banners_grabber.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.ksp """
 MODE = 'debug'

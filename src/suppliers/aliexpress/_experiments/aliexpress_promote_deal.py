@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/_experiments/aliexpress_promote_deal.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress._experiments """
 MODE = 'debug'

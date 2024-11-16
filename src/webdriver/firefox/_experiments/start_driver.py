@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/firefox/_experiments/start_driver.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.firefox._experiments """
 MODE = 'debug'

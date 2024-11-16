@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress.api.helpers """
 MODE = 'debug'

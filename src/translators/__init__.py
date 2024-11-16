@@ -1,5 +1,6 @@
 ## \file hypotez/src/translators/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.translators """
 MODE = 'debug'

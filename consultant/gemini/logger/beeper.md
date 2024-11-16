@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/logger/beeper.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.logger """
 MODE = 'debug'

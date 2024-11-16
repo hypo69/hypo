@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/category/version.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.category """
 MODE = 'debug'

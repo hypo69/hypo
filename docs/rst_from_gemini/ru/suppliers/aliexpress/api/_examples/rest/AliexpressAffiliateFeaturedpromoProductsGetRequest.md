@@ -1,51 +1,71 @@
 ```markdown
-# Файл: AliexpressAffiliateFeaturedpromoProductsGetRequest.py
+# Модуль `AliexpressAffiliateFeaturedpromoProductsGetRequest`
 
-Файл расположен по пути `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\_examples\rest\AliexpressAffiliateFeaturedpromoProductsGetRequest.py`.
+Файл: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\_examples\rest\AliexpressAffiliateFeaturedpromoProductsGetRequest.py`
 
-## Описание
+**Описание:**
 
-Этот Python-файл определяет класс `AliexpressAffiliateFeaturedpromoProductsGetRequest`, представляющий запрос к API AliExpress для получения данных о промо-продуктах. Класс наследуется от `RestApi`, что указывает на использование REST-архитектуры для взаимодействия с API.
+Данный модуль предоставляет класс `AliexpressAffiliateFeaturedpromoProductsGetRequest`, который реализует REST API запрос для получения информации о промо-товарах на AliExpress.  Этот класс наследуется от базового класса `RestApi`.
 
-## Класс `AliexpressAffiliateFeaturedpromoProductsGetRequest`
+**Класс `AliexpressAffiliateFeaturedpromoProductsGetRequest`:**
 
-Класс предоставляет интерфейс для запроса данных о промо-продуктах с помощью API AliExpress.  Методы класса, по всей видимости, позволяют указать параметры запроса.
+Класс `AliexpressAffiliateFeaturedpromoProductsGetRequest` используется для формирования и выполнения запроса к API AliExpress для получения списка товаров, участвующих в специальных акциях.
 
-### Атрибуты:
+**Параметры:**
 
-* `app_signature`:  По-видимому, параметр для подписи приложения.
-* `category_id`: Идентификатор категории.
+Класс принимает следующие параметры при инициализации:
+
+* `domain`: Домен API (по умолчанию `api-sg.aliexpress.com`).
+* `port`: Порт API (по умолчанию `80`).
+
+Имеет следующие атрибуты, которые позволяют настраивать запрос:
+
+* `app_signature`: Подпись приложения.
+* `category_id`: ID категории товаров.
 * `country`: Страна.
-* `fields`: Список полей для возвращаемых данных.
-* `page_no`: Номер страницы результатов.
-* `page_size`: Размер страницы результатов.
-* `promotion_end_time`: Дата окончания промо-акции.
-* `promotion_name`: Название промо-акции.
-* `promotion_start_time`: Дата начала промо-акции.
-* `sort`: Параметр сортировки результатов.
+* `fields`: Поля, которые нужно получить (строка с разделителями).
+* `page_no`: Номер страницы (для постраничного вывода).
+* `page_size`: Размер страницы (для постраничного вывода).
+* `promotion_end_time`: Дата окончания акции.
+* `promotion_name`: Название акции.
+* `promotion_start_time`: Дата начала акции.
+* `sort`: Сортировка результатов.
 * `target_currency`: Целевая валюта.
 * `target_language`: Целевой язык.
-* `tracking_id`: Идентификатор отслеживания.
+* `tracking_id`: ID отслеживания.
 
+**Метод `getapiname()`:**
 
-### Метод `getapiname()`:
+Возвращает имя API-метода: `aliexpress.affiliate.featuredpromo.products.get`.
 
-Возвращает имя API-метода, который используется для запроса: `aliexpress.affiliate.featuredpromo.products.get`.
+**Пример использования (неполный):**
 
-## Примечания
+```python
+from ...suppliers.aliexpress.api._examples.rest import AliexpressAffiliateFeaturedpromoProductsGetRequest
 
-* Файл комментирован, но комментарии могли бы быть более подробными и раскрывать назначение каждого параметра.
-* Код предполагает использование класса `RestApi`, который, вероятно, содержит логику обработки запросов к API.
-*  В примере явно указана информация о `.venv` файле, вероятно, для запуска кода в соответствующей среде.
-* Не хватает информации о том, как именно этот класс используется в приложении.
+# Создание экземпляра класса
+request = AliexpressAffiliateFeaturedpromoProductsGetRequest()
 
-## Следующие шаги для улучшения документации:
+# Установка параметров запроса
+request.category_id = 123
+request.page_no = 1
+request.page_size = 10
 
-* Добавьте описание назначения каждого атрибута в классе.
-* Добавьте информацию о возвращаемом формате данных.
-* Приведите пример использования класса для демонстрации его применения.
-* Опишите возможные значения для параметров, если они ограничены.
-* Укажите, какие типы данных ожидаются для каждого параметра.
+# Выполнение запроса и обработка результата (оставлены для полноты)
+try:
+    response = request.getResponse()
+    # Обработка ответа
+    print(response.body)
+except Exception as e:
+    print(f"Ошибка: {e}")
+```
+
+**Примечания:**
+
+* Код содержит константу `MODE = 'debug'`.  Предполагается, что она используется для настройки режима работы (отладка, производство).  Важно понимать, для чего используется эта константа в конкретной системе.
+* Для полного примера использования необходимо добавить код для обработки ответа от API.
+* Документация должна содержать информацию о форматах ответа от API.
+* Документация должна содержать информацию об ожидаемых ошибках и их обработке.
 
 
 ```

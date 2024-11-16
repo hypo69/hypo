@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/gui/context_menu/header.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.gui.context_menu """
 MODE = 'debug'

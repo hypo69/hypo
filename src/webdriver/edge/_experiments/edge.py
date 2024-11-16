@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/edge/_experiments/edge.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.edge._experiments """
 MODE = 'debug'

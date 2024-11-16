@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.prestashop._experiments.suppliers.hb """
 MODE = 'debug'

@@ -1,66 +1,59 @@
 ```markdown
-# Создание рекламной кампании на AliExpress
+# Campaign Creation Flow - AliExpress
 
-Этот документ описывает процесс создания рекламной кампании на платформе AliExpress.
+This document outlines the process for creating an advertising campaign on AliExpress.
 
-**1. Начало**
+## Module: `src.suppliers.aliexpress.campaign`
 
-Процесс начинается с инициализации проекта.
+**Mode:** `debug`
 
-**2. Инициализация данных кампании**
+**Flowchart:**
 
-* Укажите **Название кампании**, **Язык** и **Валюту**.
+```mermaid
+graph TD
+    A[Start] --> B{Initialize Campaign Name, Language, and Currency};
+    B --> C{Create Campaign and Category Directories};
+    C --> D{Save Campaign Configuration};
+    D --> E{Collect Product Data};
+    E --> F{Save Product Data};
+    F --> G{Create Promotional Materials};
+    G --> H{Review Campaign};
+    H -- Yes --> I{Publish Campaign};
+    H -- No --> J[Is Campaign Ready?];
+    J -- Yes --> I;
+    J -- No --> H;
+    I --> K[End];
+    A --> K;
+    B --> C;
+    C --> D;
+    D --> E;
+    E --> F;
+    F --> G;
+    G --> H;
+    subgraph "Campaign Creation"
+        A
+        B
+        C
+        D
+        E
+        F
+        G
+        H
+        I
+        K
+    end
+```
 
-**3. Создание директорий кампании и категорий**
+**Detailed Steps:**
 
-* Создайте необходимые директории для хранения данных кампании и ее категорий.
+* **Initialize Campaign:** Set the campaign's name, language, and currency.
+* **Create Directories:**  Establish the necessary directories for the campaign and product data.
+* **Save Campaign Configuration:** Store the campaign settings in a structured format.
+* **Collect Product Data:** Gather product information relevant to the campaign.
+* **Save Product Data:** Store the collected product data.
+* **Create Promotional Materials:** Develop promotional assets (e.g., banners, descriptions).
+* **Review Campaign:** Verify that all elements meet the required criteria.
+* **Publish Campaign:** Finalize and publish the campaign on AliExpress.
 
-**4. Сохранение конфигурации кампании**
-
-* Сохраните все указанные данные кампании в соответствующих файлах/базах данных.
-
-**5. Сбор данных о продуктах**
-
-* Соберите необходимые данные о продуктах, которые будут рекламироваться в рамках кампании.
-
-**6. Сохранение данных о продуктах**
-
-* Сохраните собранные данные о продуктах.
-
-**7. Создание рекламных материалов**
-
-* Создайте рекламные материалы (тексты, изображения, видео) для кампании.
-
-**8. Проверка кампании**
-
-* Проверьте готовность кампании к публикации.
-
-**9. Готова ли кампания?**
-
-* **Да:** переходите к публикации кампании.
-* **Нет:** вернитесь к предыдущему шагу и выполните необходимые корректировки.
-
-**10. Публикация кампании**
-
-* Опубликуйте кампанию на AliExpress.
-
-**11. Конец**
-
-Процесс создания рекламной кампании завершен.
-
-**Примечания:**
-
-* Подробный список необходимых данных для каждого этапа должен быть дополнительно уточнен.
-* Следует определить конкретные инструменты и методы для каждого действия, например, для сбора данных о продуктах.
-* Добавьте в документ конкретные примеры данных, используемых на каждом этапе.
-
-
-**Пример данных:**
-
-* **Название кампании:** Рождественские подарки
-* **Язык:** Русский
-* **Валюта:** Рубли
-* **Категории:** Игрушки, электроника, одежда
-
-Этот документ служит основой для более подробного описания процесса.  Для эффективной реализации, требуется более детальное описание каждого шага.
+**Note:** The flowchart clearly illustrates the steps involved in creating a campaign. The "Is Campaign Ready?" step provides a crucial check before final publication, ensuring accuracy and completeness. This documentation serves as a reference for developers working on the AliExpress campaign creation process.  Any specific error handling or data validation steps should be described in greater detail in the relevant code.
 ```

@@ -1,5 +1,6 @@
 ## \file hypotez/src/bots/telegram/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.bots.telegram """
 MODE = 'debug'

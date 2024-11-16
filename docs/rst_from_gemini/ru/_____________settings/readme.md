@@ -1,97 +1,93 @@
 ```markdown
-# `credentials.py` Module
+## \file hypotez/src/settings/readme.md
+# -*- coding: utf-8 -*-
 
-The `credentials.py` module manages sensitive configuration settings and credentials essential for the `hypotez` application. It centralizes the handling of paths, passwords, logins, and API keys, ensuring secure and consistent access throughout the project.
-
-## Overview
-
-The `ProjectSettings` class, implemented as a singleton using the `SingletonMeta` metaclass, manages and stores all critical project settings and credentials.  This ensures that only one instance of the class exists, maintaining consistency across the application.
-
-## Features
-
-1. **Singleton Pattern:** The `SingletonMeta` metaclass enforces the singleton pattern, guaranteeing a single instance of `ProjectSettings` is available throughout the application.
-
-2. **Configuration Management:** The `ProjectSettings` class defines critical project file paths and directories using `Path` objects, ensuring compatibility across different operating systems.
-
-3. **Secure Credentials Storage:**  Loads sensitive information, including API keys, passwords, and other credentials, from a KeePass database (`src/settings/db.kdbx`).  This includes credentials for various services: Aliexpress, OpenAI, Telegram, Discord, Prestashop, SMTP, Facebook, translation services, and Google APIs (gAPIs).
-
-4. **Path Definitions:** Manages paths for key project directories: root, source (`src`), binary (`bin`), log, temporary (`tmp`), cookie, and external data.
-
-5. **Initialization and Loading:**
-   - The `__init__` method initializes the settings and loads credentials from the KeePass database via the `_load_credentials()` method.
-   - Includes robust retry logic (`_open_kp()`) to handle potential issues with opening the KeePass database.
-
-6. **Credential Loading Methods:** Provides methods to load credentials for specific services:
-   - `_load_*_credentials()`:  Handles loading credentials for Aliexpress, OpenAI, Discord, Telegram, Prestashop, SMTP, Facebook, translations, and gAPIs.  Credentials are stored within the `credentials` attribute of `ProjectSettings` in a structured way (e.g., `gs.credentials.aliexpress`).  The `SimpleNamespace` object is used for easier access.
+""" module: src.settings """
+MODE = 'debug'
+""" Global Project Settings: paths, passwords, logins, and API settings.  
+This module, `settings.py`, manages critical configuration settings, including paths, passwords, logins, and API keys.  It's crucial for the application's operation and security.  Sensitive information is stored securely within a KeePass database for access control.
 
 
-## Usage with `gs` (Global Settings)
+## `credentials.py` Module
 
-To access credentials in your project, use the global `gs` object from your application's `__init__.py` file:
+The `credentials.py` module centralizes the management of sensitive configuration settings and credentials essential for the application.  It ensures secure and consistent access to paths, passwords, logins, and API keys across the entire project.
+
+### Overview
+
+The `ProjectSettings` class, implemented as a singleton, manages and stores all critical project settings and credentials.  The singleton pattern guarantees a single instance, maintaining consistency throughout the application.
+
+### Features
+
+1. **Singleton Pattern**: The `SingletonMeta` metaclass enforces the singleton pattern, ensuring only one instance of `ProjectSettings` is created and used throughout the application. This guarantees consistent configuration data.
+
+2. **Configuration Management**:  The module defines key project file paths and directories using `Path` objects for cross-platform compatibility.
+
+3. **Credentials Storage**: Sensitive information, including API keys, passwords, and other credentials for services like Aliexpress, OpenAI, Telegram, Discord, Prestashop, SMTP, Facebook, translation services, and Google APIs, are securely loaded from a KeePass database (`db.kdbx`).
+
+4. **Path Definitions**:  The module manages paths for essential project directories (root, source, binary, log, temporary, cookie, and external data).  Uses `Path` objects for cross-platform compatibility.
+
+5. **Initialization and Loading**: The `__init__` method initializes the settings and loads credentials from the KeePass database via `_load_credentials()`. The `_open_kp()` method attempts to open the KeePass database with retry logic in case of initial failures.
+
+6. **Credential Loading Methods**: Methods exist to load credentials for specific services:
+    - `_load_{service}_credentials()`: Loads credentials for each supported service.
+
+
+### Usage with `gs`
+
+The `gs` object (typically accessed via an `__init__.py` module) provides access to the `ProjectSettings` singleton:
 
 ```python
 from __init__ import gs
 
 # Access Aliexpress API credentials
-aliexpress_api_key = gs.credentials.aliexpress.api_key
+aliexpress_credentials = gs.credentials.aliexpress
+api_key = aliexpress_credentials.api_key
 ```
 
-## Notes
+### Notes
 
-- **KeePass Database:** Credentials are stored in a KeePass database located at `src/settings/db.kdbx`.  You must provide the KeePass master password to access the database.
+- **KeePass Database**: Credentials are stored in a KeePass database (`db.kdbx`) located in `src/settings/`.  The KeePass master password is required to access the database.
+- **Cross-OS Compatibility**: Paths are handled using `Path` objects from the `pathlib` module, guaranteeing consistency across different operating systems.
+- **Error Handling**: The `_open_kp()` method includes retry logic and error logging for robust KeePass database interaction.
+- **Customization**:  While the root directory is currently hardcoded, future improvements should explore configurable root directory names via a configuration file.
 
-- **Cross-OS Compatibility:** Paths are handled using `Path` objects from a library like `pathlib` for consistency across operating systems.
 
-- **Customization:** The root directory name (`hypotez`) is hardcoded.  Consider adding functionality to configure the root directory name from a configuration file or command-line argument.
+### Installation
 
-
-- **Error Handling:** Includes error handling (`try...except` blocks) to gracefully manage potential issues during KeePass database access and credential loading.
-
-## Installation
-
-Ensure the `pykeepass` library is installed:
+Install the necessary `pykeepass` library:
 
 ```bash
 pip install pykeepass
 ```
 
-
-## Example Usage
+### Example Usage (from `main.py` or another module)
 
 ```python
-# Import the settings
 from __init__ import gs
-
-# Get the path to the log directory
 log_path = gs.path.log
-
-# Get the API key for Aliexpress
-aliexpress_api_key = gs.credentials.aliexpress.api_key
+# ... access other settings
 ```
 
-## Important Considerations
 
-- **Security:**  The KeePass database is crucial for security.  Ensure it's protected and backed up.  Never hardcode passwords or sensitive information directly into your code.
+### Project Structure
 
-- **Error Handling:** The code now includes better error handling, logging exceptions properly, and providing informative error messages to the developer.
-
-- **Clearer Structure:**  The module structure is improved, making it easier to understand the purpose of each method and variable.
-
-
-## Project Structure (Example)
 
 ```
 project_root/
 ├── src/
 │   ├── settings/
+│   │   ├── settings.py
 │   │   ├── credentials.py
-│   │   ├── settings.py  # (If you have global settings)
 │   │   └── db.kdbx
 │   ├── utils/
 │   └── logger.py
 └── main.py
 ```
 
+This structure clearly separates settings and credentials from the main application code.  The `db.kdbx` file is critical; its location should be explicitly documented in the project's `README.md`.
 
-This revised README provides a more comprehensive and user-friendly description of the `credentials.py` module, highlighting security and best practices. Remember to replace placeholders like `__root__` with the actual path to the project root if necessary.
+
+
 ```
+
+

@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/crawlee_python/crawlee_python.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.crawlee_python """
 MODE = 'debug'

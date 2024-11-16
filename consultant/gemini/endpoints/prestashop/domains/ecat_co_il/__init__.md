@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/prestashop/domains/ecat_co_il/__init__.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.prestashop.domains.ecat_co_il """
 MODE = 'debug'

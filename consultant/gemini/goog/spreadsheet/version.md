@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/goog/spreadsheet/version.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.goog.spreadsheet """
 MODE = 'debug'

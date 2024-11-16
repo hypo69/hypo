@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/webdriver/driver.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.webdriver """
 MODE = 'debug'

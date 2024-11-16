@@ -1,5 +1,6 @@
 ## \file hypotez/launchers/discord.ps1
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: launchers """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/header.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.advertisement.facebook """
 MODE = 'debug'

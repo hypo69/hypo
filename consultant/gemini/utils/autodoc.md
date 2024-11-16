@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/utils/autodoc.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.utils """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/_____________settings/version.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini._____________settings """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/chrome/extentions/catch_page/background.js
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.chrome.extentions.catch_page """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/gui/context_menu/qt6/header.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.gui.context_menu.qt6 """
 MODE = 'debug'

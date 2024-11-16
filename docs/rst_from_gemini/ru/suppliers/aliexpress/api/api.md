@@ -1,84 +1,81 @@
 ```markdown
-# AliExpress API Wrapper for Python
+# AliExpress API Wrapper
 
 ## File: `hypotez/src/suppliers/aliexpress/api/api.py`
 
-This Python module provides a wrapper for the AliExpress Open Platform API.  It simplifies interacting with the API, handling requests, responses, and data parsing.
+This Python module provides a wrapper for the AliExpress Open Platform API, simplifying access to product information and affiliate links.
 
 
-### Class: `AliexpressApi`
+### Class `AliexpressApi`
 
-This class encapsulates the interaction with the AliExpress API.
+This class handles interactions with the AliExpress API.
 
-#### Constructor (`__init__`)
-
-```python
-def __init__(self, key: str, secret: str, language: model_Language, currency: model_Currency, tracking_id: str = None, app_signature: str = None, **kwargs):
-```
-
-*   **`key` (str):** Your AliExpress API key.
-*   **`secret` (str):** Your AliExpress API secret.
-*   **`language` (model_Language):** Language code (e.g., `model_Language.EN`).
-*   **`currency` (model_Currency):** Currency code (e.g., `model_Currency.USD`).
-*   **`tracking_id` (str, optional):**  Tracking ID for link generation. Defaults to `None`.
-*   **`app_signature` (str, optional):** Application signature. Defaults to `None`.
-*   **`**kwargs`:** Additional keyword arguments.
-
-
-#### Methods
-
-##### `retrieve_product_details`
+**Constructor:**
 
 ```python
-def retrieve_product_details(self, product_ids: str | list, fields: str | list = None, country: str = None, **kwargs) -> List[model_Product]:
+def __init__(self,
+    key: str,
+    secret: str,
+    language: model_Language,
+    currency: model_Currency,
+    tracking_id: str = None,
+    app_signature: str = None,
+    **kwargs):
 ```
 
-*   **`product_ids` (str | list[str]):** One or more product IDs or URLs.
-*   **`fields` (str | list[str], optional):** Specific fields to retrieve. Defaults to all.
-*   **`country` (str, optional):** Country code for price filtering.
-*   **Returns:** A list of `model_Product` objects.
-*   **Raises:**
-    *   `ProductsNotFoudException`: If no products are found.
-    *   Other exceptions related to invalid input or API errors.
+*   `key`: Your API key.
+*   `secret`: Your API secret.
+*   `language`:  Language code (e.g., `model_Language.EN`).
+*   `currency`: Currency code (e.g., `model_Currency.USD`).
+*   `tracking_id`: The tracking ID for affiliate link generation (optional).
+*   `app_signature`:  (Optional).  Likely an API signature.
+*   `**kwargs`: Additional keyword arguments.
 
 
-##### `get_affiliate_links`
+**Methods:**
 
-```python
-def get_affiliate_links(self, links: str | list, link_type: model_LinkType = model_LinkType.NORMAL, **kwargs) -> List[model_AffiliateLink]:
-```
+*   **`retrieve_product_details(self, product_ids: str | list, fields: str | list = None, country: str = None, **kwargs) -> List[model_Product]`:**
 
-*   **`links` (str | list[str]):** List of product IDs or URLs to generate affiliate links for.
-*   **`link_type` (model_LinkType, optional):** Type of affiliate link (e.g., normal or hotlink). Defaults to `model_LinkType.NORMAL`.
-*   **Returns:** A list of `model_AffiliateLink` objects.
-*   **Raises:**
-    *   `InvalidTrackingIdException`: If `tracking_id` is missing.
-    *   `ProductsNotFoudException`: If no affiliate links are found.
-    *   Other exceptions related to invalid input or API errors.
+    Retrieves product details for one or more product IDs.
 
+    *   `product_ids`: Product IDs (or URLs); accepts single string or list of strings.
+    *   `fields`: A list of fields to include in the response. Defaults to all fields.
+    *   `country`: Filter by country (e.g., for price adjustments).
+    *   Returns: A list of `model_Product` objects.
+    *   Raises: `ProductsNotFoudException`, `InvalidArgumentException`, `ApiRequestException`, `ApiRequestResponseException` (likely from underlying API calls).
 
-##### `get_hotproducts`
+*   **`get_affiliate_links(self, links: str | list, link_type: model_LinkType = model_LinkType.NORMAL, **kwargs) -> List[model_AffiliateLink]`:**
 
-```python
-def get_hotproducts(self, ... ) -> model_HotProductsResponse:
-```
+    Generates affiliate links from a list of product IDs.
 
-*   **Detailed Description of Arguments (very important):**  This method is crucial. You need to thoroughly document the parameters to help users understand how to effectively filter products.  Specifically explain how `max_sale_price` and `min_sale_price` work with the currency (e.g., they're in the lowest denomination of the specified currency). Include examples.
+    *   `links`: List of product IDs or URLs.
+    *   `link_type`: The type of affiliate link (e.g., `model_LinkType.HOTLINK`).
+    *   Returns: A list of `model_AffiliateLink` objects.
+    *   Raises: `InvalidTrackingIdException`, `ProductsNotFoudException`, `ApiRequestException`, `ApiRequestResponseException`
 
+*   **`get_hotproducts(self, ...)`:** Searches for products with high commission, offering extensive filtering options.
 
-##### `get_categories`, `get_parent_categories`, `get_child_categories`
+    *   See the docstring in the code for details on arguments.
+    *   Returns: `model_HotProductsResponse` object containing the search results.
+    *   Raises: `ProductsNotFoudException`, `ApiRequestException`, `ApiRequestResponseException`
 
-These methods handle category retrieval, with `get_categories` retrieving both parent and child categories, and `get_parent_categories` and `get_child_categories` filtering based on the parent ID. Add detailed descriptions of what each method does and the data types returned.
+*   **`get_categories(self, **kwargs) -> List[model_Category | model_ChildCategory]`:** Retrieves all available categories (parent and child).
 
-### Important Considerations
-
-*   **Error Handling:** The code includes `try...except` blocks to catch exceptions and log errors.  This is good practice.  However, consider adding more specific exception handling (e.g., for different types of API errors).
-*   **Logging:** `logger` is used for logging. This is excellent.
-*   **Type Hinting:** The use of type hinting (`typing`) is good for readability and maintainability.
-*   **`model_` prefixes:**  Make sure the `model_*` classes are properly defined in the `models` submodule.
-*   **Input Validation:**  Consider adding validation to ensure input parameters are valid (e.g., checking if `product_ids` is a valid list or string).
-*   **API Rate Limiting:** Implement mechanisms to handle API rate limits to avoid getting your IP address blocked.
+    *   Returns: A list of `model_Category` and `model_ChildCategory` objects.
+    *   Raises: `CategoriesNotFoudException`, `ApiRequestException`, `ApiRequestResponseException`
 
 
-This improved documentation provides a more complete and user-friendly guide for using this AliExpress API wrapper. Remember to thoroughly document the `model_*` classes and other submodules for a comprehensive API reference.
+*   **`get_parent_categories(self, use_cache=True, **kwargs) -> List[model_Category]`:** Retrieves only parent categories (using cached results if possible).
+*   **`get_child_categories(self, parent_category_id: int, use_cache=True, **kwargs) -> List[model_ChildCategory]`:** Retrieves child categories for a given parent category.
+
+**Important Considerations:**
+
+*   **Error Handling:** The code includes several `try...except` blocks, essential for robust API interaction. The `logger` module is utilized for proper logging of errors, which should be configured appropriately.  However, consider improving error handling by providing more specific error messages and handling different exception types more effectively.
+*   **Input Validation:** The code checks for `self._tracking_id` in `get_affiliate_links` but throws a warning rather than an exception, which might be problematic. Improve validation of the input `product_ids` and other parameters.
+*   **Type Hinting:**  The extensive use of type hinting is good practice.  Ensure that the `model_*` objects are defined elsewhere.  Be mindful of potential type mismatches if the input `links` in `get_affiliate_links` is not strictly a string or list of strings.
+*   **Caching:** The `get_categories`, `get_parent_categories`, and `get_child_categories` methods have caching mechanisms, which is very good for performance.
+*   **`setDefaultAppInfo`:** The `setDefaultAppInfo` function is likely a helper function to set API credentials.
+
+
+This improved documentation enhances the understanding and usage of the AliExpress API wrapper. Remember to consult the actual code for detailed specifications and examples.
 ```

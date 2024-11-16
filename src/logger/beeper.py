@@ -1,5 +1,6 @@
 ## \file hypotez/src/logger/beeper.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.logger """
 MODE = 'debug'

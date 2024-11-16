@@ -1,5 +1,6 @@
 ## \file hypotez/src/ai/prompts/developer/improve_code_en.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.ai.prompts.developer """
 MODE = 'debug'

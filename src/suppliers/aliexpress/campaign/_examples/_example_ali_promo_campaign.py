@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress.campaign._examples """
 MODE = 'debug'

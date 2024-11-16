@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/hypo69/code_assistant/main.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.hypo69.code_assistant """
 MODE = 'debug'

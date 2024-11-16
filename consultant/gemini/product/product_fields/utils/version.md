@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/product/product_fields/utils/version.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.product.product_fields.utils """
 MODE = 'debug'

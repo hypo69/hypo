@@ -1,5 +1,6 @@
 ## \file hypotez/src/db/manager_translations/table_categories_hypotez_translations.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.db.manager_translations """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/firefox/extentions/try_path_1.3.5/popup/popup.js
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.firefox.extentions.try_path_1.3.5.popup """
 MODE = 'debug'

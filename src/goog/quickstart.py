@@ -1,5 +1,6 @@
 ## \file hypotez/src/goog/quickstart.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.goog """
 MODE = 'debug'

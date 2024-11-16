@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/prestashop/api/_examples/core.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.prestashop.api._examples """
 MODE = 'debug'

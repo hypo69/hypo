@@ -1,5 +1,6 @@
 ## \file hypotez/src/bots/discord/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.bots.discord """
 MODE = 'debug'

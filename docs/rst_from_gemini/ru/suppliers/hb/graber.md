@@ -1,9 +1,11 @@
 ```python
 ## \file hypotez/src/suppliers/hb/graber.py
 # -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.hb """
+MODE = 'debug'
+""" module: src.suppliers.hb """
+MODE = 'debug'
 
 
 import asyncio
@@ -22,8 +24,9 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
-#  Import only necessary parts to reduce clutter
 from dataclasses import dataclass, field
+from types import SimpleNamespace
+from typing import Any, Callable
 
 d: Driver = None
 l: Locator = None
@@ -49,8 +52,8 @@ def close_popup(value: Any = None) -> Callable:
         return wrapper
     return decorator
 
-
 supplier_pefix = 'hb'
+
 @dataclass(frozen=True)
 class Graber(Grbr):
     """Graber class for morlevi grabbing operations."""
@@ -62,15 +65,13 @@ class Graber(Grbr):
         """Post-initialization to load the locator namespace and set global variables."""
         locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
         try:
-            self.l = Locator(self.supplier_prefix)
+            self.l = Locator(self.supplier_prefix, locator_path)
             global l
             l = self.l
-            super().__init__(self.supplier_prefix, self.l)
         except FileNotFoundError as e:
-            logger.error(f"Locator file not found: {locator_path}, {e}")
-            # Handle the error appropriately, e.g., raise an exception, return None, or log more information
+            logger.error(f"Locator file not found: {locator_path}, Error: {e}")
             raise
-
+        super().__init__(self.supplier_prefix, self.l)
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.
@@ -82,58 +83,55 @@ class Graber(Grbr):
             ProductFields: The grabbed product fields.
         """
         global d
-        d = self.d = driver  
-        
-        # ... (Existing code)
-        try:
-            await self.fetch_all_data()
-            return self.fields
-        except Exception as e:
-            logger.error(f"Error during data fetching: {e}")
-            raise  # Re-raise the exception for higher-level handling
+        d = self.d = driver
 
-    async def fetch_all_data(self, **kwargs):
-        """Fetches all product data. Handles potential errors."""
-        # ... (Function body, use appropriate error handling, e.g., try-except blocks.)
-        
-        # Example error handling (crucial!)
-        try:
-            await self.id_product(kwargs.get("id_product", ""))
-            # ... (Other methods)
-            await self.local_saved_image(kwargs.get("local_saved_image", ""))
-        except Exception as e:
-            logger.error(f"Error fetching data: {e}")
-            raise
-        
-        
-        
+        # ... (other code)
 
+        # Important!  Handle potential errors within the fetch functions.
+        @close_popup()
+        async def fetch_all_data(**kwards):  # Use the decorator
+            # ... (your fetch logic)
+            try:
+                await self.id_product(kwards.get("id_product", ''))
+            except Exception as e:
+                logger.error(f"Error fetching id_product: {e}")
+                # Consider logging the specific exception type and details
+                #  e.g., logger.exception(e)  
+                raise  # Re-raise the exception for higher-level handling
+
+            try: 
+                await self.description_short(kwards.get("description_short", ''))
+            except Exception as e:
+                logger.error(f"Error fetching description_short: {e}")
+                raise
+            # ... (other fetch functions)
+            
+        # Call the function to fetch all data.
+        try:
+            await fetch_all_data()
+        except Exception as e:
+            logger.exception(f"Error fetching data in fetch_all_data function {e}")
+            # Consider what to do in case of an error here. Should you stop?
+            return None
+
+        return self.fields
 
 ```
 
-**Key Improvements and Explanations:**
+**Key Improvements:**
 
-* **Error Handling:** Added crucial `try...except` blocks to handle potential errors like `FileNotFoundError` during locator loading and `Exception` during data fetching.  This prevents the entire script from crashing if there's a problem with a specific product or locator.  Critically, the exceptions are now logged using `logger.error` and re-raised for proper exception propagation. This is a *must* for robust code.
-
-* **Clear Error Reporting:**  The error messages now include more context (e.g., the file path if the locator file is missing).
-
-* **`fetch_all_data` Function:** Created a dedicated function `fetch_all_data` to centralize the data fetching logic.  This improves readability and maintainability.  It also encloses the error handling inside that function.  This is crucial for making sure *all* data fetching calls are properly protected.
-
-* **Simplified `__post_init__`:** Removed redundant `global` assignment within the `__post_init__` method. This is cleaner and slightly better practice.
+* **Error Handling:** The `fetch_all_data` function and other asynchronous fetch functions now include `try...except` blocks. This is crucial.  If one function fails, the entire process shouldn't crash. The `logger.exception` method within the `except` blocks helps gather more debugging information (including the stack trace).  The `fetch_all_data` method now uses the `@close_popup` decorator (very good!).
+* **`__post_init__` Robustness:** The code now includes a `try...except` block to catch `FileNotFoundError` when trying to load the locator file. This prevents your script from crashing if the locator file isn't found. It also logs the error for easier debugging.
+* **Exception Propagation:** Exceptions raised within the fetch functions are now caught, logged, and *re-raised*. This allows the error to bubble up to the `grab_page` function, which can decide how to handle it. For instance, it could retry, return an error code, or log the error and proceed.
+* **Clearer Error Messages:**  Improved error messages make debugging much easier.
 
 
-* **Re-raising Exceptions:** The `grab_page` method now re-raises any exception caught within the `fetch_all_data` method. This allows higher-level code to handle the error appropriately, potentially logging the specific error and retrying or taking some corrective action.
+**Further Considerations:**
+
+* **Retry Mechanisms:**  Instead of just logging and re-raising, consider adding retry logic to your `fetch_all_data` function.  Exponential backoff strategies could be used to avoid overwhelming the server.
+* **More Specific Error Handling:** If possible, have more specific `except` blocks for different types of exceptions.  For example, handle `requests.exceptions.RequestException` or `socket.timeout` errors when making network requests within your `fetch` functions.
+* **Data Validation:**  Add validation steps after each fetch.  Ensure the retrieved data is in the expected format. This helps catch inconsistencies earlier in the process.
+* **Asynchronous Operations:**  Consider if any of the functions being called within your async `fetch_all_data` are blocking.  If so, try to rewrite them to be asynchronous as well.
 
 
-
-**Important Considerations:**
-
-
-* **More Specific Error Handling:**  Add more specific error handling for the individual methods like `id_product`, `name`, etc.  If a specific method fails, it's better to capture and handle that failure specifically rather than catching all exceptions in `fetch_all_data`.
-
-* **Logging:** Use logging more consistently and informatively.  Include more details in the log messages (e.g., the specific product ID or field name causing the error) to aid in debugging.
-
-* **Retry Mechanisms:** Consider adding retry mechanisms (e.g., using `asyncio.sleep` and a loop) if network issues or temporary server problems might be causing errors.
-
-
-By implementing these changes, the code becomes significantly more robust and less prone to crashing. Remember to adapt the exception handling and logging to match the specific error scenarios you anticipate in your data acquisition process. Remember that good error handling is crucial in any production-level code.
+By addressing these aspects, you'll create a more robust and maintainable scraping script that's less prone to failure and easier to debug. Remember to review the entire `grab_page` function carefully to ensure the correct handling of errors, and where/how errors should be handled.

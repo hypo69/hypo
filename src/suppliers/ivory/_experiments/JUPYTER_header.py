@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/ivory/_experiments/JUPYTER_header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.ivory._experiments """
 MODE = 'debug'

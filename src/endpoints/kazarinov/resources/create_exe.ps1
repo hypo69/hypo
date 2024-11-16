@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/kazarinov/resources/create_exe.ps1
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.kazarinov.resources """
 MODE = 'debug'

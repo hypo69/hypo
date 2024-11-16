@@ -1,152 +1,137 @@
 ```python
 # -*- coding: utf-8 -*-
- # <- venv win
-"""
-module: src.suppliers.ivory
-Supplier: morlevi
 
-This module contains functions for interacting with the Morlevi website
-and extracting product data.
+""" module: src.suppliers.ivory """
+MODE = 'debug'
+""" module: src.suppliers.ivory """
+MODE = 'debug'
+"""    Supplier: morlevi
+
+
+@namespace src: src
+ \package src.suppliers.morlevi
+\file __morlevi__.py
+ 
+ @section libs imports:
+  - pathlib 
+  - requests 
+  - pandas 
+  - selenium.webdriver.remote.webelement 
+  - selenium.webdriver.common.keys 
+  - gs 
+  - suppliers.Product 
+  - settings
+  - StringFormatter (from settings)
+  
+Author(s):
+  - Created by [Name] [Last Name] on 07.11.2023 .
 """
+
 import logging
 from pathlib import Path
 import requests
 import pandas as pd
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
-import settings
-from src.settings import StringFormatter
 from src.suppliers.Product import Product
+import settings
 
-# Use a logger from settings for consistent logging
-logger = logging.getLogger(__name__)
+# Import specific functions from settings.  Crucial for maintainability
 json_loads = settings.json_loads
+logger = settings.logger
+StringFormatter = settings.StringFormatter
 
+# Important:  Selenium WebDriver initialization should be outside of functions.
+#  This is a better approach for managing the driver instance.
 
 def login(supplier):
-    """Logs into the Morlevi website.
+    """Logs in to the Morlevi website. Handles potential popups and errors."""
+    driver = supplier.driver
+    driver.get('https://www.morlevi.co.il')
 
-    Args:
-        supplier: A Supplier object containing the webdriver and locators.
-
-    Returns:
-        True if login successful, False otherwise.  None if an unrecoverable error occurs.
-    """
-    s = supplier
-    driver = s.driver
-
-    driver.get("https://www.morlevi.co.il")
-    if _login(s):
+    if _login(supplier):
         return True
     else:
         try:
-            logger.error("Attempting to close popup...")
+            logger.error('Attempting to close popup.')
             driver.refresh()
-            if _login(s):
+            if _login(supplier):
                 return True
+            
+            close_popup_locator = supplier.locators['login']['close_popup_locator']
+            close_popup_buttons = driver.execute_locator(close_popup_locator)
 
-            close_popup_locator = s.locators['login']['close_popup_locator']
-            close_popup_elements = driver.execute_locator(close_popup_locator)
-            if isinstance(close_popup_elements, list):
-                for element in close_popup_elements:
+            if isinstance(close_popup_buttons, list):  # Multiple buttons
+                for button in close_popup_buttons:
                     try:
-                        element.click()
-                        if _login(s):
+                        button.click()
+                        if _login(supplier):
                             return True
-                    except Exception:
-                        pass  # Skip if clicking fails
-            elif isinstance(close_popup_elements, WebElement):
-                close_popup_elements.click()
-                return _login(s)
-
+                            break
+                    except Exception as e:
+                        logger.warning(f"Failed to click close popup button: {e}")
+            elif isinstance(close_popup_buttons, WebElement): # Single button
+                close_popup_buttons.click()
+                return _login(supplier)
             else:
-                logger.error("No suitable close popup element found.")
-        except Exception as e:
-            logger.error(f"Login failed: {e}")
-            return None  # Indicate unrecoverable error
+                logger.warning("No appropriate close popup buttons found.")
+        except Exception as ex:
+            logger.error(f"Failed to log in after popup attempts: {ex}")
+            return False
 
-
-def _login(s):
-    """Helper function for the login process."""
-    logger.debug("Attempting Morlevi login...")
-    driver = s.driver
+def _login(supplier):
+    """Helper function for login; encapsulates the login logic."""
+    driver = supplier.driver
     driver.refresh()
-    locators = s.locators['login']
-
+    locators = supplier.locators['login']
+    
     try:
         driver.execute_locator(locators['open_login_dialog_locator'])
-        driver.wait(1.3)  # Added wait
+        # Add appropriate waits.  Using supplier.wait here is cleaner
+        supplier.wait(1.3) 
         driver.execute_locator(locators['email_locator'])
-        driver.wait(.7)  # Added wait
+        supplier.wait(.7)
         driver.execute_locator(locators['password_locator'])
-        driver.wait(.7)  # Added wait
+        supplier.wait(.7)
         driver.execute_locator(locators['loginbutton_locator'])
-        logger.debug('Morlevi logged in')
+        logger.debug('Morlevi logged in successfully.')
         return True
-    except Exception as e:
-        logger.error(f"Login error: {e}")
+    except Exception as ex:
+        logger.error(f'Login failed: {ex}')
         return False
 
 
-# ... (rest of the code, with docstrings and error handling)
-
-
-def grab_product_page(s):
-    """Grabs product data from a product page.
-    """
-    p = Product(supplier=s)
-    product_locators = s.locators['product']
-    driver = s.driver
-
-    # Added error handling to prevent crashes if locators are not found
-    try:
-        driver.click(s.locators['close_popup_locator'])  
-    except Exception as e:
-        logger.warning(f"Failed to close popup: {e}")
-
-
-    # ... (rest of the function)
+# ... (rest of the code)
 
 ```
 
 **Key Improvements and Explanations:**
 
-* **Error Handling:** The code now includes comprehensive `try...except` blocks to catch and log exceptions during login and product data retrieval. This is crucial for robustness.  Instead of just printing an error, it now logs the details for debugging and returns `None` to indicate a serious error from `login`.  This helps prevent the script from crashing.
+* **Error Handling:** Added `try...except` blocks to handle potential exceptions during popup closing and login attempts.  Critically important for robustness.  Logging the exceptions is essential for debugging.
+* **Clearer Logic:** The `login` function is more structured, making the flow easier to follow.
+* **Type Checking:**  Uses `isinstance` to check if the returned result from `execute_locator` is a list or a single WebElement. This is crucial for handling cases where there might be multiple or no elements found.
+* **Removed Unnecessary `str(type(...))`:**  Avoids unnecessary type conversion for checking.
+* **Consistency:** Uses `supplier.wait()` consistently for waits throughout the code (more efficient, cleaner).
+* **Logging:** Improved logging messages for debugging and error reporting.
+* **`_login` Helper Function:**  A helper function for login logic makes the code cleaner and more maintainable.
+* **Import Structure:** Correctly imports necessary functions from `settings` for maintainability.
+* **WebDriver Initialization:** The code now assumes the driver is already initialized and passed to the `supplier`.  This is the recommended practice for WebDriver management.
 
-* **Clearer Logging:** Uses `logging` module for structured error logging.  The `logger` is taken from `settings`, which is a better practice for managing logs.
+**Further Considerations:**
 
-* **Docstrings:** Added informative docstrings to functions and modules, explaining their purpose, parameters, return values, and potential errors.  This makes the code much more readable.
+* **Explicit Waits:** Implement explicit waits using `WebDriverWait` from Selenium instead of implicit waits. This will make your tests more reliable by waiting for specific elements to be present before interacting with them.
 
-* **Type Hinting (Optional but Recommended):**  Consider adding type hints to enhance readability and maintainability, especially for complex functions.  This would improve your code readability and maintainability, especially as the functions become more complex.
+* **Selenium Library Specifics:** Refer to Selenium documentation to ensure that locators are working correctly.
 
+* **Supplier Object:** Make sure the `supplier` object has methods to handle locating elements (`execute_locator`, `wait`, `driver`).
 
-* **`_login` Helper Function:** Extracted the login logic into a helper function.
+* **Robustness:** Consider more sophisticated error handling (e.g., retry mechanisms) in the `login` function if Morlevi's popup behavior is particularly unpredictable.
 
-* **Robustness with Lists/Single Elements:** Fixed the logic for handling multiple close popup elements.
-
-* **Logging Levels:**  Use appropriate log levels (e.g., `logger.error`, `logger.warning`, `logger.debug`) for different error types. This will help you prioritize your debugging efforts.
-
-
-* **Revised `grab_product_page`:**  Improved the structure and added error handling to the `grab_product_page` function, making it more resilient to potential issues.
-
-
-
-**Important Considerations:**
-
-* **`wait()` calls:**  You should either use a proper `WebDriverWait` or a dedicated waiting mechanism to avoid spurious errors from missing elements.
-* **`execute_locator`:**  Make sure `execute_locator` returns something meaningful if the locator fails to find an element.  For example, `None` or `False`.
-* **Selenium waits:** Consider using `WebDriverWait` from Selenium for more robust element waiting.  Example:
-
-```python
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
+By implementing these suggestions, you'll have a more robust and maintainable script for interacting with the Morlevi website. Remember to replace placeholders like `[Name] [Last Name]` with the actual author details.
 
 
-...
-WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "some_id")))
-...
+Remember to install the necessary libraries:
+
+```bash
+pip install requests pandas selenium gs  # Or the specific gs library if it's not standard.
 ```
-
-
-By addressing these issues, you'll create significantly more robust and reliable Python code for web scraping. Remember to install the necessary packages: `requests`, `pandas`, `selenium`, `beautifulsoup4`, `lxml`.  Remember to adjust the `settings` imports to match your actual project setup. Remember to install the `selenium` library. Also, remember to configure logging appropriately in your `settings.py` file.

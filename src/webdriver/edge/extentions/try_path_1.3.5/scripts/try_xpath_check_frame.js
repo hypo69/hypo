@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/edge/extentions/try_path_1.3.5/scripts/try_xpath_check_frame.js
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.edge.extentions.try_path_1.3.5.scripts """
 MODE = 'debug'

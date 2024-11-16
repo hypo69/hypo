@@ -1,5 +1,6 @@
 ## \file hypotez/src/db/manager_translations/_experiments/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.db.manager_translations._experiments """
 MODE = 'debug'

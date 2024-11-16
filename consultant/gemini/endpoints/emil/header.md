@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/emil/header.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.emil """
 MODE = 'debug'

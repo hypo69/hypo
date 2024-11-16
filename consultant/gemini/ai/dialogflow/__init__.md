@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/ai/dialogflow/__init__.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.ai.dialogflow """
 MODE = 'debug'

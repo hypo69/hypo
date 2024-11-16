@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/gui/openai_trаigner/__init__.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.gui.openai_trаigner """
 MODE = 'debug'

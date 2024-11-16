@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/hb/category.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.hb """
 MODE = 'debug'

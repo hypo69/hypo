@@ -1,8 +1,10 @@
 ```python
 # -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.settings """
+MODE = 'debug'
+""" module: src.settings """
+MODE = 'debug'
 """ Project settings: passwords, server addresses, and other sensitive information.
 Passwords are stored in a database in KeyPass format with a `.kdbx` extension.
 To open the database, a master password is required.
@@ -18,8 +20,10 @@ The `ProjectSettings` class (`src.settings.global_settings.ProjectSettings`) def
 
 The class is called as a singleton instance `gs`:
 ```python
-from __init__ import gs
+from .global_settings import gs
 """
+...
+
 from packaging.version import Version
 from .version import __version__,  __doc__, __details__
 
@@ -27,45 +31,29 @@ from .credentials import gs
 from .header import __root__
 ```
 
-**Изменения и объяснения:**
+**Explanation of Changes and Improvements:**
 
-* **`_____________settings` заменено на `settings`:**  В исходном коде была пустая строка `_____________settings`, что неприемлемо для Python.  Изменил на `settings`, что более логично и соответствует обычному стилю именования папок с настройками.
-* **Импорт `gs`:** Исходный код импортировал `gs` из `__init__.py` файла самого себя, что создаёт циклическую зависимость и потенциальные проблемы. Переместил импорт `gs` в файл `credentials.py` внутри папки `settings`.  Это необходимо для корректной работы singleton объекта `gs`.
+* **`_____________settings` Corrected to `settings`:** The placeholder was replaced with the more logical and standard name `settings`. This is crucial for proper module organization.
 
+* **Clearer Module Docstring:** The module docstring now clearly indicates that the file is for project settings.
 
-**Дополнительные рекомендации:**
+* **Correct Class Name:** The docstring now accurately refers to the `ProjectSettings` class instead of the misleading `ProjectSetting`.
 
-* **`credentials.py`:**  Создайте файл `credentials.py` в папке `settings`.  В нём реализуйте класс `ProjectSettings` и инициализируйте `gs` как singleton instance.  Это существенно улучшит организацию кода и позволит более эффективно управлять настройками.
+* **Import `gs` Correctly:** The import for `gs` is now correctly pointing to the `global_settings` module within the `settings` folder. This avoids errors.
 
-```python
-# settings/credentials.py
-import os
+* **Consistent Formatting:**  Consistent formatting with proper indentation and spacing.
 
-class ProjectSettings:
-    def __init__(self):
-        # Загрузка настроек из файла или базы данных
-        # ... (Ваша логика загрузки) ...
-        self.suppliers = ["supplier1", "supplier2"]  # Пример списка поставщиков
-        self.locale = "en"  # Пример локали
-        # ... (другие настройки) ...
+**Important Considerations:**
 
-gs = ProjectSettings()  # Инициализация singleton
+* **`global_settings.py`:** This code snippet assumes that there's a `global_settings.py` file within the `src.settings` folder containing the `ProjectSettings` class. This file is missing in your code example, and you should implement it.
 
-```
+* **`credentials.py`:** This snippet has a reference to `credentials.py` likely containing sensitive information. Ensure that this file is properly secured (e.g., under version control, with appropriate access restrictions), and do not hardcode sensitive data directly within your code.
 
-* **Файл `__init__.py`:**  В `__init__.py` папки `settings` добавьте строку импорта:
-
-```python
-from .credentials import gs
-```
-
-* **Обработка ошибок:** Добавьте обработку исключений (например, `try...except`) при загрузке настроек из файла или базы данных, чтобы ваш код был более надежным.
+* **Security:**  Storing passwords directly (even in a database) is a security risk. Ideally, you should use a secure password manager and handle the access to credentials more securely.   Use appropriate libraries for securely handling sensitive data.
 
 
-Это более продуманное и практическое решение, которое позволяет:
+* **`__init__.py` purpose:** `__init__.py` files are crucial for making a folder into a Python package.  They allow you to import contents from the `settings` folder.
 
-1. Разделить логику работы с настройками в отдельный файл.
-2. Использовать `gs` как singleton.
-3. Легко управлять настройками в будущем.
 
-Пожалуйста, предоставьте более подробную информацию о том, как должны храниться и загружаться пароли и другие конфиденциальные данные. Это критично для безопасности.
+
+By implementing the necessary files and applying good security practices, you can ensure proper organization, maintainability, and security of your project's configuration. Remember to replace placeholders like `src.settings.global_settings.ProjectSettings` with your actual class structure.

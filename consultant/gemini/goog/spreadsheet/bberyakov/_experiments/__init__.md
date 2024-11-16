@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/goog/spreadsheet/bberyakov/_experiments/__init__.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.goog.spreadsheet.bberyakov._experiments """
 MODE = 'debug'

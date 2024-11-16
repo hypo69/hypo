@@ -1,5 +1,6 @@
 ## \file hypotez/src/ai/myai/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.ai.myai """
 MODE = 'debug'

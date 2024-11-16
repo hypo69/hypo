@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/grandadvance/graber.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.grandadvance """
 MODE = 'debug'

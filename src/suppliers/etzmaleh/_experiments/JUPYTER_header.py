@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/etzmaleh/_experiments/JUPYTER_header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.etzmaleh._experiments """
 MODE = 'debug'

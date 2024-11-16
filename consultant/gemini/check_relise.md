@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/check_relise.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini """
 MODE = 'debug'

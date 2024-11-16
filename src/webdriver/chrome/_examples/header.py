@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/chrome/_examples/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.chrome._examples """
 MODE = 'debug'

@@ -1,145 +1,53 @@
 ```markdown
-# Emil API - Endpoint Documentation
+# Эндпоинты для работы с Emil
 
-This document describes the Emil API endpoints, providing information on how to interact with them.
+Этот файл описывает эндпоинты API, доступные для взаимодействия с сервисом Emil.
 
-**Table of Contents**
+## Список эндпоинтов
 
-* [Authentication](#authentication)
-* [Endpoints](#endpoints)
-    * [Get User Data](#get-user-data)
-    * [Create User](#create-user)
-    * [Update User](#update-user)
-    * [Delete User](#delete-user)
-    * [... other endpoints ...]
-
-
-## Authentication
-
-All requests to the Emil API require authentication.  The authentication method is [explain authentication method, e.g., API Key, JWT].
-
-* **Authentication Header:**  `Authorization: Bearer <your_api_key>` (or similar)
-
-
-## Endpoints
-
-### Get User Data
-
-**Endpoint:** `/users/{userId}`
-
-**Method:** `GET`
-
-**Description:** Retrieves details for a specific user.
-
-**Request Parameters:**
-
-* `userId` (path parameter): The unique identifier of the user.
-
-**Request Body:** (None)
-
-**Response:**
-
-* **Success (200):** A JSON object containing user data.  Example:
-```json
+| Метод | Путь | Описание | Примеры запроса | Примеры ответа |
+|---|---|---|---|---|
+| GET | `/emil` | Возвращает список всех доступных пользователей Emil. | `GET /emil` | `[{"id": 1, "name": "User 1"}, {"id": 2, "name": "User 2"}]` |
+| GET | `/emil/{id}` | Возвращает информацию о конкретном пользователе Emil по его ID. | `GET /emil/1` | `{"id": 1, "name": "User 1", "email": "user1@example.com", "phone": "+7-123-456-7890"}` |
+| POST | `/emil` | Создаёт нового пользователя Emil.  Требуется передать данные пользователя в теле запроса. | `POST /emil`  ```json
 {
-  "userId": "12345",
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "created_at": "2024-07-27T10:00:00Z"
-  // ... other user data
+  "name": "New User",
+  "email": "newuser@example.com",
+  "phone": "+7-999-123-4567"
 }
-```
-* **Error (4xx/5xx):**  Specific error details in JSON format. Example:
-```json
+``` |  `{"id": 3, "message": "Пользователь успешно создан"}` |
+| PUT | `/emil/{id}` | Обновляет информацию о пользователе Emil по его ID.  Требуется передать данные пользователя в теле запроса. | `PUT /emil/1`  ```json
 {
-  "error": "User not found",
-  "code": "USER_NOT_FOUND",
-  "details": "User with ID 12345 does not exist"
+  "name": "Updated User",
+  "email": "updated@example.com",
 }
-```
+``` |  `{"id": 1, "message": "Пользователь успешно обновлён"}` |
+| DELETE | `/emil/{id}` | Удаляет пользователя Emil по его ID. | `DELETE /emil/2` | `{"id": 2, "message": "Пользователь успешно удалён"}` |
 
 
-### Create User
 
-**Endpoint:** `/users`
+## Формат данных
 
-**Method:** `POST`
-
-**Description:** Creates a new user.
-
-**Request Parameters:** (None)
-
-**Request Body:** A JSON object containing user data. Example:
-```json
-{
-  "name": "Jane Doe",
-  "email": "jane.doe@example.com",
-  // ... other user data fields
-}
-```
-
-**Response:**
-
-* **Success (201):**  A JSON object containing the newly created user's data.
-* **Error (4xx/5xx):**  Specific error details in JSON format.
+В запросах и ответах используются форматы JSON.
 
 
-### Update User
+## Кодирование
 
-**Endpoint:** `/users/{userId}`
-
-**Method:** `PUT`
-
-**Description:** Updates an existing user.
-
-**Request Parameters:**
-
-* `userId` (path parameter): The unique identifier of the user.
-
-**Request Body:** A JSON object containing the updated user data.  Only fields to be updated need to be included.  Example:
-```json
-{
-  "name": "Updated Name",
-  "email": "updated_email@example.com"
-}
-```
-
-**Response:**
-
-* **Success (200):**  A JSON object containing the updated user data.
-* **Error (4xx/5xx):**  Specific error details in JSON format.
+Используется UTF-8.
 
 
-### Delete User
+## Авторизация
 
-**Endpoint:** `/users/{userId}`
-
-**Method:** `DELETE`
-
-**Description:** Deletes a user.
+(Добавьте информацию об авторизации, если она требуется)
 
 
-**Request Parameters:**
+## Ошибки
 
-* `userId` (path parameter): The unique identifier of the user.
+(Добавьте описание возможных ошибок и их кодов состояния)
 
-**Request Body:** (None)
+## Примечания
 
-**Response:**
-
-* **Success (204):**  No content returned.
-* **Error (4xx/5xx):**  Specific error details in JSON format.
-
-
-**... add other endpoints here ...**
-
-
-**Important Notes:**
-
-* Include details about error codes and their meanings.
-* Provide examples of valid and invalid requests.
-* Specify data types for request and response parameters.
-* Add documentation for any authentication requirements or authorization limitations.
+(Добавьте любые другие важные замечания или пояснения)
 
 
 ```

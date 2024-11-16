@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/translators/product_translator.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.translators """
 MODE = 'debug'

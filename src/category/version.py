@@ -1,5 +1,6 @@
 ## \file hypotez/src/category/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.category """
 MODE = 'debug'

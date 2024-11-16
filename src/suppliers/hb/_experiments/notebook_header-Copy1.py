@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/hb/_experiments/notebook_header-Copy1.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.hb._experiments """
 MODE = 'debug'

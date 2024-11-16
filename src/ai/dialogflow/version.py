@@ -1,5 +1,6 @@
 ## \file hypotez/src/ai/dialogflow/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.ai.dialogflow """
 MODE = 'debug'

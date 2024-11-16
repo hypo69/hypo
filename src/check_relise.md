@@ -1,5 +1,6 @@
 ## \file hypotez/src/check_relise.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src """
 MODE = 'debug'

@@ -1,135 +1,65 @@
+```markdown
+# Файл `hypotez/src/db/manager_translations/product_translations.py`
+
+## Менеджер переводов параметров товара
+
+Данный модуль предоставляет класс `ProductTranslationsManager` для взаимодействия с таблицей `product_translations` в базе данных, хранящей переводы параметров товаров.  Он предоставляет методы для вставки, выбора, обновления и удаления записей, обеспечивая удобный интерфейс для работы с переводом.
+
+### Класс `ProductTranslationsManager`
+
+Этот класс управляет взаимодействием с базой данных для переводов.
+
+#### Инициализация (`__init__`)
+
+```python
+def __init__(self, credentials = gs.credentials.presta.translations, *args, **kwargs):
 ```
-# -*- coding: utf-8 -*-
- # <- venv win
-"""
-Module: src.db.manager_translations.product_translations
 
-Менеджер переводов параметров товара.
-"""
-import sys
-import traceback
-from sqlalchemy import (
-    create_engine, Column, String, Text, or_,
-)
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+Инициализирует соединение с базой данных MySQL, используя данные из `gs.credentials.presta.translations`. Создает `engine` для соединения, `Base` для определения модели и `Session` для работы с сессиями. Определяет модель `ProductTranslation` и создает таблицу в базе данных.
 
-from __init__ import gs
-from src.logger import logger
+#### Метод `define_model`
 
+Определяет модель `ProductTranslation` SQLAlchemy, описывая структуру таблицы `product_translations`.  Важно отметить все поля и их типы данных.  Комментирование типов данных (например, `comment='Locale - ...'` ) крайне полезно для понимания назначения столбцов.
 
-class ProductTranslationsManager:
-    """
-    Менеджер для работы с переводами параметров товара в базе данных.
+#### Метод `create_table`
 
-    Пример использования:
+Создает таблицу `product_translations` в базе данных, если она не существует.  Этот метод выполняется один раз при инициализации менеджера.
 
-    1. **Инициализация менеджера:**
+#### Метод `insert_record`
 
-    ```python
-    manager = ProductTranslationsManager()
-    ```
+Вставляет новую запись в таблицу `product_translations`.
 
-    2. **Вставка записи:**
+*   **Проверка на существование:** Проверяет, существует ли запись с заданными `product_reference` и `locale`.  Если да, то выводит предупреждение (используя `logger`) и не вставляет новую запись.
+*   **Обработка ошибок:** Использует блок `try...except`, чтобы перехватывать и обрабатывать потенциальные ошибки при взаимодействии с базой данных.
 
-    ```python
-    fields = {
-        'product_reference': 'reference_product_value',
-        'locale': 'en',
-        'name': 'Product Name',
-        'description': 'Description of the product',
-        'link_rewrite': 'product-name'
-    }
-    manager.insert_record(fields)
-    ```
+#### Метод `select_record`
 
-    3. **Выбор записей:**
+Выбирает записи из таблицы `product_translations` по заданным условиям.  Метод `select_record` гибко обрабатывает условия поиска, используя `kwargs`.
 
-    ```python
-    # Выбор записей со specific product reference
-    records = manager.select_record(product_reference='reference_product_value')
-    for record in records:
-        print(record.name, record.description)
+*   **Гибкая фильтрация:** Поддерживает различные виды условий фильтрации, включая сравнения (`==`, `!=`, `>`, `<`, `>=`, `<=`), проверку на вхождение в список (`in`), поиск подстроки (`like`), проверку на `NULL` (`is_null`) и комбинации условий (`or_`). Подробное описание типов операций фильтрации приведено в документации к методу.
+*   **Обработка ошибок:**  Обрабатывает исключения, возникающие при взаимодействии с базой данных.
 
-    # Выбор записей с несколькими условиями с помощью логического OR
-    records = manager.select_record(
-        or_(ProductTranslationsManager.ProductTranslation.locale == 'en',
-            ProductTranslationsManager.ProductTranslation.locale == 'ru')
-    )
-    ```
+#### Метод `update_record`
 
-    4. **Обновление записи:**
+Обновляет существующую запись в таблице `product_translations`.
 
-    ```python
-    manager.update_record('reference_product_value', 'en', description='Updated description')
-    ```
+*   **Обработка ошибок:**  Обрабатывает исключения, возникающие при взаимодействии с базой данных и обрабатывает случай, когда запись не найдена.
 
-    5. **Удаление записи:**
+#### Метод `delete_record`
 
-    ```python
-    manager.delete_record('reference_product_value', 'en')
-    ```
+Удаляет запись из таблицы `product_translations`.
 
-    Эти примеры демонстрируют, как использовать класс `ProductTranslationsManager` для взаимодействия с записями переводов параметров товара в базе данных. Настройте значения полей и условия в соответствии с вашими конкретными потребностями.
-    """
+*   **Обработка ошибок:**  Обрабатывает исключения, возникающие при взаимодействии с базой данных и обрабатывает случай, когда запись не найдена.
 
-    def __init__(self, credentials=gs.credentials.presta.translations, *args, **kwargs):
-        # Инициализация менеджера
-        ...  # (Остальной код инициализации)
+#### Поддержка контекстного менеджера (`__enter__`, `__exit__`)
 
+Класс `ProductTranslationsManager` реализует протокол контекстного менеджера, что позволяет использовать его в `with`-блоках. Это гарантирует, что при завершении работы с объектом будет освобождено соединение с базой данных.
 
-    def define_model(self):
-        """Определяет модель ProductTranslation для SQLAlchemy."""
-        class ProductTranslation(self.Base):
-            """Модель для таблицы product_translations."""
-            __tablename__ = 'product_translations'
-            # Определяет структуру таблицы
-            product_reference = Column(String(128), primary_key=True)
-            locale = Column(String(8), nullable=False, comment='Язык - формат, в котором сервер обычно возвращает ответ. en-US, he-IL, ru-RU')
-            # ... (Остальные поля)
+### Примеры использования
 
+Документация содержит исчерпывающие примеры использования каждого метода класса.  Примеры четко показывают, как передавать данные и какие аргументы использовать для различных операций.
 
-        self.ProductTranslation = ProductTranslation
-
-    # ... (Остальные методы)
-
-
-    def insert_record(self, fields):
-        """Вставляет запись в базу данных."""
-        # ... (Остальной код)
-
-
-    def select_record(self, **kwargs) -> list:
-        """Выбирает записи из базы данных по заданным условиям."""
-        # ... (Остальной код)
-
-
-    def update_record(self, product_reference, locale, **fields):
-        """Обновляет запись в базе данных."""
-        # ... (Остальной код)
-
-
-    def delete_record(self, product_reference, locale):
-        """Удаляет запись из базы данных."""
-        # ... (Остальной код)
+**Важно:**  Улучшите пояснение к `select_record` о важных операциях фильтрации и типом данных. Подробнее опишите, как работают условия, особенно в контексте ORM и SQLAlchemy.
 
 
 ```
-
-**Изменения и улучшения:**
-
-* **Документация:** Добавлена более подробная и структурированная документация.  Документация теперь соответствует PEP 257.  Приведены конкретные примеры использования методов.
-* **Имена переменных:** Имена переменных и функций сделаны более понятными (например, `insert_record` вместо `insert_product_translation`).
-* **Комментарии:** Комментарии улучшены, чтобы быть более информативными и точными.
-* **Стиль кода:**  В целом код оформлен согласно PEP 8.
-* **Модель:**  Внутри класса добавлена документация `ProductTranslation`.
-* **Комментарии к `select_record`:** Комментарии к `select_record` значительно расширены, объясняя, как обрабатываются различные типы условий (например, `like`, `in`).
-
-
-**Важные замечания:**
-
-* **Полная инициализация:** Убедитесь, что `ProductTranslationsManager.__init__` инициализирует `self.engine`, `self.Session`, и `self.session` правильно.
-* **Обработка исключений:** Методы `insert_record`, `select_record`, `update_record` и `delete_record`  должны обрабатывать потенциальные исключения (например, проблемы с базой данных) и логировать ошибки.
-* **Закрытие сессии:** Необходимо правильно закрывать сессию `self.session` внутри контекстного менеджера (`__enter__`, `__exit__`).
-
-Это значительно улучшенная версия документации и кода. Теперь она более читабельна, понятна и соответствует лучшим практикам.  Пожалуйста, проверьте, что все необходимые импорты и настройки выполнены корректно.

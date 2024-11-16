@@ -1,77 +1,71 @@
+```markdown
+# Файл: hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
+
+Расположение: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\helpers\arguments.py`
+
+## Описание
+
+Этот модуль содержит вспомогательные функции для обработки аргументов, используемых в API для AliExpress.  Он предназначен для валидации и преобразования входных данных в подходящий формат.
+
+## Функции
+
+**`get_list_as_string(value)`**
+
+Преобразует входное значение в строку, разделенную запятыми, если это список.  Если входное значение — строка, возвращает ее. Если входное значение — `None`, ничего не возвращает. Если входное значение не строка и не список, выбрасывает исключение `InvalidArgumentException`.
+
+**`get_product_ids(values)`**
+
+Преобразует входные данные `values` в список идентификаторов продуктов.
+
+* Если `values` является строкой, разделяет ее по запятым и преобразует в список.
+* Если `values` не является ни строкой, ни списком, выбрасывает исключение `InvalidArgumentException`.
+* Для каждого элемента списка вызывается функция `get_product_id` для получения идентификатора продукта.
+* Возвращает список идентификаторов продуктов.
+
+## Исключения
+
+**`InvalidArgumentException`**
+
+Выбрасывается, если входные данные не соответствуют ожидаемому формату (не список и не строка в `get_product_ids`, не строка и не список в `get_list_as_string`).  Сообщение исключения содержит информацию о типе некорректного значения.
+
+## Примеры использования
+
 ```python
-"""
-Module: src.suppliers.aliexpress.api.helpers
+# Пример использования get_list_as_string
+result = get_list_as_string(["apple", "banana"])
+print(result)  # Вывод: apple,banana
 
-This module provides helper functions for handling arguments in the AliExpress API.
-"""
+result = get_list_as_string("apple")
+print(result)  # Вывод: apple
 
-from ..tools.get_product_id import get_product_id
-from ..errors.exceptions import InvalidArgumentException
-
-
-def get_list_as_string(value):
-    """
-    Converts a list or string to a comma-separated string.
-
-    Args:
-        value: The input value. Can be a list or a string.
-
-    Returns:
-        A comma-separated string representation of the input list, or the input string if it's a string.
-        Returns None if the input is None.
-
-    Raises:
-        InvalidArgumentException: If the input is neither a string nor a list.
-    """
-    if value is None:
-        return
-
-    if isinstance(value, str):
-        return value
-
-    elif isinstance(value, list):
-        return ','.join(value)
-
-    else:
-        raise InvalidArgumentException('Argument should be a list or string: ' + str(value))
+result = get_list_as_string(None)
+print(result)  # Вывод: None
 
 
-def get_product_ids(values):
-    """
-    Extracts product IDs from a string or list of product identifiers.
+# Пример использования get_product_ids
+product_ids = get_product_ids(["123", "456"])
+print(product_ids)  # Вывод: Список идентификаторов продуктов
 
-    Args:
-        values: A string or list of product identifiers (e.g., product names, IDs, or other identifiers).
+product_ids = get_product_ids("789,101")
+print(product_ids) # Вывод: Список идентификаторов продуктов
 
-    Returns:
-        A list of extracted product IDs.
+try:
+    product_ids = get_product_ids(123)
+except InvalidArgumentException as e:
+    print(f"Ошибка: {e}") # Вывод: Ошибка: Argument product_ids should be a list or string
 
-    Raises:
-        InvalidArgumentException: If the input is neither a string nor a list.  
-        (Also raises any exceptions raised by get_product_id).
-    """
-    if isinstance(values, str):
-        values = values.split(',')
-
-    elif not isinstance(values, list):
-        raise InvalidArgumentException('Argument product_ids should be a list or string')
-
-    product_ids = []
-    for value in values:
-        try:
-            product_ids.append(get_product_id(value))
-        except Exception as e:
-            raise InvalidArgumentException(f"Error processing product ID '{value}': {e}")  # Specific error message
-
-
-    return product_ids
 ```
 
-**Improvements and explanations:**
 
-* **Docstrings:** Added comprehensive docstrings to each function explaining their purpose, arguments, return values, and potential exceptions. This significantly improves the readability and usability of the code.  The docstrings now clearly indicate what the function *does* rather than just *what* it is.
-* **Error Handling:**  The `get_product_ids` function now includes a `try...except` block. This catches any exceptions raised by `get_product_id` (e.g., if `get_product_id` cannot parse a value).  Critically, it provides a *specific* error message that includes the problematic product ID and the original exception, making debugging much easier.
-* **Clarity and Readability:** The code is formatted for better readability, including appropriate use of blank lines and consistent indentation.
+## Связанные модули
+
+* `get_product_id`: Функция, которая используется внутри `get_product_ids` для получения идентификаторов продуктов.
+* `InvalidArgumentException`: Класс исключения, используемый для обработки ошибок валидации. (`..errors.exceptions`)
 
 
-This improved version is much more helpful to other developers (and yourself in the future!) by clearly documenting the function's behavior, potential issues, and how to handle them. Remember to adjust the docstrings further if needed based on the broader context of the `get_product_id` function and the exceptions it might throw.
+## Замечания
+
+*  `MODE = 'debug'` —  постоянно используется в этом модуле.  Возможно, это конфигурационная переменная для режима работы.
+
+
+```

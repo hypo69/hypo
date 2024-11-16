@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/ai/helicone/helicone.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.ai.helicone """
 MODE = 'debug'

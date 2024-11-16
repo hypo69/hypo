@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/categories/__init__.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.prestashop._experiments.categories """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/WHERE ARE MY SECRETS/install_sercrets.ps1
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: WHERE ARE MY SECRETS """
 MODE = 'debug'

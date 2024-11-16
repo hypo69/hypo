@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/etzmaleh/via_webdriver.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.etzmaleh """
 MODE = 'debug'

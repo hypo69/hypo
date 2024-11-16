@@ -1,5 +1,6 @@
 ## \file hypotez/src/bots/openai_bots/_docs/bot_instruction.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.bots.openai_bots._docs """
 MODE = 'debug'

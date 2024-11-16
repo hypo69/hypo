@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/fast_api/html/process_data.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.fast_api.html """
 MODE = 'debug'

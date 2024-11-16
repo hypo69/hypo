@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/ai/gemini/html_chat/app.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.ai.gemini.html_chat """
 MODE = 'debug'

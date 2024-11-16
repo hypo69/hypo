@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/wallmart/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.wallmart """
 MODE = 'debug'

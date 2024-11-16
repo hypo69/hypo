@@ -1,5 +1,6 @@
 ## \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.ai.gemini """
 MODE = 'debug'

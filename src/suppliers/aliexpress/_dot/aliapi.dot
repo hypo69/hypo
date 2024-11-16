@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/_dot/aliapi.dot
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress._dot """
 MODE = 'debug'

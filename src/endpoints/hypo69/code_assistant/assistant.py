@@ -1,11 +1,10 @@
 ## \file hypotez/src/endpoints/hypo69/code_assistant/assistant.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.hypo69.code_assistant """
 MODE = 'debug'
-""" module: src.endpoints.hypo69.code_assistant """
-MODE = 'debug'
-"""Класс обучения ассистента программиста."""
+
 import re
 import sys
 import time
@@ -19,7 +18,7 @@ from pydantic import BaseModel, Field
 from __init__ import gs
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
-from src.utils.file import read_text_file
+from src.utils.jjson import j_loads  # Импортируем j_loads для загрузки перевода
 from src.logger import logger
 
 
@@ -74,14 +73,24 @@ class CodeAssistant(BaseModel):
                 assistant_id=self.openai_assistant_id
             )
 
+    def load_translations(self, file_path: str = 'translations.json'):
+        """Загрузка переводов для ролей и языков."""
+        return j_loads(file_path)
+
+    def create_request(self, content: str, translations: dict):
+        """Создание запроса с учетом роли и языка."""
+        role_description = translations['roles'].get(self.role, {}).get(self.lang, 'Неизвестная роль')
+        content_request = f"""Твоя специализация: `{role_description}`.\nИнструкция для: Код:\n\n```{content}```\n"""
+        return content_request
+
     def process_files(self):
         """Обработка файлов и взаимодействие с моделями."""
+        translations = self.load_translations()  # Загружаем переводы
+
         for file_path, content in self.yield_files_content(self.start_dirs, ['*.py', 'README.MD']):
 
-            code_instructions = read_text_file(gs.path.src.endponits / 'hypo69' / 'instructions' / f'instruction_doc_creator_{self.lang}.md' if self.role == 'doc_creator' else f'instruction_doc_creator_{self.lang}.md')
-            content_request = (
-                f"Роль выполнения: `{self.role}`.\nКод:\n\n```{content}```\n"
-            )
+            # Формируем запрос с учетом перевода
+            content_request = self.create_request(content, translations)
 
             if self.gemini_model:
                 gemini_response = self.gemini_model.ask(content_request)
@@ -128,20 +137,19 @@ class CodeAssistant(BaseModel):
         args = parser.parse_args()
 
         if args.settings:
-            with open(args.settings, "r") as file:
-                settings = json.load(file)
-                self.role = settings.get("role", "doc_creator")
-                self.lang = settings.get("lang", "EN")
-                self.model = settings.get("model", ["gemini"])
-                self.start_dirs = [Path(d) for d in settings.get("start_dirs", [])]
-                self.gemini_generation_config = settings.get("gemini_generation_config", {})
-                self.gemini_model_name = settings.get("gemini_model_name", "gemini-1.5-flash-8b")
-                self.openai_model_name = settings.get("openai_model_name", "gpt-4o-mini")
-                self.openai_assistant_id = settings.get("openai_assistant_id", "")
-                self.exclude_file_patterns = settings.get("exclude_file_patterns", [])
-                self.exclude_dirs = settings.get("exclude_dirs", [])
-                self.exclude_files = settings.get("exclude_files", [])
-                self.role_directories = settings.get("role_directories", {})
+            settings = j_loads(args.settings)  # Используем j_loads для загрузки настроек
+            self.role = settings.get("role", "doc_creator")
+            self.lang = settings.get("lang", "EN")
+            self.model = settings.get("model", ["gemini"])
+            self.start_dirs = [Path(d) for d in settings.get("start_dirs", [])]
+            self.gemini_generation_config = settings.get("gemini_generation_config", {})
+            self.gemini_model_name = settings.get("gemini_model_name", "gemini-1.5-flash-8b")
+            self.openai_model_name = settings.get("openai_model_name", "gpt-4o-mini")
+            self.openai_assistant_id = settings.get("openai_assistant_id", "")
+            self.exclude_file_patterns = settings.get("exclude_file_patterns", [])
+            self.exclude_dirs = settings.get("exclude_dirs", [])
+            self.exclude_files = settings.get("exclude_files", [])
+            self.role_directories = settings.get("role_directories", {})
 
 if __name__ == "__main__":
     """
@@ -160,29 +168,7 @@ if __name__ == "__main__":
     """
     print("Starting Code Assistant...")
 
-    # # Пример 1: Вызов с настройками из JSON
-    # # Убедитесь, что в вашей директории есть файл 'settings.json' с нужными параметрами
-    # assistant = CodeAssistant()
-    # assistant.parse_args()
-    # assistant.initialize_models()
-    # assistant.process_files()
-
-    # # Пример 2: Вызов с явным указанием роли и настроек
-    # # Можно закомментировать или раскомментировать в зависимости от того, какие параметры нужно использовать
-    # """
-    # assistant = CodeAssistant(role='doc_creator', lang='ru', model=['gemini', 'openai'], start_dirs=[Path('/path/to/dir1'), Path('/path/to/dir2')])
-    # assistant.initialize_models()
-    # assistant.process_files()
-    # """
-    
-    # """
-    # assistant = CodeAssistant(role='code_checker', lang='en', model=['gemini'], start_dirs=[Path('/path/to/dir')])
-    # assistant.initialize_models()
-    # assistant.process_files()
-    # """
-
-    # """
-    # assistant = CodeAssistant(role='doc_creator', lang='en', model=['openai'])
-    # assistant.initialize_models()
-    # assistant.process_files()
-    # """
+    assistant = CodeAssistant()
+    assistant.parse_args()
+    assistant.initialize_models()
+    assistant.process_files()

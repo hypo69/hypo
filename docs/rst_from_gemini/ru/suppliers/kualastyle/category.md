@@ -1,21 +1,25 @@
 ```python
 # -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.suppliers.kualastyle """
 
-"""  Модуль сбора товаров со страницы категорий поставщика kualastyle через вебдрайвер.
+""" module: src.suppliers.kualastyle """
+MODE = 'debug'
+
+"""  Модуль сбора товаров со страницы категорий поставщика kualastyle.
 У каждого поставщика свой сценарий обработки категорий.
 
-- Модуль собирает список категорий со страниц продавца. `get_list_categories_from_site()`.
-@todo Реализовать проверку на изменение категорий на страницах продавца. 
-Продавец может добавлять новые категории, переименовывать или удалять/прятать уже существующие. 
-Необходимо поддерживать соответствие между категориями на сайте поставщика и категориями в базе данных (например, Престашоп).
-- Собирает список товаров со страницы категории `get_list_products_in_category()`.
-- Итерируясь по списку товаров, передает управление в `grab_product_page()` для обработки данных страницы продукта.
-`grab_product_page()` обрабатывает поля товара и передает управление классу `Product` для сохранения данных.
+Этот модуль отвечает за:
+
+- Сбор списка категорий со страниц поставщика. `get_list_categories_from_site()`.
+    - **Необходимо:** Реализовать механизм проверки на изменения категорий. 
+      (Добавление новых, переименование, удаление/скрытие).
+      Проверьте, как обновлять базу категорий (например, `prestashop.categories <-> aliexpress.shop.categoies`).
+- Сбор списка товаров со страницы категории. `get_list_products_in_category()`.
+- Обработку каждой страницы товара. `grab_product_page()` (не реализована в примере).
+  - Передача URL страницы в `grab_product_page()`.
+  - Обработка полей товара и передача данных в класс `Product`.
 
 """
+
 from typing import Dict, List
 from pathlib import Path
 
@@ -23,93 +27,105 @@ from __init__ import gs
 from src.logger import logger
 from src.webdriver import Driver
 from src.suppliers import Supplier
-from src.product import Product # Import Product class
+from src.product import Product # Importamos Product
 
 
-def get_list_products_in_category (s: Supplier) -> list[str]:    
-    """ Возвращает список URL страниц товаров со страницы категории.
+def get_list_products_in_category(s: Supplier) -> list[str] | None:
+    """ Возвращает список URL страниц товаров на странице категории.
+
+    Если страница требует пролистывания, то необходимо обеспечить обработку страниц.
 
     Args:
-        s: Объект Supplier, содержащий данные о поставщике и драйвер.
+        s: Объект Supplier, содержащий информацию о поставщике и драйвере.
 
     Returns:
-        Список URL страниц товаров или None, если товары не найдены.
-        Возвращает пустой список, если нет ссылок на товары.
+        Список URL страниц товаров или None, если на странице нет товаров.  Возвращает список строк.
     """
     d: Driver = s.driver
     l: dict = s.locators['category']
-    
-    # Обработка баннеров/предупреждений
+
+    # Важно:  Убедитесь, что `d.wait(1)` действительно необходим.
+    # Если нет, то удалите его.
+    d.wait(1)
+    # Обработка баннеров/сообщений, которые могут мешать парсингу
     try:
-        d.wait(1)  # Добавил ожидание, чтобы веб-элементы успели загрузиться
-        d.execute_locator(s.locators.get('product', {}).get('close_banner'))
+        d.execute_locator(s.locators['product']['close_banner'])
     except Exception as e:
         logger.warning(f"Ошибка при закрытии баннера: {e}")
+    
+    d.scroll() # Прокручивание для загрузки всех элементов
 
-    d.scroll() # Прокрутка страницы для загрузки всех элементов
-    
     list_products_in_category = d.execute_locator(l['product_links'])
-    
+
     if not list_products_in_category:
-        logger.warning('Нет ссылок на товары. Возвращаем пустой список.')
-        return []
-    
-    #Обработка постраничной навигации
+        logger.warning('Нет ссылок на товары. Так бывает')
+        return None  # Возвращаем None, если ссылок нет
+
+    # Обработка пагинации (страниц)
     while True:
-        try:
-            if paginator(d, l, list_products_in_category):
-                list_products_in_category.extend(d.execute_locator(l['product_links']))
-            else:
-                break
-        except Exception as e:
-          logger.error(f"Ошибка при обработке постраничной навигации: {e}")
-          break  #Прерываем цикл при ошибке
-          
-    list_products_in_category = list(set(list_products_in_category))  # Удаляем дубликаты
+        if paginator(d, l, list_products_in_category):
+            list_products_in_category.extend(d.execute_locator(l['product_links'])) # Добавляем новые ссылки
+        else:
+            break
+            
+    list_products_in_category = [str(url) for url in list_products_in_category] # Убедитесь, что это строки
     
-    logger.debug(f"""Найдено {len(list_products_in_category)} товаров в категории {s.current_scenario['name']}""")
+    logger.debug(f"Найдено {len(list_products_in_category)} товаров в категории {s.current_scenario['name']}")
     return list_products_in_category
 
 
 def paginator(d: Driver, locator: dict, list_products_in_category: list) -> bool:
-    """ Обработка постраничной навигации."""
-    try:
-      next_page_element = d.execute_locator(locator['pagination']['next'])
-      if next_page_element:
-        next_page_url = next_page_element.get_attribute('href')
-        if next_page_url:
-            d.navigate_to(next_page_url)
-            return True
-        else:
-            return False
-      else:
-          return False
-    except Exception as e:
-      logger.error(f"Ошибка при обработке постраничной навигации: {e}")
-      return False  # Возвращаем False в случае ошибки
+    """ Обрабатывает навигацию по страницам (пагинацию). """
+
+    response = d.execute_locator(locator['pagination']['next_page']) #Изменено
+
+    if not response or (isinstance(response, list) and len(response) == 0):
+        return False  # Нет следующей страницы
+
+    d.navigate_to(response) #Переход на следующую страницу
+    return True  # Возвращаем True, чтобы продолжить цикл
 
 
-def get_list_categories_from_site(s):
+def get_list_categories_from_site(s: Supplier):
     """ Сбор актуальных категорий с сайта. """
-    # ... (Реализация функции)
+    # ... (Реализация для получения списка категорий) ...
+    #  ВАЖНО!  Реализуйте логику для проверки изменений категорий и обновления базы.
+    #  Используйте logger для вывода сообщений об изменениях.
     pass
 ```
 
 **Изменения и улучшения:**
 
-* **Обработка ошибок:** Добавлено `try...except` блоки для обработки потенциальных ошибок (например, при нахождении элемента, закрытии баннера и т.д.).  Это предотвращает сбой скрипта при проблемах на веб-странице.
-* **Возвращение пустого списка:**  Теперь функция `get_list_products_in_category()` возвращает пустой список `[]` если на странице нет ссылок на товары. Это предотвращает дальнейшие ошибки при попытке работы с пустым списком.
-* **Удаление дубликатов:**  Добавлена строка `list_products_in_category = list(set(list_products_in_category))` для удаления дублирующихся ссылок, что может возникнуть при повторном выполнении.
-* **Постраничная навигация (paginator):** Функция `paginator` теперь  находит и обрабатывает элемент для перехода на следующую страницу. Возвращает `True`, если страница следующая найдена и обработана, и `False` иначе. Это позволяет корректно обрабатывать многостраничную категорию.
-* **Обработка списка ссылок на товары:**  Список ссылок теперь обрабатывается правильно, как и ожидается, в виде списка.
-* **Import Product:**  Добавлен импорт `from src.product import Product` для корректной работы, если вы используете класс `Product` в дальнейшем.
-* **Документация:** Добавлен более подробный и точный docstring к функциям.
+* **Типы данных:** Используются явные типы данных (`list[str]`).
+* **Обработка ошибок:** Обработка `Exception` при закрытии баннера.
+* **Возврат `None`:**  Функция `get_list_products_in_category` теперь возвращает `None`, если на странице нет товаров, чтобы избежать ошибок в дальнейшем коде.
+* **Пагинация:**  Функция `paginator` улучшена для обработки следующей страницы.  Она теперь использует `d.navigate_to(response)`, чтобы перейти на следующую страницу, вместо `d.execute_locator()`, что важно для корректной работы.
+* **Обработка списка ссылок:**  Теперь ссылки извлекаются в качестве строк (`str`).
+* **Проверка списка на пустоту:**  Проверка `if not list_products_in_category:`  необходима для обработки случая, когда на странице нет ссылок на товары.
+* **Улучшенная логика обработки пагинации:**  Функция `paginator` теперь возвращает `False`, если нет следующей страницы, позволяя остановить цикл. Переход на следующую страницу выполняется с помощью `d.navigate_to()`.
+* **Импорт `Product`:** Добавлено `from src.product import Product` для корректного использования `Product`.
+
 
 **Важные замечания:**
 
-* **`s.locators['product']['close_banner']`**:  Убедитесь, что  `s.locators['product']['close_banner']` корректно указывает на элемент на странице для закрытия баннера.  Измените его в зависимости от структуры страницы.
-* **`s.locators['category']['product_links']`**: Аналогично, убедитесь, что указатель `product_links` корректен.
-* **`paginator`**:  Функция `paginator` предполагает, что элемент постраничной навигации (например, ссылка "Далее") находится внутри блока с `product_links`. Если это не так, то вам нужно скорректировать логику в `paginator`.  **Очень важно проверить** корректность нахождения элемента  `locator['pagination']['next']`.
-* **`get_list_categories_from_site`:**  Реализуйте логику для сбора списка категорий, опираясь на структуру страницы категорий.
+* **Проверка изменений категорий:**  Реализация функции `get_list_categories_from_site` остается вашей задачей. Она должна проверять изменения и обновлять базу данных.
+* **Логика пагинации:**  Убедитесь, что `s.locators['category']['pagination']['next_page']` содержит правильный селектор для следующей страницы.  Изучите структуру сайта, чтобы найти верный путь.
+* **`d.wait(1)`:**  Убедитесь, что это значение нужно. Если страница не загружается за 1 секунду, используйте более подходящее значение или более сложные стратегии ожидания.
+* **`s.locators`:**  Структура вашего `s.locators` должна быть правильной.
 
-Теперь скрипт более надежный и устойчивый к ошибкам, а также правильно обрабатывает постраничную навигацию и дубликаты в списке товаров.  Протестируйте обновленный код с реальной структурой страницы.
+
+**Как использовать:**
+
+```python
+# ... (код для создания экземпляра Supplier и драйвера) ...
+
+products_urls = get_list_products_in_category(supplier_instance)
+
+if products_urls:
+    for url in products_urls:
+        product_data = grab_product_page(url)  # Предполагая что у вас есть функция
+        product_instance = Product(product_data)
+        # ... обработка данных продукта
+```
+
+Этот код значительно улучшен и надежнее обрабатывает случаи отсутствия товаров и пагинации.  Не забудьте заполнить недостающие части кода, например, `grab_product_page` и реализацию проверки изменений категорий в `get_list_categories_from_site`.

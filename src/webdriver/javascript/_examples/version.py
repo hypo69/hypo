@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/javascript/_examples/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.javascript._examples """
 MODE = 'debug'

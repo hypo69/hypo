@@ -1,5 +1,6 @@
 ## \file hypotez/src/gui/context_menu/tkinter/main.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.gui.context_menu.tkinter """
 MODE = 'debug'

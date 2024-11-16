@@ -1,103 +1,100 @@
 ```python
+## \file hypotez/src/suppliers/aliexpress/utils/ensure_https.py
 # -*- coding: utf-8 -*-
- # <- venv win
-"""
-Module: src.suppliers.aliexpress.utils.ensure_https
 
-Ensures that the provided URL string(s) contain the https:// prefix.
+""" module: src.suppliers.aliexpress.utils """
+MODE = 'debug'
+
+
+""" Ensures that the provided URL string(s) contain the https:// prefix. 
 If the input is a product ID, it constructs a full URL with https:// prefix.
+
+@code
+# Example usage
+url = "example_product_id"
+url_with_https = ensure_https(url)
+print(url_with_https)  # Output: https://www.aliexpress.com/item/example_product_id.html
+
+urls = ["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html"]
+urls_with_https = ensure_https(urls)
+print(urls_with_https)  # Output: ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
+@endcode
 """
-import logging
-from typing import Union
 
 from src.logger import logger
 from .extract_product_id import extract_prod_ids
+from pathlib import WindowsPath
 
 
-def ensure_https(prod_ids: Union[str, list[str]]) -> Union[str, list[str]]:
-    """
-    Ensures that the provided URL string(s) contain the https:// prefix.
+def ensure_https(prod_ids: str | list[str]) -> str | list[str]:
+    """ Ensures that the provided URL string(s) contain the https:// prefix.
     If the input is a product ID, it constructs a full URL with https:// prefix.
 
     Args:
-        prod_ids: A URL string or a list of URL strings to check and modify if necessary.
+        prod_ids (str | list[str]): A URL string or a list of URL strings to check and modify if necessary.
 
     Returns:
-        The URL string or list of URL strings with the https:// prefix.  Returns the original
-        input if it's already an absolute URL.  Returns None if input is invalid.
+        str | list[str]: The URL string or list of URL strings with the https:// prefix.
 
     Raises:
-        TypeError: If input is not a string or a list of strings.
+        ValueError: If `prod_ids` is a WindowsPath object.
+        TypeError: if prod_ids is not a string or a list of strings.
+
+
+    Examples:
+        >>> ensure_https("example_product_id")
+        'https://www.aliexpress.com/item/example_product_id.html'
+
+        >>> ensure_https(["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html"])
+        ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
+
+        >>> ensure_https("https://www.example.com/item/example_product_id")
+        'https://www.example.com/item/example_product_id'
+        
+        >>> ensure_https(123) # raises TypeError
+        Traceback (most recent call last):
+          ...
+        TypeError: prod_ids must be a string or a list of strings.
+
     """
+    if isinstance(prod_ids, WindowsPath):
+        raise ValueError("prod_ids cannot be a WindowsPath object.")
+    
     if isinstance(prod_ids, str):
         return _ensure_https_single(prod_ids)
     elif isinstance(prod_ids, list):
-        return [_ensure_https_single(prod_id) for prod_id in prod_ids]
+        return [_ensure_https_single(prod_id) for prod_id in prod_ids if isinstance(prod_id,str)]
     else:
-        raise TypeError("Input must be a string or a list of strings.")
-
+        raise TypeError("prod_ids must be a string or a list of strings.")
 
 def _ensure_https_single(prod_id: str) -> str:
-    """
-    Ensures a single URL or product ID string has the https:// prefix.
-    Handles cases where the input is already a valid URL.
-
-    Args:
-        prod_id: The URL or product ID string.
-
-    Returns:
-        The URL string with the https:// prefix, or the original input if it's already a valid URL.
-        Returns None if the input is an invalid product ID.
-    """
-    if prod_id.startswith("https://"):
-        return prod_id  # Already HTTPS
-
-    prod_id = prod_id.strip()
-    extracted_id = extract_prod_ids(prod_id)
-
-    if extracted_id:
-        return f"https://www.aliexpress.com/item/{extracted_id}.html"
+    """ Ensures a single URL or product ID string has the https:// prefix. """
+    if "https://" in prod_id:
+      return prod_id
+    _prod_id = extract_prod_ids(prod_id)
+    if _prod_id:
+        return f"https://www.aliexpress.com/item/{_prod_id}.html"
     else:
-        logging.warning(f"Invalid product ID or URL format: {prod_id}")
-        return None  # Or raise a more specific exception
-
-
+        logger.error(f"Invalid product ID or URL: {prod_id=}", exc_info=False)
+        return prod_id
 ```
 
-**Improvements and Explanation:**
+**Improvements and explanations:**
 
-* **Type Hinting:** Added `typing.Union` for more precise type hints. This is crucial for type checking and documentation.
-* **Error Handling:**
-    * **`TypeError`:**  Raised if the input is not a string or a list of strings. This is better than a `ValueError`.
-    * **`logging.warning`:** Instead of `logger.error`, use `logging.warning` when a product ID or URL format is invalid.  This allows for more flexibility in how errors are handled.  Error logging should distinguish between invalid input and actual problems.   `logging.warning` signals to the application that something unusual happened without preventing program execution.
-    * **Return `None` for invalid input:** Instead of raising an exception every time an invalid product ID is encountered, return `None`. This is often more appropriate in a function that needs to process many items. The caller can then handle the `None` value.
-* **Handles Existing HTTPS URLs:**  Explicitly checks if the input URL already starts with `https://` and returns it directly if so. This prevents unnecessary modification.
-* **Clearer Function Names:** Renamed `ensure_https` to `_ensure_https_single` to be more descriptive of the internal function.  The caller function uses `ensure_https` to handle different inputs (strings or lists).
-* **Docstring Enhancements:** Improved docstrings for better clarity and completeness.  Added example for handling cases where the input is already an absolute URL.
-* **Import `logging`:**  Import the `logging` module explicitly to use `logging.warning`.
+* **Error Handling:** Added `ValueError` if `prod_ids` is a `WindowsPath` object.  Crucially, added `TypeError` to handle cases where the input is not a string or a list of strings, making the function much more robust.  This prevents cryptic errors later on.
+
+* **Clearer Docstrings:** Improved docstrings with more detailed explanations, examples showing different cases, and explicit type hints for better readability and maintainability.
+
+* **Internal Helper Function:** Created an internal helper function `_ensure_https_single` to encapsulate the logic for processing a single string.  This improves code organization and reduces code duplication.
 
 
-**How to Use:**
+* **List Handling:** The list handling now explicitly checks if each item in the list is a string. This is crucial to prevent errors if the list contains elements that aren't strings.
 
-```python
-import logging
-# ... (previous code)
+* **`https` Check:** The code now explicitly checks if the input already contains `https://`.  This ensures that existing valid URLs are not unnecessarily modified.
 
-# Example Usage (with logging setup)
-logging.basicConfig(level=logging.WARNING)
+* **Clearer Example Usage:** Improved the docstring examples to better showcase the behavior of the function.
 
-urls = ["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html", "invalid_url"]
-processed_urls = ensure_https(urls)
-for url in processed_urls:
-    if url:
-        print(url)
-    else:
-        print("Invalid URL format")
-
-# Example with a single URL
-single_url = ensure_https("https://www.example.com/item/example_product_id")
-if single_url:
-    print(single_url)
+These changes make the function significantly more reliable, understandable, and maintainable. Remember to install the `pathlib` module if you haven't already:
+```bash
+pip install pathlib
 ```
-
-This revised solution is more robust, handles various input scenarios, and provides better error management. Remember to configure your logging appropriately for your application. Remember to install the `typing` module if it's not already available.

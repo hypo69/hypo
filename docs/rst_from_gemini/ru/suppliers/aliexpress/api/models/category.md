@@ -1,52 +1,57 @@
 ```markdown
-# Файл: hypotez/src/suppliers/aliexpress/api/models/category.py
+# hypotez/src/suppliers/aliexpress/api/models/category.py
 
-Расположение: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\models\category.py`
-
-**Роль:** `doc_creator` (генератор документации)
+Расположение файла: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\models\category.py`
+Роль: `doc_creator`
 
 **Описание:**
 
-Модуль `src.suppliers.aliexpress.api.models` содержит определения классов для работы с категориями на AliExpress.
+Файл `category.py` содержит определения моделей категорий для API AliExpress. Он определяет базовые классы `Category` и `ChildCategory`.
+
 
 **Классы:**
 
-* **`Category`:**
+* **`Category`**:
     * `category_id: int`: Идентификатор категории.
     * `category_name: str`: Название категории.
 
-* **`ChildCategory`:**
+* **`ChildCategory`**:
     * Наследуется от `Category`.
     * `parent_category_id: int`: Идентификатор родительской категории.
 
 
 **Комментарии:**
 
-* Комментарий `""" module: src.suppliers.aliexpress.api.models """` описывает принадлежность модуля.  Он может быть полезен для понимания места файла в проекте, но он мог бы быть более информативным, если бы описывал *назначение* модуля в рамках проекта (например, "Модель API для работы с категориями продуктов AliExpress").
-* Строка ` # <- venv win`  —  это магическая строка, указывающая интерпретатор Python, который используется. Она важна для запуска файла, но в документации не нужна.  Её можно убрать.
+* Переменная `MODE` определена дважды и не используется.  Следует удалить дублирование или объяснить её назначение.
 
 
-**Примеры использования (если есть):**
+**Рекомендации:**
+
+* **Документирование атрибутов:**  Добавьте к атрибутам `category_id`, `category_name` и `parent_category_id` более подробные описания, например, о типе данных, ограничениях и возможных значениях.
+
+
+**Пример использования (если есть):**
 
 ```python
-# Пример использования (если есть):
-from hypotez.src.suppliers.aliexpress.api.models.category import Category, ChildCategory
+# Пример использования (если есть)
+from .category import Category, ChildCategory
 
-# Создание объекта категории
-category = Category(category_id=1, category_name="Электроника")
+# Создание объекта Category
+category = Category(category_id=1, category_name="Electronics")
 
-# Создание объекта дочерней категории
-child_category = ChildCategory(category_id=2, category_name="Телефоны", parent_category_id=1)
+# Создание объекта ChildCategory
+child_category = ChildCategory(
+    category_id=2,
+    category_name="Smartphones",
+    parent_category_id=1
+)
 
 ```
 
+**Примечания:**
 
-**Рекомендации по улучшению:**
-
-* **Более подробные комментарии:** Добавить описания к классам и полям, объясняя их назначение и использование.  Например, описать ограничения на значения полей (например, допустимые типы данных, диапазон значений `category_id`).
-* **Документация для методов:**  Если в классах будут методы, необходимо добавить документацию к ним (docstrings).
-* **Примеры использования:** Предоставьте больше примеров, показывающих взаимодействие с классом.
-* **Связь с другими модулями:** Если этот модуль зависит от других, то это нужно обозначить.
+*  Дополните документацию примерами использования, если они существуют.
+*  Если есть правила валидации или другие особенности работы с этими классами, добавьте соответствующие комментарии.
 
 
 ```

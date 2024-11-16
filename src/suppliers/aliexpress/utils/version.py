@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/utils/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress.utils """
 MODE = 'debug'

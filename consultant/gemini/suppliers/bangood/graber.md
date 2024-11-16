@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/suppliers/bangood/graber.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.suppliers.bangood """
 MODE = 'debug'

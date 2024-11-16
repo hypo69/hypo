@@ -1,5 +1,6 @@
 ## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.utils.convertors """
 MODE = 'debug'

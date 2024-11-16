@@ -1,5 +1,6 @@
 ## \file hypotez/src/product/_doc/overwiev.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.product._doc """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/kazarinov/scenarios/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.kazarinov.scenarios """
 MODE = 'debug'

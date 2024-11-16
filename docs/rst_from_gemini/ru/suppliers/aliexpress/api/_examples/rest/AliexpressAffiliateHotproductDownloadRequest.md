@@ -1,44 +1,69 @@
 ```markdown
-# Файл: `hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductDownloadRequest.py`
+# AliexpressAffiliateHotproductDownloadRequest.py
 
 **Расположение:** `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\_examples\rest\AliexpressAffiliateHotproductDownloadRequest.py`
 
-**Роль:** `doc_creator` (генератор документации)
+**Роль:** `doc_creator`
 
 **Описание:**
 
-Данный файл определяет класс `AliexpressAffiliateHotproductDownloadRequest`, представляющий запрос к API AliExpress для получения горячих товаров.  Класс наследуется от `RestApi`, предполагая использование REST API.
+Этот файл содержит класс `AliexpressAffiliateHotproductDownloadRequest`, представляющий собой запрос к API AliExpress для получения горячих продуктов по партнерской программе. Класс наследуется от базового класса `RestApi`.
 
 **Класс `AliexpressAffiliateHotproductDownloadRequest`:**
 
-Класс предназначен для подготовки и отправки запроса на получение списка горячих товаров с AliExpress.  Он предоставляет возможность указать различные параметры для фильтрации и настройки результата.
+Класс `AliexpressAffiliateHotproductDownloadRequest` предназначен для взаимодействия с API AliExpress для загрузки горячих продуктов, предоставляемых через партнерскую программу. Он позволяет задавать параметры для запроса, такие как ID категории, страна, поля для возврата и т.д.
 
-**Атрибуты:**
+**Атрибуты класса:**
 
-* `app_signature`:  Неизвестно, что это, но, вероятно, подпись приложения (ключ авторизации).
-* `category_id`: Идентификатор категории товаров.
-* `country`:  Страна, для которой нужны товары.
-* `fields`:  Список полей, которые нужно вернуть в ответе.
-* `scenario_language_site`: Непонятно, что это за параметр.
-* `page_no`: Номер страницы для постраничной навигации.
-* `page_size`: Размер страницы для постраничной навигации.
-* `target_currency`: Целевая валюта для отображения цен.
-* `target_language`: Целевой язык для отображения информации.
-* `tracking_id`: ID для отслеживания запроса.
+* `app_signature`: Приложение подписи.
+* `category_id`: ID категории.
+* `country`: Страна.
+* `fields`: Поля для возврата.
+* `scenario_language_site`: Язык и сайт сценария.
+* `page_no`: Номер страницы.
+* `page_size`: Размер страницы.
+* `target_currency`: Целевая валюта.
+* `target_language`: Целевой язык.
+* `tracking_id`: ID отслеживания.
 
 **Методы:**
 
-* `getapiname()`: Возвращает имя API-метода, к которому будет осуществлен запрос (`aliexpress.affiliate.hotproduct.download`).
+* `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса. Инициализирует базовые атрибуты, настроенные для работы с API AliExpress.
+* `getapiname(self)`: Возвращает имя API-метода `aliexpress.affiliate.hotproduct.download`.
 
 **Использование:**
 
-Для использования класса необходимо:
+Для использования класса `AliexpressAffiliateHotproductDownloadRequest`, необходимо создать его экземпляр, задать значения атрибутов и вызвать необходимые методы.
 
-1. Создать экземпляр `AliexpressAffiliateHotproductDownloadRequest`, передав необходимые параметры.
-2. Установить значения атрибутов `app_signature`, `category_id`, `country` и т.д.
-3. Вызвать методы класса `RestApi` для выполнения запроса (предполагается, что в родительском классе `RestApi` реализованы методы для отправки HTTP-запросов).
+**Пример:**
 
-**Примечание:**
+```python
+from aliexpress.api._examples.rest.AliexpressAffiliateHotproductDownloadRequest import AliexpressAffiliateHotproductDownloadRequest
 
-Файл содержит комментарии `# -*- coding: utf-8 -*-` и ``. Первый устанавливает кодировку файла в UTF-8, а второй указывает интерпретатор Python.  Эти комментарии стандартны для Python-скриптов.  Комментарии в начале файла (например, `""" module: src.suppliers.aliexpress.api._examples.rest """`) служат для документирования модуля.   Необходимо иметь реализацию родительского класса `RestApi`, чтобы данный класс был работоспособным.
+# Создание экземпляра класса
+request = AliexpressAffiliateHotproductDownloadRequest()
+
+# Установка значений атрибутов
+request.category_id = 123
+request.country = "US"
+request.fields = ["title", "price"]
+
+# Вызов метода для получения данных
+# ... (Обработка результата) ...
+```
+
+**Комментарии:**
+
+Файл содержит два идентичных комментария `MODE = 'debug'`. Необходимо убрать дубликат.
+
+**Дополнительные замечания:**
+
+* Файл следует доработать, добавив документацию к параметрам, возвращаемым значениям и возможным исключениям.
+* Необходимо добавить примеры использования с обработкой результатов.
+* Рекомендовано добавить обработку ошибок (например, проверку корректности введённых параметров).
+
+
+**Модуль:** `src.suppliers.aliexpress.api._examples.rest`
+
+**Дата создания:** 2021.05.12
 ```

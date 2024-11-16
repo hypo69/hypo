@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/kazarinov/bot.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.kazarinov """
 MODE = 'debug'
@@ -18,7 +19,7 @@ from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 
 from __init__ import gs
-from src.endpoints.bots.telegram import TelegramBot
+from src.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.parser_onetab import fetch_target_urls_onetab

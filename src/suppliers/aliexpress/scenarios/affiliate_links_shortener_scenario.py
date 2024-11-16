@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress.scenarios """
 MODE = 'debug'

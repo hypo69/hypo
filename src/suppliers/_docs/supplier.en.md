@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/_docs/supplier.en.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers._docs """
 MODE = 'debug'

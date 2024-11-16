@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/visualdg/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.visualdg """
 MODE = 'debug'

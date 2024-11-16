@@ -1,5 +1,6 @@
 ## \file hypotez/dev_utils/file_counter.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: dev_utils """
 MODE = 'debug'

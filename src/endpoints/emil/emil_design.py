@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.emil """
 MODE = 'debug'

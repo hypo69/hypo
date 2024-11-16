@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/chat_gpt/gsheet.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.chat_gpt """
 MODE = 'debug'

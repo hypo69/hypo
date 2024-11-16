@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/bangood/_experiments/JUPYTER_header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.bangood._experiments """
 MODE = 'debug'

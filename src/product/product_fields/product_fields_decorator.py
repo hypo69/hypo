@@ -1,5 +1,6 @@
 ## \file hypotez/src/product/product_fields/product_fields_decorator.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.product.product_fields """
 MODE = 'debug'

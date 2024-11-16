@@ -1,5 +1,6 @@
 ## \file hypotez/src/scenario/_experiments/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.scenario._experiments """
 MODE = 'debug'

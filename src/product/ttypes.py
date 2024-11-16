@@ -1,5 +1,6 @@
 ## \file hypotez/src/product/ttypes.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.product """
 MODE = 'debug'

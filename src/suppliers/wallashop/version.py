@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/wallashop/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.wallashop """
 MODE = 'debug'

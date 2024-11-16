@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/hypo69/small_talk_bot/bot.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.hypo69.small_talk_bot """
 MODE = 'debug'

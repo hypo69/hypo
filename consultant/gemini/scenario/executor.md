@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/scenario/executor.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.scenario """
 MODE = 'debug'

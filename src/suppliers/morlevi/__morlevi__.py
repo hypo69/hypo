@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/morlevi/__morlevi__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.morlevi """
 MODE = 'debug'

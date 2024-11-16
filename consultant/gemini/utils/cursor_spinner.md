@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/utils/cursor_spinner.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.utils """
 MODE = 'debug'

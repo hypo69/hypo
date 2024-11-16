@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/kazarinov/_experiments/header.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.kazarinov._experiments """
 MODE = 'debug'

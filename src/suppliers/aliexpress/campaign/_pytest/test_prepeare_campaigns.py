@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress.campaign._pytest """
 MODE = 'debug'

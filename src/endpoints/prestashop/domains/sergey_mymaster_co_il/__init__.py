@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/prestashop/domains/sergey_mymaster_co_il/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.prestashop.domains.sergey_mymaster_co_il """
 MODE = 'debug'

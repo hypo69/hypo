@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/ai/openai/model/training.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.ai.openai.model """
 MODE = 'debug'

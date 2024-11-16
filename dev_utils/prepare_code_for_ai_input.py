@@ -1,5 +1,6 @@
 ## \file hypotez/dev_utils/prepare_code_for_ai_input.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: dev_utils """
 MODE = 'debug'

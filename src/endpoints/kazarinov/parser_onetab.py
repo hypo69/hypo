@@ -1,65 +1,80 @@
 ## \file hypotez/src/endpoints/kazarinov/parser_onetab.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+""" module: src.endpoints.kazarinov """
+"""Модуль для парсинга URL из страницы OneTab."""
 
-""" module: src.endpoints.kazarinov """
 MODE = 'debug'
-""" module: src.endpoints.kazarinov """
-MODE = 'debug'
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import requests
 from bs4 import BeautifulSoup
-from typing import Optional, List
-from types import SimpleNamespace
-from lxml import etree
-from pathlib import Path
-
-import header
-from __init__ import gs
-from src.utils.jjson import j_loads_ns
+from typing import Optional, List, Tuple
 from src.utils import pprint
 from src.logger import logger
+from __init__ import gs
 
-def prepare_one_tab(target_page_url:str) -> tuple | bool:
-    """ """
+
+def prepare_one_tab(target_page_url: str) -> Tuple[int, str, List[str]] | bool:
+    """Подготавливает данные для OneTab.
+
+    Args:
+        target_page_url (str): URL страницы OneTab.
+
+    Returns:
+        Tuple[int, str, List[str]] | bool: Кортеж из цены, имени и списка URL, 
+        или `False`, если произошла ошибка.
+    """
     return fetch_target_urls_onetab(target_page_url)
 
 
+def fetch_target_urls_onetab(target_page_url: str) -> Tuple[int, str, List[str]] | bool:
+    """Извлекает целевые URL с указанного URL OneTab.
 
-def fetch_target_urls_onetab(target_page_url: str) -> tuple[str, list] | bool:
-    """Fetches target URLs from the specified OneTab URL.
-
-    This function sends a GET request to the provided URL, parses the HTML content,
-    and extracts all URLs from anchor tags with the class 'tabLink'.
+    Выполняет GET-запрос к указанному URL, парсит HTML-контент
+    и извлекает все ссылки из тегов 'a' с классом 'tabLink'.
 
     Args:
-        url (str): The URL to fetch the target URLs from.
+        target_page_url (str): URL страницы OneTab для извлечения целевых URL.
 
     Returns:
-        Optional[List[str]]: A list of extracted URLs or `None` if the request fails.
-    
+        Tuple[int, str, List[str]] | bool: Кортеж из цены, имени и списка URL 
+        или `False`, если произошла ошибка.
+
     Raises:
-        requests.exceptions.RequestException: If there's an error with the request.
+        requests.exceptions.RequestException: При ошибке запроса.
     """
-    ...
     try:
         response = requests.get(target_page_url, timeout=10)
-        response.raise_for_status()  # Checks for HTTP errors
+        response.raise_for_status()
+
         if response.status_code != 200:
-            logger.debug(f"Ошибка response\n{pprint(response)}")
-            return False, False, False
-        ...
-        # Parse the page content
-        soup = BeautifulSoup(response.content, "html.parser")
-        urls = [a['href'] for a in soup.find_all("a", class_="tabLink")]
+            logger.debug(f'Ошибка response\n{pprint(response)}')
+            return False
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # Извлечение ссылок
+        urls = [a['href'] for a in soup.find_all('a', class_='tabLink')]
+
+        # Извлечение данных из div с классом 'tabGroupLabel'
         element = soup.find('div', class_='tabGroupLabel')
         data = element.get_text() if element else None
+
         if not data:
-            return False, False, False
-        parts = data.split(maxsplit=1)  # Разбиваем только на 2 части
-        price = int(parts[0])
+            return False
+
+        # Разбивка данных на цену и имя
+        parts = data.split(maxsplit=1)
+        try:
+            price = int(parts[0])
+        except ValueError as ex:
+            logger.error(f'Ошибка при преобразовании цены: {ex}')
+            return False
+
         mexiron_name = parts[1] if len(parts) > 1 else gs.now
+
         return price, mexiron_name, urls
+
     except requests.exceptions.RequestException as ex:
-        logger.error(f"Failed to fetch the URL: ",ex)
-        return False, False, False
+        logger.error(f'Ошибка при выполнении запроса: {ex}')
+        return False

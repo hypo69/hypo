@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/db/manager_coupons_and_sales/version.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.db.manager_coupons_and_sales """
 MODE = 'debug'

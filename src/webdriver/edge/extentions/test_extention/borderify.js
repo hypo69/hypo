@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/edge/extentions/test_extention/borderify.js
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.edge.extentions.test_extention """
 MODE = 'debug'

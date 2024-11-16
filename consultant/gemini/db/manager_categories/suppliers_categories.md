@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/db/manager_categories/suppliers_categories.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.db.manager_categories """
 MODE = 'debug'

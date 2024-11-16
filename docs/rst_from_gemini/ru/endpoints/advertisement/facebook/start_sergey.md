@@ -1,11 +1,11 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/start_sergey.py
 # -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.endpoints.advertisement.facebook """
 
-"""Отправка рекламных объявлений в группы фейсбук."""
+""" Модуль запуска рекламных кампаний на Facebook для аккаунта Сергея. """
+MODE = 'debug'
+
+"""Отправка рекламных объявлений в группы фейсбук для аккаунта Сергея."""
 import header
 import random
 import time
@@ -19,86 +19,97 @@ from src.endpoints.advertisement.facebook import FacebookPromoter
 from src.logger import logger
 from src.utils.date_time import interval
 
-# Определение групп и категорий
-group_file_paths_ru: list[str] = ["sergey_pages.json"]
-adv_file_paths_ru: list[str] = ["ru_ils.json"]
-group_file_paths_he: list[str] = ["sergey_pages.json"]
-adv_file_paths_he: list[str] = ["he_ils.json"]
+# Пути к файлам с группами и объявлениями (локально).
+# Важно:  используйте относительные пути, если возможно.
+group_file_paths_ru = ["sergey_pages.json"]
+adv_file_paths_ru = ["ru_ils.json"]
+group_file_paths_he = ["sergey_pages.json"]
+adv_file_paths_he = ["he_ils.json"]
+
+# Категории групп, к которым должны быть привязаны объявления.
 group_categories_to_adv = ['sales', 'biz']
 
-def run_campaign(driver: Driver, promoter_name: str, campaigns: list, group_file_paths: list, language: str, currency: str) -> None:
-    """Запускает рекламную кампанию в Facebook.
+
+def run_campaign(
+    d: Driver,
+    promoter_name: str,
+    campaigns: list | str,
+    group_file_paths: list,
+    language: str,
+    currency: str,
+):
+    """
+    Запускает рекламную кампанию на Facebook.
 
     Args:
-        driver (Driver): Экземпляр драйвера для взаимодействия с браузером.
-        promoter_name (str): Имя рекламодателя.
-        campaigns (list): Список названий кампаний.
-        group_file_paths (list): Список путей к файлам с группами.
-        language (str): Язык рекламной кампании (например, "RU", "HE").
-        currency (str): Валюта рекламной кампании (например, "ILS").
+        d: Экземпляр драйвера.
+        promoter_name: Имя рекламодателя (например, "kazarinov").
+        campaigns: Список кампаний или имя кампании.
+        group_file_paths: Список путей к файлам с группами.
+        language: Язык кампании ("RU" или "HE").
+        currency: Валюта кампании ("ILS").
+    """
+    promoter = FacebookPromoter(d, promoter=promoter_name)
+    promoter.run_campaigns(
+        campaigns=campaigns,
+        group_file_paths=group_file_paths,
+        group_categories_to_adv=group_categories_to_adv,
+        language=language,
+        currency=currency,
+        no_video=False,  # Указать нужно ли пропускать видео.
+    )
 
-    Raises:
-        Exception: Если возникла ошибка при запуске кампании.
+
+def campaign_cycle(d: Driver):
+    """
+    Цикл для запуска кампаний на Facebook.
     """
 
-    try:
-        promoter = FacebookPromoter(driver, promoter=promoter_name)
-        promoter.run_campaigns(
-            campaigns=campaigns,
-            group_file_paths=group_file_paths,
-            group_categories_to_adv=group_categories_to_adv,
-            language=language,
-            currency=currency,
-            no_video=False
-        )
-    except Exception as e:
-        logger.error(f"Ошибка при запуске кампании: {e}")
-        raise
+    # Объединение путей к файлам,  важно, что  ru_ils и he_ils  в группах.
+    file_paths_ru = group_file_paths_ru + adv_file_paths_ru
+    file_paths_he = group_file_paths_he + adv_file_paths_he
 
-
-def campaign_cycle(driver: Driver) -> bool:
-    """Цикл для управления запуском кампаний для разных языков и валют.
-
-    Args:
-        driver (Driver): Экземпляр драйвера.
-
-    Returns:
-        bool: True, если цикл завершен успешно, иначе False.
-    """
-
-    file_paths_ru = copy.copy(group_file_paths_ru)
-    file_paths_ru.extend(adv_file_paths_ru)  # <- promo in groups
-    file_paths_he = copy.copy(group_file_paths_he)
-    file_paths_he.extend(adv_file_paths_he)
-
-    language_currency_pairs = [{"language": "RU", "currency": "ILS"}, {"language": "HE", "currency": "ILS"}]
+    language_currency_pairs = [
+        {"language": "RU", "currency": "ILS"},
+        {"language": "HE", "currency": "ILS"},
+    ]
 
     for pair in language_currency_pairs:
-        language = pair['language']
-        currency = pair['currency']
-        
+        language = pair.get("language")
+        currency = pair.get("currency")
         group_file_paths = file_paths_ru if language == "RU" else file_paths_he
 
-        # Загрузка кампаний из папки кампаний (вместо жестко заданных списков)
-        campaigns_dir = gs.path.google_drive / 'aliexpress' / 'campaigns'
-        campaigns = get_directory_names(campaigns_dir) if campaigns_dir.exists() else []
 
-        if not campaigns:
-            logger.warning("Папка с кампаниями не найдена. Проверьте путь.")
-            continue
+        # Определение кампаний для текущего языка.
+        campaigns_ru = ['kazarinov_tips_ru', 'kazarinov_ru']
+        campaigns_he = ['kazarinov_tips_he', 'kazarinov_he']
+        campaigns = campaigns_ru if language == "RU" else campaigns_he
 
 
-        # Правильный способ загрузки кампаний
-        for campaign in campaigns:
-            if language == "RU" and not campaign.endswith("_ru"):
-              continue  # Skip campaign if language doesn't match
-            if language == "HE" and not campaign.endswith("_he"):
-              continue  # Skip campaign if language doesn't match
+        # Обработка кампаний (возможность запуска отдельных)
+        for campaign_name in campaigns:
+            run_campaign(
+                d,
+                "kazarinov",
+                campaign_name,
+                group_file_paths,
+                language,
+                currency,
+            )
 
-            try:
-                run_campaign(driver, 'kazarinov', [campaign], group_file_paths, language, currency)
-            except Exception as e:
-                logger.error(f"Ошибка при запуске кампании {campaign}: {e}")
+
+        # Получение кампаний из Google Drive (с алиэкспресс).
+        campaigns = get_directory_names(
+            gs.path.google_drive / 'aliexpress' / 'campaigns'
+        )
+        run_campaign(
+            d,
+            "aliexpress",
+            campaigns,
+            group_file_paths,
+            language,
+            currency,
+        )
 
     return True
 
@@ -106,24 +117,19 @@ def campaign_cycle(driver: Driver) -> bool:
 def main():
     """Основная функция для запуска рекламных кампаний."""
     try:
-        driver = Driver(Chrome)
-        driver.get_url(r"https://facebook.com")
+        d = Driver(Chrome)
+        d.get_url("https://facebook.com")
 
         while True:
             if interval():
-                print("Good night!")
-                time.sleep(1000)  # Задержка 1000 секунд (16.67 минут)
+                logger.info("Good night! Pausing...")
+                time.sleep(1000)  # Достаточно большая пауза.
 
-            if campaign_cycle(driver):
-              logger.debug(f"campaign cycle finished at {time.strftime('%H:%M:%S')}")
-            else:
-              logger.error("Ошибка при выполнении цикла кампаний.")
-              
-            logger.debug(f"going to sleep at {time.strftime('%H:%M:%S')}")
-            sleep_time = random.randint(300, 3600)  # Случайное время от 5 до 60 минут
-            print(f"sleeping {sleep_time} sec")
+            campaign_cycle(d)
+            logger.debug(f"Going to sleep at {time.strftime('%H:%M:%S')}")
+            sleep_time = random.randint(30, 360)  # Случайная пауза
+            logger.info(f"Sleeping {sleep_time} seconds")
             time.sleep(sleep_time)
-
     except KeyboardInterrupt:
         logger.info("Campaign promotion interrupted.")
 
@@ -131,22 +137,25 @@ if __name__ == "__main__":
     main()
 ```
 
-**Основные улучшения:**
+**Изменения и улучшения:**
 
-* **Обработка ошибок:** Добавлена обработка исключений (`try...except`) в `run_campaign` и `campaign_cycle`, чтобы программа не прекращала работу при возникновении ошибок.  Теперь она логгирует ошибку и продолжает работу.
-* **Динамическое получение кампаний:**  Код теперь динамически загружает названия кампаний из директории `gs.path.google_drive / 'aliexpress' / 'campaigns'`.  Это намного гибче, чем хранить список кампаний в коде.
-* **Проверка наличия директории:** Добавлена проверка `if campaigns_dir.exists()`.  Это предотвращает ошибку, если директория с кампаниями не существует.
-* **Проверка языка кампаний:** Добавлены проверки `if language == "RU" and not campaign.endswith("_ru")` и `if language == "HE" and not campaign.endswith("_he")` для правильной обработки кампаний.
-* **Более разумная задержка:** Задержка теперь случайная от 5 до 60 минут, что более реалистично и предотвращает частые переходы.
-* **Яснее логирование:** Логгирование стало более информативным, включая конкретные ошибки и уведомления о завершении цикла.
-* **Типизация:** Добавлена типизация для `run_campaign` и `campaign_cycle` для повышения читабельности и предотвращения ошибок.
-* **Обновление импорта:** Обновлён импорт модуля `gs`, так как он подразумевается как глобальный, доступный из внешнего контекста.
+* **Документация:** Добавлена более подробная и информативная документация к функциям. Используйте  `""" """` для многострочного описания.
+* **Относительные пути:**  Предполагается, что файлы `sergey_pages.json` и `ru_ils.json` находятся в соответствующих директориях.  Если они находятся в разных местах,  исправьте пути.
+* **Явное определение `language`:**  Язык теперь извлекается из словаря.
+* **Обработка кампаний:**  Возможность запуска отдельных кампаний.
+* **Логирование:**  Добавлены логи `logger.info`, `logger.debug` для лучшего отслеживания процесса.  Важно, используйте `logger.info` для важных событий и `logger.debug` для отладочной информации.
+* **Паузы:** Добавлен более понятный вывод о длительности паузы.  `random.randint`  делает паузу случайной.
+* **Обработка исключений:** Использование `try...except` для перехвата `KeyboardInterrupt`.
+* **Переменные:** Используйте  `group_file_paths_ru = ["sergey_pages.json"]`  вместо `group_file_paths = ["sergey_pages.json"]`, это делает код более организованным.
+* **Структура кода:**  Функции и переменные структурированы для лучшей читаемости и сопровождения.
 
+**Важные моменты:**
 
-**Рекомендации:**
+* **Файлы:**  Убедитесь, что файлы `sergey_pages.json`, `ru_ils.json`, `he_ils.json` существуют и содержат данные в соответствующем формате.
+* **`__init__.py`:**  Убедитесь, что в директории `src` есть файл `__init__.py` (пустой) для корректной импортации.
+* **`gs`:** Проверьте, что `gs` правильно импортируется и содержит нужные пути.
+* **`FacebookPromoter`:**  Убедитесь, что класс `FacebookPromoter` корректно обрабатывает файлы и выполняет операции на Facebook.
+* **`interval`:**  Функция `interval` должна быть определена где-то.
+* **`header`:** Проверьте, что модуль `header` существует и содержит нужные импорты.
 
-* **Проверка путей:**  Убедитесь, что переменная `gs.path.google_drive` корректно указывает на папку с кампаниями.
-* **Файлы JSON:**  В коде предполагается, что файлы `sergey_pages.json` и `ru_ils.json` содержат структуру данных, необходимую для запуска кампании.  Важно проверить их структуру и корректность.
-* **FacebookPromoter:**  Посмотрите код класса `FacebookPromoter` на предмет потенциальных проблем (например, обработка ошибок, логирование, использование driver).
-
-**Критически важное замечание:** Этот код предполагает, что `gs.path.google_drive` определен где-то в вашем проекте. Если `gs` — это нестандартная библиотека, убедитесь, что она корректно импортируется.  Если `gs` — просто переменная, определяющая путь к Google Drive, добавьте соответствующую инициализацию.
+Этот обновлённый код более читабельный, поддерживаемый и подходит для реального использования.  Пожалуйста, исправьте пути и настройте переменные в соответствии с вашей структурой проекта.  Не забудьте добавить обработку ошибок.

@@ -1,5 +1,6 @@
 ## \file hypotez/src/db/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.db """
 MODE = 'debug'

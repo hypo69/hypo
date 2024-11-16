@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/hb/scenarios/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.hb.scenarios """
 MODE = 'debug'

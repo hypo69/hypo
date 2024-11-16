@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/advertisement/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.advertisement """
 MODE = 'debug'

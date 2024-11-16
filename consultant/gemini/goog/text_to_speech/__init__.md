@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/goog/text_to_speech/__init__.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.goog.text_to_speech """
 MODE = 'debug'

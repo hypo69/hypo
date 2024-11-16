@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/chrome/_docs/chrome.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.chrome._docs """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/kazarinov/react/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.kazarinov.react """
 MODE = 'debug'

@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress._experiments """
 MODE = 'debug'

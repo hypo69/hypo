@@ -1,5 +1,6 @@
 ## \file hypotez/src/product/_experiments/ping.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.product._experiments """
 MODE = 'debug'

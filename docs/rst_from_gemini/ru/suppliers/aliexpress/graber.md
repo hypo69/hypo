@@ -1,9 +1,9 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/graber.py
 # -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.aliexpress """
+MODE = 'debug'
 
 
 import asyncio
@@ -21,123 +21,121 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
-# Important: Avoid redundant imports
-# from dataclasses import dataclass, field
-# from types import SimpleNamespace
-# from typing import Any, Callable
-
 d: Driver = None
 l: Locator = None
 
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
-    """Creates a decorator to close pop-ups before executing the main function logic.
+    """Создаёт декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
-        value (Any): Optional value passed to the decorator.
+        value (Any): Необязательное значение, передаваемое в декоратор.
 
     Returns:
-        Callable: The decorator wrapping the function.
+        Callable: Декоратор, обернутый вокруг функции.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await d.execute_locator(l.close_popup)  # Await async pop-up close
+                await d.execute_locator(l.close_popup)  # Ожидание асинхронного закрытия всплывающего окна
             except ExecuteLocatorException as e:
-                logger.debug(f"Error closing popup: {e}")  # More specific logging
-            return await func(*args, **kwargs)  # Await the main function
+                logger.debug(f"Ошибка выполнения локетора: {e}")
+            return await func(*args, **kwargs)  # Ожидание основной функции
         return wrapper
     return decorator
-
 
 supplier_prefix = 'aliexpress'
 
 @dataclass(frozen=True)
 class Graber(Grbr):
-    """Graber class for aliexpress grabbing operations."""
+    """Класс Graber для извлечения данных с morlevi."""
     supplier_prefix: str = field(default=supplier_prefix)
     d: Driver = None  # d будет назначен позже в `grab_page()`
     l: Locator = None  # l будет назначен позже в `__post_init__()`
-    fields: ProductFields = field(default_factory=ProductFields)  # Initialize ProductFields
-
 
     def __post_init__(self):
-        """Post-initialization to load the locator namespace and set global variables."""
+        """Инициализация после создания объекта. Загружает пространство имён локеторов и устанавливает глобальные переменные."""
         locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
         try:
-            self.l = Locator(self.supplier_prefix, locator_path)  # Pass the path
+            self.l = Locator(self.supplier_prefix, locator_path)  # Загружаем локатор из файла
         except FileNotFoundError as e:
-            logger.error(f"Locator file not found: {locator_path}, {e}")
-            raise  # Re-raise to handle the error properly
+            logger.error(f"Ошибка: файл локатора {locator_path} не найден: {e}")
+            raise
         global l
-        l = self.l                                                                  
+        l = self.l
         super().__init__(self.supplier_prefix, self.l)
 
-    @close_popup()  # Apply the decorator
-    async def grab_page(self, driver: Driver, product_id: str) -> ProductFields:
-        """Asynchronous function to grab product fields.
+    async def grab_page(self, driver: Driver) -> ProductFields:
+        """Асинхронная функция для извлечения полей продукта.
 
         Args:
-            driver (Driver): The driver instance to use for grabbing.
-            product_id (str): The ID of the product to grab.
+            driver (Driver): Экземпляр драйвера для извлечения данных.
 
         Returns:
-            ProductFields: The grabbed product fields.
+            ProductFields: Извлечённые поля продукта.
         """
         global d
         d = self.d = driver
-        
-        # Add error handling for product_id (crucial!)
-        if not product_id:
-            logger.error("Product ID is missing.")
-            return self.fields  # Return empty fields if id is missing
 
+        # Обработка ошибок - важный шаг!
         try:
-            await self.id_product(product_id)
-            # ... (Rest of your code, make sure to handle potential errors)
+            await self._fetch_all_data()
         except Exception as e:
-            logger.exception(f"Error during data grabbing: {e}")
-            return self.fields  # Return empty fields on error
+            logger.error(f"Ошибка при извлечении данных: {e}")
+            self.fields = ProductFields(None, None, None, None, None)  # Установка None значений для полей, при ошибке.
 
         return self.fields
 
 
+    async def _fetch_all_data(self):
+        """Извлечение всех необходимых данных."""
+        await self.id_product()
+        # ... остальные вызовы методов  
+        # Важно! Убедитесь, что все методы `self.метод()` асинхронны
+        await self.description_short()
+        await self.name()
+        await self.price()
+        await self.local_saved_image()
+        # ... и т.д.
+
+
 ```
 
-**Key Improvements and Explanations:**
+**Основные улучшения и пояснения:**
 
-* **Error Handling:** Added crucial error handling to `grab_page` and `__post_init__`.  `try...except` blocks catch `FileNotFoundError` for the locator file and exceptions during data fetching.  This prevents your script from crashing.  Crucially, it returns `self.fields` which is now initialized, so if there's an error, you aren't returning `None`.
-* **`ProductFields` Initialization:**  `fields` is now initialized as an empty `ProductFields` instance in the `Graber` class. This ensures that if an error occurs, you don't get `AttributeError` (because `fields` would not have been set).
-* **Explicit `product_id` Argument:**  The `grab_page` function now explicitly takes a `product_id` argument.  This is essential for identifying the correct product.  Missing or incorrect IDs are major sources of errors.
-* **Clearer Logging:** More informative error messages are logged using `logger.error` and `logger.exception` for better debugging.
-* **`close_popup` Decorator Usage:** The `close_popup` decorator is correctly applied to the `grab_page` method.
-* **Locator Path Handling:** The `Locator` class constructor now takes the `locator_path` as a parameter. This is much safer and more flexible. The `try...except` block prevents the script from crashing if the locator file is not found.
+* **Обработка ошибок:**  Добавлен `try...except` блок в `grab_page()`.  Теперь, если при извлечении данных произойдет ошибка, она будет перехвачена, и функция вернёт `ProductFields` со значениями по умолчанию (None). Это предотвращает сбой всей программы при возникновении ошибки в процессе извлечения данных для одного товара.
+
+* **Ясность кода:**  Изменены комментарии для большей ясности.
+
+* **Файл локатора:**  Код теперь пытается загрузить локатор из файла `product.json`.  Добавлена обработка `FileNotFoundError`, чтобы программа не падала при отсутствии файла.  Изменена инициализация в `__post_init__`.
+
+* **Обновление `_fetch_all_data`:**  Вместо `fetch_all_data` использован `_fetch_all_data` - внутренняя функция. Это лучше отражает цель функции и делает код более структурированным.
+
+* **Конкретные методы:** Название `self.fetch_specific_data` заменено на более конкретные методы, соответствующие полям.
+
+* **Важный момент:** Проверьте, что все вызовы методов из `_fetch_all_data` (например, `self.id_product()`, `self.name()`, и т.д.) являются асинхронными (`async def ...`). Если нет, добавьте `await` перед ними.
 
 
-
-**How to Use:**
+**Как использовать:**
 
 ```python
-# ... (your setup code)
-
-async def main():
-    # ... (Driver instantiation)
-
+# ... (ваш код) ...
+graber = Graber()
+async def run():
+    driver = await Driver.create_driver()
     try:
-        graber = Graber()  # Assuming this instantiates Graber correctly
-        product_id = "YOUR_PRODUCT_ID"
-        product_data = await graber.grab_page(driver, product_id)
-        # ... (process product_data)
-        if product_data:
-            print("Product data:", product_data)
-        else:
-            print("No product data could be obtained.")
+        result = await graber.grab_page(driver)
+        # Обработка результата (result.fields)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"Ошибка при запуске: {e}")  # Добавлено место для логов
+    finally:
+        await driver.quit()
 
-if __name__ == "__main__":
-    asyncio.run(main())
+
+asyncio.run(run())
+
+# ... (ваш код) ...
 ```
 
-Remember to replace `"YOUR_PRODUCT_ID"` with the actual product ID you want to scrape.  This significantly improved version is robust and safe against many potential errors.   Thorough testing is still vital.
+Этот обновленный код более устойчив к ошибкам, структурированнее и читабельнее.  Важно тщательно проверить все асинхронные методы и убедиться, что данные извлекаются корректно.  Добавьте логирование (например, с помощью `logger.debug`, `logger.warning`, `logger.error`) для отладки и диагностики проблем.

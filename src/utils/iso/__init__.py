@@ -1,5 +1,6 @@
 ## \file hypotez/src/utils/iso/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.utils.iso """
 MODE = 'debug'

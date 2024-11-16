@@ -1,79 +1,130 @@
-```markdown
-# crawlee_python.py
-
-## File: hypotez/src/webdriver/crawlee_python/crawlee_python.py
-
-This file implements a Python script for web crawling using the `crawlee` library and Playwright. It defines a `CrawleePython` class that encapsulates the crawling process, from setting up the crawler to running it and exporting the extracted data.
-
-### Module Description
-
-This module (`crawlee_python`) provides functionality for web scraping and data extraction.  It leverages the `crawlee` library to efficiently manage the crawling process, including handling requests, enqueuing links, and extracting data using Playwright.
-
-### Class: CrawleePython
-
-The `CrawleePython` class manages the entire crawling lifecycle.
-
-**Constructor (`__init__`)**:
 ```python
+## \file hypotez/src/webdriver/crawlee_python/crawlee_python.py
+# -*- coding: utf-8 -*-
+
+""" crawlee python module for web scraping using Playwright. """
+
+
+from pathlib import Path
+from __init__ import gs
+import asyncio
+from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
+from src.logger import logger
+
+class CrawleePython:
+    """
+    A class for web scraping using PlaywrightCrawler from the crawlee library.
+    """
     def __init__(self, max_requests: int = 5, headless: bool = False, browser_type: str = 'firefox'):
-```
-Initializes the crawler with parameters:
-- `max_requests`: Maximum number of concurrent requests.
-- `headless`: Whether to run the browser in headless mode.
-- `browser_type`: The type of browser to use (e.g., 'firefox', 'chromium').
+        """
+        Initializes the CrawleePython instance with parameters for the crawler.
 
-**Methods:**
+        Args:
+            max_requests: Maximum number of concurrent requests.
+            headless: Whether to run the browser in headless mode.
+            browser_type: Type of the browser to use (e.g., 'firefox', 'chromium').
+        """
+        self.max_requests = max_requests
+        self.headless = headless
+        self.browser_type = browser_type
+        self.crawler = None
 
-- **`setup_crawler()`**:
-```python
     async def setup_crawler(self):
-```
-Initializes the `PlaywrightCrawler` instance with the specified parameters.  Critically, it defines a `@self.crawler.router.default_handler` that will process each page visited. This allows for consistent data extraction.
+        """
+        Sets up the PlaywrightCrawler instance.
+        """
+        self.crawler = PlaywrightCrawler(
+            max_requests_per_crawl=self.max_requests,
+            headless=self.headless,
+            browser_type=self.browser_type,
+        )
+
+        @self.crawler.router.default_handler
+        async def request_handler(context: PlaywrightCrawlingContext) -> None:
+            """
+            Handles a request during the crawl.
+
+            Extracts data (URL, title, content) and enqueues linked pages.
+
+            Args:
+                context: The context of the current request.
+            """
+            context.log.info(f'Processing {context.request.url} ...')
+            await context.enqueue_links()  # Important: Enqueue links to continue crawling.
+            
+            try:
+                title = await context.page.title()
+                content = (await context.page.content())[:1000] # Increased content length for better data
+            except Exception as e:
+                logger.error(f"Error processing {context.request.url}: {e}")
+                title = "N/A"
+                content = "N/A"
+
+            data = {
+                'url': context.request.url,
+                'title': title,
+                'content': content,
+            }
+            await context.push_data(data)
 
 
-- **`run_crawler(urls)`**:
-```python
     async def run_crawler(self, urls: list[str]):
-```
-Runs the crawler with the provided list of initial URLs.
+        """ Runs the crawler with the initial list of URLs. """
+        await self.crawler.run(urls)
 
-- **`export_data(file_path)`**:
-```python
     async def export_data(self, file_path: str):
-```
-Exports the extracted data to a JSON file at the specified path.
+        """ Exports the entire dataset to a JSON file. """
+        await self.crawler.export_data(file_path)
 
-- **`get_data()`**:
-```python
     async def get_data(self) -> dict:
-```
-Retrieves the collected data as a dictionary. This method is crucial for accessing the results after the crawl.
+        """ Retrieves the extracted data as a dictionary. """
+        return await self.crawler.get_data()
 
-- **`run(urls)`**:
-```python
+
     async def run(self, urls: list[str]):
-```
-The main method that orchestrates the entire process. It sets up the crawler, runs the crawl, exports the data, retrieves and logs the data.  Crucially, it demonstrates proper use of `asyncio` for asynchronous operations.
+        """
+        Main method to set up, run the crawler, and export data.
 
-### Usage Example (`if __name__ == '__main__':`)
+        Args:
+            urls: List of URLs to start the crawl.
+        """
+        await self.setup_crawler()
+        await self.run_crawler(urls)
+        try:
+            await self.export_data(str(Path(gs.path.tmp / 'results.json')))
+            data = await self.get_data()
+            logger.info(f'Extracted data: {data}')  #  Print the entire data structure
+        except Exception as e:
+          logger.error(f"Error during export or data retrieval: {e}")
 
-```python
+
+# Example usage (Important:  Replace 'https://ksp.co.il' with a valid list of URLs)
 if __name__ == '__main__':
     async def main():
+        urls_to_crawl = ['https://example.com', 'https://www.example.org']  # Example URLs
         experiment = CrawleePython(max_requests=5, headless=False, browser_type='firefox')
-        await experiment.run(['https://ksp.co.il'])
+        await experiment.run(urls_to_crawl)
 
     asyncio.run(main())
 ```
-This example instantiates the `CrawleePython` class and calls the `run` method to start the crawl from the provided URL.  It demonstrates how to integrate with the provided class and handle the asynchronous nature of the code.
 
+**Improvements:**
 
-### Important Considerations
+* **Docstrings:** Added comprehensive docstrings to the class and methods, explaining their purpose, parameters, and return values.  This significantly improves code readability and understanding.
+* **Error Handling:** Added `try...except` blocks to handle potential errors during `page.title()` and `page.content()` calls.  This prevents the script from crashing if a website returns unexpected data or encounters an issue.  Critically, it logs errors so you know *why* a particular URL failed to process.
+* **Content Length:** Increased the content extraction limit to 1000 characters (from 100).  This is more likely to capture useful information from pages.
+* **Data Output:** Prints the *entire* `data` dictionary, which is invaluable for debugging and inspecting the output from the crawler.
+* **Example Usage:**  Made the example usage more realistic and improved commenting.  Crucially, it uses a sample list of URLs instead of a single URL.
+* **Clearer Variable Names:** Used more descriptive variable names (`urls_to_crawl`).
+* **Robustness:** The example now has a list of URLs to crawl, which is much more practical for realistic web scraping.
+* **Error Logging:**  Log errors to understand what went wrong with a specific URL.
 
-- **Error Handling:** The code lacks explicit error handling.  Consider adding `try...except` blocks to catch potential exceptions during the crawling process (e.g., network errors, invalid URLs, website changes).
-- **Data Validation:** The code extracts only the first 100 characters of the page content.  Improve the data extraction to ensure complete and accurate data capture.  Consider using more sophisticated methods to extract information.
-- **Robustness:** The usage of `Path` and `gs` suggests a deeper context that may require further documentation to clarify its functionality and role in the project.
-- **Logging:** The `logger` is used, but the `src.logger` module should be documented to describe the logging setup.
+**Before running:**
 
-This improved documentation provides a more comprehensive understanding of the code's purpose, functionality, and usage.  It also highlights potential areas for improvement, such as error handling and data validation. Remember to include documentation for the `gs` and `logger` modules if they are not self-explanatory within their own files.
-```
+1. **Install necessary packages:**
+   ```bash
+   pip install playwright crawlee
+   ```
+2. **Ensure `gs` is correctly configured:**  The code relies on a `gs` object (likely from your project). You need to ensure that `gs.path.tmp` is defined correctly and points to the expected temporary directory.
+
+This significantly improved version is much more robust, maintainable, and user-friendly. Remember to replace `['https://example.com', 'https://www.example.org']` with the actual URLs you want to crawl.  Always test with a small set of URLs first before running against a large list.  Crucially, the output will help you identify problems! Remember to adapt the `urls_to_crawl` list to the URLs you need to scrape.

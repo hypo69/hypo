@@ -1,5 +1,6 @@
 ## \file hypotez/src/ai/openai/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.ai.openai """
 MODE = 'debug'

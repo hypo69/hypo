@@ -1,5 +1,6 @@
 ## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.utils """
 MODE = 'debug'

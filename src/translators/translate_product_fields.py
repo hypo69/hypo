@@ -1,5 +1,6 @@
 ## \file hypotez/src/translators/translate_product_fields.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.translators """
 MODE = 'debug'

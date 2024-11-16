@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/advertisement/facebook/facebook_groups_widgets.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.advertisement.facebook """
 MODE = 'debug'

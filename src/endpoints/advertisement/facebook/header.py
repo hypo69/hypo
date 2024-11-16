@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.advertisement.facebook """
 MODE = 'debug'

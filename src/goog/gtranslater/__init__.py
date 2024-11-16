@@ -1,5 +1,6 @@
 ## \file hypotez/src/goog/gtranslater/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.goog.gtranslater """
 MODE = 'debug'

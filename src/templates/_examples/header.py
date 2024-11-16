@@ -1,5 +1,6 @@
 ## \file hypotez/src/templates/_examples/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.templates._examples """
 MODE = 'debug'

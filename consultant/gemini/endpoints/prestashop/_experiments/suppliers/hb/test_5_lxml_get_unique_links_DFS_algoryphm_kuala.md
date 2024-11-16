@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/endpoints/prestashop/_experiments/suppliers/hb/test_5_lxml_get_unique_links_DFS_algoryphm_kuala.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.endpoints.prestashop._experiments.suppliers.hb """
 MODE = 'debug'

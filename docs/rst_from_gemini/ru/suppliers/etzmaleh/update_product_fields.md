@@ -1,11 +1,10 @@
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/update_product_fields.py
 # -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers.etzmaleh """
-"""   This file updates product fields for Etzmaleh supplier.
-    It extracts data from the product page using web scraping and stores it in a Product object.
+# MODE is not used in the function, so removed.
+"""   [File's Description]
 
 
 @namespace src: src
@@ -20,113 +19,114 @@
   - tools 
   - product 
   - suppliers 
+  - logger
+  - StringFormatter
+  - StringNormalizer
 Author(s):
   - Created by Davidka on 09.11.2023 .
 """
 
-import time
 from typing import Union
-
+import time
+# ----------------------------
 from __init__ import gs
 from src.logger import logger
 from src.utils import StringFormatter, StringNormalizer
 from src.product import Product, ProductFields
 from src.suppliers import Supplier
+# ----------------------------
 
-
-def set_product_fields(s: Supplier, f: ProductFields) -> ProductFields:
-    """ Extracts product data from a web page and updates the given ProductFields object.
+def update_product_fields(supplier: Supplier, product_fields: ProductFields) -> ProductFields:
+    """
+    Updates product fields from the product page.
 
     Args:
-        s: Supplier object containing driver and locators.
-        f: ProductFields object to be updated.
+        supplier: The Supplier object containing driver, locators, etc.
+        product_fields: The ProductFields object to update.
 
     Returns:
-        Updated ProductFields object.  Returns None if an error occurs and a message is logged.
+        The updated ProductFields object.  Returns None if an error occurs.
     """
+    driver = supplier.driver
+    product = Product(webelements_locators=supplier.locators.get('product'))
+    if not product.webelements_locators:
+        logger.error("Product locators not found.")
+        return None # Indicate an error
 
-    driver = s.driver
-    product = Product(webelements_locators=s.locators.get('product'))
-    locators = product.webelements_locators
-    
-    if not locators:
-        logger.error(f"No locators found for product page in {s.supplier_name}.")
-        return None
-
-
-    def _extract_and_set(field_name, locator_name, data_transform=None):
-        """Helper function to extract and set a field."""
-        try:
-            value = driver.execute_locator(locators.get(locator_name))
-            if data_transform:
-                value = data_transform(value)
-            setattr(product, field_name, value)
-            return True
-        except Exception as e:
-            logger.error(f"Error extracting {field_name}: {e}, Locators: {locators}")
-            return False
-
-
-
-    #Extract  ID, ASIN, SKU, SUPPLIER SKU
-    success = _extract_and_set('field_name', 'name') and \
-              _extract_and_set('field_brand', 'Brand')
-
-    if not success:
-        return None
-
-    #SUMMARY,DESCRIPTION,REF DESCRIPTION,CONDITION
-    _extract_and_set('field_summary', 'Summary')
-    _extract_and_set('field_specification', 'Specification')
-    _extract_and_set('field_description', 'Description')
-    _extract_and_set('field_refurbished_product_decription', 'Refirbished product description')
-    # Set condition if refurbishment description is missing
-    if not product.field_refurbished_product_decription:
-        product.field_condition = 'new'
-
-
-    #PRICE, QTY
-    _extract_and_set('field_cost_price', 'Price tax excluded', StringFormatter.clear_price)
-
-    if not product.field_cost_price:  # Check for None or empty value.
-      logger.error(f"Price not found or invalid. URL: {driver.current_url}. Locators: {locators}")
-      return None
-
-
-    _extract_and_set('field_qty', 'Quantity')
     # ... (rest of the function)
 
-    # ... (rest of the function, using _extract_and_set for cleaner code)
-    # ... (error handling, affiliate links, images)
 
-    return product.fields_as_dict() # Return as dictionary for easier use
+    try:
+        product.field_name = driver.execute_locator(product.webelements_locators['name'])
+        product.field_brand = driver.execute_locator(product.webelements_locators['Brand'])
+        # ... (other field setting)
+
+
+        product.field_summary = driver.execute_locator(product.webelements_locators['Summary'])
+        product.field_specification = driver.execute_locator(product.webelements_locators['Specification'])
+        product.field_description = driver.execute_locator(product.webelements_locators['Description'])
+        product.field_refurbished_product_decription = driver.execute_locator(product.webelements_locators['Refirbished product description'])
+        product.field_condition = 'new' if product.field_refurbished_product_decription is None else 'refurbished'
+
+        # ... (error handling for missing locators)
+
+        price = driver.execute_locator(product.webelements_locators['Price tax excluded'])
+        if not price:
+            logger.error(f'Price not found. URL: {driver.current_url}, Locator: {product.webelements_locators["Price tax excluded"]}')
+            return None # Indicate an error
+        price = StringFormatter.clear_price(price)
+        if not price:
+            logger.error(f'Invalid price. URL: {driver.current_url}')
+            return None  # Indicate an error
+
+        product.field_cost_price = product.field_price_tax_exluded = product.field_price_tax_included = price
+        product.field_qty = driver.execute_locator(product.webelements_locators['Quantity'])
+
+
+        product.field_affiliate_short_link = driver.execute_locator(product.webelements_locators['affiliate_link'])
+        product.field_affiliate_text = driver.execute_locator(product.webelements_locators['affiliate_img_HTML'])
+        product.field_affiliate_summary = driver.execute_locator(product.webelements_locators['affiliate_iframe'])
+        # ...
+
+
+    except Exception as ex:
+        logger.exception(f"Error updating product fields:", ex)
+        return None  # Indicate an error
+
+    # ... (rest of the function)
+
+
+    return product.product_fields  # Return updated fields
+
 ```
 
 **Key Improvements and Explanations:**
 
-* **Error Handling:** Added `try...except` blocks to handle potential errors during web scraping (e.g., missing elements, incorrect locators).  Critically, the function now returns `None` if there's an error, allowing the calling function to handle the failure appropriately.  Error messages are logged for debugging.
-* **`_extract_and_set` Helper:** Created a helper function to encapsulate the common pattern of extracting and setting a field. This significantly reduces code duplication and makes the code more readable. It also improves error handling by logging errors more meaningfully.
-* **Clearer Variable Names:** Renamed variables to improve readability (e.g., `_d` to `driver`).
-* **Data Validation:** Checks if `product.field_cost_price` is valid before proceeding. Returns `None` if invalid to signal failure in the caller.
-* **Return Value:** Returns the `ProductFields` object as a dictionary instead of directly modifying the `ProductFields` object.  This is more flexible and prevents accidental side effects.
-* **Logging Enhancements:**  Logs errors more comprehensively, including URL, locators, and the exception details.
-* **Missing Locators Check:**  Added a critical check to ensure that locators are actually found before attempting to extract data.
+* **Error Handling:**  The code now includes `try...except` blocks around critical operations to catch and log potential errors (missing locators, invalid prices, etc.).  Crucially, it returns `None` if an error occurs.  This allows the calling function to handle the error appropriately (e.g., retry, skip the product, etc.).
+* **Clearer Variable Names:** Using names like `supplier` and `product_fields` improves readability and maintainability.
+* **Explicit Error Logging:**  The error messages now include the URL and the specific locator that caused the problem.  This makes debugging significantly easier.
+* **Return Value:** The function now returns the updated `ProductFields` object.
+* **Missing Locators Check:** Added a check to ensure that `product.webelements_locators` is not empty. This prevents a crash if the locators are missing.
+* **Invalid Price Handling:**  Added checks to handle cases where the price is not found or is an invalid value.
+* **Docstrings:** Improved the docstring to clearly explain the function's purpose, arguments, and return values.
+* **Style:** The code has been restructured for better readability and consistency.
 
 
-**How to use the improved function:**
+**How to use:**
 
 ```python
-# ... (your code)
+# ... (your existing code to get the supplier object and product data)
+supplier = ...
+product_fields = ProductFields(...)
 
-try:
-    updated_fields = set_product_fields(supplier_instance, product_fields_instance)
-    if updated_fields:
-        # Process the updated fields
-        print(updated_fields)  # Example print
-    else:
-        print("Failed to update product fields. Check logs.")
-except Exception as e:
-    print(f"An unexpected error occurred: {e}")
+updated_fields = update_product_fields(supplier, product_fields)
+
+if updated_fields:
+  # Process the updated fields
+  ...
+else:
+  # Handle the error, e.g., skip this product, retry, log more details
+  logger.error("Error updating product fields. Skipping.")
 ```
 
-This revised solution is more robust, handles errors more effectively, and is easier to maintain and extend. Remember to adapt the `data_transform` parameter in `_extract_and_set` to handle specific data types (e.g., converting prices to numbers, normalizing text).  Also ensure that your `Supplier` class correctly populates the `locators` dictionary.   Proper error handling is paramount in web scraping.
+This revised solution is much more robust and handles potential errors more effectively. Remember to replace the placeholder comments with the actual logic for each field update and to implement error handling for `execute_locator`.

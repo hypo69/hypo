@@ -1,57 +1,36 @@
 ```markdown
-# AliexpressAffiliateLinkGenerateRequest.py
+# Файл: `hypotez/src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateLinkGenerateRequest.py`
 
-Файл: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\skd\api\rest\AliexpressAffiliateLinkGenerateRequest.py`
+Файл расположен в: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\skd\api\rest\AliexpressAffiliateLinkGenerateRequest.py`
 
-**Роль:** `doc_creator` (генерация документации)
+**Роль:** `doc_creator` (генератор документации)
 
 **Описание:**
 
-Данный Python-файл определяет класс `AliexpressAffiliateLinkGenerateRequest`, представляющий собой запрос к API AliExpress для генерации аффилиатной ссылки. Он наследуется от базового класса `RestApi`.
+Данный Python-файл определяет класс `AliexpressAffiliateLinkGenerateRequest`, который, по всей видимости, представляет собой запрос к API AliExpress для генерации аффилиатной ссылки.  Класс наследуется от `RestApi`, что указывает на использование RESTful API.
 
 **Класс `AliexpressAffiliateLinkGenerateRequest`:**
 
-Этот класс предназначен для взаимодействия с API AliExpress и подготовки запроса на генерацию аффилиатной ссылки.
+* **Назначение:**  Генерирует аффилиатные ссылки AliExpress.
+* **Инициализация (`__init__`):**
+    * Принимает `domain` (по умолчанию `api-sg.aliexpress.com`) и `port` (по умолчанию `80`) для настройки подключения к API.
+    * Инициализирует базовые параметры запроса:
+        * `app_signature`: Вероятно, подпись приложения, необходимая для авторизации.
+        * `promotion_link_type`: Тип промо-ссылки (например, для разных типов рекламных кампаний).
+        * `source_values`: Дополнительные параметры для ссылки.
+        * `tracking_id`: Идентификатор отслеживания для анализа статистики.
+* **Метод `getapiname`:** Возвращает имя API-метода: `aliexpress.affiliate.link.generate`.  Это поле, скорее всего, используется для идентификации конкретного API-запроса.
 
-**Атрибуты:**
+**Дополнительные замечания:**
 
-* `domain`: Строка, содержащая доменное имя API (по умолчанию `api-sg.aliexpress.com`).
-* `port`: Целое число, представляющее порт API (по умолчанию `80`).
-* `app_signature`:  Вероятно, подпись приложения, используемая для аутентификации.
-* `promotion_link_type`: Тип промо-ссылки.
-* `source_values`:  Данные источника, используемые для отслеживания.
-* `tracking_id`:  Идентификатор отслеживания.
+* Непонятно, что хранится в переменных `MODE = 'debug'` – это вероятно конфигурационные параметры для отладки.
+*  Не хватает документации к параметрам `app_signature`, `promotion_link_type`, `source_values`, `tracking_id`. Без дополнительного кода (и, возможно, документации к API AliExpress) трудно определить точное значение этих параметров.
+*  Файл не содержит реализации обработки запроса (например, создание HTTP-запроса, обработка ответа). Он только определяет структуру запроса.  Для полноценной работы понадобится  дополнительный код, например, в `rest.py`, `base.py` или других модулях.
 
-**Методы:**
+**Рекомендации для улучшения документации:**
 
-* `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса. Инициализирует атрибуты класса и вызывает конструктор базового класса `RestApi`.
-* `getapiname(self)`: Возвращает имя API-метода, используемого для генерации аффилиатной ссылки (`aliexpress.affiliate.link.generate`).
-
-**Использование:**
-
-Для использования класса необходимо создать экземпляр `AliexpressAffiliateLinkGenerateRequest`, задав необходимые параметры (например, `app_signature`, `promotion_link_type`, `source_values`, `tracking_id`). Затем, используя методы базового класса `RestApi`, можно отправить запрос к API и получить ответ.
-
-**Примечания:**
-
-* Код предполагает наличие базового класса `RestApi`, который отвечает за взаимодействие с API.  В документации необходимо указать  функциональность этого класса для полной картины.
-* Комментарии `""" module: src.suppliers.aliexpress.api.skd.api.rest """` и `""" Created by auto_sdk on 2020.03.09 """` указывают на автоматическую генерацию кода и дату создания.  Это полезная информация для понимания происхождения файла.
-* Вероятно, необходимо заполнять атрибуты `app_signature`, `promotion_link_type`, `source_values` и `tracking_id` перед использованием метода `RestApi.execute` для отправки запроса.
-* Необходимо уточнить тип данных для каждого атрибута и описать, как их использовать в запросе.
-*  Добавьте пример использования класса, чтобы продемонстрировать, как отправлять запрос и обрабатывать ответ.
-
-
-**Пример использования (неполный):**
-
-```python
-from ...aliexpress.api.skd.api.rest import AliexpressAffiliateLinkGenerateRequest
-
-
-request = AliexpressAffiliateLinkGenerateRequest()
-request.app_signature = "your_app_signature"
-request.promotion_link_type = "type_of_link"
-# ... другие значения
-
-response = request.execute() # Предполагается, что execute есть в RestApi
-
-# Обработка ответа...
+* Добавить docstrings к методам `__init__` и `getapiname` для описания параметров и их назначения.
+* Добавить описание, как использовать этот класс с конкретными параметрами, возможно, с примерами.
+* Указать, что ожидается от `source_values`,  `promotion_link_type` и  `app_signature` - каков их формат, структура и т.д.
+* Подключить информацию о документации к API AliExpress, чтобы читатель мог понять формат запроса и возможные значения аргументов.
 ```

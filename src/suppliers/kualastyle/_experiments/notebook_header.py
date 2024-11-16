@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/kualastyle/_experiments/notebook_header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.kualastyle._experiments """
 MODE = 'debug'

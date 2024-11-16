@@ -1,5 +1,6 @@
 ## \file hypotez/src/bots/openai_bots/chatgpt-telegram/src/utils.js
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.bots.openai_bots.chatgpt-telegram.src """
 MODE = 'debug'

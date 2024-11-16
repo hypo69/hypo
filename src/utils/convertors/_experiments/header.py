@@ -1,5 +1,6 @@
 ## \file hypotez/src/utils/convertors/_experiments/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.utils.convertors._experiments """
 MODE = 'debug'

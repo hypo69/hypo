@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/edge/extentions/try_path_1.3.5/pages/show_all_results.js
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.edge.extentions.try_path_1.3.5.pages """
 MODE = 'debug'

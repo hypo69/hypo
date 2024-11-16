@@ -1,29 +1,51 @@
 ## \file hypotez/src/endpoints/kazarinov/bot.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+""" module: src.endpoints.kazarinov 
 
-""" module: src.endpoints.kazarinov """
-MODE = 'debug'
-""" module: src.endpoints.kazarinov """
-MODE = 'debug'
-""" Kazarinov's specific bot with customized behavior."""
+### KazarinovTelegramBot
 
+Описание:
+Модуль реализует Telegram-бота для проекта Kazarinov, поддерживающего 
+различные сценарии обработки команд и сообщений. Бот взаимодействует 
+с парсером Mexiron и моделью Google Generative AI, а также поддерживает 
+обработку текстовых сообщений, документов и URL.
+
+Основные возможности:
+1. Инициализация и настройка Telegram-бота на основе конфигурационного JSON-файла.
+2. Регистрация команд и обработчиков сообщений.
+3. Маршрутизация текстовых сообщений по URL с возможностью обработки ссылок на OneTab и поставщиков.
+4. Использование объекта Mexiron для парсинга данных товаров от поставщиков и генерации прайс-листов.
+5. Генерация ответов на сообщения через Google Generative AI.
+6. Логирование сообщений пользователей и их дальнейшая обработка.
+
+Зависимости:
+- pydantic: для работы с конфигурационными моделями.
+- telegram.ext: для создания и управления Telegram-ботом.
+- GoogleGenerativeAI: для генерации ответов на сообщения пользователей.
+- Mexiron: для парсинга и обработки данных товаров поставщиков.
+- Driver (Chrome | Edge | Firefox | Playwright): обеспечивает работу с целeвыми HTML.
+"""
+
+MODE = 'debug'
 import asyncio
 import json
 import random
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 
-from __init__ import gs
-from src.endpoints.bots.telegram import TelegramBot
+import header
+from src.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.parser_onetab import fetch_target_urls_onetab
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
 from src.utils.file import recursively_read_text_files, save_text_file
 from src.utils.string.url import is_url
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
 
@@ -52,7 +74,7 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
     questions_list: List[str]
     timestamp: str = Field(default_factory=lambda: gs.now)
 
-    def __init__(self, config_path: str):
+    def __init__(self, config:Optional[dict]):
         # Загружаем конфигурацию из JSON
         with open(config_path, "r", encoding="utf-8") as file:
             config_data = json.load(file)

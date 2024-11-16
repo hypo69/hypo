@@ -1,12 +1,12 @@
 ## \file hypotez/src/endpoints/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
-""" module: src.endpoints.kazarinov.scenarios """
-MODE = 'debug'
-""" module: src.endpoints.kazarinov.scenarios """
-MODE = 'debug'
-"""! Module for handling suppliers (morlevi, grandadvance, ivory, ksp) product data extraction and saving."""
+""" module: src.endpoints.kazarinov.scenarios 
 
+"""
+
+MODE = 'debug'
 import asyncio
 import random
 import time
@@ -36,7 +36,12 @@ from src.utils import pprint
 from src.logger import logger
 
 class Mexiron:
-    """! Handles Morlevi product extraction, parsing, and saving processes."""
+    """! Handles Suupliers 
+        https://morlevi.co.il,
+       https://ivory.co.il,
+       https://ksp.co.il
+       https://grandavance.co.il
+       product extraction, parsing, and saving processes."""
     
     d: Driver
     base_path: Path

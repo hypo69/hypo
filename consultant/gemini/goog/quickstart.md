@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/goog/quickstart.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.goog """
 MODE = 'debug'

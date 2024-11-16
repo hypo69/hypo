@@ -1,122 +1,60 @@
 ```markdown
-# js.py
+# Модуль `hypotez/src/webdriver/javascript/js.py`
 
-```python
-# -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.webdriver.javascript """
+Этот модуль содержит вспомогательные функции для работы с JavaScript через Selenium WebDriver в проекте Hypotez. Он предоставляет удобный интерфейс для выполнения JavaScript-кода в контексте браузера и взаимодействия с DOM.
 
-"""Module containing JavaScript helper functions for Selenium WebDriver.
+## Класс `JavaScript`
 
-This module provides utility functions to interact with JavaScript through Selenium WebDriver.
+Класс `JavaScript` предоставляет методы для выполнения JavaScript-кода в браузере, связанном с экземпляром Selenium WebDriver.
 
-Examples:
-    # Initialize JavaScript helper (assuming 'driver' is a valid WebDriver instance)
-    js_helper = JavaScript(driver)
+### Методы класса `JavaScript`:
 
-    # Use JavaScript methods
-    js_helper.window_focus()
-    referrer = js_helper.get_referrer()
-    is_visible = js_helper.unhide_DOM_element(some_element)  # Handles potential errors
-"""
+* **`__init__(self, driver)`:**
+    * Инициализирует объект `JavaScript` с экземпляром `Driver` Selenium WebDriver.
+    * `driver` (`src.webdriver.Driver`): Экземпляр Selenium WebDriver, используемый для выполнения JavaScript-кода.
 
-from __init__ import gs
-from src.logger import logger
+* **`unhide_DOM_element(self, element)`:**
+    * Делает невидимый элемент DOM видимым, изменяя его свойства стиля.
+    * `element`: Элемент WebElement, который необходимо сделать видимым.
+    * Возвращает `bool`: `True`, если скрипт успешно выполнился, `False` в противном случае.
+    * **Описание:** Метод изменяет свойства `opacity`, `transform` (и его префиксы для различных браузеров) элемента, чтобы сделать его видимым.  Также, вызывает `scrollIntoView(true)` для прокрутки элемента в видимую область. Важно, что этот метод предполагает, что элемент имеет свойства, которые можно изменить, для достижения видимости.  Это критично для корректной работы.  Возможные ошибки при выполнении должны ловиться и логироваться.
 
+* **`ready_state(self)`:**
+    * Возвращает состояние загрузки документа.
+    * Возвращает `str`:  `'loading'` если документ загружается, `'complete'` если загрузка завершена.  Если возникает ошибка при получении состояния, возвращает пустую строку и логирует ошибку.
 
-class JavaScript:
-    """Provides JavaScript utility functions for interacting with a web page."""
+* **`window_focus(self)`:**
+    * Переводит фокус браузера на текущее окно.
+    * **Описание:** Пытается перевести фокус на текущее браузерное окно. Ловит исключения и логирует их.
 
-    def __init__(self, driver):
-        """Initializes the JavaScript helper with a Selenium WebDriver instance.
+* **`get_referrer(self)`:**
+    * Возвращает URL предыдущей страницы.
+    * Возвращает `str`: URL предыдущей страницы, или пустую строку, если эта информация недоступна. Ловит исключения и логирует их.
 
-        Args:
-            driver: Selenium WebDriver instance to execute JavaScript.  Must be a valid WebDriver object.
-        """
-        if not hasattr(driver, 'execute_script'):
-            raise TypeError("Invalid driver object.  Must be a Selenium WebDriver instance.")
-
-        self.driver = driver
-
-    def unhide_DOM_element(self, element) -> bool:
-        """Makes an invisible DOM element visible by modifying its style properties.
-
-        Args:
-            element: The WebElement object to make visible.  Must be a valid WebElement.
-
-        Returns:
-            bool: True if the script executes successfully and the element is visible (or already was). False otherwise.  Handles exceptions.
-        """
-        script = """
-        try {
-            arguments[0].style.opacity = 1;
-            arguments[0].style.transform = 'translate(0px, 0px) scale(1)';
-            arguments[0].style.MozTransform = 'translate(0px, 0px) scale(1)';
-            arguments[0].style.WebkitTransform = 'translate(0px, 0px) scale(1)';
-            arguments[0].style.msTransform = 'translate(0px, 0px) scale(1)';
-            arguments[0].style.OTransform = 'translate(0px, 0px) scale(1)';
-            arguments[0].scrollIntoView(true);
-            return true;
-        } catch (error) {
-            console.error("Error within script:", error);  // Log the error in the browser's console
-            return false;
-        }
-        """
-        try:
-            result = self.driver.execute_script(script, element)
-            return bool(result)  # Explicitly handle boolean result
-        except Exception as ex:
-            logger.error("Error in unhide_DOM_element:", ex)
-            return False
-
-    @property
-    def ready_state(self) -> str:
-        """Retrieves the document loading status.
-
-        Returns:
-            str: 'loading' if the document is still loading, 'complete' if loading is finished, or an empty string on error.
-        """
-        try:
-            return self.driver.execute_script("return document.readyState;")
-        except Exception as ex:
-            logger.error("Error retrieving document.readyState:", ex)
-            return ""
+* **`get_page_lang(self)`:**
+    * Возвращает язык страницы.
+    * Возвращает `str`: Код языка страницы, или пустую строку, если эта информация недоступна. Ловит исключения и логирует их.
 
 
-    # ... (other methods remain the same, with minor improvements)
+## Модульные тесты
+
+Для обеспечения качества кода, рекомендуется написать модульные тесты для проверки корректной работы методов класса `JavaScript`.  Тесты должны охватывать различные сценарии, включая успешные и неудачные случаи выполнения JavaScript-кода.
 
 
-```
+## Логирование
 
-**Improvements and Explanation:**
-
-* **Error Handling:** The `unhide_DOM_element` method now includes a `try...except` block *within* the JavaScript code.  This crucial change catches potential errors within the JavaScript itself (e.g., if the element is not found or if the script encounters another problem).  It logs the error to the browser's console *and* returns `False` to signal that the operation failed in Python.  The Python `try...except` block also now catches any errors in the WebDriver interaction.
-
-* **Type Checking:** Added a check in `__init__` to ensure `driver` is a valid WebDriver instance.  This prevents cryptic errors later on.
-
-* **Explicit Boolean Handling:** The `unhide_DOM_element` method now uses `bool(result)` to convert the JavaScript result to a Python boolean, which is more explicit and robust.
-
-* **Docstring Enhancements:** Docstrings are improved for clarity and to better explain the expected return values and potential issues.  Critically, the documentation now explicitly mentions that the driver object must be a valid WebDriver instance.
-
-* **Logging to Browser Console:** The script logs the error to the browser's console, which is extremely helpful for debugging and understanding exactly what is going wrong on the web page's side.
+Модуль использует класс `logger` для записи сообщений об ошибках, что очень важно для отладки и анализа проблем при работе с Selenium WebDriver.  Рекомендуется указать уровень детализации логирования.
 
 
-These changes make the code more robust, reliable, and easier to maintain by handling potential errors effectively.  The addition of logging to the console significantly improves debugging. Remember to install the necessary Selenium libraries if you haven't already.
+## Дополнения
+
+* **Документация к параметрам:** Добавьте документацию к методам и атрибутам, чтобы объяснить, какие типы данных ожидаются в качестве параметров и возвращаемого значения.
+* **Обработка исключений:** Улучшите обработку исключений, предоставляя более информативные сообщения об ошибках.
+* **Конкретизация ошибок:** Уточните типы ожидаемых исключений и как они обрабатываются.
+* **Документация к `__init__`:**  Добавьте описание к `__init__`, в том числе, что необходимо использовать `src.webdriver.Driver`.
+* **Документирование `gs`:**  Если `gs` импортируется из `__init__.py`, необходимо указать, что это.
+* **Проверка на `None`:** При обращении к `document.referrer` или `document.documentElement.lang`, необходимо проверить на `None`, перед возвратом значения.
 
 
-```python
-# Example usage (assuming you have a WebDriver instance called 'driver')
-# ... (code to initialize driver)
-
-# Example of how to use the unhide_DOM_element method
-js_helper = JavaScript(driver)
-element_to_unhide = driver.find_element(By.ID, "someElement") # Replace with actual element finding
-
-if js_helper.unhide_DOM_element(element_to_unhide):
-    print("Element successfully unhidden.")
-else:
-    print("Failed to unhide the element.")
-
-
+Этот улучшенный документ лучше отображает функциональность и помогает понять, как использовать модуль `js.py` в проекте.
 ```

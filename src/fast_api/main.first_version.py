@@ -1,5 +1,6 @@
 ## \file hypotez/src/fast_api/main.first_version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.fast_api """
 MODE = 'debug'

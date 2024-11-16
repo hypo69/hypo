@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateFeaturedpromoProductsGetRequest.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress.api.skd.api.rest """
 MODE = 'debug'

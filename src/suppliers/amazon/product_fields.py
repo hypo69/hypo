@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/amazon/product_fields.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.amazon """
 MODE = 'debug'

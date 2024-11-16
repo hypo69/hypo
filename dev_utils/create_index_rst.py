@@ -1,5 +1,6 @@
 ## \file hypotez/dev_utils/create_index_rst.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: dev_utils """
 MODE = 'debug'

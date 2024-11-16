@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/aliexpress/gapi/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.aliexpress.gapi """
 MODE = 'debug'

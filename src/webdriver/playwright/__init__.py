@@ -1,5 +1,6 @@
 ## \file hypotez/src/webdriver/playwright/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.webdriver.playwright """
 MODE = 'debug'

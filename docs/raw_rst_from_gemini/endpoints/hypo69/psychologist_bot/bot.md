@@ -15,7 +15,7 @@ from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 
 from __init__ import gs
-from src.endpoints.bots.telegram import TelegramBot
+from src.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import read_text_file, recursive_read_text_files, save_text_file

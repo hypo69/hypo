@@ -1,42 +1,54 @@
 ```markdown
-# Модуль `AliexpressAffiliateFeaturedpromoGetRequest`
+# Файл: AliexpressAffiliateFeaturedpromoGetRequest.py
 
-Файл: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\_examples\rest\AliexpressAffiliateFeaturedpromoGetRequest.py`
-
-**Роль:** `doc_creator`
+Файл расположен по пути: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\_examples\rest\AliexpressAffiliateFeaturedpromoGetRequest.py`
 
 **Описание:**
 
-Этот модуль определяет класс `AliexpressAffiliateFeaturedpromoGetRequest`, представляющий REST API запрос для получения данных о промоакциях на AliExpress. Класс наследуется от базового класса `RestApi`.
+Этот Python-файл определяет класс `AliexpressAffiliateFeaturedpromoGetRequest`, который, по всей видимости, представляет собой запрос к API AliExpress для получения данных о промоакциях, используемых в партнерской программе. Класс наследуется от базового класса `RestApi`.
 
-**Класс `AliexpressAffiliateFeaturedpromoGetRequest`**
+**Класс `AliexpressAffiliateFeaturedpromoGetRequest`:**
 
-Данный класс предоставляет методы для взаимодействия с API AliExpress,  получения списка промоакций.
+* **Инициализация (`__init__`):**
+    * Принимает `domain` (по умолчанию `api-sg.aliexpress.com`) и `port` (по умолчанию `80`) для настройки соединения с API.
+    * Инициализирует `app_signature` и `fields` как `None`.  Эти переменные, вероятно, содержат подпись приложения и поля для запроса.
 
-**Атрибуты:**
+* **Метод `getapiname`:**
+    * Возвращает строку `aliexpress.affiliate.featuredpromo.get`, которая, вероятно, является именем API-метода, вызываемого для получения данных.
 
-* `domain`: Строка, определяющая домен API (по умолчанию `api-sg.aliexpress.com`).
-* `port`: Целое число, определяющее порт API (по умолчанию `80`).
-* `app_signature`:  (None)  Значение подписи приложения (возможно, для аутентификации).
-* `fields`: (None)  Дополнительные поля для запроса (например, фильтры).
+**Комментарии:**
 
-**Методы:**
+* Наличие переменной `MODE = 'debug'` указывает на то, что файл предназначен для отладки.
+* Документация в формате docstrings требует расширения.  Необходимо дополнить информацию о каждом атрибуте и методе, включая их назначение, типы аргументов, возвращаемые значения и примеры использования.
+* Отсутствует описание используемых параметров, таких как `app_signature` и `fields`.  Важно указать, как эти параметры используются в запросе к API.
 
-* `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса. Инициализирует базовый класс `RestApi` и устанавливает значения по умолчанию для `domain` и `port`.
-* `getapiname(self)`: Возвращает имя API метода (`aliexpress.affiliate.featuredpromo.get`).
+**Рекомендации:**
 
-**Использование:**
-
-Для использования класса необходимо создать его экземпляр, передав необходимые параметры (например,  `domain`),  а затем вызвать методы для выполнения запроса к API AliExpress.
-
-
-**Примечание:**
-
-* Код предполагает наличие базового класса `RestApi`. Для полной функциональности необходим код этого класса.
-*  Документация не содержит информации о параметрах, возвращаемых методом, и о том, как обрабатывать полученные данные.
-* Необходимо учесть возможные варианты аутентификации и передачи параметров запроса.
-* Комментарии в коде могут быть дополнены более подробной информацией о функциональности запроса и ожидаемых параметрах.
-* В `` указан интерпретатор Python. Это важно для запуска файла.
+* Добавьте подробные docstrings для класса и методов, описывающие назначение, аргументы, возвращаемые значения и примеры.
+* Укажите тип данных, ожидаемых для `app_signature` и `fields`.
+* Добавьте описание возможных ошибок, которые могут быть возвращены API.
+* Приведите пример использования данного класса.
 
 
+**Пример использования (гипотетический):**
+
+```python
+from aliexpress.api._examples.rest import AliexpressAffiliateFeaturedpromoGetRequest
+
+# Создание экземпляра класса
+request = AliexpressAffiliateFeaturedpromoGetRequest()
+
+# Установка значений для подписи приложения и полей
+request.app_signature = "your_app_signature"
+request.fields = {"param1": "value1", "param2": "value2"}
+
+# Выполнение запроса
+response = request.execute()  # Должен быть реализован метод execute в базовом классе RestApi
+
+# Обработка ответа
+if response.success:
+    # Обработка данных из ответа
+    print(response.data)
+else:
+    print("Ошибка: ", response.error)
 ```

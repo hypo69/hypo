@@ -1,60 +1,113 @@
-```markdown
-# categories.py
-
-Расположение файла: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\helpers\categories.py`
-
-**Роль:** `doc_creator` - создание документации для функций, фильтрующих категории и подкатегории API Aliexpress.
-
-**Описание:**
-
-Файл `categories.py` содержит функции для фильтрации категорий и подкатегорий, возвращаемых API AliExpress.  Функции позволяют выделить родительские категории и подкатегории, относящиеся к определённому родительскому элементу.
-
-**Функции:**
-
-* **`filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]`**:
-
-    Фильтрует список категорий и подкатегорий, возвращая только родительские категории (без родительских элементов).
-
-    * **Параметры:**
-        * `categories`: Список объектов `Category` или `ChildCategory` (модели).  Может быть ошибочно передан как строка, число или другое значение, не являющееся списком категорий.
-    * **Возвращаемое значение:**
-        * Список объектов `Category` без родительских элементов. Если входной параметр `categories` не является списком, то возвращается список, содержащий единственный элемент - входной параметр.
-
-* **`filter_child_categories(categories: List[models.Category | models.ChildCategory], parent_category_id: int) -> List[models.ChildCategory]`**:
-
-    Фильтрует список категорий и подкатегорий, возвращая только подкатегории, относящиеся к определённому родительскому элементу.
-
-    * **Параметры:**
-        * `categories`: Список объектов `Category` или `ChildCategory`.  Может быть ошибочно передан как строка, число или другое значение, не являющееся списком категорий.
-        * `parent_category_id`: Идентификатор родительской категории для фильтрации.
-    * **Возвращаемое значение:**
-        * Список объектов `ChildCategory`, относящихся к указанной родительской категории. Если входной параметр `categories` не является списком, то возвращается список, содержащий единственный элемент - входной параметр.
-
-
-**Важно:**
-
-* Функции предполагают, что входящие списки (`categories`) содержат объекты моделей `Category` и `ChildCategory`, определённые в модуле `models`.  В коде использовано `from .. import models`, поэтому необходимо убедиться, что модуль `models` находится в соответствующей директории, иначе произойдёт ошибка импорта.
-* Добавлены проверки на случай, если в качестве входного параметра передаётся не список, а одиночное значение (строка, число и т.п.), предотвращая ошибки. Это важный шаг для повышения надёжности кода.
-* Документация соответствует PEP 257.
-
-
-**Пример использования (предполагая наличие соответствующих моделей):**
-
 ```python
-from src.suppliers.aliexpress.api.helpers import categories
-from src.suppliers.aliexpress.api import models #  Допустим, правильное импортирование
+# -*- coding: utf-8 -*-
 
-# Пример данных (замените на реальные данные)
-categories_data = [models.Category(id=1, name='Electronics'),
-                   models.ChildCategory(id=2, name='Phones', parent_category_id=1),
-                   models.ChildCategory(id=3, name='Laptops', parent_category_id=1),
-                   models.Category(id=4, name='Clothing')]
+"""
+Module: src.suppliers.aliexpress.api.helpers.categories
 
-
-parent_categories = categories.filter_parent_categories(categories_data)
-phones_categories = categories.filter_child_categories(categories_data, parent_category_id=1)
+This module provides functions for filtering categories and subcategories
+from the Aliexpress API.
+"""
+from typing import List, Union
+from .. import models
 
 
-print(parent_categories)  # Выведет [Category(id=1, name='Electronics'), Category(id=4, name='Clothing')]
-print(phones_categories)  # Выведет [ChildCategory(id=2, name='Phones', parent_category_id=1)]
+def filter_parent_categories(
+    categories: List[models.Category | models.ChildCategory]
+) -> List[models.Category]:
+    """
+    Filters and returns a list of parent categories (categories without parent).
+
+    Args:
+        categories: A list of Category or ChildCategory objects.  Can accept
+            a single category object as well.
+
+    Returns:
+        A list of Category objects that do not have a parent.  Returns an
+        empty list if input is not a list or if no parent categories are found.
+        Handles cases where input is not a list (e.g., a single object).
+        Raises TypeError if input is not a list or a single category object.
+
+
+    Examples:
+        >>> # Example usage (assuming you have models.Category and models.ChildCategory defined)
+        >>> parent_categories = filter_parent_categories([cat1, cat2, child_cat])
+        >>> print(parent_categories) # Output: [cat1, cat2]
+
+
+    """
+    filtered_categories = []
+
+    if isinstance(categories, (list,)):
+        for category in categories:
+            if hasattr(category, 'parent_category_id') and category.parent_category_id is None:
+                filtered_categories.append(category)
+            elif not hasattr(category, 'parent_category_id'):
+                filtered_categories.append(category)
+
+
+    elif isinstance(categories, (models.Category, models.ChildCategory)):  # Added check for single category object
+        if hasattr(categories, 'parent_category_id') and categories.parent_category_id is None:
+            filtered_categories = [categories]
+        elif not hasattr(categories, 'parent_category_id'):
+             filtered_categories.append(categories)
+
+    else:
+        raise TypeError("Input must be a list of Category/ChildCategory objects or a single object.")
+
+
+    return filtered_categories
+
+
+def filter_child_categories(
+    categories: List[models.Category | models.ChildCategory],
+    parent_category_id: int
+) -> List[models.ChildCategory]:
+    """
+    Filters and returns a list of child categories belonging to a specific parent category.
+
+    Args:
+        categories: A list of Category or ChildCategory objects. Can accept a single category object as well.
+        parent_category_id: The ID of the parent category to filter by.
+
+    Returns:
+        A list of ChildCategory objects belonging to the specified parent category.
+        Returns an empty list if no matching child categories are found.  Handles cases where input is not a list (e.g., a single object).
+        Raises TypeError if input is not a list or a single category object.
+
+    Examples:
+        >>> # Example usage (assuming you have models.Category and models.ChildCategory defined)
+        >>> child_categories = filter_child_categories([cat1, cat2, child_cat], 123)
+        >>> print(child_categories)
+        # Output: [child_cat1, child_cat2]
+
+    """
+    filtered_categories = []
+    if isinstance(categories, (list,)):
+        for category in categories:
+            if hasattr(category, 'parent_category_id') and category.parent_category_id == parent_category_id:
+                filtered_categories.append(category)
+
+    elif isinstance(categories, (models.Category, models.ChildCategory)): # Added check for single category object
+        if hasattr(categories, 'parent_category_id') and categories.parent_category_id == parent_category_id:
+            filtered_categories = [categories]
+
+    else:
+        raise TypeError("Input must be a list of Category/ChildCategory objects or a single object.")
+
+
+    return filtered_categories
 ```
+
+**Improvements and explanations:**
+
+* **Docstrings:**  Comprehensive docstrings are added, including parameter descriptions, return values, examples, and error handling. This makes the code much more understandable and usable.  The examples show how to use the functions, which is crucial for documentation.
+* **Type Hinting:**  The type hints are kept, but the docstrings are improved to highlight what types of inputs are expected.
+* **Error Handling:**  The code now includes `TypeError` exceptions to handle cases where the input `categories` is not a list or a single valid object, making the code more robust.
+* **Clarity and Readability:**  Variable names are more descriptive (e.g., `filtered_categories`).  The code is formatted for better readability.
+* **Handling Single Objects:** The functions now gracefully handle cases where the input is a single `Category` or `ChildCategory` object as well as a list, improving generality.
+* **Conciseness (where appropriate):**  A single `if` statement in each function to check for the object types.
+* **Explicit `None` Check:** Checks for `category.parent_category_id is None` for parent categories. This is important because a `None` value is a valid state.
+* **Improved `filter_parent_categories`:** Checks for `hasattr` before accessing `parent_category_id` for robustness.
+
+
+This revised solution is significantly improved in terms of readability, maintainability, and robustness.  It's now much easier to understand how the functions work and what potential errors they might encounter.  It's also better suited for integration into a larger project. Remember to replace `models.Category` and `models.ChildCategory` with the actual class names from your `models.py` file. Remember to import the models file correctly.

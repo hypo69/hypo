@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/ai/myai/traffic_light.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.ai.myai """
 MODE = 'debug'

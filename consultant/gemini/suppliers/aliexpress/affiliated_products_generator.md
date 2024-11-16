@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/suppliers/aliexpress/affiliated_products_generator.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.suppliers.aliexpress """
 MODE = 'debug'

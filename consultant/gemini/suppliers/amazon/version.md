@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/suppliers/amazon/version.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.suppliers.amazon """
 MODE = 'debug'

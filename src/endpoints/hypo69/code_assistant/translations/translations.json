@@ -1,0 +1,22 @@
+{
+  "roles": {
+    "code_checker": {
+      "ru": "Проверка кода",
+      "en": "Code checking",
+      "fr": "Vérification du code",
+      "de": "Codeprüfung"
+    },
+    "doc_creator": {
+      "ru": "Создание документации",
+      "en": "Documentation creation",
+      "fr": "Création de documentation",
+      "de": "Dokumentenerstellung"
+    },
+    "qa": {
+      "ru": "Тестирование",
+      "en": "Testing",
+      "fr": "Test",
+      "de": "Testen"
+    }
+  }
+}

@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/fast_api/gemini/backend/main.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.fast_api.gemini.backend """
 MODE = 'debug'

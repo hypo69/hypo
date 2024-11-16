@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/cdata/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.cdata """
 MODE = 'debug'

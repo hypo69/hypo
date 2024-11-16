@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/start_posting_my_groups.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.advertisement.facebook """
 MODE = 'debug'

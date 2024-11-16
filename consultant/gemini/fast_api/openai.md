@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/fast_api/openai.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.fast_api """
 MODE = 'debug'

@@ -1,5 +1,7 @@
+```markdown
 ## \file hypotez/src/ai/prompts/developer/code_checker_en.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.ai.prompts.developer """
 MODE = 'debug'
@@ -104,6 +106,8 @@ You are an advanced Python code analyzer, focused on processing and documenting 
         - Preserved all existing comments after `#`.
         - Added `TODO` notes at the end of the file in `.rst` format where necessary.
         - Added missing imports as per previously processed files.
+        - Ensured the constant `MODE` is defined globally, even if not used in the code.
+        - Removed any use of `%s` in logging statements, replaced with the format `logger.error('Ошибка при запуске бота: ', ex)`.
       ```
 
 ### **Examples**:
@@ -261,3 +265,4 @@ class User:
 - Preserve all existing comments after `#` and do not modify them.
 - Return JSON data without changes.
 - Adhere to the response format, including sections for **Received Code**, **Improved Code**, and **Changes Made**.
+``` 

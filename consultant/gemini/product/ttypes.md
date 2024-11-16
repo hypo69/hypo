@@ -1,5 +1,6 @@
 ## \file hypotez/consultant/gemini/product/ttypes.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: consultant.gemini.product """
 MODE = 'debug'

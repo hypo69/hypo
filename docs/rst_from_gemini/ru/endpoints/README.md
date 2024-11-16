@@ -1,49 +1,34 @@
 ```markdown
-### **endpoints Module**: Final Consumer Endpoints
+### **Модуль `endpoints`**: Конечные точки доступа к данным
 
-The `endpoints` module serves as a collection of endpoint modules that interact with external services and systems, acting as the main interface for data exchange with final consumers.  It includes the following submodules:
+Модуль `endpoints` содержит набор модулей, взаимодействующих с внешними сервисами и системами, являясь основным интерфейсом для обмена данными с конечными потребителями. Он включает следующие подмодули:
 
 1. **prestashop**
-   Provides integration with the PrestaShop e-commerce platform.  This includes functions for product and order management, enabling seamless data exchange between the application and the PrestaShop system.
+   Обеспечивает интеграцию с платформой электронной коммерции PrestaShop. Включает функции для управления продуктами и заказами, позволяя обеспечить бесшовный обмен данными между приложением и системой PrestaShop.
 
 2. **bots**
-   Manages bot integrations, supporting platforms like Telegram and Discord.  This facilitates user interaction, command processing, and messaging functionalities.
+   Управляет интеграциями с ботами, поддерживая платформы, такие как Telegram и Discord.  Это облегчает взаимодействие с пользователем, обработку команд и обмен сообщениями.
 
 3. **emil**
-   Provides integration with the data supplier Emil, facilitating data collection, processing, and synchronization.  Clarify the *specific* data types and formats exchanged.
+   Обеспечивает интеграцию с поставщиком данных Emil, позволяя собирать, обрабатывать и синхронизировать данные.  **Уточните** типы и форматы данных, которые обмениваются.  Например, укажите структуры JSON или CSV, используемые для обмена.
 
 4. **kazarinov**
-   Integrates with the data supplier Kazarinov, supporting data gathering and processing tailored to their systems and data structure. Specify the *nature* of the data from Kazarinov and how it's processed.
+   Интегрируется с поставщиком данных Kazarinov, поддерживая сбор и обработку данных, адаптированные к их системам и структуре данных.  **Опишите** характер данных, получаемых от Kazarinov, и как они обрабатываются. Например, указывается, что данные представляют собой структурированные таблицы, которые импортируются в базу данных, или обрабатываются и трансформируются в другой формат перед использованием в приложении.
 
 
-**Example Usage (Illustrative):**
+**Пример использования (иллюстративный):**
 
 ```python
-# Example usage (replace with actual module imports and methods)
+# Пример использования (замените импорты и методы на реальные)
 from endpoints.prestashop import getProductList
 
 products = getProductList(shop_id=123)
 print(products)
 
 
-# Example for bots
+# Пример для ботов
 from endpoints.bots import send_message_to_telegram
 
-send_message_to_telegram(user_id=456, message="Order confirmed!")
+send_message_to_telegram(user_id=456, message="Заказ подтвержден!")
 ```
-
-**Further Considerations:**
-
-* **Error Handling:** Detail how errors are handled and logged within each submodule.  What exceptions are caught and how are failures communicated?
-* **Data Validation:** Describe data validation procedures used to ensure data integrity and correctness.
-* **Authentication:** If authentication is required for interacting with external services, detail the methods used.
-* **Rate Limiting:** Describe how rate limiting is managed for external services to avoid exceeding API quotas.
-* **Dependencies:** Explicitly list any external libraries or dependencies required for each submodule.  This will help maintainability.
-* **Data Structure:** Briefly describe the data structures used for exchanging data with each external service.
-
-**Future Enhancements:**
-
-* [Add potential future enhancements here, e.g., support for new platforms, improved error handling, etc.]
-
-
 ```

@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/prestashop/_experiments/ide_experiments_category.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.prestashop._experiments """
 MODE = 'debug'

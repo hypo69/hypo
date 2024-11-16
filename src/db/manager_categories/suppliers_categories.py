@@ -1,5 +1,6 @@
 ## \file hypotez/src/db/manager_categories/suppliers_categories.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.db.manager_categories """
 MODE = 'debug'

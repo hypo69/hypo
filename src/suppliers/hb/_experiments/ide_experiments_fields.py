@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/hb/_experiments/ide_experiments_fields.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.hb._experiments """
 MODE = 'debug'

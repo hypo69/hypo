@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/prestashop/_doc/overwiev.md
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.prestashop._doc """
 MODE = 'debug'

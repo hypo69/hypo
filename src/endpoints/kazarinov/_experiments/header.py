@@ -1,5 +1,6 @@
 ## \file hypotez/src/endpoints/kazarinov/_experiments/header.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.endpoints.kazarinov._experiments """
 MODE = 'debug'

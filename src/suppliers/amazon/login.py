@@ -1,5 +1,6 @@
 ## \file hypotez/src/suppliers/amazon/login.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.amazon """
 MODE = 'debug'

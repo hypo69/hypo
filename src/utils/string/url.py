@@ -1,5 +1,6 @@
 ## \file hypotez/src/utils/string/url.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.utils.string """
 MODE = 'debug'

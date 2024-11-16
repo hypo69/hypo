@@ -1,29 +1,56 @@
 ```markdown
-# Файл: hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
+# hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
 
-Расположение: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\models\hotproducts.py`
+Файл: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\api\models\hotproducts.py`
+Роль: `doc_creator`
 
-**Роль:** `doc_creator`
+## Модуль: src.suppliers.aliexpress.api.models
 
-**Описание:**
+Этот модуль содержит классы для работы с данными, полученными из API AliExpress.  В данном файле определен класс `HotProductsResponse`.
 
-Этот модуль определяет класс `HotProductsResponse`, который представляет ответ API для получения горячих продуктов с AliExpress.
+```python
+# -*- coding: utf-8 -*-
 
-**Содержание:**
-
-Класс `HotProductsResponse`:
-
-* `current_page_no`: Целое число, представляющее номер текущей страницы.
-* `current_record_count`: Целое число, представляющее количество записей на текущей странице.
-* `total_record_count`: Целое число, представляющее общее количество записей.
-* `products`: Список объектов `Product`.  Содержит список продуктов, полученных на текущей странице.
+from .product import Product
+from typing import List
 
 
-**Связанные классы/модули:**
+class HotProductsResponse:
+    """
+    Класс для представления ответа от API AliExpress с горячими товарами.
 
-* `Product`: Представляет объект продукта. Предполагается, что этот класс определен в модуле `.product.py`
-
-**Примечание:**
-
-Файл содержит комментарии, определяющие его как модуль, но не определяет необходимые типы данных или поведения класса `HotProductsResponse`.  Этот файл - шаблон, и рекомендуется добавить более подробную документацию, включая примеры использования и детали о формате данных, возвращаемых API.
+    Атрибуты:
+        current_page_no: int
+            Номер текущей страницы.
+        current_record_count: int
+            Количество записей на текущей странице.
+        total_record_count: int
+            Общее количество записей.
+        products: List[Product]
+            Список объектов `Product`, представляющих горячие товары.
+    """
+    current_page_no: int
+    current_record_count: int
+    total_record_count: int
+    products: List[Product]
 ```
+
+**Примечания:**
+
+* Класс `Product` должен быть определен в файле `.product.py` в том же каталоге, и его документация должна быть доступна, чтобы предоставить полную информацию пользователю.
+*  Комментарии в коде должны быть на русском языке для лучшего понимания.
+*  Добавлен подробный `docstring` для класса `HotProductsResponse`, описывающий назначение каждого атрибута.
+*  Указано, что `products` — это список объектов `Product`, что требует наличия `Product` в импорте.
+* Удалены дублирующиеся строки `MODE = 'debug'` — это переменная, скорее всего, нужна в другом месте.  Если она важна для этой модели, ее нужно объяснять в документации.
+
+
+**Пример использования (предполагая, что `Product` определен):**
+
+```python
+# Пример использования (предполагается, что response - объект HotProductsResponse)
+for product in response.products:
+    print(product.name)  # Пример доступа к атрибуту объекта Product
+```
+
+
+Этот обновленный документ предоставляет более полную и информативную документацию для класса `HotProductsResponse`.  Обратите внимание, что для полного понимания необходимо иметь доступ к классу `Product`.

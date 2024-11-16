@@ -1,5 +1,6 @@
 ## \file hypotez/src/scenario/_dot/executor.dot
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.scenario._dot """
 MODE = 'debug'

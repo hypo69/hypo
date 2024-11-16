@@ -1,74 +1,118 @@
-```markdown
-# Facebook API Module Documentation
+```python
+# -*- coding: utf-8 -*-
 
-## File: `hypotez/src/endpoints/advertisement/facebook/facebook.py`
+""" module: src.endpoints.advertisement.facebook """
+MODE = 'debug'
 
-**Location:** `C:\Users\user\Documents\repos\hypotez\src\endpoints\advertisement\facebook\facebook.py`
+"""  Модуль рекламы на фейсбук
 
-**Role:** `doc_creator`
+Испонемые сценарии:
+	- login: логин на фейсбук
+	- post_message: отправка текствого сообщения в форму
+	- upload_media: Загрузка файла или списка файлов
+	- switch_account: Переключение аккаунтов
+	- promote_post: Публикация поста с текстом и медиа
+	- post_title: Заполнение заголовка поста
+	- update_images_captions: Обновление подписей к изображениям
+"""
 
-**Module Description:**
+import os, sys
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Dict, List
 
-This module (`src.endpoints.advertisement.facebook`) provides functionality for interacting with Facebook's advertising platform using a web driver.
+# ... (Import statements)
 
-**Implemented Scenarios:**
-
-* **`login`:** Handles Facebook login.
-* **`post_message`:** Posts text messages to Facebook posts or forms.
-* **`upload_media`:** Uploads files (or a list of files) to Facebook.
-
-**Dependencies:**
-
-* `os`, `sys`
-* `pathlib`
-* `typing`
-* `SimpleNamespace` (likely for data structures)
-* `__init__.py` (assuming imports global state/variables)
-* `src.webdriver` (custom web driver class)
-* `src.utils` (likely for JSON handling and printing)
-* `src.logger` (logging utilities)
-* `login` (from `.scenarios.login`)
-* `switch_account`, `promote_post`, `post_title`, `upload_media`, `update_images_captions` (from `.scenarios`)
-
-
-**Classes:**
-
-### `Facebook`
-
-**Class Description:**
-
-This class interacts with Facebook using a web driver.
-
-**Attributes:**
-
-* `d: Driver`: Web driver instance.
-* `start_page: str = r'https://www.facebook.com/hypotez.promocodes'`: Initial Facebook page URL.  (Note: Hardcoding URL is brittle; consider using a configuration file or environment variable.)
-* `promoter: str`:  A variable likely holding a promoter or user identifier.
+from __init__ import gs
+from src.webdriver import Driver
+from src.utils import j_loads, j_dumps, pprint
+from src.logger import logger
+from .scenarios.login import login
+from .scenarios import switch_account, promote_post, post_title, upload_media, update_images_captions
 
 
-**Methods:**
+class Facebook:
+	"""  Класс общается с фейсбуком через вебдрайвер """
+	d: Driver
+	start_page: str = r'https://www.facebook.com/hypotez.promocodes'
+	promoter: str
 
-* **`__init__(self, driver: Driver, promoter: str, group_file_paths: list[str], *args, **kwards)`:**
-    * Initializes the Facebook class.
-    * Takes a web driver instance (`driver`), a promoter identifier (`promoter`), and paths to group files.
-    * **Important:** The code includes a placeholder for a missing URL retrieval. The method should probably set the driver's current URL using `self.d.get(self.start_page)`.  Also, check if the user is already on the correct Facebook page before proceeding.  A missing check (`self.driver.current_url != self.start_page`) could lead to unexpected behavior or errors.
-    * **TODO:** Add a check to ensure the driver is on the expected page (e.g., not the login page). If on the login page, invoke the login scenario.
-* **`login(self) -> bool`:** Executes the Facebook login scenario. Returns `True` if successful, `False` otherwise.
-* **`promote_post(self, item: SimpleNamespace) -> bool`:** Posts a message to a Facebook post.
-    * **Parameters:**
-        * `item: SimpleNamespace`:  Data structure containing message details.
-    * **Returns:** `True` on success, `False` on failure.
-* **`promote_event(self, event: SimpleNamespace)`:** (undocumented) likely handles promoting events on Facebook.
+	def __init__(self, driver: Driver, promoter: str, group_file_paths: list[str], *args, **kwards):
+		""" Я могу передать уже запущенный инстанс драйвера. Например, из алиэкспресс.
+		Если страница не https://www.facebook.com/hypotez.promocodes, будет произведено перенаправление.
+		@param driver: Объект класса Driver.
+		@param promoter:  Имя промоутера.
+		@param group_file_paths: Список путей к файлам.
+		@raises ValueError: Если driver не является объектом Driver.
+		"""
+		if not isinstance(driver, Driver):
+			raise ValueError("driver must be an instance of Driver")
 
+		self.driver = driver
+		self.promoter = promoter
+		self.group_file_paths = group_file_paths
 
-**Code Style and Potential Improvements:**
+		# Перенаправление на стартовую страницу, если необходимо.
+		current_url = self.driver.current_url
+		if current_url != self.start_page:
+			self.driver.get(self.start_page)  
+			# Добавьте проверку, что страница загрузилась корректно.
 
-* **Error Handling:**  The code lacks comprehensive error handling.  Consider adding `try...except` blocks to catch potential exceptions during web interactions and handle them gracefully.  Logging exceptions is crucial.
-* **Documentation:** The `promote_event` method is undocumented. Add a description to that method.
-* **Configuration:** Hardcoding the URL in `start_page` is not ideal. Consider using a configuration file or environment variables to store this kind of information for better maintainability.
-* **Dependency Injection:** Passing the `Driver` object in the constructor is a step toward better testability, but consider if other dependencies (e.g. promo data, config) can be injected as well.
-* **Data Validation:** Input validation (e.g., checking the type of `item` in `promote_post`) will make your code more robust.
+		#switch_account(self.driver)  # <- переключение профиля, если не на своей странице. 
+		# Важно: В реальной ситуации, скорее всего, нужно переключаться на 
+		# нужный профиль только если проверка покажет, что нужно.
+		# Эта строка потенциально может быть удалена или перенесена
+		# в метод, который обрабатывает вход в систему.
 
+	def login(self) -> bool:
+		""" Выполняет логин на фейсбуке. """
+		return login(self.driver)  # Используем self.driver
 
-This improved documentation provides a clearer understanding of the module's purpose, functionalities, dependencies, and potential areas for improvement. Remember to include specific error handling, data validation, and proper comments within the code itself to make it more maintainable.
+	def promote_post(self, item: SimpleNamespace) -> bool:
+		""" Функция отправляет текст в форму сообщения.
+		@param item: Объект SimpleNamespace содержащий данные для публикации поста.
+		@returns `True`, если успешно, иначе `False`.
+		@raises TypeError: Если item не является объектом SimpleNamespace.
+		"""
+		if not isinstance(item, SimpleNamespace):
+			raise TypeError("item must be a SimpleNamespace object")
+		return promote_post(self.driver, item)
+
+	def promote_event(self, event: SimpleNamespace):
+		""" Публикация мероприятия. """
+		# ... (your implementation)
+		pass
+
+	# ... (other methods)
 ```
+
+**Improvements and explanations:**
+
+* **Error Handling:** Added `ValueError` check to ensure `driver` is an instance of `Driver`.  This is crucial for robustness.  Also, added a check if the current URL is not the expected one, redirecting as needed.
+* **Type Hinting:**  Used type hinting for better code clarity and maintainability.  This isn't strictly necessary, but it's a good practice.
+* **Docstrings:** Improved docstrings for better explanation and clarity, especially for parameters.  Added crucial context to `__init__`.
+* **`self.driver`:**  Crucially, updated calls to `login`, `promote_post`, etc, to use `self.driver`, as they rely on the `driver` instance.  This is an extremely important change!
+* **Clearer Purpose:** Docstrings explain the *intent* of the methods more explicitly.  `promote_post` now explicitly mentions `item` needing to be a `SimpleNamespace`.
+* **Handling `event`:** Added a `promote_event` method with placeholder comments to show how to handle a new method.
+* **`__init__` Improvement:** Added better error handling and redirection logic.
+
+**How to Use (Example):**
+
+```python
+# Assuming you have a Driver instance named 'driver'
+# and file paths in 'file_paths'
+
+facebook_instance = Facebook(driver, "YourPromoterName", file_paths)
+if facebook_instance.login():
+  # ... perform promotion operations ...
+  post_data = SimpleNamespace(title="Post Title", message="Post Message", image_path="image.jpg")
+  if facebook_instance.promote_post(post_data):
+    print("Post promoted successfully!")
+  else:
+    print("Failed to promote post.")
+else:
+  print("Failed to login.")
+
+```
+
+This revised code is more robust, maintainable, and readable.  It's crucial to always handle potential errors and clearly document your methods for others (and yourself) to use. Remember to adapt the example usage to your specific needs.  Also, add proper error handling for the `promote_post` and `promote_event` methods to catch potential exceptions raised within those functions.
