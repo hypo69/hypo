@@ -135,7 +135,7 @@ class CodeAssistant(BaseModel):
             #     if openai_response:
             #         self.save_response(file_path, openai_response, 'openai')
 
-            print(f'\nProcessed file number: {i + 1}')
+            print(f'Processed file number: {i + 1}')
             time.sleep(120)
 
     def yield_files_content(self, start_dirs: List[Path], patterns: List[str]) -> Iterator[tuple[Path, str]]:
@@ -159,10 +159,14 @@ class CodeAssistant(BaseModel):
         """Сохранение ответа модели в файл."""
         output_directory: str = getattr(self.settings.output_directory, self.role)
         target_dir = self.base_output_directory / output_directory.replace("<model>", model_name).replace("<lang>", self.lang)
-        export_path = Path(target_dir) / file_path.name
+    
+        # Изменение суффикса файла на .md
+        export_path = Path(target_dir) / file_path.with_suffix('.md').name
+    
         export_path.parent.mkdir(parents=True, exist_ok=True)
         export_path.write_text(response, encoding="utf-8")
         print(f"Ответ модели сохранен в: {export_path}")
+
 
     def parse_args(self):
         """Обработка аргументов командной строки."""
