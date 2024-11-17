@@ -17,7 +17,7 @@ from pydantic import BaseModel, Field
 
 import header
 from src import gs
-from src.utils.jjson import j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
 from src.utils.file import read_text_file, save_text_file
@@ -69,9 +69,9 @@ class CodeAssistant(BaseModel):
     def _payload(self) -> bool:
         """Загружает настройки и инициализирует модели."""
         try:
-            self.exclude_file_patterns = self.settings.exclude_file_patterns
             self.exclude_dirs = self.settings.exclude_file_patterns
             self.exclude_files = self.settings.exclude_files
+            self.exclude_file_patterns = self.settings.exclude_file_patterns
         except Exception as ex:
             logger.error(f"Ошибка инициализации", ex)
             return False
@@ -135,7 +135,7 @@ class CodeAssistant(BaseModel):
             #     if openai_response:
             #         self.save_response(file_path, openai_response, 'openai')
 
-            print(f'Processed file number: {i + 1}')
+            logger.info(f'Processed file number: {i + 1}', None, False)
             time.sleep(120)
 
     def yield_files_content(self, start_dirs: List[Path] = [gs.path.src], patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD']) -> Iterator[tuple[Path, str]]:
@@ -145,10 +145,13 @@ class CodeAssistant(BaseModel):
             for pattern in patterns:
                 for file_path in start_dir.rglob(pattern):
                     if any(exclude_dir in file_path.parts for exclude_dir in self.exclude_dirs):
+                        logger.info(f"Пропускаю {file_path=}", None, False)
                         continue
                     if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
+                        logger.info(f"Пропускаю {file_path =}", None, False)
                         continue
-                    if file_path.name in self.exclude_files:
+                    if str(file_path) in self.exclude_files:
+                        logger.info(f"Пропускаю {file_path=}", None, False)
                         continue
 
                     content = file_path.read_text(encoding="utf-8")
@@ -164,7 +167,7 @@ class CodeAssistant(BaseModel):
     
         export_path.parent.mkdir(parents=True, exist_ok=True)
         export_path.write_text(response, encoding="utf-8")
-        print(f"Ответ модели сохранен в: {export_path}")
+        logger.info(f"Ответ модели сохранен в: {export_path}", None, False)
 
 
     def parse_args(self):

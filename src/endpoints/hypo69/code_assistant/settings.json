@@ -9,10 +9,7 @@
   "gemini_model_name": "gemini-1.5-flash-8b",
   "openai_model_name": "gpt-4o-mini",
   "openai_assistant_id": "<OpenAI Assistant ID>",
-  "exclude_file_patterns": [
-    ".*\\(.*\\).*",
-    "___+.*"
-  ],
+
   "exclude_dirs": [
     ".ipynb_checkpoints",
     "_experiments",
@@ -28,6 +25,10 @@
     "version.py",
     "__init__.py",
     "header.py"
+  ],
+  "exclude_file_patterns": [
+    ".*\\(.*\\).*",
+    "___+.*"
   ],
   "output_directory": {
     "doc_creator": "<model>/<lang>",
