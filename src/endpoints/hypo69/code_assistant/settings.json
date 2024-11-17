@@ -1,7 +1,7 @@
 {
   "role": "doc_creator",
   "lang": "EN",
-  "models": [ "gemini" ],
+  "model": [ "gemini" ],
   "start_dirs": [],
   "gemini_generation_config": {
     "response_mime_type": "text/plain"
@@ -11,8 +11,7 @@
   "openai_assistant_id": "<OpenAI Assistant ID>",
   "exclude_file_patterns": [
     ".*\\(.*\\).*",
-    "___+.*",
-    "___+"
+    "___+.*"
   ],
   "exclude_dirs": [
     ".ipynb_checkpoints",
@@ -22,10 +21,13 @@
     "__pycache__",
     "_examples",
     ".git",
-    ".venv"
+    ".venv",
+    "___+*"
   ],
   "exclude_files": [
-    "version.py"
+    "version.py",
+    "__init__.py",
+    "header.py"
   ],
   "output_directory": {
     "doc_creator": "<model>/<lang>",
@@ -40,7 +42,7 @@
       "default": "EN",
       "choices": [ "en", "ru" ]
     },
-    "models": {
+    "model": {
       "default": [ "gemini" ],
       "choices": [ "gemini", "openai" ]
     },
