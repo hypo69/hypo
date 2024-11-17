@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
  # <- venv win
 ## \file hypotez/src/main.py
-## ~~~~~~~~~~~~~
+
 """ module: src """
 """ <b> Module for launching the program. </b> """
 import argparse

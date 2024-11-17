@@ -1,130 +1,79 @@
-```python
-# -*- coding: utf-8 -*-
+```markdown
+# Модуль `hypotez/src/suppliers/aliexpress/campaign/ttypes.py`
 
-"""
-Module: src.suppliers.aliexpress.campaign
+Файл: `C:\Users\user\Documents\repos\hypotez\src\suppliers\aliexpress\campaign\ttypes.py`
 
-Определение типов для работы с кампаниями, категориями и продуктами AliExpress.
-Используются TypedDict для явного определения структуры данных.
-"""
+Этот модуль определяет типы данных для работы с рекламными кампаниями на AliExpress. Он использует аннотации типов Python для лучшей читаемости и поддержки статического анализа.
 
-from types import SimpleNamespace
-from typing import List, TypedDict, Optional
+## Определения типов
 
-class ProductType(TypedDict):
-    """
-    Тип данных для описания продукта.
-    """
-    product_id: Optional[int]
-    """ Идентификатор продукта. """
-    app_sale_price: Optional[float]
-    """ Цена продукта по приложению. """
-    original_price: Optional[float]
-    """ Исходная цена продукта. """
-    sale_price: Optional[float]
-    """ Цена продажи продукта. """
-    discount: Optional[float]
-    """ Скидка на продукт. """
-    product_main_image_url: Optional[str]
-    """ URL основного изображения продукта. """
-    local_saved_image: Optional[str]
-    """ Путь к сохранённому локальному изображению продукта (опционально). """
-    product_small_image_urls: Optional[List[str]]
-    """ Список URL малых изображений продукта. """
-    product_video_url: Optional[str]
-    """ URL видео продукта (опционально). """
-    local_saved_video: Optional[str]
-    """ Путь к сохранённому локальному видео продукта (опционально). """
-    first_level_category_id: Optional[int]
-    """ Идентификатор категории первого уровня. """
-    first_level_category_name: Optional[str]
-    """ Название категории первого уровня. """
-    second_level_category_id: Optional[int]
-    """ Идентификатор категории второго уровня. """
-    second_level_category_name: Optional[str]
-    """ Название категории второго уровня. """
-    target_sale_price: Optional[float]
-    """ Ценовая цель для продажи продукта. """
-    target_sale_price_currency: Optional[str]
-    """ Валюта целевой цены продажи. """
-    target_app_sale_price_currency: Optional[str]
-    """ Валюта целевой цены приложения. """
-    target_original_price_currency: Optional[str]
-    """ Валюта целевой исходной цены. """
-    original_price_currency: Optional[str]
-    """ Валюта исходной цены. """
-    product_title: Optional[str]
-    """ Название продукта. """
-    evaluate_rate: Optional[float]
-    """ Рейтинг оценки продукта. """
-    promotion_link: Optional[str]
-    """ Ссылка на промоакцию. """
-    shop_url: Optional[str]
-    """ Ссылка на магазин. """
-    shop_id: Optional[int]
-    """ Идентификатор магазина. """
-    tags: Optional[List[str]]
-    """ Список тегов продукта. """
+### `ProductType`
+
+Тип данных для описания продукта.
+
+| Поле | Тип | Описание |
+|---|---|---|
+| `product_id` | `Optional[int]` | ID продукта. |
+| `app_sale_price` | `Optional[float]` | Цена продукта на приложении. |
+| `original_price` | `Optional[float]` | Исходная цена продукта. |
+| `sale_price` | `Optional[float]` | Цена продажи продукта. |
+| `discount` | `Optional[float]` | Скидка на продукт. |
+| `product_main_image_url` | `Optional[str]` | URL основного изображения продукта. |
+| `local_saved_image` | `Optional[str]` | Путь к сохраненному изображению продукта на локальном диске. |
+| `product_small_image_urls` | `Optional[List[str]]` | Список URL изображений малого размера. |
+| `product_video_url` | `Optional[str]` | URL видео продукта. |
+| `local_saved_video` | `Optional[str]` | Путь к сохраненному видео продукта. |
+| `first_level_category_id` | `Optional[int]` | ID категории первого уровня. |
+| `first_level_category_name` | `Optional[str]` | Название категории первого уровня. |
+| `second_level_category_id` | `Optional[int]` | ID категории второго уровня. |
+| `second_level_category_name` | `Optional[str]` | Название категории второго уровня. |
+| `target_sale_price` | `Optional[float]` | Целевая цена продажи. |
+| `target_sale_price_currency` | `Optional[str]` | Валюта целевой цены продажи. |
+| `target_app_sale_price_currency` | `Optional[str]` | Валюта целевой цены на приложении. |
+| `target_original_price_currency` | `Optional[str]` | Валюта целевой исходной цены. |
+| `original_price_currency` | `Optional[str]` | Валюта исходной цены. |
+| `product_title` | `Optional[str]` | Название продукта. |
+| `evaluate_rate` | `Optional[float]` | Рейтинг оценки продукта. |
+| `promotion_link` | `Optional[str]` | Ссылка на акцию. |
+| `shop_url` | `Optional[str]` | Ссылка на магазин. |
+| `shop_id` | `Optional[int]` | ID магазина. |
+| `tags` | `Optional[List[str]]` | Список тегов продукта. |
 
 
-class CampaignType(TypedDict):
-    """
-    Тип данных для описания кампании.
-    """
-    name: Optional[str]
-    """ Название кампании. """
-    title: Optional[str]
-    """ Заголовок кампании. """
-    language: Optional[str]
-    """ Язык кампании. """
-    currency: Optional[str]
-    """ Валюта кампании. """
-    category: SimpleNamespace
-    """ Объект, представляющий категорию, к которой относится кампания. """
+### `CampaignType`
+
+Тип данных для описания рекламной кампании.
+
+| Поле | Тип | Описание |
+|---|---|---|
+| `name` | `Optional[str]` | Название кампании. |
+| `title` | `Optional[str]` | Заголовок кампании. |
+| `language` | `Optional[str]` | Язык кампании. |
+| `currency` | `Optional[str]` | Валюта кампании. |
+| `category` | `SimpleNamespace` | Объект типа `SimpleNamespace`, представляющий категорию кампании.  **Важно:**  Этот тип требует дальнейшей детализации. |
 
 
-class CategoryType(TypedDict):
-    """
-    Тип данных для описания категории.
-    """
-    name: Optional[str]
-    """ Название категории. """
-    tags: Optional[List[str]]
-    """ Список тегов категории. """
-    products: List[SimpleNamespace]
-    """ Список продуктов, относящихся к категории. """
-    products_count: int
-    """ Количество продуктов в категории. """
+### `CategoryType`
+
+Тип данных для описания категории.
+
+| Поле | Тип | Описание |
+|---|---|---|
+| `name` | `Optional[str]` | Название категории. |
+| `tags` | `Optional[List[str]]` | Список тегов категории. |
+| `products` | `List[SimpleNamespace]` | Список продуктов в категории. **Важно:**  Этот тип требует дальнейшей детализации. |
+| `products_count` | `int` | Количество продуктов в категории. |
 
 
-types = SimpleNamespace(
-    product=SimpleNamespace(**{key: None for key in ProductType.__annotations__}),
-    campaign=SimpleNamespace(
-        name=None,
-        title=None,
-        language=None,
-        currency=None,
-        category=SimpleNamespace(
-            name=None,
-            tags=None,
-            products=[],
-            products_count=0
-        )
-    ),
-    category=SimpleNamespace(
-        name=None,
-        tags=None,
-        products=[],
-        products_count=0
-    )
-)
+## Переменная `types`
+
+Переменная `types` содержит экземпляры `SimpleNamespace` для каждого типа.  Она предоставляет удобный способ доступа к данным. Однако `SimpleNamespace`  не обеспечивает валидацию данных и не рекомендует к использованию в случаях, когда необходимы сложные типы данных.
+
+**Рекомендация:** Замените `SimpleNamespace` на более конкретные типы данных (например, `TypedDict`) в `CampaignType` и `CategoryType` для лучшей поддержки типов.
+
+
+**Примечание:**  В коде присутствуют повторяющиеся объявления для `campaign` и `category`, что нелогично.  Лучше использовать единственный `SimpleNamespace` или `TypedDict`.  Из-за этого есть рекомендации по улучшению типов.
+
+
+Этот документ предоставляет описание типов данных.  Для более глубокого понимания логики работы с данными рекомендуется изучить контекст использования этих типов в программе.
 ```
-
-**Улучшения:**
-
-* **Документация:** Добавлена подробная документация к каждому полю `TypedDict`.  Это существенно повышает читаемость и понимание кода. Комментарии описывают *значение* каждого поля, а не только его тип.
-* **Ясность:** Используются более информативные имена переменных (например, `first_level_category_id` вместо просто `first_level_id`).
-* **Консистентность:** Все комментарии оформлены одинаково и относятся к соответствующим полям.
-* **Описание модуля:** В начале файла добавлено описание модуля, что делает его использование более интуитивным.
-
-Этот улучшенный код гораздо более понятен и полезен для дальнейшего использования и поддержания.  Он предоставляет ясную информацию о том, как использовать типы данных и что они представляют.

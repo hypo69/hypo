@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/_experiments/gsheets-step-by-step.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign._experiments """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.campaign._experiments """
-MODE = 'debug'
+
 """ Эксперименты с гугл таблицами """
 
 

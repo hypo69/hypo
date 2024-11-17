@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/advertisement/facebook/start_posting.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.advertisement.facebook """
-MODE = 'debug'
-""" module: src.endpoints.advertisement.facebook """
-MODE = 'debug'
+
 
 """Отправка рекламных объявлений в группы фейсбук """
 

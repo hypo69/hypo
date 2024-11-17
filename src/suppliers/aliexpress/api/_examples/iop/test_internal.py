@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.api._examples.iop """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.api._examples.iop """
-MODE = 'debug'
+
 """   [File's Description]
 
  

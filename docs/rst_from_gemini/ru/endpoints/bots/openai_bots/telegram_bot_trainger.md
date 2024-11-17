@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/bots/openai_bots/telegram_bot_trainger.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.bots.openai_bots """
 """ Этот скрипт создает простой Telegram-бот, используя библиотеку python-telegram-bot.
     Он обрабатывает текстовые сообщения, голосовые сообщения и документы, 

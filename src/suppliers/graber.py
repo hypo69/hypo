@@ -1,4 +1,5 @@
 
+
 """ Базовый класс сбора данных со старницы для всех поставщиков. 
 Для нестендартной обработки полей товара просто переопределите функцию в своем классе.
 Пример:
@@ -35,7 +36,7 @@ from src.utils.image import save_png_from_url
 from src.utils import pprint
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
-from src.endpoints.prestashop import Prestashop
+from src.endpoints.PrestaShop import PrestaShop
 
 d: Driver = None
 l: Locator = None

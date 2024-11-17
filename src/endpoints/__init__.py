@@ -1,9 +1,5 @@
-## \file hypotez/src/endpoints/kazarinov/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-""" module: src.endpoints.kazarinov """
-MODE = 'debug'
 
-     
 
+from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester 
 from .kazarinov import KazarinovTelegramBot
+

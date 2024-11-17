@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/ebay/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.ebay """
-MODE = 'debug'
-""" module: src.suppliers.ebay """
-MODE = 'debug'
+
 
 
 import asyncio

@@ -1,9 +1,4 @@
-## \file hypotez/src/utils/powershell/image_resizer.ps1
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.powershell """
-MODE = 'debug'
 # Запрашиваем у пользователя ввод пути к корневой директории
 $rootPath = Read-Host "Введите путь к корневой директории"
 

@@ -1,9 +1,4 @@
-## \file hypotez/src/bots/openai_bots/chatgpt-telegram/src/main.js
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.bots.openai_bots.chatgpt-telegram.src """
-MODE = 'debug'
 import { Telegraf } from 'telegraf'
 import { message } from 'telegraf/filters'
 import { code } from 'telegraf/format'

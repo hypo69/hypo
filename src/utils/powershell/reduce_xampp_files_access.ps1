@@ -1,9 +1,4 @@
-## \file hypotez/src/utils/powershell/reduce_xampp_files_access.ps1
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.powershell """
-MODE = 'debug'
 # Укажите путь к директории XAMPP
 $xamppPath = "C:\xampp"
 

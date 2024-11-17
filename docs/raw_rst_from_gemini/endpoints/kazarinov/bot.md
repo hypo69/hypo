@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/kazarinov/hypo69_kazarinov_bot.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov """
 """! Kazarinov's specific bot with customized behavior."""
 import header

@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.category._examples """
 """ @namespace src.category._examples """
 

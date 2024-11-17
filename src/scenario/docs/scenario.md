@@ -113,7 +113,7 @@ executor.run()
         |                     |
         v                     v
   +-----------+        +-----------+
-  |  Prestashop       | Other Suppliers |
+  |  PrestaShop       | Other Suppliers |
   +-----------+        +-----------+
 </pre>
 

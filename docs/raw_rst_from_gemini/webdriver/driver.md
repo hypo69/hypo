@@ -2,7 +2,7 @@
 ## \file hypotez/src/webdriver/driver.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver """
 
 """ `WebDriver` 

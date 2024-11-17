@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/visualdg/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.visualdg """
-MODE = 'debug'
-""" module: src.suppliers.visualdg """
-MODE = 'debug'
+
 
 
 import asyncio

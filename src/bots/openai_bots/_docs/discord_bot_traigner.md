@@ -1,9 +1,4 @@
-## \file hypotez/src/bots/openai_bots/_docs/discord_bot_traigner.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.bots.openai_bots._docs """
-MODE = 'debug'
 
 ### Step-by-Step Guide
 

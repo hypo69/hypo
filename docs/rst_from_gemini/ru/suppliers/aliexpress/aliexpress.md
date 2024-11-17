@@ -1,9 +1,14 @@
 ```markdown
-# File: hypotez/src/suppliers/aliexpress/aliexpress.py
+# Файл: hypotez/src/suppliers/aliexpress/aliexpress.py
 
-This file defines the `Aliexpress` class, a subclass of `Supplier`, `AliRequests`, and `AliApi`, providing methods for interacting with AliExpress using different approaches (webdriver, requests, API).
+Этот файл содержит класс `Aliexpress`, предназначенный для взаимодействия с сайтом AliExpress.  Класс наследует функциональность от базового класса `Supplier` и специализированных классов `AliRequests` и `AliApi`.  Это позволяет использовать различные методы для получения данных с AliExpress: через веб-драйвер, используя `requests` и API.
 
-## Class: Aliexpress
+## Краткое описание
+
+Класс `Aliexpress` предоставляет удобный интерфейс для работы с AliExpress, абстрагируя низкоуровневые детали. Он позволяет задавать параметры взаимодействия, такие как использование веб-драйвера (Chrome, Mozilla, Edge) или подключение к API, что делает код более гибким и поддерживаемым.
+
+
+## Класс `Aliexpress`
 
 ```python
 class Aliexpress(Supplier, AliRequests, AliApi):
@@ -21,13 +26,7 @@ class Aliexpress(Supplier, AliRequests, AliApi):
     @endcode
     """
     ...
-```
 
-This docstring clearly states the inheritance and the possible ways to initialize the class (no webdriver, Chrome webdriver, using requests).  Critically, it shows examples of how to use it, making it much more user-friendly.
-
-## Class Method: __init__
-
-```python
     def __init__(self, 
                  webdriver: bool | str = False, 
                  locale: str | dict = {'EN':'USD'},
@@ -51,49 +50,30 @@ This docstring clearly states the inheritance and the possible ways to initializ
         super().__init__(supplier_prefix = 'aliexpress', locale=locale, webdriver=webdriver, *args, **kwargs)
 ```
 
-The `__init__` method's docstring is excellent.  It clearly explains the parameters:
+**Описание параметров конструктора:**
 
-* **`locale`**:  Specifies the language (and potentially currency).  The example `{'EN':'USD'}` shows how to use a dictionary.
-* **`webdriver`**:  Describes the possible webdriver modes.
-* **`requests`**:  Describes the use of the `AliRequests` class.
-* **Code Examples**:  These are invaluable in showing how the parameters should be used.
+* `webdriver`:  Указывает способ взаимодействия: `False` (без веб-драйвера), `'chrome'`, `'mozilla'`, `'edge'`, `'default'`. По умолчанию `False`.
+* `locale`: Язык и валюта. Может быть строкой (напр., 'EN') или словарем, где ключи - коды языков, значения - коды валют (напр., {'EN':'USD'}).
+* `*args, **kwargs`: Дополнительные аргументы для инициализации родительских классов.
 
-**Key Improvements and Suggestions:**
+**Важные замечания:**
 
-* **Clearer Parameter Descriptions**:  The docstring for `__init__` is excellent.  Maintain this level of detail for all methods.
-* **Example Usage with `requests`**:  The docstring for `__init__` needs to show how to use the `requests=True` parameter (and similar options) in detail.
-* **`...`:**  Removing the ellipsis (`...`) after the `__init__` method's signature shows that the class is incomplete, which might lead to confusion for the reader. The ellipsis should be inside the `__init__`'s docstring, to indicate that part of the implementation is missing.
-* **Type Hinting Clarity**: Be explicit about what types are expected for parameters in the `__init__`.
-* **Missing `requests` Documentation**: Add docstrings for the `AliRequests` and `AliApi` classes to explain their functionality and parameters.
-
-
-**Example of improved code (partial):**
-
-```python
-from requests.sessions import Session
-from fake_useragent import UserAgent
-from pathlib import Path
-from typing import Union
-from requests.cookies import RequestsCookieJar
-from urllib.parse import urlparse
-
-# ... other imports ...
-
-class Aliexpress(Supplier, AliRequests, AliApi):
-    # ... (class docstring) ...
-
-    def __init__(self, 
-                 webdriver: Union[bool, str] = False, 
-                 locale: Union[str, dict] = {'EN':'USD'},
-                 requests: bool = False,  # Example of a 'requests' flag
-                 *args, **kwargs):
-        """ ... (docstring) ... """
-        super().__init__(supplier_prefix='aliexpress', locale=locale, webdriver=webdriver, *args, **kwargs)
-        if requests:
-            self.requests_instance = AliRequests()  # Initialize AliRequests if requested
-        # ... (rest of initialization) ...
+*  Методы `AliRequests` и `AliApi` доступны через наследование, позволяя напрямую работать с API и делать запросы через `requests`.
+*  `...` в коде класса `Aliexpress` указывает на то, что существуют незадокументированные части кода. Для полной документации необходимо дополнить описание.
+*  Документация должна быть дополнена описанием методов, которые доступны через наследование (например, методы для работы с API или через веб-драйвер).
+*  Важно указать, какие именно методы из `AliRequests` и `AliApi` используются и как они взаимодействуют.
+*  Документируйте логику инициализации класса `Aliexpress`.  Как происходит выбор между веб-драйвером, `requests` и API? Какие настройки влияют на этот выбор?
+*  Дополните примеры использования в документации, продемонстрировав различные варианты инициализации и взаимодействия с классом.
 
 
+**Рекомендации:**
+
+* Добавьте подробные примеры использования класса, демонстрирующие как создавать экземпляр, устанавливать нужные параметры и взаимодействовать с сайтом.
+* Опишите поведение класса при различных комбинациях параметров (например, `webdriver` и `requests`).
+* Укажите, какие классы или модули используются внутри `Aliexpress`.
+* Укажите, какие типы данных принимают и возвращают методы класса.
+* При наличии внутренних классов (`AliRequests`, `AliApi`), подробно опишите их функционал.
+
+
+Это улучшенное описание поможет лучше понять и использовать класс `Aliexpress` в вашем проекте.
 ```
-
-By adding these improvements, the documentation becomes much more comprehensive and self-explanatory, making it easier for anyone to use the `Aliexpress` class. Remember to provide similar, clear docstrings for other methods as well. Remember to address the `requests` parameter within the `__init__` method.

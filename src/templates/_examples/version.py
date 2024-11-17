@@ -1,11 +1,5 @@
-## \file hypotez/src/templates/_examples/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.templates._examples """
-MODE = 'debug'
-""" module: src.templates._examples """
-MODE = 'debug'
+
 
 """
 - `__version__`: This variable holds the version of the module or package.

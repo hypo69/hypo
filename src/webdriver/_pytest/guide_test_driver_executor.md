@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/_pytest/guide_test_driver_executor.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._pytest """
-MODE = 'debug'
 Вот руководство для тестеров по запуску и выполнению тестов из файла `test_driver_executor.py`, а также описание тестов и их целей.
 
 ---

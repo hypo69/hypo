@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/convertors/ns.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.convertors """
-MODE = 'debug'
-""" module: src.utils.convertors """
-MODE = 'debug'
+
 """
 Module to convert SimpleNamespace (ns) into various formats: dict, JSON, CSV, XML, and XLS.
 

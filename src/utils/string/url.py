@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/string/url.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.string """
-MODE = 'debug'
-""" module: src.utils.string """
-MODE = 'debug'
+
 """! module: src.utils.string 
 
     Модуль для работы с URL строками, включая извлечение параметров запроса и проверку на валидность URL.

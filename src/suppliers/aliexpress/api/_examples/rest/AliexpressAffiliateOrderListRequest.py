@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderListRequest.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.api._examples.rest """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.api._examples.rest """
-MODE = 'debug'
+
 '''
 Created by auto_sdk on 2021.06.02
 '''

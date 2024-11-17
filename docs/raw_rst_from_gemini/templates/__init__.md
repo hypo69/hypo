@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.templates """
 
 """ This module contains template files for various tasks, allowing

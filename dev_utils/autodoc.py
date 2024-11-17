@@ -1,11 +1,5 @@
-## \file hypotez/dev_utils/autodoc.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: dev_utils """
-MODE = 'debug'
-""" module: dev_utils """
-MODE = 'debug'
+
 
 """ HERE MUST BE DESCRIPTION OF MODULE """
 import functools

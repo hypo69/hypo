@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/firefox/_docs/firefox.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver.firefox._docs """
-MODE = 'debug'
 #### Firefox versions:
 Чтобы установить standalone версию Firefox, выполните следующие шаги:
 

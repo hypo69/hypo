@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.webdriver """
 __version__ = 'v1.1'
 __doc__ = ''

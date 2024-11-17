@@ -2,7 +2,7 @@
 ## \file hypotez/src/ai/dialogflow/dialogflow.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.dialogflow """
 """! This module provides an interface for interacting with the Dialogflow API.
 It handles the setup, configuration, and execution of Dialogflow intents.  

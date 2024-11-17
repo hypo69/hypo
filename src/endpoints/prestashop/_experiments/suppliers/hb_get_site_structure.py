@@ -1,18 +1,12 @@
-## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb_get_site_structure.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop._experiments.suppliers """
-MODE = 'debug'
-""" module: src.endpoints.prestashop._experiments.suppliers """
-MODE = 'debug'
+
 """  [File's Description]
 
  @section libs imports:
   - gs 
   - helpers 
   - gs 
-  - prestashop 
+  - PrestaShop 
   - requests 
   - bs4 
   - re 
@@ -23,7 +17,7 @@ MODE = 'debug'
 from src import gs
 from src.utils import  pprint
 
-from src.endpoints.prestashop import Product as PrestaProduct, Category as PrestaCategory
+from src.endpoints.PrestaShop import Product as PrestaProduct, Category as PrestaCategory
 # ---------------------------------
 
 import requests

@@ -19,7 +19,7 @@ The provided Python code defines various metadata variables, effectively acting 
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.translators """
 __version__: str = 'v1.1'
 __doc__: str = ''

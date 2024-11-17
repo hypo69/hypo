@@ -1,9 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/_docs/dependencies.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign._docs """
-MODE = 'debug'
 
 campaign/                                   # AliExpress campaign management module
 ├── __init__.py                             # Initializes the campaign module

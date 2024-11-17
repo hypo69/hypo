@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/api/errors/exceptions.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.api.errors """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.api.errors """
-MODE = 'debug'
+
 """Custom exceptions module"""
 
 

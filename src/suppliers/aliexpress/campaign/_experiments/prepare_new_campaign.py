@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/_experiments/prepare_new_campaign.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign._experiments """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.campaign._experiments """
-MODE = 'debug'
+
 
 
 """ Эксперименты над сценарием новой рекламной камании """

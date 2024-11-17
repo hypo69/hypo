@@ -1,0 +1,91 @@
+{
+  "scenarios": {
+    "CORSAIR 450W": {
+      "brand": "CORSAIR",
+      "name": "450W",
+      "url": "--------------------------------------CORSAIR 450W-------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "158,511,188,580"
+    },
+    "CORSAIR 500W": {
+      "brand": "CORSAIR",
+      "name": "500W",
+      "url": "https://www.morlevi.co.il/Cat/67?p_145=678&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "158,511,189,580"
+    },
+    "CORSAIR 550W": {
+      "brand": "CORSAIR",
+      "name": "550W",
+      "url": "---------------------------------CORSAIR 550W--------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,190,580"
+    },
+    "CORSAIR 600W": {
+      "brand": "CORSAIR",
+      "name": "600W",
+      "url": "--------------------------------------CORSAIR 600W-------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,191,580"
+    },
+    "CORSAIR 650W": {
+      "brand": "CORSAIR",
+      "name": "650W",
+      "url": "https://www.morlevi.co.il/Cat/67?p_145=637&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,192,580"
+    },
+    "CORSAIR 700W": {
+      "brand": "CORSAIR",
+      "name": "700W",
+      "url": "--------------------------------------CORSAIR 700W-------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,193,580"
+    },
+    "CORSAIR 750W": {
+      "brand": "CORSAIR",
+      "name": "750W",
+      "url": "https://www.morlevi.co.il/Cat/67?p_145=670&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,194,580"
+    },
+    "CORSAIR 850W": {
+      "brand": "CORSAIR",
+      "name": "850W",
+      "url": "https://www.morlevi.co.il/Cat/67?p_145=672&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,571,580"
+    },
+    "CORSAIR 1000W": {
+      "brand": "CORSAIR",
+      "name": "1000W",
+      "url": "https://www.morlevi.co.il/Cat/67?p_145=674&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,572,580"
+    },
+    "CORSAIR 1200W": {
+      "brand": "CORSAIR",
+      "name": "1200W",
+      "url": "https://www.morlevi.co.il/Cat/67?p_145=677&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,573,580"
+    },
+    "CORSAIR 1600W": {
+      "brand": "CORSAIR",
+      "name": "1600W",
+      "url": "https://www.morlevi.co.il/Cat/67?p_145=676&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "151,158,511,574,580"
+    }
+  }

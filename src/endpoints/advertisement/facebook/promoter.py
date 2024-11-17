@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/advertisement/facebook/promoter.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.advertisement.facebook """
-MODE = 'debug'
-""" module: src.endpoints.advertisement.facebook """
-MODE = 'debug'
+
 
 """
 This module handles the promotion of messages and events in Facebook groups.

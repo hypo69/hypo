@@ -1,9 +1,4 @@
-## \file hypotez/Rubbish/2024-11-05/sphinx_highlight.js
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: Rubbish.2024-11-05 """
-MODE = 'debug'
 /* Highlighting utilities for Sphinx HTML documentation. */
 "use strict";
 

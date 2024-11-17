@@ -1,11 +1,5 @@
-## \file hypotez/src/goog/text_to_speech/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.goog.text_to_speech """
-MODE = 'debug'
-""" module: src.goog.text_to_speech """
-MODE = 'debug'
+
 """ Google TTS """
 
 import header   

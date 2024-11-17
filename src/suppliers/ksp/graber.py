@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/ksp/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.ksp """
-MODE = 'debug'
-""" module: src.suppliers.ksp """
-MODE = 'debug'
+
 
 
 import asyncio

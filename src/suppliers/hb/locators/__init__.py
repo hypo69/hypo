@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/hb/locators/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.hb.locators """
-MODE = 'debug'
-""" module: src.suppliers.hb.locators """
-MODE = 'debug'
+
 
 """ Изменения в локаторах. Применять с осторожносастью  """
 ...

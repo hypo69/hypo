@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/emil/header.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.emil """
 
 """! Module to set the project root path and add necessary paths to sys.path """

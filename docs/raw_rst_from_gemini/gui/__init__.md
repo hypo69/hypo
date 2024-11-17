@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.gui """
 """ @namespace src.fast_api """
 

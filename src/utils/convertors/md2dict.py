@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/convertors/md2dict.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.convertors """
-MODE = 'debug'
-""" module: src.utils.convertors """
-MODE = 'debug'
+
 """
 module: src.utils.convertors
 

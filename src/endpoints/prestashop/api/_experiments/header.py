@@ -1,13 +1,7 @@
-## \file hypotez/src/endpoints/prestashop/api/_experiments/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop.api._experiments """
-MODE = 'debug'
-""" module: src.endpoints.prestashop.api._experiments """
-MODE = 'debug'
+
 """ Тестовые настройки для проверки PrestaAPIV.
-создает словари подключеня к API Prestashop из списка `gs.presta_credentials`
+создает словари подключеня к API PrestaShop из списка `gs.presta_credentials`
 
 """
  

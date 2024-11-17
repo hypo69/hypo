@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """
 Module: src.endpoints.advertisement.facebook.scenarios.post_message_in_biz.py
 

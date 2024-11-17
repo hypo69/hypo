@@ -1,11 +1,5 @@
-## \file hypotez/src/webdriver/_pytest/test_driver_executor.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._pytest """
-MODE = 'debug'
-""" module: src.webdriver._pytest """
-MODE = 'debug'
+
 
 """ Общий тест для driver и executor
 test_navigate_to_page: Проверяет, что WebDriver корректно загружает указанную страницу.

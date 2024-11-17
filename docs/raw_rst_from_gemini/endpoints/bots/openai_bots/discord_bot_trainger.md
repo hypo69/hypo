@@ -2,7 +2,7 @@
 # \file hypotez/src/endpoints/bots/openai_bots/discord_bot_trainger.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.bots.openai_bots """
 import discord
 from discord.ext import commands

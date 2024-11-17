@@ -1,46 +1,68 @@
 ```markdown
-# Модуль `product_fields_normalizer.py`
+# hypotez/src/product/product_fields/utils/product_fields_normalizer.py
 
 Файл: `C:\Users\user\Documents\repos\hypotez\src\product\product_fields\utils\product_fields_normalizer.py`
+Роль: `doc_creator`
 
-**Роль:**  Модуль `product_fields_normalizer` отвечает за нормализацию данных полей продукта.
-
-**Описание:**
-
-Данный модуль предоставляет функции для нормализации различных типов данных, связанных с продуктами.  Он обрабатывает поля, такие как название продукта и логические значения, приводя их к стандартному виду.  Это необходимо для последующей обработки и хранения данных, а также для повышения качества данных.
-
-**Функции:**
-
-* **`normalize_product_name(value: str) -> str`**:
-    Нормализует название продукта.  Принимает на вход строку, содержащую имя продукта, и возвращает нормализованную строку.  Нормализация, скорее всего, включает в себя преобразование к нижнему регистру, удаление лишних пробелов, пунктуации и т.д.  Подразумевается, что в `src.utils.string` есть класс `StringNormalizer` с методом `normalize_string` для реализации этой функции.
+Этот модуль предоставляет функции для нормализации данных полей продукта.  Он обрабатывает различные типы данных, такие как строки и булевы значения, возвращая их в стандартизированном формате.
 
 
-* **`normalize_bool(value: Union[str, bool]) -> int`**:
-    Нормализует логические значения (булевы). Принимает на вход значение, которое может быть строкой или булевым значением. Возвращает 1, если значение истинно (True или "true"), и 0, если ложно (False или "false"). Использование `StringNormalizer` позволяет обрабатывать различные варианты входных строк, такие как "true", "TRUE", "False" и т.д.  Подразумевается, что в `src.utils.string` есть класс `StringNormalizer` с методом `normalize_boolean`.
+## Функции:
 
-**Использование:**
+**`normalize_product_name(value: str) -> str`**
 
-Для использования модуля импортируйте нужные функции и вызовите их, передавая соответствующие аргументы.
+Нормализует имя продукта.
+
+**Аргументы:**
+
+* `value` (str): Имя продукта, которое требуется нормализовать.
+
+**Возвращаемое значение:**
+
+* str: Нормализованное имя продукта.
+
+
+**`normalize_bool(value: Union[str, bool]) -> int`**
+
+Преобразует булевы значения (строковые или прямое булевое значение) в 1 или 0.
+
+**Аргументы:**
+
+* `value` (Union[str, bool]): Значение, которое требуется преобразовать.
+
+**Возвращаемое значение:**
+
+* int: 1, если `value` истинно, 0, если `value` ложно.
+
+
+## Пример использования:
 
 ```python
-from product.product_fields.utils.product_fields_normalizer import normalize_product_name, normalize_bool
+from hypotez.src.product.product_fields.utils.product_fields_normalizer import normalize_product_name, normalize_bool
 
 product_name = "  Product Name  "
 normalized_name = normalize_product_name(product_name)
-print(normalized_name)  # Например, выведет "product name"
+print(f"Нормализованное имя продукта: {normalized_name}")
 
-is_available = "True"
-available_int = normalize_bool(is_available)
-print(available_int)  # Выведет 1
+is_active = "true"
+active_int = normalize_bool(is_active)
+print(f"Активность (1/0): {active_int}")
+
+is_not_active = "false"
+not_active_int = normalize_bool(is_not_active)
+print(f"Активность (1/0): {not_active_int}")
+
+
+is_active_bool = True
+active_int = normalize_bool(is_active_bool)
+print(f"Активность (1/0): {active_int}")
 ```
 
-**Замечания:**
 
-* Необходимо обеспечить наличие модулей `src.utils.string` с классами `StringNormalizer` и `StringFormatter`.
-* Вставьте подробное описание процесса нормализации данных в модуле.  В настоящее время в документе отсутствует описание того, *как* `normalize_product_name` и `normalize_bool` выполняют свою работу.  Что именно они делают?  Какие правила применяются?  Этот момент необходимо дополнить.
-* В коде повторяется строка `MODE = 'debug'`.  Это скорее всего лишний код.
-* Укажите, откуда берутся данные, которые нормализуются этой функцией.  Используются ли они непосредственно из базы данных, из файла, из запросов пользователя и т.д.
-* Необходимо описать, в каких единицах измеряются результаты работы функции `normalize_bool`.
+## Замечания:
+
+* Данный модуль использует вспомогательные функции из модулей `StringNormalizer` и `StringFormatter`.  Эти вспомогательные функции должны быть определены в модулях `src.utils.string`.
+*  Константа `MODE` с значением `'debug'` указывает на режим работы модуля (в данном случае, это режим отладки).  Для production окружения, эта константа может быть изменена.
 
 
 ```

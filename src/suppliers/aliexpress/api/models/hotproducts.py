@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.api.models """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.api.models """
-MODE = 'debug'
+
 from .product import Product
 from typing import List
 

@@ -1,11 +1,5 @@
-## \file hypotez/src/scenario/_experiments/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.scenario._experiments """
-MODE = 'debug'
-""" module: src.scenario._experiments """
-MODE = 'debug'
+
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]

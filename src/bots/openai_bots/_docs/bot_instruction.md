@@ -1,9 +1,4 @@
-## \file hypotez/src/bots/openai_bots/_docs/bot_instruction.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.bots.openai_bots._docs """
-MODE = 'debug'
 !hi: Greets the user.
 !train <data> <data_dir> <positive> <attachment>: Trains the model with the provided data. Use data for a file, data_dir for a directory, or attachment for a file attachment.
 !test <test_data>: Tests the model with provided JSON test data.

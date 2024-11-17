@@ -1,12 +1,6 @@
-## \file hypotez/src/endpoints/emil/emil_design.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.emil """
-MODE = 'debug'
-""" module: src.endpoints.emil """
-MODE = 'debug'
-"""! Module for managing and processing images and promoting to Facebook and Prestashop. """
+
+"""! Module for managing and processing images and promoting to Facebook and PrestaShop. """
 
 import header
 from pathlib import Path
@@ -14,7 +8,7 @@ from types import SimpleNamespace
 import time
 
 from src import gs, logger
-from src.endpoints.prestashop.api.api import Prestashop
+from src.endpoints.PrestaShop.api.api import PrestaShop
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
@@ -135,13 +129,13 @@ class EmilDesign:
             post_message(d, message, without_captions=True)
             ...
 
-    def upload_to_prestashop(self):
-        """! Upload product information to Prestashop.
+    def upload_to_PrestaShop(self):
+        """! Upload product information to PrestaShop.
 
-        This function initializes a product and Prestashop instance for uploading data.
+        This function initializes a product and PrestaShop instance for uploading data.
         """
         p = Product()
-        presta = Prestashop()
+        presta = PrestaShop()
         
 
 if __name__ == "__main__":

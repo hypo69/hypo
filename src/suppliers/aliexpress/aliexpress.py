@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/aliexpress.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress """
-MODE = 'debug'
+
 """ Base class for the supplier. 
 This class inherits from `Supplier`.
 It allows interaction with AliExpress in three ways:

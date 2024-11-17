@@ -2,7 +2,7 @@
 ## \file hypotez/src/logger/logger.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.logger """
 
 """

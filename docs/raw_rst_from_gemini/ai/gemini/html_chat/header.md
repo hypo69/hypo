@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """
 Module: hypotez/src/ai/gemini/html_chat/header.py
 

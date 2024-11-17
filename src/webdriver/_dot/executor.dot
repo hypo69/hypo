@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/_dot/executor.dot
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._dot """
-MODE = 'debug'
 digraph DependencyTree {
     rankdir=LR;
     node [shape=box, style=rounded];

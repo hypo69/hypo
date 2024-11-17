@@ -1,9 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/_examples/affiliated_products_generator.ru.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress._examples """
-MODE = 'debug'
 файл примеров для модуля `affiliated_products_generator.py`. Этот файл показывает, как использовать класс `AliAffiliatedProducts` для сбора данных о продуктах и обработки аффилированных ссылок.
 
 ### Пример использования `AliAffiliatedProducts`

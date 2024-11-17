@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook """
 
 """ Раскрывающееся меню выбора групп для подачи объявления"""

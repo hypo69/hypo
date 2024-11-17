@@ -1,9 +1,4 @@
-## \file hypotez/src/endpoints/advertisement/facebook/_dot/promoter.dot
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.advertisement.facebook._dot """
-MODE = 'debug'
 # \file "src\advertisement\facebook\_dot\promoter.dot"
 digraph FacebookPromoter {
     node [shape=box];

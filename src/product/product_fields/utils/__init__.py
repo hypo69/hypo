@@ -1,13 +1,7 @@
-## \file hypotez/src/product/product_fields/utils/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.product.product_fields.utils """
-MODE = 'debug'
-""" module: src.product.product_fields.utils """
-MODE = 'debug'
 
-"""   Модуль в основном используется для обработки полей товара Prestashop. 
+
+"""   Модуль в основном используется для обработки полей товара PrestaShop. 
 @details Внешние классы и аттрибуты:
 - `Product`   методы и атрибуты товара   Подробное описание см в `product.py`
 - `ProductFields`  поля товара. Подробное описание см в `product_fields.py`

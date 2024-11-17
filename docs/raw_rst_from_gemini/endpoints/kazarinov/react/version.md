@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov.react """
 __version__: str = 'v1.1'
 __doc__: str = ''

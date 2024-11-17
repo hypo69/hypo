@@ -52,16 +52,16 @@ This script contains functions and methods for executing scenarios related to au
    **Purpose**: Inserts the collected product data into PrestaShop.
 
    **What it Does**:
-   - Calls the asynchronous function `execute_prestashop_insert_async` to handle the data insertion.
+   - Calls the asynchronous function `execute_PrestaShop_insert_async` to handle the data insertion.
 
-7. **`execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+7. **`execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
 
    **Purpose**: Asynchronously handles the insertion of product data into PrestaShop.
 
    **What it Does**:
-   - Calls `execute_prestashop_insert` to perform the actual data insertion.
+   - Calls `execute_PrestaShop_insert` to perform the actual data insertion.
 
-8. **`execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+8. **`execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
 
    **Purpose**: Inserts product data into PrestaShop.
 
@@ -196,7 +196,7 @@ Scenario Files → Load Scenarios → Fetch Product Data → Insert Data into Pr
    **Details**:
    - Calls an async function to insert the data.
 
-7. **`execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+7. **`execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
 
    **Description**: Asynchronously inserts product data into PrestaShop.
 
@@ -207,7 +207,7 @@ Scenario Files → Load Scenarios → Fetch Product Data → Insert Data into Pr
    **Details**:
    - Calls a synchronous function to handle the data insertion.
 
-8. **`execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+8. **`execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
 
    **Description**: Inserts product data into PrestaShop.
 
@@ -231,8 +231,8 @@ Here’s a detailed dependency tree for the `executor.py` module, showing how di
     │   │   ├── fetch_product_links(scenario)  # Fetches links from the category page
     │   │   │   ├── collect_product_data(product_link)  # Collects data for each product
     │   │   │   │   ├── insert_grabbed_data(product_fields: ProductFields)  # Inserts product data into PrestaShop
-    │   │   │   │   │   ├── execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
-    │   │   │   │   │   │   ├── execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
+    │   │   │   │   │   ├── execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
+    │   │   │   │   │   │   ├── execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
     │   │   │   │   │   │   │   └── PrestaShopClient  # Interacts with the PrestaShop API
     │   │   │   │   │   └── (Other methods to process and validate product data)
     │   │   │   └── (Other methods for fetching and processing data)
@@ -250,8 +250,8 @@ run_scenario_files(s, scenario_files_list: Union[List[Path], Path]) -> bool
    ├── fetch_product_links(scenario)
    │   └── collect_product_data(product_link)
    │       └── insert_grabbed_data(product_fields: ProductFields)
-   │           ├── execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
-   │           │   └── execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
+   │           ├── execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
+   │           │   └── execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool
    │           │       └── PrestaShopClient
    │           └── (Additional methods for data processing)
    ├── update_journal(scenario)
@@ -275,12 +275,12 @@ run_scenario_files(s, scenario_files_list: Union[List[Path], Path]) -> bool
    - Calls: `insert_grabbed_data(product_fields: ProductFields)`
 
 6. **`insert_grabbed_data(product_fields: ProductFields)`**
-   - Calls: `execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`
+   - Calls: `execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`
 
-7. **`execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
-   - Calls: `execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`
+7. **`execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+   - Calls: `execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`
 
-8. **`execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+8. **`execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
    - Uses: `PrestaShopClient`
 
 9. **`dump_journal(s, journal: dict)`**
@@ -300,8 +300,8 @@ run_scenario_files
             ├── fetch_product_links
             │   └── collect_product_data
             │       └── insert_grabbed_data
-            │           ├── execute_prestashop_insert_async
-            │           │   └── execute_prestashop_insert
+            │           ├── execute_PrestaShop_insert_async
+            │           │   └── execute_PrestaShop_insert
             │           │       └── PrestaShopClient
             │           └── (Other methods)
             └── update_journal
@@ -330,10 +330,10 @@ Here’s a visual representation of the dependencies:
 [insert_grabbed_data]
         |
         V
-[execute_prestashop_insert_async]
+[execute_PrestaShop_insert_async]
         |
         V
-[execute_prestashop_insert]
+[execute_PrestaShop_insert]
         |
         V
 [PrestaShopClient]
@@ -346,7 +346,7 @@ Here’s a visual representation of the dependencies:
 - **`run_scenario`** fetches product links, collects data, and inserts it into PrestaShop.
 - **`fetch_product_links`** and **`collect_product_data`** handle data collection and interaction with product pages.
 - **`insert_grabbed_data`** manages the data insertion process.
-- **`execute_prestashop_insert_async`** and **`execute_prestashop_insert`** handle asynchronous and synchronous data insertion into PrestaShop.
+- **`execute_PrestaShop_insert_async`** and **`execute_PrestaShop_insert`** handle asynchronous and synchronous data insertion into PrestaShop.
 - **`dump_journal`** and **`update_journal`** manage the journal updates.
 
 This dependency tree should help you understand how different parts of the `executor.py` script interact and build upon one another.

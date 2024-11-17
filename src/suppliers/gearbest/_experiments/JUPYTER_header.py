@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/gearbest/_experiments/JUPYTER_header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.gearbest._experiments """
-MODE = 'debug'
-""" module: src.suppliers.gearbest._experiments """
-MODE = 'debug'
+
 import sys
 import os
 from pathlib import Path
@@ -29,7 +23,7 @@ from src.product import Product, ProductFields
 from src.category import Category
 from src.utils import StringFormatter, StringNormalizer
 from src.utils import  pprint
-from src.endpoints.prestashop import Product as PrestaProduct
+from src.endpoints.PrestaShop import Product as PrestaProduct
 , save_text_file
 # ----------------
 

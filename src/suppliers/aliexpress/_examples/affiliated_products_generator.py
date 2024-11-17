@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/_examples/affiliated_products_generator.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress._examples """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress._examples """
-MODE = 'debug'
+
 # пример_использования.py
 
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts

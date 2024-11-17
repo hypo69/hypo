@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/amazon/_experiments/scenarois/dict_scenarios.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.amazon._experiments.scenarois """
-MODE = 'debug'
-""" module: src.suppliers.amazon._experiments.scenarois """
-MODE = 'debug'
+
 scenario: dict = {
 
     "Murano Glass": {

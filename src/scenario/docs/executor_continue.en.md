@@ -58,15 +58,15 @@ This script defines functions to execute scenarios, which involve fetching produ
    - **Parameters**:
      - `product_fields`: ProductFields instance containing the product information.
    - **Function**:
-     - Calls `execute_prestashop_insert()` asynchronously.
+     - Calls `execute_PrestaShop_insert()` asynchronously.
 
-7. **`execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**:
+7. **`execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**:
    - **Purpose**: Inserts product data into PrestaShop.
    - **Parameters**:
      - `f`: ProductFields instance.
      - `coupon_code`, `start_date`, `end_date`: Optional parameters for promotion.
    - **Function**:
-     - Uses the Prestashop class to post product data.
+     - Uses the PrestaShop class to post product data.
      - Returns `True` if successful, `False` otherwise.
 
 ### Example Scenario File

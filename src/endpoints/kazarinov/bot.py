@@ -1,8 +1,5 @@
-## \file hypotez/src/endpoints/kazarinov/bot.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-""" module: src.endpoints.kazarinov 
 
+"""
 ### KazarinovTelegramBot
 
 Описание:
@@ -27,7 +24,6 @@
 - Driver (Chrome | Edge | Firefox | Playwright): обеспечивает работу с целeвыми HTML.
 """
 
-MODE = 'debug'
 import asyncio
 import json
 import random
@@ -40,7 +36,8 @@ from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContex
 import header
 from src import gs
 from src.bots.telegram import TelegramBot
-from src.webdriver import Driver, Chrome
+from src.webdriver.driver import Driver
+from src.webdriver.chrome import Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.parser_onetab import fetch_target_urls_onetab
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron

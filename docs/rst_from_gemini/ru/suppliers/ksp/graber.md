@@ -1,9 +1,12 @@
 ```python
+## \file hypotez/src/suppliers/ksp/graber.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.ksp """
 MODE = 'debug'
-
+""" module: src.suppliers.ksp """
+# MODE = 'debug'  # Удалить эту строку, если не нужна
 
 import asyncio
 from pathlib import Path
@@ -12,8 +15,7 @@ from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
 
-from __init__ import gs
-
+from src import gs
 from src.suppliers import Graber as Grbr, Locator
 from src.product import ProductFields
 from src.webdriver import Driver
@@ -21,101 +23,109 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
+# Важно! Импортируйте нужные функции/классы из src.product
+from src.product import ProductFields  # Добавлено
+
+d: Driver = None
+l: Locator = None
+
+
+# Определение декоратора для закрытия всплывающих окон
+def close_popup(value: Any = None) -> Callable:
+    """Создаёт декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+
+    Args:
+        value (Any): Необязательное значение, передаваемое в декоратор.
+
+    Returns:
+        Callable: Декоратор, оборачивающий функцию.
+    """
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            try:
+                await d.execute_locator(l.close_popup)  # Ждём асинхронного закрытия всплывающего окна
+            except ExecuteLocatorException as e:
+                logger.debug(f"Ошибка выполнения локетора: {e}")
+            return await func(*args, **kwargs)  # Ждём выполнения основной функции
+        return wrapper
+    return decorator
+
+
+supplier_prefix = 'ksp'
+
 @dataclass(frozen=True)
 class Graber(Grbr):
-    """Graber class for KSP grabbing operations."""
-    supplier_prefix: str = field(default='ksp')
+    """Класс Graber для извлечения данных с сайта morlevi."""
+    supplier_prefix: str = field(default=supplier_prefix)
     d: Driver = None  # d будет назначен позже в `grab_page()`
     l: Locator = None  # l будет назначен позже в `__post_init__()`
 
     def __post_init__(self):
-        """Post-initialization to load the locator namespace and set global variables."""
+        """Инициализация после создания объекта для загрузки локетора."""
+
         locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
-        try:
-            self.l = Locator(self.supplier_prefix, locator_path)  # Pass path to Locator
-        except FileNotFoundError as e:
-            logger.critical(f"Locator file not found: {locator_path}. Error: {e}")
-            raise
+        self.l = Locator(self.supplier_prefix)
         global l
-        l = self.l  # Assign to global, but this is generally not recommended
+        l = self.l
         super().__init__(self.supplier_prefix, self.l)
 
-
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Asynchronous function to grab product fields.
+        """Асинхронная функция для извлечения полей продукта.
 
         Args:
-            driver (Driver): The driver instance to use for grabbing.
+            driver (Driver): Экземпляр драйвера для извлечения данных.
 
         Returns:
-            ProductFields: The grabbed product fields, or None if an error occurs.
+            ProductFields: Извлеченные поля продукта.
         """
         global d
-        d = self.d = driver  
+        d = self.d = driver
 
-        try:
-            await self._grab_page_logic() # Separate function for better organization
-            return self.fields
-        except Exception as e:
-            logger.error(f"Error during grab_page: {e}")
-            return None
+        # ... (ваш код)
 
+        # ... (Ваша логика извлечения данных)
+        await self.fetch_all_data() # вызов асинхронной функции 
+        return self.fields
 
-    async def _grab_page_logic(self) -> None:
-        """Internal function for grabbing product data.
+    async def fetch_all_data(self, **kwargs):
+        """Извлекает данные о продукте.
+           Разбито на отдельные асинхронные вызовы для каждого поля."""
+        
+        # ... (Обратите внимание на именование функций - должны соответствовать вашему locator-файлу)
 
-        This function does not directly interact with the driver.
-        """
-        await self.close_pop_ups()  # Call the new method
-        await self._fetch_all_data()
-
-
-    async def close_pop_ups(self) -> None:
-        try:
-            await d.execute_locator(l.close_popup)
-        except ExecuteLocatorException as e:
-            logger.debug(f"Error closing pop-up: {e}")
+        # Пример использования:
+        await self.id_product(kwargs.get("id_product", ''))
+        # ... другие функции
 
 
-
-    async def _fetch_all_data(self) -> None:
-        # ... (your fetch_all_data logic here) ...
-        # Note: No need to declare a local variable named d and use it here
-        # Your existing fetch logic, but using `self` to access methods.
-        # Example using await:
-        await self.id_product("")  # Replace "" with actual value
-        # ... other methods ...
-        # Ensure all methods are called correctly through `self`
-
-
-# Example usage (replace with your actual usage):
-# async def main():
-#     driver = await Driver.create_driver(...)  # Initialize driver
-#     graber = Graber(d=driver, l=l)
-#     product_data = await graber.grab_page(driver)
-#     if product_data:
-#         print(product_data)
-
-
-# if __name__ == "__main__":
-#     asyncio.run(main())
 ```
 
-**Key Improvements and Explanations:**
+**Основные улучшения и объяснения:**
 
-* **Error Handling:** The `grab_page` method now includes a `try...except` block to catch and log any exceptions during the grabbing process.  This prevents the entire script from crashing if a problem occurs on a specific product page.  It also returns `None` in case of an error, allowing the calling function to handle the error appropriately.
-* **`_grab_page_logic` Function:** Introduced a helper function `_grab_page_logic` to encapsulate the core logic of grabbing the product data.  This makes the `grab_page` method cleaner and easier to understand. It also prevents the `await d.execute_locator(...)` from being in two different places.
-* **`close_pop_ups` Method:** Created a dedicated method to handle popup closing. This makes the code more organized and potentially re-usable.
-* **`_fetch_all_data` Method:** Created a dedicated method to fetch all data.  This separates the data fetching logic from the driver interaction, improving readability and testability.
-* **Locator Handling:** The `__post_init__` method now directly instantiates the `Locator` class, passing the `locator_path` and handling potential `FileNotFoundError`. This ensures that the correct `Locator` is being used.
-* **`self` for Method Calls:** All calls to Graber methods (e.g., `self.id_product`, `self.name`) are now made using `self`.  This is crucial for accessing methods correctly in the class.
-* **Global Variable Reduction:** The use of global variables `d` and `l` is minimized within `_fetch_all_data`.  It is usually better to pass them in as parameters or use instance variables in larger projects.  In general, the reliance on global variables should be minimized for maintainability.
+* **Проверка на наличие импорта `ProductFields`:**  Добавлен явный импорт `ProductFields` из `src.product`.  Это важно, так как код пытается использовать `self.fields`, но `self.fields` должен быть определен в классе.
+* **`fetch_all_data`:** Создана асинхронная функция `fetch_all_data`, которая объединяет все ваши асинхронные функции извлечения данных.  Это упрощает структуру кода и делает его более организованным.
+* **Документация:** Добавлены более подробные комментарии к коду, поясняя назначение и использование функций.
+* **Стиль кода:**  Код отформатирован для лучшей читаемости.
+* **Глобальные переменные `d` и `l`:**  Используются глобальные переменные `d` и `l`, но это может быть улучшено с помощью инкапсуляции.
+* **Пример `fetch_all_data`:** Показывает, как обращаться к параметрам `kwargs` для гибкости.
 
-**Important Considerations:**
+**Важные рекомендации:**
 
-* **Error Propagation:**  The `try...except` block in `grab_page` catches exceptions, logs them, but also returns `None`.  Your calling code needs to check for this `None` value to handle potential errors gracefully.
-* **`__init__` Parameter `d`:** If you absolutely need `d` in your `__init__`, then pass it in as an argument.
-* **Driver Initialization:** You must initialize the `Driver` object (e.g., `driver`) in your main function and pass it to the `Graber` object.  The example code demonstrates how you might do this.
+* **`fetch_specific_data`:** Если у вас есть функция `fetch_specific_data`, убедитесь, что она асинхронна (`async def ...`) и правильно использует `self.l` и `self.d`.
+* **Наименование функций:** Важно, чтобы имена функций в вашем коде соответствовали именам в файле `product.json` (locator). Это критично для правильной работы.
+* **Переменные `kwargs`:** Используйте `kwargs` для передачи дополнительных параметров в `fetch_all_data`, если это необходимо.
+* **Обработка ошибок:** Добавляйте обработку ошибок (например, `try...except`) внутри каждой асинхронной функции, чтобы ловить и обрабатывать возможные исключения.
+* **Удалите дубликаты импортов:** Избавиться от дублирующихся импортов `dataclass`, `SimpleNamespace`, `Any`, `Callable`.
+* **`__post_init__`:**  Метод `__post_init__` - хороший способ выполнить инициализацию после того, как все атрибуты класса были назначены.
 
 
-By implementing these changes, your code is significantly improved in terms of error handling, organization, and robustness.  This will make it easier to maintain and debug in the long run. Remember to replace the placeholder comments with your actual data fetching logic. Remember to `import asyncio` and `from __init__ import gs` in the top of your file if they aren't already present.  Also add the `from pathlib import Path` statement for error handling. Remember to handle possible exceptions from the `await self.close_pop_ups()` and other methods.
+**Пример использования `fetch_all_data`:**
+
+```python
+async def fetch_all_data(self, **kwargs):
+    await self.id_product(kwargs.get("id_product", ""))
+    # ... другие функции
+```
+
+Теперь код более структурирован, читаем, и вы можете добавлять новые функции извлечения данных без лишних сложностей.  Убедитесь, что все функции `id_product`, `name`, и т.д. существуют и правильно работают.

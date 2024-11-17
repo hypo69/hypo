@@ -1,11 +1,5 @@
-## \file hypotez/src/goog/gtranslater/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.goog.gtranslater """
-MODE = 'debug'
-""" module: src.goog.gtranslater """
-MODE = 'debug'
+
 """ This module handles language translation using Google Translate API. It includes a function to translate text with automatic language detection for the input text if not specified."""
 
 

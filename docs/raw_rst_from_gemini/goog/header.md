@@ -2,7 +2,7 @@
 ## \file hypotez/src/goog/header.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog """
 
 """ Absolute path to modules  """

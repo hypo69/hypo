@@ -1,11 +1,5 @@
-## \file hypotez/src/product/_examples/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.product._examples """
-MODE = 'debug'
-""" module: src.product._examples """
-MODE = 'debug'
+
 import sys
 import os
 from pathlib import Path

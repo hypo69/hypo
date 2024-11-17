@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/prestashop/_experiments/categories/category.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop._experiments.categories """
-MODE = 'debug'
-""" module: src.endpoints.prestashop._experiments.categories """
-MODE = 'debug'
+
 """  Работа с категориями товара 
 
 """
@@ -22,7 +16,7 @@ from typing import Union
 from src import gs
 from src.utils import  pprint
 
-from src.endpoints.prestashop import PrestaCategory
+from src.endpoints.PrestaShop import PrestaCategory
 # -----------------------------------
 
 def get_parent_categories_list(id_category):

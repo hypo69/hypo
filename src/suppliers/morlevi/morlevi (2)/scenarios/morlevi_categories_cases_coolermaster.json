@@ -1,0 +1,64 @@
+{
+  "scenarios": {
+    "COOLERMASTER MID TOWER": {
+      "brand": "COOLER MASTER",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/285?p_315=74&p_124=540&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "cooler master": "MID TOWER" }
+      }
+    },
+    "COOLERMASTER full tower": {
+      "brand": "COOLER MASTER",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/285?p_315=74&p_124=541&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "cooler master": "FULL TOWER" }
+      }
+    },
+    "COOLERMASTER mini tower": {
+      "brand": "COOLER MASTER",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/285?p_315=74&p_124=542&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "cooler master": "MINI TOWER" }
+      }
+    },
+    "COOLERMASTER gaming MID TOWER": {
+      "brand": "COOLER MASTER",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/285?p_315=74&p_124=545&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "cooler master": "GAMING MID TOWER" }
+      }
+    },
+    "COOLERMASTER gaming full tower": {
+      "brand": "COOLER MASTER",
+      "template": "",
+      "url": "----------------------------COOLER MASTER gaming full TOWER--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "cooler master": "GAMING FULL TOWER" }
+      }
+    },
+    "COOLERMASTER mini itx": {
+      "brand": "COOLER MASTER",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/285?p_124=3527&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": {
+        "template": { "cooler master": "MINI ITX" }
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@
 ## \file hypotez/src/utils/csv.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
 """!
 Module for CSV and JSON file operations.

@@ -1,9 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/_docs/startup_optioins.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign._docs """
-MODE = 'debug'
 
 ```python
 

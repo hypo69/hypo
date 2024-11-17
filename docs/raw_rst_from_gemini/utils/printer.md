@@ -2,7 +2,7 @@
 ## \file hypotez/src/utils/printer.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
 """
 This module provides enhanced print formatting for better readability of data structures.

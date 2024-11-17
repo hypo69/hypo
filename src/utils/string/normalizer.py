@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/string/normalizer.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.string """
-MODE = 'debug'
-""" module: src.utils.string """
-MODE = 'debug'
+
 """Module for normalizing product fields and handling various data types."""
 
 from decimal import Decimal, InvalidOperation

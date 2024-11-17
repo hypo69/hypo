@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/convertors/png.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.convertors """
-MODE = 'debug'
-""" module: src.utils.convertors """
-MODE = 'debug'
+
 """module: `src.utils.png`
 png convertors 
 This module reads text from a file, generates PNG images for each line of text using Pillow,

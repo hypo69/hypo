@@ -1,11 +1,5 @@
-## \file hypotez/src/gui/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.gui """
-MODE = 'debug'
-""" module: src.gui """
-MODE = 'debug'
+
 import json
 
 settings:dict = None

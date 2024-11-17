@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/scenarios/_experiments/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.scenarios._experiments """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.scenarios._experiments """
-MODE = 'debug'
+
 
 """ Aliexpress scenarios experiments """
 import os

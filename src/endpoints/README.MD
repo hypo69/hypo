@@ -2,7 +2,7 @@
 
 The `endpoints` module serves as a collection of endpoint modules that interact with external services and systems, acting as the main interface for data exchange with final consumers.  It includes the following submodules:
 
-1. **prestashop**
+1. **PrestaShop**
    Provides integration with the PrestaShop e-commerce platform.  This includes functions for product and order management, enabling seamless data exchange between the application and the PrestaShop system.
 
 2. **bots**
@@ -19,7 +19,7 @@ The `endpoints` module serves as a collection of endpoint modules that interact 
 
 ```python
 # Example usage (replace with actual module imports and methods)
-from endpoints.prestashop import getProductList
+from endpoints.PrestaShop import getProductList
 
 products = getProductList(shop_id=123)
 print(products)

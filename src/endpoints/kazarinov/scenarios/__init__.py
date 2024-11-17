@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.kazarinov.scenarios """
-MODE = 'debug'
-""" module: src.endpoints.kazarinov.scenarios """
-MODE = 'debug'
+
 """Сценарии Казаринова"""
 ...
 from packaging.version import Version

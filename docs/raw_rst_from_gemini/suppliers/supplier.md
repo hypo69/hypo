@@ -2,7 +2,7 @@
 ## \file hypotez/src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers """
 
 """ <b>Class</b> `Supplier` <b>Base class for all suppliers</b>

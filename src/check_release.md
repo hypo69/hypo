@@ -1,9 +1,4 @@
-## \file hypotez/src/check_relise.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src """
-MODE = 'debug'
 Код в файле `C:\Users\user\Documents\repos\hypotez\src\check_relise.py`  предназначен для проверки последней версии релиза на GitHub.  
 
 **Оценка:**

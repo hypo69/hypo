@@ -2,7 +2,7 @@
 ## \file hypotez/src/db/_examples/header.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db._examples """
 """ @namespace src.db._examples """
 import sys

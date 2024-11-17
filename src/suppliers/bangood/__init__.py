@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/bangood/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.bangood """
-MODE = 'debug'
-""" module: src.suppliers.bangood """
-MODE = 'debug'
+
 
 """  Постaвщик <i>wallmart</i>
 """

@@ -2,7 +2,7 @@
 # hypotez/src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop """
 """ Class of product category in `Prestashop`
 The class provides methods for adding, deleting, updating categories, 

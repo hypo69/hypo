@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+<PrestaShop xmlns:xlink="http://www.w3.org/1999/xlink">
 <api shopName="all in one catalog">
 <addresses xlink:href="https://e-cat.co.il/api/addresses" get="true" put="true" post="true" patch="true" delete="true" head="true">
 <description xlink:href="https://e-cat.co.il/api/addresses" get="true" put="true" post="true" patch="true" delete="true" head="true">
@@ -410,4 +410,4 @@ The Countries zones</description>
 <schema xlink:href="https://e-cat.co.il/api/zones?schema=synopsis" type="synopsis"/>
 </zones>
 </api>
-</prestashop>
+</PrestaShop>

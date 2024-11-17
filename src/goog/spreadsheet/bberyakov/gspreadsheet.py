@@ -1,11 +1,5 @@
-## \file hypotez/src/goog/spreadsheet/bberyakov/gspreadsheet.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.goog.spreadsheet.bberyakov """
-MODE = 'debug'
-""" module: src.goog.spreadsheet.bberyakov """
-MODE = 'debug'
+
 """  [File's Description]
 
 @namespace src: src

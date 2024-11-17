@@ -1,11 +1,5 @@
-## \file hypotez/src/webdriver/bs/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver.bs """
-MODE = 'debug'
-""" module: src.webdriver.bs """
-MODE = 'debug'
+
 import sys
 from pathlib import Path
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:

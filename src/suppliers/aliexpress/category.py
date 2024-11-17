@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/category.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress """
-MODE = 'debug'
+
 
 """ управление категориями поставщиика """
 from typing import Union
@@ -147,7 +141,7 @@ def update_categories_in_scenario_file(s, scenario_filename: str) -> bool:
                     "active": True,
                     "url":category_url,
                     "condition":"",
-                    "prestashop_categories":""
+                    "PrestaShop_categories":""
                     }})
         scenario_json['scenarios'] = categories_in_file
         json_dump(scenario_json,Path(gs.dir_scenarios, f'''{scenario_filename}'''))

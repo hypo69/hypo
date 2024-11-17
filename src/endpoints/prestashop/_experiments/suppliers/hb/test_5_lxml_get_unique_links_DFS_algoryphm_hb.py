@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb/test_5_lxml_get_unique_links_DFS_algoryphm_hb.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop._experiments.suppliers.hb """
-MODE = 'debug'
-""" module: src.endpoints.prestashop._experiments.suppliers.hb """
-MODE = 'debug'
+
 """ FROM openAI:
 Если вам необходимо углубиться до глубины depth = 5, то вам понадобится оптимизировать рекурсивный алгоритм,
 чтобы избежать переполнения стека вызовов и ускорить процесс сбора ссылок.

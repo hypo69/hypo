@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/api/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.api """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.api """
-MODE = 'debug'
+
 """ Aliexpress API wrapper"""
 ...
 

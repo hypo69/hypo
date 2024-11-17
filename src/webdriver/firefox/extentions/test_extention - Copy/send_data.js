@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/firefox/extentions/test_extention - Copy/send_data.js
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver.firefox.extentions.test_extention - Copy """
-MODE = 'debug'
 // Создаем обработчик события для загрузки страницы
 function onPageLoad() {
     // Собираем информацию о странице

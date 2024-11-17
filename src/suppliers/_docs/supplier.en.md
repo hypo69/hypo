@@ -1,9 +1,4 @@
-## \file hypotez/src/suppliers/_docs/supplier.en.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers._docs """
-MODE = 'debug'
 Here's a detailed explanation of what the `Supplier` class does, in English:
 
 ### Overview of the `Supplier` Class

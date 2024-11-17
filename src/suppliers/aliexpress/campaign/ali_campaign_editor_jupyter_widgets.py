@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/ali_campaign_editor_jupyter_widgets.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'debug'
+
 
 """ Jupyter widgets for the AliExpress campaign editor.
 

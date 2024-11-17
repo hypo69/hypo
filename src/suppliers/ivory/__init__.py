@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/ivory/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.ivory """
-MODE = 'debug'
-""" module: src.suppliers.ivory """
-MODE = 'debug'
+
 
 """  Постaвщик <i>wallmart</i>
 """

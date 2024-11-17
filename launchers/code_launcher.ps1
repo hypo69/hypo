@@ -1,9 +1,4 @@
-## \file hypotez/launchers/code_launcher.ps1
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: launchers """
-MODE = 'debug'
 # Получаем все аргументы командной строки
 $arguments = $args
 

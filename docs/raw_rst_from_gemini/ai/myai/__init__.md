@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """
 Module: hypotez/src/ai/myai
 
@@ -22,7 +22,7 @@ from .openai import OpenAIModel
 
 * **PEP 8 Compliance (Whitespace):** Added a blank line after the module docstring for better visual separation.
 
-* **Removed Redundant Comments:**  Comments like `# -*- coding: utf-8 -*-` and `## ~~~~~~~~~~~~~` are often unnecessary.  If the `-*- coding: utf-8 -*-` line is needed for a specific environment, it's kept.
+* **Removed Redundant Comments:**  Comments like `# -*- coding: utf-8 -*-` and `` are often unnecessary.  If the `-*- coding: utf-8 -*-` line is needed for a specific environment, it's kept.
 
 * **Correct File Structure:**  While the original code snippet *looks* correct, the comments specify a Windows path (`C:\...`). If you are using a different OS or a different absolute path, there's no way for a standard Python script to know that. The updated code assumes a *relative* path (or an appropriately configured Python import path) within a project; this is how Python imports should be structured.
 

@@ -1,15 +1,5 @@
-## \file hypotez/src/db/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.db """
-MODE = 'debug'
-""" module: src.db """
-MODE = 'debug'
-""" Модуль работы с базами данных """
-...
 
-...
 from .manager_translations import ProductTranslationsManager
 from .manager_translations import CategoryTranslationsManager
 from .manager_categories import CategoryManager

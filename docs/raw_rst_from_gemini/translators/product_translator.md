@@ -2,7 +2,7 @@
 ## \file hypotez/src/translators/product_translator.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.translators """
 
 """ Модуль управления переводами.

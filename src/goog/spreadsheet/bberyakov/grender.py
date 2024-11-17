@@ -1,11 +1,5 @@
-## \file hypotez/src/goog/spreadsheet/bberyakov/grender.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.goog.spreadsheet.bberyakov """
-MODE = 'debug'
-""" module: src.goog.spreadsheet.bberyakov """
-MODE = 'debug'
+
 """  Render Google Table
 
  

@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/convertors/csv.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.convertors """
-MODE = 'debug'
-""" module: src.utils.convertors """
-MODE = 'debug'
+
 
 """
 CSV and JSON conversion utilities.

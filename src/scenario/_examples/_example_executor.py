@@ -1,11 +1,5 @@
-## \file hypotez/src/scenario/_examples/_example_executor.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.scenario._examples """
-MODE = 'debug'
-""" module: src.scenario._examples """
-MODE = 'debug'
+
 
 ...
 """
@@ -26,10 +20,10 @@ The examples demonstrate how to run scenarios, handle scenario files, and intera
 
 import asyncio
 from pathlib import Path
-from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_prestashop_insert, execute_prestashop_insert_async, add_coupon
+from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_PrestaShop_insert, execute_PrestaShop_insert_async, add_coupon
 from src.utils import j_loads
 from src.product import ProductFields
-from src.endpoints.prestashop import Prestashop
+from src.endpoints.PrestaShop import PrestaShop
 
 # Assuming `Supplier` class is available and has necessary methods and attributes
 class MockSupplier:
@@ -111,21 +105,21 @@ def example_add_coupon():
     print("Coupon added successfully.")
 
 # Example 6: Execute PrestaShop insert asynchronously
-async def example_execute_prestashop_insert_async():
+async def example_execute_PrestaShop_insert_async():
     product_fields = ProductFields(
         presta_fields_dict={'reference': 'REF123', 'name': [{ 'id': 1, 'value': 'Sample Product' }], 'price': 100},
         assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'], 'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'}
     )
-    await execute_prestashop_insert_async(product_fields)
+    await execute_PrestaShop_insert_async(product_fields)
     print("Product data inserted into PrestaShop asynchronously.")
 
 # Example 7: Execute PrestaShop insert synchronously
-def example_execute_prestashop_insert():
+def example_execute_PrestaShop_insert():
     product_fields = ProductFields(
         presta_fields_dict={'reference': 'REF123', 'name': [{ 'id': 1, 'value': 'Sample Product' }], 'price': 100},
         assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'], 'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'}
     )
-    result = execute_prestashop_insert(product_fields)
+    result = execute_PrestaShop_insert(product_fields)
     if result:
         print("Product data inserted into PrestaShop.")
     else:
@@ -138,7 +132,7 @@ if __name__ == "__main__":
     example_run_scenario()
     example_insert_grabbed_data()
     example_add_coupon()
-    asyncio.run(example_execute_prestashop_insert_async())
-    example_execute_prestashop_insert()
+    asyncio.run(example_execute_PrestaShop_insert_async())
+    example_execute_PrestaShop_insert()
 
 

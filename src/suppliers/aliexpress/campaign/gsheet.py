@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/gsheet.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'debug'
+
 
 """ Редактор рекламной кампании через гугл таблицами """
 

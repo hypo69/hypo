@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/gearbest/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.gearbest """
-MODE = 'debug'
-""" module: src.suppliers.gearbest """
-MODE = 'debug'
+
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/alirequests.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress """
-MODE = 'debug'
+
 """ AliExpress requests handling.
 alirequests.py
 │

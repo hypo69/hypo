@@ -1,11 +1,5 @@
-## \file hypotez/src/ai/openai/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.ai.openai """
-MODE = 'debug'
-""" module: src.ai.openai """
-MODE = 'debug'
+
 """ OpenAI """
 
 

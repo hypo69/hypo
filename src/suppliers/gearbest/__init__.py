@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/gearbest/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.gearbest """
-MODE = 'debug'
-""" module: src.suppliers.gearbest """
-MODE = 'debug'
+
 
 """  Поставщик <I>gearbest.com</I>
 """

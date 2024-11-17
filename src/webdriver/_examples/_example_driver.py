@@ -1,11 +1,5 @@
-## \file hypotez/src/webdriver/_examples/_example_driver.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._examples """
-MODE = 'debug'
-""" module: src.webdriver._examples """
-MODE = 'debug'
+
 # example.py
 
 from src.webdriver import Driver, Chrome, Firefox, Edge

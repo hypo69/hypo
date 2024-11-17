@@ -49,16 +49,16 @@
    **Задача**: Вставляет собранные данные о продукте в PrestaShop.
 
    **Что делает**:
-   - Вызывает асинхронную функцию `execute_prestashop_insert_async` для вставки данных о продукте.
+   - Вызывает асинхронную функцию `execute_PrestaShop_insert_async` для вставки данных о продукте.
 
-7. **`execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+7. **`execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
 
    **Задача**: Асинхронно выполняет вставку данных о продукте в PrestaShop.
 
    **Что делает**:
-   - Вызывает `execute_prestashop_insert` для выполнения вставки данных.
+   - Вызывает `execute_PrestaShop_insert` для выполнения вставки данных.
 
-8. **`execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
+8. **`execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool`**
 
    **Задача**: Вставляет данные о продукте в PrestaShop.
 

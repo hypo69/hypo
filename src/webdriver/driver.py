@@ -1,5 +1,6 @@
 
 
+
 import copy
 import pickle
 import time
@@ -11,7 +12,8 @@ from selenium.common.exceptions import (InvalidArgumentException,
                                         ElementClickInterceptedException, 
                                         ElementNotInteractableException, 
                                         ElementNotVisibleException )
-from .header import gs
+import header
+from src import gs
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException, WebDriverException
 

@@ -15,7 +15,7 @@
 ## \file hypotez/src/endpoints/bots/telegram/header.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.bots.telegram """
 
 

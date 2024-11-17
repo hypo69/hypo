@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/_pytest/guide_test_executor.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._pytest """
-MODE = 'debug'
 Вот подробное руководство для тестировщика, чтобы он мог протестировать класс `ExecuteLocator` в проекте. Это руководство охватывает основные шаги от установки окружения до написания и запуска тестов.
 
 ---

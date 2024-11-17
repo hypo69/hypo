@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/amazon/api/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.amazon.api """
-MODE = 'debug'
-""" module: src.suppliers.amazon.api """
-MODE = 'debug'
+
 
 """
 - `__version__`: This variable holds the version of the module or package.

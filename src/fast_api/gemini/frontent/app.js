@@ -1,9 +1,4 @@
-## \file hypotez/src/fast_api/gemini/frontent/app.js
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.fast_api.gemini.frontent """
-MODE = 'debug'
 function App() {
   const [input, setInput] = React.useState("");
   const [messages, setMessages] = React.useState([]);

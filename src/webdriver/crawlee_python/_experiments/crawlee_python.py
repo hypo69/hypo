@@ -1,11 +1,5 @@
-## \file hypotez/src/webdriver/crawlee_python/_experiments/crawlee_python.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver.crawlee_python._experiments """
-MODE = 'debug'
-""" module: src.webdriver.crawlee_python._experiments """
-MODE = 'debug'
+
 """ Эксперименты с бибилиотекой crawlee-python """
 
 from pathlib import Path

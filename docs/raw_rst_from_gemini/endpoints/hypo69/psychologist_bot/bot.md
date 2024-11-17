@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/hypo69/hypo69_psychologist_bot.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.hypo69 """
 """! t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 

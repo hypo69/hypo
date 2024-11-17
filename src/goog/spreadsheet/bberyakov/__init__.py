@@ -1,11 +1,5 @@
-## \file hypotez/src/goog/spreadsheet/bberyakov/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.goog.spreadsheet.bberyakov """
-MODE = 'debug'
-""" module: src.goog.spreadsheet.bberyakov """
-MODE = 'debug'
+
 """  Google tables manipulation
 
 @namespace src: src

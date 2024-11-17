@@ -2,7 +2,7 @@
 ## \file hypotez/src/ai/openai/model/version.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.openai.model """
 import json
 import sys

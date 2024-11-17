@@ -1,0 +1,45 @@
+{
+  "scenarios": {
+    "MICROSOFT WIRELESS KEYBOARD": {
+      "brand": "MICROSOFT",
+      "url": "-----------------------------------------------MICROSOFT WIRELESS KEYBOARD----------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,316"
+    },
+    "MICROSOFT USB KEYBOARD": {
+      "brand": "MICROSOFT",
+      "url": "https://www.morlevi.co.il/Cat/155?p_315=42&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,315"
+    },
+    "MICROSOFT USB MOUSE": {
+      "brand": "MICROSOFT",
+      "url": "------------------------------------------------------MICROSOFT USB MOUSE------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,317"
+    },
+    "MICROSOFT WIRELESS MOUSE": {
+      "brand": "MICROSOFT",
+      "url": "https://www.morlevi.co.il/Cat/109?p_315=42&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,318"
+    },
+    "MICROSOFT USB KEYBOARD-MOUSE SET": {
+      "brand": "MICROSOFT",
+      "url": "https://www.morlevi.co.il/Cat/113?p_315=42&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,208"
+    },
+    "MICROSOFT WIRELESS  KEYBOARD-MOUSE SET": {
+      "brand": "MICROSOFT",
+      "url": "https://www.morlevi.co.il/Cat/114?p_315=42&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,334"
+    }
+  }

@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db.manager_coupons_and_sales """
 """ Менеджер скидок, купонов и т.п. в Prestashop  """
 from packaging.version import Version

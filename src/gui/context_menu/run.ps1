@@ -1,9 +1,4 @@
-## \file hypotez/src/gui/context_menu/run.ps1
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.gui.context_menu """
-MODE = 'debug'
 # Определяем текущий путь
 $currentPath = (Get-Location).Path
 

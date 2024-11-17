@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/advertisement/facebook/scenarios/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.advertisement.facebook.scenarios """
-MODE = 'debug'
-""" module: src.endpoints.advertisement.facebook.scenarios """
-MODE = 'debug'
+
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

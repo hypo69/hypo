@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/chrome/_docs/chrome.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver.chrome._docs """
-MODE = 'debug'
 Here’s the `chrome.py` file with Doxygen comments translated to English and formatted as requested, including a summary of the `chrome.json` file:
 
 ```python

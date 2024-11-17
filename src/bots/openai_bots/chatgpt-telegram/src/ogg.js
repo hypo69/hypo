@@ -1,9 +1,4 @@
-## \file hypotez/src/bots/openai_bots/chatgpt-telegram/src/ogg.js
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.bots.openai_bots.chatgpt-telegram.src """
-MODE = 'debug'
 import axios from 'axios'
 import { createWriteStream } from 'fs'
 import { dirname, resolve } from 'path'

@@ -2,7 +2,7 @@
 ## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
 
 

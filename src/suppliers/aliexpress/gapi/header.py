@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/gapi/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.gapi """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.gapi """
-MODE = 'debug'
+
 """ Определение путей программы
 """
 

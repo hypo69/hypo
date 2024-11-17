@@ -1,11 +1,5 @@
-## \file hypotez/src/logger/_examples/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.logger._examples """
-MODE = 'debug'
-""" module: src.logger._examples """
-MODE = 'debug'
+
 
 """ """
 ...

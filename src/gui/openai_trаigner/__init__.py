@@ -1,11 +1,5 @@
-## \file hypotez/src/gui/openai_trаigner/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.gui.openai_trаigner """
-MODE = 'debug'
-""" module: src.gui.openai_trаigner """
-MODE = 'debug'
+
 """ @namespace src.fast_api """
 
 """ """

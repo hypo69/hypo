@@ -1,33 +1,26 @@
-## \file hypotez/dev_utils/update_files_headers.ps1
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: dev_utils """
-MODE = 'debug'
 param (
-    [string]$Path = ".",
-    [switch]$ExcludeVenv = $true,
-    [string]$Interpreter = "/venv/Scripts/python.exe",
-    [switch]$ForceUpdate = $false,
-    [switch]$Help = $false
+    [string]$Path = ".",         # Путь к корневой папке проекта
+    [switch]$ForceUpdate,        # Флаг для принудительного обновления
+    [switch]$Clean,              # Флаг для очистки заголовков
+    [switch]$Help                # Флаг для вывода справки
 )
 
-# Информация о запуске скрипта
+
 $helpText = @"
 Скрипт для обработки Python файлов в проекте.
 
 Использование:
     -p <Path>           : Указывает путь к корневой директории проекта. По умолчанию текущая директория.
-    --exclude-venv      : Исключает директорию 'venv' из обработки.
-    --interpreter <Path>: Указывает путь к интерпретатору Python. По умолчанию '/venv/Scripts/python.exe'.
     --force-update      : Принудительно обновляет заголовки и интерпретатор в файлах.
+    --clean             : Выполняет очистку перед обновлением.
     -h, --help, ?       : Показывает справку о возможных параметрах и использовании скрипта.
 
 Пример:
-    .\update_files_headers.ps1 -p "src" --exclude-venv --interpreter "/venv/Scripts/python.exe" --force-update
+    .\update_files_headers.ps1 -p "src" --force-update --clean
 "@
 
-# Если включена опция помощи, выводим информацию и завершаем выполнение
+
+# Вывод справки, если требуется
 if ($Help) {
     Write-Host $helpText
     return
@@ -36,29 +29,26 @@ if ($Help) {
 # Формируем аргументы для Python-скрипта
 $Args = @()
 
-# Добавляем аргумент для пути, если он не равен значению по умолчанию
+# Добавляем аргументы
 if ($Path -ne ".") {
     $Args += "-p", $Path
 }
-
-# Добавляем флаг ExcludeVenv, если он включен
-if ($ExcludeVenv) {
-    $Args += "--exclude-venv"
-}
-
-# Добавляем флаг ForceUpdate, если он включен
 if ($ForceUpdate) {
     $Args += "--force-update"
 }
+if ($Clean) {
+    $Args += "--clean"
+}
 
-# Получаем абсолютный путь на один уровень выше
-$RootPath = Resolve-Path -Path (Join-Path -Path $Path -ChildPath "..")  # Путь на уровень выше
-Write-Host "Запуск скрипта обработки Python файлов в директории RootPath: $RootPath /n Path $Path "
+# Получаем путь к Python и запускаем скрипт
+$RootPath = Resolve-Path -Path (Join-Path -Path $Path -ChildPath "..")
+$PythonScriptPath = Join-Path -Path $Path -ChildPath "update_files_headers.py"
+$PythonExe = Join-Path -Path $RootPath -ChildPath "venv\Scripts\python.exe"
 
-# Проверяем, если путь к Python скрипту правильный
-$PythonScriptPath =  Join-Path -Path $Path -ChildPath "update_files_headers.py"
-$PythonExe = Join-Path -Path $RootPath -ChildPath "venv\Scripts\python.exe"  # или полный путь к Python интерпретатору, если не установлен глобально
-Write-Host "Python : $PythonExe $PythonScriptPath"
-# Запуск Python-скрипта с передачей аргументов
+if (-not (Test-Path $PythonExe)) {
+    Write-Host "Ошибка: Python интерпретатор не найден по пути: $PythonExe"
+    return
+}
+
 Write-Host "Запуск Python-скрипта: $PythonExe $PythonScriptPath $Args"
-& $PythonExe $PythonScriptPath @Args
+& "$env:VIRTUAL_ENV\Scripts\python.exe" $PythonScriptPath @Args

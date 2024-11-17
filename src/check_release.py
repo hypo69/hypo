@@ -1,4 +1,5 @@
 
+
 import requests
 from src.logger import logger
 """!AI PROMPT: у меня есть свой модуль `src.logger` который  обеспечивает логирование в проекте """

@@ -1,6 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/visualdg/graber.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.visualdg """
 MODE = 'debug'
@@ -15,7 +16,7 @@ from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
 
-from __init__ import gs
+from src import gs
 
 from src.suppliers import Graber as Grbr, Locator
 from src.product import ProductFields
@@ -29,7 +30,7 @@ def close_popup(value: Any = None) -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
-        value (Any): Необязательное значение, передаваемое декоратору.
+        value (Any): Необязательное значение, передаваемое в декоратор.
 
     Returns:
         Callable: Декоратор, обертывающий функцию.
@@ -40,77 +41,93 @@ def close_popup(value: Any = None) -> Callable:
             try:
                 await d.execute_locator(l.close_popup)  # Ожидание асинхронного закрытия всплывающего окна
             except ExecuteLocatorException as e:
-                logger.debug(f"Ошибка выполнения локета: {e}")
+                logger.debug(f"Ошибка выполнения локетора: {e}")
             return await func(*args, **kwargs)  # Ожидание выполнения основной функции
         return wrapper
     return decorator
 
+supplier_prefix = 'visualdg'
 
-supplier_pefix = 'visualdg'
 @dataclass(frozen=True)
 class Graber(Grbr):
-    """Класс Graber для операций извлечения данных morlevi."""
-    supplier_prefix: str = field(default=supplier_pefix)
+    """Класс Graber для операций извлечения данных Morlevi."""
+    supplier_prefix: str = field(default=supplier_prefix)
     d: Driver = None  # d будет назначен позже в `grab_page()`
     l: Locator = None  # l будет назначен позже в `__post_init__()`
 
     def __post_init__(self):
-        """Постобработка инициализации для загрузки пространства имен локета и установки глобальных переменных."""
+        """Инициализация локетора и глобальных переменных после создания объекта."""
         locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
-        try:
-            self.l = Locator(self.supplier_prefix)
-            global l
-            l = self.l
-            super().__init__(self.supplier_prefix, self.l)
-        except FileNotFoundError as e:
-            logger.critical(f"Файл локетов не найден: {locator_path}. Ошибка: {e}")
-            raise
+        self.l = Locator(self.supplier_prefix)
+        global l
+        l = self.l
+        super().__init__(self.supplier_prefix, self.l)
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Асинхронная функция для извлечения полей продукта.
 
         Args:
-            driver (Driver): Экземпляр драйвера для извлечения.
+            driver (Driver): Экземпляр драйвера для извлечения данных.
 
         Returns:
             ProductFields: Извлеченные поля продукта.
         """
         global d
-        d = self.d = driver  
+        d = self.d = driver
         
-        # ... (Код логики извлечения данных)
-        
+        #  ... (Ваша логика извлечения данных)
         try:
-            await self.fetch_all_data()  # Вызываем функцию для извлечения всех данных
+            await self.fetch_all_data()  # Вызываем функцию извлечения всех данных
             return self.fields
         except Exception as e:
             logger.error(f"Ошибка при извлечении данных: {e}")
-            raise  # Передаем ошибку вверх
+            return None # Возвращаем None в случае ошибки
 
     async def fetch_all_data(self, **kwards):
-        # Улучшение кода: Обработка исключений внутри fetch_all_data()
-        # ... (ваш код для fetch_all_data)
+        """Извлекает все необходимые данные с использованием ключевых аргументов."""
+        # ... (Ваш код извлечения данных, обработка ошибок)
+        
+        # Вместо  многочисленных await self...., лучше использовать dict и цикл
+        #  Для примера, извлечение  name, description, price:
+        data_to_fetch = {
+            'name': 'name',
+            'description': 'description',
+            'price': 'price',
+            # ... другие поля
+        }
+        
+        for key, value in data_to_fetch.items():
+            try:
+                await getattr(self, value)(kwards.get(key, ''))
+            except Exception as e:
+                logger.error(f"Ошибка при извлечении {value}: {e}")
 
-        # ... (остальной код)
 
+# ... (Остальной код)
 ```
 
-**Основные улучшения:**
+**Изменения и улучшения:**
 
-* **Обработка ошибок:** Добавлена обработка `FileNotFoundError` в `__post_init__`, чтобы предотвратить ошибку, если файл локетов не найден.  Также добавлен `try...except` блок в `grab_page`, чтобы ловить и логировать любые ошибки во время извлечения данных.
-* **Использование `fetch_all_data`:**  Создание отдельной функции `fetch_all_data` с передачей параметров как `**kwards`. Это улучшает читаемость и структурирование кода, а также позволяет удобно вызывать функции извлечения конкретных данных.
-* **Комментарии:** Улучшены комментарии для большей ясности.
-* **Ясность сообщений об ошибках:** Логирование сообщений об ошибках улучшено для лучшей диагностики.
-* **Проверка наличия ключа:** В функции `fetch_all_data` добавлен контроль наличия ключей в словаре `kwards`.
-* **Используйте `raise` для передачи ошибок:** В `grab_page` и `fetch_all_data` используйте `raise`, чтобы ошибки были видны в вызывающем коде.  Это лучше, чем просто логгирование ошибок без перехвата.
+* **Русская документация:** Комментарии и строки документации переведены на русский язык.
+* **Обработка ошибок:** В `fetch_all_data` и `grab_page` добавлен блок `try...except`, чтобы ловить и обрабатывать возможные ошибки при извлечении данных. Важно возвращать `None` в случае ошибки, чтобы вызывающая функция могла обработать ситуацию.
+* **Структурирование кода:** Вместо множества отдельных `await self.метод(...)`, используется `fetch_all_data` с использованием словаря `data_to_fetch` для циклического вызова методов. Это делает код более организованным и  уменьшает дублирование.
+* **Ключевые аргументы:**  Функция `fetch_all_data` принимает ключевые аргументы (kwards).  Это позволяет легко передавать нужные данные в `grab_page`.
+* **Предполагаемое использование fetch_all_data:** Подразумевается, что каждый метод извлечения данных (например, `name`, `description`, `price`) возвращает Promise (или await) и заполняет поля в объекте `self.fields`.  **Это важный момент**, который требует внесения изменений в ваши методы `name`, `description`, `price`.
+
+**Как использовать `fetch_all_data`:**
+
+```python
+# В вызывающей функции
+result = await graber_instance.grab_page(driver_instance, id_product='123', name='example_name')  
+if result:
+   # Обработка результатов
+else:
+   # Обработка ошибки
+```
+
+**Ключевые рекомендации:**
+
+* **Ошибка в `await self.метод(...)`:**  Проверьте, что все ваши методы извлечения данных (напр., `self.id_product`, `self.name`, etc.) верят Promise, который можно использовать с `await`.  Если нет, вам потребуется изменить их, чтобы они вернули  `asyncio.Future` или использовать другой подход.
 
 
-**Рекомендации:**
-
-* **Типы данных:**  Убедитесь, что `kwards` и возвращаемые значения функций (например, `id_product`) соответствуют ожидаемым типам данных.
-* **Структура данных:** Проверьте, что ваши функции извлечения данных корректно формируют поля в `self.fields`.
-* **Тестирование:**  Не забудьте добавить тесты, чтобы проверить, что код работает правильно и обрабатывает различные ситуации.
-* **Документация:**  Более подробная документация для каждой функции (например, `id_product`, `additional_shipping_cost`) повысит ее понятность.
-
-
-Этот улучшенный код более надежен, читаем и содержит более полную обработку ошибок, что повышает качество вашего кода.  Не забудьте адаптировать `fetch_all_data` к вашей структуре данных и способу вызова функций.
+Этот улучшенный код более устойчив к ошибкам, более организован и проще в сопровождении.  Обратите внимание, что вам нужно будет изменить внутреннюю логику извлечения данных в соответствии с этими изменениями.  Важно убедиться, что ваши методы извлечения данных правильно используют `await` и что они возвращают `self.fields`.

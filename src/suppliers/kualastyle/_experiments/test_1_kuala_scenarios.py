@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.kualastyle._experiments """
-MODE = 'debug'
-""" module: src.suppliers.kualastyle._experiments """
-MODE = 'debug'
+
 import header
 from header import Product, ProductFields, start_supplier
 s = start_supplier('kualastyle')

@@ -2,7 +2,7 @@
 ## \file hypotez/src/suppliers/locator.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.suppliers """
 from types import SimpleNamespace
 from pathlib import Path

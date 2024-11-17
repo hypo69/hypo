@@ -1,16 +1,10 @@
-## \file hypotez/src/endpoints/prestashop/category.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop """
-MODE = 'debug'
-""" module: src.endpoints.prestashop """
-MODE = 'debug'
-""" Class of product category in `Prestashop`
+
+""" Class of product category in `PrestaShop`
 The class provides methods for adding, deleting, updating categories, 
 as well as obtaining a list of parent categories from a given one.
 
-@details `PrestaCategory` layer between client categories (Prestashop, in my case) and suppliers
+@details `PrestaCategory` layer between client categories (PrestaShop, in my case) and suppliers
  
 locator_description Clients can each have their own unique category tree, which is only understandable to them. 
 Product binding to category is described in supplier scenarios
@@ -24,32 +18,58 @@ import requests
 from attr import attr, attrs
 from pathlib import Path
 from typing import List, Dict
+from types import SimpleNamespace
+
 import header
 from src import gs
 from src.utils import j_loads
-from .api import Prestashop
+from .api import PrestaShop
 from src.logger import logger
 
 
-class PrestaCategory(Prestashop):
-    """    
-        Пример использования класса:
-        @code    
-        prestacategory = PrestaCategory(API_DOMAIN=API_DOMAIN, API_KEY=API_KEY)
-        prestacategory.add_category_prestashop('New Category', 'Parent Category')
-        prestacategory.delete_category_prestashop(3)
-        prestacategory.update_category_prestashop(4, 'Updated Category Name')
-        print(prestacategory.get_parent_categories_list_prestashop(5))
-        ```    
-    """
+from typing import Optional
 
+class PrestaCategory(PrestaShop):
+    """    
+    Класс для работы с категориями в PrestaShop.
+
+    Пример использования класса:
+
+    .. code-block:: python
+
+        prestacategory = PrestaCategory(API_DOMAIN=API_DOMAIN, API_KEY=API_KEY)
+        prestacategory.add_category_PrestaShop('New Category', 'Parent Category')
+        prestacategory.delete_category_PrestaShop(3)
+        prestacategory.update_category_PrestaShop(4, 'Updated Category Name')
+        print(prestacategory.get_parent_categories_list_PrestaShop(5))
+    """
     
-    def __init__(self, credentials, *args,**kwards):
-        super().__init__(credentials)
+    def __init__(self, 
+                 credentials: Optional[dict | SimpleNamespace] = None, 
+                 api_domain: Optional[str] = None, 
+                 api_key: Optional[str] = None, 
+                 *args, **kwards):
+        """Инициализация категории PrestaShop.
+
+        Args:
+            credentials (Optional[dict | SimpleNamespace], optional): Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`. Defaults to None.
+            api_domain (Optional[str], optional): Домен API. Defaults to None.
+            api_key (Optional[str], optional): Ключ API. Defaults to None.
+        """
+        
+        if credentials is not None:
+            api_domain = credentials.get('api_domain', api_domain)
+            api_key = credentials.get('api_key', api_key)
+        
+        if not api_domain or not api_key:
+            raise ValueError('Необходимы оба параметра: api_domain и api_key.')
+        
+        super().__init__(api_domain, api_key, *args, **kwards)
+
 
     
     def get_parent_categories_list(self, id_category: str | int,  parent_categories_list:List[int] = []) -> list:
-        """  Вытаскивет из базы данных Prestashop родительские категории от заданной 
+        """  Вытаскивет из базы данных PrestaShop родительские категории от заданной 
         @details функция через API получает список категорий
 
         @param id_category `int`  категория для которой надо вытащить родителя

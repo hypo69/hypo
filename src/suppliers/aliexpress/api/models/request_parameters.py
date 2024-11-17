@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.api.models """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.api.models """
-MODE = 'debug'
+
 class ProductType:
     ALL = 'ALL'
     PLAZA = 'PLAZA'

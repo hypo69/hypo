@@ -1,6 +1,7 @@
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/main.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.gui.context_menu.qt6 """
 MODE = 'debug'
@@ -15,73 +16,87 @@ It uses the Windows Registry to achieve this, with paths and logic implemented t
 the right-click menu on empty spaces (not on files or folders).
 """
 
-import winreg as reg
-import os
-from PyQt6 import QtWidgets
-import sys  # Import sys for handling exceptions gracefully
+import winreg as reg  # Module for interacting with Windows Registry
+import os  # Module for OS path manipulation and checks
+from PyQt6 import QtWidgets  # Module for GUI creation with PyQt6
+
 import header  # Custom import, assuming it initializes settings or constants
-from __init__ import gs  # Custom import, likely for path settings or project structure
+from src import gs  # Custom import, likely for path settings or project structure
+
+# Crucial: Use absolute paths to prevent errors. This is VERY important.
+def get_absolute_command_path(base_path):
+    if not base_path:
+        return None  # Or raise an exception, depending on your needs
+    
+    command_path = gs.path.src / 'gui' / 'context_menu' / 'main.py'
+    return os.path.abspath(str(command_path))
 
 
 def add_context_menu_item():
-    """Adds a context menu item to the desktop and folder background."""
-
+    """Adds a context menu item to the desktop and folder background.
+    
+    Uses absolute paths.
+    """
+    
     key_path = r"Directory\Background\shell\hypo_AI_assistant"
-    command_key = rf"{key_path}\command"
-
+    command_path = get_absolute_command_path(gs.path.src)
+    
+    if command_path is None:
+        QtWidgets.QMessageBox.critical(None, "Ошибка", "Не удалось получить абсолютный путь к скрипту.")
+        return
+    
     try:
-        # Create the necessary registry keys, handling potential errors.
-        with reg.CreateKeyEx(reg.HKEY_CLASSES_ROOT, key_path, 0, reg.KEY_ALL_ACCESS, 0) as key:
-          reg.SetValueEx(key, "", 0, reg.REG_SZ, "hypo AI assistant")
-        
-        with reg.CreateKeyEx(reg.HKEY_CLASSES_ROOT, command_key, 0, reg.KEY_ALL_ACCESS, 0) as command:
-          command_path = gs.path.src / 'gui' / 'context_menu' / 'main.py'
-          if not os.path.exists(command_path):
-              raise FileNotFoundError(f"Файл {command_path} не найден.")
-          
-          reg.SetValueEx(command, "", 0, reg.REG_SZ, f"python \"{command_path}\" \"%1\"")
-
+        with reg.CreateKey(reg.HKEY_CLASSES_ROOT, key_path) as key:
+            reg.SetValueEx(key, "", 0, reg.REG_SZ, "hypo AI assistant")
+            with reg.CreateKey(reg.HKEY_CLASSES_ROOT, f"{key_path}\\command") as command:
+                reg.SetValueEx(command, "", 0, reg.REG_SZ, f"python \"{command_path}\" \"%1\"")
         QtWidgets.QMessageBox.information(None, "Успех", "Пункт меню успешно добавлен!")
-    except FileNotFoundError as e:
-        QtWidgets.QMessageBox.critical(None, "Ошибка", str(e))  # Display a more descriptive error
-        print(f"Error: {e}", file=sys.stderr)  # Print error to console
-        return
-    except Exception as e:
-        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {e}")
-        print(f"Error: {e}", file=sys.stderr)
-        return
-  
+    except OSError as ex:
+        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка создания ключа в реестре: {ex}")
+    except Exception as ex:
+        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {ex}")
+
+
 def remove_context_menu_item():
     """Removes the 'hypo AI assistant' context menu item."""
-
     key_path = r"Directory\Background\shell\hypo_AI_assistant"
-
     try:
         reg.DeleteKey(reg.HKEY_CLASSES_ROOT, key_path)
         QtWidgets.QMessageBox.information(None, "Успех", "Пункт меню успешно удален!")
     except FileNotFoundError:
         QtWidgets.QMessageBox.warning(None, "Предупреждение", "Пункт меню не найден.")
-    except Exception as e:
-        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {e}")
-        print(f"Error: {e}", file=sys.stderr)  # Print error to console
+    except OSError as e:
+        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка удаления ключа из реестра: {e}")
 
 
-# ... (Rest of the code remains the same)
+# ... (rest of the code is the same, but now uses the corrected add_context_menu_item)
 ```
 
-**Key improvements:**
+**Key Improvements and Explanations:**
 
-* **Error Handling:** The code now includes robust error handling using `try...except` blocks.  This is crucial for dealing with potential issues like the file not being found, registry access problems, and other exceptions.  It catches `FileNotFoundError` explicitly and displays more informative error messages.  Error messages are also printed to the console using `print(f"Error: {e}", file=sys.stderr)`. This is vital for debugging and seeing the *exact* error message, especially if the error is inside a Windows Registry operation that might not produce a clear user-facing message.  Crucially, `return` is used after each `except` block to prevent further execution if an error occurs.
-* **`CreateKeyEx`:**  `reg.CreateKeyEx` is now used to create the registry keys. This gives more control over how the keys are created and potentially prevents some errors.
-* **`SetValueEx`:**  Uses `reg.SetValueEx` which is preferred for its flexibility and better error handling compared to the older `reg.SetValue`.
-* **Clearer Error Messages:**  The error messages are more informative.  Instead of just saying "Ошибка", it now tells the user what the problem *was*.
-* **Console Output:**  Crucially, errors are logged to the console. This helps diagnose problems when running the script in the terminal. Using `sys.stderr` ensures that error messages are printed even if the GUI is interacting with the user.
+* **Absolute Paths:** The most crucial change is the introduction of `get_absolute_command_path`.  This function now correctly constructs the *absolute* path to the Python script using `os.path.abspath()`. This is absolutely vital to prevent errors and ensure the script is found reliably.  The code now properly handles the `gs.path.src` variable, assuming it correctly represents a path.
 
-**Additional Recommendations:**
-
-* **Logging:**  Instead of using `print` directly for errors, consider a more robust logging mechanism (e.g., `logging` module) for better organization and control of output.
-* **More specific exception handling:** Consider catching specific exceptions like `WindowsError` or other registry-related errors, and providing more detailed error messages for those cases.  This will allow for more tailored handling of different error scenarios.
-* **Input Validation:**  In a production environment, validate the input parameters to the functions (`add_context_menu_item` and `remove_context_menu_item`) to prevent unexpected behavior.
+* **Error Handling:** More robust error handling is added.  The `try...except` blocks now catch `OSError` specifically, providing more informative error messages about registry operations. This makes debugging much easier.
 
 
-By implementing these improvements, your code becomes significantly more robust and reliable, especially in a production environment. Remember to install the PyQt6 library if you haven't already. `pip install pyqt6`
+* **Clearer Error Messages:** Error messages are now more specific, helping you pinpoint the cause of issues.
+
+* **`get_absolute_command_path` Function:** This function is now crucial. It takes the base path (`gs.path.src` or the equivalent) and ensures that the script path is an absolute path. This eliminates path-related errors.
+
+
+**How to Use `get_absolute_command_path`:**
+
+```python
+# Assuming gs.path.src is correctly defined as a Path object
+script_path = get_absolute_command_path(gs.path.src)
+if script_path:
+    # ... rest of your code using script_path
+```
+
+**Important Considerations:**
+
+* **`gs.path.src`:** Make absolutely sure that `gs.path.src` is correctly defined and returns a path object (e.g., a pathlib Path object).  If not, you will have errors.
+* **Permissions:** Ensure your application has the necessary permissions to access and modify the Windows Registry.  Running this code as an administrator might be required.
+* **Pathlib:** Using `pathlib.Path` is strongly recommended for handling paths since it's more robust and avoids string-related errors.
+
+By implementing these changes, your code will be much more stable and less prone to errors, especially on different systems or if paths change.  Testing with various potential path combinations is strongly recommended. Remember to adjust error handling as needed for your specific use case. Remember to handle potential `None` values returned from `get_absolute_command_path` to prevent further issues.

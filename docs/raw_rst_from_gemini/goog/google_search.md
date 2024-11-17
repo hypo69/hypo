@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.goog """
 """ @namespace src.google """
 """  Пример парсера поискового запроса Гугл

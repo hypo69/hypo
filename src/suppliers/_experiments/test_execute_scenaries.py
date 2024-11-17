@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/_experiments/test_execute_scenaries.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers._experiments """
-MODE = 'debug'
-""" module: src.suppliers._experiments """
-MODE = 'debug'
+
 import unittest
 from unittest.mock import MagicMock
 from execute_scenarios import run_scenarios,run_scenario_file,run_scenario,grab_product_page

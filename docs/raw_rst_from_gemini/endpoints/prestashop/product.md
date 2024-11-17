@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/prestashop/product.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop """
 
 """ Класс товара `Prestashop`"""

@@ -1,9 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/_dot/aliapi.dot
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress._dot """
-MODE = 'debug'
 
 """ Aliexpress  API Scenario
 функция `start()` начинает сбор сценария по API, 

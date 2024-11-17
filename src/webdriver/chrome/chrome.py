@@ -1,4 +1,5 @@
 
+
 """ Chrome WebDriver.
 Implemented using Chrome for Developers.
 Chrome WebDriver  settings defined in the `chrome.json` file.
@@ -27,7 +28,7 @@ from src.logger import logger
 
 
 class Chrome(webdriver.Chrome):
-    """ Singleton class for Chrome WebDriver."""
+    """ class for Chrome WebDriver."""
 
     _instance = None
     driver_name: str = 'chrome'

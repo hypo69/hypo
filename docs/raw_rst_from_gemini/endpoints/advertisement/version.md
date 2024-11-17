@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/advertisement/version.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement """
 import json
 import pathlib

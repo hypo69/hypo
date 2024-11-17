@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/wallashop/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.wallashop """
-MODE = 'debug'
-""" module: src.suppliers.wallashop """
-MODE = 'debug'
+
 
 """
 - `__version__`: This variable holds the version of the module or package.

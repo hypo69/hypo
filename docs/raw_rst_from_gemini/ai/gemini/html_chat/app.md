@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.gemini.html_chat
 This module implements a simple web-based chat application using FastAPI and the Kazarinov AI model.
 It allows users to submit questions, and receives responses from the Kazarinov model.

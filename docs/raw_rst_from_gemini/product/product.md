@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.product """
 """  Class `Product`. Interaction between website, product, and PrestaShop.
 @details Defines the behavior of a product in the project.

@@ -1,9 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/_examples/affiliated_products_generator.en.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress._examples """
-MODE = 'debug'
 Here's the example file for the `affiliated_products_generator.py` module in English. This file demonstrates how to use the `AliAffiliatedProducts` class to gather product data and handle affiliate links.
 
 ### Example Usage of `AliAffiliatedProducts`

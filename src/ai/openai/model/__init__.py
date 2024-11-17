@@ -1,11 +1,5 @@
-## \file hypotez/src/ai/openai/model/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.ai.openai.model """
-MODE = 'debug'
-""" module: src.ai.openai.model """
-MODE = 'debug'
+
 ...
 
 from packaging.version import Version

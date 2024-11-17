@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/_docs/executor.en.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._docs """
-MODE = 'debug'
 
 The `executor.py` file in the `src.webdriver` module contains the `ExecuteLocator` class, which is designed for performing various actions on web page elements using Selenium WebDriver. Let’s break down the main components and functions of this class:
 

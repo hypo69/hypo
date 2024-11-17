@@ -1,9 +1,4 @@
-## \file hypotez/src/endpoints/hypo69/code_assistant/instructions/doc_creator_ru.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.hypo69.code_assistant.instructions """
-MODE = 'debug'
 Для каждого входного Python файла сгенерируй документацию в формате `rst` для последующей компиляции с Sphinx. Документация должна соответствовать следующим требованиям:
 
 1. **Формат документации**:

@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/wallashop/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.wallashop """
-MODE = 'debug'
-""" module: src.suppliers.wallashop """
-MODE = 'debug'
+
 
 """  Постaвщик <i>wallmart</i>
 """

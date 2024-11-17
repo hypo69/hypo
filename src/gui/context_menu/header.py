@@ -1,11 +1,5 @@
-## \file hypotez/src/gui/context_menu/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.gui.context_menu """
-MODE = 'debug'
-""" module: src.gui.context_menu """
-MODE = 'debug'
+
 
 """! Absolute path to modules and GTK & FFPMEG bin directory """
 

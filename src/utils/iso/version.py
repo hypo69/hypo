@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/iso/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.iso """
-MODE = 'debug'
-""" module: src.utils.iso """
-MODE = 'debug'
+
 
 """
 - `__version__`: This variable holds the version of the module or package.

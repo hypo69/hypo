@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook.scenarios """
 """ Переключение на аккунт. 
 Если есть кнопка `Переключить` - нажимаю её """

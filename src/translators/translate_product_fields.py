@@ -1,11 +1,5 @@
-## \file hypotez/src/translators/translate_product_fields.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.translators """
-MODE = 'debug'
-""" module: src.translators """
-MODE = 'debug'
+
 """ Модуль управления переводами.
 Слой связи между словарем полей товара, таблицей переводов и переводчиками
 
@@ -27,12 +21,12 @@ from src.utils import  pprint
 from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate
-from src.endpoints.prestashop import Prestashop
+from src.endpoints.PrestaShop import PrestaShop
 from src import gs
 from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate
-from src.endpoints.prestashop import Prestashop
+from src.endpoints.PrestaShop import PrestaShop
 
 def get_translations_from_presta_translations_table(product_reference: str, credentials: dict, i18n: str = None) -> list:
     """Функция возвращает словарь переводов полей товара."""

@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/_examples/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign._examples """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.campaign._examples """
-MODE = 'debug'
+
 import os
 import sys
 from pathlib import Path

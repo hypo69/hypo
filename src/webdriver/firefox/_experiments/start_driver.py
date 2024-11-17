@@ -1,11 +1,5 @@
-## \file hypotez/src/webdriver/firefox/_experiments/start_driver.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver.firefox._experiments """
-MODE = 'debug'
-""" module: src.webdriver.firefox._experiments """
-MODE = 'debug'
+
 """ вебдрайвер Firefox
 
 This code defines a subclass of webdriver.Firefox called Firefox. 

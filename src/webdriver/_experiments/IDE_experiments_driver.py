@@ -1,11 +1,5 @@
-## \file hypotez/src/webdriver/_experiments/IDE_experiments_driver.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._experiments """
-MODE = 'debug'
-""" module: src.webdriver._experiments """
-MODE = 'debug'
+
 import sys, os
 from pathlib import Path
 # ----------------

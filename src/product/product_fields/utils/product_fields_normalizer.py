@@ -1,11 +1,5 @@
-## \file hypotez/src/product/product_fields/utils/product_fields_normalizer.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.product.product_fields.utils """
-MODE = 'debug'
-""" module: src.product.product_fields.utils """
-MODE = 'debug'
+
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 from typing import Dict, Union

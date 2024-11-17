@@ -1,4 +1,5 @@
 
+
 """
 Script Executor
 @details Executor functions:
@@ -38,7 +39,7 @@ Executor functions:
         |                      |
         v                      v
   +-----------+        +-----------------+
-  |  Prestashop        | Other Suppliers |
+  |  PrestaShop        | Other Suppliers |
   +-----------+        +-----------------+
 </pre>
 @code
@@ -134,7 +135,7 @@ import header
 from src import gs
 from src.utils import pprint, j_loads, j_dumps
 from src.product import Product, ProductFields, translate_presta_fields_dict
-from src.endpoints.prestashop import Prestashop
+from src.endpoints.PrestaShop import PrestaShop
 from src.db import ProductCampaignsManager
 from src.logger import logger
 from src.logger.exceptions import ProductFieldException
@@ -314,14 +315,14 @@ def insert_grabbed_data(product_fields: ProductFields):
 
     @todo Move this logic to another file. In PrestaShop class.
     """
-    asyncio.run(execute_prestashop_insert(product_fields))
+    asyncio.run(execute_PrestaShop_insert(product_fields))
 
 
-async def execute_prestashop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
-    await execute_prestashop_insert(f, coupon_code, start_date, end_date)
+async def execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
+    await execute_PrestaShop_insert(f, coupon_code, start_date, end_date)
 
 
-def execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
+def execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
     """
     Insert the product into PrestaShop.
 
@@ -333,7 +334,7 @@ def execute_prestashop_insert(f: ProductFields, coupon_code: str = None, start_d
     @returns True if the insertion was successful, False otherwise.
     """
     try:
-        presta = Prestashop()
+        presta = PrestaShop()
         presta.post_product_data(
             product_id=f.product_id,
             product_name=f.product_name,

@@ -1,0 +1,45 @@
+{
+  "scenarios": {
+    "GENIUS WIRELESS KEYBOARD": {
+      "brand": "GENIUS",
+      "url": "-----------------------------------------------GENIUS WIRELESS KEYBOARD----------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,316"
+    },
+    "GENIUS USB KEYBOARD": {
+      "brand": "GENIUS",
+      "url": "https://www.morlevi.co.il/Cat/155?p_315=43&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,204,315"
+    },
+    "GENIUS USB MOUSE": {
+      "brand": "GENIUS",
+      "url": "https://www.morlevi.co.il/Cat/108?p_315=43&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,317"
+    },
+    "GENIUS WIRELESS MOUSE": {
+      "brand": "GENIUS",
+      "url": "https://www.morlevi.co.il/Cat/109?p_315=43&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,206,318"
+    },
+    "GENIUS USB KEYBOARD-MOUSE SET": {
+      "brand": "GENIUS",
+      "url": "https://www.morlevi.co.il/Cat/113?p_315=43&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,208"
+    },
+    "GENIUS WIRELESS  KEYBOARD-MOUSE SET": {
+      "brand": "GENIUS",
+      "url": "https://www.morlevi.co.il/Cat/114?p_315=43&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "203,207,334"
+    }
+  }

@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db.manager_categories """
 """ This module provides classes for managing categories from different suppliers.
     It exposes a base `CategoryManager` class and subclasses for specific
@@ -37,7 +37,7 @@ Example of a more detailed docstring (incorporating some of the above):
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db.manager_categories """
 """ This module provides classes for managing categories from different suppliers
     using a PostgreSQL database. It allows fetching, storing, and manipulating

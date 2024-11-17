@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/convertors/html2text.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.convertors """
-MODE = 'debug'
-""" module: src.utils.convertors """
-MODE = 'debug'
+
 """html2text: Turn HTML into equivalent Markdown-structured text."""
 __version__ = "3.1"
 __author__ = "Aaron Swartz (me@aaronsw.com)"

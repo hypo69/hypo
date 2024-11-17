@@ -2,7 +2,7 @@
 ## \file hypotez/src/ai/myai/traffic_light.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.myai """
 """! This module implements a traffic light system for a hypothetical scenario.
 It leverages the principles described in the article: https://habr.com/ru/articles/849414/

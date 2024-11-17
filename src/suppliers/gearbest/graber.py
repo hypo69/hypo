@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/gearbest/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.gearbest """
-MODE = 'debug'
-""" module: src.suppliers.gearbest """
-MODE = 'debug'
+
 
 
 import asyncio

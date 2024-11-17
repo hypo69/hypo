@@ -2,7 +2,7 @@
 ## \file hypotez/src/gui/version.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.gui """
 import json
 

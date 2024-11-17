@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/prestashop/pricelist.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop """
-MODE = 'debug'
-""" module: src.endpoints.prestashop """
-MODE = 'debug'
+
 import sys
 import os
 from attr import attr, attrs
@@ -15,15 +9,16 @@ from typing import Union
 import header
 from src import gs
 from src.logger import logger
-from src.utils import j_loads as j_loads
-from .api import Prestashop
+from src.utils.jjson import j_loads, j_loads_ns
+from .api import PrestaShop
+from types import SimpleNamespace
 
-class PriceListRequester(Prestashop):
+class PriceListRequester(PrestaShop):
     """
     Класс для запроса списка цен.
 
     Inherits:
-        Prestashop
+        PrestaShop
     """
 
     def __init__(self, api_credentials):

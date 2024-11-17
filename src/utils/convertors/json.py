@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/convertors/json.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.convertors """
-MODE = 'debug'
-""" module: src.utils.convertors """
-MODE = 'debug'
+
 
 """
 Module to convert JSON data into various formats: CSV, SimpleNamespace, XML, and XLS.

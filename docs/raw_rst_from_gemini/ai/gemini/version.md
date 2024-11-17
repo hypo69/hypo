@@ -2,7 +2,7 @@
 ## \file hypotez/src/ai/gemini/version.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.gemini """
 import json
 import sys

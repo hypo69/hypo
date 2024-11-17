@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/gui/main.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.gui """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.gui """
-MODE = 'debug'
+
 """ Main window interface for managing advertising campaigns """
 
 

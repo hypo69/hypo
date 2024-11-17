@@ -2,7 +2,7 @@
 
 The **endpoints** module serves as a collection of endpoint modules that interact with external services and systems, acting as the main interface for data exchange with final consumers. It includes the following submodules:
 
-1. **prestashop**  
+1. **PrestaShop**  
    Provides integration with the PrestaShop e-commerce platform, supporting functions such as product and order management, allowing seamless data exchange between the application and the PrestaShop system.
 
 2. **bots**  

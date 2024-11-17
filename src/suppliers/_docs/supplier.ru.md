@@ -1,9 +1,4 @@
-## \file hypotez/src/suppliers/_docs/supplier.ru.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers._docs """
-MODE = 'debug'
 Класс `Supplier` в данном коде является базовым классом для работы с поставщиками данных в вашем приложении. Вот подробное объяснение его назначения и функциональности:
 
 ### Назначение Класса

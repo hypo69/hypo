@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.settings """
 """ Project settings: passwords, server addresses, and other sensitive information.
 Passwords are stored in a database in KeyPass format with a `.kdbx` extension.

@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/convertors/_experiments/html2text.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.convertors._experiments """
-MODE = 'debug'
-""" module: src.utils.convertors._experiments """
-MODE = 'debug'
+
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header

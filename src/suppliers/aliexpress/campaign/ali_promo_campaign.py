@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/ali_promo_campaign.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'debug'
+
 
 """
 @dotfile suppliers/aliexpress/campaigns/_dot/aliexpress_campaign.dot
@@ -727,14 +721,14 @@ class AliPromoCampaign:
                 str(product.first_level_category_id): {
                     "ali_category_name": product.first_level_category_name,
                     "ali_parent": "",
-                    "prestashop_categories": [],
-                    "prestashop_main_category": ""
+                    "PrestaShop_categories": [],
+                    "PrestaShop_main_category": ""
                 },
                 str(product.second_level_category_id): {
                     "ali_category_name": product.second_level_category_name,
                     "ali_parent": str(product.first_level_category_id),
-                    "prestashop_categories": [],
-                    "prestashop_main_category": ""
+                    "PrestaShop_categories": [],
+                    "PrestaShop_main_category": ""
                 }
             }
             product.categories_convertor = categories_convertor

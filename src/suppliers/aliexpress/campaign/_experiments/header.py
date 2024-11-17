@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/_experiments/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign._experiments """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.campaign._experiments """
-MODE = 'debug'
+
 """ Header  """
 
 

@@ -1,11 +1,5 @@
-## \file hypotez/src/webdriver/_pytest/test_executor.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._pytest """
-MODE = 'debug'
-""" module: src.webdriver._pytest """
-MODE = 'debug'
+
 
 """ Фикстуры:
 

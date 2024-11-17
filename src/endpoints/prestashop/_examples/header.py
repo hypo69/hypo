@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/prestashop/_examples/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop._examples """
-MODE = 'debug'
-""" module: src.endpoints.prestashop._examples """
-MODE = 'debug'
+
 import sys
 import os
 from pathlib import Path

@@ -1,2 +1,3 @@
 
-from .category import Category, crawl_categories
+
+from .category import Category

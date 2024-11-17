@@ -2,7 +2,7 @@
 ## \file hypotez/src/scenario/executor.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.scenario """
 
 

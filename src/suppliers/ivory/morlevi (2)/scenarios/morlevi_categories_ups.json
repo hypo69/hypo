@@ -1,0 +1,17 @@
+{
+  "scenarios": {
+    "ups APC": {
+      "brand": "APC",
+      "url": "https://www.morlevi.co.il/Cat/332?p_315=86&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "158,247"
+    },
+    "ups EATON": {
+      "brand": "EATON",
+      "url": "https://www.morlevi.co.il/Cat/332?p_315=59&sort=datafloat2%2Cprice&keyword=",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": "158,247"
+    }
+  }

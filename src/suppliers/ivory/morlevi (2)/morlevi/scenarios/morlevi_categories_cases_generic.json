@@ -1,0 +1,52 @@
+{
+  "scenarios": {
+    "GENERIC MID TOWER": {
+      "brand": "GENERIC",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/97",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": { "template": { "computer cases": "MID TOWER" } }
+    },
+    "GENERIC full tower": {
+      "brand": "GENERIC",
+      "template": "",
+      "url": "----------------------------GENERIC FULL TOWER--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": { "template": { "computer cases": "FULL TOWER" } }
+    },
+    "GENERIC mini tower": {
+      "brand": "GENERIC",
+      "template": "",
+      "url": "https://www.morlevi.co.il/Cat/97",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": { "template": { "computer cases": "MINI TOWER" } }
+    },
+    "GENERIC gaming MID TOWER": {
+      "brand": "GENERIC",
+      "template": "",
+      "url": "----------------------------GENERIC gaming mid--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": { "template": { "computer cases": "MID TOWER" } }
+    },
+    "GENERIC gaming full tower": {
+      "brand": "GENERIC",
+      "template": "",
+      "url": "----------------------------GENERIC gaming full TOWER--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": { "template": { "computer cases": "FULL TOWER" } }
+    },
+    "GENERIC mini itx": {
+      "brand": "GENERIC",
+      "template": "",
+      "url": "----------------------------GENERIC mini itxR--------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new","presta_categories": { "template": { "computer cases": "MINI ITX" } }
+    }
+  }
+}

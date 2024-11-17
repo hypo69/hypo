@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/xls.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils """
-MODE = 'debug'
-""" module: src.utils """
-MODE = 'debug'
+
 """
 Module: src.utils.xls
 

@@ -3,7 +3,7 @@
  # <- venv win
 ## \file hypotez/src/ai/openai/bully.py
 #
-## ~~~~~~~~~~~~~
+
 """
 Module: src.ai.openai
 

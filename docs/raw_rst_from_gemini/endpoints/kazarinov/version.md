@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/kazarinov/version.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov """
 import json
 import pathlib

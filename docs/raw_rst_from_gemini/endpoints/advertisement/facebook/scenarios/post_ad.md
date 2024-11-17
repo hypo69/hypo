@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_ad.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook.scenarios """
 
 """ Публикация рекламного сообщения в группах фейсбук"""

@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/file.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils """
-MODE = 'debug'
-""" module: src.utils """
-MODE = 'debug'
+
 """ Module for file operations. """
 
 import os

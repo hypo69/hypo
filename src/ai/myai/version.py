@@ -1,11 +1,5 @@
-## \file hypotez/src/ai/myai/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.ai.myai """
-MODE = 'debug'
-""" module: src.ai.myai """
-MODE = 'debug'
+
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

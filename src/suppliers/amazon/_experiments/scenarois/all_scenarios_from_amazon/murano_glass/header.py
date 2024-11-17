@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass """
-MODE = 'debug'
-""" module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass """
-MODE = 'debug'
+
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]
@@ -24,7 +18,7 @@ from src.category import Category
 from src.utils import StringFormatter, StringNormalizer
 from src.utils import  pprint
 
-from src.endpoints.prestashop import PrestaAPIV, upload_image
+from src.endpoints.PrestaShop import PrestaAPIV, upload_image
 # ----------------
 
 def start_supplier(supplier_prefix: str = 'amazon' ):

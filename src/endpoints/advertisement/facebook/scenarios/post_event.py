@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_event.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.advertisement.facebook.scenarios """
-MODE = 'debug'
-""" module: src.endpoints.advertisement.facebook.scenarios """
-MODE = 'debug'
+
 
 """ Публикация календарного события v группах фейсбук"""
 from socket import timeout

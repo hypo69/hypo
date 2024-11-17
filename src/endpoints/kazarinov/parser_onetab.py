@@ -1,10 +1,6 @@
-## \file hypotez/src/endpoints/kazarinov/parser_onetab.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-""" module: src.endpoints.kazarinov """
+
 """Модуль для парсинга URL из страницы OneTab."""
 
-MODE = 'debug'
 
 import requests
 from bs4 import BeautifulSoup

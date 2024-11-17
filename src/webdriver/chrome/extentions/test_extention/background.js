@@ -1,4 +1,3 @@
-MODE = 'debug'
 // background.js
 
 chrome.browserAction.onClicked.addListener(tab => {

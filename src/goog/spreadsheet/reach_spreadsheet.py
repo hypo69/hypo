@@ -1,11 +1,5 @@
-## \file hypotez/src/goog/spreadsheet/reach_spreadsheet.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.goog.spreadsheet """
-MODE = 'debug'
-""" module: src.goog.spreadsheet """
-MODE = 'debug'
+
 
 """ 
    https://habr.com/ru/post/305378/    

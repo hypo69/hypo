@@ -1,11 +1,5 @@
-## \file hypotez/src/webdriver/chrome/_examples/driver.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver.chrome._examples """
-MODE = 'debug'
-""" module: src.webdriver.chrome._examples """
-MODE = 'debug'
+
 
 """ Examples for using `Driver` and `Chrome` classes """
 

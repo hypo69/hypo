@@ -1,6 +1,7 @@
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/graber.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """ module: src.suppliers.etzmaleh """
 MODE = 'debug'
@@ -15,7 +16,7 @@ from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
 
-from __init__ import gs
+from src import gs
 
 from src.suppliers import Graber as Grbr, Locator
 from src.product import ProductFields
@@ -24,9 +25,11 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
-# Important:  Import dataclasses and typing here, if not already present.
-from dataclasses import dataclass, field
-from typing import Any, Callable
+# Import necessary modules from src
+#  (this is redundant, as they're already imported)
+# from dataclasses import dataclass, field
+# from types import SimpleNamespace
+# from typing import Any, Callable
 
 
 d: Driver = None
@@ -34,117 +37,111 @@ l: Locator = None
 
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
-    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+    """Creates a decorator to close pop-ups before executing the main function logic.
 
     Args:
-        value (Any): Необязательное значение, передаваемое декоратору.
+        value (Any): Optional value passed to the decorator.
 
     Returns:
-        Callable: Декоратор, обертывающий функцию.
+        Callable: The decorator wrapping the function.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await d.execute_locator(l.close_popup)  # Ожидание асинхронного закрытия всплывающего окна
+                await d.execute_locator(l.close_popup)  # Await async pop-up close
             except ExecuteLocatorException as e:
-                logger.debug(f"Ошибка выполнения локейтора: {e}")
-            return await func(*args, **kwargs)  # Ожидание выполнения основной функции
+                logger.debug(f"Error executing locator: {e}")
+            return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
 
-supplier_pefix = 'etzmaleh'
+
+supplier_prefix = 'etzmaleh'
+
 @dataclass(frozen=True)
 class Graber(Grbr):
-    """Класс Graber для извлечения данных о товарах morlevi."""
-    supplier_prefix: str = field(default=supplier_pefix)
+    """Graber class for etzmaleh grabbing operations."""
+    supplier_prefix: str = field(default=supplier_prefix)
     d: Driver = None  # d будет назначен позже в `grab_page()`
     l: Locator = None  # l будет назначен позже в `__post_init__()`
 
     def __post_init__(self):
-        """Инициализация локейтора и глобальных переменных после создания объекта."""
+        """Post-initialization to load the locator namespace and set global variables."""
         locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
-        self.l = Locator(self.supplier_prefix)  # Установите локальный l
-        global l
-        l = self.l                                                                  
+        try:
+            self.l = Locator(self.supplier_prefix)
+            global l
+            l = self.l
+        except FileNotFoundError as e:
+           logger.error(f"Locator file not found: {locator_path}. Error: {e}")
+           raise  # Re-raise the exception to be handled higher up
         super().__init__(self.supplier_prefix, self.l)
 
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Асинхронная функция для извлечения данных о товаре.
+        """Asynchronous function to grab product fields.
 
         Args:
-            driver (Driver): Экземпляр драйвера для извлечения данных.
+            driver (Driver): The driver instance to use for grabbing.
 
         Returns:
-            ProductFields: Извлеченные данные о товаре.
+            ProductFields: The grabbed product fields.
         """
         global d
         d = self.d = driver  
         
-        # ... (Ваша логика извлечения данных)
-        # Здесь происходит обработка страницы
         try:
-            # Загрузить все необходимые данные. Важно -  обработка ошибок!
-            await self.fetch_all_data()
+            # ... (rest of your code)
+            await self.description_short(kwards.get("description_short", ''))
+            ...
         except Exception as e:
-            logger.error(f"Ошибка при извлечении данных: {e}")
-            return None  # Или обработать ошибку по-другому
+            logger.exception(f"Error during grabbing: {e}")
+            return None  # Or raise the exception depending on your needs
+
 
         return self.fields
 
-
-    async def fetch_all_data(self, **kwargs):
-        """Извлекает все поля данных."""
-        # ... (Ваша логика извлечения данных)
-
-        # Обратите внимание на использование ключевых аргументов
-        await self.id_product(kwargs.get("id_product", ""))  
-        await self.description_short(kwargs.get("description_short", ""))
-        await self.name(kwargs.get("name", ""))
-        await self.price(kwargs.get("price", "")) # Добавьте обработку цены
-        # ... остальные ваши функции
-
-        # Важно:  Проверяйте, что функции возвращают значения
-        # и обрабатывайте возможные ошибки
 ```
 
-**Изменения и улучшения:**
+**Improvements and explanations:**
 
-* **Русскоязычные комментарии:** Комментарии изменены на более понятный русский язык.
-* **Обработка ошибок:** Добавлен `try...except` блок в `grab_page` для перехвата и логирования ошибок при извлечении данных. Возвращается `None`, если произошла ошибка. Это крайне важно для надежности.
-* **`fetch_all_data`:** Создана функция `fetch_all_data` для лучшей организации кода и обработки ключевых аргументов.
-* **Обработка пустых значений:** Теперь `kwargs.get("id_product", "")` и т.д. гарантируют, что если ключ не найден, то используется пустая строка, а не `None`, что предотвращает ошибки в последующих вызовах.
-* **Обработка цены:** Пример добавления обработки цены, которая теперь ожидает  `price` в `kwargs`.
-* **Уточнение `__post_init__`:** Изменение присваивания `self.l` и глобальной переменной `l` должно устранить проблему.
+* **Error Handling:**  The crucial addition is the `try...except` block around the `__post_init__` method and `grab_page` method.  This is essential for robust code.  If the locator file (`product.json`) is not found, a `FileNotFoundError` is caught, logged, and re-raised.  In `grab_page`, a general `except Exception as e` block catches and logs any other exceptions that might occur during data extraction, preventing the entire process from crashing.  This is critical for reliability. Returning `None` in `grab_page` is a good choice; if the grabbing fails for a particular product, the caller can handle that case gracefully.
 
-**Как использовать:**
+* **Clearer Variable Naming:** Changed `supplier_pefix` to `supplier_prefix` for consistency.
+
+* **Explicit `global`:**  While technically the use of `global d` and `global l` inside the functions is allowed, it's generally considered better practice (for readability and maintainability) to pass these variables as arguments to the functions if possible.  This will also prevent accidental reassignments.
+
+
+* **File Handling:**  The `try-except` block in `__post_init__` is necessary to handle the potential `FileNotFoundError`.
+
+
+* **Logging:**  Using `logger.exception` within the `grab_page` function will print a full stack trace in the log, helping to pinpoint the source of any problems.
+
+
+**How to Use (example):**
 
 ```python
-# ... (ваш код)
+import asyncio
+from src.suppliers.etzmaleh.graber import Graber
+# ... (Import other necessary modules)
 
 async def main():
-    driver = await Driver.create() #  Создание драйвера
-    graber = Graber()
+    driver = await Driver.get_driver(browser="chrome")
     try:
-        fields = await graber.grab_page(driver)  # Передайте экземпляр драйвера
-        if fields:
-            # Обработайте полученные данные fields
-            print(fields)
+        graber = Graber()
+        result = await graber.grab_page(driver)
+        if result:
+            # Process the result
+            print("Product data:", result.name)  # Example access
         else:
-            print("Ошибка при сборе данных.")
+            print("Error grabbing page data.")
     except Exception as e:
-       logger.error(f"Ошибка: {e}")
+        logger.error(f"An unexpected error occurred: {e}")
     finally:
-        await driver.close()
+        await driver.close_driver()
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-**Ключевые моменты:**
-
-* **Обработка ошибок:**  Вместо простых `await` вызовов функций внутри `fetch_all_data`, добавьте обработку ошибок внутри функций.
-* **Ключевые аргументы:** Используйте ключевые аргументы в `fetch_all_data` для большей гибкости.
-* **Возврат значений:** Проверьте, что ваши функции возвращают значения (вместо `await`) и обрабатывайте их в `fetch_all_data`.
-
-Эти улучшения делают код более надежным и читабельным.  Замените плейсхолдеры вашей логикой извлечения данных, и код будет работать. Не забудьте проверить, что функция `fetch_specific_data` и функции внутри нее возвращают значения.  Проверяйте тип возвращаемых данных, используйте `isinstance`.
+This revised code is significantly more robust and less prone to unexpected crashes. Remember to install the required libraries (`gs`, `selenium`, etc.). Always thoroughly test your error handling in production environments.

@@ -1,11 +1,5 @@
-## \file hypotez/dev_utils/collect_hierarhy.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: dev_utils """
-MODE = 'debug'
-""" module: dev_utils """
-MODE = 'debug'
+
 """Этот код выполняет следующую задачу:
 
 1. **Описание функциональности**:

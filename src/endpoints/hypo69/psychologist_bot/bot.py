@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/hypo69/psychologist_bot/bot.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.hypo69.psychologist_bot """
-MODE = 'debug'
-""" module: src.endpoints.hypo69.psychologist_bot """
-MODE = 'debug'
+
 ...
 """! t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 

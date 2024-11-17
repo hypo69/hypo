@@ -1,24 +1,22 @@
-## \file hypotez/src/product/product.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.product """
-MODE = 'debug'
-""" module: src.product """
-MODE = 'debug'
+
 """  Class `Product`. Interaction between website, product, and PrestaShop.
 @details Defines the behavior of a product in the project.
 """
 
 import header
 from src import gs
-from src.endpoints.prestashop import Prestashop
+try:
+    from src.endpoints.prestashop import PrestaShop
+except Exception as ex:
+    print(ex)  
+    ...
 from src.category import Category
 from src.product.product_fields import ProductFields
 from src.logger import logger
 
 
-class Product(ProductFields, Prestashop):
+class Product(ProductFields, PrestaShop):
     """  Manipulations with the product.
     @details Initially, I instruct the grabber to fetch data from the product page,
     and then work with the PrestaShop API.

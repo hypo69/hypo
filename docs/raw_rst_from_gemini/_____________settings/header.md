@@ -2,7 +2,7 @@
 ## \file hypotez/src/project_settings/header.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.project_settings """
 
 """ Absolute path to modules  """

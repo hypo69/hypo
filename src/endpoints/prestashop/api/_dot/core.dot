@@ -1,13 +1,8 @@
-## \file hypotez/src/endpoints/prestashop/api/_dot/core.dot
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop.api._dot """
-MODE = 'debug'
-digraph Prestashop {
+digraph PrestaShop {
     node [shape=box, style=rounded, fontname="Helvetica", fontsize=12]
 
-    Prestashop [label="Prestashop"]
+    PrestaShop [label="PrestaShop"]
 
     _exec [label="_exec(resource, resource_id, method, data, search_filter, display, sort, limit, schema, io_format, language)"]
     _parse [label="_parse(text)"]
@@ -26,22 +21,22 @@ digraph Prestashop {
     upload_image [label="upload_image(resource, resource_id, img_url, img_name)"]
     get_product_images [label="get_product_images(product_id)"]
 
-    Prestashop -> _exec
-    Prestashop -> _parse
-    Prestashop -> create
-    Prestashop -> read
-    Prestashop -> write
-    Prestashop -> unlink
-    Prestashop -> search
-    Prestashop -> create_binary
-    Prestashop -> _save
-    Prestashop -> get_data
-    Prestashop -> remove_file
-    Prestashop -> get_apis
-    Prestashop -> get_languages_schema
-    Prestashop -> upload_image_async
-    Prestashop -> upload_image
-    Prestashop -> get_product_images
+    PrestaShop -> _exec
+    PrestaShop -> _parse
+    PrestaShop -> create
+    PrestaShop -> read
+    PrestaShop -> write
+    PrestaShop -> unlink
+    PrestaShop -> search
+    PrestaShop -> create_binary
+    PrestaShop -> _save
+    PrestaShop -> get_data
+    PrestaShop -> remove_file
+    PrestaShop -> get_apis
+    PrestaShop -> get_languages_schema
+    PrestaShop -> upload_image_async
+    PrestaShop -> upload_image
+    PrestaShop -> get_product_images
 
     _exec -> _prepare
     _exec -> _check_response

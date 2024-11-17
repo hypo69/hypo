@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/hb/login.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.hb """
-MODE = 'debug'
-""" module: src.suppliers.hb """
-MODE = 'debug'
+
 
 """  Функции авторизации поставщика """
 ...

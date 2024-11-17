@@ -1,4 +1,5 @@
 
+
 """
 The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 
 known as "locators." These configurations (or "locators") are dictionaries containing information on how to locate and interact with elements on a web page. The module provides the following functionalities:

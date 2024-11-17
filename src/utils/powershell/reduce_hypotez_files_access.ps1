@@ -1,9 +1,4 @@
-## \file hypotez/src/utils/powershell/reduce_hypotez_files_access.ps1
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.powershell """
-MODE = 'debug'
 # Получаем текущую директорию, где запускается скрипт
 $currentDirectory = Get-Location
 

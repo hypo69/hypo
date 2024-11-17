@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/kazarinov/gemini_chat.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov """
 
 """ 

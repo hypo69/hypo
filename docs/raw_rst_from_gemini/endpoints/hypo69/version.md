@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/hypo69/version.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.hypo69 """
 import json
 

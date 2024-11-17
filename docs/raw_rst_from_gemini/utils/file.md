@@ -2,7 +2,7 @@
 ## \file hypotez/src/utils/file.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
 
 """

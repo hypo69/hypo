@@ -1,7 +1,7 @@
 ```python
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.prestashop """
 """ Модуль обработки запросов к базам данных Prestashop.
 Адаптер для API

@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/api/skd/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.api.skd """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.api.skd """
-MODE = 'debug'
+
 '''
 Created on 2012-6-29
 

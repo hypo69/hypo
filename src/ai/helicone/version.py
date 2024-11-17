@@ -1,11 +1,5 @@
-## \file hypotez/src/ai/helicone/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.ai.helicone """
-MODE = 'debug'
-""" module: src.ai.helicone """
-MODE = 'debug'
+
 import json
 
 settings:dict = None

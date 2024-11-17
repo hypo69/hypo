@@ -1,11 +1,5 @@
-## \file hypotez/src/category/category.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.category """
-MODE = 'debug'
-""" module: src.category """
-MODE = 'debug'
+
 """ @namespace src.category """
 
 """ Модуль работы с категориями 
@@ -24,7 +18,7 @@ from src import gs
 from src.logger import logger 
 from src.utils import j_loads, j_dumps, pprint
 from src.utils.string import StringFormatter
-from src.endpoints.prestashop import Prestashop
+from src.endpoints.prestashop import PrestaShop
 from src.endpoints.prestashop import PrestaCategory 
 
 

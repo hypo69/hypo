@@ -1,13 +1,7 @@
-## \file hypotez/src/endpoints/prestashop/warehouse.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop """
-MODE = 'debug'
-""" module: src.endpoints.prestashop """
-MODE = 'debug'
 
-""" Класс склада (warwehouse) `Prestashop`"""
+
+""" Класс склада (warwehouse) `PrestaShop`"""
 
 
 import os,sys
@@ -16,9 +10,9 @@ from pathlib import Path
 import header
 from src import gs
 from src.utils import  pprint
-from .api import Prestashop
+from .api import PrestaShop
 from src.logger import logger
 
 
-class PrestaWarehouse(Prestashop): 
+class PrestaWarehouse(PrestaShop): 
     ...

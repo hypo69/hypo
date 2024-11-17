@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/etzmaleh/via_webdriver.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.etzmaleh """
-MODE = 'debug'
-""" module: src.suppliers.etzmaleh """
-MODE = 'debug'
+
 """   [File's Description]
 
 @namespace src: src
@@ -64,7 +58,7 @@ def get_list_products_in_category(s) -> list[str,str,None]:
     #for asin in list_products_in_category:
     #    _asin = asin.split(f'''/''')[-2]
     #    _sku = f'''{s.supplier_id}_{_asin}''' 
-    #    if PrestashopProduct.check(_sku) == False:
+    #    if PrestaShopProduct.check(_sku) == False:
     #        """ Синтаксис для того, чтобы помнить,
     #        что я проверяю ОТСУТСТВИЕ товара в базе данных
     #        """

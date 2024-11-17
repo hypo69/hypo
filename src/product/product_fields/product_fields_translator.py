@@ -1,11 +1,5 @@
-## \file hypotez/src/product/product_fields/product_fields_translator.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.product.product_fields """
-MODE = 'debug'
-""" module: src.product.product_fields """
-MODE = 'debug'
+
 
 """ Модуль перевода полей товара на языки клиентской базы данных """
 ...
@@ -70,7 +64,7 @@ def translate_presta_fields_dict (presta_fields_dict: dict,
 	    }
 	    ```
 	    У клиента язык с ключом `id=1` Может быть любым в зависимости от того на каком языке была 
-	    изначально установлена Prestashop. Чаще всего это английский, но это не правило.
+	    изначально установлена PrestaShop. Чаще всего это английский, но это не правило.
 	    Точные соответствия я получаю в схеме языков клиента 
 	    locator_description
 	    Самый быстрый способ узнать схему API языков - набрать в адресной строке браузера
@@ -102,7 +96,7 @@ def translate_presta_fields_dict (presta_fields_dict: dict,
         for translated_record in enabled_product_translations:
             """ 
                         ПЕРЕВОД
-            client codes from prestashop table
+            client codes from PrestaShop table
             'iso_code'    'en'    str
             'locale'    'en-US'    str
             'language_code'    'en-us'    str

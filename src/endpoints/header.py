@@ -1,8 +1,4 @@
-## \file hypotez/src/endpoints/kazarinov/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-""" module: src.endpoints.kazarinov """
-MODE = 'debug'
+
 import sys
 import json
 from packaging.version import Version

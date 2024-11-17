@@ -1,7 +1,5 @@
-## \file hypotez/src/endpoints/kazarinov/main.py
-# -*- coding: utf-8 -*-
 
-""" module: src.endpoints.kazarinov 
+
 
 
 Примеры запуска:
@@ -14,7 +12,6 @@
 3. Запуск с указанием пути к файлу настроек:
     python main.py --settings settings.json --mode prod
 """
-MODE = 'debug'
 import argparse
 import asyncio
 import json

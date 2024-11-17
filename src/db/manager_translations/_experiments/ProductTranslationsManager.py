@@ -1,11 +1,5 @@
-## \file hypotez/src/db/manager_translations/_experiments/ProductTranslationsManager.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.db.manager_translations._experiments """
-MODE = 'debug'
-""" module: src.db.manager_translations._experiments """
-MODE = 'debug'
+
 
 """ @namespace src.db.manager_translations._experiments """
 from sqlalchemy import create_engine, Column, String, Text

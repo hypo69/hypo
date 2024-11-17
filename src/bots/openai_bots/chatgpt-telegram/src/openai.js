@@ -1,9 +1,4 @@
-## \file hypotez/src/bots/openai_bots/chatgpt-telegram/src/openai.js
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.bots.openai_bots.chatgpt-telegram.src """
-MODE = 'debug'
 import { Configuration, OpenAIApi } from 'openai'
 import config from 'config'
 import { createReadStream } from 'fs'

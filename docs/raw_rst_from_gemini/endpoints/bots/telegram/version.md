@@ -13,7 +13,7 @@ This file defines version information for the Telegram bot component of the `hyp
 ## \file hypotez/src/endpoints/bots/telegram/version.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.bots.telegram """
 """
 - `__version__`: This variable holds the version of the module or package.

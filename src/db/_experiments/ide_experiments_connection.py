@@ -1,11 +1,5 @@
-## \file hypotez/src/db/_experiments/ide_experiments_connection.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.db._experiments """
-MODE = 'debug'
-""" module: src.db._experiments """
-MODE = 'debug'
+
 """ @namespace src.db._experiments """
 import header
 from src import gs

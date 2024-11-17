@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/ali_campaign_editor.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'debug'
+
 """ This module provides the editor for advertising campaigns.
 """
 

@@ -2,7 +2,7 @@
 ## \file hypotez/src/endpoints/kazarinov/react/pricelist_generator.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.kazarinov.react """
 
 #https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c

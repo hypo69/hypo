@@ -1,11 +1,5 @@
-## \file hypotez/src/fast_api/gemini.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.fast_api """
-MODE = 'debug'
-""" module: src.fast_api """
-MODE = 'debug'
+
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header 

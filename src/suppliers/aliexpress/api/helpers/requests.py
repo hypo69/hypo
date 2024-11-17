@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/api/helpers/requests.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.api.helpers """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.api.helpers """
-MODE = 'debug'
+
 from types import SimpleNamespace
 from time import sleep
 from src.logger import logger

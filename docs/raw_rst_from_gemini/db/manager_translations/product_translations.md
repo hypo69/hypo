@@ -2,7 +2,7 @@
 ## \file hypotez/src/db/manager_translations/product_translations.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.db.manager_translations """
 """ Менеджер переводов параметров товара"""
 import sys

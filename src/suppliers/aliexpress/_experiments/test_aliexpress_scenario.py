@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress._experiments """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress._experiments """
-MODE = 'debug'
+
 
 
 import sys
@@ -98,5 +92,5 @@ f.reference = d.current_url.split('/')[-1].split('.')[0]
 f.price = _(l['price'])
 
 if not p.check_if_product_in_presta_db(f.reference):
-    p.add_2_prestashop(f)
+    p.add_2_PrestaShop(f)
 ...

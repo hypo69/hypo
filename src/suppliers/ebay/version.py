@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/ebay/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.ebay """
-MODE = 'debug'
-""" module: src.suppliers.ebay """
-MODE = 'debug'
+
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

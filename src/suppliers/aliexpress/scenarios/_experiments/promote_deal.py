@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/aliexpress/scenarios/_experiments/promote_deal.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.aliexpress.scenarios._experiments """
-MODE = 'debug'
-""" module: src.suppliers.aliexpress.scenarios._experiments """
-MODE = 'debug'
+
 
 """ Создание рекламной кампании """
 

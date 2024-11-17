@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/crawlee_python/_docs/crawlee_python.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver.crawlee_python._docs """
-MODE = 'debug'
 
 The provided code defines a Python class `CrawleePython` that leverages the `PlaywrightCrawler` from the `crawlee` library to perform web scraping tasks. Below is a detailed breakdown of the class and its functionality:
 Class Overview: `CrawleePython`

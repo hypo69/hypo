@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/etzmaleh/login.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.etzmaleh """
-MODE = 'debug'
-""" module: src.suppliers.etzmaleh """
-MODE = 'debug'
+
 """   Интерфейс авторизации. Реализация для вебдрайвера
 
 @image html login.png

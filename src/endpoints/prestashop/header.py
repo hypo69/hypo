@@ -1,8 +1,4 @@
-## \file hypotez/src/bots/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-""" module: src.bots """
-MODE = 'debug'
+
 import sys
 import json
 from packaging.version import Version

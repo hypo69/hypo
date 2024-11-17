@@ -2,7 +2,7 @@
 ## \file hypotez/src/credentials.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src """
 """ Global Project Settings: paths, passwords, logins, and API settings.
 

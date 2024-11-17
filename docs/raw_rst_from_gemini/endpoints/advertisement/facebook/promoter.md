@@ -2,7 +2,7 @@
 # \file hypotez/src/endpoints/advertisement/facebook/promoter.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.endpoints.advertisement.facebook """
 
 """

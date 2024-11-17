@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/etzmaleh/product_fields.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.etzmaleh """
-MODE = 'debug'
-""" module: src.suppliers.etzmaleh """
-MODE = 'debug'
+
 """   [File's Description]
 
 @namespace src: src

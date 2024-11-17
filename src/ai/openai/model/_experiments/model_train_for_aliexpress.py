@@ -1,11 +1,5 @@
-## \file hypotez/src/ai/openai/model/_experiments/model_train_for_aliexpress.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.ai.openai.model._experiments """
-MODE = 'debug'
-""" module: src.ai.openai.model._experiments """
-MODE = 'debug'
+
 
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 

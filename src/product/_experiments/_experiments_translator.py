@@ -1,11 +1,5 @@
-## \file hypotez/src/product/_experiments/_experiments_translator.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.product._experiments """
-MODE = 'debug'
-""" module: src.product._experiments """
-MODE = 'debug'
+
 """ Переводы мультиязычных полей """
 from pathlib import Path
 from typing import Dict, List
@@ -13,7 +7,7 @@ import header
 from src import gs, j_dumps, j_loads
 from src.db import ProductTranslationsManager
 from src.ai import translate
-from src.endpoints.prestashop import Prestashop
+from src.endpoints.PrestaShop import PrestaShop
 from src.webdriver import Driver
 from header import ecat_api_credentials,emil_api_credentials
 from src.db import ProductTranslationsManager
@@ -24,11 +18,11 @@ from src.translator import translate_product_fields as translator
 
 """ ## Тестовый Клиент (emil-design.com,e-cat.co.il) """
 #1. ecat_api_credentials
-# presta_client_ecat = Prestashop(ecat_api_credentials)
+# presta_client_ecat = PrestaShop(ecat_api_credentials)
 # presta_client_ecat_laguages_schema = presta_client_ecat.get_languages_schema()
 
 #2. emil_api_credentials
-presta_client_emil = Prestashop(emil_api_credentials)
+presta_client_emil = PrestaShop(emil_api_credentials)
 emil_laguages_schema = presta_client_emil.get_languages_schema() 
 
 
@@ -76,7 +70,7 @@ def translate_presta_fields_dict (presta_fields_dict: Dict, page_lang: str, clie
 	    }
 	    ```
 	    У клиента язык с ключом `id=1` Может быть любым в зависимости от того на каком языке была 
-	    изначально установлена Prestashop. Чаще всего это английский, но это не правило.
+	    изначально установлена PrestaShop. Чаще всего это английский, но это не правило.
 	    Точные соответствия я получаю в схеме языков клиента 
 	    locator_description
 	    Самый быстрый способ узнать схему API языков - набрать в адресной строке браузера
@@ -108,7 +102,7 @@ def translate_presta_fields_dict (presta_fields_dict: Dict, page_lang: str, clie
         for translated_record in enabled_product_translations:
             """ 
                         ПЕРЕВОД
-            client codes from prestashop table
+            client codes from PrestaShop table
             'iso_code'    'en'    str
             'locale'    'en-US'    str
             'language_code'    'en-us'    str

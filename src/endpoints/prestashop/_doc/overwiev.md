@@ -1,12 +1,7 @@
-## \file hypotez/src/endpoints/prestashop/_doc/overwiev.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop._doc """
-MODE = 'debug'
 ### Directory Structure
 
-1. **Main Directory (`prestashop`)**:
+1. **Main Directory (`PrestaShop`)**:
     - `__init__.py`: Initializes the module.
     - `category.py`: Manages category-related functionality.
     - `customer.py`: Manages customer-related functionality.
@@ -42,8 +37,8 @@ MODE = 'debug'
     - `api_schemas_buider.py`: Script for building API schemas.
     - `api_suppliers_schema.json`: JSON schema for suppliers.
     - `csv_product_schema.json`: CSV schema for product.
-    - `prestashop_product_combinations_fields.json`: JSON file for product combination fields.
-    - `prestashop_product_combinations_sysnonyms_he.json`: JSON file for product combination synonyms in Hebrew.
+    - `PrestaShop_product_combinations_fields.json`: JSON file for product combination fields.
+    - `PrestaShop_product_combinations_sysnonyms_he.json`: JSON file for product combination synonyms in Hebrew.
 
 5. **Domains Directory (`domains`)**:
     - Contains subdirectories for different domains, each with their own settings and configurations.
@@ -125,7 +120,7 @@ MODE = 'debug'
 Here's an example of how you might use the `product` module:
 
 ```python
-from prestashop.product import Product
+from PrestaShop.product import Product
 
 # Initialize the Product
 product = Product()
@@ -140,4 +135,4 @@ print(product_data)
 
 The `_examples` directory contains example scripts and documentation files to help developers understand and use the module effectively.
 
-This overview provides a comprehensive understanding of the `prestashop` module's functionality. Let me know if you need any specific details or modifications!
+This overview provides a comprehensive understanding of the `PrestaShop` module's functionality. Let me know if you need any specific details or modifications!

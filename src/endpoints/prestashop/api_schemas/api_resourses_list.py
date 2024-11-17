@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop.api_schemas """
-MODE = 'debug'
-""" module: src.endpoints.prestashop.api_schemas """
-MODE = 'debug'
+
 """ Список всех доступных ресурсов для API вызовов"""
 
 resource:list = [

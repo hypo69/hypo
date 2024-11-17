@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb/test_2_hb_get_site_structure.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.prestashop._experiments.suppliers.hb """
-MODE = 'debug'
-""" module: src.endpoints.prestashop._experiments.suppliers.hb """
-MODE = 'debug'
+
 import requests
 from bs4 import BeautifulSoup
 import re

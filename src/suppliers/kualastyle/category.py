@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/kualastyle/category.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.kualastyle """
-MODE = 'debug'
-""" module: src.suppliers.kualastyle """
-MODE = 'debug'
+
 
 """  Модуль сбора товаров со страницы категорий поставщика hb.co.il через вебдрайвер
 У каждого поставщика свой сценарий обреботки категорий
@@ -13,7 +7,7 @@ MODE = 'debug'
 -Модуль Собирает список категорий со страниц продавца . `get_list_categories_from_site()`.
 @todo Сделать проверку на изменение категорий на страницах продавца. 
 Продавец может добавлять новые категории, переименовывать или удалять/прятать уже существующие. 
-По большому счету надо держать таблицу категории `prestashop.categories <-> aliexpress.shop.categoies`
+По большому счету надо держать таблицу категории `PrestaShop.categories <-> aliexpress.shop.categoies`
 - Собирает список товаров со страницы категории `get_list_products_in_category()`
 - Итерируясь по списку передает управление в `grab_product_page()` отсылая функции текущий url страницы  
 `grab_product_page()` обрабатывает поля товара и передает управление классу `Product` 

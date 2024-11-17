@@ -1,11 +1,5 @@
-## \file hypotez/src/utils/convertors/html.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.utils.convertors """
-MODE = 'debug'
-""" module: src.utils.convertors """
-MODE = 'debug'
+
 """
 HTML conversion utilities.
 Functions:

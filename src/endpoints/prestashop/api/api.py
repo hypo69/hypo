@@ -1,16 +1,10 @@
-## \file hypotez/src/endpoints/prestashop/api/api.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.endpoints.prestashop.api """
-MODE = 'debug'
-""" module: src.endpoints.prestashop.api """
-MODE = 'debug'
-
-""" Prestashop API connector - interact with Prestashop webservice API, using JSON and XML for message 
 
 
-@dotfile prestashop//api//prestashop.dot
+
+""" PrestaShop API connector - interact with PrestaShop webservice API, using JSON and XML for message 
+
+
+@dotfile PrestaShop//api//PrestaShop.dot
 
 """
 
@@ -25,6 +19,7 @@ from pathlib import Path
 from xml.etree import ElementTree
 from xml.parsers.expat import ExpatError
 
+import header
 from src import gs
 from src.utils.file import save_text_file
 from src.utils.convertors import dict2xml, xml2dict, base64_to_tmpfile
@@ -46,28 +41,28 @@ class Format(Enum):
     XML = 'XML'
 
 
-class Prestashop:
-    """ Interact with Prestashop webservice API, using JSON and XML for message
+class PrestaShop:
+    """ Interact with PrestaShop webservice API, using JSON and XML for message
 
     @details
-    This class provides methods to interact with the Prestashop API, allowing for CRUD operations, searching, and uploading images.
+    This class provides methods to interact with the PrestaShop API, allowing for CRUD operations, searching, and uploading images.
     It also provides error handling for responses and methods to handle the API's data.
 
-    @param API_KEY `str`: The API key generated from Prestashop.
-    @param API_DOMAIN `str`: The domain of the Prestashop shop (e.g., https://myprestashop.com).
+    @param API_KEY `str`: The API key generated from PrestaShop.
+    @param API_DOMAIN `str`: The domain of the PrestaShop shop (e.g., https://myPrestaShop.com).
     @param data_format `str`: Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
     @param default_lang `int`: Default language ID. Defaults to 1.
     @param debug `bool`: Activate debug mode. Defaults to True.
 
     @throws PrestaShopAuthenticationError: When the API key is wrong or does not exist.
-    @throws PrestaShopException: For generic Prestashop WebServices errors.
+    @throws PrestaShopException: For generic PrestaShop WebServices errors.
 
     Example usage:
     @code
-    from prestashop import Prestashop, Format
+    from PrestaShop import PrestaShop, Format
 
-    api = Prestashop(
-        API_DOMAIN = "https://myprestashop.com",
+    api = PrestaShop(
+        API_DOMAIN = "https://myPrestaShop.com",
         API_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
         default_lang=1,
         debug=True,
@@ -133,10 +128,10 @@ class Prestashop:
                  data_format: str = 'JSON',
                  default_lang: int = 1,
                  debug: bool = True) -> None:
-        """ Initialize the Prestashop class.
+        """ Initialize the PrestaShop class.
 
-        @param API_DOMAIN `str`: The API domain of your Prestashop shop (e.g., https://myprestashop.com).
-        @param API_KEY `str`: The API key generated from Prestashop.
+        @param API_DOMAIN `str`: The API domain of your PrestaShop shop (e.g., https://myPrestaShop.com).
+        @param API_KEY `str`: The API key generated from PrestaShop.
         @param data_format `str`: Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
         @param default_lang `int`: Default language ID. Defaults to 1.
         @param debug `bool`: Activate debug mode. Defaults to True.
@@ -190,7 +185,7 @@ class Prestashop:
             return False
 
     def _parse_response_error(self, response, method=None, url=None, headers=None, data=None):
-        """ Parse the error response from Prestashop API.
+        """ Parse the error response from PrestaShop API.
 
         @param response `requests.Response`: HTTP response object from the server.
         """
@@ -208,7 +203,7 @@ class Prestashop:
             error_answer = self._parse(response.text)
             if isinstance(error_answer, dict):
                 error_content = (error_answer
-                                 .get('prestashop', {})
+                                 .get('PrestaShop', {})
                                  .get('errors', {})
                                  .get('error', {}))
                 if isinstance(error_content, list):
@@ -248,7 +243,7 @@ class Prestashop:
               limit: str = None,
               language: int = None,
               io_format: str = 'JSON') -> dict | None:
-        """ Execute an HTTP request to the Prestashop API.
+        """ Execute an HTTP request to the PrestaShop API.
 
         @param resource `str`: The API resource (e.g., 'products', 'categories').
         @param resource_id `int |  str`: The ID of the resource.
@@ -306,7 +301,7 @@ class Prestashop:
         try:
             if self.data_format == 'JSON':
                 data = response.json()
-                return data.get('prestashop', {}) if 'prestashop' in data else data
+                return data.get('PrestaShop', {}) if 'PrestaShop' in data else data
             else:
                 tree = ElementTree.fromstring(text)
                 return tree
@@ -315,7 +310,7 @@ class Prestashop:
             return False
 
     def create(self, resource: str, data: dict) -> dict:
-        """ Create a new resource in Prestashop API.
+        """ Create a new resource in PrestaShop API.
 
         @param resource `str`: API resource (e.g., 'products').
         @param data `dict`: Data for the new resource.
@@ -325,7 +320,7 @@ class Prestashop:
         return self._exec(resource=resource, method='POST', data=data, io_format=self.data_format)
 
     def read(self, resource: str, resource_id: int |  str, **kwargs) -> dict:
-        """ Read a resource from the Prestashop API.
+        """ Read a resource from the PrestaShop API.
 
         @param resource `str`: API resource (e.g., 'products').
         @param resource_id `int |  str`: Resource ID.
@@ -335,7 +330,7 @@ class Prestashop:
         return self._exec(resource=resource, resource_id=resource_id, method='GET', io_format=self.data_format, **kwargs)
 
     def write(self, resource: str, data: dict) -> dict:
-        """ Update an existing resource in the Prestashop API.
+        """ Update an existing resource in the PrestaShop API.
 
         @param resource `str`: API resource (e.g., 'products').
         @param data `dict`: Data for the resource.
@@ -345,7 +340,7 @@ class Prestashop:
         return self._exec(resource=resource, resource_id=data.get('id'), method='PUT', data=data, io_format=self.data_format)
 
     def unlink(self, resource: str, resource_id: int |  str) -> bool:
-        """ Delete a resource from the Prestashop API.
+        """ Delete a resource from the PrestaShop API.
 
         @param resource `str`: API resource (e.g., 'products').
         @param resource_id `int |  str`: Resource ID.
@@ -355,7 +350,7 @@ class Prestashop:
         return self._exec(resource=resource, resource_id=resource_id, method='DELETE', io_format=self.data_format)
 
     def search(self, resource: str, filter: str | dict = None, **kwargs) -> List[dict]:
-        """ Search for resources in the Prestashop API.
+        """ Search for resources in the PrestaShop API.
 
         @param resource `str`: API resource (e.g., 'products').
         @param filter `str | dict`: Filter for the search.
@@ -365,7 +360,7 @@ class Prestashop:
         return self._exec(resource=resource, search_filter=filter, method='GET', io_format=self.data_format, **kwargs)
 
     def create_binary(self, resource: str, file_path: str, file_name: str) -> dict:
-        """ Upload a binary file to a Prestashop API resource.
+        """ Upload a binary file to a PrestaShop API resource.
 
         @param resource `str`: API resource (e.g., 'images/products/22').
         @param file_path `str`: Path to the binary file.
@@ -391,7 +386,7 @@ class Prestashop:
         save_text_file(file_name, j_dumps(data, indent=4, ensure_ascii=False))
 
     def get_data(self, resource: str, **kwargs) -> dict | None:
-        """ Fetch data from a Prestashop API resource and save it.
+        """ Fetch data from a PrestaShop API resource and save it.
 
         @param resource `str`: API resource (e.g., 'products').
         @param **kwargs: Additional arguments for the API request.
@@ -434,7 +429,7 @@ class Prestashop:
             return
 
     def upload_image_async(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> dict | None:
-        """ Upload an image to Prestashop API asynchronously.
+        """ Upload an image to PrestaShop API asynchronously.
 
         @param resource `str`: API resource (e.g., 'images/products/22').
         @param resource_id `int`: Resource ID.
@@ -453,7 +448,7 @@ class Prestashop:
         return response
 
     def upload_image(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> dict | None:
-        """ Upload an image to Prestashop API.
+        """ Upload an image to PrestaShop API.
 
         @param resource `str`: API resource (e.g., 'images/products/22').
         @param resource_id `int`: Resource ID.

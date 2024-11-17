@@ -2,7 +2,7 @@
 ## \file hypotez/src/category/version.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.category """
 import json
 

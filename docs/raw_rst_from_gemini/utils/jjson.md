@@ -2,7 +2,7 @@
 ## \file hypotez/src/utils/jjson.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
 
 """

@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/advertisement/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.advertisement """
-MODE = 'debug'
-""" module: src.endpoints.advertisement """
-MODE = 'debug'
+
 import json
 
 settings:dict = None

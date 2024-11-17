@@ -1,11 +1,5 @@
-## \file hypotez/src/endpoints/emil/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.endpoints.emil """
-MODE = 'debug'
-""" module: src.endpoints.emil """
-MODE = 'debug'
+
 import json
 
 settings:dict = None

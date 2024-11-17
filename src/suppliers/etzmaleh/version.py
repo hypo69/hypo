@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/etzmaleh/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.etzmaleh """
-MODE = 'debug'
-""" module: src.suppliers.etzmaleh """
-MODE = 'debug'
+
 __version__: str = 'v1.1'
 __doc__: str = ''
 __details__: str = ''

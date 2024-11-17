@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/_experiments/Supplier/test_absolute_paths.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers._experiments.Supplier """
-MODE = 'debug'
-""" module: src.suppliers._experiments.Supplier """
-MODE = 'debug'
+
 import unittest
 from pathlib import Path
 from src.suppliers import Supplier

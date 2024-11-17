@@ -1,0 +1,51 @@
+{
+  "role": "doc_creator",
+  "lang": "EN",
+  "models": [ "gemini" ],
+  "start_dirs": [],
+  "gemini_generation_config": {
+    "response_mime_type": "text/plain"
+  },
+  "gemini_model_name": "gemini-1.5-flash-8b",
+  "openai_model_name": "gpt-4o-mini",
+  "openai_assistant_id": "<OpenAI Assistant ID>",
+  "exclude_file_patterns": [
+    ".*\\(.*\\).*",
+    "___+.*",
+    "___+"
+  ],
+  "exclude_dirs": [
+    ".ipynb_checkpoints",
+    "_experiments",
+    "db",
+    "node_modules",
+    "__pycache__",
+    "_examples",
+    ".git",
+    ".venv"
+  ],
+  "exclude_files": [
+    "version.py"
+  ],
+  "role_directories": {
+    "doc_creator": "<model>/<lang>",
+    "code_checker": "consultant/<model>/<lang>"
+  },
+  "argparse": {
+    "role": {
+      "default": "code_checker",
+      "choices": [ "doc_creator", "code_checker", "qa" ]
+    },
+    "lang": {
+      "default": "EN",
+      "choices": [ "en", "ru" ]
+    },
+    "models": {
+      "default": [ "gemini" ],
+      "choices": [ "gemini", "openai" ]
+    },
+    "start_dirs": {
+      "default": [ "<path_to_src>" ]
+    }
+  }
+}

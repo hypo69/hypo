@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/amazon/_experiments/notebook_header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.amazon._experiments """
-MODE = 'debug'
-""" module: src.suppliers.amazon._experiments """
-MODE = 'debug'
+
 import sys
 import os
 from pathlib import Path

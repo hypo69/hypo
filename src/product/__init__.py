@@ -1,4 +1,5 @@
 
+
 """ Product module
 External classes and attributes:
 - `Product`: Methods and attributes of the product. Detailed description in `product.py`

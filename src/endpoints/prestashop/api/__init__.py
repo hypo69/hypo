@@ -1,2 +1,3 @@
 
-from .api import Prestashop
+
+from .api import PrestaShop

@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/_docs/driver_dependency_tree.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._docs """
-MODE = 'debug'
 
 <pre>
 src.webdriver.driver

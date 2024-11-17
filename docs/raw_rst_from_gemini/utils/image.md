@@ -2,7 +2,7 @@
 ## \file hypotez/src/utils/image.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.utils """
 """
 Image Saving Utilities.

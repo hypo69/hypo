@@ -1,35 +1,59 @@
 
-""" Module to set the project root path """
-
 import sys
-import os
-from pathlib import Path
+import json
+from packaging.version import Version
 
-def find_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')):
-    """ Finds the root directory of the project starting from the current file's directory,
+from pathlib import Path
+def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+    """!
+    Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
-    
+
     Args:
         marker_files (tuple): Filenames or directory names to identify the project root.
     
     Returns:
         Path: Path to the root directory if found, otherwise the directory where the script is located.
     """
-    # Get the directory of the current file (where this function is called)
-    current_path = Path(__file__).resolve().parent
-
-    # Traverse upwards through the directory tree, starting from the file's directory
+    __root__:Path
+    current_path:Path = Path(__file__).resolve().parent
+    __root__ = current_path
     for parent in [current_path] + list(current_path.parents):
-        # Check if any of the marker files (e.g., 'pyproject.toml', 'requirements.txt', '.git') exist in the current directory
         if any((parent / marker).exists() for marker in marker_files):
-            # If found, return this directory as the root of the project
-            return parent
+            __root__ = parent
+            break
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
 
-    # If no marker files are found, return the current directory of the file as a fallback
-    return current_path
 
-# Call the function to find the project root
-__root__: Path = find_project_root()
+# Get the root directory of the project
+__root__: Path = get_project_root()
+"""__root__ (Path): Path to the root directory of the project"""
 
-# Add the project root to `sys.path` to allow importing modules from the project root
-sys.path.append(str(__root__))
+from src import gs
+
+settings:dict = None
+try:
+    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
+
+
+doc_str:str = None
+try:
+    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+        doc_str = settings_file.read()
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
+
+ 
+
+__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
+__version__: str = settings.get("version", '')  if settings  else ''
+__doc__: str = doc_str if doc_str else ''
+__details__: str = ''
+__author__: str = settings.get("author", '')  if settings  else ''
+__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"

@@ -2,7 +2,7 @@
 # hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-
  # <- venv win
-## ~~~~~~~~~~~~~
+
 """ module: src.ai.openai """
 """ Переводчик текста с использованием OpenAI API.
 

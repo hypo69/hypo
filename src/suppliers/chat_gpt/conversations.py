@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/chat_gpt/conversations.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.chat_gpt """
-MODE = 'debug'
-""" module: src.suppliers.chat_gpt """
-MODE = 'debug'
+
 
 import re
 import argparse

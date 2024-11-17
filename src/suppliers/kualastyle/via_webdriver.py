@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/kualastyle/via_webdriver.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.kualastyle """
-MODE = 'debug'
-""" module: src.suppliers.kualastyle """
-MODE = 'debug'
+
 """    parsing kualastyle via webdriver
 
 @namespace src: src

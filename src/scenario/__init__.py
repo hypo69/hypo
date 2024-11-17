@@ -1,4 +1,5 @@
 
+
 """   Module with scenario execution functions: `run_scenario_files`, `run_scenarios`  
 Scenario executor for suppliers.
 ----
@@ -28,7 +29,7 @@ The logic executed is as follows:
         |                     |
         v                     v
   +-----------+        +-----------+
-  |  Prestashop       | Other Suppliers |
+  |  PrestaShop       | Other Suppliers |
   +-----------+        +-----------+
 </pre>
 @code
@@ -108,6 +109,6 @@ from .executor import (
     run_scenarios, 
     run_scenario_file, 
     run_scenario_files, 
-    execute_prestashop_insert, 
-    execute_prestashop_insert_async,
+    execute_PrestaShop_insert, 
+    execute_PrestaShop_insert_async,
 )

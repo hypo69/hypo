@@ -1,11 +1,5 @@
-## \file hypotez/src/suppliers/amazon/_experiments/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.suppliers.amazon._experiments """
-MODE = 'debug'
-""" module: src.suppliers.amazon._experiments """
-MODE = 'debug'
+
 import sys
 import os
 path = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]
@@ -24,7 +18,7 @@ from categories import Category
 from src.utils import StringFormatter, StringNormalizer, translate
 from src.utils import  pprint
 
-#from src.endpoints.prestashop import Product as PrestaProduct, PrestaAPIV1, PrestaAPIV2, PrestaAPIV3
+#from src.endpoints.PrestaShop import Product as PrestaProduct, PrestaAPIV1, PrestaAPIV2, PrestaAPIV3
 # ----------------
 
 def start_supplier(supplier_prefix: str = 'amazon'):

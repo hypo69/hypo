@@ -1,9 +1,4 @@
-## \file hypotez/Rubbish/2024-11-05/_static/documentation_options.js
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: Rubbish.2024-11-05._static """
-MODE = 'debug'
 const DOCUMENTATION_OPTIONS = {
     VERSION: '0.1',
     LANGUAGE: 'en',

@@ -63,12 +63,12 @@
    **5. `insert_grabbed_data(product_fields)`**:
    - **Purpose**: Inserts the product data into PrestaShop.
    - **Steps**:
-     - Calls `execute_prestashop_insert` asynchronously.
+     - Calls `execute_PrestaShop_insert` asynchronously.
 
-   **6. `execute_prestashop_insert(f, coupon_code, start_date, end_date)`**:
+   **6. `execute_PrestaShop_insert(f, coupon_code, start_date, end_date)`**:
    - **Purpose**: Inserts product data into PrestaShop.
    - **Steps**:
-     - Uses the `Prestashop` class to post product data.
+     - Uses the `PrestaShop` class to post product data.
      - Handles errors and logs issues.
 
 ---

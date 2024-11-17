@@ -1,11 +1,5 @@
-## \file hypotez/pytest/src/utils/printer/test_printer.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: pytest.src.utils.printer """
-MODE = 'debug'
-""" module: pytest.src.utils.printer """
-MODE = 'debug'
+
 
 import pytest
 import json

@@ -1,11 +1,5 @@
-## \file hypotez/src/translators/product_translator.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.translators """
-MODE = 'debug'
-""" module: src.translators """
-MODE = 'debug'
+
 
 """ Модуль управления переводами.
 Слой связи между словарем полей товара, таблицей переводов и переводчиками
@@ -30,7 +24,7 @@ from src.logger import logger
 from src.utils import j_loads, j_dumps,  pprint
 from src.db import ProductTranslationsManager
 from src.ai.openai import translate
-from src.endpoints.prestashop import Prestashop
+from src.endpoints.PrestaShop import PrestaShop
 
 # def record(presta_fields:Dict, i18n:str = None, i:int = 0) -> Dict:
 #     """ Вытаскивает из словаря полей престашоп 

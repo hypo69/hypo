@@ -1,9 +1,4 @@
-## \file hypotez/src/webdriver/_docs/executor.2.ru.md
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
 
-""" module: src.webdriver._docs """
-MODE = 'debug'
 подробные описания для каждой функции модуля `executor`:
 
 ### 1. `execute_locator`
