@@ -121,7 +121,7 @@ class CodeAssistant(BaseModel):
     def process_files(self):
         """Обработка файлов и взаимодействие с моделями."""
         self.translations = self.load_translations()
-        for i, (file_path, content) in enumerate(self.yield_files_content(self.start_dirs, ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD'])):
+        for i, (file_path, content) in enumerate(self.yield_files_content( )):
             content_request = self.create_request(content, self.translations)
 
             if self.gemini_model:
@@ -138,10 +138,9 @@ class CodeAssistant(BaseModel):
             print(f'Processed file number: {i + 1}')
             time.sleep(120)
 
-    def yield_files_content(self, start_dirs: List[Path], patterns: List[str]) -> Iterator[tuple[Path, str]]:
+    def yield_files_content(self, start_dirs: List[Path] = [gs.path.src], patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD']) -> Iterator[tuple[Path, str]]:
         """Итерация по файлам, соответствующим паттернам, и их содержимому."""
         exclude_file_patterns = [re.compile(pattern) for pattern in self.exclude_file_patterns]
-        print(f"Excluded: {exclude_file_patterns}")
         for start_dir in start_dirs:
             for pattern in patterns:
                 for file_path in start_dir.rglob(pattern):
