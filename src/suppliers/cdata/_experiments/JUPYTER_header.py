@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/cdata/_experiments/JUPYTER_header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.cdata._experiments """
+MODE = 'development'
 
 
 import sys

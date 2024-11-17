@@ -1,3 +1,9 @@
+## \file hypotez/src/db/manager_categories/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.db.manager_categories """
+MODE = 'development'
 
 
 """ @namespace src.db.manager_categories """

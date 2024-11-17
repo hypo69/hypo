@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.kualastyle._experiments """
+MODE = 'development'
 
 
 import header

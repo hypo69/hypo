@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/visualdg/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.visualdg """
+MODE = 'development'
 
 
 import json

@@ -1,3 +1,9 @@
+## \file hypotez/src/ai/openai/model/event_handler.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.ai.openai.model """
+MODE = 'development'
 
 
 

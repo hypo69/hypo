@@ -1,3 +1,9 @@
+## \file hypotez/src/category/category.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.category """
+MODE = 'development'
 
 
 """ @namespace src.category """

@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/supplier.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers """
+MODE = 'development'
 
 import importlib
 from typing import List, Optional, Dict, Any

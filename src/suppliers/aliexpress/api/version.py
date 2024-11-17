@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/api/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress.api """
+MODE = 'development'
 
 
 

@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/_experiments/test_categories_from_template.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers._experiments """
+MODE = 'development'
 
 
 """ класс проверки создания шаблонов категорий.

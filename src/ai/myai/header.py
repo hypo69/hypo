@@ -1,3 +1,9 @@
+## \file hypotez/src/ai/myai/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.ai.myai """
+MODE = 'development'
 
 import sys
 import json

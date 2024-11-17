@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/_experiments/test_supplier.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers._experiments """
+MODE = 'development'
 
 
 import unittest

@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/edge/_experiments/edge.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.edge._experiments """
+MODE = 'development'
 
 
 from pathlib import Path

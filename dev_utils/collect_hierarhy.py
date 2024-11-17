@@ -1,3 +1,9 @@
+## \file hypotez/dev_utils/collect_hierarhy.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: dev_utils """
+MODE = 'development'
 
 
 """Этот код выполняет следующую задачу:

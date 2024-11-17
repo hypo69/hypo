@@ -1,3 +1,9 @@
+## \file hypotez/pytest/src/utils/printer/test_printer.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: pytest.src.utils.printer """
+MODE = 'development'
 
 
 

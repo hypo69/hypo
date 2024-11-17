@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/chat_gpt/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.chat_gpt """
+MODE = 'development'
 
 
 """ Модуль управления моделью OpenAI 

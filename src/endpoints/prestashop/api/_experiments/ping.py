@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/api/_experiments/ping.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop.api._experiments """
+MODE = 'development'
 
 
 import header

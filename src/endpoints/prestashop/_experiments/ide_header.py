@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/_experiments/ide_header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop._experiments """
+MODE = 'development'
 
 
 """ Файл заголовок, подключаемый к ide тестовым модулям """

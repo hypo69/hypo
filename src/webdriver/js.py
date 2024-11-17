@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/js.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver """
+MODE = 'development'
 
 import header
 from src import gs

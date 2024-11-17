@@ -1,3 +1,9 @@
+## \file hypotez/src/utils/file.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.utils """
+MODE = 'development'
 
 
 """ Module for file operations. """

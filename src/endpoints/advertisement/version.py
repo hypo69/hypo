@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/advertisement/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.advertisement """
+MODE = 'development'
 
 
 import json

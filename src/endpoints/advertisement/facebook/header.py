@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/advertisement/facebook/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.advertisement.facebook """
+MODE = 'development'
 
 import sys
 import json

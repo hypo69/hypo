@@ -1,3 +1,9 @@
+## \file hypotez/src/product/product_fields/utils/product_fields_normalizer.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.product.product_fields.utils """
+MODE = 'development'
 
 
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

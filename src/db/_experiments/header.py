@@ -1,3 +1,9 @@
+## \file hypotez/src/db/_experiments/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.db._experiments """
+MODE = 'development'
 
 
 """ @namespace src.db._experiments """

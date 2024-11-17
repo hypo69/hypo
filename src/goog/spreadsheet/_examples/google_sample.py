@@ -1,3 +1,9 @@
+## \file hypotez/src/goog/spreadsheet/_examples/google_sample.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.goog.spreadsheet._examples """
+MODE = 'development'
 
 
 """  Всякие манипуляции с гуглем

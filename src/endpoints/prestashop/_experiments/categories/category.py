@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/_experiments/categories/category.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop._experiments.categories """
+MODE = 'development'
 
 
 """  Работа с категориями товара 

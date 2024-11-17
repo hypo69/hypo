@@ -1,3 +1,9 @@
+## \file hypotez/src/scenario/_experiments/amazon_murano_glass.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.scenario._experiments """
+MODE = 'development'
 
 
 import header

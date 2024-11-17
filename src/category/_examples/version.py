@@ -1,3 +1,9 @@
+## \file hypotez/src/category/_examples/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.category._examples """
+MODE = 'development'
 
 
 """ @namespace src.category._examples """

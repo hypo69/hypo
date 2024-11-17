@@ -1,3 +1,9 @@
+## \file hypotez/src/translators/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.translators """
+MODE = 'development'
 
 import sys
 import json

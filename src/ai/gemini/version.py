@@ -1,3 +1,9 @@
+## \file hypotez/src/ai/gemini/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.ai.gemini """
+MODE = 'development'
 
 
 ...

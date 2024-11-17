@@ -1,3 +1,9 @@
+## \file hypotez/src/bots/openai_bots/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.bots.openai_bots """
+MODE = 'development'
 
 import sys
 import json

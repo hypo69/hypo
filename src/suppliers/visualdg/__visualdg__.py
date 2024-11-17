@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/visualdg/__visualdg__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.visualdg """
+MODE = 'development'
 
 
 """    Supplier: visualdg.co.il

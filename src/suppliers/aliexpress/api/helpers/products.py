@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress.api.helpers """
+MODE = 'development'
 
 
 def parse_product(product):

@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/edge/extentions/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.edge.extentions """
+MODE = 'development'
 
 
 

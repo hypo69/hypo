@@ -1,3 +1,9 @@
+## \file hypotez/src/credentials.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src """
+MODE = 'development'
 
 
 """ Global Project Settings: paths, passwords, logins, and API settings.  """

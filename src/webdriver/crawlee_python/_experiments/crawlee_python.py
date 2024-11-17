@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/crawlee_python/_experiments/crawlee_python.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.crawlee_python._experiments """
+MODE = 'development'
 
 
 """ Эксперименты с бибилиотекой crawlee-python """

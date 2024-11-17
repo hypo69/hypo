@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/kualastyle_get_site_structure.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop._experiments.suppliers """
+MODE = 'development'
 
 
 

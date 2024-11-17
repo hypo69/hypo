@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/grandadvance/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.grandadvance """
+MODE = 'development'
 
 
 __version__: str = 'v1.1'

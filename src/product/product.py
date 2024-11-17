@@ -1,3 +1,9 @@
+## \file hypotez/src/product/product.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.product """
+MODE = 'development'
 
 
 """  Class `Product`. Interaction between website, product, and PrestaShop.

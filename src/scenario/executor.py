@@ -1,3 +1,9 @@
+## \file hypotez/src/scenario/executor.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.scenario """
+MODE = 'development'
 
 
 """

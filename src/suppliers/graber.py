@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/graber.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers """
+MODE = 'development'
 
 
 """ Базовый класс сбора данных со старницы для всех поставщиков. 

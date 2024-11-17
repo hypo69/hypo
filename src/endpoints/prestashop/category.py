@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/category.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop """
+MODE = 'development'
 
 
 """ Class of product category in `PrestaShop`

@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/edge/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.edge """
+MODE = 'development'
 
 import sys
 import json

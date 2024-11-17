@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/kualastyle/_experiments/notebook_header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.kualastyle._experiments """
+MODE = 'development'
 
 
 import sys

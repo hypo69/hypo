@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/api/_experiments/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop.api._experiments """
+MODE = 'development'
 
 
 """ Тестовые настройки для проверки PrestaAPIV.

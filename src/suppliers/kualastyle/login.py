@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/kualastyle/login.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.kualastyle """
+MODE = 'development'
 
 
 

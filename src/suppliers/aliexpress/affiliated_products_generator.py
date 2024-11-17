@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/affiliated_products_generator.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress """
+MODE = 'development'
 
 
 import asyncio

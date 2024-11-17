@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/pricelist.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop """
+MODE = 'development'
 
 
 import sys

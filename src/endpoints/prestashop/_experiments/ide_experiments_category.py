@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/_experiments/ide_experiments_category.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop._experiments """
+MODE = 'development'
 
 
 import ide_header

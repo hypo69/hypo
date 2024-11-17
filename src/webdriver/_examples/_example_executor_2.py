@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/_examples/_example_executor_2.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver._examples """
+MODE = 'development'
 
 
 """ Примеры использования класса `ExecuteLocator` для различных сценариев тестирования.

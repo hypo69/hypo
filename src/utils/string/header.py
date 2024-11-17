@@ -1,3 +1,9 @@
+## \file hypotez/src/utils/string/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.utils.string """
+MODE = 'development'
 
 
 """ Experiments with aliexpress campaign  """

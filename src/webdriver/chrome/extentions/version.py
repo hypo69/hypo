@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/chrome/extentions/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.chrome.extentions """
+MODE = 'development'
 
 
 

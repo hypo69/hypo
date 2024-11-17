@@ -1,3 +1,9 @@
+## \file hypotez/dev_utils/code2file_for_chat_gpt.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: dev_utils """
+MODE = 'development'
 
 
 """! Этот скрипт рекурсивно читает и обрабатывает все указанные текстовые и данные файлы в каталоге 

@@ -1,3 +1,9 @@
+## \file hypotez/src/utils/convertors/_experiments/html2text.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.utils.convertors._experiments """
+MODE = 'development'
 
 
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

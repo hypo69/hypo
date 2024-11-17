@@ -1,3 +1,9 @@
+## \file hypotez/src/product/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.product """
+MODE = 'development'
 
 import sys
 import json

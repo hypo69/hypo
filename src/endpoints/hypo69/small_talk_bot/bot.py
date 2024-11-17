@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/hypo69/small_talk_bot/bot.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.hypo69.small_talk_bot """
+MODE = 'development'
 
 
 ...

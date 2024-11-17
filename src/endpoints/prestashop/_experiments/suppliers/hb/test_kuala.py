@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb/test_kuala.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop._experiments.suppliers.hb """
+MODE = 'development'
 
 
 from urllib import response

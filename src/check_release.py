@@ -1,3 +1,9 @@
+## \file hypotez/src/check_release.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src """
+MODE = 'development'
 
 
 import requests

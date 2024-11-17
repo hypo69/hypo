@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/hb/scenarios/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.hb.scenarios """
+MODE = 'development'
 
 
 

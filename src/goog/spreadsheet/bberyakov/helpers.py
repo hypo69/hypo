@@ -1,3 +1,9 @@
+## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.goog.spreadsheet.bberyakov """
+MODE = 'development'
 
 
 """ перевод цветовых форматов.

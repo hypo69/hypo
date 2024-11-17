@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/locator.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers """
+MODE = 'development'
 
 
 from types import SimpleNamespace

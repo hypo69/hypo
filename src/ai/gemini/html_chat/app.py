@@ -1,3 +1,9 @@
+## \file hypotez/src/ai/gemini/html_chat/app.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.ai.gemini.html_chat """
+MODE = 'development'
 
 
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

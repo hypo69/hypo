@@ -1,3 +1,9 @@
+## \file hypotez/src/goog/quickstart.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.goog """
+MODE = 'development'
 
 
 """

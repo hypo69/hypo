@@ -1,3 +1,9 @@
+## \file hypotez/src/utils/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.utils """
+MODE = 'development'
 
 
 __version__: str = 'v1.1'

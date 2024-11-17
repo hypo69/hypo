@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/ebay/graber.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.ebay """
+MODE = 'development'
 
 
 

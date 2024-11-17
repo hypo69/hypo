@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/chrome/_experiments/1st_steps.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.chrome._experiments """
+MODE = 'development'
 
 
 

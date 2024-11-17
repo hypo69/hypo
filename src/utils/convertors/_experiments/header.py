@@ -1,3 +1,9 @@
+## \file hypotez/src/utils/convertors/_experiments/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.utils.convertors._experiments """
+MODE = 'development'
 
 
 

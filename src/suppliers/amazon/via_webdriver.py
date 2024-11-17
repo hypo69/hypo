@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/amazon/via_webdriver.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.amazon """
+MODE = 'development'
 
 
 """  Модуль сбора товаров со страницы категорий поставщика aliexpress.com через вебдрайвер

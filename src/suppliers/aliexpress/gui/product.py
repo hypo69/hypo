@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/gui/product.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress.gui """
+MODE = 'development'
 
 
 """ Window editor for products """

@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress.campaign._examples """
+MODE = 'development'
 
 
 from ..prepare_campaigns import *

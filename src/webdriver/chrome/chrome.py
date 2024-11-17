@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/chrome/chrome.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.chrome """
+MODE = 'development'
 
 
 """ Chrome WebDriver.

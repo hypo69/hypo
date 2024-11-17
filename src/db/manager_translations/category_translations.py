@@ -1,3 +1,9 @@
+## \file hypotez/src/db/manager_translations/category_translations.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.db.manager_translations """
+MODE = 'development'
 
 
 """ Менджер переводов категорий """

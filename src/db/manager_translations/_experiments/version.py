@@ -1,3 +1,9 @@
+## \file hypotez/src/db/manager_translations/_experiments/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.db.manager_translations._experiments """
+MODE = 'development'
 
 
 """ @namespace src.db.manager_translations._experiments """

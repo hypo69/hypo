@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress.api.models """
+MODE = 'development'
 
 
 class ProductType:

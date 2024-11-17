@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/emil/emil_design.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.emil """
+MODE = 'development'
 
 
 """! Module for managing and processing images and promoting to Facebook and PrestaShop. """

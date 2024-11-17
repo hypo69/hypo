@@ -1,3 +1,9 @@
+## \file hypotez/src/gui/openai_trаigner/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.gui.openai_trаigner """
+MODE = 'development'
 
 
 __version__: str = 'v1.1'

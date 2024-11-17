@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.advertisement.facebook """
+MODE = 'development'
 
 
 """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

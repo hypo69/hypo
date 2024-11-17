@@ -1,3 +1,9 @@
+## \file hypotez/dev_utils/png_from_dot.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: dev_utils """
+MODE = 'development'
 
 
 # /path/to/interpreter/python

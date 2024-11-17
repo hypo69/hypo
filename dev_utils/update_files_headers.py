@@ -1,3 +1,9 @@
+## \file hypotez/dev_utils/update_files_headers.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: dev_utils """
+MODE = 'development'
 
 
 """
@@ -60,7 +66,7 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
     w_venv_interpreter_line = f'#! {w_venv_interpreter}\n'
     linux_venv_interpreter_line = f'#! {linux_venv_interpreter}\n'
     module_docstring = f'""" module: {relative_path.parent.as_posix().replace("/", ".")} """\n'
-    mode_line = "MODE = 'debug'\n"
+    mode_line = "MODE = 'development'\n"
 
     try:
         with open(file_path, 'r+', encoding='utf-8') as file:
@@ -149,7 +155,6 @@ def traverse_and_clean(directory: Path):
 
 def main():
     """Main function to execute the script."""
-    traverse_and_clean(PROJECT_ROOT_FOLDER)
     # parser = argparse.ArgumentParser(description="Process Python files in the 'hypotez' project.")
     # parser.add_argument('--force-update', action='store_true', help="Force update the headers even if they already match.")
     # parser.add_argument('--clean', action='store_true', help="Clean specified headers from Python files.")
@@ -164,6 +169,9 @@ def main():
     #         traverse_and_update(project_root, args.force_update)
     # except FileNotFoundError as ex:
     #     print(f"Error: {ex}")
+    
+    traverse_and_clean(PROJECT_ROOT_FOLDER)
+    traverse_and_update(PROJECT_ROOT_FOLDER, True)
 
 if __name__ == '__main__':
     main()

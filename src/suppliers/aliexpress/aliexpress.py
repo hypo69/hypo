@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/aliexpress.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress """
+MODE = 'development'
 
 
 """ Base class for the supplier. 

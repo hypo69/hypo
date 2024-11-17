@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/campaign/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress.campaign """
+MODE = 'development'
 
 
 

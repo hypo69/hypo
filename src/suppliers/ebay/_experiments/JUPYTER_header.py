@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/ebay/_experiments/JUPYTER_header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.ebay._experiments """
+MODE = 'development'
 
 
 import sys

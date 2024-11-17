@@ -27,7 +27,7 @@
   "exclude_files": [
     "version.py"
   ],
-  "role_directories": {
+  "output_directory": {
     "doc_creator": "<model>/<lang>",
     "code_checker": "consultant/<model>/<lang>"
   },

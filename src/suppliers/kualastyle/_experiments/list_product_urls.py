@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/kualastyle/_experiments/list_product_urls.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.kualastyle._experiments """
+MODE = 'development'
 
 
 product_urls = ['https://kualastyle.com/collections/%D7%A1%D7%A4%D7%95%D7%AA-%D7%9E%D7%A2%D7%95%D7%A6%D7%91%D7%95%D7%AA/products/verona',

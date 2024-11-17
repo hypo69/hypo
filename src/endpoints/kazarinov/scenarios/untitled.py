@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/kazarinov/scenarios/untitled.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.kazarinov.scenarios """
+MODE = 'development'
 
 
 def j_loads(

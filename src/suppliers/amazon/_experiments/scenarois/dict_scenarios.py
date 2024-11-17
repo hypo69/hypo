@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/amazon/_experiments/scenarois/dict_scenarios.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.amazon._experiments.scenarois """
+MODE = 'development'
 
 
 scenario: dict = {

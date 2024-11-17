@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/_pytest/test_driver_executor.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver._pytest """
+MODE = 'development'
 
 
 

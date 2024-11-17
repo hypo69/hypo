@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/_examples/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver._examples """
+MODE = 'development'
 
 
 import os

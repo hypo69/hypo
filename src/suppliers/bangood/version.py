@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/bangood/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.bangood """
+MODE = 'development'
 
 
 __version__: str = 'v1.1'

@@ -1,3 +1,9 @@
+## \file hypotez/src/ai/openai/bully.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.ai.openai """
+MODE = 'development'
 
 
 """ @namespace src.ai """

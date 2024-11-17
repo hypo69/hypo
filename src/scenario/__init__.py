@@ -1,3 +1,9 @@
+## \file hypotez/src/scenario/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.scenario """
+MODE = 'development'
 
 
 """   Module with scenario execution functions: `run_scenario_files`, `run_scenarios`  

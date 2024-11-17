@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/etzmaleh/update_product_fields.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.etzmaleh """
+MODE = 'development'
 
 
 """   [File's Description]

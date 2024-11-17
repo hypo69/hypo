@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/ivory/morlevi (2)/morlevi/graber.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.ivory.morlevi (2).morlevi """
+MODE = 'development'
 
 
 """ morlevi

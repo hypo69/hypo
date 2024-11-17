@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/_experiments/web_login.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress._experiments """
+MODE = 'development'
 
 
 """ Aliexpress Проверки логин, кукис итп. """

@@ -1,3 +1,9 @@
+## \file hypotez/src/utils/video.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.utils """
+MODE = 'development'
 
 
 """

@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/utils/extract_product_id.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress.utils """
+MODE = 'development'
 
 
 

@@ -1,3 +1,9 @@
+## \file hypotez/src/goog/spreadsheet/spreadsheet.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.goog.spreadsheet """
+MODE = 'development'
 
 
 

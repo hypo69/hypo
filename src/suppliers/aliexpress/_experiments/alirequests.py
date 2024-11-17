@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/aliexpress/_experiments/alirequests.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.aliexpress._experiments """
+MODE = 'development'
 
 
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """

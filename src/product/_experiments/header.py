@@ -1,3 +1,9 @@
+## \file hypotez/src/product/_experiments/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.product._experiments """
+MODE = 'development'
 
 
 import sys

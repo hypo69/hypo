@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/ivory/morlevi (2)/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.ivory.morlevi (2) """
+MODE = 'development'
 
 
 __version__: str = 'v1.1'

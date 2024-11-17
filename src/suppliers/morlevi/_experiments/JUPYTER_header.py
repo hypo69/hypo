@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/morlevi/_experiments/JUPYTER_header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.morlevi._experiments """
+MODE = 'development'
 
 
 import sys

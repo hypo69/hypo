@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/prestashop/api/_experiments/ide_experiments_PrestaAPIV.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.prestashop.api._experiments """
+MODE = 'development'
 
 
 """  Прослойка между разными вериями модулей взаимммодействия с престашоп 

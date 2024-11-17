@@ -1,3 +1,9 @@
+## \file hypotez/src/endpoints/kazarinov/react/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints.kazarinov.react """
+MODE = 'development'
 
 import sys
 import json

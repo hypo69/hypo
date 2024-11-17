@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/chat_gpt/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.chat_gpt """
+MODE = 'development'
 
 
 __version__: str = 'v1.1'

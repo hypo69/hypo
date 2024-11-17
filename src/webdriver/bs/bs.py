@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/bs/bs.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.bs """
+MODE = 'development'
 
 
 """ parse pages with `BeautifulSoup` and XPath 

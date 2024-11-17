@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/morlevi/morlevi (2)/morlevi/__morlevi__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.morlevi.morlevi (2).morlevi """
+MODE = 'development'
 
 
 """    Supplier: morlevi

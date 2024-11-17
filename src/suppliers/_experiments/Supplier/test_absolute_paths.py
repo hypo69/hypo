@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/_experiments/Supplier/test_absolute_paths.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers._experiments.Supplier """
+MODE = 'development'
 
 
 import unittest

@@ -1,3 +1,9 @@
+## \file hypotez/src/suppliers/wallmart/_experiments/JUPYTER_header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.suppliers.wallmart._experiments """
+MODE = 'development'
 
 
 import sys

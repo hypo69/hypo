@@ -1,3 +1,9 @@
+## \file hypotez/src/webdriver/edge/edge.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.webdriver.edge """
+MODE = 'development'
 
 
 """ Custom Edge WebDriver class with simplified configuration using fake_useragent."""

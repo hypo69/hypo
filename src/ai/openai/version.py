@@ -1,3 +1,9 @@
+## \file hypotez/src/ai/openai/version.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.ai.openai """
+MODE = 'development'
 
 
 import json
