@@ -118,53 +118,121 @@ class CodeAssistant(BaseModel):
         content_request = f"""Твоя специализация: `{role_description}`.\nИнструкция для: Код:\n\n```{content}```\n"""
         return content_request
 
+    # def process_files(self):
+    #     """Обработка файлов и взаимодействие с моделями."""
+    #     self.translations = self.load_translations()
+    #     for i, (file_path, content) in enumerate(self.yield_files_content( )):
+    #         if not (file_path, content):
+    #             continue
+    #         content_request = self.create_request(content, self.translations)
+
+    #         if self.gemini_model:
+    #             gemini_response = self.gemini_model.ask(content_request)
+    #             if gemini_response:
+    #                 print("save...")
+    #                 self.save_response(file_path, gemini_response, 'gemini')
+
+    #         # if self.openai_model:
+    #         #     openai_response = self.openai_model.ask(content_request)
+    #         #     if openai_response:
+    #         #         self.save_response(file_path, openai_response, 'openai')
+
+    #         logger.info(f'Processed file number: {i + 1}', None, False)
+    #         time.sleep(120)
+
+    # def yield_files_content(self, start_dirs: List[Path] = [gs.path.src], patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD']) -> Iterator[tuple[Path, str]]:
+    #     """Итерация по файлам, соответствующим паттернам, и их содержимому."""
+    #     exclude_file_patterns = [re.compile(pattern) for pattern in self.exclude_file_patterns]
+    #     for start_dir in start_dirs:
+    #         for pattern in patterns:
+    #             for file_path in start_dir.rglob(pattern):
+    #                 if any(exclude_dir in file_path.parts for exclude_dir in self.exclude_dirs):
+    #                     logger.info(f"Пропускаю {file_path=}", None, False)
+    #                     continue
+    #                 if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
+    #                     logger.info(f"Пропускаю {file_path =}", None, False)
+    #                     continue
+    #                 if str(file_path) in self.exclude_files:
+    #                     logger.info(f"Пропускаю {file_path=}", None, False)
+    #                     continue
+    #                 try:
+    #                     content = file_path.read_text(encoding="utf-8")
+    #                     yield file_path, content
+    #                 except Exception as ex:
+    #                     yield None, None
+
     def process_files(self):
-        """Обработка файлов и взаимодействие с моделями."""
+        """Обрабатывает файлы и взаимодействует с моделью Gemini."""
+        # Загружаем переводы
         self.translations = self.load_translations()
-        for i, (file_path, content) in enumerate(self.yield_files_content( )):
+        for i, (file_path, content) in enumerate(self.yield_files_content()):
+            # Проверяем, что файл и его содержимое не пустые
+            if not (file_path and content):
+                continue
+
+            # Создаем запрос для модели на основе содержимого файла и переводов
             content_request = self.create_request(content, self.translations)
 
+            # Отправляем запрос в модель Gemini, если она активна
             if self.gemini_model:
                 gemini_response = self.gemini_model.ask(content_request)
                 if gemini_response:
-                    print("save...")
+                    logger.info(f'Сохраняю результат для {file_path}', None, False)
                     self.save_response(file_path, gemini_response, 'gemini')
 
-            # if self.openai_model:
-            #     openai_response = self.openai_model.ask(content_request)
-            #     if openai_response:
-            #         self.save_response(file_path, openai_response, 'openai')
-
+            # Логируем номер обработанного файла
             logger.info(f'Processed file number: {i + 1}', None, False)
-            time.sleep(120)
+            time.sleep(120)  # Пауза между запросами для избежания перегрузки
 
-    def yield_files_content(self, start_dirs: List[Path] = [gs.path.src], patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD']) -> Iterator[tuple[Path, str]]:
-        """Итерация по файлам, соответствующим паттернам, и их содержимому."""
+    def yield_files_content(
+        self,
+        start_dirs: List[Path] = [gs.path.src],
+        patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD']
+    ) -> Iterator[tuple[Path, str]]:
+        """Генерирует пути файлов и их содержимое по указанным шаблонам.
+
+        Args:
+            start_dirs (List[Path]): Список начальных директорий для поиска файлов.
+            patterns (List[str]): Список шаблонов для поиска файлов.
+
+        Yields:
+            Iterator[tuple[Path, str]]: Путь к файлу и его содержимое.
+        """
+        # Компилируем регулярные выражения для паттернов исключаемых файлов
         exclude_file_patterns = [re.compile(pattern) for pattern in self.exclude_file_patterns]
         for start_dir in start_dirs:
             for pattern in patterns:
+                # Ищем файлы по шаблонам
                 for file_path in start_dir.rglob(pattern):
+                    # Проверка исключаемых директорий
                     if any(exclude_dir in file_path.parts for exclude_dir in self.exclude_dirs):
-                        logger.info(f"Пропускаю {file_path=}", None, False)
+                        logger.info(f'Пропускаю файл в исключенной директории: {file_path}', None, False)
                         continue
+                    # Проверка на соответствие паттернам исключаемых файлов
                     if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
-                        logger.info(f"Пропускаю {file_path =}", None, False)
+                        logger.info(f'Пропускаю файл по паттерну исключения: {file_path}', None, False)
                         continue
+                    # Проверка на наличие файла в списке исключаемых файлов
                     if str(file_path) in self.exclude_files:
-                        logger.info(f"Пропускаю {file_path=}", None, False)
+                        logger.info(f'Пропускаю исключенный файл: {file_path}', None, False)
                         continue
-
-                    content = file_path.read_text(encoding="utf-8")
-                    yield file_path, content
+                    try:
+                        # Читаем содержимое файла
+                        content = file_path.read_text(encoding='utf-8')
+                        yield file_path, content
+                    except Exception as ex:
+                        logger.error('Ошибка при чтении файла: ', ex)
+                        yield None, None
 
     def save_response(self, file_path: Path, response: str, model_name: str):
         """Сохранение ответа модели в файл."""
-        output_directory: str = getattr(self.settings.output_directory, self.role)
+        output_directory: str = getattr(self.settings.output_directory, self.role)  
+        print(f'{file_path=}')
         target_dir = self.base_output_directory / output_directory.replace("<model>", model_name).replace("<lang>", self.lang)
     
         # Изменение суффикса файла на .md
         export_path = Path(target_dir) / file_path.with_suffix('.md').name
-    
+        print(f'{export_path=}')
         export_path.parent.mkdir(parents=True, exist_ok=True)
         export_path.write_text(response, encoding="utf-8")
         logger.info(f"Ответ модели сохранен в: {export_path}", None, False)
