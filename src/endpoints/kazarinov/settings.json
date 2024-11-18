@@ -33,6 +33,6 @@
   },
   "telegram": {
     "bot_name": "hypo69_kazarinov_bot",
-    "log_path": "bots/chat_logs.txt"
+    "log_path": "bots/<user_id>/chat_logs.txt"
   }
 }

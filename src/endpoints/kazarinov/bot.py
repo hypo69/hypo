@@ -82,7 +82,8 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
         # Загружаем конфигурацию из JSON
         with open(config_path, "r", encoding="utf-8") as file:
             config_data = json.load(file)
-        
+
+        config_data - j_loads(config_path)
         self.config = KazarinovBotConfig(**config_data)
         
         # Выбираем токен на основе режима
@@ -188,6 +189,6 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
 
 
 if __name__ == "__main__":
-    config_path = "config/kazarinov.json"
+    config_path = "settings.json"
     kt = KazarinovTelegramBot(config_path=config_path)
     asyncio.run(kt.application.run_polling())

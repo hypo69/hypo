@@ -42,12 +42,13 @@ class CodeAssistant(BaseModel):
     exclude_file_patterns: List[str] = Field(default_factory=list, description="Список паттернов для исключения файлов")
     exclude_dirs: List[str] = Field(default_factory=list, description="Список директорий для исключения")
     exclude_files: List[str] = Field(default_factory=list, description="Список файлов для исключения")
-    basePath: Path = Field(default = gs.path.src / 'endpoints' / 'hypo69' / 'code_assistant', description="Корневая директория скрипта")
+    base_path: Path = Field(default = gs.path.src / 'endpoints' / 'hypo69' / 'code_assistant', description="Корневая директория скрипта")
     base_output_directory: Path = Field(default = gs.path.root / 'docs' / 'ai', description="Базовая директория для сохранения результатов по ролям")
 
     translations: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(), description="Переводы для ролей")
     settings: SimpleNamespace = Field(default_factory=lambda: j_loads_ns(gs.path.src / 'endpoints' / 'hypo69' / 'code_assistant' / 'settings.json'), description="Настройки")
 
+    system_instruction_file: Path| str = Field(default="instructions", description="Инструкции перед отправлок кода в модель")
     class Config:
         arbitrary_types_allowed = True
 
@@ -60,30 +61,69 @@ class CodeAssistant(BaseModel):
     def __init__(self):
         """Выполняет инициализацию после создания объекта."""
         super().__init__()
-        print("init")
-        if not self._payload():
-            return
+        pprint('CodeAssistant инициализирован',text_color='gray',bg_color='white')
+        self._payload()
+
 
     def _payload(self) -> bool:
         """Загружает настройки и инициализирует модели."""
         try:
-            self.exclude_dirs = self.settings.exclude_dirs
-            self.exclude_files = self.settings.exclude_files
-            self.exclude_file_patterns = self.settings.exclude_file_patterns
+            # Загружаем настройки из файла `settings.json`
+            settings_path = Path('settings.json')
+            settings = j_loads(settings_path) if settings_path.exists() else {}
+
+            # Получаем аргументы командной строки
+            cli_args = self.parse_args()
+
+            # Устанавливаем параметры: сначала значения из файла, затем перезаписываем аргументами из командной строки
+            self.role = cli_args['role'] if cli_args.get('role') else settings.get('role', 'code_checker')
+            self.lang = cli_args['lang'] if cli_args.get('lang') else settings.get('lang', 'ru')
+            self.model = cli_args['model'] if cli_args.get('model') else settings.get('model', ['gemini'])
+            self.start_dirs = cli_args['start_dirs'] if cli_args.get('start_dirs') else \
+                [Path(gs.path.root) / d for d in settings.get('start_dirs', [])]
+
+            # Загрузка остальных параметров из файла настроек
+            self.gemini_generation_config = settings.get('gemini_generation_config', {})
+            self.gemini_model_name = settings.get('gemini_model_name', 'gemini-1.5-flash-8b')
+            self.openai_model_name = settings.get('openai_model_name', 'gpt-4o-mini')
+            self.openai_assistant_id = settings.get('openai_assistant_id', '')
+            self.exclude_file_patterns = settings.get('exclude_file_patterns', [])
+            self.exclude_dirs = settings.get('exclude_dirs', [])
+            self.exclude_files = settings.get('exclude_files', [])
+            self.base_output_directory = Path(settings.get('base_output_directory', str(self.base_output_directory)))
+            self.base_path = Path(settings.get('base_path', str(self.base_path)))
+
         except Exception as ex:
-            logger.error(f"Ошибка инициализации", ex)
+            logger.error('Ошибка инициализации', ex)
             return False
+
         return self.initialize_models()
 
+    @property
+    def system_instruction(self) -> str | bool:
+        """ """
+        try:
+            system_instruction_file = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / f'{self.role}_{self.lang}.md')
+            system_instruction = read_text_file(system_instruction_file)
+            return system_instruction
+        except Exception as ex:
+            logger.error(f"Error reading instruction file:\n{system_instruction_file=}")
+            return False    
+
+    @property
+    def code_instruction(self) -> str | bool:
+        """ """
+        try:
+            code_instruction_file = Path(self.base_path / 'instructions' / f'instruction_{self.role}_{self.lang}.md')
+            code_instruction = read_text_file( code_instruction_file)
+            return code_instruction
+        except Exception as ex:
+            logger.error(f"Error reading instruction file:\n{code_instruction_file=}")
+            return False
 
     def initialize_models(self) -> bool:
         """Инициализация моделей на основе роли и языка."""
-        try:
-            system_instruction_file = f'instruction_{self.role}_{self.lang}.md'
-            system_instruction = read_text_file(self.basePath / 'instructions' / system_instruction_file)
-        except Exception as ex:
-            logger.error(f"Error reading instruction file:\n{system_instruction_file=}")
-            return False
+        system_instruction = self.system_instruction
 
         try:
             if 'gemini' in self.model:
@@ -113,7 +153,8 @@ class CodeAssistant(BaseModel):
         """Создание запроса с учетом роли и языка."""
         roles_translations: SimpleNamespace = getattr(translations.roles, self.role)
         role_description: str = getattr(roles_translations, self.lang)
-        content_request = f"""Твоя специализация: `{role_description}`.\nИнструкция для: Код:\n\n```{content}```\n"""
+        code_instruction = self.code_instruction
+        content_request = f"""Твоя специализация: `{role_description}`.\nИнструкция  для кода: ```{code_instruction}```\n Код:\n\n```{content}```\n"""
         return content_request
 
 
@@ -143,7 +184,7 @@ class CodeAssistant(BaseModel):
     def yield_files_content(
         self,
         start_dirs: List[Path] = [gs.path.src],
-        patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD']
+        patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD', 'README.EN.MD', 'INTRO.EN.MD']
     ) -> Iterator[tuple[Path, str]]:
         """Генерирует пути файлов и их содержимое по указанным шаблонам.
 
@@ -194,80 +235,39 @@ class CodeAssistant(BaseModel):
         export_path.write_text(response, encoding="utf-8")
         pprint(f"Ответ модели сохранен в: {export_path}", text_color='green')
 
-
     def parse_args(self):
         """Обработка аргументов командной строки."""
-        parser = argparse.ArgumentParser(description="Code Assistant: обучение модели на основе кода.")
-        parser.add_argument('--settings', type=Path, help='Путь к JSON файлу настроек')
+        parser = argparse.ArgumentParser(description='Code Assistant: обучение модели на основе кода.')
         parser.add_argument('--role', type=str, help='Роль для выполнения задачи')
         parser.add_argument('--lang', type=str, help='Язык выполнения')
         parser.add_argument('--models', type=str, nargs='+', help='Список моделей для инициализации')
         parser.add_argument('--start_dirs', type=Path, nargs='+', help='Список стартовых директорий')
         args = parser.parse_args()
-
-        if args.settings:
-            settings = j_loads(args.settings)  # Используем j_loads для загрузки настроек
-            self.role = settings.get("role", "doc_creator")
-            self.lang = settings.get("lang", "EN")
-            self.model = settings.get("model", ["gemini"])
-            self.start_dirs = [Path(gs.path.root) / d for d in settings.get("start_dirs", [])]
-            self.gemini_generation_config = settings.get("gemini_generation_config", {})
-            self.gemini_model_name = settings.get("gemini_model_name", "gemini-1.5-flash-8b")
-            self.openai_model_name = settings.get("openai_model_name", "gpt-4o-mini")
-            self.openai_assistant_id = settings.get("openai_assistant_id", "")
-            self.exclude_file_patterns = settings.get("exclude_file_patterns", [])
-            self.exclude_dirs = settings.get("exclude_dirs", [])
-            self.exclude_files = settings.get("exclude_files", [])
-            self.base_output_directory = Path(settings.get("base_output_directory", str(self.base_output_directory)))
-            self.basePath = Path(settings.get("basePath", str(self.basePath)))
-
-        self._payload()
+        
+        # Создаем словарь с аргументами командной строки
+        cli_args = {
+            'role': args.role,
+            'lang': args.lang,
+            'model': args.models,
+            'start_dirs': args.start_dirs
+        }
+        pprint(f'{cli_args=}')
+        return cli_args
 
     def run(self):
         """Запуск ассистента для обработки файлов."""
         signal.signal(signal.SIGINT, self.signal_handler)
-        self.parse_args()
+    
+        # Выполняем _payload после парсинга аргументов
+        if not self._payload():
+            logger.error('Ошибка при инициализации _payload()')
+            return
+    
+        # Запускаем обработку файлов
         self.process_files()
 
-
-    def parse_args(self):
-        """Обработка аргументов командной строки."""
-        parser = argparse.ArgumentParser(description="Code Assistant: обучение модели на основе кода.")
-        parser.add_argument('--settings', type=Path, help='Путь к JSON файлу настроек')
-        parser.add_argument('--role', type=str, help='Роль для выполнения задачи')
-        parser.add_argument('--lang', type=str, help='Язык выполнения')
-        parser.add_argument('--models', type=str, nargs='+', help='Список моделей для инициализации')
-        parser.add_argument('--start_dirs', type=Path, nargs='+', help='Список стартовых директорий')
-        args = parser.parse_args()
-
-        if args.settings:
-            settings = j_loads(args.settings)  # Используем j_loads для загрузки настроек
-            self.role = settings.get("role", "doc_creator")
-            self.lang = settings.get("lang", "EN")
-            self.model = settings.get("model", ["gemini"])
-            self.start_dirs = [Path(gs.path.root) / d for d in settings.get("start_dirs", [])]
-            self.gemini_generation_config = settings.get("gemini_generation_config", {})
-            self.gemini_model_name = settings.get("gemini_model_name", "gemini-1.5-flash-8b")
-            self.openai_model_name = settings.get("openai_model_name", "gpt-4o-mini")
-            self.openai_assistant_id = settings.get("openai_assistant_id", "")
-            self.exclude_file_patterns = settings.get("exclude_file_patterns", [])
-            self.exclude_dirs = settings.get("exclude_dirs", [])
-            self.exclude_files = settings.get("exclude_files", [])
-            self.role_directories = settings.get("role_directories", {})
-
-        # Устанавливаем аргументы командной строки
-        if args.role:
-            self.role = args.role
-        if args.lang:
-            self.lang = args.lang
-        if args.models:
-            self.model = args.models
-        if args.start_dirs:
-            self.start_dirs = args.start_dirs
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     assistant = CodeAssistant()
     assistant.parse_args()
-    #assistant.signal_handler(signal.SIGINT, None)
-    assistant.initialize_models()
-    assistant.process_files()
+    assistant.run()
+

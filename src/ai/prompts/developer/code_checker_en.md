@@ -272,4 +272,5 @@ class User:
 - Strive to improve code readability and add comments for every step.
 - Use Pydantic wherever possible to enhance code quality.
 - Use `logger.error` for all errors.
+- Replace the usage of `with open(<file_path>, 'r', encoding='utf-8') as file: <variable> = json.load(file)` with `<variable> = j_loads(<file_path>)`.
 ```
