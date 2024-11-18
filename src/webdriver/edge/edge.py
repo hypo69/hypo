@@ -14,7 +14,7 @@ from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.common.exceptions import WebDriverException
 from src.webdriver.executor import ExecuteLocator
-from src.webdriver.javascript import JavaScript
+from src.webdriver.js import JavaScript
 from fake_useragent import UserAgent
 from src import gs
 from src.logger import logger

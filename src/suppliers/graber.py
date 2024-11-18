@@ -33,7 +33,7 @@ from functools import wraps
 
 import header
 from src import gs
-from src.suppliers.locator import Locator
+from src.locator.locator import Locator
 from src.product.product_fields import ProductFields
 from src.category import Category
 from src.webdriver import Driver

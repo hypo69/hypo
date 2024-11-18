@@ -57,7 +57,7 @@ from src.logger.exceptions import (
     ExecuteLocatorException,
     WebDriverException,
 )
-from src.suppliers.locator import locator
+
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint
 from src.utils.image import save_png
@@ -88,7 +88,7 @@ class ExecuteLocator:
 
     async def execute_locator( # Improved docstring
         self,
-        locator: Union[dict, SimpleNamespace, Locator],
+        locator: dict | SimpleNamespace,
         timeout: float = 0,
         timeout_for_event: str = 'presence_of_element_located',
         message: Optional[str] = None,

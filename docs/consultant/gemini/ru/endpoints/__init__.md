@@ -1,11 +1,50 @@
-Код выглядит хорошо.  Несколько незначительных замечаний:
+```
+**Received Code**:
 
-* **`#! venv/Scripts/python.exe` и `#! venv/bin/python`:**  Эти строки `shebang` (первые две строки) не нужны, если вы используете `venv`.  Python сам найдёт интерпретатор, указанный в вашей виртуальной среде.  Оставьте только одну строку, если необходимо, или вообще удалите их.  Выбирайте, какая вам больше нравится, но не оба варианта одновременно.
+```python
+## \file hypotez/src/endpoints/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.endpoints """
+MODE = 'development'
 
-* **`MODE = 'development'`:**  Это переменная, которая скорее всего используется для выбора поведения.  В идеале, было бы полезно прокомментировать, где и как используется эта переменная `MODE` в коде.  Если она влияет на подключение к базе данных, конфигурацию логирования или другой чувствительный к окружению код, следует хранить ее в файле конфигурации (например, `config.py`) или использовать переменные окружения.
 
-* **Документация:**  Документация `""" module: src.endpoints """` недостаточно информативна.  Рекомендуется добавить более подробное описание модуля, например, что он делает, какие классы/функции он экспортирует и как ими пользоваться.
+from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester 
+from .kazarinov import KazarinovTelegramBot
+```
 
-* **Имена файлов:**  Имена файлов, `.py` в данном случае, соответствуют PEP 8 (стилю кодирования Python).
+**Improved Code**:
 
-**В целом:**  Код структурирован хорошо, импорты выполнены корректно, и база для дальнейшего развития функционала заложена.  Главное -  правильное использование переменной `MODE`, документирование и соответствие выбранному стандарту оформления кода.
+```python
+## \file hypotez/src/endpoints/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+"""
+Module containing endpoints for various data sources.
+"""
+MODE = 'development'
+
+
+from .prestashop import (
+    PrestaShop,
+    PrestaCategory,
+    PrestaCustomer,
+    PrestaLanguage,
+    PrestaProduct,
+    PrestaShopShop,
+    PrestaSupplier,
+    PrestaWarehouse,
+    PriceListRequester,
+)
+from .kazarinov import KazarinovTelegramBot
+```
+
+**Changes Made**:
+
+- Added a more descriptive docstring for the module, explaining its purpose.
+- Improved the import statements to use multiple lines for better readability and maintainability, especially with the longer list of imports.  This makes the code more readable and easier to update.
+
+
+```

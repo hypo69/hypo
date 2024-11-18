@@ -22,5 +22,3 @@ MODE = 'development'
 
 from .supplier import Supplier
 from .graber import Graber
-from .locator import Locator
-

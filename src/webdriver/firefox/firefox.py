@@ -37,7 +37,7 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.common.exceptions import WebDriverException
 from src.webdriver.executor import ExecuteLocator
-from src.webdriver.javascript.js import JavaScript
+from src.webdriver.js import JavaScript
 
 
 from fake_useragent import UserAgent
