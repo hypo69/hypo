@@ -1,207 +1,185 @@
+
 # Проект Hypotez
 
+## Содержание
+1. [Описание проекта](#описание-проекта)
+2. [Ключевые особенности](#ключевые-особенности)
+3. [Пример рабочего процесса](#пример-рабочего-процесса)
+4. [Необходимые инструменты и ПО](#необходимые-инструменты-и-по)
+5. [Инструкции по установке](#инструкции-по-установке)
+   - [Проверка версии Python](#проверка-версии-python)
+   - [Установка Python 3.12](#установка-python-312)
+   - [Установка виртуального окружения](#установка-виртуального-окружения)
+   - [Установка зависимостей](#установка-зависимостей)
+6. [Конфигурация](#конфигурация)
+   - [Настройка учетных данных](#настройка-учетных-данных)
+7. [Дополнительная информация](#дополнительная-информация)
+
+---
+
 ## Описание проекта
-в однойа картинкой:
-<br>
-<img src="images/now_feature.png" alt="Feature Image" width="270" height="320" />
-<br>
 
-Описание
-Проект hypotez — это личный ИИ-ассистент, который может помочь в самых разных задачах: от работы страховым агентом или риэлтором до поддержки в продажах, HR или даже ведении переписки. Мы создаем ассистента, который сможет адаптироваться к любой роли и выполнять задачи, как будто у вас есть личный помощник на все случаи жизни.
+Проект `hypotez` — это ваш персональный ИИ-ассистент, предназначенный для помощи в широком спектре задач. Будь то виртуальный страховой агент, помощник по недвижимости, специалист по продажам, представитель HR или даже секретарь по электронной почте — `hypotez` справится с этим. Наша цель — создать универсального ассистента, который может адаптироваться к различным ролям и выполнять сложные задачи, как если бы у вас был личный помощник для каждой ситуации.
 
-Кроме того, hypotez — это мощный инструмент для анализа данных. Он включает в себя различные библиотеки для статистики и визуализации, которые помогут быстро разобраться в цифрах и делать осознанные выводы.
+Кроме того, `hypotez` — это мощный инструмент для анализа данных. В проект включены различные библиотеки для статистики и визуализации, что позволяет быстро обрабатывать данные и принимать обоснованные решения.
 
-А еще в проекте есть удобный парсер и скрапер, которые автоматически собирают данные с веб-сайтов и документов. Это значит, что можно забыть про рутинный сбор информации и сразу получать все, что нужно для анализа и принятия решений. В общем, hypotez — это ваш помощник, который ускорит работу и поможет принимать взвешенные решения.
-
+Также в проекте предусмотрен удобный парсер и скрейпер, который автоматически собирает данные с веб-сайтов и документов. Это позволяет вам пропустить рутинную работу по сбору данных и сразу получить нужные инсайты для анализа и принятия решений. Вкратце, `hypotez` — это ваш универсальный помощник, который ускоряет работу и помогает принимать умные, обоснованные решения.
 
 ---
 
-### Основные особенности
+## Ключевые особенности
 
-1. **Умный ассистент**:
-   - **Интеллектуальная поддержка**: Hypotez действует как универсальный ассистент, способный суммировать встречи, управлять коммуникациями и предлагать помощь в реальном времени. Он служит вашим личным секретарем, техническим ассистентом, службой поддержки и автоответчиком.
-   - **Сводки встреч**: Автоматически создает подробные сводки встреч, оценивая тональность и ключевые моменты для помощи в принятии решений.
-   - **Поддержка в реальном времени**: Отвечает на вопросы и автоматизирует последующие действия в email, чатах и других каналах коммуникации.
+1. **Управление лидами**:
+   - **Сбор лидов**: Автоматический сбор информации о лидах из различных источников.
+   - **Отслеживание взаимодействий**: Логирование всех взаимодействий с лидами, включая электронную почту, звонки и встречи.
+   - **Оценка лидов**: Оценка и ранжирование лидов на основе их потенциала и вовлеченности.
 
-2. **Управление прайс-листами и закупками**:
-   - **Управление прайс-листами**: Автоматически обновляет и организует прайс-листы для команд продаж и закупок, обеспечивая их актуальной и релевантной информацией о ценах.
-   - **Поиск товаров и компонентов**: Помогает командам закупок и продаж найти нужные товары и компоненты, проводя поиск по широкому кругу поставщиков и товарных позиций, упрощая принятие решений о закупках.
+2. **Управление продажами**:
+   - **Отслеживание сделок**: Мониторинг сделок через разные стадии воронки продаж.
+   - **Прогнозирование**: Прогнозирование будущих продаж на основе текущих трендов.
+   - **Управление задачами**: Назначение и отслеживание задач для каждого лида.
 
-3. **Мониторинг рыночных тенденций**:
-   - **Анализ трендов**: Hypotez отслеживает и анализирует рыночные тенденции, выявляя новые продукты, технологии и тренды, релевантные вашему бизнесу.
-   - **Интеллектуальные инсайты**: Предоставляет полезные инсайты о рыночных разработках, помогая вашему бизнесу опережать конкурентов, адаптируясь к новым тенденциям и возможностям на рынке.
+3. **Отчеты и аналитика**:
+   - **Метрики производительности**: Генерация отчетов по эффективности продаж и конверсии лидов.
+   - **Пользовательские отчеты**: Создание отчетов для анализа специфичных аспектов продаж.
 
-4. **Обработка и анализ данных**:
-   - **Интеграция данных**: Обрабатывает данные от команд продаж и закупок, выявляя паттерны и тренды, которые помогают оптимизировать стратегии и принимать обоснованные решения.
-   - **Метрики производительности**: Предоставляет подробные отчеты об эффективности закупок, результатах продаж и других операционных показателей, обеспечивая полное представление о здоровье вашего бизнеса.
+4. **Инструменты связи**:
+   - **Интеграция с электронной почтой**: Управление и отслеживание коммуникаций через интеграцию с электронной почтой.
+   - **Планирование**: Планирование встреч и последующих действий.
 
-5. **Автоматизация**:
-   - **Автоматизация задач**: Автоматизирует повторяющиеся задачи, такие как ввод данных, генерация отчетов и последующие действия, освобождая время для более ценных активностей.
-   - **Автоматизация рабочих процессов**: Упрощает процессы за счет интеграции с существующими инструментами (например, CRM-системами, email-системами, проектным управлением и PrestaShop), позволяя автоматизировать повседневные рабочие процессы в разных командах.
+5. **CRM (Управление взаимоотношениями с клиентами)**:
+   - **Управление контактами**: Хранение базы данных контактов.
+   - **История взаимодействий**: Хранение записей обо всех взаимодействиях с клиентами.
 
-6. **Поддержка клиентов и коммуникация**:
-   - **Мультиканальная коммуникация**: Управляет коммуникацией с клиентами через email, чат и другие платформы, предлагая единый обзор всех взаимодействий.
-   - **Планирование и напоминания**: Автоматизирует планирование встреч и напоминания о последующих действиях, обеспечивая своевременную коммуникацию и поддержку.
+6. **Автоматизация**:
+   - **Email-кампании**: Автоматизация последующих писем и маркетинговых кампаний.
+   - **Ввод данных**: Снижение необходимости вручную вводить данные через автоматический сбор.
 
-7. **Интеграция с PrestaShop**:
-   - **Оптимизация для e-commerce**: Бесшовно интегрируется с PrestaShop, платформой для онлайн-продаж, чтобы управлять вашим онлайн-магазином, отслеживать продажи, инвентарь и поведение клиентов, а также улучшать общий пользовательский опыт.
-   - **Управление заказами**: Синхронизирует данные между PrestaShop и Hypotez для управления заказами, уровнями запасов и продажами в реальном времени, обеспечивая бесперебойную работу бизнеса.
+7. **Командное сотрудничество**:
+   - **Общие панели мониторинга**: Предоставление реальных панелей мониторинга для обновлений и совместной работы.
+   - **Заметки и комментарии**: Возможность для команды оставлять заметки о лидах и сделках.
 
----
-
-### Пример рабочего процесса
-
-1. **Обновления прайс-листов**: Автоматически извлекает и обновляет актуальную информацию о ценах, обеспечивая ваши команды продаж и закупок правильными данными.
-2. **Поиск товаров**: Hypotez помогает находить лучших поставщиков и продукты в зависимости от потребностей бизнеса и текущих тенденций.
-3. **Анализ рынка**: Отслеживает важные рыночные тренды, предоставляя инсайты о новых продуктах и технологиях для формирования вашей стратегии.
-4. **Обработка данных**: Интегрирует данные из продаж и закупок, генерируя полезные инсайты для оптимизации бизнес-процессов.
-5. **Синхронизация с PrestaShop**: Бесшовно интегрируется с PrestaShop, поддерживая вашу e-commerce платформу в актуальном состоянии с последними данными о продуктах, ценах и продажах.
-6. **Автоматизация задач**: Автоматизирует повседневные задачи, такие как отчетность, напоминания по email и планирование встреч, сокращая административную нагрузку.
-
-### Потенциальные инструменты
-
-- **CRM-системы**: Salesforce, HubSpot, Zoho CRM.
-- **Платформы автоматизации**: Zapier, Microsoft Power Automate.
-- **Инструменты отчетности**: Google Data Studio, Tableau.
-- **Платформы e-commerce**: PrestaShop (интеграция для онлайн-продаж и управления магазинами).
+8. **Интеграция с другими инструментами**:
+   - **Бухгалтерские программы**: Синхронизация с бухгалтерскими программами для финансового учета.
+   - **Управление проектами**: Интеграция с инструментами для управления проектами.
 
 ---
 
-## Setup Instructions
+## Пример рабочего процесса
 
-### Required Software (Pre-installed on your computer)
-Here’s the list of required, pre-installed software for the project:
+1. **Сбор лидов**: Автоматически импортировать информацию о лидах.
+2. **Оценка лидов**: Присваивать баллы лидам на основе заранее определенных критериев.
+3. **Управление воронкой**: Перемещать лидов через стадии воронки.
+4. **Последующие действия**: Автоматизировать отправку последующих писем и планировать встречи.
+5. **Отчетность**: Генерировать еженедельные отчеты о статусе лидов.
+6. **Сотрудничество**: Делитесь обновлениями с командой по продажам.
 
-1. **Web Browsers**: One or more of the following:
+---
+
+## Необходимые инструменты и ПО
+
+### Необходимое ПО (предустановленное на вашем компьютере):
+
+1. **Веб-браузеры**:
    - **Firefox**
    - **Chrome**
-   - **Edge**   
-   These are used in conjunction with browser drivers (in the `bin` folder) for testing and automation purposes.
+   - **Edge**  
+   Эти браузеры используются в сочетании с драйверами браузера (в папке `bin`) для тестирования и автоматизации.
 
-2. **PowerShell**: A task automation and configuration management framework from Microsoft, essential for executing scripts and managing workflows, especially in Windows environments.
+2. **PowerShell**: Фреймворк автоматизации задач и управления конфигурациями от Microsoft, необходимый для выполнения скриптов и управления рабочими процессами, особенно в средах Windows.
 
-3. **Python 3.12**: This specific version of Python is required for the project, likely due to compatibility with certain libraries or dependencies.
+3. **Python 3.12**: Эта версия Python требуется для проекта, вероятно, из-за совместимости с определёнными библиотеками или зависимостями.
 
-4. **`npm`**: Node Package Manager for managing JavaScript project dependencies, allowing installation, updating, and managing of libraries and development tools.
+4. **`npm`**: Менеджер пакетов Node для управления зависимостями JavaScript-проекта, который позволяет устанавливать, обновлять и управлять библиотеками и инструментами разработки.
 
-# Software tools and library located in the `bin` folder:
-Here's a brief overview of each software tool or library located in the bin folder:
+---
 
-1. **`ffmpeg.exe`**: A comprehensive tool for handling multimedia files. It's commonly used for video and audio encoding, decoding, transcoding, and streaming. It supports many formats and can convert media files, apply filters, and modify encoding settings.
+## Инструкции по установке
 
-2. **`chrome drivers`**: Web drivers for controlling the Google Chrome browser, mainly used for automated browser testing. These are often integrated into testing frameworks like Selenium for simulating browser interactions.
+### Проверка версии Python
 
-3. **`chrome for developers`**: This is a version of Google Chrome specifically for developers, often including beta or experimental features. It's useful for web development testing and debugging in real-world browser environments.
+Для проверки установленной версии Python выполните следующую команду:
 
-4. **`geckodriver`**: A driver for Mozilla Firefox, used to control Firefox in automated testing scenarios. It enables interaction with the Firefox browser through automation tools, allowing for cross-browser testing in conjunction with other drivers.
-
-5. **`edge drivers`**: Drivers for Microsoft Edge browser control, useful in automated testing environments, similar to Chrome and Firefox drivers. It's part of Microsoft's WebDriver toolset and allows testing web applications in the Edge browser.
-
-6. **`gtk`**: The GIMP Toolkit, a library for developing graphical user interfaces. Widely used in Linux applications, it provides a collection of controls and widgets for creating windows, buttons, and other interface elements.
-
-
-### Installation Steps
-
-1. **Clone the repository**:
-   ```powershell
-   # Set the current path
-   $currentPath = (Get-Location).Path
-   
-   # Clone the repository
-   git clone https://github.com/hypo69/hypo.git
-   ```
-   - Navigate to the `hypotez` directory.
-
-
-2. **Download the `bin` directory**:
-   [Download bin directory](https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo)
-   - Unzip the downloaded compressed file into the `hypotez` folder .
-
-	Make sure to **unzip directly into the project folder**, similar to selecting "Extract Here" in a context menu. The archive already contains a `bin` folder with all necessary binaries, so unzipping it in the project root will place everything in the correct directory structure automatically.
-		- Your directory structure should look like this:  <img src="imasges/bin.png" alt="`bin` directory structute">
-	- - Easy Way to continue installation: 								
-	Execute the install script `.\INSTALL.PS1`.
-
-    The script will guide you through the steps to set up `hypotez` efficiently. After completion, continue to the Configuration section below to add your credentials and any other specific settings.
-
-3. Continue to manual install:
-
-4. **Set execution policy**:
-   ```powershell
-   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-   ```
-
-5. **Create a virtual environment**:
-   ```powershell
-   python -m venv venv
-   ```
-
-6. **Activate the virtual environment**:
-   ```powershell
-   venv\Scripts\Activate.ps1
-   ```
-
-7. **Upgrade `pip`**:
-   ```powershell
-   pip install --upgrade pip setuptools wheel
-   ```
-
-8. **Install dependencies**:
-   ```powershell
-   pip install -r requirements.txt --ignore-installed
-   ```
-
-9. **Install npm and web-ext**:
-	```powershell
-	npm install -g npm
-	npm install -g web-ext
-	```
-
-10. **Install Jupyter Lab extensions**:
-	```powershell
-	jupyter labextension install @jupyter-widgets/jupyterlab-manager
-	```
-
-11. **Install Playwright**:
-	```powershell
-	playwright install
-	```
-
-## Configuration
-
-### Setting Up Credentials
-
-Before starting, create a folder named `secrets` in the project root. Copy `credentials.kdbx.example` and `password.txt` from the service folder into `secrets`, and remove the `.example` suffix.
-
-Here is the structure for credentials:
-
-1. **Suppliers > Aliexpress > API**
-   - `api_key`: Aliexpress API key.
-   - `secret`: Secret key.
-   - `tracking_id`: Tracking ID.
-   - `email`: Aliexpress account email.
-   - `password`: Aliexpress account password.
-
-2. **OpenAI**
-   - `api_key`: API key for OpenAI.
-
-3. **Telegram**, **Discord**, **Prestashop**, **SMTP**, **Facebook**, **Google API**, etc.
-
-Ensure these details are correctly entered to allow the assistant to function effectively.
-
-#### PowerShell Commands
-
-```powershell
-# Define current path
-$currentPath = (Get-Location).Path
-
-# Create the 'secrets' folder
-New-Item -ItemType Directory -Path "$currentPath\secrets"
-
-# Copy example files to 'secrets' folder
-Copy-Item -Path "$currentPath\credentials.kdbx.example" -Destination "$currentPath\secrets\credentials.kdbx"
-Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\password.txt"
+```bash
+python --version
 ```
 
-For more details, please check out the [codebase in the `src/readme.md`](src/readme.md). 
-Instructions for setting up passwords and secrets are documented in the [SECURITY.md](SECURITY.md) file.
+или
+
+```bash
+python3 --version
+```
+
+Если у вас несколько версий Python, проверьте конкретную версию:
+
+```bash
+python3.12 --version
+python3.13 --version
+```
+
+---
+
+### Установка Python 3.12
+
+#### Для **Linux**:
+
+На большинстве дистрибутивов Linux можно установить Python 3.12 через менеджер пакетов. Например, для Ubuntu:
+
+```bash
+sudo apt update
+sudo apt install python3.12
+```
+
+#### Для **Windows**:
+
+Перейдите на [официальный сайт Python](https://www.python.org/downloads/release/python-3120/) и скачайте установщик для Windows. Во время установки выберите опцию **Add Python to PATH**.
+
+#### Для **macOS**:
+
+Можно использовать `brew` для установки Python 3.12:
+
+```bash
+brew install python@3.12
+```
+
+---
+
+### Установка виртуального окружения
+
+После установки Python 3.12 убедитесь, что у вас установлен модуль `venv`. Выполните команду:
+
+```bash
+python3.12 -m ensurepip --upgrade
+```
+
+---
+
+### Установка зависимостей
+
+Создайте виртуальное окружение и активируйте его:
+
+```bash
+python3.12 -m venv venv
+source venv/bin/activate
+```
+
+Установите зависимости:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Конфигурация
+
+### Настройка учетных данных
+
+Перед началом работы создайте папку `secrets` в корне проекта и скопируйте в неё файлы `credentials.kdbx.example` и `password.txt`, затем удалите суффикс `.example`.
+
+---
+
+## Дополнительная информация
+
+Для получения более подробной информации ознакомьтесь с [кодовой базой в `src/readme.md`](src/readme.md) и инструкциями по настройке паролей и секретов в [файле SECURITY.md](SECURITY.md).
+от текст теперь включает перевод, TOC и правильную группировку разделов. Лишняя информация была удалена, и структура документа упрощена.
