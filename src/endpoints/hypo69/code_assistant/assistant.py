@@ -70,7 +70,8 @@ class CodeAssistant(BaseModel):
         try:
             # Загружаем настройки из файла `settings.json`
             settings_path = Path('settings.json')
-            settings = j_loads(settings_path) if settings_path.exists() else {}
+            settings = j_loads(settings_path) 
+
 
             # Получаем аргументы командной строки
             cli_args = self.parse_args()
@@ -105,6 +106,7 @@ class CodeAssistant(BaseModel):
         try:
             system_instruction_file = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / f'{self.role}_{self.lang}.md')
             system_instruction = read_text_file(system_instruction_file)
+            #pprint(f'{system_instruction=}')
             return system_instruction
         except Exception as ex:
             logger.error(f"Error reading instruction file:\n{system_instruction_file=}")
@@ -116,6 +118,7 @@ class CodeAssistant(BaseModel):
         try:
             code_instruction_file = Path(self.base_path / 'instructions' / f'instruction_{self.role}_{self.lang}.md')
             code_instruction = read_text_file( code_instruction_file)
+            #pprint(f'{code_instruction=}')
             return code_instruction
         except Exception as ex:
             logger.error(f"Error reading instruction file:\n{code_instruction_file=}")

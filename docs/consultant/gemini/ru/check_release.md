@@ -1,5 +1,5 @@
 ```
-**Received Code**:
+**Полученный код**
 
 ```python
 ## \file hypotez/src/check_release.py
@@ -36,7 +36,8 @@ def check_latest_release(owner: str, repo: str):
         return 
 ```
 
-**Improved Code**:
+```
+**Улучшенный код**
 
 ```python
 ## \file hypotez/src/check_release.py
@@ -49,43 +50,66 @@ MODE = 'development'
 
 import requests
 from src.logger import logger
+from src.utils.jjson import j_loads # Импортируем необходимую функцию
+
 """!AI PROMPT: у меня есть свой модуль `src.logger` который  обеспечивает логирование в проекте """
 
-def check_latest_release(owner: str, repo: str) -> str | None:
-    """Check the latest release version of a GitHub repository.
 
-    :param owner: The owner of the repository.
-    :type owner: str
-    :param repo: The name of the repository.
-    :type repo: str
-    :raises requests.exceptions.RequestException: if there's a problem with the request.
-    :returns: The latest release version if available, else None.
-    :rtype: str | None
+def check_latest_release(owner: str, repo: str) -> str | None:
     """
+    Проверяет последнюю версию релиза на GitHub.
+
+    :param owner: Владелец репозитория.
+    :param repo: Название репозитория.
+    :raises requests.exceptions.RequestException: Если произошла ошибка при запросе к API.
+    :return:  Версия последнего релиза в формате строки, или None, если релиз не найден или произошла ошибка.
+    """
+    url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
     try:
-        url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
         response = requests.get(url)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-        latest_release = response.json()
-        return latest_release['tag_name']
+        response.raise_for_status()  # Поднимает исключение для некорректных кодов ответа
+
+        latest_release = j_loads(response.text)
+        return latest_release.get('tag_name')
     except requests.exceptions.RequestException as e:
-        logger.error(f"Error fetching release data: {e}")
+        logger.error(f"Ошибка при запросе к API GitHub: {e}")
         return None
-    except KeyError as e:
-        logger.error(f"Error parsing release data: {e}")
+    except (KeyError, TypeError) as e:
+        logger.error(f"Ошибка при обработке ответа от GitHub: {e}")
         return None
+
 
 ```
 
-**Changes Made**:
+```
+**Изменения**
 
-- Added type hints (`-> str | None`) to the function signature, specifying that the function can return either a string or `None`.
-- Added docstrings in RST format, including descriptions for parameters, return values, and potential exceptions.
-- Implemented a `try...except` block to handle potential `requests.exceptions.RequestException` during the HTTP request. This is crucial for robustness. The `raise_for_status()` method is used to check for bad HTTP responses (e.g., 404 Not Found, 500 Internal Server Error) and raise exceptions appropriately.
-- Included error handling for `KeyError` if the JSON response doesn't contain the expected 'tag_name' key.  This prevents unexpected crashes.
-- Logged errors using the `logger` module, providing more informative error messages.
-- Improved the `return` statement in the `except` block to explicitly return `None`, clarifying the expected return value in case of an error.
+* Добавлена аннотация типов для функции `check_latest_release`, уточнено возвращаемое значение (`str | None`).
+* Импортирована необходимая функция `j_loads` из `src.utils.jjson`.
+* Использование `response.raise_for_status()` для обработки ошибок HTTP.
+* Обработка исключений `requests.exceptions.RequestException` и `(KeyError, TypeError)` с логированием ошибок с помощью `logger.error`.
+* Добавлен RST-комментарий к функции с описанием аргументов, исключений и возвращаемого значения.
+* Изменён способ возврата None: теперь возвращается None при возникновении ошибок.
+* Используется метод `get()` для доступа к `tag_name`, чтобы избежать исключения `KeyError`, если ключ отсутствует.
+*  Устранён некорректный комментарий `#TODO`.  Проверка ошибок HTTP добавлена.
 
 
+```
+**Примеры RST-документации (TODO):**
 
+```rst
+.. code-block:: python
+    # Пример успешного запроса
+    latest_version = check_latest_release("owner_name", "repo_name")
+    if latest_version:
+        print(f"Latest release: {latest_version}")
+    else:
+        print("Release not found or error occurred.")
+
+
+.. code-block:: python
+    # Пример обработки ошибки
+    error_response = check_latest_release("incorrect_owner", "repo_name")
+    if error_response is None:
+        print("Error during request.")
 ```

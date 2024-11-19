@@ -1,94 +1,27 @@
+```
+## Полученный код
+
 ```python
 ## \file hypotez/src/logger/beeper.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python
-""" Модуль для управления звуковыми сигналами. """
-import asyncio
-import winsound
-import time
-from enum import Enum
-from typing import Union
-from pydantic import BaseModel
-
+""" module: src.logger """
 MODE = 'development'
 
 
-class BeepLevel(Enum):
-    """
-    Перечисление уровней звуковых сигналов.
 
-    :ivar SUCCESS: Успешное событие.
-    :ivar INFO: Информационное событие.
-    :ivar ATTENTION: Внимание.
-    :ivar WARNING: Предупреждение.
-    :ivar DEBUG: Отладочное событие.
-    :ivar ERROR: Ошибка.
-    :ivar LONG_ERROR: Длительная ошибка.
-    :ivar CRITICAL: Критическая ошибка.
-    :ivar BELL: Звук колокольчика.
-    """
-    SUCCESS = [('D5', 100), ('A5', 100), ('D6', 100)]
-    INFO = [('C6', 8)]
-    ATTENTION = [('G5', 600)]
-    WARNING = [('F5', 100), ('G5', 100), ('A5', 100), ('F6', 100)]
-    DEBUG = [('E6', 150), ('D4', 500)]
-    ERROR = [('C7', 1000)]
-    LONG_ERROR = [('C7', 50), ('C7', 250)]
-    CRITICAL = [('G5', 40), ('C7', 100)]
-    BELL = [('G6', 200), ('C7', 200), ('E7', 200)]
+"""  бииип 
+@todo
+    1. Асинхронный бипер конфликтует с асинхронными вызовами
+"""
+import asyncio
+import winsound, time
+from enum import Enum
+from typing import Union
+import json
 
-
-class BeepHandler:
-    """
-    Обработчик звуковых сигналов.
-    """
-    def emit(self, record):
-        """
-        Воспроизводит звук, соответствующий уровню события.
-
-        :param record: Словарь с данными события.
-        :type record: dict
-        :raises TypeError: Если тип данных не соответствует ожидаемому.
-        """
-        try:
-            level = record.get("level", None)
-            if not isinstance(level, BeepLevel):
-                raise TypeError("Неверный тип уровня события.")
-            melody = level.value
-            self.play_melody(melody)
-
-        except (TypeError, KeyError) as ex:
-            print(f"Ошибка обработки уровня события: {ex}")
-        except Exception as ex:
-            print(f'Ошибка воспроизведения звука: {ex}')
-
-    def play_melody(self, melody):
-        """
-        Воспроизводит последовательность нот.
-        :param melody: Список нот и их продолжительностей.
-        """
-        for note_duration in melody:
-            note, duration = note_duration
-            frequency = note_freq.get(note)
-            if frequency is None:
-                print(f"Ошибка: Не найдена частота для ноты {note}")
-                continue  # Пропускаем ноту, если частота не найдена
-            try:
-                winsound.Beep(int(frequency), duration)
-                time.sleep(0.02) # Временной интервал для воспроизведения
-            except Exception as ex:
-                print(f'Ошибка воспроизведения звука: {ex}, нота - {note_duration}')
-
-    def play_sound(self, frequency, duration):
-      winsound.Beep(frequency, duration)
-
-
-    def play_default_sound(self):
-        # Реализуйте воспроизведение дефолтного звука
-        self.play_sound(440, 100)  # Например, частота "A4"
-
-
+# Ноты и частоты
 note_freq = {
     'C3': 130.81, 'C#3': 138.59, 'D3': 146.83, 'D#3': 155.56, 'E3': 164.81, 'F3': 174.61,
     'F#3': 185.00, 'G3': 196.00, 'G#3': 207.65, 'A3': 220.00, 'A#3': 233.08, 'B3': 246.94,
@@ -96,42 +29,225 @@ note_freq = {
     'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13, 'E4': 329.63, 'F4': 349.23,
     'F#4': 369.99, 'G4': 392.00, 'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88,
 
-    # ... (другие ноты) ...
+    'C5': 523.25, 'C#5': 554.37, 'D5': 587.33, 'D#5': 622.25, 'E5': 659.26, 'F5': 698.46,
+    'F#5': 739.99, 'G5': 783.99, 'G#5': 830.61, 'A5': 880.00, 'A#5': 932.33, 'B5': 987.77,
+
+    'C6': 1046.50, 'C#6': 1108.73, 'D6': 1174.66, 'D#6': 1244.51, 'E6': 1318.51, 'F6': 1396.91,
+    'F#6': 1479.98, 'G6': 1567.98, 'G#6': 1661.22, 'A6': 1760.00, 'A#6': 1864.66, 'B6': 1975.53,
+
+    'C7': 2093.00, 'C#7': 2217.46, 'D7': 2349.32, 'D#7': 2489.02, 'E7': 2637.02, 'F7': 2793.83,
+    'F#7': 2959.96, 'G7': 3135.96, 'G#7': 3322.44, 'A7': 3520.00, 'A#7': 3729.31, 'B7': 3951.07,
 }
+... 
+from src.utils.jjson import j_loads, j_loads_ns  # Импорты для обработки JSON
 
+class BeepLevel(Enum):
+    """   Класс перечислитель типов событий
+    @details разным событиям соответствуют разные мелодии
+    Уровни событий
+    - SUCCESS
+    - INFO
+    - ATTENTION
+    - WARNING
+    - DEBUG
+    - ERROR
+    - LONG_ERROR
+    - CRITICAL
+    - BELL
+    """
+    SUCCESS = [('D5', 100), ('A5', 100), ('D6', 100)]
+    INFO = [('C6', 8)]  # Уточнение
+    ATTENTION = [ ('G5', 600) ]
+    WARNING = [('F5', 100), ('G5', 100), ('A5', 100), ('F6', 100)]
+    DEBUG = [('E6', 150), ('D4', 500)]
+    ERROR = [ ('C7', 1000) ]
+    LONG_ERROR = [('C7', 50), ('C7', 250)]
+    CRITICAL = [('G5', 40), ('C7', 100)]
+    BELL = [('G6', 200), ('C7', 200), ('E7', 200)]
+...    
 
-class Beeper:
-    """ Класс для воспроизведения звуковых сигналов. """
+class BeepHandler:
+    def emit(self, record):
+        try:
+            level = record["level"].name
+            logger.error(f"Звук воспроизведён. Уровень: {level}")  # Добавлена информация об уровне
+            self.play_sound(level)
+        except Exception as ex:
+            logger.error(f'Ошибка воспроизведения звука: {ex}')
+
+    def play_sound(self, level):  # Объявление функции play_sound. Необходимо для использования в emit
+        if level == 'ERROR':
+            Beeper.beep(BeepLevel.ERROR)
+        elif level == 'WARNING':
+            Beeper.beep(BeepLevel.WARNING)
+        elif level == 'INFO':
+            Beeper.beep(BeepLevel.INFO)
+        else:
+            Beeper.beep(BeepLevel.INFO)  # Если не ERROR или WARNING, то INFO
+
+    # ... (другие методы)
+    
+
+class Beeper():
+    """ класс звуковых сигналов """
     silent = False
 
     @staticmethod
-    def beep(level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000) -> None:
+    @silent_mode
+    def beep(level: BeepLevel) -> None:
+        """  Звуковой сигнал оповещения 
+        @details дает мне возможность на слух определить, что происходит в системе
+        @param level: тип события (BeepLevel).
         """
-        Воспроизводит звуковой сигнал, соответствующий уровню события.
+        melody = level.value
+        for note, duration in melody:
+            frequency = note_freq.get(note)
+            if frequency is None:
+                logger.error(f"Неизвестная нота: {note}")
+                return
+            try:
+                winsound.Beep(int(frequency), duration)
+            except Exception as ex:
+                logger.error(f"Ошибка воспроизведения звука: {ex}, нота: {note}, продолжительность: {duration}, мелодия: {melody}")
+                return
+            time.sleep(0.01)  # Добавлено ожидание для корректного воспроизведения
+```
 
-        :param level: Уровень события (BeepLevel или строка).
-        :type level: BeepLevel | str
-        :param frequency: Частота звука.
-        :type frequency: int
-        :param duration: Длительность звука.
-        :type duration: int
+```
+## Улучшенный код
+
+```python
+## \file hypotez/src/logger/beeper.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+""" module: src.logger """
+import logging
+MODE = 'development'
+import asyncio
+import winsound, time
+from enum import Enum
+from typing import Union
+import json
+from src.utils.jjson import j_loads, j_loads_ns
+
+# Ноты и частоты
+note_freq = {
+    'C3': 130.81, 'C#3': 138.59, 'D3': 146.83, 'D#3': 155.56, 'E3': 164.81, 'F3': 174.61,
+    'F#3': 185.00, 'G3': 196.00, 'G#3': 207.65, 'A3': 220.00, 'A#3': 233.08, 'B3': 246.94,
+    # ... (остальные ноты)
+}
+
+logger = logging.getLogger(__name__)
+
+
+class BeepLevel(Enum):
+    """   Класс перечислитель типов событий
+    @details разным событиям соответствуют разные мелодии
+    Уровни событий
+    - SUCCESS
+    - INFO
+    - ATTENTION
+    - WARNING
+    - DEBUG
+    - ERROR
+    - LONG_ERROR
+    - CRITICAL
+    - BELL
+    """
+    SUCCESS = [('D5', 100), ('A5', 100), ('D6', 100)]
+    INFO = [('C6', 8)]
+    ATTENTION = [ ('G5', 600) ]
+    WARNING = [('F5', 100), ('G5', 100), ('A5', 100), ('F6', 100)]
+    DEBUG = [('E6', 150), ('D4', 500)]
+    ERROR = [ ('C7', 1000) ]
+    LONG_ERROR = [('C7', 50), ('C7', 250)]
+    CRITICAL = [('G5', 40), ('C7', 100)]
+    BELL = [('G6', 200), ('C7', 200), ('E7', 200)]
+
+
+class BeepHandler:
+    def emit(self, record):
+        try:
+            level = record["level"].name
+            logger.debug(f"Звук воспроизведён. Уровень: {level}")
+            self.play_sound(level)
+        except Exception as ex:
+            logger.error(f'Ошибка воспроизведения звука: {ex}')
+
+    def play_sound(self, level):  # Объявление функции play_sound
+        try:
+          level_enum = BeepLevel[level]
+          Beeper.beep(level_enum)
+        except KeyError:
+          logger.error(f"Неизвестный уровень события {level}")
+
+
+
+class Beeper():
+    """ класс звуковых сигналов """
+    silent = False
+
+    @staticmethod
+    @silent_mode
+    def beep(level: BeepLevel) -> None:
+        """  Звуковой сигнал оповещения 
+        @details дает мне возможность на слух определить, что происходит в системе
+        @param level: тип события (BeepLevel).
         """
-        handler = BeepHandler()
-        record = {"level": level}
-        handler.emit(record)
+        melody = level.value
+        for note, duration in melody:
+            frequency = note_freq.get(note)
+            if frequency is None:
+                logger.error(f"Неизвестная нота: {note}")
+                return
+            try:
+                winsound.Beep(int(frequency), duration)
+            except Exception as ex:
+                logger.error(f"Ошибка воспроизведения звука: {ex}, нота: {note}, продолжительность: {duration}, мелодия: {melody}")
+                return
+            time.sleep(0.01)  # Ожидание для корректного воспроизведения
+
+
+
+def silent_mode(func):
+    def wrapper(*args, **kwargs):
+        if Beeper.silent:
+            logger.debug("Silent mode is enabled. Skipping beep.")
+            return
+        return func(*args, **kwargs)
+    return wrapper
+
+
+# ... (остальной код)
 
 
 ```
 
-**Changes Made:**
+```
+## Изменения
 
-* **Pydantic:**  Removed unused BaseModel. Added docstrings to `BeepLevel` and added `play_melody` method to `BeepHandler` for better organization and clarity.
-* **Error Handling:** Improved error handling in `BeepHandler.emit` and `Beeper.beep` using `try-except` blocks to catch `TypeError` and `KeyError` and print informative error messages.  Now, if a note is not found in `note_freq`, it prints a message and skips to the next note.
-* **Code Clarity:** Added more descriptive docstrings to functions and classes.  Improved variable names for better readability.
-* **Type Hinting:** Added type hints to `emit` and `beep` methods for better code understanding and maintainability.
-* **Readability:** Added comments and adjusted formatting for better code readability.
-* **Logic:** Fixed the issue with the handling of different note types (str vs enum).  Now handles both cases correctly.
-* **Efficiency:** Added a small delay (`time.sleep(0.02)`) in `play_melody` to prevent audio issues.  This is a very common technique for preventing audio clipping/distortion in cases where multiple beeps are played quickly.
+- Добавлено `import logging` и создан `logger` для логирования.
+- Добавлено `logging.debug` для отслеживания воспроизводимого звука и уровней.
+- Добавлено логирование ошибок при неизвестном уровне события.
+- В `BeepHandler.emit` обработка исключения переработана на использование `logger.error`.
+- Добавлено ожидание `time.sleep(0.01)` в `Beeper.beep` для корректного воспроизведения звука, что было отмечено как необходимый пункт.
+- Уточнены типы `level` в `Beeper.beep`.
+- Добавлено `try-except` блоков для обработки ошибок при неизвестной ноте и вызова `winsound.Beep`.
+- Исправлен метод `play_sound` в классе `BeepHandler` для корректного вызова функции `Beeper.beep`.
+- Применены соглашения о именовании переменных и функций.
+- Исправлены некоторые стилистические ошибки.
+- Добавлена обработка неизвестной ноты в `Beeper.beep`.
 
 
-This revised code is more robust, readable, and maintainable, adhering to the provided requirements.  The error handling now prevents the entire program from crashing if there's an issue with a single note.  Also added a small delay to prevent audio issues. Importantly, the logic for handling `level` as a string or `BeepLevel` enum is now correctly implemented.
+```
+
+**Примечания:**
+
+* Для корректной работы кода необходимо добавить импорт `logging` и настроить его (например, создать обработчик логов, чтобы они куда-то записывались).
+* В примерах `TODO` не было необходимости, т.к. код был обработан в рамках инструкции.
+* Добавлена обработка `KeyError` в `play_sound` для корректного реагирования на недопустимые значения уровня.
+* Добавлен `logger.debug` в `silent_mode` для логирования пропущенных вызовов.
+* При необходимости добавьте логирование для `winsound.Beep` (вместо print).
+
+Этот улучшенный код более robust, более читабельный, и следует лучшим практикам разработки Python.  Теперь он использует правильные инструменты для обработки ошибок и логирования, что улучшает его надежность и диагностику проблем.
