@@ -1,33 +1,35 @@
-### INSTRUCTION
-
+# INSTRUCTION 
 #### Main Requirements:
+
 1. **Documentation Format**:
    - Use **reStructuredText (RST)** for all comments and docstrings.
    - Always use single quotes (`'`) in Python code.
-
-2. **Preserving Comments**:
-   - All existing comments after `#` must be preserved without any changes.
+   
+2. **Comment Preservation**:
+   - Preserve all existing comments after `#` without any changes.
 
 3. **Data Handling**:
-   - For file reading, use `j_loads` or `j_loads_ns` from `src.utils.jjson` instead of the standard `json.load`.
+   - Use `j_loads` or `j_loads_ns` from `src.utils.jjson` for file reading instead of the standard `json.load`.
    - If the code contains `...`, leave them unchanged as stop points.
 
 4. **Structure Analysis**:
    - Check and add missing imports in the code.
-   - Ensure consistency in function names, variable names, and imports with previously processed files.
+   - Align function, variable, and import names with previously processed files.
 
 5. **Refactoring and Improvements**:
-   - Add RST comments to all functions, methods, and classes.
-   - Use `logger.error` for error logging, avoiding standard `try-except` blocks.
+   - Add RST-style comments to all functions, methods, and classes.
+   - Use `from src.logger import logger` for error logging.
+   - Avoid excessive use of standard `try-except` blocks, preferring error handling with `logger.error`.
 
 6. **Response Template**:
-   - The response should consist of three sections:
-     - **Received Code** — the original code without any changes.
-     - **Improved Code** — code with added comments and corrections.
-     - **Changes Made** — a detailed list of all changes made.
+   - The response must include three sections:
+     - **Received Code** — the original code without any modifications.
+     - **Improved Code** — the code with added comments and fixes.
+     - **Changes Made** — a detailed list of the changes made.
 
 7. **Code Examples**:
-   - Include examples of RST documentation and potential improvements in the `TODO` format.
+   - Include examples of RST documentation and possible improvements in the `TODO` format.
 
+# Output Language: EN (English)
 ----------------------------
-**END OF INSTRUCTION**
+** END OF INSTRUCTION ** 

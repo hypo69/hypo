@@ -1,4 +1,4 @@
-```python
+
 # Полученный код
 ```python
 ## \file hypotez/src/category/category.py

@@ -150,14 +150,15 @@ class ProgramSettings(BaseModel):
         self.config.project_name = self.base_dir.name
         
         self.path = SimpleNamespace(
-            root=Path(self.base_dir),
-            src=Path(self.base_dir) / 'src',
-            bin=Path(self.base_dir) / 'bin',
-            log=Path(self.base_dir) / 'log',
-            tmp=Path(self.base_dir) / 'tmp',
-            data=Path(self.base_dir) / 'data',
-            secrets=Path(self.base_dir) / 'secrets',
-            google_drive=Path(self.config.google_drive)  # <- DEBUG path
+            root = Path(self.base_dir),
+            src = Path(self.base_dir) / 'src',
+            endpoints = Path(self.base_dir) / 'src' / 'endpoints',
+            bin = Path(self.base_dir) / 'bin',
+            log = Path(self.base_dir) / 'log',
+            tmp = Path(self.base_dir) / 'tmp',
+            data = Path(self.base_dir) / 'data',
+            secrets = Path(self.base_dir) / 'secrets',
+            google_drive = Path(self.config.google_drive)  # <- DEBUG path
         )
 
         if check_latest_release(self.config.git_user, self.config.git):

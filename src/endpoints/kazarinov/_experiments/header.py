@@ -1,34 +1,65 @@
-## \file hypotez/src/endpoints/kazarinov/_experiments/header.py
+## \file hypotez/src/endpoints/kazarinov/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python
-""" module: src.endpoints.kazarinov._experiments """
+""" module: src.endpoints.kazarinov """
 MODE = 'development'
 
-
-
-"""! Absolute path to modules and GTK bin directory setup """
-
 import sys
-import os
+import json
+from packaging.version import Version
+
 from pathlib import Path
+def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+    """!
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
 
-#  корневой путь к проекту
-__root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])
-sys.path.append(str(__root__))
+    Args:
+        marker_files (tuple): Filenames or directory names to identify the project root.
+    
+    Returns:
+        Path: Path to the root directory if found, otherwise the directory where the script is located.
+    """
+    __root__:Path
+    current_path:Path = Path(__file__).resolve().parent
+    __root__ = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            __root__ = parent
+            break
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
 
 
-gtk_bin_path = fr"{__root__}/bin/gtk/gtk-nsis-pack/bin" 
-ffmpeg_bin_path = fr"{__root__}/bin/ffmpeg/bin" 
-graphviz_bin_path = fr"{__root__}/bin/graphviz/bin" 
+# Get the root directory of the project
+__root__: Path = get_project_root()
+"""__root__ (Path): Path to the root directory of the project"""
 
-if gtk_bin_path not in os.environ["PATH"]:
-    os.environ["PATH"] = gtk_bin_path + os.pathsep + os.environ["PATH"]
+from src import gs
 
-if ffmpeg_bin_path not in os.environ["PATH"]:
-    os.environ["PATH"] = ffmpeg_bin_path + os.pathsep + os.environ["PATH"]
+settings:dict = None
+try:
+    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
 
-if graphviz_bin_path not in os.environ["PATH"]:
-    os.environ["PATH"] = graphviz_bin_path + os.pathsep + os.environ["PATH"]
 
-os.environ['WEASYPRINT_DLL_DIRECTORIES'] = str(gtk_bin_path)
+doc_str:str = None
+try:
+    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+        doc_str = settings_file.read()
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
+
+ 
+
+__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
+__version__: str = settings.get("version", '')  if settings  else ''
+__doc__: str = doc_str if doc_str else ''
+__details__: str = ''
+__author__: str = settings.get("author", '')  if settings  else ''
+__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
