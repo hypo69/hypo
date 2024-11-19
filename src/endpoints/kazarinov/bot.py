@@ -31,17 +31,20 @@ MODE = 'development'
 """
 
 import asyncio
+from importlib.resources import read_text
 import json
 import random
 from pathlib import Path
 from typing import List, Optional
+from types import SimpleNamespace
 from pydantic import BaseModel, Field
 from telegram import Update
-from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 import header
 from src import gs
 from src.bots.telegram import TelegramBot
+from src.utils.string import url
 from src.webdriver.driver import Driver
 from src.webdriver.chrome import Chrome
 from src.ai.gemini import GoogleGenerativeAI
@@ -53,78 +56,26 @@ from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
 
-class KazarinovBotConfig(BaseModel):
-    """Config model for KazarinovTelegramBot."""
-    
-    mode: str
-    driver: dict
-    mexiron: dict
-    system_instruction_path: str
-    questions_list_path: str
-    url_handlers: dict
-    generation_config: dict
-    telegram: dict
-
-
-class KazarinovTelegramBot(TelegramBot, BaseModel):
+class KazarinovTelegramBot(TelegramBot):
     """Telegram bot with custom behavior for Kazarinov."""
 
-    config: KazarinovBotConfig
     token: str
-    d: Driver
-    mexiron: Mexiron
-    model: GoogleGenerativeAI
-    system_instruction: str
-    questions_list: List[str]
-    timestamp: str = Field(default_factory=lambda: gs.now)
+    config = j_loads_ns(gs.path.src / 'endpoints' / 'kazarinov' / 'config.json')
+    mexiron:Mexiron = Mexiron(Driver(Chrome))
 
-    def __init__(self, config:Optional[dict]):
-        # Загружаем конфигурацию из JSON
-        with open(config_path, "r", encoding="utf-8") as file:
-            config_data = json.load(file)
+    def __init__(self):
 
-        config_data - j_loads(config_path)
-        self.config = KazarinovBotConfig(**config_data)
-        
-        # Выбираем токен на основе режима
+        # Устанавливаем настройки
         self.token = (
             gs.credentials.telegram.hypo69_test_bot
             if self.config.mode == 'test'
             else gs.credentials.telegram.hypo69_kazarinov_bot
         )
-        
-        # Инициализация драйвера и Mexiron
-        self.d = Driver(Chrome, **self.config.driver.get("options", {}))
-        self.mexiron = Mexiron(self.d)
-        
-        # Загрузка системных инструкций и вопросов
-        self.system_instruction = recursively_read_text_files(
-            gs.path.google_drive / self.config.system_instruction_path
-        )
-        self.questions_list = recursively_read_text_files(
-            gs.path.google_drive / self.config.questions_list_path, ['*.*'], as_list=True
-        )
-        
-        # Инициализация модели
-        self.model = GoogleGenerativeAI(
-            api_key=gs.credentials.gemini.kazarinov,
-            system_instruction=self.system_instruction,
-            generation_config=self.config.generation_config
-        )
-        
-        self.register_handlers()
+        super().__init__(self.token)
 
-    def register_handlers(self):
-        """Register bot commands and message handlers."""
-        self.application.add_handler(CommandHandler('start', self.start))
-        self.application.add_handler(CommandHandler('help', self.help_command))
-        self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
-        self.application.add_handler(MessageHandler(filters.VOICE, self.handle_voice))
-        self.application.add_handler(MessageHandler(filters.Document.ALL, self.handle_document))
+        self.system_instruction = self.config.system_instruction
+        self.questions_list_path = self.config.questions_list_path
 
-    async def start(self, update: Update, context: CallbackContext) -> None:
-        """Handle /start command."""
-        await update.message.reply_text('Hello! This is Kazarinov’s custom bot.')
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
         """Handle text messages with URL-based routing."""
@@ -132,9 +83,12 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
         user_id = update.effective_user.id
 
         log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
-        save_text_file(f"User {user_id}: {response}\n", Path(log_path))
+        save_text_file(f"User {user_id}: {response}\n", Path(log_path),mode='a')
 
-        if handler := self.get_handler_for_url(response):
+        if self.handle_onetab_url(update, response):
+            await update.message.reply_text("OK")
+
+        if self.handle_supplier_url(response):
             return await handler(update, response)
 
         if response in ('--next', '-next', '__next', '-n', '-q'):
@@ -144,30 +98,28 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
             answer = self.model.ask(q=response, history_file=f'{user_id}.txt')
             await update.message.reply_text(answer)
 
-    def get_handler_for_url(self, response: str):
+    def handle_supplier_url(self, response: str):
         """Map URLs to specific handlers."""
-        for key, (urls, handler_func) in self.config.url_handlers.items():
-            if any(response.startswith(url) for url in urls):
-                return getattr(self, handler_func)
-        return None
+        if any(response.startswith(url) for url in self.config.url_handlers.suppliers):
+            ...
+        return False
 
-    async def handle_suppliers_response(self, update: Update, response: str) -> None:
-        """Handle suppliers' URLs."""
-        if await self.mexiron.run_scenario(response, update):
-            await update.message.reply_text('Готово!')
-        else:
-            await update.message.reply_text('Ошибка. Попробуй ещё раз.')
 
-    async def handle_onetab_response(self, update: Update, response: str) -> None:
+    async def handle_onetab_url(self, update: Update, response: str) -> None:
         """Handle OneTab URLs."""
+        if not response.startswith(('https://onetab.com','http://onetab.com')):
+            return False
+
         price, mexiron_name, urls = fetch_target_urls_onetab(response)
 
         if not all([price, mexiron_name, urls]):
-            await update.message.reply_text('Ошибка на сервере OneTab. Попробуй ещё раз через часок.')
+            return await update.message.reply_text('Ошибка на сервере OneTab. Попробуй ещё раз через часок.')
+
         elif await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
-            await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
+            return await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
+
         else:
-            await update.message.reply_text('Ошибка. Попробуй ещё раз.')
+            return await update.message.reply_text('Ошибка. Попробуй ещё раз.')
 
     async def handle_next_command(self, update: Update) -> None:
         """Handle '--next' and related commands."""
@@ -182,13 +134,9 @@ class KazarinovTelegramBot(TelegramBot, BaseModel):
             logger.debug("Ошибка чтения вопросов: %s", ex)
             await update.message.reply_text('Произошла ошибка при чтении вопросов.')
 
-    async def handle_document(self, update: Update, context: CallbackContext) -> None:
-        """Handle document uploads."""
-        file_content = await super().handle_document(update, context)
-        await update.message.reply_text(f'Received your document. Content: {file_content}')
 
 
 if __name__ == "__main__":
-    config_path = "settings.json"
-    kt = KazarinovTelegramBot(config_path=config_path)
+    
+    kt = KazarinovTelegramBot()
     asyncio.run(kt.application.run_polling())

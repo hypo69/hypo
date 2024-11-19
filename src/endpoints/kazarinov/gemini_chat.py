@@ -10,9 +10,6 @@ Module that handles model training using GoogleGenerativeAI for the Kazarinov pr
 Logs dialogs into JSON files and processes training prompts.
 """
 
-
-
-
 import header
 import time
 import json

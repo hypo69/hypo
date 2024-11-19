@@ -24,7 +24,7 @@ from src.logger import logger
 
 # Load locators from JSON file.
 locator: SimpleNamespace = j_loads_ns(
-    Path(gs.path.src, 'advertisement', 'facebook', 'locators', 'post_message.json')
+    Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
 )
 
 fails:int = 0

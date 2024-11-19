@@ -6,17 +6,15 @@
 MODE = 'development'
 
 
-
-
 import asyncio
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
-
+from pydantic import BaseModel
 from src import gs
-from src.suppliers import Graber as Grbr, Locator
+from src.suppliers import Graber as Grbr
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
@@ -28,7 +26,7 @@ from types import SimpleNamespace
 from typing import Any, Callable
 
 d: Driver = None
-l: Locator = None
+l: SimpleNamespace = None
 
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
@@ -52,22 +50,20 @@ def close_popup(value: Any = None) -> Callable:
     return decorator
 
 supplier_prefix = 'morlevi'
-
-class Graber(Grbr):
+class Graber(Grbr, BaseModel):
     """Graber class for morlevi grabbing operations."""
-    d:Driver
-    l:Locator
+    supplier_prefix: str
+    d: Optional[Driver] = None  # d будет назначен позже в `grab_page()`
+    l: SimpleNamespace
 
-    def __init__(self):
-        """Initialize the Graber class and set default values."""
-        global supplier_prefix
+    class Config:
+        arbitrary_types_allowed = True
+
+    def __init__(self, supplier_prefix: str):
+        super().__init__(supplier_prefix=supplier_prefix)
         self.supplier_prefix = supplier_prefix
-        locator = Locator(self.supplier_prefix)
-        self.l = locator.locator
-        global l
-        l = self.l  
-        super().__init__(supplier_prefix = self.supplier_prefix, locator = self.l)
-
+        self.l = j_loads_ns(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
+        super().__init__(self.supplier_prefix, self.l)
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.

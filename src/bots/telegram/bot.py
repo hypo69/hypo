@@ -33,6 +33,15 @@ class TelegramBot:
             token (str): Telegram bot token, e.g., `gs.credentials.telegram.bot.kazarinov`.
         """
         self.application = Application.builder().token(token).build()
+        self.register_handlers()
+
+    def register_handlers(self):
+        """Register bot commands and message handlers."""
+        self.application.add_handler(CommandHandler('start', self.start))
+        self.application.add_handler(CommandHandler('help', self.help_command))
+        self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
+        self.application.add_handler(MessageHandler(filters.VOICE, self.handle_voice))  # Новый обработчик голосовых сообщений
+        self.application.add_handler(MessageHandler(filters.Document.ALL, self.handle_document))
 
     async def start(self, update: Update, context: CallbackContext) -> None:
         """Handle the /start command."""
@@ -45,6 +54,32 @@ class TelegramBot:
             '/start - Start the bot\n'
             '/help - Show this help message'
         )
+
+    async def handle_voice(self, update: Update, context: CallbackContext) -> None:
+        """Handle voice messages and transcribe the audio."""
+        try:
+            # Получаем файл голосового сообщения
+            voice = update.message.voice
+            file = await context.bot.get_file(voice.file_id)
+            file_path = gs.path.temp / f'{voice.file_id}.ogg'
+            
+            # Сохраняем файл на локальной системе
+            await file.download_to_drive(file_path)
+
+            # Здесь можно добавить обработку файла (распознавание речи), например, с помощью Google Speech-to-Text
+            transcribed_text = self.transcribe_voice(file_path)
+            
+            # Отправляем распознанный текст пользователю
+            await update.message.reply_text(f'Распознанный текст: {transcribed_text}')
+        
+        except Exception as ex:
+            logger.error('Ошибка при обработке голосового сообщения: ', ex)
+            await update.message.reply_text('Произошла ошибка при обработке голосового сообщения. Попробуй ещё раз.')
+
+    def transcribe_voice(self, file_path: Path) -> str:
+        """Transcribe voice message using a speech recognition service."""
+        # Пример заглушки, замените это на реальную логику распознавания речи
+        return 'Распознавание голоса ещё не реализовано.'
 
     async def handle_document(self, update: Update, context: CallbackContext) -> str:
         """Handle received documents.

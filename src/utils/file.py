@@ -134,7 +134,7 @@ def recursively_yield_file_path(
     except Exception as ex:
         logger.error(f"Failed to search files in '{root_dir}'.", ex, exc_info=exc_info)
 
-def recursively_get_filenames(
+def recursively_get_file_path(
     root_dir: Union[str, Path], 
     patterns: Union[str, list[str]] = "*", 
     exc_info: bool = True

@@ -27,13 +27,14 @@ import os
 import sys
 import asyncio
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Callable
 from langdetect import detect
 from functools import wraps
 
 import header
 from src import gs
-from src.locator.locator import Locator
+
 from src.product.product_fields import ProductFields
 from src.category import Category
 from src.webdriver import Driver
@@ -42,10 +43,10 @@ from src.utils.image import save_png_from_url
 from src.utils import pprint
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
-from src.endpoints.PrestaShop import PrestaShop
+from src.endpoints.prestashop import PrestaShop
 
 d: Driver = None
-l: Locator = None
+l: SimpleNamespace = None
 
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
@@ -71,7 +72,7 @@ def close_popup(value: Any = None) -> Callable:
 class Graber:
     """Базовый класс сбора данных со страницы для всех поставщиков."""
     
-    def __init__(self, supplier_prefix: str, locator: Locator):
+    def __init__(self, supplier_prefix: str, locator: SimpleNamespace | dict):
         """Инициализация класса Graber.
 
         Args:

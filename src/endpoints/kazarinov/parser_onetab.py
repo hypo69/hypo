@@ -16,18 +16,6 @@ from src.logger import logger
 from src import gs
 
 
-def prepare_one_tab(target_page_url: str) -> Tuple[int, str, List[str]] | bool:
-    """Подготавливает данные для OneTab.
-
-    Args:
-        target_page_url (str): URL страницы OneTab.
-
-    Returns:
-        Tuple[int, str, List[str]] | bool: Кортеж из цены, имени и списка URL, 
-        или `False`, если произошла ошибка.
-    """
-    return fetch_target_urls_onetab(target_page_url)
-
 
 def fetch_target_urls_onetab(target_page_url: str) -> Tuple[int, str, List[str]] | bool:
     """Извлекает целевые URL с указанного URL OneTab.

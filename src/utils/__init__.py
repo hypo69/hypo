@@ -159,7 +159,7 @@ from .file import (
     get_directory_names,
     get_filenames,
     read_text_file,
-    recursively_get_filenames,
+    recursively_get_file_path,
     recursively_read_text_files,
     save_text_file,
     recursively_yield_file_path,  

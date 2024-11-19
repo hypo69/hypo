@@ -5,82 +5,70 @@
 """ module: src.suppliers.kualastyle """
 MODE = 'development'
 
-
-
-
 import asyncio
 from pathlib import Path
-from types import SimpleNamespace
-from typing import Any, Callable, Optional
-from dataclasses import dataclass, field
 from functools import wraps
-
+from typing import Any, Callable, Optional
+from pydantic import BaseModel
+from dataclasses import dataclass, field
+from types import SimpleNamespace
 from src import gs
-
-from src.suppliers import Graber as Grbr, Locator
+from src.suppliers import Graber as Grbr
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
-from dataclasses import dataclass, field
-from types import SimpleNamespace
-from typing import Any, Callable
-
-d: Driver = None
-l: Locator = None
-
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
-    """Creates a decorator to close pop-ups before executing the main function logic.
+    """Создание декоратора для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
-        value (Any): Optional value passed to the decorator.
+        value (Any): Необязательное значение, передаваемое в декоратор.
 
     Returns:
-        Callable: The decorator wrapping the function.
+        Callable: Декоратор, оборачивающий основную функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await d.execute_locator(l.close_popup)  # Await async pop-up close
+                await d.execute_locator(l.close_popup)  # Ожидание закрытия всплывающего окна
             except ExecuteLocatorException as e:
-                logger.debug(f"Error executing locator: {e}")
-            return await func(*args, **kwargs)  # Await the main function
+                logger.debug(f"Ошибка при выполнении локатора: {e}")
+            return await func(*args, **kwargs)  # Ожидание выполнения основной функции
         return wrapper
     return decorator
 
-supplier_pefix = 'kualastyle'
-@dataclass(frozen=True)
-class Graber(Grbr):
+
+supplier_prefix = 'kualastyle'
+class Graber(Grbr, BaseModel):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str = field(default = supplier_pefix)
-    d: Driver = None  # d будет назначен позже в `grab_page()`
-    l: Locator = None  # l будет назначен позже в `__post_init__()`
+    supplier_prefix: str
+    d: Optional[Driver] = None  # d будет назначен позже в `grab_page()`
+    l: SimpleNamespace
 
-    def __post_init__(self):
-        """Post-initialization to load the locator namespace and set global variables."""
+    class Config:
+        arbitrary_types_allowed = True
 
-        locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
-        object.__setattr__(self, 'l', Locator(self.supplier_prefix))
-        global l
-        l = self.l                                                                  
+    def __init__(self, supplier_prefix: str):
+        super().__init__(supplier_prefix=supplier_prefix)
+        self.supplier_prefix = supplier_prefix
+        self.l = j_loads_ns(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
         super().__init__(self.supplier_prefix, self.l)
 
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Asynchronous function to grab product fields.
+        """Асинхронная функция для извлечения данных о товаре.
 
         Args:
-            driver (Driver): The driver instance to use for grabbing.
+            driver (Driver): Экземпляр драйвера для извлечения данных.
 
         Returns:
-            ProductFields: The grabbed product fields.
+            ProductFields: Извлеченные поля товара.
         """
         global d
         d = self.d = driver  
-        
         ...
         # Логика извлечения данных
         async def fetch_all_data(**kwards):

@@ -23,7 +23,7 @@ from src.logger import logger
 
 # Load locators from JSON file.
 locator: SimpleNamespace = j_loads_ns(
-    Path(gs.path.src, 'advertisement', 'facebook', 'locators', 'post_event.json')
+    Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_event.json')
 )
 
 def post_title(d: Driver, title:str) -> bool:

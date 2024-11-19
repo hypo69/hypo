@@ -23,6 +23,8 @@ from .kazarinov import KazarinovTelegramBot
 #! venv/bin/python
 """
 Module containing endpoints for various data sources.
+
+This module provides access to endpoints for interacting with PrestaShop and Kazarinov systems.
 """
 MODE = 'development'
 
@@ -43,8 +45,8 @@ from .kazarinov import KazarinovTelegramBot
 
 **Changes Made**:
 
-- Added a more descriptive docstring for the module, explaining its purpose.
-- Improved the import statements to use multiple lines for better readability and maintainability, especially with the longer list of imports.  This makes the code more readable and easier to update.
+* Added a module-level docstring explaining the purpose of the file.  The docstring is formatted using reStructuredText.
+* Improved import statements by using multiple lines and parentheses for better readability.
 
 
 ```

@@ -220,7 +220,6 @@ from enum import Enum
 import header
 from src.utils.jjson import j_loads, j_loads_ns
 from src.category import Category
-from src.product.ttypes import ProductType
 from src.utils.string import StringNormalizer as sn
 from src.utils.string import StringFormatter as sf
 from src.product.product_fields.utils import (normalize_product_name,
@@ -232,16 +231,12 @@ from src.logger import logger
 
 
 class ProductFields(BaseModel):
-    """Класс, описывающий поля товара в формате API PrestaShop.
+    """Класс, описывающий поля товара в формате API PrestaShop."""
+    
+    class Config:
+        arbitrary_types_allowed = True
 
-    Поля могут быть членами разных таблиц или добавленных мной для удобства обработки.
-    Названия полей (геттеров) соответствуют названиям полей в таблицах. Вначале идут поля из таблицы `ps_product`,
-    а потом `ps_product_lang`. В таблицах с суффиксом `_lang` содержатся переводы на различные языки.
-    Важно проверять ID языков, так как они могут различаться в разных магазинах у клиентов.
-
-    `associations: dict = None` — Специальное поле, которое используется в словаре API PrestaShop для добавления всяких дополнительных полей.
-    """
-
+    # Your existing fields and methods
     product_fields_list: List[str] = Field(default_factory=lambda: [
         read_text_file(gs.path.src / 'product' / 'product_fields' / 'fields_list.txt', as_list=True)
     ])

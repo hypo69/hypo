@@ -28,7 +28,7 @@ from jinja2 import Environment, FileSystemLoader
 import pdfkit
 from src.utils.jjson import j_loads
 from src.utils.file import read_text_file, save_text_file    
-from src.utils.pdf import save_pdf
+from src.utils.pdf import PDFUtils
 from src.utils.convertors.html import html2pdf
 from src.utils.printer import pprint
 from src.logger import logger

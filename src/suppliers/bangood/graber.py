@@ -5,19 +5,15 @@
 """ module: src.suppliers.bangood """
 MODE = 'development'
 
-
-
-
 import asyncio
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
-
+from pydantic import BaseModel
 from src import gs
-
-from src.suppliers import Graber as Grbr, Locator
+from src.suppliers import Graber as Grbr
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
@@ -27,9 +23,6 @@ from src.logger.exceptions import ExecuteLocatorException
 from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Callable
-
-d: Driver = None
-l: Locator = None
 
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
@@ -52,21 +45,20 @@ def close_popup(value: Any = None) -> Callable:
         return wrapper
     return decorator
 
-supplier_pefix = 'bangood'
-@dataclass(frozen=True)
-class Graber(Grbr):
+supplier_prefix = 'bangood'
+class Graber(Grbr, BaseModel):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str = field(default = supplier_pefix)
-    d: Driver = None  # d будет назначен позже в `grab_page()`
-    l: Locator = None  # l будет назначен позже в `__post_init__()`
+    supplier_prefix: str
+    d: Optional[Driver] = None  # d будет назначен позже в `grab_page()`
+    l: SimpleNamespace
 
-    def __post_init__(self):
-        """Post-initialization to load the locator namespace and set global variables."""
+    class Config:
+        arbitrary_types_allowed = True
 
-        locator_path = Path(gs.path.src, 'suppliers', self.supplier_prefix, 'locators', 'product.json')
-        object.__setattr__(self, 'l', Locator(self.supplier_prefix))
-        global l
-        l = self.l                                                                  
+    def __init__(self, supplier_prefix: str):
+        super().__init__(supplier_prefix=supplier_prefix)
+        self.supplier_prefix = supplier_prefix
+        self.l = j_loads_ns(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
         super().__init__(self.supplier_prefix, self.l)
 
     async def grab_page(self, driver: Driver) -> ProductFields:

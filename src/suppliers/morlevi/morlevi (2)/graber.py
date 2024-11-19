@@ -33,9 +33,9 @@ from src.endpoints.PrestaShop import PrestaShop
 supplier_prefix = 'morlevi'
 
 s: Supplier = Supplier(supplier_prefix = supplier_prefix)
-#l: dict = j_loads(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+#l: dict = j_loads(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
 l: SimpleNamespace
-l = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+l = j_loads_ns(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
 if not l:
     logger.debug(f"Не определились локаторы - ошибка в файле  {gs.path.src}/suppliers/{supplier_prefix}/locators/product.json")
     ...

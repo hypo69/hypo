@@ -61,9 +61,9 @@ class ProgramSettings(BaseModel):
     Синглтон, хранящий основные параметры и настройки проекта.
     """
     
-    model_config = {
-        "arbitrary_types_allowed": True
-    }
+    class Config:
+        arbitrary_types_allowed = True
+
 
     base_dir: Path = Field(default_factory=lambda: Path(__file__).resolve().parent.parent)
     settings: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
@@ -110,7 +110,7 @@ class ProgramSettings(BaseModel):
         facebook=[],
         gapi={}
     ))
-    mode: str = Field(default='debug')
+    MODE: str = Field(default='development')
     path: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(
         root = None,
         src = None,
@@ -122,6 +122,7 @@ class ProgramSettings(BaseModel):
         google_drive = None,
         dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
     ))
+    config:SimpleNamespace = Field(default_factory=lambda:SimpleNamespace())
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -140,13 +141,13 @@ class ProgramSettings(BaseModel):
         self.base_dir = _get_project_root()
         sys.path.append(str(self.base_dir))
 
-        self.settings = j_loads_ns(self.base_dir / 'src' / 'settings.json')
-        if not self.settings:
-            logger.error('Ошибка при загрузке настроек', ex)
+        self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')
+        if not self.config:
+            logger.error('Ошибка при загрузке настроек')
             ...
             return
 
-        self.settings.project_name = self.base_dir.name
+        self.config.project_name = self.base_dir.name
         
         self.path = SimpleNamespace(
             root=Path(self.base_dir),
@@ -156,13 +157,13 @@ class ProgramSettings(BaseModel):
             tmp=Path(self.base_dir) / 'tmp',
             data=Path(self.base_dir) / 'data',
             secrets=Path(self.base_dir) / 'secrets',
-            google_drive=Path(self.settings.google_drive)  # <- DEBUG path
+            google_drive=Path(self.config.google_drive)  # <- DEBUG path
         )
 
-        if check_latest_release(self.settings.git_user, self.settings.git):
+        if check_latest_release(self.config.git_user, self.config.git):
             ...  # Логика для новой версии
 
-        self.mode = self.settings.mode
+        self.MODE = self.config.mode
 
         # Paths to bin directories
         gtk_bin_dir = self.base_dir / 'bin' / 'gtk' / 'gtk-nsis-pack' / 'bin'
