@@ -1,22 +1,25 @@
 {
   "roles": {
     "code_checker": {
-      "ru": "Проверка кода",
-      "en": "Code checking",
-      "fr": "Vérification du code",
-      "de": "Codeprüfung"
+      "ru": "Твоя специализация - проверка кода",
+      "en": "Your specialization is code checking",
+      "fr": "Votre spécialisation est la vérification du code",
+      "de": "Ihre Spezialisierung ist die Codeprüfung",
+      "he": "ההתמחות שלך היא בדיקת קוד"
     },
     "doc_creator": {
-      "ru": "Создание документации",
-      "en": "Documentation creation",
-      "fr": "Création de documentation",
-      "de": "Dokumentenerstellung"
+      "ru": "Твоя специализация - создание документации для кода",
+      "en": "Your specialization is documentation creation",
+      "fr": "Votre spécialisation est la création de documentation",
+      "de": "Ihre Spezialisierung ist die Dokumentenerstellung",
+      "he": "ההתמחות שלך היא יצירת תיעוד"
     },
     "qa": {
-      "ru": "Тестирование",
-      "en": "Testing",
-      "fr": "Test",
-      "de": "Testen"
+      "ru": "Твоя специализация - тестирование кода",
+      "en": "Your specialization is testing",
+      "fr": "Votre spécialisation est le test",
+      "de": "Ihre Spezialisierung ist das Testen",
+      "he": "ההתמחות שלך היא בדיקות תוכנה"
     }
   }
 }

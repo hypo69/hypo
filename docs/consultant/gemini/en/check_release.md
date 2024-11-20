@@ -1,5 +1,4 @@
-```
-**Received Code**:
+**Received Code**
 
 ```python
 ## \file hypotez/src/check_release.py
@@ -36,56 +35,102 @@ def check_latest_release(owner: str, repo: str):
         return 
 ```
 
-**Improved Code**:
+**Improved Code**
 
 ```python
-## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src """
+"""
+Module for checking the latest release of a GitHub repository.
+"""
+import requests
+from src.logger import logger
+from src.utils.jjson import j_loads
+
 MODE = 'development'
 
 
-import requests
-from src.logger import logger
-"""!AI PROMPT: у меня есть свой модуль `src.logger` который  обеспечивает логирование в проекте """
-
 def check_latest_release(owner: str, repo: str) -> str | None:
-    """Check the latest release version of a GitHub repository.
+    """
+    Check the latest release version of a GitHub repository.
 
     :param owner: The owner of the repository.
-    :type owner: str
     :param repo: The name of the repository.
-    :type repo: str
-    :raises requests.exceptions.RequestException: if there's a problem with the request.
-    :returns: The latest release version if available, else None.
-    :rtype: str | None
+    :raises requests.exceptions.RequestException: If there's an error during the request.
+    :return: The latest release version if available, otherwise None.
     """
     try:
         url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
         response = requests.get(url)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-        latest_release = response.json()
+        response.raise_for_status()  # Raise an exception for bad status codes.
+
+        #Using j_loads for more robust JSON handling.
+        latest_release = j_loads(response.text)
         return latest_release['tag_name']
     except requests.exceptions.RequestException as e:
-        logger.error(f"Error fetching release data: {e}")
+        logger.error(f"Error fetching data: {e}")
         return None
-    except KeyError as e:
-        logger.error(f"Error parsing release data: {e}")
+    except (KeyError, TypeError) as e:
+        logger.error(f"Error parsing JSON response: {e}")
         return None
 
+
+# TODO: Add more comprehensive error handling (e.g., network issues)
+# TODO: Consider using a more robust JSON library (e.g., `orjson`)
+# TODO: Add unit tests
 ```
 
-**Changes Made**:
+**Changes Made**
 
-- Added type hints (`-> str | None`) to the function signature, specifying that the function can return either a string or `None`.
-- Added docstrings in RST format, including descriptions for parameters, return values, and potential exceptions.
-- Implemented a `try...except` block to handle potential `requests.exceptions.RequestException` during the HTTP request. This is crucial for robustness. The `raise_for_status()` method is used to check for bad HTTP responses (e.g., 404 Not Found, 500 Internal Server Error) and raise exceptions appropriately.
-- Included error handling for `KeyError` if the JSON response doesn't contain the expected 'tag_name' key.  This prevents unexpected crashes.
-- Logged errors using the `logger` module, providing more informative error messages.
-- Improved the `return` statement in the `except` block to explicitly return `None`, clarifying the expected return value in case of an error.
+*   Added missing import `from src.utils.jjson import j_loads`.
+*   Added type hints for function parameters and return values (`-> str | None`).
+*   Replaced `json.load` with `j_loads` from `src.utils.jjson`.
+*   Added a `try-except` block to handle potential `requests` exceptions.
+*   Used `response.raise_for_status()` to raise an exception for bad status codes, avoiding a simple `if` check.
+*   Improved error handling using `logger.error` for exceptions and `KeyError` for invalid JSON structure.
+*   Added RST-style docstrings to the function, including :param, :raises, and :return tags.
+*   Removed the unnecessary and potentially misleading comment `#TODO: Код не проверен`.
 
 
+**Complete Code**
 
+```python
+# -*- coding: utf-8 -*-
+"""
+Module for checking the latest release of a GitHub repository.
+"""
+import requests
+from src.logger import logger
+from src.utils.jjson import j_loads
+
+MODE = 'development'
+
+
+def check_latest_release(owner: str, repo: str) -> str | None:
+    """
+    Check the latest release version of a GitHub repository.
+
+    :param owner: The owner of the repository.
+    :param repo: The name of the repository.
+    :raises requests.exceptions.RequestException: If there's an error during the request.
+    :return: The latest release version if available, otherwise None.
+    """
+    try:
+        url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for bad status codes.
+
+        #Using j_loads for more robust JSON handling.
+        latest_release = j_loads(response.text)
+        return latest_release['tag_name']
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error fetching data: {e}")
+        return None
+    except (KeyError, TypeError) as e:
+        logger.error(f"Error parsing JSON response: {e}")
+        return None
+
+
+# TODO: Add more comprehensive error handling (e.g., network issues)
+# TODO: Consider using a more robust JSON library (e.g., `orjson`)
+# TODO: Add unit tests
 ```

@@ -2,150 +2,91 @@
 # -*- coding: utf-8 -*- 
 #! venv/Scripts/python.exe
 #! venv/bin/python
-"""Модуль для работы ассистента программиста в проекте src.endpoints.hypo69.code_assistant
+"""
+Модуль для работы ассистента программиста в проекте `src.endpoints.hypo69.code_assistant`
+=========================================================================================
 
-Этот модуль содержит класс `CodeAssistant`, который используется для работы с различными моделями ИИ, такими как Google Gemini и OpenAI,
-для выполнения задач по обработке кода.
+Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ, 
+такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
 
-Пример использования:
-    assistant = CodeAssistant()
-    assistant.process_files(start_file=2)
+Пример использования
+--------------------
+
+Пример использования класса `CodeAssistant`:
+
+.. code-block:: python
+
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    assistant.process_files()
 """
 
-MODE = 'development'
-
-import re
-import sys
-import time
-import signal
-import json
 import argparse
+import sys
 from pathlib import Path
 from typing import Iterator, List, Optional
 from types import SimpleNamespace
-from pydantic import BaseModel, Field
+import signal
+import time
+import re
 
 import header
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
-from src.utils.file import read_text_file, save_text_file
 from src.utils.printer import pprint
 from src.logger import logger
 
 
-class CodeAssistant(BaseModel):
-    """Класс обучения ассистента программиста.
+class CodeAssistant:
+    """Класс обучения ассистента программиста."""
+    role:str
+    lang:str
+    start_dirs: Path | str | list [Path] |list[str]
+    base_path:Path
+    config:SimpleNamespace
+    gemini_model:GoogleGenerativeAI
+    openai_model:OpenAIModel
+    start_file_number:int
 
-    Этот класс позволяет инициализировать ассистента для выполнения задач в области разработки кода, используя различные модели ИИ,
-    такие как Google Gemini и OpenAI. Он загружает настройки, файлы и обрабатывает их с использованием заданных инструкций.
+    def __init__(self, **kwargs):
+        """Инициализация ассистента с заданными параметрами."""
+        self.role = kwargs.get('role', 'doc_creator')
+        self.lang = kwargs.get('lang', 'EN')
+        self.model = kwargs.get('model', ['gemini'])
+        self.start_dirs = kwargs.get('start_dirs', [])
+        self.base_path = gs.path.endpoints / 'hypo69' / 'code_assistant'
+        self.config = j_loads_ns(self.base_path / 'code_assistant.json')
+        self.gemini_model = None
+        self.openai_model = None
+        self.start_file_number = kwargs.get('start_file_number',1)
+        self._initialize_models(**kwargs)
 
-    Пример:
-        assistant = CodeAssistant()
-        assistant.process_files(from_file=2)
+    def _initialize_models(self, **kwargs):
+        """Инициализация моделей на основе заданных параметров."""
+        if 'gemini' in self.model:
+            self.gemini_model = GoogleGenerativeAI(
+                model_name='gemini-1.5-flash-8b', 
+                api_key=gs.credentials.gemini.onela, 
+                **kwargs
+            )
+        if 'openai' in self.model:
+            self.openai_model = OpenAIModel(
+                model_name='gpt-4o-mini', 
+                assistant_id=gs.credentials.openai.assistant_id.code_assistant, 
+                **kwargs
+            )
 
-    Атрибуты:
-        role (str): Роль для выполнения задачи. Например, "code_checker".
-        lang (str): Язык выполнения. Например, "en" или "ru".
-        model (List[str]): Список моделей для инициализации. По умолчанию "gemini".
-        start_dirs (List[Path]): Список стартовых директорий для обработки файлов.
-        gemini_generation_config (dict): Конфигурация генерации для модели Gemini.
-        gemini_model_name (str): Название модели Gemini.
-        openai_model_name (str): Название модели OpenAI.
-        openai_assistant_id (str): ID ассистента OpenAI.
-        exclude_file_patterns (List[str]): Список паттернов для исключения файлов.
-        exclude_dirs (List[str]): Список директорий для исключения.
-        exclude_files (List[str]): Список файлов для исключения.
-        base_path (Path): Корневая директория для скрипта.
-        base_output_directory (Path): Базовая директория для сохранения результатов по ролям.
-        translations (SimpleNamespace): Переводы для ролей и языков.
-        config (SimpleNamespace): Настройки для конфигурации ассистента.
-    """
-    role: str = Field(default="doc_creator", description="Роль для выполнения задачи")
-    lang: str = Field(default="EN", description="Язык выполнения")
-    model: List[str] = Field(default_factory=lambda: ["gemini"], description="Список моделей для инициализации")
-    start_dirs: List[Path] = Field(default_factory=list, description="Список стартовых директорий для обработки")
-    gemini_generation_config: dict = Field(default_factory=dict, description="Конфигурация генерации для модели Gemini")
-    gemini_model_name: str = Field(default="gemini-1.5-flash-8b", description="Название модели Gemini")
-    gemini_model: Optional[GoogleGenerativeAI] = None
-
-    openai_model_name: str = Field(default="gpt-4o-mini", description="Название модели OpenAI")
-    openai_assistant_id: str = Field(default="", description="ID ассистента OpenAI")
-    openai_model: Optional[OpenAIModel] = None
-
-    exclude_file_patterns: List[str] = Field(default_factory=list, description="Список паттернов для исключения файлов")
-    exclude_dirs: List[str] = Field(default_factory=list, description="Список директорий для исключения")
-    exclude_files: List[str] = Field(default_factory=list, description="Список файлов для исключения")
-    base_path: Path = Field(default=gs.path.endpoints / 'hypo69' / 'code_assistant', description="Корневая директория скрипта")
-    base_output_directory: Path = Field(default=gs.path.root / 'docs' / 'ai', description="Базовая директория для сохранения результатов по ролям")
-
-    translations: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(), description="Переводы для ролей")
-    config: SimpleNamespace = Field(default_factory=lambda: j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json'), description="Настройки")
-
-    system_instruction_file: Path | str = Field(default="instructions", description="Инструкции перед отправкой кода в модель")
-
-    class Config:
-        arbitrary_types_allowed = True
-
-    def signal_handler(self, sig, frame):
-        """Обработчик сигнала завершения работы программы через CTRL+C.
-
-        Этот метод завершает выполнение программы, когда пользователь нажимает CTRL+C.
-
-        Пример:
-            signal.signal(signal.SIGINT, assistant.signal_handler)
-        """
-        logger.info("\nПрограмма завершена пользователем.")
-        sys.exit(0)
-
-    def __init__(self):
-        """Выполняет инициализацию после создания объекта.
-
-        В этой функции инициализируются все необходимые параметры и модели, а также загружаются настройки.
-
-        Пример:
-            assistant = CodeAssistant()
-        """
-        super().__init__()
-        pprint('CodeAssistant инициализирован', text_color='gray', bg_color='white')
-        self._payload()
-
-    def _payload(self) -> bool:
-        """Загружает настройки и инициализирует модели.
-
-        Эта функция загружает параметры из файла конфигурации и командной строки, затем инициализирует модели.
-
-        Пример:
-            assistant._payload()
-        """
-        try:
-            # Получаем аргументы командной строки
-            cli_args = self.parse_args()
-
-            # Устанавливаем параметры: сначала значения из файла, затем перезаписываем аргументами из командной строки
-            self.role = cli_args['role'] if cli_args.get('role') else self.config.get('role', 'code_checker')
-            self.lang = cli_args['lang'] if cli_args.get('lang') else self.config.get('lang', 'ru')
-            self.model = cli_args['model'] if cli_args.get('model') else self.config.get('model', ['gemini'])
-            self.start_dirs = cli_args['start_dirs'] if cli_args.get('start_dirs') else \
-                [Path(gs.path.root) / d for d in self.config.get('start_dirs', [])]
-
-            # Загрузка остальных параметров из файла настроек
-            self.gemini_generation_config = self.config.get('gemini_generation_config', {})
-            self.gemini_model_name = self.config.get('gemini_model_name', 'gemini-1.5-flash-8b')
-            self.openai_model_name = self.config.get('openai_model_name', 'gpt-4o-mini')
-            self.openai_assistant_id = self.config.get('openai_assistant_id', '')
-            self.exclude_file_patterns = self.config.get('exclude_file_patterns', [])
-            self.exclude_dirs = self.config.get('exclude_dirs', [])
-            self.exclude_files = self.config.get('exclude_files', [])
-            self.base_output_directory = Path(self.config.get('base_output_directory', str(self.base_output_directory)))
-            self.base_path = Path(self.config.get('base_path', str(self.base_path)))
-
-        except Exception as ex:
-            logger.error('Ошибка инициализации', ex)
-            return False
-
-        return self.initialize_models()
+    @staticmethod
+    def parse_args():
+        """Разбор аргументов командной строки."""
+        parser = argparse.ArgumentParser(description='Ассистент для программистов')
+        parser.add_argument('--role', type=str, default='code_checker', help='Роль для выполнения задачи')
+        parser.add_argument('--lang', type=str, default='ru', help='Язык выполнения')
+        parser.add_argument('--model', nargs='+', type=str, default=['gemini'], help='Список моделей для инициализации')
+        parser.add_argument('--start-dirs', nargs='+', type=str, default=[], help='Список директорий для обработки')
+        parser.add_argument('--start-file-number', type=int, default=1, help='С какого файла делать обработку. Полезно при сбоях')
+        return vars(parser.parse_args())
 
     @property
     def system_instruction(self) -> str | bool:
@@ -158,12 +99,11 @@ class CodeAssistant(BaseModel):
             system_instruction = assistant.system_instruction
         """
         try:
-            system_instruction: str = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / f'{self.role}_{self.lang}.md').read_text(encoding='UTF-8')
-            return system_instruction
+            return Path(gs.path.src / 'ai' / 'prompts' / 'developer' / f'{self.role}_{self.lang}.md').read_text(encoding='UTF-8')
         except Exception as ex:
-            logger.error(f"Ошибка чтения инструкции", ex)
-            return False
-
+            logger.error(f"Error reading instruction file",ex)
+            return False   
+        
     @property
     def code_instruction(self) -> str | bool:
         """Чтение инструкции для кода.
@@ -174,26 +114,138 @@ class CodeAssistant(BaseModel):
             code_instruction = assistant.code_instruction
         """
         try:
-            code_instruction = Path(self.base_path / 'instructions' / f'instruction_{self.role}_{self.lang}.md').read_text(encoding='UTF-8')
-            return code_instruction
+            return Path(self.base_path / 'instructions' / f'instruction_{self.role}_{self.lang}.md').read_text(encoding='UTF-8')
         except Exception as ex:
-            logger.error(f"Ошибка чтения инструкции для кода", ex)
+            logger.error(f"Error reading instruction file",ex)
             return False
 
-    def initialize_models(self):
-        """Инициализация моделей на основе роли и языка.
+    @property
+    def translations(self) -> SimpleNamespace:
+        """Загрузка переводов для ролей и языков."""
+        return j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'translations' / 'translations.json')
 
-        Эта функция инициализирует модели на основе роли и языка, используя параметры, переданные в конструктор.
+    def process_files(self, start_file_number:int = 1):
+        """Обработка файлов, взаимодействие с моделью и сохранение результата."""
+        for i, (file_path, content) in enumerate(self._yield_files_content()):
+            while i < start_file_number:
+                i += 1
+                continue
+            if file_path and content:
+                content_request = self._create_request(content)
+                if self.gemini_model:
+                    response = self.gemini_model.ask(content_request)
+                    if response:
+                        self._save_response(file_path, response, 'gemini')
 
-        Пример:
-            assistant.initialize_models()
+        pprint(f'Processed file number: {i + 1}', text_color='yellow')
+        time.sleep(120)  
+
+    def _create_request(self, content: str) -> str:
         """
-        try:
-            if 'gemini' in self.model:
-                self.gemini_model = GoogleGenerativeAI(config=self.gemini_generation_config)
-            if 'openai' in self.model:
-                self.openai_model = OpenAIModel(model_name=self.openai_model_name, assistant_id=self.openai_assistant_id)
-            return True
-        except Exception as ex:
-            logger.error('Ошибка при инициализации моделей', ex)
-            return False
+        Создание запроса с учетом роли и языка.
+
+        Args:
+            content (str): Исходное содержимое кода для включения в запрос.
+
+        Returns:
+            str: Сформированный запрос с учетом языка и роли.
+        """
+        roles_translations = getattr(self.translations.roles, self.role)
+        role_description = getattr(roles_translations, self.lang)
+
+    
+        content_request = (
+            f'**{role_description}**\n'
+            f'{self.code_instruction}\n'
+            f'Input code:\n\n```{content}```\n'
+        )
+        return content_request
+
+    def _yield_files_content(
+        self,
+        start_dirs: List[Path] = [gs.path.src],
+        patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD', 'README.EN.MD', 'INTRO.EN.MD']
+    ) -> Iterator[tuple[Path, str]]:
+        """Генерирует пути файлов и их содержимое по указанным шаблонам.
+
+        Args:
+            start_dirs (List[Path]): Список начальных директорий для поиска файлов.
+            patterns (List[str]): Список шаблонов для поиска файлов.
+
+        Yields:
+            Iterator[tuple[Path, str]]: Путь к файлу и его содержимое.
+        """
+        # Компилируем регулярные выражения для паттернов исключаемых файлов
+        exclude_file_patterns = [re.compile(pattern) for pattern in self.config.exclude_file_patterns]
+        for start_dir in start_dirs:
+            for pattern in patterns:
+                # Ищем файлы по шаблонам
+                for file_path in start_dir.rglob(pattern):
+                    # Проверка исключаемых директорий
+                    if any(exclude_dir in file_path.parts for exclude_dir in self.config.exclude_dirs):
+                        pprint(f'Пропускаю файл в исключенной директории: {file_path}', text_color='cyan')
+                        continue
+                    # Проверка на соответствие паттернам исключаемых файлов
+                    if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
+                        pprint(f'Пропускаю файл по паттерну исключения: {file_path}', text_color='cyan')
+                        continue
+                    # Проверка на наличие файла в списке исключаемых файлов
+                    if str(file_path) in self.config.exclude_files:
+                        pprint(f'Пропускаю исключенный файл: {file_path}', text_color='cyan')
+                        continue
+                    try:
+                        # Читаем содержимое файла
+                        content = file_path.read_text(encoding='utf-8')
+                        yield file_path, content
+                    except Exception as ex:
+                        pprint(f'Ошибка при чтении файла: {ex}', text_color='red', bg_color='light_grey' )
+                        yield None, None
+
+    def _save_response(self, file_path: Path, response: str, model_name: str):
+        """Сохранение ответа модели в файл."""
+        output_directory: str = getattr(self.config.output_directory, self.role)  
+        print(f'{file_path=}')
+        target_dir = 'docs/' + output_directory.replace("<model>", model_name).replace("<lang>", self.lang)
+        print(f'{target_dir=}')
+        # Изменение суффикса файла на .md
+        file_path = str(file_path).replace('src', target_dir)  # Convert Path to string for replace
+        export_path = Path(file_path).with_suffix('.md')  # Convert back to Path and change suffix
+        print(f'{export_path=}')
+        export_path.parent.mkdir(parents=True, exist_ok=True)
+        export_path.write_text(response, encoding="utf-8")
+        pprint(f"Ответ модели сохранен в: {export_path}", text_color='green')
+
+
+    def run(self, start_file_number:int = 1):
+        """Запуск процесса обработки файлов."""
+        signal.signal(signal.SIGINT, lambda sig, frame: sys.exit(0))
+        self.process_files(start_file_number)
+
+
+def main():
+    """Основная точка входа в программу."""
+    # Парсинг аргументов через командную строку
+    args = CodeAssistant.parse_args()
+    
+    # Создание экземпляра ассистента с переданными параметрами
+    assistant = CodeAssistant(**args)
+    
+    # Логирование конфигурации
+    logger.info(f'Запуск ассистента с конфигурацией: роль={assistant.role}, язык={assistant.lang}, модели={assistant.model}, директории={assistant.start_dirs}')
+    
+    # Запуск обработки
+    assistant.run()
+
+
+if __name__ == '__main__':
+    #main()
+    assistant_direct = CodeAssistant(
+        role="code_checker",
+        lang="en",
+        model=["gemini"],
+        #start_dirs=[Path("suppliers"), Path("webdriver")],
+        start_dirs=[".."],
+        start_file_number = 1
+
+    )
+    assistant_direct.process_files(start_file_number = 1)

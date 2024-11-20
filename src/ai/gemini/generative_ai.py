@@ -12,9 +12,9 @@ import time
 import json
 from pathlib import Path
 from datetime import datetime
+from typing import Optional, Dict
+from types import SimpleNamespace
 import base64
-from pydantic import BaseModel, Field, validator
-from typing import Optional, List, Dict
 import google.generativeai as genai
 from src.logger import logger
 from src import gs
@@ -25,30 +25,38 @@ from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 
 timeout_check = TimeoutCheck()
 
-class GoogleGenerativeAI(BaseModel):
-    """Class to interact with Google Generative AI models."""
-    model_config = {
-        "arbitrary_types_allowed": True
-    }
+class GoogleGenerativeAI:
+    """
+    Класс для взаимодействия с моделями Google Generative AI.
 
-    MODELS: List[str] = Field(default_factory=lambda: [
+    Этот класс используется для настройки и работы с моделью Google Generative AI, включая отправку запросов,
+    получение ответов и сохранение диалогов в текстовых и JSON файлах.
+
+    Атрибуты:
+        MODELS (List[str]): Список доступных моделей AI.
+        api_key (str): Ключ API для доступа к генеративной модели.
+        model_name (str): Название модели для использования.
+        generation_config (Dict): Конфигурация для генерации.
+        mode (str): Режим работы модели (например, 'debug' или 'production').
+        dialogue_log_path (Optional[Path]): Путь для логирования диалогов.
+        dialogue_txt_path (Optional[Path]): Путь для сохранения текстовых файлов диалогов.
+        history_dir (Path): Директория для хранения истории.
+        history_txt_file (Optional[Path]): Путь к файлу для хранения истории в формате текста.
+        history_json_file (Optional[Path]): Путь к файлу для хранения истории в формате JSON.
+        model (Optional[genai.GenerativeModel]): Объект модели Google Generative AI.
+        system_instruction (Optional[str]): Инструкция для системы, которая задает параметры поведения модели.
+
+    Пример использования:
+        >>> ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction="Instruction")
+        >>> response = ai.ask("Как дела?")
+        >>> print(response)
+    """
+
+    MODELS = [
         "gemini-1.5-flash-8b",
         "gemini-2-13b",
         "gemini-3-20b"
-    ])
-
-    api_key: str = Field(default='')
-    model_name: str = Field(default="gemini-1.5-flash-8b")
-    generation_config: Dict = Field(default_factory=lambda: {"response_mime_type": "text/plain"})
-    mode: str = Field(default='debug')
-    
-    dialogue_log_path: Optional[Path] = None
-    dialogue_txt_path: Optional[Path] = None
-    history_dir: Path = Field(default = gs.path.google_drive / 'AI' / 'history' )
-    history_txt_file: Optional[Path] = None
-    history_json_file: Optional[Path] = None
-    model: Optional[genai.GenerativeModel] = None
-    system_instruction: Optional[str] = None 
+    ]
 
     def __init__(self, 
                  api_key: str, 
@@ -56,46 +64,82 @@ class GoogleGenerativeAI(BaseModel):
                  generation_config: Optional[Dict] = None, 
                  system_instruction: Optional[str] = None, 
                  **kwargs):
-        """Initialize the GoogleGenerativeAI model with additional settings."""
-        super().__init__(**kwargs)  # Инициализация Pydantic полей
+        """
+        Инициализация модели GoogleGenerativeAI с дополнительными настройками.
 
-        # Инициализация дополнительных атрибутов
-        self.dialogue_log_path = gs.path.google_drive / 'AI' / 'log'
-        self.dialogue_txt_path = self.dialogue_log_path / f"gemini_{gs.now}.txt"
-        self.history_txt_file = self.history_dir / f"gemini_{gs.now}.txt"
-        self.history_json_file = self.history_dir / f"gemini_{gs.now}.json"
+        Этот метод настраивает модель AI, а также определяет пути для логирования и истории.
 
-        # Инициализация модели
+        Аргументы:
+            api_key (str): Ключ API для доступа к генеративной модели.
+            model_name (Optional[str], optional): Название модели для использования. По умолчанию "gemini-1.5-flash-8b".
+            generation_config (Optional[Dict], optional): Конфигурация для генерации. По умолчанию {"response_mime_type": "text/plain"}.
+            system_instruction (Optional[str], optional): Инструкция для системы. По умолчанию None.
+        """
+        
+        self.api_key = api_key
         self.model_name = model_name or "gemini-1.5-flash-8b"
         self.generation_config = generation_config or {"response_mime_type": "text/plain"}
         self.system_instruction = system_instruction
 
-        # Настройка модели
-        genai.configure(api_key=api_key)
+        self.dialogue_log_path = gs.path.google_drive / 'AI' / 'log'
+        self.dialogue_txt_path = self.dialogue_log_path / f"gemini_{gs.now}.txt"
+        self.history_dir = gs.path.google_drive / 'AI' / 'history'
+        self.history_txt_file = self.history_dir / f"gemini_{gs.now}.txt"
+        self.history_json_file = self.history_dir / f"gemini_{gs.now}.json"
+
+        # Инициализация модели
+        genai.configure(api_key=self.api_key)
         self.model = genai.GenerativeModel(
-            model_name = self.model_name,
-            generation_config = self.generation_config
+            model_name=self.model_name,
+            generation_config=self.generation_config
         )
 
-    # Этот метод должен вызываться после того, как объект полностью инициализирован
     def __post_init__(self):
-        # Инициализация модели и других параметров после создания экземпляра
+        """
+        Метод для инициализации модели и других параметров после создания экземпляра.
+
+        Этот метод гарантирует, что модель будет инициализирована, если ключ API указан, но модель еще не была
+        настроена в конструкторе.
+        """
         if self.api_key and not self.model:
             genai.configure(api_key=self.api_key)
             self.model = genai.GenerativeModel(
-                model_name = self.model_name,
-                generation_config = self.generation_config,
-                system_instruction = self.system_instruction,       
+                model_name=self.model_name,
+                generation_config=self.generation_config,
+                system_instruction=self.system_instruction,       
             )
 
     def _save_dialogue(self, dialogue: list):
-        """Save dialogue to both txt and json files with size management."""
+        """
+        Сохранить диалог в текстовый и JSON файл с управлением размером файлов.
+
+        Этот метод сохраняет каждый диалог в текстовом и JSON формате для последующего анализа.
+
+        Аргументы:
+            dialogue (list): Список сообщений, представляющих диалог, который нужно сохранить.
+        """
         save_text_file(dialogue, self.history_txt_file, mode='+a')
         for message in dialogue:
             j_dumps(data=message, file_path=self.history_json_file, mode='+a')
 
     def ask(self, q: str, attempts: int = 3) -> Optional[str]:
-        """Send a prompt to the model and get the response."""
+        """
+        Отправить запрос к модели и получить ответ.
+
+        Этот метод отправляет текстовый запрос модели и возвращает ответ.
+
+        Аргументы:
+            q (str): Вопрос, который будет отправлен модели.
+            attempts (int, optional): Количество попыток для получения ответа. По умолчанию 3.
+
+        Возвращает:
+            Optional[str]: Ответ от модели или None, если ответ не был получен.
+
+        Пример:
+            >>> ai = GoogleGenerativeAI(api_key="your_api_key")
+            >>> response = ai.ask("Какая погода сегодня?")
+            >>> print(response)
+        """
         
         try:
             
@@ -103,8 +147,7 @@ class GoogleGenerativeAI(BaseModel):
 
             if not response:
                 logger.debug("No response from the model.")
-                ...
-                return 
+                return None
 
             messages = [
                 {"role": "user", "content": q},
@@ -116,10 +159,25 @@ class GoogleGenerativeAI(BaseModel):
 
         except Exception as ex:
             logger.error("Error during request", ex, False)
-            return 
+            return None
 
     def describe_image(self, image_path: Path) -> Optional[str]:
-        """Generate a description of an image."""
+        """
+        Генерирует описание изображения.
+
+        Этот метод отправляет изображение в модель для анализа и получает текстовое описание изображения.
+
+        Аргументы:
+            image_path (Path): Путь к изображению, которое нужно описать.
+
+        Возвращает:
+            Optional[str]: Описание изображения или None, если произошла ошибка.
+
+        Пример:
+            >>> ai = GoogleGenerativeAI(api_key="your_api_key")
+            >>> description = ai.describe_image(Path("path/to/image.jpg"))
+            >>> print(description)
+        """
         try:
             with image_path.open('rb') as f:
                 encoded_image = base64.b64encode(f.read()).decode('utf-8')
@@ -133,7 +191,14 @@ class GoogleGenerativeAI(BaseModel):
 
 
 def chat():
-    """Run the interactive chat session."""
+    """
+    Запускает интерактивную сессию чата.
+
+    Этот метод запускает цикл общения с пользователем, где можно задавать вопросы модели и получать ответы.
+
+    Пример:
+        >>> chat()  # Запуск чата
+    """
     logger.debug("Hello, I am the AI assistant. Ask your questions.")
     print("Type 'exit' to end the chat.\n")
 
