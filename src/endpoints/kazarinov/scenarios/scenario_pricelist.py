@@ -57,7 +57,7 @@ class Mexiron:
         self.d = d
         self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' / self.timestamp
 
-        system_instruction_path = gs.path.google_drive / 'kazarinov' / 'prompts' /  'buid_mexiron.txt'
+        system_instruction_path = gs.path.endpoints / 'kazarinov' / 'instruction' /  'buid_mexiron.txt'
         system_instruction: str = read_text_file(system_instruction_path)
 
         api_key = gs.credentials.gemini.kazarinov

@@ -25,8 +25,32 @@ from src.utils.printer import pprint
 from src.logger import logger
 
 class CodeAssistant(BaseModel):
-    """Класс обучения ассистента программиста."""
+    """Класс обучения ассистента программиста.
 
+    Этот класс позволяет инициализировать ассистента для выполнения задач в области разработки кода, используя различные модели ИИ,
+    такие как Google Gemini и OpenAI. Он загружает настройки, файлы и обрабатывает их с использованием заданных инструкций.
+
+    Пример:
+        assistant = CodeAssistant()
+        assistant.process_files(from_file=2)
+
+    Атрибуты:
+        role (str): Роль для выполнения задачи. Например, "code_checker".
+        lang (str): Язык выполнения. Например, "en" или "ru".
+        model (List[str]): Список моделей для инициализации. По умолчанию "gemini".
+        start_dirs (List[Path]): Список стартовых директорий для обработки файлов.
+        gemini_generation_config (dict): Конфигурация генерации для модели Gemini.
+        gemini_model_name (str): Название модели Gemini.
+        openai_model_name (str): Название модели OpenAI.
+        openai_assistant_id (str): ID ассистента OpenAI.
+        exclude_file_patterns (List[str]): Список паттернов для исключения файлов.
+        exclude_dirs (List[str]): Список директорий для исключения.
+        exclude_files (List[str]): Список файлов для исключения.
+        base_path (Path): Корневая директория для скрипта.
+        base_output_directory (Path): Базовая директория для сохранения результатов по ролям.
+        translations (SimpleNamespace): Переводы для ролей и языков.
+        settings (SimpleNamespace): Настройки для конфигурации ассистента.
+    """
     role: str = Field(default="doc_creator", description="Роль для выполнения задачи")
     lang: str = Field(default="EN", description="Язык выполнения")
     model: List[str] = Field(default_factory=lambda: ["gemini"], description="Список моделей для инициализации")
@@ -46,32 +70,45 @@ class CodeAssistant(BaseModel):
     base_output_directory: Path = Field(default = gs.path.root / 'docs' / 'ai', description="Базовая директория для сохранения результатов по ролям")
 
     translations: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(), description="Переводы для ролей")
-    settings: SimpleNamespace = Field(default_factory=lambda: j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'config.json'), description="Настройки")
+    settings: SimpleNamespace = Field(default_factory=lambda: j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json'), description="Настройки")
 
-    system_instruction_file: Path| str = Field(default="instructions", description="Инструкции перед отправлок кода в модель")
+    system_instruction_file: Path| str = Field(default="instructions", description="Инструкции перед отправкой кода в модель")
+
     class Config:
         arbitrary_types_allowed = True
 
     def signal_handler(self, sig, frame):
-        """Обработчик сигнала завершения работы программы через CTRL+C."""
+        """Обработчик сигнала завершения работы программы через CTRL+C.
+
+        Этот метод завершает выполнение программы, когда пользователь нажимает CTRL+C.
+
+        Пример:
+            signal.signal(signal.SIGINT, assistant.signal_handler)
+        """
         logger.info("\nПрограмма завершена пользователем.")
         sys.exit(0)
 
-
     def __init__(self):
-        """Выполняет инициализацию после создания объекта."""
+        """Выполняет инициализацию после создания объекта.
+
+        В этой функции инициализируются все необходимые параметры и модели, а также загружаются настройки.
+        """
         super().__init__()
-        pprint('CodeAssistant инициализирован',text_color='gray',bg_color='white')
+        pprint('CodeAssistant инициализирован', text_color='gray', bg_color='white')
         self._payload()
 
-
     def _payload(self) -> bool:
-        """Загружает настройки и инициализирует модели."""
+        """Загружает настройки и инициализирует модели.
+
+        Эта функция загружает параметры из файла конфигурации и командной строки, затем инициализирует модели.
+
+        Пример:
+            assistant._payload()
+        """
         try:
             # Загружаем настройки из файла `settings.json`
             settings_path = Path('settings.json')
             settings = j_loads(settings_path) 
-
 
             # Получаем аргументы командной строки
             cli_args = self.parse_args()
@@ -102,11 +139,17 @@ class CodeAssistant(BaseModel):
 
     @property
     def system_instruction(self) -> str | bool:
-        """ """
+        """Чтение инструкции из файла.
+
+        Эта функция пытается загрузить инструкцию из заранее заданного файла для модели. Если файл не найден или возникла ошибка,
+        возвращается `False`.
+
+        Пример:
+            system_instruction = assistant.system_instruction
+        """
         try:
             system_instruction_file = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / f'{self.role}_{self.lang}.md')
             system_instruction = read_text_file(system_instruction_file)
-            #pprint(f'{system_instruction=}')
             return system_instruction
         except Exception as ex:
             logger.error(f"Error reading instruction file:\n{system_instruction_file=}")
@@ -114,163 +157,107 @@ class CodeAssistant(BaseModel):
 
     @property
     def code_instruction(self) -> str | bool:
-        """ """
+        """Чтение инструкции для кода.
+
+        Эта функция пытается загрузить инструкцию для кода из файла. Если файл не найден или возникла ошибка, возвращается `False`.
+
+        Пример:
+            code_instruction = assistant.code_instruction
+        """
         try:
             code_instruction_file = Path(self.base_path / 'instructions' / f'instruction_{self.role}_{self.lang}.md')
-            code_instruction = read_text_file( code_instruction_file)
-            #pprint(f'{code_instruction=}')
+            code_instruction = read_text_file(code_instruction_file)
             return code_instruction
         except Exception as ex:
             logger.error(f"Error reading instruction file:\n{code_instruction_file=}")
             return False
 
     def initialize_models(self) -> bool:
-        """Инициализация моделей на основе роли и языка."""
-        system_instruction = self.system_instruction
+        """Инициализация моделей на основе роли и языка.
 
+        Эта функция инициализирует модели на основе роли и языка, используя параметры, переданные в конструктор.
+
+        Пример:
+            assistant.initialize_models()
+        """
+        system_instruction = self.system_instruction
         try:
             if 'gemini' in self.model:
                 self.gemini_model = GoogleGenerativeAI(
-                    api_key=gs.credentials.gemini.onela,
                     model_name=self.gemini_model_name,
                     system_instruction=system_instruction,
-                    generation_config=self.gemini_generation_config
+                    role=self.role,
+                    lang=self.lang
                 )
 
             if 'openai' in self.model:
                 self.openai_model = OpenAIModel(
-                    system_instruction=system_instruction,
+                    assistant_id=self.openai_assistant_id,
                     model_name=self.openai_model_name,
-                    assistant_id=self.openai_assistant_id
+                    system_instruction=system_instruction
                 )
         except Exception as ex:
-            logger.error(f"Ошибка инициализации модели", ex)
+            logger.error(f'Ошибка инициализации моделей: {ex}')
             return False
         return True
 
-    def load_translations(self, file_path: Path = gs.path.src / 'endpoints' / 'hypo69' / 'code_assistant' / 'translations' / 'translations.json'):
-        """Загрузка переводов для ролей и языков."""
-        return j_loads_ns(file_path)
+    def process_files(self, start_file: int = 1) -> None:
+        """Обработка файлов с учётом пропуска первых файлов.
 
-    def create_request(self, content: str, translations: SimpleNamespace):
-        """Создание запроса с учетом роли и языка."""
-        roles_translations: SimpleNamespace = getattr(translations.roles, self.role)
-        role_description: str = getattr(roles_translations, self.lang)
-        code_instruction = self.code_instruction
-        content_request = f"""Твоя специализация: `{role_description}`.\nИнструкция  для кода: ```{code_instruction}```\n Код:\n\n```{content}```\n"""
-        return content_request
+        Этот метод перебирает все файлы в указанных директориях и начинает обработку с файла, указанного в аргументе `start_file`.
 
+        Пример:
+            assistant.process_files(start_file=3)
 
-    def process_files(self):
-        """Обрабатывает файлы и взаимодействует с моделью Gemini."""
-        # Загружаем переводы
-        self.translations = self.load_translations()
-        for i, (file_path, content) in enumerate(self.yield_files_content()):
-            # Проверяем, что файл и его содержимое не пустые
-            if not (file_path and content):
-                continue
-
-            # Создаем запрос для модели на основе содержимого файла и переводов
-            content_request = self.create_request(content, self.translations)
-
-            # Отправляем запрос в модель Gemini, если она активна
-            if self.gemini_model:
-                gemini_response = self.gemini_model.ask(content_request)
-                if gemini_response:
-                    
-                    self.save_response(file_path, gemini_response, 'gemini')
-
-            # Логируем номер обработанного файла
-            pprint(f'Processed file number: {i + 1}', text_color='yellow')
-            time.sleep(120)  # Пауза между запросами для избежания перегрузки
-
-    def yield_files_content(
-        self,
-        start_dirs: List[Path] = [gs.path.src],
-        patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD', 'README.EN.MD', 'INTRO.EN.MD']
-    ) -> Iterator[tuple[Path, str]]:
-        """Генерирует пути файлов и их содержимое по указанным шаблонам.
-
-        Args:
-            start_dirs (List[Path]): Список начальных директорий для поиска файлов.
-            patterns (List[str]): Список шаблонов для поиска файлов.
-
-        Yields:
-            Iterator[tuple[Path, str]]: Путь к файлу и его содержимое.
+        Аргументы:
+            start_file (int): Номер файла, с которого начинать обработку.
         """
-        # Компилируем регулярные выражения для паттернов исключаемых файлов
-        exclude_file_patterns = [re.compile(pattern) for pattern in self.exclude_file_patterns]
-        for start_dir in start_dirs:
-            for pattern in patterns:
-                # Ищем файлы по шаблонам
-                for file_path in start_dir.rglob(pattern):
-                    # Проверка исключаемых директорий
-                    if any(exclude_dir in file_path.parts for exclude_dir in self.exclude_dirs):
-                        pprint(f'Пропускаю файл в исключенной директории: {file_path}', text_color='cyan')
-                        continue
-                    # Проверка на соответствие паттернам исключаемых файлов
-                    if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
-                        pprint(f'Пропускаю файл по паттерну исключения: {file_path}', text_color='cyan')
-                        continue
-                    # Проверка на наличие файла в списке исключаемых файлов
-                    if str(file_path) in self.exclude_files:
-                        pprint(f'Пропускаю исключенный файл: {file_path}', text_color='cyan')
-                        continue
-                    try:
-                        # Читаем содержимое файла
-                        content = file_path.read_text(encoding='utf-8')
-                        yield file_path, content
-                    except Exception as ex:
-                        pprint(f'Ошибка при чтении файла: {ex}', text_color='red', bg_color='light_grey' )
-                        yield None, None
+        all_files = list(self.yield_files_content())
+        for idx, (file_path, content) in enumerate(all_files[start_file - 1:], start=start_file):
+            logger.info(f'Обработка файла {file_path}, номер: {idx}')
+            self.process_file(file_path, content)
 
-    def save_response(self, file_path: Path, response: str, model_name: str):
-        """Сохранение ответа модели в файл."""
-        output_directory: str = getattr(self.settings.output_directory, self.role)  
-        print(f'{file_path=}')
-        target_dir = 'docs/' + output_directory.replace("<model>", model_name).replace("<lang>", self.lang)
-        print(f'{target_dir=}')
-        # Изменение суффикса файла на .md
-        file_path = str(file_path).replace('src', target_dir)  # Convert Path to string for replace
-        export_path = Path(file_path).with_suffix('.md')  # Convert back to Path and change suffix
-        print(f'{export_path=}')
-        export_path.parent.mkdir(parents=True, exist_ok=True)
-        export_path.write_text(response, encoding="utf-8")
-        pprint(f"Ответ модели сохранен в: {export_path}", text_color='green')
+    def yield_files_content(self) -> Iterator[tuple[Path, str]]:
+        """Генератор для получения контента файлов.
+
+        Этот метод возвращает генератор, который поочередно извлекает файлы из стартовых директорий и предоставляет их содержимое.
+
+        Пример:
+            for file_path, content in assistant.yield_files_content():
+                print(file_path, content)
+        """
+        for start_dir in self.start_dirs:
+            for file_path in Path(start_dir).rglob('*.py'):
+                if any(file_path.match(pattern) for pattern in self.exclude_file_patterns):
+                    continue
+                if any(str(file_path).startswith(excluded) for excluded in self.exclude_dirs):
+                    continue
+                if any(file_path.name == excluded for excluded in self.exclude_files):
+                    continue
+
+                content = read_text_file(file_path)
+                yield file_path, content
 
     def parse_args(self):
-        """Обработка аргументов командной строки."""
-        parser = argparse.ArgumentParser(description='Code Assistant: обучение модели на основе кода.')
-        parser.add_argument('--role', type=str, help='Роль для выполнения задачи')
-        parser.add_argument('--lang', type=str, help='Язык выполнения')
-        parser.add_argument('--models', type=str, nargs='+', help='Список моделей для инициализации')
-        parser.add_argument('--start_dirs', type=Path, nargs='+', help='Список стартовых директорий')
-        args = parser.parse_args()
-        
-        # Создаем словарь с аргументами командной строки
-        cli_args = {
-            'role': args.role,
-            'lang': args.lang,
-            'model': args.models,
-            'start_dirs': args.start_dirs
-        }
-        pprint(f'{cli_args=}')
-        return cli_args
+        """Парсинг аргументов командной строки.
 
-    def run(self):
-        """Запуск ассистента для обработки файлов."""
-        signal.signal(signal.SIGINT, self.signal_handler)
-    
-        # Выполняем _payload после парсинга аргументов
-        if not self._payload():
-            logger.error('Ошибка при инициализации _payload()')
-            return
-    
-        # Запускаем обработку файлов
-        self.process_files()
+        Этот метод парсит аргументы командной строки с помощью argparse.
 
-if __name__ == '__main__':
+        Пример:
+            args = assistant.parse_args()
+            print(args)
+
+        Возвращает:
+            dict: Словарь с аргументами командной строки.
+        """
+        parser = argparse.ArgumentParser(description="Code Assistant CLI", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        parser.add_argument("--role", type=str, help="Роль ассистента (например, code_checker)")
+        parser.add_argument("--lang", type=str, help="Язык (например, en, ru)")
+        parser.add_argument("--model", type=str, nargs='+', default=['gemini'], help="Модели для инициализации (например, gemini, openai)")
+        parser.add_argument("--start-dirs", type=Path, nargs='+', default=[gs.path.src], help="Список директорий для обработки")
+        parser.add_argument("--start-file", type=int, default=1, help="Номер файла, с которого начинать обработку")
+        return vars(parser.parse_args())
+
+if __name__ == "__main__":
     assistant = CodeAssistant()
-    assistant.parse_args()
-    assistant.run()
-
+    assistant.process_files(start_file=assistant.parse_args()['start_file'])

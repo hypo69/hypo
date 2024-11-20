@@ -36,6 +36,26 @@
 8. **Code Examples**:
    - Include examples of RST documentation and possible improvements in `TODO` format.
 
+9. **Additional Instruction**:
+   - All comments to modules, functions, methods, and variables must be rewritten in reStructuredText (RST) format. This includes:
+     - Descriptions of the module at the beginning of the file.
+     - Documentation for each method, function, and variable.
+     - Compliance with Python docstring standards (e.g., for Sphinx).
+
+     Example of the documentation format for functions:
+
+     .. code-block:: python
+
+         def example_function(param1: str, param2: int) -> str:
+             """
+             Performs an example task.
+
+             :param param1: Description of parameter 1.
+             :param param2: Description of parameter 2.
+             :return: Description of the return value.
+             """
+             ...
+
 # Output Language: EN (English)
 ----------------------------
-** END OF INSTRUCTION ** 
+** END OF INSTRUCTION **  
