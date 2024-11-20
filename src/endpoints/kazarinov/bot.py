@@ -97,10 +97,10 @@ class KazarinovTelegramBot(TelegramBot, HandlersParser):
         response = update.message.text
         user_id = update.effective_user.id
         if is_url(response):
-            self.handle_url(update, context)
+            await self.handle_url(update, context)
             # <- add logic after url scenario ended
             ...
-
+        return
         log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
         save_text_file(f"User {user_id}: {response}\n", Path(log_path), mode='a')
 

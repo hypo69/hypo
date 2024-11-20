@@ -10,6 +10,7 @@ import random
 import asyncio
 import requests
 from typing import Optional, Any
+from bs4 import BeautifulSoup
 from src import gs
 from src.logger import logger
 from src.webdriver.driver import Driver
@@ -41,10 +42,10 @@ class HandlersParser():
     async def handle_url(self, update: Update, context: CallbackContext) -> Any:
         """В первую очередь я ожидаю ссылку onetab, именно оттуда Сергей отправляет запрос на построение ценового предложения"""
         ...
-        # handle `https://onetab.com`
+        # handle `https://one-tab.com`
         response = update.message.text
-        if response.startswith(['https://onetab.com','http://onetab.com']):
-            price, mexiron_name, urls = self.get_suppliers_list_from_onetab(update.message.text)
+        if response.startswith(('https://one-tab.com','http://one-tab.com','https://www.one-tab.com','http://www.one-tab.com')):
+            price, mexiron_name, urls = self.get_suppliers_list_from_onetab(response)
             if not all([price, mexiron_name, urls]):
                 await update.message.reply_text("хуйня какая-то")
 
@@ -63,15 +64,12 @@ class HandlersParser():
     #         pass
     #     return False, False, False
 
-    async def get_suppliers_list_from_onetab(self, update: Update, response: str) -> list[int | float, str, list] | bool:
+    def get_suppliers_list_from_onetab(self, response: str) -> list[int | float, str, list] | bool:
         """Handle OneTab URLs."""
-        if not response.startswith(('https://onetab.com', 'http://onetab.com')):
-            return False, False, False
 
         price, mexiron_name, urls = self.fetch_target_urls_onetab(response)
 
         if not all([price, mexiron_name, urls]):
-            await update.message.reply_text('Ошибка на сервере OneTab. Попробуй ещё раз через часок.')
             return False, False, False
 
         return price, mexiron_name, urls
