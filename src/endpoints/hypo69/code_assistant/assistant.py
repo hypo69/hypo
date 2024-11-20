@@ -46,7 +46,7 @@ class CodeAssistant(BaseModel):
     base_output_directory: Path = Field(default = gs.path.root / 'docs' / 'ai', description="Базовая директория для сохранения результатов по ролям")
 
     translations: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(), description="Переводы для ролей")
-    settings: SimpleNamespace = Field(default_factory=lambda: j_loads_ns(gs.path.src / 'endpoints' / 'hypo69' / 'code_assistant' / 'settings.json'), description="Настройки")
+    settings: SimpleNamespace = Field(default_factory=lambda: j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'config.json'), description="Настройки")
 
     system_instruction_file: Path| str = Field(default="instructions", description="Инструкции перед отправлок кода в модель")
     class Config:

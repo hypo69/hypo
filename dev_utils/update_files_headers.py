@@ -54,7 +54,7 @@ def find_project_root(start_path: Path, project_root_folder: str) -> Path:
 def get_interpreter_paths(project_root: Path) -> tuple:
     """Returns paths to Python interpreters for Windows and Linux/macOS."""
     w_venv_interpreter = fr'venv/Scripts/python.exe'
-    linux_venv_interpreter = fr'venv/bin/python'
+    linux_venv_interpreter = fr'venv/bin/python/python3.12'
     return w_venv_interpreter, 'py', linux_venv_interpreter, '/usr/bin/python'
 
 def add_or_replace_file_header(file_path: str, project_root: Path, force_update: bool):

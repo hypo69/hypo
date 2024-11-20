@@ -1,8 +1,8 @@
-## \file hypotez/src/scenario/header.py
+## \file hypotez/src/suppliers/ksp/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python
-""" module: src.scenario """
+""" module: src.suppliers.ksp """
 MODE = 'development'
 
 import sys

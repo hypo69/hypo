@@ -7,7 +7,7 @@ MODE = 'development'
 
 
 
-
+"""
 Примеры запуска:
 1. Запуск в тестовом режиме:
     python main.py --mode test

@@ -52,7 +52,19 @@ class Driver:
             raise TypeError("`webdriver_cls` должен быть допустимым классом WebDriver.")
         self.driver = webdriver_cls(*args, **kwargs)
 
+    def __init_subclass__(cls, *, browser_name=None, **kwargs):
+        """
+        Определяет поведение для подклассов `Driver`.
 
+        Args:
+            browser_name (str): Имя браузера, для которого создается драйвер.
+            **kwargs: Дополнительные аргументы для базового класса.
+        """
+        super().__init_subclass__(**kwargs)
+        if browser_name is None:
+            raise ValueError(f'Класс {cls.__name__} должен указать аргумент `browser_name`.')
+        cls.browser_name = browser_name
+     
     def __getattr__(self, item):
         """ Proxy for accessing WebDriver attributes.
 

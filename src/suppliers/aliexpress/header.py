@@ -1,8 +1,8 @@
-## \file hypotez/src/scenario/header.py
+## \file hypotez/src/suppliers/aliexpress/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python
-""" module: src.scenario """
+""" module: src.suppliers.aliexpress """
 MODE = 'development'
 
 import sys
