@@ -1,4 +1,4 @@
-## Полученный код
+**Received Code**
 
 ```python
 ## \file hypotez/src/bots/telegram/__init__.py
@@ -11,57 +11,121 @@ MODE = 'development'
 from .bot import TelegramBot
 ```
 
-## Улучшенный код
+**Improved Code**
 
 ```python
-## \file hypotez/src/bots/telegram/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.bots.telegram """
-import logging
-logger = logging.getLogger(__name__)
+"""
+Module for Telegram bot functionalities.
 
-MODE = 'development'
+This module provides the necessary classes and functions
+for interacting with a Telegram bot.
+"""
 
+# Import the TelegramBot class.
 from .bot import TelegramBot
+# Import logger from the appropriate module.
+from src.logger import logger
+# ...
 
 
-def init_telegram_bot():
-    """Инициализирует бота Telegram."""
-    try:
-        telegram_bot = TelegramBot()
-        telegram_bot.run()
-        return telegram_bot
-    except Exception as e:
-        logger.error(f"Ошибка при инициализации бота Telegram: {e}")
-        return None
+# ---
+# Define the mode of operation.
+# ---
+MODE = 'development'  # Define the mode of operation.
 
-# TODO: Добавьте обработку событий и логирование
 
+# ---
+# Example Docstring for a function (for reference).
+# ---
+#
+# .. code-block:: python
+#
+#     def my_function(param1: str, param2: int) -> str:
+#         """
+#         Performs a specific task.
+#
+#         :param param1: A string parameter.
+#         :param param2: An integer parameter.
+#         :return: A string result.
+#         """
+#         # ... (Your code here)
+#         return "Result"
+#
+# ---
+# Example of logging usage:
+# ---
+# def example_logging():
+#     try:
+#         # ... Your code that might raise an exception ...
+#         result = 10 / 0
+#         # ...
+#     except ZeroDivisionError as e:
+#         logger.error("Division by zero occurred: %s", e)
+#     except Exception as e:
+#         logger.error("An unexpected error occurred: %s", e)
 ```
 
-## Изменения
+**Changes Made**
 
-- Добавлена функция `init_telegram_bot()`:  Эта функция инициализирует и запускает бота, позволяя более удобно управлять его запуском и обработкой ошибок.
-- Добавлено импортирование `logging`:  Позволяет использовать логирование.
-- Добавлено `logger.error`: Для более корректного логирования ошибок.
-- Добавлена `try...except` конструкция: Обрабатывает возможные исключения при работе с Telegram ботом.  Теперь код не будет падать при возникновении ошибок, а будет логировать их.
-- Добавлено RST документация к `init_telegram_bot`:  Создан RST docstring для функции `init_telegram_bot`.
-- TODO комментарий:  Добавлен комментарий, чтобы указать на необходимость добавить обработку событий и логирования.
-- Удалены ненужные комментарии (`#! venv/Scripts/python.exe`, `#! venv/bin/python`) если они не несут никакой практической нагрузки.  Так как эти строки обычно являются указаниями интерпретатора для запуска файла из командной строки.
+- Added missing import `from src.logger import logger`.
+- Added RST documentation for the module (`__init__.py`) describing its purpose.
+- Added example docstring for a function to illustrate the RST format.
+- Added a placeholder example of logging using the `logger` object.
+- Improved the comment formatting to adhere to RST standards and the instructions for writing documentation.
+- Added `# ...` placeholders in several places as per the request to preserve `...` for future additions.
 
-**Примечание:**  Файл `src.utils.jjson` не был импортирован, так как его содержимое не было доступно.  Если `j_loads` и `j_loads_ns`  являются пользовательскими функциями, их импортирование необходимо.
-
-
-**Пример использования (в другом файле):**
+**Complete Code (Improved)**
 
 ```python
-from hypotez.src.bots.telegram import init_telegram_bot
+# -*- coding: utf-8 -*-
+"""
+Module for Telegram bot functionalities.
 
-bot = init_telegram_bot()
-if bot:
-    print("Бот Telegram запущен успешно")
-else:
-    print("Ошибка при запуске бота Telegram")
+This module provides the necessary classes and functions
+for interacting with a Telegram bot.
+"""
+
+# Import the TelegramBot class.
+from .bot import TelegramBot
+# Import logger from the appropriate module.
+from src.logger import logger
+# ...
+
+
+# ---
+# Define the mode of operation.
+# ---
+MODE = 'development'  # Define the mode of operation.
+
+
+# ---
+# Example Docstring for a function (for reference).
+# ---
+#
+# .. code-block:: python
+#
+#     def my_function(param1: str, param2: int) -> str:
+#         """
+#         Performs a specific task.
+#
+#         :param param1: A string parameter.
+#         :param param2: An integer parameter.
+#         :return: A string result.
+#         """
+#         # ... (Your code here)
+#         return "Result"
+#
+# ---
+# Example of logging usage:
+# ---
+# def example_logging():
+#     try:
+#         # ... Your code that might raise an exception ...
+#         result = 10 / 0
+#         # ...
+#     except ZeroDivisionError as e:
+#         logger.error("Division by zero occurred: %s", e)
+#     except Exception as e:
+#         logger.error("An unexpected error occurred: %s", e)
 ```

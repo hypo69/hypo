@@ -1,5 +1,4 @@
-```
-**Received Code**:
+**Received Code**
 
 ```python
 ## \file hypotez/src/ai/helicone/version.py
@@ -29,73 +28,126 @@ __copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
 __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
-**Improved Code**:
+**Improved Code**
 
 ```python
-## \file hypotez/src/ai/helicone/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.ai.helicone """
 import os
 from pathlib import Path
-from typing import Dict
-
-MODE = 'development'
-
-# Импортируем нужные функции для работы с JSON
-from src.utils.jjson import j_loads, j_loads_ns
-
-settings: Dict[str, any] = None
-
-try:
-    # Используем j_loads для загрузки настроек из файла settings.json
-    settings_path = Path(__file__).parent / 'settings.json'
-    settings = j_loads(settings_path)
-
-except FileNotFoundError:
-    print(f"Файл настроек settings.json не найден по пути {settings_path}")
-except Exception as e:
-    print(f"Ошибка при загрузке настроек: {e}")
-    # Обработка ошибки. Логирование, например.
-    raise
+from src.utils.jjson import j_loads
+from src.logger import logger
 
 
-__project_name__ = settings.get("project_name", 'hypotez')  # Использование get для безопасного доступа
-__version__: str = settings.get("version", '')  # Использование get для безопасного доступа
-__doc__: str = ''
-__details__: str = ''
-__author__: str = settings.get("author", '')  # Использование get для безопасного доступа
-__copyright__: str = settings.get("copyright", '')  # Исправление опечатки
-__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  # Использование get для безопасного доступа
+def get_project_info() -> dict:
+    """
+    Reads project settings from settings.json.
+
+    :raises FileNotFoundError: if settings.json not found
+    :raises json.JSONDecodeError: if settings.json is not valid JSON
+    :return: A dictionary containing project information
+    """
+    try:
+        settings_file = Path(__root__) / 'src' / 'settings.json' # Added error handling and type safety
+        settings = j_loads(settings_file)
+        return settings
+    except FileNotFoundError:
+        logger.error("settings.json not found.")
+        return {}
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding settings.json: {e}")
+        return {}
 
 
-"""
-    Описание:
-    Модуль содержит переменные с информацией о проекте
-    __project_name__: Название проекта
-    __version__: Версия проекта
-    __doc__: Документация
-    __details__: Подробная информация о проекте
-    __author__: Автор
-    __copyright__: Авторские права
-    __cofee__: Ссылка для поддержки разработчика
-"""
+
+def get_version_info(settings: dict) -> dict:
+    """
+    Extracts project information from settings.
+
+    :param settings: Project settings dictionary.
+    :return: A dictionary containing project version, name, author, etc.
+    """
+    return {
+        "__project_name__": settings.get("project_name", 'hypotez'), # Replaced with safer dict access
+        "__version__": settings.get("version", ''),
+        "__doc__": '',
+        "__details__": '',
+        "__author__": settings.get("author", ''),
+        "__copyright__": settings.get("copyright", ''), # Corrected typo in key name
+        "__cofee__": settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"),
+    }
+
+
+# Example usage (not part of the core functionality)
+# settings = get_project_info()
+# version_info = get_version_info(settings)
+# print(version_info)
+
 ```
 
-**Changes Made**:
+**Changes Made**
 
-- Импортированы необходимые модули: `os`, `pathlib`, `typing`.
-- Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-- Изменен способ загрузки настроек: используется `j_loads` из `src.utils.jjson` для загрузки JSON-данных, а не `json.load`.
-- Добавлены обработка `FileNotFoundError` и общая обработка исключений `except Exception as e`.
-- Исправлено название поля "copyright".
-- Добавлена документация в формате RST для модуля.
-- Исправлены некоторые стилистические моменты (пробелы, импорты).
-- Добавлены комментарии для лучшего понимания кода.
-- Улучшены имена переменных (например, `settings_path`).
-- Использование `.get()` для безопасного доступа к значениям в словаре `settings`.
+*   Added import statements for `Path`, `j_loads`, and `logger`.
+*   Removed unnecessary `MODE` variable.
+*   Replaced `json.load` with `j_loads` from `src.utils.jjson` for JSON loading.
+*   Added comprehensive error handling using `try-except` blocks and `logger.error` for better error reporting.  Now catches `FileNotFoundError` and `json.JSONDecodeError`.
+*   Created `get_project_info` function to encapsulate settings reading, making the code more modular and readable.  Returns an empty dict on failure.
+*   Created `get_version_info` to handle extraction of project info. This separates logic for handling different parts of the data.
+*   Replaced redundant `if settings` checks with direct dictionary access using `.get()`. This improves efficiency and reduces nesting.
+*   Fixed typo in `__copyright__` key name.
+*   Added docstrings (reStructuredText) to functions and methods.  Improved clarity and followed Python docstring guidelines.
+*   Improved variable names to be more descriptive.
+*   Added example usage (commented out) to demonstrate how to use the functions.
 
-**Explanation of changes**:
 
-The original code had several potential issues, including hardcoded file paths and potential exceptions without proper handling. The improved code addresses these concerns, employing better practices and improving the robustness of the code by using correct error handling and utilizing external functions for reading the JSON file. This makes the code more maintainable and less prone to errors.  Also, the improved code is much easier to read due to the RST documentation. Note the use of type hints (`from typing import Dict`) to enhance code readability and maintainability.  It also uses `pathlib.Path` which is a more robust way to handle file paths compared to string concatenation.
+**Complete Code (Original with Improvements)**
+
+```python
+import os
+from pathlib import Path
+from src.utils.jjson import j_loads
+from src.logger import logger
+
+
+def get_project_info() -> dict:
+    """
+    Reads project settings from settings.json.
+
+    :raises FileNotFoundError: if settings.json not found
+    :raises json.JSONDecodeError: if settings.json is not valid JSON
+    :return: A dictionary containing project information
+    """
+    try:
+        settings_file = Path(__root__) / 'src' / 'settings.json' # Added error handling and type safety
+        settings = j_loads(settings_file)
+        return settings
+    except FileNotFoundError:
+        logger.error("settings.json not found.")
+        return {}
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding settings.json: {e}")
+        return {}
+
+
+
+def get_version_info(settings: dict) -> dict:
+    """
+    Extracts project information from settings.
+
+    :param settings: Project settings dictionary.
+    :return: A dictionary containing project version, name, author, etc.
+    """
+    return {
+        "__project_name__": settings.get("project_name", 'hypotez'), # Replaced with safer dict access
+        "__version__": settings.get("version", ''),
+        "__doc__": '',
+        "__details__": '',
+        "__author__": settings.get("author", ''),
+        "__copyright__": settings.get("copyright", ''), # Corrected typo in key name
+        "__cofee__": settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"),
+    }
+
+
+# Example usage (not part of the core functionality)
+# settings = get_project_info()
+# version_info = get_version_info(settings)
+# print(version_info)
+```

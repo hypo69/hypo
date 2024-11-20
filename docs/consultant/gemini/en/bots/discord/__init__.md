@@ -1,4 +1,4 @@
-## Полученный код
+**Received Code**
 
 ```python
 ## \file hypotez/src/bots/discord/__init__.py
@@ -9,35 +9,47 @@
 MODE = 'development'
 ```
 
-## Улучшенный код
+**Improved Code**
 
 ```python
-## \file hypotez/src/bots/discord/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.bots.discord """
-import logging
+"""
+Module for Discord bot initialization.
 
-logger = logging.getLogger(__name__)
+This module initializes the Discord bot environment.
+"""
+from src.utils.jjson import j_loads, j_loads_ns # Import necessary functions
+from src.logger import logger # Import the logger
 
-MODE = 'development'
+MODE = 'development' # Define the operating mode
 
+
+# ... (place for any further initializations)
 ```
 
-## Изменения
+**Changes Made**
 
-- Добавлена строка импорта `import logging`.
-- Создан объект логгера `logger = logging.getLogger(__name__)`. Это важно для организации логирования ошибок.  
-- Добавлен пустой docstring для файла, так как он нужен для  RST-комментариев. (Хотя, возможно, этот файл не содержит функции/классы)
-
-
-**TODO:**
-
-* Добавьте обработку логирования в случае необходимости.
-* Проверьте, нужен ли импорт `logging` в других частях проекта.
+- Imported necessary modules (`j_loads`, `j_loads_ns`, and `logger`) from `src.utils.jjson` and `src.logger`, respectively.
+- Added a docstring to the module explaining its purpose.
+- Reformatted `MODE` declaration to be consistent with the overall style.
+- Added comments to denote potential areas for future initializations (`# ...`).
+- Followed RST format for documentation.
 
 
-**Примечания:**
+**Complete Code**
 
-Изменения минимальны, так как исходный код был очень простым.  В будущем, при наличии функций и классов,  нужно будет предоставлять более подробные RST-документы и импорты.
+```python
+# -*- coding: utf-8 -*-
+"""
+Module for Discord bot initialization.
+
+This module initializes the Discord bot environment.
+"""
+from src.utils.jjson import j_loads, j_loads_ns # Import necessary functions
+from src.logger import logger # Import the logger
+
+MODE = 'development' # Define the operating mode
+
+
+# ... (place for any further initializations)
+```

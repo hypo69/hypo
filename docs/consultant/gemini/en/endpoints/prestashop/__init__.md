@@ -1,5 +1,4 @@
-```
-## Полученный код
+**Received Code**
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/__init__.py
@@ -20,8 +19,7 @@ from .pricelist import PriceListRequester
 from .customer import PrestaCustomer
 ```
 
-```
-## Улучшенный код
+**Improved Code**
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/__init__.py
@@ -29,15 +27,12 @@ from .customer import PrestaCustomer
 #! venv/Scripts/python.exe
 #! venv/bin/python
 """
-Module for interacting with the PrestaShop API.
-
-:module: hypotez.src.endpoints.prestashop
+Module for interacting with PrestaShop API endpoints.
 """
-import logging
+import src.utils.jjson as jjson
+from src.logger import logger
 
 MODE = 'development'
-logger = logging.getLogger(__name__)
-
 
 from .api import PrestaShop
 from .product import PrestaProduct
@@ -49,26 +44,63 @@ from .shop import PrestaShopShop
 from .pricelist import PriceListRequester
 from .customer import PrestaCustomer
 
-
-# Add imports for json handling if needed
-# from src.utils.jjson import j_loads, j_loads_ns
+# TODO: Add more detailed RST documentation for each class.
+#       Example:
+#
+# .. code-block:: python
+#
+#     class PrestaShop:
+#         """
+#         Provides methods for interacting with the PrestaShop API.
+#
+#         :ivar MODE: The current execution mode.
+#         """
+#         ...
 ```
 
-```
-## Изменения
+**Changes Made**
 
-- Добавлена строка импорта `import logging`.
-- Добавлена переменная `logger` для логирования, и инициализирована.
-- Добавлен RST-docstring для модуля `prestashop`.
-- Добавлены TODO-комментарии по поводу импортов для обработки JSON.
-- Добавлен импорт `logging`.  Этот импорт теперь нужен для корректного использования `logger.error`.
-- Внедрена лучшая практика организации кода:  использование `__name__` для получения имени модуля в `logger`.
+- Imported `logger` from `src.logger` for error logging.
+- Added a module-level docstring in RST format to describe the purpose of the file.
+- Added `import src.utils.jjson as jjson` to use `j_loads` or `j_loads_ns` for handling JSON data.
+- No changes were made to the existing code that were not explicitly documented by the requirements.
 
-**TODO:**
-- Добавить обработку ошибок при чтении данных.
-- Добавить подробные docstrings для всех функций, методов и классов.
-- Обработать возможные исключения (например, `FileNotFoundError`).
-- Реализовать проверку корректности возвращаемых данных из API.
-- Применить функции `j_loads` или `j_loads_ns` из `src.utils.jjson` для загрузки данных из JSON-файлов.
-- Проверить наличие необходимых файлов `src.utils.jjson`.
+
+**Complete Code (with improvements)**
+
+```python
+## \file hypotez/src/endpoints/prestashop/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+"""
+Module for interacting with PrestaShop API endpoints.
+"""
+import src.utils.jjson as jjson
+from src.logger import logger
+
+MODE = 'development'
+
+from .api import PrestaShop
+from .product import PrestaProduct
+from .supplier import PrestaSupplier
+from .category import PrestaCategory
+from .warehouse import PrestaWarehouse
+from .language import PrestaLanguage
+from .shop import PrestaShopShop
+from .pricelist import PriceListRequester
+from .customer import PrestaCustomer
+
+# TODO: Add more detailed RST documentation for each class.
+#       Example:
+#
+# .. code-block:: python
+#
+#     class PrestaShop:
+#         """
+#         Provides methods for interacting with the PrestaShop API.
+#
+#         :ivar MODE: The current execution mode.
+#         """
+#         ...
 ```
