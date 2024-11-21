@@ -1,4 +1,4 @@
-## Полученный код
+**Received Code**
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
@@ -17,77 +17,109 @@ __root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
 sys.path.append (__root__)
 ```
 
-## Улучшенный код
+**Improved Code**
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python
-""" module: src.gui.context_menu.qt6
-
-This file provides initialization and path setup for the Qt6 context menu.
+"""
+Module for Qt6 context menu related functionality.
 """
 import sys
 import os
 from pathlib import Path
-import logging
-
-# Import jjson loading functions (assuming they exist)
-try:
-    from src.utils.jjson import j_loads, j_loads_ns
-except ImportError as e:
-    logger = logging.getLogger(__name__)
-    logger.error(f"Error importing jjson functions: {e}")
-    raise
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
 
 MODE = 'development'
 
 
-__root__: Path = Path.cwd().parent if Path.cwd().parent.name == 'hypotez' else Path.cwd()
+# Ensure __root__ is a valid Path object
+def get_root_path():
+    """
+    Retrieves the root path of the project.
+
+    :return: Path object representing the project root path.
+    :raises RuntimeError: if the project root directory cannot be determined.
+    """
+    try:
+        root_path_str = os.getcwd()[:os.getcwd().rfind('hypotez') + 7]
+        return Path(root_path_str)
+    except ValueError:
+        logger.error("Error determining project root path.")
+        raise RuntimeError("Error determining project root path.")
+
+
+# Use the get_root_path function for obtaining the root path
+__root__: Path = get_root_path()
+# Append the root path to the system path
 sys.path.append(str(__root__))
 
 
-# Example of using logger to log path information
-logger = logging.getLogger(__name__)
-logger.info(f"Root path set to: {__root__}")
+# TODO: Add more imports as needed for Qt6, etc.
+# TODO: Add more robust error handling for path problems.
+# TODO: Document the __root__ variable.
+
+
 ```
 
-## Изменения
+**Changes Made**
 
-- **Добавлены импорты:**
-    - `logging` для логирования ошибок при импорте `jjson`.
-    - Добавлена обработка `ImportError` при импорте `j_loads` и `j_loads_ns` из `src.utils.jjson`. Используется `logger.error` для логирования ошибок.
-- **Обработка путей:**
-    - Изменён способ получения пути к корню проекта `__root__`. Теперь используется `Path.cwd().parent`, что предположительно обеспечивает более стабильную работу, особенно на разных платформах.  Добавлена проверка, что родительский каталог назван `hypotez`. Если нет, то используется текущий каталог `Path.cwd()`.
-- **Документация:**
-    - Добавлен RST docstring к модулю, описывающий его назначение.
-- **Логирование:**
-    - Добавлена строка логирования для `logger`, которая выводит информацию о заданном пути `__root__`.
-- **Использование `j_loads` и `j_loads_ns`:**
-    - Добавлен импорт `j_loads` и `j_loads_ns` с обработкой `ImportError` для обеспечения возможности дальнейшей работы, даже если эти функции не доступны.
-- **Стандартизация импортов:**
-    - Импорты разделены на группы (стандартные модули, сторонние модули).
-- **Стиль кода:**
-    - Приведение к согласованному стилю импортов.
-- **Комментарии:**
-    - Добавлены комментарии о назначении переменных (MODE, __root__).
-- **Улучшенная обработка ошибок:**
-    - `try-except` заменен на `logger.error`.
-- **TODO:**
-    - В примере документации добавлены заметки `TODO`, например, о необходимости в будущем импортировать `j_loads` и `j_loads_ns`.
+- Imported `j_loads` and `j_loads_ns` from `src.utils.jjson`.
+- Added missing `from src.logger import logger` import.
+- Created a function `get_root_path` to handle potential errors when determining the project root.
+- Replaced direct string slicing with the `get_root_path` function, making the code more robust and readable.
+- Added error handling using `logger.error` and `raise RuntimeError` for situations where the root path can't be determined.
+- Added RST docstrings for functions and the module.
+- Included TODOs for potential future improvements and documentation.
+- Made `__root__` a Path object and added appropriate error handling.
 
+**Complete Code**
 
-**Рекомендации:**
+```python
+## \file hypotez/src/gui/context_menu/qt6/header.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+"""
+Module for Qt6 context menu related functionality.
+"""
+import sys
+import os
+from pathlib import Path
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.logger import logger  # Import logger
 
-- Проверьте, что `src.utils.jjson` действительно содержит функции `j_loads` и `j_loads_ns`.
-- Убедитесь, что используете подходящий обработчик `logging` для записи ошибок и отладки.
-- Рассмотрите возможность добавления проверки существования файла или каталога `__root__`.
+MODE = 'development'
 
 
-**Дополнительные улучшения (TODO):**
+# Ensure __root__ is a valid Path object
+def get_root_path():
+    """
+    Retrieves the root path of the project.
 
-- Добавить валидацию пути `__root__`, например, проверить, что директория существует.
-- Добавить конфигурацию для настройки пути `__root__` (например, в файле конфигурации).
-- Документировать переменную `MODE`.
-- Рассмотреть более сложные варианты обработки путей для различных ситуаций.
+    :return: Path object representing the project root path.
+    :raises RuntimeError: if the project root directory cannot be determined.
+    """
+    try:
+        root_path_str = os.getcwd()[:os.getcwd().rfind('hypotez') + 7]
+        return Path(root_path_str)
+    except ValueError:
+        logger.error("Error determining project root path.")
+        raise RuntimeError("Error determining project root path.")
+
+
+# Use the get_root_path function for obtaining the root path
+__root__: Path = get_root_path()
+# Append the root path to the system path
+# #sys.path.append (__root__) # Removed - using function for error handling
+sys.path.append(str(__root__))
+
+
+# TODO: Add more imports as needed for Qt6, etc.
+# TODO: Add more robust error handling for path problems.
+# TODO: Document the __root__ variable.
+
+
+```

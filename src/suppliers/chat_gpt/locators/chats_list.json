@@ -1,0 +1,12 @@
+{
+  "link": {
+    "attribute": "href",
+    "by": "XPATH",
+    "selector": "//a[@data-discover = 'true']",
+    "event": null,
+    "if_list": "all",
+    "use_mouse": false,
+    "mandatory": true,
+    "locator_description": "Ссылки на состоявюиеся беседы"
+  }
+}

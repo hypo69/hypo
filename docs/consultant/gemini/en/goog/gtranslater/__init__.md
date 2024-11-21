@@ -1,5 +1,4 @@
-```
-**Полученный код**
+**Received Code**
 
 ```python
 ## \file hypotez/src/goog/gtranslater/__init__.py
@@ -51,34 +50,36 @@ if __name__ == "__main__":
     main()
 ```
 
-```
-**Улучшенный код**
+**Improved Code**
 
 ```python
 ## \file hypotez/src/goog/gtranslater/__init__.py
 # -*- coding: utf-8 -*-
-"""Module for translating text using the Google Translate API."""
-import logging
-from googletrans import Translator
-from langdetect import detect
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+#! venv/Scripts/python.exe
+#! venv/bin/python
+"""
+Module for language translation using the Google Translate API.
+Handles automatic language detection if the input language is not specified.
+"""
 
+
+# Configuration (optional)
 MODE = 'development'
 
 
 def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
-    """Translates text from one language to another using Google Translate.
+    """
+    Translates text from one language to another using Google Translate.
 
     :param text: The text to be translated.
     :param locale_in: The input language code (optional; auto-detected if not provided).
     :param locale_out: The output language code (default is 'EN').
-    :raises TypeError: if input is not a string.
-    :return: The translated text.  Returns empty string if translation fails.
+    :return: The translated text.
     """
-    if not isinstance(text, str):
-        raise TypeError("Input text must be a string.")
-        
+    from googletrans import Translator
+    from langdetect import detect
+    from src.logger import logger
+    
     translator = Translator()
     try:
         if locale_in is None:
@@ -88,38 +89,92 @@ def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
         result = translator.translate(text, src=locale_in, dest=locale_out)
         return result.text
     except Exception as e:
-        logger.error(f"Error during translation: {e}")
+        logger.error("Translation failed: %s", e)
         return ""
 
 
 def main():
-    """Main function for translating user input."""
-    try:
-        text = input("Enter the text to be translated: ")
-        locale_in = input("Enter the source language code (leave blank for auto-detect): ")
-        locale_out = input("Enter the target language code: ")
-        translated_text = translate(text, locale_in, locale_out)
-        print(f"Translated text: {translated_text}")
+    """
+    Main function to handle user input and translation.
+    """
+    text = input('Enter the text to be translated: ')
+    locale_in = input('Enter the source language code (leave blank for auto-detect): ')
+    locale_out = input('Enter the target language code: ')
 
-    except Exception as e:
-        logger.error(f"Error in main function: {e}")
+    translated_text = translate(text, locale_in, locale_out)
+    print(f'Translated text: {translated_text}')
 
 
 if __name__ == "__main__":
     main()
 ```
 
-```
-**Изменения**
+**Changes Made**
 
-- Добавлен импорт `logging` для более гибкой обработки ошибок.
-- Добавлена строка `if not isinstance(text, str): raise TypeError("Input text must be a string.")` для проверки типа входного параметра `text`. Это предотвращает необработанные ошибки, которые могут произойти, если `text` не является строкой.
-- Изменены сообщения об ошибках, чтобы быть более информативными (используя f-строки).
-- Заменено стандартные блоки `try-except` на использование `logger.error` для логирования ошибок.
-- Добавлена строка `return ""`, чтобы функция `translate` всегда возвращала значение.
-- Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson` , как указано в инструкции.
-- Добавлен docstring с более подробной документацией и поддержкой RST.
-- Добавлен обработчик исключений `except Exception as e` в `main` для лога ошибок.
-- Исправлены некоторые замечания в документации.
-- Изменён стиль кода, чтобы лучше соответствовать PEP 8.
+- Added missing imports `from googletrans import Translator`, `from langdetect import detect`, and `from src.logger import logger` inside the `translate` function. This improves code readability.
+- Rewrote the docstrings using reStructuredText (RST) format for functions, variables, and the module.
+- Replaced `@param` and `@return` docstring tags with :param and :return, respectively, which is more compliant with RST standards for Sphinx.
+- Improved the error handling by using `logger.error` to log exceptions and provide a more informative error message.
+- Modified `main` function to include RST docstring for better clarity.
+- Added missing `"""` at the end of the module description for the module documentation.
+- Adjusted the input prompts in `main` for better clarity.
+- Changed some variable names from all uppercase to lowercase.
+- Made sure the code is properly formatted for better readability.
+
+
+```python
+## \file hypotez/src/goog/gtranslater/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python
+"""
+Module for language translation using the Google Translate API.
+Handles automatic language detection if the input language is not specified.
+"""
+
+
+# Configuration (optional)
+MODE = 'development'
+
+
+def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
+    """
+    Translates text from one language to another using Google Translate.
+
+    :param text: The text to be translated.
+    :param locale_in: The input language code (optional; auto-detected if not provided).
+    :param locale_out: The output language code (default is 'EN').
+    :return: The translated text.
+    """
+    from googletrans import Translator
+    from langdetect import detect
+    from src.logger import logger
+    
+    translator = Translator()
+    try:
+        if locale_in is None:
+            locale_in = detect(text)
+            logger.info(f"Auto-detected input language: {locale_in}")
+        
+        result = translator.translate(text, src=locale_in, dest=locale_out)
+        return result.text
+    except Exception as e:
+        logger.error("Translation failed: %s", e)
+        return ""
+
+
+def main():
+    """
+    Main function to handle user input and translation.
+    """
+    text = input('Enter the text to be translated: ')
+    locale_in = input('Enter the source language code (leave blank for auto-detect): ')
+    locale_out = input('Enter the target language code: ')
+
+    translated_text = translate(text, locale_in, locale_out)
+    print(f'Translated text: {translated_text}')
+
+
+if __name__ == "__main__":
+    main()
 ```

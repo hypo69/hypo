@@ -241,7 +241,7 @@ if __name__ == '__main__':
     #main()
     assistant_direct = CodeAssistant(
         role="code_checker",
-        lang="en",
+        lang="he",
         model=["gemini"],
         #start_dirs=[Path("suppliers"), Path("webdriver")],
         start_dirs=[".."],

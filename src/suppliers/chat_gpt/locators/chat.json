@@ -10,7 +10,6 @@
     "locator_description": "Я получаю весь контейнер и в коде вытескиваю .text"
   },
   "user": {
-
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[@data-message-author-role='user']",

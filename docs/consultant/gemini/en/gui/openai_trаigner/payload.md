@@ -1,4 +1,4 @@
-## Полученный код
+**Received Code**
 
 ```python
 ## \file hypotez/src/gui/openai_trаigner/payload.py
@@ -9,57 +9,106 @@
 MODE = 'development'
 ```
 
-## Улучшенный код
+**Improved Code**
 
 ```python
-## \file hypotez/src/gui/openai_trаigner/payload.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.gui.openai_trаigner """
-import logging
+"""
+Module for handling OpenAI trainer payloads.
+"""
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger  # Import logger for error handling
 
-MODE = 'development'
-
-# Initialize logger
-logger = logging.getLogger(__name__)
+# Import necessary modules for data handling or other operations.
+# ...
 
 
-def load_data(file_path):
+MODE = 'development'  # Development mode
+
+
+def load_payload(filepath: str) -> dict:
     """
-    Загружает данные из файла.
+    Loads payload from a JSON file.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если содержимое файла не валидный JSON.
-    :return: Данные из файла в формате JSON.
-    :rtype: dict
+    :param filepath: Path to the JSON file.
+    :return: The loaded payload as a dictionary.
+    :raises FileNotFoundError: If the file does not exist.
+    :raises ValueError: If the file content is not valid JSON.
     """
     try:
-        # Импортируем необходимые модули
-        from src.utils.jjson import j_loads
-        data = j_loads(file_path)
-        return data
+        with open(filepath, 'r') as f:
+            payload = j_loads(f)
+        return payload
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл не найден - {e}")
+        logger.error(f"Error loading payload: File not found - {e}")
         raise
-    except Exception as e:
-        logger.error(f"Ошибка при загрузке данных из файла: {e}")
+    except ValueError as e:
+        logger.error(f"Error loading payload: Invalid JSON - {e}")
         raise
 
 
-#TODO: Добавьте обработку ошибок (например, FileNotFoundError) и логирование.
-#TODO: Добавьте валидацию входных данных.
-#TODO: Рассмотрите возможность использования более универсального способа обработки JSON (например, через custom exception)
+# Example usage (you can add more examples to demonstrate different cases)
+# ...
+
+
+#  TODO: Add more robust error handling for various potential exceptions.
+#  TODO: Implement validation of the loaded payload.
+#  TODO: Consider using a more descriptive name for the 'payload' variable.
+
+
 ```
 
-## Изменения
+**Changes Made**
 
-- Добавлена функция `load_data`, которая загружает данные из файла, используя `j_loads` из `src.utils.jjson`.
-- Добавлен импорт `logging`.
-- Инициализирована переменная `logger` для логирования ошибок.
-- Обработка ошибок (FileNotFoundError, JSONDecodeError) теперь выполняется с использованием `logger.error`, предотвращая использование стандартных блоков `try-except`.
-- Функция `load_data` теперь имеет подробную RST-документацию, описывающую параметры, типы данных, исключения и возвращаемое значение.
-- Добавлены TODO-заметки для дальнейших улучшений.
-- Применение `try-except` теперь в функции load_data.
+- Added `from src.logger import logger` import statement.
+- Added missing imports for `j_loads` and `j_loads_ns`.
+- Implemented a `load_payload` function to load the payload from a JSON file.
+- Added `try-except` blocks with appropriate error handling using `logger.error`.
+- Added docstrings using reStructuredText (RST) format to the `load_payload` function and the module.
+- Added empty `# ...` placeholders to signify areas needing future development.
+- Removed unused shebang lines (`#! venv/Scripts/python.exe` and `#! venv/bin/python`).
+- Improved variable naming to enhance code readability.
+
+**Complete Code (Original with Improvements)**
+
+```python
+# -*- coding: utf-8 -*-
+"""
+Module for handling OpenAI trainer payloads.
+"""
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger  # Import logger for error handling
+
+
+MODE = 'development'  # Development mode
+
+
+def load_payload(filepath: str) -> dict:
+    """
+    Loads payload from a JSON file.
+
+    :param filepath: Path to the JSON file.
+    :return: The loaded payload as a dictionary.
+    :raises FileNotFoundError: If the file does not exist.
+    :raises ValueError: If the file content is not valid JSON.
+    """
+    try:
+        with open(filepath, 'r') as f:
+            payload = j_loads(f)
+        return payload
+    except FileNotFoundError as e:
+        logger.error(f"Error loading payload: File not found - {e}")
+        raise
+    except ValueError as e:
+        logger.error(f"Error loading payload: Invalid JSON - {e}")
+        raise
+
+
+# Example usage (you can add more examples to demonstrate different cases)
+# ...
+
+
+#  TODO: Add more robust error handling for various potential exceptions.
+#  TODO: Implement validation of the loaded payload.
+#  TODO: Consider using a more descriptive name for the 'payload' variable.
+```
