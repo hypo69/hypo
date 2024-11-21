@@ -2,28 +2,16 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python
-""" module: src.suppliers.aliexpress """
-MODE = 'development'
+""" 
+Module: src.suppliers.aliexpress
 
-
-""" Base class for the supplier. 
-This class inherits from `Supplier`.
-It allows interaction with AliExpress in three ways:
-- webdriver
-- requests
-- API
-
-Examples:
-    @code
-    # Run without a webdriver
-    a = Aliexpress()
-    
-    # Webdriver `Chrome`
-    a = Aliexpress('chrome')
-    @endcode
+This module provides the `Aliexpress` class, which integrates functionality
+from `Supplier`, `AliRequests`, and `AliApi` for working with AliExpress.
 """
 
+import header
 
+MODE = 'development'
 
 import pickle
 import requests
@@ -42,41 +30,61 @@ from .aliapi import AliApi
 from src.logger import logger  
 
 class Aliexpress(Supplier, AliRequests, AliApi):
-    """ Base class for AliExpress. 
-    This class inherits from `Supplier`, `AliRequests`, and `AliApi`.
-    @code
-    # Run without a webdriver
-    a = Aliexpress()
+    """
+    Base class for AliExpress.
+
+    This class combines features of the `Supplier`, `AliRequests`, and `AliApi`
+    classes to facilitate interaction with AliExpress.
+
+    **Usage examples**:
     
-    # Webdriver `Chrome`
-    a = Aliexpress('chrome')
-    
-    # Requests
-    a = Aliexpress(requests=True)
-    @endcode
+    .. code-block:: python
+
+        # Run without a webdriver
+        a = Aliexpress()
+
+        # Webdriver `Chrome`
+        a = Aliexpress('chrome')
+
+        # Requests mode
+        a = Aliexpress(requests=True)
     """
     ...
 
-    
     def __init__(self, 
                  webdriver: bool | str = False, 
-                 locale: str | dict = {'EN':'USD'},
+                 locale: str | dict = {'EN': 'USD'},
                  *args, **kwargs):
-        """ Initialize the Aliexpress class
+        """
+        Initialize the Aliexpress class.
 
-        @param locale - The language of the script
-        @param webdriver - Webdriver mode (default False)
-        Webdriver modes: False, 'chrome', 'mozilla', 'edge', 'default'
-        @param requests `bool` - Connect the `AliRequests` class
-        @code
+        :param webdriver: Webdriver mode. Supported values are:
+            - `False` (default): No webdriver.
+            - `'chrome'`: Use the Chrome webdriver.
+            - `'mozilla'`: Use the Mozilla webdriver.
+            - `'edge'`: Use the Edge webdriver.
+            - `'default'`: Use the system's default webdriver.
+        :type webdriver: bool | str
+
+        :param locale: The language and currency settings for the script.
+        :type locale: str | dict
+
+        :param args: Additional positional arguments.
+        :param kwargs: Additional keyword arguments.
+
+        **Examples**:
+
+        .. code-block:: python
+
             # Run without a webdriver
             a = Aliexpress()
-    
+
             # Webdriver `Chrome`
             a = Aliexpress('chrome')
-    
-        @endcode
+
         """
         ...
-        super().__init__(supplier_prefix = 'aliexpress', locale=locale, webdriver=webdriver, *args, **kwargs)
-
+        super().__init__(supplier_prefix = 'aliexpress', 
+                         locale = locale, 
+                         webdriver = webdriver, 
+                         *args, **kwargs)

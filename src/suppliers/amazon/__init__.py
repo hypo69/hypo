@@ -5,14 +5,7 @@
 """ module: src.suppliers.amazon """
 MODE = 'development'
 
-
-
-"""  Постaвщик <i>wallmart</i>
-"""
-
-from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
-
 from .graber import Graber
+from .scenario import get_list_products_in_category
 
 
