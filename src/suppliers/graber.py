@@ -45,8 +45,6 @@ from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 from src.endpoints.prestashop import PrestaShop
 
-d: Driver = None
-l: SimpleNamespace = None
 
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
@@ -72,7 +70,7 @@ def close_popup(value: Any = None) -> Callable:
 class Graber:
     """Базовый класс сбора данных со страницы для всех поставщиков."""
     
-    def __init__(self, supplier_prefix: str, locator: SimpleNamespace | dict):
+    def __init__(self, supplier_prefix: str, d:Driver):
         """Инициализация класса Graber.
 
         Args:
@@ -81,8 +79,8 @@ class Graber:
             driver (Driver): Экземпляр класса Driver.
         """
         self.supplier_prefix = supplier_prefix
-        global l
-        l = self.l = locator
+        self.l:SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+        self.d:Driver = d
         self.fields = ProductFields()
 
     async def error(self, field: str):

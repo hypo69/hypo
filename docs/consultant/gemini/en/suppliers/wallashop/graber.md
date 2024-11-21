@@ -66,8 +66,8 @@ class Graber(Grbr, BaseModel):
     def __init__(self, supplier_prefix: str):
         super().__init__(supplier_prefix=supplier_prefix)
         self.supplier_prefix = supplier_prefix
-        self.l = j_loads_ns(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
-        super().__init__(self.supplier_prefix, self.l)
+        
+        
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.
@@ -145,8 +145,8 @@ class Graber(Grbr, BaseModel):
         """
         super().__init__(supplier_prefix=supplier_prefix)
         self.supplier_prefix = supplier_prefix
-        self.l = j_loads_ns(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
-        super().__init__(self.supplier_prefix, self.l)  # Call the parent class's init
+        
+          # Call the parent class's init
 
     @logger.catch
     async def grab_page(self, driver: Driver) -> ProductFields:
@@ -260,8 +260,8 @@ class Graber(Grbr, BaseModel):
         """
         super().__init__(supplier_prefix=supplier_prefix)
         self.supplier_prefix = supplier_prefix
-        self.l = j_loads_ns(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
-        super().__init__(self.supplier_prefix, self.l)  # Call the parent class's init
+        
+          # Call the parent class's init
 
     @logger.catch
     async def grab_page(self, driver: Driver) -> ProductFields:

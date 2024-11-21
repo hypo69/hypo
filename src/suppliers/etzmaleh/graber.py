@@ -48,21 +48,19 @@ def close_popup(value: Any = None) -> Callable:
         return wrapper
     return decorator
 
-supplier_prefix = 'etzmaleh'
 class Graber(Grbr, BaseModel):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str
+    supplier_prefix: str  = 'etzmaleh'
     d: Optional[Driver] = None  # d будет назначен позже в `grab_page()`
     l: SimpleNamespace
 
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, supplier_prefix: str):
-        super().__init__(supplier_prefix=supplier_prefix)
-        self.supplier_prefix = supplier_prefix
-        self.l = j_loads_ns(gs.path.src / 'suppliers' / self.supplier_prefix / 'locators' / 'product.json')
-        super().__init__(self.supplier_prefix, self.l)
+    def __init__(self, driver:Driver):
+        super().__init__(supplier_prefix=self.supplier_prefix, d = driver)
+        
+        
 
 
     async def grab_page(self, driver: Driver) -> ProductFields:

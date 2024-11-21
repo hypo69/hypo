@@ -45,7 +45,7 @@ class HandlersParser():
         # handle `https://one-tab.com`
         response = update.message.text
         if response.startswith(('https://one-tab.com','http://one-tab.com','https://www.one-tab.com','http://www.one-tab.com')):
-            price, mexiron_name, urls = self.get_suppliers_list_from_onetab(response)
+            price, mexiron_name, urls = self.get_data_from_onetab(response)
             if not all([price, mexiron_name, urls]):
                 await update.message.reply_text("хуйня какая-то")
 
@@ -64,8 +64,11 @@ class HandlersParser():
     #         pass
     #     return False, False, False
 
-    def get_suppliers_list_from_onetab(self, response: str) -> list[int | float, str, list] | bool:
-        """Handle OneTab URLs."""
+    def get_data_from_onetab(self, response: str) -> list[int | float, str, list] | bool:
+        """Handle name, price, supplier_urls from OneTab
+        price, name приходят через строчку названия таба в one-tab [price] [name] с пробельным разделителем.
+        цена определяется значениен до первого пробела, остльное - название (необязательно)
+        """
 
         price, mexiron_name, urls = self.fetch_target_urls_onetab(response)
 
@@ -121,7 +124,7 @@ class HandlersParser():
             data = element.get_text() if element else None
 
             if not data:
-                return False
+                return 
 
             # Разбивка данных на цену и имя
             parts = data.split(maxsplit=1)
@@ -129,7 +132,7 @@ class HandlersParser():
                 price = int(parts[0])
             except ValueError as ex:
                 logger.error(f'Ошибка при преобразовании цены: {ex}')
-                return False
+                return 
 
             mexiron_name = parts[1] if len(parts) > 1 else gs.now
 
@@ -137,4 +140,4 @@ class HandlersParser():
 
         except requests.exceptions.RequestException as ex:
             logger.error(f'Ошибка при выполнении запроса: {ex}')
-            return False
+            return 

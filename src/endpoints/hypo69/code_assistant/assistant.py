@@ -137,8 +137,8 @@ class CodeAssistant:
                     if response:
                         self._save_response(file_path, response, 'gemini')
 
-        pprint(f'Processed file number: {i + 1}', text_color='yellow')
-        time.sleep(120)  
+            pprint(f'Processed file number: {i + 1}', text_color='yellow')
+            time.sleep(20)  
 
     def _create_request(self, content: str) -> str:
         """

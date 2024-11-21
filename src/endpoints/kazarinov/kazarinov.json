@@ -1,16 +1,5 @@
 {
   "mode": "test",
-  "driver": {
-    "class": "Chrome",
-    "options": {
-      "headless": true,
-      "user_agent": "Mozilla/5.0"
-    }
-  },
-  "mexiron": {
-    "scenario": "Mexiron",
-    "driver": "Chrome"
-  },
   "system_instruction": "system_instruction.txt",
   "questions_list_path": "kazarinov/prompts/train_data/q",
   "url_handlers": {
@@ -33,6 +22,6 @@
   },
   "telegram": {
     "bot_name": "hypo69_kazarinov_bot",
-    "log_path": "bots/<user_id>/chat_logs.txt"
+    "log_path": "bot_logs/<user_id>/<timestamp>.txt"
   }
 }

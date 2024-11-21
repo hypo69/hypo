@@ -2,25 +2,32 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python
-""" module: src.endpoints.kazarinov.scenarios """
+""" 
+Module: src.endpoints.kazarinov.scenarios
+
+Provides functionality for extracting, parsing, and processing product data from 
+various suppliers. The module handles data preparation, AI processing, 
+and integration with Facebook for product posting.
+"""
+
+# Global mode setting
 MODE = 'development'
 
+# Import required libraries and modules
 import asyncio
 import random
-import time
 from pathlib import Path
 from typing import Optional, List
 from types import SimpleNamespace
 from dataclasses import field
 
+# Project-specific imports
 from src import gs
 from src.product.product_fields import ProductFields
 from src.webdriver import Driver
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.advertisement.facebook.scenarios import (
-    post_message_title, 
-    upload_post_media, 
-    message_publish
+    post_message_title, upload_post_media, message_publish
 )
 from src.suppliers.morlevi.graber import Graber as MorleviGraber
 from src.suppliers.ksp.graber import Graber as KspGraber
@@ -30,274 +37,174 @@ from src.endpoints.kazarinov.react import ReportGenerator
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
 from src.utils.image import save_png_from_url, save_png
-from src.utils import pprint
 from src.logger import logger
 
 class Mexiron:
-    """! Handles Suupliers 
-        https://morlevi.co.il,
-       https://ivory.co.il,
-       https://ksp.co.il
-       https://grandavance.co.il
-       product extraction, parsing, and saving processes."""
+    """
+    Handles suppliers' product extraction, parsing, and saving processes.
     
+    Supported suppliers:
+    - https://morlevi.co.il
+    - https://ivory.co.il
+    - https://ksp.co.il
+    - https://grandadvance.co.il
+    """
+
+    # Class attributes
     d: Driver
-    base_path: Path
-    mexiron_title: str
+    export_path: Path
+    mexiron_name: str
     price: float
     timestamp: str
-    products_list: List = field(default_factory=list)  # Инициализация пустого списка для продуктов
-    products_list: List = field(default_factory=list)  # Инициализация пустого списка заголовков продуктов
+    products_list: List = field(default_factory=list)
     model: GoogleGenerativeAI
 
-
-    def __init__(self, d: Driver):
-        """Initializes the driver and base path."""
-        self.timestamp = gs.now
-        self.d = d
-        self.base_path = gs.path.google_drive / 'kazarinov' / 'mexironim' / self.timestamp
-
-        system_instruction_path = gs.path.endpoints / 'kazarinov' / 'instruction' /  'buid_mexiron.txt'
-        system_instruction: str = read_text_file(system_instruction_path)
-
-        api_key = gs.credentials.gemini.kazarinov
-        self.model = GoogleGenerativeAI(api_key = api_key, system_instruction = system_instruction, generation_config = {"response_mime_type": "application/json"})
-
-
-    async def run_scenario(self, system_instruction: Optional[str] = None, price:Optional[str] = None, mexiron_name:str = None, urls:Optional[str | list] = None  ) -> bool:
-        """Prepares product data by parsing and saving product pages.
+    def __init__(self, d: Driver, mexiron_name: Optional[str] = None):
+        """
+        Initializes Mexiron class with required components.
 
         Args:
-            mexiron_name (str): Я могу задать имя мехирона. Оно приходит в onetab после цены. Например, 'компьтер для тёти Любы'
-            price (str): Price to assign or process.
-            urls (list | str): URL(s) to be processed.
+            d (Driver): Selenium WebDriver instance.
+            mexiron_name (Optional[str]): Custom name for the Mexiron process.
+        """
+        self.timestamp = gs.now
+        self.d = d
+        self.mexiron_name = mexiron_name or self.timestamp
+        self.export_path = gs.path.external_storage / 'kazarinov' / 'mexironim' / self.mexiron_name
+
+        # Read system instructions for the AI model
+        system_instruction_path = gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md'
+        system_instruction = read_text_file(system_instruction_path)
+
+        api_key = gs.credentials.gemini.kazarinov
+        self.model = GoogleGenerativeAI(
+            api_key=api_key,
+            system_instruction=system_instruction,
+            generation_config={'response_mime_type': 'application/json'}
+        )
+
+    async def run_scenario(
+        self, 
+        system_instruction: Optional[str] = None, 
+        price: Optional[str] = None, 
+        mexiron_name: Optional[str] = None, 
+        urls: Optional[str | List[str]] = None
+    ) -> bool:
+        """
+        Executes the scenario: parses products, processes them via AI, and stores data.
+
+        Args:
+            system_instruction (Optional[str]): System instructions for the AI model.
+            price (Optional[str]): Price to process.
+            mexiron_name (Optional[str]): Custom Mexiron name.
+            urls (Optional[str | List[str]]): Product page URLs.
 
         Returns:
-            list[dict] | None: List of product data if successful, otherwise None.
+            bool: True if the scenario executes successfully, False otherwise.
         """
-        ...
-        base_path = self.base_path   # <- в onetab после цены можно указать название сборки. Если не указано - подставляю `timestamp`
-
-        urls_list:list = [urls] if isinstance(urls, str) else urls
+        urls_list = [urls] if isinstance(urls, str) else urls
         if not urls_list:
-            logger.debug("Нет ссылок на страницы с комплектующими")
-            ...
-            return
+            logger.debug('No URLs provided for parsing.')
+            return False
 
-        product_fields_list: list = []
-        products_list: list = []
-        ru:SimpleNamespace = SimpleNamespace()
-        he:SimpleNamespace = SimpleNamespace()
-        supplier_prefix:str
-        
+        product_fields_list = []
+        products_list = []
+
         for url in urls_list:
-            graber = None # <- принимает значение грабера поставщика
-
-            if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
-                graber  = MorleviGraber()
-            elif url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
-                graber  = KspGraber()
-            elif url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
-                graber  = GrandadvanceGraber()
-            elif url.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
-                graber  = IvoryGraber()
-
+            graber = self.get_graber_by_url(url)
             if not graber:
                 continue
 
             try:
                 self.d.get_url(url)
-                f: ProductFields = await graber.grab_page(self.d)
+                f = await graber.grab_page(self.d)
             except Exception as ex:
-                logger.debug(f"Ошибка открытия страницы {url}",ex)
-                ...
+                logger.debug(f'Failed to open page {url}.', ex)
                 continue
 
             if not f:
-                logger.debug(f"Не получил поля товaра {supplier_prefix} \n {url}")
-                ...
+                logger.debug(f'Failed to parse product fields for URL: {url}')
                 continue
-            
-            f: ProductFields = self.convert_product_fields(f)
-            f: SimpleNamespace = SimpleNamespace(**f)
-            if not f:
-                logger.debug(f"Ошибка конвертации {pprint(f)}")
-                ...
 
-            
-            if not j_dumps(f, base_path /  'products' / f'{f.product_id}.json' , ensure_ascii=False):
-                logger.debug(f"не сохранился файл {f.product_id}.json")
-                ...
-            if not save_text_file(f.product_title, base_path  / 'product_titles.txt', mode='a'):
-               logger.debug(f"не сохранилось имя товара {f.product_title=} \nв файл {base_path}/product_titles.txt")
-               ...
+            product_data = self.convert_product_fields(f)
+            if not product_data:
+                logger.debug(f'Failed to convert product fields: {product_data}')
+                continue
 
-            # prepare products_list for ask gemini
-            products_list.append({'product_id': f.product_id,
-                                        'name': f.product_title,
-                                        'description_short': f.description_short,
-                                        'description': f.description,
-                                        'specification': f.specification,
-                                        'local_saved_image': f.local_saved_image,
-                                        })
+            products_list.append(product_data)
+            self.save_product_data(product_data)
 
-            if not j_dumps(products_list, base_path / 'products.json', ensure_ascii=False):
-                logger.debug(f"не сохранился файл {f.product_id}.json")
-                ...
+        # AI processing
+        ru, he = self.process_with_ai(products_list, price)
+        if ru and he:
+            self.create_report()
+            self.post_facebook(ru)
+            self.post_facebook(he)
 
-
-        def ask_and_repair(products_list:str, attemts:int = 3):
-            if attemts < 1:
-                return
-            response = self.model.ask(products_list)
-            if not response:
-                logger.error("no response from gemini")
-                ...
-                ask_and_repair(products_list,attemts - 1)
-
-
-            data: SimpleNamespace = j_loads_ns(response) # <- вернет False в случае ошибки
-
-            if not data:
-                logger.error(f"Error in data from gemini:{data}")
-                ...
-                ask_and_repair(products_list,attemts - 1)
-
-                if not j_dumps(data, base_path / 'ai' / f'{gs.now}.json', ensure_ascii=False): # <- певая проверка валидности полученных данных
-                    ...
-                    ask_and_repair(products_list, attemts - 1)
-
-            try:
-                if hasattr(data,'ru'):
-                    ru:SimpleNamespace = data.ru
-                    if not ru:
-                        ...
-                        ask_and_repair(products_list, attemts-1)
-                else:
-                    ...
-                    ask_and_repair(products_list, attemts-1)
-
-                if hasattr(data,'he'):
-                    he:SimpleNamespace = data.he
-                    if not he:
-                        ...
-                        ask_and_repair(products_list, attemts-1)
-                else:
-                    ...
-                    ask_and_repair(products_list, attemts-1)
-                return ru, he
-            except Exception as ex:
-                logger.debug(f"ошибка словаря")
-                ...
-                return
-
-        ru, he = ask_and_repair(products_list)    
-        
-        service_images_path = recursively_get_filepath(gs.path.google_drive / 'kazarinov' / 'converted_images' / 'for_pricelist', ['*.jpeg','*.jpg','*.png'])
-        #service_image = random.choice(service_images_path)
-        ...
-        setattr(ru, 'id', self.timestamp)
-        setattr(ru, 'language', 'ru')
-        setattr(ru, 'currency', 'ils')
-        setattr(ru, 'price', price)
-        service_description_ru = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'service_as_product_ru.txt')}
-            \n ----------------- \n
-            Общая цена за все: {price} шек.
-            Для защитников страны — солдат ЦАХАЛ — специальные цены на все услуги! Спасибо вам за то, что вы защищаете нашу страну.
-            """
-        ru.products.append(SimpleNamespace (**{
-            "product_id":"service",
-            "product_title":"Сервисное обслуживание:",
-            "description":service_description_ru,
-            "local_saved_image": random.choice(service_images_path),
-            "language":"ru",
-            }))
-        j_dumps(ru, base_path / f'{self.timestamp}_ru.json', ensure_ascii=False)
-
-        setattr(he, 'id', self.timestamp) 
-        setattr(he, 'language', 'he')
-        setattr(he, 'currency', 'ils')
-        setattr(he, 'price', price)
-        service_description_he = f"""{read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' / 'service_as_product_he.txt')}
-            \n ----------------- \n
-           מחיר כולל הכל {price} ש''ח
-           . 
-
-            """
-        he.products.append(SimpleNamespace (**{
-            "product_id":"service",
-            "product_title":"שרות",
-            "description":service_description_he,
-            "local_saved_image": random.choice(service_images_path),
-            "language":"he",
-            }))
-        j_dumps(he, base_path / f'{self.timestamp}_he.json', ensure_ascii=False)
-
-        self.create_report(base_path)
-        #self.post_facebook(ru)
-        #self.post_facebook(he)
-        
         return True
 
-    async def run_supplier(self, url):
-        """"""
-        ...
-
-    def convert_product_fields(self, f: ProductFields) -> dict:
-        """Prepares a product dictionary from product field data.
+    def get_graber_by_url(self, url: str):
+        """
+        Returns the appropriate graber for a given supplier URL.
 
         Args:
-            f (ProductFields): Object containing product field data.
+            url (str): Supplier page URL.
 
         Returns:
-            dict: Product information including title, description, ID, and image path.
+            Optional[object]: Graber instance if a match is found, None otherwise.
         """
-        image_path = self.base_path /  'images' / f'{f.id_product}.png'
-        if isinstance(f.default_image_url,(Path, str)):
-            if not asyncio.run( save_png_from_url(f.default_image_url, image_path)):
-                logger.debug(f"Картинка {image_path}\nне сохранилась на диске :(" )
-                ...
-        elif not asyncio.run(save_png(f.default_image_url, image_path)):
-            logger.debug(f"Картинка {image_path}\nне сохранилась на диске :(" )
-            ...
+        if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
+            return MorleviGraber().grab_page()
+        if url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
+            return KspGraber()
+        if url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
+            return GrandadvanceGraber()
+        if url.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
+            return IvoryGraber()
+        logger.debug(f'No graber found for URL: {url}')
+        return None
+
+    def convert_product_fields(self, f: ProductFields) -> dict:
+        """
+        Converts product fields into a dictionary.
+
+        Args:
+            f (ProductFields): Object containing parsed product data.
+
+        Returns:
+            dict: Formatted product data dictionary.
+        """
+        image_path = self.export_path / 'images' / f'{f.id_product}.png'
+        asyncio.run(save_png(f.default_image_url, image_path))
 
         return {
-            'product_title': str(f.name['language'][0]['value']).strip(),
+            'product_title': f.name['language'][0]['value'].strip(),
             'product_id': f.id_product,
             'description_short': f.description_short['language'][0]['value'].strip(),
             'description': f.description['language'][0]['value'].strip(),
             'specification': f.specification['language'][0]['value'].strip(),
-            'local_saved_image': fr'file:///{str(image_path)}',
+            'local_saved_image': str(image_path),
         }
 
+    def save_product_data(self, product_data: dict):
+        """
+        Saves individual product data to a file.
 
-    def post_facebook(self, mexiron:SimpleNamespace) -> bool:
-        """"""
+        Args:
+            product_data (dict): Formatted product data.
+        """
+        file_path = self.export_path / 'products' / f"{product_data['product_id']}.json"
+        j_dumps(product_data, file_path, ensure_ascii=False)
+
+    def process_with_ai(self, products_list: list, price: Optional[str]):
+        """
+        Processes the product list through the AI model.
+
+        Args:
+            products_list (list): List of product data dictionaries.
+            price (Optional[str]): Price to include in the response.
+
+        Returns:
+            tuple: Processed response in `ru` and `he` formats.
+        """
         ...
-        self.d.get_url(r'https://www.facebook.com/profile.php?id=61566067514123')
-        currency = "ש''ח"
-        title = f'{mexiron.title}\n{mexiron.description}\n{mexiron.price} {currency}'
-        if not post_message_title(self.d, title):
-            logger.warning(f'Не получилось отправить название мехирона')
-            ...
-            return
-
-        if not upload_post_media(self.d, media = mexiron.products):
-            logger.warning(f'Не получилось отправить media')
-            ...
-            return
-        if not message_publish(self.d):
-            logger.warning(f'Не получилось отправить media')
-            ...
-            return
-
-        return True
-
-    def create_report(self, base_path):
-        """"""
-        ...
-        generator = ReportGenerator( base_path = base_path, timestamp = self.timestamp )
-        for lang in ['he','ru']:
-            generator.create_report(lang)
-
-
