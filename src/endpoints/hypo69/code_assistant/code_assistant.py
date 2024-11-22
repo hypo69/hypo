@@ -156,28 +156,45 @@ class CodeAssistant:
     def _yield_files_content(
         self,
         start_dirs: List[Path] = [gs.path.src],
-    ) -> Iterator[tuple[Path, str]] :
-        """Генерирует пути файлов и их содержимое по указанным шаблонам."""
+    ) -> Iterator[tuple[Path, str]]:
+        """
+        Генерирует пути файлов и их содержимое по указанным шаблонам.
+
+        :param start_dirs: Список директорий для обхода.
+        :return: Итератор кортежей из пути файла и его содержимого.
+        """
+        # Компилируем паттерны исключаемых файлов
         exclude_file_patterns = [re.compile(pattern) for pattern in self.config.exclude_file_patterns]
         include_file_patterns = self.config.include_files
         for start_dir in start_dirs:
-            for pattern in include_file_patterns:
-                for file_path in start_dir.rglob(pattern):
-                    if any(exclude_dir in file_path.parts for exclude_dir in self.config.exclude_dirs):
-                        pprint(f'Пропускаю файл в исключенной директории: {file_path}', text_color='cyan')
-                        continue
-                    if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
-                        pprint(f'Пропускаю файл по паттерну исключения: {file_path}', text_color='cyan')
-                        continue
-                    if str(file_path) in self.config.exclude_files:
-                        pprint(f'Пропускаю исключенный файл: {file_path}', text_color='cyan')
-                        continue
-                    try:
-                        content = file_path.read_text(encoding='utf-8')
-                        yield file_path, content
-                    except Exception as ex:
-                        pprint(f'Ошибка при чтении файла: {ex}', text_color='red', bg_color='light_grey' )
-                        yield None, None
+            # Итерация по всем файлам в директории
+            for file_path in start_dir.rglob('*'):
+                # Проверяем соответствие шаблонам включения
+                if not any(fnmatch.fnmatch(file_path.name, pattern) for pattern in include_file_patterns):
+                    continue
+
+                # Проверяем исключенные директории
+                if any(exclude_dir in file_path.parts for exclude_dir in self.config.exclude_dirs):
+                    pprint(f'Пропускаю файл в исключенной директории: {file_path}', text_color='cyan')
+                    continue
+
+                # Проверяем исключенные файлы по паттерну
+                if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
+                    pprint(f'Пропускаю файл по паттерну исключения: {file_path}', text_color='cyan')
+                    continue
+
+                # Проверяем конкретные исключенные файлы
+                if str(file_path) in self.config.exclude_files:
+                    pprint(f'Пропускаю исключенный файл: {file_path}', text_color='cyan')
+                    continue
+
+                # Чтение содержимого файла
+                try:
+                    content = file_path.read_text(encoding='utf-8')
+                    yield file_path, content
+                except Exception as ex:
+                    pprint(f'Ошибка при чтении файла: {ex}', text_color='red', bg_color='light_grey')
+                    yield None, None
 
     def _save_response(self, file_path: Path, response: str, model_name: str):
         """Сохранение ответа модели в файл."""
