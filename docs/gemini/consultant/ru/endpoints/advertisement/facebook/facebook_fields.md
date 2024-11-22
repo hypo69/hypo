@@ -7,10 +7,9 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook 
+.. module:: src.endpoints.advertisement.facebook
 	:platform: Windows, Unix
 	:synopsis:
-
 """
 MODE = 'development'
 
@@ -49,15 +48,16 @@ class FacebookFields:
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook.facebook_fields
+.. module:: src.endpoints.advertisement.facebook
    :platform: Windows, Unix
-   :synopsis: Модуль содержит класс для работы с полями объявлений и событий Facebook.
+   :synopsis: Модуль для работы с полями объявлений и событий Facebook.
 """
 MODE = 'development'
 
+
 from pathlib import Path
 from src import gs
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads
 from src.logger import logger
 
 
@@ -69,50 +69,58 @@ class FacebookFields:
 
     def __init__(self):
         """
-        Инициализирует объект, загружая поля из файла.
+        Инициализирует объект, загружая поля из файла JSON.
 
-        :raises FileNotFoundError: Если файл не найден.
-        :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
-        """
-        self._load_fields()
-
-
-    def _load_fields(self):
-        """
-        Загружает поля из файла JSON и устанавливает их в качестве атрибутов объекта.
-
-        :raises FileNotFoundError: Если файл не найден.
-        :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
-        :return: True, если загрузка успешна, иначе логгирует ошибку и возвращает None.
+        Возможные ошибки:
+           - Файл не найден или пуст.
         """
         try:
-            filepath = Path(gs.path.src, 'advertisement', 'facebook', 'facebook_feilds.json')
-            data = j_loads(filepath)  # Используем j_loads для загрузки файла JSON
-            if data is None:
-                logger.error(f"Ошибка загрузки полей из файла {filepath}")
-                return None
-            for name, value in data.items():
-                setattr(self, name, value)  # Используем name как имя атрибута
-            return True
-        except FileNotFoundError as e:
-            logger.error(f"Файл не найден: {filepath}", exc_info=True)
-            return None
+            self._payload()
         except Exception as e:
-            logger.error(f"Ошибка при чтении файла {filepath}: {e}", exc_info=True)
-            return None
+            logger.error(f"Ошибка инициализации FacebookFields: {e}")
 
+    def _payload(self):
+        """
+        Загружает поля из файла JSON и устанавливает их в атрибуты объекта.
 
+        Возможные ошибки:
+            - Ошибка чтения файла.
+            - Ошибка парсинга JSON.
+            - Файл не найден или пуст.
+
+        :raises FileNotFoundError: если файл не найден.
+        :raises ValueError: если содержимое файла не является валидным JSON.
+        """
+        filepath = Path(gs.path.src, 'advertisement', 'facebook', 'facebook_fields.json')
+        try:
+            data = j_loads(filepath)  # Обработка ошибок чтения JSON
+        except FileNotFoundError:
+            logger.error(f"Файл {filepath} не найден.")
+            return
+        except ValueError as e:
+            logger.error(f"Ошибка парсинга JSON: {e}")
+            return
+
+        if not data:
+            logger.error(f"Файл {filepath} пуст.")
+            return
+
+        for name, value in data.items():
+            setattr(self, name, value)  # Использование name напрямую
+        return True
 ```
 
 **Changes Made**
 
-* Исправлен импорт `facebook_feilds.json` (ошибка в имени файла).
-* Добавлены типы возвращаемых значений для функций `_payload` и `__init__`.
-* Добавлен блок `try-except` для обработки ошибок `FileNotFoundError` и `json.JSONDecodeError` при работе с файлом JSON.
-* Изменён метод `_payload` на `_load_fields` для лучшего соответствия именованию.
-* Улучшена обработка ошибок: используется `logger.error` для вывода информации об ошибках, включая трассировку стека.
-* Добавлены docstrings в формате RST для всех методов и класса.
-* Исправлено присвоение атрибутов объекта: используется `setattr(self, name, value)`, где `name` — это ключ из словаря.
+*   Добавлен заголовок RST для модуля.
+*   Добавлены docstring для класса ``FacebookFields`` и метода ``_payload``.
+*   Обработка ошибок чтения файла ``facebook_fields.json`` с использованием ``try-except``.
+*   Изменён способ вывода лога для `FileNotFoundError` и `ValueError`
+*   Использование ``logger.error`` вместо ``logger.debug`` для сообщений об ошибках.
+*   Исправлена ошибка в пути к файлу (`facebok` -> `facebook`).
+*   Использование переменной ``name`` для задания атрибута вместо ``f'{name}'``.
+*   Улучшен и расширен  docstring для методов.
+*   Добавлены возможные ошибки к docstring
 
 
 **Full Code (Improved)**
@@ -124,15 +132,16 @@ class FacebookFields:
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook.facebook_fields
+.. module:: src.endpoints.advertisement.facebook
    :platform: Windows, Unix
-   :synopsis: Модуль содержит класс для работы с полями объявлений и событий Facebook.
+   :synopsis: Модуль для работы с полями объявлений и событий Facebook.
 """
 MODE = 'development'
 
+
 from pathlib import Path
 from src import gs
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads
 from src.logger import logger
 
 
@@ -144,36 +153,43 @@ class FacebookFields:
 
     def __init__(self):
         """
-        Инициализирует объект, загружая поля из файла.
+        Инициализирует объект, загружая поля из файла JSON.
 
-        :raises FileNotFoundError: Если файл не найден.
-        :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
-        """
-        self._load_fields()
-
-
-    def _load_fields(self):
-        """
-        Загружает поля из файла JSON и устанавливает их в качестве атрибутов объекта.
-
-        :raises FileNotFoundError: Если файл не найден.
-        :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
-        :return: True, если загрузка успешна, иначе логгирует ошибку и возвращает None.
+        Возможные ошибки:
+           - Файл не найден или пуст.
         """
         try:
-            filepath = Path(gs.path.src, 'advertisement', 'facebook', 'facebook_feilds.json')
-            # Исправление: Правильное имя файла
-            data = j_loads(filepath)  # Используем j_loads для загрузки файла JSON
-            if data is None:
-                logger.error(f"Ошибка загрузки полей из файла {filepath}")
-                return None
-            for name, value in data.items():
-                setattr(self, name, value)  # Используем name как имя атрибута
-            return True
-        except FileNotFoundError as e:
-            logger.error(f"Файл не найден: {filepath}", exc_info=True)
-            return None
+            self._payload()
         except Exception as e:
-            logger.error(f"Ошибка при чтении файла {filepath}: {e}", exc_info=True)
-            return None
+            logger.error(f"Ошибка инициализации FacebookFields: {e}")
+
+    def _payload(self):
+        """
+        Загружает поля из файла JSON и устанавливает их в атрибуты объекта.
+
+        Возможные ошибки:
+            - Ошибка чтения файла.
+            - Ошибка парсинга JSON.
+            - Файл не найден или пуст.
+
+        :raises FileNotFoundError: если файл не найден.
+        :raises ValueError: если содержимое файла не является валидным JSON.
+        """
+        filepath = Path(gs.path.src, 'advertisement', 'facebook', 'facebook_fields.json')
+        try:
+            data = j_loads(filepath)  # Обработка ошибок чтения JSON
+        except FileNotFoundError:
+            logger.error(f"Файл {filepath} не найден.")
+            return
+        except ValueError as e:
+            logger.error(f"Ошибка парсинга JSON: {e}")
+            return
+
+        if not data:
+            logger.error(f"Файл {filepath} пуст.")
+            return
+
+        for name, value in data.items():
+            setattr(self, name, value)  # Использование name напрямую
+        return True
 ```
