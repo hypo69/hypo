@@ -1,0 +1,17 @@
+ 
+
+{shop_url}
+
+הי,
+
+{product} כמעט ואזל מהמלאי.
+
+ישנו כעת פחות מ-{last_qty} מוצרים במלאי.
+
+כמות מלאי שנותרה: {qty}
+
+מלאו את המלאי שלכם. גשו לעמוד קטלוג > מלאי במערכת הניהול כדי לנהל את המלאי שלכם.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

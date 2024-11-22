@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>ps_wirepayment</name>
+    <displayName><![CDATA[העברה בנקאית]]></displayName>
+    <version><![CDATA[2.1.3]]></version>
+    <description><![CDATA[Accept wire payments by displaying your account details during the checkout.]]></description>
+    <author><![CDATA[PrestaShop]]></author>
+    <tab><![CDATA[payments_gateways]]></tab>
+	<confirmUninstall><![CDATA[האם ברצונך למחוק את פרטייך?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

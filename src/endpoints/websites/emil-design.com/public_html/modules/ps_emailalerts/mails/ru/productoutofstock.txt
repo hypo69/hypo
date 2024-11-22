@@ -1,0 +1,17 @@
+ 
+
+{shop_url}
+
+Здравствуйте,
+
+{product} почти не осталось в наличии.
+
+На складе осталось менее чем {last_qty} товаров.
+
+Товарный остаток: {qty}
+
+Пополните свои запасы, перейдите в раздел  Каталог> Запасы[/ 1] своего бэк-офиса, чтобы управлять своими запасами.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

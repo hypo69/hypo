@@ -1,0 +1,17 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Спасибо за доверие.
+
+Мы рады предложить вам скидку в размере {amount}% на ваше следующий заказ. Это предложение действительно в течение {days} дней, поспешите!
+
+Ваш промо-код: {voucher_num}
+
+Для получения скидки введите данный код в корзине.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

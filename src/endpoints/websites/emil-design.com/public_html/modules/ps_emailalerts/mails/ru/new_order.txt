@@ -1,0 +1,43 @@
+ 
+
+{shop_url}
+
+Поздравляем!
+
+В магазине {shop_name} размещен заказ клиентом: {firstname} {lastname} ({email})
+
+Подробности заказа
+
+Заказ: {order_name} Оформлен {date}
+
+Способ оплаты: {payment}
+
+Код	Товар	Цена	Количество	Сумма   {items}
+Товары	{total_products}
+Скидки	{total_discounts}
+Подарочная упаковка	{total_wrapping}
+Доставка	{total_shipping}
+Включая итог по налогам	{total_tax_paid}
+Итого к оплате	{total_paid}
+
+Перевозчик
+
+Перевозчик: {carrier}
+
+Способ оплаты: {payment}
+
+Адрес доставки
+
+{delivery_block_html}
+
+Адрес плательщика
+
+{invoice_block_html}
+
+Сообщение покупателя:
+
+{message}
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

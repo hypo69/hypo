@@ -1,0 +1,15 @@
+ 
+
+{shop_url}
+
+Здравствуйте,
+
+{product} есть в наличии.
+
+Хорошие новости, этот товар снова в наличии!
+
+Нажмите на ссылку, чтобы перейти на страницу товара и заказать его: [{product}]({product_link})
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)
