@@ -22,59 +22,87 @@ from .kazarinov import KazarinovTelegramBot
 **Improved Code**
 
 ```python
+## \file hypotez/src/endpoints/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.endpoints
    :platform: Windows, Unix
    :synopsis: Модуль содержит классы для работы с различными API.
-
 """
 import logging
 
-# Импорт модуля логирования из src.logger
-from src.logger import logger
-from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester
+MODE = 'development'
+
+
+from .prestashop import (
+    PrestaShop,
+    PrestaCategory,
+    PrestaCustomer,
+    PrestaLanguage,
+    PrestaProduct,
+    PrestaShopShop,
+    PrestaSupplier,
+    PrestaWarehouse,
+    PriceListRequester,
+)
 from .kazarinov import KazarinovTelegramBot
+from src.logger import logger
 
 
-MODE = 'development'  # Режим работы приложения.
+# TODO: Добавьте импорты для логирования, если они необходимы.
+# TODO: Проверьте соответствие имён переменным в других модулях.
+# TODO: Добавьте обработку ошибок.
 
-
-# TODO: Добавьте более подробную документацию к переменной MODE,
-#       если она имеет значение, влияющее на поведение программы.
 
 ```
 
 **Changes Made**
 
-* **Импорты:** Добавлена строка `import logging` для импорта модуля логирования.
-* **Логирование:** Заменено использование глобального `print` на `logger.error` для логирования ошибок, что улучшает отслеживание проблем.
-* **Документация:** Добавлены комментарии в формате reStructuredText (RST) для модуля.
-* **Оформление:** Исправлены некоторые стилистические ошибки в RST-форматировании.
-* **Обработка ошибок:** Изменены методы обработки потенциальных ошибок. Используется `logger.error` для отслеживания проблем.
-* **Комментарии:** Исправлены/убраны ненужные комментарии.
-* **Дополнительные import:** Нет необходимости в импорте `jjson` в этом файле.
+1.  **Импорты:** Добавлен импорт `logging` для использования в последующей логике обработки ошибок. Изменён способ импорта из подпапки `prestashop`, добавив `from ... import ...` для каждого класса.
+2.  **Документация:** Добавлен RST-стиль документации для модуля `src.endpoints` с описанием цели.
+3.  **Логирование:** Добавлено `from src.logger import logger` для использования в будущем для логирования ошибок.
+4.  **Обработка ошибок:** Внедрены `# TODO` для задач, которые необходимо решить в последующих этапах.
+5.  **Стиль кода:** Применение PEP 8 для улучшения стиля импорта.
 
-**Full Improved Code (for copy-paste)**
+**Full improved code (copy-paste ready):**
 
 ```python
+## \file hypotez/src/endpoints/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.endpoints
    :platform: Windows, Unix
    :synopsis: Модуль содержит классы для работы с различными API.
-
 """
 import logging
 
-# Импорт модуля логирования из src.logger
-from src.logger import logger
-from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester
+MODE = 'development'
+
+
+from .prestashop import (
+    PrestaShop,
+    PrestaCategory,
+    PrestaCustomer,
+    PrestaLanguage,
+    PrestaProduct,
+    PrestaShopShop,
+    PrestaSupplier,
+    PrestaWarehouse,
+    PriceListRequester,
+)
 from .kazarinov import KazarinovTelegramBot
+from src.logger import logger
 
 
-MODE = 'development'  # Режим работы приложения.
-# TODO: Добавьте более подробную документацию к переменной MODE,
-#       если она имеет значение, влияющее на поведение программы.
+# TODO: Добавьте импорты для логирования, если они необходимы.
+# TODO: Проверьте соответствие имён переменным в других модулях.
+# TODO: Добавьте обработку ошибок.
+
 
 ```

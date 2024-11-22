@@ -27,27 +27,25 @@ from .telegram import TelegramBot
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.bots
+.. module:: src.bots
    :platform: Windows, Unix
-   :synopsis: Инициализирующий модуль для ботов.
+   :synopsis:  Модуль для управления ботами.
 """
 
-# Добавлен импорт для логирования.
-from src.logger import logger
+# Модуль для управления ботами.
 MODE = 'development'
 
 
 from .telegram import TelegramBot
+from src.logger import logger
 ```
 
 **Changes Made**
 
-- Добавлена строка `from src.logger import logger` для импорта необходимой функции логирования.
-- Добавлены RST комментарии к модулю, описывающие его назначение, платформы и синопсис.
-- Исправлен RST синтаксис для модуля, теперь он соответствует стандарту reStructuredText.
+- Добавлена строка импорта `from src.logger import logger`. Это необходимо для использования логирования.
+- Добавлен docstring для модуля в формате reStructuredText. Он описывает назначение модуля и платформы, на которых он может работать.
 
-
-**Complete Code (Improved)**
+**Full improved code (copyable):**
 
 ```python
 ## \file hypotez/src/bots/__init__.py
@@ -56,16 +54,15 @@ from .telegram import TelegramBot
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.bots
+.. module:: src.bots
    :platform: Windows, Unix
-   :synopsis: Инициализирующий модуль для ботов.
+   :synopsis:  Модуль для управления ботами.
 """
 
-# Добавлен импорт для логирования.
-from src.logger import logger
-# Переменная MODE теперь с описанием
-MODE = 'development' # Тип режима работы.
+# Модуль для управления ботами.
+MODE = 'development'
 
 
 from .telegram import TelegramBot
+from src.logger import logger
 ```

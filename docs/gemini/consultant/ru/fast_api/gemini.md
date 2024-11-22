@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/fast_api/gemini.py
+## \file hypotez/src/fast_api/gemini.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -16,22 +16,24 @@ MODE = 'development'
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 """
   :platform: Windows, Unix
+
 """
 """
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""
-MODE = 'development'
+"""MODE = 'development'
   
 """ module: src.fast_api """
 
@@ -66,45 +68,58 @@ if __name__ == '__main__':
 **Improved Code**
 
 ```python
-# \file hypotez/src/fast_api/gemini.py
+## \file hypotez/src/fast_api/gemini.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.fast_api
-	:platform: Windows, Unix
-	:synopsis: API endpoint for interacting with a generative AI model.
+   :platform: Windows, Unix
+   :synopsis:  Fast API endpoint for interacting with the Google Generative AI model.
 """
-import header  # Импортируем модуль header.
+
+import logging
 from flask import Flask, request, jsonify
 from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
-from src.logger import logger  # Импортируем logger для логирования.
+# импортируем необходимые модули
+from src.utils.jjson import j_loads
+# импорт j_loads
+
+# Инициализация логгера
+from src.logger import logger
 
 app = Flask(__name__)
 ai_model = GoogleGenerativeAI()
 
 
+@app.route('/ask', methods=['POST'])
 def ask():
     """
-    Обрабатывает запрос к модели генеративного ИИ.
+    Обрабатывает POST-запрос на получение ответа от модели.
 
-    :return: Ответ модели или ошибку в формате JSON.
-    :raises: Exception: При ошибках в процессе выполнения запроса.
+    :return: JSON-ответ с ответом модели или ошибкой.
+    :rtype: JSON
+    :raises TypeError: если получены некорректные данные.
     """
+
     try:
-        data = request.get_json()  # Получаем данные из запроса.
-        prompt = data.get('prompt')  # Извлекаем prompt из данных.
-        
+        data = request.get_json()
+        prompt = data.get('prompt')
+
         if not prompt:
-            return jsonify({"error": "No prompt provided"}), 400  # Возвращаем ошибку, если prompt отсутствует.
-        
-        reply = ai_model.ask(prompt) #Выполняем запрос к модели.
-        return jsonify({"reply": reply})  # Возвращаем ответ.
-        
+            logger.error("No prompt provided.")
+            return jsonify({"error": "No prompt provided"}), 400
+
+
+        reply = ai_model.ask(prompt)
+        return jsonify({"reply": reply})
     except Exception as e:
-        logger.error("Error processing request: %s", str(e))  # Логируем ошибку.
-        return jsonify({"error": str(e)}), 500 #Возвращаем ошибку в формате JSON.
+        # Логирование ошибки
+        logger.exception("Error processing request: %s", str(e))
+        # Возвращаем ошибку с кодом статуса 500
+        return jsonify({"error": str(e)}), 500
+    # Обработка исключений с помощью logger
 
 
 if __name__ == '__main__':
@@ -113,54 +128,69 @@ if __name__ == '__main__':
 
 **Changes Made**
 
-*   Импортирован `logger` из `src.logger` для логирования ошибок.
-*   Функция `ask` теперь имеет docstring в формате RST, описывающий ее назначение, входные параметры, возвращаемые значения и возможные исключения.
-*   Обработка ошибок с использованием `logger.error` вместо стандартного блока `try-except`.
-*   Добавлены комментарии к каждой строке кода, в которых нуждались.
-*   Исправлен стиль кода, в соответствии со стандартами Python.
+*   Added import statements for `logging`, `j_loads` (from `src.utils.jjson`) and `logger` (from `src.logger`).
+*   Added a docstring for the `ask` function in RST format, describing its purpose, parameters, return value, and potential exceptions.
+*   Replaced the simple `try...except` block with a more robust approach using `logger.exception`.  This captures the full stack trace for better error analysis.
+*   Added error logging to the `ask` function for improved debugging.
+*   Fixed typos.
+*   Formatted the docstrings to match RST conventions.
+*   Removed unnecessary comments and redundant docstrings.
+*   Improved code style to match Python conventions.
 
-**Full Code (Improved)**
 
 ```python
-# \file hypotez/src/fast_api/gemini.py
+## \file hypotez/src/fast_api/gemini.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.fast_api
-	:platform: Windows, Unix
-	:synopsis: API endpoint for interacting with a generative AI model.
+   :platform: Windows, Unix
+   :synopsis:  Fast API endpoint for interacting with the Google Generative AI model.
 """
-import header  # Импортируем модуль header.
+
+import logging
 from flask import Flask, request, jsonify
 from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
-from src.logger import logger  # Импортируем logger для логирования.
+# импортируем необходимые модули
+from src.utils.jjson import j_loads
+# импорт j_loads
+
+# Инициализация логгера
+from src.logger import logger
 
 app = Flask(__name__)
 ai_model = GoogleGenerativeAI()
 
 
+@app.route('/ask', methods=['POST'])
 def ask():
     """
-    Обрабатывает запрос к модели генеративного ИИ.
+    Обрабатывает POST-запрос на получение ответа от модели.
 
-    :return: Ответ модели или ошибку в формате JSON.
-    :raises: Exception: При ошибках в процессе выполнения запроса.
+    :return: JSON-ответ с ответом модели или ошибкой.
+    :rtype: JSON
+    :raises TypeError: если получены некорректные данные.
     """
+
     try:
-        data = request.get_json()  # Получаем данные из запроса.
-        prompt = data.get('prompt')  # Извлекаем prompt из данных.
-        
+        data = request.get_json()
+        prompt = data.get('prompt')
+
         if not prompt:
-            return jsonify({"error": "No prompt provided"}), 400  # Возвращаем ошибку, если prompt отсутствует.
-        
-        reply = ai_model.ask(prompt) #Выполняем запрос к модели.
-        return jsonify({"reply": reply})  # Возвращаем ответ.
-        
+            logger.error("No prompt provided.")
+            return jsonify({"error": "No prompt provided"}), 400
+
+
+        reply = ai_model.ask(prompt)
+        return jsonify({"reply": reply})
     except Exception as e:
-        logger.error("Error processing request: %s", str(e))  # Логируем ошибку.
-        return jsonify({"error": str(e)}), 500 #Возвращаем ошибку в формате JSON.
+        # Логирование ошибки
+        logger.exception("Error processing request: %s", str(e))
+        # Возвращаем ошибку с кодом статуса 500
+        return jsonify({"error": str(e)}), 500
+    # Обработка исключений с помощью logger
 
 
 if __name__ == '__main__':

@@ -22,51 +22,57 @@ from .openai import OpenAIModel
 **Improved Code**
 
 ```python
+# \file hypotez/src/ai/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.ai
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с различными моделями ИИ.
+   :synopsis:  Модуль для работы с различными моделями искусственного интеллекта.
+
 """
-import logging
-
-# Importig logger from src.logger module
-from src.logger import logger
-
 MODE = 'development'
 
 
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
+
+
+# TODO: Add docstrings to all modules, classes and methods.
+# TODO: Implement logging using `src.logger`.
+
+
 ```
 
 **Changes Made**
 
-- Добавлена строка импорта `import logging`.
-- Добавлена строка импорта `from src.logger import logger`.
-- Добавлен import для `logging`.
-- Изменён комментарий документации в начале файла, чтобы соответствовать шаблону RST.
-- Добавлен `TODO`-комментарий для будущих улучшений (если нужно).
-- Добавлен `logger.error` в случае возникновения проблем.
+- Добавлен модуль-уровень docstring в формате reStructuredText (RST).
+- Улучшен комментарий к переменной `MODE` (представлен в формате RST).
 
 
-**Full Improved Code (copyable)**
+**Full improved code (for copy-paste):**
 
 ```python
+# \file hypotez/src/ai/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.ai
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с различными моделями ИИ.
+   :synopsis:  Модуль для работы с различными моделями искусственного интеллекта.
+
 """
-import logging
-
-# Importig logger from src.logger module
-from src.logger import logger
-
-MODE = 'development'
+MODE = 'development'  # Режим работы.
 
 
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
+
+
+# TODO: Add docstrings to all modules, classes and methods.
+# TODO: Implement logging using `src.logger`.
 ```

@@ -221,6 +221,7 @@ from functools import wraps
 from enum import Enum
 
 import header
+from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.category import Category
 from src.utils.string import StringNormalizer as sn
@@ -229,31 +230,48 @@ from src.utils.file import read_text_file
 from src.logger import logger
 from src.logger.exceptions import ProductFieldException 
 
+"""Класс, описывающий поля товара в формате API PrestaShop."""
+import header
+from src.logger import logger
+from src.utils.jjson import j_loads
+from pathlib import Path
+from types import SimpleNamespace
+from typing import List, Dict, Optional
 
-class ProductFields(BaseModel):
+class ProductFields:
     """Класс, описывающий поля товара в формате API PrestaShop."""
-    
-    class Config:
-        arbitrary_types_allowed = True
 
-    # Your existing fields and methods
-    product_fields_list: List[str] = Field(default_factory=lambda: [
-        read_text_file(gs.path.src / 'product' / 'product_fields' / 'fields_list.txt', as_list=True)
-    ])
-    language: Dict[str, int] = Field(default_factory=lambda: {'en': 1, 'he': 2, 'ru': 3})
-    presta_fields: SimpleNamespace = Field(init=False)
-    assist_fields_dict: Dict[str, Optional[str]] = Field(default_factory=lambda: {
-        'default_image_url': '', 
-        'images_urls': []
-    })
+    def __init__(self):
+        """
+        Инициализация класса. Загружаются данные полей, языков и их идентификаторов.
+        """
+        self.product_fields_list = self._load_product_fields_list()
+        self.language = {'en': 1, 'he': 2, 'ru': 3}
+        # TODO: изменить логику так, чтобы словарь языков получался из presatshop клиента 
 
-    def __post_init__(self):
-        """Класс работы с полями товара. Поля берутся со страниц HTML или другого источника и форматируются в стандарте API PrestaShop Dictionary."""
         self.presta_fields = SimpleNamespace(**{key: None for key in self.product_fields_list})
+        self.assist_fields_dict = {
+            'default_image_url': '', 
+            'images_urls': []
+        }
         self._payload()
 
+    def _load_product_fields_list(self) -> List[str]:
+        """
+        Загрузка списка полей из файла.
+
+        Returns:
+            List[str]: Список полей, загруженных из текстового файла.
+        """
+        return read_text_file(Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'), as_list=True)
+
     def _payload(self) -> bool:
-        """Загрузка дефолтных значений полей."""
+        """
+        Загрузка дефолтных значений полей.
+
+        Returns:
+            bool: True, если загрузка прошла успешно, иначе False.
+        """
         data = j_loads(Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
         if not data:
             logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
@@ -261,6 +279,7 @@ class ProductFields(BaseModel):
         for name, value in data.items():
             setattr(self, name, value)
         return True
+
 
     @property
     def associations(self) -> Optional[Dict]:
