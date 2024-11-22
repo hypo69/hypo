@@ -61,7 +61,7 @@ class CodeAssistant:
 
     def __init__(self, **kwargs):
         """Инициализация ассистента с заданными параметрами."""
-        self.role = kwargs.get('role', 'doc_writer')
+        self.role = kwargs.get('role', 'doc_writer_rst')
         self.lang = kwargs.get('lang', 'EN')
         self.model = kwargs.get('model', ['gemini'])
         self.start_dirs = kwargs.get('start_dirs', ['..'])
@@ -250,12 +250,12 @@ def main():
 if __name__ == '__main__':
     #main()
     assistant_direct = CodeAssistant(
-        role="doc_writer",
+        role="pytest",
         lang="en",
         model=["gemini"],
         #start_dirs=[Path("suppliers"), Path("webdriver")],
         start_dirs=[".."],
-        start_file_number = 1
+        start_file_number = 0
 
     )
     assistant_direct.process_files(start_file_number = 1)

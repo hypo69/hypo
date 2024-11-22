@@ -14,12 +14,14 @@
       "de": "Ihre Spezialisierung ist die Dokumentenerstellung",
       "he": "ההתמחות שלך היא יצירת תיעוד"
     },
-    "qa": {
-      "ru": "Твоя специализация - тестирование кода",
-      "en": "Your specialization is testing",
-      "fr": "Votre spécialisation est le test",
-      "de": "Ihre Spezialisierung ist das Testen",
-      "he": "ההתמחות שלך היא בדיקות תוכנה"
+
+    "pytest": {
+      "ru": "Твоя специализация — написание тестов для кода",
+      "en": "Your specialization is writing tests for code",
+      "fr": "Votre spécialisation est l'écriture de tests pour le code",
+      "de": "Ihre Spezialisierung ist das Schreiben von Tests für Code",
+      "he": "ההתמחות שלך היא כתיבת בדיקות לתוכנה"
     }
+
   }
 }

@@ -24,7 +24,8 @@
     ".vscode",
     "docs",
     "images",
-    "exe"
+    "exe",
+    "pytest"
   ],
   "exclude_files": [
     "version.py",
@@ -37,13 +38,15 @@
     "___*.*"
   ],
   "output_directory": {
-    "doc_writer": "model_docs/<model>/<lang>",
-    "code_checker": "consultant/<model>/<lang>"
+    "doc_writer_rst": "model_docs/<model>/rst/<lang>",
+    "doc_writer_md": "model_docs/<model>/md/<lang>",
+    "code_checker": "consultant/<model>/<lang>",
+    "pytest": "../pytest/<model>/<lang>"
   },
   "argparse": {
     "role": {
       "default": "code_checker",
-      "choices": [ "doc_writer", "code_checker", "qa" ]
+      "choices": [ "doc_writer_rst", "doc_writer_md", "code_checker", "pytest" ]
     },
     "lang": {
       "default": "en",
