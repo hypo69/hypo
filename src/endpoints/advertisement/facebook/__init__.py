@@ -1,11 +1,15 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
-
-
 
 from .facebook import Facebook
 from .facebook_fields import FacebookFields

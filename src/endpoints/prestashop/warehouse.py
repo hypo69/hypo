@@ -1,14 +1,15 @@
 ## \file hypotez/src/endpoints/prestashop/warehouse.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.prestashop 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
-
-
-
-""" Класс склада (warwehouse) `PrestaShop`"""
-
 
 import os,sys
 from attr import attr, attrs

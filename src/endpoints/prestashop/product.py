@@ -1,13 +1,16 @@
 ## \file hypotez/src/endpoints/prestashop/product.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.prestashop 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-
-""" Класс товара `PrestaShop`"""
 from types import SimpleNamespace
 from typing import Optional
 import header

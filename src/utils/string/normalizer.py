@@ -1,12 +1,16 @@
 ## \file hypotez/src/utils/string/normalizer.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.string """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils.string 
+	:platform: Windows, Unix
+	:synopsis: Module for normalizing product fields and handling various data types
+
+"""
 MODE = 'development'
 
-
-"""Module for normalizing product fields and handling various data types."""
 
 from decimal import Decimal, InvalidOperation
 from typing import Any, List, Union

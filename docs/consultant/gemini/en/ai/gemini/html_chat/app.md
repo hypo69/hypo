@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header
 import webbrowser  # Для автоматического открытия браузера
@@ -186,7 +186,7 @@ if __name__ == "__main__":
 - Added error logging and a user-friendly error message if an exception occurs.
 - Added docstrings using reStructuredText (RST) format to functions, classes, and modules, according to Python docstring standards.
 - Improved variable names and function names to adhere to PEP 8 style guidelines.
-- Replaced the unnecessary comments (`"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """`) with a more descriptive module docstring.
+- Replaced the unnecessary comments (`""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """`) with a more descriptive module docstring.
 
 
 

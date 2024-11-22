@@ -1,9 +1,39 @@
 ## \file hypotez/src/ai/openai/model/_experiments/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.ai.openai.model._experiments """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.ai.openai.model._experiments 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.ai.openai.model._experiments """
 
 
 """ Модуль управления моделью OpenAI 

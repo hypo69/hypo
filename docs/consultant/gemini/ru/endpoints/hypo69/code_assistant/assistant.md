@@ -30,7 +30,7 @@ from src.logger import logger
 class CodeAssistant(BaseModel):
     """Класс обучения ассистента программиста."""
 
-    role: str = Field(default="doc_creator", description="Роль для выполнения задачи")
+    role: str = Field(default="doc_writer", description="Роль для выполнения задачи")
     lang: str = Field(default="EN", description="Язык выполнения")
     model: List[str] = Field(default_factory=lambda: ["gemini"], description="Список моделей для инициализации")
     start_dirs: List[Path] = Field(default_factory=list, description="Список стартовых директорий для обработки")

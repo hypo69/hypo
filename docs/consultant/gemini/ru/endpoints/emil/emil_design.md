@@ -10,7 +10,7 @@
 MODE = 'development'
 
 
-"""! Module for managing and processing images and promoting to Facebook and PrestaShop. """
+""" Module for managing and processing images and promoting to Facebook and PrestaShop. """
 
 import header
 from pathlib import Path
@@ -29,7 +29,7 @@ from src.utils.jjson import j_loads_ns, j_dumps
 from src.logger import logger
 
 class EmilDesign:
-    """! Class for designing and promoting images through various platforms. """
+    """ Class for designing and promoting images through various platforms. """
 
     # Base path for the module data
     base_path: Path = (
@@ -38,11 +38,11 @@ class EmilDesign:
     )
 
     def __init__(self):
-        """! Initialize the EmilDesign class. """
+        """ Initialize the EmilDesign class. """
         ...
 
     def describe_images(self, from_url: bool = False):
-        """! Describe images based on the provided instruction and examples.
+        """ Describe images based on the provided instruction and examples.
 
         Args:
             from_url (bool, optional): Если True, использует URL для описания изображений. По умолчанию False.
@@ -105,7 +105,7 @@ class EmilDesign:
             logger.error(f"Ошибка при описании изображений: {e}")
         
     def promote_to_facebook(self):
-        """! Promote images and their descriptions to Facebook.
+        """ Promote images and their descriptions to Facebook.
 
         This function logs into Facebook and posts messages derived from the image descriptions.
         """
@@ -127,7 +127,7 @@ class EmilDesign:
 
 
     def upload_to_PrestaShop(self):
-        """! Upload product information to PrestaShop.
+        """ Upload product information to PrestaShop.
 
         This function initializes a product and PrestaShop instance for uploading data.
         """
@@ -155,7 +155,7 @@ if __name__ == "__main__":
 MODE = 'development'
 
 
-"""! Module for managing and processing images and promoting to Facebook and PrestaShop. """
+""" Module for managing and processing images and promoting to Facebook and PrestaShop. """
 
 import header
 from pathlib import Path
@@ -174,17 +174,17 @@ from src.logger import logger
 
 
 class EmilDesign:
-    """! Class for designing and promoting images through various platforms. """
+    """ Class for designing and promoting images through various platforms. """
 
     # Base path for the module data
     base_path: Path = gs.path.google_drive / "emil"
 
     def __init__(self):
-        """! Initialize the EmilDesign class. """
+        """ Initialize the EmilDesign class. """
         pass  # Пустой метод __init__
 
     def describe_images(self, from_url: bool = False):
-        """! Describe images based on the provided instruction and examples.
+        """ Describe images based on the provided instruction and examples.
 
         Args:
             from_url (bool, optional): If True, uses URL to describe images. Defaults to False.
@@ -196,7 +196,7 @@ class EmilDesign:
 
 
     def promote_to_facebook(self):
-        """! Promote images and their descriptions to Facebook.
+        """ Promote images and their descriptions to Facebook.
 
         This function logs into Facebook and posts messages derived from the image descriptions.
         """
@@ -223,7 +223,7 @@ class EmilDesign:
 
 
     def upload_to_PrestaShop(self):
-        """! Upload product information to PrestaShop.
+        """ Upload product information to PrestaShop.
 
         This function initializes a product and PrestaShop instance for uploading data.
         """

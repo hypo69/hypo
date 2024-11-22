@@ -1,16 +1,16 @@
 ## \file hypotez/src/category/category.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.category """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" @namespace src.category """
-
-""" Модуль работы с категориями 
-На сегодняшний день модуль заточен в основном под Престашоп
 """
+.. module: src.category 
+	:platform: Windows, Unix
+	:synopsis: Модуль работы с категориями 
+На сегодняшний день модуль заточен в основном под Престашоп
+
+"""
+MODE = 'development'
 
 from pathlib import Path
 import os

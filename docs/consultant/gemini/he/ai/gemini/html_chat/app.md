@@ -10,7 +10,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header
 import webbrowser  # Для автоматического открытия браузера

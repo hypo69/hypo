@@ -10,7 +10,7 @@ MODE = 'development'
 
 
 
-"""! Absolute path to modules and GTK & FFPMEG bin directory """
+""" Absolute path to modules and GTK & FFPMEG bin directory """
 
 import json
 import sys

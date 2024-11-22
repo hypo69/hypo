@@ -1,17 +1,20 @@
 ## \file hypotez/src/suppliers/aliexpress/aliexpress.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" 
-Module: src.suppliers.aliexpress
+#! venv/bin/python/python3.12
 
-This module provides the `Aliexpress` class, which integrates functionality
-from `Supplier`, `AliRequests`, and `AliApi` for working with AliExpress.
 """
+.. module: src.suppliers.aliexpress 
+	:platform: Windows, Unix
+	:synopsis: module provides the `Aliexpress` class, which integrates functionality
+from `Supplier`, `AliRequests`, and `AliApi` for working with AliExpress.
+
+"""
+MODE = 'development'
+
 
 import header
 
-MODE = 'development'
 
 import pickle
 import requests

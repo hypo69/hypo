@@ -1,10 +1,21 @@
 ## \file hypotez/src/utils/printer.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module:: src.utils
+    :platform: Windows, Unix
+    :synopsis: Utility functions for pretty printing and text styling.
+
+This module provides functions to print data in a human-readable format with optional text styling, including color, background, and font styles.
+
+Functions:
+    - :func:`_color_text`
+    - :func:`pprint`
+"""
+
+MODE = 'development'
 
 import json
 import csv
@@ -35,12 +46,52 @@ FONT_STYLES = {
 }
 
 def _color_text(text: str, text_color: str = "", bg_color: str = "", font_style: str = "") -> str:
-    """Apply color, background, and font styling to the text."""
+    """Apply color, background, and font styling to the text.
+
+    This helper function applies the provided color and font styles to the given text using ANSI escape codes.
+
+    :param text: The text to be styled.
+    :param text_color: The color to apply to the text. Default is an empty string, meaning no color.
+    :param bg_color: The background color to apply. Default is an empty string, meaning no background color.
+    :param font_style: The font style to apply to the text. Default is an empty string, meaning no font style.
+    :return: The styled text as a string.
+
+    :example:
+        >>> _color_text("Hello, World!", text_color="green", font_style="bold")
+        '\033[1m\033[32mHello, World!\033[0m'
+    """
     return f"{font_style}{text_color}{bg_color}{text}{RESET}"
 
 def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = "", font_style: str = "") -> None:
-    """Pretty prints the given data with optional color, background, and font style."""
-    
+    """Pretty prints the given data with optional color, background, and font style.
+
+    This function formats the input data based on its type and prints it to the console. The data is printed with optional 
+    text color, background color, and font style based on the specified parameters. The function can handle dictionaries, 
+    lists, strings, and file paths.
+
+    :param print_data: The data to be printed. Can be of type ``None``, ``dict``, ``list``, ``str``, or ``Path``.
+    :param text_color: The color to apply to the text. Default is 'white'. See :ref:`TEXT_COLORS`.
+    :param bg_color: The background color to apply to the text. Default is '' (no background color). See :ref:`BG_COLORS`.
+    :param font_style: The font style to apply to the text. Default is '' (no font style). See :ref:`FONT_STYLES`.
+    :return: None
+
+    :raises: Exception if the data type is unsupported or an error occurs during printing.
+
+    :example:
+        >>> pprint({"name": "Alice", "age": 30}, text_color="green")
+        \033[32m{
+            "name": "Alice",
+            "age": 30
+        }\033[0m
+
+        >>> pprint(["apple", "banana", "cherry"], text_color="blue", font_style="bold")
+        \033[34m\033[1mapple\033[0m
+        \033[34m\033[1mbanana\033[0m
+        \033[34m\033[1mcherry\033[0m
+
+        >>> pprint("text example", text_color="yellow", bg_color="bg_red", font_style="underline")
+        \033[4m\033[33m\033[41mtext example\033[0m
+    """
     text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
     bg_color = BG_COLORS.get(bg_color.lower(), "")
     font_style = FONT_STYLES.get(font_style.lower(), "")

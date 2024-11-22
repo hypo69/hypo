@@ -63,7 +63,7 @@ from src.logger import logger
 
 # Функция для конвертации словаря в PDF
 def dict2pdf(data: dict | SimpleNamespace, file_path: str | Path) -> None:
-    """!
+    """
     Save dictionary data to a PDF file.
 
     Args:

@@ -1,11 +1,8 @@
 ## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
-MODE = 'development'
-
-
 from .languages import Language
 from .currencies import Currency
 from .request_parameters import ProductType, SortBy, LinkType

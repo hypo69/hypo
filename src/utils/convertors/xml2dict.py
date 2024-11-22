@@ -1,14 +1,12 @@
 ## \file hypotez/src/utils/convertors/xml2dict.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
-MODE = 'development'
-
-
+#! venv/bin/python/python3.12
 
 """
-This module provides utilities for converting XML data into dictionaries. It includes functions for parsing XML strings and converting XML element trees into dictionary representations.
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis: provides utilities for converting XML data into dictionaries. It includes functions for parsing XML strings and converting XML element trees into dictionary representations.
 
 Functions:
 - `_parse_node`: Parses an XML node into a dictionary.
@@ -16,7 +14,7 @@ Functions:
 - `xml2dict`: Parses an XML string into a dictionary.
 - `ET2dict`: Converts an XML element tree into a dictionary.
 """
-
+MODE = 'development'
 import re
 
 try:

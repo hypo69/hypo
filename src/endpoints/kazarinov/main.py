@@ -1,23 +1,16 @@
 ## \file hypotez/src/endpoints/kazarinov/main.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.kazarinov """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.kazarinov 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-
-"""
-Примеры запуска:
-1. Запуск в тестовом режиме:
-    python main.py --mode test
-
-2. Запуск в продакшн режиме:
-    python main.py --mode prod
-
-3. Запуск с указанием пути к файлу настроек:
-    python main.py --settings settings.json --mode prod
-"""
 import argparse
 import asyncio
 import json

@@ -1,8 +1,14 @@
 ## \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.kazarinov """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.kazarinov 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 import header
@@ -54,15 +60,9 @@ class HandlersParser():
                 return True
         else:
             await update.message.reply_text('Ошибка. Попробуй ещё раз.')
-            return False
+            ...
+            return 
 
-    # def handle_supplier_url(self, update: Update) -> Optional[bool]:
-    #     """Map URLs to specific handlers.""" 
-    #     response = update.message.text
-    #     if any(response.startswith(url) for url in self.config.url_handlers.suppliers):
-    #         # Здесь будет код для обработки ссылок поставщиков
-    #         pass
-    #     return False, False, False
 
     def get_data_from_onetab(self, response: str) -> list[int | float, str, list] | bool:
         """Handle name, price, supplier_urls from OneTab
@@ -88,6 +88,7 @@ class HandlersParser():
             )
         except Exception as ex:
             logger.debug("Ошибка чтения вопросов: %s", ex)
+            ...
             await update.message.reply_text('Произошла ошибка при чтении вопросов.')
 
     def fetch_target_urls_onetab(self, one_tab_url: str) -> list[str] | bool:
@@ -112,7 +113,8 @@ class HandlersParser():
 
             if response.status_code != 200:
                 logger.debug(f'Ошибка response\n{pprint(response)}')
-                return False
+                ...
+                return 
 
             soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -124,6 +126,7 @@ class HandlersParser():
             data = element.get_text() if element else None
 
             if not data:
+                ...
                 return 
 
             # Разбивка данных на цену и имя
@@ -132,6 +135,7 @@ class HandlersParser():
                 price = int(parts[0])
             except ValueError as ex:
                 logger.error(f'Ошибка при преобразовании цены: {ex}')
+                ...
                 return 
 
             mexiron_name = parts[1] if len(parts) > 1 else gs.now
@@ -140,4 +144,5 @@ class HandlersParser():
 
         except requests.exceptions.RequestException as ex:
             logger.error(f'Ошибка при выполнении запроса: {ex}')
+            ...
             return 

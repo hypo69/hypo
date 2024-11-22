@@ -1,16 +1,17 @@
 ## \file hypotez/src/webdriver/chrome/chrome.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver.chrome """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" Chrome WebDriver.
+"""
+.. module: src.webdriver.chrome 
+	:platform: Windows, Unix
+	:synopsis: Chrome WebDriver.
 Implemented using Chrome for Developers.
 Chrome WebDriver  settings defined in the `chrome.json` file.
 
 """
+MODE = 'development'
 ...
 import os
 import sys

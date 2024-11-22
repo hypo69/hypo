@@ -1,9 +1,39 @@
-## \file hypotez/src/suppliers/bangood/via_webdriver.py
+## \file hypotez/src/suppliers/bangood/scenario.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.bangood """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.bangood 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.suppliers.bangood """
 
 
 """  Модуль сбора товаров со страницы категорий поставщика bangood.co.il через вебдрайвер

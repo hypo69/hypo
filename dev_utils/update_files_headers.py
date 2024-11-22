@@ -1,12 +1,18 @@
 ## \file hypotez/dev_utils/update_files_headers.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: dev_utils """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
+.. module: dev_utils 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
+
+"""
+
 Описание:
 Скрипт предназначен для обработки Python файлов в проекте "hypotez" с целью добавления или замены 
 заголовков, строк интерпретаторов и строк документации. Он выполняет обход всех файлов в проекте и 
@@ -32,7 +38,7 @@ MODE = 'development'
    python update_files_headers.py --clean
 """
 
-
+from csv import QUOTE_STRINGS
 import os
 import argparse
 from pathlib import Path
@@ -40,7 +46,7 @@ import sys
 import platform
 
 PROJECT_ROOT_FOLDER = os.path.abspath('..')
-EXCLUDE_DIRS = ['venv', 'tmp', 'docs', 'data', '__pycache__']
+EXCLUDE_DIRS = ['venv', 'tmp', 'docs', 'data', '__pycache__','.ipynb_checkpoints']
 
 def find_project_root(start_path: Path, project_root_folder: str) -> Path:
     """Find the project root directory by searching for the specified folder."""
@@ -65,7 +71,10 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
     w_venv_interpreter, _, linux_venv_interpreter, _ = get_interpreter_paths(project_root)
     w_venv_interpreter_line = f'#! {w_venv_interpreter}\n'
     linux_venv_interpreter_line = f'#! {linux_venv_interpreter}\n'
-    module_docstring = f'""" module: {relative_path.parent.as_posix().replace("/", ".")} """\n'
+    docstring_module = f'.. module: {relative_path.parent.as_posix().replace("/", ".")} \n'
+    docstring_platform = '\t:platform: Windows, Unix\n'
+    docstring_synopsis = '\t:synopsis:\n'
+    triple_quote = '\n"""\n'
     mode_line = "MODE = 'development'\n"
 
     try:
@@ -77,7 +86,14 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
                     line.startswith("## \\file") or
                     line.startswith("# -*- coding") or
                     line.startswith("#!") or
-                    line.strip().startswith('""" module:') or
+                    line.strip().startswith('"""module:') or 
+                    line.strip().startswith('""".. module:') or
+                    line.strip().startswith('module:') or
+                    line.strip().startswith('.. module:') or
+                    line.strip().startswith('    :platform:') or
+                    line.strip().startswith('    :synopsis:') or                    
+                    line.strip().startswith('\t:platform:') or
+                    line.strip().startswith('\t:synopsis:') or
                     line.strip().startswith('MODE =')
                 )
             ]
@@ -86,14 +102,29 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
             needs_update = force_update or any(
                 not any(line.strip() == check_line.strip() for line in filtered_lines)
                 for check_line in [
-                    header_line, coding_index, w_venv_interpreter_line, linux_venv_interpreter_line, module_docstring, mode_line
+                    header_line,
+                    coding_index,
+                    w_venv_interpreter_line,
+                    linux_venv_interpreter_line,
+                    docstring_module,
+                    docstring_platform,
+                    docstring_synopsis,
+                    mode_line
                 ]
             )
 
             if needs_update:
                 new_lines = [
-                    header_line, coding_index, w_venv_interpreter_line, linux_venv_interpreter_line,
-                    module_docstring, mode_line
+                    header_line,
+                    coding_index,
+                    w_venv_interpreter_line,
+                    linux_venv_interpreter_line,
+                    triple_quote,
+                    docstring_module,
+                    docstring_platform,
+                    docstring_synopsis,
+                    triple_quote,
+                    mode_line
                 ]
                 file.seek(0)
                 file.writelines(new_lines + filtered_lines)
@@ -105,25 +136,33 @@ def add_or_replace_file_header(file_path: str, project_root: Path, force_update:
     except IOError as ex:
         print(f"Error processing file {file_path}: {ex}")
 
-def clean(file_path: str ):
+def clean(file_path: str):
     """Removes specified header lines from the file and replaces them with empty lines."""
     header_prefix = '## \\file'
     coding_prefix = '# -*- coding'
     interpreter_prefix = '#!'
-    module_docstring_prefix = '""" module:'
-    mode_str = "MODE = 'debug"
+    docstring_module_1 = '.. module::'
+    docstring_module_2 = 'module:'
+    docstring_module_3 = '""".. module:'
+    docstring_module_3 = '"""module:'
+    docstring_platform = '  :platform:'
+    docstring_synopsis = '  :synopsis:'
+    mode_str = "MODE = "
 
     try:
         with open(file_path, 'r+', encoding='utf-8') as file:
             lines = file.readlines()
             cleaned_lines = [line.lstrip('\ufeff') for line in lines]
             filtered_lines = [
-                # Если строка должна быть удалена, заменяем ее на пустую строку.
                 '' if (
                     line.startswith(header_prefix) or
                     line.startswith(coding_prefix) or
                     line.startswith(interpreter_prefix) or
-                    line.strip().startswith(module_docstring_prefix) or
+                    line.strip().startswith(docstring_module_1) or 
+                    line.strip().startswith(docstring_module_2) or
+                    line.strip().startswith(docstring_module_3) or
+                    line.strip().startswith(docstring_platform) or
+                    line.strip().startswith(docstring_synopsis) or
                     line.strip().startswith('MODE = ')
                 ) else line
                 for line in cleaned_lines
@@ -149,7 +188,8 @@ def traverse_and_clean(directory: Path):
     for root, dirs, files in os.walk(directory):
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         for file in files:
-            if file.endswith(('.py', '.txt', '.md', '.js', '.dot', '.ps1')):
+            # if file.endswith(('.py', '.txt', '.md', '.js', '.dot', '.ps1')):
+            if file.endswith(('.py')):
                 clean(os.path.join(root, file))
 
 
@@ -170,7 +210,8 @@ def main():
     # except FileNotFoundError as ex:
     #     print(f"Error: {ex}")
     
-    traverse_and_clean(PROJECT_ROOT_FOLDER)
+    ## CLEAN LINES
+    # traverse_and_clean(PROJECT_ROOT_FOLDER)
     traverse_and_update(PROJECT_ROOT_FOLDER, True)
 
 if __name__ == '__main__':

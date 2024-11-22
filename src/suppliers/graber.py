@@ -1,12 +1,12 @@
 ## \file hypotez/src/suppliers/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" Базовый класс сбора данных со старницы для всех поставщиков. 
+"""
+.. module: src.suppliers 
+	:platform: Windows, Unix
+	:synopsis:  Базовый класс сбора данных со старницы для всех поставщиков. 
 Для нестендартной обработки полей товара просто переопределите функцию в своем классе.
 Пример:
 ```python
@@ -20,8 +20,11 @@ class G(Graber):
     async def name(self, value: Any = None):
         self.fields.name = <Ваша реализация>
         )
-    
+    ```
+
 """
+MODE = 'development'
+
 
 import os
 import sys

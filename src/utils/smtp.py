@@ -1,17 +1,18 @@
 ## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: SMTP Email Interface
+
+"""
 MODE = 'development'
 
 
-
-
-"""
-SMTP Email Interface
-
-This module provides functionality to send and receive emails using an SMTP or IMAP server.
+""" This module provides functionality to send and receive emails using an SMTP or IMAP server.
 It includes functions to send emails using SMTP and retrieve emails using IMAP.
 
 Functions:

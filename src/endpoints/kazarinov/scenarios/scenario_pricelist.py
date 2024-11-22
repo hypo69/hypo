@@ -1,19 +1,18 @@
 ## \file hypotez/src/endpoints/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" 
-Module: src.endpoints.kazarinov.scenarios
+#! venv/bin/python/python3.12
 
-Provides functionality for extracting, parsing, and processing product data from 
+"""
+.. module: src.endpoints.kazarinov.scenarios 
+	:platform: Windows, Unix
+	:synopsis: Provides functionality for extracting, parsing, and processing product data from 
 various suppliers. The module handles data preparation, AI processing, 
 and integration with Facebook for product posting.
-"""
 
-# Global mode setting
+"""
 MODE = 'development'
 
-# Import required libraries and modules
 import asyncio
 import random
 from pathlib import Path
@@ -21,7 +20,6 @@ from typing import Optional, List
 from types import SimpleNamespace
 from dataclasses import field
 
-# Project-specific imports
 from src import gs
 from src.product.product_fields import ProductFields
 from src.webdriver import Driver

@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! supplier: IVORY """
+""" supplier: IVORY """
 ```
 
 **Improved Code**
@@ -32,7 +32,7 @@ MODE = 'development'
 * Imported necessary modules:
     - `j_loads` and `j_loads_ns` from `src.utils.jjson` for JSON handling.
     - `logger` from `src.logger` for logging errors.
-* Removed the unused and pointless `"""! supplier: IVORY """` comment.  This is likely a leftover from a different format and is not needed.
+* Removed the unused and pointless `""" supplier: IVORY """` comment.  This is likely a leftover from a different format and is not needed.
 
 
 **Complete Code**

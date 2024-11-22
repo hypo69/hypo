@@ -1,9 +1,39 @@
 ## \file hypotez/src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/dict_scenarios.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass """
 
 
 scenario: dict = {

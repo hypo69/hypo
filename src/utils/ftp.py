@@ -1,14 +1,12 @@
 ## \file hypotez/src/utils/ftp.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
-MODE = 'development'
-
-
-
+#! venv/bin/python/python3.12
 
 """
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: interface for interacting with FTP servers
 This module provides an interface for interacting with FTP servers. It includes functions to send, receive, and delete files from an FTP server.
 
 ** Purpose **:
@@ -25,7 +23,7 @@ Functions:
     - `read`: Retrieves a file from an FTP server.
     - `delete`: Deletes a file from an FTP server.
 """
-
+MODE = 'development'
 from src.logger import logger
 from typing import Union
 import ftplib

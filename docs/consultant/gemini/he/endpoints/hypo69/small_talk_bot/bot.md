@@ -10,7 +10,7 @@ MODE = 'development'
 
 
 ...
-"""! t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
+""" t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 import header
 
 import asyncio
@@ -139,7 +139,7 @@ MODE = 'development'
 
 
 ...
-"""! t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
+""" t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 import header
 
 import asyncio

@@ -1,9 +1,16 @@
 ## \file hypotez/src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
 
 import importlib
 from typing import List, Optional, Dict, Any

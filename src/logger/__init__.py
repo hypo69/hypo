@@ -1,11 +1,15 @@
 ## \file hypotez/src/logger/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.logger """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-     
+"""
+.. module: src.logger 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
 
 from .logger import logger
 #from .beeper import Beeper

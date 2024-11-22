@@ -1,8 +1,14 @@
 ## \file hypotez/src/endpoints/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 

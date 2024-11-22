@@ -1,12 +1,42 @@
 ## \file hypotez/src/endpoints/kazarinov/_experiments/pricelist_generator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.kazarinov._experiments """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.kazarinov._experiments 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.endpoints.kazarinov._experiments """
+
+
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
 https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b
 """
 

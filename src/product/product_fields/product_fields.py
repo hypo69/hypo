@@ -1,11 +1,14 @@
 ## \file hypotez/src/product/product_fields/product_fields.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.product.product_fields """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-"""    <b>Kласс `ProductFields` Расписано каждое поле товара для таблиц престашоп.</b> 
+"""
+.. module: src.product.product_fields 
+	:platform: Windows, Unix
+	:synopsis: Расписано каждое поле товара для таблиц престашоп
+
+ <b>Kласс `ProductFields` Расписано каждое поле товара для таблиц престашоп.</b> 
 langdetect в Python используется для определения языка текста. Он основан на библиотеке language-detection, 
 которая была разработана компанией Google и использует метод Naive Bayes для классификации текста по языку.
 
@@ -207,7 +210,7 @@ empty fields template
             f.width = None
 """
 
-
+MODE = 'development'
 from pathlib import Path
 from typing import List, Dict, Optional, Callable, Any
 from pydantic import BaseModel, Field, validator
@@ -222,12 +225,9 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.category import Category
 from src.utils.string import StringNormalizer as sn
 from src.utils.string import StringFormatter as sf
-from src.product.product_fields.utils import (normalize_product_name,
-                                               normalize_bool,
-                                               )
 from src.utils.file import read_text_file
 from src.logger import logger
-
+from src.logger.exceptions import ProductFieldException 
 
 
 class ProductFields(BaseModel):

@@ -1,16 +1,15 @@
 ## \file hypotez/src/suppliers/aliexpress/scenarios/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.scenarios """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.aliexpress.scenarios 
+	:platform: Windows, Unix
+	:synopsis: Сценарии для алиэкспресс
+
+"""
 MODE = 'development'
 
 
-
-""" Сценарии исполнения для алиэкспресс
-"""
-...
-from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
-
-from .login import loginn
+from .login import login

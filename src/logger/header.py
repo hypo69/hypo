@@ -1,9 +1,20 @@
 ## \file hypotez/src/logger/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.logger """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.logger 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
+    :TODO: В дальнейшем перенести в системную переменную"""
 
 import sys
 import json
@@ -11,7 +22,7 @@ from packaging.version import Version
 
 from pathlib import Path
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 

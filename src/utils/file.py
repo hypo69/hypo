@@ -1,12 +1,16 @@
 ## \file hypotez/src/utils/file.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis:  Module for file operations
+
+"""
 MODE = 'development'
 
-
-""" Module for file operations. """
 
 import os
 import json

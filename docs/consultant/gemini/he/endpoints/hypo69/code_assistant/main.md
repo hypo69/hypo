@@ -14,14 +14,14 @@ MODE = 'development'
 1. Запуск с готовыми настройками:
     python main.py --settings settings.json
 
-2. Запуск с указанием роли 'doc_creator', языка 'ru', моделей 'gemini' и 'openai', а также стартовых директорий:
-    python main.py --role doc_creator --lang ru --models gemini openai --start_dirs /path/to/dir1 /path/to/dir2
+2. Запуск с указанием роли 'doc_writer', языка 'ru', моделей 'gemini' и 'openai', а также стартовых директорий:
+    python main.py --role doc_writer --lang ru --models gemini openai --start_dirs /path/to/dir1 /path/to/dir2
 
 3. Запуск с указанием роли 'code_checker', языка 'en' и только модели 'gemini', а также стартовой директории:
     python main.py --role code_checker --lang en --models gemini --start_dirs /path/to/dir
 
-4. Запуск с указанием роли 'doc_creator', языка 'en' и только модели 'openai':
-    python main.py --role doc_creator --lang en --models openai
+4. Запуск с указанием роли 'doc_writer', языка 'en' и только модели 'openai':
+    python main.py --role doc_writer --lang en --models openai
 """
 import argparse
 import json
@@ -45,7 +45,7 @@ def parse_args() -> dict:
     parser.add_argument(
         '--role',
         type=str,
-        choices=['code_checker', 'code_analyzer', 'doc_creator', 'tests_creator'],
+        choices=['code_checker', 'code_analyzer', 'doc_writer', 'tests_creator'],
         help='Assistant role.'
     )
     parser.add_argument(
@@ -233,7 +233,7 @@ def parse_args() -> dict:
     parser.add_argument(
         '--role',
         type=str,
-        choices=['code_checker', 'code_analyzer', 'doc_creator', 'tests_creator'],
+        choices=['code_checker', 'code_analyzer', 'doc_writer', 'tests_creator'],
         help='Assistant role.'
     )
     parser.add_argument(

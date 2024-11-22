@@ -1,15 +1,16 @@
 ## \file hypotez/src/db/manager_translations/product_translations.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.db.manager_translations """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.db.manager_translations 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-""" Менеджер переводов параметров товара"""
-...
-
-...
 import sys
 import traceback
 from sqlalchemy import create_engine, Column, String, Text

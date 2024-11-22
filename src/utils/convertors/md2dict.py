@@ -1,17 +1,14 @@
 ## \file hypotez/src/utils/convertors/md2dict.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis: Модуль для конвертации строки Markdown в структурированный словарь, включая извлечение JSON содержимого, если оно присутствует.
+"""
 MODE = 'development'
-
-
-"""
-module: src.utils.convertors
-
-Модуль для конвертации строки Markdown в структурированный словарь, включая извлечение JSON содержимого, если оно присутствует.
-"""
-
 import re
 from typing import Dict
 from markdown2 import markdown

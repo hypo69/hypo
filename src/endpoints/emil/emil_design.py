@@ -1,12 +1,42 @@
 ## \file hypotez/src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.emil """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.emil 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
 
-"""! Module for managing and processing images and promoting to Facebook and PrestaShop. """
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.endpoints.emil """
+
+
+""" Module for managing and processing images and promoting to Facebook and PrestaShop. """
 
 import header
 from pathlib import Path
@@ -25,7 +55,7 @@ from src.utils.jjson import j_loads_ns, j_dumps
 from src.logger import logger
 
 class EmilDesign:
-    """! Class for designing and promoting images through various platforms. """
+    """ Class for designing and promoting images through various platforms. """
 
     # Base path for the module data
     base_path: Path = (
@@ -34,11 +64,11 @@ class EmilDesign:
     )
 
     def __init__(self):
-        """! Initialize the EmilDesign class. """
+        """ Initialize the EmilDesign class. """
         ...
 
     def describe_images(self, from_url: str = False):
-        """! Describe images based on the provided instruction and examples.
+        """ Describe images based on the provided instruction and examples.
 
         Args:
             from_url (str, optional): If True, uses URL to describe images. Defaults to False.
@@ -117,7 +147,7 @@ class EmilDesign:
             ...
 
     def promote_to_facebook(self):
-        """! Promote images and their descriptions to Facebook.
+        """ Promote images and their descriptions to Facebook.
 
         This function logs into Facebook and posts messages derived from the image descriptions.
         """
@@ -136,7 +166,7 @@ class EmilDesign:
             ...
 
     def upload_to_PrestaShop(self):
-        """! Upload product information to PrestaShop.
+        """ Upload product information to PrestaShop.
 
         This function initializes a product and PrestaShop instance for uploading data.
         """

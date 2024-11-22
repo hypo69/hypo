@@ -10,7 +10,7 @@ MODE = 'development'
 
 
 
-"""! Absolute path to modules  """
+""" Absolute path to modules  """
 
 import sys,os
 from pathlib import Path

@@ -1,9 +1,39 @@
-## \file hypotez/src/suppliers/amazon/via_webdriver.py
+## \file hypotez/src/suppliers/amazon/scenario.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.amazon """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.amazon 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.suppliers.amazon """
 
 
 """  Модуль сбора товаров со страницы категорий поставщика aliexpress.com через вебдрайвер

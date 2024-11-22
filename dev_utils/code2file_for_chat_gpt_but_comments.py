@@ -1,12 +1,44 @@
 ## \file hypotez/dev_utils/code2file_for_chat_gpt_but_comments.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: dev_utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: dev_utils 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
 
-"""! Этот скрипт рекурсивно читает и обрабатывает все указанные текстовые и данные файлы в каталоге 
+"""
+ 
+
+"""
+ 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+"""  """
+
+
+""" Этот скрипт рекурсивно читает и обрабатывает все указанные текстовые и данные файлы в каталоге 
 и сохраняет объединенное содержимое в один файл. Скрипт также позволяет удалять блоки с тройными кавычками 
 из файлов Python, если это указано, но в этой версии все комментарии и докстринги сохраняются.
 
@@ -30,7 +62,7 @@ from pathlib import Path
 from src.logger import logger
 
 def delete_directory_contents(directory: Path) -> None:
-    """! Рекурсивно удаляет все содержимое указанной директории.
+    """ Рекурсивно удаляет все содержимое указанной директории.
 
     Args:
         directory (Path): Путь к директории, содержимое которой нужно удалить.
@@ -59,7 +91,7 @@ def delete_directory_contents(directory: Path) -> None:
 def read_text_files(
     directory: str, output_file: str
 ) -> None:
-    """! Читает все указанные текстовые и данные файлы в каталоге и сохраняет объединенный текст в один файл,
+    """ Читает все указанные текстовые и данные файлы в каталоге и сохраняет объединенный текст в один файл,
     одновременно удаляя файлы и директории, которые начинаются с `_` или содержат `(` и `)`.
 
     Args:

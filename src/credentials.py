@@ -1,14 +1,17 @@
 ## \file hypotez/src/credentials.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src 
+	:platform: Windows, Unix
+	:synopsis: Global Project Settings: paths, passwords, logins, and API settings
+
+"""
 MODE = 'development'
 
 
-""" Global Project Settings: paths, passwords, logins, and API settings.  """
-
-# Встроенные библиотеки
 import datetime
 from datetime import datetime
 import getpass
@@ -21,12 +24,9 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Optional
 
-# Сторонние библиотеки
 from pydantic import BaseModel, Field
-
 from pykeepass import PyKeePass
 
-# # Локальные модули
 from src.check_release import check_latest_release
 from src.logger.logger import logger
 from src.logger.exceptions import (
@@ -128,10 +128,10 @@ class ProgramSettings(BaseModel):
         super().__init__(**kwargs)
         # Ваш код для выполнения __post_init__
 
-        """! Выполняет инициализацию после создания экземпляра класса."""
+        """ Выполняет инициализацию после создания экземпляра класса."""
         
         def _get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')):
-            """! Находит корневую директорию проекта, начиная с текущей директории."""
+            """ Находит корневую директорию проекта, начиная с текущей директории."""
             current_path = Path(__file__).resolve().parent
             for parent in [current_path] + list(current_path.parents):
                 if any((parent / marker).exists() for marker in marker_files):
@@ -185,7 +185,7 @@ class ProgramSettings(BaseModel):
 
 
     def _load_credentials(self) -> None:
-        """! Загружает учетные данные из настроек."""
+        """ Загружает учетные данные из настроек."""
 
         kp = self._open_kp(3)
         if not kp:
@@ -267,7 +267,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract Aliexpress API key from KeePass {ex}" )
             ...
-            return False
+            return
 
     def _load_openai_credentials(self, kp: PyKeePass) -> bool:
         """ Load OpenAI credentials from KeePass

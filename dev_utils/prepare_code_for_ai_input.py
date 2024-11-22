@@ -1,12 +1,44 @@
 ## \file hypotez/dev_utils/prepare_code_for_ai_input.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: dev_utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: dev_utils 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
 
-"""! This script collects the contents of specific files in the 'src' directory, 
+"""
+ 
+
+"""
+ 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+"""  """
+
+
+""" This script collects the contents of specific files in the 'src' directory, 
 saves them in a single text file for machine learning model input, excluding 
 specific directories and files, and including only .py, .json, .md, .dot, and .mer files.
 """
@@ -16,7 +48,7 @@ from pathlib import Path
 from src.utils.jjson import j_dumps
 
 def collect_file_contents(directory: Path, target_directory: Path) -> dict:
-    """! Recursively collects the content of specific files.
+    """ Recursively collects the content of specific files.
 
     Traverses the specified `directory`, filters out unwanted directories and files,
     and collects the content of remaining files with specific extensions.
@@ -43,7 +75,7 @@ def collect_file_contents(directory: Path, target_directory: Path) -> dict:
     return contents
 
 def save_contents_to_text(contents: dict, output_file: Path):
-    """! Saves collected file contents to a single text file.
+    """ Saves collected file contents to a single text file.
 
     Args:
         contents (dict): Dictionary with file paths as keys and file contents as values.
@@ -57,7 +89,7 @@ def save_contents_to_text(contents: dict, output_file: Path):
             f.write("\n" + "="*80 + "\n\n")  # Separator between files
 
 def main():
-    """! Main function to initiate content collection and save to a text file."""
+    """ Main function to initiate content collection and save to a text file."""
 
     src_directory = Path(header.__root__, 'src', 'utils')
     project_structure_directory = Path(src_directory, 'prod')

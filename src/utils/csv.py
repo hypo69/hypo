@@ -1,15 +1,18 @@
 ## \file hypotez/src/utils/csv.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: CSV and JSON file operations
+
+"""
 MODE = 'development'
 
 
-"""!
-Module for CSV and JSON file operations.
-
-This module provides utilities for:
+""" This module provides utilities for:
 - Saving and reading CSV files.
 - Converting JSON data to CSV and vice versa.
 - Transforming CSV content into dictionaries for easy manipulation.
@@ -46,7 +49,7 @@ def save_csv_file(
     mode: str = 'a',
     exc_info: bool = True
 ) -> bool:
-    """! Save a list of dictionaries to a CSV file.
+    """ Save a list of dictionaries to a CSV file.
 
     Args:
         data (List[Dict[str, str]]): Data to be saved in CSV format.
@@ -77,7 +80,7 @@ def save_csv_file(
         return False
 
 def read_csv_file(file_path: Union[str, Path], exc_info: bool = True) -> List[Dict[str, str]] | None:
-    """! Read CSV content as a list of dictionaries.
+    """ Read CSV content as a list of dictionaries.
 
     Args:
         file_path (str | Path): Path to the CSV file.
@@ -100,7 +103,7 @@ def read_csv_file(file_path: Union[str, Path], exc_info: bool = True) -> List[Di
 
 
 def read_csv_as_json(csv_file_path: Union[str, Path], json_file_path: Union[str, Path], exc_info: bool = True) -> bool:
-    """! Convert a CSV file to JSON format and save it.
+    """ Convert a CSV file to JSON format and save it.
 
     Args:
         csv_file_path (str | Path): Path to the CSV file.
@@ -126,7 +129,7 @@ def read_csv_as_json(csv_file_path: Union[str, Path], json_file_path: Union[str,
         return False
 
 def read_csv_as_dict(csv_file: Union[str, Path]) -> dict | None:
-    """! Convert CSV content to a dictionary.
+    """ Convert CSV content to a dictionary.
 
     Args:
         csv_file (str | Path): Path to the CSV file.
@@ -148,7 +151,7 @@ def read_csv_as_dict(csv_file: Union[str, Path]) -> dict | None:
         return
 
 def read_csv_as_ns(file_path: Union[str, Path]) -> List[dict]:
-    """! Load CSV data into a list of dictionaries using Pandas.
+    """ Load CSV data into a list of dictionaries using Pandas.
 
     Args:
         file_path (str | Path): Path to the CSV file.

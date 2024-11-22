@@ -1,14 +1,15 @@
 ## \file hypotez/src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.ai.openai.model """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.ai.openai.model 
+	:platform: Windows, Unix
+	:synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model
+
+"""
 MODE = 'development'
-
-
-
-
-""" OpenAI Model Class for handling communication with the OpenAI API and training the model. """
 
 import time
 from pathlib import Path

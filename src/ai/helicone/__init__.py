@@ -1,19 +1,12 @@
 ## \file hypotez/src/ai/helicone/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.ai.helicone """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.ai.helicone 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
-
-
-""" OpenAI """
-
-
-
-
-from packaging.version import Version
-from .version import __version__,  __doc__, __details__
-
-from .translator import translate
-from .model import OpenAIModel
-

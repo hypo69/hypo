@@ -10,7 +10,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header
 import webbrowser  # Для автоматического открытия браузера
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 MODE = 'development'
 
 
-"""! Модуль для создания веб-приложения чат-бота с использованием FastAPI и модели Kazarinov. """
+""" Модуль для создания веб-приложения чат-бота с использованием FastAPI и модели Kazarinov. """
 
 import webbrowser  # Для автоматического открытия браузера
 import threading  # Для запуска браузера в отдельном потоке

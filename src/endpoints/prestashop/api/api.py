@@ -1,18 +1,16 @@
 ## \file hypotez/src/endpoints/prestashop/api/api.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop.api """
-MODE = 'development'
-
-
-
-""" PrestaShop API connector - interact with PrestaShop webservice API, using JSON and XML for message 
-
-
-@dotfile PrestaShop//api//PrestaShop.dot
+#! venv/bin/python/python3.12
 
 """
+.. module: src.endpoints.prestashop.api 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
+
 
 import os
 import sys

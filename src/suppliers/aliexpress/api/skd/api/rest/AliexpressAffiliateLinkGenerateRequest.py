@@ -1,11 +1,8 @@
 ## \file hypotez/src/suppliers/aliexpress/api/skd/api/rest/AliexpressAffiliateLinkGenerateRequest.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.skd.api.rest """
-MODE = 'development'
-
-
 """
 Created by auto_sdk on 2020.03.09
 """

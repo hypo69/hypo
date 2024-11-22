@@ -1,9 +1,39 @@
 ## \file hypotez/src/webdriver/firefox/_experiments/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver.firefox._experiments """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.webdriver.firefox._experiments 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.webdriver.firefox._experiments """
 
 
 """ Установкя кораня проекта в системный путь """

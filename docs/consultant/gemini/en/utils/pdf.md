@@ -41,13 +41,13 @@ options = {"enable-local-file-access": ""}
 
 
 class PDFUtils:
-    """!
+    """
     Класс для работы с PDF-файлами, предоставляющий методы для сохранения HTML-контента в PDF.
     """
 
     @staticmethod
     def save_pdf(data: str | Path, pdf_file: str | Path) -> bool:
-        """!
+        """
         Сохранить HTML-контент или файл в PDF.
 
         Args:
@@ -79,7 +79,7 @@ class PDFUtils:
 
     @staticmethod
     def save_pdf_v2(data: str, pdf_file: str | Path) -> bool:
-        """!
+        """
         Альтернативный метод сохранения текста в PDF с использованием библиотеки FPDF.
 
         Args:

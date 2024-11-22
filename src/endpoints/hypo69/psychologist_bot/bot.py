@@ -1,13 +1,43 @@
 ## \file hypotez/src/endpoints/hypo69/psychologist_bot/bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.hypo69.psychologist_bot """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.hypo69.psychologist_bot 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.endpoints.hypo69.psychologist_bot """
 
 
 ...
-"""! t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
+""" t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 
 import asyncio
 from pathlib import Path

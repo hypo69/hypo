@@ -1,12 +1,17 @@
 ## \file hypotez/src/utils/date_time.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: function to check if the current time is within a specified interval with an optional timeout
+
+"""
 MODE = 'development'
 
-
-"""! This module contains a function to check if the current time is within a specified interval with an optional timeout.
+""" This module contains a function to check if the current time is within a specified interval with an optional timeout.
 
 The `interval` function allows for determining whether the current time falls within the 
 given time frame, which is useful for running operations that should only occur during 
@@ -24,7 +29,7 @@ class TimeoutCheck:
         self.result = None
 
     def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval.
+        """ Check if the current time is within the specified interval.
         
         Args:
             start (time): Start of the interval (default is 23:00).
@@ -43,7 +48,7 @@ class TimeoutCheck:
             self.result = current_time >= start or current_time <= end
 
     def interval_with_timeout(self, timeout: int = 5, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval with a timeout.
+        """ Check if the current time is within the specified interval with a timeout.
 
         Args:
             timeout (int): Time in seconds to wait for the interval check.
@@ -64,11 +69,11 @@ class TimeoutCheck:
         return self.result
 
     def get_input(self):
-        """! Запрашиваем ввод от пользователя."""
+        """ Запрашиваем ввод от пользователя."""
         self.user_input = input("U:> ")
 
     def input_with_timeout(self, timeout: int = 5) -> str | None:
-        """! Ожидаем ввод с тайм-аутом.
+        """ Ожидаем ввод с тайм-аутом.
 
         Args:
             timeout (int): Время ожидания ввода в секундах.

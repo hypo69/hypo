@@ -1,12 +1,12 @@
 ## \file hypotez/src/scenario/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.scenario """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-"""   Module with scenario execution functions: `run_scenario_files`, `run_scenarios`  
+"""
+.. module: src.scenario 
+	:platform: Windows, Unix
+	:synopsis: Module with scenario execution functions: `run_scenario_files`, `run_scenarios`  
 Scenario executor for suppliers.
 ----
 
@@ -57,7 +57,7 @@ run_scenarios(s, list_of_scenarios)
 
 @endcode
 Example of a scenario file:
-@code
+```json
 {
   "scenarios": {
 
@@ -81,7 +81,8 @@ Example of a scenario file:
       }
     }
 }
-@endcode
+```
+```python
 
 For detailed information on the scenario dictionary, read here: ...
 
@@ -106,10 +107,9 @@ s.run(scenario1)
 
 list_of_scenarios = [scenario1, ...]
 s.run(list_of_scenarios)
-
-@endcode
+```
 """
-
+MODE = 'development'
 from .executor import (
     run_scenario, 
     run_scenarios, 

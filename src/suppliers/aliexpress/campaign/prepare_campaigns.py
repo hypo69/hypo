@@ -1,14 +1,12 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/prepare_campaigns.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'development'
-
-
+#! venv/bin/python/python3.12
 
 """
-This module prepares AliExpress campaigns by processing categories, handling campaign data, and generating promotional materials.
+.. module: src.suppliers.aliexpress.campaign 
+	:platform: Windows, Unix
+	:synopsis: module prepares AliExpress campaigns by processing categories, handling campaign data, and generating promotional materials
 
 ### Examples:
 To run the script for a specific campaign:
@@ -19,7 +17,7 @@ To process all campaigns:
 
     python src/suppliers/aliexpress/campaigns/prepare_campaigns.py --all -l EN -cu USD
 """
-
+MODE = 'development'
 import header
 import argparse
 import copy

@@ -1,12 +1,44 @@
 ## \file hypotez/dev_utils/code2file_for_chat_gpt.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: dev_utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: dev_utils 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
 
-"""! Этот скрипт рекурсивно читает и обрабатывает все указанные текстовые и данные файлы в каталоге 
+"""
+ 
+
+"""
+ 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+"""  """
+
+
+""" Этот скрипт рекурсивно читает и обрабатывает все указанные текстовые и данные файлы в каталоге 
 и сохраняет объединенное содержимое в один файл. Скрипт также позволяет удалять блоки с тройными кавычками 
 из файлов Python, если это указано.
 
@@ -37,7 +69,7 @@ EXCLUDE_DIRS = ['__pycache__', '.git', '.egg-info', '.ipynb_checkpoints']
 EXCLUDE_EXTENSIONS = ['.pyc', '.pyo']  # Временные файлы Python
 
 def clean_html(content: str) -> str:
-    """! Удаляет HTML-теги из содержимого.
+    """ Удаляет HTML-теги из содержимого.
 
     Args:
         content (str): HTML-содержимое для очистки.
@@ -53,7 +85,7 @@ def clean_html(content: str) -> str:
     return soup.get_text()
 
 def remove_docstrings(content: str) -> str:
-    """! Удаляет все блоки с тройными кавычками `\"""` и `\'''` из текста.
+    """ Удаляет все блоки с тройными кавычками `\"""` и `\'''` из текста.
 
     Args:
         content (str): Текстовое содержимое, из которого нужно удалить блоки с тройными кавычками.
@@ -72,7 +104,7 @@ def remove_docstrings(content: str) -> str:
     return content
 
 def delete_directory_contents(directory: Path) -> None:
-    """! Рекурсивно удаляет все содержимое указанной директории.
+    """ Рекурсивно удаляет все содержимое указанной директории.
 
     Args:
         directory (Path): Путь к директории, содержимое которой нужно удалить.
@@ -101,7 +133,7 @@ def delete_directory_contents(directory: Path) -> None:
 def read_text_files(
     directory: str, output_file: str, remove_docs: bool = False, max_chars: int = 2000
 ) -> None:
-    """! Читает все указанные Python файлы в каталоге и сохраняет объединенный текст в несколько файлов,
+    """ Читает все указанные Python файлы в каталоге и сохраняет объединенный текст в несколько файлов,
     если размер содержания превышает 2000 символов.
 
     Args:

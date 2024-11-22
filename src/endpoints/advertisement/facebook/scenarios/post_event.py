@@ -1,13 +1,16 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_event.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook.scenarios """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook.scenarios 
+	:platform: Windows, Unix
+	:synopsis: Публикация календарного события v группах фейсбук
+
+"""
 MODE = 'development'
 
-
-
-""" Публикация календарного события v группах фейсбук"""
 from socket import timeout
 import time
 from pathlib import Path

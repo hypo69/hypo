@@ -1,9 +1,39 @@
 ## \file hypotez/src/endpoints/hypo69/psychologist_bot/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.hypo69.psychologist_bot """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.hypo69.psychologist_bot 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.endpoints.hypo69.psychologist_bot """
 
 import sys
 import json
@@ -11,7 +41,7 @@ from packaging.version import Version
 
 from pathlib import Path
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 

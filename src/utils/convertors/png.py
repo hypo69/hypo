@@ -1,17 +1,16 @@
 ## \file hypotez/src/utils/convertors/png.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-"""module: `src.utils.png`
-png convertors 
-This module reads text from a file, generates PNG images for each line of text using Pillow,
+"""
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis: png convertors 
+Module reads text from a file, generates PNG images for each line of text using Pillow,
 and saves them to an output directory with customizable options for image appearance.
 """
-
+MODE = 'development'
 from pathlib import Path
 from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont

@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! supplier: IVORY """
+""" supplier: IVORY """
 ```
 
 **Improved Code**

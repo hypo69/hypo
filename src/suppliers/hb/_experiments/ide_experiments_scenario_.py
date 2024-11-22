@@ -1,9 +1,39 @@
 ## \file hypotez/src/suppliers/hb/_experiments/ide_experiments_scenario_.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.hb._experiments """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.hb._experiments 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.suppliers.hb._experiments """
 
 
 """  Файл проверки наполнения полей HB -> product_fields """

@@ -1,16 +1,19 @@
 ## \file hypotez/src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis: Converter for converting between dict and SimpleNamespace objects
+
+"""
 MODE = 'development'
 
 
 
-"""
-Converter for converting between dict and SimpleNamespace objects.
-
-This module contains functions to recursively convert dictionaries to SimpleNamespace
+""" This module contains functions to recursively convert dictionaries to SimpleNamespace
 objects and vice versa, as well as exporting data to various formats.
 
 Functions:
@@ -58,7 +61,7 @@ from src.utils.xls import save_xls_file
 
 # Функция для конвертации словаря в PDF
 def dict2pdf(data: dict | SimpleNamespace, file_path: str | Path) -> None:
-    """!
+    """
     Save dictionary data to a PDF file.
 
     Args:

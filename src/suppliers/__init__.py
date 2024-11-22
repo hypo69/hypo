@@ -1,13 +1,12 @@
 ## \file hypotez/src/suppliers/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
-Модуль поставщика. Класс `Supplier`
+.. module: src.suppliers 
+	:platform: Windows, Unix
+	:synopsis: Модуль поставщика. Класс `Supplier`
 
 Для каждого конкретного поставщика есть свои специфичные методы (функции) извлечения информации. 
 Эти функции дополняют базовый класс `Supplier` и подключаются через интерфейс `supplier.related_functions`.
@@ -18,7 +17,9 @@ MODE = 'development'
 
 ## Взаимосвязь сущностей Supplier, Driver, Product
 @image html supplier-warehouse-client.png
+
 """
+MODE = 'development'
 
 from .supplier import Supplier
 from .graber import Graber

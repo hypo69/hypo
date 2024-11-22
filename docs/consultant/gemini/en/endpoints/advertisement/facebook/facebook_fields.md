@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 from pathlib import Path
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns

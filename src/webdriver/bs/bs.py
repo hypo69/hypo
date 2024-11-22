@@ -1,13 +1,13 @@
 ## \file hypotez/src/webdriver/bs/bs.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver.bs """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" parse pages with `BeautifulSoup` and XPath 
-@code
+"""
+.. module: src.webdriver.bs 
+	:platform: Windows, Unix
+	:synopsis: parse pages with `BeautifulSoup` and XPath 
+```python
 if __name__ == "__main__":
     driver = Driver()
     # For file
@@ -15,9 +15,10 @@ if __name__ == "__main__":
     # For URL
     driver.get_url('https://example.com')
     driver.execute_locator(locator)
-@endcode
+```
 
 """
+MODE = 'development'
 
 
 import re

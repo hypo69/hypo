@@ -1,9 +1,39 @@
 ## \file hypotez/src/endpoints/hypo69/code_assistant/_experiments/openai_bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.hypo69.code_assistant._experiments """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.hypo69.code_assistant._experiments 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.endpoints.hypo69.code_assistant._experiments """
 
 
 
@@ -11,7 +41,7 @@ MODE = 'development'
 
 Процесс работы:
 1. Модуль использует роль выполнения, установленную внутри кода, для взаимодействия с моделью.
-2. Для роли `doc_creator` используется модель **OpenAI GPT-4** для генерации документации или других текстов.
+2. Для роли `doc_writer` используется модель **OpenAI GPT-4** для генерации документации или других текстов.
 3. Входные данные для модели включают комментарии и код/документацию, которые передаются в модель для обработки.
 4. Ответ модели сохраняется в файл с расширением `.md` в зависимости от роли.
    
@@ -34,7 +64,7 @@ from src.utils.file import yield_files_content, read_text_file
 from src.logger import logger
 
 # Глобальная переменная для роли
-role: str = 'doc_creator'  # Устанавливаем роль напрямую внутри кода
+role: str = 'doc_writer'  # Устанавливаем роль напрямую внутри кода
 
 openai_model_name:str = 'gpt-4o-mini'
 openai_assistant_id:str = gs.credentials.openai.assistant_id.code_assistant
@@ -48,10 +78,10 @@ def main() -> None:
     """
     global role
 
-    role = role if role else 'doc_creator'
+    role = role if role else 'doc_writer'
 
-    if role == 'doc_creator':
-        comment_for_model_about_piece_of_code = 'doc_creator.md'
+    if role == 'doc_writer':
+        comment_for_model_about_piece_of_code = 'doc_writer.md'
         system_instruction: str = 'create_documentation.md'
         
 
@@ -103,7 +133,7 @@ def save_response(file_path: Path, response: str, from_model: str) -> None:
 
     # Словарь, ассоциирующий роли с директориями
     role_directories = {
-        'doc_creator': f'docs/{from_model}/raw_rst_from_ai',
+        'doc_writer': f'docs/{from_model}/raw_rst_from_ai',
     }
 
     # Проверка наличия роли в словаре

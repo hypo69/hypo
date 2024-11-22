@@ -1,13 +1,15 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook 
+	:platform: Windows, Unix
+	:synopsis: Раскрывающеся меню выбора групп для подачи объвления
+
+"""
 MODE = 'development'
-
-
-
-""" Раскрывающеся меню выбора групп для подачи объвления"""
 
 import header 
 from IPython.display import display

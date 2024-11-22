@@ -1,13 +1,12 @@
 ## \file hypotez/src/webdriver/executor.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
-The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 
+.. module: src.webdriver 
+	:platform: Windows, Unix
+	:synopsis: The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 
 known as "locators." These configurations (or "locators") are dictionaries containing information on how to locate and interact with elements on a web page. The module provides the following functionalities:
 
 1. **Parsing and Handling Locators**: Converts dictionaries with configurations into `SimpleNamespace` objects, 
@@ -23,8 +22,11 @@ that might have unstable elements or require a special approach.
 with one or several web elements simultaneously.
 
 This module provides flexibility and versatility in working with web elements, enabling the automation of complex web interaction scenarios.
+
+
 """
-...
+MODE = 'development'
+
 import asyncio
 import re
 import sys
@@ -115,7 +117,7 @@ class ExecuteLocator:
         async def _parse_locator(
             l: Union[dict, SimpleNamespace], message: Optional[str]
         ) -> str | list | dict | WebElement | bool:
-            """! Parses and executes locator instructions.
+            """ Parses and executes locator instructions.
 
             Args:
                 loc (Union[dict, SimpleNamespace]): Locator data.
@@ -172,7 +174,7 @@ class ExecuteLocator:
         typing_speed: float = 0,
         continue_on_error: bool = True,
     ) -> str | list | dict | WebElement | list[WebElement] | None:
-        """! Retrieves attributes from an element or list of elements found by the given locator.
+        """ Retrieves attributes from an element or list of elements found by the given locator.
 
         Args:
             locator (dict | SimpleNamespace): Locator as a dictionary or SimpleNamespace.
@@ -195,7 +197,7 @@ class ExecuteLocator:
             return
    
         def _parse_dict_string(attr_string: str) -> dict | None:
-            """! Parses a string like '{attr1:attr2}' into a locator.
+            """ Parses a string like '{attr1:attr2}' into a locator.
 
             Args:
                 attr_string (str): String representing a dictionary-like structure.
@@ -218,7 +220,7 @@ class ExecuteLocator:
                 return
 
         def _get_attributes_from_dict(element: WebElement, attr_dict: dict) -> dict:
-            """! Retrieves attribute values for each key in a given dictionary.
+            """ Retrieves attribute values for each key in a given dictionary.
 
             Args:
                 element (WebElement): The web element to retrieve attributes from.
@@ -306,7 +308,7 @@ class ExecuteLocator:
         continue_on_error: bool = True,
         webelement: Optional[WebElement] = None
     ) -> BinaryIO | None:
-        """! Takes a screenshot of the located web element.
+        """ Takes a screenshot of the located web element.
 
         Args:
             locator (dict | SimpleNamespace): Locator as a dictionary or SimpleNamespace.

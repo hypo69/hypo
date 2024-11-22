@@ -1,9 +1,41 @@
 ## \file hypotez/dev_utils/collect_hierarhy.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: dev_utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: dev_utils 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+ 
+
+"""
+ 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+"""  """
 
 
 """Этот код выполняет следующую задачу:

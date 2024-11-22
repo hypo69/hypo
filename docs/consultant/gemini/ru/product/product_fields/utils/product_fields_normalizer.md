@@ -10,7 +10,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 from typing import Dict, Union
 from src.utils.string import StringNormalizer as sn
@@ -53,7 +53,7 @@ MODE = 'development'
 logger = logging.getLogger(__name__)
 
 
-"""!
+"""
 This module provides functions for normalizing product data.
 It uses the StringNormalizer and StringFormatter utilities.
 """

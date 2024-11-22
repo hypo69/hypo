@@ -15,7 +15,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для обработки JSON
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 
@@ -89,7 +89,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 from src.logger import logger # Импортируем logger
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 
@@ -177,7 +177,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 from src.logger import logger # Импортируем logger
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 

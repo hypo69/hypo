@@ -1,12 +1,15 @@
 ## \file hypotez/src/webdriver/edge/edge.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver.edge """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.webdriver.edge 
+	:platform: Windows, Unix
+	:synopsis: Custom Edge WebDriver class with simplified configuration using fake_useragent
+
+"""
 MODE = 'development'
-
-
-""" Custom Edge WebDriver class with simplified configuration using fake_useragent."""
 
 from pathlib import Path
 from selenium.webdriver import Edge as WebDriver

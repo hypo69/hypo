@@ -1,15 +1,17 @@
 ## \file hypotez/src/utils/video.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
-Video Saving Utilities.
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: Video Saving Utilities
 
-This module provides asynchronous functions for downloading and saving video files, as well as retrieving video data.  It includes error handling and logging for robust operation.
+"""
+MODE = 'development'
+
+""" This module provides asynchronous functions for downloading and saving video files, as well as retrieving video data.  It includes error handling and logging for robust operation.
 
 Functions:
     save_video_from_url(url: str, save_path: str) -> Optional[Path]:

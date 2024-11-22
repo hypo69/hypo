@@ -1,8 +1,14 @@
 ## \file hypotez/src/suppliers/wallmart/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.wallmart """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.wallmart 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 import asyncio

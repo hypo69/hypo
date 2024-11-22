@@ -11,7 +11,7 @@ MODE = 'development'
 
 
 
-"""! Absolute path to modules and GTK & FFPMEG bin directory """
+""" Absolute path to modules and GTK & FFPMEG bin directory """
 
 import json
 import sys
@@ -66,7 +66,7 @@ from src.utils.jjson import j_loads
 
 MODE = 'development'
 
-"""! Absolute path to modules and GTK & FFPMEG bin directory """
+""" Absolute path to modules and GTK & FFPMEG bin directory """
 
 # Load the project name from settings.json, using j_loads for robust data handling
 try:

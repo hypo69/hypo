@@ -1,12 +1,12 @@
 ## \file hypotez/src/suppliers/aliexpress/utils/locales.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.utils """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" Module for loading locales data from JSON file.
+"""
+.. module: src.suppliers.aliexpress.utils 
+	:platform: Windows, Unix
+	:synopsis: Module for loading locales data from JSON file.
 
 This module contains functions for loading and processing locales data from a JSON file.
 
@@ -19,8 +19,10 @@ Examples:
     >>> locales = load_locales_data(Path('/path/to/locales.json'))
     >>> print(locales)
     [{'EN': 'USD'}, {'HE': 'ILS'}, {'RU': 'ILS'}, {'EN': 'EUR'}, {'EN': 'GBR'}, {'RU': 'EUR'}]
+
 """
-...
+MODE = 'development'
+
 from pathlib import Path
 
 from src import gs

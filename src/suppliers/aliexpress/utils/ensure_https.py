@@ -1,17 +1,15 @@
 ## \file hypotez/src/suppliers/aliexpress/utils/ensure_https.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.utils """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-
-
-""" Ensures that the provided URL string(s) contain the https:// prefix. 
+"""
+.. module: src.suppliers.aliexpress.utils 
+	:platform: Windows, Unix
+	:synopsis: Ensures that the provided URL string(s) contain the https:// prefix. 
 If the input is a product ID, it constructs a full URL with https:// prefix.
 
-@code
+```python
 # Example usage
 url = "example_product_id"
 url_with_https = ensure_https(url)
@@ -20,9 +18,11 @@ print(url_with_https)  # Output: https://www.aliexpress.com/item/example_product
 urls = ["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html"]
 urls_with_https = ensure_https(urls)
 print(urls_with_https)  # Output: ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
-@endcode
+```
+
 """
-...
+MODE = 'development'
+
 from src.logger import logger
 from .extract_product_id import extract_prod_ids
 

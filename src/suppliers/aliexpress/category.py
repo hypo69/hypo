@@ -1,13 +1,16 @@
 ## \file hypotez/src/suppliers/aliexpress/category.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.aliexpress 
+	:platform: Windows, Unix
+	:synopsis:  управление категориями aliexpress
+
+"""
 MODE = 'development'
 
-
-
-""" управление категориями поставщиика """
 from typing import Union
 from pathlib import Path
 

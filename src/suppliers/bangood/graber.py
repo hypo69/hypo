@@ -1,8 +1,14 @@
 ## \file hypotez/src/suppliers/bangood/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.bangood """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.bangood 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 import asyncio

@@ -1,8 +1,14 @@
 ## \file hypotez/src/webdriver/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.webdriver 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 import sys
@@ -11,8 +17,7 @@ from packaging.version import Version
 
 from pathlib import Path
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
-    Finds the root directory of the project starting from the current file's directory,
+    """ Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 
     Args:

@@ -1,9 +1,39 @@
 ## \file hypotez/src/fast_api/html/process_data.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.fast_api.html """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.fast_api.html 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.fast_api.html """
 
 
 """ @namespace src.fast_api.html """

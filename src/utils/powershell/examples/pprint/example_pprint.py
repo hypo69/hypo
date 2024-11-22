@@ -1,9 +1,39 @@
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.powershell.examples.pprint """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils.powershell.examples.pprint 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.utils.powershell.examples.pprint """
 
 
 

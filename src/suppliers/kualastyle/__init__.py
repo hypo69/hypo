@@ -1,17 +1,15 @@
 ## \file hypotez/src/suppliers/kualastyle/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.kualastyle """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-
-"""  Постaвщик <i>wallmart</i>
 """
+.. module: src.suppliers.kualastyle 
+	:platform: Windows, Unix
+	:synopsis:
 
-from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
+"""
+MODE = 'development'
 
 from .graber import Graber
 

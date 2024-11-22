@@ -1,14 +1,15 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/gsheet.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.campaign """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.aliexpress.campaign 
+	:platform: Windows, Unix
+	:synopsis:  Редактор рекламной кампании через гугл таблицами
+
+"""
 MODE = 'development'
-
-
-
-""" Редактор рекламной кампании через гугл таблицами """
-
 
 import time
 from types import SimpleNamespace

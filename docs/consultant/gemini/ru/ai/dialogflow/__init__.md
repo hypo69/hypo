@@ -9,7 +9,7 @@
 """ module: src.ai.dialogflow """
 MODE = 'development'
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
 https://habr.com/ru/articles/346606/
 """
 ```
@@ -29,7 +29,7 @@ MODE = 'development'
 
 logger = logging.getLogger(__name__)
 
-"""!
+"""
 Модуль для взаимодействия с сервисом Dialogflow.
 
 Описание работы модуля.  Подробности доступны по ссылке:

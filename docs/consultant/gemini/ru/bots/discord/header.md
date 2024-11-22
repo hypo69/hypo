@@ -18,7 +18,7 @@ from src import gs
 from src.utils import jjson
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 
@@ -98,7 +98,7 @@ logging.basicConfig(level=logging.INFO)  # or logging.DEBUG for more details
 logger = logging.getLogger(__name__)
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 

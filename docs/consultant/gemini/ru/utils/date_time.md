@@ -10,7 +10,7 @@
 MODE = 'development'
 
 
-"""! This module contains a function to check if the current time is within a specified interval with an optional timeout.
+""" This module contains a function to check if the current time is within a specified interval with an optional timeout.
 
 The `interval` function allows for determining whether the current time falls within the 
 given time frame, which is useful for running operations that should only occur during 
@@ -35,7 +35,7 @@ class TimeoutCheck:
 
 
     def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval.
+        """ Check if the current time is within the specified interval.
         
         :param start: Start of the interval (default is 23:00).
         :type start: time
@@ -56,7 +56,7 @@ class TimeoutCheck:
 
 
     def interval_with_timeout(self, timeout: int = 5, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval with a timeout.
+        """ Check if the current time is within the specified interval with a timeout.
 
         :param timeout: Time in seconds to wait for the interval check.
         :type timeout: int
@@ -75,7 +75,7 @@ class TimeoutCheck:
 
 
     def get_input(self):
-        """! Запрашиваем ввод от пользователя.
+        """ Запрашиваем ввод от пользователя.
 
         :returns: Введенные данные пользователем.
         :rtype: str
@@ -87,7 +87,7 @@ class TimeoutCheck:
 
 
     def input_with_timeout(self, timeout: int = 5) -> str | None:
-        """! Ожидаем ввод с тайм-аутом.
+        """ Ожидаем ввод с тайм-аутом.
 
         :param timeout: Время ожидания ввода в секундах.
         :type timeout: int
@@ -130,7 +130,7 @@ if __name__ == '__main__':
 MODE = 'development'
 
 
-"""! This module contains a function to check if the current time is within a specified interval with an optional timeout.
+""" This module contains a function to check if the current time is within a specified interval with an optional timeout.
 
 The `interval` function allows for determining whether the current time falls within the 
 given time frame, which is useful for running operations that should only occur during 

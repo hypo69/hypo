@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! Module for speech recognition and text-to-speech conversion. """
+""" Module for speech recognition and text-to-speech conversion. """
 
 from pathlib import Path
 import tempfile
@@ -24,7 +24,7 @@ from src.logger import logger
 
 
 def speech_recognizer(audio_url: str = None, audio_file_path: Path = None, language: str = 'ru-RU') -> str:
-    """! Download an audio file and recognize speech in it.
+    """ Download an audio file and recognize speech in it.
 
     Args:
         audio_url (str, optional): URL of the audio file to be downloaded. Defaults to `None`.
@@ -75,7 +75,7 @@ def speech_recognizer(audio_url: str = None, audio_file_path: Path = None, langu
 
 
 async def text2speech(text: str, lang: str = 'ru') -> str:
-    """! Convert text to speech and save it as an audio file.
+    """ Convert text to speech and save it as an audio file.
 
     Args:
         text (str): The text to be converted into speech.

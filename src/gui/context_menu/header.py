@@ -1,13 +1,43 @@
 ## \file hypotez/src/gui/context_menu/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.gui.context_menu """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.gui.context_menu 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.gui.context_menu """
 
 
-"""! Absolute path to modules and GTK & FFPMEG bin directory """
+
+""" Absolute path to modules and GTK & FFPMEG bin directory """
 
 import json
 import sys

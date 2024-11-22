@@ -1,8 +1,14 @@
 ## \file hypotez/src/webdriver/playwright/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver.playwright """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.webdriver.playwright 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 from .playwrid import Playwrid

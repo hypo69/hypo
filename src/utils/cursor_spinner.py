@@ -1,10 +1,15 @@
 ## \file hypotez/src/utils/cursor_spinner.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: utility to show a spinning cursor
+
+"""
+MODE = 'development'
 
 """
 This module provides a utility to show a spinning cursor in the console 

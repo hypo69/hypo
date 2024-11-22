@@ -1,15 +1,14 @@
 ## \file hypotez/src/goog/spreadsheet/spreadsheet.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.goog.spreadsheet """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module: src.goog.spreadsheet 
+	:platform: Windows, Unix
+	:synopsis: Minimal library for working with Google Sheets.
 
-
-""" Minimal library for working with Google Sheets.
-
-@code
+```python
 # Example usage of the class
 if __name__ == "__main__":
     from pathlib import Path
@@ -24,7 +23,11 @@ if __name__ == "__main__":
         spreadsheet_name='My New Spreadsheet'  # Name of the new Spreadsheet if spreadsheet_id is not specified
     )
     google_sheet_handler.upload_data_to_sheet()
-@endcode
+```
+"""
+MODE = 'development'
+
+""" 
 """
 
 from pathlib import Path

@@ -1,23 +1,24 @@
 ## \file hypotez/src/webdriver/playwright/playwrid.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver.playwright """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" Playwrid Crawler
+"""
+.. module: src.webdriver.playwright 
+	:platform: Windows, Unix
+	:synopsis: Playwrid Crawler
 
 This code defines a subclass of `PlaywrightCrawler` called `Playwrid`. 
 It provides additional functionality such as the ability to set custom browser settings, profiles, and launch options using Playwright.
 
-@code
+```python
 # Example usage
 if __name__ == "__main__":
     browser = Playwrid()
     browser.start("https://www.example.com")
-@endcode
+```
 """
+MODE = 'development'
 
 
 from pathlib import Path

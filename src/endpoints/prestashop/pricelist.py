@@ -1,10 +1,15 @@
 ## \file hypotez/src/endpoints/prestashop/pricelist.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module: src.endpoints.prestashop 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
 
 import sys
 import os

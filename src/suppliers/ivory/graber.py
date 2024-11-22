@@ -1,10 +1,15 @@
 ## \file hypotez/src/suppliers/ivory/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.ivory """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module: src.suppliers.ivory 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
 
 import asyncio
 from pathlib import Path

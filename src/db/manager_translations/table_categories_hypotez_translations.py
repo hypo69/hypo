@@ -1,14 +1,16 @@
 ## \file hypotez/src/db/manager_translations/table_categories_hypotez_translations.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.db.manager_translations """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.db.manager_translations 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-""" @namespace src.db.manager_translations """
-
-""" Переводчик категорий """
 ...
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker

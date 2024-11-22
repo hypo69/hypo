@@ -1,11 +1,8 @@
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
-MODE = 'development'
-
-
 
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException

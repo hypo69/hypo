@@ -1,11 +1,8 @@
 ## \file hypotez/src/suppliers/aliexpress/api/models/currencies.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
-MODE = 'development'
-
-
 class Currency:
     USD = 'USD'
     GBP = 'GBP'

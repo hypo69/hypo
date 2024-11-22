@@ -10,7 +10,7 @@ MODE = 'development'
 
 
 
-"""! Absolute path to modules and GTK & FFPMEG bin directory """
+""" Absolute path to modules and GTK & FFPMEG bin directory """
 
 import json
 import sys
@@ -72,7 +72,7 @@ from src.logger import logger
 MODE = 'development'
 
 
-"""! Absolute path to modules and GTK & FFPMEG bin directory """
+""" Absolute path to modules and GTK & FFPMEG bin directory """
 
 
 # Load the project name from settings.json
@@ -164,7 +164,7 @@ from src.logger import logger
 MODE = 'development'
 
 
-"""! Absolute path to modules and GTK & FFPMEG bin directory """
+""" Absolute path to modules and GTK & FFPMEG bin directory """
 
 
 # Load the project name from settings.json

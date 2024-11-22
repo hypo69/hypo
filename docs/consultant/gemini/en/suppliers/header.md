@@ -14,7 +14,7 @@ from packaging.version import Version
 
 from pathlib import Path
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 
@@ -155,7 +155,7 @@ __cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for bo
 - Added detailed RST documentation for functions, variables, and module.
 - Replaced all `...` placeholders with `logger.error` statements to handle exceptions appropriately.
 - Renamed `__root__` to `root_path` for clarity.
-- Removed unnecessary docstring `"""!"""` in the header.
+- Removed unnecessary docstring `""""""` in the header.
 
 
 **Complete Code (Improved)**

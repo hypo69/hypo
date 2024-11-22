@@ -86,7 +86,7 @@ def csv_to_json(
     json_file_path: str | Path,
     exc_info: bool = True
 ) -> List[Dict[str, str]] | None:
-    """! Convert a CSV file to JSON format and save it to a JSON file.
+    """ Convert a CSV file to JSON format and save it to a JSON file.
 
     Args:
         csv_file_path (str | Path): The path to the CSV file to read.

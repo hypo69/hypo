@@ -1,11 +1,15 @@
 ## \file hypotez/src/webdriver/driver.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver """
+#! venv/bin/python/python3.12
+
+"""
+.. module:: src.webdriver
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с веб-драйверами Selenium.
+"""
+
 MODE = 'development'
-
-
 
 import copy
 import pickle
@@ -35,10 +39,11 @@ class Driver:
     """
 
     def __init__(self, webdriver_cls, *args, **kwargs):
-        """ Инициализирует класс Driver указанным веб-драйвером.
+        """
+        Инициализирует класс `Driver` с указанным веб-драйвером.
 
         Args:
-            webdriver_cls (type): Класс WebDriver из `selenium.webdriver`, такой как `Chrome`, `Firefox` или `Edge`.
+            webdriver_cls (type): Класс WebDriver из `selenium.webdriver`, например `Chrome`, `Firefox` или `Edge`.
             *args: Дополнительные позиционные аргументы, передаваемые в конструктор WebDriver.
             **kwargs: Дополнительные ключевые аргументы, передаваемые в конструктор WebDriver.
 
@@ -66,47 +71,48 @@ class Driver:
         cls.browser_name = browser_name
      
     def __getattr__(self, item):
-        """ Proxy for accessing WebDriver attributes.
+        """
+        Прокси для доступа к аттрибутам WebDriver.
 
         Args:
-            item (str): The attribute name to access.
+            item (str): Имя атрибута для доступа.
 
-        Returns:
-            Any: The value of the attribute from the WebDriver instance.
+        Возвращает:
+            Any: Значение атрибута из экземпляра WebDriver.
         """
         return getattr(self.driver, item)
 
-
-
     def scroll(self, scrolls: int = 1, frame_size: int = 600, direction: str = 'both', delay: float = .3) -> bool:
-        """ Scrolls the web page.
+        """
+        Прокручивает веб-страницу.
 
         Args:
-            scrolls (int, optional): Number of times to scroll. Defaults to 1.
-            frame_size (int, optional): The scroll frame size in pixels. Defaults to 1800.
-            direction (str, optional): Direction of scrolling. Possible values are 'both', 'down', 'up'. Defaults to 'both'.
-            delay (float, optional): Delay in seconds between each scroll. Defaults to 0.3.
+            scrolls (int, optional): Количество прокруток. По умолчанию 1.
+            frame_size (int, optional): Размер прокрутки в пикселях. По умолчанию 1800.
+            direction (str, optional): Направление прокрутки. Возможные значения: 'both', 'down', 'up'. По умолчанию 'both'.
+            delay (float, optional): Задержка между прокрутками в секундах. По умолчанию 0.3.
 
-        Returns:
-            bool: `True` if scrolling is successful, `False` otherwise.
+        Возвращает:
+            bool: `True`, если прокрутка выполнена успешно, `False` в противном случае.
 
-        Raises:
-            Exception: If an error occurs during scrolling.
+        Исключения:
+            Exception: Если произошла ошибка во время прокрутки.
         """
         def carousel(direction: str = '', scrolls: int = 1, frame_size: int = 600, delay: float = .3) -> bool:
-            """ Scrolls the screen up or down.
+            """
+            Прокручивает экран вверх или вниз.
 
             Args:
-                direction (str, optional): 'down', 'up', 'both'. Defaults to 'both'.
-                scrolls (int, optional): Number of scroll frames. Defaults to 5.
-                frame_size (int, optional): Frame size in pixels. Defaults to 1800.
-                delay (float, optional): Delay in seconds between each scroll. Defaults to 1.
+                direction (str, optional): 'down', 'up', 'both'. По умолчанию 'both'.
+                scrolls (int, optional): Количество прокруток. По умолчанию 5.
+                frame_size (int, optional): Размер прокрутки в пикселях. По умолчанию 1800.
+                delay (float, optional): Задержка между прокрутками в секундах. По умолчанию 1.
 
-            Returns:
-                bool: `True` if successful, `False` otherwise.
+            Возвращает:
+                bool: `True`, если прокрутка выполнена успешно, `False` в противном случае.
 
-            Raises:
-                Exception: If an error occurs during scrolling.
+            Исключения:
+                Exception: Если произошла ошибка во время прокрутки.
             """
             try:
                 for i in range(scrolls):
@@ -114,7 +120,7 @@ class Driver:
                     self.wait(delay)
                 return True
             except Exception as ex:
-                logger.error("Error during scrolling", exc_info=ex)
+                logger.error("Ошибка при прокрутке", exc_info=ex)
                 return False
 
         try:
@@ -126,58 +132,58 @@ class Driver:
                 if not carousel('', scrolls, frame_size, delay) or not carousel('-', scrolls, frame_size, delay):
                     return False
                 return True
-
-
         except Exception as ex:
-            logger.error("Error in scroll function", ex)
+            logger.error("Ошибка в функции прокрутки", ex)
             return False
 
     @property
     def locale(self) -> Optional[str]:
-        """ Attempts to determine the language of the page.
+        """
+        Попытка определить язык страницы.
 
-        Returns:
-            Optional[str]: The language code if found, `None` otherwise.
+        Возвращает:
+            Optional[str]: Код языка, если он найден, `None` в противном случае.
 
-        Raises:
-            Exception: If an error occurs while determining the language.
+        Исключения:
+            Exception: Если произошла ошибка при определении языка.
         """
         try:
             meta_language = self.find_element(By.CSS_SELECTOR, "meta[http-equiv='Content-Language']")
             return meta_language.get_attribute("content")
         except Exception as ex:
-            logger.debug("Could not determine site language from META", ex)
+            logger.debug("Не удалось определить язык сайта из META", ex)
             try:
                 return self.get_page_lang()
             except Exception as ex:
-                logger.debug("Could not determine site language from JavaScript", ex)
+                logger.debug("Не удалось определить язык сайта из JavaScript", ex)
                 return
 
     def get_url(self, url: str) -> bool:
-        """ Navigates to the specified URL and saves the current URL, previous URL, and cookies.
+        """
+        Переходит по указанному URL и сохраняет текущий URL, предыдущий URL и куки.
 
         Args:
-            url (str): The URL to navigate to.
+            url (str): URL для перехода.
 
-        Returns:
-            bool: `True` if the transition is successful and the current URL matches the expected one, `False` otherwise.
+        Возвращает:
+            bool: `True`, если переход успешен и текущий URL совпадает с ожидаемым, `False` в противном случае.
 
-        Raises:
-            WebDriverException: If an error occurs with WebDriver operations.
-            InvalidArgumentException: If the URL is invalid.
-            Exception: For any other errors during navigation.
+        Исключения:
+            WebDriverException: Если возникает ошибка с WebDriver.
+            InvalidArgumentException: Если URL некорректен.
+            Exception: Для любых других ошибок при переходе.
         """
         try:
             _previous_url = copy.copy(self.current_url)
         except Exception as ex:
-            logger.error("Driver exception:", ex)
+            logger.error("Ошибка при получении текущего URL", ex)
             return False
         
         try:
             self.driver.get(url)
             
             while self.ready_state != 'complete':
-                """ Wait until the whole page loads """
+                """ Ожидаем завершения загрузки страницы """
 
             if url != _previous_url:
                 self.previous_url = _previous_url
@@ -193,20 +199,21 @@ class Driver:
             logger.error(f"InvalidArgumentException {url}", ex)
             return False
         except Exception as ex:
-            logger.error(f'Error on url: {url}\n', ex)
+            logger.error(f'Ошибка при переходе по URL: {url}\n', ex)
             return False
 
     def fetch_html(self, url: str) -> Optional[bool]:
-        """ Fetches HTML content from a file or URL and parses it with BeautifulSoup and XPath.
+        """
+        Извлекает HTML-контент из файла или URL и парсит его с помощью BeautifulSoup и XPath.
 
         Args:
-            url (str): The file path or URL to fetch HTML content from.
+            url (str): Путь к файлу или URL для извлечения HTML-контента.
 
-        Returns:
-            Optional[bool]: `True` on successful content retrieval, `None` otherwise.
+        Возвращает:
+            Optional[bool]: `True` при успешном получении контента, `None` в противном случае.
 
-        Raises:
-            Exception: If an error occurs during content retrieval.
+        Исключения:
+            Exception: Если произошла ошибка при извлечении контента.
         """
         if url.startswith('file://'):
             cleaned_url = url.replace('file://', '')
@@ -220,13 +227,13 @@ class Driver:
                             self.html_content = file.read()
                         return True
                     except Exception as ex:
-                        logger.error('Exception while reading the file:', ex)
+                        logger.error('Ошибка при чтении файла:', ex)
                         return False
                 else:
-                    logger.error('Local file not found:', file_path)
+                    logger.error('Локальный файл не найден:', file_path)
                     return False
             else:
-                logger.error('Invalid file path:', cleaned_url)
+                logger.error('Некорректный путь к файлу:', cleaned_url)
                 return False
         elif url.startswith('http://') or url.startswith('https://'):
             try:
@@ -234,136 +241,36 @@ class Driver:
                     self.html_content = self.page_source
                     return True
             except Exception as ex:
-                logger.error(f"Error fetching {url}:", ex)
+                logger.error(f"Ошибка при получении {url}:", ex)
                 return False
         else:
-            logger.error('Invalid URL or file path:', url)
+            logger.error("Ошибка: Неподдерживаемый протокол для URL:", url)
             return False
-    
-        return
 
-    def extract_body_text(self, url: str = '') -> str:
-        """ Extracts and returns the text from the body of the HTML page using JavaScript executed via Selenium.
+    def _save_cookies_localy(self):
+        """
+        Сохраняет куки в локальный файл.
 
-        Args:
-            url (str, optional): The URL of the webpage to extract text from. If not provided, extracts from the current page.
+        Возвращает:
+            None
 
-        Returns:
-            str: The extracted plain text from the body of the HTML page.
-
-        Examples:
-            >>> import header
-            >>> d = Driver()
-            >>>
-            >>> # 1. Extract from a specific URL
-            >>> text = d.extract_body_text('https://example.com')
-            >>> print(text)
-            >>> 
-            >>> # 2. Extract from the current page
-            >>> url = 'https://example2.com'
-            >>> d.get(url)
-            >>> text = d.extract_body_text()
-            >>> print(text)
+        Исключения:
+            Exception: Если произошла ошибка при сохранении куки.
         """
         try:
-            if url:
-                self.get(url)
-
-            script = """
-            return document.body.innerText;
-            """
-            text = self.execute_script(script)
+            with open(gs.cookies_filepath, 'wb') as cookiesfile:
+                pickle.dump(self.driver.get_cookies(), cookiesfile)
         except Exception as ex:
-            logger.error(f"Error processing page text extraction: {ex}")
-            text = ''
-        return text
+            logger.error('Ошибка при сохранении куки:', ex)
 
-    def extract_domain(self, url: str) -> str:
-        """ Extracts the domain name from the URL, removing the 'www' prefix if present.
+    def wait(self, delay: float = .3) -> None:
+        """
+        Ждет указанное количество времени.
 
         Args:
-            url (str): The URL to extract the domain from.
+            delay (float, optional): Время задержки в секундах. По умолчанию 0.3.
 
-        Returns:
-            str: Domain name without 'www' prefix.
-
-        Raises:
-            ValueError: If the URL is malformed.
+        Возвращает:
+            None
         """
-        if "://" in url:
-            url = url.split("://")[1]
-
-        domain = url.split('/')[0]
-
-        if domain.startswith('www.'):
-            domain = domain[4:]
-
-        return domain  
-
-    def _save_cookies_localy(self, to_file: Optional[str | Path] = None) -> bool:
-        """ Saves cookies to a local file.
-
-        Args:
-            to_file (Optional[str | Path], optional): Path to the file where cookies will be saved. Defaults to None.
-
-        Returns:
-            bool: `True` if cookies are successfully saved, `False` otherwise.
-
-        Raises:
-            Exception: If an error occurs while saving cookies.
-        """
-        return True # <- debug без куки
-        if not to_file:
-            to_file = Path(gs.path.google_drive / 'cookies' / self.driver_name / self.extract_domain(self.current_url) / 'cookie')
-        
-        directory = to_file.parent
-        if not directory.exists():
-            directory.mkdir(parents=True)
-
-        try:
-            cookies = self.get_cookies()
-        except Exception as ex:
-            logger.debug("Error getting cookies", ex, True)
-            return False
-            
-        try:
-            with open(to_file, 'wb') as file:
-                pickle.dump(cookies, file)
-        except Exception as ex:
-            logger.debug("Cookie local file was not saved", ex)
-            return False
-    
-        return True
-
-    def page_refresh(self) -> bool:
-        """ Refreshes the page and waits for it to fully reload.
-
-        Returns:
-            bool: `True` if the page refresh is successful, `False` otherwise.
-
-        Raises:
-            Exception: If an error occurs during page refresh.
-        """
-        return self.get_url(self.current_url)
-
-    def window_focus(self) -> None:
-        """ Returns focus to the page (removes focus from the element).
-
-        Returns:
-            None: This method does not return any value.
-
-        Raises:
-            Exception: If an error occurs while returning focus.
-        """
-        self.ready_state()
-
-    def wait(self, interval: float = 0) -> None:
-        """ Waits for a specified time interval.
-
-        Args:
-            interval (float, optional): The time interval to wait in seconds. Defaults to 0.
-
-        Returns:
-            None: This method does not return any value.
-        """
-        time.sleep(interval)
+        time.sleep(delay)

@@ -1,44 +1,15 @@
 ## \file hypotez/src/suppliers/aliexpress/alirequests.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress """
-MODE = 'development'
-
-
-""" AliExpress requests handling.
-alirequests.py
-│
-├── pickle
-│
-├── requests
-│   ├── requests.sessions.Session
-│   ├── requests.cookies.RequestsCookieJar
-│   ├── requests.RequestException
-│
-├── pathlib.Path
-│
-├── typing.List
-│
-├── urllib.parse.urlparse
-│
-├── fake_useragent.UserAgent
-│
-├── src.settings.gs
-│   └── gs.dir_cookies
-│
-├── src.utils.j_dumps
-│
-├── src.logger.logger
-│   ├── logger.success()
-│   ├── logger.error()
-│   ├── logger.warning()
-│
-└── src.suppliers.supplier.Supplier
-    ├── Supplier
-    ├── Supplier.__init__()
+#! venv/bin/python/python3.12
 
 """
+.. module: src.suppliers.aliexpress 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
 
 import pickle
 import requests

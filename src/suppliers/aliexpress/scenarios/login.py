@@ -1,15 +1,16 @@
 ## \file hypotez/src/suppliers/aliexpress/scenarios/login.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.scenarios """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.aliexpress.scenarios 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-
-""" Сценарии логина на сайт aliexpress.com 
-Заменено на куки
-"""
 
 import requests
 import pickle

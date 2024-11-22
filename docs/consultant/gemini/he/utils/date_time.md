@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! This module contains a function to check if the current time is within a specified interval with an optional timeout.
+""" This module contains a function to check if the current time is within a specified interval with an optional timeout.
 
 The `interval` function allows for determining whether the current time falls within the 
 given time frame, which is useful for running operations that should only occur during 
@@ -24,15 +24,15 @@ import threading
 from src.logger import logger
 
 class TimeoutCheck:
-    """! Class for checking time intervals and handling timeouts."""
+    """ Class for checking time intervals and handling timeouts."""
 
     def __init__(self):
-        """! Initializes the TimeoutCheck class."""
+        """ Initializes the TimeoutCheck class."""
         self.result = None
 
 
     def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval.
+        """ Check if the current time is within the specified interval.
 
         Args:
             start (time): Start of the interval (default is 23:00).
@@ -58,7 +58,7 @@ class TimeoutCheck:
 
 
     def interval_with_timeout(self, timeout: int = 5, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval with a timeout.
+        """ Check if the current time is within the specified interval with a timeout.
 
         Args:
             timeout (int): Time in seconds to wait for the interval check.
@@ -79,7 +79,7 @@ class TimeoutCheck:
 
 
     def get_input(self) -> str:
-        """! Prompts the user for input.
+        """ Prompts the user for input.
 
         Returns:
             str: User's input.
@@ -89,7 +89,7 @@ class TimeoutCheck:
 
 
     def input_with_timeout(self, timeout: int = 5) -> str | None:
-        """! Waits for user input with a timeout.
+        """ Waits for user input with a timeout.
 
         Args:
             timeout (int): Time in seconds to wait for input.

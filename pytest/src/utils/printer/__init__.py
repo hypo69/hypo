@@ -1,12 +1,42 @@
 ## \file hypotez/pytest/src/utils/printer/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: pytest.src.utils.printer """
+#! venv/bin/python/python3.12
+
+"""
+.. module: pytest.src.utils.printer 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
 
-"""! This module initializes the `utils` package.
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: pytest.src.utils.printer """
+
+
+""" This module initializes the `utils` package.
 
 This module imports the `pprint` function from the `printer` module. It is designed to provide utility functions and tools to support various operations within the package.
 

@@ -61,7 +61,7 @@ class CodeAssistant:
         :param start_dirs: Список директорий для обработки.
         :param start_file_number: С какого файла начинать обработку.
         """
-        self.role = kwargs.get('role', 'doc_creator')
+        self.role = kwargs.get('role', 'doc_writer')
         self.lang = kwargs.get('lang', 'EN')
         self.model = kwargs.get('model', ['gemini'])
         self.start_dirs = kwargs.get('start_dirs', [])
@@ -442,7 +442,7 @@ class CodeAssistant:
         :param start_dirs: Список директорий для обработки.
         :param start_file_number: С какого файла начинать обработку.
         """
-        self.role = kwargs.get('role', 'doc_creator')
+        self.role = kwargs.get('role', 'doc_writer')
         self.lang = kwargs.get('lang', 'EN')
         self.model = kwargs.get('model', ['gemini'])
         self.start_dirs = [Path(d) for d in kwargs.get('start_dirs', [])]  # Convert to Path objects

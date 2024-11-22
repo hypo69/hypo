@@ -1,11 +1,15 @@
 ## \file hypotez/src/goog/spreadsheet/reach_spreadsheet.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.goog.spreadsheet """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.goog.spreadsheet 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
-
-
 
 """ 
    https://habr.com/ru/post/305378/    

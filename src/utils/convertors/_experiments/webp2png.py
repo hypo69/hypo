@@ -1,12 +1,42 @@
 ## \file hypotez/src/utils/convertors/_experiments/webp2png.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors._experiments """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils.convertors._experiments 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
 
-"""! This module converts WebP images to PNG format.
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.utils.convertors._experiments """
+
+
+""" This module converts WebP images to PNG format.
 
 It retrieves WebP files from a specified directory and converts them to PNG format, 
 saving the output to another directory. The conversion is handled by the `webp2png` function.
@@ -19,7 +49,7 @@ from src.utils.convertors.webp2png import webp2png
 from src.utils.file import get_filenames
 
 def convert_images(webp_dir: Path, png_dir: Path) -> None:
-    """! Convert all WebP images in the specified directory to PNG format.
+    """ Convert all WebP images in the specified directory to PNG format.
 
     Args:
         webp_dir (Path): Directory containing the source WebP images.

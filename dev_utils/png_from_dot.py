@@ -1,9 +1,41 @@
 ## \file hypotez/dev_utils/png_from_dot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: dev_utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: dev_utils 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+ 
+
+"""
+ 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+"""  """
 
 
 # /path/to/interpreter/python
@@ -11,7 +43,7 @@ MODE = 'development'
 import os
 
 def generate_image_links(folder_path):
-    """!
+    """
     Генерирует список изображений в Markdown для всех файлов из указанной папки.
 
     Args:

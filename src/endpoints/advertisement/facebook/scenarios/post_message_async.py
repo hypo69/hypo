@@ -1,13 +1,15 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message_async.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook.scenarios """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook.scenarios 
+	:platform: Windows, Unix
+	:synopsis: Публикация сообщения из `aliexpress` промо
+
+"""
 MODE = 'development'
-
-
-
-""" Публикация сообщения из алиэкспресс промо """
 
 import time
 import asyncio

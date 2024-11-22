@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
 quick start:   https://docs.helicone.ai/getting-started/quick-start
 """
 
@@ -35,7 +35,7 @@ from src.logger import logger  # Import logger
 MODE = 'development'
 
 
-# """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
+# """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
 # quick start:   https://docs.helicone.ai/getting-started/quick-start
 # """
 
@@ -99,7 +99,7 @@ from src.logger import logger  # Import logger
 MODE = 'development'
 
 
-# """! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
+# """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
 # quick start:   https://docs.helicone.ai/getting-started/quick-start
 # """
 

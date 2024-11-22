@@ -1,10 +1,15 @@
 ## \file hypotez/src/suppliers/wallashop/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.wallashop """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module: src.suppliers.wallashop 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
 
 from .graber import Graber
 

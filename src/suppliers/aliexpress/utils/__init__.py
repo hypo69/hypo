@@ -1,20 +1,15 @@
 ## \file hypotez/src/suppliers/aliexpress/utils/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.utils """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" модули управления рекламной кампанией Aliexpress:
-
- 
 """
-...
+.. module: src.suppliers.aliexpress.utils 
+	:platform: Windows, Unix
+	:synopsis:
 
-...
-from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
+"""
+MODE = 'development'
 
 from .extract_product_id import extract_prod_ids
 from .ensure_https import ensure_https

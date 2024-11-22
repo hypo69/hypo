@@ -1,9 +1,39 @@
 ## \file hypotez/src/goog/gtranslater/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.goog.gtranslater """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.goog.gtranslater 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.goog.gtranslater """
 
 
 """ This module handles language translation using Google Translate API. It includes a function to translate text with automatic language detection for the input text if not specified."""

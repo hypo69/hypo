@@ -1,71 +1,16 @@
 ## \file hypotez/src/suppliers/aliexpress/aliapi.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.aliexpress 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-""" AliExpress API Scenario
-\rst
-aliapi.py
-│
-├── re
-│
-├── json
-│
-├── asyncio
-│
-├── pathlib.Path
-│
-├── typing.Union, List, Dict
-│
-├── types.SimpleNamespace
-│
-├── requests.get
-│
-├── requests.post
-│
-├── src.settings.gs
-│   ├── gs.aliexpress_credentials
-│   │   ├── api_key
-│   │   ├── secret
-│   │   └── tracking_id
-│
-├── src.utils.jjson
-│
-├── src.utils.j_loads
-│
-├── src.utils.j_dumps
-│
-├── src.utils.pprint
-│
-├── src.utils.convertor.xls2dict.xls2dict
-│
-├── src.utils.convertor.json2csv.json2csv
-│
-├── src.logger.logger
-│   ├── logger.success()
-│   ├── logger.error()
-│   ├── logger.warning()
-│
-├── src.db.manager_categories.AliexpressCategory
-│
-├── src.db.manager_categories.CategoryManager
-│
-├── src.db.manager_coupons_and_sales.ProductCampaignsManager
-│
-└── .api.AliexpressApi
-    ├── AliexpressApi
-    ├── AliexpressApi.__init__()
-    ├── AliexpressApi.retrieve_product_details()
-    ├── AliexpressApi.get_affiliate_links()
-\endrst
-The `start()` function begins the API scenario collection process, 
-processing XLS files from the `scenarios\\api\\sources` directory. 
-`start()` processes only one XLS file if specified, or all files in the directory if no specific file is provided.
-"""
-...
 
 ...
 import re

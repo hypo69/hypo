@@ -1,16 +1,17 @@
 ## \file hypotez/src/utils/convertors/csv.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
-MODE = 'development'
-
-
+#! venv/bin/python/python3.12
 
 """
-CSV and JSON conversion utilities.
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis: CSV and JSON conversion utilities
 
-Functions:
+"""
+MODE = 'development'
+
+""" Functions:
     - `csv2dict`: Convert CSV data to a dictionary.
     - `csv2ns`: Convert CSV data to SimpleNamespace objects.
 
@@ -83,7 +84,7 @@ def csv_to_json(
     json_file_path: str | Path,
     exc_info: bool = True
 ) -> List[Dict[str, str]] | None:
-    """! Convert a CSV file to JSON format and save it to a JSON file.
+    """ Convert a CSV file to JSON format and save it to a JSON file.
 
     Args:
         csv_file_path (str | Path): The path to the CSV file to read.

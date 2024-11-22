@@ -8,7 +8,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header
 from flask import Flask, request, jsonify
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 from flask import Flask, request, jsonify
 from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
 from src.logger import logger  # Import logger for error handling
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 from flask import Flask, request, jsonify
 from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
 from src.logger import logger  # Import logger for error handling

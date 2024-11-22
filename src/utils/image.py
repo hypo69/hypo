@@ -1,39 +1,58 @@
 ## \file hypotez/src/utils/image.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
-Image Saving Utilities.
+.. module:: src.utils
+    :platform: Windows, Unix
+    :synopsis: Image Saving Utilities
 
 This module provides asynchronous functions to download, save, and retrieve image data.
 
 Functions:
-    save_png_from_url(image_url: str, filename: str | Path) -> str | None:
-        Download an image from a URL and save it locally asynchronously.
+    - :func:`save_png_from_url`
+    - :func:`save_png`
+    - :func:`get_image_data`
 
-    save_png(image_data: bytes, file_name: str | Path) -> str | None:
-        Save an image in PNG format asynchronously.
+.. function:: save_png_from_url(image_url: str, filename: str | Path) -> str | None
 
-    get_image_data(file_name: str | Path) -> bytes | None:
-        Retrieve binary data of a file if it exists.
+    Download an image from a URL and save it locally asynchronously.
 
-Examples:
+    :param image_url: The URL to download the image from.
+    :param filename: The name of the file to save the image to.
+    :return: The path to the saved file or ``None`` if the operation failed.
+
+    Example:
     >>> asyncio.run(save_png_from_url("https://example.com/image.png", "local_image.png"))
     'local_image.png'
 
+.. function:: save_png(image_data: bytes, file_name: str | Path) -> str | None
+
+    Save an image in PNG format asynchronously.
+
+    :param image_data: The binary image data.
+    :param file_name: The name of the file to save the image to.
+    :return: The path to the saved file or ``None`` if the operation failed.
+
+    Example:
     >>> with open("example_image.png", "rb") as f:
     ...     image_data = f.read()
     >>> asyncio.run(save_png(image_data, "saved_image.png"))
     'saved_image.png'
 
+.. function:: get_image_data(file_name: str | Path) -> bytes | None
+
+    Retrieve binary data of a file if it exists.
+
+    :param file_name: The name of the file to read.
+    :return: The binary data of the file if it exists, or ``None`` if the file is not found or an error occurred.
+
+    Example:
     >>> get_image_data("saved_image.png")
     b'\x89PNG\r\n...'
 """
-
+MODE = 'development'
 import aiohttp
 import aiofiles
 from PIL import Image
@@ -48,14 +67,11 @@ async def save_png_from_url(
 ) -> str | None:
     """Download an image from a URL and save it locally asynchronously.
 
-    Args:
-        image_url (str): The URL to download the image from.
-        filename (str | Path): The name of the file to save the image to.
+    :param image_url: The URL to download the image from.
+    :param filename: The name of the file to save the image to.
+    :return: The path to the saved file or ``None`` if the operation failed.
 
-    Returns:
-        str | None: The path to the saved file or `None` if the operation failed.
-
-    Example:
+    :example:
         >>> asyncio.run(save_png_from_url("https://example.com/image.png", "local_image.png"))
         'local_image.png'
     """
@@ -74,14 +90,11 @@ async def save_png_from_url(
 async def save_png(image_data: bytes, file_name: str | Path) -> str | None:
     """Save an image in PNG format asynchronously.
 
-    Args:
-        image_data (bytes): The binary image data.
-        file_name (str | Path): The name of the file to save the image to.
+    :param image_data: The binary image data.
+    :param file_name: The name of the file to save the image to.
+    :return: The path to the saved file or ``None`` if the operation failed.
 
-    Returns:
-        str | None: The path to the saved file or `None` if the operation failed.
-
-    Example:
+    :example:
         >>> with open("example_image.png", "rb") as f:
         ...     image_data = f.read()
         >>> asyncio.run(save_png(image_data, "saved_image.png"))
@@ -121,13 +134,10 @@ async def save_png(image_data: bytes, file_name: str | Path) -> str | None:
 def get_image_data(file_name: str | Path) -> bytes | None:
     """Retrieve binary data of a file if it exists.
 
-    Args:
-        file_name (str | Path): The name of the file to read.
+    :param file_name: The name of the file to read.
+    :return: The binary data of the file if it exists, or ``None`` if the file is not found or an error occurred.
 
-    Returns:
-        bytes | None: The binary data of the file if it exists, or `None` if the file is not found or an error occurred.
-
-    Example:
+    :example:
         >>> get_image_data("saved_image.png")
         b'\x89PNG\r\n...'
     """

@@ -1,8 +1,14 @@
 ## \file hypotez/src/endpoints/hypo69/code_assistant/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.hypo69.code_assistant """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.hypo69.code_assistant 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 from .assistant import CodeAssistant

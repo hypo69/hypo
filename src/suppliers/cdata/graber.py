@@ -1,8 +1,14 @@
 ## \file hypotez/src/suppliers/cdata/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.cdata """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.cdata 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 import asyncio

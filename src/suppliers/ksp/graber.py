@@ -1,10 +1,15 @@
 ## \file hypotez/src/suppliers/ksp/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.ksp """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module: src.suppliers.ksp 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
 
 import asyncio
 from pathlib import Path

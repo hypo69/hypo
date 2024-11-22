@@ -1,14 +1,13 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/ali_promo_campaign.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'development'
-
-
+#! venv/bin/python/python3.12
 
 """
-@dotfile suppliers/aliexpress/campaigns/_dot/aliexpress_campaign.dot
+.. module: src.suppliers.aliexpress.campaign 
+	:platform: Windows, Unix
+	:synopsis: AliPromoCampaign
+
 
 ## AliPromoCampaign
 
@@ -39,7 +38,7 @@ MODE = 'development'
     >>> campaign = AliPromoCampaign("new_campaign", "EN", "USD")
     >>> campaign.process_ai_category("Electronics")
 """
-
+MODE = 'development'
 import header
 import asyncio
 import time

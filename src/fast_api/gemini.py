@@ -1,12 +1,42 @@
 ## \file hypotez/src/fast_api/gemini.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.fast_api """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.fast_api 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
+"""
+	:platform: Windows, Unix
+	:synopsis:
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.fast_api """
+
+
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
 import header 
 from flask import Flask, request, jsonify

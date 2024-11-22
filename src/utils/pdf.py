@@ -1,30 +1,60 @@
 ## \file hypotez/src/utils/pdf.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
-MODE = 'development'
-
-
-
+#! venv/bin/python/python3.12
 
 """
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: Модуль для преобразования HTML-контента или файлов в PDF
+
 Модуль для преобразования HTML-контента или файлов в PDF с использованием библиотеки `pdfkit`.
 Дополнительная информация:
 - https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b
 - https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err
 - https://habr.com/ru/companies/bothub/articles/853490/
 """
-
-import pdfkit
-from pathlib import Path
+MODE = 'development'
+import sys
 import os
+
+from pathlib import Path
+import pdfkit
 from reportlab.pdfgen import canvas
-from src.logger import logger
 from fpdf import FPDF
 
-from . import wkhtmltopdf_bin_path        
-wkhtmltopdf_exe = wkhtmltopdf_bin_path /  'wkhtmltopdf.exe'
+from src.logger import logger
+
+def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+    """
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
+
+    Args:
+        marker_files (tuple): Filenames or directory names to identify the project root.
+    
+    Returns:
+        Path: Path to the root directory if found, otherwise the directory where the script is located.
+    """
+    __root__:Path
+    current_path:Path = Path(__file__).resolve().parent
+    __root__ = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            __root__ = parent
+            break
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
+
+
+# Get the root directory of the project
+__root__: Path = get_project_root()
+"""__root__ (Path): Path to the root directory of the project"""
+
+
+     
+wkhtmltopdf_exe = __root__ / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' /  'wkhtmltopdf.exe'
 
 if not wkhtmltopdf_exe.exists():
     logger.error("Не найден wkhtmltopdf.exe по указанному пути.")
@@ -38,13 +68,13 @@ options = {"enable-local-file-access": ""}
 
 
 class PDFUtils:
-    """!
+    """
     Класс для работы с PDF-файлами, предоставляющий методы для сохранения HTML-контента в PDF.
     """
 
     @staticmethod
     def save_pdf(data: str | Path, pdf_file: str | Path) -> bool:
-        """!
+        """
         Сохранить HTML-контент или файл в PDF.
 
         Args:
@@ -76,7 +106,7 @@ class PDFUtils:
 
     @staticmethod
     def save_pdf_v2(data: str, pdf_file: str | Path) -> bool:
-        """!
+        """
         Альтернативный метод сохранения текста в PDF с использованием библиотеки FPDF.
 
         Args:

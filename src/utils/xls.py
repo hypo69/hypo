@@ -1,16 +1,17 @@
 ## \file hypotez/src/utils/xls.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
-Module: src.utils.xls
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`)
 
-Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`).
-This module provides functions to convert Excel files to JSON format, handle multiple sheets, and save JSON data back to Excel files.
+"""
+MODE = 'development'
+
+""" This module provides functions to convert Excel files to JSON format, handle multiple sheets, and save JSON data back to Excel files.
 
 Functions:
     read_xls_as_dict(xls_file: str, json_file: str = None, sheet_name: Union[str, int] = None) -> Union[Dict, List[Dict], bool]:

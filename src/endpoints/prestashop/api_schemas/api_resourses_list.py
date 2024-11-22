@@ -1,12 +1,15 @@
 ## \file hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop.api_schemas """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.prestashop.api_schemas 
+	:platform: Windows, Unix
+	:synopsis: Список всех доступных ресурсов для API вызовов
+
+"""
 MODE = 'development'
-
-
-""" Список всех доступных ресурсов для API вызовов"""
 
 resource:list = [
     'products', 
@@ -76,4 +79,4 @@ resource:list = [
     'warehouses', 
     'weight_ranges',
     'zones',
-    ]]
+    ]

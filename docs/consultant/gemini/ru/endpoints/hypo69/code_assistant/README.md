@@ -17,7 +17,7 @@
 ## Структура проекта
 
 - **Модели**: Используются модели **Gemini** и **OpenAI** для обработки запросов.
-- **Промпты**: Программа читает промпты из файлов в директории `src/ai/prompts/developer/` (например, `doc_creator_en.md`).
+- **Промпты**: Программа читает промпты из файлов в директории `src/ai/prompts/developer/` (например, `doc_writer_en.md`).
 - **Файлы**: Обрабатываются файлы с расширениями `.py` и `README.MD` в указанных стартовых директориях.
 
 ## Пример использования
@@ -31,7 +31,7 @@ python assistant.py --settings settings.json
 ### Запуск с явным указанием параметров:
 
 ```bash
-python assistant.py --role doc_creator --lang ru --models gemini openai --start_dirs /path/to/dir1 /path/to/dir2
+python assistant.py --role doc_writer --lang ru --models gemini openai --start_dirs /path/to/dir1 /path/to/dir2
 ```
 
 ### Пример для роли `code_checker`:
@@ -43,13 +43,13 @@ python assistant.py --role code_checker --lang en --models gemini --start_dirs /
 ### Пример для модели `openai`:
 
 ```bash
-python assistant.py --role doc_creator --lang en --models openai
+python assistant.py --role doc_writer --lang en --models openai
 ```
 
 ## Параметры командной строки
 
 - `--settings`: Путь к JSON файлу с настройками. Загружает параметры из файла.
-- `--role`: Роль модели для выполнения задачи (например, `doc_creator`, `code_checker`).
+- `--role`: Роль модели для выполнения задачи (например, `doc_writer`, `code_checker`).
 - `--lang`: Язык выполнения задачи (например, `ru` или `en`).
 - `--models`: Список моделей для инициализации (например, `gemini`, `openai`).
 - `--start_dirs`: Список директорий для обработки (например, `/path/to/dir1`).

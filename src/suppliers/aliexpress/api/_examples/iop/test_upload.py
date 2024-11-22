@@ -1,11 +1,8 @@
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_upload.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.iop """
-MODE = 'development'
-
-
 # # -*- coding: utf-8 -*-
 #
 # import iop

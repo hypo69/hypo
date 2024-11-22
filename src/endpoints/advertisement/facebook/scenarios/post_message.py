@@ -1,14 +1,17 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook.scenarios """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook.scenarios 
+	:platform: Windows, Unix
+	:synopsis: Публикация сообщения
+
+"""
 MODE = 'development'
 
 
-
-""" Публикация сообщения """
-...
 import time
 from pathlib import Path
 from types import SimpleNamespace

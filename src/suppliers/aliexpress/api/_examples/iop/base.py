@@ -1,11 +1,8 @@
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/base.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.iop """
-MODE = 'development'
-
-
 '''
 Created on 2018-03-21
 

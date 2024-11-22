@@ -1,13 +1,12 @@
 ## \file hypotez/src/utils/string/formatter.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.string """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
-String formatting functions.
+.. module: src.utils.string 
+	:platform: Windows, Unix
+	:synopsis: String formatting functions.
 
 Functions:
     - remove_line_breaks(input_str: str) -> str
@@ -23,7 +22,7 @@ Data transformation:
     - extract_value_from_parentheses_with_lead_dollar(input_str: str) -> str | list | bool
     - clean_url_from_protocols(url: str) -> str
 """
-
+MODE = 'development'
 import re
 import html
 from typing import List, Dict

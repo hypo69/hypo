@@ -1,16 +1,15 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook.scenarios """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook.scenarios 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
-
-
-""" Сценарии фейсбука """
-
-
-from packaging.version import Version
-from .version import __version__,  __doc__, __details__
 
 from .login import login
 from .post_message  import *

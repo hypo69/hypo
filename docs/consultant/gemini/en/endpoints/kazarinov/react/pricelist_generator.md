@@ -12,7 +12,7 @@ MODE = 'development'
 
 #https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c
 
-"""! Генератор HTML и PDF для мехиронов Казаринова
+""" Генератор HTML и PDF для мехиронов Казаринова
 
 Описание работы:
 - Конструктор `__init__`: Принимает шаблон, базовый путь, метку времени и язык.
@@ -40,7 +40,7 @@ config = pdfkit.configuration(wkhtmltopdf= str( gs.path.bin / 'wkhtmltopdf' / 'f
 
 @dataclass
 class ReportGenerator:
-    """!
+    """
     Класс для генерации HTML- и PDF-отчётов на основе данных из JSON.
     """
 
@@ -49,7 +49,7 @@ class ReportGenerator:
     env: Environment = field(default_factory=lambda: Environment(loader=FileSystemLoader('.')))
 
     def generate_html(self, data:dict ) -> str:
-        """!
+        """
         Генерирует HTML-контент на основе шаблона и данных.
 
         Args:
@@ -65,7 +65,7 @@ class ReportGenerator:
 
 
     def create_report(self, data: dict, html_file:str| Path, pdf_file:str |Path) -> None:
-        """!
+        """
         Полный цикл генерации отчёта.
 
         Args:

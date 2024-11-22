@@ -1,10 +1,15 @@
 ## \file hypotez/src/db/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.db """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module: src.db 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
 
 from .manager_translations import ProductTranslationsManager
 from .manager_translations import CategoryTranslationsManager

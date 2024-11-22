@@ -1,9 +1,39 @@
 ## \file hypotez/src/endpoints/prestashop/_experiments/ide_experiments_category.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop._experiments """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.prestashop._experiments 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.endpoints.prestashop._experiments """
 
 
 import ide_header

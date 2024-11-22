@@ -1,9 +1,18 @@
 ## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis:  HTML -> MD
+
+"""
 MODE = 'development'
+
+
+
 
 
 """html2text: Turn HTML into equivalent Markdown-structured text."""

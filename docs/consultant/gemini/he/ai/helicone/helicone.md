@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
 quick start:   https://docs.helicone.ai/getting-started/quick-start
 """
 
@@ -45,7 +45,7 @@ Reference quick start guide at https://docs.helicone.ai/getting-started/quick-st
 **Changes Made**
 
 - Added a complete RST-style docstring to the module (`__doc__`) explaining its purpose.
-- Removed the commented-out placeholder (`"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION !"""`).
+- Removed the commented-out placeholder (`""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION !"""`).
 - Replaced the placeholder with a more informative and structured docstring.
 - Imported `logger` from `src.logger`.  This is crucial for proper error handling.
 - Noted that `import header` should be modified to import the necessary libraries for Helicone.

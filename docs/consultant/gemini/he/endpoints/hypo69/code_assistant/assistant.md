@@ -54,8 +54,8 @@ class CodeAssistant:
 
     def __init__(self, **kwargs):
         """Инициализация ассистента с заданными параметрами."""
-        # #  param role: str = 'doc_creator'
-        self.role = kwargs.get('role', 'doc_creator')
+        # #  param role: str = 'doc_writer'
+        self.role = kwargs.get('role', 'doc_writer')
         self.lang = kwargs.get('lang', 'EN')
         self.model = kwargs.get('model', ['gemini'])
         self.start_dirs = [Path(d) for d in kwargs.get('start_dirs', [])]  # Convert strings to Path objects
@@ -115,7 +115,7 @@ class CodeAssistant:
 
     def __init__(self, **kwargs):
         """Initializes the assistant with provided parameters."""
-        self.role = kwargs.get('role', 'doc_creator')
+        self.role = kwargs.get('role', 'doc_writer')
         self.lang = kwargs.get('lang', 'EN')
         self.model = kwargs.get('model', ['gemini'])
         self.start_dirs = [Path(d) for d in kwargs.get('start_dirs', [])]  # Convert strings to Path objects

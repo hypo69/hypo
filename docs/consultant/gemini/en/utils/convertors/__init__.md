@@ -23,7 +23,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns
 warnings.filterwarnings("ignore", category=UserWarning)
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 

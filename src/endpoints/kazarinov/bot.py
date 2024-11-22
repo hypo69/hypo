@@ -1,12 +1,12 @@
 ## \file hypotez/src/endpoints/kazarinov/bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.kazarinov """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
 """
-### KazarinovTelegramBot
+.. module: src.endpoints.kazarinov 
+	:platform: Windows, Unix
+	:synopsis: KazarinovTelegramBot
 
 Описание:
 Модуль реализует Telegram-бота для проекта Kazarinov, поддерживающего 
@@ -22,23 +22,12 @@ MODE = 'development'
 5. Генерация ответов на сообщения через Google Generative AI.
 6. Логирование сообщений пользователей и их дальнейшая обработка.
 
-Зависимости:
-- pydantic: для работы с конфигурационными моделями.
-- telegram.ext: для создания и управления Telegram-ботом.
-- GoogleGenerativeAI: для генерации ответов на сообщения пользователей.
-- Mexiron: для парсинга и обработки данных товаров поставщиков.
-- Driver (Chrome | Edge | Firefox | Playwright): обеспечивает работу с целeвыми HTML.
-- HandlerExecutors: реализует набор вспомогательных методов для обработки пользовательских команд, маршрутизации сообщений и выполнения сценариев, специфичных для Kazarinov.
 """
-
+MODE = 'development'
 import asyncio
-from importlib.resources import read_text
-import json
-import random
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict
 from types import SimpleNamespace
-from pydantic import BaseModel, Field
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
@@ -52,7 +41,6 @@ from src.utils.string.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
-
 class KazarinovTelegramBot(TelegramBot, HandlersParser):
     """Telegram bot with custom behavior for Kazarinov."""
 
@@ -60,11 +48,11 @@ class KazarinovTelegramBot(TelegramBot, HandlersParser):
     config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
 
     system_instruction: str = Path(
-        gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction.md'
+        gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md'
     ).read_text(encoding='UTF-8')
 
     mexiron_command_instruction: str = Path(
-        gs.path.endpoints / 'kazarinov' / 'instructions' / 'mexiron.md'
+        gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md'
     ).read_text(encoding='UTF-8')
 
     questions_list_path = config.questions_list_path

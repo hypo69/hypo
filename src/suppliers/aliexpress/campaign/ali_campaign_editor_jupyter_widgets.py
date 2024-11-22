@@ -1,19 +1,21 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/ali_campaign_editor_jupyter_widgets.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.campaign """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-
-""" Jupyter widgets for the AliExpress campaign editor.
+"""
+.. module: src.suppliers.aliexpress.campaign 
+	:platform: Windows, Unix
+	:synopsis: Jupyter widgets for the AliExpress campaign editor.
 
 This module contains widgets for managing AliExpress campaigns in Jupyter notebooks.
 
 Testfile:
     file test_ali_campaign_editor_jupyter_widgets.py
+
 """
+MODE = 'development'
+
 
 from types import SimpleNamespace
 import header

@@ -1,17 +1,15 @@
 ## \file hypotez/src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" Class of product category in `PrestaShop`
+"""
+.. module: src.endpoints.prestashop 
+	:platform: Windows, Unix
+	:synopsis: `PrestaCategory` layer between client categories (PrestaShop, in my case) and suppliers
 The class provides methods for adding, deleting, updating categories, 
 as well as obtaining a list of parent categories from a given one.
 
-@details `PrestaCategory` layer between client categories (PrestaShop, in my case) and suppliers
- 
 locator_description Clients can each have their own unique category tree, which is only understandable to them. 
 Product binding to category is described in supplier scenarios
 
@@ -19,7 +17,8 @@ Product binding to category is described in supplier scenarios
 """
 ...
 
-...
+MODE = 'development'
+
 import requests
 from attr import attr, attrs
 from pathlib import Path

@@ -1,16 +1,13 @@
 ## \file hypotez/src/utils/jjson.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils """
-MODE = 'development'
-
-
+#! venv/bin/python/python3.12
 
 """
-Module for handling JSON and CSV files, including loading, dumping, and merging data.
-
-This module provides functions to:
+.. module: src.utils 
+	:platform: Windows, Unix
+	:synopsis: Module for handling JSON and CSV files, including loading, dumping, and merging data.
+ This module provides functions to:
 - **Dump JSON data**: Convert JSON or SimpleNamespace objects into JSON format and write to a file, or return the JSON data as a dictionary.
 - **Load JSON and CSV data**: Read JSON or CSV data from a file, directory, or string, and convert it into dictionaries or lists of dictionaries.
 - **Convert to SimpleNamespace**: Convert loaded JSON data into SimpleNamespace objects for easier manipulation.
@@ -19,7 +16,7 @@ This module provides functions to:
 
 The functions in this module handle various aspects of working with JSON and CSV data, ensuring that data is loaded, saved, and merged efficiently and effectively.
 """
-
+MODE = 'development'
 from datetime import datetime
 from math import log
 from pathlib import Path

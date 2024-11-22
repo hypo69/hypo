@@ -1,14 +1,19 @@
 ## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 
 import requests
 from src.logger import logger
-"""!AI PROMPT: у меня есть свой модуль `src.logger` который  обеспечивает логирование в проекте """
 
 def check_latest_release(owner: str, repo: str):
     """Check the latest release version of a GitHub repository.

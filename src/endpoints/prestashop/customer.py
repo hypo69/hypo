@@ -1,14 +1,16 @@
 ## \file hypotez/src/endpoints/prestashop/customer.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.prestashop 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-
-"""  Класс клиента в `PrestaShop`"""
-...
 
 import sys
 import os

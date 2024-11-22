@@ -1,12 +1,13 @@
 ## \file hypotez/src/scenario/executor.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.scenario """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
+.. module: src.scenario 
+	:platform: Windows, Unix
+	:synopsis:
+
 Script Executor
 @details Executor functions:
 - `run_scenario_files()` - Accepts a list of scenario files, parses the list, and hands it over to the file executor.
@@ -124,7 +125,7 @@ s.run(list_of_scenarios)
 
 @image html executor.png
 """
-
+MODE = 'development'
 
 import os
 import sys

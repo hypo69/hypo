@@ -1,29 +1,18 @@
 ## \file hypotez/src/utils/string/validator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.string """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-
-"""  
- Модуль валидации строк
-@details Модуль может предоставлять функции для проверки строк на соответствие определенным критериям или форматам.
+"""
+.. module: src.utils.string 
+	:platform: Windows, Unix
+	:synopsis: Модуль валидации строк
+Модуль может предоставлять функции для проверки строк на соответствие определенным критериям или форматам.
 Валидация может включать в себя проверку наличия определенных символов, длины строки, формата электронной почты, URL и т. д.
  
- @section libs imports:
-  - re 
-  - .re_patterns 
-  - urllib.parse 
-  - attr 
-  - .string_formatter 
-  - helpers 
-  - gs 
-Author(s):
-  - Created by Davidka on 09.11.2023 .
 """
 ...
+MODE = 'development'
 import re, html
 from urllib.parse import urlparse, parse_qs
 from typing import Union

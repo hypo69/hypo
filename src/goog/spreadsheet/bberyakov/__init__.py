@@ -1,25 +1,16 @@
 ## \file hypotez/src/goog/spreadsheet/bberyakov/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.goog.spreadsheet.bberyakov """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.goog.spreadsheet.bberyakov 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-"""  Google tables manipulation
-
-@namespace src: src
- \package beeryakov.goog
-\file __init__.py
- 
- @section libs imports:
-  - .gspreadsheet 
-  - .gworksheets 
-  - .grender 
-  
-Author(s):
-  - Created by [Davidka] [BenAvraham] on 08.11.2023 .
-"""
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet
 from .grender import GSRenderr

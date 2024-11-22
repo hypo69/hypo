@@ -1,9 +1,19 @@
 ## \file hypotez/src/endpoints/hypo69/code_assistant/assistant.py
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
+#! venv/bin/python/python3.12
+
 """
-Модуль для работы ассистента программиста в проекте `src.endpoints.hypo69.code_assistant`
+.. module: src.endpoints.hypo69.code_assistant 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'development'
+
+
+"""
+Модуль для работы ассистента программиста
 =========================================================================================
 
 Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ, 
@@ -51,10 +61,10 @@ class CodeAssistant:
 
     def __init__(self, **kwargs):
         """Инициализация ассистента с заданными параметрами."""
-        self.role = kwargs.get('role', 'doc_creator')
+        self.role = kwargs.get('role', 'doc_writer')
         self.lang = kwargs.get('lang', 'EN')
         self.model = kwargs.get('model', ['gemini'])
-        self.start_dirs = kwargs.get('start_dirs', [])
+        self.start_dirs = kwargs.get('start_dirs', ['..'])
         self.base_path = gs.path.endpoints / 'hypo69' / 'code_assistant'
         self.config = j_loads_ns(self.base_path / 'code_assistant.json')
         self.gemini_model = None
@@ -240,8 +250,8 @@ def main():
 if __name__ == '__main__':
     #main()
     assistant_direct = CodeAssistant(
-        role="code_checker",
-        lang="he",
+        role="doc_writer",
+        lang="en",
         model=["gemini"],
         #start_dirs=[Path("suppliers"), Path("webdriver")],
         start_dirs=[".."],

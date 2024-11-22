@@ -10,7 +10,7 @@
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 from pathlib import Path
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
@@ -48,7 +48,7 @@ class FacebookFields:
 MODE = 'development'
 
 
-"""!
+"""
 Этот модуль содержит класс для работы с полями объявлений и событий Facebook.
 Он загружает данные о полях из файла JSON и сохраняет их в атрибутах объекта.
 """

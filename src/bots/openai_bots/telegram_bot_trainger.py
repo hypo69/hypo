@@ -1,9 +1,39 @@
 ## \file hypotez/src/bots/openai_bots/telegram_bot_trainger.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.bots.openai_bots """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.bots.openai_bots 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.bots.openai_bots """
 
 
 """ This script creates a simple Telegram bot using the python-telegram-bot library."""

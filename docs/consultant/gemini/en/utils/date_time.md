@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! This module contains a function to check if the current time is within a specified interval with an optional timeout.
+""" This module contains a function to check if the current time is within a specified interval with an optional timeout.
 
 The `interval` function allows for determining whether the current time falls within the 
 given time frame, which is useful for running operations that should only occur during 
@@ -25,15 +25,15 @@ from src.logger import logger
 import src.utils.jjson as jjson  # Import jjson for json handling
 
 class TimeoutCheck:
-    """! Class for checking time intervals and handling timeouts."""
+    """ Class for checking time intervals and handling timeouts."""
 
     def __init__(self):
-        """! Initializes the TimeoutCheck object."""
+        """ Initializes the TimeoutCheck object."""
         self.result = None
         self.user_input = None # Added for input handling
 
     def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval.
+        """ Check if the current time is within the specified interval.
         
         :param start: Start of the interval (default is 23:00).
         :param end: End of the interval (default is 06:00).
@@ -51,7 +51,7 @@ class TimeoutCheck:
 
 
     def interval_with_timeout(self, timeout: int = 5, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval with a timeout.
+        """ Check if the current time is within the specified interval with a timeout.
 
         :param timeout: Time in seconds to wait for the interval check.
         :param start: Start of the interval (default is 23:00).
@@ -69,11 +69,11 @@ class TimeoutCheck:
         return self.result
 
     def get_input(self):
-        """! Prompts the user for input."""
+        """ Prompts the user for input."""
         self.user_input = input("U:> ")  # Store user input
 
     def input_with_timeout(self, timeout: int = 5) -> str | None:
-        """! Waits for user input with a timeout.
+        """ Waits for user input with a timeout.
 
         :param timeout: Time in seconds to wait for input.
         :returns: User input if received within timeout, None otherwise.
@@ -116,15 +116,15 @@ from src.logger import logger
 import src.utils.jjson as jjson  # Import jjson for json handling
 
 class TimeoutCheck:
-    """! Class for checking time intervals and handling timeouts."""
+    """ Class for checking time intervals and handling timeouts."""
 
     def __init__(self):
-        """! Initializes the TimeoutCheck object."""
+        """ Initializes the TimeoutCheck object."""
         self.result = None
         self.user_input = None # Added for input handling
 
     def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval.
+        """ Check if the current time is within the specified interval.
         
         :param start: Start of the interval (default is 23:00).
         :param end: End of the interval (default is 06:00).
@@ -142,7 +142,7 @@ class TimeoutCheck:
 
 
     def interval_with_timeout(self, timeout: int = 5, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval with a timeout.
+        """ Check if the current time is within the specified interval with a timeout.
 
         :param timeout: Time in seconds to wait for the interval check.
         :param start: Start of the interval (default is 23:00).
@@ -160,11 +160,11 @@ class TimeoutCheck:
         return self.result
 
     def get_input(self):
-        """! Prompts the user for input."""
+        """ Prompts the user for input."""
         self.user_input = input("U:> ")  # Store user input
 
     def input_with_timeout(self, timeout: int = 5) -> str | None:
-        """! Waits for user input with a timeout.
+        """ Waits for user input with a timeout.
 
         :param timeout: Time in seconds to wait for input.
         :returns: User input if received within timeout, None otherwise.
@@ -220,15 +220,15 @@ from src.logger import logger
 import src.utils.jjson as jjson  # Import jjson for json handling
 
 class TimeoutCheck:
-    """! Class for checking time intervals and handling timeouts."""
+    """ Class for checking time intervals and handling timeouts."""
 
     def __init__(self):
-        """! Initializes the TimeoutCheck object."""
+        """ Initializes the TimeoutCheck object."""
         self.result = None
         self.user_input = None # Added for input handling
 
     def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval.
+        """ Check if the current time is within the specified interval.
         
         :param start: Start of the interval (default is 23:00).
         :param end: End of the interval (default is 06:00).
@@ -246,7 +246,7 @@ class TimeoutCheck:
 
 
     def interval_with_timeout(self, timeout: int = 5, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-        """! Check if the current time is within the specified interval with a timeout.
+        """ Check if the current time is within the specified interval with a timeout.
 
         :param timeout: Time in seconds to wait for the interval check.
         :param start: Start of the interval (default is 23:00).
@@ -264,11 +264,11 @@ class TimeoutCheck:
         return self.result
 
     def get_input(self):
-        """! Prompts the user for input."""
+        """ Prompts the user for input."""
         self.user_input = input("U:> ")  # Store user input
 
     def input_with_timeout(self, timeout: int = 5) -> str | None:
-        """! Waits for user input with a timeout.
+        """ Waits for user input with a timeout.
 
         :param timeout: Time in seconds to wait for input.
         :returns: User input if received within timeout, None otherwise.

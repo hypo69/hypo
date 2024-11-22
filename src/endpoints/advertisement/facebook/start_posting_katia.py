@@ -1,13 +1,16 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/start_posting_katia.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook 
+	:platform: Windows, Unix
+	:synopsis: Отправка рекламных объявлений в группы фейсбук (Katia?)
+
+"""
 MODE = 'development'
 
-
-
-"""Отправка рекламных объявлений в группы фейсбук """
 
 import header 
 from src.webdriver import Driver, Chrome

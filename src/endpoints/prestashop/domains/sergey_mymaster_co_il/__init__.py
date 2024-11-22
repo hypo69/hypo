@@ -1,9 +1,39 @@
 ## \file hypotez/src/endpoints/prestashop/domains/sergey_mymaster_co_il/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.prestashop.domains.sergey_mymaster_co_il """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.prestashop.domains.sergey_mymaster_co_il 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.endpoints.prestashop.domains.sergey_mymaster_co_il """
 
 
 """    Client's websites

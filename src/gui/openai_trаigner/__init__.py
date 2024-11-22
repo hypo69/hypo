@@ -1,9 +1,39 @@
 ## \file hypotez/src/gui/openai_trаigner/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.gui.openai_trаigner """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.gui.openai_trаigner 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.gui.openai_trаigner """
 
 
 """ @namespace src.fast_api """

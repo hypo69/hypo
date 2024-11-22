@@ -1,11 +1,15 @@
 ## \file hypotez/src/suppliers/aliexpress/utils/extract_product_id.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.utils """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.aliexpress.utils 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
-
-
 
 import re
 from src.logger import logger

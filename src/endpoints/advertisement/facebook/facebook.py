@@ -1,19 +1,20 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
+"""
+.. module: src.endpoints.advertisement.facebook 
+	:platform: Windows, Unix
+	:synopsis: Модуль рекламы на фейсбук
 
-
-"""  Модуль рекламы на фейсбук
-
-Испонемые сценарии:
+ сценарии:
 	- login: логин на фейсбук
 	- post_message: отправка текствого сообщения в форму 
 	- upload_media: Загрузка файла или списка файлов
+
 """
+MODE = 'development'
 
 import os, sys
 from pathlib import Path

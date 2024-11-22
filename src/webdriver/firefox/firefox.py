@@ -1,12 +1,12 @@
 ## \file hypotez/src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver.firefox """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" Firefox WebDriver
+"""
+.. module: src.webdriver.firefox 
+	:platform: Windows, Unix
+	:synopsis: Firefox WebDriver
 
 This code defines a subclass of `webdriver.Firefox` called `Firefox`. 
 It provides additional functionality such as the ability to launch Firefox 
@@ -24,8 +24,9 @@ if __name__ == "__main__":
     browser.quit()
 @endcode
 @image html class_firefox.png
-"""
 
+"""
+MODE = 'development'
 
 import os
 from pathlib import Path

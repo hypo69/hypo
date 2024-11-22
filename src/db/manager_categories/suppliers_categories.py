@@ -1,18 +1,21 @@
 ## \file hypotez/src/db/manager_categories/suppliers_categories.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.db.manager_categories """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" @namespace src.db.manager_categories """
-
-""" Модуль обработки категорий.
+"""
+.. module: src.db.manager_categories 
+	:platform: Windows, Unix
+	:synopsis: Модуль обработки категорий.
 сервер: davidka.net
-db: u177424397_splr_catgories
+db: uXXXXXXX_splr_catgories
  Для каждого поставщика есть таблица дерева категорий.
  Я сравниваю актуальные категории на сайте поставщика и храню их в таблицах поставщиков
+
+"""
+MODE = 'development'
+
+""" 
 """
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey 
 from sqlalchemy import and_, or_

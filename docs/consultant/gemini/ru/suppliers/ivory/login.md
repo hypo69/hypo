@@ -10,7 +10,7 @@
 MODE = 'development'
 
 
-"""! supplier: IVORY """
+""" supplier: IVORY """
 ```
 
 **Улучшенный код**
@@ -37,7 +37,7 @@ except ImportError as e:
 MODE = 'development'
 
 
-"""! supplier: IVORY """
+""" supplier: IVORY """
 
 ```
 

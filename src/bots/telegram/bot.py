@@ -1,11 +1,15 @@
 ## \file hypotez/src/bots/telegram/bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.bots.telegram """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.bots.telegram 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
-
-
 
 from pathlib import Path
 import tempfile

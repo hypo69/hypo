@@ -1,15 +1,16 @@
 ## \file hypotez/src/db/manager_coupons_and_sales/product_campaigns.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.db.manager_coupons_and_sales """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.db.manager_coupons_and_sales 
+	:platform: Windows, Unix
+	:synopsis: Купоны, скидки и т.п. для товаров PrestaShop
+
+"""
 MODE = 'development'
 
-
-""" Купоны, скидки и т.п. для товаров PrestaShop"""
-...
-
-...
 from sqlalchemy import create_engine
 from sqlalchemy import select
 from sqlalchemy import Column, Integer, DateTime, String, MetaData, Table, ForeignKey

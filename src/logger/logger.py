@@ -1,16 +1,15 @@
-## \file hypotez/src/logger/logger.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.logger """
-MODE = 'development'
-
-
+#! venv/bin/python/python3.12
 
 """
-Logger Module
+.. module: src.logger 
+	:platform: Windows, Unix
+	:synopsis: Logger Module
+"""
+MODE = 'development'
 
-This module provides a singleton logging utility with various logging levels and formats, including console, file, and JSON logging. It utilizes the Singleton design pattern to ensure a single instance of the logger is used throughout the application. The logger supports different log levels and output formats, and it can colorize console messages based on log severity.
+"""This module provides a singleton logging utility with various logging levels and formats, including console, file, and JSON logging. It utilizes the Singleton design pattern to ensure a single instance of the logger is used throughout the application. The logger supports different log levels and output formats, and it can colorize console messages based on log severity.
 
 Classes:
 - SingletonMeta: Metaclass for Singleton pattern implementation.
@@ -58,9 +57,7 @@ Examples:
     logger.debug('This is a debug message',None,exc_info=True)
     logger.error('This is an error message',ex)
     logger.critical('This is a critical message',ex)
-
 """
-...
 
 import threading
 import traceback
@@ -192,9 +189,7 @@ class Logger(metaclass=SingletonMeta):
         ...
         # Get the previous frame in the stack to find where the log was called
         # Adjust the stack index based on the depth of the call
-        frame_info = inspect.stack()[
-            3
-        ]  # 0 is the current frame, 1 is `_ex_full_info`, 2 is the caller of the logger method
+        frame_info = inspect.stack()[3]  # 0 is the current frame, 1 is `_ex_full_info`, 2 is the caller of the logger method
         file_name = frame_info.filename
         function_name = frame_info.function
         line_number = frame_info.lineno
@@ -258,18 +253,17 @@ class Logger(metaclass=SingletonMeta):
             message,
             ex,
             exc_info,
-            (colorama.Fore.BLACK, colorama.Back.YELLOW),
+            (colorama.Fore.WHITE, colorama.Back.RED),
         )
 
-    def info_red(self, message):
+    def info_red(self, message, ex=None, exc_info=True):
         """ Logs an info message in red."""
-        self.log(logging.INFO, message, color=colorama.Fore.RED)
+        self.log(logging.INFO, message, ex, exc_info, colorama.Fore.RED)
 
-    def info_black(self, message):
+    def info_black(self, message, ex=None, exc_info=True):
         """ Logs an info message in black with a white background."""
-        self.log(
-            logging.INFO, message, color=(colorama.Fore.BLACK, colorama.Back.WHITE)
-        )
+        self.log(logging.INFO, message, ex, exc_info, (colorama.Fore.BLACK, colorama.Back.WHITE))
+
 
 
 # Initialize logger

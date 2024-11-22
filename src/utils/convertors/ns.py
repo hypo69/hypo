@@ -1,13 +1,12 @@
 ## \file hypotez/src/utils/convertors/ns.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
-Module to convert SimpleNamespace (ns) into various formats: dict, JSON, CSV, XML, and XLS.
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis: convert SimpleNamespace (ns) into various formats: dict, JSON, CSV, XML, and XLS
 
 Functions:
     - ns2dict: Convert SimpleNamespace object to a dictionary.
@@ -16,7 +15,7 @@ Functions:
     - ns2xml: Convert SimpleNamespace object to XML format.
     - ns2xls: Convert SimpleNamespace object to XLS format.
 """
-
+MODE = 'development'
 import json
 import csv
 from types import SimpleNamespace

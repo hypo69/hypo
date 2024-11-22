@@ -1,9 +1,39 @@
 ## \file hypotez/pytest/src/utils/printer/test_printer.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: pytest.src.utils.printer """
+#! venv/bin/python/python3.12
+
+"""
+.. module: pytest.src.utils.printer 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: pytest.src.utils.printer """
 
 
 

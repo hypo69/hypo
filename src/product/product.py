@@ -1,14 +1,16 @@
 ## \file hypotez/src/product/product.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.product """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-"""  Class `Product`. Interaction between website, product, and PrestaShop.
-Defines the behavior of a product in the project.
 """
+.. module: src.product 
+	:platform: Windows, Unix
+	:synopsis: Interaction between website, product, and PrestaShop.
+Defines the behavior of a product in the project.
+
+"""
+MODE = 'development'
 
 import header
 from src import gs

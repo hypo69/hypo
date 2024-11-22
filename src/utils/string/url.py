@@ -1,21 +1,22 @@
 ## \file hypotez/src/utils/string/url.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.string """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.utils.string 
+	:platform: Windows, Unix
+	:synopsis: Модуль для работы с URL строками, включая извлечение параметров запроса и проверку на валидность UR
+
+"""
 MODE = 'development'
 
-
-"""! module: src.utils.string 
-
-    Модуль для работы с URL строками, включая извлечение параметров запроса и проверку на валидность URL.
-"""
 
 from urllib.parse import urlparse, parse_qs
 import validators
 
 def extract_url_params(url: str) -> dict | None:
-    """! Извлекает параметры из строки URL.
+    """ Извлекает параметры из строки URL.
 
     Args:
         url (str): Строка URL для парсинга.
@@ -34,7 +35,7 @@ def extract_url_params(url: str) -> dict | None:
 
 
 def is_url(text: str) -> bool:
-    """! Проверяет, является ли переданный текст валидным URL с использованием библиотеки validators.
+    """ Проверяет, является ли переданный текст валидным URL с использованием библиотеки validators.
 
     Args:
         text (str): Строка для проверки.

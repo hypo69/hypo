@@ -1,13 +1,15 @@
 ## \file hypotez/src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.ai.gemini """
+#! venv/bin/python/python3.12
+
+"""
+.. module:: src.ai.gemini
+   :platform: Windows, Unix
+   :synopsis: Google generative AI integration
+"""
+
 MODE = 'development'
-
-
-"""Google generative AI integration."""
-
 import time
 import json
 from pathlib import Path

@@ -1,5 +1,5 @@
 {
-  "role": "doc_creator",
+  "role": "doc_writer",
   "lang": "EN",
   "model": [ "gemini" ],
   "start_dirs": [],
@@ -37,13 +37,13 @@
     "___*.*"
   ],
   "output_directory": {
-    "doc_creator": "<model>/<lang>",
+    "doc_writer": "model_docs/<model>/<lang>",
     "code_checker": "consultant/<model>/<lang>"
   },
   "argparse": {
     "role": {
       "default": "code_checker",
-      "choices": [ "doc_creator", "code_checker", "qa" ]
+      "choices": [ "doc_writer", "code_checker", "qa" ]
     },
     "lang": {
       "default": "en",

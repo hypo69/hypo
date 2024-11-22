@@ -1,25 +1,16 @@
 ## \file hypotez/src/goog/spreadsheet/bberyakov/gworksheets.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.goog.spreadsheet.bberyakov """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.goog.spreadsheet.bberyakov 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
-
-"""  [File's Description]
-
-@namespace src: src
- \package beeryakov.goog
-\file gworksheets.py
- 
- @section libs imports:
-  - gspread 
-  - goog.grender 
-  - typing 
-  
-Author(s):
-  - Created by [Davidka] [BenAvraham] on 08.11.2023 .
-"""
 
 from global_settingspread import Spreadsheet, Worksheet
 #from goog.gspreadsheet import GSpreadsheet

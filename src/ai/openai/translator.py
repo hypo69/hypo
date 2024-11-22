@@ -1,24 +1,15 @@
 ## \file hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.ai.openai """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-""" Переводчик 
-@code
-# Пример использования функции
-source_text = "Привет, как дела?"
-source_language = "Russian"
-target_language = "English"
-translation = translate_text(source_text, source_language, target_language)
-print(f"Translated text: {translation}")
-@endcode
+"""
+.. module:: src.ai.openai
+    :platform: Windows, Unix
+    :synopsis: Модуль для перевода текста с использованием OpenAI API.
 """
 
-
-
+MODE = 'development'
 
 import openai
 from src import gs
@@ -27,6 +18,27 @@ from src.logger import logger
 openai.api_key = gs.credentials.openai
 
 def translate(text, source_language, target_language):
+    """
+    Перевод текста с использованием OpenAI API.
+
+    Этот метод отправляет текст для перевода на указанный язык с помощью модели OpenAI и возвращает переведённый текст.
+
+    Аргументы:
+        text (str): Текст для перевода.
+        source_language (str): Язык исходного текста.
+        target_language (str): Язык для перевода.
+
+    Возвращает:
+        str: Переведённый текст.
+
+    Пример использования:
+        >>> source_text = "Привет, как дела?"
+        >>> source_language = "Russian"
+        >>> target_language = "English"
+        >>> translation = translate_text(source_text, source_language, target_language)
+        >>> print(f"Translated text: {translation}")
+    """
+    
     # Формируем запрос к OpenAI API
     prompt = (
         f"Translate the following text from {source_language} to {target_language}:\n\n"
@@ -52,5 +64,3 @@ def translate(text, source_language, target_language):
         # Логируем ошибку
         logger.error("Error during translation", ex)
         return
-
-

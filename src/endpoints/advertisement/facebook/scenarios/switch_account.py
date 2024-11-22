@@ -1,17 +1,15 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook.scenarios """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook.scenarios 
+	:platform: Windows, Unix
+	:synopsis: Переключение между аккаунатми
+"""
 MODE = 'development'
 
-
-""" Переключение на аккунт. 
-Если есть кнопка `Переключить` - нажимаю её """
-
-
-
-...
 from pathlib import Path
 from types import SimpleNamespace
 from src import gs
@@ -24,4 +22,5 @@ locator: SimpleNamespace = j_loads_ns(
 )
 
 def switch_account(driver: Driver):
+    """ Если есть кнопка `Переключить` - нажимаю её  """
     driver.execute_locator(locator.switch_to_account_button)

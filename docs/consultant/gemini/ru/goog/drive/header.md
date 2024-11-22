@@ -16,7 +16,7 @@ from pathlib import Path
 from src.utils import jjson  # Импортируем необходимые функции
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 
@@ -94,7 +94,7 @@ from pathlib import Path
 from src.utils import jjson  # Импортируем необходимые функции
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+    """
     Находит корневой каталог проекта, начиная с текущего каталога,
     переходя наверх по каталогам до первого, содержащего любой из файлов-маркеров.
 

@@ -1,8 +1,14 @@
 ## \file hypotez/src/webdriver/js.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.webdriver """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.webdriver 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 import header

@@ -1,21 +1,20 @@
 ## \file hypotez/src/utils/convertors/json.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
-MODE = 'development'
-
-
+#! venv/bin/python/python3.12
 
 """
-Module to convert JSON data into various formats: CSV, SimpleNamespace, XML, and XLS.
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis: convert JSON data into various formats: CSV, SimpleNamespace, XML, and XLS
+
 Functions:
     - `json2csv`: Convert JSON data to CSV format.
     - `json2ns`: Convert JSON data to SimpleNamespace object.
     - `json2xml`: Convert JSON data to XML format.
     - `json2xls`: Convert JSON data to XLS format.
 """
-
+MODE = 'development'
 import json
 import csv
 from types import SimpleNamespace

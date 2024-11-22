@@ -1,17 +1,16 @@
 ## \file hypotez/src/utils/string/html_escapes.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.string """
-MODE = 'development'
+#! venv/bin/python/python3.12
 
-
-
-"""    dictionary {UTF-8 : HTML ESCAPE}
+"""
+.. module: src.utils.string 
+	:platform: Windows, Unix
+	:synopsis: dictionary {UTF-8 : HTML ESCAPE}
  Словарь {UTF-8 : HTML ESCAPE}
 """
 ...
-
+MODE = 'development'
 
 html_escapes = {
     '&': '&amp;',

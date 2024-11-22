@@ -1,17 +1,16 @@
 ## \file hypotez/src/suppliers/aliexpress/campaign/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.suppliers.aliexpress.campaign """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.aliexpress.campaign 
+	:platform: Windows, Unix
+	:synopsis:модули управления рекламной кампанией Aliexpress
+
+"""
 MODE = 'development'
 
-
-
-""" модули управления рекламной кампанией Aliexpress:
-"""
-
-from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
 
 from .ali_campaign_editor import AliCampaignEditor
 #from .gsheet import AliCampaignGoogleSheet

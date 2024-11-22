@@ -1,14 +1,15 @@
 ## \file hypotez/src/product/product_fields/product_fields_translator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.product.product_fields """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.product.product_fields 
+	:platform: Windows, Unix
+	:synopsis: Модуль перевода полей товара на языки клиентской базы данных
+
+"""
 MODE = 'development'
-
-
-
-""" Модуль перевода полей товара на языки клиентской базы данных """
-...
 
 from pathlib import Path
 from typing import List

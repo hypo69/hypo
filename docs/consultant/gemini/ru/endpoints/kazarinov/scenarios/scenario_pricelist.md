@@ -37,7 +37,7 @@ from src.utils import pprint
 from src.logger import logger
 
 class Mexiron:
-    """! Handles suppliers for product extraction, parsing, and saving processes.
+    """ Handles suppliers for product extraction, parsing, and saving processes.
     
     Supported suppliers:
         - morlevi.co.il

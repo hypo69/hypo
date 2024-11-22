@@ -9,7 +9,7 @@
 MODE = 'development'
 
 
-"""! Module for managing and processing images and promoting to Facebook and PrestaShop. """
+""" Module for managing and processing images and promoting to Facebook and PrestaShop. """
 
 import header
 from pathlib import Path
@@ -28,7 +28,7 @@ from src.utils.jjson import j_loads_ns, j_dumps
 from src.logger import logger
 
 class EmilDesign:
-    """! Class for designing and promoting images through various platforms. """
+    """ Class for designing and promoting images through various platforms. """
 
     # Base path for the module data
     base_path: Path = (
@@ -37,11 +37,11 @@ class EmilDesign:
     )
 
     def __init__(self):
-        """! Initialize the EmilDesign class. """
+        """ Initialize the EmilDesign class. """
         ...
 
     def describe_images(self, from_url: str = False):
-        """! Describe images based on the provided instruction and examples.
+        """ Describe images based on the provided instruction and examples.
 
         Args:
             from_url (str, optional): If True, uses URL to describe images. Defaults to False.

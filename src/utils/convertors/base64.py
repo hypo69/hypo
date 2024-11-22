@@ -1,14 +1,17 @@
 ## \file hypotez/src/utils/convertors/base64.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.utils.convertors """
-MODE = 'development'
-
+#! venv/bin/python/python3.12
 
 """
-Convert Base64 encoded content to a temporary file.
-This module provides a function to decode Base64 encoded content and write it to a temporary file with the specified extension.
+.. module: src.utils.convertors 
+	:platform: Windows, Unix
+	:synopsis: Convert Base64 encoded content to a temporary file
+
+"""
+MODE = 'development'
+
+""" This module provides a function to decode Base64 encoded content and write it to a temporary file with the specified extension.
 
 Functions:
     - `base64_to_tmpfile`: Convert Base64 encoded content to a temporary file.

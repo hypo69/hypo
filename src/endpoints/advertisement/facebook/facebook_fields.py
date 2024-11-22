@@ -1,12 +1,17 @@
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.endpoints.advertisement.facebook """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.advertisement.facebook 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
 
 
-"""! HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 from pathlib import Path
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns

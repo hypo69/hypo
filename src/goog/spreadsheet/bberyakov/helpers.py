@@ -1,9 +1,39 @@
 ## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
-#! venv/bin/python
-""" module: src.goog.spreadsheet.bberyakov """
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.goog.spreadsheet.bberyakov 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 MODE = 'development'
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'development'
+  
+""" module: src.goog.spreadsheet.bberyakov """
 
 
 """ перевод цветовых форматов.
