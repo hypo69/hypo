@@ -250,7 +250,7 @@ def main():
 if __name__ == '__main__':
     #main()
     assistant_direct = CodeAssistant(
-        role="pytest",
+        role="doc_writer_md",
         lang="en",
         model=["gemini"],
         #start_dirs=[Path("suppliers"), Path("webdriver")],

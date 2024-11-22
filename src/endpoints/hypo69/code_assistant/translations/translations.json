@@ -7,14 +7,21 @@
       "de": "Ihre Spezialisierung ist die Codeprüfung",
       "he": "ההתמחות שלך היא בדיקת קוד"
     },
-    "doc_writer": {
-      "ru": "Твоя специализация - создание документации для кода",
-      "en": "Your specialization is documentation creation",
-      "fr": "Votre spécialisation est la création de documentation",
-      "de": "Ihre Spezialisierung ist die Dokumentenerstellung",
-      "he": "ההתמחות שלך היא יצירת תיעוד"
-    },
 
+    "doc_writer_rst": {
+      "ru": "Твоя специализация - создание документации для кода в формате `RST`",
+      "en": "Your specialization is documentation creation in the `RST` format",
+      "fr": "Votre spécialisation est la création de documentation au format `RST`",
+      "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `RST`-Format",
+      "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `RST`"
+    },
+    "doc_writer_md": {
+      "ru": "Твоя специализация - создание документации для кода в формате `MD`",
+      "en": "Your specialization is documentation creation in the `MD` format",
+      "fr": "Votre spécialisation est la création de documentation au format `MD`",
+      "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `MD`-Format",
+      "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `MD`"
+    },
     "pytest": {
       "ru": "Твоя специализация — написание тестов для кода",
       "en": "Your specialization is writing tests for code",
