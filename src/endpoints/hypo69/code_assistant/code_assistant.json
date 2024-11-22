@@ -38,9 +38,9 @@
     "___*.*"
   ],
   "output_directory": {
-    "doc_writer_rst": "model_docs/<model>/rst/<lang>",
-    "doc_writer_md": "model_docs/<model>/md/<lang>",
-    "code_checker": "consultant/<model>/<lang>",
+    "doc_writer_rst": "<model>/doc/rst/<lang>",
+    "doc_writer_md": "<model>/doc/md/<lang>",
+    "code_checker": "<model>/<lang>/consultant/<lang>",
     "pytest": "../pytest/<model>/<lang>"
   },
   "argparse": {
