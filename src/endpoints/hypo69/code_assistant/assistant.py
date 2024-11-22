@@ -5,58 +5,8 @@
 
 """
 .. module: src.endpoints.hypo69.code_assistant 
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-MODE = 'development'
-
-
-"""
-Модуль для работы ассистента программиста
-=========================================================================================
-
-Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ, 
-такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
-
-Пример использования
---------------------
-
-Пример использования класса `CodeAssistant`:
-
-.. code-block:: python
-
-    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-    assistant.process_files()
-"""
-
-import argparse
-import sys
-from pathlib import Path
-from typing import Iterator, List, Optional
-from types import SimpleNamespace
-import signal
-import time
-import re
-
-import header
-from src import gs
-from src.utils.jjson import j_loads, j_loads_ns
-from src.ai.gemini import GoogleGenerativeAI
-from src.ai.openai import OpenAIModel
-from src.utils.printer import pprint
-from src.logger import logger
-
-
-## \file hypotez/src/endpoints/hypo69/code_assistant/assistant.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module: src.endpoints.hypo69.code_assistant 
     :platform: Windows, Unix
-    :synopsis:
+    :synopsis: Модуль для работы ассистента программиста
 """
 
 MODE = 'development'
@@ -99,7 +49,8 @@ from src.logger import logger
 
 
 class CodeAssistant:
-    """Класс обучения ассистента программиста."""
+    """Класс для работы ассистента программиста с моделями ИИ."""
+
     role: str
     lang: str
     start_dirs: Path | str | list[Path] | list[str]
@@ -182,10 +133,10 @@ class CodeAssistant:
 
                 if self.gemini_model:
                     response = self.gemini_model.ask(content_request)
-                    response = self.remove_outer_quotes(response)
+                    
                     if response:
-                        cleaned_response = self.remove_outer_quotes(file_path)  # Обрабатываем ответ
-                        self._save_response(file_path, cleaned_response, 'gemini')
+                        response = self.remove_outer_quotes(response)
+                        self._save_response(file_path, response, 'gemini')
 
             pprint(f'Processed file number: {i + 1}', text_color='yellow')
             time.sleep(20)  
@@ -206,7 +157,7 @@ class CodeAssistant:
         self,
         start_dirs: List[Path] = [gs.path.src],
         patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD', 'README.EN.MD', 'INTRO.EN.MD']
-    ) -> Iterator[tuple[Path, str]]:
+    ) -> Iterator[tuple[Path, str]] :
         """Генерирует пути файлов и их содержимое по указанным шаблонам."""
         exclude_file_patterns = [re.compile(pattern) for pattern in self.config.exclude_file_patterns]
         for start_dir in start_dirs:
@@ -242,8 +193,8 @@ class CodeAssistant:
         """
         Удаляет внешние кавычки вокруг блоков кода, оформленных в Python, Markdown или reStructuredText.
 
-        :param file_path: Путь к файлу, который необходимо обработать.
-        :type file_path: Path
+        :param response: Ответ модели, который необходимо обработать.
+        :type response: str
         :return: Очищенный контент как строка.
         :rtype: str
         """
@@ -252,25 +203,22 @@ class CodeAssistant:
 
     def run(self, start_file_number: int = 1):
         """Запуск процесса обработки файлов."""
-        signal.signal(signal.SIGINT, lambda sig, frame: sys.exit(0))
+        signal.signal(signal.SIGINT, self._signal_handler)  # Обработка прерывания (Ctrl+C)
         self.process_files(start_file_number)
 
+    def _signal_handler(self, signal, frame):
+        """Обработка прерывания выполнения."""
+        pprint('Процесс был прерван', text_color='red')
+        sys.exit(0)
 
 
 def main():
-    """Основная точка входа в программу."""
-    # Парсинг аргументов через командную строку
+    """Основная функция для запуска."""
     args = CodeAssistant.parse_args()
-    
-    # Создание экземпляра ассистента с переданными параметрами
-    assistant = CodeAssistant(**args)
-    
-    # Логирование конфигурации
-    logger.info(f'Запуск ассистента с конфигурацией: роль={assistant.role}, язык={assistant.lang}, модели={assistant.model}, директории={assistant.start_dirs}')
-    
-    # Запуск обработки
-    assistant.run()
 
+    assistant = CodeAssistant(**args)
+
+    assistant.run(start_file_number=args['start_file_number'])
 
 if __name__ == '__main__':
     #main()
@@ -287,3 +235,4 @@ if __name__ == '__main__':
 
             )
             assistant_direct.process_files(start_file_number = 1)
+
