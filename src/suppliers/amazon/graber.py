@@ -55,11 +55,12 @@ def close_popup(value: Any = None) -> Callable:
 class Graber(Grbr, BaseModel):
     """Graber class for morlevi grabbing operations."""
     supplier_prefix: str = 'amazon'
-    d: Optional[Driver] = None  # d будет назначен позже в `grab_page()`
-    l: SimpleNamespace
 
     class Config:
         arbitrary_types_allowed = True
+
+    def __init__(self, driver:Driver):
+        super().__init__(supplier_prefix=self.supplier_prefix, d = driver)
 
     def __init__(self, driver:Driver):
         super().__init__(supplier_prefix=self.supplier_prefix, d = driver)

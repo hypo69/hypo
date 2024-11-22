@@ -111,6 +111,7 @@ class Mexiron:
         for url in urls_list:
             graber = self.get_graber_by_url(url)
             if not graber:
+                ...
                 continue
 
             try:
@@ -118,15 +119,18 @@ class Mexiron:
                 f = await graber.grab_page(self.d)
             except Exception as ex:
                 logger.debug(f'Failed to open page {url}.', ex)
+                ...
                 continue
 
             if not f:
                 logger.debug(f'Failed to parse product fields for URL: {url}')
+                ...
                 continue
 
             product_data = self.convert_product_fields(f)
             if not product_data:
                 logger.debug(f'Failed to convert product fields: {product_data}')
+                ...
                 continue
 
             products_list.append(product_data)
@@ -152,7 +156,7 @@ class Mexiron:
             Optional[object]: Graber instance if a match is found, None otherwise.
         """
         if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
-            return MorleviGraber().grab_page()
+            return MorleviGraber()
         if url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
             return KspGraber()
         if url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):

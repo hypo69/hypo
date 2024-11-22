@@ -16,9 +16,6 @@ MODE = 'development'
 
 
 from .telegram import TelegramBot
-
-
-
 ```
 
 **Improved Code**
@@ -30,33 +27,27 @@ from .telegram import TelegramBot
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.bots
+.. module:: hypotez.src.bots
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с различными ботами.
+   :synopsis: Инициализирующий модуль для ботов.
 """
-import os
 
-MODE = 'development'  # Режим работы приложения.
+# Добавлен импорт для логирования.
+from src.logger import logger
+MODE = 'development'
 
 
 from .telegram import TelegramBot
-from src.logger import logger # Импорт для логирования
-
-
-#TODO: добавить более подробную документацию для модуля
-
-
 ```
 
 **Changes Made**
 
-* Импортирован `logger` из `src.logger` для использования в коде.
-* Добавлена docstring для модуля в формате RST.
-* Добавлен импорт `os`, который, возможно, понадобится в дальнейшем.
-* Добавлены TODO пункты для дальнейшего улучшения документации.
+- Добавлена строка `from src.logger import logger` для импорта необходимой функции логирования.
+- Добавлены RST комментарии к модулю, описывающие его назначение, платформы и синопсис.
+- Исправлен RST синтаксис для модуля, теперь он соответствует стандарту reStructuredText.
 
 
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
 ## \file hypotez/src/bots/__init__.py
@@ -65,21 +56,16 @@ from src.logger import logger # Импорт для логирования
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.bots
+.. module:: hypotez.src.bots
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с различными ботами.
+   :synopsis: Инициализирующий модуль для ботов.
 """
-import os
 
-MODE = 'development'  # Режим работы приложения.
+# Добавлен импорт для логирования.
+from src.logger import logger
+# Переменная MODE теперь с описанием
+MODE = 'development' # Тип режима работы.
 
 
 from .telegram import TelegramBot
-from src.logger import logger # Импорт для логирования
-
-
-#TODO: добавить более подробную документацию для модуля
-
-
-#TODO: Добавить конфигурацию ботов
 ```

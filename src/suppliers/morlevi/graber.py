@@ -30,8 +30,6 @@ from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Callable
 
-d: Driver = None
-l: SimpleNamespace = None
 
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
@@ -56,9 +54,7 @@ def close_popup(value: Any = None) -> Callable:
 
 class Graber(Grbr, BaseModel):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str   = 'morlevi'
-    d: Optional[Driver] = None  # d будет назначен позже в `grab_page()`
-    l: SimpleNamespace
+    supplier_prefix: str = 'morlevi'
 
     class Config:
         arbitrary_types_allowed = True
@@ -77,7 +73,6 @@ class Graber(Grbr, BaseModel):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        global d
         d = self.d = driver  
         
         ...

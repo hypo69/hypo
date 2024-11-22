@@ -57,8 +57,6 @@ def close_popup(value: Any = None) -> Callable:
 class Graber(Grbr, BaseModel):
     """Graber class for morlevi grabbing operations."""
     supplier_prefix: str = 'aliexpress'
-    d: Optional[Driver] = None  # d будет назначен позже в `grab_page()`
-    l: SimpleNamespace
 
     class Config:
         arbitrary_types_allowed = True
@@ -77,8 +75,8 @@ class Graber(Grbr, BaseModel):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        global d
-        d = self.d = driver  
+        d = self.d 
+        l = self.l
         
         ...
         # Логика извлечения данных

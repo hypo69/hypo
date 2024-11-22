@@ -54,9 +54,7 @@ def close_popup(value: Any = None) -> Callable:
 
 class Graber(Grbr, BaseModel):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str  = 'ivory'
-    d: Optional[Driver] = None  # d будет назначен позже в `grab_page()`
-    l: SimpleNamespace
+    supplier_prefix: str = 'ivory'
 
     class Config:
         arbitrary_types_allowed = True
