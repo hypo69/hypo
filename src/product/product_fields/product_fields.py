@@ -1748,17 +1748,6 @@ class ProductFields:
             return
 
 
-
-
-
-
-
-
-
-
-
-
-
     ####################################################################################################################################
     #
     #
@@ -1966,7 +1955,7 @@ class ProductFields:
         try:
             self.presta_fields.name: dict = {'language':
                                                         [
-                                                            {'attrs':{'id':self.language[lang]}, 'value': normalize_product_name(value) },
+                                                            {'attrs':{'id':self.language[lang]}, 'value': sn.normalize_string (value) },
                                                         ]
                                                      }
             return True

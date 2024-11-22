@@ -156,12 +156,12 @@ class CodeAssistant:
     def _yield_files_content(
         self,
         start_dirs: List[Path] = [gs.path.src],
-        patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD', 'README.EN.MD', 'INTRO.EN.MD']
     ) -> Iterator[tuple[Path, str]] :
         """Генерирует пути файлов и их содержимое по указанным шаблонам."""
         exclude_file_patterns = [re.compile(pattern) for pattern in self.config.exclude_file_patterns]
+        include_file_patterns = self.config.include_files
         for start_dir in start_dirs:
-            for pattern in patterns:
+            for pattern in include_file_patterns:
                 for file_path in start_dir.rglob(pattern):
                     if any(exclude_dir in file_path.parts for exclude_dir in self.config.exclude_dirs):
                         pprint(f'Пропускаю файл в исключенной директории: {file_path}', text_color='cyan')

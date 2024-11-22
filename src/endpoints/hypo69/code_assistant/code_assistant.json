@@ -37,6 +37,18 @@
     "___+.*",
     "___*.*"
   ],
+  "include_files": [
+    "*.py",
+    "*.js",
+    "*.htm*",
+    "*.php",
+    "README.MD",
+    "INTRO.MD",
+    "README.RU.MD",
+    "INTRO.RU.MD",
+    "README.EN.MD",
+    "INTRO.EN.MD"
+  ],
   "output_directory": {
     "doc_writer_rst": "<model>/doc/rst/<lang>",
     "doc_writer_md": "<model>/doc/md/<lang>",
