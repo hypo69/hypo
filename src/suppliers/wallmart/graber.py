@@ -32,9 +32,6 @@ from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Callable
 
-d: Driver = None
-l: Locator = None
-
 # Определение декоратора для закрытия всплывающих окон
 def close_popup(value: Any = None) -> Callable:
     """Creates a decorator to close pop-ups before executing the main function logic.
@@ -56,15 +53,15 @@ def close_popup(value: Any = None) -> Callable:
         return wrapper
     return decorator
 
-class Graber(Grbr, BaseModel):
+class Graber(Grbr):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str = 'wallmart'
+    supplier_prefix: str
 
-    class Config:
-        arbitrary_types_allowed = True
 
     def __init__(self, driver:Driver):
-        super().__init__(supplier_prefix=self.supplier_prefix, d = driver)
+        """ Инициализация класса сбора полей товара. """
+        self.supplier_prefix: str = 'wallmart'
+        super().__init__(supplier_prefix=self.supplier_prefix, driver = driver)
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.

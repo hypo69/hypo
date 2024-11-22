@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/__init__.py
+# \file hypotez/src/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -20,7 +20,7 @@ from .credentials import gs
 **Improved Code**
 
 ```python
-## \file hypotez/src/__init__.py
+# \file hypotez/src/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -28,26 +28,25 @@ from .credentials import gs
 """
 .. module:: src
    :platform: Windows, Unix
-   :synopsis:  Инициализирующий модуль для пакета hypotez.
+   :synopsis:  Этот модуль содержит константы и импорты для приложения.
 
 """
 MODE = 'development'
 
+# Импорт из модуля credentials
 from .credentials import gs
-# Импорт модуля gs из файла credentials
 ```
 
 **Changes Made**
 
-* Добавлен заголовок RST для модуля `src` с кратким описанием.
-* Улучшена структура документации (использование `.. module::` вместо `.. module:`)
-* Убран неиспользуемый блок документации для platform и synopsis.
+- Добавлены строгие комментарии `.. module::` в формате reStructuredText.
+- Добавлен более подробный, наглядный комментарий к модулю, описывающий его назначение.
+- Изменен стиль комментария `.. module:` на `.. module::`.
+- Все импорты оформлены в соответствии с best practices Python
 
-
-**Full Improved Code**
 
 ```python
-## \file hypotez/src/__init__.py
+# \file hypotez/src/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -55,11 +54,11 @@ from .credentials import gs
 """
 .. module:: src
    :platform: Windows, Unix
-   :synopsis:  Инициализирующий модуль для пакета hypotez.
+   :synopsis:  Этот модуль содержит константы и импорты для приложения.
 
 """
 MODE = 'development'
 
+# Импорт из модуля credentials
 from .credentials import gs
-# Импорт модуля gs из файла credentials
 ```

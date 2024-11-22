@@ -1,10 +1,10 @@
-## \file hypotez/src/endpoints/kazarinov/bot.py
+## \file hypotez/src/endpoints/kazarinov/kazarinov_bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.kazarinov.bot 
+.. module: src.endpoints.kazarinov.kazarinov_bot 
 	:platform: Windows, Unix
 	:synopsis: KazarinovTelegramBot
 

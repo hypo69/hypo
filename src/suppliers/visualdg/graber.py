@@ -54,15 +54,15 @@ def close_popup(value: Any = None) -> Callable:
         return wrapper
     return decorator
 
-class Graber(Grbr, BaseModel):
+class Graber(Grbr):
     """Graber class for morlevi grabbing operations."""
-    supplier_prefix: str = 'visualdg'
+    supplier_prefix: str
 
-    class Config:
-        arbitrary_types_allowed = True
 
     def __init__(self, driver:Driver):
-        super().__init__(supplier_prefix=self.supplier_prefix, d = driver)
+        """ Инициализация класса сбора полей товара. """
+        self.supplier_prefix: str = 'visualdg'
+        super().__init__(supplier_prefix=self.supplier_prefix, driver = driver)
         
 
     async def grab_page(self, driver: Driver) -> ProductFields:

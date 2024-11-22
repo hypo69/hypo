@@ -49,7 +49,7 @@ class Mexiron:
     """
 
     # Class attributes
-    d: Driver
+    driver: Driver
     export_path: Path
     mexiron_name: str
     price: float
@@ -57,7 +57,7 @@ class Mexiron:
     products_list: List = field(default_factory=list)
     model: GoogleGenerativeAI
 
-    def __init__(self, d: Driver, mexiron_name: Optional[str] = None):
+    def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
         """
         Initializes Mexiron class with required components.
 
@@ -66,7 +66,7 @@ class Mexiron:
             mexiron_name (Optional[str]): Custom name for the Mexiron process.
         """
         self.timestamp = gs.now
-        self.d = d
+        self.driver = driver
         self.mexiron_name = mexiron_name or self.timestamp
         self.export_path = gs.path.external_storage / 'kazarinov' / 'mexironim' / self.mexiron_name
 
@@ -156,13 +156,13 @@ class Mexiron:
             Optional[object]: Graber instance if a match is found, None otherwise.
         """
         if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
-            return MorleviGraber()
+            return MorleviGraber(self.driver)
         if url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
-            return KspGraber()
+            return KspGraber(self.driver)
         if url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
-            return GrandadvanceGraber()
+            return GrandadvanceGraber(self.driver)
         if url.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
-            return IvoryGraber()
+            return IvoryGraber(self.driver)
         logger.debug(f'No graber found for URL: {url}')
         return None
 

@@ -228,17 +228,18 @@ def main():
 
 if __name__ == '__main__':
     #main()
-    for lang in ['ru','en']:
-        for role in ['code_checker','doc_writer_md','pytest','doc_writer_rst']:
-            logger.debug(f"Start role: {role}, lang: {lang}")
-            assistant_direct = CodeAssistant(
-                role=role,
-                lang=lang,
-                model=["gemini"],
-                #start_dirs=[Path("suppliers"), Path("webdriver")],
-                start_dirs=[".."],
-                start_file_number = 0
+    while True:
+        for lang in ['ru','en']:
+            for role in ['code_checker','doc_writer_md','pytest','doc_writer_rst']:
+                logger.debug(f"Start role: {role}, lang: {lang}")
+                assistant_direct = CodeAssistant(
+                    role=role,
+                    lang=lang,
+                    model=["gemini"],
+                    #start_dirs=[Path("suppliers"), Path("webdriver")],
+                    start_dirs=[".."],
+                    start_file_number = 0
 
-            )
-            assistant_direct.process_files(start_file_number = 1)
+                )
+                assistant_direct.process_files(start_file_number = 1)
 

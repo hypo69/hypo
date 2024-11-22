@@ -73,7 +73,7 @@ def close_popup(value: Any = None) -> Callable:
 class Graber:
     """Базовый класс сбора данных со страницы для всех поставщиков."""
     
-    def __init__(self, supplier_prefix: str, d:Driver):
+    def __init__(self, supplier_prefix: str, driver:Driver):
         """Инициализация класса Graber.
 
         Args:
@@ -83,8 +83,9 @@ class Graber:
         """
         self.supplier_prefix = supplier_prefix
         self.l:SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
-        self.d:Driver = d
-        self.fields = ProductFields()
+        self.d:Driver = driver
+        self.driver = self.d
+        self.fields:ProductFields = ProductFields()
 
     async def error(self, field: str):
         """Обработчик ошибок для полей."""
