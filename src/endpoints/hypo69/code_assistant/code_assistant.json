@@ -40,7 +40,7 @@
   "output_directory": {
     "doc_writer_rst": "<model>/doc/rst/<lang>",
     "doc_writer_md": "<model>/doc/md/<lang>",
-    "code_checker": "<model>/<lang>/consultant/<lang>",
+    "code_checker": "<model>/consultant/<lang>",
     "pytest": "../pytest/<model>/<lang>"
   },
   "argparse": {

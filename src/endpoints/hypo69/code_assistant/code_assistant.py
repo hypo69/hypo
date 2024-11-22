@@ -63,7 +63,7 @@ class CodeAssistant:
     def __init__(self, **kwargs):
         """Инициализация ассистента с заданными параметрами."""
         self.role = kwargs.get('role', 'doc_writer_rst')
-        self.lang = kwargs.get('lang', 'EN')
+        self.lang = 'en' if self.role == 'pytest' else kwargs.get('lang', 'EN')  
         self.model = kwargs.get('model', ['gemini'])
         self.start_dirs = kwargs.get('start_dirs', ['..'])
         self.base_path = gs.path.endpoints / 'hypo69' / 'code_assistant'
@@ -191,15 +191,21 @@ class CodeAssistant:
 
     def remove_outer_quotes(self, response: str) -> str:
         """
-        Удаляет внешние кавычки вокруг блоков кода, оформленных в Python, Markdown или reStructuredText.
+        Удаляет внешние кавычки в начале и в конце строки.
 
         :param response: Ответ модели, который необходимо обработать.
         :type response: str
         :return: Очищенный контент как строка.
         :rtype: str
         """
-        content = re.sub(r'```(.*?)```', '', response, flags=re.DOTALL)  # Remove block code
-        return content
+        # Удаляем внешние кавычки, если они есть в начале и в конце строки
+        if response.startswith('"') and response.endswith('"'):
+            response = response[1:-1]
+        elif response.startswith("'") and response.endswith("'"):
+            response = response[1:-1]
+
+        return response
+
 
     def run(self, start_file_number: int = 1):
         """Запуск процесса обработки файлов."""
@@ -222,7 +228,7 @@ def main():
 
 if __name__ == '__main__':
     #main()
-    for lang in ['en','ru']:
+    for lang in ['ru','en']:
         for role in ['code_checker','doc_writer_md','pytest','doc_writer_rst']:
             logger.debug(f"Start role: {role}, lang: {lang}")
             assistant_direct = CodeAssistant(

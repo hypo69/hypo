@@ -8,32 +8,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 
-"""
-MODE = 'development'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'development'
-  
-""" module: src.endpoints.hypo69.code_assistant """
 
 
 
@@ -50,6 +25,8 @@ MODE = 'development'
 4. Запуск с указанием роли 'doc_writer', языка 'en' и только модели 'openai':
     python main.py --role doc_writer --lang en --models openai
 """
+MODE = 'development'
+
 import argparse
 import json
 from pathlib import Path

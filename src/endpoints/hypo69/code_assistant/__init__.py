@@ -11,4 +11,4 @@
 """
 MODE = 'development'
 
-from .assistant import CodeAssistant
+from .code_assistant import CodeAssistant

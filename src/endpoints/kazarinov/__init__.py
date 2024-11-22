@@ -11,4 +11,4 @@
 """
 MODE = 'development'
 
-from .bot import KazarinovTelegramBot
+from .kazarinov_bot import KazarinovTelegramBot

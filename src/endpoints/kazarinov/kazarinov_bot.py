@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.kazarinov 
+.. module: src.endpoints.kazarinov.bot 
 	:platform: Windows, Unix
 	:synopsis: KazarinovTelegramBot
 
@@ -67,7 +67,7 @@ class KazarinovTelegramBot(TelegramBot, HandlersParser):
         """
         # Set the mode
         mode = mode or self.config.mode
-
+        logger.info(f'{mode=}')
         # Initialize the token based on mode
         self.token = (
             gs.credentials.telegram.hypo69_test_bot
