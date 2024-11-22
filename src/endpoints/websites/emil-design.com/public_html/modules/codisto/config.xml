@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>codisto</name>
+    <displayName><![CDATA[Codisto]]></displayName>
+    <version><![CDATA[1.0.8]]></version>
+    <description><![CDATA[Sell multichannel on Google, Amazon, eBay, Google & Walmart direct from PrestaShop. Create listings & sync products, inventory & orders directly from PrestaShop]]></description>
+    <author><![CDATA[Codisto]]></author>
+    <tab><![CDATA[administration]]></tab>
+    <confirmUninstall>Are you sure you want to uninstall?</confirmUninstall>
+    <is_configurable>0</is_configurable>
+    <need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

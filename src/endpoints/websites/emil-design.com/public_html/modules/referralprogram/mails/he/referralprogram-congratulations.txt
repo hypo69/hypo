@@ -1,0 +1,15 @@
+ 
+
+{shop_url}
+
+מזל טוב!
+
+החבר/ה שהזמנת, {sponsored_firstname} {sponsored_lastname}, ביצע/ה את הזמנתו/ה הראשונה ב[{shop_name}]({shop_url})!
+
+אנו שמחים להציע לך שובר בשווי {discount_display} (שובר #{discount_name}) לשימוש עבור הזמנתך הבאה.
+
+בברכה,
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

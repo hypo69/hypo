@@ -1,0 +1,12 @@
+{
+    "description": "Create Tabs in Symfony Controller",
+    "autoload": {
+        "psr-4": {
+            "PrestaShop\\Module\\Codisto\\":  "src/"
+        }
+    },
+    "config": {
+        "prepend-autoloader": false
+    },
+    "type": "prestashop-module"
+}

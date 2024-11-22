@@ -1,0 +1,83 @@
+{#**
+* 2022 Codisto
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the 3-Clause BSD License
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* https://opensource.org/licenses/BSD-3-Clause
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to support@codisto.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade Codisto to newer
+* versions in the future. If you wish to customize Codisto for your
+* needs please refer to https://codisto.com for more information.
+*
+*  @author    Codisto <support@codisto.com>
+*  @copyright 2022 Codisto
+*  @license   https://opensource.org/licenses/BSD-3-Clause 3-Clause BSD License
+*  Property of Codisto
+*#}
+
+{% set layoutTitle = layoutTitle %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+
+    {% if(updated == true) %}
+        <div id="message" class="updated-template"><p><strong>{{ 'File edited successfully.'|trans({}, 'Modules.Codisto.Template') }}</strong></p></div>
+    {% endif %}
+    <div class="template-wrap">
+        <h1>{{ ( filename == '_new' ? 'New Template File' : filename ) }}
+            <span style="font-size: 12px;"><a style="color: #888;" target="codisto!preview" href="{{ templatepreview }}">{{ 'Preview'|trans({}, 'Modules.Codisto.Template') }}<span style="font-size: inherit; vertical-align: inherit; width: inherit;" class="dashicons dashicons-external"></span></a></span>
+        </h1>
+    </div>
+    <div id="templateside">
+        <h2>{{ 'Listing Templates'|trans({}, 'Modules.Codisto.Template') }}</h2>
+        {{ list_files | raw }}
+    </div>
+
+    <div>
+        <form name="template" id="template" action="{{ action_url }}" method="post">
+            <input type="hidden" name="action" value="codisto_update_template" />
+            {% if(filename != '_new') %}
+            <input type="hidden" name="file" value="{{ filename }}" />
+            {% endif %}
+
+            {% if(filename == '_new') %}
+                <br/>
+                <div>
+                    <label for="filename">{{ 'New File Name'|trans({}, 'Modules.Codisto.Template') }}</label> <input id="filename" type="text" name="file" value=""/>
+                    <em>(Only .html extensons are allowed)</em>
+                </div>
+                <div id="error-message">
+                {% if(file_error == true) %}
+                    <p style="color:red"><strong>The file name provided is invalid. Please only use ‘-’, ‘_’, ‘.’ and alphanumeric characters.</strong></p>
+                {% endif %}
+                {% if(ext_error == true) %}
+                    <p style="color:red"><strong>The file name provided is invalid. Only .html extensions are allowed.</strong></p>
+                {% endif %}
+                </div>
+                <br/>
+            {% endif %}
+            <div>
+                <textarea cols="70" rows="30" name="newcontent" id="newcontent" aria-describedby="newcontent-description">{{ content | raw }}</textarea>
+            </div>
+            <div>
+            {% if(filename != '_new') %}
+                <div>
+                    <p class="submit"><input type="submit" name="submit" id="submit" class="btn btn-primary" value="{{ 'Update Template'|trans({}, 'Modules.Codisto.Template') }}"></p>
+                </div>
+            {% else %}
+                <div>
+                    <p class="submit"><input type="submit" name="submit" id="submit" class="btn btn-primary" value="{{ 'Create Template'|trans({}, 'Modules.Codisto.Template') }}"></p>
+                </div>
+            {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

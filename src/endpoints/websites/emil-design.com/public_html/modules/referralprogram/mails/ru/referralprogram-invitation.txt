@@ -1,0 +1,19 @@
+ 
+
+{shop_url}
+
+{firstname_friend} {lastname_friend}, Присоединяйтесь!
+
+Ваш друг {firstname} {lastname} хочет пригласить вас посетить магазин [{shop_name}]({shop_url})!
+
+Мы рады предложить вам промо-код номиналом {discount}, который вы сможете использовать при следующем заказе. Приняв приглашение вы получаете промо-код на скидку {discount}!
+
+[Регистрация - это легко. Просто нажмите здесь!]({link})
+
+При регистрации не забудьте указать адрес электронной почты пригласившего вас друга: {email}.
+
+С наилучшими пожеланиями,
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

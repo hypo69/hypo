@@ -1,0 +1,19 @@
+ 
+
+{shop_url}
+
+{firstname_friend} {lastname_friend}, הצטרפ/י אלינו!
+
+חברך/תך {firstname} {lastname} רוצה להזמינך אל [{shop_name}]({shop_url})!
+
+אנו שמחים להציע לך שובר בשווי {discount} לשימוש עבור הזמנתך הבאה. הזמן חבר והרווח שובר של {discount}!
+
+[פשוט מאוד להרשם. רק לחץ כאן!]({link})
+
+בעת ההרשמה, אל תשכח לספק את כתובת הדוא"ל של חברך המפנה: {email}.
+
+בברכה,
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)
