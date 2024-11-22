@@ -4,34 +4,44 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver 
-	:platform: Windows, Unix
-	:synopsis:
+.. module:: src.webdriver.js
+    :platform: Windows, Unix
+    :synopsis: Provides JavaScript utility functions for interacting with a web page.
 
+This module is designed to extend the capabilities of Selenium WebDriver by adding common JavaScript-based
+functions for interacting with web pages, including visibility manipulations, retrieving page information,
+and managing browser focus.
+
+Key Features:
+    1. Make invisible DOM elements visible for interaction.
+    2. Retrieve metadata like document ready state, referrer, or page language.
+    3. Manage browser window focus programmatically.
 """
 MODE = 'development'
 
 import header
 from src import gs
 from src.logger import logger
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class JavaScript:
     """Provides JavaScript utility functions for interacting with a web page."""
 
-    def __init__(self, driver):
+    def __init__(self, driver: WebDriver):
         """Initializes the JavaScript helper with a Selenium WebDriver instance.
 
         Args:
-            driver (`src.webdriver.Driver`): Selenium WebDriver instance to execute JavaScript.
+            driver (WebDriver): Selenium WebDriver instance to execute JavaScript.
         """
         self.driver = driver
 
-    def unhide_DOM_element(self, element) -> bool:
+    def unhide_DOM_element(self, element: WebElement) -> bool:
         """Makes an invisible DOM element visible by modifying its style properties.
 
         Args:
-            element: The WebElement object to make visible.
+            element (WebElement): The WebElement object to make visible.
 
         Returns:
             bool: True if the script executes successfully, False otherwise.
@@ -50,7 +60,7 @@ class JavaScript:
             self.driver.execute_script(script, element)
             return True
         except Exception as ex:
-            logger.error("Error in unhide_DOM_element:", ex)
+            logger.error('Error in unhide_DOM_element: %s', ex)
             return False
 
     @property
@@ -61,10 +71,10 @@ class JavaScript:
             str: 'loading' if the document is still loading, 'complete' if loading is finished.
         """
         try:
-            return self.driver.execute_script("return document.readyState;")
+            return self.driver.execute_script('return document.readyState;')
         except Exception as ex:
-            logger.error("Error retrieving document.readyState:", ex)
-            return ""
+            logger.error('Error retrieving document.readyState: %s', ex)
+            return ''
 
     def window_focus(self) -> None:
         """Sets focus to the browser window using JavaScript.
@@ -72,9 +82,9 @@ class JavaScript:
         Attempts to bring the browser window to the foreground.
         """
         try:
-            self.driver.execute_script("window.focus();")
+            self.driver.execute_script('window.focus();')
         except Exception as ex:
-            logger.error("Error executing window.focus():", ex)
+            logger.error('Error executing window.focus(): %s', ex)
 
     def get_referrer(self) -> str:
         """Retrieves the referrer URL of the current document.
@@ -83,10 +93,10 @@ class JavaScript:
             str: The referrer URL, or an empty string if unavailable.
         """
         try:
-            return self.driver.execute_script("return document.referrer;") or ""
+            return self.driver.execute_script('return document.referrer;') or ''
         except Exception as ex:
-            logger.error("Error retrieving document.referrer:", ex)
-            return ""
+            logger.error('Error retrieving document.referrer: %s', ex)
+            return ''
 
     def get_page_lang(self) -> str:
         """Retrieves the language of the current page.
@@ -95,10 +105,7 @@ class JavaScript:
             str: The language code of the page, or an empty string if unavailable.
         """
         try:
-            return (
-                self.driver.execute_script("return document.documentElement.lang;")
-                or ""
-            )
+            return self.driver.execute_script('return document.documentElement.lang;') or ''
         except Exception as ex:
-            logger.error("Error retrieving document.documentElement.lang:", ex)
-            return ""
+            logger.error('Error retrieving document.documentElement.lang: %s', ex)
+            return ''

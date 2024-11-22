@@ -4,15 +4,21 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.chrome 
-	:platform: Windows, Unix
-	:synopsis: Chrome WebDriver.
-Implemented using Chrome for Developers.
-Chrome WebDriver  settings defined in the `chrome.json` file.
+.. module:: src.webdriver.chrome
+    :platform: Windows, Unix
+    :synopsis: Chrome WebDriver implementation.
 
+This module provides a custom implementation of Selenium's Chrome WebDriver. It integrates
+settings defined in the `chrome.json` configuration file, such as user-agent and browser
+profile settings, to allow for flexible and automated browser interactions.
+
+Key Features:
+    - Centralized configuration through JSON files.
+    - Support for multiple browser profiles.
+    - Enhanced logging and exception handling.
 """
 MODE = 'development'
-...
+
 import os
 import sys
 import threading
@@ -35,39 +41,44 @@ from src.logger import logger
 
 
 class Chrome(webdriver.Chrome):
-    """ class for Chrome WebDriver."""
+    """Class for Chrome WebDriver."""
 
     _instance = None
     driver_name: str = 'chrome'
 
     def __new__(cls, *args, **kwargs):
-        """ Ensure a single instance of Chrome WebDriver. Calls window_open() if instance already exists."""
+        """Ensure a single instance of Chrome WebDriver.
+
+        If an instance already exists, calls `window_open()`.
+
+        Returns:
+            Chrome: The singleton instance of the Chrome WebDriver.
+        """
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         else:
-            cls._instance.window_open()  # Call window_open() if instance already exists
+            cls._instance.window_open()  # Open a new window if instance already exists
         return cls._instance
 
-    def __init__(self, user_agent=None, *args, **kwargs):
-        """ Initializes the Chrome WebDriver with the specified options and profile.
+    def __init__(self, user_agent: Optional[str] = None, *args, **kwargs):
+        """Initializes the Chrome WebDriver with the specified options and profile.
 
         Args:
-            user_agent (str, optional): The user agent string to be used. Defaults to a random user agent.
+            user_agent (Optional[str]): The user agent string to be used. Defaults to a random user agent.
         """
-        ...
+        super().__init__(*args, **kwargs)
         try:
             # Function attributes declaration
-            user_agent = user_agent if user_agent else UserAgent().random
-            settings =  j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))  # Load settings from JSON file
+            user_agent = user_agent or UserAgent().random
+            settings = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))  # Load settings from JSON file
             if not settings:
-                logger.debug(f"Ошибка в файле {gs.path.src}/webdriver/chrome/chrome.json")
-                ...
-            options: ChromeOptions = ChromeOptions()  # Initialize options
-            profile_directory: Path  # Set user data directory
-            executable_path: str
+                logger.debug(f'Ошибка в файле {gs.path.src}/webdriver/chrome/chrome.json')
+                return
 
-            def normilize_path(path: str) -> str:
-                """ Replace placeholders with actual environment paths.
+            options = ChromeOptions()  # Initialize options
+
+            def normalize_path(path: str) -> str:
+                """Replace placeholders with actual environment paths.
 
                 Args:
                     path (str): The path string with placeholders like %APPDATA% or %LOCALAPPDATA%.
@@ -76,65 +87,60 @@ class Chrome(webdriver.Chrome):
                     str: The normalized path with environment variables substituted.
                 """
                 if not path:
-                    return ""
-
-                return str(path).replace('%APPDATA%', os.environ.get('APPDATA')).replace('%LOCALAPPDATA%', os.getenv('LOCALAPPDATA'))
-                ...
+                    return ''
+                return (
+                    path.replace('%APPDATA%', os.environ.get('APPDATA', ''))
+                        .replace('%LOCALAPPDATA%', os.getenv('LOCALAPPDATA', ''))
+                )
 
             # Add arguments from options_settings
             if hasattr(settings, 'options') and settings.options:
-
                 for key, value in vars(settings.options).items():
-                    options.add_argument(f"--{key}={value}")
+                    options.add_argument(f'--{key}={value}')
 
             # Add arguments from settings.headers
             if hasattr(settings, 'headers') and settings.headers:
                 for key, value in vars(settings.headers).items():
-                    options.add_argument(f"--{key}={value}")
+                    options.add_argument(f'--{key}={value}')
 
-            profile_directory: str = normilize_path(
-                getattr(settings.profile_directory, settings.profile_directory.default))
-
-            executable_path: str = str(
-                Path(gs.path.root, getattr(settings.executable_path, settings.executable_path.default))
+            profile_directory = normalize_path(
+                getattr(settings.profile_directory, 'default', '')
             )
-                                                                                                                          
+            executable_path = str(
+                Path(gs.path.root, getattr(settings.executable_path, 'default', ''))
+            )
+
             if profile_directory:
                 options.add_argument(f'user-data-dir={profile_directory}')
 
             # Additional options
             options.binary_location = executable_path
 
-            service = ChromeService(executable_path = executable_path) if executable_path else ChromeService()
+            service = ChromeService(executable_path=executable_path) if executable_path else ChromeService()
 
         except Exception as ex:
-            logger.error('Error setting up Chrome WebDriver.', ex)
-            ...
+            logger.error('Error setting up Chrome WebDriver: %s', ex)
             return
 
         try:
-            super().__init__(options=options)
-            ...
+            super().__init__(options=options, service=service)
         except WebDriverException as ex:
-            logger.critical("Error initializing Chrome WebDriver:", ex, True)
-            ...
+            logger.critical('Error initializing Chrome WebDriver: %s', ex)
             return
         except Exception as ex:
-            logger.critical("Chrome WebDriver crashed. General error:", ex, True)
-            ...
+            logger.critical('Chrome WebDriver crashed. General error: %s', ex)
             return
 
         self._payload()
 
-    def _payload(self):
-        """ Load executor for locators and JavaScript scenarios."""
-        ...
-        j = JavaScript(self)
-        self.get_page_lang = j.get_page_lang
-        self.ready_state = j.ready_state
-        self.get_referrer = j.ready_state
-        self.unhide_DOM_element = j.unhide_DOM_element
-        self.window_focus = j.window_focus
+    def _payload(self) -> None:
+        """Load executor for locators and JavaScript scenarios."""
+        js_executor = JavaScript(self)
+        self.get_page_lang = js_executor.get_page_lang
+        self.ready_state = js_executor.ready_state
+        self.get_referrer = js_executor.get_referrer
+        self.unhide_DOM_element = js_executor.unhide_DOM_element
+        self.window_focus = js_executor.window_focus
 
         execute_locator = ExecuteLocator(self)
         self.execute_locator = execute_locator.execute_locator
@@ -143,18 +149,4 @@ class Chrome(webdriver.Chrome):
         self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
         self.send_message = self.send_key_to_webelement = execute_locator.send_message
 
-    def window_open(self, url: Optional[str] = None):
-        """Open a new tab in the current browser window and switch to it.
 
-        Args:
-            url (Optional[str]): URL to open in the new tab. Defaults to `None`.
-        """
-        # Open a new tab in the current window
-        self.execute_script("window.open();")
-    
-        # Switch to the new tab (which is the last tab in the window handles list)
-        self.switch_to.window(self.window_handles[-1])
-
-        # If a URL is provided, navigate to it
-        if url:
-            self.get(url)

@@ -234,78 +234,17 @@ class Driver:
             logger.error(f'Ошибка при переходе по URL: {url}\n', ex)
             return False
 
-    def fetch_html(self, url: str) -> Optional[bool]:
-        """
-        Извлекает HTML-контент из файла или URL и парсит его с помощью BeautifulSoup и XPath.
+    def window_open(self, url: Optional[str] = None) -> None:
+        """Open a new tab in the current browser window and switch to it.
 
         Args:
-            url (str): Путь к файлу или URL для извлечения HTML-контента.
-
-        Возвращает:
-            Optional[bool]: `True` при успешном получении контента, `None` в противном случае.
-
-        Исключения:
-            Exception: Если произошла ошибка при извлечении контента.
+            url (Optional[str]): URL to open in the new tab. Defaults to `None`.
         """
-        if url.startswith('file://'):
-            cleaned_url = url.replace('file://', '')
-        
-            match = re.search(r'[a-zA-Z]:[\/].*', cleaned_url)
-            if match:
-                file_path = Path(match.group(0))
-                if file_path.exists():
-                    try:
-                        with open(file_path, 'r', encoding='utf-8') as file:
-                            self.html_content = file.read()
-                        return True
-                    except Exception as ex:
-                        logger.error('Ошибка при чтении файла:', ex)
-                        return False
-                else:
-                    logger.error('Локальный файл не найден:', file_path)
-                    return False
-            else:
-                logger.error('Некорректный путь к файлу:', cleaned_url)
-                return False
-        elif url.startswith('http://') or url.startswith('https://'):
-            try:
-                if self.get_url(url):
-                    self.html_content = self.page_source
-                    return True
-            except Exception as ex:
-                logger.error(f"Ошибка при получении {url}:", ex)
-                return False
-        else:
-            logger.error("Ошибка: Неподдерживаемый протокол для URL:", url)
-            return False
+        self.execute_script('window.open();')
+        self.switch_to.window(self.window_handles[-1])
+        if url:
+            self.get(url)
 
-    def _save_cookies_localy(self):
-        """
-        Сохраняет куки в локальный файл.
-
-        Возвращает:
-            None
-
-        Исключения:
-            Exception: Если произошла ошибка при сохранении куки.
-        """
-        try:
-            with open(gs.cookies_filepath, 'wb') as cookiesfile:
-                pickle.dump(self.driver.get_cookies(), cookiesfile)
-        except Exception as ex:
-            logger.error('Ошибка при сохранении куки:', ex)
-
-    def wait(self, delay: float = .3) -> None:
-        """
-        Ждет указанное количество времени.
-
-        Args:
-            delay (float, optional): Время задержки в секундах. По умолчанию 0.3.
-
-        Возвращает:
-            None
-        """
-        time.sleep(delay)
     def wait(self, delay: float = .3) -> None:
         """
         Ожидает указанное количество времени.
