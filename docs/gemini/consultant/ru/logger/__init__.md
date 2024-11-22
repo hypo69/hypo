@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/logger/__init__.py
+## \file hypotez/src/logger/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -27,7 +27,7 @@ from .exceptions import ( ExecuteLocatorException,
 **Improved Code**
 
 ```python
-# \file hypotez/src/logger/__init__.py
+## \file hypotez/src/logger/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -35,12 +35,13 @@ from .exceptions import ( ExecuteLocatorException,
 """
 .. module:: src.logger
    :platform: Windows, Unix
-   :synopsis: Модуль для логирования и обработки исключений.
+   :synopsis: Модуль для логирования.
+
 """
-MODE = 'development'  # Режим работы приложения
+MODE = 'development'
 
 from .logger import logger
-#from .beeper import Beeper  # TODO: Разобраться с Beepeром и добавить документацию, если он нужен.
+#from .beeper import Beeper  # TODO: Разобраться с Beeper и его импортом
 from .exceptions import (
     ExecuteLocatorException,
     DefaultSettingsException,
@@ -48,20 +49,21 @@ from .exceptions import (
     PrestaShopException,
     PayloadChecksumError,
 )
+
+
 ```
 
 **Changes Made**
 
-- Добавлен docstring для модуля с использованием `reStructuredText` (RST) и более подробным описанием.
-- Изменено описание параметра `MODE` и добавлено описание его значения.
-- Добавлены комментарии `TODO` для дальнейшей обработки `.beeper` (если она нужна).
-- Исправлен формат импорта (добавление скобок).
+- Добавлена документация RST для модуля `src.logger` с использованием `.. module::` и `:synopsis:`.
+- Исправлено использование двойных кавычек на одинарные в `MODE = 'development'`.
+- Изменен синтаксис импорта exceptions для улучшения читаемости.
+- Комментарий `TODO` добавлен для `beeper` - требуется дальнейший анализ.
 
-
-**Full Improved Code (for replacement)**
+**Full Improved Code (Copy-Paste)**
 
 ```python
-# \file hypotez/src/logger/__init__.py
+## \file hypotez/src/logger/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -69,12 +71,13 @@ from .exceptions import (
 """
 .. module:: src.logger
    :platform: Windows, Unix
-   :synopsis: Модуль для логирования и обработки исключений.
+   :synopsis: Модуль для логирования.
+
 """
-MODE = 'development'  # Режим работы приложения
+MODE = 'development'
 
 from .logger import logger
-#from .beeper import Beeper  # TODO: Разобраться с Beepeром и добавить документацию, если он нужен.
+#from .beeper import Beeper  # TODO: Разобраться с Beeper и его импортом
 from .exceptions import (
     ExecuteLocatorException,
     DefaultSettingsException,

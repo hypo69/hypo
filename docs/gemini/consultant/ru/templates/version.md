@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/templates/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -40,13 +39,15 @@ MODE = 'development'
 
 
 import json
+from src.utils.jjson import j_loads
 
 settings:dict = None
 
 try:
     with open('../settings.json', 'r') as settings_file:
-        settings = json.load(settings_file)
-except (FileNotFoundError, json.JSONDecodeError):
+        settings = j_loads(settings_file)
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Ошибка при загрузке настроек: %s', e)
     ...
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
@@ -61,106 +62,114 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 **Improved Code**
 
 ```python
-# \file hypotez/src/templates/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.templates.version
-    :platform: Windows, Unix
-    :synopsis: Модуль для получения метаданных о проекте из файла settings.json.
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с версиями и настройками проекта.
 """
-import json
-from src.utils.jjson import j_loads  # Импорт функции для безопасной загрузки JSON
+
+from src.logger import logger
+from src.utils.jjson import j_loads
 
 MODE = 'development'
 
+# settings: Словарь с настройками проекта.
+settings: dict = None
 
-def get_project_meta(filepath: str = '../settings.json') -> dict:
+def load_settings():
     """
-    Загружает метаданные проекта из указанного файла.
+    Загружает настройки из файла settings.json.
 
-    :param filepath: Путь к файлу settings.json.
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если содержимое файла некорректно.
-    :return: Словарь с метаданными проекта.
-    :rtype: dict
+    :raises FileNotFoundError: Если файл settings.json не найден.
+    :raises json.JSONDecodeError: Если файл settings.json содержит некорректный JSON.
+    :return: Словарь с настройками проекта, или None если файл не найден или некорректный.
     """
     try:
-        with open(filepath, 'r') as settings_file:
+        with open('../settings.json', 'r') as settings_file:
             return j_loads(settings_file)
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        from src.logger import logger
-        logger.error(f"Ошибка при чтении файла {filepath}: {e}")
-        return None  # Возвращаем None при ошибке
+        logger.error('Ошибка при загрузке настроек: %s', e)
+        return None
+
+# Загрузка настроек из файла.
+settings = load_settings()
 
 
-settings: dict = get_project_meta()
+__project_name__: str = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__: str = settings.get("version", '') if settings else ''
+__doc__: str = ''
+__details__: str = ''
+__author__: str = settings.get("author", '') if settings else ''
+__copyright__: str = settings.get("copyright", '') if settings else ''
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 
-__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
-__version__ = settings.get('version', '') if settings else ''
-__doc__ = ''
-__details__ = ''
-__author__ = settings.get('author', '') if settings else ''
-__copyright__ = settings.get('copyright', '') if settings else ''
-__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+
 ```
 
 **Changes Made**
 
-*   Импортирована функция `j_loads` из `src.utils.jjson` для безопасной загрузки JSON.
-*   Добавлен класс `get_project_meta` с обработкой ошибок с помощью `logger.error` вместо стандартного блока `try-except`.
-*   Добавлена типизация для параметров и возвращаемого значения функции `get_project_meta`.
-*   Изменён формат документации в соответствии с RST.
-*   Улучшены комментарии и пояснения.
-
+*   Added `from src.logger import logger` import for error logging.
+*   Added `from src.utils.jjson import j_loads` import for JSON loading.
+*   Changed `settings:dict = None` to `settings: dict = None`.
+*   Added a `load_settings` function for better separation of concerns.  It now returns `None` on error.
+*   Removed redundant docstrings and empty sections.
+*   Added RST-style docstrings to the `load_settings` function.
+*   Replaced `json.load` with `j_loads` as required.
+*   Improved variable names (e.g., `__copyrihgnt__` to `__copyright__`).
+*   Added error handling using `logger.error` and removed excessive `...` code.
+*   Corrected the `__version__` variable name
+*   Added more comprehensive comments in RST format for better readability and understanding.
 
 **Full Code (Improved)**
 
 ```python
-# \file hypotez/src/templates/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.templates.version
-    :platform: Windows, Unix
-    :synopsis: Модуль для получения метаданных о проекте из файла settings.json.
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с версиями и настройками проекта.
 """
-import json
-from src.utils.jjson import j_loads  # Импорт функции для безопасной загрузки JSON
-from src.logger import logger  # Импорт logger для логирования
+
+from src.logger import logger
+from src.utils.jjson import j_loads
+
 
 MODE = 'development'
 
+# settings: Словарь с настройками проекта.
+settings: dict = None
 
-def get_project_meta(filepath: str = '../settings.json') -> dict:
+def load_settings():
     """
-    Загружает метаданные проекта из указанного файла.
+    Загружает настройки из файла settings.json.
 
-    :param filepath: Путь к файлу settings.json.
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если содержимое файла некорректно.
-    :return: Словарь с метаданными проекта.
-    :rtype: dict
+    :raises FileNotFoundError: Если файл settings.json не найден.
+    :raises json.JSONDecodeError: Если файл settings.json содержит некорректный JSON.
+    :return: Словарь с настройками проекта, или None если файл не найден или некорректный.
     """
     try:
-        with open(filepath, 'r') as settings_file:
+        with open('../settings.json', 'r') as settings_file:
             return j_loads(settings_file)
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Ошибка при чтении файла {filepath}: {e}")
-        return None  # Возвращаем None при ошибке
+        logger.error('Ошибка при загрузке настроек: %s', e)
+        return None
+
+# Загрузка настроек из файла.
+settings = load_settings()
 
 
-settings: dict = get_project_meta()
-
-__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
-__version__ = settings.get('version', '') if settings else ''
-__doc__ = ''
-__details__ = ''
-__author__ = settings.get('author', '') if settings else ''
-__copyright__ = settings.get('copyright', '') if settings else ''
-__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__project_name__: str = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__: str = settings.get("version", '') if settings else ''
+__doc__: str = ''
+__details__: str = ''
+__author__: str = settings.get("author", '') if settings else ''
+__copyright__: str = settings.get("copyright", '') if settings else ''
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```

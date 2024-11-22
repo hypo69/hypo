@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/suppliers/__init__.py
+# \file hypotez/src/suppliers/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -31,56 +31,64 @@ from .graber import Graber
 **Improved Code**
 
 ```python
+# -*- coding: utf-8 -*-
 """
-Модуль `src.suppliers`.
+.. module:: src.suppliers
+   :platform: Windows, Unix
+   :synopsis: Модуль, содержащий базовые классы для работы с поставщиками данных.
 
-:platform: Windows, Unix
-:synopsis: Модуль для работы с поставщиками данных.
-            Содержит базовый класс `Supplier` и вспомогательные классы.
+   Этот модуль предоставляет классы для взаимодействия с различными поставщиками данных,
+   определяя абстрактный класс `Supplier` и вспомогательный класс `Graber`.  
+   Каждый конкретный поставщик данных (например, Amazon, Aliexpress) 
+   реализует свои специфические методы извлечения информации, дополняя класс `Supplier`.
+
+
+   .. image:: supplier-warehouse-client.png
+      :alt: Взаимосвязь сущностей Supplier, Driver, Product
+      :align: center
+      :width: 50%
 """
-# TODO: Добавить описание взаимосвязей (см. docstring)
-# TODO: Дополнить описание возможностей модуля
 
-import logging
-
-# Импортируем logger для логирования
-from src.logger import logger
+from .supplier import Supplier
+from .graber import Graber
+from src.logger import logger  # Импорт логгера
 
 MODE = 'development'
-
-from .supplier import Supplier  # Импортируем класс Supplier
-from .graber import Graber  # Импортируем класс Graber
 ```
 
 **Changes Made**
 
-* Добавлено импортирование `logging` и `logger` для логирования ошибок.
-* Исправлен и переписан docstring в формате RST для соответствия требованиям.
-* Заменены `#`-комментарии на RST-комментарии.
-* Удалены устаревшие/неиспользуемые комментарии.
-* Добавлены TODO пункты для дальнейшего развития.
+- Добавлен импорт `from src.logger import logger` для использования логгирования.
+- Заменено описание модуля на формат RST.
+- Добавлен RST-документ к модулю `src.suppliers`
+-  Комментарии оформлены в соответствии с требованиями RST.
+- Удалены ненужные комментарии.
+- Добавлен `:platform:` и `:synopsis:` в документацию.
 
-
-**Full Improved Code**
+**Full Code (Improved)**
 
 ```python
+# -*- coding: utf-8 -*-
 """
-Модуль `src.suppliers`.
+.. module:: src.suppliers
+   :platform: Windows, Unix
+   :synopsis: Модуль, содержащий базовые классы для работы с поставщиками данных.
 
-:platform: Windows, Unix
-:synopsis: Модуль для работы с поставщиками данных.
-            Содержит базовый класс `Supplier` и вспомогательные классы.
+   Этот модуль предоставляет классы для взаимодействия с различными поставщиками данных,
+   определяя абстрактный класс `Supplier` и вспомогательный класс `Graber`.  
+   Каждый конкретный поставщик данных (например, Amazon, Aliexpress) 
+   реализует свои специфические методы извлечения информации, дополняя класс `Supplier`.
+
+
+   .. image:: supplier-warehouse-client.png
+      :alt: Взаимосвязь сущностей Supplier, Driver, Product
+      :align: center
+      :width: 50%
 """
-# TODO: Добавить описание взаимосвязей (см. docstring)
-# TODO: Дополнить описание возможностей модуля
 
-import logging
-
-# Импортируем logger для логирования
-from src.logger import logger
+from .supplier import Supplier
+from .graber import Graber
+from src.logger import logger  # Импорт логгера
 
 MODE = 'development'
-
-from .supplier import Supplier  # Импортируем класс Supplier
-from .graber import Graber  # Импортируем класс Graber
 ```

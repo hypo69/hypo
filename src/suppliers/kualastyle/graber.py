@@ -27,37 +27,53 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
+
+# Глобальные настройки через отдельный объект
+class Context:
+    """Класс для хранения глобальных настроек."""
+    driver: Driver = None
+    locator: SimpleNamespace = None
+
 # Определение декоратора для закрытия всплывающих окон
+# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
+# Общее название декоратора `@close_popup` можно изменить 
+# Если декоратор не используется в поставщике - надо закомментировать строку
+# ```await Context.driver.execute_locator(Context.locator.close_popup)  # Await async pop-up close``` 
 def close_popup(value: Any = None) -> Callable:
-    """Создание декоратора для закрытия всплывающих окон перед выполнением основной логики функции.
+    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
-        value (Any): Необязательное значение, передаваемое в декоратор.
+        value (Any): Дополнительное значение для декоратора.
 
     Returns:
-        Callable: Декоратор, оборачивающий основную функцию.
+        Callable: Декоратор, оборачивающий функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await d.execute_locator(l.close_popup)  # Ожидание закрытия всплывающего окна
+                # await Context.driver.execute_locator(Context.locator.close_popup)  # Await async pop-up close  
+                ... 
             except ExecuteLocatorException as e:
-                logger.debug(f"Ошибка при выполнении локатора: {e}")
-            return await func(*args, **kwargs)  # Ожидание выполнения основной функции
+                logger.debug(f'Ошибка выполнения локатора: {e}')
+            return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
 
-
 class Graber(Grbr):
-    """Graber class for morlevi grabbing operations."""
+    """Класс для операций захвата Morlevi."""
     supplier_prefix: str
 
+    def __init__(self, driver: Driver):
+        """Инициализация класса сбора полей товара."""
+        self.supplier_prefix = 'kualastyle'
+        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+        # Устанавливаем глобальные настройки через Context
+        Context.driver = driver
+        Context.locator = SimpleNamespace(
+            close_popup='locator_for_closing_popup'  # Пример задания локатора
+        )
 
-    def __init__(self, driver:Driver):
-        """ Инициализация класса сбора полей товара. """
-        self.supplier_prefix: str = 'kualastyle'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver = driver)
         
         
 

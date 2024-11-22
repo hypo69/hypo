@@ -27,7 +27,7 @@ from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns
 
 
 class JavaScript:
@@ -144,7 +144,7 @@ from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns
 
 
 class JavaScript:
@@ -153,19 +153,15 @@ class JavaScript:
     def __init__(self, driver: WebDriver):
         """Initializes the JavaScript helper with a Selenium WebDriver instance.
 
-        Args:
-            driver (WebDriver): Selenium WebDriver instance to execute JavaScript.
+        :param driver: Selenium WebDriver instance to execute JavaScript.
         """
         self.driver = driver
 
     def unhide_DOM_element(self, element: WebElement) -> bool:
         """Makes an invisible DOM element visible by modifying its style properties.
 
-        Args:
-            element (WebElement): The WebElement object to make visible.
-
-        Returns:
-            bool: True if the script executes successfully, False otherwise.
+        :param element: The WebElement object to make visible.
+        :return: True if the script executes successfully, False otherwise.
         """
         script = """
         arguments[0].style.opacity = 1;
@@ -188,8 +184,7 @@ class JavaScript:
     def ready_state(self) -> str:
         """Retrieves the document loading status.
 
-        Returns:
-            str: 'loading' if the document is still loading, 'complete' if loading is finished.
+        :return: 'loading' if the document is still loading, 'complete' if loading is finished.
         """
         try:
             return self.driver.execute_script('return document.readyState;')
@@ -210,8 +205,7 @@ class JavaScript:
     def get_referrer(self) -> str:
         """Retrieves the referrer URL of the current document.
 
-        Returns:
-            str: The referrer URL, or an empty string if unavailable.
+        :return: The referrer URL, or an empty string if unavailable.
         """
         try:
             return self.driver.execute_script('return document.referrer;') or ''
@@ -222,8 +216,7 @@ class JavaScript:
     def get_page_lang(self) -> str:
         """Retrieves the language of the current page.
 
-        Returns:
-            str: The language code of the page, or an empty string if unavailable.
+        :return: The language code of the page, or an empty string if unavailable.
         """
         try:
             return self.driver.execute_script('return document.documentElement.lang;') or ''
@@ -234,10 +227,11 @@ class JavaScript:
 
 **Changes Made**
 
-- Added missing import `from src.utils.jjson import j_loads, j_loads_ns`.
-- Replaced standard `json.load` with `j_loads` and `j_loads_ns`.
-- Added comprehensive RST documentation for the class and all methods.
-- Improved error handling by using `logger.error` for more informative error logging.
+1. Imported necessary modules:
+   - Added `from src.utils.jjson import j_loads, j_loads_ns`.
+
+2. Docstrings:
+   - Rewrote docstrings for all functions, methods, and classes using reStructuredText (RST) format.  Added `:param` and `:return` to specify parameter and return value types and descriptions.
 
 
 **Full Code (Improved)**
@@ -269,7 +263,7 @@ from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns
 
 
 class JavaScript:
@@ -278,19 +272,15 @@ class JavaScript:
     def __init__(self, driver: WebDriver):
         """Initializes the JavaScript helper with a Selenium WebDriver instance.
 
-        Args:
-            driver (WebDriver): Selenium WebDriver instance to execute JavaScript.
+        :param driver: Selenium WebDriver instance to execute JavaScript.
         """
         self.driver = driver
 
     def unhide_DOM_element(self, element: WebElement) -> bool:
         """Makes an invisible DOM element visible by modifying its style properties.
 
-        Args:
-            element (WebElement): The WebElement object to make visible.
-
-        Returns:
-            bool: True if the script executes successfully, False otherwise.
+        :param element: The WebElement object to make visible.
+        :return: True if the script executes successfully, False otherwise.
         """
         script = """
         arguments[0].style.opacity = 1;
@@ -313,8 +303,7 @@ class JavaScript:
     def ready_state(self) -> str:
         """Retrieves the document loading status.
 
-        Returns:
-            str: 'loading' if the document is still loading, 'complete' if loading is finished.
+        :return: 'loading' if the document is still loading, 'complete' if loading is finished.
         """
         try:
             return self.driver.execute_script('return document.readyState;')
@@ -335,8 +324,7 @@ class JavaScript:
     def get_referrer(self) -> str:
         """Retrieves the referrer URL of the current document.
 
-        Returns:
-            str: The referrer URL, or an empty string if unavailable.
+        :return: The referrer URL, or an empty string if unavailable.
         """
         try:
             return self.driver.execute_script('return document.referrer;') or ''
@@ -347,8 +335,7 @@ class JavaScript:
     def get_page_lang(self) -> str:
         """Retrieves the language of the current page.
 
-        Returns:
-            str: The language code of the page, or an empty string if unavailable.
+        :return: The language code of the page, or an empty string if unavailable.
         """
         try:
             return self.driver.execute_script('return document.documentElement.lang;') or ''

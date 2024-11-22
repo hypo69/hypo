@@ -32,36 +32,54 @@ from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Callable
 
+
+# Глобальные настройки через отдельный объект
+class Context:
+    """Класс для хранения глобальных настроек."""
+    driver: Driver = None
+    locator: SimpleNamespace = None
+
 # Определение декоратора для закрытия всплывающих окон
+# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
+# Общее название декоратора `@close_popup` можно изменить 
+# Если декоратор не используется в поставщике - надо закомментировать строку
+# ```await Context.driver.execute_locator(Context.locator.close_popup)  # Await async pop-up close``` 
 def close_popup(value: Any = None) -> Callable:
-    """Creates a decorator to close pop-ups before executing the main function logic.
+    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
-        value (Any): Optional value passed to the decorator.
+        value (Any): Дополнительное значение для декоратора.
 
     Returns:
-        Callable: The decorator wrapping the function.
+        Callable: Декоратор, оборачивающий функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await d.execute_locator(l.close_popup)  # Await async pop-up close
+                # await Context.driver.execute_locator(Context.locator.close_popup)  # Await async pop-up close  
+                ... 
             except ExecuteLocatorException as e:
-                logger.debug(f"Error executing locator: {e}")
+                logger.debug(f'Ошибка выполнения локатора: {e}')
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
 
 class Graber(Grbr):
-    """Graber class for morlevi grabbing operations."""
+    """Класс для операций захвата Morlevi."""
     supplier_prefix: str
 
+    def __init__(self, driver: Driver):
+        """Инициализация класса сбора полей товара."""
+        self.supplier_prefix = 'wallmart'
+        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+        # Устанавливаем глобальные настройки через Context
+        Context.driver = driver
+        Context.locator = SimpleNamespace(
+            close_popup='locator_for_closing_popup'  # Пример задания локатора
+        )
 
-    def __init__(self, driver:Driver):
-        """ Инициализация класса сбора полей товара. """
-        self.supplier_prefix: str = 'wallmart'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver = driver)
+        
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.

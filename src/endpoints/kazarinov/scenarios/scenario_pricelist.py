@@ -109,14 +109,15 @@ class Mexiron:
         products_list = []
 
         for url in urls_list:
+
             graber = self.get_graber_by_url(url)
             if not graber:
                 ...
                 continue
 
             try:
-                self.d.get_url(url)
-                f = await graber.grab_page(self.d)
+                self.driver.get_url(url)
+                f = await graber.grab_page(self.driver)
             except Exception as ex:
                 logger.debug(f'Failed to open page {url}.', ex)
                 ...

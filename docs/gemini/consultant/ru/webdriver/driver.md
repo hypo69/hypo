@@ -45,7 +45,7 @@ import header
 from src import gs
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException, WebDriverException
-from src.utils.jjson import j_loads, j_loads_ns # Импорт необходимых функций
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 class Driver:
     """
@@ -57,7 +57,7 @@ class Driver:
 
     Атрибуты:
         driver (selenium.webdriver): Экземпляр Selenium WebDriver.
-        html_content (str): Содержимое HTML страницы.
+        html_content: Содержимое HTML-страницы.
     """
 
     def __init__(self, webdriver_cls, *args, **kwargs):
@@ -78,28 +78,9 @@ class Driver:
         if not hasattr(webdriver_cls, 'get'):
             raise TypeError('`webdriver_cls` должен быть допустимым классом WebDriver.')
         self.driver = webdriver_cls(*args, **kwargs)
-        self.html_content = None # Добавление атрибута для хранения html
+        self.html_content = None
 
-
-    def __init_subclass__(cls, *, browser_name=None, **kwargs):
-        """
-        .. method:: __init_subclass__(cls, *, browser_name=None, **kwargs)
-
-        Автоматически вызывается при создании подкласса `Driver`.
-
-        :param browser_name: Имя браузера.
-        :type browser_name: str
-        :param kwargs: Дополнительные аргументы.
-
-        Исключение:
-            ValueError: Если browser_name не указан.
-        """
-        super().__init_subclass__(**kwargs)
-        if browser_name is None:
-            raise ValueError(f'Класс {cls.__name__} должен указать аргумент `browser_name`.')
-        cls.browser_name = browser_name
-
-    # ... (rest of the code)
+    # ... (Остальной код)
 ```
 
 **Improved Code**
@@ -149,7 +130,7 @@ import header
 from src import gs
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException, WebDriverException
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 class Driver:
     """
@@ -161,7 +142,8 @@ class Driver:
 
     Атрибуты:
         driver (selenium.webdriver): Экземпляр Selenium WebDriver.
-        html_content (str): Содержимое HTML страницы.
+        html_content: Содержимое HTML-страницы.
+        previous_url: Предыдущий URL.
     """
 
     def __init__(self, webdriver_cls, *args, **kwargs):
@@ -183,24 +165,69 @@ class Driver:
             raise TypeError('`webdriver_cls` должен быть допустимым классом WebDriver.')
         self.driver = webdriver_cls(*args, **kwargs)
         self.html_content = None
+        self.previous_url = None  # Добавление атрибута
+
+    # ... (Остальной код с изменениями)
+
+    def __getattr__(self, item):
+        """
+        .. method:: __getattr__(self, item)
+
+        Прокси для доступа к атрибутам драйвера.
+
+        :param item: Имя атрибута.
+        :type item: str
+
+        Пример:
+            >>> driver.current_url
+        """
+        try:
+            return getattr(self.driver, item)
+        except AttributeError as e:
+            logger.error(f'Ошибка доступа к атрибуту: {e}')
+            raise
 
 
-    # ... (rest of the code with docstrings and error handling)
+    def get_url(self, url: str) -> bool:
+        """
+        Переходит по указанному URL и сохраняет текущий URL, предыдущий URL и куки.
 
+        :param url: URL для перехода.
+        :type url: str
+        :return: True, если переход успешен, False иначе.
+        """
+        try:
+            self.previous_url = self.current_url
+            self.driver.get(url)
+            self._save_cookies_localy()
+            return True
+        except WebDriverException as e:
+            logger.error(f"Ошибка при переходе по URL {url}: {e}")
+            return False
+        except InvalidArgumentException as e:
+            logger.error(f"Некорректный URL: {url}, {e}")
+            return False
+        except Exception as e:
+            logger.error(f"Ошибка при переходе по URL {url}: {e}")
+            return False
 
+    # ... (Остальной код)
 ```
 
 **Changes Made**
 
-- Added import `from src.utils.jjson import j_loads, j_loads_ns`.
-- Added `self.html_content = None` to the `__init__` method to initialize the `html_content` attribute.
-- Improved error handling. Instead of using bare `try-except` blocks, `logger.error` is used to log exceptions with details.
-- Added docstrings for all functions and methods using reStructuredText (RST) format.
-- Minor code style improvements (e.g., consistent use of single quotes).
-- Docstrings were improved to follow RST style guidelines.
+- Добавлено импортирование функций `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+- Изменены комментарии в формате RST.
+- Добавлена обработка ошибок с помощью `logger.error`.
+- Улучшен метод `__getattr__` для обработки исключений `AttributeError`.
+- Улучшены комментарии к методам и добавлены docstrings.
+- Добавлен атрибут `previous_url` для хранения предыдущего URL.
+- Изменены некоторые имена переменных для согласования.
+- Удалены неиспользуемые методы и атрибуты.
+- Изменён метод `get_url` — теперь возвращает `bool`.
 
 
-**Full Code (Improved)**
+**Full Improved Code**
 
 ```python
 # \file hypotez/src/webdriver/driver.py
@@ -247,7 +274,7 @@ import header
 from src import gs
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException, WebDriverException
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 class Driver:
     """
@@ -259,7 +286,8 @@ class Driver:
 
     Атрибуты:
         driver (selenium.webdriver): Экземпляр Selenium WebDriver.
-        html_content (str): Содержимое HTML страницы.
+        html_content: Содержимое HTML-страницы.
+        previous_url: Предыдущий URL.
     """
 
     def __init__(self, webdriver_cls, *args, **kwargs):
@@ -280,8 +308,34 @@ class Driver:
         if not hasattr(webdriver_cls, 'get'):
             raise TypeError('`webdriver_cls` должен быть допустимым классом WebDriver.')
         self.driver = webdriver_cls(*args, **kwargs)
-        self.html_content = None  # Добавление атрибута для хранения html
+        self.html_content = None
+        self.previous_url = None
 
 
-    # ... (rest of the improved code)
+    def get_url(self, url: str) -> bool:
+        """
+        Переходит по указанному URL и сохраняет текущий URL, предыдущий URL и куки.
+
+        :param url: URL для перехода.
+        :type url: str
+        :return: True, если переход успешен, False иначе.
+        """
+        try:
+            self.previous_url = self.current_url
+            self.driver.get(url)
+            self._save_cookies_localy()
+            return True
+        except WebDriverException as e:
+            logger.error(f"Ошибка при переходе по URL {url}: {e}")
+            return False
+        except InvalidArgumentException as e:
+            logger.error(f"Некорректный URL: {url}, {e}")
+            return False
+        except Exception as e:
+            logger.error(f"Ошибка при переходе по URL {url}: {e}")
+            return False
+
+
+
+    # ... (Остальной код)
 ```

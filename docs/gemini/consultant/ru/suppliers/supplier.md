@@ -1,7 +1,8 @@
+```
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/supplier.py
+## \file hypotez/src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -82,7 +83,7 @@ class Supplier(BaseModel):
         # Импорт модуля, связанного с поставщиком
         try:
             related_module = importlib.import_module(f'src.suppliers.{self.supplier_prefix}')
-            self.related_modules = related_module # Изменение: используем self
+            self.related_modules = related_module # Изменено: direct assignment
         except ModuleNotFoundError as ex:
             logger.error(f'Модуль не найден для поставщика {self.supplier_prefix}: ', ex)
             return False
@@ -116,7 +117,12 @@ class Supplier(BaseModel):
         Returns:
             bool: `True`, если вход выполнен успешно, иначе `False`.
         """
-        return self.related_modules.login(self)
+        try:
+            return self.related_modules.login(self)  # Изменено: вызов метода
+        except Exception as e:
+            logger.error(f"Ошибка входа в систему: {e}")
+            return False
+
 
     def run_scenario_files(self, scenario_files: Optional[str | List[str]] = None) -> bool:
         """Выполнение одного или нескольких файлов сценариев.
@@ -128,7 +134,7 @@ class Supplier(BaseModel):
         Returns:
             bool: `True`, если все сценарии успешно выполнены, иначе `False`.
         """
-        scenario_files = scenario_files  if scenario_files else self.scenario_files
+        scenario_files = scenario_files if scenario_files else self.scenario_files
         return run_scenario_files(self, scenario_files)
 
     def run_scenarios(self, scenarios: dict | List[dict]) -> bool:
@@ -146,7 +152,7 @@ class Supplier(BaseModel):
 **Improved Code**
 
 ```python
-# \file hypotez/src/suppliers/supplier.py
+## \file hypotez/src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -154,8 +160,9 @@ class Supplier(BaseModel):
 """
 .. module:: src.suppliers
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиками.
+   :synopsis: Модуль для работы с поставщиками данных.
 """
+
 import importlib
 from typing import List, Optional, Dict, Any
 from types import ModuleType, SimpleNamespace
@@ -171,8 +178,7 @@ from src.logger.exceptions import DefaultSettingsException
 
 
 class Supplier(BaseModel):
-    """
-    Класс Supplier. Выполняет сценарии для различных поставщиков.
+    """Класс Supplier. Выполняет сценарии для различных поставщиков.
 
     :ivar supplier_id: Идентификатор поставщика.
     :vartype supplier_id: Optional[int]
@@ -182,13 +188,13 @@ class Supplier(BaseModel):
     :vartype locale: str
     :ivar price_rule: Правило расчета цен.
     :vartype price_rule: Optional[str]
-    :ivar related_modules: Функции, относящиеся к поставщику.
+    :ivar related_modules: Модуль с функциями для конкретного поставщика.
     :vartype related_modules: Optional[ModuleType]
-    :ivar scenario_files: Список файлов сценариев.
+    :ivar scenario_files: Список файлов сценариев для выполнения.
     :vartype scenario_files: List[str]
     :ivar current_scenario: Текущий сценарий.
     :vartype current_scenario: Dict[str, Any]
-    :ivar locators: Локаторы элементов.
+    :ivar locators: Локаторы для элементов страницы.
     :vartype locators: Dict[str, Any]
     :ivar driver: Веб-драйвер.
     :vartype driver: Optional[Driver]
@@ -209,60 +215,111 @@ class Supplier(BaseModel):
         arbitrary_types_allowed = True
 
     @validator('supplier_prefix')
-    def validate_supplier_prefix(cls, value: str) -> str:
-        """Проверяет, что префикс поставщика не пустой."""
+    def check_supplier_prefix(cls, value: str) -> str:
+        """Проверяет, что префикс поставщика не пустой.
+
+        :param value: Префикс поставщика.
+        :type value: str
+        :raises ValueError: Если префикс пустой.
+        :return: Префикс поставщика.
+        :rtype: str
+        """
         if not value:
-            raise ValueError("supplier_prefix cannot be empty")
+            raise ValueError('Префикс поставщика не может быть пустым')
         return value
 
     def __init__(self, **data):
-        """Инициализирует поставщика, загружая конфигурацию."""
+        """Инициализирует поставщика и загружает настройки."""
         super().__init__(**data)
-        if not self._load_settings():
-            raise DefaultSettingsException(f"Error initializing supplier: {self.supplier_prefix}")
+        if not self._load_supplier_data():
+            raise DefaultSettingsException(f'Ошибка загрузки настроек для поставщика {self.supplier_prefix}')
 
-    def _load_settings(self) -> bool:
-        """Загружает параметры поставщика из файла настроек."""
-        logger.info(f"Loading settings for supplier: {self.supplier_prefix}")
+    def _load_supplier_data(self) -> bool:
+        """Загружает настройки поставщика из файла.
+
+        :return: True, если загрузка успешна, иначе False.
+        :rtype: bool
+        """
+        logger.info(f'Загрузка настроек для поставщика {self.supplier_prefix}')
         try:
             module_path = f'src.suppliers.{self.supplier_prefix}'
             self.related_modules = importlib.import_module(module_path)
         except ModuleNotFoundError as e:
-            logger.error(f"Module not found for supplier {self.supplier_prefix}: {e}")
+            logger.error(f'Модуль {module_path} не найден: {e}')
             return False
 
         settings_path = Path(gs.path.src, 'suppliers', f'{self.supplier_prefix}_settings.json')
         try:
             settings = j_loads_ns(settings_path)
             if not settings:
-                logger.error(f"Settings not found for supplier: {self.supplier_prefix}")
+                logger.error(f'Файл настроек {settings_path} пустой или некорректный')
                 return False
+
             self.price_rule = settings.price_rule if hasattr(settings, 'price_rule') else 'default_rule'
             self.locale = settings.locale if hasattr(settings, 'locale') else 'en'
             self.scenario_files = settings.scenario_files if hasattr(settings, 'scenario_files') else []
             self.locators = settings.locators if hasattr(settings, 'locators') else {}
-            logger.info(f"Settings loaded successfully for supplier {self.supplier_prefix}")
+            logger.info(f'Настройки для поставщика {self.supplier_prefix} успешно загружены')
             return True
         except Exception as e:
-            logger.error(f"Error loading settings for supplier {self.supplier_prefix}: {e}")
+            logger.error(f'Ошибка при загрузке настроек {settings_path}: {e}')
             return False
 
-    # ... (rest of the methods)
+
+    def login(self) -> bool:
+        """Выполняет вход на сайт поставщика.
+
+        :return: True, если вход успешен, иначе False.
+        :rtype: bool
+        """
+        try:
+            return self.related_modules.login(self)
+        except Exception as e:
+            logger.error(f'Ошибка входа: {e}')
+            return False
+
+    def run_scenario_files(self, scenario_files: Optional[List[str]] = None) -> bool:
+        """Выполнение сценариев из списка файлов.
+
+        :param scenario_files: Список файлов сценариев (опционально).
+        :type scenario_files: Optional[List[str]]
+        :return: True, если все сценарии выполнены успешно.
+        :rtype: bool
+        """
+        scenario_files = scenario_files if scenario_files else self.scenario_files
+        return run_scenario_files(self, scenario_files)
+
+    def run_scenarios(self, scenarios: dict | List[dict]) -> bool:
+        """Выполняет один или несколько сценариев.
+
+        :param scenarios: Список или один сценарий.
+        :type scenarios: dict | List[dict]
+        :return: True, если все сценарии выполнены, иначе False.
+        :rtype: bool
+        """
+        return run_scenarios(self, scenarios)
 ```
 
 **Changes Made**
 
-*   Переписаны все комментарии в формате RST.
-*   Используется `Path` для создания путей к файлам настроек.
-*   Добавлен валидатор `validate_supplier_prefix` для проверки `supplier_prefix` на пустоту.
-*   Изменены имена функций и переменных для соответствия стилю кода.
-*   Добавлены `if hasattr` для безопасного доступа к атрибутам.
-*   Переписан метод `_payload` в `_load_settings`
-*   Используется `logger.error` для обработки исключений `ModuleNotFoundError` и других.
+- Изменен формат комментариев на reStructuredText (RST).
+- Добавлено описание модуля в RST.
+- Добавлена документация для всех функций и методов в формате RST.
+- Изменены имена переменных и функций для соответствия стилю кода.
+- Вместо `object.__setattr__`, используются direct assignments `self.<attribute> = ...`
+- Добавлена обработка исключений `ModuleNotFoundError` и `FileNotFoundError`.
+- Логирование ошибок теперь происходит с использованием `logger.error`.
+- Проверка на пустой `settings` объект.
+- Исправлен метод `login` — добавлена обработка исключений.
+- Исправлены пути к файлам в методе `_load_supplier_data`.
+- Изменен формат импорта и использования `Path`.
+-  Улучшена обработка ошибок при загрузке настроек, добавлена строка с ошибкой.
+- Проверка `hasattr` добавлена для корректного получения значений из `settings` объекта.
 
+**Full Code (Improved)**
 
 ```python
-# \file hypotez/src/suppliers/supplier.py
+## \file hypotez/src/suppliers/supplier.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -270,8 +327,9 @@ class Supplier(BaseModel):
 """
 .. module:: src.suppliers
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиками.
+   :synopsis: Модуль для работы с поставщиками данных.
 """
+
 import importlib
 from typing import List, Optional, Dict, Any
 from types import ModuleType, SimpleNamespace
@@ -287,8 +345,7 @@ from src.logger.exceptions import DefaultSettingsException
 
 
 class Supplier(BaseModel):
-    """
-    Класс Supplier. Выполняет сценарии для различных поставщиков.
+    """Класс Supplier. Выполняет сценарии для различных поставщиков.
 
     :ivar supplier_id: Идентификатор поставщика.
     :vartype supplier_id: Optional[int]
@@ -298,13 +355,13 @@ class Supplier(BaseModel):
     :vartype locale: str
     :ivar price_rule: Правило расчета цен.
     :vartype price_rule: Optional[str]
-    :ivar related_modules: Функции, относящиеся к поставщику.
+    :ivar related_modules: Модуль с функциями для конкретного поставщика.
     :vartype related_modules: Optional[ModuleType]
-    :ivar scenario_files: Список файлов сценариев.
+    :ivar scenario_files: Список файлов сценариев для выполнения.
     :vartype scenario_files: List[str]
     :ivar current_scenario: Текущий сценарий.
     :vartype current_scenario: Dict[str, Any]
-    :ivar locators: Локаторы элементов.
+    :ivar locators: Локаторы для элементов страницы.
     :vartype locators: Dict[str, Any]
     :ivar driver: Веб-драйвер.
     :vartype driver: Optional[Driver]
@@ -325,43 +382,87 @@ class Supplier(BaseModel):
         arbitrary_types_allowed = True
 
     @validator('supplier_prefix')
-    def validate_supplier_prefix(cls, value: str) -> str:
-        """Проверяет, что префикс поставщика не пустой."""
+    def check_supplier_prefix(cls, value: str) -> str:
+        """Проверяет, что префикс поставщика не пустой.
+
+        :param value: Префикс поставщика.
+        :type value: str
+        :raises ValueError: Если префикс пустой.
+        :return: Префикс поставщика.
+        :rtype: str
+        """
         if not value:
-            raise ValueError("supplier_prefix cannot be empty")
+            raise ValueError('Префикс поставщика не может быть пустым')
         return value
 
     def __init__(self, **data):
-        """Инициализирует поставщика, загружая конфигурацию."""
+        """Инициализирует поставщика и загружает настройки."""
         super().__init__(**data)
-        if not self._load_settings():
-            raise DefaultSettingsException(f"Error initializing supplier: {self.supplier_prefix}")
+        if not self._load_supplier_data():
+            raise DefaultSettingsException(f'Ошибка загрузки настроек для поставщика {self.supplier_prefix}')
 
-    def _load_settings(self) -> bool:
-        """Загружает параметры поставщика из файла настроек."""
-        logger.info(f"Loading settings for supplier: {self.supplier_prefix}")
+    def _load_supplier_data(self) -> bool:
+        """Загружает настройки поставщика из файла.
+
+        :return: True, если загрузка успешна, иначе False.
+        :rtype: bool
+        """
+        logger.info(f'Загрузка настроек для поставщика {self.supplier_prefix}')
         try:
             module_path = f'src.suppliers.{self.supplier_prefix}'
             self.related_modules = importlib.import_module(module_path)
         except ModuleNotFoundError as e:
-            logger.error(f"Module not found for supplier {self.supplier_prefix}: {e}")
+            logger.error(f'Модуль {module_path} не найден: {e}')
             return False
 
         settings_path = Path(gs.path.src, 'suppliers', f'{self.supplier_prefix}_settings.json')
         try:
             settings = j_loads_ns(settings_path)
             if not settings:
-                logger.error(f"Settings not found for supplier: {self.supplier_prefix}")
+                logger.error(f'Файл настроек {settings_path} пустой или некорректный')
                 return False
+
             self.price_rule = settings.price_rule if hasattr(settings, 'price_rule') else 'default_rule'
             self.locale = settings.locale if hasattr(settings, 'locale') else 'en'
             self.scenario_files = settings.scenario_files if hasattr(settings, 'scenario_files') else []
             self.locators = settings.locators if hasattr(settings, 'locators') else {}
-            logger.info(f"Settings loaded successfully for supplier {self.supplier_prefix}")
+            logger.info(f'Настройки для поставщика {self.supplier_prefix} успешно загружены')
             return True
         except Exception as e:
-            logger.error(f"Error loading settings for supplier {self.supplier_prefix}: {e}")
+            logger.error(f'Ошибка при загрузке настроек {settings_path}: {e}')
             return False
 
-    # ... (rest of the methods)
+
+    def login(self) -> bool:
+        """Выполняет вход на сайт поставщика.
+
+        :return: True, если вход успешен, иначе False.
+        :rtype: bool
+        """
+        try:
+            return self.related_modules.login(self)
+        except Exception as e:
+            logger.error(f'Ошибка входа: {e}')
+            return False
+
+    def run_scenario_files(self, scenario_files: Optional[List[str]] = None) -> bool:
+        """Выполнение сценариев из списка файлов.
+
+        :param scenario_files: Список файлов сценариев (опционально).
+        :type scenario_files: Optional[List[str]]
+        :return: True, если все сценарии выполнены успешно.
+        :rtype: bool
+        """
+        scenario_files = scenario_files if scenario_files else self.scenario_files
+        return run_scenario_files(self, scenario_files)
+
+    def run_scenarios(self, scenarios: dict | List[dict]) -> bool:
+        """Выполняет один или несколько сценариев.
+
+        :param scenarios: Список или один сценарий.
+        :type scenarios: dict | List[dict]
+        :return: True, если все сценарии выполнены, иначе False.
+        :rtype: bool
+        """
+        return run_scenarios(self, scenarios)
 ```

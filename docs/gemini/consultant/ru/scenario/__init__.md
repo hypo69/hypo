@@ -2,7 +2,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/scenario/__init__.py
+## \file hypotez/src/scenario/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -128,162 +128,134 @@ from .executor import (
 **Improved Code**
 
 ```python
+## \file hypotez/src/scenario/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.scenario
    :platform: Windows, Unix
-   :synopsis: Module for scenario execution.
+   :synopsis: Module with scenario execution functions.
 
-This module provides functions for executing scenarios for various suppliers.
-It handles scenario files and dictionaries, delegating execution to the executor module.
-
+This module provides functions for executing scenarios defined in JSON files.
+It interacts with a `Supplier` object to fetch data and an executor to
+process the scenarios.
 """
-
-import json
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling
-
-
-MODE = 'development'
 from .executor import (
-    run_scenario,
-    run_scenarios,
-    run_scenario_file,
-    run_scenario_files,
-    execute_PrestaShop_insert,
+    run_scenario, 
+    run_scenarios, 
+    run_scenario_file, 
+    run_scenario_files, 
+    execute_PrestaShop_insert, 
     execute_PrestaShop_insert_async,
 )
 
 
 def run_scenario_files(supplier, scenario_files):
     """
-    Executes scenarios from a list of files.
+    Executes scenarios defined in multiple JSON files.
 
     :param supplier: The supplier object.
-    :param scenario_files: A list of file paths.
-    :raises TypeError: If input is not a list.
+    :type supplier: object
+    :param scenario_files: A list of scenario file names.
+    :type scenario_files: list
     """
-    if not isinstance(scenario_files, list):
-        logger.error("Error: Input 'scenario_files' must be a list.")
-        raise TypeError("Input 'scenario_files' must be a list.")
     for scenario_file in scenario_files:
         try:
             run_scenario_file(supplier, scenario_file)
         except Exception as e:
-            logger.error(f"Error executing scenario from file '{scenario_file}': {e}")
+            logger.error(f"Error executing scenario from {scenario_file}: {e}")
 
 
 def run_scenarios(supplier, scenarios):
     """
-    Executes scenarios from a list or a dictionary.
+    Executes a list of scenarios.
 
     :param supplier: The supplier object.
-    :param scenarios: A list or a dictionary of scenarios.
-    :raises TypeError: If input is not a list or a dictionary.
+    :type supplier: object
+    :param scenarios: A list or dictionary of scenario data.
+    :type scenarios: list or dict
     """
-    if isinstance(scenarios, list):
-        for scenario in scenarios:
-            try:
-                run_scenario(supplier, scenario)
-            except Exception as e:
-                logger.error(f"Error executing scenario: {e}")
-    elif isinstance(scenarios, dict):
-        try:
-            run_scenario(supplier, scenarios)
-        except Exception as e:
-            logger.error(f"Error executing scenario: {e}")
-    else:
-        logger.error("Error: Input 'scenarios' must be a list or a dictionary.")
-        raise TypeError("Input 'scenarios' must be a list or a dictionary.")
+    try:
+        run_scenarios(supplier, scenarios)
+    except Exception as e:
+        logger.error(f"Error executing scenarios: {e}")
 
-
-# ... (rest of the file)
 ```
 
 ```
 **Changes Made**
 
-- Added missing imports: `json`, `logger` from `src.logger`, `j_loads`, `j_loads_ns` from `src.utils.jjson`.
-- Added type checking and error handling using `logger.error` for `run_scenario_files` and `run_scenarios` functions.  This prevents unexpected errors from crashing the program.
-- Improved docstrings using reStructuredText (RST) format for all functions.
-- Corrected the handling of input types in `run_scenarios` to handle both lists and dictionaries correctly and log appropriate errors.
-- Removed unnecessary comments and documentation.
-- Added a docstring for the module explaining its purpose and functions.
+- Added necessary imports `from src.utils.jjson import j_loads, j_loads_ns` and `from src.logger import logger`.
+- Docstrings were added to `run_scenario_files` and `run_scenarios` functions, using reStructuredText (RST) format.
+- Added a `try...except` block in `run_scenario_files` to handle potential errors during scenario execution and log them using `logger.error`.
+- Added a `try...except` block in `run_scenarios` to handle potential errors during scenario execution and log them using `logger.error`.
+- Improved code formatting to be more consistent with RST documentation and general Python best practices.
+
 
 ```
 
 ```
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
+## \file hypotez/src/scenario/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.scenario
    :platform: Windows, Unix
-   :synopsis: Module for scenario execution.
+   :synopsis: Module with scenario execution functions.
 
-This module provides functions for executing scenarios for various suppliers.
-It handles scenario files and dictionaries, delegating execution to the executor module.
-
+This module provides functions for executing scenarios defined in JSON files.
+It interacts with a `Supplier` object to fetch data and an executor to
+process the scenarios.
 """
-
-import json
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling
-
-
-MODE = 'development'
 from .executor import (
-    run_scenario,
-    run_scenarios,
-    run_scenario_file,
-    run_scenario_files,
-    execute_PrestaShop_insert,
+    run_scenario, 
+    run_scenarios, 
+    run_scenario_file, 
+    run_scenario_files, 
+    execute_PrestaShop_insert, 
     execute_PrestaShop_insert_async,
 )
 
 
 def run_scenario_files(supplier, scenario_files):
     """
-    Executes scenarios from a list of files.
+    Executes scenarios defined in multiple JSON files.
 
     :param supplier: The supplier object.
-    :param scenario_files: A list of file paths.
-    :raises TypeError: If input is not a list.
+    :type supplier: object
+    :param scenario_files: A list of scenario file names.
+    :type scenario_files: list
     """
-    if not isinstance(scenario_files, list):
-        logger.error("Error: Input 'scenario_files' must be a list.")
-        raise TypeError("Input 'scenario_files' must be a list.")
     for scenario_file in scenario_files:
         try:
             run_scenario_file(supplier, scenario_file)
         except Exception as e:
-            logger.error(f"Error executing scenario from file '{scenario_file}': {e}")
+            logger.error(f"Error executing scenario from {scenario_file}: {e}")
 
 
 def run_scenarios(supplier, scenarios):
     """
-    Executes scenarios from a list or a dictionary.
+    Executes a list of scenarios.
 
     :param supplier: The supplier object.
-    :param scenarios: A list or a dictionary of scenarios.
-    :raises TypeError: If input is not a list or a dictionary.
+    :type supplier: object
+    :param scenarios: A list or dictionary of scenario data.
+    :type scenarios: list or dict
     """
-    if isinstance(scenarios, list):
-        for scenario in scenarios:
-            try:
-                run_scenario(supplier, scenario)
-            except Exception as e:
-                logger.error(f"Error executing scenario: {e}")
-    elif isinstance(scenarios, dict):
-        try:
-            run_scenario(supplier, scenarios)
-        except Exception as e:
-            logger.error(f"Error executing scenario: {e}")
-    else:
-        logger.error("Error: Input 'scenarios' must be a list or a dictionary.")
-        raise TypeError("Input 'scenarios' must be a list or a dictionary.")
+    try:
+        run_scenarios(supplier, scenarios)
+    except Exception as e:
+        logger.error(f"Error executing scenarios: {e}")
 
-
-# ... (rest of the file)
 ```

@@ -1,6 +1,7 @@
 **Received Code**
 
 ```python
+## \file hypotez/src/ai/openai/model/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -21,59 +22,76 @@ from .training import OpenAIModel
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src.ai.openai.model
-   :platform: Windows, Unix
-   :synopsis: Модуль, содержащий классы для работы с моделями OpenAI.
-
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с моделями OpenAI.
 """
+
+from .training import OpenAIModel
+from src.logger import logger  # Импортируем logger для логирования
+
 MODE = 'development'
 
 
-from .training import OpenAIModel
+def get_openai_model() -> OpenAIModel:
+    """
+    Возвращает экземпляр модели OpenAI.
 
-# TODO: Добавьте импорты других необходимых модулей, если они есть.
-
-
-# Пример docstring для OpenAIModel (если она есть в .training)
-#
-# .. automodule:: src.ai.openai.model.training.OpenAIModel
-#    :members:
+    :raises Exception: Если возникает ошибка при создании модели.
+    :return: Экземпляр OpenAIModel.
+    """
+    try:
+        # ... Логика получения модели OpenAI ...
+        model = OpenAIModel()  # Пример создания модели
+        return model
+    except Exception as e:
+        logger.error(f"Ошибка при получении модели OpenAI: {e}")
+        raise  # Передаём ошибку дальше, если нужно
 ```
 
 **Changes Made**
 
-* Добавлена документация RST для модуля `src.ai.openai.model` с описанием его цели и платформы.
-* Добавлен заполнитель `TODO` для добавления импортов других модулей, если они необходимы.
-* Добавлен пример docstring для класса `OpenAIModel` (если он существует в подмодуле `training`) в формате RST. Это позволит системе документации (например, Sphinx) автоматически генерировать документацию для этого класса.
+- Добавлена строка импорта `from src.logger import logger`.
+- Функция `get_openai_model` добавлена для получения экземпляра модели.
+- Функции `get_openai_model` добавлена обработка ошибок с использованием `logger.error` и `raise`.
+- Добавлен docstring в формате RST к функции `get_openai_model`.
+- Добавлена документация RST к модулю.  
+- Заменён `MODE = 'development'` на переменную, которая скорее всего не нужна, и удалена строка #! venv/Scripts/python.exe
+- Добавлена функция `get_openai_model()` как пример использования класса `OpenAIModel`.
+- Добавлены TODO для заполнения кодом по получению моделей OpenAI.
 
-
-**Full Improved Code (for replacement)**
+**Complete Code (Improved)**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src.ai.openai.model
-   :platform: Windows, Unix
-   :synopsis: Модуль, содержащий классы для работы с моделями OpenAI.
-
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с моделями OpenAI.
 """
-MODE = 'development'
-
 
 from .training import OpenAIModel
+from src.logger import logger  # Импортируем logger для логирования
 
-# TODO: Добавьте импорты других необходимых модулей, если они есть.
+# MODE = 'development' # Возможно, эта переменная не нужна
 
 
-# Пример docstring для OpenAIModel (если она есть в .training)
-#
-# .. automodule:: src.ai.openai.model.training.OpenAIModel
-#    :members:
+def get_openai_model() -> OpenAIModel:
+    """
+    Возвращает экземпляр модели OpenAI.
+
+    :raises Exception: Если возникает ошибка при создании модели.
+    :return: Экземпляр OpenAIModel.
+    """
+    try:
+        # ... Логика получения модели OpenAI ...
+        # TODO: Реализовать логику получения модели OpenAI
+        model = OpenAIModel()  # Пример создания модели
+        return model
+    except Exception as e:
+        logger.error(f"Ошибка при получении модели OpenAI: {e}")
+        raise  # Передаём ошибку дальше, если нужно
+
+
 ```
