@@ -102,7 +102,7 @@
     "mandatory": true
 
   },
-  "close_popup": {
+  "close_pop_up": {
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[@aria-label = 'Закрыть']",

@@ -16,7 +16,7 @@ locator = j_loads(gs.path.src.suppliers / f{s} / 'locators' / 'product.json`)
 
 class G(Graber):
 
-    @close_popup()
+    @close_pop_up()
     async def name(self, value: Any = None):
         self.fields.name = <Ваша реализация>
         )
@@ -49,23 +49,35 @@ from src.logger.exceptions import ExecuteLocatorException
 from src.endpoints.prestashop import PrestaShop
 
 
+
+# Глобальные настройки через отдельный объект
+class Context:
+    """Класс для хранения глобальных настроек."""
+    driver: Driver = None
+    locator: SimpleNamespace = None
+
 # Определение декоратора для закрытия всплывающих окон
-def close_popup(value: Any = None) -> Callable:
-    """Creates a decorator to close pop-ups before executing the main function logic.
+# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
+# Общее название декоратора `@close_pop_up` можно изменить 
+# Если декоратор не используется в поставщике - надо закомментировать строку
+# ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
+def close_pop_up(value: Any = None) -> Callable:
+    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
-        value (Any): Optional value passed to the decorator.
+        value (Any): Дополнительное значение для декоратора.
 
     Returns:
-        Callable: The decorator wrapping the function.
+        Callable: Декоратор, оборачивающий функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await d.execute_locator(l.close_popup)  # Await async pop-up close
+                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
+                ... 
             except ExecuteLocatorException as e:
-                logger.debug(f"Error executing locator: {e}")
+                logger.debug(f'Ошибка выполнения локатора: {e}')
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
@@ -86,6 +98,10 @@ class Graber:
         self.d:Driver = driver
         self.driver = self.d
         self.fields:ProductFields = ProductFields()
+        Context.driver = self.driver
+        Context.locator = SimpleNamespace(
+            close_pop_up='locator_for_closing_popup'  # Пример задания локатора
+        )
 
     async def error(self, field: str):
         """Обработчик ошибок для полей."""
@@ -233,7 +249,7 @@ class Graber:
             self.error(field_name) or default
         )
 
-    @close_popup()
+    @close_pop_up()
     async def additional_shipping_cost(self, value: Any = None):
         """Fetch and set additional shipping cost."""
         self.fields.additional_shipping_cost = await self.set_field_value(
@@ -242,7 +258,7 @@ class Graber:
             'additional_shipping_cost'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def delivery_in_stock(self, value: Any = None):
         """Fetch and set delivery in stock status."""
         self.fields.delivery_in_stock = await self.set_field_value(
@@ -251,7 +267,7 @@ class Graber:
             'delivery_in_stock'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def active(self, value: Any = None):
         """Fetch and set active status."""
         self.fields.active = await self.set_field_value(
@@ -260,7 +276,7 @@ class Graber:
             'active'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def additional_delivery_times(self, value: Any = None):
         """Fetch and set additional delivery times."""
         self.fields.additional_delivery_times = await self.set_field_value(
@@ -269,7 +285,7 @@ class Graber:
             'additional_delivery_times'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def advanced_stock_management(self, value: Any = None):
         """Fetch and set advanced stock management status."""
         self.fields.advanced_stock_management = await self.set_field_value(
@@ -278,7 +294,7 @@ class Graber:
             'advanced_stock_management'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def affiliate_short_link(self, value: Any = None):
         """Fetch and set affiliate short link."""
         self.fields.affiliate_short_link = await self.set_field_value(
@@ -287,7 +303,7 @@ class Graber:
             'affiliate_short_link'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def affiliate_summary(self, value: Any = None):
         """Fetch and set affiliate summary."""
         self.fields.affiliate_summary = await self.set_field_value(
@@ -296,7 +312,7 @@ class Graber:
             'affiliate_summary'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def affiliate_summary_2(self, value: Any = None):
         """Fetch and set affiliate summary 2."""
         self.fields.affiliate_summary_2 = await self.set_field_value(
@@ -307,7 +323,7 @@ class Graber:
 
 
 
-    @close_popup()
+    @close_pop_up()
     async def affiliate_text(self, value: Any = None):
         self.fields.affiliate_text = await self.set_field_value(
             value, 
@@ -315,7 +331,7 @@ class Graber:
             'affiliate_text'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def affiliate_image_large(self, value: Any = None):
         self.fields.affiliate_image_large = await self.set_field_value(
             value, 
@@ -323,14 +339,14 @@ class Graber:
             'affiliate_image_large'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def affiliate_image_medium(self, value: Any = None):
         self.fields.affiliate_image_medium = await self.set_field_value(
             value, 
             lambda: ''.join(self.d.execute_locator(self.l.affiliate_image_medium) or []), 
             'affiliate_image_medium'
         )
-    @close_popup()
+    @close_pop_up()
     async def affiliate_image_small(self, value: Any = None):
         self.fields.affiliate_image_small = await self.set_field_value(
             value, 
@@ -338,7 +354,7 @@ class Graber:
             'affiliate_image_small'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def available_date(self, value: Any = None):
         self.fields.available_date = await self.set_field_value(
             value, 
@@ -346,7 +362,7 @@ class Graber:
             'available_date'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def available_for_order(self, value: Any = None):
         self.fields.available_for_order = await self.set_field_value(
             value, 
@@ -354,7 +370,7 @@ class Graber:
             'available_for_order'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def available_later(self, value: Any = None):
         self.fields.available_later = await self.set_field_value(
             value, 
@@ -362,7 +378,7 @@ class Graber:
             'available_later'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def available_now(self, value: Any = None):
         f.available_now = await self.set_field_value(
             value, 
@@ -370,11 +386,11 @@ class Graber:
             'available_now'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def additional_categories(self, value: str | list = None) -> dict:
         self.fields.additional_categories = value if value else ''
 
-    @close_popup()
+    @close_pop_up()
     async def cache_default_attribute(self, value: Any = None):
         self.fields.cache_default_attribute = await self.set_field_value(
             value, 
@@ -382,7 +398,7 @@ class Graber:
             'cache_default_attribute'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def cache_has_attachments(self, value: Any = None):
         self.fields.cache_has_attachments = await self.set_field_value(
             value, 
@@ -390,7 +406,7 @@ class Graber:
             'cache_has_attachments'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def cache_is_pack(self, value: Any = None):
         self.fields.cache_is_pack = await self.set_field_value(
             value, 
@@ -398,7 +414,7 @@ class Graber:
             'cache_is_pack'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def condition(self, value: Any = None):
         self.fields.condition = await self.set_field_value(
             value, 
@@ -406,7 +422,7 @@ class Graber:
             'condition'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def condition(self, value: Any = None):
         self.fields.condition = await self.set_field_value(
             value, 
@@ -414,7 +430,7 @@ class Graber:
             'condition'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def customizable(self, value: Any = None):
         self.fields.customizable = await self.set_field_value(
             value, 
@@ -422,7 +438,7 @@ class Graber:
             'customizable'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def date_add(self, value: Any = None):
         self.fields.date_add = await self.set_field_value(
             value, 
@@ -430,7 +446,7 @@ class Graber:
             'date_add'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def date_upd(self, value: Any = None):
         self.fields.date_upd = await self.set_field_value(
             value, 
@@ -438,7 +454,7 @@ class Graber:
             'date_upd'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def delivery_out_stock(self, value: Any = None):
         self.fields.delivery_out_stock = await self.set_field_value(
             value, 
@@ -446,7 +462,7 @@ class Graber:
             'delivery_out_stock'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def depth(self, value: Any = None):
         self.fields.depth = await self.set_field_value(
             value, 
@@ -454,7 +470,7 @@ class Graber:
             'depth'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def description(self, value: Any = None):
         self.fields.description = await self.set_field_value(
             value, 
@@ -462,7 +478,7 @@ class Graber:
             'description'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def description_short(self, value: Any = None):
         self.fields.description_short = await self.set_field_value(
             value, 
@@ -470,11 +486,11 @@ class Graber:
             'description_short'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def id_category_default(self, value: Any = None):
         self.fields.id_category_default = value
 
-    @close_popup()
+    @close_pop_up()
     async def id_default_combination(self, value: Any = None):
         self.fields.id_default_combination = await self.set_field_value(
             value, 
@@ -482,7 +498,7 @@ class Graber:
             'id_default_combination'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def id_product(self, value: Any = None):
         if value:
             self.fields.id_product = value
@@ -490,7 +506,7 @@ class Graber:
         self.fields.id_supplier = self.fields.id_supplier or self.d.execute_locator(self.l.id_supplier)
         self.fields.id_product = f"{self.supplier_prefix}-{self.fields.id_supplier}" if self.fields.id_supplier else None
 
-    @close_popup()
+    @close_pop_up()
     async def locale(self, value: Any = None):
         i18n = value or d.locale
         if not i18n and self.fields.name['language'][0]['value']:
@@ -498,7 +514,7 @@ class Graber:
             i18n = detect(text)
         self.fields.locale = i18n
 
-    @close_popup()
+    @close_pop_up()
     async def id_default_image(self, value: Any = None):
         self.fields.id_default_image = await self.set_field_value(
             value, 
@@ -506,7 +522,7 @@ class Graber:
             'id_default_image'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def ean13(self, value: Any = None):
         self.fields.ean13 = await self.set_field_value(
             value, 
@@ -514,7 +530,7 @@ class Graber:
             'ean13'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def ecotax(self, value: Any = None):
         self.fields.ecotax = await self.set_field_value(
             value, 
@@ -522,7 +538,7 @@ class Graber:
             'ecotax'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def height(self, value: Any = None):
         self.fields.height = await self.set_field_value(
             value, 
@@ -530,7 +546,7 @@ class Graber:
             'height'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def how_to_use(self, value: Any = None):
         self.fields.how_to_use = await self.set_field_value(
             value, 
@@ -538,7 +554,7 @@ class Graber:
             'how_to_use'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def id_manufacturer(self, value: Any = None):
         self.fields.id_manufacturer = await self.set_field_value(
             value, 
@@ -546,7 +562,7 @@ class Graber:
             'id_manufacturer'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def id_supplier(self, value: Any = None):
         self.fields.id_supplier = await self.set_field_value(
             value, 
@@ -554,7 +570,7 @@ class Graber:
             'id_supplier'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def id_tax(self, value: Any = None):
         self.fields.id_tax = await self.set_field_value(
             value, 
@@ -562,7 +578,7 @@ class Graber:
             'id_tax'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def id_type_redirected(self, value: Any = None):
         self.fields.id_type_redirected = await self.set_field_value(
             value, 
@@ -570,14 +586,14 @@ class Graber:
             'id_type_redirected'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def images_urls(self, value: Any = None):
         self.fields.images_urls = await self.set_field_value(
             value, 
             lambda: ''.join(self.d.execute_locator(self.l.images_urls) or []), 
             'images_urls'
         )
-    @close_popup()
+    @close_pop_up()
     async def indexed(self, value: Any = None):
         self.fields.indexed = await self.set_field_value(
             value, 
@@ -586,7 +602,7 @@ class Graber:
         )
 
 
-    @close_popup()
+    @close_pop_up()
     async def ingredients(self, value: Any = None):
         self.fields.images_urls = await self.set_field_value(
             value,
@@ -594,7 +610,7 @@ class Graber:
             'images_urls'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def meta_description(self, value: Any = None):
         self.fields.meta_description = await self.set_field_value(
             value,
@@ -602,7 +618,7 @@ class Graber:
             'meta_description'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def meta_keywords(self, value: Any = None):
         self.fields.meta_keywords = await self.set_field_value(
             value,
@@ -610,7 +626,7 @@ class Graber:
             'meta_keywords'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def meta_title(self, value: Any = None):
         self.fields.meta_title = await self.set_field_value(
             value,
@@ -618,7 +634,7 @@ class Graber:
             'meta_title'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def is_virtual(self, value: Any = None):
         self.fields.is_virtual = await self.set_field_value(
             value,
@@ -626,7 +642,7 @@ class Graber:
             'is_virtual'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def isbn(self, value: Any = None):
         self.fields.isbn = await self.set_field_value(
             value,
@@ -635,7 +651,7 @@ class Graber:
         )
 
 
-    @close_popup()
+    @close_pop_up()
     async def link_rewrite(self, value: Any = None) -> str:
         self.fields.link_rewrite = await self.set_field_value(
             value,
@@ -643,7 +659,7 @@ class Graber:
             'link_rewrite'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def location(self, value: Any = None):
         self.fields.location = await self.set_field_value(
             value,
@@ -651,7 +667,7 @@ class Graber:
             'location'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def low_stock_alert(self, value: Any = None):
         self.fields.low_stock_alert = await self.set_field_value(
             value,
@@ -659,7 +675,7 @@ class Graber:
             'low_stock_alert'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def low_stock_threshold(self, value: Any = None):
         self.fields.low_stock_threshold = await self.set_field_value(
             value,
@@ -667,7 +683,7 @@ class Graber:
             'low_stock_threshold'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def minimal_quantity(self, value: Any = None):
         self.fields.minimal_quantity = await self.set_field_value(
             value,
@@ -675,7 +691,7 @@ class Graber:
             'minimal_quantity'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def mpn(self, value: Any = None):
         self.fields.mpn = await self.set_field_value(
             value,
@@ -683,7 +699,7 @@ class Graber:
             'mpn'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def name(self, value: Any = None):
         self.fields.name = await self.set_field_value(
             value,
@@ -691,7 +707,7 @@ class Graber:
             'name'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def online_only(self, value: Any = None):
         self.fields.online_only = await self.set_field_value(
             value,
@@ -699,7 +715,7 @@ class Graber:
             'online_only'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def on_sale(self, value: Any = None):
         self.fields.on_sale = await self.set_field_value(
             value,
@@ -707,7 +723,7 @@ class Graber:
             'on_sale'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def out_of_stock(self, value: Any = None):
         self.fields.out_of_stock = await self.set_field_value(
             value,
@@ -715,7 +731,7 @@ class Graber:
             'out_of_stock'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def pack_stock_type(self, value: Any = None):
         self.fields.pack_stock_type = await self.set_field_value(
             value,
@@ -723,7 +739,7 @@ class Graber:
             'pack_stock_type'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def price(self, value: Any = None):
         self.fields.price = await self.set_field_value(
             value,
@@ -731,7 +747,7 @@ class Graber:
             'price'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def product_type(self, value: Any = None):
         self.fields.product_type = await self.set_field_value(
             value,
@@ -739,7 +755,7 @@ class Graber:
             'product_type'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def quantity(self, value: Any = None):
         self.fields.quantity = await self.set_field_value(
             value,
@@ -747,7 +763,7 @@ class Graber:
             'quantity'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def quantity_discount(self, value: Any = None):
         self.fields.quantity_discount = await self.set_field_value(
             value,
@@ -755,7 +771,7 @@ class Graber:
             'quantity_discount'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def redirect_type(self, value: Any = None):
         self.fields.redirect_type = await self.set_field_value(
             value,
@@ -763,7 +779,7 @@ class Graber:
             'redirect_type'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def reference(self, value: Any = None):
         self.fields.reference = await self.set_field_value(
             value,
@@ -771,7 +787,7 @@ class Graber:
             'reference'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def show_condition(self, value: Any = None):
         self.fields.show_condition = await self.set_field_value(
             value,
@@ -779,7 +795,7 @@ class Graber:
             'show_condition'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def show_price(self, value: Any = None):
         self.fields.show_price = await self.set_field_value(
             value,
@@ -787,7 +803,7 @@ class Graber:
             'show_price'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def state(self, value: Any = None):
         self.fields.state = await self.set_field_value(
             value,
@@ -795,7 +811,7 @@ class Graber:
             'state'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def text_fields(self, value: Any = None):
         self.fields.text_fields = await self.set_field_value(
             value,
@@ -803,7 +819,7 @@ class Graber:
             'text_fields'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def unit_price_ratio(self, value: Any = None):
         self.fields.unit_price_ratio = await self.set_field_value(
             value,
@@ -812,7 +828,7 @@ class Graber:
         )
 
 
-    @close_popup()
+    @close_pop_up()
     async def unity(self, value: Any = None):
         selself.fields.fields.unity = await self.set_field_value(
             value,
@@ -820,7 +836,7 @@ class Graber:
             'unity'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def upc(self, value: Any = None):
         selself.fields.fields.upc = await self.set_field_value(
             value,
@@ -828,7 +844,7 @@ class Graber:
             'upc'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def uploadable_files(self, value: Any = None):
         selself.fields.fields.uploadable_files = await self.set_field_value(
             value,
@@ -836,7 +852,7 @@ class Graber:
             'uploadable_files'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def default_image_url(self, value: Any = None):
         selself.fields.fields.default_image_url = await self.set_field_value(
             value,
@@ -844,7 +860,7 @@ class Graber:
             'default_image_url'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def visibility(self, value: Any = None):
         selself.fields.fields.visibility = await self.set_field_value(
             value,
@@ -852,7 +868,7 @@ class Graber:
             'visibility'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def weight(self, value: Any = None):
         selself.fields.fields.weight = await self.set_field_value(
             value,
@@ -860,7 +876,7 @@ class Graber:
             'weight'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def wholesale_price(self, value: Any = None):
         selself.fields.fields.wholesale_price = await self.set_field_value(
             value,
@@ -868,7 +884,7 @@ class Graber:
             'wholesale_price'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def width(self, value: Any = None):
         selself.fields.fields.width = await self.set_field_value(
             value,
@@ -876,7 +892,7 @@ class Graber:
             'width'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def specification(self, value: Any = None):
         selself.fields.fields.specification = await self.set_field_value(
             value,
@@ -884,7 +900,7 @@ class Graber:
             'specification'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def link(self, value: Any = None):
         selself.fields.fields.link = await self.set_field_value(
             value,
@@ -892,7 +908,7 @@ class Graber:
             'link'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def byer_protection(self, value: Any = None):
         self.fields.byer_protection = await self.set_field_value(
             value,
@@ -900,7 +916,7 @@ class Graber:
             'byer_protection'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def customer_reviews(self, value: Any = None):
         self.fields.customer_reviews = await self.set_field_value(
             value,
@@ -908,7 +924,7 @@ class Graber:
             'customer_reviews'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def link_to_video(self, value: Any = None):
         self.fields.link_to_video = await self.set_field_value(
             value,
@@ -916,7 +932,7 @@ class Graber:
             'link_to_video'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def local_saved_image(self, value: Any = None):
         self.fields.local_saved_image = await self.set_field_value(
             value,
@@ -924,7 +940,7 @@ class Graber:
             'local_saved_image'
         )
 
-    @close_popup()
+    @close_pop_up()
     async def local_saved_video(self, value: Any = None):
         self.fields.local_saved_video = await self.set_field_value(
             value,

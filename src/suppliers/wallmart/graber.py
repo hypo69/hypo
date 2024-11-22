@@ -41,10 +41,10 @@ class Context:
 
 # Определение декоратора для закрытия всплывающих окон
 # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# Общее название декоратора `@close_popup` можно изменить 
+# Общее название декоратора `@close_pop_up` можно изменить 
 # Если декоратор не используется в поставщике - надо закомментировать строку
-# ```await Context.driver.execute_locator(Context.locator.close_popup)  # Await async pop-up close``` 
-def close_popup(value: Any = None) -> Callable:
+# ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
+def close_pop_up(value: Any = None) -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
@@ -57,7 +57,7 @@ def close_popup(value: Any = None) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                # await Context.driver.execute_locator(Context.locator.close_popup)  # Await async pop-up close  
+                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
                 ... 
             except ExecuteLocatorException as e:
                 logger.debug(f'Ошибка выполнения локатора: {e}')
@@ -76,7 +76,7 @@ class Graber(Grbr):
         # Устанавливаем глобальные настройки через Context
         Context.driver = driver
         Context.locator = SimpleNamespace(
-            close_popup='locator_for_closing_popup'  # Пример задания локатора
+            close_pop_up='locator_for_closing_popup'  # Пример задания локатора
         )
 
         

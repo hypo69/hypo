@@ -1,7 +1,7 @@
 {
   "infinity_scroll": false,
   "checkboxes_for_categories": false,
-  "close_popup_locator": {
+  "close_pop_up_locator": {
     
     "attribute": null,
     "by": "XPATH",

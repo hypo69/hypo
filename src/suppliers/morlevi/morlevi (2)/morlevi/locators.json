@@ -15,7 +15,7 @@
       "event": "click()"
     }
   },
-  "close_popup_locator": {
+  "close_pop_up_locator": {
     "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
     "by": "XPATH",
     "selector": "//div[@class='modal-dialog']//button[@class='close']",

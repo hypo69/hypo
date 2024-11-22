@@ -49,10 +49,10 @@ def login(s) -> bool:
         True if login else False
 
    """
-    close_popup(s)
+    close_pop_up(s)
     return True 
 
-def close_popup(s) -> bool:
+def close_pop_up(s) -> bool:
     """ Функция логин
    @param
         s - Supplier
@@ -61,7 +61,7 @@ def close_popup(s) -> bool:
 
    """
     _d = s.driver
-    _l : dict = s.locators['close_popup_locator']
+    _l : dict = s.locators['close_pop_up_locator']
     
     _d.get_url('https://www.kualastyle.com')
     _d.window_focus(_d)

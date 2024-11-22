@@ -71,12 +71,12 @@ def login(supplier):
 
             
 
-            close_popup_locator = _s.locators['login']['close_popup_locator']
-            close_popup_btn = _d.execute_locator(close_popup_locator)
+            close_pop_up_locator = _s.locators['login']['close_pop_up_locator']
+            close_pop_up_btn = _d.execute_locator(close_pop_up_locator)
             _d.wait(5)
 
-            if str(type(close_popup_btn)).execute_locator("class 'list'") >-1:  # Если появилось несколько
-                for b in close_popup_btn:
+            if str(type(close_pop_up_btn)).execute_locator("class 'list'") >-1:  # Если появилось несколько
+                for b in close_pop_up_btn:
                     try:
                         b.click()
                         if _login(_s) : 
@@ -84,8 +84,8 @@ def login(supplier):
                             return True
                             break
                     except: ...
-            if str(type(close_popup_btn)).execute_locator("webelement") >-1:  # нашелся только один элемент
-                close_popup_btn.click()
+            if str(type(close_pop_up_btn)).execute_locator("webelement") >-1:  # нашелся только один элемент
+                close_pop_up_btn.click()
                 return _login(_s)
         except Exception as ex:
             logger.error(f''' 
