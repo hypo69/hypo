@@ -47,107 +47,134 @@ https://habr.com/ru/articles/849414/
 **Improved Code**
 
 ```python
+## \file hypotez/src/ai/myai/traffic_light.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.ai.myai.traffic_light
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с системами светофоров.
+   :platform: Windows, Unix
+   :synopsis:  Этот модуль содержит логику для работы с светофорами.
 """
-from src.utils.jjson import j_loads
-from src.logger import logger
+import sys  # Импортируем sys для доступа к аргументам командной строки
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем функции для работы с JSON
 
+MODE = 'development'  # Переменная, определяющая режим работы
 
-# Переменная MODE не используется, удалена
-# MODE = 'development'
-
-
-def process_traffic_light_data(file_path: str) -> dict:
+def get_traffic_light_status(file_path):
     """
-    Обрабатывает данные о светофоре из файла.
+    Получает состояние светофора из файла.
 
-    :param file_path: Путь к файлу с данными.
+    :param file_path: Путь к файлу со статусом.
     :type file_path: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не в формате JSON.
-    :return: Словарь с данными о светофоре.
-    :rtype: dict
+    :raises Exception: Если возникла ошибка при чтении файла.
+    :return: Словарь со статусом светофора или None, если файл некорректен.
+    :rtype: dict or None
+
     """
     try:
         with open(file_path, 'r') as f:
-            data = j_loads(f) # Используем j_loads вместо json.load
-        return data
+            #  Чтение файла с помощью j_loads для обработки JSON
+            data = j_loads(f)  # Используем j_loads из src.utils.jjson
+            return data
     except FileNotFoundError:
         logger.error(f"Файл '{file_path}' не найден.")
         raise
     except Exception as e:
         logger.error(f"Ошибка при чтении файла '{file_path}': {e}")
-        raise
+        return None  # Возвращаем None для индикации ошибки
 
 
-# Пример использования
-# if __name__ == '__main__':
-#     try:
-#         data = process_traffic_light_data('traffic_light_data.json')
-#         print(data)
-#     except Exception as e:
-#         logger.error(f'Ошибка: {e}')
+# Пример использования (может быть перенесен в отдельный модуль тестирования)
+if __name__ == "__main__":
+    from src.logger import logger  # Импортируем logger из src.logger
 
+    if len(sys.argv) != 2:
+        logger.error("Необходимо указать путь к файлу.")
+        sys.exit(1)
+    
+    file_path = sys.argv[1]
+    try:
+        status = get_traffic_light_status(file_path)
+        if status:
+            logger.info(f"Статус светофора: {status}")
+        else:
+            logger.error("Ошибка при чтении файла.")
+    except Exception as e:
+       logger.error(f"Ошибка: {e}")
 ```
 
 **Changes Made**
 
-1.  Заменил `json.load` на `j_loads` для загрузки данных из файла.
-2.  Добавил обработку `FileNotFoundError` и общую обработку исключений.
-3.  Добавил логирование ошибок с помощью `logger.error`.
-4.  Добавил документацию RST в виде docstring к функции `process_traffic_light_data`.
-5.  Удалил неиспользуемые переменные `MODE`.
-6.  Добавил необходимые импорты.
-7.  Исправил формат комментариев.
+*   Импортирован необходимый модуль `sys` для обработки аргументов командной строки.
+*   Импортированы функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлена функция `get_traffic_light_status` с обработкой ошибок.
+*   Использована функция `logger.error` для записи сообщений об ошибках.
+*   Проверены условия для корректного запуска скрипта.
+*   Улучшена документация (docstrings) в формате RST.
+*   Исправлено использование `j_loads` для чтения файлов JSON.
+*   Изменен пример использования (if __name__ == "__main__").
 
+
+**Complete Code (Improved)**
 
 ```python
+## \file hypotez/src/ai/myai/traffic_light.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.ai.myai.traffic_light
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с системами светофоров.
+   :platform: Windows, Unix
+   :synopsis:  Этот модуль содержит логику для работы с светофорами.
 """
-from src.utils.jjson import j_loads
-from src.logger import logger
+import sys  # Импортируем sys для доступа к аргументам командной строки
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем функции для работы с JSON
+from src.logger import logger  # Импортируем logger для логирования
 
+MODE = 'development'  # Переменная, определяющая режим работы
 
-# Переменная MODE не используется, удалена
-# MODE = 'development'
-
-
-def process_traffic_light_data(file_path: str) -> dict:
+def get_traffic_light_status(file_path):
     """
-    Обрабатывает данные о светофоре из файла.
+    Получает состояние светофора из файла.
 
-    :param file_path: Путь к файлу с данными.
+    :param file_path: Путь к файлу со статусом.
     :type file_path: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не в формате JSON.
-    :return: Словарь с данными о светофоре.
-    :rtype: dict
+    :raises Exception: Если возникла ошибка при чтении файла.
+    :return: Словарь со статусом светофора или None, если файл некорректен.
+    :rtype: dict or None
+
     """
     try:
         with open(file_path, 'r') as f:
-            data = j_loads(f) # Используем j_loads вместо json.load
-        return data
+            #  Чтение файла с помощью j_loads для обработки JSON
+            data = j_loads(f)  # Используем j_loads из src.utils.jjson
+            return data
     except FileNotFoundError:
         logger.error(f"Файл '{file_path}' не найден.")
         raise
     except Exception as e:
         logger.error(f"Ошибка при чтении файла '{file_path}': {e}")
-        raise
+        return None  # Возвращаем None для индикации ошибки
 
 
-# Пример использования
-# if __name__ == '__main__':
-#     try:
-#         data = process_traffic_light_data('traffic_light_data.json')
-#         print(data)
-#     except Exception as e:
-#         logger.error(f'Ошибка: {e}')
+# Пример использования (может быть перенесен в отдельный модуль тестирования)
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        logger.error("Необходимо указать путь к файлу.")
+        sys.exit(1)
+    
+    file_path = sys.argv[1]
+    try:
+        status = get_traffic_light_status(file_path)
+        if status:
+            logger.info(f"Статус светофора: {status}")
+        else:
+            logger.error("Ошибка при чтении файла.")
+    except Exception as e:
+       logger.error(f"Ошибка: {e}")
 ```

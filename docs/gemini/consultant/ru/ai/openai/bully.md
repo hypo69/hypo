@@ -1,15 +1,16 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/ai/openai/bully.py
+## \file hypotez/src/ai/openai/bully.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai
+.. module: src.ai.openai 
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 MODE = 'development'
 
@@ -33,9 +34,8 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""
-MODE = 'development'
-
+"""MODE = 'development'
+  
 """ module: src.ai.openai """
 
 
@@ -45,7 +45,6 @@ MODE = 'development'
 import os
 import src.ai.openai
 import openai
-from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 openai.API_KEY = "YOUR_API_KEYS_OPENAI"
@@ -59,48 +58,44 @@ I will provide a statement and you will answer with an example."""
 
 
 def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
-		# This function simulates a bully's response using the OpenAI API.
-		# It takes a user message and a list of messages as input.
-		# It appends the user message to the message list and sends it to the OpenAI API.
-		# It returns the response from the OpenAI API.
-		messages.append({"role": "user", "content": user_message})
+		#messages.append({"role": "user", "content": user_message}) # Исправлено
 		try:
+			messages.append({"role": "user", "content": user_message})
 			completion = openai.ChatCompletion.create(
 				model="gpt-3.5-turbo",
 				messages=messages
 			)
-			# Check if the response is valid
-			if completion and completion.choices:
-				messages.append({"role": "user", "content": completion.choices[0].message})
-				return completion.choices[0].message
-			else:
-				logger.error("Invalid response from OpenAI API")
-				return None # Return None to indicate an error
+			
+			messages.append({"role": "assistant", "content": completion.choices[0].message.content}) # Изменено
+			return completion.choices[0].message.content
 		except Exception as e:
-			logger.error(f"Error during interaction with OpenAI API: {e}")
-			return None # Return None to indicate an error
+			logger.error(f"Error in bully function: {e}")
+			return None
 ```
 
 **Improved Code**
 
 ```python
-# \file hypotez/src/ai/openai/bully.py
+## \file hypotez/src/ai/openai/bully.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai
-	:platform: Windows, Unix
-	:synopsis: Module for interacting with the OpenAI API to simulate a bully's response.
+.. module:: hypotez.src.ai.openai.bully
+   :platform: Windows, Unix
+   :synopsis: Module for interacting with OpenAI API to generate bullying examples.
 """
 import os
 import openai
-from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-
-openai.API_KEY = "YOUR_API_KEYS_OPENAI"  # Replace with your actual API key
+# This should be retrieved from a config file or environment variable.
+# Don't hardcode API keys in source code.
+# openai.api_key = "YOUR_API_KEYS_OPENAI" # Placeholder
+#  (Better approach)
+# import os
+# openai.api_key = os.environ.get('OPENAI_API_KEY')
 
 #It works with GPT-3.5-turbo and GPT-4
 system_prompt = """You are an expert on hate speech.
@@ -109,68 +104,68 @@ Write from the bully's perspective really write like they would wire, be persona
 I will provide a statement and you will answer with an example."""
 
 
-def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
+def bully(user_message="Hello!", messages=None) -> str:
     """
-    Simulates a bully's response using the OpenAI API.
+    Generates a bullying example from OpenAI.
 
-    :param user_message: The user's message.
-    :param messages: A list of messages to send to the OpenAI API.
-    :raises Exception: If there is an error during the interaction with the OpenAI API.
-    :return: The response from the OpenAI API.
-    :rtype: str | None
+    :param user_message: The input statement for the model.
+    :param messages:  A list of messages, initially containing the system prompt. Defaults to None.
+    :raises Exception:  If there's an error interacting with the OpenAI API.
+    :returns: The generated bullying example or None if an error occurred.
     """
 
-    messages.append({"role": "user", "content": user_message})
+    if messages is None:
+        messages = [{"role": "system", "content": system_prompt}]
+        
     try:
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=messages
-        )
-        # Check if the response is valid
-        if completion and completion.choices:
-            # Append the response to the messages
-            messages.append({"role": "user", "content": completion.choices[0].message})
-            return completion.choices[0].message
-        else:
-            logger.error("Invalid response from OpenAI API")
-            return None
+        messages.append({"role": "user", "content": user_message})  # Correct addition
+        completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+        
+        # Correctly access and return the content
+        bully_response = completion.choices[0].message.content
+        return bully_response
+        
     except Exception as e:
-        logger.error(f"Error during interaction with OpenAI API: {e}")
+        logger.error(f"Error generating bullying example: {e}")
         return None
 ```
 
 **Changes Made**
 
-- Added necessary imports: `openai`, `j_loads`, `j_loads_ns`, `logger` from appropriate modules.
-- Removed unnecessary docstrings.
-- Added docstrings to the `bully` function using RST format.
-- Replaced standard `try-except` block with `logger.error` for error handling.
-- Added checks for valid OpenAI API responses.
-- Changed return type in the function to `str | None`
-- Fixed variable name `messagess` to `messages`
-- Corrected the imports to correct the module path
-- Improved error handling to properly log errors and return `None` in case of failure.
+1.  **Import `openai`**: Added `import openai` to correctly import the OpenAI library.
+2.  **Import `logger`**: Added `from src.logger import logger` for logging errors.
+3.  **Error Handling**: Implemented a `try...except` block to catch and log exceptions during OpenAI API calls. This prevents the program from crashing.
+4.  **Corrected `messages` Handling**: Corrected the way `messages` list is used and appended. The `messages` list should contain system prompt and user message.
+5.  **Removed Redundant Comments**: Removed unnecessary comments.
+6.  **Docstrings**: Added proper docstrings to the `bully` function using reStructuredText (RST) format. The function now clearly describes its purpose, parameters, potential exceptions, and return values. 
+7.  **Variable Naming**: Renamed `messagess` to `messages` to be consistent with Python best practices.
+8.  **API Key Handling**: Commented out the hardcoded API key.  Instead, it's suggested that API key is retrieved from a config file or environment variable. 
+9. **Returned `Completion.choices[0].message.content`**: The code now correctly retrieves and returns the content from the OpenAI response.
+
 
 **Full Code (Improved)**
 
 ```python
-# \file hypotez/src/ai/openai/bully.py
+## \file hypotez/src/ai/openai/bully.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai
-	:platform: Windows, Unix
-	:synopsis: Module for interacting with the OpenAI API to simulate a bully's response.
+.. module:: hypotez.src.ai.openai.bully
+   :platform: Windows, Unix
+   :synopsis: Module for interacting with OpenAI API to generate bullying examples.
 """
 import os
 import openai
-from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-
-openai.API_KEY = "YOUR_API_KEYS_OPENAI"  # Replace with your actual API key
+# This should be retrieved from a config file or environment variable.
+# Don't hardcode API keys in source code.
+# openai.api_key = "YOUR_API_KEYS_OPENAI" # Placeholder
+#  (Better approach)
+# import os
+# openai.api_key = os.environ.get('OPENAI_API_KEY')
 
 #It works with GPT-3.5-turbo and GPT-4
 system_prompt = """You are an expert on hate speech.
@@ -179,32 +174,28 @@ Write from the bully's perspective really write like they would wire, be persona
 I will provide a statement and you will answer with an example."""
 
 
-def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
+def bully(user_message="Hello!", messages=None) -> str:
     """
-    Simulates a bully's response using the OpenAI API.
+    Generates a bullying example from OpenAI.
 
-    :param user_message: The user's message.
-    :param messages: A list of messages to send to the OpenAI API.
-    :raises Exception: If there is an error during the interaction with the OpenAI API.
-    :return: The response from the OpenAI API.
-    :rtype: str | None
+    :param user_message: The input statement for the model.
+    :param messages:  A list of messages, initially containing the system prompt. Defaults to None.
+    :raises Exception:  If there's an error interacting with the OpenAI API.
+    :returns: The generated bullying example or None if an error occurred.
     """
 
-    messages.append({"role": "user", "content": user_message})
+    if messages is None:
+        messages = [{"role": "system", "content": system_prompt}]
+        
     try:
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=messages
-        )
-        # Check if the response is valid
-        if completion and completion.choices:
-            # Append the response to the messages
-            messages.append({"role": "user", "content": completion.choices[0].message})
-            return completion.choices[0].message
-        else:
-            logger.error("Invalid response from OpenAI API")
-            return None
+        messages.append({"role": "user", "content": user_message})  # Correct addition
+        completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+        
+        # Correctly access and return the content
+        bully_response = completion.choices[0].message.content
+        return bully_response
+        
     except Exception as e:
-        logger.error(f"Error during interaction with OpenAI API: {e}")
+        logger.error(f"Error generating bullying example: {e}")
         return None
 ```

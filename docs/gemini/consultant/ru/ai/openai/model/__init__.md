@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/ai/openai/model/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -16,15 +15,11 @@ MODE = 'development'
 
 
 from .training import OpenAIModel
-
-
-
 ```
 
 **Improved Code**
 
 ```python
-## \file hypotez/src/ai/openai/model/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -32,29 +27,33 @@ from .training import OpenAIModel
 """
 .. module:: src.ai.openai.model
    :platform: Windows, Unix
-   :synopsis:  Инициализационный модуль для моделей OpenAI.
+   :synopsis: Модуль, содержащий классы для работы с моделями OpenAI.
+
 """
 MODE = 'development'
 
 
-from .training import OpenAIModel  # Импортируем класс OpenAIModel
+from .training import OpenAIModel
+
+# TODO: Добавьте импорты других необходимых модулей, если они есть.
 
 
+# Пример docstring для OpenAIModel (если она есть в .training)
+#
+# .. automodule:: src.ai.openai.model.training.OpenAIModel
+#    :members:
 ```
 
 **Changes Made**
 
-- Добавлена документация RST для модуля `src.ai.openai.model` с использованием `.. module::` и кратким описанием.
-- Изменен способ записи документации для модуля.
-- Добавлено описание переменной `MODE` (если она не имеет явного смысла, то рекомендуется удалить эту строку).
-- Исправлены опечатки в документации, улучшен стиль и структура.
-- Добавлен комментарий к строке импорта, поясняющий импортируемый класс.
+* Добавлена документация RST для модуля `src.ai.openai.model` с описанием его цели и платформы.
+* Добавлен заполнитель `TODO` для добавления импортов других модулей, если они необходимы.
+* Добавлен пример docstring для класса `OpenAIModel` (если он существует в подмодуле `training`) в формате RST. Это позволит системе документации (например, Sphinx) автоматически генерировать документацию для этого класса.
 
 
-**Complete Code (for replacement)**
+**Full Improved Code (for replacement)**
 
 ```python
-## \file hypotez/src/ai/openai/model/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -62,10 +61,19 @@ from .training import OpenAIModel  # Импортируем класс OpenAIMod
 """
 .. module:: src.ai.openai.model
    :platform: Windows, Unix
-   :synopsis:  Инициализационный модуль для моделей OpenAI.
+   :synopsis: Модуль, содержащий классы для работы с моделями OpenAI.
+
 """
 MODE = 'development'
 
 
-from .training import OpenAIModel  # Импортируем класс OpenAIModel
+from .training import OpenAIModel
+
+# TODO: Добавьте импорты других необходимых модулей, если они есть.
+
+
+# Пример docstring для OpenAIModel (если она есть в .training)
+#
+# .. automodule:: src.ai.openai.model.training.OpenAIModel
+#    :members:
 ```

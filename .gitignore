@@ -203,3 +203,7 @@ password.txt
 #Sphins
 docs/sphinx/
 
+#prestashop
+src/endpoints/websites/emil-design.com/img/
+
+
