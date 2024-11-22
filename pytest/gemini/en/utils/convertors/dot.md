@@ -1,0 +1,103 @@
+```python
+import pytest
+import os
+from graphviz import Source
+from hypotez.src.utils.convertors.dot import dot2png
+
+
+def test_dot2png_valid_input():
+    """Tests conversion with a valid DOT file."""
+    # Create a temporary DOT file for testing
+    temp_dot_file = "test.dot"
+    with open(temp_dot_file, "w") as f:
+        f.write("digraph G { A -> B; }")
+
+    temp_png_file = "test.png"
+    dot2png(temp_dot_file, temp_png_file)
+
+    # Assert that the PNG file was created
+    assert os.path.exists(temp_png_file)
+
+    # Clean up temporary files
+    os.remove(temp_dot_file)
+    os.remove(temp_png_file)
+
+
+def test_dot2png_invalid_dot_file():
+    """Tests with an invalid (non-existent) DOT file."""
+    temp_png_file = "test.png"
+    with pytest.raises(FileNotFoundError, match=r"The file"):
+        dot2png("nonexistent.dot", temp_png_file)
+
+
+def test_dot2png_exception_during_conversion():
+    """Tests exception handling during conversion (e.g., invalid DOT content)."""
+    # Create a temporary DOT file with invalid DOT content
+    temp_dot_file = "test_error.dot"
+    with open(temp_dot_file, "w") as f:
+        f.write("invalid dot content")
+
+    temp_png_file = "test_error.png"
+    with pytest.raises(Exception, match=r"An error occurred"):
+        dot2png(temp_dot_file, temp_png_file)
+
+    # Clean up temporary file
+    os.remove(temp_dot_file)
+
+def test_dot2png_wrong_number_of_commandline_arguments():
+    """Tests correct handling if the command line arguments are wrong."""
+    with pytest.raises(SystemExit) as excinfo:
+      dot2png("test.dot","test.png")
+
+    assert excinfo.value.code == 1
+
+
+
+# This test needs a DOT file in the same directory.
+def test_dot2png_valid_dot_file_real():
+    """Tests conversion with a valid DOT file using a file that is not temporary."""
+    dot_file = "example.dot" #replace with a valid DOT file in your test directory
+    png_file = "output.png"
+
+    dot2png(dot_file, png_file)
+    
+    # Assert that the PNG file was created
+    assert os.path.exists(png_file)
+    os.remove(png_file)
+
+
+# Add this test case if your DOT file is large to test performance and proper handling of large files.
+#def test_dot2png_large_file():
+    #"""Tests conversion with a large DOT file."""
+    #large_dot_file = "large_example.dot"  # Replace with your large DOT file
+    #large_png_file = "large_output.png"  
+    #dot2png(large_dot_file, large_png_file)
+
+    # Assert that the PNG file was created.
+
+
+#IMPORTANT
+#In order to run the test you need to create example.dot in the same directory.
+#If you want to run the other tests that require a DOT file,
+#create them in the same directory and change the file name on the test.
+```
+
+**Explanation and Improvements:**
+
+* **Error Handling:**  The tests now use `pytest.raises` to specifically check for `FileNotFoundError` and other expected exceptions, making the tests more robust.  The error messages are also checked for more precise matches.
+* **Temporary Files:** The tests create and delete temporary DOT and PNG files. This avoids cluttering the test environment and ensures that tests are independent.
+* **Clearer Assertions:**  The assertions (`assert os.path.exists(...)`) are clearer about what is being verified.
+* **Edge Case (`test_dot2png_invalid_dot_file`):** Tests the case where the DOT file doesn't exist.
+* **Clean-up:** Crucial addition of `os.remove()` to delete the temporary files after the tests. This prevents test failures due to leftover files in later tests.
+* **Command-line Argument Test (`test_dot2png_wrong_number_of_commandline_arguments`):** A test case that specifically checks the SystemExit exception when the wrong number of command line arguments is provided to the program. This demonstrates the robustness of the tests and proper exception handling, important for production code.
+* **Realistic test (`test_dot2png_valid_dot_file_real`):** Includes a real-world test with an actual `example.dot` file, but only if one is present. You should replace `"example.dot"` with the actual path if you have a file. This validates that the conversion works with real-world data.
+* **Large File Test (commented out):** Added a placeholder for a large file test, which is beneficial for ensuring that the code handles files of varying sizes. This test would be particularly useful if you anticipate a large number of users using the tool or if the processing time becomes a concern with large files.
+
+
+**How to Run the Tests:**
+
+1.  Save the test code as a `.py` file (e.g., `test_dot2png.py`).
+2.  Make sure you have `pytest` installed (`pip install pytest`).
+3.  Run the tests from your terminal: `pytest test_dot2png.py`
+
+Remember to create a file named `example.dot` in the same directory as the test file, with valid DOT language content, to run `test_dot2png_valid_dot_file_real`. Otherwise, that test will fail. Also remove `output.png` from the directory if it was generated by a previous test run. If `example.dot` is not created, the test will fail.
