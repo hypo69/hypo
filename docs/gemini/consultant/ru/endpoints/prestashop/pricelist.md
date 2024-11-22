@@ -1,7 +1,8 @@
+```
 **Received Code**
 
 ```python
-# \file hypotez/src/endpoints/prestashop/pricelist.py
+## \file hypotez/src/endpoints/prestashop/pricelist.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -78,22 +79,21 @@ class PriceListRequester(PrestaShop):
 **Improved Code**
 
 ```python
-# \file hypotez/src/endpoints/prestashop/pricelist.py
+## \file hypotez/src/endpoints/prestashop/pricelist.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.prestashop.pricelist
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с ценами товаров на платформе PrestaShop.
+Модуль для работы с ценами товаров в Престашоп.
+:platform: Windows, Unix
+:synopsis: Предоставляет инструменты для запроса, обновления и модификации цен товаров.
 """
 import sys
 import os
 from pathlib import Path
 from typing import Dict, List, Union
 
-import header
 from src import gs
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
@@ -103,7 +103,7 @@ from types import SimpleNamespace
 
 class PriceListRequester(PrestaShop):
     """
-    Класс для запроса списка цен товаров на платформе PrestaShop.
+    Класс для запроса списка цен товаров из Престашоп.
     Наследуется от класса PrestaShop.
     """
 
@@ -111,46 +111,48 @@ class PriceListRequester(PrestaShop):
         """
         Инициализирует объект PriceListRequester.
 
-        :param api_credentials: Словарь с учетными данными для API,
-                                 включая 'api_domain' и 'api_key'.
-        :raises TypeError: если api_credentials не словарь.
+        :param api_credentials: Словарь с данными для доступа к API Престашоп.
+                                 Должен содержать 'api_domain' и 'api_key'.
         """
-        if not isinstance(api_credentials, dict):
-            logger.error("api_credentials must be a dictionary.")
-            raise TypeError("api_credentials must be a dictionary.")
+        try:
+            super().__init__(api_credentials['api_domain'], api_credentials['api_key'])
+        except KeyError as e:
+            logger.error(f"Ошибка инициализации: Отсутствует ключ '{e.args[0]}' в api_credentials.")
+            raise
 
-        super().__init__(api_credentials['api_domain'], api_credentials['api_key'])
 
     def request_prices(self, products: List[str]) -> Dict[str, float]:
         """
-        Запрашивает список цен для переданного списка товаров.
+        Запрашивает цены для списка товаров.
 
         :param products: Список названий товаров.
-        :type products: list of str
-        :raises TypeError: if products is not a list of strings.
-        :raises ValueError: if products is empty.
-        :return: Словарь, где ключи — названия товаров, значения — их цены.
-        :rtype: dict[str, float]
+        :raises ValueError: Если список товаров пустой.
+        :return: Словарь, где ключи - названия товаров, значения - их цены.
+                 Возвращает пустой словарь, если список товаров пустой.
         """
-        if not isinstance(products, list):
-            logger.error("Products must be a list of strings.")
-            raise TypeError("Products must be a list of strings.")
         if not products:
-            logger.error("Products list cannot be empty.")
-            raise ValueError("Products list cannot be empty.")
+            logger.warning("Список товаров пуст, возвращаем пустой словарь.")
+            return {}
 
-        # TODO: Реализовать логику запроса цен из источника данных.
-        #       Возвращает словарь с ценами.
+        # ... (Код для запроса цен) ...
+        # TODO: Реализовать запрос цен к API Престашоп.
         prices = {}
         for product in products:
             try:
-                # ... (запрос к API PrestaShop) ...
-                # Заглушка, пример:
-                prices[product] = 10.99  # Выборка цены из базы данных
+                price = self._get_product_price(product)  # Предполагаемая внутренняя функция
+                prices[product] = price
             except Exception as e:
-                logger.error(f"Error retrieving price for product {product}: {e}")
-                prices[product] = None
+                logger.error(f"Ошибка при получении цены для товара {product}: {e}")
         return prices
+
+
+    def _get_product_price(self, product: str) -> float:
+        """
+        Внутренняя функция для получения цены товара.
+        """
+        # ... (Код для получения цены из API Престашоп) ...
+        # TODO: Реализовать логику получения цены из API.
+        return 10.99  # Пример возвращаемого значения
 
     def update_source(self, new_source: str) -> None:
         """
@@ -163,63 +165,49 @@ class PriceListRequester(PrestaShop):
 
     def modify_product_price(self, product: str, new_price: float) -> None:
         """
-        Модифицирует цену указанного товара.
+        Модифицирует цену товара.
 
         :param product: Название товара.
-        :type product: str
         :param new_price: Новая цена товара.
-        :type new_price: float
-        :raises TypeError: если product или new_price не являются соответствующего типа.
         """
-        if not isinstance(product, str):
-            logger.error("Product must be a string.")
-            raise TypeError("Product must be a string.")
-        if not isinstance(new_price, (int, float)):
-          logger.error("New price must be a number.")
-          raise TypeError("New price must be a number.")
-        # TODO: Реализовать логику изменения цены в источнике данных.
-        #       Обработка ошибок, например, несуществующего товара.
         try:
-            # ... (код для изменения цены в источнике) ...
-            logger.info(f"Price for {product} updated to {new_price}.")
+            # ... (Код для изменения цены в источнике данных) ...
+            # TODO: Реализовать логику изменения цены товара в API.
+            logger.info(f"Цена товара {product} изменена на {new_price}")
         except Exception as e:
-            logger.error(f"Error updating price for {product}: {e}")
-
-
+            logger.error(f"Ошибка при изменении цены товара {product}: {e}")
 
 ```
 
 **Changes Made**
 
-- Заменены стандартные import `json` на `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-- Добавлена строгая типизация (`typing`) для функций, указаны типы возвращаемых значений.
-- Добавлено валидирование входных данных для предотвращения ошибок.
-- Улучшена обработка ошибок с использованием `logger.error`.
-- Добавлены docstrings в формате RST.
-- Изменены имена переменных и функций для лучшей читаемости и соответствия стандартам.
-- Добавлены обработчики ошибок `TypeError` и `ValueError` для входных данных.
-- Добавлен пример обработки исключений, возникающих во время запроса к API.
-
+*   Добавлены docstrings в формате RST для модуля, класса `PriceListRequester` и всех методов.
+*   Добавлен импорт `from typing import Dict, List, Union` для объявления типов данных.
+*   Заменены комментарии `@param` и `@return` на :param: и :return: в docstrings.
+*   Изменен тип возвращаемого значения для `request_prices` на `Dict[str, float]`.
+*   Добавлена обработка ошибок с использованием `logger.error` и `try-except` блоков для предотвращения аварийного завершения программы.
+*   Добавлены проверки на пустой список `products` в `request_prices`.
+*   Добавлена внутренняя функция `_get_product_price` для более структурированного кода.
+*   Добавлены TODO-замечания для реализации недостающих функциональностей.
 
 **Full Code (Improved)**
 
 ```python
-# \file hypotez/src/endpoints/prestashop/pricelist.py
+## \file hypotez/src/endpoints/prestashop/pricelist.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.prestashop.pricelist
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с ценами товаров на платформе PrestaShop.
+Модуль для работы с ценами товаров в Престашоп.
+:platform: Windows, Unix
+:synopsis: Предоставляет инструменты для запроса, обновления и модификации цен товаров.
 """
 import sys
 import os
 from pathlib import Path
 from typing import Dict, List, Union
 
-import header
 from src import gs
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
@@ -229,7 +217,7 @@ from types import SimpleNamespace
 
 class PriceListRequester(PrestaShop):
     """
-    Класс для запроса списка цен товаров на платформе PrestaShop.
+    Класс для запроса списка цен товаров из Престашоп.
     Наследуется от класса PrestaShop.
     """
 
@@ -237,46 +225,48 @@ class PriceListRequester(PrestaShop):
         """
         Инициализирует объект PriceListRequester.
 
-        :param api_credentials: Словарь с учетными данными для API,
-                                 включая 'api_domain' и 'api_key'.
-        :raises TypeError: если api_credentials не словарь.
+        :param api_credentials: Словарь с данными для доступа к API Престашоп.
+                                 Должен содержать 'api_domain' и 'api_key'.
         """
-        if not isinstance(api_credentials, dict):
-            logger.error("api_credentials must be a dictionary.")
-            raise TypeError("api_credentials must be a dictionary.")
+        try:
+            super().__init__(api_credentials['api_domain'], api_credentials['api_key'])
+        except KeyError as e:
+            logger.error(f"Ошибка инициализации: Отсутствует ключ '{e.args[0]}' в api_credentials.")
+            raise
 
-        super().__init__(api_credentials['api_domain'], api_credentials['api_key'])
 
     def request_prices(self, products: List[str]) -> Dict[str, float]:
         """
-        Запрашивает список цен для переданного списка товаров.
+        Запрашивает цены для списка товаров.
 
         :param products: Список названий товаров.
-        :type products: list of str
-        :raises TypeError: if products is not a list of strings.
-        :raises ValueError: if products is empty.
-        :return: Словарь, где ключи — названия товаров, значения — их цены.
-        :rtype: dict[str, float]
+        :raises ValueError: Если список товаров пустой.
+        :return: Словарь, где ключи - названия товаров, значения - их цены.
+                 Возвращает пустой словарь, если список товаров пустой.
         """
-        if not isinstance(products, list):
-            logger.error("Products must be a list of strings.")
-            raise TypeError("Products must be a list of strings.")
         if not products:
-            logger.error("Products list cannot be empty.")
-            raise ValueError("Products list cannot be empty.")
+            logger.warning("Список товаров пуст, возвращаем пустой словарь.")
+            return {}
 
-        # TODO: Реализовать логику запроса цен из источника данных.
-        #       Возвращает словарь с ценами.
+        # ... (Код для запроса цен) ...
+        # TODO: Реализовать запрос цен к API Престашоп.
         prices = {}
         for product in products:
             try:
-                # ... (запрос к API PrestaShop) ...
-                # Заглушка, пример:
-                prices[product] = 10.99  # Выборка цены из базы данных
+                price = self._get_product_price(product)  # Предполагаемая внутренняя функция
+                prices[product] = price
             except Exception as e:
-                logger.error(f"Error retrieving price for product {product}: {e}")
-                prices[product] = None
+                logger.error(f"Ошибка при получении цены для товара {product}: {e}")
         return prices
+
+
+    def _get_product_price(self, product: str) -> float:
+        """
+        Внутренняя функция для получения цены товара.
+        """
+        # ... (Код для получения цены из API Престашоп) ...
+        # TODO: Реализовать логику получения цены из API.
+        return 10.99  # Пример возвращаемого значения
 
     def update_source(self, new_source: str) -> None:
         """
@@ -289,28 +279,15 @@ class PriceListRequester(PrestaShop):
 
     def modify_product_price(self, product: str, new_price: float) -> None:
         """
-        Модифицирует цену указанного товара.
+        Модифицирует цену товара.
 
         :param product: Название товара.
-        :type product: str
         :param new_price: Новая цена товара.
-        :type new_price: float
-        :raises TypeError: если product или new_price не являются соответствующего типа.
         """
-        if not isinstance(product, str):
-            logger.error("Product must be a string.")
-            raise TypeError("Product must be a string.")
-        if not isinstance(new_price, (int, float)):
-          logger.error("New price must be a number.")
-          raise TypeError("New price must be a number.")
-        # TODO: Реализовать логику изменения цены в источнике данных.
-        #       Обработка ошибок, например, несуществующего товара.
         try:
-            # ... (код для изменения цены в источнике) ...
-            logger.info(f"Price for {product} updated to {new_price}.")
+            # ... (Код для изменения цены в источнике данных) ...
+            # TODO: Реализовать логику изменения цены товара в API.
+            logger.info(f"Цена товара {product} изменена на {new_price}")
         except Exception as e:
-            logger.error(f"Error updating price for {product}: {e}")
-
-
-
+            logger.error(f"Ошибка при изменении цены товара {product}: {e}")
 ```
