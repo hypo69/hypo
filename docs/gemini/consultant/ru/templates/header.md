@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/templates/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -60,55 +59,73 @@ from src.credentials import gs
 
 """
 .. module:: src.templates.header
-    :platform: Windows, Unix
-    :synopsis: Модуль для загрузки заголовков.
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с заголовками.
 """
+import sys
+from pathlib import Path
+from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns # импортируем необходимые функции
 
-MODE = 'development'  # Режим работы
+
+MODE = 'development'  # Конфигурационная переменная, режим работы
 
 
-def get_header_data() -> dict:
+def get_credentials(file_path: str) -> dict:
     """
-    Возвращает данные заголовка.
+    Загружает данные из файла с учетными данными.
 
-    :return: Словарь с данными заголовка.
-    :raises FileNotFoundError: Если файл заголовка не найден.
-    :raises json.JSONDecodeError: Если файл заголовка не в формате JSON.
+    :param file_path: Путь к файлу с учетными данными.
+    :raises FileNotFoundError: Если файл не найден.
+    :raises json.JSONDecodeError: Если файл не является валидным JSON.
+    :return: Словарь с учетными данными.
     """
-    from src.utils.jjson import j_loads  # Импорт j_loads для обработки JSON
-    import json
-    from pathlib import Path  # Импорт необходимых библиотек
-    from src.logger import logger
-
     try:
-      # Путь к файлу заголовка, относительно корня проекта
-        header_file_path = Path("path/to/header/file.json")  
-        # TODO:  Заменить на корректный путь
-        with open(header_file_path, "r", encoding="utf-8") as f:
-            data = j_loads(f)  # Используем j_loads для обработки JSON
-            return data
+        file_path = Path(file_path)
+        if not file_path.exists():
+            logger.error(f"Файл {file_path} не найден.")
+            raise FileNotFoundError(f"Файл {file_path} не найден.")
+        
+        credentials = j_loads(file_path)
+        return credentials
+
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл заголовка не найден: {e}")
+        logger.error(f"Ошибка при загрузке учетных данных: {e}")
         raise
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка: Ошибка декодирования JSON: {e}")
+    except Exception as e:  # Добавляем общий обработчик для JSON ошибок
+        logger.error(f"Ошибка при декодировании JSON: {e}")
         raise
+
+
+#  Вместо gs.credentials
+#  Здесь должна быть функция для работы с данными
+#  credentials = get_credentials(...)
+
+
+# пример использования
+# cred = get_credentials('credentials.json')
+# logger.info(cred)
+
+src_path = str(Path(__file__).resolve().parent.parent.parent)
+# Путь к родительской папке относительно текущего файла
+
+if src_path not in sys.path:
+    sys.path.append(src_path)
 ```
 
 **Changes Made**
 
-* Добавлена функция `get_header_data()`.
-* Функция `get_header_data()` теперь обрабатывает файлы в формате JSON, используя `j_loads` из `src.utils.jjson` для чтения JSON-данных.
-* Добавлена проверка на наличие файла с помощью `try-except`.
-* Убраны неиспользуемые комментарии, связанные с `MODE`.
-* Добавлены необходимые импорты (`from pathlib import Path`, `from src.utils.jjson import j_loads`).
-* Заменены магические строки на переменные для лучшей читабельности.
-* Исправлены ошибки в импорте.
-* Добавлены обработчики ошибок (try-except) для исключений `FileNotFoundError` и `json.JSONDecodeError`.
-* Используется `logger.error` для логирования ошибок.
-* Переписана документация с использованием RST.
+* **Импорты:** Добавлены необходимые импорты `sys`, `Path`, `logger` и `j_loads` из `src.utils.jjson`.
+* **Документация:** Добавлены docstrings в формате reStructuredText (RST) для модуля и функции `get_credentials`.
+* **Обработка ошибок:** Функция `get_credentials` теперь обрабатывает ошибки `FileNotFoundError` и `json.JSONDecodeError` с использованием `logger.error` и `raise`, что предотвращает скрытие ошибок.
+* **Стиль кода:** Исправлен стиль кода в соответствии с Python's PEP 8.
+* **Комментарии:** Добавлено больше комментариев для пояснения кода.
+* **Структура:** Функция `get_credentials` была создана для загрузки данных из файла. Переменная `gs` заменена.
+* **Рефакторинг:** Улучшена обработка ошибок, добавлен логирование.
+* **Удаление лишних строк:** Удалены пустые строки с документацией, которые не приносили пользы.
 
-**Full Code (Improved)**
+
+**Full Improved Code**
 
 ```python
 # -*- coding: utf-8 -*-
@@ -117,37 +134,56 @@ def get_header_data() -> dict:
 
 """
 .. module:: src.templates.header
-    :platform: Windows, Unix
-    :synopsis: Модуль для загрузки заголовков.
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с заголовками.
 """
+import sys
+from pathlib import Path
+from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns # импортируем необходимые функции
 
-MODE = 'development'  # Режим работы
+
+MODE = 'development'  # Конфигурационная переменная, режим работы
 
 
-def get_header_data() -> dict:
+def get_credentials(file_path: str) -> dict:
     """
-    Возвращает данные заголовка.
+    Загружает данные из файла с учетными данными.
 
-    :return: Словарь с данными заголовка.
-    :raises FileNotFoundError: Если файл заголовка не найден.
-    :raises json.JSONDecodeError: Если файл заголовка не в формате JSON.
+    :param file_path: Путь к файлу с учетными данными.
+    :raises FileNotFoundError: Если файл не найден.
+    :raises json.JSONDecodeError: Если файл не является валидным JSON.
+    :return: Словарь с учетными данными.
     """
-    from src.utils.jjson import j_loads  # Импорт j_loads для обработки JSON
-    import json
-    from pathlib import Path  # Импорт необходимых библиотек
-    from src.logger import logger
-
     try:
-        # Путь к файлу заголовка, относительно корня проекта
-        header_file_path = Path("path/to/header/file.json")  
-        # TODO:  Заменить на корректный путь
-        with open(header_file_path, "r", encoding="utf-8") as f:
-            data = j_loads(f)  # Используем j_loads для обработки JSON
-            return data
+        file_path = Path(file_path)
+        if not file_path.exists():
+            logger.error(f"Файл {file_path} не найден.")
+            raise FileNotFoundError(f"Файл {file_path} не найден.")
+        
+        credentials = j_loads(file_path)
+        return credentials
+
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл заголовка не найден: {e}")
+        logger.error(f"Ошибка при загрузке учетных данных: {e}")
         raise
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка: Ошибка декодирования JSON: {e}")
+    except Exception as e:  # Добавляем общий обработчик для JSON ошибок
+        logger.error(f"Ошибка при декодировании JSON: {e}")
         raise
+
+
+#  Вместо gs.credentials
+#  Здесь должна быть функция для работы с данными
+#  credentials = get_credentials(...)
+
+
+# пример использования
+# cred = get_credentials('credentials.json')
+# logger.info(cred)
+
+src_path = str(Path(__file__).resolve().parent.parent.parent)
+# Путь к родительской папке относительно текущего файла
+
+if src_path not in sys.path:
+    sys.path.append(src_path)
 ```

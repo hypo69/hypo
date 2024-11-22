@@ -27,66 +27,74 @@ from .crawlee_python import CrawleePython
 **Improved Code**
 
 ```python
+## \file hypotez/src/webdriver/__init__.py
 # -*- coding: utf-8 -*-
-"""
-Module for managing webdrivers.
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-:platform: Windows, Unix
-:synopsis: Provides classes for interacting with different webdrivers.
 """
-from src.utils.jjson import j_loads, j_loads_ns
+.. module:: hypotez.src.webdriver
+   :platform: Windows, Unix
+   :synopsis: Модуль для управления веб-драйверами.
+"""
+import sys
+
+MODE = 'development'
+
+
 from .driver import Driver
 from .chrome import Chrome
 from .firefox import Firefox
 from .edge import Edge
 from .bs import BS
-from .playwright import Playwright  # Исправлено имя класса
+from .playwright import Playwright  # Исправлено название
 from .crawlee_python import CrawleePython
-from src.logger import logger
 
-MODE = 'development'
+#from src.logger import logger # Импорт логирования
+# ... (rest of the file)
+# # Определение констант.
 
-
-# ... (possible initialization code) ...
+# MODE = 'development' # ...
 ```
 
 **Changes Made**
 
-1.  **Import `j_loads`, `j_loads_ns`:** Added import statements for `j_loads` and `j_loads_ns` from `src.utils.jjson`.  This is important for proper data handling.
-2.  **Import `logger`:** Added `from src.logger import logger` to enable logging capabilities.
-3.  **Corrected `Playwright` class name:** Changed `Playwrid` to `Playwright` to match the actual class name in the referenced files.
-4.  **Added module-level docstring:**  Created a more complete docstring for the module, providing details about the purpose, platform compatibility, and synopsis.
-5. **Removed unnecessary comments and typos:** Removed unnecessary comments and corrected typo in the class name.
+- Импортирован `sys` для будущей потенциальной обработки аргументов командной строки или других подобных нужд.
+- Исправлено неточное написание импорта `Playwright` (было `Playwrid`).
+- Добавлен docstring для модуля, описывающий его назначение.
+- Добавлены стандартные imports `from src.logger import logger`, хотя пока он не используется.
+- Добавлены строчки комментариев # ... , для соответствия требованиям к структуре исходного файла.
 
 
-**Complete Code (for replacement)**
+**Full Improved Code**
 
 ```python
+## \file hypotez/src/webdriver/__init__.py
 # -*- coding: utf-8 -*-
-"""
-Module for managing webdrivers.
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-:platform: Windows, Unix
-:synopsis: Provides classes for interacting with different webdrivers.
 """
-from src.utils.jjson import j_loads, j_loads_ns
+.. module:: hypotez.src.webdriver
+   :platform: Windows, Unix
+   :synopsis: Модуль для управления веб-драйверами.
+"""
+import sys
+from src.logger import logger # Импорт логирования
+# ... (rest of the file)
+# Определение констант.
+
+MODE = 'development' # ...
+
+
 from .driver import Driver
 from .chrome import Chrome
 from .firefox import Firefox
 from .edge import Edge
 from .bs import BS
-from .playwright import Playwright  # Исправлено имя класса
+from .playwright import Playwright  # Исправлено название
 from .crawlee_python import CrawleePython
-from src.logger import logger
 
-MODE = 'development'
-
-
-# ... (possible initialization code) ...
-# Example using logger:
-# try:
-#     data = j_loads('some_file.json')
-#     # ... process data ...
-# except Exception as e:
-#     logger.error(f"Error loading data: {e}")
+#from src.logger import logger # Импорт логирования
+# ... (rest of the file)
 ```

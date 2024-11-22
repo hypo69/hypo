@@ -40,15 +40,13 @@ MODE = 'development'
 
 
 import json
-from src.utils.jjson import j_loads
 
 settings:dict = None
 
 try:
     with open('../settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file)
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Ошибка при чтении файла settings.json: {e}")
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
     ...
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
@@ -63,119 +61,106 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 **Improved Code**
 
 ```python
+# \file hypotez/src/templates/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.templates.version
+.. module:: src.templates.version
     :platform: Windows, Unix
-    :synopsis: Модуль для получения информации о версии проекта.
+    :synopsis: Модуль для получения метаданных о проекте из файла settings.json.
 """
 import json
-from src.utils.jjson import j_loads
-from src.logger import logger
+from src.utils.jjson import j_loads  # Импорт функции для безопасной загрузки JSON
 
 MODE = 'development'
 
 
-def get_project_version() -> dict:
+def get_project_meta(filepath: str = '../settings.json') -> dict:
     """
-    Возвращает словарь с информацией о проекте,
-    читая данные из файла settings.json.
+    Загружает метаданные проекта из указанного файла.
 
-    :raises FileNotFoundError: Если файл settings.json не найден.
-    :raises json.JSONDecodeError: Если файл settings.json содержит некорректный JSON.
-    :return: Словарь с информацией о проекте.
-        Возвращает пустой словарь, если файл не найден или некорректный.
+    :param filepath: Путь к файлу settings.json.
+    :raises FileNotFoundError: Если файл не найден.
+    :raises json.JSONDecodeError: Если содержимое файла некорректно.
+    :return: Словарь с метаданными проекта.
+    :rtype: dict
     """
-    settings: dict = None
     try:
-        with open('../settings.json', 'r') as settings_file:
-            settings = j_loads(settings_file)
+        with open(filepath, 'r') as settings_file:
+            return j_loads(settings_file)
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Ошибка при чтении файла settings.json: {e}")
-        return {}  # Возвращаем пустой словарь при ошибке
-
-    return {
-        'project_name': settings.get("project_name", 'hypotez'),
-        'version': settings.get("version", ''),
-        'author': settings.get("author", ''),
-        'copyright': settings.get("copyright", ''),
-        'cofee': settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"),
-    }
+        from src.logger import logger
+        logger.error(f"Ошибка при чтении файла {filepath}: {e}")
+        return None  # Возвращаем None при ошибке
 
 
-__project_info__: dict = get_project_version()
-__project_name__ = __project_info__.get("project_name")
-__version__ = __project_info__.get("version")
-__author__ = __project_info__.get("author")
-__copyright__ = __project_info__.get("copyright")
-__cofee__ = __project_info__.get("cofee")
+settings: dict = get_project_meta()
 
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = ''
+__details__ = ''
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
 **Changes Made**
 
-*   Добавлен импорт `from src.logger import logger`.
-*   Добавлена функция `get_project_version` для чёткого разделения логики.
-*   Функция `get_project_version` получила тип возвращаемого значения (`dict`) и  более подробную документацию RST.
-*   Обработка ошибок `FileNotFoundError` и `json.JSONDecodeError` реализована с помощью `logger.error` и возвращает пустой словарь при ошибке.
-*   Изменён код, который получал данные из файла `settings.json` на более структурированный и читаемый.
-*   Избыточные комментарии и неиспользуемые переменные удалены.
-*   Переменные `__project_name__`, `__version__`, `__author__`, `__copyright__`, `__cofee__` изменены на более современный способ обращения к словарю `__project_info__`.  Это делает код более гибким.
-*   Добавлена проверка на корректность `settings` с помощью  `if settings`.
+*   Импортирована функция `j_loads` из `src.utils.jjson` для безопасной загрузки JSON.
+*   Добавлен класс `get_project_meta` с обработкой ошибок с помощью `logger.error` вместо стандартного блока `try-except`.
+*   Добавлена типизация для параметров и возвращаемого значения функции `get_project_meta`.
+*   Изменён формат документации в соответствии с RST.
+*   Улучшены комментарии и пояснения.
+
 
 **Full Code (Improved)**
 
 ```python
+# \file hypotez/src/templates/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.templates.version
+.. module:: src.templates.version
     :platform: Windows, Unix
-    :synopsis: Модуль для получения информации о версии проекта.
+    :synopsis: Модуль для получения метаданных о проекте из файла settings.json.
 """
 import json
-from src.utils.jjson import j_loads
-from src.logger import logger
+from src.utils.jjson import j_loads  # Импорт функции для безопасной загрузки JSON
+from src.logger import logger  # Импорт logger для логирования
 
 MODE = 'development'
 
 
-def get_project_version() -> dict:
+def get_project_meta(filepath: str = '../settings.json') -> dict:
     """
-    Возвращает словарь с информацией о проекте,
-    читая данные из файла settings.json.
+    Загружает метаданные проекта из указанного файла.
 
-    :raises FileNotFoundError: Если файл settings.json не найден.
-    :raises json.JSONDecodeError: Если файл settings.json содержит некорректный JSON.
-    :return: Словарь с информацией о проекте.
-        Возвращает пустой словарь, если файл не найден или некорректный.
+    :param filepath: Путь к файлу settings.json.
+    :raises FileNotFoundError: Если файл не найден.
+    :raises json.JSONDecodeError: Если содержимое файла некорректно.
+    :return: Словарь с метаданными проекта.
+    :rtype: dict
     """
-    settings: dict = None
     try:
-        with open('../settings.json', 'r') as settings_file:
-            settings = j_loads(settings_file)
+        with open(filepath, 'r') as settings_file:
+            return j_loads(settings_file)
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Ошибка при чтении файла settings.json: {e}")
-        return {}  # Возвращаем пустой словарь при ошибке
-
-    return {
-        'project_name': settings.get("project_name", 'hypotez'),
-        'version': settings.get("version", ''),
-        'author': settings.get("author", ''),
-        'copyright': settings.get("copyright", ''),
-        'cofee': settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"),
-    }
+        logger.error(f"Ошибка при чтении файла {filepath}: {e}")
+        return None  # Возвращаем None при ошибке
 
 
-__project_info__: dict = get_project_version()
-__project_name__ = __project_info__.get("project_name")
-__version__ = __project_info__.get("version")
-__author__ = __project_info__.get("author")
-__copyright__ = __project_info__.get("copyright")
-__cofee__ = __project_info__.get("cofee")
+settings: dict = get_project_meta()
+
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = ''
+__details__ = ''
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```

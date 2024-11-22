@@ -124,19 +124,19 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 """
 .. module:: src.utils.smtp
    :platform: Windows, Unix
-   :synopsis: SMTP Email Interface
+   :synopsis: SMTP email interface for sending and receiving emails.
 
-This module provides functionality to send and receive emails using an SMTP or IMAP server.
-It includes functions to send emails using SMTP and retrieve emails using IMAP.
 """
+
 import smtplib
 import imaplib
 import email
 import os
 from email.mime.text import MIMEText
 from typing import List, Dict, Optional
-from src.utils.jjson import j_loads, j_loads_ns  #Added necessary imports
+
 from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Added necessary import
 
 # --- Configuration ---
 # DO NOT HARDCODE CREDENTIALS HERE!  Use environment variables instead.
@@ -153,32 +153,31 @@ def send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') 
     """Sends an email.
 
     :param subject: Email subject.
+    :type subject: str
     :param body: Email body.
+    :type body: str
     :param to: Recipient email address.
-    :raises smtplib.SMTPException: if SMTP connection fails.
-    :raises Exception: for other exceptions.
+    :type to: str
+    :raises smtplib.SMTPException: If SMTP error occurs.
     :return: True if successful, False otherwise.
     """
     try:
-        # Create SMTP connection
         smtp = smtplib.SMTP(_connection['server'], _connection['port'])
         smtp.ehlo()
         smtp.starttls()
         smtp.login(_connection['user'], _connection['password'])
 
         message = MIMEText(body)
-        message["Subject"] = subject
-        message["From"] = _connection['user']
-        message["To"] = to
+        message['Subject'] = subject
+        message['From'] = _connection['user']
+        message['To'] = to
 
-        smtp.send_message(message)  # Use send_message for better handling
+        smtp.send_message(message)  # Using send_message for better error handling
         smtp.quit()
         return True
+
     except smtplib.SMTPException as e:
-        logger.error(f"Error sending email. Subject: {subject}. Body: {body}. Error: {e}", exc_info=True)
-        return False
-    except Exception as ex:
-        logger.error(f"An unexpected error occurred: {ex}", exc_info=True)
+        logger.error(f"Error sending email: {e}", exc_info=True)
         return False
 
 
@@ -186,11 +185,15 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
     """Retrieves emails.
 
     :param imap_server: IMAP server address.
+    :type imap_server: str
     :param user: IMAP user.
+    :type user: str
     :param password: IMAP password.
-    :param folder: Email folder to retrieve from (default is 'inbox').
+    :type password: str
+    :param folder: Folder to retrieve emails from. Defaults to 'inbox'.
+    :type folder: str
+    :raises imaplib.IMAP4.error: If IMAP error occurs.
     :return: List of email dictionaries if successful, None otherwise.
-    :raises imaplib.IMAP4.error: for IMAP connection issues
     """
     try:
         mail = imaplib.IMAP4_SSL(imap_server)
@@ -209,33 +212,30 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
             email_data = {
                 'subject': msg['subject'],
                 'from': msg['from'],
-                'body': msg.get_payload(decode=True, _charset="utf-8").decode("utf-8", errors="ignore")  # Added error handling
+                'body': msg.get_payload(decode=True, _charset="utf-8").decode("utf-8", errors="ignore")
             }
             emails.append(email_data)
 
         mail.close()
         mail.logout()
         return emails
-    except imaplib.IMAP4.error as e:
-        logger.error(f"Error connecting to IMAP server: {e}", exc_info=True)
-        return None
-    except Exception as ex:
-        logger.error(f"An unexpected error occurred: {ex}", exc_info=True)
-        return None
 
+    except imaplib.IMAP4.error as e:
+        logger.error(f"Error receiving emails: {e}", exc_info=True)
+        return None
 ```
 
 **Changes Made**
 
-- Added necessary import `from src.utils.jjson import j_loads, j_loads_ns`
-- Improved docstrings using reStructuredText (RST) format for functions, methods, and classes.
-- Replaced `smtp.sendmail` with `smtp.send_message` for better handling of email messages.
-- Added error handling using `try...except` blocks for `smtplib.SMTPException` and `imaplib.IMAP4.error` and other potential exceptions. Logged errors using `logger.error`.
-- Improved error messages in `logger.error` statements to provide more context.
-- Changed `_charset="utf-8"` to `_charset="utf-8", errors="ignore"` in `msg.get_payload` to handle potential decoding issues more robustly.
+- Added necessary import `from src.utils.jjson import j_loads, j_loads_ns`.
+- Changed `sendmail` to `send_message` in the `send` function for better error handling.
+- Improved docstrings for both functions using RST format and Sphinx conventions. Added type hints.
+- Added exception handling using `try-except` blocks with specific error types (e.g., `smtplib.SMTPException`, `imaplib.IMAP4.error`) to catch and log SMTP and IMAP errors.
+- Changed `_charset` error handling in `receive` function to `errors="ignore"` to prevent the script from crashing on potentially malformed data.
+- Removed unnecessary comments and reformatted the code for better readability.
 
 
-**Full Code (Improved)**
+**Full Improved Code (Copy and Paste)**
 
 ```python
 ## \file hypotez/src/utils/smtp.py
@@ -246,19 +246,19 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 """
 .. module:: src.utils.smtp
    :platform: Windows, Unix
-   :synopsis: SMTP Email Interface
+   :synopsis: SMTP email interface for sending and receiving emails.
 
-This module provides functionality to send and receive emails using an SMTP or IMAP server.
-It includes functions to send emails using SMTP and retrieve emails using IMAP.
 """
+
 import smtplib
 import imaplib
 import email
 import os
 from email.mime.text import MIMEText
 from typing import List, Dict, Optional
-from src.utils.jjson import j_loads, j_loads_ns  #Added necessary imports
+
 from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Added necessary import
 
 # --- Configuration ---
 # DO NOT HARDCODE CREDENTIALS HERE!  Use environment variables instead.
@@ -275,32 +275,31 @@ def send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') 
     """Sends an email.
 
     :param subject: Email subject.
+    :type subject: str
     :param body: Email body.
+    :type body: str
     :param to: Recipient email address.
-    :raises smtplib.SMTPException: if SMTP connection fails.
-    :raises Exception: for other exceptions.
+    :type to: str
+    :raises smtplib.SMTPException: If SMTP error occurs.
     :return: True if successful, False otherwise.
     """
     try:
-        # Create SMTP connection
         smtp = smtplib.SMTP(_connection['server'], _connection['port'])
         smtp.ehlo()
         smtp.starttls()
         smtp.login(_connection['user'], _connection['password'])
-        
+
         message = MIMEText(body)
-        message["Subject"] = subject
-        message["From"] = _connection['user']
-        message["To"] = to
-        
-        smtp.send_message(message)  # Use send_message for better handling
+        message['Subject'] = subject
+        message['From'] = _connection['user']
+        message['To'] = to
+
+        smtp.send_message(message)  # Using send_message for better error handling
         smtp.quit()
         return True
+
     except smtplib.SMTPException as e:
-        logger.error(f"Error sending email. Subject: {subject}. Body: {body}. Error: {e}", exc_info=True)
-        return False
-    except Exception as ex:
-        logger.error(f"An unexpected error occurred: {ex}", exc_info=True)
+        logger.error(f"Error sending email: {e}", exc_info=True)
         return False
 
 
@@ -308,11 +307,15 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
     """Retrieves emails.
 
     :param imap_server: IMAP server address.
+    :type imap_server: str
     :param user: IMAP user.
+    :type user: str
     :param password: IMAP password.
-    :param folder: Email folder to retrieve from (default is 'inbox').
+    :type password: str
+    :param folder: Folder to retrieve emails from. Defaults to 'inbox'.
+    :type folder: str
+    :raises imaplib.IMAP4.error: If IMAP error occurs.
     :return: List of email dictionaries if successful, None otherwise.
-    :raises imaplib.IMAP4.error: for IMAP connection issues
     """
     try:
         mail = imaplib.IMAP4_SSL(imap_server)
@@ -331,17 +334,15 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
             email_data = {
                 'subject': msg['subject'],
                 'from': msg['from'],
-                'body': msg.get_payload(decode=True, _charset="utf-8").decode("utf-8", errors="ignore")  # Added error handling
+                'body': msg.get_payload(decode=True, _charset="utf-8").decode("utf-8", errors="ignore")
             }
             emails.append(email_data)
 
         mail.close()
         mail.logout()
         return emails
+
     except imaplib.IMAP4.error as e:
-        logger.error(f"Error connecting to IMAP server: {e}", exc_info=True)
-        return None
-    except Exception as ex:
-        logger.error(f"An unexpected error occurred: {ex}", exc_info=True)
+        logger.error(f"Error receiving emails: {e}", exc_info=True)
         return None
 ```

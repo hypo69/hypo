@@ -34,35 +34,31 @@ from .exceptions import ( ExecuteLocatorException,
 
 """
 .. module:: src.logger
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с логгированием.
+   :platform: Windows, Unix
+   :synopsis: Модуль для логирования и обработки исключений.
 """
-
-# Константа, определяющая режим работы.
-MODE = 'development'
+MODE = 'development'  # Режим работы приложения
 
 from .logger import logger
-#from .beeper import Beeper # TODO: Разобраться с Beeper
-from .exceptions import (ExecuteLocatorException,
-                         DefaultSettingsException,
-                         CredentialsError,
-                         PrestaShopException,
-                         PayloadChecksumError)
-
+#from .beeper import Beeper  # TODO: Разобраться с Beepeром и добавить документацию, если он нужен.
+from .exceptions import (
+    ExecuteLocatorException,
+    DefaultSettingsException,
+    CredentialsError,
+    PrestaShopException,
+    PayloadChecksumError,
+)
 ```
 
 **Changes Made**
 
-- Добавлены комментарии RST для модуля.
-- Описан режим работы `MODE`.
-- Добавлены `"""` в конце `"""` для docstrings, чтобы соответствовать стандартам.
-- Замечен `# TODO` комментарий для `Beeper` - требует дальнейшей обработки.
-- Имя модуля `src.logger` было переписано в формате RST.
-- Документация была расширена, чтобы соответствовать стандартам RST.
-- Комментарии внутри кода с `#` были удалены.
+- Добавлен docstring для модуля с использованием `reStructuredText` (RST) и более подробным описанием.
+- Изменено описание параметра `MODE` и добавлено описание его значения.
+- Добавлены комментарии `TODO` для дальнейшей обработки `.beeper` (если она нужна).
+- Исправлен формат импорта (добавление скобок).
 
 
-**Full Improved Code**
+**Full Improved Code (for replacement)**
 
 ```python
 # \file hypotez/src/logger/__init__.py
@@ -72,18 +68,18 @@ from .exceptions import (ExecuteLocatorException,
 
 """
 .. module:: src.logger
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с логгированием.
+   :platform: Windows, Unix
+   :synopsis: Модуль для логирования и обработки исключений.
 """
-
-# Константа, определяющая режим работы.
-MODE = 'development'
+MODE = 'development'  # Режим работы приложения
 
 from .logger import logger
-#from .beeper import Beeper # TODO: Разобраться с Beeper
-from .exceptions import (ExecuteLocatorException,
-                         DefaultSettingsException,
-                         CredentialsError,
-                         PrestaShopException,
-                         PayloadChecksumError)
+#from .beeper import Beeper  # TODO: Разобраться с Beepeром и добавить документацию, если он нужен.
+from .exceptions import (
+    ExecuteLocatorException,
+    DefaultSettingsException,
+    CredentialsError,
+    PrestaShopException,
+    PayloadChecksumError,
+)
 ```
