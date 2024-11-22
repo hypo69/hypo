@@ -204,6 +204,6 @@ password.txt
 docs/sphinx/
 
 #prestashop
-src/endpoints/websites/emil-design.com/img/
+src/endpoints/websites/emil-design.com/public_html/img/
 
 
