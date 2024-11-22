@@ -48,16 +48,66 @@ from src.utils.printer import pprint
 from src.logger import logger
 
 
+## \file hypotez/src/endpoints/hypo69/code_assistant/assistant.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.endpoints.hypo69.code_assistant 
+    :platform: Windows, Unix
+    :synopsis:
+"""
+
+MODE = 'development'
+
+
+"""
+Модуль для работы ассистента программиста
+=========================================================================================
+
+Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ, 
+такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
+
+Пример использования
+--------------------
+
+Пример использования класса `CodeAssistant`:
+
+.. code-block:: python
+
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    assistant.process_files()
+"""
+
+import argparse
+import sys
+from pathlib import Path
+from typing import Iterator, List, Optional
+from types import SimpleNamespace
+import signal
+import time
+import re
+
+import header
+from src import gs
+from src.utils.jjson import j_loads, j_loads_ns
+from src.ai.gemini import GoogleGenerativeAI
+from src.ai.openai import OpenAIModel
+from src.utils.printer import pprint
+from src.logger import logger
+
+
 class CodeAssistant:
     """Класс обучения ассистента программиста."""
-    role:str
-    lang:str
-    start_dirs: Path | str | list [Path] |list[str]
-    base_path:Path
-    config:SimpleNamespace
-    gemini_model:GoogleGenerativeAI
-    openai_model:OpenAIModel
-    start_file_number:int
+    role: str
+    lang: str
+    start_dirs: Path | str | list[Path] | list[str]
+    base_path: Path
+    config: SimpleNamespace
+    gemini_model: GoogleGenerativeAI
+    openai_model: OpenAIModel
+    start_file_number: int
 
     def __init__(self, **kwargs):
         """Инициализация ассистента с заданными параметрами."""
@@ -69,21 +119,21 @@ class CodeAssistant:
         self.config = j_loads_ns(self.base_path / 'code_assistant.json')
         self.gemini_model = None
         self.openai_model = None
-        self.start_file_number = kwargs.get('start_file_number',1)
+        self.start_file_number = kwargs.get('start_file_number', 1)
         self._initialize_models(**kwargs)
 
     def _initialize_models(self, **kwargs):
         """Инициализация моделей на основе заданных параметров."""
         if 'gemini' in self.model:
             self.gemini_model = GoogleGenerativeAI(
-                model_name='gemini-1.5-flash-8b', 
-                api_key=gs.credentials.gemini.onela, 
+                model_name='gemini-1.5-flash-8b',
+                api_key=gs.credentials.gemini.onela,
                 **kwargs
             )
         if 'openai' in self.model:
             self.openai_model = OpenAIModel(
-                model_name='gpt-4o-mini', 
-                assistant_id=gs.credentials.openai.assistant_id.code_assistant, 
+                model_name='gpt-4o-mini',
+                assistant_id=gs.credentials.openai.assistant_id.code_assistant,
                 **kwargs
             )
 
@@ -100,33 +150,20 @@ class CodeAssistant:
 
     @property
     def system_instruction(self) -> str | bool:
-        """Чтение инструкции из файла.
-
-        Эта функция пытается загрузить инструкцию из заранее заданного файла для модели. Если файл не найден или возникла ошибка,
-        возвращается `False`.
-
-        Пример:
-            system_instruction = assistant.system_instruction
-        """
+        """Чтение инструкции из файла."""
         try:
             return Path(gs.path.src / 'ai' / 'prompts' / 'developer' / f'{self.role}_{self.lang}.md').read_text(encoding='UTF-8')
         except Exception as ex:
-            logger.error(f"Error reading instruction file",ex)
+            logger.error(f"Error reading instruction file", ex)
             return False   
-        
+
     @property
     def code_instruction(self) -> str | bool:
-        """Чтение инструкции для кода.
-
-        Эта функция пытается загрузить инструкцию для кода из файла. Если файл не найден или возникла ошибка, возвращается `False`.
-
-        Пример:
-            code_instruction = assistant.code_instruction
-        """
+        """Чтение инструкции для кода."""
         try:
             return Path(self.base_path / 'instructions' / f'instruction_{self.role}_{self.lang}.md').read_text(encoding='UTF-8')
         except Exception as ex:
-            logger.error(f"Error reading instruction file",ex)
+            logger.error(f"Error reading instruction file", ex)
             return False
 
     @property
@@ -134,7 +171,7 @@ class CodeAssistant:
         """Загрузка переводов для ролей и языков."""
         return j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'translations' / 'translations.json')
 
-    def process_files(self, start_file_number:int = 1):
+    def process_files(self, start_file_number: int = 1):
         """Обработка файлов, взаимодействие с моделью и сохранение результата."""
         for i, (file_path, content) in enumerate(self._yield_files_content()):
             while i < start_file_number:
@@ -142,27 +179,21 @@ class CodeAssistant:
                 continue
             if file_path and content:
                 content_request = self._create_request(content)
+
                 if self.gemini_model:
                     response = self.gemini_model.ask(content_request)
+                    response = self.remove_outer_quotes(response)
                     if response:
-                        self._save_response(file_path, response, 'gemini')
+                        cleaned_response = self.remove_outer_quotes(file_path)  # Обрабатываем ответ
+                        self._save_response(file_path, cleaned_response, 'gemini')
 
             pprint(f'Processed file number: {i + 1}', text_color='yellow')
             time.sleep(20)  
 
     def _create_request(self, content: str) -> str:
-        """
-        Создание запроса с учетом роли и языка.
-
-        Args:
-            content (str): Исходное содержимое кода для включения в запрос.
-
-        Returns:
-            str: Сформированный запрос с учетом языка и роли.
-        """
+        """Создание запроса с учетом роли и языка."""
         roles_translations = getattr(self.translations.roles, self.role)
         role_description = getattr(roles_translations, self.lang)
-
     
         content_request = (
             f'**{role_description}**\n'
@@ -176,35 +207,21 @@ class CodeAssistant:
         start_dirs: List[Path] = [gs.path.src],
         patterns: List[str] = ['*.py', 'README.MD', 'INTRO.MD', 'README.RU.MD', 'INTRO.RU.MD', 'README.EN.MD', 'INTRO.EN.MD']
     ) -> Iterator[tuple[Path, str]]:
-        """Генерирует пути файлов и их содержимое по указанным шаблонам.
-
-        Args:
-            start_dirs (List[Path]): Список начальных директорий для поиска файлов.
-            patterns (List[str]): Список шаблонов для поиска файлов.
-
-        Yields:
-            Iterator[tuple[Path, str]]: Путь к файлу и его содержимое.
-        """
-        # Компилируем регулярные выражения для паттернов исключаемых файлов
+        """Генерирует пути файлов и их содержимое по указанным шаблонам."""
         exclude_file_patterns = [re.compile(pattern) for pattern in self.config.exclude_file_patterns]
         for start_dir in start_dirs:
             for pattern in patterns:
-                # Ищем файлы по шаблонам
                 for file_path in start_dir.rglob(pattern):
-                    # Проверка исключаемых директорий
                     if any(exclude_dir in file_path.parts for exclude_dir in self.config.exclude_dirs):
                         pprint(f'Пропускаю файл в исключенной директории: {file_path}', text_color='cyan')
                         continue
-                    # Проверка на соответствие паттернам исключаемых файлов
                     if any(exclude.match(str(file_path)) for exclude in exclude_file_patterns):
                         pprint(f'Пропускаю файл по паттерну исключения: {file_path}', text_color='cyan')
                         continue
-                    # Проверка на наличие файла в списке исключаемых файлов
                     if str(file_path) in self.config.exclude_files:
                         pprint(f'Пропускаю исключенный файл: {file_path}', text_color='cyan')
                         continue
                     try:
-                        # Читаем содержимое файла
                         content = file_path.read_text(encoding='utf-8')
                         yield file_path, content
                     except Exception as ex:
@@ -214,22 +231,30 @@ class CodeAssistant:
     def _save_response(self, file_path: Path, response: str, model_name: str):
         """Сохранение ответа модели в файл."""
         output_directory: str = getattr(self.config.output_directory, self.role)  
-        print(f'{file_path=}')
         target_dir = 'docs/' + output_directory.replace("<model>", model_name).replace("<lang>", self.lang)
-        print(f'{target_dir=}')
-        # Изменение суффикса файла на .md
         file_path = str(file_path).replace('src', target_dir)  # Convert Path to string for replace
         export_path = Path(file_path).with_suffix('.md')  # Convert back to Path and change suffix
-        print(f'{export_path=}')
         export_path.parent.mkdir(parents=True, exist_ok=True)
         export_path.write_text(response, encoding="utf-8")
         pprint(f"Ответ модели сохранен в: {export_path}", text_color='green')
 
+    def remove_outer_quotes(self, response: str) -> str:
+        """
+        Удаляет внешние кавычки вокруг блоков кода, оформленных в Python, Markdown или reStructuredText.
 
-    def run(self, start_file_number:int = 1):
+        :param file_path: Путь к файлу, который необходимо обработать.
+        :type file_path: Path
+        :return: Очищенный контент как строка.
+        :rtype: str
+        """
+        content = re.sub(r'```(.*?)```', '', response, flags=re.DOTALL)  # Remove block code
+        return content
+
+    def run(self, start_file_number: int = 1):
         """Запуск процесса обработки файлов."""
         signal.signal(signal.SIGINT, lambda sig, frame: sys.exit(0))
         self.process_files(start_file_number)
+
 
 
 def main():
