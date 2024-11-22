@@ -1,0 +1,15 @@
+ 
+
+{shop_url}
+
+הי,
+
+התראת לוג חדשה נשמרה
+
+הודעת אזהרה : קיבלת התראת קובץ לוג חדש , במערכת הניהול שלך.
+
+באפשרותך לבדוק זאת באיזור "כלים" > "קבצי לוג" בממשק הניהול של חנותך.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

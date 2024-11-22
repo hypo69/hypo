@@ -1,0 +1,15 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Код заказа {order_name} - Кредитная квитанция
+
+К заказу с кодом {order_name} создана платёжная квитанция на ваше имя.
+
+Review this credit slip and download your invoice on our shop, go to the [Кредитные квитанции]({history_url}) section of your customer account.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

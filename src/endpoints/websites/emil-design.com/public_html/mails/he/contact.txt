@@ -1,0 +1,19 @@
+ 
+
+{shop_url}
+
+הודעה מלקוח של {shop_name}
+
+כתובת דוא"ל לקוח: {email}
+
+מספר הזמנה #:  {order_name}
+
+קובץ מצורף: {attached_file}
+
+הודעת הלקוח:
+
+{message}
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

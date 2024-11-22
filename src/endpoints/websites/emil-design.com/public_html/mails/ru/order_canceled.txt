@@ -1,0 +1,17 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Код заказа {order_name} - Заказ отменён
+
+Ваш заказ с кодом {order_name} в {shop_name} отменён продавцом.
+
+Перейдите в свой аккаунт клиента, чтобы узнать больше об этом.
+
+If you have a guest account, you can follow your order via the [Отслеживание гостевых заказов]({guest_tracking_url}) section on our shop.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

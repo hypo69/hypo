@@ -1,0 +1,29 @@
+ 
+
+{shop_url}
+
+שלום {firstname} {lastname},
+
+תודה שיצרת חשבון לקוח באתר של {shop_name}.
+
+פרטי ההתחברות שלך ל-{shop_name}
+
+להלן פרטי ההתחברות שלך:
+
+דוא"ל: {email}
+
+טיפים חשובים לאבטחת חשבונך:
+
+1. אנו ממליצים לשמור במקום בטוח את פרטי החשבון.
+
+2. אין לגלות את הפרטים לאיש.
+
+3. שנה סיסמא לעיתים תכופות.
+
+4. אם עולה בך החשד שמישהו משתמש בחשבונך באופן לא חוקי, דווח לנו מייד.
+
+ניתן לבצע כעת הזמנה בחנות: [{shop_name}]({shop_url})
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

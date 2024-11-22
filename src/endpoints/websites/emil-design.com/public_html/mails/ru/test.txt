@@ -1,0 +1,13 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Это тестовое email из вашего магазина.
+
+Если вы можете прочитать это, значит, тест пройден успешно!
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

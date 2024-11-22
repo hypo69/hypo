@@ -1,0 +1,15 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Возврат заказа №{id_order_return} - Обновление
+
+Мы обновили статус по возврату №{id_order_return}, новый статус: "{state_order_return}".
+
+Follow your order and download your invoice on our shop, go to the [Мои заказы]({history_url}) section of your customer account.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

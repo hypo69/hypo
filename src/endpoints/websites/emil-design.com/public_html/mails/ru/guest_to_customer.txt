@@ -1,0 +1,20 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Ваш гостевой аккаунт превращен в клиентский
+
+Подзравляем, ваш гостевой аккаунт в {shop_name} превращен в клиентский!
+
+E-mail: {email}
+
+Перейдите по ссылке, чтобы установить пароль:
+{url}
+
+Вы можете войти в учётную запись в нашем магазине: [{shop_name}]({shop_url})
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

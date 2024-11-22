@@ -1,0 +1,45 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Благодарим за покупку в {shop_name}!
+
+Подробности заказа
+
+Заказ: {order_name} Оформлен {date}
+
+Способ оплаты: {payment}
+
+Код	Товар	Цена	Количество	Сумма  {products_txt} {discounts_txt}
+Товары	{total_products}
+Скидки	{total_discounts}
+Подарочная упаковка	{total_wrapping}
+Доставка	{total_shipping}
+Включая итог по налогам	{total_tax_paid}
+Итого к оплате	{total_paid}
+
+Доставка
+
+Перевозчик: {carrier}
+
+Способ оплаты: {payment}
+
+Recycled packaging: {recycled_packaging_label}
+
+Адрес доставки
+
+{delivery_block_txt}
+
+Адрес плательщика
+
+{invoice_block_txt}
+
+Follow your order and download your invoice on our shop, go to the [Мои заказы]({history_url}) section of your customer account.
+
+If you have a guest account, you can follow your order via the [Отслеживание гостевых заказов]({guest_tracking_url}) section on our shop.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

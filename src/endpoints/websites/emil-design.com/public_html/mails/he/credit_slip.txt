@@ -1,0 +1,15 @@
+ 
+
+{shop_url}
+
+שלום {firstname} {lastname},
+
+מספר הזמנה {order_name} - שובר זיכוי
+
+שובר הזמנה נוצר בשמך עבור הזמנתך בעלת המזהה {order_name}.
+
+עברו על שובר זה והדפיסו את חשבונית העסקה בחנותינו. גשו אל עמוד [שוברי זיכוי]({history_url}) בחשבון הלקוח שלך.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

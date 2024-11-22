@@ -1,0 +1,17 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Клиентская служба - Обсуждение передано
+
+{employee} хочет передать это обсуждение вам.
+
+История переписки: {messages}
+
+{employee} добавил {comment}
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

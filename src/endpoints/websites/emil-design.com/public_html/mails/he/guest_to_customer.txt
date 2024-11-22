@@ -1,0 +1,20 @@
+ 
+
+{shop_url}
+
+שלום {firstname} {lastname},
+
+חשבון האורח שלך הפך לחשבון לקוח
+
+מזל טוב, חשבון האורח שלך עבור  {shop_name}  הפך לחשבון לקוח!
+
+דוא"ל: {email}
+
+לחץ על הקישור הבא כדי להגדיר את סיסמתך:
+{url}
+
+באפשרותך להתחבר לחשבון הלקוח שלך בחנות שלנו: [{shop_name}]({shop_url})
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

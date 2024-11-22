@@ -1,0 +1,29 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Благодарим за покупки в магазине {shop_name}!
+
+Код заказа {order_name} - Ожидание оплаты чеком
+
+Ваш заказ с кодом {order_name} успешно размещен. Мы отправим его, как только получим ваш платёж.
+
+Способ оплаты: чеком
+
+Вы решили оплатить банковским чеком. Информация, необходимая вам для оплаты чеком:
+
+Сумма:  {total_paid}
+
+Оплата заказа:  {check_name}
+
+Отправьте ваш чек по адресу:  {check_address_html}
+
+Follow your order and download your invoice on our shop, go to the [Мои заказы]({history_url}) section of your customer account.
+
+If you have a guest account, you can follow your order via the [Отслеживание гостевых заказов]({guest_tracking_url}) section on our shop.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

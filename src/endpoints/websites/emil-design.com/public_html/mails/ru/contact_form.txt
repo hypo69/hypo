@@ -1,0 +1,19 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Ваше сообщение отправлено, спасибо, что потратили время на его написание!
+
+Номер заказа:  {order_name}
+
+Товар:  {product_name}
+
+Прикрепленный файл: {attached_file}
+
+Вы ответим максимально быстро.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

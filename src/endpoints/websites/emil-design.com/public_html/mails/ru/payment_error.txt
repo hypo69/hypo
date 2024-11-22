@@ -1,0 +1,19 @@
+ 
+
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Код заказа {order_name} - Ошибка оплаты
+
+Мы столкнулись с ошибкой при обработке вашего платежа для вашего заказа  {order_name} из  {shop_name}. Пожалуйста, свяжитесь с нами как можно скорее.
+
+Вы можете ожидать доставку, как только ваш платеж будет получен.
+
+Follow your order and download your invoice on our shop, go to the [Мои заказы]({history_url}) section of your customer account.
+
+If you have a guest account, you can follow your order via the [Отслеживание гостевых заказов]({guest_tracking_url}) section on our shop.
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)
