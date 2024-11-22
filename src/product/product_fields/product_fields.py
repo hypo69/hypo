@@ -534,7 +534,7 @@ class ProductFields:
             bool: _ @details_
         """
         try:
-            self.presta_fields.on_sale = normalize_bool(value)
+            self.presta_fields.on_sale = sn.normalize_boolean(value)
 
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'On sale (0/1)' данными {value}
@@ -556,7 +556,7 @@ class ProductFields:
     def online_only(self, value = 0) -> bool:
         """   <sub>*[setter]*</sub> """
         try:
-            self.presta_fields.online_only = normalize_bool(value)
+            self.presta_fields.online_only = sn.normalize_boolean(value)
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'online_only' данными {value}""",ex)

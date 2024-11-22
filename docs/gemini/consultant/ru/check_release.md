@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/check_release.py
+## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -43,7 +43,7 @@ def check_latest_release(owner: str, repo: str):
 **Improved Code**
 
 ```python
-# \file hypotez/src/check_release.py
+## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -51,55 +51,50 @@ def check_latest_release(owner: str, repo: str):
 """
 .. module:: check_release
    :platform: Windows, Unix
-   :synopsis: Module for checking the latest release version of a GitHub repository.
+   :synopsis: Модуль для проверки последней версии релиза на GitHub.
 """
-
 MODE = 'development'
+
 
 import requests
 from src.logger import logger
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads  # Импорт функции j_loads для работы с JSON
 
 def check_latest_release(owner: str, repo: str) -> str | None:
     """
-    Получает последнюю версию релиза из репозитория GitHub.
+    Проверяет последнюю версию релиза на GitHub.
 
     :param owner: Имя владельца репозитория.
-    :param repo: Имя репозитория.
+    :param repo: Название репозитория.
     :raises requests.exceptions.RequestException: Если произошла ошибка при запросе.
-    :raises ValueError: Если структура JSON не соответствует ожидаемой.
-    :return: Версия последнего релиза, если доступна, иначе None.
+    :return: Последняя версия релиза в формате строки, или None, если релиз не найден.
     """
     url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Поднимает исключение для ошибок статуса
+        response.raise_for_status()  # Поднимает исключение для кодов ошибок
         latest_release = j_loads(response.text)
         return latest_release['tag_name']
     except requests.exceptions.RequestException as e:
         logger.error(f"Ошибка при запросе к GitHub: {e}")
         return None
-    except (KeyError, ValueError) as e:
-        logger.error(f"Ошибка обработки ответа от GitHub: {e}")
+    except (KeyError, TypeError) as e:
+        logger.error(f"Ошибка при обработке ответа от GitHub: {e}")
         return None
 ```
 
 **Changes Made**
 
-- Добавлены docstring в соответствии с RST.
-- Изменён тип возвращаемого значения в docstring и функции.
-- Использование `j_loads` для обработки JSON.
-- Добавлена обработка исключений `requests.exceptions.RequestException` и `KeyError`.
-- Использование `response.raise_for_status()` для проверки кода ответа.
-- Замена `return None` на `return None` для ясности.
-- Удален комментарий `#TODO: Код не проверен`
-- Удален избыточный `#logger.error(f"...")`
-- Изменено имя модуля с `src` на `check_release` в docstring.
-- Импорт `j_loads` из `src.utils.jjson`.
+*   Импортирован `j_loads` из `src.utils.jjson`.
+*   Добавлены `try...except` блоки для обработки исключений `requests.exceptions.RequestException`, `KeyError`, `TypeError`.
+*   Метод `check_latest_release` теперь возвращает `str | None` для указания возможности возвращать `None`.
+*   Используется `response.raise_for_status()` для обработки ошибок HTTP.
+*   Заменена  `#TODO` на исчерпывающие исключения.
+*   Добавлены комментарии в формате RST для описания модуля, функции и типов возвращаемых значений.
 
 
 ```python
-# \file hypotez/src/check_release.py
+## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -107,35 +102,34 @@ def check_latest_release(owner: str, repo: str) -> str | None:
 """
 .. module:: check_release
    :platform: Windows, Unix
-   :synopsis: Module for checking the latest release version of a GitHub repository.
+   :synopsis: Модуль для проверки последней версии релиза на GitHub.
 """
-
 MODE = 'development'
+
 
 import requests
 from src.logger import logger
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads  # Импорт функции j_loads для работы с JSON
 
 def check_latest_release(owner: str, repo: str) -> str | None:
     """
-    Получает последнюю версию релиза из репозитория GitHub.
+    Проверяет последнюю версию релиза на GitHub.
 
     :param owner: Имя владельца репозитория.
-    :param repo: Имя репозитория.
+    :param repo: Название репозитория.
     :raises requests.exceptions.RequestException: Если произошла ошибка при запросе.
-    :raises ValueError: Если структура JSON не соответствует ожидаемой.
-    :return: Версия последнего релиза, если доступна, иначе None.
+    :return: Последняя версия релиза в формате строки, или None, если релиз не найден.
     """
     url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Поднимает исключение для ошибок статуса
+        response.raise_for_status()  # Поднимает исключение для кодов ошибок
         latest_release = j_loads(response.text)
         return latest_release['tag_name']
     except requests.exceptions.RequestException as e:
         logger.error(f"Ошибка при запросе к GitHub: {e}")
         return None
-    except (KeyError, ValueError) as e:
-        logger.error(f"Ошибка обработки ответа от GitHub: {e}")
+    except (KeyError, TypeError) as e:
+        logger.error(f"Ошибка при обработке ответа от GitHub: {e}")
         return None
 ```

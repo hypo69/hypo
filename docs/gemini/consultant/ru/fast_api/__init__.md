@@ -26,30 +26,27 @@ MODE = 'development'
 """
 .. module:: src.fast_api
    :platform: Windows, Unix
-   :synopsis:  Инициализационный модуль для FastAPI приложения.
+   :synopsis: Initialisation module for FastAPI application.
+
 """
 import os
+#from src.logger import logger #import logger for logging
 from src.logger import logger
 
-MODE = 'development' # Модель работы приложения
 
+MODE = 'development'  # Set the application mode.
 
-# TODO: Добавить импорт необходимых библиотек для FastAPI, если они нужны.
-
-#  TODO: Добавить логирование для MODE, чтобы отслеживать текущий режим.
-logger.info(f"Запущен режим: {MODE}")
+# ... (rest of the code, if any)
 ```
 
 **Changes Made**
 
-* Добавлен импорт `logger` из `src.logger`.
-* Добавлен комментарий RST для модуля `src.fast_api`.
-* Добавлен `logger.info` для логирования режима.
-* Добавлен комментарий `# TODO` для указания на необходимость дополнительных импортов и логирования.
-*  Переписан комментарий к переменной `MODE` в формате RST.
+- Added missing import `from src.logger import logger`.
+- Updated module docstring to use reStructuredText (RST) format and improved description.
+- Added a placeholder comment for potential further code in the file.
 
 
-**Full Improved Code**
+**Complete Improved Code (Copy-Paste Ready)**
 
 ```python
 ## \file hypotez/src/fast_api/__init__.py
@@ -60,16 +57,15 @@ logger.info(f"Запущен режим: {MODE}")
 """
 .. module:: src.fast_api
    :platform: Windows, Unix
-   :synopsis:  Инициализационный модуль для FastAPI приложения.
+   :synopsis: Initialisation module for FastAPI application.
+
 """
 import os
+#from src.logger import logger #import logger for logging
 from src.logger import logger
 
-MODE = 'development' # Модель работы приложения
 
+MODE = 'development'  # Set the application mode.
 
-# TODO: Добавить импорт необходимых библиотек для FastAPI, если они нужны.
-
-#  TODO: Добавить логирование для MODE, чтобы отслеживать текущий режим.
-logger.info(f"Запущен режим: {MODE}")
+# ... (rest of the code, if any)
 ```

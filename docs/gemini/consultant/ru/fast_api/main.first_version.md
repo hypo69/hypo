@@ -1,7 +1,8 @@
+```
 **Received Code**
 
 ```python
-# \file hypotez/src/fast_api/main.first_version.py
+## \file hypotez/src/fast_api/main.first_version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -9,7 +10,7 @@
 """
 .. module:: src.fast_api
 	:platform: Windows, Unix
-	:synopsis: FastAPI application for processing data.
+	:synopsis:
 """
 MODE = 'development'
 
@@ -33,9 +34,8 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""
-MODE = 'development'
-
+"""MODE = 'development'
+  
 """ module: src.fast_api """
 
 
@@ -52,8 +52,7 @@ from pathlib import Path
 from fastapi import FastAPI, Form, Request, HTTPException
 from subprocess import Popen, PIPE
 from fastapi.staticfiles import StaticFiles
-# Add necessary import
-from src.utils.jjson import j_loads, j_loads_ns  # for json handling
+from src.logger import logger
 
 app = FastAPI()
 
@@ -66,27 +65,35 @@ webbrowser.open("http://localhost:8000/html/index.html")
 @app.post("/process_data")
 async def process_data(request: Request, first_name: str = Form(...), last_name: str = Form(...)):
     """
-    Processes data from the HTML form.
+    Обрабатывает данные, полученные из HTML формы.
 
-    :param request: Request object.
-    :param first_name: First name.
-    :param last_name: Last name.
-    :return: Dictionary containing the output from the script.
-    :raises HTTPException: If first name or last name is missing or if the script execution fails.
+    :param request: Объект запроса.
+    :param first_name: Имя.
+    :param last_name: Фамилия.
+    :raises HTTPException: Если имя или фамилия не предоставлены.
+    :raises HTTPException: Если возникла ошибка при выполнении скрипта.
+    :return: Словарь с результатом выполнения скрипта.
     """
-    # Check if first name and last name are provided
+    # Проверка на наличие имени и фамилии
     if not first_name or not last_name:
+        logger.error("First name and last name are missing")
         raise HTTPException(status_code=400, detail="First name and last name must be provided")
     
-    # Formulate the input data string
+    # Формирование входных данных для скрипта
     input_data = f"{first_name} {last_name}"
     
-    # Execute the script with the input data and get the result
+    # Путь к скрипту
     script_path = Path(__file__).resolve().parent.parent / 'script.py'
-    process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    stdout, stderr = process.communicate(input=input_data.encode())
     
-    # Check for errors during script execution
+    try:
+        # Выполнение скрипта с входными данными
+        process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate(input=input_data.encode())
+    except FileNotFoundError as e:
+        logger.error(f"Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Python executable not found")
+    
+    # Проверка на ошибки при выполнении скрипта
     if process.returncode != 0:
         logger.error(f"Error executing the script: {stderr.decode()}")
         raise HTTPException(status_code=500, detail=f"Error executing the script: {stderr.decode()}")
@@ -97,31 +104,19 @@ async def process_data(request: Request, first_name: str = Form(...), last_name:
 @app.get("/")
 async def open_index():
     """
-    Redirects to index.html.
+    Перенаправляет на index.html.
     
-    :return: Dictionary containing a message indicating redirection.
+    :return: Словарь с сообщением о перенаправлении.
     """
-    # Redirect to index.html
     return {"message": "Redirecting to index.html..."}
 
-# import logger
-from src.logger import logger
 
-# Removed redundant endpoint
-# @app.get("/index.html")
-# async def open_index_html():
-#     # Open index.html in the browser
-#     try:
-#         webbrowser.open("http://localhost:8000/index.html")
-#     except Exception as e:
-#         return {"error": f"Error opening file: {e}"}
-#     return {"message": "Opening index.html in the browser..."}}
 ```
 
 **Improved Code**
 
 ```python
-# \file hypotez/src/fast_api/main.first_version.py
+## \file hypotez/src/fast_api/main.first_version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -129,30 +124,36 @@ from src.logger import logger
 """
 .. module:: src.fast_api
 	:platform: Windows, Unix
-	:synopsis: FastAPI application for processing data.
+	:synopsis: FastAPI application for processing data from a form.
 """
 MODE = 'development'
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 """
   :platform: Windows, Unix
+
 """
 """
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""
-MODE = 'development'
+"""MODE = 'development'
+  
 """ module: src.fast_api """
+
+
+
 
 """ Start FastAPI 
 uvicorn main:app --reload
@@ -165,9 +166,7 @@ from pathlib import Path
 from fastapi import FastAPI, Form, Request, HTTPException
 from subprocess import Popen, PIPE
 from fastapi.staticfiles import StaticFiles
-from src.utils.jjson import j_loads, j_loads_ns  # for json handling
-from src.logger import logger  # Import logger
-
+from src.logger import logger
 
 app = FastAPI()
 
@@ -180,56 +179,71 @@ webbrowser.open("http://localhost:8000/html/index.html")
 @app.post("/process_data")
 async def process_data(request: Request, first_name: str = Form(...), last_name: str = Form(...)):
     """
-    Processes data from the HTML form.
+    Обрабатывает данные, полученные из HTML формы.
 
-    :param request: Request object.
-    :param first_name: First name.
-    :param last_name: Last name.
-    :return: Dictionary containing the output from the script.
-    :raises HTTPException: If first name or last name is missing or if the script execution fails.
+    :param request: Объект запроса.
+    :param first_name: Имя.
+    :param last_name: Фамилия.
+    :raises HTTPException: Если имя или фамилия не предоставлены.
+    :raises HTTPException: Если возникла ошибка при выполнении скрипта.
+    :return: Словарь с результатом выполнения скрипта.
     """
+    # Проверка на наличие имени и фамилии
     if not first_name or not last_name:
-        logger.error("First name and last name must be provided")
+        logger.error("First name and last name are missing")
         raise HTTPException(status_code=400, detail="First name and last name must be provided")
     
+    # Формирование входных данных для скрипта
     input_data = f"{first_name} {last_name}"
     
+    # Путь к скрипту
     script_path = Path(__file__).resolve().parent.parent / 'script.py'
-    process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    stdout, stderr = process.communicate(input=input_data.encode())
     
+    try:
+        # Выполнение скрипта с входными данными
+        process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate(input=input_data.encode())
+    except FileNotFoundError as e:
+        logger.error(f"Python executable not found: {e}")
+        raise HTTPException(status_code=500, detail="Python executable not found")
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}")
+    
+    # Проверка на ошибки при выполнении скрипта
     if process.returncode != 0:
         logger.error(f"Error executing the script: {stderr.decode()}")
         raise HTTPException(status_code=500, detail=f"Error executing the script: {stderr.decode()}")
     
     return {"output": stdout.decode()}
 
+# Endpoint to open index.html in the browser
 @app.get("/")
 async def open_index():
     """
-    Redirects to index.html.
+    Перенаправляет на index.html.
     
-    :return: Dictionary containing a message indicating redirection.
+    :return: Словарь с сообщением о перенаправлении.
     """
     return {"message": "Redirecting to index.html..."}
+
 
 ```
 
 **Changes Made**
 
-- Added import `from src.logger import logger` for logging.
-- Removed redundant `try...except` block in `open_index_html`.
-- Replaced all usages of `json.load` with `j_loads` from `src.utils.jjson`.
-- Added missing `j_loads` and `j_loads_ns` imports.
-- Added comprehensive RST documentation for all functions, methods, and classes.
-- Improved error handling by using `logger.error` to log errors.
-- Fixed/Removed redundant docstrings.
-- Removed redundant endpoint `/index.html` as it was a duplicate and likely not necessary.
+1.  Added import `from src.logger import logger`.
+2.  Added more robust error handling using `try-except` blocks and logging errors to `logger`.
+3.  Added informative error messages in HTTPExceptions.
+4.  Improved docstrings using reStructuredText (RST) format for functions and classes.
+5.  Removed unnecessary comments and adjusted the code style to match the example.
+6.  Fixed potential `FileNotFoundError`.
 
-**Complete Code (for copy-paste)**
+
+**Complete Code (Improved)**
 
 ```python
-# \file hypotez/src/fast_api/main.first_version.py
+## \file hypotez/src/fast_api/main.first_version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -237,30 +251,36 @@ async def open_index():
 """
 .. module:: src.fast_api
 	:platform: Windows, Unix
-	:synopsis: FastAPI application for processing data.
+	:synopsis: FastAPI application for processing data from a form.
 """
 MODE = 'development'
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 """
   :platform: Windows, Unix
+
 """
 """
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""
-MODE = 'development'
+"""MODE = 'development'
+  
 """ module: src.fast_api """
+
+
+
 
 """ Start FastAPI 
 uvicorn main:app --reload
@@ -273,9 +293,7 @@ from pathlib import Path
 from fastapi import FastAPI, Form, Request, HTTPException
 from subprocess import Popen, PIPE
 from fastapi.staticfiles import StaticFiles
-from src.utils.jjson import j_loads, j_loads_ns  # for json handling
-from src.logger import logger  # Import logger
-
+from src.logger import logger
 
 app = FastAPI()
 
@@ -288,36 +306,52 @@ webbrowser.open("http://localhost:8000/html/index.html")
 @app.post("/process_data")
 async def process_data(request: Request, first_name: str = Form(...), last_name: str = Form(...)):
     """
-    Processes data from the HTML form.
+    Обрабатывает данные, полученные из HTML формы.
 
-    :param request: Request object.
-    :param first_name: First name.
-    :param last_name: Last name.
-    :return: Dictionary containing the output from the script.
-    :raises HTTPException: If first name or last name is missing or if the script execution fails.
+    :param request: Объект запроса.
+    :param first_name: Имя.
+    :param last_name: Фамилия.
+    :raises HTTPException: Если имя или фамилия не предоставлены.
+    :raises HTTPException: Если возникла ошибка при выполнении скрипта.
+    :return: Словарь с результатом выполнения скрипта.
     """
+    # Проверка на наличие имени и фамилии
     if not first_name or not last_name:
-        logger.error("First name and last name must be provided")
+        logger.error("First name and last name are missing")
         raise HTTPException(status_code=400, detail="First name and last name must be provided")
     
+    # Формирование входных данных для скрипта
     input_data = f"{first_name} {last_name}"
     
+    # Путь к скрипту
     script_path = Path(__file__).resolve().parent.parent / 'script.py'
-    process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    stdout, stderr = process.communicate(input=input_data.encode())
     
+    try:
+        # Выполнение скрипта с входными данными
+        process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate(input=input_data.encode())
+    except FileNotFoundError as e:
+        logger.error(f"Python executable not found: {e}")
+        raise HTTPException(status_code=500, detail="Python executable not found")
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}")
+    
+    # Проверка на ошибки при выполнении скрипта
     if process.returncode != 0:
         logger.error(f"Error executing the script: {stderr.decode()}")
         raise HTTPException(status_code=500, detail=f"Error executing the script: {stderr.decode()}")
     
     return {"output": stdout.decode()}
 
+# Endpoint to open index.html in the browser
 @app.get("/")
 async def open_index():
     """
-    Redirects to index.html.
+    Перенаправляет на index.html.
     
-    :return: Dictionary containing a message indicating redirection.
+    :return: Словарь с сообщением о перенаправлении.
     """
     return {"message": "Redirecting to index.html..."}
+
 ```

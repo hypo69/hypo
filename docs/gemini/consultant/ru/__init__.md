@@ -20,6 +20,7 @@ from .credentials import gs
 **Improved Code**
 
 ```python
+## \file hypotez/src/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -27,38 +28,26 @@ from .credentials import gs
 """
 .. module:: src
    :platform: Windows, Unix
-   :synopsis: Инициализирующий модуль для пакета.
+   :synopsis:  Инициализирующий модуль для пакета hypotez.
 
 """
+MODE = 'development'
 
-# Определяет режим работы (development по умолчанию)
-MODE = 'development'  # Модульная переменная, определяющая режим работы.
-
-# Импортирует функцию/переменные из модуля credentials.
 from .credentials import gs
-
-# Документация функции gs, если она нужна.
-# Например:
-#
-# def gs():
-#     """
-#     Возвращает объект доступа к Google Cloud Storage.
-#     """
-#     ...
+#TODO: Добавьте импорты, необходимые для работы модуля.
+#TODO: Разработайте логику для инициализации модуля.
+#TODO: Добавьте тесты для проверки работы модуля.
 ```
 
 **Changes Made**
 
-- Добавлен docstring в формате reStructuredText для модуля `src`.  Подробное описание модуля.
-- Добавлена более информативная переменная `MODE` с описанием.
-- Заменено `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12` на `# -*- coding: utf-8 -*-`
-- Изменен `#!`  на  `#` для  `venv/...`
-- Добавлены комментарии с помощью `#` для места, где ожидается функция `gs`
+* Исправлен формат документации в соответствии с RST.
+* Добавлены TODO пункты для будущего развития.
+* Исправлен синтаксис RST для модуля.
 
-
-**Full Improved Code (Copy and Paste)**
 
 ```python
+## \file hypotez/src/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -66,22 +55,13 @@ from .credentials import gs
 """
 .. module:: src
    :platform: Windows, Unix
-   :synopsis: Инициализирующий модуль для пакета.
+   :synopsis:  Инициализирующий модуль для пакета hypotez.
 
 """
+MODE = 'development'
 
-# Определяет режим работы (development по умолчанию)
-MODE = 'development'  # Модульная переменная, определяющая режим работы.
-
-# Импортирует функцию/переменные из модуля credentials.
 from .credentials import gs
-
-# Документация функции gs, если она нужна.
-# Например:
-#
-# def gs():
-#     """
-#     Возвращает объект доступа к Google Cloud Storage.
-#     """
-#     ...
+#TODO: Добавьте импорты, необходимые для работы модуля.
+#TODO: Разработайте логику для инициализации модуля.
+#TODO: Добавьте тесты для проверки работы модуля.
 ```

@@ -25,7 +25,8 @@
     "docs",
     "images",
     "exe",
-    "pytest"
+    "pytest",
+      "emil-design.com"
   ],
   "exclude_files": [
     "version.py",
