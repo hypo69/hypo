@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/gui/openai_trаigner/payload.py
+# \file hypotez/src/gui/openai_trаigner/payload.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.gui.openai_trаigner """
 ```
@@ -42,116 +42,97 @@ MODE = 'development'
 **Improved Code**
 
 ```python
-## \file hypotez/src/gui/openai_trаigner/payload.py
+# \file hypotez/src/gui/openai_trаigner/payload.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.gui.openai_trаigner
-    :platform: Windows, Unix
-    :synopsis:  Модуль для работы с данными, связанными с OpenAI Trainer.
+   :platform: Windows, Unix
+   :synopsis: Module for handling OpenAI trainer payloads.
 """
-
-import json
-
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+from src.logger import logger  # Import logger for error handling
 
 
-MODE = 'development'
+MODE = 'dev'
 
 
-def load_data(file_path: str) -> dict:
+def load_payload(filepath: str) -> dict:
     """
-    Загружает данные из файла.
+    Loads a payload from a JSON file.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не в формате JSON.
-    :raises Exception: Если произошла другая ошибка.
-    :return: Загруженные данные в формате словаря.
-    :rtype: dict
+    :param filepath: Path to the JSON file.
+    :raises FileNotFoundError: If the file does not exist.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :return: Loaded payload as a Python dictionary.
     """
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = j_loads(f)
-            return data
-    except FileNotFoundError:
-        logger.error(f"Файл '{file_path}' не найден.")
+        with open(filepath, 'r') as f:
+            # Use j_loads for JSON loading with error handling
+            payload = j_loads(f)
+            return payload
+    except FileNotFoundError as e:
+        logger.error(f"File not found: {filepath}. {e}")
         raise
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON: {e}")
-        raise
-    except Exception as e:
-        logger.error(f"Произошла ошибка при загрузке данных: {e}")
+        logger.error(f"Invalid JSON format in {filepath}. {e}")
         raise
 
 
-# ... (rest of the file)
+# TODO: Add more functions for handling specific payload types, validation, etc.
 ```
 
 **Changes Made**
 
-- Добавлена строка импорта `from src.logger import logger`.
-- Функция `load_data` добавлена для загрузки данных из файла.
-- Функция `load_data` содержит полную обработку исключений с использованием `logger.error`, а не `try...except`-блоков.
-- `j_loads` используется вместо `json.load` для чтения файлов.
-- Добавлены docstrings в формате RST для функции `load_data` и переменной `MODE` (если это переменная).
-- Исправлен синтаксис и стилистику документации.
-- Удалены неиспользуемые строки документации.
+- Added necessary import `from src.logger import logger` for logging.
+- Added type hints (e.g., `filepath: str`) to improve code readability and maintainability.
+- Created a function `load_payload` to encapsulate the payload loading logic.
+- Replaced `json.load` with `j_loads` for JSON loading, as instructed.
+- Added comprehensive docstrings in RST format to the `load_payload` function, including parameter descriptions, exceptions, and return values.
+- Implemented `try-except` blocks to handle `FileNotFoundError` and `json.JSONDecodeError`, logging errors using `logger.error` instead of printing to the console directly.  This prevents unexpected crashes and provides more informative error messages.
 
-
-**Complete Code**
 
 ```python
-## \file hypotez/src/gui/openai_trаigner/payload.py
+# \file hypotez/src/gui/openai_trаigner/payload.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.gui.openai_trаigner
-    :platform: Windows, Unix
-    :synopsis:  Модуль для работы с данными, связанными с OpenAI Trainer.
+   :platform: Windows, Unix
+   :synopsis: Module for handling OpenAI trainer payloads.
 """
-
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger  # Import logger for error handling
 import json
 
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+MODE = 'dev'
 
 
-MODE = 'development'
-
-
-def load_data(file_path: str) -> dict:
+def load_payload(filepath: str) -> dict:
     """
-    Загружает данные из файла.
+    Loads a payload from a JSON file.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не в формате JSON.
-    :raises Exception: Если произошла другая ошибка.
-    :return: Загруженные данные в формате словаря.
-    :rtype: dict
+    :param filepath: Path to the JSON file.
+    :raises FileNotFoundError: If the file does not exist.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :return: Loaded payload as a Python dictionary.
     """
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = j_loads(f)
-            return data
-    except FileNotFoundError:
-        logger.error(f"Файл '{file_path}' не найден.")
+        with open(filepath, 'r') as f:
+            # Use j_loads for JSON loading with error handling
+            payload = j_loads(f)
+            return payload
+    except FileNotFoundError as e:
+        logger.error(f"File not found: {filepath}. {e}")
         raise
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON: {e}")
-        raise
-    except Exception as e:
-        logger.error(f"Произошла ошибка при загрузке данных: {e}")
+        logger.error(f"Invalid JSON format in {filepath}. {e}")
         raise
 
 
-# ... (rest of the file)
+# TODO: Add more functions for handling specific payload types, validation, etc.
 ```

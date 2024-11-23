@@ -7,12 +7,11 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress 
+.. module:: src.suppliers.aliexpress
 	:platform: Windows, Unix
 	:synopsis:
-
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 ...
@@ -76,7 +75,6 @@ class AliApi(AliexpressApi):
             logger.error(f"Error retrieving product details: {e}")
             return None
 
-
     def get_affiliate_links(self, links: str | list, link_type: int = 0, **kwargs) -> List[SimpleNamespace]:
         """ 
         Retrieves affiliate links for the specified products.
@@ -86,7 +84,6 @@ class AliApi(AliexpressApi):
         :returns: A list of SimpleNamespace objects containing affiliate links.
         """
         return super().get_affiliate_links(links, link_type, **kwargs)
-
 ```
 
 **Improved Code**
@@ -98,11 +95,11 @@ class AliApi(AliexpressApi):
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.aliexpress.aliapi
-   :platform: Windows, Unix
-   :synopsis: Module for interacting with the AliExpress API.
+.. module:: src.suppliers.aliexpress
+	:platform: Windows, Unix
+	:synopsis: This module provides functionality for interacting with the AliExpress API.
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 ...
@@ -120,21 +117,24 @@ from src.utils.convertors import json2csv
 from src.logger import logger
 from .api import AliexpressApi
 
-from src.db.manager_categories import CategoryManager
+from src.db.manager_categories import AliexpressCategory, CategoryManager
 from src.db.manager_coupons_and_sales import ProductCampaignsManager
 
 class AliApi(AliexpressApi):
-    """Custom API class for AliExpress operations."""
-
+    """
+    Custom API class for AliExpress operations.
+    """
+    
+    # Database managers
     manager_categories: CategoryManager = None
     manager_campaigns: ProductCampaignsManager = None
-
+       
     def __init__(self, language: str = 'en', currency: str = 'usd', *args, **kwargs):
         """
         Initializes an instance of the AliApi class.
 
-        :param language: The language for API requests (default 'en').
-        :param currency: The currency for API requests (default 'usd').
+        :param language: The language to use for API requests. Defaults to 'en'.
+        :param currency: The currency to use for API requests. Defaults to 'usd'.
         """
         credentials = gs.credentials.aliexpress
         api_key = credentials.api_key
@@ -150,48 +150,43 @@ class AliApi(AliexpressApi):
     #     """ Given a URL, I retrieve deals, coupons, and other offers received from AliExpress"""
     #     ...
 
-    def retrieve_product_details_as_dict(self, product_ids: list) -> list | None:
+    def retrieve_product_details_as_dict(self, product_ids: list) -> list[dict] | None:
         """
-        Retrieves product details from AliExpress for a list of IDs.
+        Sends a list of product IDs to AliExpress and retrieves product details as a list of dictionaries.
 
         :param product_ids: List of product IDs.
         :returns: List of product details as dictionaries, or None if an error occurred.
         """
         try:
             prod_details_ns = self.retrieve_product_details(product_ids)
-            # Convert SimpleNamespace objects to dictionaries.
-            prod_details_dict = [product.__dict__ for product in prod_details_ns]
-            return prod_details_dict
+            return [item.__dict__ for item in prod_details_ns]  # Using __dict__ for conversion
         except Exception as e:
             logger.error(f"Error retrieving product details: {e}")
             return None
-
 
     def get_affiliate_links(self, links: str | list, link_type: int = 0, **kwargs) -> List[SimpleNamespace]:
         """
         Retrieves affiliate links for the specified products.
 
-        :param links: The product links to be processed.
-        :param link_type: The type of affiliate link to be generated.
+        :param links: The product links to be processed (string or list).
+        :param link_type: The type of affiliate link to be generated. Defaults to 0.
         :returns: A list of SimpleNamespace objects containing affiliate links.
         """
         return super().get_affiliate_links(links, link_type, **kwargs)
-
 ```
 
 **Changes Made**
 
-*   Added type hints for function parameters and return values.
-*   Replaced `prod_details_dict = [vars(ns) for ns in prod_details_ns]` with `prod_details_dict = [product.__dict__ for product in prod_details_ns]` to correctly convert SimpleNamespace objects to dictionaries. This avoids potential issues with `vars()` if SimpleNamespace has attributes which are not just regular variables.  
-*   Added a `try...except` block to handle potential errors during product details retrieval and log them using `logger.error`.
-*   Replaced `dict | dict | None` with more specific return types `list | None`.
-*   Corrected variable naming for better readability (e.g., `prod_details_ns` to `product`).
-*   Updated docstrings to RST format, including parameter and return descriptions.
-*   Improved docstrings to be more informative and concise.
-*   Added a module-level docstring in RST format.
+- Added type hints for function parameters and return values.
+- Replaced `prod_details_dict = [vars(ns) for ns in prod_details_ns]` with `[item.__dict__ for item in prod_details_ns]` for better conversion from SimpleNamespace to dictionary. This is more robust and less prone to errors compared to using `vars()`.
+- Changed return type of `retrieve_product_details_as_dict` to `list[dict] | None` for better type safety.
+- Added comprehensive docstrings in RST format to all functions, methods, and classes.
+- Wrapped the `retrieve_product_details_as_dict` function with a `try...except` block to handle potential errors and log them using `logger.error`. This is crucial for robust error handling.
+- Improved the docstrings to clearly explain the purpose, parameters, and return values of each function.
+- Corrected RST formatting.
 
 
-**Complete Code**
+**Full Code (Improved)**
 
 ```python
 # \file hypotez/src/suppliers/aliexpress/aliapi.py
@@ -200,11 +195,11 @@ class AliApi(AliexpressApi):
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.aliexpress.aliapi
-   :platform: Windows, Unix
-   :synopsis: Module for interacting with the AliExpress API.
+.. module:: src.suppliers.aliexpress
+	:platform: Windows, Unix
+	:synopsis: This module provides functionality for interacting with the AliExpress API.
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 ...
@@ -222,21 +217,24 @@ from src.utils.convertors import json2csv
 from src.logger import logger
 from .api import AliexpressApi
 
-from src.db.manager_categories import CategoryManager
+from src.db.manager_categories import AliexpressCategory, CategoryManager
 from src.db.manager_coupons_and_sales import ProductCampaignsManager
 
 class AliApi(AliexpressApi):
-    """Custom API class for AliExpress operations."""
-
+    """
+    Custom API class for AliExpress operations.
+    """
+    
+    # Database managers
     manager_categories: CategoryManager = None
     manager_campaigns: ProductCampaignsManager = None
-
+       
     def __init__(self, language: str = 'en', currency: str = 'usd', *args, **kwargs):
         """
         Initializes an instance of the AliApi class.
 
-        :param language: The language for API requests (default 'en').
-        :param currency: The currency for API requests (default 'usd').
+        :param language: The language to use for API requests. Defaults to 'en'.
+        :param currency: The currency to use for API requests. Defaults to 'usd'.
         """
         credentials = gs.credentials.aliexpress
         api_key = credentials.api_key
@@ -252,29 +250,26 @@ class AliApi(AliexpressApi):
     #     """ Given a URL, I retrieve deals, coupons, and other offers received from AliExpress"""
     #     ...
 
-    def retrieve_product_details_as_dict(self, product_ids: list) -> list | None:
+    def retrieve_product_details_as_dict(self, product_ids: list) -> list[dict] | None:
         """
-        Retrieves product details from AliExpress for a list of IDs.
+        Sends a list of product IDs to AliExpress and retrieves product details as a list of dictionaries.
 
         :param product_ids: List of product IDs.
         :returns: List of product details as dictionaries, or None if an error occurred.
         """
         try:
             prod_details_ns = self.retrieve_product_details(product_ids)
-            # Convert SimpleNamespace objects to dictionaries.
-            prod_details_dict = [product.__dict__ for product in prod_details_ns]
-            return prod_details_dict
+            return [item.__dict__ for item in prod_details_ns]  # Using __dict__ for conversion
         except Exception as e:
             logger.error(f"Error retrieving product details: {e}")
             return None
-
 
     def get_affiliate_links(self, links: str | list, link_type: int = 0, **kwargs) -> List[SimpleNamespace]:
         """
         Retrieves affiliate links for the specified products.
 
-        :param links: The product links to be processed.
-        :param link_type: The type of affiliate link to be generated.
+        :param links: The product links to be processed (string or list).
+        :param link_type: The type of affiliate link to be generated. Defaults to 0.
         :returns: A list of SimpleNamespace objects containing affiliate links.
         """
         return super().get_affiliate_links(links, link_type, **kwargs)

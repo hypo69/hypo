@@ -214,7 +214,7 @@ class GoogleGenerativeAI:
                 time.sleep(2 ** attempt)
                 continue
             except ResourceExhausted as ex:
-                timeout = 3600
+                timeout = 5400
                 logger.debug(f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
                 time.sleep(timeout)
                 continue
@@ -222,8 +222,12 @@ class GoogleGenerativeAI:
                 logger.error("Authentication error:",ex,None)
                 return  # Прекратить попытки, если ошибка аутентификации
             except (ValueError, TypeError) as ex:
-                logger.error("Invalid input:",ex,None)
-                return  # Прекратить попытки, если ошибка в запросе
+                if attempt < max_attempts:
+                    break
+                timeout = 5
+                logger.error(f"Invalid input: Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
+                time.sleep(timeout)
+                continue  # Прекратить попытки, если ошибка в запросе
             except (InvalidArgument, RpcError) as ex:
                 logger.error("API error:",ex,None)
                 return

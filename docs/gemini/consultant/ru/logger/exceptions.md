@@ -62,9 +62,9 @@ class CustomException(Exception):
 
     def handle_exception(self):
         """Handles the exception by logging the error and original exception, if available."""
-        logger.error(f"Exception occurred: {self}")
+        logger.error(f'Exception occurred: {self}')
         if self.original_exception:
-            logger.debug(f"Original exception: {self.original_exception}")
+            logger.debug(f'Original exception: {self.original_exception}')
         # Add recovery logic, retries, or other handling as necessary.
 
 class FileNotFoundError(CustomException, IOError):
@@ -94,7 +94,7 @@ class ExecuteLocatorException(CustomException):
 class PrestaShopException(Exception):
     """Generic exception for PrestaShop WebService errors.
     
-    This class is used for handling errors that occur when interacting with the PrestaShop WebService.
+    This class inherits from Exception.
     
     Attributes:
     ----------
@@ -111,7 +111,7 @@ class PrestaShopException(Exception):
     def __init__(self, msg: str, error_code: Optional[int] = None, 
                  ps_error_msg: str = '', ps_error_code: Optional[int] = None):
         """Initializes the PrestaShopException with the provided message and error details."""
-        super().__init__(msg)  # Changed to use super()
+        super().__init__(msg) # Corrected
         self.msg = msg
         self.error_code = error_code
         self.ps_error_msg = ps_error_msg
@@ -119,7 +119,7 @@ class PrestaShopException(Exception):
 
     def __str__(self):
         """Returns the string representation of the exception."""
-        return f"PrestaShop Error: {self.ps_error_msg or self.msg}"  # Improved string representation
+        return f"PrestaShop Error: {self.ps_error_msg or self.msg}"  # Corrected
 
 class PrestaShopAuthenticationError(PrestaShopException):
     """Exception raised for PrestaShop authentication errors (Unauthorized)."""
@@ -142,7 +142,8 @@ class PrestaShopAuthenticationError(PrestaShopException):
 Program Exceptions
 ------------------
 
-This module contains several custom exception classes to handle errors related to various application components, including file operations, product fields, KeePass database connections, and PrestaShop WebService errors.
+This module contains several custom exception classes to handle errors related to various application components,
+including file operations, product fields, KeePass database connections, and PrestaShop WebService errors.
 
 Classes:
 --------
@@ -173,8 +174,11 @@ class CustomException(Exception):
     Handles logging of the exception and provides a mechanism for dealing with the original exception.
 
     :param message: The error message.
-    :param e: The original exception (optional).
-    :param exc_info: Whether to log exception information (default True).
+    :type message: str
+    :param e: The original exception, if any.
+    :type e: Optional[Exception]
+    :param exc_info: Flag to indicate if exception information should be logged.
+    :type exc_info: bool
     """
     def __init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True):
         """Initializes the CustomException."""
@@ -184,30 +188,76 @@ class CustomException(Exception):
         self.handle_exception()
 
     def handle_exception(self):
-        """Handles the exception by logging the error."""
+        """Handles the exception by logging the error and original exception."""
         logger.error(f"Exception occurred: {self}")
         if self.original_exception:
             logger.debug(f"Original exception: {self.original_exception}")
-# ... (rest of the code is the same)
-        
-# Improved __str__ for PrestaShopException
+
+class FileNotFoundError(CustomException, IOError):
+    """Exception raised when a file is not found."""
+    pass
+
+class ProductFieldException(CustomException):
+    """Exception raised for errors related to product fields."""
+    pass
+
+class KeePassException(CredentialsError, BinaryError, HeaderChecksumError, PayloadChecksumError, UnableToSendToRecycleBin):
+    """Exception raised for connection issues with KeePass database."""
+    pass
+
+class DefaultSettingsException(CustomException):
+    """Exception raised for issues with default settings."""
+    pass
+
+class WebDriverException(WDriverException):
+    """Exception raised for WebDriver related issues."""
+    pass
+
+class ExecuteLocatorException(CustomException):
+    """Exception raised for errors related to locator executors."""
+    pass
+
+class PrestaShopException(Exception):
+    """
+    Generic exception for PrestaShop WebService errors.
+
+    :ivar msg: The custom error message.
+    :vartype msg: str
+    :ivar error_code: The error code returned by PrestaShop.
+    :vartype error_code: Optional[int]
+    :ivar ps_error_msg: The error message from PrestaShop.
+    :vartype ps_error_msg: str
+    :ivar ps_error_code: The PrestaShop error code.
+    :vartype ps_error_code: Optional[int]
+    """
+
+    def __init__(self, msg: str, error_code: Optional[int] = None, ps_error_msg: str = '', ps_error_code: Optional[int] = None):
+        """Initializes the PrestaShopException."""
+        super().__init__(msg)  # Correctly call the parent constructor
+        self.msg = msg
+        self.error_code = error_code
+        self.ps_error_msg = ps_error_msg
+        self.ps_error_code = ps_error_code
+
     def __str__(self):
+        """Returns the string representation of the exception."""
         return f"PrestaShop Error: {self.ps_error_msg or self.msg}"
 
-
+class PrestaShopAuthenticationError(PrestaShopException):
+    """Exception raised for PrestaShop authentication errors (Unauthorized)."""
+    pass
 ```
 
 **Changes Made**
 
-- Added `from src.logger import logger` import.
-- Changed `__init__` in `PrestaShopException` to use `super().__init__(msg)`. This is crucial to properly initialize the base `Exception` class.
-- Improved the `__str__` method of `PrestaShopException` to provide a more informative message.
-- Corrected the docstring formatting to RST standard.
-- Changed `Exception` in `__str__` PrestaShopException to `self.msg` for correctness.
-- Updated the comments using RST format for all classes, functions, and methods.
+- Added missing import statements.
+- Corrected the `__init__` method in `PrestaShopException` to correctly call the parent class constructor.
+- Corrected the `__str__` method in `PrestaShopException` to provide a more informative representation of the error.
+- Improved docstrings to RST format, including descriptions for attributes.
+- Added more comprehensive docstrings and improved the consistency and readability of the docstrings.
 
 
-**Complete Code (Improved)**
+**Complete Code (Copy and Paste)**
 
 ```python
 ## \file hypotez/src/logger/exceptions.py
@@ -223,7 +273,8 @@ class CustomException(Exception):
 Program Exceptions
 ------------------
 
-This module contains several custom exception classes to handle errors related to various application components, including file operations, product fields, KeePass database connections, and PrestaShop WebService errors.
+This module contains several custom exception classes to handle errors related to various application components,
+including file operations, product fields, KeePass database connections, and PrestaShop WebService errors.
 
 Classes:
 --------
@@ -254,8 +305,11 @@ class CustomException(Exception):
     Handles logging of the exception and provides a mechanism for dealing with the original exception.
 
     :param message: The error message.
-    :param e: The original exception (optional).
-    :param exc_info: Whether to log exception information (default True).
+    :type message: str
+    :param e: The original exception, if any.
+    :type e: Optional[Exception]
+    :param exc_info: Flag to indicate if exception information should be logged.
+    :type exc_info: bool
     """
     def __init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True):
         """Initializes the CustomException."""
@@ -265,13 +319,62 @@ class CustomException(Exception):
         self.handle_exception()
 
     def handle_exception(self):
-        """Handles the exception by logging the error."""
+        """Handles the exception by logging the error and original exception."""
         logger.error(f"Exception occurred: {self}")
         if self.original_exception:
             logger.debug(f"Original exception: {self.original_exception}")
-# ... (rest of the code is the same)
+
+class FileNotFoundError(CustomException, IOError):
+    """Exception raised when a file is not found."""
+    pass
+
+class ProductFieldException(CustomException):
+    """Exception raised for errors related to product fields."""
+    pass
+
+class KeePassException(CredentialsError, BinaryError, HeaderChecksumError, PayloadChecksumError, UnableToSendToRecycleBin):
+    """Exception raised for connection issues with KeePass database."""
+    pass
+
+class DefaultSettingsException(CustomException):
+    """Exception raised for issues with default settings."""
+    pass
+
+class WebDriverException(WDriverException):
+    """Exception raised for WebDriver related issues."""
+    pass
+
+class ExecuteLocatorException(CustomException):
+    """Exception raised for errors related to locator executors."""
+    pass
+
+class PrestaShopException(Exception):
+    """
+    Generic exception for PrestaShop WebService errors.
+
+    :ivar msg: The custom error message.
+    :vartype msg: str
+    :ivar error_code: The error code returned by PrestaShop.
+    :vartype error_code: Optional[int]
+    :ivar ps_error_msg: The error message from PrestaShop.
+    :vartype ps_error_msg: str
+    :ivar ps_error_code: The PrestaShop error code.
+    :vartype ps_error_code: Optional[int]
+    """
+
+    def __init__(self, msg: str, error_code: Optional[int] = None, ps_error_msg: str = '', ps_error_code: Optional[int] = None):
+        """Initializes the PrestaShopException."""
+        super().__init__(msg)  # Correctly call the parent constructor
+        self.msg = msg
+        self.error_code = error_code
+        self.ps_error_msg = ps_error_msg
+        self.ps_error_code = ps_error_code
+
     def __str__(self):
+        """Returns the string representation of the exception."""
         return f"PrestaShop Error: {self.ps_error_msg or self.msg}"
 
-
+class PrestaShopAuthenticationError(PrestaShopException):
+    """Exception raised for PrestaShop authentication errors (Unauthorized)."""
+    pass
 ```

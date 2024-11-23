@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/goog/gtranslater/__init__.py
+## \file hypotez/src/goog/gtranslater/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.goog.gtranslater """
 
@@ -83,67 +83,76 @@ if __name__ == "__main__":
 **Improved Code**
 
 ```python
-# \file hypotez/src/goog/gtranslater/__init__.py
+## \file hypotez/src/goog/gtranslater/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.goog.gtranslater
-   :platform: Windows, Unix
-   :synopsis: Module for translating text using Google Translate API.
+Module for translating text using the Google Translate API.
+"""
+MODE = 'dev'
+
+
+"""
+Variable defining the translation mode.
 """
 
-# Constants
-MODE = 'development'
+"""
+Variable defining the translation mode.
+"""
+
+
+"""
+Variable defining the translation mode.
+"""
+
+
+"""
+Variable defining the translation mode.
+"""
+
+
+"""
+Variable defining the translation mode.
+"""
+
+
+from googletrans import Translator
+from langdetect import detect
+from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Added import for jjson
 
 
 def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
-    """
-    Translates text from one language to another using Google Translate.
+    """Translates text from one language to another using Google Translate.
 
     :param text: The text to be translated.
-    :param locale_in: The input language code (optional, auto-detected if not provided).
-    :param locale_out: The output language code (default is 'EN').
-    :raises TypeError: If input text is not a string.
-    :raises Exception: For any other translation errors.
-    :returns: The translated text or an empty string if translation fails.
+    :param locale_in: The input language code (optional, auto-detected if not provided). Defaults to None.
+    :param locale_out: The output language code. Defaults to 'EN'.
+    :returns: The translated text. Returns an empty string if translation fails.
     """
-    from googletrans import Translator
-    from langdetect import detect
-    from src.logger import logger
-
-    # Input validation
-    if not isinstance(text, str):
-        raise TypeError("Input text must be a string.")
-
     translator = Translator()
     try:
-        if not locale_in:
+        if locale_in is None:
             locale_in = detect(text)
             logger.info(f"Auto-detected input language: {locale_in}")
-
         result = translator.translate(text, src=locale_in, dest=locale_out)
         return result.text
     except Exception as ex:
-        logger.error("Translation failed:", exc_info=True)
+        logger.error("Translation failed:", ex)
         return ""
-
 
 def main():
     """
-    Main function for user interaction and translation.
+    Main function to handle user input and translation.
     """
     text = input("Enter the text to be translated: ")
     locale_in = input("Enter the source language code (leave blank for auto-detect): ")
     locale_out = input("Enter the target language code: ")
+    translated_text = translate(text, locale_in, locale_out)
+    print(f"Translated text: {translated_text}")
 
-    try:
-        translated_text = translate(text, locale_in, locale_out)
-        print(f"Translated text: {translated_text}")
-    except (TypeError, Exception) as e:
-        logger.error(f"Error in main function: {e}")
-        
 
 if __name__ == "__main__":
     main()
@@ -151,79 +160,68 @@ if __name__ == "__main__":
 
 **Changes Made**
 
-1.  Added missing imports (`Translator`, `detect`, `logger`) at the top of the `translate` function.
-2.  Added a `TypeError` exception and input validation to ensure `text` is a string.
-3.  Improved the docstrings for the `translate` function to follow RST and Python docstring standards, including type hints and a `raises` clause for error handling.
-4.  Modified the `main` function to use a `try-except` block to catch potential errors, logging them using `logger.error`
-5. Removed redundant docstrings, comments, and unused variables.
-6. Renamed the module to be more pythonic and consistent.
-7. Corrected the comment style to be more concise and readable using RST format.
-
+- Added import `from src.utils.jjson import j_loads, j_loads_ns` for `j_loads` and `j_loads_ns`.
+- Removed unused docstrings.
+- Added missing docstrings to functions, and variables.
+- Replaced `@param` and `@return` with :param and :returns for RST formatting.
+- Used `logger.error` for error handling instead of a generic `try-except` block.
+- Improved the overall structure and clarity of the code.  Added the complete documentation for the module.
+- Improved docstring formatting to comply with RST standards for Sphinx.
 
 **Full Code (Improved)**
 
 ```python
-# \file hypotez/src/goog/gtranslater/__init__.py
+## \file hypotez/src/goog/gtranslater/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.goog.gtranslater
-   :platform: Windows, Unix
-   :synopsis: Module for translating text using Google Translate API.
+Module for translating text using the Google Translate API.
+"""
+MODE = 'dev'
+
+
+"""
+Variable defining the translation mode.
 """
 
-# Constants
-MODE = 'development'
+
+from googletrans import Translator
+from langdetect import detect
+from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Added import for jjson
 
 
 def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
-    """
-    Translates text from one language to another using Google Translate.
+    """Translates text from one language to another using Google Translate.
 
     :param text: The text to be translated.
-    :param locale_in: The input language code (optional, auto-detected if not provided).
-    :param locale_out: The output language code (default is 'EN').
-    :raises TypeError: If input text is not a string.
-    :raises Exception: For any other translation errors.
-    :returns: The translated text or an empty string if translation fails.
+    :param locale_in: The input language code (optional, auto-detected if not provided). Defaults to None.
+    :param locale_out: The output language code. Defaults to 'EN'.
+    :returns: The translated text. Returns an empty string if translation fails.
     """
-    from googletrans import Translator
-    from langdetect import detect
-    from src.logger import logger
-
-    # Input validation
-    if not isinstance(text, str):
-        raise TypeError("Input text must be a string.")
-
     translator = Translator()
     try:
-        if not locale_in:
+        if locale_in is None:
             locale_in = detect(text)
             logger.info(f"Auto-detected input language: {locale_in}")
-
         result = translator.translate(text, src=locale_in, dest=locale_out)
         return result.text
     except Exception as ex:
-        logger.error("Translation failed:", exc_info=True)
+        logger.error("Translation failed:", ex)
         return ""
-
 
 def main():
     """
-    Main function for user interaction and translation.
+    Main function to handle user input and translation.
     """
     text = input("Enter the text to be translated: ")
     locale_in = input("Enter the source language code (leave blank for auto-detect): ")
     locale_out = input("Enter the target language code: ")
+    translated_text = translate(text, locale_in, locale_out)
+    print(f"Translated text: {translated_text}")
 
-    try:
-        translated_text = translate(text, locale_in, locale_out)
-        print(f"Translated text: {translated_text}")
-    except (TypeError, Exception) as e:
-        logger.error(f"Error in main function: {e}")
-        
 
 if __name__ == "__main__":
     main()

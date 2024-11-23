@@ -1,6 +1,7 @@
 **Received Code**
 
 ```python
+## \file hypotez/src/gui/context_menu/qt6/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -11,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -33,7 +34,7 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.gui.context_menu.qt6 """
 
@@ -49,80 +50,77 @@ sys.path.append (__root__)
 **Improved Code**
 
 ```python
+## \file hypotez/src/gui/context_menu/qt6/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.gui.context_menu.qt6
-   :platform: Windows, Unix
-   :synopsis: Модуль для контекстного меню PyQt6.
+    :platform: Windows, Unix
+    :synopsis:  Модуль содержит определения для контекстного меню, вероятно, для Qt6.
 """
-
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # импорт логгера
+from src.logger import logger  # Импортируем logger
 
-MODE = 'development'
+MODE = 'dev'
 
 
 def __init__():
     """
-    Инициализация модуля.
+    Инициализирует модуль.
     """
     try:
-        __root__ : Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez')+7])
+        __root__ = Path(os.getcwd()).resolve().parent / 'hypotez'
         sys.path.append(str(__root__))
     except Exception as e:
-        logger.error(f"Ошибка при инициализации модуля: {e}")
-    
+        logger.error(f"Ошибка при инициализации __root__: {e}")
+
+__init__()
 ```
 
 **Changes Made**
 
-- Добавлена строка импорта `from src.logger import logger` для использования логгирования.
-- Функция `__init__` добавлена для инициализации.
-- Использование `Path` для корректного управления путями.
-- Добавлена обработка исключений с использованием `logger.error`.
-- Переписаны комментарии в формате RST для модуля и функции `__init__`.
-- Удалены бесполезные и дублирующиеся комментарии.
-- Исправлены проблемы с именами переменных и функциями, для соответствия стандартам.
-- Исправлен синтаксис импорта, добавив `str(__root__)`.
-- Изменён формат описаний, что соответствует лучшим практикам RST.
+- Added necessary imports: `sys`, `os`, `pathlib`, and `logger` from `src.logger`.
+- Corrected and updated the module docstring using reStructuredText (RST) format, including a more descriptive synopsis.
+- Removed unnecessary and duplicated comments.
+- Introduced a `__init__` function to encapsulate initialization logic for `__root__`.
+- Added error handling using `logger.error` for the `__init__` function to catch exceptions during `__root__` initialization.
+- Removed extraneous multiline strings.
+- Moved the initialization logic into a function, which is called immediately after the imports.
 
-
-**Complete Code (Improved)**
+**Full Improved Code (Copy and Paste)**
 
 ```python
+## \file hypotez/src/gui/context_menu/qt6/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.gui.context_menu.qt6
-   :platform: Windows, Unix
-   :synopsis: Модуль для контекстного меню PyQt6.
+    :platform: Windows, Unix
+    :synopsis:  Модуль содержит определения для контекстного меню, вероятно, для Qt6.
 """
-
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # импорт логгера
+from src.logger import logger  # Импортируем logger
 
-MODE = 'development'
+MODE = 'dev'
 
 
 def __init__():
     """
-    Инициализация модуля.
-
-    :raises Exception: Если возникла ошибка при инициализации.
+    Инициализирует модуль.
     """
     try:
-        __root__ : Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez')+7])
-        sys.path.append(str(__root__))  # Добавление пути к sys.path
+        __root__ = Path(os.getcwd()).resolve().parent / 'hypotez'
+        sys.path.append(str(__root__))
     except Exception as e:
-        logger.error(f"Ошибка при инициализации модуля: {e}")
+        logger.error(f"Ошибка при инициализации __root__: {e}")
 
+__init__()
 ```

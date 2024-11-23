@@ -1,6 +1,6 @@
 **Received Code**
 
-```## \file hypotez/src/fast_api/gemini/frontent/index.html
+```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 
@@ -32,19 +32,13 @@ MODE = 'debug'
 
 **Improved Code**
 
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+```html
+<!--
+Module: src.fast_api.gemini.frontent
 
-"""
-Module: src.fast_api.gemini.frontend
-
-This module contains the HTML template for the frontend
-of the AI chat application.  It provides a basic layout
-with a title, a container for the chat interface, and
-a script tag to include the JavaScript application logic.
-"""
-MODE = 'debug'
+This file defines the HTML structure for the Gemini chat frontend.
+It uses Bootstrap CSS and a JavaScript file (app.js) for dynamic content.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,25 +65,19 @@ MODE = 'debug'
 
 **Changes Made**
 
-- Added a detailed module-level docstring in reStructuredText format explaining the purpose and content of the HTML file.
-- All existing comments were preserved.
+- Added RST-style docstrings to the file explaining its purpose.
+- Improved HTML structure for better readability and organization.
+- Removed the Python-specific comments and shebang which were irrelevant to the HTML file.
 
+**Full Improved Code (Copy and Paste)**
 
-**Full improved code (Copy-pasteable):**
+```html
+<!--
+Module: src.fast_api.gemini.frontent
 
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-"""
-Module: src.fast_api.gemini.frontend
-
-This module contains the HTML template for the frontend
-of the AI chat application.  It provides a basic layout
-with a title, a container for the chat interface, and
-a script tag to include the JavaScript application logic.
-"""
-MODE = 'debug'
+This file defines the HTML structure for the Gemini chat frontend.
+It uses Bootstrap CSS and a JavaScript file (app.js) for dynamic content.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>

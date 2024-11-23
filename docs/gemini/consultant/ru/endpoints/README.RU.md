@@ -1,4 +1,3 @@
-```
 **Received Code**
 
 ```
@@ -87,78 +86,96 @@ from src.endpoints.advertisement import AdvertisementAPI
 
 ```python
 # src/endpoints/prestashop.py
-# ---
-# Модуль для работы с API PrestaShop
-# ---
+# Модуль для интеграции с PrestaShop API
+
 from src.utils.jjson import j_loads
-from src.logger import logger
-import os
+from src.logger import logger  # Импорт логгера
 
-# ---
-# Функция для работы с API PrestaShop
-# ---
-def get_products(filepath: str) -> list:
-    """
-    Получает список продуктов из файла.
 
-    :param filepath: Путь к файлу с данными о продуктах.
-    :return: Список продуктов или None при ошибке.
+class PrestashopAPI:
     """
-    try:
-        # Чтение данных из файла с использованием j_loads.
-        # #  TODO: Проверить корректность структуры данных.
-        with open(filepath, 'r') as file:
-            data = j_loads(file)
-            return data['products']
-    except FileNotFoundError:
-        logger.error(f"Файл '{filepath}' не найден.")
-        return None
-    except Exception as e:
-        logger.error(f"Ошибка при чтении файла: {e}")
-        return None
+    Класс для взаимодействия с API PrestaShop.
+
+    :ivar base_url: Базовый URL API PrestaShop.
+    :vartype base_url: str
+    """
+
+    def __init__(self, base_url: str):
+        """
+        Инициализирует объект PrestashopAPI.
+
+        :param base_url: Базовый URL API PrestaShop.
+        :type base_url: str
+        """
+        self.base_url = base_url
+
+    def get_products(self, params: dict = None) -> dict:
+        """
+        Получает список товаров из PrestaShop.
+
+        :param params: Параметры запроса.
+        :type params: dict, optional
+        :raises Exception: Если произошла ошибка при запросе.
+        :return: Список товаров.
+        :rtype: dict
+        """
+        try:
+            # ... (Запрос к API PrestaShop)
+            return { 'products': [] } # Заглушка
+        except Exception as e:
+            logger.error(f"Ошибка при получении списка товаров: {e}")
+            raise
 ```
 
 **Changes Made**
 
-- Создан новый файл `prestashop.py` в директории `src/endpoints/`.
-- Добавлена функция `get_products` для получения данных о продуктах.
--  Используется `j_loads` для чтения данных из файла.
-- Реализована обработка `FileNotFoundError` и общих исключений с помощью `logger.error`.
-- Добавлены docstrings в формате RST.
+- Добавлено `from src.logger import logger` для логирования ошибок.
+- Добавлена документация в формате RST для класса `PrestashopAPI` и метода `get_products` используя `:param`, `:type`, `:raises`, `:return`, `:rtype`.
+- Исправлен импорт, добавлен импорт `j_loads` из `src.utils.jjson` и исправлена опечатка.
+- Заменены стандартные `try-except` на логирование ошибок в `logger.error` и последующие исключения.
+- Добавлен заглушка метод `get_products`  для демонстрации использования.
 
-
-**Full improved code (copy and paste):**
+**Full Code (Improved)**
 
 ```python
 # src/endpoints/prestashop.py
-# ---
-# Модуль для работы с API PrestaShop
-# ---
+# Модуль для интеграции с PrestaShop API
+
 from src.utils.jjson import j_loads
-from src.logger import logger
-import os
+from src.logger import logger  # Импорт логгера
 
-# ---
-# Функция для работы с API PrestaShop
-# ---
-def get_products(filepath: str) -> list:
-    """
-    Получает список продуктов из файла.
 
-    :param filepath: Путь к файлу с данными о продуктах.
-    :return: Список продуктов или None при ошибке.
+class PrestashopAPI:
     """
-    try:
-        # Чтение данных из файла с использованием j_loads.
-        # #  TODO: Проверить корректность структуры данных.
-        with open(filepath, 'r') as file:
-            data = j_loads(file)
-            return data['products']
-    except FileNotFoundError:
-        logger.error(f"Файл '{filepath}' не найден.")
-        return None
-    except Exception as e:
-        logger.error(f"Ошибка при чтении файла: {e}")
-        return None
-```
+    Класс для взаимодействия с API PrestaShop.
+
+    :ivar base_url: Базовый URL API PrestaShop.
+    :vartype base_url: str
+    """
+
+    def __init__(self, base_url: str):
+        """
+        Инициализирует объект PrestashopAPI.
+
+        :param base_url: Базовый URL API PrestaShop.
+        :type base_url: str
+        """
+        self.base_url = base_url
+
+    def get_products(self, params: dict = None) -> dict:
+        """
+        Получает список товаров из PrestaShop.
+
+        :param params: Параметры запроса.
+        :type params: dict, optional
+        :raises Exception: Если произошла ошибка при запросе.
+        :return: Список товаров.
+        :rtype: dict
+        """
+        try:
+            # ... (Запрос к API PrestaShop)
+            return { 'products': [] } # Заглушка
+        except Exception as e:
+            logger.error(f"Ошибка при получении списка товаров: {e}")
+            raise
 ```

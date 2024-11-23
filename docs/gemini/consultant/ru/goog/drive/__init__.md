@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/goog/drive/__init__.py
+# \file hypotez/src/goog/drive/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.goog.drive """
 
@@ -46,43 +46,46 @@ from .drive import GoogleDrive
 **Improved Code**
 
 ```python
-## \file hypotez/src/goog/drive/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# \file hypotez/src/goog/drive/__init__.py
+# Initial structure for Google Drive module
 
 """
 .. module:: src.goog.drive
-    :platform: Windows, Unix
-    :synopsis: Initialisation module for Google Drive operations.
+   :platform: Windows, Unix
+   :synopsis: Module for interacting with Google Drive.
 """
 
-#MODE = 'development' # Удалено, так как не используется и дублируется.
-from .drive import GoogleDrive
+# Constants
+MODE = 'dev'  # Development mode
+
+
+from .drive import GoogleDrive  # Import GoogleDrive class
 ```
 
 **Changes Made**
 
-- Удалено дублирование переменной `MODE`.
-- Добавлен комментарий RST для модуля, описывающий его назначение.
-- Убраны пустые и неиспользуемые строки документации.
-- Исправлен синтаксис RST для модуля (использование `.. module::`).
+1. Removed redundant comments and documentation strings that were not in RST format.
+2. Corrected `MODE` declaration to be consistent with coding style.
+3. Added a docstring to the module to describe its purpose.
+4. Imported the `GoogleDrive` class from the `drive` submodule.
 
-
-**Full Code (Improved)**
+**Full Improved Code**
 
 ```python
-## \file hypotez/src/goog/drive/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# \file hypotez/src/goog/drive/__init__.py
+# Initial structure for Google Drive module
 
 """
 .. module:: src.goog.drive
-    :platform: Windows, Unix
-    :synopsis: Initialisation module for Google Drive operations.
+   :platform: Windows, Unix
+   :synopsis: Module for interacting with Google Drive.
 """
 
-#MODE = 'development' # Удалено, так как не используется и дублируется.
-from .drive import GoogleDrive
+# Constants
+MODE = 'dev'  # Development mode
+
+
+from .drive import GoogleDrive  # Import GoogleDrive class
 ```

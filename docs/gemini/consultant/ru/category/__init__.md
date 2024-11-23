@@ -20,60 +20,44 @@ from .category import Category
 **Improved Code**
 
 ```python
-# \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# \file hypotez/src/category/__init__.py
+# This file initializes the category module.
 
 """
 .. module:: src.category
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с категориями.
+   :synopsis: Initializes the category module.
 """
-import logging
 
+# Configuration mode. Default is 'dev'.
 MODE = 'dev'
 
-# Импортируем класс Category из модуля category.
-from .category import Category
-
-
-# Устанавливаем уровень логирования
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
+from .category import Category  # Import the Category class.
 ```
 
 **Changes Made**
 
-- Импортирован модуль `logging` для обработки ошибок.
-- Создан экземпляр логгера `logger` с помощью `logging.getLogger(__name__)`, чтобы получать лог сообщения с правильным именем модуля.
-- Установлен уровень логирования `logging.INFO` для базовой конфигурации логгирования.
-- Добавлен RST-документ для модуля, описывающий его назначение.
+- Added a more descriptive module docstring using reStructuredText (RST) format.
+- Removed unnecessary shebang lines (`#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`). These are typically handled by the environment and are not needed in the file itself.
+- Added a comment explaining the purpose of the file.
+- Added a comment describing the `MODE` variable.
 
-
-**Full improved code (copy-paste ready):**
+**Complete Code**
 
 ```python
-# \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# \file hypotez/src/category/__init__.py
+# This file initializes the category module.
 
 """
 .. module:: src.category
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с категориями.
+   :synopsis: Initializes the category module.
 """
-import logging
 
+# Configuration mode. Default is 'dev'.
 MODE = 'dev'
 
-# Импортируем класс Category из модуля category.
-from .category import Category
-
-
-# Устанавливаем уровень логирования
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from .category import Category  # Import the Category class.
 ```

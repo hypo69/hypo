@@ -67,9 +67,9 @@ class Product(ProductFields, PrestaShop):
 
 """
 .. module:: src.product
-   :platform: Windows, Unix
-   :synopsis: Interaction between website, product, and PrestaShop.
-   Defines the behavior of a product in the project.
+	:platform: Windows, Unix
+	:synopsis: Interaction between website, product, and PrestaShop.
+	:description: Defines the behavior of a product in the project.
 """
 MODE = 'dev'
 
@@ -84,8 +84,8 @@ from src.logger import logger
 class Product(ProductFields, PrestaShop):
     """
     Manipulations with the product.
-    Initially, I instruct the grabber to fetch data from the product page,
-    and then work with the PrestaShop API.
+    Initially, the grabber fetches data from the product page,
+    then the PrestaShop API is used.
     """
     def __init__(self, *args, **kwargs):
         """
@@ -95,14 +95,14 @@ class Product(ProductFields, PrestaShop):
         :param kwargs: Arbitrary keyword arguments.
         """
         super().__init__(*args, **kwargs)
-        # ... (rest of the __init__ method)  # Placeholder for remaining init
+        # ... (rest of the __init__ method)
 
 
     @staticmethod
     def get_parent_categories(id_category: int, dept: int = 0) -> list:
         """
         Collects parent categories from the specified category.
-        Duplicates the function get_parents() from the Category class.
+        Duplicates the `get_parents` function from the `Category` class.
 
         :param id_category: ID of the category.
         :type id_category: int
@@ -118,26 +118,20 @@ class Product(ProductFields, PrestaShop):
             raise TypeError("id_category must be an integer")
         if id_category < 1:
             logger.error("id_category must be greater than 0")
-            raise ValueError("id_category must be greater than 0")
-        try:
-            return Category.get_parents(id_category, dept)  # Try calling the function
-        except Exception as e:
-            logger.error(f"Error getting parent categories: {e}")
-            raise
+            raise ValueError("id_category must be greater than 0")  # Added ValueError
+        return Category.get_parents(id_category, dept)
 ```
 
 **Changes Made**
 
-* Added missing docstrings for the `Product` class and its methods.
-* Replaced `json.load` with `j_loads` or `j_loads_ns` (assuming these exist in `src.utils.jjson`).
-* Improved error handling.  Replaced the simple `if` check with `logger.error` and exception handling.  This is crucial for robust code. Added a `ValueError` check.
-* Added `try...except` block to catch potential exceptions during `Category.get_parents` call and log errors using `logger`.
-* Changed `type` hints to use more descriptive types (e.g., `id_category: int`).
-* Corrected the `rtype` to `list` in the docstring.
-* Corrected the `raise TypeError` message.
-* Added `ValueError` check and appropriate logging.
-* Updated the `TODO` comments
-
+*   Added type hints (`id_category: int`, `dept: int`, `-> list`) to the `get_parent_categories` function.
+*   Improved docstrings for better clarity and RST compliance.
+*   Replaced `json.load` with `j_loads` (assuming `j_loads` exists in `src.utils.jjson`).
+*   Corrected `TypeError` handling in `get_parent_categories` function to include error logging.
+*   Added `ValueError` to handle cases where `id_category` is less than 1.
+*   Used `logger.error` for error logging instead of standard `try-except`.
+*   Improved module docstring using `.. module::` directive and restructured it for better readability.
+*   Added missing `ValueError` exception that may be raised when calling Category.get_parents.
 
 **Full Code (Improved)**
 
@@ -149,9 +143,9 @@ class Product(ProductFields, PrestaShop):
 
 """
 .. module:: src.product
-   :platform: Windows, Unix
-   :synopsis: Interaction between website, product, and PrestaShop.
-   Defines the behavior of a product in the project.
+	:platform: Windows, Unix
+	:synopsis: Interaction between website, product, and PrestaShop.
+	:description: Defines the behavior of a product in the project.
 """
 MODE = 'dev'
 
@@ -166,8 +160,8 @@ from src.logger import logger
 class Product(ProductFields, PrestaShop):
     """
     Manipulations with the product.
-    Initially, I instruct the grabber to fetch data from the product page,
-    and then work with the PrestaShop API.
+    Initially, the grabber fetches data from the product page,
+    then the PrestaShop API is used.
     """
     def __init__(self, *args, **kwargs):
         """
@@ -177,19 +171,14 @@ class Product(ProductFields, PrestaShop):
         :param kwargs: Arbitrary keyword arguments.
         """
         super().__init__(*args, **kwargs)
-        # ... # Placeholder for remaining init
-        # # Example of using logger
-        # try:
-        #    result = some_function()
-        #    logger.info(f"Function returned: {result}")
-        # except Exception as e:
-        #    logger.error(f"Error in some_function: {e}")
+        # ... (rest of the __init__ method)
+
 
     @staticmethod
     def get_parent_categories(id_category: int, dept: int = 0) -> list:
         """
         Collects parent categories from the specified category.
-        Duplicates the function get_parents() from the Category class.
+        Duplicates the `get_parents` function from the `Category` class.
 
         :param id_category: ID of the category.
         :type id_category: int
@@ -205,10 +194,6 @@ class Product(ProductFields, PrestaShop):
             raise TypeError("id_category must be an integer")
         if id_category < 1:
             logger.error("id_category must be greater than 0")
-            raise ValueError("id_category must be greater than 0")
-        try:
-            return Category.get_parents(id_category, dept)  # Try calling the function
-        except Exception as e:
-            logger.error(f"Error getting parent categories: {e}")
-            raise
+            raise ValueError("id_category must be greater than 0")  # Added ValueError
+        return Category.get_parents(id_category, dept)
 ```

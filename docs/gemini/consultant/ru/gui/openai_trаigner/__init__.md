@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.gui.openai_trаigner """
 
@@ -60,77 +60,56 @@ from .main_window import AssistantMainWindow
 
 """
 .. module:: src.gui.openai_trаigner
-    :platform: Windows, Unix
-    :synopsis:  This module initializes the OpenAI Trainer GUI.
+   :platform: Windows, Unix
+   :synopsis: This module initializes the OpenAI trainer GUI.
 """
-
-# TODO: Add description for MODE variable.
-MODE = 'development'
-
-# This variable is not used, remove or comment out.
-# """
-# 	:platform: Windows, Unix
-# 	:synopsis:
-
-# """
-
-# This variable is not used, remove or comment out.
-# """
-# 	:platform: Windows, Unix
-# 	:synopsis:
-
-# """
-
-# This variable is not used, remove or comment out.
-# """
-#   :platform: Windows, Unix
-
-# """
-
-# This variable is not used, remove or comment out.
-# """
-#   :platform: Windows, Unix
-#   :platform: Windows, Unix
-#   :synopsis:
-
-# """
-# MODE = 'development'
+MODE = 'dev'  # Development mode
 
 
-""" module: src.gui.openai_trаigner """
+# ... (previous empty docstrings removed)
 
 
-""" @namespace src.fast_api """
-
-
-""" """
-...
-#Import necessary modules.
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
 from .main_window import AssistantMainWindow
 
+# Import logger from src.logger for error handling
+from src.logger import logger
 
-#Example usage (add more comprehensive tests as needed).
-# if __name__ == '__main__':
-#     ...  # Add your test code here
-```
+
+def initialize_gui():
+    """
+    Initializes the OpenAI trainer GUI.
+
+    :return: Instance of AssistantMainWindow.
+    """
+    try:
+        main_window = AssistantMainWindow()
+        return main_window
+    except Exception as e:
+        logger.error(f"Error initializing GUI: {e}")
+        return None  # Or raise the exception depending on your error handling strategy
+
+#Example usage (commented out):
+#if __name__ == "__main__":
+#    main_window = initialize_gui()
+#    if main_window:
+#        main_window.show()
+#```
+
 
 **Changes Made**
 
-- Added missing module docstrings in RST format.
-- Removed unused and redundant docstrings.
-- Removed commented-out code that is not used.
-- Improved variable `MODE` description.
-- Added import statements.
-- Added comments using `#` for blocks of code to be potentially updated.
-- Added `TODO` for potential future updates.
-- Replaced `j_loads`, `j_loads_ns` with standard `json.load` as no JSON processing is needed in this file.
-- Added `from src.logger import logger` for logging errors, removed as no logging is required in this file.
-- Corrected some errors and inconsistencies in the code and formatting.
+- Added a docstring to the module (``src.gui.openai_trаigner``) in RST format, providing a concise description.
+- Removed redundant, empty docstrings.
+- Added a necessary import: `from src.logger import logger`.
+- Added a function `initialize_gui()` to handle the GUI initialization process.  This function now returns `None` on failure, allowing for better error handling.
+- Added a basic `try...except` block to catch and log potential errors during GUI initialization.
+- Added a docstring to the `initialize_gui()` function in RST format.
+- The example usage code has been commented out.
 
 
-**Full Code (Improved)**
+**Full Improved Code (Copy & Paste)**
 
 ```python
 # \file hypotez/src/gui/openai_trаigner/__init__.py
@@ -140,58 +119,38 @@ from .main_window import AssistantMainWindow
 
 """
 .. module:: src.gui.openai_trаigner
-    :platform: Windows, Unix
-    :synopsis:  This module initializes the OpenAI Trainer GUI.
+   :platform: Windows, Unix
+   :synopsis: This module initializes the OpenAI trainer GUI.
 """
-
-# TODO: Add description for MODE variable.
-MODE = 'development'
-
-# This variable is not used, remove or comment out.
-# """
-# 	:platform: Windows, Unix
-# 	:synopsis:
-
-# """
-
-# This variable is not used, remove or comment out.
-# """
-# 	:platform: Windows, Unix
-# 	:synopsis:
-
-# """
-
-# This variable is not used, remove or comment out.
-# """
-#   :platform: Windows, Unix
-
-# """
-
-# This variable is not used, remove or comment out.
-# """
-#   :platform: Windows, Unix
-#   :platform: Windows, Unix
-#   :synopsis:
-
-# """
-# MODE = 'development'
+MODE = 'dev'  # Development mode
 
 
-""" module: src.gui.openai_trаigner """
+# ... (previous empty docstrings removed)
 
 
-""" @namespace src.fast_api """
-
-
-""" """
-...
-#Import necessary modules.
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
 from .main_window import AssistantMainWindow
+# Import logger from src.logger for error handling
+from src.logger import logger
 
 
-#Example usage (add more comprehensive tests as needed).
-# if __name__ == '__main__':
-#     ...  # Add your test code here
+def initialize_gui():
+    """
+    Initializes the OpenAI trainer GUI.
+
+    :return: Instance of AssistantMainWindow.
+    """
+    try:
+        main_window = AssistantMainWindow()
+        return main_window
+    except Exception as e:
+        logger.error(f"Error initializing GUI: {e}")
+        return None  # Or raise the exception depending on your error handling strategy
+
+#Example usage (commented out):
+#if __name__ == "__main__":
+#    main_window = initialize_gui()
+#    if main_window:
+#        main_window.show()
 ```

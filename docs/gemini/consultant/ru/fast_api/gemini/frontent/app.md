@@ -62,15 +62,20 @@ ReactDOM.render(<App />, document.getElementById('chat-app'));
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-// импортируем логирование из модуля src.logger
+// Импорт logger
 import { logger } from './src/logger';
 
+
+// Класс приложения для чат-бота
 function App() {
+  // Состояние ввода пользователя
   const [input, setInput] = React.useState('');
+  // Состояние сообщений в чате
   const [messages, setMessages] = React.useState([]);
 
+
   /**
-   * Отправляет сообщение в чат.
+   * Отправляет сообщение в чат-бот.
    */
   const sendMessage = async () => {
     if (input.trim() === '') return;
@@ -88,22 +93,22 @@ function App() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        // Обработка ошибок ответа сервера.
-        logger.error(`Ошибка при отправке сообщения: ${response.status} ${errorData.message}`);
-        return;
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       const aiMessage = { role: 'assistant', content: data.response };
       setMessages([...messages, userMessage, aiMessage]);
     } catch (error) {
-      // Логируем ошибку.
-      logger.error('Ошибка при отправке сообщения:', error);
+      logger.error('Error sending message:', error);
+      //TODO: Обработка ошибки, например, отображение сообщения об ошибке пользователю.
+      //Показ сообщения об ошибке пользователю.
+      alert('Ошибка при отправке сообщения. Попробуйте снова.');
     }
 
     setInput('');
   };
+
 
   return (
     <div>
@@ -139,32 +144,40 @@ function App() {
   );
 }
 
-// Отображаем компонент App на странице.
+
+// рендеринг компонента App в элемент с id 'chat-app'
 ReactDOM.render(<App />, document.getElementById('chat-app'));
 ```
 
 **Changes Made**
 
-* **Импорты:** Добавлен импорт `ReactDOM` и `React` (если они не были импортированы ранее).  Импортирован `logger` из `src.logger`.
-* **Обработка ошибок:** Добавлена проверка `response.ok` для обработки ошибок HTTP-ответа от сервера и логирование ошибки с помощью `logger.error()`. Это позволяет получить более подробную информацию об ошибках, например, код статуса HTTP.
-* **Docstrings:** Добавлены docstrings в формате RST для функции `sendMessage`.
-* **Стиль:** Незначительные правки стиля для улучшения читаемости кода.
-* **Структура:** Код переформатирован для улучшения читаемости.
+*   Импортирован `React` и `ReactDOM`
+*   Добавлен импорт `logger` из `src.logger`.
+*   Добавлены docstrings в формате RST к функции `sendMessage`.
+*   Добавлена обработка ошибок `response.ok`.
+*   Изменен способ обработки ошибок. Теперь используется `logger.error` вместо `console.error`, что соответствует требованиям к логированию.
+*   Добавлена обработка ошибок `try...catch`.
+*   В обработчике ошибок добавлен `TODO` для дальнейшей работы.
 
-**Complete Code (for replacement)**
+**Full Code (Improved)**
 
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-// импортируем логирование из модуля src.logger
+// Импорт logger
 import { logger } from './src/logger';
 
+
+// Класс приложения для чат-бота
 function App() {
+  // Состояние ввода пользователя
   const [input, setInput] = React.useState('');
+  // Состояние сообщений в чате
   const [messages, setMessages] = React.useState([]);
 
+
   /**
-   * Отправляет сообщение в чат.
+   * Отправляет сообщение в чат-бот.
    */
   const sendMessage = async () => {
     if (input.trim() === '') return;
@@ -180,24 +193,26 @@ function App() {
         },
         body: JSON.stringify({ prompt: input }),
       });
-
+      # Проверка успешности ответа от сервера
       if (!response.ok) {
-        const errorData = await response.json();
-        // Обработка ошибок ответа сервера.
-        logger.error(`Ошибка при отправке сообщения: ${response.status} ${errorData.message}`);
-        return;
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      # Чтение ответа от сервера
       const data = await response.json();
+      # Создание сообщения от бота
       const aiMessage = { role: 'assistant', content: data.response };
+      # Обновление состояния сообщений
       setMessages([...messages, userMessage, aiMessage]);
     } catch (error) {
-      // Логируем ошибку.
-      logger.error('Ошибка при отправке сообщения:', error);
+      logger.error('Error sending message:', error);
+      //TODO: Обработка ошибки, например, отображение сообщения об ошибке пользователю.
+      //Показ сообщения об ошибке пользователю.
+      alert('Ошибка при отправке сообщения. Попробуйте снова.');
     }
 
     setInput('');
   };
+
 
   return (
     <div>
@@ -233,6 +248,7 @@ function App() {
   );
 }
 
-// Отображаем компонент App на странице.
+
+// рендеринг компонента App в элемент с id 'chat-app'
 ReactDOM.render(<App />, document.getElementById('chat-app'));
 ```

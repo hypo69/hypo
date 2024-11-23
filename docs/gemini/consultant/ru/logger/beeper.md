@@ -1,4 +1,3 @@
-```
 **Received Code**
 
 ```python
@@ -49,8 +48,8 @@ import asyncio
 import winsound, time
 from enum import Enum
 from typing import Union
-from src.utils.jjson import j_loads, j_loads_ns # Импорт необходимых функций
-from src.logger import logger # Импорт logger
+from src.logger import logger  # Импортируем logger
+from src.utils.jjson import j_loads, j_loads_ns
 
 # Ноты и частоты
 note_freq = {
@@ -86,10 +85,10 @@ class BeepLevel(Enum):
     """
     SUCCESS = [('D5', 100), ('A5', 100), ('D6', 100)]
     INFO = [('C6', 8)]
-    ATTENTION = [ ('G5', 600) ]
+    ATTENTION = [('G5', 600)]
     WARNING = [('F5', 100), ('G5', 100), ('A5', 100), ('F6', 100)]
     DEBUG = [('E6', 150), ('D4', 500)]
-    ERROR = [ ('C7', 1000) ]
+    ERROR = [('C7', 1000)]
     LONG_ERROR = [('C7', 50), ('C7', 250)]
     CRITICAL = [('G5', 40), ('C7', 100)]
     BELL = [('G6', 200), ('C7', 200), ('E7', 200)]
@@ -97,86 +96,92 @@ class BeepLevel(Enum):
 
 class BeepHandler:
     def emit(self, record):
-        """Обрабатывает запись лога и воспроизводит звук."""
         try:
             level = record["level"].name
             if level == 'ERROR':
-                self.play_sound(880, 500)  # Проиграть "бип" для ошибок
+                self.play_sound(880, 500)
             elif level == 'WARNING':
-                self.play_sound(500, 300)  # Проиграть другой звук для предупреждений
+                self.play_sound(500, 300)
             elif level == 'INFO':
-                self.play_sound(300, 200)  # И так далее...
+                self.play_sound(300, 200)
             else:
-                self.play_default_sound()  # Дефолтный звук для других уровней логгирования
+                self.play_default_sound()
         except Exception as ex:
             logger.error(f'Ошибка воспроизведения звука: {ex}')
 
-    def play_sound(self, frequency, duration):
-        winsound.Beep(int(frequency), duration)
-        # ... метод для воспроизведения звука ...
-    def play_default_sound(self):
-        # ... метод для воспроизведения дефолтного звука ...
-        pass
-
     def beep(self, level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000):
         Beeper.beep(level, frequency, duration)
+
+...
+
 # ------------------------------------------------------------------------------------------------
 
 
+def silent_mode(func):
+    """
+    Функция-декоратор для управления режимом "беззвучия".
+
+    :param func: Функция для декорирования.
+    :return: Обернутая функция, добавляющая проверку режима "беззвучия".
+    """
+    def wrapper(*args, **kwargs):
+        """
+        Внутренняя функция-обертка для проверки режима "беззвучия" перед выполнением функции.
+
+        :param args: Позиционные аргументы.
+        :param kwargs: Именованные аргументы.
+        :return: Результат выполнения оборачиваемой функции или None, если режим "беззвучия" включен.
+        """
+        if Beeper.silent:
+            logger.warning("Silent mode is enabled. Skipping beep.")
+            return
+        return func(*args, **kwargs)
+    return wrapper
+...
+
+
 class Beeper():
-    """ класс звуковых сигналов """
+    """ Класс звуковых сигналов """
 
     silent = False
     
     @staticmethod
     @silent_mode
     async def beep(level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000) -> None:
-        """  
-         Звуковой сигнал оповещения 
-        @details дает мне возможность на слух определить, что происходит в системе
-        @param mode `BeepLevel | str`  :  тип события: `info`, `attention`, `warning`, `debug`, `error`, `long_error`, `critical`, `bell`  
-        /t /t или `Beep.SUCCESS`, `Beep.INFO`, `Beep.ATTENTION`, `Beep.WARNING`, `Beep.DEBUG`, `Beep.ERROR`, `Beep.LONG_ERROR`, `Beep.CRITICAL`, `Beep.BELL`
-        @param frequency частота сигнала в значениях от 37 до 32000
-        @param duration длительность сигнала
         """
-        if Beeper.silent:
-            logger.warning("Silent mode is enabled. Skipping beep.")
-            return
+        Звуковой сигнал оповещения.
+
+        :param level: Тип события (BeepLevel или строка).
+        :param frequency: Частота сигнала.
+        :param duration: Длительность сигнала.
+        """
         melody = None
         if isinstance(level, str):
-            level_name = level.upper()
-            try:
+            level_name = level.upper()  # Приводим к верхнему регистру
+            if hasattr(BeepLevel, level_name):
                 melody = getattr(BeepLevel, level_name).value
-            except AttributeError:
+            else:
                 logger.error(f"Неизвестный уровень события: {level}")
                 return
         elif isinstance(level, BeepLevel):
             melody = level.value
-
-        if melody:
-            for note, dur in melody:
-                try:
-                    frequency = note_freq[note]
-                    winsound.Beep(int(frequency), dur)
-                    time.sleep(0.1)  # Добавлено для предотвращения проблем
-                except KeyError as e:
-                    logger.error(f"Ошибка: неизвестная нота {note} в мелодии. {e}")
-                    return
-                except Exception as ex:
-                    logger.error(f'Ошибка воспроизведения звука: {ex}')
         else:
-            logger.error('Melody is empty')
-
-def silent_mode(func):
-    def wrapper(*args, **kwargs):
-        if Beeper.silent:
-            logger.warning("Silent mode is enabled. Skipping beep.")
+            logger.error("Неверный тип уровня события.")
             return
-        return func(*args, **kwargs)
-    return wrapper
+
+        for note, dur in melody:
+            try:
+                frequency = note_freq[note]
+                winsound.Beep(int(frequency), dur)
+                time.sleep(0.1)  # Добавлено для предотвращения перегрузки системы
+            except KeyError as e:
+                logger.error(f"Ошибка воспроизведения звука: неизвестная нота {note}. Ошибка: {e}")
+                return
+            except Exception as ex:
+                logger.error(f'Ошибка воспроизведения звука: {ex}, нота - {note}, длительность - {dur}, мелодия - {melody}')
+                return
 ```
 
-```
 **Improved Code**
 
 ```python
@@ -186,18 +191,18 @@ def silent_mode(func):
 #! venv/bin/python/python3.12
 
 """
-Модуль для обработки и воспроизведения звуковых сигналов (бипов)
-в зависимости от уровня лога.
+Модуль для воспроизведения звуковых сигналов (бипов) в консоли.
+Поддерживает различные уровни бипов, соответствующие различным событиям.
 """
 import asyncio
 import winsound
 import time
 from enum import Enum
 from typing import Union
+from src.logger import logger  # Импортируем logger
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
 
-# Словарь для хранения частот нот.
+# Словарь нот и их частот
 note_freq = {
     'C3': 130.81, 'C#3': 138.59, 'D3': 146.83, 'D#3': 155.56, 'E3': 164.81, 'F3': 174.61,
     'F#3': 185.00, 'G3': 196.00, 'G#3': 207.65, 'A3': 220.00, 'A#3': 233.08, 'B3': 246.94,
@@ -215,8 +220,12 @@ note_freq = {
     'F#7': 2959.96, 'G7': 3135.96, 'G#7': 3322.44, 'A7': 3520.00, 'A#7': 3729.31, 'B7': 3951.07,
 }
 
+
 class BeepLevel(Enum):
-    """Класс для определения уровней событий и соответствующих им мелодий."""
+    """
+    Перечисление уровней событий для бипов.
+    Разным событиям соответствуют разные мелодии.
+    """
     SUCCESS = [('D5', 100), ('A5', 100), ('D6', 100)]
     INFO = [('C6', 8)]
     ATTENTION = [('G5', 600)]
@@ -228,15 +237,17 @@ class BeepLevel(Enum):
     BELL = [('G6', 200), ('C7', 200), ('E7', 200)]
 
 
-class Beeper():
-    """Класс для воспроизведения звуковых сигналов."""
+class Beeper:
+    """
+    Класс для управления звуковыми сигналами.
+    """
     silent = False
-    
+
     @staticmethod
     @silent_mode
     async def beep(level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000) -> None:
         """
-        Воспроизводит звуковой сигнал в соответствии с уровнем события.
+        Воспроизводит звуковой сигнал.
 
         :param level: Уровень события (BeepLevel или строка).
         :param frequency: Частота звука.
@@ -245,59 +256,46 @@ class Beeper():
         melody = None
         if isinstance(level, str):
             level_name = level.upper()
-            try:
+            if hasattr(BeepLevel, level_name):
                 melody = getattr(BeepLevel, level_name).value
-            except AttributeError:
+            else:
                 logger.error(f"Неизвестный уровень события: {level}")
                 return
         elif isinstance(level, BeepLevel):
             melody = level.value
-        
-        if melody:
-            for note, dur in melody:
-                try:
-                    frequency = note_freq[note]
-                    winsound.Beep(int(frequency), dur)
-                    time.sleep(0.1)
-                except KeyError as e:
-                    logger.error(f"Ошибка: неизвестная нота {note} в мелодии. {e}")
-                    return
-                except Exception as ex:
-                    logger.error(f'Ошибка воспроизведения звука: {ex}')
         else:
-            logger.error('Melody is empty')
-
-def silent_mode(func):
-    """Декоратор для отключения звуковых сигналов."""
-    def wrapper(*args, **kwargs):
-        if Beeper.silent:
-            logger.warning("Silent mode is enabled. Skipping beep.")
+            logger.error("Неверный тип уровня события.")
             return
-        return func(*args, **kwargs)
-    return wrapper
+        
+        for note, dur in melody:
+            try:
+                frequency = note_freq[note]
+                winsound.Beep(int(frequency), dur)
+                time.sleep(0.1)
+            except KeyError as e:
+                logger.error(f"Ошибка воспроизведения звука: неизвестная нота {note}. Ошибка: {e}")
+                return
+            except Exception as ex:
+                logger.error(f'Ошибка воспроизведения звука: {ex}, нота - {note}, длительность - {dur}, мелодия - {melody}')
+                return
 
 
 ```
 
-```
 **Changes Made**
 
-- Added import statements for `j_loads`, `j_loads_ns` from `src.utils.jjson` and `logger` from `src.logger`.
-- Removed unused imports and commented out unused code.
-- Added RST documentation to functions, methods, and classes.
-- Replaced print statements with `logger.error` and `logger.warning` for logging errors and warnings, respectively.
-- Added a `time.sleep(0.1)` call after `winsound.Beep` to prevent potential issues.
-- Corrected `if` conditions for handling different types of `level`.
-- Added more robust error handling (using `try-except` blocks) to catch `KeyError` for unknown notes and other exceptions.
-- Corrected the way that the `level` attribute is accessed from the record dictionary.
-- Cleaned up and formatted the code for better readability.
-- Improved error messages in the logging functions.
+* Импортирован модуль `logger` из `src.logger`.
+* Импортирован модуль `j_loads` из `src.utils.jjson`.
+* Добавлены комментарии в формате RST к классу `Beeper` и функции `beep`.
+* Добавлены проверки типов и обработка ошибок `KeyError` и других исключений внутри функции `beep`.
+* Изменен способ получения мелодии из `level`, теперь используются `getattr` и проверка на существование атрибута.
+* Добавлен `time.sleep(0.1)` для предотвращения перегрузки системы.
+* Улучшены сообщения об ошибках для большей информативности.
+* Добавлены проверки на корректный тип `level` и приведение к верхнему регистру строки.
+* Улучшена документация в формате RST.
 
 
-```
-
-```
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
 ## \file hypotez/src/logger/beeper.py
@@ -306,18 +304,18 @@ def silent_mode(func):
 #! venv/bin/python/python3.12
 
 """
-Модуль для обработки и воспроизведения звуковых сигналов (бипов)
-в зависимости от уровня лога.
+Модуль для воспроизведения звуковых сигналов (бипов) в консоли.
+Поддерживает различные уровни бипов, соответствующие различным событиям.
 """
 import asyncio
 import winsound
 import time
 from enum import Enum
 from typing import Union
+from src.logger import logger  # Импортируем logger
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
 
-# Словарь для хранения частот нот.
+# Словарь нот и их частот
 note_freq = {
     'C3': 130.81, 'C#3': 138.59, 'D3': 146.83, 'D#3': 155.56, 'E3': 164.81, 'F3': 174.61,
     'F#3': 185.00, 'G3': 196.00, 'G#3': 207.65, 'A3': 220.00, 'A#3': 233.08, 'B3': 246.94,
@@ -335,8 +333,12 @@ note_freq = {
     'F#7': 2959.96, 'G7': 3135.96, 'G#7': 3322.44, 'A7': 3520.00, 'A#7': 3729.31, 'B7': 3951.07,
 }
 
+
 class BeepLevel(Enum):
-    """Класс для определения уровней событий и соответствующих им мелодий."""
+    """
+    Перечисление уровней событий для бипов.
+    Разным событиям соответствуют разные мелодии.
+    """
     SUCCESS = [('D5', 100), ('A5', 100), ('D6', 100)]
     INFO = [('C6', 8)]
     ATTENTION = [('G5', 600)]
@@ -348,15 +350,17 @@ class BeepLevel(Enum):
     BELL = [('G6', 200), ('C7', 200), ('E7', 200)]
 
 
-class Beeper():
-    """Класс для воспроизведения звуковых сигналов."""
+class Beeper:
+    """
+    Класс для управления звуковыми сигналами.
+    """
     silent = False
-    
+
     @staticmethod
     @silent_mode
     async def beep(level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000) -> None:
         """
-        Воспроизводит звуковой сигнал в соответствии с уровнем события.
+        Воспроизводит звуковой сигнал.
 
         :param level: Уровень события (BeepLevel или строка).
         :param frequency: Частота звука.
@@ -365,36 +369,28 @@ class Beeper():
         melody = None
         if isinstance(level, str):
             level_name = level.upper()
-            try:
+            if hasattr(BeepLevel, level_name):
                 melody = getattr(BeepLevel, level_name).value
-            except AttributeError:
+            else:
                 logger.error(f"Неизвестный уровень события: {level}")
                 return
         elif isinstance(level, BeepLevel):
             melody = level.value
-        
-        if melody:
-            for note, dur in melody:
-                try:
-                    frequency = note_freq[note]
-                    winsound.Beep(int(frequency), dur)
-                    time.sleep(0.1)
-                except KeyError as e:
-                    logger.error(f"Ошибка: неизвестная нота {note} в мелодии. {e}")
-                    return
-                except Exception as ex:
-                    logger.error(f'Ошибка воспроизведения звука: {ex}')
         else:
-            logger.error('Melody is empty')
-
-def silent_mode(func):
-    """Декоратор для отключения звуковых сигналов."""
-    def wrapper(*args, **kwargs):
-        if Beeper.silent:
-            logger.warning("Silent mode is enabled. Skipping beep.")
+            logger.error("Неверный тип уровня события.")
             return
-        return func(*args, **kwargs)
-    return wrapper
+        
+        for note, dur in melody:
+            try:
+                frequency = note_freq[note]
+                winsound.Beep(int(frequency), dur)
+                time.sleep(0.1)
+            except KeyError as e:
+                logger.error(f"Ошибка воспроизведения звука: неизвестная нота {note}. Ошибка: {e}")
+                return
+            except Exception as ex:
+                logger.error(f'Ошибка воспроизведения звука: {ex}, нота - {note}, длительность - {dur}, мелодия - {melody}')
+                return
 
-```
+
 ```
