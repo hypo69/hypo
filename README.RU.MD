@@ -232,7 +232,7 @@ Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\p
 ## Далее:
 
 1. [Документация для разработчика](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/ru)
-2. [Документация для пользователя](https://github.com/hypo69/hypo/tree/master/docs/gemini/doc/md/ru)
+2. [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/sceanrios_list.md)
 3. [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
 
 
