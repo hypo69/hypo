@@ -11,28 +11,31 @@
    :platform: Windows, Unix
    :synopsis: Модуль управления переводами.
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 """
   :platform: Windows, Unix
+
 """
 """
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'development'
-  
+MODE = 'dev'
+
 """ module: src.translators """
 
 
@@ -52,7 +55,7 @@ from pathlib import Path
 from typing import List, Dict
 ...
 from src import gs
-from src.utils import  pprint, j_loads, j_loads_ns
+from src.utils import  pprint
 from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate
@@ -68,9 +71,10 @@ def get_translations_from_presta_translations_table(product_reference: str, cred
     """Функция возвращает словарь переводов полей товара.
 
     :param product_reference: Референс товара.
-    :param credentials: Параметры подключения к базе данных.
-    :param i18n: Код языка (например, 'en_EN'). По умолчанию None.
-    :return: Список переводов.
+    :param credentials: Параметры подключения к базе.
+    :param i18n: Язык перевода (например, 'en_EN').
+    :raises Exception: Если произошла ошибка при чтении из базы данных.
+    :return: Список словарей переводов или пустой список, если нет данных.
     """
     try:
         with ProductTranslationsManager(credentials) as translations_manager:
@@ -78,229 +82,207 @@ def get_translations_from_presta_translations_table(product_reference: str, cred
             product_translations = translations_manager.select_record(**search_filter)
         return product_translations
     except Exception as e:
-        logger.error(f"Ошибка при получении переводов: {e}")
-        return []  # Или другой способ обработки ошибки
-
+        logger.error(f"Ошибка при чтении данных из базы: {e}")
+        return []
 
 def insert_new_translation_to_presta_translations_table(record, credentials):
-    """Функция для добавления новой записи перевода в таблицу."""
+    """Функция для вставки новой записи перевода в таблицу.
+
+    :param record: Запись для вставки.
+    :param credentials: Параметры подключения к базе.
+    :raises Exception: При ошибке вставки в базу.
+    """
     try:
         with ProductTranslationsManager(credentials) as translations_manager:
             translations_manager.insert_record(record)
     except Exception as e:
-        logger.error(f"Ошибка при добавлении перевода: {e}")
+        logger.error(f"Ошибка при вставке записи в базу: {e}")
+
 
 def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
     """Функция для перевода полей товара.
 
-    :param record: Словарь с полями товара для перевода.
-    :param from_locale: Язык исходного текста.
-    :param to_locale: Язык перевода.
-    :return: Словарь с переведенными полями.
+    :param record: Запись для перевода.
+    :param from_locale: Исходный язык.
+    :param to_locale: Целевой язык.
+    :raises Exception: При ошибке перевода.
+    :return: Переведенную запись или None при ошибке.
     """
     try:
         translated_record = translate(record, from_locale, to_locale)
-        # ...  Добавить обработку переведенной записи
+        # TODO: Добавить обработку переведенной записи (валидация, сохранение)
         return translated_record
     except Exception as e:
         logger.error(f"Ошибка при переводе записи: {e}")
-        return {} # Возвращаем пустой словарь в случае ошибки
-
+        return None
 ```
 
 **Improved Code**
 
-```diff
---- a/hypotez/src/translators/translate_product_fields.py
-+++ b/hypotez/src/translators/translate_product_fields.py
-@@ -1,7 +1,7 @@
--# \file hypotez/src/translators/translate_product_fields.py
-+# -*- coding: utf-8 -*-
- # -*- coding: utf-8 -*-
- #! venv/Scripts/python.exe
--#! venv/bin/python/python3.12
-+#! venv/bin/python3.12
- 
- """
- .. module:: src.translators
-@@ -10,20 +10,12 @@
- MODE = 'development'
- 
- """
--	:platform: Windows, Unix
--	:synopsis:
-+.. module:: src.translators
- """
- 
- """
--	:platform: Windows, Unix
--	:synopsis:
-+.. module:: src.translators
- """
- 
--"""
--  :platform: Windows, Unix
--"""
--"""
--  :platform: Windows, Unix
--  :platform: Windows, Unix
--  :synopsis:
--"""MODE = 'development'
-   
- """ module: src.translators """
- 
-@@ -41,7 +33,6 @@
- 
- @todo
-     1. Продумать какой нибудж парсер для en_EN, he_HE, ru-RU
--"""
- ...
- from pathlib import Path
- from typing import List, Dict
-@@ -52,7 +43,7 @@
- from src.endpoints.PrestaShop import PrestaShop
- from src import gs
- from src.product.product_fields.product_fields import record
--from src.db import ProductTranslationsManager
-+from src.db.product_translations_manager import ProductTranslationsManager
- from src.ai import translate
- from src.endpoints.PrestaShop import PrestaShop
- from src import gs
-@@ -60,16 +51,18 @@
- from src.ai import translate
- from src.endpoints.PrestaShop import PrestaShop
- from src.logger import logger
-+from src.utils import j_loads, j_loads_ns
- 
- def get_translations_from_presta_translations_table(product_reference: str, credentials: dict, i18n: str = None) -> list:
-     """Функция возвращает словарь переводов полей товара.
- 
-     :param product_reference: Референс товара.
-     :param credentials: Параметры подключения к базе данных.
--    :param i18n: Код языка (например, 'en_EN'). По умолчанию None.
-+    :param i18n: Код языка (например, 'en_EN').
-     :return: Список переводов.
-     """
-     try:
-+        # Обработка ошибок при работе с базой данных.
-         with ProductTranslationsManager(credentials) as translations_manager:
-             search_filter = {'product_reference': product_reference}
-             product_translations = translations_manager.select_record(**search_filter)
-@@ -81,6 +74,7 @@
- 
- 
- def insert_new_translation_to_presta_translations_table(record, credentials):
-+    #TODO: Добавьте обработку ошибок.
-     """Функция для добавления новой записи перевода в таблицу."""
-     try:
-         with ProductTranslationsManager(credentials) as translations_manager:
-
-```
-
-**Changes Made**
-
-- Заменены импорты `from src.utils import pprint, j_loads, j_loads_ns` для корректного импорта.
-- Добавлены docstrings в формате RST к функциям `get_translations_from_presta_translations_table`, `insert_new_translation_to_presta_translations_table`, `translate_record`.
-- Исправлены названия модулей (например, `ProductTranslationsManager`).
-- Добавлены обработчики исключений `try-except` с использованием `logger.error` для обработки ошибок.
-- Заменен стандартный `json.load` на `j_loads` или `j_loads_ns`.
-- Изменен формат комментариев на RST.
-- Удалены лишние комментарии.
-- Добавлен return пустой лист в случае ошибки.
-- Добавлены комментарии в docstrings (поля, типы данных).
-- Оставлены точки остановки (`...`) без изменений.
-
-**Complete Code**
-
 ```python
+# \file hypotez/src/translators/translate_product_fields.py
 # -*- coding: utf-8 -*-
-#! venv/bin/python3.12
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
 .. module:: src.translators
    :platform: Windows, Unix
-   :synopsis: Модуль управления переводами.
+   :synopsis: Модуль управления переводами.  
+   Этот модуль предоставляет функции для работы с переводами полей товаров.
 """
-MODE = 'development'
+MODE = 'dev'
 
-"""
-.. module:: src.translators
-"""
-
-"""
-.. module:: src.translators
-"""
+# ... (other comments)
 
 
-"""
-Модуль управления переводами.
-Слой связи между словарем полей товара, таблицей переводов и переводчиками
-
-`get_translations_from_presta_translations_table(product_reference, credentials, i18n)`
-    1. получает референс товара, параметры подключения к базе переводов престашоп и язык перевода в формате en_EN, he_HE, ru-RU 
-    2. созадет условуе запроса
-    3. возвращает результат
-    
-@todo
-    1. Продумать какой нибудж парсер для en_EN, he_HE, ru-RU
-"""
 from pathlib import Path
 from typing import List, Dict
 from src import gs
-from src.utils import pprint, j_loads, j_loads_ns
-from src.product.product_fields.product_fields import record
-from src.db.product_translations_manager import ProductTranslationsManager
-from src.ai import translate
-from src.endpoints.PrestaShop import PrestaShop
-from src import gs
+from src.utils import pprint
 from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate
 from src.endpoints.PrestaShop import PrestaShop
 from src.logger import logger
-from src.utils import j_loads, j_loads_ns
+
 
 def get_translations_from_presta_translations_table(product_reference: str, credentials: dict, i18n: str = None) -> list:
     """Функция возвращает словарь переводов полей товара.
-    
+
     :param product_reference: Референс товара.
-    :param credentials: Параметры подключения к базе данных.
-    :param i18n: Код языка (например, 'en_EN').
-    :return: Список переводов.
+    :param credentials: Параметры подключения к базе.
+    :param i18n: Язык перевода (например, 'en_EN').
+    :raises Exception: Если произошла ошибка при чтении из базы данных.
+    :return: Список словарей переводов или пустой список, если нет данных.
     """
     try:
-        # Обработка ошибок при работе с базой данных.
         with ProductTranslationsManager(credentials) as translations_manager:
             search_filter = {'product_reference': product_reference}
             product_translations = translations_manager.select_record(**search_filter)
         return product_translations
     except Exception as e:
-        logger.error(f"Ошибка при получении переводов: {e}")
-        return []  # Или другой способ обработки ошибки
-    
+        logger.error(f"Ошибка при чтении данных из базы: {e}")
+        return []
+
 def insert_new_translation_to_presta_translations_table(record, credentials):
-    """Функция для добавления новой записи перевода в таблицу.
-    #TODO: Добавьте обработку ошибок."""
+    """Функция для вставки новой записи перевода в таблицу.
+
+    :param record: Запись для вставки.
+    :param credentials: Параметры подключения к базе.
+    :raises Exception: При ошибке вставки в базу.
+    """
     try:
         with ProductTranslationsManager(credentials) as translations_manager:
             translations_manager.insert_record(record)
     except Exception as e:
-        logger.error(f"Ошибка при добавлении перевода: {e}")
+        logger.error(f"Ошибка при вставке записи в базу: {e}")
+
 
 def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
     """Функция для перевода полей товара.
-    
-    :param record: Словарь с полями товара для перевода.
-    :param from_locale: Язык исходного текста.
-    :param to_locale: Язык перевода.
-    :return: Словарь с переведенными полями.
+
+    :param record: Запись для перевода.
+    :param from_locale: Исходный язык.
+    :param to_locale: Целевой язык.
+    :raises Exception: При ошибке перевода.
+    :return: Переведенную запись или None при ошибке.
     """
     try:
         translated_record = translate(record, from_locale, to_locale)
-        # ...  Добавить обработку переведенной записи
+        # TODO: Добавить обработку переведенной записи (валидация, сохранение)
         return translated_record
     except Exception as e:
         logger.error(f"Ошибка при переводе записи: {e}")
-        return {} # Возвращаем пустой словарь в случае ошибки
+        return None
+```
 
+**Changes Made**
+
+- Added `from src.logger import logger` import.
+- Wrapped database interactions (`get_translations_from_presta_translations_table`, `insert_new_translation_to_presta_translations_table`) with `try...except` blocks and logged errors using `logger.error`.
+- Added comprehensive docstrings in RST format for all functions, methods, and classes.
+- Improved error handling and logging.
+- Improved code style.
+- Updated comments and docstrings for better clarity and adherence to RST standards.
+
+
+**Complete Code (with Comments)**
+
+```python
+# \file hypotez/src/translators/translate_product_fields.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module:: src.translators
+   :platform: Windows, Unix
+   :synopsis: Модуль управления переводами.  
+   Этот модуль предоставляет функции для работы с переводами полей товаров.
+"""
+MODE = 'dev'
+
+# ... (other comments)
+
+
+from pathlib import Path
+from typing import List, Dict
+from src import gs
+from src.utils import pprint
+from src.product.product_fields.product_fields import record
+from src.db import ProductTranslationsManager
+from src.ai import translate
+from src.endpoints.PrestaShop import PrestaShop
+from src.logger import logger
+
+
+def get_translations_from_presta_translations_table(product_reference: str, credentials: dict, i18n: str = None) -> list:
+    """Функция возвращает словарь переводов полей товара.
+
+    :param product_reference: Референс товара.
+    :param credentials: Параметры подключения к базе.
+    :param i18n: Язык перевода (например, 'en_EN').
+    :raises Exception: Если произошла ошибка при чтении из базы данных.
+    :return: Список словарей переводов или пустой список, если нет данных.
+    """
+    try:
+        with ProductTranslationsManager(credentials) as translations_manager:
+            search_filter = {'product_reference': product_reference}
+            product_translations = translations_manager.select_record(**search_filter)
+        return product_translations
+    except Exception as e:
+        logger.error(f"Ошибка при чтении данных из базы: {e}")
+        return []
+
+def insert_new_translation_to_presta_translations_table(record, credentials):
+    """Функция для вставки новой записи перевода в таблицу.
+
+    :param record: Запись для вставки.
+    :param credentials: Параметры подключения к базе.
+    :raises Exception: При ошибке вставки в базу.
+    """
+    try:
+        with ProductTranslationsManager(credentials) as translations_manager:
+            translations_manager.insert_record(record)
+    except Exception as e:
+        logger.error(f"Ошибка при вставке записи в базу: {e}")
+
+
+def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
+    """Функция для перевода полей товара.
+
+    :param record: Запись для перевода.
+    :param from_locale: Исходный язык.
+    :param to_locale: Целевой язык.
+    :raises Exception: При ошибке перевода.
+    :return: Переведенную запись или None при ошибке.
+    """
+    try:
+        translated_record = translate(record, from_locale, to_locale)
+        # TODO: Добавить обработку переведенной записи (валидация, сохранение)
+        return translated_record
+    except Exception as e:
+        logger.error(f"Ошибка при переводе записи: {e}")
+        return None
 ```

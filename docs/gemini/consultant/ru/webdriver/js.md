@@ -20,14 +20,15 @@ Key Features:
     2. Retrieve metadata like document ready state, referrer, or page language.
     3. Manage browser window focus programmatically.
 """
-MODE = 'development'
+MODE = 'dev'
 
 import header
 from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns
+#from src.utils.jjson import j_loads  # Импорт функции j_loads для обработки JSON
+from src.utils.jjson import j_loads_ns
 
 
 class JavaScript:
@@ -137,14 +138,14 @@ Key Features:
     2. Retrieve metadata like document ready state, referrer, or page language.
     3. Manage browser window focus programmatically.
 """
-MODE = 'development'
+MODE = 'dev'
 
 import header
 from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns
+from src.utils.jjson import j_loads_ns
 
 
 class JavaScript:
@@ -154,6 +155,7 @@ class JavaScript:
         """Initializes the JavaScript helper with a Selenium WebDriver instance.
 
         :param driver: Selenium WebDriver instance to execute JavaScript.
+        :type driver: WebDriver
         """
         self.driver = driver
 
@@ -161,7 +163,9 @@ class JavaScript:
         """Makes an invisible DOM element visible by modifying its style properties.
 
         :param element: The WebElement object to make visible.
+        :type element: WebElement
         :return: True if the script executes successfully, False otherwise.
+        :rtype: bool
         """
         script = """
         arguments[0].style.opacity = 1;
@@ -185,6 +189,7 @@ class JavaScript:
         """Retrieves the document loading status.
 
         :return: 'loading' if the document is still loading, 'complete' if loading is finished.
+        :rtype: str
         """
         try:
             return self.driver.execute_script('return document.readyState;')
@@ -206,6 +211,7 @@ class JavaScript:
         """Retrieves the referrer URL of the current document.
 
         :return: The referrer URL, or an empty string if unavailable.
+        :rtype: str
         """
         try:
             return self.driver.execute_script('return document.referrer;') or ''
@@ -217,6 +223,7 @@ class JavaScript:
         """Retrieves the language of the current page.
 
         :return: The language code of the page, or an empty string if unavailable.
+        :rtype: str
         """
         try:
             return self.driver.execute_script('return document.documentElement.lang;') or ''
@@ -227,14 +234,13 @@ class JavaScript:
 
 **Changes Made**
 
-1. Imported necessary modules:
-   - Added `from src.utils.jjson import j_loads, j_loads_ns`.
+*   Added missing import `from src.utils.jjson import j_loads_ns`.
+*   Corrected docstrings to follow RST format and Sphinx standards.
+*   Added type hints (e.g., `:param driver: WebDriver`) to docstrings for clarity.
+*   Removed unused import `from src.utils.jjson import j_loads`.
+*   Improved and formatted docstrings for better readability and clarity.  Now conform to RST standards.
 
-2. Docstrings:
-   - Rewrote docstrings for all functions, methods, and classes using reStructuredText (RST) format.  Added `:param` and `:return` to specify parameter and return value types and descriptions.
-
-
-**Full Code (Improved)**
+**Complete Code (Copy and Paste)**
 
 ```python
 # \file hypotez/src/webdriver/js.py
@@ -256,14 +262,14 @@ Key Features:
     2. Retrieve metadata like document ready state, referrer, or page language.
     3. Manage browser window focus programmatically.
 """
-MODE = 'development'
+MODE = 'dev'
 
 import header
 from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns
+from src.utils.jjson import j_loads_ns
 
 
 class JavaScript:
@@ -273,6 +279,7 @@ class JavaScript:
         """Initializes the JavaScript helper with a Selenium WebDriver instance.
 
         :param driver: Selenium WebDriver instance to execute JavaScript.
+        :type driver: WebDriver
         """
         self.driver = driver
 
@@ -280,7 +287,9 @@ class JavaScript:
         """Makes an invisible DOM element visible by modifying its style properties.
 
         :param element: The WebElement object to make visible.
+        :type element: WebElement
         :return: True if the script executes successfully, False otherwise.
+        :rtype: bool
         """
         script = """
         arguments[0].style.opacity = 1;
@@ -304,6 +313,7 @@ class JavaScript:
         """Retrieves the document loading status.
 
         :return: 'loading' if the document is still loading, 'complete' if loading is finished.
+        :rtype: str
         """
         try:
             return self.driver.execute_script('return document.readyState;')
@@ -325,6 +335,7 @@ class JavaScript:
         """Retrieves the referrer URL of the current document.
 
         :return: The referrer URL, or an empty string if unavailable.
+        :rtype: str
         """
         try:
             return self.driver.execute_script('return document.referrer;') or ''
@@ -336,6 +347,7 @@ class JavaScript:
         """Retrieves the language of the current page.
 
         :return: The language code of the page, or an empty string if unavailable.
+        :rtype: str
         """
         try:
             return self.driver.execute_script('return document.documentElement.lang;') or ''

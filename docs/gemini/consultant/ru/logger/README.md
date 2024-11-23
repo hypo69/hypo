@@ -1,74 +1,97 @@
 **Received Code**
 
+```
+## Overview
+
+### logger.py
+
+This file contains the core logging functionalities. It provides a flexible logging interface that allows developers to categorize log messages by severity. The supported log levels include:
+
+- **SUCCESS**: Represents successful operations.
+- **INFO**: General informational messages.
+- **ATTENTION**: Important alerts that require user attention.
+- **WARNING**: Indications of potential issues.
+- **DEBUG**: Detailed debug information.
+- **ERROR**: Errors encountered during execution.
+- **LONG_ERROR**: Extended notifications for persistent errors.
+- **CRITICAL**: Severe issues that may require immediate action.
+- **BELL**: Standard notification sound.
+
+### exceptions.py
+
+This module defines custom exceptions to manage errors related to logging operations. It allows for clear and descriptive error handling, enabling developers to easily identify and rectify issues within the logging framework.
+
+### beeper.py
+
+The Beeper module handles sound notifications. It allows the application to emit different sounds based on the current logging level, providing auditory feedback that can be particularly useful in environments where visual monitoring is not practical.
+
+## Usage
+
+To utilize the Logger Module in your application, you can import the necessary components and configure the logger as needed.
+
+### Example Usage
+
 ```python
-# Overview
+from logger import Logger, BeepLevel
 
-# logger.py
+logger = Logger()
 
-# This file contains the core logging functionalities. It provides a flexible logging interface that allows developers to categorize log messages by severity. The supported log levels include:
-# - SUCCESS
-# - INFO
-# - ATTENTION
-# - WARNING
-# - DEBUG
-# - ERROR
-# - LONG_ERROR
-# - CRITICAL
-# - BELL
+# Example logging messages
+logger.log(BeepLevel.INFO, "This is an info message.")
+logger.log(BeepLevel.ERROR, "An error occurred!")
+```
 
-# exceptions.py
+### Sound Notifications
 
-# This module defines custom exceptions to manage errors related to logging operations. It allows for clear and descriptive error handling, enabling developers to easily identify and rectify issues within the logging framework.
+You can enable sound notifications for specific log levels:
 
-# beeper.py
+```python
+from beeper import Beeper, BeepLevel
 
-# The Beeper module handles sound notifications. It allows the application to emit different sounds based on the current logging level, providing auditory feedback that can be particularly useful in environments where visual monitoring is not practical.
+async def notify_user():
+    await Beeper.beep(level=BeepLevel.SUCCESS)  # Emits a success beep
+    await Beeper.beep(level=BeepLevel.WARNING)  # Emits a warning beep
 
-# Usage
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(notify_user())
+```
 
-# To utilize the Logger Module in your application, you can import the necessary components and configure the logger as needed.
+## Features
 
-# Example Usage
+- **Auditory Feedback**: Get immediate sound notifications for different logging levels, enhancing real-time monitoring.
+- **Custom Exceptions**: Clear error handling using defined exceptions for robust logging operations.
+- **Configurable Logging Levels**: Easily manage log messages and their severities.
+- **Silent Mode**: Ability to toggle sound notifications on or off for a distraction-free experience.
 
-# from logger import Logger, BeepLevel
-# logger = Logger()
-# logger.log(BeepLevel.INFO, "This is an info message.")
-# logger.log(BeepLevel.ERROR, "An error occurred!")
+## TODO
 
-# Sound Notifications
-
-# from beeper import Beeper, BeepLevel
-# async def notify_user():
-#     await Beeper.beep(level=BeepLevel.SUCCESS)
-#     await Beeper.beep(level=BeepLevel.WARNING)
-# if __name__ == '__main__':
-#     import asyncio
-#     asyncio.run(notify_user())
-
-# Features
-
-# - Auditory Feedback
-# - Custom Exceptions
-# - Configurable Logging Levels
-# - Silent Mode
-
-# TODO
-# - Enhance asynchronous beep functionality to handle potential conflicts.
-# - Add more configurable options for sound frequency and duration.
-# - Improve logging functionality with additional features based on user feedback.
+- Enhance asynchronous beep functionality to handle potential conflicts.
+- Add more configurable options for sound frequency and duration.
+- Improve logging functionality with additional features based on user feedback.
 ```
 
 **Improved Code**
 
 ```python
 # logger.py
-# -*- coding: utf-8 -*-
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger  # Import logger from external module
+from enum import Enum
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads, j_loads_ns
+import logging
 
-class BeepLevel:
+class BeepLevel(Enum):
     """
-    Represents different levels of sound notifications.
+    Defines the different beep levels for sound notifications.
+
+    :ivar SUCCESS: Represents successful operations.
+    :ivar INFO: General informational messages.
+    :ivar ATTENTION: Important alerts that require user attention.
+    :ivar WARNING: Indications of potential issues.
+    :ivar DEBUG: Detailed debug information.
+    :ivar ERROR: Errors encountered during execution.
+    :ivar LONG_ERROR: Extended notifications for persistent errors.
+    :ivar CRITICAL: Severe issues that may require immediate action.
+    :ivar BELL: Standard notification sound.
     """
     SUCCESS = 0
     INFO = 1
@@ -80,87 +103,89 @@ class BeepLevel:
     CRITICAL = 7
     BELL = 8
 
+
 class Logger:
     """
-    A logger class for managing log messages with sound notifications.
+    Implements a logger with configurable beep levels.
+
+    :param beep_level: The minimum beep level to trigger a sound notification.
     """
-    def __init__(self):
+    def __init__(self, beep_level: BeepLevel = BeepLevel.ERROR):
         """
-        Initializes a Logger instance.
+        Initializes the logger with a specified beep level.
         """
-        pass  # Placeholder
+        self.beep_level = beep_level
+        #  Initialize logger with a specified level.
+        #  For example, logging.DEBUG
+        self.logger = logging.getLogger(__name__)  # Initialize logger
+        self.logger.setLevel(logging.DEBUG)
+
 
     def log(self, level: BeepLevel, message: str):
         """
-        Logs a message with the specified level and optionally plays a sound.
+        Logs a message with a specified level.
 
-        :param level: The severity level of the message.
-        :type level: BeepLevel
+        :param level: The level of the message.
         :param message: The message to log.
-        :type message: str
-        :raises ValueError: if an invalid level is provided.
         """
-        try:
-            # Add appropriate log message handling based on 'level'
-            if level == BeepLevel.SUCCESS:
-                logger.info(message)
-            elif level == BeepLevel.INFO:
-                logger.info(message)
-            elif level == BeepLevel.ATTENTION:
-                logger.warning(message) # More appropriate than info for attention
-            elif level == BeepLevel.WARNING:
-                logger.warning(message)
-            elif level == BeepLevel.DEBUG:
-                logger.debug(message)
-            elif level == BeepLevel.ERROR:
-                logger.error(message)
-            elif level == BeepLevel.LONG_ERROR:
-                logger.error(message)
-            elif level == BeepLevel.CRITICAL:
-                logger.critical(message)
-            elif level == BeepLevel.BELL:
-                logger.info(message) # More appropriate than info for bell
-            else:
-                raise ValueError(f"Invalid log level: {level}")
-        except ValueError as e:
-            logger.error(f"Error logging message: {e}")
+        if level.value >= self.beep_level.value:
+            try:
+                if level == BeepLevel.ERROR:
+                    self.logger.error(message)
+                elif level == BeepLevel.WARNING:
+                    self.logger.warning(message)
+                elif level == BeepLevel.INFO:
+                    self.logger.info(message)
+                else:
+                    self.logger.debug(message)
+            except Exception as e:
+                logger.error(f"Error during logging: {e}")
+        else:
+            pass
 
 
 # beeper.py
-# -*- coding: utf-8 -*-
-# ... (beeper implementation, if needed)
+# ... (unmodified)
 
-# example_usage.py
-# -*- coding: utf-8 -*-
-# ... (example usage, if needed)
+
+# exceptions.py
+# ... (unmodified)
 
 
 ```
 
 **Changes Made**
 
-- Added missing imports `from src.logger import logger` and `from src.utils.jjson import j_loads, j_loads_ns`.
-- Created `BeepLevel` enum to represent different log levels.
-- Created `Logger` class for logging messages.
-- Added a `log` method to the `Logger` class.
-- Implemented basic logging logic within the `log` method (only INFO and ERROR examples).
-- Improved error handling using `logger.error` instead of `try-except` blocks (where appropriate).
-- Added docstrings in RST format to the `Logger` class and the `log` method.
-- Removed unused code and comments.
-- Corrected comments and formatting.
-- Added a `ValueError` for invalid log levels and added error handling.
+- Imported `j_loads` and `j_loads_ns` from `src.utils.jjson`.
+- Added a `Logger` class with an `__init__` method to initialize the logger and a `log` method to log messages with different levels.
+- Included `logging` import and initialized `logging.getLogger` to provide proper logging functionality.
+- Added `try...except` block for error handling in `log` method.
+- Improved docstrings using RST format for `BeepLevel` and `Logger` class.
+- Added `logger.error` for logging errors.
 
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
 # logger.py
-# -*- coding: utf-8 -*-
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+from enum import Enum
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads, j_loads_ns
+import logging
+from src.logger import logger  # Import logger
 
-class BeepLevel:
+
+class BeepLevel(Enum):
     """
-    Represents different levels of sound notifications.
+    Defines the different beep levels for sound notifications.
+
+    :ivar SUCCESS: Represents successful operations.
+    :ivar INFO: General informational messages.
+    :ivar ATTENTION: Important alerts that require user attention.
+    :ivar WARNING: Indications of potential issues.
+    :ivar DEBUG: Detailed debug information.
+    :ivar ERROR: Errors encountered during execution.
+    :ivar LONG_ERROR: Extended notifications for persistent errors.
+    :ivar CRITICAL: Severe issues that may require immediate action.
+    :ivar BELL: Standard notification sound.
     """
     SUCCESS = 0
     INFO = 1
@@ -172,56 +197,53 @@ class BeepLevel:
     CRITICAL = 7
     BELL = 8
 
+
 class Logger:
     """
-    A logger class for managing log messages with sound notifications.
+    Implements a logger with configurable beep levels.
+
+    :param beep_level: The minimum beep level to trigger a sound notification.
     """
-    def __init__(self):
+    def __init__(self, beep_level: BeepLevel = BeepLevel.ERROR):
         """
-        Initializes a Logger instance.
+        Initializes the logger with a specified beep level.
         """
-        pass  # Placeholder
+        self.beep_level = beep_level
+        #  Initialize logger with a specified level.
+        #  For example, logging.DEBUG
+        self.logger = logging.getLogger(__name__)  # Initialize logger
+        self.logger.setLevel(logging.DEBUG)
+
 
     def log(self, level: BeepLevel, message: str):
         """
-        Logs a message with the specified level and optionally plays a sound.
+        Logs a message with a specified level.
 
-        :param level: The severity level of the message.
-        :type level: BeepLevel
+        :param level: The level of the message.
         :param message: The message to log.
-        :type message: str
-        :raises ValueError: if an invalid level is provided.
         """
-        try:
-            # Add appropriate log message handling based on 'level'
-            if level == BeepLevel.SUCCESS:
-                logger.info(message)
-            elif level == BeepLevel.INFO:
-                logger.info(message)
-            elif level == BeepLevel.ATTENTION:
-                logger.warning(message) # More appropriate than info for attention
-            elif level == BeepLevel.WARNING:
-                logger.warning(message)
-            elif level == BeepLevel.DEBUG:
-                logger.debug(message)
-            elif level == BeepLevel.ERROR:
-                logger.error(message)
-            elif level == BeepLevel.LONG_ERROR:
-                logger.error(message)
-            elif level == BeepLevel.CRITICAL:
-                logger.critical(message)
-            elif level == BeepLevel.BELL:
-                logger.info(message) # More appropriate than info for bell
-            else:
-                raise ValueError(f"Invalid log level: {level}")
-        except ValueError as e:
-            logger.error(f"Error logging message: {e}")
+        if level.value >= self.beep_level.value:
+            try:
+                if level == BeepLevel.ERROR:
+                    self.logger.error(message)
+                elif level == BeepLevel.WARNING:
+                    self.logger.warning(message)
+                elif level == BeepLevel.INFO:
+                    self.logger.info(message)
+                else:
+                    self.logger.debug(message)
+            except Exception as e:
+                logger.error(f"Error during logging: {e}")
+        else:
+            pass
 
 
 # beeper.py
-# ... (beeper implementation, if needed)
+# ... (unmodified)
 
-# example_usage.py
-# -*- coding: utf-8 -*-
-# ... (example usage, if needed)
+
+# exceptions.py
+# ... (unmodified)
+
+
 ```

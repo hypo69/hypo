@@ -9,101 +9,87 @@ self.__RSC_SERVER_MANIFEST="{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionK
 ```python
 from src.utils.jjson import j_loads
 
-class MyClass:
-    """
-    Класс, содержащий информацию о сервере RSC.
-    """
-
+# Модуль содержит конфигурацию для сервера RSC.
+# Хранит данные о узлах (node), краях (edge) и криптографическом ключе (encryptionKey)
+# в формате JSON.
+class RSCServerConfig:
     def __init__(self):
         """
-        Инициализирует класс.
-        """
-        # Загрузка данных из манифеста сервера.  # TODO: Добавить обработку ошибок
-        self.__RSC_SERVER_MANIFEST = '{\n  "node": {},\n  "edge": {},\n  "encryptionKey": "XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc="\n}'
+        Инициализирует объект RSCServerConfig.
 
+        Загружает конфигурацию из строки JSON в атрибут ``__RSC_SERVER_MANIFEST``.
+        """
         try:
-            self.__manifest_data = j_loads(self.__RSC_SERVER_MANIFEST)  # Загружает данные с помощью j_loads
+            self.__RSC_SERVER_MANIFEST = j_loads(
+                "{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionKey\": \"XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc=\"\n}"
+            )
         except Exception as e:
-            logger.error("Ошибка при загрузке манифеста сервера: %s", e)
-            self.__manifest_data = {} # Устанавливает пустой словарь при ошибке
+            logger.error(f"Ошибка при загрузке конфигурации RSC: {e}")
 
-    @property
-    def manifest_data(self):
+        # Методы доступа к данным
+        # ...
+
+    def get_encryption_key(self) -> str:
         """
-        Возвращает данные манифеста сервера.
+        Возвращает криптографический ключ.
 
-        :return: Словарь данных манифеста.
+        :return: Значение ключа.
+        :raises KeyError: Если ключ не найден.
         """
-        return self.__manifest_data
-
-    @property
-    def encryption_key(self):
-        """
-        Возвращает ключ шифрования.
-
-        :return: Ключ шифрования.
-        """
-        return self.__manifest_data.get('encryptionKey')
-
-
-# Пример использования (для тестирования)
-# ...
+        try:
+            return self.__RSC_SERVER_MANIFEST['encryptionKey']
+        except KeyError as e:
+            logger.error(f"Ключ не найден: {e}")
+            raise
 ```
 
 **Changes Made**
 
-- Добавлена документация RST для класса `MyClass` и его методов `__init__`, `manifest_data` и `encryption_key` в формате reStructuredText (RST).
-- Изменен способ загрузки данных. Вместо строкового литерала используется метод `j_loads` из `src.utils.jjson` для более корректной обработки JSON.
-- Добавлена обработка исключений с помощью `try-except` блока. Обрабатывается случай, когда `j_loads` возвращает ошибку и записывается сообщение об ошибке в лог.  Установка значения по умолчанию для `self.__manifest_data` при ошибке.
-- Импорт `j_loads` из `src.utils.jjson` добавлен.
-- Импорт `logger` из `src.logger` добавлен.  (Предполагается, что модуль `src.logger` содержит функцию `logger.error`).
-- Внедрена `@property` для `manifest_data` и `encryption_key` для улучшения доступа к данным.
-- Добавлено описание параметров и возвращаемых значений для методов в формате RST.
-- Добавлен пример использования для демонстрации работы класса (комментированный).
+1.  Добавлен класс `RSCServerConfig` для хранения и доступа к данным конфигурации.
+2.  Используется `j_loads` для обработки данных JSON.
+3.  Добавлена обработка ошибок с помощью `logger.error`.
+4.  Добавлена функция `get_encryption_key` для безопасного доступа к ключу.
+5.  Добавлена документация в формате RST к классу и функции.
+6.  Добавлены необходимые импорты (из `src.utils.jjson`, `src.logger`).
+7.  Комментарии к исходному коду переформатированы в RST-стиль.
+8.  Обработка ошибок теперь более корректна и использует `KeyError` для указания проблемы.
 
+**Full Code (Improved)**
 
 ```python
 from src.utils.jjson import j_loads
-from src.logger import logger # Импорт логгера
+from src.logger import logger
 
-class MyClass:
-    """
-    Класс, содержащий информацию о сервере RSC.
-    """
-
+# Модуль содержит конфигурацию для сервера RSC.
+# Хранит данные о узлах (node), краях (edge) и криптографическом ключе (encryptionKey)
+# в формате JSON.
+class RSCServerConfig:
     def __init__(self):
         """
-        Инициализирует класс.
-        """
-        # Загрузка данных из манифеста сервера.  # TODO: Добавить обработку ошибок
-        self.__RSC_SERVER_MANIFEST = '{\n  "node": {},\n  "edge": {},\n  "encryptionKey": "XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc="\n}'
-        # ... (ошибка обрабатывается в блоке try-except)
+        Инициализирует объект RSCServerConfig.
 
+        Загружает конфигурацию из строки JSON в атрибут ``__RSC_SERVER_MANIFEST``.
+        """
         try:
-            self.__manifest_data = j_loads(self.__RSC_SERVER_MANIFEST)  # Загружает данные с помощью j_loads
+            self.__RSC_SERVER_MANIFEST = j_loads(
+                "{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionKey\": \"XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc=\"\n}"
+            ) # Исходный код
         except Exception as e:
-            logger.error("Ошибка при загрузке манифеста сервера: %s", e)
-            self.__manifest_data = {} # Устанавливает пустой словарь при ошибке
+            logger.error(f"Ошибка при загрузке конфигурации RSC: {e}")
 
-    @property
-    def manifest_data(self):
+        # Методы доступа к данным
+        # ...
+
+    def get_encryption_key(self) -> str:
         """
-        Возвращает данные манифеста сервера.
+        Возвращает криптографический ключ.
 
-        :return: Словарь данных манифеста.
+        :return: Значение ключа.
+        :raises KeyError: Если ключ не найден.
         """
-        return self.__manifest_data
-
-    @property
-    def encryption_key(self):
-        """
-        Возвращает ключ шифрования.
-
-        :return: Ключ шифрования.
-        """
-        return self.__manifest_data.get('encryptionKey')
-
-
-# Пример использования (для тестирования)
-# ...
+        try:
+            return self.__RSC_SERVER_MANIFEST['encryptionKey'] # Исходный код
+        except KeyError as e:
+            logger.error(f"Ключ не найден: {e}")
+            raise
 ```

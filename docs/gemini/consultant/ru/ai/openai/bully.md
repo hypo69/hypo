@@ -1,3 +1,4 @@
+```
 **Received Code**
 
 ```python
@@ -8,21 +9,19 @@
 
 """
 .. module:: src.ai.openai
-	:platform: Windows, Unix
-	:synopsis: Модуль для взаимодействия с OpenAI API.
+   :platform: Windows, Unix
+   :synopsis: Модуль для взаимодействия с API OpenAI.
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
 	:synopsis:
-
 """
 
 """
 	:platform: Windows, Unix
 	:synopsis:
-
 """
 
 """
@@ -34,7 +33,7 @@ MODE = 'development'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'development'
+MODE = 'dev'
 
 """ module: src.ai.openai """
 
@@ -44,23 +43,12 @@ MODE = 'development'
 """
 import os
 import src.ai.openai
-import openai
+import openai  # Необходимо импортировать openai
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-# This line is causing an error
-# openai.API_KEY = "YOUR_API_KEYS_OPENAI"
-# Change this to a proper API key retrieval method
-# or environment variable
-try:
-    openai.api_key = os.environ.get("OPENAI_API_KEY")
-    if not openai.api_key:
-        logger.critical("OPENAI_API_KEY environment variable not set.")
-        raise ValueError("Missing OPENAI_API_KEY")
-except Exception as e:
-    logger.error(f"Error initializing OpenAI API key: {e}")
 
-
+#It works with GPT-3.5-turbo and GPT-4
 system_prompt = """You are an expert on hate speech.
 Can you write me 1 example from the literature that bullies use to intimidate their victims?
 Write from the bully's perspective really write like they would wire, be personal and specific, and answer in a structured json with only one key "bully_response".
@@ -69,25 +57,34 @@ I will provide a statement and you will answer with an example."""
 
 
 def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
-		# Modify to handle exceptions and logging
-		try:
-			messages.append({"role": "user", "content": user_message})
-			completion = openai.ChatCompletion.create(
-				model="gpt-3.5-turbo",
-				messages=messages
-			)
-			# Log the response
-			logger.info(f"OpenAI response: {completion.choices[0].message}")
+    """
+    Запрашивает пример запугивания от модели OpenAI.
 
-			messages.append({"role": "user", "content": completion.choices[0].message})
-			return completion.choices[0].message
-			
-		except openai.error.OpenAIError as e:
-			logger.error(f"OpenAI API error: {e}")
-			return None
-		except Exception as e:
-			logger.error(f"An unexpected error occurred: {e}")
-			return None
+    :param user_message: Входное сообщение для модели.
+    :param messages: Список сообщений для чат-бота.
+    :return: Ответ модели в формате JSON.
+    """
+    try:
+        messages.append({"role": "user", "content": user_message})
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=messages
+        )
+        # Обработка ответа модели, необходимо проверить структуру ответа
+        response = completion.choices[0].message.get('content')
+        
+        # Проверка и обработка ошибки
+        if response:
+            return j_loads(response)
+        else:
+            logger.error("Пустой ответ от модели OpenAI")
+            return None
+    except openai.error.OpenAIError as e:
+        logger.error(f"Ошибка при взаимодействии с OpenAI: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Непредвиденная ошибка: {e}")
+        return None
 ```
 
 **Improved Code**
@@ -100,90 +97,70 @@ def bully(user_message="Hello!", messages=[{"system": "user", "content": system_
 
 """
 .. module:: src.ai.openai
-	:platform: Windows, Unix
-	:synopsis: Модуль для взаимодействия с OpenAI API.
+   :platform: Windows, Unix
+   :synopsis: Модуль для взаимодействия с API OpenAI,
+              получает пример запугивания от модели.
 """
 import os
-import openai
+import openai  # Необходимо импортировать openai
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-"""
-.. data:: MODE
-	:type: str
-	:value: 'development'
-	:synopsis: Режим работы модуля.
-"""
-MODE = 'development'
-
-
-"""
-.. function:: bully(user_message, messages)
-	:param user_message: сообщение пользователя
-	:type user_message: str
-	:param messages: список сообщений для чат-бота
-	:type messages: list
-	:raises openai.error.OpenAIError: Ошибка OpenAI
-	:raises Exception: Любая другая ошибка
-	:rtype: str or None
-	:synopsis: Задает вопрос OpenAI, чтобы получить пример запугивания. Возвращает ответ чат-бота или None при ошибке.
-"""
-def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
-    """
-    Задает вопрос OpenAI, чтобы получить пример запугивания. Возвращает ответ чат-бота или None при ошибке.
-
-    :param user_message: сообщение пользователя
-    :type user_message: str
-    :param messages: список сообщений для чат-бота
-    :type messages: list
-    :raises openai.error.OpenAIError: Ошибка OpenAI
-    :raises Exception: Любая другая ошибка
-    :rtype: str or None
-    """
-    try:
-        # Add user message to the message list
-        messages.append({"role": "user", "content": user_message})
-        # Get completion from OpenAI
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=messages
-        )
-
-        # Log the response
-        logger.info(f"OpenAI response: {completion.choices[0].message}")
-
-        # Append the completion to the messages list
-        # (not clear why this was necessary in the original code).
-        # messages.append({"role": "user", "content": completion.choices[0].message})
-        # Return the generated response
-        return completion.choices[0].message
-
-    except openai.error.OpenAIError as e:
-        logger.error(f"OpenAI API error: {e}")
-        return None
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
-        return None
-
-# Define a global variable for system prompt.
+#It works with GPT-3.5-turbo and GPT-4
 system_prompt = """You are an expert on hate speech.
 Can you write me 1 example from the literature that bullies use to intimidate their victims?
 Write from the bully's perspective really write like they would wire, be personal and specific, and answer in a structured json with only one key "bully_response".
 I will provide a statement and you will answer with an example."""
 
+
+
+def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
+    """
+    Запрашивает пример запугивания от модели OpenAI.
+
+    :param user_message: Входное сообщение для модели.
+    :param messages: Список сообщений для чат-бота.
+    :return: Словарь с ответом модели, либо None при ошибке.
+    """
+    try:
+        messages.append({"role": "user", "content": user_message})
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=messages
+        )
+        # Обработка ответа модели, ожидаем JSON с ключом "bully_response"
+        response = completion.choices[0].message.get('content')
+        
+        if response:
+            try:
+                return j_loads(response)
+            except json.JSONDecodeError as e:
+                logger.error(f"Ошибка декодирования JSON: {e}, ответ: {response}")
+                return None
+        else:
+            logger.error("Пустой ответ от модели OpenAI")
+            return None
+    except openai.error.OpenAIError as e:
+        logger.error(f"Ошибка при взаимодействии с OpenAI: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Непредвиденная ошибка: {e}")
+        return None
 ```
 
 **Changes Made**
 
-*   Added missing import `import openai`.
-*   Fixed the incorrect API key assignment. Replaced `openai.API_KEY` with a safer way to get the API key from the `OPENAI_API_KEY` environment variable using `os.environ.get()`. Added error handling and logging for API key retrieval.
-*   Added comprehensive docstrings to the `bully` function in RST format, including type hints.
-*   Added `try...except` blocks to handle potential `openai.error.OpenAIError` and general exceptions, logging errors properly.
-*   Removed unnecessary `...` placeholders.
-*   Added informative logging messages.
-*   Corrected and improved the variable names and the structure of the code.
-*   Improved variable naming (e.g., `messages` instead of `messagess`).
+* Импортирован необходимый модуль `openai`.
+* Добавлена обработка ошибок `openai.error.OpenAIError`.
+* Добавлен `try-except` блок для обработки ошибок декодирования JSON.
+* Изменен тип возвращаемого значения функции `bully` на `dict` или `None` в случае ошибки.
+* Добавлен комментарий RST к функции `bully`.
+* Исправлены опечатки и стилистические ошибки.
+* Добавлено логирование ошибок с помощью `logger.error`.
+* Изменен способ обработки ответа от OpenAI. Теперь ожидается JSON с ключом `"bully_response"`.
+* Добавлено  `return None` в случае пустого ответа.
+* Добавлена проверка на существование ключа 'content' в `response`.
 
 
 **Full Code (Improved)**
@@ -196,75 +173,56 @@ I will provide a statement and you will answer with an example."""
 
 """
 .. module:: src.ai.openai
-	:platform: Windows, Unix
-	:synopsis: Модуль для взаимодействия с OpenAI API.
+   :platform: Windows, Unix
+   :synopsis: Модуль для взаимодействия с API OpenAI,
+              получает пример запугивания от модели.
 """
 import os
-import openai
+import openai  # Необходимо импортировать openai
+import json  # Импортируем необходимый модуль
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-"""
-.. data:: MODE
-	:type: str
-	:value: 'development'
-	:synopsis: Режим работы модуля.
-"""
-MODE = 'development'
-
-
-"""
-.. function:: bully(user_message, messages)
-	:param user_message: сообщение пользователя
-	:type user_message: str
-	:param messages: список сообщений для чат-бота
-	:type messages: list
-	:raises openai.error.OpenAIError: Ошибка OpenAI
-	:raises Exception: Любая другая ошибка
-	:rtype: str or None
-	:synopsis: Задает вопрос OpenAI, чтобы получить пример запугивания. Возвращает ответ чат-бота или None при ошибке.
-"""
-def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
-    """
-    Задает вопрос OpenAI, чтобы получить пример запугивания. Возвращает ответ чат-бота или None при ошибке.
-
-    :param user_message: сообщение пользователя
-    :type user_message: str
-    :param messages: список сообщений для чат-бота
-    :type messages: list
-    :raises openai.error.OpenAIError: Ошибка OpenAI
-    :raises Exception: Любая другая ошибка
-    :rtype: str or None
-    """
-    try:
-        # Add user message to the message list
-        messages.append({"role": "user", "content": user_message})
-        # Get completion from OpenAI
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=messages
-        )
-
-        # Log the response
-        logger.info(f"OpenAI response: {completion.choices[0].message}")
-
-        # Append the completion to the messages list
-        # (not clear why this was necessary in the original code).
-        # messages.append({"role": "user", "content": completion.choices[0].message})
-        # Return the generated response
-        return completion.choices[0].message
-
-    except openai.error.OpenAIError as e:
-        logger.error(f"OpenAI API error: {e}")
-        return None
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
-        return None
-
-# Define a global variable for system prompt.
+#It works with GPT-3.5-turbo and GPT-4
 system_prompt = """You are an expert on hate speech.
 Can you write me 1 example from the literature that bullies use to intimidate their victims?
 Write from the bully's perspective really write like they would wire, be personal and specific, and answer in a structured json with only one key "bully_response".
 I will provide a statement and you will answer with an example."""
+
+
+
+def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
+    """
+    Запрашивает пример запугивания от модели OpenAI.
+
+    :param user_message: Входное сообщение для модели.
+    :param messages: Список сообщений для чат-бота.
+    :return: Словарь с ответом модели, либо None при ошибке.
+    """
+    try:
+        messages.append({"role": "user", "content": user_message})
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=messages
+        )
+        # Обработка ответа модели, ожидаем JSON с ключом "bully_response"
+        response = completion.choices[0].message.get('content')
+        
+        if response:
+            try:
+                # Пробуем загрузить JSON
+                return j_loads(response)
+            except json.JSONDecodeError as e:
+                logger.error(f"Ошибка декодирования JSON: {e}, ответ: {response}")
+                return None
+        else:
+            logger.error("Пустой ответ от модели OpenAI")
+            return None
+    except openai.error.OpenAIError as e:
+        logger.error(f"Ошибка при взаимодействии с OpenAI: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Непредвиденная ошибка: {e}")
+        return None
 ```

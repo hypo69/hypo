@@ -12,7 +12,7 @@
     :synopsis: Модуль для перевода текста с использованием OpenAI API.
 """
 
-MODE = 'development'
+MODE = 'dev'
 
 import openai
 from src import gs
@@ -86,28 +86,24 @@ def translate(text, source_language, target_language):
 import openai
 from src import gs
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # noqa: F401
+
+# TODO: Возможно, стоит использовать конфигурационный файл для хранения API ключа.
+# TODO: Указать допустимые языки для перевода.
+# TODO: Добавить обработку ситуаций, когда модель OpenAI вернет ошибку.
+# TODO: Рассмотреть возможность использования других моделей OpenAI для улучшения качества перевода.
 
 
-# Define the API key.
-MODE = 'development'
-OPENAI_API_KEY = gs.credentials.openai
-openai.api_key = OPENAI_API_KEY
+openai.api_key = gs.credentials.openai
 
 def translate(text: str, source_language: str, target_language: str) -> str:
     """
-    Переводит текст с одного языка на другой используя OpenAI API.
+    Переводит текст с одного языка на другой с помощью OpenAI API.
 
     :param text: Текст для перевода.
-    :param source_language: Исходный язык.
-    :param target_language: Целевой язык.
-    :raises TypeError: Если входные данные имеют неправильный тип.
-    :return: Переведенный текст или None в случае ошибки.
+    :param source_language: Язык исходного текста.
+    :param target_language: Язык перевода.
+    :return: Переведенный текст. Возвращает None в случае ошибки.
     """
-    # Проверка типов входных данных.
-    if not isinstance(text, str) or not isinstance(source_language, str) or not isinstance(target_language, str):
-        logger.error("Invalid input type for translation.")
-        raise TypeError("Invalid input type for translation")
     
     # Формируем запрос к OpenAI API.
     prompt = (
@@ -131,32 +127,27 @@ def translate(text: str, source_language: str, target_language: str) -> str:
         translation = response.choices[0].text.strip()
         return translation
     except openai.error.OpenAIError as e:
-        # Обработка ошибок OpenAI.
-        logger.error("Error during OpenAI request: %s", e)
+        logger.error("OpenAI API error during translation: %s", e)
         return None
-    except Exception as e:
-        # Обработка других ошибок.
-        logger.error("An unexpected error occurred during translation: %s", e)
+    except Exception as ex:
+        logger.error("Error during translation: %s", ex)
         return None
 ```
 
 **Changes Made**
 
-- Добавлено описание модуля в формате RST.
-- Добавлены типы данных к параметрам функции `translate`.
-- Добавлены проверки типов входных данных и обработка ошибок `TypeError`.
-- Изменены имена переменных (например, `source_text` на `text`).
-- Исправлена функция для возврата `None` при ошибке, вместо `return`.
-- Добавлены обработчики для ошибок `openai.error.OpenAIError` и `Exception` с логированием.
-- Добавлены импорты из `src.utils.jjson`.
-- Изменены комментарии в формате RST.
-- Заменён `translate_text` на `translate`.
-- Исправлен `import` для импорта `j_loads`, `j_loads_ns` из `src.utils.jjson`, добавив `noqa: F401`.
-- Добавлена обработка `TypeError` для проверки корректности типов входных параметров.
-- Добавлены комментарии к каждой строке кода, где это необходимо.
+*   Добавлен модуль `openai` и импорт из `src.logger`.
+*   Добавлена документация RST для функции `translate`.
+*   Изменены типы параметров `text`, `source_language`, `target_language` и возвращаемого значения в docstring функции `translate` для большей ясности.
+*   Добавлен блок `try-except` для обработки ошибок OpenAI API, логгирует ошибку с помощью `logger.error` и возвращает `None`.
+*   Обработка остальных исключений (кроме `openai.error.OpenAIError`).
+*   Добавлены TODO-задачи для дальнейшего улучшения кода (например, использование конфигурационного файла, проверка допустимых языков).
+*   Изменено имя функции `translate_text` на `translate` для соответствия современным стандартам наименования функций.
+*   Добавлен импорт `import openai`, необходимый для работы с OpenAI API.
+*   Изменены комментарии.
 
 
-**Full Improved Code (for replacement)**
+**Full Code (Improved)**
 
 ```python
 # \file hypotez/src/ai/openai/translator.py
@@ -173,28 +164,24 @@ def translate(text: str, source_language: str, target_language: str) -> str:
 import openai
 from src import gs
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # noqa: F401
+
+# TODO: Возможно, стоит использовать конфигурационный файл для хранения API ключа.
+# TODO: Указать допустимые языки для перевода.
+# TODO: Добавить обработку ситуаций, когда модель OpenAI вернет ошибку.
+# TODO: Рассмотреть возможность использования других моделей OpenAI для улучшения качества перевода.
 
 
-# Define the API key.
-MODE = 'development'
-OPENAI_API_KEY = gs.credentials.openai
-openai.api_key = OPENAI_API_KEY
+openai.api_key = gs.credentials.openai
 
 def translate(text: str, source_language: str, target_language: str) -> str:
     """
-    Переводит текст с одного языка на другой используя OpenAI API.
+    Переводит текст с одного языка на другой с помощью OpenAI API.
 
     :param text: Текст для перевода.
-    :param source_language: Исходный язык.
-    :param target_language: Целевой язык.
-    :raises TypeError: Если входные данные имеют неправильный тип.
-    :return: Переведенный текст или None в случае ошибки.
+    :param source_language: Язык исходного текста.
+    :param target_language: Язык перевода.
+    :return: Переведенный текст. Возвращает None в случае ошибки.
     """
-    # Проверка типов входных данных.
-    if not isinstance(text, str) or not isinstance(source_language, str) or not isinstance(target_language, str):
-        logger.error("Invalid input type for translation.")
-        raise TypeError("Invalid input type for translation")
     
     # Формируем запрос к OpenAI API.
     prompt = (
@@ -218,11 +205,9 @@ def translate(text: str, source_language: str, target_language: str) -> str:
         translation = response.choices[0].text.strip()
         return translation
     except openai.error.OpenAIError as e:
-        # Обработка ошибок OpenAI.
-        logger.error("Error during OpenAI request: %s", e)
+        logger.error("OpenAI API error during translation: %s", e)
         return None
-    except Exception as e:
-        # Обработка других ошибок.
-        logger.error("An unexpected error occurred during translation: %s", e)
+    except Exception as ex:
+        logger.error("Error during translation: %s", ex)
         return None
 ```

@@ -77,8 +77,17 @@ MODE = 'debug'
 **Improved Code**
 
 ```html
+<!--
+.. module:: src.endpoints.kazarinov.react.templates.template_1
+
+    :platform: Linux
+    :synopsis: Шаблон HTML для отображения списка продуктов.
+
+    :file: template_1.html
+-->
 <!DOCTYPE html>
 <html lang="{{ language }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,6 +125,7 @@ MODE = 'debug'
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1 class="text-center my-5">{{ title }}</h1>
@@ -125,33 +135,44 @@ MODE = 'debug'
             {% for product in products %}
             <div class="col-md-6 product-card">
                 <h3>{{ product.product_title }}</h3>
-                <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" class="img-fluid" />
+                <img src="{{ product.image_local_saved_path }}" 
+                     alt="{{ product.product_title }}" class="img-fluid" />
                 <p>{{ product.product_description }}</p>
             </div>
             {% endfor %}
         </div>
 
         <div class="footer">
-            <p>Общая стоимость: <span class="price-tag">{{ price }} {{ currency }}</span></p>
+            <p>Общая стоимость: 
+                <span class="price-tag">{{ price }} {{ currency }}</span>
+            </p>
         </div>
     </div>
 </body>
+
 </html>
 ```
 
 **Changes Made**
 
-- Removed unnecessary comments and shebang line (`#! venv/Scripts/python.exe`).
-- No changes were made to the HTML structure, as it's already well-formatted.
-- Added missing closing tags (`</head>`, `</body>`, `</html>`).
-- Improved code readability by removing extra whitespace.
+- Added RST-style documentation to the top of the file, describing the module and its purpose.
+- Removed the unnecessary Python shebang line (`#! venv/Scripts/python.exe`) as it's not relevant for HTML.
+- Removed the `MODE = 'debug'` line as it's likely not used in this HTML file.
+- No further changes were needed as the code was already valid HTML.
 
-
-**Full Code (Improved)**
 
 ```html
+<!--
+.. module:: src.endpoints.kazarinov.react.templates.template_1
+
+    :platform: Linux
+    :synopsis: Шаблон HTML для отображения списка продуктов.
+
+    :file: template_1.html
+-->
 <!DOCTYPE html>
 <html lang="{{ language }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -189,6 +210,7 @@ MODE = 'debug'
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1 class="text-center my-5">{{ title }}</h1>
@@ -198,16 +220,20 @@ MODE = 'debug'
             {% for product in products %}
             <div class="col-md-6 product-card">
                 <h3>{{ product.product_title }}</h3>
-                <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" class="img-fluid" />
+                <img src="{{ product.image_local_saved_path }}" 
+                     alt="{{ product.product_title }}" class="img-fluid" />
                 <p>{{ product.product_description }}</p>
             </div>
             {% endfor %}
         </div>
 
         <div class="footer">
-            <p>Общая стоимость: <span class="price-tag">{{ price }} {{ currency }}</span></p>
+            <p>Общая стоимость: 
+                <span class="price-tag">{{ price }} {{ currency }}</span>
+            </p>
         </div>
     </div>
 </body>
+
 </html>
 ```

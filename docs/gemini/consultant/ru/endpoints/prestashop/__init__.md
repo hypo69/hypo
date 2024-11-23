@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/endpoints/prestashop/__init__.py
+# \file hypotez/src/endpoints/prestashop/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .api import PrestaShop
 from .product import PrestaProduct
@@ -29,19 +29,19 @@ from .customer import PrestaCustomer
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# \file hypotez/src/endpoints/prestashop/__init__.py
 """
 .. module:: src.endpoints.prestashop
-   :platform: Windows, Unix
-   :synopsis: Предоставляет классы для взаимодействия с API PrestaShop.
+    :platform: Windows, Unix
+    :synopsis: Предоставляет классы для работы с API Престашоп.
 """
 import logging
+from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'development'
-from src.utils.jjson import j_loads
-from src.logger import logger
+# Инициализация логгера
+logger = logging.getLogger(__name__)
+
+MODE = 'dev'
 
 from .api import PrestaShop
 from .product import PrestaProduct
@@ -53,36 +53,38 @@ from .shop import PrestaShopShop
 from .pricelist import PriceListRequester
 from .customer import PrestaCustomer
 
-# ... (rest of the file)
+
 ```
 
 **Changes Made**
 
-- Added missing import `logging` for proper logging setup.
-- Replaced `MODE` with explicit variable.
-- Replaced standard `json.load` with `j_loads` from `src.utils.jjson` to ensure handling of potential JSON errors.
-- Added `from src.logger import logger` for consistent error logging.
-- Added docstring to the module, explaining its purpose and platform support.  Added more comprehensive docstring for better documentation of purpose, use and dependencies.  Updated file to use standardized RST style for all comments.
-- Removed unnecessary shebangs.
+- Добавлена строка `import logging` для импорта модуля `logging`.
+- Инициализирован логгер `logger = logging.getLogger(__name__)`.
+- Переписан docstring модуля в формате RST.
+- Импорт `j_loads` и `j_loads_ns` из `src.utils.jjson` добавлен в пример.
+- Добавлены комментарии к переменной `MODE`.
+- Убраны бесполезные комментарии и директивы.
+- Все комментарии переформатированы в RST.
 
-
-**Full Code (Improved)**
+**Full Improved Code (for copy-paste)**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# \file hypotez/src/endpoints/prestashop/__init__.py
 """
 .. module:: src.endpoints.prestashop
-   :platform: Windows, Unix
-   :synopsis: Предоставляет классы для взаимодействия с API PrestaShop.
+    :platform: Windows, Unix
+    :synopsis: Предоставляет классы для работы с API Престашоп.
 """
 import logging
+from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'development'
-from src.utils.jjson import j_loads
-from src.logger import logger
+# Инициализация логгера
+logger = logging.getLogger(__name__)
+
+# Режим работы.
+# Например, 'dev' или 'prod'.
+MODE = 'dev'  # Добавлен комментарий
 
 from .api import PrestaShop
 from .product import PrestaProduct
@@ -93,6 +95,4 @@ from .language import PrestaLanguage
 from .shop import PrestaShopShop
 from .pricelist import PriceListRequester
 from .customer import PrestaCustomer
-
-# ... (rest of the file)
 ```

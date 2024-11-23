@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .category import Category
 ```
@@ -20,46 +20,60 @@ from .category import Category
 **Improved Code**
 
 ```python
+# \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Module for managing categories.
-
-:module: src.category
-:platform: Windows, Unix
+.. module:: src.category
+   :platform: Windows, Unix
+   :synopsis:  Модуль для работы с категориями.
 """
-from .category import Category  # Импорт класса Category
-from src.logger import logger  # Импорт logger для логирования
+import logging
 
-MODE = 'development'  # Переменная MODE
+MODE = 'dev'
 
+# Импортируем класс Category из модуля category.
+from .category import Category
+
+
+# Устанавливаем уровень логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 ```
 
 **Changes Made**
 
-* Added missing import statement `from src.logger import logger`.
-* Removed unnecessary shebangs (`#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`). These are not needed for Python code execution and might lead to problems in different environments.
-* Updated module docstring to better conform to reStructuredText (RST) standards, including using proper `:module:` and `:platform:` directives.
-* Added missing documentation string for the `MODE` variable (though it's a simple variable, documentation is good practice).
-* Removed unnecessary blank lines.
-* The file now conforms to a better Python style guide, making it easier to read and understand.
+- Импортирован модуль `logging` для обработки ошибок.
+- Создан экземпляр логгера `logger` с помощью `logging.getLogger(__name__)`, чтобы получать лог сообщения с правильным именем модуля.
+- Установлен уровень логирования `logging.INFO` для базовой конфигурации логгирования.
+- Добавлен RST-документ для модуля, описывающий его назначение.
 
 
-**Full Improved Code (Copy and Paste)**
+**Full improved code (copy-paste ready):**
 
 ```python
+# \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Module for managing categories.
-
-:module: src.category
-:platform: Windows, Unix
+.. module:: src.category
+   :platform: Windows, Unix
+   :synopsis:  Модуль для работы с категориями.
 """
-from .category import Category  # Импорт класса Category
-from src.logger import logger  # Импорт logger для логирования
+import logging
 
-MODE = 'development'  # Переменная MODE
-#TODO: Добавить документацию к переменной MODE
+MODE = 'dev'
+
+# Импортируем класс Category из модуля category.
+from .category import Category
 
 
+# Устанавливаем уровень логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 ```

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from .facebook import Facebook
@@ -29,26 +29,26 @@ from .facebook import Facebook
 """
 .. module:: src.endpoints.advertisement
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с рекламными кампаниями.
-
+   :synopsis: Модуль для работы с рекламными объявлениями.
 """
-import logging
 
-# Конфигурируем логирование (важно, если вы планируете использовать logger)
-MODE = 'development'
-logger = logging.getLogger(__name__)
+MODE = 'dev'  # Режим работы (например, 'dev', 'prod').
 
 
-from .facebook import Facebook
+from .facebook import Facebook  # Импорт класса Facebook из подпапки facebook
+
+
+# TODO: Добавьте docstrings к модулю и классу Facebook,
+#  опираясь на примеры и стандарты Sphinx.
 ```
 
 **Changes Made**
 
-*   Импортирован модуль `logging` для возможности использования `logger`.
-*   Добавлен `logger = logging.getLogger(__name__)`.  Это нужно для корректного логирования ошибок.
-*   Добавлен комментарий RST, описывающий модуль, используя правильный синтаксис `.. module::`
-*   Изменен стиль документации, чтобы соответствовать RST стандартам (использованы двойные косые черты `..`).
-*   Добавлено конфигурирование логгера - это **критически важно** для правильной работы логирования в вашем приложении.
+* Добавлен модульный docstring в формате RST, описывающий модуль `src.endpoints.advertisement`.
+* Добавлен комментарий к переменной `MODE`.
+* Улучшен импорт `Facebook` с комментарием.
+* Включены TODO пункты для будущих улучшений (добавл. docstring к классу).
+
 
 **Full Code (Improved)**
 
@@ -61,16 +61,15 @@ from .facebook import Facebook
 """
 .. module:: src.endpoints.advertisement
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с рекламными кампаниями.
-
+   :synopsis: Модуль для работы с рекламными объявлениями.
 """
-import logging
 
-# Конфигурируем логирование (важно, если вы планируете использовать logger)
-MODE = 'development'
-logger = logging.getLogger(__name__)
+MODE = 'dev'  # Режим работы (например, 'dev', 'prod').
 
 
-# Импорт модуля Facebook
-from .facebook import Facebook
+from .facebook import Facebook  # Импорт класса Facebook из подпапки facebook
+
+
+# TODO: Добавьте docstrings к модулю и классу Facebook,
+#  опираясь на примеры и стандарты Sphinx.
 ```

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -34,132 +34,105 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.ai.llama """
-
-
 ```
 
 **Improved Code**
 
 ```python
-## \file hypotez/src/ai/llama/model.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.llama
-   :platform: Windows, Unix
-   :synopsis:  Модель Llama.
+.. module:: src.ai.llama.model
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с моделями Llama.
 """
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
-import logging # Импортируем модуль logging
 
-# Настройка уровня логирования.
-logger = logging.getLogger(__name__)  # Используем __name__ для наилучшей практики
+from src.utils.jjson import j_loads, j_loads_ns  # noqa: F401
+from src.logger import logger
 
 
-MODE = 'development'
+MODE = 'dev'
 
 
-def load_model_config(config_path: str) -> dict:
+# Функция для работы с моделями Llama.
+# TODO: Добавьте здесь подробную документацию.
+def load_model_config(filepath):
     """
-    Загружает конфигурацию модели из файла.
+    Загружает конфигурацию модели Llama из файла.
 
-    :param config_path: Путь к файлу конфигурации.
-    :type config_path: str
+    :param filepath: Путь к файлу с конфигурацией.
+    :type filepath: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При других ошибках обработки файла.
-    :return: Словарь с конфигурацией модели.
+    :raises json.JSONDecodeError: Если файл некорректный JSON.
+    :return: Конфигурация модели.
     :rtype: dict
     """
     try:
-        with open(config_path, 'r') as f:
-            # Использование j_loads для обработки JSON
-            config = j_loads(f)
-            return config
-    except FileNotFoundError:
-        logger.error(f"Файл конфигурации '{config_path}' не найден.")
+        with open(filepath, 'r') as f:
+            config = j_loads(f)  # Используем j_loads вместо json.load
+        return config
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка: файл {filepath} не найден. {e}")
         raise
     except Exception as e:
         logger.error(f"Ошибка при загрузке конфигурации: {e}")
         raise
-
-
-# Пример использования (TODO: Добавить полноценные тесты)
-# try:
-#     config = load_model_config('config.json')
-#     print(config)
-# except Exception as e:
-#     print(f"Ошибка: {e}")
 ```
 
 **Changes Made**
 
-*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Добавлен импорт `logging`.
-*   Создана функция `load_model_config` для загрузки конфигурации модели.
-*   Добавлена обработка ошибок с использованием `logger.error` для `FileNotFoundError` и `Exception`.
-*   Добавлена документация RST для функции `load_model_config` в формате Sphinx.
-*   Комментарии изменены на RST.
-*   Добавлена переменная `logger`.
-*   Исправлен неправильный синтаксис импорта.
-*   Добавлен пример использования функции, который должен быть закомментирован для чистого кода (TODO: добавить тесты).
+1.  Изменил синтаксис импорта, чтобы он соответствовал принятому стандарту в других файлах.
+2.  Добавлены импорты `j_loads`, `j_loads_ns` и `logger`.
+3.  Добавлена функция `load_model_config` с документацией в формате reStructuredText (RST).
+4.  Реализована обработка исключений `FileNotFoundError` и других, используя `logger.error` для логирования.
+5.  Использование `j_loads` для чтения файла.
+6.  Добавлены docstrings к функции,  соответствующие требованиям RST.
 
-
-**Complete Code**
 
 ```python
-## \file hypotez/src/ai/llama/model.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.llama
-   :platform: Windows, Unix
-   :synopsis:  Модель Llama.
+.. module:: src.ai.llama.model
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с моделями Llama.
 """
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
-import logging # Импортируем модуль logging
 
-# Настройка уровня логирования.
-logger = logging.getLogger(__name__)  # Используем __name__ для наилучшей практики
+from src.utils.jjson import j_loads, j_loads_ns  # noqa: F401
+from src.logger import logger
 
 
-MODE = 'development'
+MODE = 'dev'
 
 
-def load_model_config(config_path: str) -> dict:
+# Функция для работы с моделями Llama.
+# TODO: Добавьте здесь подробную документацию.
+def load_model_config(filepath):
     """
-    Загружает конфигурацию модели из файла.
+    Загружает конфигурацию модели Llama из файла.
 
-    :param config_path: Путь к файлу конфигурации.
-    :type config_path: str
+    :param filepath: Путь к файлу с конфигурацией.
+    :type filepath: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При других ошибках обработки файла.
-    :return: Словарь с конфигурацией модели.
+    :raises json.JSONDecodeError: Если файл некорректный JSON.
+    :return: Конфигурация модели.
     :rtype: dict
     """
     try:
-        with open(config_path, 'r') as f:
-            # Использование j_loads для обработки JSON
-            config = j_loads(f)
-            return config
-    except FileNotFoundError:
-        logger.error(f"Файл конфигурации '{config_path}' не найден.")
+        with open(filepath, 'r') as f:
+            config = j_loads(f)  # Используем j_loads вместо json.load
+        return config
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка: файл {filepath} не найден. {e}")
         raise
     except Exception as e:
         logger.error(f"Ошибка при загрузке конфигурации: {e}")
         raise
-
-
-# Пример использования (TODO: Добавить полноценные тесты)
-# try:
-#     config = load_model_config('config.json')
-#     print(config)
-# except Exception as e:
-#     print(f"Ошибка: {e}")
 ```

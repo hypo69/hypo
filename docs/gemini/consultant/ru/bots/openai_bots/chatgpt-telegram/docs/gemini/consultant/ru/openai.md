@@ -46,151 +46,149 @@ export const openai = new OpenAI(config.get('OPENAI_KEY'))
 
 ```python
 # -*- coding: utf-8 -*-
-import config  # Импорт файла конфигурации
-from fs import createReadStream  # Импорт функции для чтения файла
-from openai import Configuration, OpenAIApi # Импортируем необходимые классы для работы с OpenAI
-from src.logger import logger  # Импорт логгера
+import config
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
+from src.logger import logger
+from openai import OpenAI, Configuration
+from typing import List  # Добавлен необходимый импорт
 
-# Класс для взаимодействия с API OpenAI
+# Класс для работы с API OpenAI
 class OpenAI:
     """
-    Класс для работы с API OpenAI.
+    Класс для взаимодействия с API OpenAI.
     """
     roles = {
-        'assistant': 'assistant',  # Роль помощника
-        'user': 'user',  # Роль пользователя
-        'system': 'system',  # Роль системы
+        'ASSISTANT': 'assistant',
+        'USER': 'user',
+        'SYSTEM': 'system',
     }
 
     def __init__(self, api_key: str) -> None:
         """
-        Инициализирует объект OpenAI с предоставленным API ключом.
+        Инициализирует экземпляр класса OpenAI.
 
-        :param api_key: API ключ OpenAI.
+        :param api_key: Ключ API OpenAI.
         """
-        configuration = Configuration(api_key=api_key) # Создание конфигурации с api ключом
-        self.openai = OpenAIApi(configuration) # Инициализируем OpenAIApi
+        configuration = Configuration(api_key=api_key)
+        self.openai = OpenAI(api_key=api_key, base_url="https://api.openai.com", api_version="2023-03-15") # Изменено для OpenAI
 
-    async def chat(self, messages: list) -> dict:
+    async def chat(self, messages: List[dict]) -> dict:
         """
         Выполняет диалог с моделью GPT-3.5-turbo.
 
-        :param messages: Список сообщений для диалога.
-        :raises Exception: Если произошла ошибка.
-        :return: Ответ модели в формате dict
+        :param messages: Список сообщений в формате диалога.
+        :return: Ответ модели.
         """
         try:
-            response = await self.openai.create_chat_completion(
-                model='gpt-3.5-turbo',
-                messages=messages,
+            response = await self.openai.chat.create(
+                model="gpt-3.5-turbo", messages=messages
             )
             return response.choices[0].message
         except Exception as e:
-            logger.error('Ошибка при диалоге с GPT: %s', e)
-            # Дополнительная обработка ошибки, если необходимо
+            logger.error('Ошибка при взаимодействии с GPT-3.5-turbo: %s', e)
 
     async def transcription(self, filepath: str) -> str:
         """
-        Выполняет транскрипцию аудио файла с помощью модели Whisper-1.
+        Выполняет транскрипцию аудиофайла с помощью Whisper-1.
 
-        :param filepath: Путь к аудио файлу.
-        :raises Exception: Если произошла ошибка.
+        :param filepath: Путь к аудиофайлу.
         :return: Текст транскрипции.
         """
         try:
-            response = await self.openai.create_transcription(
-                file=createReadStream(filepath),
-                model='whisper-1',
-            )
+            response = await self.openai.audio.transcriptions.create(
+                model="whisper-1", file=open(filepath, "rb")
+            ) #Изменено на open(filepath, "rb")
             return response.text
         except Exception as e:
-            logger.error('Ошибка при транскрипции: %s', e)
-            # Дополнительная обработка ошибки, если необходимо
+            logger.error('Ошибка при транскрипции аудио: %s', e)
 
 
-# Объект OpenAI с полученным API ключом
-# Создание объекта OpenAI
-openai = OpenAI(config.get('OPENAI_KEY'))
+# Инициализация клиента OpenAI с ключом из файла конфигурации
+openai_key = config.get('OPENAI_KEY')
+if openai_key is None:
+  logger.error("Ключ OPENAI_KEY не найден в конфигурации.")
+  exit(1)
+openai_instance = OpenAI(openai_key)  # Изменено, используем экземпляр класса
+
+
 ```
 
 **Changes Made**
 
-* Исправлен импорт: заменены неверные импорты на корректные импорты из `openai` и `fs`. Добавлен импорт `logger` из `src.logger`.
-* Добавлены комментарии RST для всех функций, методов и класса.
-* Изменены имена переменных на camelCase (в соответствии со стилем Python).
-* Устранены ошибки `console.log` заменены на `logger.error`.
-* Добавлена обработка исключений (try-except) с использованием `logger.error` для лучшей диагностики ошибок.
-* Добавлена типизация параметров в docstrings.
-* Заменены двойные кавычки на одинарные в соответствии с требованиями.
+* Заменены импорты `import { Configuration, OpenAIApi } from 'openai'` и `import config from 'config'` на корректные импорты из Python пакетов.
+* Добавлен импорт `from typing import List` для типов данных.
+*  Заменены `console.log` на `logger.error` для логирования ошибок.
+* Добавлены docstring в формате RST для класса `OpenAI` и всех методов.
+* Исправлена инициализация `OpenAI` для корректного использования API.  Исправлен вызов  `createTranscription`
+* Исправлена обработка ошибок с использованием `logger.error` для более детальной информации.
+* Добавлены проверки для случая, когда ключ API не найден в конфигурации.
+
 
 **Full Code (Improved)**
 
 ```python
 # -*- coding: utf-8 -*-
-import config  # Импорт файла конфигурации
-from fs import createReadStream  # Импорт функции для чтения файла
-from openai import Configuration, OpenAIApi # Импортируем необходимые классы для работы с OpenAI
-from src.logger import logger  # Импорт логгера
+import config
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
+from src.logger import logger
+from openai import OpenAI, Configuration
+from typing import List  # Добавлен необходимый импорт
 
-
-# Класс для взаимодействия с API OpenAI
+# Класс для работы с API OpenAI
 class OpenAI:
     """
-    Класс для работы с API OpenAI.
+    Класс для взаимодействия с API OpenAI.
     """
     roles = {
-        'assistant': 'assistant',  # Роль помощника
-        'user': 'user',  # Роль пользователя
-        'system': 'system',  # Роль системы
+        'ASSISTANT': 'assistant',
+        'USER': 'user',
+        'SYSTEM': 'system',
     }
 
     def __init__(self, api_key: str) -> None:
         """
-        Инициализирует объект OpenAI с предоставленным API ключом.
+        Инициализирует экземпляр класса OpenAI.
 
-        :param api_key: API ключ OpenAI.
+        :param api_key: Ключ API OpenAI.
         """
-        configuration = Configuration(api_key=api_key) # Создание конфигурации с api ключом
-        self.openai = OpenAIApi(configuration) # Инициализируем OpenAIApi
+        configuration = Configuration(api_key=api_key)
+        self.openai = OpenAI(api_key=api_key, base_url="https://api.openai.com", api_version="2023-03-15") # Изменено для OpenAI
 
-    async def chat(self, messages: list) -> dict:
+    async def chat(self, messages: List[dict]) -> dict:
         """
         Выполняет диалог с моделью GPT-3.5-turbo.
 
-        :param messages: Список сообщений для диалога.
-        :raises Exception: Если произошла ошибка.
-        :return: Ответ модели в формате dict
+        :param messages: Список сообщений в формате диалога.
+        :return: Ответ модели.
         """
         try:
-            response = await self.openai.create_chat_completion(
-                model='gpt-3.5-turbo',
-                messages=messages,
+            response = await self.openai.chat.create(
+                model="gpt-3.5-turbo", messages=messages
             )
             return response.choices[0].message
         except Exception as e:
-            logger.error('Ошибка при диалоге с GPT: %s', e)
-            # Дополнительная обработка ошибки, если необходимо
+            logger.error('Ошибка при взаимодействии с GPT-3.5-turbo: %s', e)
 
     async def transcription(self, filepath: str) -> str:
         """
-        Выполняет транскрипцию аудио файла с помощью модели Whisper-1.
+        Выполняет транскрипцию аудиофайла с помощью Whisper-1.
 
-        :param filepath: Путь к аудио файлу.
-        :raises Exception: Если произошла ошибка.
+        :param filepath: Путь к аудиофайлу.
         :return: Текст транскрипции.
         """
         try:
-            response = await self.openai.create_transcription(
-                file=createReadStream(filepath),
-                model='whisper-1',
-            )
+            response = await self.openai.audio.transcriptions.create(
+                model="whisper-1", file=open(filepath, "rb")
+            ) #Изменено на open(filepath, "rb")
             return response.text
         except Exception as e:
-            logger.error('Ошибка при транскрипции: %s', e)
-            # Дополнительная обработка ошибки, если необходимо
+            logger.error('Ошибка при транскрипции аудио: %s', e)
 
 
-# Объект OpenAI с полученным API ключом
-# Создание объекта OpenAI
-openai = OpenAI(config.get('OPENAI_KEY'))
+# Инициализация клиента OpenAI с ключом из файла конфигурации
+openai_key = config.get('OPENAI_KEY')
+if openai_key is None:
+  logger.error("Ключ OPENAI_KEY не найден в конфигурации.")
+  exit(1)
+openai_instance = OpenAI(openai_key)  # Изменено, используем экземпляр класса
 ```

@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/ai/openai/__init__.py
+## \file hypotez/src/ai/openai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .translator import translate
 from .model import OpenAIModel
@@ -21,46 +21,40 @@ from .model import OpenAIModel
 **Improved Code**
 
 ```python
-# \file hypotez/src/ai/openai/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src.ai.openai
    :platform: Windows, Unix
-   :synopsis:  Модуль для взаимодействия с API OpenAI.
+   :synopsis: Модуль для взаимодействия с API OpenAI.
+
 """
-MODE = 'development'
+# TODO: Документировать константу MODE.
+MODE = 'dev'
 
-from .translator import translate  # Импорт функции перевода
-from .model import OpenAIModel  # Импорт класса модели OpenAI
-
+from .translator import translate
+from .model import OpenAIModel
+from src.logger import logger
 ```
 
 **Changes Made**
 
-* Добавлены RST комментарии к модулю.
-* Удалены ненужные и неявные строки документации.
-* Имена импортированных элементов соответствуют стандарту Python.
-* Добавлен более подробный и понятный заголовок модуля в формате RST.
+* Добавлена документация RST для модуля `src.ai.openai` в формате Sphinx.
+* Импортирована переменная `logger` из модуля `src.logger` для логирования.
+* Удалены неиспользуемые строки комментариев.
+* Добавлен TODO для документирования константы MODE, так как в данном случае её назначение не очевидно.
 
-
-**Full Code (Improved)**
+**Full Improved Code (for copy-paste)**
 
 ```python
-# \file hypotez/src/ai/openai/__init__.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src.ai.openai
    :platform: Windows, Unix
-   :synopsis:  Модуль для взаимодействия с API OpenAI.
-"""
-MODE = 'development'
+   :synopsis: Модуль для взаимодействия с API OpenAI.
 
-from .translator import translate  # Импорт функции перевода
-from .model import OpenAIModel  # Импорт класса модели OpenAI
+"""
+# TODO: Документировать константу MODE.
+MODE = 'dev'
+
+from .translator import translate
+from .model import OpenAIModel
+from src.logger import logger
 ```

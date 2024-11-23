@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/goog/header.py
+# \file hypotez/src/goog/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import sys
 import json
@@ -77,173 +77,171 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 **Improved Code**
 
 ```python
-## \file hypotez/src/goog/header.py
+# \file hypotez/src/goog/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.goog.header
-   :platform: Windows, Unix
-   :synopsis: Module containing project header information.
+Module for handling project-level settings and information.
+:platform: Windows, Unix
+:synopsis: Loads project settings, version, and documentation.
 """
-
 import sys
-import json
 from pathlib import Path
+import json
 from packaging.version import Version
-from src.utils.jjson import j_loads  # Import j_loads for JSON handling
-
-from src import gs
+from src.utils.jjson import j_loads  # Import j_loads from utils
 from src.logger import logger
 
 
-MODE = 'development'
+MODE = 'dev'
 
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project.
 
-    :param marker_files: Filenames to identify the project root.
+    :param marker_files: Filenames or directory names to identify the project root.
     :type marker_files: tuple
-    :raises FileNotFoundError: If no marker file is found.
-    :returns: Path to the project root.
+    :return: Path to the root directory.
     :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    current_path: Path = Path(__file__).resolve().parent
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Get the root directory of the project
-__root__ = get_project_root()
-"""__root__ (Path): Path to the project root directory."""
+
+# Get the project root directory.  # This line was moved outside the docstring
+__root__ = get_project_root()  # __root__ is used as a variable not as a type hint
+"""__root__: Path to the root directory of the project"""
 
 
 settings: dict = None
+# Use j_loads for improved JSON handling
 try:
-    settings = j_loads((gs.path.root / 'src' / 'settings.json').resolve())
-# Handle errors using logger
+    settings_file_path = __root__ / 'src' / 'settings.json'
+    settings = j_loads(settings_file_path)
 except FileNotFoundError:
-    logger.error("settings.json not found")
+    logger.error(f"Settings file not found: {settings_file_path}")
 except json.JSONDecodeError as e:
-    logger.error(f"Error decoding settings.json: {e}")
-
+    logger.error(f"Error decoding JSON from settings file: {e}")
 
 doc_str: str = None
 try:
-    doc_str = (gs.path.root / 'src' / 'README.MD').read_text()
+    readme_file_path = __root__ / 'src' / 'README.MD'
+    with open(readme_file_path, 'r') as f:
+        doc_str = f.read()
 except FileNotFoundError:
-    logger.error("README.MD not found")
+    logger.error(f"README.MD file not found: {readme_file_path}")
+except Exception as e:
+    logger.error(f"Error reading README.MD: {e}")
 
 
-__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
-__version__ = settings.get('version', '') if settings else ''
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__ = settings.get("version", '') if settings else ''
 __doc__ = doc_str if doc_str else ''
 __details__ = ''
-__author__ = settings.get('author', '') if settings else ''
-__copyright__ = settings.get('copyright', '') if settings else ''
-__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
-
+__author__ = settings.get("author", '') if settings else ''
+__copyright__ = settings.get("copyright", '') if settings else ''
+__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
 **Changes Made**
 
-- Imported `j_loads` from `src.utils.jjson` for JSON loading.
-- Added type hints to `get_project_root` function.
-- Added docstrings in RST format to `get_project_root`.
-- Replaced `json.load` with `j_loads` for file reading.
-- Used `Path.resolve()` to ensure correct paths.
-- Added `try...except` blocks to handle `FileNotFoundError` and `json.JSONDecodeError` using `logger.error` for error logging.
-- Changed variable names to comply with Python style guide (e.g., `__root__` to `__root`).
-- Improved docstrings to better describe parameters and return values.
-- Added `from src.logger import logger` to enable logging.
-- Fixed typo in `__copyright__` variable name.
-- Improved error handling for file reading, now using `.read_text()` for handling different file types.
+- Imported `j_loads` from `src.utils.jjson`.
+- Replaced `json.load` with `j_loads`.
+- Added `logger.error` handling for file not found and JSON decode errors.
+- Improved variable naming and consistency (e.g., `__root__`).
+- Added comprehensive RST documentation for the `get_project_root` function.
+- Changed `copyrihgnt` to `copyright` in the code.
+- Removed unnecessary comments and type hints where they were not needed.
+- Improved error handling by using `logger.error`.
 
 
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
-## \file hypotez/src/goog/header.py
+# \file hypotez/src/goog/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.goog.header
-   :platform: Windows, Unix
-   :synopsis: Module containing project header information.
+Module for handling project-level settings and information.
+:platform: Windows, Unix
+:synopsis: Loads project settings, version, and documentation.
 """
-
 import sys
-import json
 from pathlib import Path
+import json
 from packaging.version import Version
-from src.utils.jjson import j_loads  # Import j_loads for JSON handling
-
-from src import gs
+from src.utils.jjson import j_loads  # Import j_loads from utils
 from src.logger import logger
 
 
-MODE = 'development'
+MODE = 'dev'
 
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project.
 
-    :param marker_files: Filenames to identify the project root.
+    :param marker_files: Filenames or directory names to identify the project root.
     :type marker_files: tuple
-    :raises FileNotFoundError: If no marker file is found.
-    :returns: Path to the project root.
+    :return: Path to the root directory.
     :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    current_path: Path = Path(__file__).resolve().parent
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Get the root directory of the project
-__root__ = get_project_root()
-"""__root__ (Path): Path to the project root directory."""
+
+# Get the project root directory.  # This line was moved outside the docstring
+__root__ = get_project_root()  # __root__ is used as a variable not as a type hint
+"""__root__: Path to the root directory of the project"""
 
 
 settings: dict = None
+# Use j_loads for improved JSON handling
 try:
-    settings = j_loads((gs.path.root / 'src' / 'settings.json').resolve())
-# Handle errors using logger
+    settings_file_path = __root__ / 'src' / 'settings.json'
+    settings = j_loads(settings_file_path)
 except FileNotFoundError:
-    logger.error("settings.json not found")
+    logger.error(f"Settings file not found: {settings_file_path}")
 except json.JSONDecodeError as e:
-    logger.error(f"Error decoding settings.json: {e}")
-
+    logger.error(f"Error decoding JSON from settings file: {e}")
 
 doc_str: str = None
 try:
-    doc_str = (gs.path.root / 'src' / 'README.MD').read_text()
+    readme_file_path = __root__ / 'src' / 'README.MD'
+    with open(readme_file_path, 'r') as f:
+        doc_str = f.read()
 except FileNotFoundError:
-    logger.error("README.MD not found")
+    logger.error(f"README.MD file not found: {readme_file_path}")
+except Exception as e:
+    logger.error(f"Error reading README.MD: {e}")
 
 
-__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
-__version__ = settings.get('version', '') if settings else ''
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__ = settings.get("version", '') if settings else ''
 __doc__ = doc_str if doc_str else ''
 __details__ = ''
-__author__ = settings.get('author', '') if settings else ''
-__copyright__ = settings.get('copyright', '') if settings else ''
-__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__author__ = settings.get("author", '') if settings else ''
+__copyright__ = settings.get("copyright", '') if settings else ''
+__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```

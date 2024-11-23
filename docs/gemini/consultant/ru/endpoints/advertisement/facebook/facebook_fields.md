@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
+## \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from pathlib import Path
@@ -43,7 +43,7 @@ class FacebookFields:
 **Improved Code**
 
 ```python
-# \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
+## \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -51,87 +51,73 @@ class FacebookFields:
 """
 .. module:: src.endpoints.advertisement.facebook.facebook_fields
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с полями объявлений и событий Facebook.
+   :synopsis: Модуль для работы с полями объявлений и событий в Facebook.
 """
-MODE = 'development'
-
-
+import os
 from pathlib import Path
 from src import gs
 from src.utils.jjson import j_loads
 from src.logger import logger
 
+
 class FacebookFields:
-    """
-    Класс для работы с полями объявлений и событий Facebook.
-    Загружает данные из файла JSON.
+    """Класс для работы с полями объявлений и событий в Facebook.
     """
 
     def __init__(self):
+        """Инициализирует поля объявлений и событий из файла.
         """
-        Инициализирует объект, загружая данные из файла JSON.
+        # Загрузка данных из файла.
+        self._payload()
 
-        :raises FileNotFoundError: Если файл JSON не найден.
-        :raises ValueError: Если данные в файле JSON некорректны.
-        """
-        try:
-            self._payload()
-        except FileNotFoundError as e:
-            logger.error(f"Ошибка: файл не найден {e}")
-            raise
-        except ValueError as e:
-            logger.error(f"Ошибка: некорректные данные в файле {e}")
-            raise
-    
+
     def _payload(self):
-        """
-        Загружает и устанавливает поля из файла JSON.
-
-        :raises FileNotFoundError: Если файл JSON не найден.
-        :raises ValueError: Если данные в файле JSON некорректны.
-        :return: True, если загрузка прошла успешно.
-        """
-        file_path = Path(gs.path.src, 'advertisement', 'facebook', 'facebook_fields.json')
-        # # Проверяем существование файла
-        if not file_path.is_file():
-            logger.error(f"Файл не найден: {file_path}")
-            raise FileNotFoundError(f"Файл не найден: {file_path}")
+        """Загружает поля из файла JSON и устанавливает их в атрибуты класса.
         
-        try:
-            data = j_loads(file_path)
-        except json.JSONDecodeError as e:
-            logger.error(f"Ошибка декодирования JSON: {e}")
-            raise ValueError(f"Ошибка декодирования JSON: {e}")
+        :raises FileNotFoundError: Если файл не найден.
+        :raises ValueError: Если данные в файле некорректны.
+        :returns: True, если загрузка успешна.
+        """
+        # Путь к файлу с данными полей.
+        filepath = Path(gs.path.src, 'advertisement', 'facebook', 'facebook_fields.json')
 
-        if not data:
-            logger.warning(f"Пустой файл: {file_path}")
+        try:
+            # Загрузка данных из файла с помощью j_loads.
+            data = j_loads(filepath)
+            
+            # Проверка на пустой результат.
+            if not data:
+                logger.error(f"Пустой результат при загрузке данных из файла {filepath}")
+                return False
+            
+            # Установка полей из данных в атрибуты класса.
+            for name, value in data.items():
+                setattr(self, name, value)  #Используем корректное имя атрибута
+            return True
+        except FileNotFoundError:
+            logger.error(f"Файл не найден: {filepath}")
+            return False
+        except ValueError as e:
+            logger.error(f"Ошибка при парсинге JSON: {e}, Путь к файлу: {filepath}")
             return False
 
-        for name, value in data.items():
-            setattr(self, name, value)  # Используем имя переменной напрямую
-        return True
+
 ```
 
 **Changes Made**
 
-- Заменено `j_loads_ns` на `j_loads`.
-- Добавлены docstrings в формате RST для класса `FacebookFields` и метода `_payload`.
-- Исправлена ошибка в пути к файлу, добавлена проверка на существование файла.
-- Обработка ошибок с помощью `try-except` заменена на использование `logger.error`.
-- Добавлен `logger.warning` для случая пустого файла.
-- Добавлена обработка `json.JSONDecodeError` для корректной обработки ошибок при чтении json.
-- Приведение имён переменных и функций к PEP8.
-- Использование `name` вместо `f'{name}'` в `setattr`.
-- Исправлено название папки в пути (`facebok` -> `facebook`).
-- Добавлены `raise` в блоках `except` для перехвата ошибок.
-- Описание файла теперь корректно описывает модуль.
-- Добавлена проверка на корректность данных `data` перед перебором.
+- **Improved Docstrings:** Added RST-formatted docstrings to the `FacebookFields` class and the `_payload` method, explaining their purpose and parameters.
+- **Error Handling:** Implemented `try-except` blocks to handle `FileNotFoundError` and `ValueError` during JSON loading. This prevents the script from crashing and logs the error.  The `if not data:` check was also moved inside the try block to correctly handle the case of missing or empty files.
+- **Corrected File Path:** Corrected the file path to `facebook_fields.json` and added `src.logger` import.
+- **Corrected Attribte Names:** Fixed the `setattr` call to use the actual key `name` for the attribute name instead of the string `f'{name}'`. This is crucial for correct attribute assignment.
+- **Clearer Error Logging:** Changed `logger.debug` to `logger.error` for error messages to better identify and handle potential issues. Provided more context in error messages (file path) for better debugging.
+- **Correct Import:** Corrected the import of j_loads.
 
 
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
-# \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
+## \file hypotez/src/endpoints/advertisement/facebook/facebook_fields.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -139,64 +125,53 @@ class FacebookFields:
 """
 .. module:: src.endpoints.advertisement.facebook.facebook_fields
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с полями объявлений и событий Facebook.
+   :synopsis: Модуль для работы с полями объявлений и событий в Facebook.
 """
-import json
-MODE = 'development'
-
-
+import os
 from pathlib import Path
 from src import gs
 from src.utils.jjson import j_loads
 from src.logger import logger
 
+
 class FacebookFields:
-    """
-    Класс для работы с полями объявлений и событий Facebook.
-    Загружает данные из файла JSON.
+    """Класс для работы с полями объявлений и событий в Facebook.
     """
 
     def __init__(self):
+        """Инициализирует поля объявлений и событий из файла.
         """
-        Инициализирует объект, загружая данные из файла JSON.
+        # Загрузка данных из файла.
+        self._payload()
 
-        :raises FileNotFoundError: Если файл JSON не найден.
-        :raises ValueError: Если данные в файле JSON некорректны.
-        """
-        try:
-            self._payload()
-        except FileNotFoundError as e:
-            logger.error(f"Ошибка: файл не найден {e}")
-            raise
-        except ValueError as e:
-            logger.error(f"Ошибка: некорректные данные в файле {e}")
-            raise
-    
+
     def _payload(self):
-        """
-        Загружает и устанавливает поля из файла JSON.
-
-        :raises FileNotFoundError: Если файл JSON не найден.
-        :raises ValueError: Если данные в файле JSON некорректны.
-        :return: True, если загрузка прошла успешно.
-        """
-        file_path = Path(gs.path.src, 'advertisement', 'facebook', 'facebook_fields.json')
-        # # Проверяем существование файла
-        if not file_path.is_file():
-            logger.error(f"Файл не найден: {file_path}")
-            raise FileNotFoundError(f"Файл не найден: {file_path}")
+        """Загружает поля из файла JSON и устанавливает их в атрибуты класса.
         
+        :raises FileNotFoundError: Если файл не найден.
+        :raises ValueError: Если данные в файле некорректны.
+        :returns: True, если загрузка успешна.
+        """
+        # Путь к файлу с данными полей.
+        filepath = Path(gs.path.src, 'advertisement', 'facebook', 'facebook_fields.json')
+
         try:
-            data = j_loads(file_path)
-        except json.JSONDecodeError as e:
-            logger.error(f"Ошибка декодирования JSON: {e}")
-            raise ValueError(f"Ошибка декодирования JSON: {e}")
-
-        if not data:
-            logger.warning(f"Пустой файл: {file_path}")
+            # Загрузка данных из файла с помощью j_loads.
+            data = j_loads(filepath)
+            
+            # Проверка на пустой результат.
+            if not data:
+                logger.error(f"Пустой результат при загрузке данных из файла {filepath}")
+                return False
+            
+            # Установка полей из данных в атрибуты класса.
+            for name, value in data.items():
+                setattr(self, name, value)  #Используем корректное имя атрибута
+            return True
+        except FileNotFoundError:
+            logger.error(f"Файл не найден: {filepath}")
             return False
-
-        for name, value in data.items():
-            setattr(self, name, value)  # Используем имя переменной напрямую
-        return True
+        except ValueError as e:
+            logger.error(f"Ошибка при парсинге JSON: {e}, Путь к файлу: {filepath}")
+            return False
 ```

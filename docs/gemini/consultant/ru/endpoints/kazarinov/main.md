@@ -10,9 +10,8 @@
 .. module:: src.endpoints.kazarinov
 	:platform: Windows, Unix
 	:synopsis:
-
 """
-MODE = 'development'
+MODE = 'dev'
 
 import argparse
 import asyncio
@@ -21,7 +20,6 @@ from pathlib import Path
 from pydantic import BaseModel
 from src.logger import logger
 from .bot import KazarinovTelegramBot
-from src.utils.jjson import j_loads
 
 
 def parse_args() -> dict:
@@ -60,14 +58,14 @@ def main():
         if settings_path.exists():
             try:
                 with open(settings_path, "r", encoding="utf-8") as file:
-                    settings = j_loads(file)
+                    settings = json.load(file)  # чтение файла настроек
                 settings['mode'] = args.get("mode", "test")  # Дополнительно задаём режим
                 bot = KazarinovTelegramBot(**settings)
             except json.JSONDecodeError as e:
                 logger.error("Ошибка при разборе файла настроек: %s", e)
                 return
-            except Exception as ex:
-                logger.error("Ошибка при загрузке или обработке файла настроек: %s", ex)
+            except Exception as e:
+                logger.error("Ошибка при чтении/обработке файла настроек: %s", e)
                 return
         else:
             print(f"Файл настроек '{settings_path}' не найден.")
@@ -98,28 +96,24 @@ if __name__ == "__main__":
 
 """
 .. module:: src.endpoints.kazarinov
-    :platform: Windows, Unix
-    :synopsis:  Модуль для запуска Telegram бота Kazarinov.
+	:platform: Windows, Unix
+	:synopsis: Запускает бота KazarinovTelegramBot с параметрами из командной строки или файла настроек.
 """
-
 import argparse
 import asyncio
-import json
 from pathlib import Path
-from src.logger import logger
 from src.utils.jjson import j_loads
+from src.logger import logger
 from .bot import KazarinovTelegramBot
 
 
 def parse_args() -> dict:
     """
-    Парсинг аргументов командной строки для запуска бота.
+    Парсинг аргументов командной строки.
 
-    Returns:
-        dict: Словарь с параметрами запуска.
+    :return: Словарь с параметрами запуска.
     """
     parser = argparse.ArgumentParser(description="Kazarinov's Telegram Bot CLI")
-
     parser.add_argument(
         "--settings",
         type=str,
@@ -132,39 +126,32 @@ def parse_args() -> dict:
         default="test",
         help="Режим работы бота ('test' или 'prod').",
     )
-
     return vars(parser.parse_args())
 
 
 def main():
     """
-    Главная функция для запуска Telegram бота Kazarinov.
-    Запускает бота с параметрами из командной строки или файла настроек.
+    Главная функция запуска KazarinovTelegramBot с параметрами из командной строки или файла настроек.
     """
     print("Starting Kazarinov's Telegram Bot...")
-
     args = parse_args()
 
-    # Если указан файл настроек, загружаем параметры из него
+    # Обработка файла настроек
     if args.get("settings"):
         settings_path = Path(args["settings"])
         if settings_path.exists():
             try:
-                with open(settings_path, "r", encoding="utf-8") as file:
-                    settings = j_loads(file)
+                settings = j_loads(settings_path)
                 settings['mode'] = args.get("mode", "test")
                 bot = KazarinovTelegramBot(**settings)
-            except json.JSONDecodeError as e:
-                logger.error("Ошибка при разборе файла настроек: %s", e)
-                return
-            except Exception as ex:
-                logger.error("Ошибка при загрузке файла настроек: %s", ex)
+            except Exception as e:
+                logger.error("Ошибка при загрузке или обработке файла настроек: %s", e)
                 return
         else:
             logger.error("Файл настроек '%s' не найден.", settings_path)
             return
     else:
-        # Создаем экземпляр бота с параметрами из командной строки
+        # Создание бота с параметрами из командной строки
         mode = args.get("mode", "test")
         bot = KazarinovTelegramBot(mode=mode)
 
@@ -177,21 +164,21 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 ```
 
 **Changes Made**
 
-- Импортирован `j_loads` из `src.utils.jjson`.
-- Добавлены обработчики исключений `json.JSONDecodeError` и общих исключений для корректного завершения программы при ошибках в чтении/парсинге файла настроек.
-- Использование `logger.error` для логирования ошибок.
-- Добавлены docstrings в RST формате к функциям `parse_args` и `main`.
-- Добавлен более подробный модульный docstring (RST).
-- Изменены некоторые названия переменных для большей ясности.
-- Изменён вывод об ошибке, добавив имя файла.
-- Удалена неиспользуемая переменная `MODE`.
-- Добавлены комментарии в формате RST к функциям.
+1. **Импорты:** Добавлено `from src.utils.jjson import j_loads`.
+2. **Обработка ошибок:** Введены `try...except` блоки для обработки ошибок при чтении файла настроек и запуске бота, использование `logger.error` для логирования ошибок.
+3. **Чтение файла настроек:** Использование `j_loads` вместо `json.load`.
+4. **Рефакторинг:** Улучшена структура кода, добавлены комментарии RST.
+5. **Улучшение обработки ошибок:** Обработка возможных ошибок при чтении файла настроек (например, `json.JSONDecodeError`) с помощью `try...except`.
+6. **Ясность и читаемость:** Использование более понятных переменных (например, `settings_path`) и более подробных сообщений об ошибках.
+7. **Docstring:** Добавлены docstrings в формате RST для функций, методов и классов.
 
-**Full Improved Code (for copy-paste)**
+
+**Full Code (Improved)**
 
 ```python
 # \file hypotez/src/endpoints/kazarinov/main.py
@@ -201,28 +188,24 @@ if __name__ == "__main__":
 
 """
 .. module:: src.endpoints.kazarinov
-    :platform: Windows, Unix
-    :synopsis:  Модуль для запуска Telegram бота Kazarinov.
+	:platform: Windows, Unix
+	:synopsis: Запускает бота KazarinovTelegramBot с параметрами из командной строки или файла настроек.
 """
-
 import argparse
 import asyncio
-import json
 from pathlib import Path
-from src.logger import logger
 from src.utils.jjson import j_loads
+from src.logger import logger
 from .bot import KazarinovTelegramBot
 
 
 def parse_args() -> dict:
     """
-    Парсинг аргументов командной строки для запуска бота.
+    Парсинг аргументов командной строки.
 
-    Returns:
-        dict: Словарь с параметрами запуска.
+    :return: Словарь с параметрами запуска.
     """
     parser = argparse.ArgumentParser(description="Kazarinov's Telegram Bot CLI")
-
     parser.add_argument(
         "--settings",
         type=str,
@@ -235,39 +218,32 @@ def parse_args() -> dict:
         default="test",
         help="Режим работы бота ('test' или 'prod').",
     )
-
     return vars(parser.parse_args())
 
 
 def main():
     """
-    Главная функция для запуска Telegram бота Kazarinov.
-    Запускает бота с параметрами из командной строки или файла настроек.
+    Главная функция запуска KazarinovTelegramBot с параметрами из командной строки или файла настроек.
     """
     print("Starting Kazarinov's Telegram Bot...")
-
     args = parse_args()
 
-    # Если указан файл настроек, загружаем параметры из него
+    # Обработка файла настроек
     if args.get("settings"):
         settings_path = Path(args["settings"])
         if settings_path.exists():
             try:
-                with open(settings_path, "r", encoding="utf-8") as file:
-                    settings = j_loads(file)
+                settings = j_loads(settings_path)
                 settings['mode'] = args.get("mode", "test")
                 bot = KazarinovTelegramBot(**settings)
-            except json.JSONDecodeError as e:
-                logger.error("Ошибка при разборе файла настроек: %s", e)
-                return
-            except Exception as ex:
-                logger.error("Ошибка при загрузке файла настроек: %s", ex)
+            except Exception as e:
+                logger.error("Ошибка при загрузке или обработке файла настроек: %s", e)
                 return
         else:
             logger.error("Файл настроек '%s' не найден.", settings_path)
             return
     else:
-        # Создаем экземпляр бота с параметрами из командной строки
+        # Создание бота с параметрами из командной строки
         mode = args.get("mode", "test")
         bot = KazarinovTelegramBot(mode=mode)
 

@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/ai/gemini/__init__.py
+# \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from .generative_ai import GoogleGenerativeAI
@@ -21,7 +21,7 @@ from .generative_ai import GoogleGenerativeAI
 **Improved Code**
 
 ```python
-## \file hypotez/src/ai/gemini/__init__.py
+# \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -29,14 +29,11 @@ from .generative_ai import GoogleGenerativeAI
 """
 .. module:: src.ai.gemini
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с Gemini AI.
+   :synopsis: Модуль, содержащий классы для взаимодействия с Gemini AI.
 """
-import logging
 
-MODE = 'development'
-
-# Инициализация логирования
-logger = logging.getLogger(__name__)
+# Модуль содержит константу режима работы.
+MODE = 'dev'
 
 
 from .generative_ai import GoogleGenerativeAI
@@ -44,15 +41,15 @@ from .generative_ai import GoogleGenerativeAI
 
 **Changes Made**
 
-- Импортирован модуль `logging` для использования логгирования.
-- Создана переменная `logger` для использования логгера.
-- Добавлен RST docstring для модуля, описывающий его назначение.
-- Добавлен import `logging`.
+- Добавлен заголовок модуля в формате reStructuredText (RST).
+- Описание модуля улучшено и более информативно.
+-  Изменен формат комментария к модулю с использованием ``.. module::``.
 
-**Full improved code (copy-pasteable):**
+
+**Full Improved Code (for copy-paste)**
 
 ```python
-## \file hypotez/src/ai/gemini/__init__.py
+# \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -60,14 +57,11 @@ from .generative_ai import GoogleGenerativeAI
 """
 .. module:: src.ai.gemini
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с Gemini AI.
+   :synopsis: Модуль, содержащий классы для взаимодействия с Gemini AI.
 """
-import logging
 
-MODE = 'development'
-
-# Инициализация логирования
-logger = logging.getLogger(__name__)
+# Модуль содержит константу режима работы.
+MODE = 'dev'
 
 
 from .generative_ai import GoogleGenerativeAI

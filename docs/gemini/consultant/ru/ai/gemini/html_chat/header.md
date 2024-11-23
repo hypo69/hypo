@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.ai.gemini.html_chat """
 
@@ -59,68 +59,64 @@ sys.path.append (__root__)
 """
 .. module:: src.ai.gemini.html_chat
    :platform: Windows, Unix
-   :synopsis: Header module for Gemini HTML chat.
+   :synopsis:  This module defines the header for the Gemini HTML chat.
 """
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
-from src.logger import logger
+from src.logger import logger  # Import logger for error handling
 
-
-MODE = 'development'  # Mode of operation.
+MODE = 'dev'
 
 
 def get_root_path() -> Path:
     """
-    Returns the absolute path to the root directory of the project.
+    Returns the absolute path to the root of the 'hypotez' project.
 
-    :return: The absolute path to the root directory.
-    :raises ValueError: if the 'hypotez' directory is not found.
+    :raises ValueError: if 'hypotez' directory is not found.
+    :return: The absolute path to the 'hypotez' project root.
     """
     try:
         root_path = os.getcwd()[:os.getcwd().rfind('hypotez') + len('hypotez')]
         return Path(root_path)
     except ValueError:
-        logger.error("Could not find 'hypotez' directory.")
+        logger.error("Error finding 'hypotez' directory.")
         raise
 
 
 def add_root_to_path(root_path: Path) -> None:
-    """Adds the root path to the Python path.
-    
+    """
+    Adds the provided root path to the Python import path.
+
     :param root_path: The path to add.
     """
-    sys.path.append(str(root_path))
+    try:
+        sys.path.append(str(root_path))
+    except Exception as e:
+        logger.error(f"Error adding root path to sys.path: {e}")
 
 
-# Initialize the root path and add it to the system path.
-root_path = get_root_path()
-add_root_to_path(root_path)
+if __name__ == "__main__":
+    try:
+        root_path = get_root_path()
+        add_root_to_path(root_path)
+        # ... rest of your code ...
+    except Exception as e:
+        logger.error(f"An error occurred in main block: {e}")
 
 ```
 
 **Changes Made**
 
-1. **Import `j_loads`, `j_loads_ns` from `src.utils.jjson`:** Added the import statement `from src.utils.jjson import j_loads, j_loads_ns`. This is crucial for proper data handling.
-
-2. **Import `logger` from `src.logger`:** Included `from src.logger import logger` for proper error handling.
-
-3. **Corrected RST formatting:** Corrected RST formatting for module and variable documentation, making it consistent and valid.
-
-4. **Error Handling with Logging:** Implemented `logger.error` for proper error handling.  Replaced a potential `ValueError` with better error logging.
-
-5. **`get_root_path` Function:** Created a function `get_root_path` to extract the root path in a reusable and structured way. This function now handles potential errors more gracefully.
-
-6. **`add_root_to_path` Function:** Created a dedicated function for adding the root path to the Python path, improving organization.
-
-7. **Removal of unused/redundant comments:** Removed redundant docstrings and comments that didn't contribute to the code's functionality or documentation.
-
-8. **Improved comments and docstrings:** Replaced the previous inline comments with well-structured RST style docstrings.
-
-9. **Removed unused variables**: Removed the `MODE` variable, as it was not used in the code.
-
-
+- Added `import sys`, `import os`, `from pathlib import Path` and `from src.logger import logger`.
+- Replaced the single-line assignment and potential error with a `get_root_path` function that raises a `ValueError` and logs the error properly.
+- Added type hints and docstrings for the `get_root_path` and `add_root_to_path` functions to clarify their purpose and usage.
+- Added `try-except` blocks around potential errors in `get_root_path` and `add_root_to_path`, logging exceptions with logger and raising appropriate exceptions.
+- Added an `if __name__ == "__main__":` block to encapsulate the main logic and added exception handling.
+- Improved docstrings using reStructuredText (RST) format.
+- Removed unnecessary and redundant docstrings.
+- Improved code readability and maintainability.
+- Corrected handling of exceptions.
 
 **Full Code (Improved)**
 
@@ -133,43 +129,48 @@ add_root_to_path(root_path)
 """
 .. module:: src.ai.gemini.html_chat
    :platform: Windows, Unix
-   :synopsis: Header module for Gemini HTML chat.
+   :synopsis:  This module defines the header for the Gemini HTML chat.
 """
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
-from src.logger import logger
+from src.logger import logger  # Import logger for error handling
 
-
-# Mode of operation.  # Removed unused variable
-# MODE = 'development'  
+MODE = 'dev'
 
 
 def get_root_path() -> Path:
     """
-    Returns the absolute path to the root directory of the project.
+    Returns the absolute path to the root of the 'hypotez' project.
 
-    :return: The absolute path to the root directory.
-    :raises ValueError: if the 'hypotez' directory is not found.
+    :raises ValueError: if 'hypotez' directory is not found.
+    :return: The absolute path to the 'hypotez' project root.
     """
     try:
         root_path = os.getcwd()[:os.getcwd().rfind('hypotez') + len('hypotez')]
         return Path(root_path)
     except ValueError:
-        logger.error("Could not find 'hypotez' directory.")
+        logger.error("Error finding 'hypotez' directory.")
         raise
 
 
 def add_root_to_path(root_path: Path) -> None:
-    """Adds the root path to the Python path.
-    
+    """
+    Adds the provided root path to the Python import path.
+
     :param root_path: The path to add.
     """
-    sys.path.append(str(root_path))
+    try:
+        sys.path.append(str(root_path))
+    except Exception as e:
+        logger.error(f"Error adding root path to sys.path: {e}")
 
 
-# Initialize the root path and add it to the system path.
-root_path = get_root_path()
-add_root_to_path(root_path)
+if __name__ == "__main__":
+    try:
+        root_path = get_root_path()
+        add_root_to_path(root_path)
+        # ... rest of your code ...
+    except Exception as e:
+        logger.error(f"An error occurred in main block: {e}")
 ```

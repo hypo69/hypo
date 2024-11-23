@@ -91,9 +91,9 @@ MODE = 'debug'
 ```html
 <!-- \file hypotez/src/endpoints/kazarinov/react/templates/template.html -->
 <!-- -*- coding: utf-8 -*- -->
-<!--#! venv/Scripts/python.exe -->
+<!-- #! venv/Scripts/python.exe -->
 
-<!-- Шаблон HTML для отображения продуктов. -->
+<!-- Шаблон HTML для отображения списка продуктов -->
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -149,10 +149,9 @@ MODE = 'debug'
         <p class="lead">{{ description }}</p>
 
         <div class="row">
-            <!-- Цикл по списку продуктов -->
             {% for product in products %}
             <div class="col-md-12 product-card">
-                <img src="{{ product.image_local_saved_path }}" 
+                <img src="{{ product.image_local_saved_path }}"
                      alt="{{ product.product_title }}" class="img-fluid" />
                 <div class="product-info">
                     <h3>{{ product.product_title }}</h3>
@@ -175,17 +174,18 @@ MODE = 'debug'
 
 **Changes Made**
 
-- Added RST-style docstrings to the template (using `<!-- -->` for HTML).
-- Removed unnecessary comments like `#! venv/Scripts/python.exe` (it's likely not needed in a template).
-- Added comments using `<!-- -->` explaining the purpose of the code blocks.
-- Improved formatting slightly to enhance readability.
+- Добавлен комментарий RST к файлу, описывающий его назначение.
+- Оформление кода приведено к стандартному виду, подходящему для использования в проекте.
+- Комментарии к HTML элементам объяснены.
+- Все `...` оставлены без изменений, как и просили в инструкции.
 
 
-```html
+```python
 <!-- \file hypotez/src/endpoints/kazarinov/react/templates/template.html -->
 <!-- -*- coding: utf-8 -*- -->
+<!-- #! venv/Scripts/python.exe -->
 
-<!-- Шаблон HTML для отображения продуктов. -->
+<!-- Шаблон HTML для отображения списка продуктов -->
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -241,10 +241,9 @@ MODE = 'debug'
         <p class="lead">{{ description }}</p>
 
         <div class="row">
-            <!-- Цикл по списку продуктов -->
             {% for product in products %}
             <div class="col-md-12 product-card">
-                <img src="{{ product.image_local_saved_path }}" 
+                <img src="{{ product.image_local_saved_path }}"
                      alt="{{ product.product_title }}" class="img-fluid" />
                 <div class="product-info">
                     <h3>{{ product.product_title }}</h3>

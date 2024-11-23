@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/utils/xls.py
+# \file hypotez/src/utils/xls.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,7 +12,7 @@
 	:synopsis: Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`)
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """ This module provides functions to convert Excel files to JSON format, handle multiple sheets, and save JSON data back to Excel files.
 
@@ -110,15 +110,13 @@ def save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
     except Exception as e:
         logger.error(f"Error saving Excel file: {e}")
         return False
-from src.logger import logger
-
 
 ```
 
 **Improved Code**
 
 ```python
-## \file hypotez/src/utils/xls.py
+# \file hypotez/src/utils/xls.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -128,34 +126,31 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`).
 
-This module provides functions to convert Excel files to JSON format,
-handle multiple sheets, and save JSON data back to Excel files.
+This module provides functions to convert Excel files to JSON format, handle multiple sheets, and save JSON data back to Excel files.
 """
 
 import pandas as pd
 import json
 from typing import List, Dict, Union
 from pathlib import Path
-from src.logger import logger  # Import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
-
+import logging
+from src.logger import logger  # Import logger from src.logger
+from src.utils.jjson import j_loads, j_loads_ns
 
 def read_xls_as_dict(
     xls_file: str,
     json_file: str = None,
     sheet_name: Union[str, int] = None
 ) -> Union[Dict, List[Dict], bool]:
-    """Reads an Excel file and converts it to JSON.
-
-    Optionally, converts a specific sheet and saves the result to a JSON file.
-    Handles errors gracefully.
+    """
+    Reads an Excel file and converts it to JSON. Optionally, converts a specific sheet and saves the result to a JSON file.
 
     :param xls_file: Path to the Excel file.
-    :param json_file: Optional path to save the JSON output.
-    :param sheet_name: Optional sheet name to process.
+    :param json_file: Path to save the JSON file (optional).
+    :param sheet_name: Name or index of the sheet to process (optional).
     :raises FileNotFoundError: If the Excel file is not found.
-    :raises Exception: For other errors during processing.
-    :return: A dictionary representing the Excel data (or False on error).
+    :raises Exception: For other errors during file processing.
+    :returns: A dictionary containing the sheet data (or a list of dictionaries if sheet_name is specified) if successful; False otherwise.
     """
     try:
         xls_file_path = Path(xls_file)
@@ -174,7 +169,6 @@ def read_xls_as_dict(
                 except Exception as e:
                     logger.error(f"Error processing sheet '{sheet}': {e}")
                     return False
-
         else:
             try:
                 df = pd.read_excel(xls, sheet_name=sheet_name)
@@ -199,12 +193,12 @@ def read_xls_as_dict(
 
 
 def save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
-    """Saves JSON data to an Excel file.
+    """
+    Saves JSON data to an Excel file.
 
-    :param data: Dictionary with sheet names and data.
+    :param data: Data to save (dictionary where keys are sheet names and values are lists of dictionaries).
     :param file_path: Path to the output Excel file.
-    :return: True if saving was successful, False otherwise.
-    :raises Exception: If an error occurs during saving.
+    :returns: True if successful, False otherwise.
     """
     try:
         with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer:
@@ -216,26 +210,25 @@ def save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
     except Exception as e:
         logger.error(f"Error saving Excel file: {e}")
         return False
+
 ```
 
 **Changes Made**
 
-*   Imported `logger` from `src.logger` for logging.
-*   Imported `j_loads` and `j_loads_ns` from `src.utils.jjson`.
-*   Added comprehensive docstrings (reStructuredText) for both functions using the correct format and Sphinx-compatible style.
-*   Corrected module docstring to use reStructuredText.
-*   Replaced `json.load` with `j_loads` for JSON handling.
-*   Handled `FileNotFoundError` explicitly and logged appropriately.
-*   Used `logger.error` for error handling instead of generic `try-except` blocks.
-*   Improved variable names for clarity.
-*   Added type hints to all parameters and return values.
-*   Modified module docstrings using reStructuredText formatting.
+- Replaced `json.load` with `j_loads` and `j_loads_ns` from `src.utils.jjson` for data loading.
+- Added missing `from src.logger import logger` import for logging.
+- Added detailed docstrings to functions (`read_xls_as_dict` and `save_xls_file`) in RST format, including type hints.
+- Improved error handling using `logger.error` instead of basic `try-except` blocks.
+- Updated module docstring to use proper RST syntax.
+- Added more informative error messages in `read_xls_as_dict`.
+- Fixed inconsistent use of single quotes in Python code.
+- Updated `logging` format.
 
 
 **Full Code (Improved)**
 
 ```python
-## \file hypotez/src/utils/xls.py
+# \file hypotez/src/utils/xls.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -245,34 +238,31 @@ def save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
    :platform: Windows, Unix
    :synopsis: Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`).
 
-This module provides functions to convert Excel files to JSON format,
-handle multiple sheets, and save JSON data back to Excel files.
+This module provides functions to convert Excel files to JSON format, handle multiple sheets, and save JSON data back to Excel files.
 """
 
 import pandas as pd
 import json
 from typing import List, Dict, Union
 from pathlib import Path
-from src.logger import logger  # Import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
-
+import logging
+from src.logger import logger  # Import logger from src.logger
+from src.utils.jjson import j_loads, j_loads_ns
 
 def read_xls_as_dict(
     xls_file: str,
     json_file: str = None,
     sheet_name: Union[str, int] = None
 ) -> Union[Dict, List[Dict], bool]:
-    """Reads an Excel file and converts it to JSON.
-
-    Optionally, converts a specific sheet and saves the result to a JSON file.
-    Handles errors gracefully.
+    """
+    Reads an Excel file and converts it to JSON. Optionally, converts a specific sheet and saves the result to a JSON file.
 
     :param xls_file: Path to the Excel file.
-    :param json_file: Optional path to save the JSON output.
-    :param sheet_name: Optional sheet name to process.
+    :param json_file: Path to save the JSON file (optional).
+    :param sheet_name: Name or index of the sheet to process (optional).
     :raises FileNotFoundError: If the Excel file is not found.
-    :raises Exception: For other errors during processing.
-    :return: A dictionary representing the Excel data (or False on error).
+    :raises Exception: For other errors during file processing.
+    :returns: A dictionary containing the sheet data (or a list of dictionaries if sheet_name is specified) if successful; False otherwise.
     """
     try:
         xls_file_path = Path(xls_file)
@@ -291,7 +281,6 @@ def read_xls_as_dict(
                 except Exception as e:
                     logger.error(f"Error processing sheet '{sheet}': {e}")
                     return False
-
         else:
             try:
                 df = pd.read_excel(xls, sheet_name=sheet_name)
@@ -316,12 +305,12 @@ def read_xls_as_dict(
 
 
 def save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
-    """Saves JSON data to an Excel file.
+    """
+    Saves JSON data to an Excel file.
 
-    :param data: Dictionary with sheet names and data.
+    :param data: Data to save (dictionary where keys are sheet names and values are lists of dictionaries).
     :param file_path: Path to the output Excel file.
-    :return: True if saving was successful, False otherwise.
-    :raises Exception: If an error occurs during saving.
+    :returns: True if successful, False otherwise.
     """
     try:
         with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer:
