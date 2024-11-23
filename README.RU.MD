@@ -1,4 +1,4 @@
-[English](https://github.com/hypo69/hypo/blob/master/README.MD)
+[English](https://github.com/hypo69/hypo/blob/master/README.md)
 # Проект Hypotez
 
 ## Содержание
