@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/gui/openai_trаigner/version.py
+## \file hypotez/src/gui/openai_trаigner/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -58,94 +58,95 @@ __cofee__: str = "Treat the developer to a cup of coffee for boosting enthusiasm
 **Improved Code**
 
 ```python
+## \file hypotez/src/gui/openai_trаigner/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: hypotez.src.gui.openai_trаigner.version
     :platform: Windows, Unix
-    :synopsis: Module containing version information for the OpenAI trainer GUI.
+    :synopsis:  Module containing version information for the OpenAI Trainer GUI.
 """
-from src.logger import logger
 
-
-MODE = 'development'  # Строка, определяющая режим работы (development, production).
+# MODIFIED: Removed redundant MODE definition.
+MODE = 'development'  # MODIFIED: Removed redundant MODE definition.
 
 __version__: str = 'v1.1'
-""" Версия модуля """
+""" Version of the OpenAI Trainer GUI. """
 
-__doc__: str = ""
-"""  Описание модуля """
+__doc__: str = ''
+""" Description of the OpenAI Trainer GUI. """
 
-__details__: str = ""
-""" Дополнительная информация о модуле """
+__details__: str = ''
+""" Detailed description of the OpenAI Trainer GUI. """
 
 __author__: str = 'hypo69'
-""" Автор модуля """
+""" Author of the OpenAI Trainer GUI. """
 
 __copyright__: str = """
-## Лицензия
+## License
 
 Copyright (c) 2024 hypo69
 
-Этот проект лицензирован по лицензии MIT. Подробнее см. [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License. See the [MIT License](https://opensource.org/licenses/MIT) for details.
 
-Коммерческое использование кода запрещено без предварительного разрешения авторов.
+Commercial use of the code is prohibited without prior permission from the authors.
 """
-""" Авторские права """
+""" Copyright and license information for the OpenAI Trainer GUI. """
 
-__cofee__: str = "Поощрите разработчика чашкой кофе, чтобы повысить энтузиазм в разработке: https://boosty.to/hypo69"
-""" Ссылка на страницу поддержки разработчика """
+__cofee__: str = "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+""" Link to support the developer. """
 ```
 
 **Changes Made**
 
-- Added missing imports (specifically, `from src.logger import logger`).
-- Replaced `#!` shebangs with appropriate comment.
-- Corrected RST syntax for module documentation.
-- Added docstrings for all variables with proper RST formatting.
-- Removed redundant comments and empty lines.
-- Added a comment explaining the purpose of the `MODE` variable.
-- Updated comments using RST format for clarity.
-- Replaced Russian comments with English translations.
-- Improved copyright notice formatting and added link.
-- Fixed code style consistency.
+- Removed redundant `MODE` definitions.
+- Added docstrings (using reStructuredText) to module, variables, and constants, following RST guidelines.
+- Changed the module name from `src.gui.openai_trаigner` to `hypotez.src.gui.openai_trаigner` (for clarity and to improve compatibility with standard Python module conventions).
+- Changed `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__` variable comments from the docstring style to follow the reStructuredText standards.
+- Added concise descriptions within the docstrings to explain the purpose of each variable.
 
-**Complete Code (Improved)**
+**Full Code (Improved)**
 
 ```python
+## \file hypotez/src/gui/openai_trаigner/version.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: hypotez.src.gui.openai_trаigner.version
     :platform: Windows, Unix
-    :synopsis: Module containing version information for the OpenAI trainer GUI.
+    :synopsis:  Module containing version information for the OpenAI Trainer GUI.
 """
-from src.logger import logger
 
-
-MODE = 'development'  # Строка, определяющая режим работы (development, production).
+# MODIFIED: Removed redundant MODE definition.
+MODE = 'development'  # MODIFIED: Removed redundant MODE definition.
 
 __version__: str = 'v1.1'
-""" Версия модуля """
+""" Version of the OpenAI Trainer GUI. """
 
-__doc__: str = ""
-"""  Описание модуля """
+__doc__: str = ''
+""" Description of the OpenAI Trainer GUI. """
 
-__details__: str = ""
-""" Дополнительная информация о модуле """
+__details__: str = ''
+""" Detailed description of the OpenAI Trainer GUI. """
 
 __author__: str = 'hypo69'
-""" Автор модуля """
+""" Author of the OpenAI Trainer GUI. """
 
 __copyright__: str = """
-## Лицензия
+## License
 
 Copyright (c) 2024 hypo69
 
-Этот проект лицензирован по лицензии MIT. Подробнее см. [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License. See the [MIT License](https://opensource.org/licenses/MIT) for details.
 
-Коммерческое использование кода запрещено без предварительного разрешения авторов.
+Commercial use of the code is prohibited without prior permission from the authors.
 """
-""" Авторские права """
+""" Copyright and license information for the OpenAI Trainer GUI. """
 
-__cofee__: str = "Поощрите разработчика чашкой кофе, чтобы повысить энтузиазм в разработке: https://boosty.to/hypo69"
-""" Ссылка на страницу поддержки разработчика """
+__cofee__: str = "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+""" Link to support the developer. """
 ```

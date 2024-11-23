@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/gui/context_menu/qt6/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -51,107 +50,79 @@ sys.path.append (__root__)
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-.. module:: hypotez.src.gui.context_menu.qt6.header
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-    :platform: Windows, Unix
-    :synopsis: Header module for context menu implementation in Qt6.
 """
+.. module:: src.gui.context_menu.qt6
+   :platform: Windows, Unix
+   :synopsis: Модуль для контекстного меню PyQt6.
+"""
+
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # Import logger for logging
-
+from src.logger import logger  # импорт логгера
 
 MODE = 'development'
 
 
-def _get_root_path() -> Path:
+def __init__():
     """
-    Gets the root path of the project.
-
-    :raises ValueError: if the project root cannot be determined.
-    :returns: Path to the project root.
+    Инициализация модуля.
     """
     try:
-        root_path = os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7]
-        return Path(root_path)
-    except ValueError as e:
-        logger.error(f"Error determining project root: {e}")
-        raise
-
-
-def setup_module_path() -> None:
-    """
-    Sets the module search path to include the project root.
-    """
-    try:
-        root_path = _get_root_path()
-        sys.path.append(str(root_path))
+        __root__ : Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez')+7])
+        sys.path.append(str(__root__))
     except Exception as e:
-        logger.error(f"Error setting module search path: {e}")
-
-
-# Call the function to set the path
-setup_module_path()
+        logger.error(f"Ошибка при инициализации модуля: {e}")
+    
 ```
 
 **Changes Made**
 
-- Added missing import `from src.logger import logger`.
-- Replaced the potentially error-prone `os.getcwd()` string manipulation with a dedicated function `_get_root_path` to improve error handling and code clarity.  This function now raises a `ValueError` if the project root cannot be determined.
-- Added `try...except` blocks around potentially failing operations (`os.getcwd()`, `append` method) and log any errors using `logger.error`.
-- Added docstrings to the `_get_root_path` and `setup_module_path` functions in RST format.
-- Removed redundant multiline docstrings that were not actually used.
-- Simplified the logic for adding the root path to `sys.path`.
--  Added `__root__` type annotation using `Path`.
+- Добавлена строка импорта `from src.logger import logger` для использования логгирования.
+- Функция `__init__` добавлена для инициализации.
+- Использование `Path` для корректного управления путями.
+- Добавлена обработка исключений с использованием `logger.error`.
+- Переписаны комментарии в формате RST для модуля и функции `__init__`.
+- Удалены бесполезные и дублирующиеся комментарии.
+- Исправлены проблемы с именами переменных и функциями, для соответствия стандартам.
+- Исправлен синтаксис импорта, добавив `str(__root__)`.
+- Изменён формат описаний, что соответствует лучшим практикам RST.
 
 
-**Full Improved Code (Copy and Paste)**
+**Complete Code (Improved)**
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-.. module:: hypotez.src.gui.context_menu.qt6.header
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-    :platform: Windows, Unix
-    :synopsis: Header module for context menu implementation in Qt6.
 """
+.. module:: src.gui.context_menu.qt6
+   :platform: Windows, Unix
+   :synopsis: Модуль для контекстного меню PyQt6.
+"""
+
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # Import logger for logging
-
+from src.logger import logger  # импорт логгера
 
 MODE = 'development'
 
 
-def _get_root_path() -> Path:
+def __init__():
     """
-    Gets the root path of the project.
+    Инициализация модуля.
 
-    :raises ValueError: if the project root cannot be determined.
-    :returns: Path to the project root.
+    :raises Exception: Если возникла ошибка при инициализации.
     """
     try:
-        root_path = os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7]
-        return Path(root_path)
-    except ValueError as e:
-        logger.error(f"Error determining project root: {e}")
-        raise
-
-
-def setup_module_path() -> None:
-    """
-    Sets the module search path to include the project root.
-    """
-    try:
-        root_path = _get_root_path()
-        sys.path.append(str(root_path))
+        __root__ : Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez')+7])
+        sys.path.append(str(__root__))  # Добавление пути к sys.path
     except Exception as e:
-        logger.error(f"Error setting module search path: {e}")
+        logger.error(f"Ошибка при инициализации модуля: {e}")
 
-
-# Call the function to set the path
-setup_module_path()
 ```

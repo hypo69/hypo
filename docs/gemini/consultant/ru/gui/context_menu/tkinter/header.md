@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/gui/context_menu/tkinter/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -50,89 +49,87 @@ sys.path.append (__root__)
 **Improved Code**
 
 ```python
-## \file hypotez/src/gui/context_menu/tkinter/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.gui.context_menu.tkinter
-    :platform: Windows, Unix
-    :synopsis: Header file for tkinter context menu module.
+   :platform: Windows, Unix
+   :synopsis:  Модуль содержит код для контекстного меню в интерфейсе Tkinter.
 """
+
+# Конфигурация режима (development/production).
+MODE = 'development'
+
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # Import logger for error handling
-
-MODE = 'development'
-
+from src.logger import logger  # Импортируем logger для логирования
 
 def __init__():
     """
-    Initializes the module.
+    Инициализация модуля.
     
-    :raises ImportError: If any required modules are missing.
     """
+    global __root__
+    __root__ = Path(os.getcwd()).resolve().parents[0]
     try:
-        __root__ = Path(os.getcwd()).parents[1]  # Get the hypotez directory
         sys.path.append(str(__root__))
     except Exception as e:
-        logger.error(f"Error initializing module: {e}")
-        raise
+      logger.error("Ошибка при добавлении пути к sys.path: %s", e)
 
+# Вызываем инициализацию для корректной работы
+__init__()
 
-# __init__()
 ```
 
 **Changes Made**
 
-* Added missing import `from src.logger import logger`.
-* Replaced `os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]` with `Path(os.getcwd()).parents[1]` for more robust and platform-independent path handling.
-* Added a `__init__` function to encapsulate the initialization logic.
-* Implemented `try...except` block to handle potential errors during initialization and log them using `logger.error`.
-* Corrected RST formatting for module docstring and function docstrings.
-* Removed unnecessary comments and redundant declarations of `MODE`.
-* Improved variable name `__root__` to `__root__` (using double underscores).
-* Added a docstring to the `__init__` function to explain its purpose.
-* Converted single-line comments starting with `#` to docstrings.
-* Removed any leftover `...` as placeholder comments.
+- Added missing import `from src.logger import logger`.
+- Changed the docstring for the module to use reStructuredText (RST) format and to include a synopsis.
+- Added `__init__` function to ensure correct initialization and path adding.
+- Removed unnecessary comments and duplicated docstrings.
+- Added error handling using `logger.error` for robustness.
+- Corrected Path usage to use resolve for consistent results.
+- Corrected variable naming.
+- Corrected path construction logic to avoid potential errors.
 
 
-**Complete Code (Improved)**
+**Full Improved Code (Copy & Paste)**
 
 ```python
-## \file hypotez/src/gui/context_menu/tkinter/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.gui.context_menu.tkinter
-    :platform: Windows, Unix
-    :synopsis: Header file for tkinter context menu module.
+   :platform: Windows, Unix
+   :synopsis:  Модуль содержит код для контекстного меню в интерфейсе Tkinter.
 """
+
+# Конфигурация режима (development/production).
+MODE = 'development'
+
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # Import logger for error handling
-
-MODE = 'development'
-
+from src.logger import logger  # Импортируем logger для логирования
 
 def __init__():
     """
-    Initializes the module.
+    Инициализация модуля.
     
-    :raises ImportError: If any required modules are missing.
     """
+    global __root__
+    # Использование resolve() для получения абсолютного пути и избегания проблем с относительными путями
+    __root__ = Path(os.getcwd()).resolve().parents[0]
     try:
-        __root__ = Path(os.getcwd()).parents[1]  # Get the hypotez directory
         sys.path.append(str(__root__))
     except Exception as e:
-        logger.error(f"Error initializing module: {e}")
-        raise
+      logger.error("Ошибка при добавлении пути к sys.path: %s", e)
 
-
-# __init__()
+# Вызываем инициализацию для корректной работы
+__init__()
 ```
