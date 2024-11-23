@@ -95,14 +95,6 @@ def close_pop_up(value: Any = None) -> Callable:
     return decorator
 
 
-def check_value(func):
-    """Декоратор для проверки аргумента `value` перед выполнением функции."""
-    async def wrapper(self, value: Any = None, *args, **kwargs):
-        if not value:
-            logger.debug(f"Нет аргумента {value=}")
-            return
-        return await func(self, value, *args, **kwargs)
-    return wrapper
 
 class Graber:
     """Базовый класс сбора данных со страницы для всех поставщиков."""
@@ -259,20 +251,6 @@ class Graber:
         """Error handler for fields."""
         logger.debug(f"Ошибка заполнения поля {field}")
 
-    async def set_field_value(
-        self, 
-        value: Any, 
-        locator_func: Callable[[], Any], 
-        field_name: str, 
-        default: Any = ''
-    ) -> Any:
-        """Universal function for setting field values with error handling."""
-        if value:
-            return value
-        result = await locator_func()  # Ожидаем выполнение корутины
-        return result if result else self.error(field_name) or default
-
-
 
 
     @close_pop_up()
@@ -282,334 +260,357 @@ class Graber:
         value (Any): это значение можно передать в словаре kwards чеез ключ {additional_shipping_cost = `value`} при определении класса
         если `value` был передан - его значение подставляется в поле `ProductFields.additional_shipping_cost
         """
-
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.additional_shipping_cost) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.additional_shipping_cost) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `additional_shipping_cost`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.additional_shipping_cost}")
+            ...
             return
 
         # Записываем результат в поле `additional_shipping_cost` объекта `ProductFields`
         self.fields.additional_shipping_cost = value
+        return True
+
     @close_pop_up()
     async def delivery_in_stock(self, value: Any = None):
         """Fetch and set delivery in stock status.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {delivery_in_stock = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.delivery_in_stock`
+        value (Any): это значение можно передать в словаре kwargs через ключ {delivery_in_stock = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.delivery_in_stock`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.delivery_in_stock) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.delivery_in_stock) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `delivery_in_stock`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
-        if not locator_result:
-            logger.debug(f"Невалидный результат {locator_result=}")
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.delivery_in_stock}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.delivery_in_stock = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'delivery_in_stock'
-        )
-
+        # Записываем результат в поле `delivery_in_stock` объекта `ProductFields`
+        self.fields.delivery_in_stock = value
+        return True
 
     @close_pop_up()
     async def active(self, value: Any = None):
         """Fetch and set active status.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {active = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.active`
+        value (Any): это значение можно передать в словаре kwargs через ключ {active = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.active`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.active) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.active) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `active`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
-        if not locator_result:
-            logger.debug(f"Невалидный результат {locator_result=}")
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.active}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.active = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'active'
-        )
-
+        # Записываем результат в поле `active` объекта `ProductFields`
+        self.fields.active = value
+        return True
 
     @close_pop_up()
     async def additional_delivery_times(self, value: Any = None):
         """Fetch and set additional delivery times.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {additional_delivery_times = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.additional_delivery_times`
+        value (Any): это значение можно передать в словаре kwargs через ключ {additional_delivery_times = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.additional_delivery_times`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.additional_delivery_times) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.additional_delivery_times) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `additional_delivery_times`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
-        if not locator_result:
-            logger.debug(f"Невалидный результат {locator_result=}")
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.additional_delivery_times}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.additional_delivery_times = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'additional_delivery_times'
-        )
-
+        # Записываем результат в поле `additional_delivery_times` объекта `ProductFields`
+        self.fields.additional_delivery_times = value
+        return True
 
     @close_pop_up()
     async def advanced_stock_management(self, value: Any = None):
         """Fetch and set advanced stock management status.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {advanced_stock_management = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.advanced_stock_management`
+        value (Any): это значение можно передать в словаре kwargs через ключ {advanced_stock_management = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.advanced_stock_management`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.advanced_stock_management) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.advanced_stock_management) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `advanced_stock_management`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
-        if not locator_result:
-            logger.debug(f"Невалидный результат {locator_result=}")
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.advanced_stock_management}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.advanced_stock_management = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'advanced_stock_management'
-        )
-
-
+        # Записываем результат в поле `advanced_stock_management` объекта `ProductFields`
+        self.fields.advanced_stock_management = value
+        return True
     @close_pop_up()
     async def affiliate_short_link(self, value: Any = None):
         """Fetch and set affiliate short link.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {affiliate_short_link = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.affiliate_short_link`
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_short_link = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_short_link`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.affiliate_short_link) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.affiliate_short_link) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_short_link`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
-        if not locator_result:
-            logger.debug(f"Невалидный результат {locator_result=}")
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_short_link}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.affiliate_short_link = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'affiliate_short_link'
-        )
-
+        # Записываем результат в поле `affiliate_short_link` объекта `ProductFields`
+        self.fields.affiliate_short_link = value
+        return True
 
     @close_pop_up()
     async def affiliate_summary(self, value: Any = None):
         """Fetch and set affiliate summary.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {affiliate_summary = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.affiliate_summary`
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_summary = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_summary`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.affiliate_summary) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.affiliate_summary) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_summary`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
-        if not locator_result:
-            logger.debug(f"Невалидный результат {locator_result=}")
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_summary}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.affiliate_summary = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'affiliate_summary'
-        )
+        # Записываем результат в поле `affiliate_summary` объекта `ProductFields`
+        self.fields.affiliate_summary = value
+        return True
+
     @close_pop_up()
     async def affiliate_summary_2(self, value: Any = None):
         """Fetch and set affiliate summary 2.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {affiliate_summary_2 = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.affiliate_summary_2`
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_summary_2 = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_summary_2`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.affiliate_summary_2) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.affiliate_summary_2) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_summary_2`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
-        if not locator_result:
-            logger.debug(f"Невалидный результат {locator_result=}")
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_summary_2}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.affiliate_summary_2 = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'affiliate_summary_2'
-        )
-
+        # Записываем результат в поле `affiliate_summary_2` объекта `ProductFields`
+        self.fields.affiliate_summary_2 = value
+        return True
 
     @close_pop_up()
     async def affiliate_text(self, value: Any = None):
         """Fetch and set affiliate text.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {affiliate_text = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.affiliate_text`
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_text = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_text`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.affiliate_text) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.affiliate_text) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_text`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
-        if not locator_result:
-            logger.debug(f"Невалидный результат {locator_result=}")
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_text}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.affiliate_text = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'affiliate_text'
-        )
-
-
+        # Записываем результат в поле `affiliate_text` объекта `ProductFields`
+        self.fields.affiliate_text = value
+        return True
     @close_pop_up()
     async def affiliate_image_large(self, value: Any = None):
         """Fetch and set affiliate large image.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {affiliate_image_large = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.affiliate_image_large`
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_image_large = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_large`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.affiliate_image_large) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            locator_result = value if value else await self.d.execute_locator(self.l.affiliate_image_large) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_image_large`", ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not locator_result:
             logger.debug(f"Невалидный результат {locator_result=}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.affiliate_image_large = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'affiliate_image_large'
-        )
-
+        # Записываем результат в поле `affiliate_image_large` объекта `ProductFields`
+        self.fields.affiliate_image_large = locator_result
+        return True
 
     @close_pop_up()
     async def affiliate_image_medium(self, value: Any = None):
         """Fetch and set affiliate medium image.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {affiliate_image_medium = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.affiliate_image_medium`
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_image_medium = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_medium`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.affiliate_image_medium) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            locator_result = value if value else await self.d.execute_locator(self.l.affiliate_image_medium) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_image_medium`", ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not locator_result:
             logger.debug(f"Невалидный результат {locator_result=}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.affiliate_image_medium = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'affiliate_image_medium'
-        )
-
+        # Записываем результат в поле `affiliate_image_medium` объекта `ProductFields`
+        self.fields.affiliate_image_medium = locator_result
+        return True
 
     @close_pop_up()
     async def affiliate_image_small(self, value: Any = None):
         """Fetch and set affiliate small image.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {affiliate_image_small = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.affiliate_image_small`
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_image_small = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_small`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.affiliate_image_small) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            locator_result = value if value else await self.d.execute_locator(self.l.affiliate_image_small) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_image_small`", ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not locator_result:
             logger.debug(f"Невалидный результат {locator_result=}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.affiliate_image_small = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'affiliate_image_small'
-        )
-
+        # Записываем результат в поле `affiliate_image_small` объекта `ProductFields`
+        self.fields.affiliate_image_small = locator_result
+        return True
 
     @close_pop_up()
     async def available_date(self, value: Any = None):
         """Fetch and set available date.
-    
+        
         Args:
-        value (Any): это значение можно передать в словаре kwards через ключ {available_date = `value`} при определении класса
-        если `value` был передан - его значение подставляется в поле `ProductFields.available_date`
+        value (Any): это значение можно передать в словаре kwargs через ключ {available_date = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.available_date`.
         """
-    
-        # Получаем значение через execute_locator
-        locator_result = await self.d.execute_locator(self.l.available_date) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            locator_result = value if value else await self.d.execute_locator(self.l.available_date) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `available_date`", ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not locator_result:
             logger.debug(f"Невалидный результат {locator_result=}")
+            ...
             return
 
-        # Записываем результат в поле объекта
-        self.fields.available_date = await self.set_field_value(
-            value, 
-            lambda: locator_result,
-            'available_date'
-        )
-
+        # Записываем результат в поле `available_date` объекта `ProductFields`
+        self.fields.available_date = locator_result
+        return True
     @close_pop_up()
     async def available_for_order(self, value: Any = None):
         """Fetch and set available for order status.
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {available_for_order = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.available_for_order`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.available_for_order`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.available_for_order) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `available_for_order`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.available_for_order) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_for_order}")
+            ...
             return
 
         # Записываем результат в поле `available_for_order` объекта `ProductFields`
         self.fields.available_for_order = value
-
+        return True
 
     @close_pop_up()
     async def available_later(self, value: Any = None):
@@ -617,20 +618,25 @@ class Graber:
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {available_later = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.available_later`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.available_later`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.available_later) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `available_later`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.available_later) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_later}")
+            ...
             return
 
         # Записываем результат в поле `available_later` объекта `ProductFields`
         self.fields.available_later = value
-
+        return True
 
     @close_pop_up()
     async def available_now(self, value: Any = None):
@@ -638,20 +644,25 @@ class Graber:
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {available_now = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.available_now`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.available_now`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.available_now) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `available_now`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.available_now) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_now}")
+            ...
             return
 
         # Записываем результат в поле `available_now` объекта `ProductFields`
         self.fields.available_now = value
-
+        return True
 
     @close_pop_up()
     async def additional_categories(self, value: str | list = None) -> dict:
@@ -662,13 +673,12 @@ class Graber:
 
         Args:
         value (str | list, optional): Строка или список категорий. Если не передано, используется пустое значение.
-    
+
         Returns:
         dict: Словарь с ID категорий.
         """
-
         self.fields.additional_categories = value if value else ''
-
+        return {'additional_categories': self.fields.additional_categories}
 
     @close_pop_up()
     async def cache_default_attribute(self, value: Any = None):
@@ -676,41 +686,50 @@ class Graber:
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {cache_default_attribute = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.cache_default_attribute`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_default_attribute`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.cache_default_attribute) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `cache_default_attribute`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.cache_default_attribute) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_default_attribute}")
+            ...
             return
 
         # Записываем результат в поле `cache_default_attribute` объекта `ProductFields`
         self.fields.cache_default_attribute = value
-
-
+        return True
     @close_pop_up()
     async def cache_has_attachments(self, value: Any = None):
         """Fetch and set cache has attachments status.
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {cache_has_attachments = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.cache_has_attachments`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_has_attachments`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.cache_has_attachments) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `cache_has_attachments`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.cache_has_attachments) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_has_attachments}")
+            ...
             return
 
         # Записываем результат в поле `cache_has_attachments` объекта `ProductFields`
         self.fields.cache_has_attachments = value
-
+        return True
 
     @close_pop_up()
     async def cache_is_pack(self, value: Any = None):
@@ -718,20 +737,25 @@ class Graber:
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {cache_is_pack = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.cache_is_pack`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_is_pack`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.cache_is_pack) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `cache_is_pack`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.cache_is_pack) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_is_pack}")
+            ...
             return
 
         # Записываем результат в поле `cache_is_pack` объекта `ProductFields`
         self.fields.cache_is_pack = value
-
+        return True
 
     @close_pop_up()
     async def condition(self, value: Any = None):
@@ -739,20 +763,25 @@ class Graber:
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {condition = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.condition`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.condition`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.condition) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `condition`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.condition) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.condition}")
+            ...
             return
 
         # Записываем результат в поле `condition` объекта `ProductFields`
         self.fields.condition = value
-
+        return True
 
     @close_pop_up()
     async def customizable(self, value: Any = None):
@@ -760,41 +789,50 @@ class Graber:
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {customizable = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.customizable`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.customizable`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.customizable) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `customizable`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.customizable) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.customizable}")
+            ...
             return
 
         # Записываем результат в поле `customizable` объекта `ProductFields`
         self.fields.customizable = value
-
-
+        return True
     @close_pop_up()
     async def date_add(self, value: Any = None):
         """Fetch and set date added.
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {date_add = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.date_add`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.date_add`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.date_add) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `date_add`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.date_add) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.date_add}")
+            ...
             return
 
         # Записываем результат в поле `date_add` объекта `ProductFields`
         self.fields.date_add = value
-
+        return True
 
     @close_pop_up()
     async def date_upd(self, value: Any = None):
@@ -802,145 +840,186 @@ class Graber:
 
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {date_upd = `value`} при определении класса.
-        если `value` был передан - его значение подставляется в поле `ProductFields.date_upd`.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.date_upd`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.date_upd) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `date_upd`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.date_upd) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.date_upd}")
+            ...
             return
 
         # Записываем результат в поле `date_upd` объекта `ProductFields`
         self.fields.date_upd = value
+        return True
+
     @close_pop_up()
     async def delivery_out_stock(self, value: Any = None):
         """Fetch and set delivery out of stock.
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {delivery_out_stock = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.delivery_out_stock`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.delivery_out_stock) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `delivery_out_stock`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.delivery_out_stock) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.delivery_out_stock}")
+            ...
             return
 
         # Записываем результат в поле `delivery_out_stock` объекта `ProductFields`
         self.fields.delivery_out_stock = value
-
+        return True
 
     @close_pop_up()
     async def depth(self, value: Any = None):
         """Fetch and set depth.
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {depth = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.depth`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.depth) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `depth`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.depth) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.depth}")
+            ...
             return
 
         # Записываем результат в поле `depth` объекта `ProductFields`
         self.fields.depth = value
-
-
+        return True
     @close_pop_up()
     async def description(self, value: Any = None):
         """Fetch and set description.
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {description = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.description`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.description) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `description`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.description) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.description}")
+            ...
             return
 
         # Записываем результат в поле `description` объекта `ProductFields`
         self.fields.description = value
-
+        return True
 
     @close_pop_up()
     async def description_short(self, value: Any = None):
         """Fetch and set short description.
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {description_short = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.description_short`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.description_short) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `description_short`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.description_short) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.description_short}")
+            ...
             return
 
         # Записываем результат в поле `description_short` объекта `ProductFields`
         self.fields.description_short = value
-
+        return True
 
     @close_pop_up()
     async def id_category_default(self, value: Any = None):
         """Fetch and set default category ID.
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_category_default = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_category_default`.
         """
-
         # Записываем значение в поле `id_category_default` объекта `ProductFields`
         self.fields.id_category_default = value
-
+        return True
 
     @close_pop_up()
     async def id_default_combination(self, value: Any = None):
         """Fetch and set default combination ID.
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_default_combination = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_default_combination`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.id_default_combination) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения данных для поля `id_default_combination`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.id_default_combination) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_default_combination}")
+            ...
             return
 
         # Записываем результат в поле `id_default_combination` объекта `ProductFields`
         self.fields.id_default_combination = value
-
+        return True
 
     @close_pop_up()
     async def id_product(self, value: Any = None):
         """Fetch and set product ID.
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_product = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_product`.
         """
-
-        # Получаем значение id_supplier, если оно не передано
-        self.fields.id_supplier = self.fields.id_supplier or await self.d.execute_locator(self.l.id_supplier)
+        try:
+            # Получаем значение id_supplier, если оно не передано
+            self.fields.id_supplier = self.fields.id_supplier or await self.d.execute_locator(self.l.id_supplier)
+        except Exception as ex:
+            logger.error(f"Ошибка значения поля `id_product`", ex)
+            ...
+            return
     
         # Формируем id_product с учетом supplier_prefix
         self.fields.id_product = f"{self.supplier_prefix}{f'-{self.fields.id_supplier}' if self.fields.id_supplier else ''}-{value}"
-
+        return True
 
     @close_pop_up()
     async def locale(self, value: Any = None):
@@ -955,7 +1034,7 @@ class Graber:
         if not i18n and self.fields.name['language'][0]['value']:
             text = self.fields.name['language'][0]['value']
             i18n = detect(text)
-    
+
         # Записываем результат в поле `locale` объекта `ProductFields`
         self.fields.locale = i18n
 
@@ -968,16 +1047,23 @@ class Graber:
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_default_image`.
         """
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.id_default_image) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.id_default_image) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `id_default_image`", ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_default_image}")
+            ...
             return
 
         # Записываем результат в поле `id_default_image` объекта `ProductFields`
         self.fields.id_default_image = value
+        return True
 
 
     @close_pop_up()
@@ -988,16 +1074,23 @@ class Graber:
         Если `value` было передано, его значение подставляется в поле `ProductFields.ean13`.
         """
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.ean13) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.ean13) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `ean13`", ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ean13}")
+            ...
             return
 
         # Записываем результат в поле `ean13` объекта `ProductFields`
         self.fields.ean13 = value
+        return True
 
 
     @close_pop_up()
@@ -1008,16 +1101,23 @@ class Graber:
         Если `value` было передано, его значение подставляется в поле `ProductFields.ecotax`.
         """
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.ecotax) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.ecotax) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `ecotax`", ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ecotax}")
+            ...
             return
 
         # Записываем результат в поле `ecotax` объекта `ProductFields`
         self.fields.ecotax = value
+        return True
 
 
     @close_pop_up()
@@ -1028,17 +1128,23 @@ class Graber:
         Если `value` было передано, его значение подставляется в поле `ProductFields.height`.
         """
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.height) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.height) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `height`", ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.height}")
+            ...
             return
 
         # Записываем результат в поле `height` объекта `ProductFields`
         self.fields.height = value
-
+        return True
 
     @close_pop_up()
     async def how_to_use(self, value: Any = None):
@@ -1047,17 +1153,23 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {how_to_use = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.how_to_use`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.how_to_use) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `how_to_use`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.how_to_use) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.how_to_use}")
+            ...
             return
 
         # Записываем результат в поле `how_to_use` объекта `ProductFields`
         self.fields.how_to_use = value
+
 
     @close_pop_up()
     async def id_manufacturer(self, value: Any = None):
@@ -1066,13 +1178,18 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_manufacturer = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_manufacturer`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.id_manufacturer) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `id_manufacturer`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.id_manufacturer) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_manufacturer}")
+            ...
             return
 
         # Записываем результат в поле `id_manufacturer` объекта `ProductFields`
@@ -1086,13 +1203,18 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_supplier = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_supplier`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.id_supplier) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `id_supplier`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.id_supplier) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_supplier}")
+            ...
             return
 
         # Записываем результат в поле `id_supplier` объекта `ProductFields`
@@ -1106,13 +1228,18 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_tax = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_tax`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.id_tax) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `id_tax`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.id_tax) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_tax}")
+            ...
             return
 
         # Записываем результат в поле `id_tax` объекта `ProductFields`
@@ -1126,13 +1253,18 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_type_redirected = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_type_redirected`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.id_type_redirected) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `id_type_redirected`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.id_type_redirected) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_type_redirected}")
+            ...
             return
 
         # Записываем результат в поле `id_type_redirected` объекта `ProductFields`
@@ -1146,18 +1278,22 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {images_urls = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.images_urls`.
         """
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.images_urls) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `images_urls`", ex)
+            ...
+            return
 
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.images_urls) or ''
-    
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.images_urls}")
+            ...
             return
 
         # Записываем результат в поле `images_urls` объекта `ProductFields`
         self.fields.images_urls = value
-
 
     @close_pop_up()
     async def indexed(self, value: Any = None):
@@ -1166,17 +1302,22 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {indexed = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.indexed`.
         """
-
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.indexed) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.indexed) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `indexed`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.indexed}")
+            ...
             return
 
         # Записываем результат в поле `indexed` объекта `ProductFields`
         self.fields.indexed = value
+        return True
 
 
     @close_pop_up()
@@ -1186,17 +1327,22 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {ingredients = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.ingredients`.
         """
-
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.ingredients) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.ingredients) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `ingredients`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ingredients}")
+            ...
             return
 
         # Записываем результат в поле `ingredients` объекта `ProductFields`
         self.fields.ingredients = value
+        return True
 
 
     @close_pop_up()
@@ -1206,17 +1352,22 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {meta_description = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.meta_description`.
         """
-
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.meta_description) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.meta_description) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `meta_description`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_description}")
+            ...
             return
 
         # Записываем результат в поле `meta_description` объекта `ProductFields`
         self.fields.meta_description = value
+        return True
 
 
     @close_pop_up()
@@ -1226,17 +1377,22 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {meta_keywords = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.meta_keywords`.
         """
-
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.meta_keywords) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.meta_keywords) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `meta_keywords`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_keywords}")
+            ...
             return
 
         # Записываем результат в поле `meta_keywords` объекта `ProductFields`
         self.fields.meta_keywords = value
+        return True
 
 
     @close_pop_up()
@@ -1246,17 +1402,22 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {meta_title = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.meta_title`.
         """
-
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.meta_title) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.meta_title) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `meta_title`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_title}")
+            ...
             return
 
         # Записываем результат в поле `meta_title` объекта `ProductFields`
         self.fields.meta_title = value
+        return True
 
 
     @close_pop_up()
@@ -1266,671 +1427,874 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {is_virtual = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.is_virtual`.
         """
-
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.is_virtual) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.is_virtual) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `is_virtual`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.is_virtual}")
+            ...
             return
 
         # Записываем результат в поле `is_virtual` объекта `ProductFields`
         self.fields.is_virtual = value
-
-
+        return True
     @close_pop_up()
     async def isbn(self, value: Any = None):
         """Fetch and set ISBN.
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {isbn = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.isbn`.
         """
-
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.isbn) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.isbn) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `isbn`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.isbn}")
+            ...
             return
-
+        
         # Записываем результат в поле `isbn` объекта `ProductFields`
         self.fields.isbn = value
+        return True
+
     @close_pop_up()
     async def link_rewrite(self, value: Any = None):
         """Fetch and set link rewrite.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {link_rewrite = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.link_rewrite`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.link_rewrite) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.link_rewrite) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `link_rewrite`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.link_rewrite}")
+            ...
             return
-    
+        
         # Записываем результат в поле `link_rewrite` объекта `ProductFields`
         self.fields.link_rewrite = value
-
+        return True
 
     @close_pop_up()
     async def location(self, value: Any = None):
         """Fetch and set location.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {location = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.location`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.location) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.location) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `location`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.location}")
+            ...
             return
-    
+        
         # Записываем результат в поле `location` объекта `ProductFields`
         self.fields.location = value
-
+        return True
 
     @close_pop_up()
     async def low_stock_alert(self, value: Any = None):
         """Fetch and set low stock alert.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {low_stock_alert = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.low_stock_alert`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.low_stock_alert) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.low_stock_alert) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `low_stock_alert`", ex)
+            ...
+            return
+        
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.low_stock_alert}")
+            ...
             return
-    
+        
         # Записываем результат в поле `low_stock_alert` объекта `ProductFields`
         self.fields.low_stock_alert = value
-
-
+        return True
     @close_pop_up()
     async def low_stock_threshold(self, value: Any = None):
         """Fetch and set low stock threshold.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {low_stock_threshold = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.low_stock_threshold`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.low_stock_threshold) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.low_stock_threshold) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `low_stock_threshold`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.low_stock_threshold}")
+            ...
             return
-    
+
         # Записываем результат в поле `low_stock_threshold` объекта `ProductFields`
         self.fields.low_stock_threshold = value
+        return True
 
 
     @close_pop_up()
     async def minimal_quantity(self, value: Any = None):
         """Fetch and set minimal quantity.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {minimal_quantity = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.minimal_quantity`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.minimal_quantity) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.minimal_quantity) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `minimal_quantity`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.minimal_quantity}")
+            ...
             return
-    
+
         # Записываем результат в поле `minimal_quantity` объекта `ProductFields`
         self.fields.minimal_quantity = value
+        return True
 
 
     @close_pop_up()
     async def mpn(self, value: Any = None):
         """Fetch and set MPN (Manufacturer Part Number).
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {mpn = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.mpn`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.mpn) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.mpn) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `mpn`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.mpn}")
+            ...
             return
-    
+
         # Записываем результат в поле `mpn` объекта `ProductFields`
         self.fields.mpn = value
+        return True
 
 
     @close_pop_up()
     async def name(self, value: Any = None):
         """Fetch and set product name.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {name = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.name`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.name) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.name) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `name`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.name}")
+            ...
             return
-    
+
         # Записываем результат в поле `name` объекта `ProductFields`
         self.fields.name = value
+        return True
 
 
     @close_pop_up()
     async def online_only(self, value: Any = None):
         """Fetch and set online-only status.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {online_only = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.online_only`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.online_only) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.online_only) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `online_only`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.online_only}")
+            ...
             return
-    
+
         # Записываем результат в поле `online_only` объекта `ProductFields`
         self.fields.online_only = value
+        return True
 
 
     @close_pop_up()
     async def on_sale(self, value: Any = None):
         """Fetch and set on sale status.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {on_sale = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.on_sale`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.on_sale) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.on_sale) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `on_sale`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.on_sale}")
+            ...
             return
-    
+
         # Записываем результат в поле `on_sale` объекта `ProductFields`
         self.fields.on_sale = value
+        return True
 
 
     @close_pop_up()
     async def out_of_stock(self, value: Any = None):
         """Fetch and set out of stock status.
-    
+        
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {out_of_stock = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.out_of_stock`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.out_of_stock) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.out_of_stock) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `out_of_stock`", ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.out_of_stock}")
+            ...
             return
-    
+
         # Записываем результат в поле `out_of_stock` объекта `ProductFields`
         self.fields.out_of_stock = value
-
-
+        return True
     @close_pop_up()
     async def pack_stock_type(self, value: Any = None):
         """Fetch and set pack stock type.
-    
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {pack_stock_type = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.pack_stock_type`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.pack_stock_type) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.pack_stock_type) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `pack_stock_type`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.pack_stock_type}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.pack_stock_type}')
+            ...
             return
-    
+
         # Записываем результат в поле `pack_stock_type` объекта `ProductFields`
         self.fields.pack_stock_type = value
+        return True
 
 
     @close_pop_up()
     async def price(self, value: Any = None):
         """Fetch and set price.
-    
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {price = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.price`.
         """
-    
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.price) or ''
-    
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.price) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `price`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.price}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.price}')
+            ...
             return
-    
+
         # Записываем результат в поле `price` объекта `ProductFields`
         self.fields.price = value
+        return True
 
 
     @close_pop_up()
     async def product_type(self, value: Any = None):
         """Fetch and set product type.
-        
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {product_type = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.product_type`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.product_type) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.product_type) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `product_type`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.product_type}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.product_type}')
+            ...
             return
 
         # Записываем результат в поле `product_type` объекта `ProductFields`
         self.fields.product_type = value
+        return True
+
 
     @close_pop_up()
     async def quantity(self, value: Any = None):
         """Fetch and set quantity.
-        
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {quantity = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.quantity`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.quantity) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.quantity) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `quantity`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.quantity}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.quantity}')
+            ...
             return
 
         # Записываем результат в поле `quantity` объекта `ProductFields`
         self.fields.quantity = value
+        return True
+
 
     @close_pop_up()
     async def quantity_discount(self, value: Any = None):
         """Fetch and set quantity discount.
-        
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {quantity_discount = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.quantity_discount`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.quantity_discount) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.quantity_discount) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `quantity_discount`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.quantity_discount}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.quantity_discount}')
+            ...
             return
 
         # Записываем результат в поле `quantity_discount` объекта `ProductFields`
         self.fields.quantity_discount = value
+        return True
+
 
     @close_pop_up()
     async def redirect_type(self, value: Any = None):
         """Fetch and set redirect type.
-        
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {redirect_type = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.redirect_type`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.redirect_type) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.redirect_type) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `redirect_type`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.redirect_type}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.redirect_type}')
+            ...
             return
 
         # Записываем результат в поле `redirect_type` объекта `ProductFields`
         self.fields.redirect_type = value
+        return True
+
 
     @close_pop_up()
     async def reference(self, value: Any = None):
         """Fetch and set reference.
-        
+
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {reference = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.reference`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.reference) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.reference) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `reference`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.reference}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.reference}')
+            ...
             return
 
         # Записываем результат в поле `reference` объекта `ProductFields`
         self.fields.reference = value
+        return True
+
     @close_pop_up()
     async def show_condition(self, value: Any = None):
         """Fetch and set show condition.
-        
+    
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {show_condition = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.show_condition`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.show_condition) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.show_condition) or ''
+        except Exception as ex:
+            logger.error('Ошибка получения значения в поле `show_condition`', ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.show_condition}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.show_condition}')
+            ...
             return
 
         # Записываем результат в поле `show_condition` объекта `ProductFields`
         self.fields.show_condition = value
+        return True
 
     @close_pop_up()
     async def show_price(self, value: Any = None):
         """Fetch and set show price.
-        
+    
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {show_price = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.show_price`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.show_price) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.show_price) or ''
+        except Exception as ex:
+            logger.error('Ошибка получения значения в поле `show_price`', ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.show_price}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.show_price}')
+            ...
             return
 
         # Записываем результат в поле `show_price` объекта `ProductFields`
         self.fields.show_price = value
+        return True
 
     @close_pop_up()
     async def state(self, value: Any = None):
         """Fetch and set state.
-        
+    
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {state = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.state`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.state) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.state) or ''
+        except Exception as ex:
+            logger.error('Ошибка получения значения в поле `state`', ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.state}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.state}')
+            ...
             return
 
         # Записываем результат в поле `state` объекта `ProductFields`
         self.fields.state = value
+        return True
 
     @close_pop_up()
     async def text_fields(self, value: Any = None):
         """Fetch and set text fields.
-        
+    
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {text_fields = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.text_fields`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.text_fields) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.text_fields) or ''
+        except Exception as ex:
+            logger.error('Ошибка получения значения в поле `text_fields`', ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.text_fields}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.text_fields}')
+            ...
             return
 
         # Записываем результат в поле `text_fields` объекта `ProductFields`
         self.fields.text_fields = value
+        return True
 
     @close_pop_up()
     async def unit_price_ratio(self, value: Any = None):
         """Fetch and set unit price ratio.
-        
+    
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {unit_price_ratio = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.unit_price_ratio`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.unit_price_ratio) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.unit_price_ratio) or ''
+        except Exception as ex:
+            logger.error('Ошибка получения значения в поле `unit_price_ratio`', ex)
+            ...
+            return
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.unit_price_ratio}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.unit_price_ratio}')
+            ...
             return
 
         # Записываем результат в поле `unit_price_ratio` объекта `ProductFields`
         self.fields.unit_price_ratio = value
+        return True
+@close_pop_up()
+async def unity(self, value: Any = None):
+    """Fetch and set unity.
 
-    @close_pop_up()
-    async def unity(self, value: Any = None):
-        """Fetch and set unity.
-        
-        Args:
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {unity = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.unity`.
-        """
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.unity) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.unity}")
-            return
+    except Exception as ex:
+        logger.error(f'Ошибка получения значения в поле `unity`', ex)
+        ...
+        return
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.unity}')
+        ...
+        return
 
-        # Записываем результат в поле `unity` объекта `ProductFields`
-        self.fields.unity = value
+    # Записываем результат в поле `unity` объекта `ProductFields`
+    self.fields.unity = value
+    return True
 
-    @close_pop_up()
-    async def upc(self, value: Any = None):
-        """Fetch and set UPC.
-        
-        Args:
+@close_pop_up()
+async def upc(self, value: Any = None):
+    """Fetch and set UPC.
+
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {upc = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.upc`.
-        """
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.upc) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.upc}")
-            return
+    except Exception as ex:
+        logger.error(f'Ошибка получения значения в поле `upc`', ex)
+        ...
+        return
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.upc}')
+        ...
+        return
 
-        # Записываем результат в поле `upc` объекта `ProductFields`
-        self.fields.upc = value
+    # Записываем результат в поле `upc` объекта `ProductFields`
+    self.fields.upc = value
+    return True
 
-    @close_pop_up()
-    async def uploadable_files(self, value: Any = None):
-        """Fetch and set uploadable files.
-        
-        Args:
+@close_pop_up()
+async def uploadable_files(self, value: Any = None):
+    """Fetch and set uploadable files.
+
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {uploadable_files = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.uploadable_files`.
-        """
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.uploadable_files) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.uploadable_files}")
-            return
+    except Exception as ex:
+        logger.error(f'Ошибка получения значения в поле `uploadable_files`', ex)
+        ...
+        return
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.uploadable_files}')
+        ...
+        return
 
-        # Записываем результат в поле `uploadable_files` объекта `ProductFields`
-        self.fields.uploadable_files = value
+    # Записываем результат в поле `uploadable_files` объекта `ProductFields`
+    self.fields.uploadable_files = value
+    return True
 
-    @close_pop_up()
-    async def default_image_url(self, value: Any = None):
-        """Fetch and set default image URL.
-        
-        Args:
+@close_pop_up()
+async def default_image_url(self, value: Any = None):
+    """Fetch and set default image URL.
+
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {default_image_url = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.default_image_url`.
-        """
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.default_image_url) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.default_image_url}")
-            return
+    except Exception as ex:
+        logger.error(f'Ошибка получения значения в поле `default_image_url`', ex)
+        ...
+        return
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.default_image_url}')
+        ...
+        return
 
-        # Записываем результат в поле `default_image_url` объекта `ProductFields`
-        self.fields.default_image_url = value
+    # Записываем результат в поле `default_image_url` объекта `ProductFields`
+    self.fields.default_image_url = value
+    return True
 
-    @close_pop_up()
-    async def visibility(self, value: Any = None):
-        """Fetch and set visibility.
-        
-        Args:
+@close_pop_up()
+async def visibility(self, value: Any = None):
+    """Fetch and set visibility.
+
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {visibility = `value`} при определении класса.
         Если `value` был передан - его значение подставляется в поле `ProductFields.visibility`.
-        """
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.visibility) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.visibility}")
-            return
+    except Exception as ex:
+        logger.error(f'Ошибка получения значения в поле `visibility`', ex)
+        ...
+        return
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.visibility}')
+        ...
+        return
 
-        # Записываем результат в поле `visibility` объекта `ProductFields`
-        self.fields.visibility = value
-    @close_pop_up()
-    async def weight(self, value: Any = None):
-        """Fetch and set weight.
-        
-        Args:
+    # Записываем результат в поле `visibility` объекта `ProductFields`
+    self.fields.visibility = value
+    return True
+@close_pop_up()
+async def weight(self, value: Any = None):
+    """Fetch and set weight.
+    
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {weight = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.weight`.
-        """
-        
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.weight) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.weight}")
-            return
-        
-        # Записываем результат в поле `weight` объекта `ProductFields`
-        self.fields.weight = value
+    except Exception as ex:
+        logger.error('Ошибка получения значения в поле `weight`', ex)
+        ...
+        return
 
-    @close_pop_up()
-    async def wholesale_price(self, value: Any = None):
-        """Fetch and set wholesale price.
-        
-        Args:
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.weight}')
+        ...
+        return
+
+    # Записываем результат в поле `weight` объекта `ProductFields`
+    self.fields.weight = value
+    return True
+
+
+@close_pop_up()
+async def wholesale_price(self, value: Any = None):
+    """Fetch and set wholesale price.
+    
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {wholesale_price = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.wholesale_price`.
-        """
-        
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.wholesale_price) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.wholesale_price}")
-            return
-        
-        # Записываем результат в поле `wholesale_price` объекта `ProductFields`
-        self.fields.wholesale_price = value
+    except Exception as ex:
+        logger.error('Ошибка получения значения в поле `wholesale_price`', ex)
+        ...
+        return
 
-    @close_pop_up()
-    async def width(self, value: Any = None):
-        """Fetch and set width.
-        
-        Args:
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.wholesale_price}')
+        ...
+        return
+
+    # Записываем результат в поле `wholesale_price` объекта `ProductFields`
+    self.fields.wholesale_price = value
+    return True
+
+
+@close_pop_up()
+async def width(self, value: Any = None):
+    """Fetch and set width.
+    
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {width = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.width`.
-        """
-        
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.width) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.width}")
-            return
-        
-        # Записываем результат в поле `width` объекта `ProductFields`
-        self.fields.width = value
+    except Exception as ex:
+        logger.error('Ошибка получения значения в поле `width`', ex)
+        ...
+        return
 
-    @close_pop_up()
-    async def specification(self, value: Any = None):
-        """Fetch and set specification.
-        
-        Args:
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.width}')
+        ...
+        return
+
+    # Записываем результат в поле `width` объекта `ProductFields`
+    self.fields.width = value
+    return True
+
+
+@close_pop_up()
+async def specification(self, value: Any = None):
+    """Fetch and set specification.
+    
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {specification = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.specification`.
-        """
-        
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.specification) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.specification}")
-            return
-        
-        # Записываем результат в поле `specification` объекта `ProductFields`
-        self.fields.specification = value
+    except Exception as ex:
+        logger.error('Ошибка получения значения в поле `specification`', ex)
+        ...
+        return
 
-    @close_pop_up()
-    async def link(self, value: Any = None):
-        """Fetch and set link.
-        
-        Args:
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.specification}')
+        ...
+        return
+
+    # Записываем результат в поле `specification` объекта `ProductFields`
+    self.fields.specification = value
+    return True
+
+
+@close_pop_up()
+async def link(self, value: Any = None):
+    """Fetch and set link.
+    
+    Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {link = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.link`.
-        """
-        
+    """
+    try:
         # Получаем значение через execute_locator
         value = value if value else await self.d.execute_locator(self.l.link) or ''
-        
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.link}")
-            return
-        
-        # Записываем результат в поле `link` объекта `ProductFields`
-        self.fields.link = value
+    except Exception as ex:
+        logger.error('Ошибка получения значения в поле `link`', ex)
+        ...
+        return
+
+    # Проверяем валидность результата
+    if not value:
+        logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.link}')
+        ...
+        return
+
+    # Записываем результат в поле `link` объекта `ProductFields`
+    self.fields.link = value
+    return True
     @close_pop_up()
     async def byer_protection(self, value: Any = None):
         """Fetch and set buyer protection.
@@ -1939,16 +2303,23 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {byer_protection = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.byer_protection`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.byer_protection) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.byer_protection) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `byer_protection`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.byer_protection}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.byer_protection}')
+            ...
             return
 
         # Записываем результат в поле `byer_protection` объекта `ProductFields`
         self.fields.byer_protection = value
+        return True
 
     @close_pop_up()
     async def customer_reviews(self, value: Any = None):
@@ -1958,16 +2329,23 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {customer_reviews = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.customer_reviews`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.customer_reviews) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.customer_reviews) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `customer_reviews`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.customer_reviews}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.customer_reviews}')
+            ...
             return
 
         # Записываем результат в поле `customer_reviews` объекта `ProductFields`
         self.fields.customer_reviews = value
+        return True
 
     @close_pop_up()
     async def link_to_video(self, value: Any = None):
@@ -1977,16 +2355,23 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {link_to_video = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.link_to_video`.
         """
-        # Получаем значение через execute_locator
-        value = value if value else await self.d.execute_locator(self.l.link_to_video) or ''
-        
+        try:
+            # Получаем значение через execute_locator
+            value = value if value else await self.d.execute_locator(self.l.link_to_video) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка получения значения в поле `link_to_video`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.link_to_video}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.link_to_video}')
+            ...
             return
 
         # Записываем результат в поле `link_to_video` объекта `ProductFields`
         self.fields.link_to_video = value
+        return True
 
     @close_pop_up()
     async def local_saved_image(self, value: Any = None):
@@ -1996,16 +2381,23 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
         """
-        # Получаем значение через execute_locator и сохраняем изображение
-        value = value if value else save_png_from_url(self.d.execute_locator(self.l.default_image_url), self.fields.id_product)
-        
+        try:
+            # Получаем значение через execute_locator и сохраняем изображение
+            value = value if value else save_png_from_url(self.d.execute_locator(self.l.default_image_url), self.fields.id_product)
+        except Exception as ex:
+            logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.default_image_url}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.default_image_url}')
+            ...
             return
 
         # Записываем результат в поле `local_saved_image` объекта `ProductFields`
         self.fields.local_saved_image = value
+        return True
 
     @close_pop_up()
     async def local_saved_video(self, value: Any = None):
@@ -2015,13 +2407,20 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_video = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_video`.
         """
-        # Получаем значение через execute_locator и сохраняем видео
-        value = value if value else await self.d.execute_locator(self.l.local_saved_video) or ''
-        
+        try:
+            # Получаем значение через execute_locator и сохраняем видео
+            value = value if value else await self.d.execute_locator(self.l.local_saved_video) or ''
+        except Exception as ex:
+            logger.error(f'Ошибка сохранения видео в поле `local_saved_video`', ex)
+            ...
+            return
+
         # Проверяем валидность результата
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.local_saved_video}")
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.local_saved_video}')
+            ...
             return
 
         # Записываем результат в поле `local_saved_video` объекта `ProductFields`
         self.fields.local_saved_video = value
+        return True
