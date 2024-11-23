@@ -124,25 +124,62 @@
 ## Инструкции по установке
 
 ### Проверка версии Python
+Проект оптимизирован для версии 3.12  
+Для проверки установленной версии Python выполните следующую команду:
 
 ```bash
 python --version
 ```
 
+или
+
+```bash
+python3 --version
+```
+
+Если у вас несколько версий Python, проверьте конкретную версию:
+
+```bash
+python3.12 --version
+python3.13 --version
+```
+
+---
+
 ### Установка Python 3.12
 
-1. Скачайте установщик с официального сайта [Python](https://www.python.org/downloads/release/python-3120/).
-2. Запустите установку и следуйте инструкциям.
+#### Для **Linux**:
+
+На большинстве дистрибутивов Linux можно установить Python 3.12 через менеджер пакетов. Например, для Ubuntu:
+
+```bash
+sudo apt update
+sudo apt install python3.12
+```
+
+#### Для **Windows**:
+
+Перейдите на [официальный сайт Python](https://www.python.org/downloads/release/python-3120/) и скачайте установщик для Windows. Во время установки выберите опцию **Add Python to PATH**.
+
+#### Для **macOS**:
+
+Можно использовать `brew` для установки Python 3.12:
+
+```bash
+brew install python@3.12
+```
+
+---
 
 ### Установка виртуального окружения
 
-1. Установите `virtualenv` с помощью следующей команды:
+1. DEPRECATED Установите `virtualenv`  с помощью следующей команды:
    ```bash
    pip install virtualenv
    ```
 2. Создайте виртуальное окружение:
    ```bash
-   python -m venv venv
+   python3.12 -m venv venv
    ```
 
 3. Активируйте виртуальное окружение:
@@ -238,4 +275,4 @@ Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\p
 
 ## Дополнительная информация
 
-Для получения дополнительной информации о проекте, пожалуйста, посетите наш [официальный сайт](https://hypotez.com).
+Для дополнительной информации о проекте перейдите на [вебсайт](https://davidka.net).
