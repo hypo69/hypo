@@ -17,7 +17,17 @@ from datetime import datetime
 from typing import Optional, Dict
 from types import SimpleNamespace
 import base64
+
 import google.generativeai as genai
+import requests
+from google.api_core.exceptions import (
+    GatewayTimeout,
+    ServiceUnavailable,
+    ResourceExhausted,
+    InvalidArgument,
+    RpcError
+)
+from google.auth.exceptions import DefaultCredentialsError, RefreshError
 from src.logger import logger
 from src import gs
 from src.utils import pprint
@@ -125,6 +135,32 @@ class GoogleGenerativeAI:
             j_dumps(data=message, file_path=self.history_json_file, mode='+a')
 
     def ask(self, q: str, attempts: int = 3) -> Optional[str]:
+
+        
+        try:
+            
+            response = self.model.generate_content(q)
+
+            if not response:
+                logger.debug("No response from the model.")
+                return
+
+            messages = [
+                {"role": "user", "content": q},
+                {"role": "assistant", "content": response.text}
+                ]
+
+            self._save_dialogue([messages])
+            return response.text
+
+        except Exception as ex:
+            logger.error("Error during request", ex, False)
+            return
+
+
+
+
+    def ask(self, q: str, attempts: int = 5) -> Optional[str]:
         """
         Отправить запрос к модели и получить ответ.
 
@@ -142,26 +178,54 @@ class GoogleGenerativeAI:
             >>> response = ai.ask("Какая погода сегодня?")
             >>> print(response)
         """
-        
-        try:
-            
-            response = self.model.generate_content(q)
+        attempts = 10
+        for attempt in range(attempts):
+            try:
+                response = self.model.generate_content(q)
 
-            if not response:
-                logger.debug("No response from the model.")
-                return None
+                if not response:
+                    logger.debug(f"No response from the model. Attempt: {attempt}\nSleeping for {2 ** attempt}")
+                    time.sleep(2 ** attempt)
+                    continue  # Повторить попытку
 
-            messages = [
-                {"role": "user", "content": q},
-                {"role": "assistant", "content": response.text}
+                messages = [
+                    {"role": "user", "content": q},
+                    {"role": "assistant", "content": response.text}
                 ]
 
-            self._save_dialogue([messages])
-            return response.text
+                self._save_dialogue([messages])
+                return response.text
 
-        except Exception as ex:
-            logger.error("Error during request", ex, False)
-            return None
+            except requests.exceptions.RequestException as ex:
+                timeout = 1200
+                logger.debug(f"Network error. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
+                time.sleep(timeout)
+                continue  # Повторить попытку
+            except (GatewayTimeout, ServiceUnavailable) as ex:
+                logger.error("Service unavailable:", ex, None)
+                # Экспоненциальный бэк-офф для повторных попыток
+                time.sleep(2 ** attempt)
+                continue
+            except ResourceExhausted as ex:
+                timeout = 3600
+                logger.debug(f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
+                time.sleep(timeout)
+                continue
+            except (DefaultCredentialsError, RefreshError) as ex:
+                logger.error("Authentication error:",ex,None)
+                return  # Прекратить попытки, если ошибка аутентификации
+            except (ValueError, TypeError) as ex:
+                logger.error("Invalid input:",ex,None)
+                return  # Прекратить попытки, если ошибка в запросе
+            except (InvalidArgument, RpcError) as ex:
+                logger.error("API error:",ex,None)
+                return
+            except Exception as ex:
+                logger.error("Unexpected error:",ex,None)
+                return
+
+        return
+
 
     def describe_image(self, image_path: Path) -> Optional[str]:
         """
@@ -189,7 +253,7 @@ class GoogleGenerativeAI:
 
         except Exception as ex:
             logger.error(f"Error describing image: {ex}")
-            return None
+            return
 
 
 def chat():

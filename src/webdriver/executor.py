@@ -191,7 +191,7 @@ class ExecuteLocator:
 
         element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
         if not element:
-            if MODE == 'debug': 
+            if MODE in ('dev','debug'):
                 logger.debug(f"Element not clickable: {pprint(locator, text_color='YELLOW', bg_color='BLACK')}\n", None, False)
             ...
             return
@@ -211,11 +211,11 @@ class ExecuteLocator:
                     for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))
                 }
             except ValueError as ex:
-                if MODE == 'debug': 
+                if MODE in ('dev','debug'):
                     logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
                 return
             except Exception as ex:
-                if MODE == 'debug': 
+                if MODE in ('dev','debug'):
                     logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
                 return
 
@@ -236,7 +236,7 @@ class ExecuteLocator:
                     attr_value = element.get_attribute(value)
                     result[attr_key] = attr_value
                 except Exception as ex:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'):
                         logger.debug(
                             f"Error retrieving attributes '{pprint(key, text_color='WHITE', bg_color='RED')}' or '{pprint(value, text_color='WHITE', bg_color='RED')}' from element.", ex, False)
                     return
@@ -258,7 +258,7 @@ class ExecuteLocator:
                         ret.append(f'{e.get_attribute(locator.attribute)}')
                     return ret if len(ret) > 1 else ret[0]
                 except Exception as ex:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'):
                         logger.debug(f"Error in get_attribute(): {pprint(locator, text_color='YELLOW', bg_color='BLACK')}\n", ex, False)
                     return
             
@@ -378,11 +378,11 @@ class ExecuteLocator:
                     # result.append(True)
                     continue
                 except ElementClickInterceptedException as ex:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'): 
                         logger.debug(f"Element click intercepted: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
                     return False
                 except Exception as ex:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'): 
                         logger.debug(f"Element click intercepted: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
                     return False
 
@@ -393,13 +393,13 @@ class ExecuteLocator:
                     await asyncio.sleep(pause_duration)
                     result.append(True)
                     continue
-                if MODE == 'debug': 
+                if MODE in ('dev','debug'):
                     logger.debug(f"Invalid pause duration: {pprint(event, text_color='WHITE',bg_color='RED')}\n")
                 return False
 
             elif event == "upload_media()":
                 if not message:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'):
                         logger.debug(f"Message is required for upload_media event. Message: {pprint(message, text_color='WHITE',bg_color='RED')}", None, False)
                     return False
                 try:
@@ -407,7 +407,7 @@ class ExecuteLocator:
                     result.append(True)
                     continue
                 except Exception as ex:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'):
                         logger.debug(f"Error uploading media: {pprint(message, text_color='WHITE',bg_color='RED')}", ex, False)
                     return False
 
@@ -423,7 +423,7 @@ class ExecuteLocator:
                 try:
                     await asyncio.to_thread(webelement.clear)
                 except Exception as ex:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'):
                         logger.error(f"Error clearing element: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
                     return False
 
@@ -438,7 +438,7 @@ class ExecuteLocator:
                             actions.send_keys(key_to_send)
                     await asyncio.to_thread(actions.perform)
                 except Exception as ex:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'):
                         logger.error(f"Error sending keys: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
                     return False
 
@@ -602,7 +602,7 @@ class ExecuteLocator:
                             self.actions.pause(typing_speed)
                             self.actions.perform()
                 except Exception as ex:
-                    if MODE == 'debug': 
+                    if MODE in ('dev','debug'):
                         logger.error(f"Error typing message\n{letter=}\n{word=}\n{pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex)
                     ...
                     continue  # <- если была ошибка в передаче буквы - пока игнорую ёё
