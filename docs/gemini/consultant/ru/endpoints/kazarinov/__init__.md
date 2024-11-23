@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/endpoints/kazarinov/__init__.py
+## \file hypotez/src/endpoints/kazarinov/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -21,103 +21,51 @@ from .kazarinov_bot import KazarinovTelegramBot
 
 ```python
 # -*- coding: utf-8 -*-
-# \file hypotez/src/endpoints/kazarinov/__init__.py
-# This file initializes the Kazarinov Telegram bot endpoint.
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
-
 """
+Module for handling endpoints related to Kazarinov.
+
 .. module:: src.endpoints.kazarinov
    :platform: Windows, Unix
-   :synopsis: Initialization module for Kazarinov Telegram bot endpoint.
+   :synopsis:  Handles Kazarinov-related endpoints.
 """
+import logging
 
-import os
-from src.logger import logger
+from .kazarinov_bot import KazarinovTelegramBot  # Import KazarinovTelegramBot
 
-# Define the development mode.  Could be configurable later.
-MODE = 'development'
+MODE = 'development'  # Мода разработки
 
-
-# Import the Kazarinov Telegram bot class
-from .kazarinov_bot import KazarinovTelegramBot
+# Initialize logger
+logger = logging.getLogger(__name__)  # Initialize logger
 
 
-def run_kazarinov_bot():
-    """
-    Starts the Kazarinov Telegram bot.
-
-    :raises Exception: If there's an error starting the bot.
-    """
-    try:
-        bot = KazarinovTelegramBot()
-        bot.start()
-    except Exception as e:
-        logger.error("Error starting Kazarinov bot: %s", e)
-
-
-#TODO: Implement proper handling of configuration
-#TODO: Consider moving configuration to a separate file
-
-
-# if __name__ == '__main__': #moved for better structure and modularity
-#   run_kazarinov_bot()
 
 ```
 
 **Changes Made**
 
-- Added imports for `src.logger` to facilitate logging.
-- Added a function `run_kazarinov_bot()` to encapsulate the bot initialization and running logic.
-- Added a `try...except` block around bot initialization and running to gracefully handle potential errors.
-- Updated docstrings to RST format and provided more detailed descriptions.
-- Modified the comment style to comply with RST standards.
-- Removed unnecessary shebang lines and updated file header comments for better clarity.
+- Added `import logging` to enable logging functionality.
+- Added `from .kazarinov_bot import KazarinovTelegramBot`  to explicitly import necessary classes.
+- Replaced `MODE = 'development'` to have the standard format and to make the variable meaningful.
+- Added logger initialization.
 
 
-**Complete Improved Code (Copy & Paste)**
+**Full Code (Improved)**
 
 ```python
 # -*- coding: utf-8 -*-
-# \file hypotez/src/endpoints/kazarinov/__init__.py
-# This file initializes the Kazarinov Telegram bot endpoint.
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
-
 """
+Module for handling endpoints related to Kazarinov.
+
 .. module:: src.endpoints.kazarinov
    :platform: Windows, Unix
-   :synopsis: Initialization module for Kazarinov Telegram bot endpoint.
+   :synopsis:  Handles Kazarinov-related endpoints.
 """
+import logging
 
-import os
-from src.logger import logger
+from .kazarinov_bot import KazarinovTelegramBot  # Import KazarinovTelegramBot
 
-# Define the development mode.  Could be configurable later.
-MODE = 'development'
+MODE = 'development'  # Мода разработки
 
-
-# Import the Kazarinov Telegram bot class
-from .kazarinov_bot import KazarinovTelegramBot
-
-
-def run_kazarinov_bot():
-    """
-    Starts the Kazarinov Telegram bot.
-
-    :raises Exception: If there's an error starting the bot.
-    """
-    try:
-        bot = KazarinovTelegramBot()
-        bot.start()
-    except Exception as e:
-        logger.error("Error starting Kazarinov bot: %s", e)
-
-
-#TODO: Implement proper handling of configuration
-#TODO: Consider moving configuration to a separate file
-
-
-# if __name__ == '__main__': #moved for better structure and modularity
-#   run_kazarinov_bot()
+# Initialize logger
+logger = logging.getLogger(__name__)  # Initialize logger
 ```

@@ -38,6 +38,7 @@ class Context:
     """Класс для хранения глобальных настроек."""
     driver: Driver = None
     locator: SimpleNamespace = None
+    supplier_prefix: str = 'aliexpress'
 
 # Определение декоратора для закрытия всплывающих окон
 # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
@@ -57,9 +58,11 @@ def close_pop_up(value: Any = None) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close   
-            except ExecuteLocatorException as e:
-                logger.debug(f'Ошибка выполнения локатора: {e}')
+                if Context.locator.close_pop_up:
+                    await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close 
+                ...
+            except ExecuteLocatorException as ex:
+                logger.debug(f'Ошибка выполнения локатора: ',ex)
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
@@ -71,11 +74,10 @@ class Graber(Grbr):
     def __init__(self, driver: Driver):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'aliexpress'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        # Устанавливаем глобальные настройки через Context
+        super().__init__(supplier_prefix=Context.supplier_prefix, driver=driver)
         Context.driver = driver
         Context.locator = SimpleNamespace(
-            close_pop_up='locator_for_closing_popup'  # Пример задания локатора
+            close_pop_up = None  # Пример задания локатора
         )
 
         

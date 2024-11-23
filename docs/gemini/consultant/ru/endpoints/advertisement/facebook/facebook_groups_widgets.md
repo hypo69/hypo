@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
+# \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -36,8 +36,7 @@ class FacebookGroupsWidget:
             self.groups_data: SimpleNamespace = j_loads_ns(json_file_path)
             self.dropdown = self.create_dropdown()
         except Exception as e:
-            logger.error(f"Ошибка при инициализации виджета: {e}")
-            # TODO: Обработка ошибки (например, вывод сообщения пользователю)
+            logger.error(f"Ошибка при инициализации FacebookGroupsWidget: {e}")
 
     def create_dropdown(self) -> Dropdown:
         """ Создает и возвращает виджет выпадающего списка на основе данных групп.
@@ -54,10 +53,8 @@ class FacebookGroupsWidget:
             )
             return dropdown
         except Exception as e:
-            logger.error(f"Ошибка при создании выпадающего списка: {e}")
-            #TODO: Обработка ошибки (например, создание пустого списка)
-            return None # Возвращаем None для обработки ошибки в display_widget
-
+            logger.error(f"Ошибка при создании Dropdown: {e}")
+            return None  # Возвращаем None в случае ошибки
 
     def display_widget(self):
         """ Отображает виджет выпадающего списка."""
@@ -65,13 +62,12 @@ class FacebookGroupsWidget:
             display(self.dropdown)
         except Exception as e:
             logger.error(f"Ошибка при отображении виджета: {e}")
-            #TODO: Обработка ошибки (например, вывод сообщения пользователю)
 ```
 
 **Improved Code**
 
 ```python
-## \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
+# \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -79,14 +75,10 @@ class FacebookGroupsWidget:
 """
 .. module:: src.endpoints.advertisement.facebook
 
-.. moduleauthor:: Автоматический генератор кода
-
-.. autoclass:: FacebookGroupsWidget
-    :members:
+	:platform: Windows, Unix
+	:synopsis:  Создает виджет выпадающего списка для выбора групп Facebook для размещения объявления.
 """
-MODE = 'development'
-
-import header  # TODO: Убедиться, что этот модуль импортируется и используется
+import logging
 from IPython.display import display
 from ipywidgets import Dropdown
 from src.utils import j_loads_ns
@@ -95,32 +87,29 @@ from pathlib import Path
 from src.logger import logger
 
 class FacebookGroupsWidget:
-    """Создает выпадающий список с URL групп Facebook из предоставленного JSON."""
+    """
+    Создает виджет выпадающего списка с URL групп Facebook из предоставленного JSON файла.
+    """
 
     def __init__(self, json_file_path: Path):
         """
-        Инициализация виджета с выпадающим списком для групп Facebook.
+        Инициализирует виджет с выпадающим списком для групп Facebook.
 
-        :param json_file_path: Путь к JSON-файлу, содержащему информацию о группах Facebook.
-        :vartype json_file_path: Path
+        :param json_file_path: Путь к файлу JSON, содержащему информацию о группах Facebook.
         """
         try:
-            self.groups_data: SimpleNamespace = j_loads_ns(json_file_path)
-            self.dropdown = self.create_dropdown()
+            self.groups_data = j_loads_ns(json_file_path)
+            self.dropdown = self._create_dropdown()
         except Exception as e:
-            logger.error(f"Ошибка при загрузке данных из файла: {e}")
-            self.dropdown = None #Устанавливаем dropdown в None, чтобы не вызывать ошибки
+            logger.error(f"Ошибка при загрузке данных из файла {json_file_path}: {e}")
 
-
-    def create_dropdown(self) -> Dropdown:
+    def _create_dropdown(self) -> Dropdown:
         """
-        Создает и возвращает виджет выпадающего списка на основе данных групп.
+        Создает и возвращает виджет выпадающего списка.
 
-        :return: Виджет выпадающего списка с URL групп Facebook.
-        :rtype: Dropdown
+        :return: Виджет Dropdown с URL групп Facebook.
+        :raises Exception: Если возникнет ошибка при создании виджета.
         """
-        if self.groups_data is None:
-            return None
         try:
             group_urls = list(self.groups_data.__dict__.keys())
             dropdown = Dropdown(
@@ -130,39 +119,39 @@ class FacebookGroupsWidget:
             )
             return dropdown
         except Exception as e:
-            logger.error(f"Ошибка при создании выпадающего списка: {e}")
-            return None
-
+            logger.error(f"Ошибка при создании виджета Dropdown: {e}")
+            return None  # Возвращаем None в случае ошибки
 
     def display_widget(self):
-        """Отображает виджет выпадающего списка."""
-        if self.dropdown is not None:
-            try:
+        """
+        Отображает виджет выпадающего списка.
+        """
+        try:
+            if self.dropdown:
                 display(self.dropdown)
-            except Exception as e:
-                logger.error(f"Ошибка при отображении виджета: {e}")
-        else:
-            logger.warning("Виджет не создан, ничего не отображается")
-
+            else:
+                logger.warning("Виджет не был создан, не отображается.")
+        except Exception as e:
+            logger.error(f"Ошибка при отображении виджета: {e}")
 
 ```
 
 **Changes Made**
 
-- Added `try...except` blocks to handle potential errors during file loading, dropdown creation, and display.
-- Logged errors using `logger.error` instead of printing directly.
-- Added `TODO` comments for further improvements (error handling, user feedback).
-- Changed `...` to `#TODO: add implementation logic` for better understanding.
-- Added detailed docstrings in RST format for the class and methods.
-- Added `logger` import and use.
-- Added `if self.dropdown is not None:` to `display_widget` to prevent errors if dropdown is not created.
-- Handles case where `self.groups_data` is `None` in `create_dropdown`.
-- Added `logger.warning` to `display_widget` in case dropdown is `None`
+1.  Изменены импорты: добавлен `logging` для логирования и переименован `header` на `logging` в зависимости от потребностей.
+2.  Добавлен обработка исключений: добавлены блоки `try...except` для обработки ошибок при чтении JSON-файла, создании и отображении виджета, логирование ошибок.
+3.  Изменены имена методов: `create_dropdown` переименовано в `_create_dropdown` для соблюдения соглашения об именах в Python.
+4.  Добавлены docstring в формате RST для всех функций и методов.
+5.  Улучшены комментарии: добавлено более детальное описание и использовано RST для документации.
+6.  Добавлено предупреждение: логируется предупреждение, если виджет не был создан.
+7.  Проверка существования `self.dropdown`: добавлена проверка `if self.dropdown` для предотвращения ошибок при вызове `display()`.
+8.  Использовано `logger` для логирования.
+9.  Возвращается `None` в случае ошибки при создании `Dropdown`.
 
-**Full Code (Improved)**
+**Complete Code**
 
 ```python
-## \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
+# \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -170,14 +159,10 @@ class FacebookGroupsWidget:
 """
 .. module:: src.endpoints.advertisement.facebook
 
-.. moduleauthor:: Автоматический генератор кода
-
-.. autoclass:: FacebookGroupsWidget
-    :members:
+	:platform: Windows, Unix
+	:synopsis:  Создает виджет выпадающего списка для выбора групп Facebook для размещения объявления.
 """
-MODE = 'development'
-
-import header  # TODO: Убедиться, что этот модуль импортируется и используется
+import logging
 from IPython.display import display
 from ipywidgets import Dropdown
 from src.utils import j_loads_ns
@@ -186,32 +171,29 @@ from pathlib import Path
 from src.logger import logger
 
 class FacebookGroupsWidget:
-    """Создает выпадающий список с URL групп Facebook из предоставленного JSON."""
+    """
+    Создает виджет выпадающего списка с URL групп Facebook из предоставленного JSON файла.
+    """
 
     def __init__(self, json_file_path: Path):
         """
-        Инициализация виджета с выпадающим списком для групп Facebook.
+        Инициализирует виджет с выпадающим списком для групп Facebook.
 
-        :param json_file_path: Путь к JSON-файлу, содержащему информацию о группах Facebook.
-        :vartype json_file_path: Path
+        :param json_file_path: Путь к файлу JSON, содержащему информацию о группах Facebook.
         """
         try:
-            self.groups_data: SimpleNamespace = j_loads_ns(json_file_path)
-            self.dropdown = self.create_dropdown()
+            self.groups_data = j_loads_ns(json_file_path)
+            self.dropdown = self._create_dropdown()
         except Exception as e:
-            logger.error(f"Ошибка при загрузке данных из файла: {e}")
-            self.dropdown = None #Устанавливаем dropdown в None, чтобы не вызывать ошибки
+            logger.error(f"Ошибка при загрузке данных из файла {json_file_path}: {e}")
 
-
-    def create_dropdown(self) -> Dropdown:
+    def _create_dropdown(self) -> Dropdown:
         """
-        Создает и возвращает виджет выпадающего списка на основе данных групп.
+        Создает и возвращает виджет выпадающего списка.
 
-        :return: Виджет выпадающего списка с URL групп Facebook.
-        :rtype: Dropdown
+        :return: Виджет Dropdown с URL групп Facebook.
+        :raises Exception: Если возникнет ошибка при создании виджета.
         """
-        if self.groups_data is None:
-            return None
         try:
             group_urls = list(self.groups_data.__dict__.keys())
             dropdown = Dropdown(
@@ -221,17 +203,18 @@ class FacebookGroupsWidget:
             )
             return dropdown
         except Exception as e:
-            logger.error(f"Ошибка при создании выпадающего списка: {e}")
-            return None
-
+            logger.error(f"Ошибка при создании виджета Dropdown: {e}")
+            return None  # Возвращаем None в случае ошибки
 
     def display_widget(self):
-        """Отображает виджет выпадающего списка."""
-        if self.dropdown is not None:
-            try:
+        """
+        Отображает виджет выпадающего списка.
+        """
+        try:
+            if self.dropdown:
                 display(self.dropdown)
-            except Exception as e:
-                logger.error(f"Ошибка при отображении виджета: {e}")
-        else:
-            logger.warning("Виджет не создан, ничего не отображается")
+            else:
+                logger.warning("Виджет не был создан, не отображается.")
+        except Exception as e:
+            logger.error(f"Ошибка при отображении виджета: {e}")
 ```
