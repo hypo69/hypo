@@ -267,7 +267,7 @@ class Graber:
         """Fetch and set additional shipping cost."""
         self.fields.additional_shipping_cost = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.additional_shipping_cost) or ''),
+            lambda: self.d.execute_locator(self.l.additional_shipping_cost) or '',
             'additional_shipping_cost'
         )
 
@@ -276,7 +276,7 @@ class Graber:
         """Fetch and set delivery in stock status."""
         self.fields.delivery_in_stock = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.delivery_in_stock) or ''),
+            lambda: self.d.execute_locator(self.l.delivery_in_stock) or '',
             'delivery_in_stock'
         )
 
@@ -285,7 +285,7 @@ class Graber:
         """Fetch and set active status."""
         self.fields.active = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.active) or ''),
+            lambda: self.d.execute_locator(self.l.active) or '',
             'active'
         )
 
@@ -294,7 +294,7 @@ class Graber:
         """Fetch and set additional delivery times."""
         self.fields.additional_delivery_times = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.additional_delivery_times) or ''),
+            lambda: self.d.execute_locator(self.l.additional_delivery_times) or '',
             'additional_delivery_times'
         )
 
@@ -303,7 +303,7 @@ class Graber:
         """Fetch and set advanced stock management status."""
         self.fields.advanced_stock_management = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.advanced_stock_management) or ''),
+            lambda: self.d.execute_locator(self.l.advanced_stock_management) or '',
             'advanced_stock_management'
         )
 
@@ -312,7 +312,7 @@ class Graber:
         """Fetch and set affiliate short link."""
         self.fields.affiliate_short_link = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.affiliate_short_link) or ''),
+            lambda: self.d.execute_locator(self.l.affiliate_short_link) or '',
             'affiliate_short_link'
         )
 
@@ -321,7 +321,7 @@ class Graber:
         """Fetch and set affiliate summary."""
         self.fields.affiliate_summary = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.affiliate_summary) or ''),
+            lambda: self.d.execute_locator(self.l.affiliate_summary) or '',
             'affiliate_summary'
         )
 
@@ -330,72 +330,76 @@ class Graber:
         """Fetch and set affiliate summary 2."""
         self.fields.affiliate_summary_2 = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.affiliate_summary_2) or ''),
+            lambda: self.d.execute_locator(self.l.affiliate_summary_2) or '',
             'affiliate_summary_2'
         )
 
-
-
     @close_pop_up()
     async def affiliate_text(self, value: Any = None):
+        """Fetch and set affiliate text."""
         self.fields.affiliate_text = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.affiliate_text) or ''),
+            lambda: self.d.execute_locator(self.l.affiliate_text) or '',
             'affiliate_text'
         )
 
     @close_pop_up()
     async def affiliate_image_large(self, value: Any = None):
+        """Fetch and set affiliate large image."""
         self.fields.affiliate_image_large = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.affiliate_image_large) or ''),
+            lambda: self.d.execute_locator(self.l.affiliate_image_large) or '',
             'affiliate_image_large'
         )
 
     @close_pop_up()
     async def affiliate_image_medium(self, value: Any = None):
+        """Fetch and set affiliate medium image."""
         self.fields.affiliate_image_medium = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.affiliate_image_medium) or ''),
+            lambda: self.d.execute_locator(self.l.affiliate_image_medium) or '',
             'affiliate_image_medium'
         )
+
     @close_pop_up()
     async def affiliate_image_small(self, value: Any = None):
+        """Fetch and set affiliate small image."""
         self.fields.affiliate_image_small = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.affiliate_image_small) or ''),
+            lambda: self.d.execute_locator(self.l.affiliate_image_small) or '',
             'affiliate_image_small'
         )
 
     @close_pop_up()
     async def available_date(self, value: Any = None):
+        """Fetch and set available date."""
         self.fields.available_date = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.available_date) or ''),
+            lambda: self.d.execute_locator(self.l.available_date) or '',
             'available_date'
         )
 
     @close_pop_up()
     async def available_for_order(self, value: Any = None):
+        """Fetch and set available for order status."""
         self.fields.available_for_order = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.available_for_order) or ''),
+            lambda: self.d.execute_locator(self.l.available_for_order) or '',
             'available_for_order'
         )
-
     @close_pop_up()
     async def available_later(self, value: Any = None):
         self.fields.available_later = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.available_later) or ''),
+            lambda: self.d.execute_locator(self.l.available_later) or '',
             'available_later'
         )
 
     @close_pop_up()
     async def available_now(self, value: Any = None):
-        f.available_now = await self.set_field_value(
+        self.fields.available_now = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.available_now) or ''),
+            lambda: self.d.execute_locator(self.l.available_now) or '',
             'available_now'
         )
 
@@ -407,7 +411,7 @@ class Graber:
     async def cache_default_attribute(self, value: Any = None):
         self.fields.cache_default_attribute = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.cache_default_attribute) or ''),
+            lambda: self.d.execute_locator(self.l.cache_default_attribute) or '',
             'cache_default_attribute'
         )
 
@@ -415,7 +419,7 @@ class Graber:
     async def cache_has_attachments(self, value: Any = None):
         self.fields.cache_has_attachments = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.cache_default_attribute) or ''),
+            lambda: self.d.execute_locator(self.l.cache_has_attachments) or '',
             'cache_has_attachments'
         )
 
@@ -423,7 +427,7 @@ class Graber:
     async def cache_is_pack(self, value: Any = None):
         self.fields.cache_is_pack = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.cache_is_pack) or ''),
+            lambda: self.d.execute_locator(self.l.cache_is_pack) or '',
             'cache_is_pack'
         )
 
@@ -431,15 +435,7 @@ class Graber:
     async def condition(self, value: Any = None):
         self.fields.condition = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.condition) or ''),
-            'condition'
-        )
-
-    @close_pop_up()
-    async def condition(self, value: Any = None):
-        self.fields.condition = await self.set_field_value(
-            value, 
-            lambda: ''.join(self.d.execute_locator(self.l.condition) or ''),
+            lambda: self.d.execute_locator(self.l.condition) or '',
             'condition'
         )
 
@@ -447,7 +443,7 @@ class Graber:
     async def customizable(self, value: Any = None):
         self.fields.customizable = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.customizable) or ''),
+            lambda: self.d.execute_locator(self.l.customizable) or '',
             'customizable'
         )
 
@@ -455,7 +451,7 @@ class Graber:
     async def date_add(self, value: Any = None):
         self.fields.date_add = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.date_add) or ''),
+            lambda: self.d.execute_locator(self.l.date_add) or '',
             'date_add'
         )
 
@@ -463,7 +459,7 @@ class Graber:
     async def date_upd(self, value: Any = None):
         self.fields.date_upd = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.date_upd) or ''),
+            lambda: self.d.execute_locator(self.l.date_upd) or '',
             'date_upd'
         )
 
@@ -471,7 +467,7 @@ class Graber:
     async def delivery_out_stock(self, value: Any = None):
         self.fields.delivery_out_stock = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.delivery_out_stock) or ''),
+            lambda: self.d.execute_locator(self.l.delivery_out_stock) or '',
             'delivery_out_stock'
         )
 
@@ -479,7 +475,7 @@ class Graber:
     async def depth(self, value: Any = None):
         self.fields.depth = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.depth) or ''),
+            lambda: self.d.execute_locator(self.l.depth) or '',
             'depth'
         )
 
@@ -487,7 +483,7 @@ class Graber:
     async def description(self, value: Any = None):
         self.fields.description = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.description) or ''),
+            lambda: self.d.execute_locator(self.l.description) or '',
             'description'
         )
 
@@ -495,7 +491,7 @@ class Graber:
     async def description_short(self, value: Any = None):
         self.fields.description_short = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.description_short) or ''), 
+            lambda: self.d.execute_locator(self.l.description_short) or '', 
             'description_short'
         )
 
@@ -507,7 +503,7 @@ class Graber:
     async def id_default_combination(self, value: Any = None):
         self.fields.id_default_combination = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.id_default_combination) or ''),
+            lambda: self.d.execute_locator(self.l.id_default_combination) or '',
             'id_default_combination'
         )
 
@@ -531,7 +527,7 @@ class Graber:
     async def id_default_image(self, value: Any = None):
         self.fields.id_default_image = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.id_default_image) or ''),
+            lambda: self.d.execute_locator(self.l.id_default_image) or '',
             'id_default_image'
         )
 
@@ -539,7 +535,7 @@ class Graber:
     async def ean13(self, value: Any = None):
         self.fields.ean13 = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.ean13) or ''),
+            lambda: self.d.execute_locator(self.l.ean13) or '',
             'ean13'
         )
 
@@ -547,15 +543,14 @@ class Graber:
     async def ecotax(self, value: Any = None):
         self.fields.ecotax = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.ecotax) or ''),
+            lambda: self.d.execute_locator(self.l.ecotax) or '',
             'ecotax'
         )
-
     @close_pop_up()
     async def height(self, value: Any = None):
         self.fields.height = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.height) or ''),
+            lambda: self.d.execute_locator(self.l.height) or '',
             'height'
         )
 
@@ -563,7 +558,7 @@ class Graber:
     async def how_to_use(self, value: Any = None):
         self.fields.how_to_use = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.how_to_use) or ''),
+            lambda: self.d.execute_locator(self.l.how_to_use) or '',
             'how_to_use'
         )
 
@@ -571,7 +566,7 @@ class Graber:
     async def id_manufacturer(self, value: Any = None):
         self.fields.id_manufacturer = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.id_manufacturer) or ''),
+            lambda: self.d.execute_locator(self.l.id_manufacturer) or '',
             'id_manufacturer'
         )
 
@@ -579,7 +574,7 @@ class Graber:
     async def id_supplier(self, value: Any = None):
         self.fields.id_supplier = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.id_supplier) or ''),
+            lambda: self.d.execute_locator(self.l.id_supplier) or '',
             'id_supplier'
         )
 
@@ -587,7 +582,7 @@ class Graber:
     async def id_tax(self, value: Any = None):
         self.fields.id_tax = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.id_tax) or ''),
+            lambda: self.d.execute_locator(self.l.id_tax) or '',
             'id_tax'
         )
 
@@ -595,7 +590,7 @@ class Graber:
     async def id_type_redirected(self, value: Any = None):
         self.fields.id_type_redirected = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.id_type_redirected) or ''),
+            lambda: self.d.execute_locator(self.l.id_type_redirected) or '',
             'id_type_redirected'
         )
 
@@ -603,31 +598,31 @@ class Graber:
     async def images_urls(self, value: Any = None):
         self.fields.images_urls = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.images_urls) or ''),
+            lambda: self.d.execute_locator(self.l.images_urls) or '',
             'images_urls'
         )
+
     @close_pop_up()
     async def indexed(self, value: Any = None):
         self.fields.indexed = await self.set_field_value(
             value, 
-            lambda: ''.join(self.d.execute_locator(self.l.indexed) or ''),
+            lambda: self.d.execute_locator(self.l.indexed) or '',
             'indexed'
         )
 
-
     @close_pop_up()
     async def ingredients(self, value: Any = None):
-        self.fields.images_urls = await self.set_field_value(
+        self.fields.ingredients = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.images_urls) or []),
-            'images_urls'
+            lambda: self.d.execute_locator(self.l.ingredients) or '',
+            'ingredients'
         )
 
     @close_pop_up()
     async def meta_description(self, value: Any = None):
         self.fields.meta_description = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.meta_description) or []),
+            lambda: self.d.execute_locator(self.l.meta_description) or '',
             'meta_description'
         )
 
@@ -635,15 +630,14 @@ class Graber:
     async def meta_keywords(self, value: Any = None):
         self.fields.meta_keywords = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.meta_keywords) or []),
+            lambda: self.d.execute_locator(self.l.meta_keywords) or '',
             'meta_keywords'
         )
-
     @close_pop_up()
     async def meta_title(self, value: Any = None):
         self.fields.meta_title = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.meta_title) or []),
+            lambda: self.d.execute_locator(self.l.meta_title) or '',
             'meta_title'
         )
 
@@ -651,7 +645,7 @@ class Graber:
     async def is_virtual(self, value: Any = None):
         self.fields.is_virtual = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.is_virtual) or []),
+            lambda: self.d.execute_locator(self.l.is_virtual) or '',
             'is_virtual'
         )
 
@@ -659,16 +653,15 @@ class Graber:
     async def isbn(self, value: Any = None):
         self.fields.isbn = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.isbn) or []),
+            lambda: self.d.execute_locator(self.l.isbn) or '',
             'isbn'
         )
-
 
     @close_pop_up()
     async def link_rewrite(self, value: Any = None) -> str:
         self.fields.link_rewrite = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.link_rewrite) or []),
+            lambda: self.d.execute_locator(self.l.link_rewrite) or '',
             'link_rewrite'
         )
 
@@ -676,7 +669,7 @@ class Graber:
     async def location(self, value: Any = None):
         self.fields.location = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.location) or []),
+            lambda: self.d.execute_locator(self.l.location) or '',
             'location'
         )
 
@@ -684,7 +677,7 @@ class Graber:
     async def low_stock_alert(self, value: Any = None):
         self.fields.low_stock_alert = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.low_stock_alert) or []),
+            lambda: self.d.execute_locator(self.l.low_stock_alert) or '',
             'low_stock_alert'
         )
 
@@ -692,7 +685,7 @@ class Graber:
     async def low_stock_threshold(self, value: Any = None):
         self.fields.low_stock_threshold = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.low_stock_threshold) or []),
+            lambda: self.d.execute_locator(self.l.low_stock_threshold) or '',
             'low_stock_threshold'
         )
 
@@ -700,7 +693,7 @@ class Graber:
     async def minimal_quantity(self, value: Any = None):
         self.fields.minimal_quantity = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.minimal_quantity) or []),
+            lambda: self.d.execute_locator(self.l.minimal_quantity) or '',
             'minimal_quantity'
         )
 
@@ -708,7 +701,7 @@ class Graber:
     async def mpn(self, value: Any = None):
         self.fields.mpn = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.mpn) or []),
+            lambda: self.d.execute_locator(self.l.mpn) or '',
             'mpn'
         )
 
@@ -716,7 +709,7 @@ class Graber:
     async def name(self, value: Any = None):
         self.fields.name = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.name) or []),
+            lambda: self.d.execute_locator(self.l.name) or '',
             'name'
         )
 
@@ -724,15 +717,14 @@ class Graber:
     async def online_only(self, value: Any = None):
         self.fields.online_only = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.online_only) or []),
+            lambda: self.d.execute_locator(self.l.online_only) or '',
             'online_only'
         )
-
     @close_pop_up()
     async def on_sale(self, value: Any = None):
         self.fields.on_sale = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.on_sale) or []),
+            lambda: self.d.execute_locator(self.l.on_sale) or '',
             'on_sale'
         )
 
@@ -740,7 +732,7 @@ class Graber:
     async def out_of_stock(self, value: Any = None):
         self.fields.out_of_stock = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.out_of_stock) or []),
+            lambda: self.d.execute_locator(self.l.out_of_stock) or '',
             'out_of_stock'
         )
 
@@ -748,7 +740,7 @@ class Graber:
     async def pack_stock_type(self, value: Any = None):
         self.fields.pack_stock_type = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.pack_stock_type) or []),
+            lambda: self.d.execute_locator(self.l.pack_stock_type) or '',
             'pack_stock_type'
         )
 
@@ -756,7 +748,7 @@ class Graber:
     async def price(self, value: Any = None):
         self.fields.price = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.price) or []),
+            lambda: self.d.execute_locator(self.l.price) or '',
             'price'
         )
 
@@ -764,7 +756,7 @@ class Graber:
     async def product_type(self, value: Any = None):
         self.fields.product_type = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.product_type) or []),
+            lambda: self.d.execute_locator(self.l.product_type) or '',
             'product_type'
         )
 
@@ -772,7 +764,7 @@ class Graber:
     async def quantity(self, value: Any = None):
         self.fields.quantity = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.quantity) or []),
+            lambda: self.d.execute_locator(self.l.quantity) or '',
             'quantity'
         )
 
@@ -780,7 +772,7 @@ class Graber:
     async def quantity_discount(self, value: Any = None):
         self.fields.quantity_discount = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.quantity_discount) or []),
+            lambda: self.d.execute_locator(self.l.quantity_discount) or '',
             'quantity_discount'
         )
 
@@ -788,7 +780,7 @@ class Graber:
     async def redirect_type(self, value: Any = None):
         self.fields.redirect_type = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.redirect_type) or []),
+            lambda: self.d.execute_locator(self.l.redirect_type) or '',
             'redirect_type'
         )
 
@@ -796,7 +788,7 @@ class Graber:
     async def reference(self, value: Any = None):
         self.fields.reference = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.reference) or []),
+            lambda: self.d.execute_locator(self.l.reference) or '',
             'reference'
         )
 
@@ -804,7 +796,7 @@ class Graber:
     async def show_condition(self, value: Any = None):
         self.fields.show_condition = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.show_condition) or []),
+            lambda: self.d.execute_locator(self.l.show_condition) or '',
             'show_condition'
         )
 
@@ -812,7 +804,7 @@ class Graber:
     async def show_price(self, value: Any = None):
         self.fields.show_price = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.show_price) or []),
+            lambda: self.d.execute_locator(self.l.show_price) or '',
             'show_price'
         )
 
@@ -820,7 +812,7 @@ class Graber:
     async def state(self, value: Any = None):
         self.fields.state = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.state) or []),
+            lambda: self.d.execute_locator(self.l.state) or '',
             'state'
         )
 
@@ -828,96 +820,94 @@ class Graber:
     async def text_fields(self, value: Any = None):
         self.fields.text_fields = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.text_fields) or []),
+            lambda: self.d.execute_locator(self.l.text_fields) or '',
             'text_fields'
         )
-
     @close_pop_up()
     async def unit_price_ratio(self, value: Any = None):
         self.fields.unit_price_ratio = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.unit_price_ratio) or []),
+            lambda: self.d.execute_locator(self.l.unit_price_ratio) or '',
             'unit_price_ratio'
         )
 
-
     @close_pop_up()
     async def unity(self, value: Any = None):
-        selself.fields.fields.unity = await self.set_field_value(
+        self.fields.unity = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.unity) or []),
+            lambda: self.d.execute_locator(self.l.unity) or '',
             'unity'
         )
 
     @close_pop_up()
     async def upc(self, value: Any = None):
-        selself.fields.fields.upc = await self.set_field_value(
+        self.fields.upc = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.upc) or []),
+            lambda: self.d.execute_locator(self.l.upc) or '',
             'upc'
         )
 
     @close_pop_up()
     async def uploadable_files(self, value: Any = None):
-        selself.fields.fields.uploadable_files = await self.set_field_value(
+        self.fields.uploadable_files = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.uploadable_files) or []),
+            lambda: self.d.execute_locator(self.l.uploadable_files) or '',
             'uploadable_files'
         )
 
     @close_pop_up()
     async def default_image_url(self, value: Any = None):
-        selself.fields.fields.default_image_url = await self.set_field_value(
+        self.fields.default_image_url = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.default_image_url) or []),
+            lambda: self.d.execute_locator(self.l.default_image_url) or '',
             'default_image_url'
         )
 
     @close_pop_up()
     async def visibility(self, value: Any = None):
-        selself.fields.fields.visibility = await self.set_field_value(
+        self.fields.visibility = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.visibility) or []),
+            lambda: self.d.execute_locator(self.l.visibility) or '',
             'visibility'
         )
 
     @close_pop_up()
     async def weight(self, value: Any = None):
-        selself.fields.fields.weight = await self.set_field_value(
+        self.fields.weight = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.weight) or []),
+            lambda: self.d.execute_locator(self.l.weight) or '',
             'weight'
         )
 
     @close_pop_up()
     async def wholesale_price(self, value: Any = None):
-        selself.fields.fields.wholesale_price = await self.set_field_value(
+        self.fields.wholesale_price = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.wholesale_price) or []),
+            lambda: self.d.execute_locator(self.l.wholesale_price) or '',
             'wholesale_price'
         )
 
     @close_pop_up()
     async def width(self, value: Any = None):
-        selself.fields.fields.width = await self.set_field_value(
+        self.fields.width = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.width) or []),
+            lambda: self.d.execute_locator(self.l.width) or '',
             'width'
         )
 
     @close_pop_up()
     async def specification(self, value: Any = None):
-        selself.fields.fields.specification = await self.set_field_value(
+        self.fields.specification = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.specification) or []),
+            lambda: self.d.execute_locator(self.l.specification) or '',
             'specification'
         )
 
     @close_pop_up()
     async def link(self, value: Any = None):
-        selself.fields.fields.link = await self.set_field_value(
+        self.fields.link = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.link) or []),
+            lambda: self.d.execute_locator(self.l.link) or '',
             'link'
         )
 
@@ -925,7 +915,7 @@ class Graber:
     async def byer_protection(self, value: Any = None):
         self.fields.byer_protection = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.byer_protection) or []),
+            lambda: self.d.execute_locator(self.l.byer_protection) or '',
             'byer_protection'
         )
 
@@ -933,7 +923,7 @@ class Graber:
     async def customer_reviews(self, value: Any = None):
         self.fields.customer_reviews = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.customer_reviews) or []),
+            lambda: self.d.execute_locator(self.l.customer_reviews) or '',
             'customer_reviews'
         )
 
@@ -941,7 +931,7 @@ class Graber:
     async def link_to_video(self, value: Any = None):
         self.fields.link_to_video = await self.set_field_value(
             value,
-            lambda: ''.join(self.d.execute_locator(self.l.link_to_video) or []),
+            lambda: self.d.execute_locator(self.l.link_to_video) or '',
             'link_to_video'
         )
 
@@ -949,7 +939,7 @@ class Graber:
     async def local_saved_image(self, value: Any = None):
         self.fields.local_saved_image = await self.set_field_value(
             value,
-            lambda: save_png_from_url( d.execute_locator(self.l.default_image_url), f.id_product),
+            lambda: save_png_from_url(self.d.execute_locator(self.l.default_image_url), f.id_product),
             'local_saved_image'
         )
 
@@ -957,6 +947,6 @@ class Graber:
     async def local_saved_video(self, value: Any = None):
         self.fields.local_saved_video = await self.set_field_value(
             value,
-            lambda: d.execute_locator(self.l.local_saved_video),
+            lambda: self.d.execute_locator(self.l.local_saved_video) or '',
             'local_saved_video'
         )

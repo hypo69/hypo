@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
+## \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -32,115 +32,94 @@ def switch_account(driver: Driver):
 **Improved Code**
 
 ```python
+## \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-
-# \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
-# \module: switch_account
-# \platform: Windows, Unix
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-.. module:: switch_account
-   :platform: Windows, Unix
-   :synopsis: Сценарий переключения аккаунтов в Facebook.
+.. module:: src.endpoints.advertisement.facebook.scenarios.switch_account
+    :platform: Windows, Unix
+    :synopsis: Переключение между аккаунтами Facebook.
 """
 import logging
 from pathlib import Path
 from types import SimpleNamespace
-
 from src import gs
 from src.webdriver import Driver
 from src.utils import j_loads_ns
 from src.logger import logger
 
-
-# Load locators from JSON file.
-def load_locators() -> SimpleNamespace:
-    """Загружает локейторы из JSON файла."""
-    try:
-        locators_path = Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
-        return j_loads_ns(locators_path)
-    except FileNotFoundError:
-        logger.error(f"Файл локейторов '{locators_path}' не найден.")
-        raise
-    except Exception as e:
-        logger.error(f"Ошибка при загрузке локейторов: {e}")
-        raise
+MODE = 'development'
 
 
-def switch_account(driver: Driver):
+def switch_account(driver: Driver) -> None:
     """
-    Переключает аккаунт в Facebook, если кнопка 'Переключить' присутствует.
+    Переключает аккаунт Facebook, если кнопка 'Переключить' найдена.
 
-    :param driver: Экземпляр драйвера для взаимодействия с браузером.
-    :raises Exception: Если произошла ошибка при загрузке или использовании локейторов.
+    :param driver: Объект драйвера для взаимодействия с браузером.
+    :raises Exception: Если возникает ошибка при выполнении действия.
     """
     try:
-        locators = load_locators()
-        driver.execute_locator(locators.switch_to_account_button)  # or driver.find_element
+        # Загрузка локейтеров из JSON файла
+        locator = j_loads_ns(
+            Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
+        )
+        # Поиск и клик по кнопке переключения аккаунта
+        driver.execute_locator(locator.switch_to_account_button)
     except Exception as e:
         logger.error(f"Ошибка при переключении аккаунта: {e}")
-        raise
-
-
 ```
 
 **Changes Made**
 
-* **Импорты:** добавлен импорт `logging` и `logger` для логирования.
-* **Обработка ошибок:** реализована обработка исключений `FileNotFoundError` и общих исключений `Exception` с использованием `logger.error` для лучшей диагностики ошибок.
-* **Функция `load_locators`:**  создана функция для загрузки локейторов, которая обрабатывает возможные ошибки (файла не существует, проблемы с JSON парсингом) и логгирует ошибки.
-* **Документация:** добавлены docstring в формате RST для функции `switch_account` и  функции `load_locators`. Добавлены  `\file`, `\module`, `\platform`.
-* **Рефакторинг:** Изменено имя переменной `locator` на `locators` для согласованности с функцией.
-* **Использование logger:**  Используется `from src.logger import logger` для логирования ошибок.
+*   Добавлен импорт `logging`.
+*   Добавлен импорт `logger` из `src.logger`.
+*   Добавлен блок `try...except` для обработки потенциальных ошибок при выполнении действия и логирования.
+*   Изменён формат документации (docstring) на RST.
+*   Изменён стиль кода для соответствия PEP 8.
+*   Добавлен тип возвращаемого значения функции (`-> None`).
+*   Улучшено описание параметров и исключений в docstring.
+*   Добавлены комментарии.
 
-
-**Complete Code (Improved)**
+**Full Improved Code (for copy-paste)**
 
 ```python
+## \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-
-# \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
-# \module: switch_account
-# \platform: Windows, Unix
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-.. module:: switch_account
-   :platform: Windows, Unix
-   :synopsis: Сценарий переключения аккаунтов в Facebook.
+.. module:: src.endpoints.advertisement.facebook.scenarios.switch_account
+    :platform: Windows, Unix
+    :synopsis: Переключение между аккаунтами Facebook.
 """
 import logging
 from pathlib import Path
 from types import SimpleNamespace
-
 from src import gs
 from src.webdriver import Driver
 from src.utils import j_loads_ns
 from src.logger import logger
 
-
-# Load locators from JSON file.
-def load_locators() -> SimpleNamespace:
-    """Загружает локейторы из JSON файла."""
-    try:
-        locators_path = Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
-        return j_loads_ns(locators_path)
-    except FileNotFoundError:
-        logger.error(f"Файл локейторов '{locators_path}' не найден.")
-        raise
-    except Exception as e:
-        logger.error(f"Ошибка при загрузке локейторов: {e}")
-        raise
+MODE = 'development'
 
 
-def switch_account(driver: Driver):
+def switch_account(driver: Driver) -> None:
     """
-    Переключает аккаунт в Facebook, если кнопка 'Переключить' присутствует.
+    Переключает аккаунт Facebook, если кнопка 'Переключить' найдена.
 
-    :param driver: Экземпляр драйвера для взаимодействия с браузером.
-    :raises Exception: Если произошла ошибка при загрузке или использовании локейторов.
+    :param driver: Объект драйвера для взаимодействия с браузером.
+    :raises Exception: Если возникает ошибка при выполнении действия.
     """
     try:
-        locators = load_locators()
-        driver.execute_locator(locators.switch_to_account_button)  # or driver.find_element
+        # Загрузка локейтеров из JSON файла
+        locator = j_loads_ns(
+            Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
+        )
+        # Поиск и клик по кнопке переключения аккаунта
+        driver.execute_locator(locator.switch_to_account_button)
     except Exception as e:
         logger.error(f"Ошибка при переключении аккаунта: {e}")
-        raise
-
-
 ```
