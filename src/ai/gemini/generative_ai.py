@@ -20,12 +20,13 @@ import base64
 
 import google.generativeai as genai
 import requests
+
+from grpc import RpcError
 from google.api_core.exceptions import (
     GatewayTimeout,
     ServiceUnavailable,
     ResourceExhausted,
     InvalidArgument,
-    RpcError
 )
 from google.auth.exceptions import DefaultCredentialsError, RefreshError
 from src.logger import logger
@@ -252,7 +253,7 @@ class GoogleGenerativeAI:
             return response.text
 
         except Exception as ex:
-            logger.error(f"Error describing image: {ex}")
+            logger.error(f"Error describing image:" , ex)
             return
 
 
@@ -265,7 +266,7 @@ def chat():
     Пример:
         >>> chat()  # Запуск чата
     """
-    logger.debug("Hello, I am the AI assistant. Ask your questions.")
+    logger.debug("Hello, I am the AI assistant. Ask your questions.",None,False)
     print("Type 'exit' to end the chat.\n")
 
     system_instruction = input("Enter system instruction (or press Enter to skip): ")
