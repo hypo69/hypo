@@ -10,7 +10,7 @@
  Словарь {UTF-8 : HTML ESCAPE}
 """
 ...
-MODE = 'development'
+MODE = 'dev'
 
 html_escapes = {
     '&': '&amp;',

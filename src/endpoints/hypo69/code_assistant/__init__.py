@@ -9,6 +9,6 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .code_assistant import CodeAssistant

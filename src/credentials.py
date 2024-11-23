@@ -9,7 +9,7 @@
 	:synopsis: Global Project Settings: paths, passwords, logins, and API settings
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 import datetime

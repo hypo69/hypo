@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import asyncio
 from pathlib import Path
@@ -74,7 +74,7 @@ class Graber(Grbr):
         self.supplier_prefix = 'wallmart'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
-        Context.driver = driver
+        
         Context.locator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
 
         

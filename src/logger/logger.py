@@ -7,7 +7,7 @@
 	:platform: Windows, Unix
 	:synopsis: Logger Module
 """
-MODE = 'development'
+MODE = 'dev'
 
 """This module provides a singleton logging utility with various logging levels and formats, including console, file, and JSON logging. It utilizes the Singleton design pattern to ensure a single instance of the logger is used throughout the application. The logger supports different log levels and output formats, and it can colorize console messages based on log severity.
 

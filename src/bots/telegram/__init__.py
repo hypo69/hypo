@@ -9,6 +9,6 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .bot import TelegramBot

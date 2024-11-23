@@ -14,7 +14,7 @@ Testfile:
     file test_ali_campaign_editor_jupyter_widgets.py
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from types import SimpleNamespace

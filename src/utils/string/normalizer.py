@@ -9,7 +9,7 @@
 	:synopsis: Module for normalizing product fields and handling various data types
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from decimal import Decimal, InvalidOperation

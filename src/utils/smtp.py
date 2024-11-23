@@ -9,7 +9,7 @@
 	:synopsis: SMTP Email Interface
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 """ This module provides functionality to send and receive emails using an SMTP or IMAP server.

@@ -9,7 +9,7 @@
 	:synopsis: CSV and JSON conversion utilities
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """ Functions:
     - `csv2dict`: Convert CSV data to a dictionary.

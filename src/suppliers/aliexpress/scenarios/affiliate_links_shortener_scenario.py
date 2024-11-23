@@ -9,7 +9,7 @@
 	:synopsis: Сокращатель ссылок через веббраузер
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from pathlib import Path
 from typing import List, Union

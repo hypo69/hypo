@@ -23,7 +23,7 @@ class G(Graber):
     ```
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 import os
@@ -63,7 +63,7 @@ class Context:
 
     # Атрибуты класса
     driver: Driver = None
-    locator: SimpleNamespace = None
+    locator: SimpleNamespace = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
     supplier_prefix: str = None
 
 
@@ -114,7 +114,6 @@ class Graber:
         self.d = self.driver
         self.fields:ProductFields = ProductFields()
         Context.driver = self.driver
-        Context.locator = None
         Context.supplier_prefix =  supplier_prefix
 
     async def error(self, field: str):

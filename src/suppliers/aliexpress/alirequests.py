@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import pickle
 import requests

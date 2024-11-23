@@ -9,6 +9,6 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .crawlee_python import CrawleePython

@@ -9,7 +9,7 @@
 	:synopsis: Convert Base64 encoded content to a temporary file
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """ This module provides a function to decode Base64 encoded content and write it to a temporary file with the specified extension.
 

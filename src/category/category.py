@@ -10,7 +10,7 @@
 На сегодняшний день модуль заточен в основном под Престашоп
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from pathlib import Path
 import os

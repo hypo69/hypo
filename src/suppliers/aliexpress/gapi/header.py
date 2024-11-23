@@ -8,7 +8,7 @@ module: src.suppliers.aliexpress.gapi
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
-MODE = 'development'
+MODE = 'dev'
 
 import sys
 import json

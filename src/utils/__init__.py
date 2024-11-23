@@ -9,7 +9,7 @@
 	:synopsis: tiny_utils Module
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 """ collection of small, useful utilities designed to simplify common programming tasks. 

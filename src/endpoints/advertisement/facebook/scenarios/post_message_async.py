@@ -9,7 +9,7 @@
 	:synopsis: Публикация сообщения из `aliexpress` промо
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import time
 import asyncio

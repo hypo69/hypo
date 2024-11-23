@@ -9,7 +9,7 @@
 	:synopsis: graber for supplier webpage
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import asyncio
 from pathlib import Path
@@ -67,8 +67,6 @@ class Graber(Grbr):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'morlevi'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        # Устанавливаем глобальные настройки через Context
-        Context.driver = driver
         Context.locator = self.locator.close_pop_up
 
     async def grab_page(self, driver: Driver) -> ProductFields:

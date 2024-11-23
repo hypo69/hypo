@@ -18,7 +18,7 @@ if __name__ == "__main__":
     browser.start("https://www.example.com")
 ```
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from pathlib import Path

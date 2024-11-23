@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
 """
 
-MODE = 'development'
+MODE = 'dev'
 
 import os
 from pathlib import Path

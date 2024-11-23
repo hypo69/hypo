@@ -9,7 +9,7 @@
 	:synopsis: Генератор HTML контента рекламной кампании
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import header   
 

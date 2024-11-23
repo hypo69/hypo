@@ -9,7 +9,7 @@
    :synopsis: Google generative AI integration
 """
 
-MODE = 'development'
+MODE = 'dev'
 import time
 import json
 from pathlib import Path

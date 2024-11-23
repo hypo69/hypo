@@ -15,7 +15,7 @@ Functions:
     - :func:`pprint`
 """
 
-MODE = 'development'
+MODE = 'dev'
 
 import json
 import csv

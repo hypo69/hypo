@@ -9,7 +9,7 @@
 	:synopsis: Список всех доступных ресурсов для API вызовов
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 resource:list = [
     'products', 

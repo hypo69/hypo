@@ -9,7 +9,7 @@
     :synopsis: Модуль для работы ассистента программиста
 """
 
-MODE = 'development'
+MODE = 'dev'
 
 
 """

@@ -109,7 +109,7 @@ list_of_scenarios = [scenario1, ...]
 s.run(list_of_scenarios)
 ```
 """
-MODE = 'development'
+MODE = 'dev'
 from .executor import (
     run_scenario, 
     run_scenarios, 

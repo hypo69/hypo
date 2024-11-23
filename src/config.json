@@ -7,7 +7,8 @@
   "project_folder": "hypotez",
   "google_drive": "H:\\My Drive\\hypotez",
   "external_storage": "E:\\hypotez_data",
-  "mode": "debug",
+  "mode": "dev",
+  "avaible_modes": [ "dev", "debug", "test", "prod" ],
   "git_user": "hypo69",
   "git": "hypo",
   "cofee": "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"

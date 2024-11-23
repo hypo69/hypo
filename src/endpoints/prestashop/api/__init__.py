@@ -9,6 +9,6 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .api import PrestaShop

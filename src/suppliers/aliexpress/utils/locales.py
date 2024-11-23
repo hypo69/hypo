@@ -21,7 +21,7 @@ Examples:
     [{'EN': 'USD'}, {'HE': 'ILS'}, {'RU': 'ILS'}, {'EN': 'EUR'}, {'EN': 'GBR'}, {'RU': 'EUR'}]
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from pathlib import Path
 

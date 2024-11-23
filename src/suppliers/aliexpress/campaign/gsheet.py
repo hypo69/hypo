@@ -9,7 +9,7 @@
 	:synopsis:  Редактор рекламной кампании через гугл таблицами
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import time
 from types import SimpleNamespace

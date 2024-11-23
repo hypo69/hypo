@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.endpoints.hypo69.code_assistant._experiments """
 

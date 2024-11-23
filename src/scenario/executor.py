@@ -125,7 +125,7 @@ s.run(list_of_scenarios)
 
 @image html executor.png
 """
-MODE = 'development'
+MODE = 'dev'
 
 import os
 import sys

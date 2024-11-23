@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 ...
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, Boolean

@@ -9,7 +9,7 @@
 	:synopsis: CSV and JSON file operations
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 """ This module provides utilities for:

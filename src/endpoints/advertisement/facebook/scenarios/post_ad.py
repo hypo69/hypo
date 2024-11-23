@@ -9,7 +9,7 @@
 	:synopsis: Публикация рекламного сообщения группах фейсбук
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from socket import timeout
 import time

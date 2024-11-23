@@ -9,7 +9,7 @@
 	:synopsis: Купоны, скидки и т.п. для товаров PrestaShop
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from sqlalchemy import create_engine
 from sqlalchemy import select

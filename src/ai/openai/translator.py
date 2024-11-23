@@ -9,7 +9,7 @@
     :synopsis: Модуль для перевода текста с использованием OpenAI API.
 """
 
-MODE = 'development'
+MODE = 'dev'
 
 import openai
 from src import gs

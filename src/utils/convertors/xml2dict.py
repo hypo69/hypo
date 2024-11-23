@@ -14,7 +14,7 @@ Functions:
 - `xml2dict`: Parses an XML string into a dictionary.
 - `ET2dict`: Converts an XML element tree into a dictionary.
 """
-MODE = 'development'
+MODE = 'dev'
 import re
 
 try:

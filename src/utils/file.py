@@ -9,7 +9,7 @@
 	:synopsis:  Module for file operations
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 import os

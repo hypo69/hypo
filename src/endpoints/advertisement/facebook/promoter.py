@@ -10,7 +10,7 @@
 It processes campaigns and events, posting them to Facebook groups while avoiding duplicate promotions.
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 ...
 import time

@@ -14,7 +14,7 @@
 	- upload_media: Загрузка файла или списка файлов
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import os, sys
 from pathlib import Path

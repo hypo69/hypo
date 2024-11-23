@@ -9,7 +9,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (my groups?)
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 import header 

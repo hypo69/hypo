@@ -9,7 +9,7 @@
 	:synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import time
 from pathlib import Path

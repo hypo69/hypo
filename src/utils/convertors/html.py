@@ -15,7 +15,7 @@ Functions:
     https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err
 https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b
 """
-MODE = 'development'
+MODE = 'dev'
 import re
 from typing import Dict
 from pathlib import Path

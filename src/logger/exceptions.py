@@ -27,7 +27,7 @@ Classes:
 
 """
 
-MODE = 'development'
+MODE = 'dev'
 
 from typing import Optional
 from src.logger import logger

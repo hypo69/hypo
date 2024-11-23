@@ -9,7 +9,7 @@
 	:synopsis: Сценарии для алиэкспресс
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from .login import login

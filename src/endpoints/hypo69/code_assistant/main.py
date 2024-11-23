@@ -25,7 +25,7 @@
 4. Запуск с указанием роли 'doc_writer', языка 'en' и только модели 'openai':
     python main.py --role doc_writer --lang en --models openai
 """
-MODE = 'development'
+MODE = 'dev'
 
 import argparse
 import json

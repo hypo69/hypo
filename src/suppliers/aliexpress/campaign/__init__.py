@@ -9,7 +9,7 @@
 	:synopsis:модули управления рекламной кампанией Aliexpress
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from .ali_campaign_editor import AliCampaignEditor

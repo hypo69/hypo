@@ -9,4 +9,4 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'

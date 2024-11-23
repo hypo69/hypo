@@ -9,7 +9,7 @@
 	:synopsis: Facebook login scenario
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from pathlib import Path
 from typing import Dict

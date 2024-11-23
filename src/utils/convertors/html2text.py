@@ -9,7 +9,7 @@
 	:synopsis:  HTML -> MD
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 

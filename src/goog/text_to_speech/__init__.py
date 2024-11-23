@@ -9,7 +9,7 @@
 	:synopsis: Google TTS 
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import header   
 

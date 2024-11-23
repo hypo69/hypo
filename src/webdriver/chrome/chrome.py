@@ -17,7 +17,7 @@ Key Features:
     - Support for multiple browser profiles.
     - Enhanced logging and exception handling.
 """
-MODE = 'development'
+MODE = 'dev'
 
 import os
 import sys

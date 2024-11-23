@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .facebook import Facebook
 from .facebook_fields import FacebookFields

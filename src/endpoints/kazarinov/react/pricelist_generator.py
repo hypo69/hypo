@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 #https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c
 

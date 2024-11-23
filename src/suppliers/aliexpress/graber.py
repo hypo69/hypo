@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import asyncio
 from pathlib import Path
@@ -75,7 +75,7 @@ class Graber(Grbr):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'aliexpress'
         super().__init__(supplier_prefix=Context.supplier_prefix, driver=driver)
-        Context.driver = driver
+        
         Context.locator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
         
         

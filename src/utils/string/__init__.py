@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .formatter import StringFormatter
 from .validator import ProductFieldsValidator

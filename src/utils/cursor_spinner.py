@@ -9,7 +9,7 @@
 	:synopsis: utility to show a spinning cursor
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 This module provides a utility to show a spinning cursor in the console 

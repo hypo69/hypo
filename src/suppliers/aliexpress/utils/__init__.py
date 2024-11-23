@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .extract_product_id import extract_prod_ids
 from .ensure_https import ensure_https

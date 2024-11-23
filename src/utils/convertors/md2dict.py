@@ -8,7 +8,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль для конвертации строки Markdown в структурированный словарь, включая извлечение JSON содержимого, если оно присутствует.
 """
-MODE = 'development'
+MODE = 'dev'
 import re
 from typing import Dict
 from markdown2 import markdown

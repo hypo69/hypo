@@ -25,7 +25,7 @@ This module provides flexibility and versatility in working with web elements, e
 
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import asyncio
 import re
@@ -91,12 +91,12 @@ class ExecuteLocator:
     async def execute_locator( # Improved docstring
         self,
         locator: dict | SimpleNamespace,
-        timeout: float = 0,
-        timeout_for_event: str = 'presence_of_element_located',
+        timeout: Optional[float] = 0,
+        timeout_for_event: Optional[str] = 'presence_of_element_located',
         message: Optional[str] = None,
-        typing_speed: float = 0,
-        continue_on_error: bool = True,
-    ) -> Union[str, list, dict, WebElement, bool, None]:
+        typing_speed: Optional[float] = 0,
+        continue_on_error: Optional[bool] = True,
+    ) -> str | list | dict | WebElement | bool:
         """Executes actions on a web element based on the provided locator.
 
         Args:

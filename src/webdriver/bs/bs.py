@@ -18,7 +18,7 @@ if __name__ == "__main__":
 ```
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 import re
