@@ -224,20 +224,15 @@ class CodeAssistant:
         if response.startswith('```python'):
             return response
 
-        # Если строка начинается с '```md' и заканчивается на '```', удаляем кавычки с концов
-        if response.startswith('```md') and response.endswith('```'):
-            response = response[1:-1]
-        
-        # Если строка начинается с '```markdown' и заканчивается на '```', удаляем кавычки с концов
-        elif response.startswith('```markdown') and response.endswith('```'):
-            response = response[1:-1]
-        
-        # Если строка начинается с '```rst' и заканчивается на '```', удаляем кавычки с концов
-        elif response.startswith('```rst') and response.endswith('```'):
-            response = response[1:-1]
-        
-        # Возвращаем очищенную строку
+        # Удаляем маркер для известных форматов, если строка обрамлена в '```'
+        known_prefixes = ['```md', '```markdown', '```rst', '```']
+        for prefix in known_prefixes:
+            if response.startswith(prefix) and response.endswith('```'):
+                return response.removeprefix(prefix).removesuffix('```').strip()
+
+        # Возвращаем строку без изменений, если условия не выполнены
         return response
+
 
 
     def run(self, start_file_number: int = 1):
