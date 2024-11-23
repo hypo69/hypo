@@ -202,26 +202,41 @@ class CodeAssistant:
         output_directory: str = getattr(self.config.output_directory, self.role)  
         target_dir = 'docs/' + output_directory.replace("<model>", model_name).replace("<lang>", self.lang)
         file_path = str(file_path).replace('src', target_dir)  # Convert Path to string for replace
-        export_path = Path(file_path).with_suffix('.md')  # Convert back to Path and change suffix
+        export_path = Path(file_path).with_suffix('.md'if role != 'doc_writer_rst' else '.rst')  # Convert back to Path and change suffix
         export_path.parent.mkdir(parents=True, exist_ok=True)
         export_path.write_text(response, encoding="utf-8")
         pprint(f"Ответ модели сохранен в: {export_path}", text_color='green')
 
     def remove_outer_quotes(self, response: str) -> str:
         """
-        Удаляет внешние кавычки в начале и в конце строки.
+        Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
 
         :param response: Ответ модели, который необходимо обработать.
         :type response: str
         :return: Очищенный контент как строка.
         :rtype: str
-        """
-        # Удаляем внешние кавычки, если они есть в начале и в конце строки
-        if response.startswith('"') and response.endswith('"'):
-            response = response[1:-1]
-        elif response.startswith("'") and response.endswith("'"):
-            response = response[1:-1]
 
+        :example:
+            Если строка '```md some content ```' будет передана в функцию,
+            результат будет ' some content '.
+        """
+        # Если строка начинается с '```python', возвращаем её без изменений
+        if response.startswith('```python'):
+            return response
+
+        # Если строка начинается с '```md' и заканчивается на '```', удаляем кавычки с концов
+        if response.startswith('```md') and response.endswith('```'):
+            response = response[1:-1]
+        
+        # Если строка начинается с '```markdown' и заканчивается на '```', удаляем кавычки с концов
+        elif response.startswith('```markdown') and response.endswith('```'):
+            response = response[1:-1]
+        
+        # Если строка начинается с '```rst' и заканчивается на '```', удаляем кавычки с концов
+        elif response.startswith('```rst') and response.endswith('```'):
+            response = response[1:-1]
+        
+        # Возвращаем очищенную строку
         return response
 
 

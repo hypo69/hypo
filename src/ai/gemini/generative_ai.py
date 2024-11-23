@@ -199,12 +199,18 @@ class GoogleGenerativeAI:
 
             except requests.exceptions.RequestException as ex:
                 timeout = 1200
+                max_attempts = 3
+                if attempt < max_attempts:
+                    break
                 logger.debug(f"Network error. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
                 time.sleep(timeout)
                 continue  # Повторить попытку
             except (GatewayTimeout, ServiceUnavailable) as ex:
                 logger.error("Service unavailable:", ex, None)
                 # Экспоненциальный бэк-офф для повторных попыток
+                max_attempts = 3
+                if attempt < max_attempts:
+                    break
                 time.sleep(2 ** attempt)
                 continue
             except ResourceExhausted as ex:
