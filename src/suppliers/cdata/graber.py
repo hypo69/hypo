@@ -30,37 +30,37 @@ from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Callable
 
-# Глобальные настройки через отдельный объект
-class Context:
-    """Класс для хранения глобальных настроек."""
-    driver: Driver = None
-    locator: SimpleNamespace = None
+# # Глобальные настройки через отдельный объект
+# class Context:
+#     """Класс для хранения глобальных настроек."""
+#     driver: Driver = None
+#     locator: SimpleNamespace = None
 
-# Определение декоратора для закрытия всплывающих окон
-# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# Общее название декоратора `@close_pop_up` можно изменить 
-# Если декоратор не используется в поставщике - надо закомментировать строку
-# ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
-def close_pop_up(value: Any = None) -> Callable:
-    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+# # Определение декоратора для закрытия всплывающих окон
+# # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
+# # Общее название декоратора `@close_pop_up` можно изменить 
+# # Если декоратор не используется в поставщике - надо закомментировать строку
+# # ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
+# def close_pop_up(value: Any = None) -> Callable:
+#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    Args:
-        value (Any): Дополнительное значение для декоратора.
+#     Args:
+#         value (Any): Дополнительное значение для декоратора.
 
-    Returns:
-        Callable: Декоратор, оборачивающий функцию.
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
-                ... 
-            except ExecuteLocatorException as e:
-                logger.debug(f'Ошибка выполнения локатора: {e}')
-            return await func(*args, **kwargs)  # Await the main function
-        return wrapper
-    return decorator
+#     Returns:
+#         Callable: Декоратор, оборачивающий функцию.
+#     """
+#     def decorator(func: Callable) -> Callable:
+#         @wraps(func)
+#         async def wrapper(*args, **kwargs):
+#             try:
+#                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
+#                 ... 
+#             except ExecuteLocatorException as e:
+#                 logger.debug(f'Ошибка выполнения локатора: {e}')
+#             return await func(*args, **kwargs)  # Await the main function
+#         return wrapper
+#     return decorator
 
 class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
@@ -72,9 +72,7 @@ class Graber(Grbr):
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
         Context.driver = driver
-        Context.locator = SimpleNamespace(
-            close_pop_up='locator_for_closing_popup'  # Пример задания локатора
-        )
+        Context.locator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
 
         
 

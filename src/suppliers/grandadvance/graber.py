@@ -75,9 +75,7 @@ class Graber(Grbr):
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
         Context.driver = driver
-        Context.locator = SimpleNamespace(
-            close_pop_up= None # Пример задания локатора
-        )
+        Context.locator = None
 
         
 

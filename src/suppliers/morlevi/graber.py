@@ -69,9 +69,7 @@ class Graber(Grbr):
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
         Context.driver = driver
-        Context.locator = SimpleNamespace(
-            close_pop_up = self.locator.close_pop_up
-        )
+        Context.locator = self.locator.close_pop_up
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.

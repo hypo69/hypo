@@ -45,27 +45,27 @@ class Context:
 # Общее название декоратора `@close_pop_up` можно изменить 
 # Если декоратор не используется в поставщике - надо закомментировать строку
 # ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
-def close_pop_up(value: Any = None) -> Callable:
-    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+# def close_pop_up(value: Any = None) -> Callable:
+#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    Args:
-        value (Any): Дополнительное значение для декоратора.
+#     Args:
+#         value (Any): Дополнительное значение для декоратора.
 
-    Returns:
-        Callable: Декоратор, оборачивающий функцию.
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                if Context.locator.close_pop_up:
-                    await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close 
-                ...
-            except ExecuteLocatorException as ex:
-                logger.debug(f'Ошибка выполнения локатора: ',ex)
-            return await func(*args, **kwargs)  # Await the main function
-        return wrapper
-    return decorator
+#     Returns:
+#         Callable: Декоратор, оборачивающий функцию.
+#     """
+#     def decorator(func: Callable) -> Callable:
+#         @wraps(func)
+#         async def wrapper(*args, **kwargs):
+#             try:
+#                 if Context.locator.close_pop_up:
+#                     await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close 
+#                 ...
+#             except ExecuteLocatorException as ex:
+#                 logger.debug(f'Ошибка выполнения локатора: ',ex)
+#             return await func(*args, **kwargs)  # Await the main function
+#         return wrapper
+#     return decorator
 
 class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
@@ -76,10 +76,7 @@ class Graber(Grbr):
         self.supplier_prefix = 'aliexpress'
         super().__init__(supplier_prefix=Context.supplier_prefix, driver=driver)
         Context.driver = driver
-        Context.locator = SimpleNamespace(
-            close_pop_up = None  # Пример задания локатора
-        )
-
+        Context.locator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
         
         
 
