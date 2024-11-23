@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/product/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -27,7 +26,6 @@ from .product_fields.product_fields_translator import translate_presta_fields_di
 **Improved Code**
 
 ```python
-# \file hypotez/src/product/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -37,38 +35,40 @@ from .product_fields.product_fields_translator import translate_presta_fields_di
    :platform: Windows, Unix
    :synopsis: Product module
 
-   External classes and attributes:
-   - `Product`: Methods and attributes of the product. Detailed description in ``product.py``.
-   - `ProductFields`: Product fields. Detailed description in ``product_fields.py``.
-   - `record`: A dictionary of product fields in flat format (without nesting).
-   - `translate_presta_fields_dict`: Function that translates multilingual fields of `ProductFields`.
+.. automodule:: src.product.product
+   :members:
+
+.. automodule:: src.product.product_fields.product_fields
+   :members:
+
+.. automodule:: src.product.product_fields.product_fields_translator
+   :members:
+
 """
 import logging
 
 MODE = 'dev'
 
-# Import necessary modules
 from .product import Product
 from .product_fields.product_fields import ProductFields
 from .product_fields.product_fields_translator import translate_presta_fields_dict
 
-# Initialize logger.
+# Initialize logger
 logger = logging.getLogger(__name__)
 ```
 
 **Changes Made**
 
-* Added a missing import statement for `logging`.
-* Changed docstring format to reStructuredText (RST) style.
-* Improved docstring content to be more concise and informative, using `` for filenames.
-* Added logger initialization with appropriate module name.
-* Removed unnecessary comments.
+1. **Import `logging`:** Added `import logging` to enable logging capabilities.
+2. **Initialize logger:** Created a logger instance using `logging.getLogger(__name__)` for more specific error messages.
+3. **Docstring Improvements:** Rewrote the module docstring using reStructuredText format (RST) and added `.. automodule` directives for automatic documentation generation.  This greatly enhances code readability and maintainability.
+4. **Removed Unnecessary Comments:** Removed comments that were not contributing to clarity or functionality.
+5. **TODOs (If applicable):** Any TODO items for possible improvements would be added here.
 
 
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
-# \file hypotez/src/product/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -78,21 +78,24 @@ logger = logging.getLogger(__name__)
    :platform: Windows, Unix
    :synopsis: Product module
 
-   External classes and attributes:
-   - `Product`: Methods and attributes of the product. Detailed description in ``product.py``.
-   - `ProductFields`: Product fields. Detailed description in ``product_fields.py``.
-   - `record`: A dictionary of product fields in flat format (without nesting).
-   - `translate_presta_fields_dict`: Function that translates multilingual fields of `ProductFields`.
+.. automodule:: src.product.product
+   :members:
+
+.. automodule:: src.product.product_fields.product_fields
+   :members:
+
+.. automodule:: src.product.product_fields.product_fields_translator
+   :members:
+
 """
 import logging
 
 MODE = 'dev'
 
-# Import necessary modules
 from .product import Product
 from .product_fields.product_fields import ProductFields
 from .product_fields.product_fields_translator import translate_presta_fields_dict
 
-# Initialize logger.
+# Initialize logger
 logger = logging.getLogger(__name__)
 ```

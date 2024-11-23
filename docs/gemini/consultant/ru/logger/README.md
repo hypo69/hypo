@@ -1,6 +1,6 @@
 **Received Code**
 
-```
+```python
 ## Overview
 
 ### logger.py
@@ -75,109 +75,232 @@ if __name__ == '__main__':
 
 ```python
 # logger.py
+# This module provides logging functionalities with sound notifications.
+
 from enum import Enum
-from src.utils import j_loads, j_loads_ns
-from src.logger import logger
+import logging
+import playsound
+
 
 class BeepLevel(Enum):
     """
-    Defines the different levels of beep notifications.
+    Represents different levels of sound notifications.
     """
-    SUCCESS = 0
-    INFO = 1
-    ATTENTION = 2
-    WARNING = 3
-    DEBUG = 4
-    ERROR = 5
-    LONG_ERROR = 6
-    CRITICAL = 7
-    BELL = 8
+    SUCCESS = 1
+    INFO = 2
+    ATTENTION = 3
+    WARNING = 4
+    DEBUG = 5
+    ERROR = 6
+    LONG_ERROR = 7
+    CRITICAL = 8
+    BELL = 9
+
 
 class Logger:
     """
-    A logger class for managing log messages with beep notifications.
+    A class for handling logging operations with sound notifications.
     """
+
     def __init__(self):
         """
         Initializes the Logger object.
         """
-        pass  # ...
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)  # Default logging level
 
-    def log(self, level: BeepLevel, message: str) -> None:
+
+    def log(self, level: BeepLevel, message: str):
         """
-        Logs a message with the specified level and optional beep notification.
+        Logs a message with a specified level and plays a corresponding sound notification.
 
-        :param level: The logging level.
-        :param message: The message to log.
-        :raises TypeError: If input types are incorrect.
+        :param level: The log level.
+        :param message: The log message.
+        :raises TypeError: If the level is not a BeepLevel value.
         """
         if not isinstance(level, BeepLevel):
-            logger.error("Invalid log level type.")
-            raise TypeError("Invalid log level type.")
-        if not isinstance(message, str):
-            logger.error("Invalid message type.")
-            raise TypeError("Invalid message type.")
+            raise TypeError("Invalid log level. Must be a BeepLevel enum.")
 
-        # ... log message processing and beep notification handling ...
-        logger.info(f"Log level: {level.name}, Message: {message}")
+        try:
+          # Map BeepLevel to logging levels
+          log_level_mapping = {
+              BeepLevel.SUCCESS: logging.INFO,
+              BeepLevel.INFO: logging.INFO,
+              BeepLevel.ATTENTION: logging.WARNING,
+              BeepLevel.WARNING: logging.WARNING,
+              BeepLevel.DEBUG: logging.DEBUG,
+              BeepLevel.ERROR: logging.ERROR,
+              BeepLevel.LONG_ERROR: logging.ERROR,
+              BeepLevel.CRITICAL: logging.CRITICAL,
+              BeepLevel.BELL: logging.INFO
+          }
+
+          log_level = log_level_mapping.get(level)
+          if not log_level:
+            raise ValueError(f"Invalid BeepLevel: {level}")
+
+          self.logger.log(log_level, message)
+          # Play sound based on log level.  Replace with actual beep logic.
+          sound_file_path = f"sound_{level.name.lower()}.wav"  # Example sound file path.
+          try:
+              playsound.playsound(sound_file_path)
+          except FileNotFoundError:
+              logger.error(f"Sound file not found: {sound_file_path}")
+
+        except Exception as e:
+          logger.error(f"Error during logging: {e}")
+
+
+
+# beeper.py
+# This module is for handling sound notifications.
+
+import asyncio
+import playsound
+from logger import BeepLevel, Logger
+logger = Logger() # Initialize logger
+
+
+async def beep(level: BeepLevel):
+    """
+    Plays a sound notification based on the given log level.
+
+    :param level: The log level to play a sound for.
+    :raises ValueError: If level is not a valid BeepLevel.
+    """
+    if not isinstance(level, BeepLevel):
+        raise ValueError("Invalid BeepLevel")
+
+    sound_file_path = f"sound_{level.name.lower()}.wav"  # Replace with actual sound file logic
+    try:
+        playsound.playsound(sound_file_path)
+    except FileNotFoundError:
+        logger.error(f"Sound file not found: {sound_file_path}")
+
+
+
 ```
 
 **Changes Made**
 
-*   Added imports: `from src.utils import j_loads, j_loads_ns`, `from src.logger import logger`.  These were missing and crucial for proper function, and now are correctly imported for use.
-*   Added `BeepLevel` as an `Enum`: This enhances readability and type safety for log levels.
-*   Added a `Logger` class with a `log` method: This is a more structured way to handle logging, and it was missing in the original code.
-*   Implemented basic type checking and error handling in `log` method: Using `isinstance` checks for correct input types and logs errors if needed.
-*   Added a proper docstring for the `Logger` class and the `log` method: This improves code readability and maintainability by providing clear documentation.
-*   Added placeholder comments (`# ...`) for the parts of the code that were missing in the original structure to preserve the intent.
+- Added missing imports (`logging`, `playsound`).
+- Created a `BeepLevel` enum for better type safety and organization.
+- Implemented `log` method to handle logging and sound notification with type checking, error handling and level mapping.
+- Added error handling with `logger.error` in `log` method, providing more informative error messages.
+- Created `beep` function in `beeper.py` and made sound file paths dynamic based on log level.
+- Improved code structure and clarity with comments.
+- Added basic error handling for missing sound files.
+- Added `__init__` method to `Logger` to initialize logger.
+- Changed default log level to `INFO`
+
 
 **Full Code (Improved)**
 
 ```python
 # logger.py
+# This module provides logging functionalities with sound notifications.
+
 from enum import Enum
-from src.utils import j_loads, j_loads_ns
+import logging
+import playsound
 from src.logger import logger
+
 
 class BeepLevel(Enum):
     """
-    Defines the different levels of beep notifications.
+    Represents different levels of sound notifications.
     """
-    SUCCESS = 0
-    INFO = 1
-    ATTENTION = 2
-    WARNING = 3
-    DEBUG = 4
-    ERROR = 5
-    LONG_ERROR = 6
-    CRITICAL = 7
-    BELL = 8
+    SUCCESS = 1
+    INFO = 2
+    ATTENTION = 3
+    WARNING = 4
+    DEBUG = 5
+    ERROR = 6
+    LONG_ERROR = 7
+    CRITICAL = 8
+    BELL = 9
+
 
 class Logger:
     """
-    A logger class for managing log messages with beep notifications.
+    A class for handling logging operations with sound notifications.
     """
+
     def __init__(self):
         """
         Initializes the Logger object.
         """
-        pass  # ...
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)  # Default logging level
 
-    def log(self, level: BeepLevel, message: str) -> None:
+
+    def log(self, level: BeepLevel, message: str):
         """
-        Logs a message with the specified level and optional beep notification.
+        Logs a message with a specified level and plays a corresponding sound notification.
 
-        :param level: The logging level.
-        :param message: The message to log.
-        :raises TypeError: If input types are incorrect.
+        :param level: The log level.
+        :param message: The log message.
+        :raises TypeError: If the level is not a BeepLevel value.
         """
         if not isinstance(level, BeepLevel):
-            logger.error("Invalid log level type.")
-            raise TypeError("Invalid log level type.")
-        if not isinstance(message, str):
-            logger.error("Invalid message type.")
-            raise TypeError("Invalid message type.")
+            raise TypeError("Invalid log level. Must be a BeepLevel enum.")
 
-        # ... log message processing and beep notification handling ...
-        logger.info(f"Log level: {level.name}, Message: {message}")
+        try:
+          # Map BeepLevel to logging levels
+          log_level_mapping = {
+              BeepLevel.SUCCESS: logging.INFO,
+              BeepLevel.INFO: logging.INFO,
+              BeepLevel.ATTENTION: logging.WARNING,
+              BeepLevel.WARNING: logging.WARNING,
+              BeepLevel.DEBUG: logging.DEBUG,
+              BeepLevel.ERROR: logging.ERROR,
+              BeepLevel.LONG_ERROR: logging.ERROR,
+              BeepLevel.CRITICAL: logging.CRITICAL,
+              BeepLevel.BELL: logging.INFO
+          }
+
+          log_level = log_level_mapping.get(level)
+          if not log_level:
+            raise ValueError(f"Invalid BeepLevel: {level}")
+
+          self.logger.log(log_level, message)
+          # Play sound based on log level.  Replace with actual beep logic.
+          sound_file_path = f"sound_{level.name.lower()}.wav"  # Example sound file path.
+          try:
+              playsound.playsound(sound_file_path)
+          except FileNotFoundError:
+              logger.error(f"Sound file not found: {sound_file_path}")
+
+        except Exception as e:
+          logger.error(f"Error during logging: {e}")
+
+
+
+# beeper.py
+# This module is for handling sound notifications.
+
+
+import asyncio
+import playsound
+from logger import BeepLevel, Logger
+logger = Logger() # Initialize logger
+
+
+async def beep(level: BeepLevel):
+    """
+    Plays a sound notification based on the given log level.
+
+    :param level: The log level to play a sound for.
+    :raises ValueError: If level is not a valid BeepLevel.
+    """
+    if not isinstance(level, BeepLevel):
+        raise ValueError("Invalid BeepLevel")
+
+    sound_file_path = f"sound_{level.name.lower()}.wav"  # Replace with actual sound file logic
+    try:
+        playsound.playsound(sound_file_path)
+    except FileNotFoundError:
+        logger.error(f"Sound file not found: {sound_file_path}")
+
+
 ```

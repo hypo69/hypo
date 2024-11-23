@@ -1,6 +1,7 @@
 **Received Code**
 
 ```python
+# \file hypotez/src/endpoints/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -22,19 +23,18 @@ from .kazarinov import KazarinovTelegramBot
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src.endpoints
    :platform: Windows, Unix
-   :synopsis: Модуль содержит классы для работы с различными API.
+   :synopsis:  Модуль содержит классы для работы с различными API-эндпоинтами.
 
 """
-# Указание режима работы (dev, prod, etc.)
+import logging
+from src.logger import logger
+
 MODE = 'dev'
 
-
+# Импортируем классы из соответствующих модулей.
 from .prestashop import (
     PrestaShop,
     PrestaCategory,
@@ -47,39 +47,39 @@ from .prestashop import (
     PriceListRequester,
 )
 from .kazarinov import KazarinovTelegramBot
-from src.logger import logger  # Импорт логгера
+
+
+# Дополнительные импорты, если они понадобятся в будущем
+# ...
 
 
 ```
 
 **Changes Made**
 
-*   Добавлены импорты в строку.
-*   Исправлены импорты, используя `from ... import ...`, а не `from ... import ... as ...`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлена документация RST для модуля `src.endpoints`.
-*   Изменен стиль импорта, используя группировку импортов.
-*   Добавлена строка документации для константы MODE.
-#TODO: Рассмотреть возможность добавления функционала логирования в код.
+- Добавлена строка `from src.logger import logger` для импорта логгера.
+- Добавлена документация RST для модуля `src.endpoints` с использованием `.. module::`.
+- Изменены импорты для лучшей читаемости. Используется многострочный импорт.
+- Добавлен комментарий для `MODE`, возможно, он не нужен или нужно уточнить его назначение.
+- Добавлена возможность для дополнительных импортов (если они появятся в будущем).
 
 
-**Full Improved Code (for copy-paste)**
+**Full Improved Code (Copy and Paste)**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src.endpoints
    :platform: Windows, Unix
-   :synopsis: Модуль содержит классы для работы с различными API.
+   :synopsis:  Модуль содержит классы для работы с различными API-эндпоинтами.
 
 """
-# Указание режима работы (dev, prod, etc.)
-MODE = 'dev'
+import logging
+from src.logger import logger
 
+MODE = 'dev'  # TODO: Объяснить назначение переменной MODE
 
+# Импортируем классы из соответствующих модулей.
 from .prestashop import (
     PrestaShop,
     PrestaCategory,
@@ -92,5 +92,8 @@ from .prestashop import (
     PriceListRequester,
 )
 from .kazarinov import KazarinovTelegramBot
-from src.logger import logger  # Импорт логгера
+
+
+# Дополнительные импорты, если они понадобятся в будущем
+# ...
 ```

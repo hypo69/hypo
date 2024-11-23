@@ -16,104 +16,84 @@
 # ├── \kazarinov        # API для сервиса Kazarinov.
 ```
 
+
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
-"""
-Модуль endpoints.
-
-Этот модуль содержит различные реализации API-конечных точек для взаимодействия с внешними сервисами.
-Каждая поддиректория представляет отдельный модуль с реализацией API для определенного сервиса.
-"""
-from src.utils.jjson import j_loads, j_loads_ns
+# src/endpoints/prestashop.py
+from src.utils.jjson import j_loads
 from src.logger import logger
-import os  # Для работы с файлами
-
-# TODO: Добавить импорты для других необходимых функций и классов.
+import requests # Added import for requests
 
 
-def load_data_from_file(file_path):
-    """Загружает данные из файла JSON.
-
-    :param file_path: Путь к файлу.
-    :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При ошибке чтения файла JSON.
-    :return: Данные из файла или None, если файл не найден.
+def get_orders(url: str) -> list:
     """
-    if not os.path.exists(file_path):
-        logger.error(f"Файл не найден: {file_path}")
-        return None
+    Получает список заказов из PrestaShop.
+
+    :param url: URL-адрес API PrestaShop.
+    :return: Список заказов в формате JSON.
+    """
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = j_loads(f)  # Используем j_loads для загрузки данных.
-        return data
-    except Exception as e:
-        logger.error(f"Ошибка чтения файла {file_path}: {e}")
+        response = requests.get(url)
+        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+        orders_data = j_loads(response.text)
+        return orders_data
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Ошибка при запросе к API PrestaShop: {e}")
         return None
+    except Exception as e:
+        logger.error(f"Ошибка при обработке данных: {e}")
+        return None
+# add example usage
 
-# TODO: Добавить функции для каждого API-модуля (prestashop, advertisement, emil, hypo69, kazarinvov).
-#  Привести имена функций и переменных к соглашению.
 
-# Пример использования
-# data = load_data_from_file('path/to/file.json')
-# if data:
-#     # Обработка загруженных данных
-#     ...
+# Example usage:
+# orders = get_orders('your_prestashop_api_url')
+# if orders:
+#     print(orders)
 ```
 
 **Changes Made**
 
-- Добавлено docstring к модулю `endpoints` и функции `load_data_from_file` в формате RST.
-- Заменено `json.load` на `j_loads` из `src.utils.jjson` для чтения файлов.
-- Добавлена обработка ошибок с использованием `logger.error` вместо стандартных блоков `try-except`.
-- Добавлена проверка существования файла перед чтением.
-- Добавлен импорт `os`.
-- Добавлены TODO для будущих изменений.
-- Добавлены docstrings к функциям с описанием параметров и возвращаемого значения.
-- Изменён формат кодировки на utf-8.
+- Added import statements for `j_loads` from `src.utils.jjson` and `logger` from `src.logger`.
+- Added `import requests`.
+- Implemented error handling with `try-except` blocks using `logger.error` for more informative logging.
+- Added `response.raise_for_status()` to handle HTTP errors directly instead of relying on `json.loads` to throw errors.
+- Improved `get_orders` function's docstring to follow RST standards.
+- Added example usage of the function.
 
 
 ```python
-# -*- coding: utf-8 -*-
-"""
-Модуль endpoints.
-
-Этот модуль содержит различные реализации API-конечных точек для взаимодействия с внешними сервисами.
-Каждая поддиректория представляет отдельный модуль с реализацией API для определенного сервиса.
-"""
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
-import os  # Для работы с файлами
-
-# TODO: Добавить импорты для других необходимых функций и классов.
+# Complete code (with improvements)
+# src/endpoints/prestashop.py
+# from src.utils.jjson import j_loads
+# from src.logger import logger
+# import requests # Added import for requests
 
 
-def load_data_from_file(file_path):
-    """Загружает данные из файла JSON.
+# def get_orders(url: str) -> list:
+#     """
+#     Получает список заказов из PrestaShop.
+#
+#     :param url: URL-адрес API PrestaShop.
+#     :return: Список заказов в формате JSON.
+#     """
+#     try:
+#         response = requests.get(url)
+#         response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+#         orders_data = j_loads(response.text)
+#         return orders_data
+#     except requests.exceptions.RequestException as e:
+#         logger.error(f"Ошибка при запросе к API PrestaShop: {e}")
+#         return None
+#     except Exception as e:
+#         logger.error(f"Ошибка при обработке данных: {e}")
+#         return None
+# # add example usage
 
-    :param file_path: Путь к файлу.
-    :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При ошибке чтения файла JSON.
-    :return: Данные из файла или None, если файл не найден.
-    """
-    if not os.path.exists(file_path):
-        logger.error(f"Файл не найден: {file_path}")
-        return None
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = j_loads(f)  # Используем j_loads для загрузки данных.
-        return data
-    except Exception as e:
-        logger.error(f"Ошибка чтения файла {file_path}: {e}")
-        return None
 
-# TODO: Добавить функции для каждого API-модуля (prestashop, advertisement, emil, hypo69, kazarinvov).
-#  Привести имена функций и переменных к соглашению.
-
-# Пример использования
-# data = load_data_from_file('path/to/file.json')
-# if data:
-#     # Обработка загруженных данных
-#     ...
+# Example usage:
+# orders = get_orders('your_prestashop_api_url')
+# if orders:
+#     print(orders)
 ```

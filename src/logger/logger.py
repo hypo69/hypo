@@ -59,19 +59,27 @@ Examples:
     logger.critical('This is a critical message',ex)
 """
 
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.logger
+    :platform: Windows, Unix
+    :synopsis: Logger Module
+"""
+
 import threading
 import traceback
 import logging
+from typing import Optional
 import colorama
 import datetime
 import json
 import inspect
 
-# from .beeper import Beeper, BeepLevel
-
-
 class SingletonMeta(type):
-    """ Metaclass for Singleton pattern implementation."""
+    """Metaclass for Singleton pattern implementation."""
 
     _instances = {}
     _lock = threading.Lock()
@@ -84,96 +92,114 @@ class SingletonMeta(type):
                     cls._instances[cls] = instance
         return cls._instances[cls]
 
-
 class JsonFormatter(logging.Formatter):
-    """ Custom formatter for logging in JSON format."""
+    """Custom formatter for logging in JSON format."""
 
-    def format(self, record):
-        """ Format the log record as JSON."""
+    def format(self, record: logging.LogRecord) -> str:
+        """Format the log record as JSON.
+
+        Args:
+            record (logging.LogRecord): The log record.
+
+        Returns:
+            str: Formatted log record in JSON format.
+        """
         log_entry = {
             "asctime": self.formatTime(record, self.datefmt),
             "name": record.name,
             "levelname": record.levelname,
             "message": record.getMessage(),
-            "exc_info": self.formatException(record.exc_info)
-            if record.exc_info
-            else None,
+            "exc_info": self.formatException(record.exc_info) if record.exc_info else None,
         }
         return json.dumps(log_entry, ensure_ascii=False)
 
-
 class Logger(metaclass=SingletonMeta):
-    """ Logger class implementing Singleton pattern with console, file, and JSON logging."""
+    """Logger class implementing Singleton pattern with console, file, and JSON logging."""
 
-    # Class attributes declaration
-    logger_console: logging.Logger = None
-    logger_file_info: logging.Logger = None
-    logger_file_debug: logging.Logger = None
-    logger_file_errors: logging.Logger = None
-    logger_file_json: logging.Logger = None
-    _initialized: bool = False  # Flag to check initialization
+    logger_console: Optional[logging.Logger] = None
+    logger_file_info: Optional[logging.Logger] = None
+    logger_file_debug: Optional[logging.Logger] = None
+    logger_file_errors: Optional[logging.Logger] = None
+    logger_file_json: Optional[logging.Logger] = None
+    _initialized: bool = False
 
     def __init__(self):
-        """ Initialize the Logger instance."""
+        """Initialize the Logger instance."""
         self.logger_console = None
         self.logger_file_info = None
         self.logger_file_debug = None
         self.logger_file_errors = None
         self.logger_file_json = None
-        self._initialized = False  # Flag to check initialization
+        self._initialized = False
 
     def _configure_logger(
-        self, name, log_path, level=logging.DEBUG, formatter=None, mode="a"
-    ):
-        """ Configures and returns a logger."""
+        self, 
+        name: str, 
+        log_path: str, 
+        level: Optional[int] = logging.DEBUG, 
+        formatter: Optional[logging.Formatter] = None, 
+        mode: Optional[str] = 'a'
+    ) -> logging.Logger:
+        """Configures and returns a logger.
+
+        Args:
+            name (str): Name of the logger.
+            log_path (str): Path to the log file.
+            level (Optional[int]): Logging level. Defaults to `logging.DEBUG`.
+            formatter (Optional[logging.Formatter]): Custom formatter. Defaults to `None`.
+            mode (Optional[str]): File mode. Defaults to `'a'`.
+
+        Returns:
+            logging.Logger: Configured logger instance.
+        """
         logger = logging.getLogger(name)
         logger.setLevel(level)
         handler = logging.FileHandler(filename=log_path, mode=mode)
-        handler.setFormatter(
-            formatter or logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        )
+        handler.setFormatter(formatter or logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         logger.addHandler(handler)
         return logger
 
     def initialize_loggers(
-        self, info_log_path="", debug_log_path="", errors_log_path="", json_log_path=""
+        self, 
+        info_log_path: Optional[str] = '', 
+        debug_log_path: Optional[str] = '', 
+        errors_log_path: Optional[str] = '', 
+        json_log_path: Optional[str] = ''
     ):
-        """ Initializes loggers for console, info, debug, error, and JSON logging."""
-        if self._initialized:
-            return  # Avoid reinitialization
+        """Initializes loggers for console, info, debug, error, and JSON logging.
 
-        timestamp = datetime.datetime.now().strftime("%d%m%y%H%M")
+        Args:
+            info_log_path (Optional[str]): Path to the info log file. Defaults to `''`.
+            debug_log_path (Optional[str]): Path to the debug log file. Defaults to `''`.
+            errors_log_path (Optional[str]): Path to the errors log file. Defaults to `''`.
+            json_log_path (Optional[str]): Path to the JSON log file. Defaults to `''`.
+        """
+        if self._initialized:
+            return
+
+        timestamp = datetime.datetime.now().strftime('%d%m%y%H%M')
 
         if not self.logger_console:
-            self.logger_console = logging.getLogger(f"console_{timestamp}")
+            self.logger_console = logging.getLogger(f'console_{timestamp}')
             self.logger_console.setLevel(logging.DEBUG)
             console_handler = logging.StreamHandler()
-            console_handler.setFormatter(
-                logging.Formatter("%(levelname)s: %(message)s")
-            )
+            console_handler.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
             self.logger_console.addHandler(console_handler)
 
         if info_log_path:
-            self.logger_file_info = self._configure_logger(
-                f"info_{timestamp}", info_log_path, logging.INFO
-            )
+            self.logger_file_info = self._configure_logger(f'info_{timestamp}', info_log_path, logging.INFO)
 
         if debug_log_path:
-            self.logger_file_debug = self._configure_logger(
-                f"debug_{timestamp}", debug_log_path, logging.DEBUG
-            )
+            self.logger_file_debug = self._configure_logger(f'debug_{timestamp}', debug_log_path, logging.DEBUG)
 
         if errors_log_path:
-            self.logger_file_errors = self._configure_logger(
-                f"errors_{timestamp}", errors_log_path, logging.ERROR
-            )
+            self.logger_file_errors = self._configure_logger(f'errors_{timestamp}', errors_log_path, logging.ERROR)
 
         if json_log_path:
-            self.logger_file_json = self._configure_logger(
-                f"json_{timestamp}", json_log_path, logging.DEBUG, JsonFormatter()
-            )
+            self.logger_file_json = self._configure_logger(f'json_{timestamp}', json_log_path, logging.DEBUG, JsonFormatter())
 
-        self._initialized = True  # Mark as initialized
+        self._initialized = True
+
 
     def _format_message(self, message, ex=None, color=None):
         """ Returns formatted message with optional color and exception information."""
@@ -220,23 +246,44 @@ class Logger(metaclass=SingletonMeta):
         if level in [logging.ERROR, logging.CRITICAL] and self.logger_file_errors:
             self.logger_file_errors.log(level, formatted_message)
 
-    def info(self, message, ex=None, exc_info=False):
+    def info(self, message, ex=None, exc_info=False, colors: Optional[tuple] = None):
         """ Logs an info message."""
-        self.log(logging.INFO, message, ex, exc_info, colorama.Fore.GREEN)
+        self.log(logging.INFO, 
+                 message, 
+                 ex, 
+                 exc_info, 
+                 colorama.Fore.GREEN if not colors else colors)
 
-    def success(self, message, ex=None, exc_info=False):
+    def success(self, message, ex=None, exc_info=False, colors: Optional[tuple] = None):
         """ Logs a success message."""
-        self.log(logging.INFO, message, ex, exc_info, colorama.Fore.CYAN)
+        self.log(logging.INFO, 
+                 message, 
+                 ex, 
+                 exc_info, 
+                 colorama.Fore.CYAN if not colors else colors)
 
-    def warning(self, message, ex=None, exc_info=False):
+    def warning(self, 
+                message, 
+                ex=None, 
+                exc_info=False, 
+                colors: Optional[tuple] = None):
         """ Logs a warning message."""
-        self.log(logging.WARNING, message, ex, exc_info, colorama.Fore.YELLOW)
+        self.log(logging.WARNING, 
+                 message, 
+                 ex, 
+                 exc_info, 
+                 colorama.Fore.YELLOW if not colors else colors)
 
-    def debug(self, message, ex=None, exc_info=True):
+    def debug(self, message, ex=None, exc_info=True, colors: Optional[tuple] = None):
         """ Logs a debug message."""
-        self.log(logging.DEBUG, message, ex, exc_info, colorama.Fore.CYAN)
+        self.log(
+            logging.DEBUG, 
+            message, 
+            ex, 
+            exc_info, 
+            colorama.Fore.CYAN if not colors else colors)
 
-    def error(self, message, ex=None, exc_info=True):
+    def error(self, message, ex=None, exc_info=True, colors: Optional[tuple] = None):
         """ Logs an error message."""
         self.log(
             logging.ERROR,
@@ -246,23 +293,16 @@ class Logger(metaclass=SingletonMeta):
             (colorama.Fore.WHITE, colorama.Back.RED),
         )
 
-    def critical(self, message, ex=None, exc_info=True):
+    def critical(self, message, ex=None, exc_info=True, colors: Optional[tuple] = None):
         """ Logs a critical message."""
         self.log(
             logging.CRITICAL,
             message,
             ex,
             exc_info,
-            (colorama.Fore.WHITE, colorama.Back.RED),
+            colors if colors else (colorama.Fore.WHITE, colorama.Back.RED),
         )
 
-    def info_red(self, message, ex=None, exc_info=True):
-        """ Logs an info message in red."""
-        self.log(logging.INFO, message, ex, exc_info, colorama.Fore.RED)
-
-    def info_black(self, message, ex=None, exc_info=True):
-        """ Logs an info message in black with a white background."""
-        self.log(logging.INFO, message, ex, exc_info, (colorama.Fore.BLACK, colorama.Back.WHITE))
 
 
 

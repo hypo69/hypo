@@ -1,13 +1,42 @@
 **Received Code**
 
 ```
-# Модуль категоризации данных (класс Product), полученных от поставщика (класс Supplier)
+# Модуль категоризации данных (класс `Product`), полученных от поставщика (класс `Supplier`)
+# ...
+class Supplier:
+    def __init__(self, supplier_id, name):
+        # ...
+        self.supplier_id = supplier_id
+        self.name = name
+        # ...
+
+class Product:
+    def __init__(self, product_id, name, supplier):
+        # ...
+        self.product_id = product_id
+        self.name = name
+        self.supplier = supplier
+        # ...
+    
+    def categorize(self):
+        # ...
+        # Эта функция должна категоризировать продукт
+        # ...
+        if self.name == 'Milk':
+           return 'Dairy'
+        elif self.name == 'Bread':
+           return 'Bakery'
+        else:
+           return 'Other'
+        # ...
 ```
 
 **Improved Code**
 
 ```python
-# Модуль категоризации данных (класс Product), полученных от поставщика (класс Supplier)
+# Модуль категоризации данных (классы `Product` и `Supplier`)
+# Содержит классы для работы с продуктами и поставщиками
+
 import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
@@ -15,83 +44,77 @@ from src.logger import logger
 
 class Supplier:
     """
-    Класс, представляющий поставщика данных.
-    """
+    Класс, представляющий поставщика.
 
-    def __init__(self, supplier_id: str):
+    :ivar supplier_id: Идентификатор поставщика.
+    :ivar name: Название поставщика.
+    """
+    def __init__(self, supplier_id, name):
         """
-        Инициализирует экземпляр класса Supplier.
+        Инициализирует объект Supplier.
 
         :param supplier_id: Идентификатор поставщика.
+        :param name: Название поставщика.
         """
         self.supplier_id = supplier_id
+        self.name = name
 
-    def get_data(self) -> dict:
-        """
-        Возвращает данные от поставщика.
-
-        :return: Словарь с данными.
-        """
-        # # TODO: Добавить реализацию получения данных от поставщика
-        # # Например, чтение данных из файла или API.
-        try:
-            with open('supplier_data.json', 'r') as f:
-                data = j_loads(f)
-                return data
-        except FileNotFoundError:
-            logger.error("Файл 'supplier_data.json' не найден.")
-            return {}
-        except json.JSONDecodeError as e:
-            logger.error(f"Ошибка декодирования JSON: {e}")
-            return {}
 
 class Product:
     """
     Класс, представляющий продукт.
+
+    :ivar product_id: Идентификатор продукта.
+    :ivar name: Название продукта.
+    :ivar supplier: Объект Supplier, представляющий поставщика.
     """
-
-    def __init__(self, product_data: dict):
+    def __init__(self, product_id, name, supplier):
         """
-        Инициализирует экземпляр класса Product.
+        Инициализирует объект Product.
 
-        :param product_data: Данные о продукте.
+        :param product_id: Идентификатор продукта.
+        :param name: Название продукта.
+        :param supplier: Объект Supplier, представляющий поставщика.
         """
-        self.product_data = product_data
+        self.product_id = product_id
+        self.name = name
+        self.supplier = supplier
+
 
     def categorize(self) -> str:
         """
         Категоризирует продукт.
 
-        :return: Строка с категорией продукта.
+        :return: Строка, представляющая категорию продукта.
         """
         try:
-            # #TODO: Реализовать логику категоризации.
-            # # В зависимости от product_data.
-            category = self.product_data.get('category', 'Неизвестно')  # Обработка отсутствия поля
-            return category
-        except (AttributeError, KeyError) as e:
+            if self.name == 'Milk':
+                return 'Dairy'
+            elif self.name == 'Bread':
+                return 'Bakery'
+            else:
+                return 'Other'
+        except Exception as e:
             logger.error(f"Ошибка при категоризации продукта: {e}")
-            return "Ошибка"
-
+            return 'Unknown' # Или другое значение по умолчанию
 ```
 
 **Changes Made**
 
-* Added missing imports (`json`, `j_loads`, `j_loads_ns`, `logger`).
-* Replaced `json.load` with `j_loads`.
-* Added `try...except` blocks to handle potential `FileNotFoundError` and `json.JSONDecodeError` errors during data loading. This is replaced with `logger.error` handling.
-* Added docstrings in RST format to all functions and classes for better documentation.
-* Improved error handling using `logger.error`.
-* Added default value for the 'category' field in `categorize` method to prevent `AttributeError`.
-* Improved variable naming and code structure.
-* Added comments in RST format.
-* Corrected the way `product_data` is accessed, making the code more robust and readable.
+* Добавлено описание модуля в формате RST.
+* Добавлены docstring в формате RST для класса `Supplier` и `Product` и метода `categorize` в формате RST.
+* Изменены имена переменных на более читаемые, если это необходимо.
+* Заменены комментарии в формате RST.
+* Импортирован `logger` из `src.logger`.
+* Добавлена обработка ошибок с использованием `logger.error`.
 
 
-**Full Code (Improved)**
+**Full Improved Code (Copy and Paste)**
 
 ```python
-# Модуль категоризации данных (класс Product), полученных от поставщика (класс Supplier)
+# Модуль категоризации данных (классы `Product` и `Supplier`)
+# Содержит классы для работы с продуктами и поставщиками
+
 import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
@@ -99,62 +122,57 @@ from src.logger import logger
 
 class Supplier:
     """
-    Класс, представляющий поставщика данных.
-    """
+    Класс, представляющий поставщика.
 
-    def __init__(self, supplier_id: str):
+    :ivar supplier_id: Идентификатор поставщика.
+    :ivar name: Название поставщика.
+    """
+    def __init__(self, supplier_id, name):
         """
-        Инициализирует экземпляр класса Supplier.
+        Инициализирует объект Supplier.
 
         :param supplier_id: Идентификатор поставщика.
+        :param name: Название поставщика.
         """
         self.supplier_id = supplier_id
-
-    def get_data(self) -> dict:
-        """
-        Возвращает данные от поставщика.
-
-        :return: Словарь с данными.
-        """
-        # #TODO: Добавить реализацию получения данных от поставщика
-        # # Например, чтение данных из файла или API.
-        try:
-            with open('supplier_data.json', 'r') as f:
-                data = j_loads(f)
-                return data
-        except FileNotFoundError:
-            logger.error("Файл 'supplier_data.json' не найден.")
-            return {}
-        except json.JSONDecodeError as e:
-            logger.error(f"Ошибка декодирования JSON: {e}")
-            return {}
+        self.name = name
 
 
 class Product:
     """
     Класс, представляющий продукт.
+
+    :ivar product_id: Идентификатор продукта.
+    :ivar name: Название продукта.
+    :ivar supplier: Объект Supplier, представляющий поставщика.
     """
-
-    def __init__(self, product_data: dict):
+    def __init__(self, product_id, name, supplier):
         """
-        Инициализирует экземпляр класса Product.
+        Инициализирует объект Product.
 
-        :param product_data: Данные о продукте.
+        :param product_id: Идентификатор продукта.
+        :param name: Название продукта.
+        :param supplier: Объект Supplier, представляющий поставщика.
         """
-        self.product_data = product_data
+        self.product_id = product_id
+        self.name = name
+        self.supplier = supplier
+
 
     def categorize(self) -> str:
         """
         Категоризирует продукт.
 
-        :return: Строка с категорией продукта.
+        :return: Строка, представляющая категорию продукта.
         """
         try:
-            # #TODO: Реализовать логику категоризации.
-            # # В зависимости от product_data.
-            category = self.product_data.get('category', 'Неизвестно')  # Обработка отсутствия поля
-            return category
-        except (AttributeError, KeyError) as e:
+            if self.name == 'Milk':
+                return 'Dairy'
+            elif self.name == 'Bread':
+                return 'Bakery'
+            else:
+                return 'Other'
+        except Exception as e:
             logger.error(f"Ошибка при категоризации продукта: {e}")
-            return "Ошибка"
+            return 'Unknown' # Или другое значение по умолчанию
 ```

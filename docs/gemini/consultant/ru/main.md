@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/main.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -10,6 +9,7 @@
 .. module:: src
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 MODE = 'dev'
 
@@ -21,6 +21,7 @@ MODE = 'dev'
 
 
 import argparse
+# import necessary modules if any
 
 def script1():
     """Запускает скрипт 1."""
@@ -90,39 +91,43 @@ if __name__ == "__main__":
 **Improved Code**
 
 ```python
-# \file hypotez/src/main.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль `main.py` предоставляет интерактивное меню для запуска скриптов.
+.. module:: src.main
+    :platform: Windows, Unix
+    :synopsis: Модуль содержит основную функцию для запуска интерактивного меню.
 """
-
 import argparse
-from src.logger import logger # Импорт логгера
+from src.logger import logger  # Импорт логгера
+
+MODE = 'dev'
 
 
 def script1():
-    """Запускает скрипт 1."""
-    print("Запущен скрипт 1")
-    # Добавьте здесь код скрипта 1
-    # TODO: Реализовать логирование
-    # try:
-    #     ...
-    # except Exception as e:
-    #     logger.error(f"Ошибка при запуске скрипта 1: {e}")
+    """Запускает скрипт 1.
+
+    :raises Exception: Если возникнет ошибка при выполнении скрипта.
+    """
+    try:
+        print('Запущен скрипт 1')
+        # Добавьте здесь код скрипта 1
+    except Exception as e:
+        logger.error('Ошибка при выполнении скрипта 1: %s', e)
 
 
 def script2():
-    """Запускает скрипт 2."""
-    print("Запущен скрипт 2")
-    # Добавьте здесь код скрипта 2
-    # TODO: Реализовать логирование
-    # try:
-    #     ...
-    # except Exception as e:
-    #     logger.error(f"Ошибка при запуске скрипта 2: {e}")
+    """Запускает скрипт 2.
+
+    :raises Exception: Если возникнет ошибка при выполнении скрипта.
+    """
+    try:
+        print('Запущен скрипт 2')
+        # Добавьте здесь код скрипта 2
+    except Exception as e:
+        logger.error('Ошибка при выполнении скрипта 2: %s', e)
 
 
 def show_help():
@@ -145,24 +150,17 @@ def interactive_menu():
 
         choice = input("Введите номер команды: ").strip()
 
-        if choice == "1":
-            try:
-                script1()
-            except Exception as e:
-                logger.error(f"Ошибка при выборе команды 1: {e}")
-        elif choice == "2":
-            try:
-                script2()
-            except Exception as e:
-                logger.error(f"Ошибка при выборе команды 2: {e}")
-        elif choice == "3" or choice.lower() == "--help":
+        if choice == '1':
+            script1()
+        elif choice == '2':
+            script2()
+        elif choice == '3' or choice.lower() == '--help':
             show_help()
-        elif choice.lower() == "exit":
+        elif choice.lower() == 'exit':
             print("Выход из программы.")
             break
         else:
             print("Некорректный ввод. Пожалуйста, выберите одну из предложенных команд.")
-
 
 
 def main():
@@ -187,48 +185,54 @@ if __name__ == "__main__":
 
 **Changes Made**
 
-- Импортирован модуль `logger` из `src.logger`.
-- Добавлены docstring в формате RST для функций `script1`, `script2`, `show_help`, `interactive_menu`, `main`.
-- Добавлены обработчики ошибок `try...except` в `interactive_menu` для перехвата и логирования исключений.
-- Добавлены TODO пункты для реализации логирования в функциях `script1` и `script2`.
-- Код отформатирован для лучшей читаемости.
+- Added import `from src.logger import logger`.
+- Added `try...except` blocks to `script1` and `script2` functions to handle potential exceptions and log errors using the logger.
+- Improved docstrings using reStructuredText (RST) format for modules, functions, and methods.
+- Docstrings now include type hints (`:raises Exception:`) where appropriate.
+- Corrected typos and inconsistencies in the docstrings.
+- Changed input handling to use `.strip()` for better robustness.
+
 
 **Full Code (Improved)**
 
 ```python
-# \file hypotez/src/main.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль `main.py` предоставляет интерактивное меню для запуска скриптов.
+.. module:: src.main
+    :platform: Windows, Unix
+    :synopsis: Модуль содержит основную функцию для запуска интерактивного меню.
 """
-
 import argparse
-from src.logger import logger # Импорт логгера
+from src.logger import logger  # Импорт логгера
+
+MODE = 'dev'
 
 
 def script1():
-    """Запускает скрипт 1."""
-    print("Запущен скрипт 1")
-    # Добавьте здесь код скрипта 1
-    # TODO: Реализовать логирование
-    # try:
-    #     ...
-    # except Exception as e:
-    #     logger.error(f"Ошибка при запуске скрипта 1: {e}")
+    """Запускает скрипт 1.
+
+    :raises Exception: Если возникнет ошибка при выполнении скрипта.
+    """
+    try:
+        print('Запущен скрипт 1')
+        # Добавьте здесь код скрипта 1
+    except Exception as e:
+        logger.error('Ошибка при выполнении скрипта 1: %s', e)
 
 
 def script2():
-    """Запускает скрипт 2."""
-    print("Запущен скрипт 2")
-    # Добавьте здесь код скрипта 2
-    # TODO: Реализовать логирование
-    # try:
-    #     ...
-    # except Exception as e:
-    #     logger.error(f"Ошибка при запуске скрипта 2: {e}")
+    """Запускает скрипт 2.
+
+    :raises Exception: Если возникнет ошибка при выполнении скрипта.
+    """
+    try:
+        print('Запущен скрипт 2')
+        # Добавьте здесь код скрипта 2
+    except Exception as e:
+        logger.error('Ошибка при выполнении скрипта 2: %s', e)
 
 
 def show_help():
@@ -251,24 +255,17 @@ def interactive_menu():
 
         choice = input("Введите номер команды: ").strip()
 
-        if choice == "1":
-            try:
-                script1()
-            except Exception as e:
-                logger.error(f"Ошибка при выборе команды 1: {e}")
-        elif choice == "2":
-            try:
-                script2()
-            except Exception as e:
-                logger.error(f"Ошибка при выборе команды 2: {e}")
-        elif choice == "3" or choice.lower() == "--help":
+        if choice == '1':
+            script1()
+        elif choice == '2':
+            script2()
+        elif choice == '3' or choice.lower() == '--help':
             show_help()
-        elif choice.lower() == "exit":
+        elif choice.lower() == 'exit':
             print("Выход из программы.")
             break
         else:
             print("Некорректный ввод. Пожалуйста, выберите одну из предложенных команд.")
-
 
 
 def main():

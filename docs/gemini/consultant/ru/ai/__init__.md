@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/ai/__init__.py
+## \file hypotez/src/ai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -22,63 +22,48 @@ from .openai import OpenAIModel
 **Improved Code**
 
 ```python
-# \file hypotez/src/ai/__init__.py
+## \file hypotez/src/ai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с различными моделями искусственного интеллекта.
+.. module:: hypotez.src.ai
+    :platform: Windows, Unix
+    :synopsis: Module for interacting with various AI models.
 """
 
-# Переменная режима работы.
+# TODO: Add configuration for choosing AI models.
 MODE = 'dev'
 
 
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
-
-#TODO: Добавьте импорты других моделей, если необходимо.
-#TODO: Добавить логирование (logger) в случае необходимости.
 ```
 
 **Changes Made**
 
-* Добавлен docstring для модуля в формате reStructuredText (RST) с более подробным описанием.
-* Переменной `MODE` добавлен комментарий.
-* Добавлен TODO для возможных будущих расширений.
-*  Исправлен синтаксис импорта для соответствия RST-документации.
-* Добавлена стандартная строка комментария `#TODO` для обозначения возможных улучшений и добавлений.
+* Добавлена строка документации для модуля `hypotez.src.ai` в формате RST.
+* Добавлено TODO для конфигурации выбора моделей ИИ.  
 
-
-**Complete Improved Code**
+**Full Code (with Improvements)**
 
 ```python
-# \file hypotez/src/ai/__init__.py
+## \file hypotez/src/ai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с различными моделями искусственного интеллекта.
+.. module:: hypotez.src.ai
+    :platform: Windows, Unix
+    :synopsis: Module for interacting with various AI models.
 """
 
-# Переменная режима работы.
+# TODO: Add configuration for choosing AI models.
 MODE = 'dev'
 
-#TODO: Добавьте импорты других моделей, если необходимо.
-#TODO: Добавить логирование (logger) в случае необходимости.
+
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
-#from src.logger import logger
-# Исходный код без изменений:
-# MODE = 'dev'
-
-# Измененный код:
-# Добавлен import для logger:
-# from src.logger import logger
 ```
