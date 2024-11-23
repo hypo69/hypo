@@ -198,9 +198,36 @@ jupyter labextension install @jupyterlab/toc
 
 ### Настройка учетных данных
 
-1. Перейдите в настройки конфигурации проекта и добавьте ваши учетные данные.
-2. Убедитесь, что ваш API-ключ корректно добавлен в конфигурационный файл.
+### Setting Up Credentials
 
+Before starting, create a folder named `secrets` in the project root. Copy `credentials.kdbx.example` and `password.txt` from the service folder into `secrets`, and remove the `.example` suffix.
+
+Here is the structure for credentials:
+
+1. **Suppliers > Aliexpress > API**
+   - `api_key`: Aliexpress API key.
+   - `secret`: Secret key.
+   - `tracking_id`: Tracking ID.
+   - `email`: Aliexpress account email.
+   - `password`: Aliexpress account password.
+
+2. **OpenAI**
+   - `api_key`: API key for OpenAI.
+
+3. **Telegram**, **Discord**, **Prestashop**, **SMTP**, **Facebook**, **Google API**, etc.
+
+Ensure these details are correctly entered to allow the assistant to function effectively.
+```powershell
+# Define current path
+$currentPath = (Get-Location).Path
+
+# Create the 'secrets' folder
+New-Item -ItemType Directory -Path "$currentPath\secrets"
+
+# Copy example files to 'secrets' folder
+Copy-Item -Path "$currentPath\credentials.kdbx.example" -Destination "$currentPath\secrets\credentials.kdbx"
+Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\password.txt"
+```
 ---
 ## Далее:
 
