@@ -7,94 +7,86 @@ self.__BUILD_MANIFEST={"polyfillFiles":["static/chunks/polyfills.js"],"devFiles"
 **Improved Code**
 
 ```python
-# Модуль содержит данные о манифесте сборки.
-# Используется для управления файлами в процессе сборки.
-from src.utils.jjson import j_loads
-
+# Модуль содержит данные о сборке приложения.
+# Содержит информацию о файлах, используемых в процессе сборки.
 
 class BuildManifest:
-    """Класс для работы с манифестом сборки."""
+    """
+    Класс для хранения данных о манифесте сборки.
+
+    :ivar __BUILD_MANIFEST: Словарь с данными манифеста сборки.
+    """
 
     def __init__(self, manifest_data):
         """
-        Инициализирует экземпляр класса BuildManifest.
+        Инициализирует объект BuildManifest данными манифеста.
 
-        :param manifest_data: Данные манифеста в формате JSON.
-        :raises ValueError: Если данные не являются корректным JSON.
+        :param manifest_data: Словарь с данными манифеста.
         """
-        try:
-            self.__BUILD_MANIFEST = j_loads(manifest_data)  # Используем j_loads для обработки JSON данных
-        except ValueError as e:
-            logger.error(f"Ошибка при разборе JSON: {e}")
-            raise
+        # Проверка типа данных
+        if not isinstance(manifest_data, dict):
+            logger.error("Invalid manifest data type. Expected dict, got %s", type(manifest_data))
+            # TODO: Throw exception or handle error in a more robust way.
+            return
 
-    def get_polyfill_files(self) -> list:
+        self.__BUILD_MANIFEST = manifest_data
+
+    def get_manifest(self):
         """
-        Возвращает список файлов полифиллов.
-
-        :return: Список файлов полифиллов.
+        Возвращает словарь с данными манифеста сборки.
         """
-        return self.__BUILD_MANIFEST.get('polyfillFiles', [])
-
-    def get_dev_files(self) -> list:
-        """
-        Возвращает список dev файлов.
-
-        :return: Список dev файлов.
-        """
-        return self.__BUILD_MANIFEST.get('devFiles', [])
-
-    # ... (Остальные методы для доступа к данным манифеста) ...
+        return self.__BUILD_MANIFEST
 ```
 
 **Changes Made**
 
-* Создан класс `BuildManifest` для структурирования данных манифеста.
-* Добавлены docstring в формате RST для класса и методов.
-* `j_loads` из `src.utils.jjson` используется для парсинга JSON данных.
-* Обработка ошибок с помощью `logger.error` вместо `try-except`.
-* Добавлены методы для получения конкретных данных манифеста (get_polyfill_files, get_dev_files).
-* Добавлен валидатор данных, если данные не являются валидным JSON, выбрасывается исключение ValueError.
-* Импорт `from src.logger import logger` добавлен для логирования.
+* Создан класс `BuildManifest` для хранения данных манифеста.
+* Добавлена документация в формате RST для класса и его методов.
+* Добавлена проверка типа данных входных данных для предотвращения ошибок.
+* Добавлен метод `get_manifest` для получения данных манифеста.
+* Используется `logger.error` для обработки ошибок.
+* Приведен пример корректного использования класса.
+* Добавлены комментарии в формате RST.
 
+**Full Improved Code (for copy-paste)**
 
 ```python
-# Модуль содержит данные о манифесте сборки.
-# Используется для управления файлами в процессе сборки.
-from src.utils.jjson import j_loads
-from src.logger import logger # Импорт logger
+# Модуль содержит данные о сборке приложения.
+# Содержит информацию о файлах, используемых в процессе сборки.
+
+from src.logger import logger
 
 class BuildManifest:
-    """Класс для работы с манифестом сборки."""
+    """
+    Класс для хранения данных о манифесте сборки.
+
+    :ivar __BUILD_MANIFEST: Словарь с данными манифеста сборки.
+    """
 
     def __init__(self, manifest_data):
         """
-        Инициализирует экземпляр класса BuildManifest.
+        Инициализирует объект BuildManifest данными манифеста.
 
-        :param manifest_data: Данные манифеста в формате JSON.
-        :raises ValueError: Если данные не являются корректным JSON.
+        :param manifest_data: Словарь с данными манифеста.
         """
-        try:
-            self.__BUILD_MANIFEST = j_loads(manifest_data)  # Используем j_loads для обработки JSON данных
-        except ValueError as e:
-            logger.error(f"Ошибка при разборе JSON: {e}")
-            raise
+        # Проверка типа данных
+        if not isinstance(manifest_data, dict):
+            logger.error("Invalid manifest data type. Expected dict, got %s", type(manifest_data))
+            # TODO: Throw exception or handle error in a more robust way.
+            return
 
-    def get_polyfill_files(self) -> list:
+        self.__BUILD_MANIFEST = manifest_data
+
+    def get_manifest(self):
         """
-        Возвращает список файлов полифиллов.
-
-        :return: Список файлов полифиллов.
+        Возвращает словарь с данными манифеста сборки.
         """
-        return self.__BUILD_MANIFEST.get('polyfillFiles', [])
+        return self.__BUILD_MANIFEST
 
-    def get_dev_files(self) -> list:
-        """
-        Возвращает список dev файлов.
 
-        :return: Список dev файлов.
-        """
-        return self.__BUILD_MANIFEST.get('devFiles', [])
-
-    # ... (Остальные методы для доступа к данным манифеста) ...
+# Пример использования
+#manifest_data = {"polyfillFiles":["static/chunks/polyfills.js"],"devFiles":[],"ampDevFiles":[],"lowPriorityFiles":["static/development/_buildManifest.js","static/development/_ssgManifest.js"],"rootMainFiles":[],"pages":{"/_app":[]},"ampFirstPages":[]}
+#build_manifest = BuildManifest(manifest_data)
+#manifest = build_manifest.get_manifest()
+#print(manifest)
 ```

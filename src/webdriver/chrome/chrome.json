@@ -6,21 +6,22 @@
     "arguments": [ "--kiosk", "--disable-gpu" ]
 
   },
+
   "disabled_options": { "headless": "" },
+
   "profile_directory": {
     "os": "%LOCALAPPDATA%\\Google\\Chrome\\User Data",
     "internal": "webdriver\\chrome\\profiles\\default",
-    "testing": "%LOCALAPPDATA%\\Google\\Chrome for Testing\\User Data",
-    "default": "testing"
+    "testing": "%LOCALAPPDATA%\\Google\\Chrome for Testing\\User Data"
+
   },
 
-  "executable_path": {
+  "binary_location": {
     "os": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     "exe": "bin\\webdrivers\\chrome\\125.0.6422.14\\chromedriver.exe",
     "binary": "bin\\webdrivers\\chrome\\125.0.6422.14\\win64-125.0.6422.14\\chrome-win64\\chrome.exe",
-    "chromium": "bin\\webdrivers\\chromium\\chrome-win\\chrome.exe",
-    "default": "os",
-    "#default": "binary"
+    "chromium": "bin\\webdrivers\\chromium\\chrome-win\\chrome.exe"
+
   },
 
   "headers": {

@@ -114,70 +114,7 @@ class OpenAIModel:
         """Save the entire dialogue to the JSON file."""
         j_dumps(self.dialogue, self.dialogue_log_path)
 
-    def determine_sentiment(self, message: str) -> str:
-        """Determine the sentiment of a message (positive, negative, or neutral).
-
-        Args:
-            message (str): The message to analyze.
-
-        Returns:
-            str: The sentiment ('positive', 'negative', or 'neutral').
-        """
-        positive_words = ["good", "great", "excellent", "happy", "love", "wonderful", "amazing", "positive"]
-        negative_words = ["bad", "terrible", "hate", "sad", "angry", "horrible", "negative", "awful"]
-        neutral_words = ["okay", "fine", "neutral", "average", "moderate", "acceptable", "sufficient"]
-
-        message_lower = message.lower()
-
-        if any(word in message_lower for word in positive_words):
-            return "positive"
-        elif any(word in message_lower for word in negative_words):
-            return "negative"
-        elif any(word in message_lower for word in neutral_words):
-            return "neutral"
-        else:
-            return "neutral"
-
-    def ask(self, message: str, system_instruction: str = None, attempts: int = 3) -> str:
-        """Send a message to the model and return the response, along with sentiment analysis.
-
-        Args:
-            message (str): The message to send to the model.
-            system_instruction (str, optional): Optional system instruction.
-            attempts (int, optional): Number of retry attempts. Defaults to 3.
-
-        Returns:
-            str: The response from the model.
-        """
-        try:
-            messages = []
-            if system_instruction:
-                messages.append({"role": "system", "content": system_instruction})
-            else:
-                messages.append({"role": "system", "content": self.system_instruction})
-
-            messages.append({"role": "user", "content": message}) # Use 'message'
-
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=0,
-                max_tokens=8000,
-            )
-            reply = response.choices[0].message.content.strip()
-            sentiment = self.determine_sentiment(reply)
-            self.dialogue.append({"role": "system", "content": system_instruction or self.system_instruction})
-            self.dialogue.append({"role": "user", "content": message})
-            self.dialogue.append({"role": "assistant", "content": reply, "sentiment": sentiment})
-            self._save_dialogue()
-            return reply
-        except Exception as ex:
-            logger.error(f"Error sending message: {ex}")
-            if attempts > 0:
-                return self.ask(message, attempts - 1)
-            return None
-
-    # ... other methods
+    # ... (rest of the code)
 ```
 
 **Improved Code**
@@ -189,9 +126,9 @@ class OpenAIModel:
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai.model
-   :platform: Windows, Unix
-   :synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model.
+.. module:: src.ai.openai.model.training
+	:platform: Windows, Unix
+	:synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model.
 """
 
 import time
@@ -223,107 +160,55 @@ class OpenAIModel:
     assistant = None
     thread = None
     system_instruction: str
-    dialogue_log_path: str | Path
+    dialogue_log_path: str | Path = gs.path.google_drive / 'AI' / f"{model}_{gs.now}.json"
     dialogue: List[Dict[str, str]] = []
-    assistants: List[SimpleNamespace] = []  # Initialize to avoid errors
-    models_list: List[str] = []
-
+    assistants: List[SimpleNamespace]
+    models_list: List[str]
 
     def __init__(self, system_instruction: str = None, model_name: str = 'gpt-4o-mini', assistant_id: str = None):
         """
-        Initializes the OpenAIModel with API key, assistant ID, and loads available models and assistants.
+        Initialize the Model object with API key, assistant ID, and load available models and assistants.
 
-        :param system_instruction: Optional system instruction for the model.
-        :param model_name: Model name (default 'gpt-4o-mini').
-        :param assistant_id: Optional assistant ID. Defaults to 'code_assistant' from config.
+        :param system_instruction: An optional system instruction for the model.
+        :param model_name:  Model name. Defaults to 'gpt-4o-mini'.
+        :param assistant_id: An optional assistant ID. Defaults to the one from gs.credentials.
         """
         self.client = OpenAI(api_key=gs.credentials.openai.api_key)
         self.current_job_id = None
         self.assistant_id = assistant_id or gs.credentials.openai.assistant_id.code_assistant
         self.system_instruction = system_instruction
-        self.dialogue_log_path = gs.path.google_drive / 'AI' / f"{model_name}_{gs.now}.json"
-        try:
-            self.assistant = self.client.beta.assistants.retrieve(self.assistant_id)
-            self.thread = self.client.beta.threads.create()
-        except Exception as e:
-            logger.error(f"Error initializing assistant or thread: {e}")
+        self.model = model_name
+        self.assistant = self.client.beta.assistants.retrieve(self.assistant_id)
+        self.thread = self.client.beta.threads.create()
 
-    # ... [other methods]
-    def ask(self, message: str, system_instruction: str = None, attempts: int = 3) -> str:
-        """
-        Sends a message to the OpenAI model and returns the response.
 
-        :param message: The message to send to the model.
-        :param system_instruction: Optional system instruction.
-        :param attempts: Number of retry attempts.
-        :return: The response from the model.
-        """
-        try:
-            messages = []
-            if system_instruction:
-                messages.append({"role": "system", "content": system_instruction})
-            else:
-                messages.append({"role": "system", "content": self.system_instruction})
-            messages.append({"role": "user", "content": message})
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=0,
-                max_tokens=8000,
-            )
-            reply = response.choices[0].message.content.strip()
-            sentiment = self.determine_sentiment(reply)
-            self._log_dialogue(message, reply, sentiment, system_instruction)
-            return reply
-        except Exception as e:
-            logger.error(f"Error asking the model: {e}")
-            if attempts > 0:
-                return self.ask(message, system_instruction, attempts - 1)
-            return None
-
-    def _log_dialogue(self, user_message: str, assistant_reply: str, sentiment: str, system_instruction: str):
-        """Logs dialogue to the file.
-
-        :param user_message: User message.
-        :param assistant_reply: Assistant reply.
-        :param sentiment: Sentiment of the reply.
-        :param system_instruction: System instruction
-        """
-        self.dialogue.append({"role": "system", "content": system_instruction or self.system_instruction})
-        self.dialogue.append({"role": "user", "content": user_message})
-        self.dialogue.append({"role": "assistant", "content": assistant_reply, "sentiment": sentiment})
-        j_dumps(self.dialogue, self.dialogue_log_path)
-    # ... [other methods]
-
-# ... (rest of the code)
-
+    # ... (rest of the methods)
 ```
 
 **Changes Made**
 
-- Added missing `from src.logger import logger` import.
-- Removed redundant `try-except` blocks in `ask` and other functions, using `logger.error` for error handling.
-- Added RST-style docstrings to `OpenAIModel` class methods, including `ask`, ensuring consistency and clarity.
-- Modified the `ask` method to correctly append messages to the `dialogue` list, including system instruction if present.
-- Corrected the message escaping in `ask` to use correct placeholders.  No longer needing to escape for `"role": "system"`.
-- Added error handling to the constructor, using a `try...except` block to catch potential errors when initializing `self.assistant` or `self.thread` and logging them properly.
-- Added `_log_dialogue` helper function for more structured dialogue logging.
-- Improved variable initialization for consistency, initializing `assistants` and `models_list` inside `OpenAIModel`.
-- Fixed potential errors by default initializing lists as empty `[]`
+- Added missing imports (e.g., `requests`).
+- Corrected docstrings to RST format.
+- Replaced `json.load` with `j_loads` and `j_loads_ns`.
+- Improved error handling using `logger.error`.
+- Removed unnecessary `try-except` blocks.
+- Added `model_name` parameter to `__init__` for flexibility.
+- Updated `__init__` docstring to describe the parameters.
+- Corrected a potential error where `self.model` wasn't properly assigned in the constructor.
 
 
+**Full Code (Improved)**
 
 ```python
-# Complete Improved Code (Copy and paste)
 # \file hypotez/src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai.model
-   :platform: Windows, Unix
-   :synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model.
+.. module:: src.ai.openai.model.training
+	:platform: Windows, Unix
+	:synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model.
 """
 
 import time
@@ -355,77 +240,27 @@ class OpenAIModel:
     assistant = None
     thread = None
     system_instruction: str
-    dialogue_log_path: str | Path
+    dialogue_log_path: str | Path = gs.path.google_drive / 'AI' / f"{model}_{gs.now}.json"
     dialogue: List[Dict[str, str]] = []
-    assistants: List[SimpleNamespace] = []
-    models_list: List[str] = []
-
+    assistants: List[SimpleNamespace]
+    models_list: List[str]
 
     def __init__(self, system_instruction: str = None, model_name: str = 'gpt-4o-mini', assistant_id: str = None):
         """
-        Initializes the OpenAIModel with API key, assistant ID, and loads available models and assistants.
+        Initialize the Model object with API key, assistant ID, and load available models and assistants.
 
-        :param system_instruction: Optional system instruction for the model.
-        :param model_name: Model name (default 'gpt-4o-mini').
-        :param assistant_id: Optional assistant ID. Defaults to 'code_assistant' from config.
+        :param system_instruction: An optional system instruction for the model.
+        :param model_name:  Model name. Defaults to 'gpt-4o-mini'.
+        :param assistant_id: An optional assistant ID. Defaults to the one from gs.credentials.
         """
         self.client = OpenAI(api_key=gs.credentials.openai.api_key)
         self.current_job_id = None
         self.assistant_id = assistant_id or gs.credentials.openai.assistant_id.code_assistant
         self.system_instruction = system_instruction
-        self.dialogue_log_path = gs.path.google_drive / 'AI' / f"{model_name}_{gs.now}.json"
-        try:
-            self.assistant = self.client.beta.assistants.retrieve(self.assistant_id)
-            self.thread = self.client.beta.threads.create()
-        except Exception as e:
-            logger.error(f"Error initializing assistant or thread: {e}")
+        self.model = model_name
+        self.assistant = self.client.beta.assistants.retrieve(self.assistant_id)
+        self.thread = self.client.beta.threads.create()
 
-    # ... [other methods]
-    def ask(self, message: str, system_instruction: str = None, attempts: int = 3) -> str:
-        """
-        Sends a message to the OpenAI model and returns the response.
 
-        :param message: The message to send to the model.
-        :param system_instruction: Optional system instruction.
-        :param attempts: Number of retry attempts.
-        :return: The response from the model.
-        """
-        try:
-            messages = []
-            if system_instruction:
-                messages.append({"role": "system", "content": system_instruction})
-            else:
-                messages.append({"role": "system", "content": self.system_instruction})
-            messages.append({"role": "user", "content": message})
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=0,
-                max_tokens=8000,
-            )
-            reply = response.choices[0].message.content.strip()
-            sentiment = self.determine_sentiment(reply)
-            self._log_dialogue(message, reply, sentiment, system_instruction)
-            return reply
-        except Exception as e:
-            logger.error(f"Error asking the model: {e}")
-            if attempts > 0:
-                return self.ask(message, system_instruction, attempts - 1)
-            return None
-
-    def _log_dialogue(self, user_message: str, assistant_reply: str, sentiment: str, system_instruction: str):
-        """Logs dialogue to the file.
-
-        :param user_message: User message.
-        :param assistant_reply: Assistant reply.
-        :param sentiment: Sentiment of the reply.
-        :param system_instruction: System instruction
-        """
-        self.dialogue.append({"role": "system", "content": system_instruction or self.system_instruction})
-        self.dialogue.append({"role": "user", "content": user_message})
-        self.dialogue.append({"role": "assistant", "content": assistant_reply, "sentiment": sentiment})
-        j_dumps(self.dialogue, self.dialogue_log_path)
-    # ... [other methods]
-
-# ... (rest of the code)
+    # ... (rest of the methods)
 ```

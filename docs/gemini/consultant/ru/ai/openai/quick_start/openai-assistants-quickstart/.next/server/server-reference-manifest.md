@@ -9,87 +9,97 @@ self.__RSC_SERVER_MANIFEST="{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionK
 ```python
 from src.utils.jjson import j_loads
 
-# Модуль содержит конфигурацию для сервера RSC.
-# Хранит данные о узлах (node), краях (edge) и криптографическом ключе (encryptionKey)
-# в формате JSON.
-class RSCServerConfig:
+class MyClass:
+    """
+    Класс для работы с манифестом сервера RSC.
+
+    .. versionadded:: 0.1.0
+    """
+
     def __init__(self):
         """
-        Инициализирует объект RSCServerConfig.
+        Инициализирует класс.
+        """
+        pass
 
-        Загружает конфигурацию из строки JSON в атрибут ``__RSC_SERVER_MANIFEST``.
+    @property
+    def RSC_SERVER_MANIFEST(self):
+        """
+        Возвращает манифест сервера RSC.
+
+        :return: Манифест сервера RSC в формате JSON.
+        :rtype: dict
         """
         try:
-            self.__RSC_SERVER_MANIFEST = j_loads(
-                "{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionKey\": \"XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc=\"\n}"
-            )
+            # Парсим строку JSON
+            manifest_data = j_loads(self.__RSC_SERVER_MANIFEST)
+            return manifest_data
         except Exception as e:
-            logger.error(f"Ошибка при загрузке конфигурации RSC: {e}")
+            logger.error('Ошибка при парсинге манифеста: %s', str(e))
+            return None
 
-        # Методы доступа к данным
-        # ...
 
-    def get_encryption_key(self) -> str:
-        """
-        Возвращает криптографический ключ.
-
-        :return: Значение ключа.
-        :raises KeyError: Если ключ не найден.
-        """
-        try:
-            return self.__RSC_SERVER_MANIFEST['encryptionKey']
-        except KeyError as e:
-            logger.error(f"Ключ не найден: {e}")
-            raise
+    __RSC_SERVER_MANIFEST = """
+    {
+        "node": {},
+        "edge": {},
+        "encryptionKey": "XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc="
+    }
+    """
 ```
 
 **Changes Made**
 
-1.  Добавлен класс `RSCServerConfig` для хранения и доступа к данным конфигурации.
-2.  Используется `j_loads` для обработки данных JSON.
-3.  Добавлена обработка ошибок с помощью `logger.error`.
-4.  Добавлена функция `get_encryption_key` для безопасного доступа к ключу.
-5.  Добавлена документация в формате RST к классу и функции.
-6.  Добавлены необходимые импорты (из `src.utils.jjson`, `src.logger`).
-7.  Комментарии к исходному коду переформатированы в RST-стиль.
-8.  Обработка ошибок теперь более корректна и использует `KeyError` для указания проблемы.
+1. **Импорты:** Добавлено `from src.utils.jjson import j_loads` для работы с JSON.
+2. **Комментарии:** Добавлены комментарии RST к классу `MyClass`, методу `__init__` и свойству `RSC_SERVER_MANIFEST`.
+3. **Обработка ошибок:** Добавлено `try...except` для обработки потенциальных ошибок при парсинге JSON.  Используется `logger.error` для записи ошибок в лог.
+4. **Формат JSON:**  Строка `__RSC_SERVER_MANIFEST` преобразована в многострочный  формат для лучшей читаемости.
+5. **Docstrings:** Docstrings переписаны в формате RST.
+6. **Переменная:** `self.__RSC_SERVER_MANIFEST` изменена на более читаемое имя `__RSC_SERVER_MANIFEST`.
+7. **`@property` декоратор:** Метод `RSC_SERVER_MANIFEST` преобразован в свойство `@property` для доступа к данным как к атрибуту объекта.
 
-**Full Code (Improved)**
+
+**Complete Code (Improved)**
 
 ```python
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-# Модуль содержит конфигурацию для сервера RSC.
-# Хранит данные о узлах (node), краях (edge) и криптографическом ключе (encryptionKey)
-# в формате JSON.
-class RSCServerConfig:
+class MyClass:
+    """
+    Класс для работы с манифестом сервера RSC.
+
+    .. versionadded:: 0.1.0
+    """
+
     def __init__(self):
         """
-        Инициализирует объект RSCServerConfig.
+        Инициализирует класс.
+        """
+        pass # Необходимо ли что-то инициализировать?
 
-        Загружает конфигурацию из строки JSON в атрибут ``__RSC_SERVER_MANIFEST``.
+    @property
+    def RSC_SERVER_MANIFEST(self):
+        """
+        Возвращает манифест сервера RSC.
+
+        :return: Манифест сервера RSC в формате JSON.
+        :rtype: dict
         """
         try:
-            self.__RSC_SERVER_MANIFEST = j_loads(
-                "{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionKey\": \"XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc=\"\n}"
-            ) # Исходный код
+            # Парсим строку JSON
+            manifest_data = j_loads(self.__RSC_SERVER_MANIFEST)
+            return manifest_data
         except Exception as e:
-            logger.error(f"Ошибка при загрузке конфигурации RSC: {e}")
+            logger.error('Ошибка при парсинге манифеста: %s', str(e))
+            return None
 
-        # Методы доступа к данным
-        # ...
 
-    def get_encryption_key(self) -> str:
-        """
-        Возвращает криптографический ключ.
-
-        :return: Значение ключа.
-        :raises KeyError: Если ключ не найден.
-        """
-        try:
-            return self.__RSC_SERVER_MANIFEST['encryptionKey'] # Исходный код
-        except KeyError as e:
-            logger.error(f"Ключ не найден: {e}")
-            raise
+    __RSC_SERVER_MANIFEST = """
+    {
+        "node": {},
+        "edge": {},
+        "encryptionKey": "XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc="
+    }
+    """
 ```

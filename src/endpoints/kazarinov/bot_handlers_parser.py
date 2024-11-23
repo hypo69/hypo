@@ -37,6 +37,7 @@ class HandlersParser():
     def __init__(self, webdriver_name: Optional[str] = 'firefox'):
         """"""
         logger.info('handler started')
+
         self.mexiron: Mexiron = Mexiron(
             Driver(
                 Firefox if webdriver_name.lower() == 'firefox' 

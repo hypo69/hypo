@@ -1,7 +1,6 @@
 **Received Code**
 
-```
-### **product Module**: Product Management
+```### **product Module**: Product Management
 
 The **product** module is responsible for managing all aspects of product data, including processing, validation, and field management. It consists of the following components:
 
@@ -14,102 +13,162 @@ The **product** module is responsible for managing all aspects of product data, 
 
 **Improved Code**
 
-```
+```python
 # product.py
-import json
-from src.utils.jjson import j_loads
-# TODO: Add necessary imports from src.logger
-from src.logger import logger
+# -*- coding: utf-8 -*-
+"""
+Module for managing product data.
 
-# ... (Placeholder for product processing logic)
+This module provides functions for creating, updating, and deleting product records.
+It also handles processing and validation of product data.
+"""
+from src.utils.jjson import j_loads  # импорт функции для работы с json
+from src.logger import logger  # импорт логгера
 
-def process_product_data(product_data_file: str) -> None:
+
+def process_product_data(product_data_file: str) -> dict:
     """
-    Обрабатывает данные о продукте из файла.
+    Processes product data from a JSON file.
 
-    :param product_data_file: Путь к файлу с данными о продукте.
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если данные в файле некорректны.
-    :raises Exception: Для обработки других ошибок.
+    :param product_data_file: Path to the JSON file.
+    :return: Processed product data as a dictionary.
+    :raises ValueError: If the input file is not a valid JSON file.
+    :raises FileNotFoundError: If the input file does not exist.
     """
     try:
         with open(product_data_file, 'r') as file:
-            # TODO: Используйте j_loads для обработки JSON данных
-            product_data = j_loads(file)  # Замените json.load на j_loads
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл {product_data_file} не найден. {e}")
+            # чтение файла с помощью j_loads
+            product_data = j_loads(file)
+            # ... (ваш код обработки данных)
+            return product_data
+    except FileNotFoundError:
+        logger.error(f"File not found: {product_data_file}")
         raise
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON: {e}")
-        raise
+        logger.error(f"Error decoding JSON: {e}")
+        raise ValueError(f"Invalid JSON format: {e}")
     except Exception as e:
-        logger.error(f"Произошла непредвиденная ошибка при обработке данных: {e}")
+        logger.error(f"An error occurred while processing product data: {e}")
         raise
-    
-    # ... (Остальной обработчик данных)
-    # Добавьте обработку ошибок для каждого шага
-
-# ... (Остальной код)
-
-#product_data_file = 'data.json'
-#process_product_data(product_data_file) # Пример использования
 
 
+def create_product(product_data: dict):
+    """
+    Creates a new product record.
+
+    :param product_data: Product data as a dictionary.
+    :raises ValueError: If the input data is invalid.
+    """
+    # ... (ваш код создания продукта)
+    pass
+
+
+def update_product(product_id: int, updated_data: dict):
+    """
+    Updates an existing product record.
+
+    :param product_id: ID of the product to update.
+    :param updated_data: Updated product data as a dictionary.
+    :raises ValueError: If the input data is invalid or product not found.
+    """
+    # ... (ваш код обновления продукта)
+    pass
+
+
+def delete_product(product_id: int):
+    """
+    Deletes a product record.
+
+    :param product_id: ID of the product to delete.
+    :raises ValueError: If the product with the given ID does not exist.
+    """
+    # ... (ваш код удаления продукта)
+    pass
 ```
 
 **Changes Made**
 
-*   Added docstrings to the `process_product_data` function using RST format.
-*   Replaced `json.load` with `j_loads` for JSON file loading from `src.utils.jjson`.
-*   Added `try...except` blocks to handle `FileNotFoundError`, `json.JSONDecodeError`, and general exceptions.
-*   Used `logger.error` to log errors.
-*   Added comments with TODO items for further improvement, such as specifying the type hinting for the product_data_file argument, adding proper exception handling for the remaining logic, and implementing the import from src.logger.
+* Added docstrings to functions (`process_product_data`, `create_product`, `update_product`, `delete_product`) using RST format.
+* Imported `logger` from `src.logger`.
+* Used `j_loads` for reading JSON data instead of `json.load`.
+* Included `try...except` blocks to handle potential `FileNotFoundError` and `json.JSONDecodeError` exceptions.
+* Logged errors using `logger.error`.
+* Added type hints to parameters for better code readability and maintainability.
+* Added comments for clarifying code logic.
+
 
 **Full Code (Improved)**
 
 ```python
 # product.py
+# -*- coding: utf-8 -*-
+"""
+Module for managing product data.
+
+This module provides functions for creating, updating, and deleting product records.
+It also handles processing and validation of product data.
+"""
 import json
-from src.utils.jjson import j_loads
-from src.logger import logger
+from src.utils.jjson import j_loads  # импорт функции для работы с json
+from src.logger import logger  # импорт логгера
 
-# ... (Placeholder for product processing logic)
 
-def process_product_data(product_data_file: str) -> None:
+def process_product_data(product_data_file: str) -> dict:
     """
-    Обрабатывает данные о продукте из файла.
+    Processes product data from a JSON file.
 
-    :param product_data_file: Путь к файлу с данными о продукте.
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если данные в файле некорректны.
-    :raises Exception: Для обработки других ошибок.
+    :param product_data_file: Path to the JSON file.
+    :return: Processed product data as a dictionary.
+    :raises ValueError: If the input file is not a valid JSON file.
+    :raises FileNotFoundError: If the input file does not exist.
     """
     try:
         with open(product_data_file, 'r') as file:
-            # TODO: Используйте j_loads для обработки JSON данных
-            product_data = j_loads(file)  # Замените json.load на j_loads
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл {product_data_file} не найден. {e}")
+            # чтение файла с помощью j_loads
+            product_data = j_loads(file)
+            # ... (ваш код обработки данных)
+            return product_data
+    except FileNotFoundError:
+        logger.error(f"File not found: {product_data_file}")
         raise
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON: {e}")
-        raise
+        logger.error(f"Error decoding JSON: {e}")
+        raise ValueError(f"Invalid JSON format: {e}")
     except Exception as e:
-        logger.error(f"Произошла непредвиденная ошибка при обработке данных: {e}")
+        logger.error(f"An error occurred while processing product data: {e}")
         raise
-    
-    # ... (Остальной обработчик данных)
-    # Добавьте обработку ошибок для каждого шага
-    # Пример:
-    # try:
-    #     # ... Обработка данных
-    # except ValueError as e:
-    #     logger.error(f"Ошибка валидации данных: {e}")
-    #     return None
 
 
-# ... (Остальной код)
+def create_product(product_data: dict):
+    """
+    Creates a new product record.
 
-#product_data_file = 'data.json'
-#process_product_data(product_data_file) # Пример использования
+    :param product_data: Product data as a dictionary.
+    :raises ValueError: If the input data is invalid.
+    """
+    # ... (ваш код создания продукта)
+    pass
+
+
+def update_product(product_id: int, updated_data: dict):
+    """
+    Updates an existing product record.
+
+    :param product_id: ID of the product to update.
+    :param updated_data: Updated product data as a dictionary.
+    :raises ValueError: If the input data is invalid or product not found.
+    """
+    # ... (ваш код обновления продукта)
+    pass
+
+
+def delete_product(product_id: int):
+    """
+    Deletes a product record.
+
+    :param product_id: ID of the product to delete.
+    :raises ValueError: If the product with the given ID does not exist.
+    """
+    # ... (ваш код удаления продукта)
+    pass
 ```

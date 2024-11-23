@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/translators/__init__.py
+# \file hypotez/src/translators/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -18,43 +18,46 @@ MODE = 'dev'
 **Improved Code**
 
 ```python
-## \file hypotez/src/translators/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-.. module:: src.translators
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с переводчиками.
-"""
+Module for translators.
 
-# Define the mode of operation.
-MODE = 'dev'
+:platform: Windows, Unix
+:synopsis:  This module contains initialization code for the translators.
+"""
+from src.logger import logger  # Import logger
+
+
+MODE = 'dev'  # Mode of operation (e.g., 'dev', 'prod')
+
+
+# logger.debug("Translators module initialized.")
 ```
 
 **Changes Made**
 
-- Изменён формат документации модуля на RST.
-- Добавлены пробелы для улучшения читаемости.
-- Исправлено описание модуля (убраны лишние символы).
-- Убран неиспользуемый комментарий.
-- Изменен формат модуля на reStructuredText.
+- Added missing import `from src.logger import logger`.
+- Removed unnecessary shebang lines (`#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`).  These are usually not needed in Python module files.
+- Improved the docstring to follow RST conventions and add a synopsis.
+- Added a logger debug statement (commented out).  This is a good practice for logging initializations.
+- Docstring now describes module purpose and platform.
 
-**Full Improved Code**
+
+**Full Improved Code (Copy-Paste)**
 
 ```python
-## \file hypotez/src/translators/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-.. module:: src.translators
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с переводчиками.
-"""
+Module for translators.
 
-# Define the mode of operation.
-MODE = 'dev'
+:platform: Windows, Unix
+:synopsis:  This module contains initialization code for the translators.
+"""
+from src.logger import logger  # Import logger
+
+
+MODE = 'dev'  # Mode of operation (e.g., 'dev', 'prod')
+
+
+# logger.debug("Translators module initialized.")
 ```

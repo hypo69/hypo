@@ -45,6 +45,7 @@ class Chrome(webdriver.Chrome):
 
     _instance = None
     driver_name: str = 'chrome'
+    config: SimpleNamespace
 
     def __new__(cls, *args, **kwargs):
         """Ensure a single instance of Chrome WebDriver.
@@ -66,16 +67,18 @@ class Chrome(webdriver.Chrome):
         Args:
             user_agent (Optional[str]): The user agent string to be used. Defaults to a random user agent.
         """
-        super().__init__(*args, **kwargs)
         try:
             # Function attributes declaration
             user_agent = user_agent or UserAgent().random
-            settings = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))  # Load settings from JSON file
-            if not settings:
-                logger.debug(f'Ошибка в файле {gs.path.src}/webdriver/chrome/chrome.json')
+            self.config = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))  # Load settings from JSON file
+            if not self.config:
+                logger.debug(f'Ошибка в файле config `chrome.json`')
+                ...
                 return
 
             options = ChromeOptions()  # Initialize options
+            profile_directory: Path  # Set user data directory
+            executable_path: str
 
             def normalize_path(path: str) -> str:
                 """Replace placeholders with actual environment paths.
@@ -94,41 +97,44 @@ class Chrome(webdriver.Chrome):
                 )
 
             # Add arguments from options_settings
-            if hasattr(settings, 'options') and settings.options:
-                for key, value in vars(settings.options).items():
+            if hasattr(self.config, 'options') and self.config.options:
+                for key, value in vars(self.config.options).items():
                     options.add_argument(f'--{key}={value}')
 
             # Add arguments from settings.headers
-            if hasattr(settings, 'headers') and settings.headers:
-                for key, value in vars(settings.headers).items():
+            if hasattr(self.config, 'headers') and self.config.headers:
+                for key, value in vars(self.config.headers).items():
                     options.add_argument(f'--{key}={value}')
 
-            profile_directory = normalize_path(
-                getattr(settings.profile_directory, 'default', '')
-            )
-            executable_path = str(
-                Path(gs.path.root, getattr(settings.executable_path, 'default', ''))
-            )
+            profile_directory = Path(gs.path.root / normalize_path(self.config.profile_directory.testing))
+       
+            binary_location = Path(gs.path.root /  normalize_path(self.config.binary_location.binary))
 
             if profile_directory:
                 options.add_argument(f'user-data-dir={profile_directory}')
 
             # Additional options
-            options.binary_location = executable_path
+            options.binary_location = str(binary_location)
 
-            service = ChromeService(executable_path=executable_path) if executable_path else ChromeService()
+            service = ChromeService(executable_path=str(binary_location)) if binary_location else ChromeService()
+            service = ChromeService()
 
         except Exception as ex:
-            logger.error('Error setting up Chrome WebDriver: %s', ex)
+            logger.error('Error setting up Chrome WebDriver:', ex)
+            ...
             return
 
         try:
-            super().__init__(options=options, service=service)
+            # super().__init__(options=options, service=service)
+            ...
+            super().__init__(options=options)
         except WebDriverException as ex:
-            logger.critical('Error initializing Chrome WebDriver: %s', ex)
+            logger.critical('Error initializing Chrome WebDriver:', ex)
+            ...
             return
         except Exception as ex:
-            logger.critical('Chrome WebDriver crashed. General error: %s', ex)
+            logger.critical('Chrome WebDriver crashed. General error:', ex)
+            ...
             return
 
         self._payload()

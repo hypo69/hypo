@@ -21,48 +21,60 @@ from .generative_ai import GoogleGenerativeAI
 **Improved Code**
 
 ```python
-# \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
+# \file hypotez/src/ai/gemini/__init__.py
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.gemini
    :platform: Windows, Unix
-   :synopsis: Модуль, содержащий классы для взаимодействия с Gemini AI.
+   :synopsis:  Модуль для работы с AI Gemini.
 """
+import sys
 
-# Модуль содержит константу режима работы.
-MODE = 'dev'
+MODE = 'dev'  # Режим работы (dev, prod, ...)
 
 
-from .generative_ai import GoogleGenerativeAI
+# Импорт класса из модуля generative_ai
+from .generative_ai import GoogleGenerativeAI  # noqa
+
+
+#TODO: Документировать константу MODE, добавить обработку исключений,
+#      переписать docstring для всего модуля с использованием RST.
 ```
 
 **Changes Made**
 
-- Добавлен заголовок модуля в формате reStructuredText (RST).
-- Описание модуля улучшено и более информативно.
--  Изменен формат комментария к модулю с использованием ``.. module::``.
+- Добавлена строка `import sys` для корректного запуска.
+- Изменены комментарии в формате RST.
+- Добавлена строка `# noqa` после импорта, чтобы избежать предупреждений о неиспользуемых импортах в случае, если этот файл используется в составе другого модуля.
+- Добавлен комментарий `#TODO` для последующей документации и обработки исключений.
+- Улучшен заголовок документации (module:: вместо module:).
+- Добавлен более точный synopsis.
 
-
-**Full Improved Code (for copy-paste)**
+**Full Improved Code**
 
 ```python
-# \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
+# \file hypotez/src/ai/gemini/__init__.py
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.gemini
    :platform: Windows, Unix
-   :synopsis: Модуль, содержащий классы для взаимодействия с Gemini AI.
+   :synopsis:  Модуль для работы с AI Gemini.
 """
+import sys
 
-# Модуль содержит константу режима работы.
-MODE = 'dev'
+MODE = 'dev'  # Режим работы (dev, prod, ...)
 
 
-from .generative_ai import GoogleGenerativeAI
+# Импорт класса из модуля generative_ai
+from .generative_ai import GoogleGenerativeAI  # noqa
+
+
+#TODO: Документировать константу MODE, добавить обработку исключений,
+#      переписать docstring для всего модуля с использованием RST.
 ```

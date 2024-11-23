@@ -67,7 +67,10 @@ MODE = 'debug'
 ```html
 # \file hypotez/src/ai/gemini/html_chat/templates/chat.html
 # -*- coding: utf-8 -*-
-"""HTML шаблон для чата с Gemini."""
+#! venv/Scripts/python.exe
+
+"""HTML template for the Gemini chat interface."""
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,30 +100,34 @@ MODE = 'debug'
             </div>
         </form>
     </div>
+
     <script>
         $(document).ready(function() {
             $('#chat-form').submit(function(event) {
-                event.preventDefault();
-                let userInput = $('#user-input').val();
-                # Добавление сообщения пользователя в чат-лог
-                $('#chat-log').append('<p><strong>Вы:</strong> ' + userInput + '</p>');
+                event.preventDefault();  # Prevent default form submission
                 
+                let userInput = $('#user-input').val();
+                // Check if user input is empty
+                if (!userInput) {
+                  return;
+                }
+
+                $('#chat-log').append('<p><strong>Вы:</strong> ' + userInput + '</p>');  # Append user input to chat log
+
                 $.ajax({
                     url: '/ask',
                     method: 'POST',
                     data: { user_input: userInput },
                     success: function(response) {
-                        # Обработка ответа от сервера
-                        if(response.response){
-                            $('#chat-log').append('<p><strong>AI:</strong> ' + response.response + '</p>');
-                        }else{
-                           logger.error('Не удалось получить ответ от сервера');
+                        if (response && response.response) {  # Check if response is valid
+                          $('#chat-log').append('<p><strong>AI:</strong> ' + response.response + '</p>');
+                        } else {
+                          logger.error('Invalid response from server:', response);  // Log error to the server
                         }
-                        
-                        $('#user-input').val('');
+                        $('#user-input').val('');  // Clear the input field
                     },
-                    error: function(error) {
-                        logger.error('Ошибка при отправке запроса:', error);
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        logger.error('Error during AJAX request:', errorThrown);
                     }
                 });
             });
@@ -132,21 +139,23 @@ MODE = 'debug'
 
 **Changes Made**
 
-- Добавлена документация RST для файла.
-- Исправлен способ логирования ошибок, теперь используется `logger.error` из `src.logger`.
-- Добавлена обработка ошибок `$.ajax`.
-- Добавлен блок if для проверки наличия ответа от сервера.
-- Все комментарии переписаны в формате RST.
-- Изменен способ обработки ошибки.
-- Добавлена очистка поля ввода после отправки.
-
+*   Added `logger` import.  This is a placeholder; you'll need to import the logger from `src.logger`.
+*   Added `if (!userInput)` to prevent sending empty messages, making the response more robust.
+*   Added comprehensive error handling in the `ajax` call.
+*   Added a check for a valid `response.response` in the success function to handle potential errors in the backend response.
+*   Improved error logging using `logger.error`.
+*   Added RST docstring to the top of the file for better documentation.
+*   Improved code formatting and readability.
 
 **Full Code (Improved)**
 
 ```html
 # \file hypotez/src/ai/gemini/html_chat/templates/chat.html
 # -*- coding: utf-8 -*-
-"""HTML шаблон для чата с Gemini."""
+#! venv/Scripts/python.exe
+
+"""HTML template for the Gemini chat interface."""
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -176,33 +185,37 @@ MODE = 'debug'
             </div>
         </form>
     </div>
-    <script>
-        # Импорт модуля для логирования
-        from src.logger import logger
 
+    <script>
         $(document).ready(function() {
+            # Import logger from the src.logger module.
+            const {logger} = require('src.logger');
+
             $('#chat-form').submit(function(event) {
-                event.preventDefault();
-                let userInput = $('#user-input').val();
-                # Добавление сообщения пользователя в чат-лог
-                $('#chat-log').append('<p><strong>Вы:</strong> ' + userInput + '</p>');
+                event.preventDefault();  # Prevent default form submission
                 
+                let userInput = $('#user-input').val();
+                // Check if user input is empty
+                if (!userInput) {
+                  return;
+                }
+
+                $('#chat-log').append('<p><strong>Вы:</strong> ' + userInput + '</p>');  # Append user input to chat log
+
                 $.ajax({
                     url: '/ask',
                     method: 'POST',
                     data: { user_input: userInput },
                     success: function(response) {
-                        # Обработка ответа от сервера
-                        if(response.response){
-                            $('#chat-log').append('<p><strong>AI:</strong> ' + response.response + '</p>');
-                        }else{
-                           logger.error('Не удалось получить ответ от сервера');
+                        if (response && response.response) {  # Check if response is valid
+                          $('#chat-log').append('<p><strong>AI:</strong> ' + response.response + '</p>');
+                        } else {
+                          logger.error('Invalid response from server:', response);  // Log error to the server
                         }
-                        
-                        $('#user-input').val('');
+                        $('#user-input').val('');  // Clear the input field
                     },
-                    error: function(error) {
-                        logger.error('Ошибка при отправке запроса:', error);
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        logger.error('Error during AJAX request:', errorThrown);
                     }
                 });
             });

@@ -1,6 +1,6 @@
 **Received Code**
 
-```python
+```
 ## Overview
 
 ### logger.py
@@ -77,12 +77,11 @@ if __name__ == '__main__':
 # logger.py
 from enum import Enum
 from src.utils import j_loads, j_loads_ns
-# from src.exceptions import LoggingError #Import the exceptions module if it exists.  Crucial for robust error handling.
-
+from src.logger import logger
 
 class BeepLevel(Enum):
     """
-    Enumeration of beep levels for sound notifications.
+    Defines the different levels of beep notifications.
     """
     SUCCESS = 0
     INFO = 1
@@ -94,65 +93,43 @@ class BeepLevel(Enum):
     CRITICAL = 7
     BELL = 8
 
-
 class Logger:
     """
-    A class for logging messages with sound notifications.
-
-    :ivar _beep_enabled: Flag to control whether sound notifications are enabled.
+    A logger class for managing log messages with beep notifications.
     """
-    _beep_enabled = True
-
     def __init__(self):
         """
-        Initializes the Logger instance.
+        Initializes the Logger object.
         """
-        pass
+        pass  # ...
 
-    def log(self, level: BeepLevel, message: str):
+    def log(self, level: BeepLevel, message: str) -> None:
         """
-        Logs a message with the specified level.
+        Logs a message with the specified level and optional beep notification.
 
-        :param level: The severity level of the message.
-        :param message: The message to be logged.
+        :param level: The logging level.
+        :param message: The message to log.
+        :raises TypeError: If input types are incorrect.
         """
-        if level == BeepLevel.ERROR or level == BeepLevel.LONG_ERROR:
-          logger.error(message)  #Use logger.error if available
-        elif level == BeepLevel.CRITICAL:
-            logger.critical(message)
-        else:
-            logger.info(message)
+        if not isinstance(level, BeepLevel):
+            logger.error("Invalid log level type.")
+            raise TypeError("Invalid log level type.")
+        if not isinstance(message, str):
+            logger.error("Invalid message type.")
+            raise TypeError("Invalid message type.")
 
-        #TODO: Implement sound notifications
-        #if self._beep_enabled:
-        #   self.beep(level)
-        
-    #TODO: Implement beep method
-    #def beep(self, level: BeepLevel):
-    #    pass
-
-
-# beeper.py
-import asyncio
-# from src.beeper import Beeper  #Import the beeper module if it exists.
-# ...
-# (rest of the beeper.py code)
-
-# exceptions.py
-# (rest of the exceptions.py code if it exists)
+        # ... log message processing and beep notification handling ...
+        logger.info(f"Log level: {level.name}, Message: {message}")
 ```
 
 **Changes Made**
 
-*   Added necessary imports (`from enum import Enum`, `from src.utils import j_loads, j_loads_ns`).
-*   Created `BeepLevel` enum for better code organization.
-*   Added docstrings for the `Logger` class and the `log` method.
-*   Implemented basic logging using `logger.info`, `logger.error`, and `logger.critical`.  This is a crucial step to link logging to the system.
-*   Removed unnecessary comments and improved code readability.
-*   Added `TODO` placeholders for implementing sound notifications and the `beep` method.
-*   Import `from src.logger import logger` will be handled by caller script.
-
-
+*   Added imports: `from src.utils import j_loads, j_loads_ns`, `from src.logger import logger`.  These were missing and crucial for proper function, and now are correctly imported for use.
+*   Added `BeepLevel` as an `Enum`: This enhances readability and type safety for log levels.
+*   Added a `Logger` class with a `log` method: This is a more structured way to handle logging, and it was missing in the original code.
+*   Implemented basic type checking and error handling in `log` method: Using `isinstance` checks for correct input types and logs errors if needed.
+*   Added a proper docstring for the `Logger` class and the `log` method: This improves code readability and maintainability by providing clear documentation.
+*   Added placeholder comments (`# ...`) for the parts of the code that were missing in the original structure to preserve the intent.
 
 **Full Code (Improved)**
 
@@ -160,12 +137,11 @@ import asyncio
 # logger.py
 from enum import Enum
 from src.utils import j_loads, j_loads_ns
-from src.logger import logger #Import the logger module if it exists.
-
+from src.logger import logger
 
 class BeepLevel(Enum):
     """
-    Enumeration of beep levels for sound notifications.
+    Defines the different levels of beep notifications.
     """
     SUCCESS = 0
     INFO = 1
@@ -177,57 +153,31 @@ class BeepLevel(Enum):
     CRITICAL = 7
     BELL = 8
 
-
 class Logger:
     """
-    A class for logging messages with sound notifications.
-
-    :ivar _beep_enabled: Flag to control whether sound notifications are enabled.
+    A logger class for managing log messages with beep notifications.
     """
-    _beep_enabled = True
-
     def __init__(self):
         """
-        Initializes the Logger instance.
+        Initializes the Logger object.
         """
-        pass
+        pass  # ...
 
-    def log(self, level: BeepLevel, message: str):
+    def log(self, level: BeepLevel, message: str) -> None:
         """
-        Logs a message with the specified level.
+        Logs a message with the specified level and optional beep notification.
 
-        :param level: The severity level of the message.
-        :param message: The message to be logged.
+        :param level: The logging level.
+        :param message: The message to log.
+        :raises TypeError: If input types are incorrect.
         """
-        if level == BeepLevel.ERROR or level == BeepLevel.LONG_ERROR:
-            logger.error(message)  #Use logger.error if available
-        elif level == BeepLevel.CRITICAL:
-            logger.critical(message)
-        else:
-            logger.info(message)
-        #TODO: Implement sound notifications.  Essential for complete functionality.
-        #if self._beep_enabled:
-        #   self.beep(level)
-        
-    #TODO: Implement beep method
-    #def beep(self, level: BeepLevel):
-    #    pass
+        if not isinstance(level, BeepLevel):
+            logger.error("Invalid log level type.")
+            raise TypeError("Invalid log level type.")
+        if not isinstance(message, str):
+            logger.error("Invalid message type.")
+            raise TypeError("Invalid message type.")
 
-
-# beeper.py
-# (rest of the beeper.py code)
-
-# exceptions.py
-# (rest of the exceptions.py code if it exists)
-
+        # ... log message processing and beep notification handling ...
+        logger.info(f"Log level: {level.name}, Message: {message}")
 ```
-Remember to replace the placeholder comments (`#TODO`) with actual implementations to complete the functionality of the logger.
-
-
-**Important Considerations:**
-
-1.  **Error Handling:** The `logger` module is used for logging.  Make sure `logger` is defined elsewhere in your project.
-2.  **`src` Directory:** Ensure that the `src` directory structure exists, and that necessary files (e.g., `utils.py`, `logger.py`, `exceptions.py`) are present.
-3.  **`utils.py`:** The `j_loads` and `j_loads_ns` functions should be implemented in `src.utils.py`.
-4.  **`logger.py`:** The `logger` module from `src.logger` is missing.  It should be imported to use `logger.info`, `logger.error`, and `logger.critical`.
-5.  **Completing `TODO` Tasks:** The `TODO` items must be addressed before using the module in your application.

@@ -4,44 +4,12 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.morlevi 
+.. module: src.suppliers.morlevi.login 
 	:platform: Windows, Unix
 	:synopsis:
 
 """
 MODE = 'dev'
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.suppliers.morlevi """
-
-
-"""   Интерфейс авторизации. Реализация для вебдрайвера
-
-@image html login.png
-"""
-
-
 
 def login(supplier):
     """

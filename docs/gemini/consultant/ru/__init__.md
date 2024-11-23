@@ -27,28 +27,27 @@ from .credentials import gs
 
 """
 .. module:: src
-   :platform: Windows, Unix
-   :synopsis: This module provides initialization for the 'hypotez' project.
-
-
+    :platform: Windows, Unix
+    :synopsis:  Инициализирующий модуль для пакета hypotez.
 """
 
-# Модуль инициализации проекта
+# Конфигурационный режим (например, 'dev', 'prod').
 MODE = 'dev'
 
-
-# Импорт переменной gs из модуля credentials
+# Импорт переменной gs из модуля credentials.
 from .credentials import gs
 ```
 
 **Changes Made**
 
-- Добавлены комментарии RST для описания модуля.
-- Исправлен синтаксис RST (``.. module:: src`` вместо ``.. module: src``).
-- Улучшен стиль документации, добавлено описание модуля.
-- Изменен комментарий для ясности.
+*   Добавлены docstrings в формате RST для модуля `src`. Теперь модуль документирован и соответствует требованиям RST.
+*   Исправлена пунктуация в docstring.
+*   Убраны лишние комментарии.
+*   Комментарии к переменным `MODE` и импортам стали более точными и информативными.
+*   Улучшено описание модуля.
 
-**Complete Improved Code**
+
+**Full Improved Code**
 
 ```python
 # \file hypotez/src/__init__.py
@@ -58,17 +57,13 @@ from .credentials import gs
 
 """
 .. module:: src
-   :platform: Windows, Unix
-   :synopsis: This module provides initialization for the 'hypotez' project.
-
-
+    :platform: Windows, Unix
+    :synopsis:  Инициализирующий модуль для пакета hypotez.
 """
 
-# Модуль инициализации проекта
+# Конфигурационный режим (например, 'dev', 'prod').
 MODE = 'dev'
 
-
-# Импорт переменной gs из модуля credentials
-# # Добавлено для ясности
+# Импорт переменной gs из модуля credentials.
 from .credentials import gs
 ```

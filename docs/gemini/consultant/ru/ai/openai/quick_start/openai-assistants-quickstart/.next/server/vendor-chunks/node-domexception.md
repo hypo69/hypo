@@ -1,6 +1,4 @@
-```
-**Received Code**
-
+Received Code
 ```javascript
 /*
  * ATTENTION: An "eval-source-map" devtool has been used.
@@ -28,14 +26,17 @@ eval("/*! node-domexception. MIT License. Jimmy Wärting <https://jimmy.warting.
 ;
 ```
 
-**Improved Code**
-
+```
+Improved Code
 ```javascript
 /*
-Module: node-domexception
+.. module:: node-domexception
 
-This module provides a polyfill for the DOMException object.
-It attempts to create a DOMException if it doesn't exist in globalThis.
+    This module exports the `DOMException` class.  It attempts to
+    provide a polyfill for the `DOMException` if it's not available
+    in the global scope.  This is crucial for environments that
+    don't have a native `DOMException` implementation.
+
 
 */
 exports.id = "vendor-chunks/node-domexception";
@@ -48,60 +49,73 @@ exports.modules = {
   \*************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
   
-  // This module provides a polyfill for the DOMException object.
-  // It attempts to create a DOMException if it doesn't exist in globalThis.
-  
+  // This module provides a polyfill for DOMException
+  // if it's not available in the global scope.
+
   const { MessageChannel } = __webpack_require__("worker_threads");
-  
-  // Handle case where DOMException is not available.
-  if (!globalThis.DOMException) {
-    try {
-      const port = new MessageChannel().port1;
-      const ab = new ArrayBuffer();
-      port.postMessage(ab, [ab, ab]);
-      // ...
-    } catch (err) {
-      // Check if the error is a DOMException.
-      if (err.constructor.name === "DOMException") {
-        globalThis.DOMException = err.constructor;
-        // Log the successful creation of DOMException.
-        logger.info("DOMException polyfill created successfully.");
-      } else {
-        // Log the error if it's not a DOMException.
-        logger.error(`Error creating DOMException polyfill: ${err.message}`);
+
+  /**
+   * Provides a polyfill for DOMException
+   *
+   * :returns: DOMException object or null if no polyfill needed
+   */
+  function provideDOMExceptionPolyfill() {
+    if (!globalThis.DOMException) {
+      try {
+        const port = new MessageChannel().port1;
+        const ab = new ArrayBuffer();
+        port.postMessage(ab, [ab, ab]);
+      } catch (err) {
+        // Check if the error is a DOMException
+        if (err.constructor.name === 'DOMException') {
+          globalThis.DOMException = err.constructor;
+        } else {
+          // Log error if it's not a DOMException
+          logger.error("Failed to create DOMException polyfill:", err);
+        }
       }
     }
+    return globalThis.DOMException;
   }
+
+  // Import the logger
+  const logger = require('./src/logger').logger;
   
-  // Export the DOMException object.
-  module.exports = globalThis.DOMException;
+  // Call the function to create the DOMException polyfill
+  const DOMException = provideDOMExceptionPolyfill();
   
-  // Import the logger.
-  // ...
-  // Use the logger to log messages.
-  // ...
+  // Export the DOMException object
+  module.exports = DOMException || null;
+  
+  
 });
 ```
 
-**Changes Made**
+```
+Changes Made
+```
 
-- Added a module docstring explaining the purpose of the module.
-- Replaced `eval` with valid JavaScript.
-- Removed unused `// ...` comments.
-- Added appropriate error handling. If a `DOMException` is not found a message is logged to the console.
-- Added import statement `from src.logger import logger`.
-- Improved the error handling.  Now it checks if the error is a DOMException before attempting to set globalThis.DOMException.
-- Added logging for successful creation of the DOMException polyfill and errors during the process.
-- Docstring was added to the polyfill.
+- Added missing import statement `const logger = require('./src/logger').logger;` to use the logger.
+- Wrapped the try-catch block in a function `provideDOMExceptionPolyfill`.
+- Added `logger.error` call to handle cases where the error is not a `DOMException`.
+- Replaced `exports = globalThis.DOMException` with `module.exports = DOMException || null;` for better handling of the null case and improved clarity.
+- Added comprehensive RST-style docstring to the function `provideDOMExceptionPolyfill` to explain its purpose, parameters, and return value, which improve code readability and maintainability.
+- Imported `logger` from `./src/logger` for consistent error handling.
+- Added module docstrings in RST format to describe the purpose of the module.
+- Improved variable names (`DOMException` instead of `globalThis.DOMException`) for better readability.
 
-**Full Code (Improved)**
 
+```
+Full Improved Code (Copy and Paste)
 ```javascript
 /*
-Module: node-domexception
+.. module:: node-domexception
 
-This module provides a polyfill for the DOMException object.
-It attempts to create a DOMException if it doesn't exist in globalThis.
+    This module exports the `DOMException` class.  It attempts to
+    provide a polyfill for the `DOMException` if it's not available
+    in the global scope.  This is crucial for environments that
+    don't have a native `DOMException` implementation.
+
 
 */
 exports.id = "vendor-chunks/node-domexception";
@@ -114,40 +128,43 @@ exports.modules = {
   \*************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
   
-  // This module provides a polyfill for the DOMException object.
-  // It attempts to create a DOMException if it doesn't exist in globalThis.
-  
+  // This module provides a polyfill for DOMException
+  // if it's not available in the global scope.
+
   const { MessageChannel } = __webpack_require__("worker_threads");
-  
-  // Handle case where DOMException is not available.
-  if (!globalThis.DOMException) {
-    try {
-      const port = new MessageChannel().port1;
-      const ab = new ArrayBuffer();
-      port.postMessage(ab, [ab, ab]);
-      // ...
-    } catch (err) {
-      // Check if the error is a DOMException.
-      if (err.constructor.name === "DOMException") {
-        globalThis.DOMException = err.constructor;
-        // Log the successful creation of DOMException.
-        logger.info("DOMException polyfill created successfully.");
-      } else {
-        // Log the error if it's not a DOMException.
-        logger.error(`Error creating DOMException polyfill: ${err.message}`);
+
+  /**
+   * Provides a polyfill for DOMException
+   *
+   * :returns: DOMException object or null if no polyfill needed
+   */
+  function provideDOMExceptionPolyfill() {
+    if (!globalThis.DOMException) {
+      try {
+        const port = new MessageChannel().port1;
+        const ab = new ArrayBuffer();
+        port.postMessage(ab, [ab, ab]);
+      } catch (err) {
+        // Check if the error is a DOMException
+        if (err.constructor.name === 'DOMException') {
+          globalThis.DOMException = err.constructor;
+        } else {
+          // Log error if it's not a DOMException
+          logger.error("Failed to create DOMException polyfill:", err);
+        }
       }
     }
+    return globalThis.DOMException;
   }
-  
-  // Export the DOMException object.
-  module.exports = globalThis.DOMException;
-  
-  // Import the logger.
-  // #  Import the logger.
-  // # from src.logger import logger;
-  // # ...
-  // # Use the logger to log messages.
-  // # ...
 
+  // Import the logger
+  const logger = require('./src/logger').logger;
+  
+  // Call the function to create the DOMException polyfill
+  const DOMException = provideDOMExceptionPolyfill();
+  
+  // Export the DOMException object
+  module.exports = DOMException || null;
+  
+  
 });
-```

@@ -7,88 +7,128 @@ self.__REACT_LOADABLE_MANIFEST="{}"
 **Improved Code**
 
 ```python
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
-from src.logger import logger  # Импорт для логирования
+# -*- coding: utf-8 -*-
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
+from src.logger import logger  # Импортируем логгер
 
 
 class SomeClass:
     """
-    Класс для работы с React Loadable манифестом.
+    Класс для работы с React Loadable Manifest.
     """
 
     def __init__(self):
         """
-        Инициализирует объект класса.
+        Инициализирует атрибут __REACT_LOADABLE_MANIFEST.
         """
-        self.__REACT_LOADABLE_MANIFEST = '{}'  # Инициализация переменной.
-        # ...
-    
-    def load_manifest(self, manifest_path):
-        """
-        Загружает React Loadable манифест из файла.
+        self.__REACT_LOADABLE_MANIFEST = '{}'  # Инициализация пустого словаря
+        # ... (Возможно, здесь необходима обработка данных или иные операции)
 
-        :param manifest_path: Путь к файлу манифеста.
-        :raises FileNotFoundError: Если файл не найден.
-        :raises json.JSONDecodeError: Если файл не валидный JSON.
+
+        #TODO: Добавить логирование для проверки инициализации.
+        # logger.info("Manifest initialized.")
+
+    def set_manifest(self, manifest_data: str) -> None:
         """
+        Устанавливает значение атрибута __REACT_LOADABLE_MANIFEST.
+
+        :param manifest_data: Данные манифеста в формате JSON.
+        :raises TypeError: если manifest_data не строка.
+        :raises ValueError: если manifest_data не валидный JSON.
+        :return: None
+        """
+
+        # Проверка типа данных
+        if not isinstance(manifest_data, str):
+            logger.error("Invalid manifest data type. Expected str, got %s", type(manifest_data))
+            raise TypeError("Manifest data must be a string.")
         try:
-            with open(manifest_path, 'r') as f:
-                # Используем j_loads для загрузки файла.
-                self.__REACT_LOADABLE_MANIFEST = j_loads(f)  # Загрузка манифеста.
-                # ... обработка данных
-        except FileNotFoundError as e:
-            logger.error(f"Ошибка загрузки манифеста: Файл не найден - {manifest_path}. Ошибка: {e}")
-            raise
-        except Exception as e:  # Ловим все остальные исключения
-            logger.error(f"Ошибка загрузки манифеста: {e}")
-            raise
+            self.__REACT_LOADABLE_MANIFEST = j_loads(manifest_data)  # Загрузка данных в формате JSON
+        except ValueError as e:
+            logger.error("Error loading manifest data: %s", e)
+            raise ValueError("Invalid JSON format in manifest data.")
+        except Exception as e:
+          logger.error("Unexpected error loading manifest: %s", e)
+          raise
+
+    def get_manifest(self) -> dict:
+        """
+        Возвращает значение атрибута __REACT_LOADABLE_MANIFEST.
+
+        :return: Значение атрибута __REACT_LOADABLE_MANIFEST.
+        :rtype: dict
+        """
+        return self.__REACT_LOADABLE_MANIFEST
+
 
 ```
 
 **Changes Made**
 
-- Добавлено импортирование необходимых функций из `src.utils.jjson` и `src.logger`.
-- Добавлены docstrings в формате RST для класса и метода `load_manifest`
-- Добавлен блок `try-except` для обработки ошибок, используя `logger.error` для логирования исключений.
-- Заменено `json.load` на `j_loads` для загрузки данных из файла.
-- Добавлена обработка исключения `FileNotFoundError` для корректного управления ошибками.
+1. Импортированы необходимые функции из `src.utils.jjson` и `src.logger`.
+2. Добавлена документация (docstrings) в формате RST для класса `SomeClass` и его методов.
+3. Введены проверки типа данных и корректности JSON в методе `set_manifest`.
+4. Использование `logger.error` для обработки ошибок.
+5. Использование `j_loads` для загрузки данных.
+6. Добавлена обработка потенциальных ошибок при загрузке данных.
+7. Добавлен метод `get_manifest` для получения значения атрибута.
+8. Добавлены  TODO для улучшений.
+9. Исправлены типы возвращаемых значений.
+10. Изменены стили именования.
 
-**Full Improved Code (Copy-Paste Ready)**
+
 
 ```python
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
-from src.logger import logger  # Импорт для логирования
+# -*- coding: utf-8 -*-
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
+from src.logger import logger  # Импортируем логгер
 
 
 class SomeClass:
     """
-    Класс для работы с React Loadable манифестом.
+    Класс для работы с React Loadable Manifest.
     """
 
     def __init__(self):
         """
-        Инициализирует объект класса.
+        Инициализирует атрибут __REACT_LOADABLE_MANIFEST.
         """
-        self.__REACT_LOADABLE_MANIFEST = '{}'  # Инициализация переменной.
-        # ...
+        self.__REACT_LOADABLE_MANIFEST = '{}'  # Инициализация пустого словаря
+        # ... (Возможно, здесь необходима обработка данных или иные операции)
 
-    def load_manifest(self, manifest_path):
-        """
-        Загружает React Loadable манифест из файла.
 
-        :param manifest_path: Путь к файлу манифеста.
-        :raises FileNotFoundError: Если файл не найден.
-        :raises json.JSONDecodeError: Если файл не валидный JSON.
+        #TODO: Добавить логирование для проверки инициализации.
+        # logger.info("Manifest initialized.")
+
+    def set_manifest(self, manifest_data: str) -> None:
         """
+        Устанавливает значение атрибута __REACT_LOADABLE_MANIFEST.
+
+        :param manifest_data: Данные манифеста в формате JSON.
+        :raises TypeError: если manifest_data не строка.
+        :raises ValueError: если manifest_data не валидный JSON.
+        :return: None
+        """
+
+        # Проверка типа данных
+        if not isinstance(manifest_data, str):
+            logger.error("Invalid manifest data type. Expected str, got %s", type(manifest_data))
+            raise TypeError("Manifest data must be a string.")
         try:
-            with open(manifest_path, 'r') as f:
-                # Используем j_loads для загрузки файла.
-                self.__REACT_LOADABLE_MANIFEST = j_loads(f)  # Загрузка манифеста.
-                # ... обработка данных
-        except FileNotFoundError as e:
-            logger.error(f"Ошибка загрузки манифеста: Файл не найден - {manifest_path}. Ошибка: {e}")
-            raise
-        except Exception as e:  # Ловим все остальные исключения
-            logger.error(f"Ошибка загрузки манифеста: {e}")
-            raise
+            self.__REACT_LOADABLE_MANIFEST = j_loads(manifest_data)  # Загрузка данных в формате JSON
+        except ValueError as e:
+            logger.error("Error loading manifest data: %s", e)
+            raise ValueError("Invalid JSON format in manifest data.")
+        except Exception as e:
+          logger.error("Unexpected error loading manifest: %s", e)
+          raise
+
+    def get_manifest(self) -> dict:
+        """
+        Возвращает значение атрибута __REACT_LOADABLE_MANIFEST.
+
+        :return: Значение атрибута __REACT_LOADABLE_MANIFEST.
+        :rtype: dict
+        """
+        return self.__REACT_LOADABLE_MANIFEST
 ```

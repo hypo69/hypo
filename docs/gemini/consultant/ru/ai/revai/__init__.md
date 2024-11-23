@@ -51,50 +51,41 @@ MODE = 'dev'
 """
 .. module:: src.ai.revai
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с API Rev.ai.
+   :synopsis:  Module for interacting with the Rev.com API.
 """
 
-from src.logger import logger  # Импортируем logger для логирования
-import json  # Импортируем модуль json
+from src.logger import logger # Import logger for error handling
 
-MODE = 'dev'
+MODE = 'dev' # Мода работы
 
 
-def get_transcriptions(audio_file_path):
+def __init__():
     """
-    Получает транскрипции из аудиофайла с помощью API Rev.ai.
-
-    :param audio_file_path: Путь к аудиофайлу.
-    :return: Словарь с транскрипциями, или None в случае ошибки.
-    :raises FileNotFoundError: Если аудиофайл не найден.
+    Инициализирует модуль.
+    
+    В данном случае, поскольку инициализирующая функция не содержит функциональности, 
+    рекомендуется убрать функцию. Если потребуется инициализация,
+    добавить логику и соответствующую документацию. 
     """
-    try:
-        with open(audio_file_path, 'rb') as f:
-            audio_data = f.read()
-        # ... (Обработка данных с помощью API Rev.ai)
-        return {"transcriptions": "..."}  # ... Возвращаем результат
-    except FileNotFoundError as e:
-        logger.error("Ошибка: аудиофайл не найден: %s", audio_file_path)
-        return None
-    except Exception as e:
-        logger.error("Ошибка при получении транскрипций: %s", e)
-        return None
+    pass
 
+
+
+# https://www.rev.com/api/docs
+# https://docs.rev.ai/resources/code-samples/python/
 ```
 
 **Changes Made**
 
-1.  Добавлен импорт `from src.logger import logger`.
-2.  Добавлен импорт `import json`.
-3.  Функция `get_transcriptions` добавлена для обработки аудиофайлов.
-4.  Добавлена документация RST для модуля и функции `get_transcriptions` в соответствии с заданными требованиями.
-5.  Использованы `logger.error` для обработки исключений вместо стандартных `try-except` блоков.
-6.  Добавлен обработчик `FileNotFoundError`.
-7. Заменены `...` на `...` в вызове API для обозначения части кода, который должен быть реализован в соответствии с заданием.
+*   Добавлен импорт `from src.logger import logger` для использования логирования.
+*   Устранены дубликаты и неиспользуемые строки документации.
+*   Функция `__init__` добавлена для соблюдения структуры, но она пустая.  Рекомендуется убрать, если в модуле нет логики инициализации.
+*   Комментарии переформатированы в соответствии с требованиями RST.
+*   Добавлена полная документация к модулю.
+*   Избыточные комментарии удалены.
 
 
-
-**Full improved code (for copy-paste):**
+**Complete Code (for replacement)**
 
 ```python
 ## \file hypotez/src/ai/revai/__init__.py
@@ -105,32 +96,26 @@ def get_transcriptions(audio_file_path):
 """
 .. module:: src.ai.revai
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с API Rev.ai.
+   :synopsis:  Module for interacting with the Rev.com API.
 """
 
-from src.logger import logger  # Импортируем logger для логирования
-import json  # Импортируем модуль json
+from src.logger import logger # Import logger for error handling
 
-MODE = 'dev'
+MODE = 'dev' # Мода работы
 
 
-def get_transcriptions(audio_file_path):
+def __init__():
     """
-    Получает транскрипции из аудиофайла с помощью API Rev.ai.
-
-    :param audio_file_path: Путь к аудиофайлу.
-    :return: Словарь с транскрипциями, или None в случае ошибки.
-    :raises FileNotFoundError: Если аудиофайл не найден.
+    Инициализирует модуль.
+    
+    В данном случае, поскольку инициализирующая функция не содержит функциональности, 
+    рекомендуется убрать функцию. Если потребуется инициализация,
+    добавить логику и соответствующую документацию. 
     """
-    try:
-        with open(audio_file_path, 'rb') as f:
-            audio_data = f.read()
-        # ... (Обработка данных с помощью API Rev.ai)
-        return {"transcriptions": "..."}  # ... Возвращаем результат
-    except FileNotFoundError as e:
-        logger.error("Ошибка: аудиофайл не найден: %s", audio_file_path)
-        return None
-    except Exception as e:
-        logger.error("Ошибка при получении транскрипций: %s", e)
-        return None
+    pass
+
+
+
+# https://www.rev.com/api/docs
+# https://docs.rev.ai/resources/code-samples/python/
 ```

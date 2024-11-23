@@ -27,7 +27,7 @@ from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # импортируем необходимые функции для работы с JSON
 
 
 class JavaScript:
@@ -137,14 +137,15 @@ Key Features:
     2. Retrieve metadata like document ready state, referrer, or page language.
     3. Manage browser window focus programmatically.
 """
+MODE = 'dev'
+
 import header
 from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # импортируем необходимые функции для работы с JSON
 
-MODE = 'dev'
 
 class JavaScript:
     """Provides JavaScript utility functions for interacting with a web page."""
@@ -155,7 +156,6 @@ class JavaScript:
         :param driver: Selenium WebDriver instance to execute JavaScript.
         """
         self.driver = driver
-
 
     def unhide_DOM_element(self, element: WebElement) -> bool:
         """Makes an invisible DOM element visible by modifying its style properties.
@@ -180,7 +180,6 @@ class JavaScript:
             logger.error('Error in unhide_DOM_element: %s', ex)
             return False
 
-
     @property
     def ready_state(self) -> str:
         """Retrieves the document loading status.
@@ -193,7 +192,6 @@ class JavaScript:
             logger.error('Error retrieving document.readyState: %s', ex)
             return ''
 
-
     def window_focus(self) -> None:
         """Sets focus to the browser window using JavaScript.
 
@@ -203,7 +201,6 @@ class JavaScript:
             self.driver.execute_script('window.focus();')
         except Exception as ex:
             logger.error('Error executing window.focus(): %s', ex)
-
 
     def get_referrer(self) -> str:
         """Retrieves the referrer URL of the current document.
@@ -215,7 +212,6 @@ class JavaScript:
         except Exception as ex:
             logger.error('Error retrieving document.referrer: %s', ex)
             return ''
-
 
     def get_page_lang(self) -> str:
         """Retrieves the language of the current page.
@@ -232,16 +228,7 @@ class JavaScript:
 **Changes Made**
 
 - Added missing import `from src.utils.jjson import j_loads, j_loads_ns`.
-- Replaced `# -*- coding: utf-8 -*-` with correct encoding declaration.
-- Rewrote docstrings in RST format for all functions, methods, and class.
-- Added type hints (e.g., `-> str`, `:param driver`).
-- Removed unused `MODE` variable.
-- Corrected function signatures and docstrings to adhere to RST standards.
-- Removed unnecessary comments.
-- Added `logger.error` for error handling.
-- Moved import `from src.logger import logger` to the top of the file.
-- Renamed function parameters for consistency (using `param1`, `param2`).
-- Added explicit return values for functions that return values.
+- Docstrings were updated to RST format following best practices and using Sphinx-compatible syntax.
 
 
 **Full Code (Improved)**
@@ -266,12 +253,15 @@ Key Features:
     2. Retrieve metadata like document ready state, referrer, or page language.
     3. Manage browser window focus programmatically.
 """
+MODE = 'dev'
+
 import header
 from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # импортируем необходимые функции для работы с JSON
+
 
 class JavaScript:
     """Provides JavaScript utility functions for interacting with a web page."""
@@ -282,7 +272,6 @@ class JavaScript:
         :param driver: Selenium WebDriver instance to execute JavaScript.
         """
         self.driver = driver
-
 
     def unhide_DOM_element(self, element: WebElement) -> bool:
         """Makes an invisible DOM element visible by modifying its style properties.
@@ -307,7 +296,6 @@ class JavaScript:
             logger.error('Error in unhide_DOM_element: %s', ex)
             return False
 
-
     @property
     def ready_state(self) -> str:
         """Retrieves the document loading status.
@@ -320,7 +308,6 @@ class JavaScript:
             logger.error('Error retrieving document.readyState: %s', ex)
             return ''
 
-
     def window_focus(self) -> None:
         """Sets focus to the browser window using JavaScript.
 
@@ -330,7 +317,6 @@ class JavaScript:
             self.driver.execute_script('window.focus();')
         except Exception as ex:
             logger.error('Error executing window.focus(): %s', ex)
-
 
     def get_referrer(self) -> str:
         """Retrieves the referrer URL of the current document.
@@ -342,7 +328,6 @@ class JavaScript:
         except Exception as ex:
             logger.error('Error retrieving document.referrer: %s', ex)
             return ''
-
 
     def get_page_lang(self) -> str:
         """Retrieves the language of the current page.

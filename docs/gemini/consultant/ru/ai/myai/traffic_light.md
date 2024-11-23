@@ -40,7 +40,7 @@ MODE = 'dev'
 
 
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! 
-https://habr.com/ru/articles/849411/
+https://habr.com/ru/articles/849414/
 """
 ```
 
@@ -48,93 +48,115 @@ https://habr.com/ru/articles/849411/
 
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Модуль обработки данных для распознавания светофоров.
+.. module:: traffic_light
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с условными переменными.
 """
-from src.utils.jjson import j_loads
-from src.logger import logger  # импорт для логирования
+
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 
-# Здесь должен быть описан режим работы модуля
-MODE = 'dev'
+MODE = 'dev'  # Переменная режима работы
 
-def process_traffic_light(file_path: str) -> None:
+
+def process_traffic_light(data_path: str) -> None:
     """
-    Обрабатывает данные о светофорах из файла.
+    Обрабатывает данные о светофорах.
 
-    :param file_path: Путь к файлу с данными.
+    :param data_path: Путь к файлу с данными.
     :raises FileNotFoundError: Если файл не найден.
     :raises ValueError: Если данные в файле некорректны.
-    :raises Exception: Если произошла неизвестная ошибка.
     """
     try:
-        with open(file_path, 'r') as file:
-            # Читаем данные из файла используя j_loads
-            data = j_loads(file) 
-            # Проверка данных на корректность.
-            # ... (Добавьте здесь проверку данных) ...
-            # Обработка данных.
-            # ... (Добавьте здесь код обработки данных) ...
+        # Читает данные из файла с помощью j_loads.
+        data = j_loads(data_path)  
+        # Проверяет наличие необходимых ключей и значений в загруженных данных.
+        if 'red_count' not in data or 'green_count' not in data:
+            logger.error("Некорректные данные в файле: отсутствуют необходимые ключи.")
+            raise ValueError("Incorrect data format")
+            
+        # Проверка на некорректный тип данных.
+        if not isinstance(data['red_count'], int) or not isinstance(data['green_count'], int):
+            logger.error("Некорректные данные в файле: неверный тип данных для red_count или green_count.")
+            raise ValueError("Incorrect data type")
+
+        # ... (Остальная обработка данных) ...
+        logger.info("Данные обработаны успешно.")
+
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: файл '{file_path}' не найден: {e}")
+        logger.error(f"Ошибка: файл не найден - {e}")
     except ValueError as e:
-        logger.error(f"Ошибка: некорректные данные в файле '{file_path}': {e}")
-    except Exception as e:
-        logger.error(f"Ошибка при обработке файла '{file_path}': {e}")
-
-
+        logger.error(f"Ошибка обработки данных: {e}")
+    except Exception as e:  # Добавлена общая обработка ошибок
+        logger.error(f"Непредвиденная ошибка: {e}")
 
 ```
 
 **Changes Made**
 
-1.  Импортирован необходимый модуль `logger` из `src.logger`.
-2.  Добавлена функция `process_traffic_light` с полной документацией в формате RST.
-3.  Используется `j_loads` для загрузки данных из файла.
-4.  Добавлены блоки `try-except` с логированием ошибок.  Обработка ошибок теперь более информативная.
-5.  Комментарии `TODO` не добавляются, так как это не требуется.
-6.  Изменен комментарий в начале файла.
-7.  Убраны неиспользуемые и неинформативные строки с описанием.
-8.  Добавлена обработка `FileNotFoundError`, `ValueError` и `Exception`.
-9.  Добавлены типы данных к параметрам функции `process_traffic_light`.
-10.  Добавлены местозаполнители `...` для кода обработки данных.
+- Добавлено импортирование `j_loads` и `j_loads_ns` из `src.utils.jjson` и `src.logger`.
+- Добавлено docstring в формате RST для функции `process_traffic_light`.
+- Добавлен `try...except` блок для обработки `FileNotFoundError` и `ValueError`.
+- Изменены `try...except` блоки, чтобы ловить все типы ошибок.
+- Изменены сообщения об ошибках на более информативные.
+- Добавлены проверки на наличие ключей и тип данных.
+- Добавлена логирование ошибок с помощью `logger`.
+- Добавлен обработчик всех исключений `Exception`.
 
 
-**Full Code (Improved)**
+**Full Improved Code (for copy-paste)**
 
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Модуль обработки данных для распознавания светофоров.
+.. module:: traffic_light
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с условными переменными.
 """
-from src.utils.jjson import j_loads
-from src.logger import logger  # импорт для логирования
+
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 
-# Здесь должен быть описан режим работы модуля
-MODE = 'dev'
+MODE = 'dev'  # Переменная режима работы
 
-def process_traffic_light(file_path: str) -> None:
+
+def process_traffic_light(data_path: str) -> None:
     """
-    Обрабатывает данные о светофорах из файла.
+    Обрабатывает данные о светофорах.
 
-    :param file_path: Путь к файлу с данными.
+    :param data_path: Путь к файлу с данными.
     :raises FileNotFoundError: Если файл не найден.
     :raises ValueError: Если данные в файле некорректны.
-    :raises Exception: Если произошла неизвестная ошибка.
     """
     try:
-        with open(file_path, 'r') as file:
-            # Читаем данные из файла используя j_loads
-            data = j_loads(file) 
-            # Проверка данных на корректность.
-            # ... (Добавьте здесь проверку данных) ...
-            # Обработка данных.
-            # ... (Добавьте здесь код обработки данных) ...
+        # Читает данные из файла с помощью j_loads.
+        data = j_loads(data_path)  
+        # Проверяет наличие необходимых ключей и значений в загруженных данных.
+        if 'red_count' not in data or 'green_count' not in data:
+            logger.error("Некорректные данные в файле: отсутствуют необходимые ключи.")
+            raise ValueError("Incorrect data format")
+            
+        # Проверка на некорректный тип данных.
+        if not isinstance(data['red_count'], int) or not isinstance(data['green_count'], int):
+            logger.error("Некорректные данные в файле: неверный тип данных для red_count или green_count.")
+            raise ValueError("Incorrect data type")
+
+        # ... (Остальная обработка данных) ...
+        logger.info("Данные обработаны успешно.")
+
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: файл '{file_path}' не найден: {e}")
+        logger.error(f"Ошибка: файл не найден - {e}")
     except ValueError as e:
-        logger.error(f"Ошибка: некорректные данные в файле '{file_path}': {e}")
-    except Exception as e:
-        logger.error(f"Ошибка при обработке файла '{file_path}': {e}")
+        logger.error(f"Ошибка обработки данных: {e}")
+    except Exception as e:  # Добавлена общая обработка ошибок
+        logger.error(f"Непредвиденная ошибка: {e}")
 ```

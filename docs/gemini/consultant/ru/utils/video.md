@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils 
+.. module:: src.utils 
 	:platform: Windows, Unix
 	:synopsis: Video Saving Utilities
 
@@ -138,9 +138,9 @@ if __name__ == "__main__":
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.utils.video
+.. module:: hypotez.src.utils.video
     :platform: Windows, Unix
-    :synopsis: Utilities for downloading and handling video files.
+    :synopsis: Utilities for downloading and saving video files.
 """
 
 import aiohttp
@@ -151,19 +151,18 @@ import asyncio
 from src.logger import logger
 
 
-#.. autofunction:: save_video_from_url
-
 async def save_video_from_url(
     url: str,
     save_path: str
 ) -> Optional[Path]:
-    """
-    Downloads a video from a given URL and saves it to the specified path asynchronously.
+    """Download a video from a URL and save it locally asynchronously.
 
-    :param url: The URL of the video.
+    :param url: The URL of the video to download.
+    :type url: str
     :param save_path: The path to save the downloaded video.
-    :raises aiohttp.ClientError: If there's a network issue during download.
-    :return: The path to the saved video file if successful, otherwise None.
+    :type save_path: str
+    :raises aiohttp.ClientError: if there's a network error.
+    :returns: The path to the saved video file if successful, or None otherwise.
     """
     save_path = Path(save_path)
 
@@ -184,11 +183,10 @@ async def save_video_from_url(
 
         # Crucial checks after saving.
         if not save_path.exists():
-            logger.error(f"File {save_path} not saved successfully.")
+            logger.error(f"Video file {save_path} not saved.")
             return None
-
         if save_path.stat().st_size == 0:
-            logger.error(f"Downloaded file {save_path} is empty.")
+            logger.error(f"Downloaded video {save_path} is empty.")
             return None
 
         return save_path
@@ -201,35 +199,35 @@ async def save_video_from_url(
         return None
 
 
-#.. autofunction:: get_video_data
 def get_video_data(file_name: str) -> Optional[bytes]:
-    """
-    Reads and returns the binary data of a video file if it exists.
+    """Retrieve binary data of a video file.
 
     :param file_name: The path to the video file.
-    :return: The binary data of the file if found, otherwise None.
+    :type file_name: str
+    :returns: The binary data of the file if it exists, or None if not found or an error occurs.
     """
     file_path = Path(file_name)
 
     if not file_path.exists():
-        logger.error(f"File {file_name} not found.")
+        logger.error(f"Video file {file_name} not found.")
         return None
 
     try:
         with open(file_path, "rb") as file:
             return file.read()
     except Exception as e:
-        logger.error(f"Error reading file {file_name}: {e}", exc_info=True)
+        logger.error(f"Error reading video file {file_name}: {e}", exc_info=True)
         return None
 
 
-
 def main():
+    """Main function to demonstrate the video saving process."""
     url = "https://example.com/video.mp4"  # Replace with a valid URL!
     save_path = "local_video.mp4"
     result = asyncio.run(save_video_from_url(url, save_path))
     if result:
         print(f"Video saved to {result}")
+
 
 if __name__ == "__main__":
     main()
@@ -237,22 +235,17 @@ if __name__ == "__main__":
 
 **Changes Made**
 
-- Replaced `json.load` with `j_loads` or `j_loads_ns` (not applicable as no JSON handling was present).
 - Added missing import `from src.logger import logger`.
-- Updated docstrings to RST format, including module docstring and function docstrings.  Corrected errors in docstring formatting.
-- Removed redundant `# -*- coding: utf-8 -*-` (Python 3 handles this automatically).
-- Added type hints (`-> Optional[Path]`, etc.) for clarity.
-- Improved error handling by using `logger.error` for all exceptions.
-- Included `exc_info=True` in `logger.error` calls for better debugging.
-- Corrected the way the `Path` object is created in `save_video_from_url`.
-- Added missing `return None` in `save_video_from_url` to properly handle cases where file saving might fail.
-- Added crucial checks after saving (existence and size) in `save_video_from_url`.
-- Corrected typo in module name from `src.utils` to `src.utils.video`.
-- Added missing `return None` in `get_video_data` to handle file not found cases.
-- Improved variable name consistency.
+- Replaced `json.load` with `j_loads` (or `j_loads_ns`). (Note: The original code didn't use `json.load`, so this step is not necessary.)
+- Added comprehensive docstrings in RST format to the `save_video_from_url` and `get_video_data` functions.
+- Improved error handling using `logger.error` instead of bare `try-except` blocks.
+- Corrected the file path handling in `save_video_from_url` by making `save_path` a `Path` object.
+- Improved variable names and made them consistent with RST style.
+- Changed module docstring to use the appropriate reStructuredText syntax (`.. module::`).
+- Added descriptive comments where necessary.
 
 
-**Full Improved Code (Copy and Paste)**
+**Complete Code (Improved)**
 
 ```python
 # \file hypotez/src/utils/video.py
@@ -261,9 +254,9 @@ if __name__ == "__main__":
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.utils.video
+.. module:: hypotez.src.utils.video
     :platform: Windows, Unix
-    :synopsis: Utilities for downloading and handling video files.
+    :synopsis: Utilities for downloading and saving video files.
 """
 
 import aiohttp
@@ -274,19 +267,18 @@ import asyncio
 from src.logger import logger
 
 
-#.. autofunction:: save_video_from_url
-
 async def save_video_from_url(
     url: str,
     save_path: str
 ) -> Optional[Path]:
-    """
-    Downloads a video from a given URL and saves it to the specified path asynchronously.
+    """Download a video from a URL and save it locally asynchronously.
 
-    :param url: The URL of the video.
+    :param url: The URL of the video to download.
+    :type url: str
     :param save_path: The path to save the downloaded video.
-    :raises aiohttp.ClientError: If there's a network issue during download.
-    :return: The path to the saved video file if successful, otherwise None.
+    :type save_path: str
+    :raises aiohttp.ClientError: if there's a network error.
+    :returns: The path to the saved video file if successful, or None otherwise.
     """
     save_path = Path(save_path)
 
@@ -307,11 +299,10 @@ async def save_video_from_url(
 
         # Crucial checks after saving.
         if not save_path.exists():
-            logger.error(f"File {save_path} not saved successfully.")
+            logger.error(f"Video file {save_path} not saved.")
             return None
-
         if save_path.stat().st_size == 0:
-            logger.error(f"Downloaded file {save_path} is empty.")
+            logger.error(f"Downloaded video {save_path} is empty.")
             return None
 
         return save_path
@@ -324,35 +315,35 @@ async def save_video_from_url(
         return None
 
 
-#.. autofunction:: get_video_data
 def get_video_data(file_name: str) -> Optional[bytes]:
-    """
-    Reads and returns the binary data of a video file if it exists.
+    """Retrieve binary data of a video file.
 
     :param file_name: The path to the video file.
-    :return: The binary data of the file if found, otherwise None.
+    :type file_name: str
+    :returns: The binary data of the file if it exists, or None if not found or an error occurs.
     """
     file_path = Path(file_name)
 
     if not file_path.exists():
-        logger.error(f"File {file_name} not found.")
+        logger.error(f"Video file {file_name} not found.")
         return None
 
     try:
         with open(file_path, "rb") as file:
             return file.read()
     except Exception as e:
-        logger.error(f"Error reading file {file_name}: {e}", exc_info=True)
+        logger.error(f"Error reading video file {file_name}: {e}", exc_info=True)
         return None
 
 
-
 def main():
+    """Main function to demonstrate the video saving process."""
     url = "https://example.com/video.mp4"  # Replace with a valid URL!
     save_path = "local_video.mp4"
     result = asyncio.run(save_video_from_url(url, save_path))
     if result:
         print(f"Video saved to {result}")
+
 
 if __name__ == "__main__":
     main()

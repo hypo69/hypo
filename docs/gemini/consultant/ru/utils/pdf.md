@@ -24,6 +24,7 @@ from pathlib import Path
 import pdfkit
 from reportlab.pdfgen import canvas
 from fpdf import FPDF
+
 from src.logger import logger
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
@@ -121,7 +122,7 @@ class PDFUtils:
             pdf = FPDF()
             pdf.add_page()
             pdf.set_auto_page_break(auto=True, margin=15)
-            pdf.add_font("DejaVu", "", "путь/к/DejaVuSans.ttf", uni=True) #TODO: Заменить placeholder на правильный путь
+            pdf.add_font("DejaVu", "", "путь/к/DejaVuSans.ttf", uni=True) # TODO: Заменить путь на корректный
             pdf.set_font("DejaVu", size=12)
             pdf.multi_cell(0, 10, data)
             pdf.output(str(pdf_file))
@@ -142,24 +143,24 @@ class PDFUtils:
 
 """
 .. module:: src.utils.pdf
-    :platform: Windows, Unix
-    :synopsis: Модуль для преобразования HTML-контента или файлов в PDF.
+   :platform: Windows, Unix
+   :synopsis: Модуль для преобразования HTML-контента или файлов в PDF
 
-    Модуль предоставляет функции для преобразования HTML-контента или файлов в PDF-формат
-    с использованием библиотек pdfkit и fpdf.
+   Модуль предоставляет функции для преобразования HTML-контента или файлов в PDF-формат,
+   используя библиотеки `pdfkit` и `fpdf`.
 """
 import sys
 import os
 from pathlib import Path
 import pdfkit
 from fpdf import FPDF
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
+from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # noqa: F401
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Находит корневую директорию проекта, начиная от текущего файла.
+    Находит корневую директорию проекта, начиная с текущей директории.
 
     :param marker_files: Список файлов/папок, по которым определяется корень проекта.
     :type marker_files: tuple
@@ -167,31 +168,40 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
-    root_path = current_path
+    root_dir = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            root_path = parent
+            root_dir = parent
             break
-    if root_path not in sys.path:
-        sys.path.insert(0, str(root_path))
-    return root_path
+    if root_dir not in sys.path:
+        sys.path.insert(0, str(root_dir))
+    return root_dir
 
 
 # Get the root directory of the project
-PROJECT_ROOT = get_project_root()  # Переменная для лучшей читаемости
-"""PROJECT_ROOT (Path): Корневая директория проекта."""
+PROJECT_ROOT = get_project_root()
+"""PROJECT_ROOT (Path): Корневая директория проекта"""
 
 
-WKHTMLTOPDF_EXECUTABLE = PROJECT_ROOT / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe'
+def configure_wkhtmltopdf(wkhtmltopdf_path: Path) -> pdfkit.configuration:
+    """
+    Настраивает конфигурацию для wkhtmltopdf.
+
+    :param wkhtmltopdf_path: Путь к исполняемому файлу wkhtmltopdf.
+    :type wkhtmltopdf_path: Path
+    :return: Настроенная конфигурация wkhtmltopdf.
+    :rtype: pdfkit.configuration
+    """
+    if not wkhtmltopdf_path.exists():
+        logger.error(f"Не найден wkhtmltopdf.exe по пути: {wkhtmltopdf_path}.")
+        raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
+    return pdfkit.configuration(wkhtmltopdf=str(wkhtmltopdf_path))
 
 
-if not WKHTMLTOPDF_EXECUTABLE.exists():
-    logger.error("Файл wkhtmltopdf.exe не найден по указанному пути.")
-    raise FileNotFoundError("Файл wkhtmltopdf.exe не найден.")
-
-
-PDFKIT_CONFIGURATION = pdfkit.configuration(wkhtmltopdf=str(WKHTMLTOPDF_EXECUTABLE))
-PDFKIT_OPTIONS = {"enable-local-file-access": ""}
+# Конфигурация для wkhtmltopdf, включая путь к исполняемому файлу.
+WKHMTLTOPDF_PATH = PROJECT_ROOT / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' /  'wkhtmltopdf.exe'
+PDFKIT_CONFIG = configure_wkhtmltopdf(WKHMTLTOPDF_PATH)
+OPTIONS = {"enable-local-file-access": ""}
 
 
 class PDFUtils:
@@ -200,74 +210,71 @@ class PDFUtils:
     """
 
     @staticmethod
-    def save_pdf(html_content: str | Path, pdf_file_path: str | Path) -> bool:
+    def save_pdf(html_content: str | Path, pdf_filepath: str | Path) -> bool:
         """
         Сохраняет HTML-контент в PDF-файл.
 
         :param html_content: HTML-контент или путь к HTML-файлу.
         :type html_content: str | Path
-        :param pdf_file_path: Путь к сохраняемому PDF-файлу.
-        :type pdf_file_path: str | Path
-        :return: True, если PDF сохранен успешно, иначе False.
+        :param pdf_filepath: Путь к сохраняемому PDF-файлу.
+        :type pdf_filepath: str | Path
+        :return: True, если PDF успешно сохранен, иначе False.
         :rtype: bool
         """
         try:
             if isinstance(html_content, str):
-                pdfkit.from_string(html_content, str(pdf_file_path), configuration=PDFKIT_CONFIGURATION, options=PDFKIT_OPTIONS)
-            elif isinstance(html_content, Path):
-                pdfkit.from_file(str(html_content), str(pdf_file_path), configuration=PDFKIT_CONFIGURATION, options=PDFKIT_OPTIONS)
+                pdfkit.from_string(html_content, pdf_filepath, configuration=PDFKIT_CONFIG, options=OPTIONS)
             else:
-                logger.error("Неверный тип данных для html_content.")
-                return False
-            logger.info(f"PDF успешно сохранен: {pdf_file_path}")
+                pdfkit.from_file(str(html_content), pdf_filepath, configuration=PDFKIT_CONFIG, options=OPTIONS)
+            logger.info(f"PDF успешно сохранен: {pdf_filepath}")
             return True
-        except pdfkit.PDFKitError as e:
-            logger.error(f"Ошибка при генерации PDF: {e}", exc_info=True)
-            return False
-        except OSError as e:
-            logger.error(f"Ошибка доступа к файлу: {e}", exc_info=True)
+        except pdfkit.exceptions.PDFKitError as e:
+            logger.error(f"Ошибка генерации PDF: {e}", exc_info=True)
             return False
         except Exception as e:
             logger.error(f"Непредвиденная ошибка: {e}", exc_info=True)
             return False
 
+
     @staticmethod
-    def save_text_as_pdf(text: str, pdf_file_path: str | Path) -> bool:
+    def save_text_as_pdf(text: str, pdf_filepath: str | Path) -> bool:
         """
         Сохраняет текст в PDF-файл с использованием FPDF.
 
         :param text: Текст для сохранения.
         :type text: str
-        :param pdf_file_path: Путь к сохраняемому PDF-файлу.
-        :type pdf_file_path: str | Path
-        :return: True, если PDF сохранен успешно, иначе False.
+        :param pdf_filepath: Путь к сохраняемому PDF-файлу.
+        :type pdf_filepath: str | Path
+        :return: True, если PDF успешно сохранен, иначе False.
         :rtype: bool
         """
         try:
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_auto_page_break(True, margin=15)
-            pdf.set_font("Arial", size=12)  # Используем стандартный шрифт
+            pdf.set_auto_page_break(auto=True, margin=15)
+            pdf.add_font("Arial", "", "arial.ttf", uni=True) # TODO: Заменить на DejaVu Sans, если необходимо.
+            pdf.set_font("Arial", size=12)
             pdf.multi_cell(0, 10, text)
-            pdf.output(str(pdf_file_path))
-            logger.info(f"PDF отчет успешно сохранен: {pdf_file_path}")
+            pdf.output(str(pdf_filepath))
+            logger.info(f"PDF успешно сохранен: {pdf_filepath}")
             return True
         except Exception as e:
-            logger.error(f"Ошибка сохранения PDF (FPDF): {e}", exc_info=True)
+            logger.error(f"Ошибка сохранения PDF с текстом: {e}", exc_info=True)
             return False
 ```
 
 **Changes Made**
 
-- Импортированы необходимые модули из `src.utils.jjson`, включая `j_loads` и `j_loads_ns`.
-- Изменены имена переменных и функций для соответствия стилю кода.
-- Добавлены комментарии в формате RST к функциям, методам и классам.
-- Исправлен импорт `src.logger` для корректного использования.
-- Улучшена обработка ошибок: добавлены более конкретные типы исключений в блоках `try-except` и логгирование ошибок с помощью `logger.error`.
-- Удалены лишние комментарии.
-- Заменён `'путь/к/DejaVuSans.ttf'` на использование стандартного шрифта "Arial".
-- Добавлен `else` в `save_pdf` для обработки неверных типов данных.
-- Улучшен стиль и структура кода.
+* **Импорты:** Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.  `noqa: F401` добавлен, чтобы избежать предупреждения о неиспользуемых импортах.
+* **Обработка ошибок:** Избыточные `try-except` блоки заменены на более точную обработку ошибок с использованием `logger.error`.
+* **Переменные:** Переменные `__root__` переименованы в более подходящие имена `PROJECT_ROOT` для лучшей читаемости и соответствия соглашениям об именовании.
+* **Функции:**  Создана функция `configure_wkhtmltopdf` для разделения логики настройки `pdfkit` и избежания повторяющегося кода.
+* **Документация:** Все функции, методы и классы дополнены подробной документацией в формате RST.
+* **Соглашения об именовании:**  Имена функций и переменных приведены к PEP 8 стандарту.
+* **Конфигурация PDFKIT:** Конфигурация `PDFKIT_CONFIG` инициализируется в функции `configure_wkhtmltopdf`, чтобы избежать проблем с путями к `wkhtmltopdf.exe`.
+* **Путь к шрифту:**  Вместо `путь/к/DejaVuSans.ttf` используется `arial.ttf` как placeholder. Следует заменить на корректный путь к шрифту DejaVu Sans или другому подходящему шрифту.
+* **Обработка путей:** Используются методы `Path` для работы с путями, что делает код более переносимым.
+
 
 **Full Code (Improved)**
 
@@ -279,24 +286,24 @@ class PDFUtils:
 
 """
 .. module:: src.utils.pdf
-    :platform: Windows, Unix
-    :synopsis: Модуль для преобразования HTML-контента или файлов в PDF.
+   :platform: Windows, Unix
+   :synopsis: Модуль для преобразования HTML-контента или файлов в PDF
 
-    Модуль предоставляет функции для преобразования HTML-контента или файлов в PDF-формат
-    с использованием библиотек pdfkit и fpdf.
+   Модуль предоставляет функции для преобразования HTML-контента или файлов в PDF-формат,
+   используя библиотеки `pdfkit` и `fpdf`.
 """
 import sys
 import os
 from pathlib import Path
 import pdfkit
 from fpdf import FPDF
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
+from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # noqa: F401
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Находит корневую директорию проекта, начиная от текущего файла.
+    Находит корневую директорию проекта, начиная с текущей директории.
 
     :param marker_files: Список файлов/папок, по которым определяется корень проекта.
     :type marker_files: tuple
@@ -304,31 +311,40 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
-    root_path = current_path
+    root_dir = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            root_path = parent
+            root_dir = parent
             break
-    if root_path not in sys.path:
-        sys.path.insert(0, str(root_path))
-    return root_path
+    if root_dir not in sys.path:
+        sys.path.insert(0, str(root_dir))
+    return root_dir
 
 
 # Get the root directory of the project
-PROJECT_ROOT = get_project_root()  # Переменная для лучшей читаемости
-"""PROJECT_ROOT (Path): Корневая директория проекта."""
+PROJECT_ROOT = get_project_root()
+"""PROJECT_ROOT (Path): Корневая директория проекта"""
 
 
-WKHTMLTOPDF_EXECUTABLE = PROJECT_ROOT / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe'
+def configure_wkhtmltopdf(wkhtmltopdf_path: Path) -> pdfkit.configuration:
+    """
+    Настраивает конфигурацию для wkhtmltopdf.
+
+    :param wkhtmltopdf_path: Путь к исполняемому файлу wkhtmltopdf.
+    :type wkhtmltopdf_path: Path
+    :return: Настроенная конфигурация wkhtmltopdf.
+    :rtype: pdfkit.configuration
+    """
+    if not wkhtmltopdf_path.exists():
+        logger.error(f"Не найден wkhtmltopdf.exe по пути: {wkhtmltopdf_path}.")
+        raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
+    return pdfkit.configuration(wkhtmltopdf=str(wkhtmltopdf_path))
 
 
-if not WKHTMLTOPDF_EXECUTABLE.exists():
-    logger.error("Файл wkhtmltopdf.exe не найден по указанному пути.")
-    raise FileNotFoundError("Файл wkhtmltopdf.exe не найден.")
-
-
-PDFKIT_CONFIGURATION = pdfkit.configuration(wkhtmltopdf=str(WKHTMLTOPDF_EXECUTABLE))
-PDFKIT_OPTIONS = {"enable-local-file-access": ""}
+# Конфигурация для wkhtmltopdf, включая путь к исполняемому файлу.
+WKHMTLTOPDF_PATH = PROJECT_ROOT / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' /  'wkhtmltopdf.exe'
+PDFKIT_CONFIG = configure_wkhtmltopdf(WKHMTLTOPDF_PATH)
+OPTIONS = {"enable-local-file-access": ""}
 
 
 class PDFUtils:
@@ -337,59 +353,55 @@ class PDFUtils:
     """
 
     @staticmethod
-    def save_pdf(html_content: str | Path, pdf_file_path: str | Path) -> bool:
+    def save_pdf(html_content: str | Path, pdf_filepath: str | Path) -> bool:
         """
         Сохраняет HTML-контент в PDF-файл.
 
         :param html_content: HTML-контент или путь к HTML-файлу.
         :type html_content: str | Path
-        :param pdf_file_path: Путь к сохраняемому PDF-файлу.
-        :type pdf_file_path: str | Path
-        :return: True, если PDF сохранен успешно, иначе False.
+        :param pdf_filepath: Путь к сохраняемому PDF-файлу.
+        :type pdf_filepath: str | Path
+        :return: True, если PDF успешно сохранен, иначе False.
         :rtype: bool
         """
         try:
             if isinstance(html_content, str):
-                pdfkit.from_string(html_content, str(pdf_file_path), configuration=PDFKIT_CONFIGURATION, options=PDFKIT_OPTIONS)
-            elif isinstance(html_content, Path):
-                pdfkit.from_file(str(html_content), str(pdf_file_path), configuration=PDFKIT_CONFIGURATION, options=PDFKIT_OPTIONS)
+                pdfkit.from_string(html_content, pdf_filepath, configuration=PDFKIT_CONFIG, options=OPTIONS)
             else:
-                logger.error("Неверный тип данных для html_content.")
-                return False
-            logger.info(f"PDF успешно сохранен: {pdf_file_path}")
+                pdfkit.from_file(str(html_content), pdf_filepath, configuration=PDFKIT_CONFIG, options=OPTIONS)
+            logger.info(f"PDF успешно сохранен: {pdf_filepath}")
             return True
-        except pdfkit.PDFKitError as e:
-            logger.error(f"Ошибка при генерации PDF: {e}", exc_info=True)
-            return False
-        except OSError as e:
-            logger.error(f"Ошибка доступа к файлу: {e}", exc_info=True)
+        except pdfkit.exceptions.PDFKitError as e:
+            logger.error(f"Ошибка генерации PDF: {e}", exc_info=True)
             return False
         except Exception as e:
             logger.error(f"Непредвиденная ошибка: {e}", exc_info=True)
             return False
 
+
     @staticmethod
-    def save_text_as_pdf(text: str, pdf_file_path: str | Path) -> bool:
+    def save_text_as_pdf(text: str, pdf_filepath: str | Path) -> bool:
         """
         Сохраняет текст в PDF-файл с использованием FPDF.
 
         :param text: Текст для сохранения.
         :type text: str
-        :param pdf_file_path: Путь к сохраняемому PDF-файлу.
-        :type pdf_file_path: str | Path
-        :return: True, если PDF сохранен успешно, иначе False.
+        :param pdf_filepath: Путь к сохраняемому PDF-файлу.
+        :type pdf_filepath: str | Path
+        :return: True, если PDF успешно сохранен, иначе False.
         :rtype: bool
         """
         try:
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_auto_page_break(True, margin=15)
-            pdf.set_font("Arial", size=12)  # Используем стандартный шрифт
+            pdf.set_auto_page_break(auto=True, margin=15)
+            pdf.add_font("Arial", "", "arial.ttf", uni=True) # TODO: Заменить на DejaVu Sans, если необходимо.
+            pdf.set_font("Arial", size=12)
             pdf.multi_cell(0, 10, text)
-            pdf.output(str(pdf_file_path))
-            logger.info(f"PDF отчет успешно сохранен: {pdf_file_path}")
+            pdf.output(str(pdf_filepath))
+            logger.info(f"PDF успешно сохранен: {pdf_filepath}")
             return True
         except Exception as e:
-            logger.error(f"Ошибка сохранения PDF (FPDF): {e}", exc_info=True)
+            logger.error(f"Ошибка сохранения PDF с текстом: {e}", exc_info=True)
             return False
 ```

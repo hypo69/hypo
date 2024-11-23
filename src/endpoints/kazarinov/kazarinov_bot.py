@@ -107,5 +107,5 @@ class KazarinovTelegramBot(TelegramBot, HandlersParser):
 
 
 if __name__ == "__main__":
-    kt = KazarinovTelegramBot(mode='test', webdriver_name='firefox')
+    kt = KazarinovTelegramBot(mode='test', webdriver_name='chrome')
     asyncio.run(kt.application.run_polling())

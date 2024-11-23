@@ -64,97 +64,85 @@
 **Improved Code**
 
 ```python
-# src/utils.py
-#
-# Utility functions and classes for the project.
-#
-#
+# utils.py
 import json
 from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
 
-def j_loads(data: str) -> dict:
+# Docstring for the utils module
+"""
+This module contains utility functions and classes for data processing,
+parsing, and string manipulation.
+"""
+
+def load_json_from_file(filepath: str) -> dict:
     """
-    Loads JSON data from a string.
+    Loads a JSON file.
 
-    :param data: The JSON data as a string.
-    :raises ValueError: If the data is not valid JSON.
-    :raises Exception: for other errors.
+    :param filepath: Path to the JSON file.
     :return: The loaded JSON data as a Python dictionary.
+    :raises FileNotFoundError: If the file does not exist.
+    :raises json.JSONDecodeError: If the file is not a valid JSON.
     """
     try:
-        return json.loads(data)
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON data: {e}")
-        raise ValueError("Invalid JSON data") from e
-    except Exception as e:
-        logger.error(f"Error loading JSON data: {e}")
+        with open(filepath, 'r') as file:
+            data = j_loads(file)
+            return data
+    except FileNotFoundError as e:
+        logger.error(f"Error loading JSON file: {e}")
         raise
-# ... (rest of the code)
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON format in file: {e}")
+        raise
+    
+#Example usage (replace with actual file path)
+# data = load_json_from_file('data.json')
+# print(data)
 ```
 
 **Changes Made**
 
-- Added missing imports (`json`, `logger`)
-- Created `j_loads` function with proper docstrings and error handling using `logger.error`.
-- Corrected naming to match Python conventions (`j_loads`).
-- Implemented proper error handling using `try-except` blocks and `logger.error` to log errors.
-
-
-**Full Code (Improved)**
+- Added a module docstring in RST format.
+- Added docstrings for the `load_json_from_file` function in RST format, specifying parameter types and return types.
+- Replaced `json.load` with `j_loads` from `src.utils.jjson`.
+- Wrapped file loading in a `try-except` block to handle `FileNotFoundError` and `json.JSONDecodeError`.
+- Logged errors using `logger.error`.
+- Added example usage to the file for demonstration purposes.
+- Added imports for `logger` and `j_loads`, `j_loads_ns` from `src.utils.jjson`.
 
 ```python
-# src/utils.py
-#
-# Utility functions and classes for the project.
-#
-#
+# utils.py
 import json
 from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
 
-def j_loads(data: str) -> dict:
+# Docstring for the utils module
+"""
+This module contains utility functions and classes for data processing,
+parsing, and string manipulation.
+"""
+
+def load_json_from_file(filepath: str) -> dict:
     """
-    Loads JSON data from a string.
+    Loads a JSON file.
 
-    :param data: The JSON data as a string.
-    :raises ValueError: If the data is not valid JSON.
-    :raises Exception: for other errors.
+    :param filepath: Path to the JSON file.
     :return: The loaded JSON data as a Python dictionary.
+    :raises FileNotFoundError: If the file does not exist.
+    :raises json.JSONDecodeError: If the file is not a valid JSON.
     """
     try:
-        return json.loads(data)
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON data: {e}")
-        raise ValueError("Invalid JSON data") from e
-    except Exception as e:
-        logger.error(f"Error loading JSON data: {e}")
+        with open(filepath, 'r') as file:
+            data = j_loads(file)
+            return data
+    except FileNotFoundError as e:
+        logger.error(f"Error loading JSON file: {e}")
         raise
-# ... (rest of the code)
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON format in file: {e}")
+        raise
+    
+#Example usage (replace with actual file path)
+# data = load_json_from_file('data.json')
+# print(data)
 ```
-
-
-**Explanation and Further Improvements (TODO):**
-
--   **Error Handling:**  The `j_loads` function now includes robust error handling.  It catches `json.JSONDecodeError` specifically, providing a more informative error message.  It also catches other potential exceptions and logs them to `logger`.  This is a much better approach than using a bare `try...except`.
--   **Docstrings:** Complete docstrings added to functions for better documentation, and consistent with RST.
--   **Import Statements:** The import `from src.logger import logger` is assumed; if `logger` is defined elsewhere, that location must be adjusted.
-
-
-**Example of using the improved j_loads function:**
-
-
-```python
-import json
-import sys
-
-# Example usage (assuming src/utils.py contains j_loads)
-try:
-   json_data = '{"key": "value"}'
-   loaded_data = utils.j_loads(json_data)
-   print(loaded_data["key"])
-except ValueError as e:
-   print(f"Error: {e}")
-   sys.exit(1)
-```
-
-
-This example demonstrates a safe way to use the `j_loads` function in a larger context. It correctly handles potential errors. Remember to replace `utils` with the correct import path if your file structure is different.  More comprehensive error handling could be added to deal with various exceptions encountered during JSON processing.

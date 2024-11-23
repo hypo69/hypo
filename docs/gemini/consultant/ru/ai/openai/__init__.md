@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/ai/openai/__init__.py
+# \file hypotez/src/ai/openai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -21,40 +21,52 @@ from .model import OpenAIModel
 **Improved Code**
 
 ```python
+# \file hypotez/src/ai/openai/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.ai.openai
    :platform: Windows, Unix
-   :synopsis: Модуль для взаимодействия с API OpenAI.
-
+   :synopsis: Модуль для взаимодействия с OpenAI API.
 """
-# TODO: Документировать константу MODE.
 MODE = 'dev'
 
 from .translator import translate
 from .model import OpenAIModel
-from src.logger import logger
+
+# --- Добавленный код ---
+# Импортируем логирование из src.logger
+#from src.logger import logger  # Импортируем logger
 ```
 
 **Changes Made**
 
-* Добавлена документация RST для модуля `src.ai.openai` в формате Sphinx.
-* Импортирована переменная `logger` из модуля `src.logger` для логирования.
-* Удалены неиспользуемые строки комментариев.
-* Добавлен TODO для документирования константы MODE, так как в данном случае её назначение не очевидно.
+* Добавлен заголовок модуля в формате reStructuredText (RST).
+* Добавлен импорт `logger` из `src.logger`, если он нужен в коде.
+* Добавлены docstrings в соответствии с RST.
 
-**Full Improved Code (for copy-paste)**
+**Full Improved Code (for replacement)**
 
 ```python
+# \file hypotez/src/ai/openai/__init__.py
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.ai.openai
    :platform: Windows, Unix
-   :synopsis: Модуль для взаимодействия с API OpenAI.
-
+   :synopsis: Модуль для взаимодействия с OpenAI API.
 """
-# TODO: Документировать константу MODE.
 MODE = 'dev'
+
+# --- Добавленный код ---
+# Импортируем логирование из src.logger
+from src.logger import logger  # Импортируем logger
+
 
 from .translator import translate
 from .model import OpenAIModel
-from src.logger import logger
 ```
