@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/templates/version.py
+## \file hypotez/src/templates/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -40,15 +40,13 @@ MODE = 'dev'
 
 
 import json
-from src.utils.jjson import j_loads
 
 settings:dict = None
 
 try:
     with open('../settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file)
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading settings: {e}")
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
     ...
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
@@ -63,111 +61,207 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 **Improved Code**
 
 ```python
-# \file hypotez/src/templates/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.templates.version
-   :platform: Windows, Unix
-   :synopsis: Module for retrieving project version information.
-"""
-
 import json
 from src.utils.jjson import j_loads
-from src.logger import logger
-
-# Module variables
-MODE = 'dev'
+from src.logger import logger  # Импортируем logger для логирования
 
 
-def get_project_version() -> dict:
+def load_settings() -> dict:
     """
-    Reads project settings from settings.json and returns version information.
+    Загружает настройки из файла settings.json.
 
-    :raises FileNotFoundError: If settings.json is not found.
-    :raises json.JSONDecodeError: If settings.json is invalid JSON.
-    :return: A dictionary containing project information (project_name, version, etc.).
+    :return: Словарь настроек или None, если файл не найден или поврежден.
     """
-    settings: dict = None
     try:
         with open('../settings.json', 'r') as settings_file:
-            settings = j_loads(settings_file)
-        return settings
+            return j_loads(settings_file)
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Error loading settings: {e}")
-        return None  # Or raise the exception, depending on your needs
+        logger.error(f'Ошибка при загрузке настроек: {e}')
+        return None
 
 
-settings_data = get_project_version()
+# Загрузка настроек
+settings: dict = load_settings()
 
-__project_name__ = settings_data.get("project_name", 'hypotez') if settings_data else 'hypotez'
-__version__: str = settings_data.get("version", '') if settings_data else ''
-__doc__: str = ''
-__details__: str = ''
-__author__: str = settings_data.get("author", '') if settings_data else ''
-__copyright__: str = settings_data.get("copyrihgnt", '') if settings_data else ''
-__cofee__: str = settings_data.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings_data else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+
+def get_project_name() -> str:
+    """
+    Возвращает имя проекта из настроек.
+
+    :return: Имя проекта.
+    """
+    return settings.get('project_name', 'hypotez') if settings else 'hypotez'
+
+def get_version() -> str:
+    """
+    Возвращает версию проекта из настроек.
+
+    :return: Версия проекта.
+    """
+    return settings.get('version', '') if settings else ''
+
+# Заменяем все остальные строковые значения аналогично
+def get_doc() -> str:
+    """
+    Возвращает описание проекта из настроек.
+
+    :return: Описание проекта.
+    """
+    return settings.get('doc', '') if settings else ''
+    
+
+def get_details() -> str:
+    """
+    Возвращает подробное описание проекта из настроек.
+
+    :return: Подробное описание проекта.
+    """
+    return settings.get('details', '') if settings else ''
+
+def get_author() -> str:
+    """
+    Возвращает имя автора проекта из настроек.
+
+    :return: Имя автора проекта.
+    """
+    return settings.get('author', '') if settings else ''
+
+
+def get_copyright() -> str:
+    """
+    Возвращает копирайт проекта из настроек.
+
+    :return: Копирайт проекта.
+    """
+    return settings.get('copyright', '') if settings else ''
+
+
+def get_cofee() -> str:
+    """
+    Возвращает ссылку на спонсорство проекта (кофе).
+
+    :return: Ссылка на спонсорство.
+    """
+    return settings.get('cofee', 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69') if settings else 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69'
+
+
+# Пример использования
+__project_name__ = get_project_name()
+__version__ = get_version()
+__doc__ = get_doc()
+__details__ = get_details()
+__author__ = get_author()
+__copyright__ = get_copyright()
+__cofee__ = get_cofee()
+
 ```
 
 **Changes Made**
 
-*   Added missing import `from src.logger import logger`.
-*   Added import `from src.utils.jjson import j_loads`.
-*   Converted the code to a function `get_project_version` for better structure and reusability.
-*   Added comprehensive docstrings for the module and function using reStructuredText (RST).
-*   Corrected variable names for better consistency (`settings_data` instead of `settings` in the function scope).
-*   Improved error handling: Uses `logger.error` to log errors instead of `...`. Returns `None` if settings loading fails; adjust to your needs.
-*   Corrected capitalization of `copyrihgnt` to `copyright`.
-*   Added type hints for better code clarity and maintainability.
+- Импортирован необходимый модуль `j_loads` из `src.utils.jjson`.
+- Импортирован модуль `logger` из `src.logger`.
+- Функция `load_settings` создана для загрузки настроек с обработкой ошибок.
+- Функции для получения значений из настроек созданы, чтобы использовать их повторно.
+-  Использование `j_loads` вместо `json.load` для обработки настроек.
+- Использование `logger.error` для обработки исключений.
+- Добавлена документация RST к функциям.
+- Изменён стиль импорта.
+- Изменён формат вывода кода.
 
+
+**Complete Code (Improved)**
 
 ```python
-# \file hypotez/src/templates/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.templates.version
-   :platform: Windows, Unix
-   :synopsis: Module for retrieving project version information.
-"""
-
 import json
 from src.utils.jjson import j_loads
-from src.logger import logger
-
-# Module variables
-MODE = 'dev'
+from src.logger import logger  # Импортируем logger для логирования
 
 
-def get_project_version() -> dict:
+def load_settings() -> dict:
     """
-    Reads project settings from settings.json and returns version information.
+    Загружает настройки из файла settings.json.
 
-    :raises FileNotFoundError: If settings.json is not found.
-    :raises json.JSONDecodeError: If settings.json is invalid JSON.
-    :return: A dictionary containing project information (project_name, version, etc.).
+    :return: Словарь настроек или None, если файл не найден или поврежден.
     """
-    settings: dict = None
     try:
         with open('../settings.json', 'r') as settings_file:
-            settings = j_loads(settings_file)
-        return settings
+            return j_loads(settings_file)
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Error loading settings: {e}")
-        return None  # Or raise the exception, depending on your needs
+        logger.error(f'Ошибка при загрузке настроек: {e}')
+        return None
 
 
-settings_data = get_project_version()
+# Загрузка настроек
+settings: dict = load_settings()
 
-__project_name__ = settings_data.get("project_name", 'hypotez') if settings_data else 'hypotez'
-__version__: str = settings_data.get("version", '') if settings_data else ''
-__doc__: str = ''
-__details__: str = ''
-__author__: str = settings_data.get("author", '') if settings_data else ''
-__copyright__: str = settings_data.get("copyright", '') if settings_data else ''
-__cofee__: str = settings_data.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings_data else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+
+def get_project_name() -> str:
+    """
+    Возвращает имя проекта из настроек.
+
+    :return: Имя проекта.
+    """
+    return settings.get('project_name', 'hypotez') if settings else 'hypotez'
+
+def get_version() -> str:
+    """
+    Возвращает версию проекта из настроек.
+
+    :return: Версия проекта.
+    """
+    return settings.get('version', '') if settings else ''
+
+# Заменяем все остальные строковые значения аналогично
+def get_doc() -> str:
+    """
+    Возвращает описание проекта из настроек.
+
+    :return: Описание проекта.
+    """
+    return settings.get('doc', '') if settings else ''
+    
+
+def get_details() -> str:
+    """
+    Возвращает подробное описание проекта из настроек.
+
+    :return: Подробное описание проекта.
+    """
+    return settings.get('details', '') if settings else ''
+
+def get_author() -> str:
+    """
+    Возвращает имя автора проекта из настроек.
+
+    :return: Имя автора проекта.
+    """
+    return settings.get('author', '') if settings else ''
+
+
+def get_copyright() -> str:
+    """
+    Возвращает копирайт проекта из настроек.
+
+    :return: Копирайт проекта.
+    """
+    return settings.get('copyright', '') if settings else ''
+
+
+def get_cofee() -> str:
+    """
+    Возвращает ссылку на спонсорство проекта (кофе).
+
+    :return: Ссылка на спонсорство.
+    """
+    return settings.get('cofee', 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69') if settings else 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69'
+
+
+# Пример использования
+__project_name__ = get_project_name()
+__version__ = get_version()
+__doc__ = get_doc()
+__details__ = get_details()
+__author__ = get_author()
+__copyright__ = get_copyright()
+__cofee__ = get_cofee()
 ```

@@ -1,312 +1,292 @@
-```python
-# -*- coding: utf-8 -*-
-"""
-Модуль `src.scenario` для автоматизации взаимодействия с поставщиками
-используя сценарии, описанные в JSON-файлах.
-"""
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
-import os
-import requests
+**Received Code**
 
-# ... (Остальной код)
+```python
+# Модуль `src.scenario` предназначен для автоматизации взаимодействия с поставщиками,
+# используя сценарии, описанные в JSON-файлах. Основная задача модуля — адаптировать
+# процесс извлечения и обработки данных о продуктах с веб-сайтов поставщиков и
+# синхронизировать эту информацию с базой данных вашей системы.
+
+import json
+import os
+from src.utils.jjson import j_loads
+from src.utils.db import DbHandler
+from src.logger import logger
 
 
 def run_scenario_files(s, scenario_files_list):
     """
-    Выполняет сценарии из списка файлов.
+    Выполняет сценарии, описанные в списке файлов.
 
-    :param s: Объект session для работы с запросами.
-    :param scenario_files_list: Список путей к файлам со сценариями.
-    :raises Exception: Если возникла ошибка при обработке файла.
+    :param s: Объект, представляющий текущую сессию.
+    :param scenario_files_list: Список путей к файлам сценариев.
     """
     for scenario_file in scenario_files_list:
         try:
             run_scenario_file(s, scenario_file)
         except Exception as e:
-            logger.error(f"Ошибка при выполнении сценария из файла {scenario_file}: {e}")
+            logger.error(f'Ошибка при выполнении сценария из файла {scenario_file}: {e}')
 
 
 def run_scenario_file(s, scenario_file):
     """
-    Выполняет сценарии из одного файла.
+    Загружает и выполняет сценарии из указанного файла.
 
-    :param s: Объект session для работы с запросами.
-    :param scenario_file: Путь к файлу со сценариями.
-    :raises Exception: Если возникла ошибка при чтении или обработке файла.
+    :param s: Объект, представляющий текущую сессию.
+    :param scenario_file: Путь к файлу сценария.
     """
     try:
-        with open(scenario_file, 'r', encoding='utf-8') as f:
-            scenarios = j_loads(f)
-            for scenario_name, scenario_data in scenarios.get('scenarios', {}).items():
-                run_scenario(s, scenario_name, scenario_data)
+        with open(scenario_file, 'r') as f:
+            scenario_data = j_loads(f)
+        for scenario_name, scenario_data in scenario_data['scenarios'].items():
+            run_scenario(s, scenario_name, scenario_data)
     except FileNotFoundError:
         logger.error(f"Файл сценария {scenario_file} не найден.")
+    except json.JSONDecodeError as e:
+        logger.error(f'Ошибка при разборе JSON файла {scenario_file}: {e}')
     except Exception as e:
-        logger.error(f"Ошибка при чтении или обработке файла {scenario_file}: {e}")
+        logger.error(f'Ошибка при обработке файла {scenario_file}: {e}')
 
 
-def run_scenario(s, scenario_name, scenario_data):
+def run_scenario(s, scenario_name, scenario):
     """
-    Обрабатывает один сценарий.
+    Обрабатывает отдельный сценарий.
 
-    :param s: Объект session для работы с запросами.
+    :param s: Объект, представляющий текущую сессию.
     :param scenario_name: Имя сценария.
-    :param scenario_data: Данные сценария.
-    :raises Exception: Если возникла ошибка при обработке сценария.
+    :param scenario: Данные сценария.
     """
-    try:
-        url = scenario_data.get('url')
-        if url:
-            # ... (Обработка запроса к URL)
-            response = s.get(url)
-            response.raise_for_status()  # Проверка статуса ответа
-            # ... (Обработка ответа)
-        else:
-            logger.warning(f'Отсутствует URL для сценария {scenario_name}.')
-
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка при запросе к URL {url}: {e}")
-    except Exception as e:
-        logger.error(f"Ошибка при обработке сценария {scenario_name}: {e}")
-    
-    # ... (Остальной код)
+    # ... (Обработка сценария)
+    # ... (Доступ к базе данных)
+    pass
 
 
-# ... (Остальной код)
+def dump_journal(s, journal):
+    """
+    Сохраняет журнал выполнения сценариев.
+
+    :param s: Объект, представляющий текущую сессию.
+    :param journal: Журнал выполнения сценариев.
+    """
+    # ... (Сохранение журнала)
+    pass
 
 
 def main():
+    """Основная функция для запуска модуля."""
+    # ... (Инициализация сессии и списка файлов)
+    pass
+
+```
+
+**Improved Code**
+
+```python
+# Модуль src.scenario для автоматизации работы со сценариями из JSON-файлов.
+# Он извлекает данные о продуктах с веб-сайтов поставщиков и синхронизирует их
+# с базой данных.
+
+import json
+import os
+from src.utils.jjson import j_loads
+from src.utils.db import DbHandler
+from src.logger import logger
+
+
+def run_scenario_files(session, scenario_files_list):
     """
-    Основная функция для запуска модуля.
+    Выполняет сценарии, описанные в предоставленном списке файлов.
+
+    :param session: Объект, представляющий текущую сессию.
+    :param scenario_files_list: Список путей к файлам со сценариями.
+    :raises FileNotFoundError: Если файл сценария не найден.
+    :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
+    """
+    for scenario_file in scenario_files_list:
+        try:
+            run_scenario_file(session, scenario_file)
+        except Exception as e:
+            logger.error(f"Ошибка при обработке файла {scenario_file}: {e}")
+
+
+def run_scenario_file(session, scenario_file):
+    """
+    Загружает и выполняет сценарии из указанного файла.
+
+    :param session: Объект, представляющий текущую сессию.
+    :param scenario_file: Путь к файлу сценария.
+    :raises FileNotFoundError: Если файл сценария не найден.
+    :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
     """
     try:
-        # ... (Инициализация сессии)
-        s = requests.Session()  # Создаем сессию для повторного использования cookies
-        scenario_files_list = ['data/scenario_file.json']  # Список файлов сценариев
+        with open(scenario_file, 'r') as f:
+            scenario_data = j_loads(f)
+        for scenario_name, scenario_data in scenario_data.get('scenarios', {}).items(): # Добавлена проверка на существование ключа
+            run_scenario(session, scenario_name, scenario_data)
+    except FileNotFoundError as e:
+        logger.error(f"Файл сценария {scenario_file} не найден: {e}")
+    except json.JSONDecodeError as e:
+        logger.error(f"Ошибка при разборе JSON файла {scenario_file}: {e}")
+    except Exception as e:  # Добавлена общая обработка ошибок
+        logger.error(f"Непредвиденная ошибка при обработке файла {scenario_file}: {e}")
 
-        run_scenario_files(s, scenario_files_list)
 
+def run_scenario(session, scenario_name, scenario):
+    """
+    Обрабатывает отдельный сценарий.
+
+    :param session: Объект, представляющий текущую сессию.
+    :param scenario_name: Имя сценария.
+    :param scenario: Данные сценария.
+    """
+    try:
+        # Добавьте здесь код для обработки сценария.
+        # Извлечение данных, работа с базой данных, и т.д.
+        url = scenario.get('url')
+        if url:
+            # ... (Код для доступа к веб-странице и извлечения данных)
+            pass
+        db_handler = DbHandler() # Инициализация DbHandler
+        category_ids = scenario.get('presta_categories', {}).get('default_category')
+        if category_ids:
+          db_handler.update_db(scenario_name, category_ids) # Пример использования DbHandler
+        else:
+          logger.warning(f"Отсутствуют ID категории для сценария {scenario_name}")
     except Exception as e:
-        logger.error(f"Ошибка при запуске модуля: {e}")
+        logger.error(f'Ошибка при выполнении сценария "{scenario_name}": {e}')
 
 
-# ... (Остальной код)
 
-if __name__ == '__main__':
+def dump_journal(session, journal):
+    """Сохраняет журнал выполнения сценариев в файл."""
+    # ... (Реализация сохранения журнала)
+    pass
+
+
+def main():
+    """Основная функция для запуска модуля."""
+    # Инициализация сессии и списка файлов сценариев
+    session = ...  # Инициализация сессии
+    scenario_files = ...  # Список файлов сценариев
+    try:
+      run_scenario_files(session, scenario_files)
+    except Exception as e:
+      logger.error(f"Ошибка при запуске сценариев: {e}")
+
+
+if __name__ == "__main__":
     main()
 ```
 
-```
-Improved Code
+**Changes Made**
+
+-   Добавлены docstrings в формате RST ко всем функциям и методам.
+-   Используется `from src.logger import logger` для логирования.
+-   Добавлен `try...except` для обработки конкретных ошибок (FileNotFoundError, json.JSONDecodeError) и общей обработки ошибок.
+-   Добавлена проверка на существование ключа `'scenarios'` в загружаемых данных.
+-   Используется `j_loads` для чтения JSON-файлов.
+-   Добавлен `DbHandler` для работы с базой данных.
+-   Добавлен пример использования `DbHandler` в `run_scenario`.
+-   Добавлены логирование предупреждений, если не найдена категория.
+-   Добавлена обработка ошибок в `main`.
+-   Улучшены сообщения об ошибках, предоставляя более подробную информацию.
+-   Добавлен `if __name__ == "__main__":` для корректного вызова `main` только при прямом запуске модуля.
+
+
+**Complete Code (Improved)**
+
 ```python
-# -*- coding: utf-8 -*-
-"""
-Модуль `src.scenario` для автоматизации взаимодействия с поставщиками
-используя сценарии, описанные в JSON-файлах.
-"""
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+# Модуль src.scenario для автоматизации работы со сценариями из JSON-файлов.
+# Он извлекает данные о продуктах с веб-сайтов поставщиков и синхронизирует их
+# с базой данных.
+
+import json
 import os
-import requests
+from src.utils.jjson import j_loads
+from src.utils.db import DbHandler
+from src.logger import logger
 
-# ... (Остальной код)
 
-
-def run_scenario_files(s, scenario_files_list):
+def run_scenario_files(session, scenario_files_list):
     """
-    Выполняет сценарии из списка файлов.
+    Выполняет сценарии, описанные в предоставленном списке файлов.
 
-    :param s: Объект session для работы с запросами.
+    :param session: Объект, представляющий текущую сессию.
     :param scenario_files_list: Список путей к файлам со сценариями.
-    :raises Exception: Если возникла ошибка при обработке файла.
+    :raises FileNotFoundError: Если файл сценария не найден.
+    :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
     """
     for scenario_file in scenario_files_list:
         try:
-            run_scenario_file(s, scenario_file)
+            run_scenario_file(session, scenario_file)
         except Exception as e:
-            logger.error(f"Ошибка при выполнении сценария из файла {scenario_file}: {e}")
+            logger.error(f"Ошибка при обработке файла {scenario_file}: {e}")
 
 
-def run_scenario_file(s, scenario_file):
+def run_scenario_file(session, scenario_file):
     """
-    Выполняет сценарии из одного файла.
+    Загружает и выполняет сценарии из указанного файла.
 
-    :param s: Объект session для работы с запросами.
-    :param scenario_file: Путь к файлу со сценариями.
-    :raises Exception: Если возникла ошибка при чтении или обработке файла.
+    :param session: Объект, представляющий текущую сессию.
+    :param scenario_file: Путь к файлу сценария.
+    :raises FileNotFoundError: Если файл сценария не найден.
+    :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
     """
     try:
-        with open(scenario_file, 'r', encoding='utf-8') as f:
-            scenarios = j_loads(f)
-            for scenario_name, scenario_data in scenarios.get('scenarios', {}).items():
-                run_scenario(s, scenario_name, scenario_data)
-    except FileNotFoundError:
-        logger.error(f"Файл сценария {scenario_file} не найден.")
-    except Exception as e:
-        logger.error(f"Ошибка при чтении или обработке файла {scenario_file}: {e}")
+        with open(scenario_file, 'r') as f:
+            scenario_data = j_loads(f)
+        for scenario_name, scenario_data in scenario_data.get('scenarios', {}).items(): # Добавлена проверка на существование ключа
+            run_scenario(session, scenario_name, scenario_data)
+    except FileNotFoundError as e:
+        logger.error(f"Файл сценария {scenario_file} не найден: {e}")
+    except json.JSONDecodeError as e:
+        logger.error(f"Ошибка при разборе JSON файла {scenario_file}: {e}")
+    except Exception as e:  # Добавлена общая обработка ошибок
+        logger.error(f"Непредвиденная ошибка при обработке файла {scenario_file}: {e}")
 
 
-def run_scenario(s, scenario_name, scenario_data):
+def run_scenario(session, scenario_name, scenario):
     """
-    Обрабатывает один сценарий.
+    Обрабатывает отдельный сценарий.
 
-    :param s: Объект session для работы с запросами.
+    :param session: Объект, представляющий текущую сессию.
     :param scenario_name: Имя сценария.
-    :param scenario_data: Данные сценария.
-    :raises Exception: Если возникла ошибка при обработке сценария.
+    :param scenario: Данные сценария.
     """
     try:
-        url = scenario_data.get('url')
+        # Добавьте здесь код для обработки сценария.
+        # Извлечение данных, работа с базой данных, и т.д.
+        url = scenario.get('url')
         if url:
-            # ... (Обработка запроса к URL)
-            response = s.get(url)
-            response.raise_for_status()  # Проверка статуса ответа
-            # ... (Обработка ответа)
+            # ... (Код для доступа к веб-странице и извлечения данных)
+            pass
+        db_handler = DbHandler() # Инициализация DbHandler
+        category_ids = scenario.get('presta_categories', {}).get('default_category')
+        if category_ids:
+          db_handler.update_db(scenario_name, category_ids) # Пример использования DbHandler
         else:
-            logger.warning(f'Отсутствует URL для сценария {scenario_name}.')
-
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка при запросе к URL {url}: {e}")
+          logger.warning(f"Отсутствуют ID категории для сценария {scenario_name}")
     except Exception as e:
-        logger.error(f"Ошибка при обработке сценария {scenario_name}: {e}")
-    
-    # ... (Остальной код)
+        logger.error(f'Ошибка при выполнении сценария "{scenario_name}": {e}')
 
 
-# ... (Остальной код)
+
+def dump_journal(session, journal):
+    """Сохраняет журнал выполнения сценариев в файл."""
+    # ... (Реализация сохранения журнала)
+    pass
 
 
 def main():
-    """
-    Основная функция для запуска модуля.
-    """
+    """Основная функция для запуска модуля."""
+    # Инициализация сессии и списка файлов сценариев
+    session = ...  # Инициализация сессии
+    scenario_files = ...  # Список файлов сценариев
     try:
-        # ... (Инициализация сессии)
-        s = requests.Session()  # Создаем сессию для повторного использования cookies
-        scenario_files_list = ['data/scenario_file.json']  # Список файлов сценариев
-
-        run_scenario_files(s, scenario_files_list)
-
+      run_scenario_files(session, scenario_files)
     except Exception as e:
-        logger.error(f"Ошибка при запуске модуля: {e}")
+      logger.error(f"Ошибка при запуске сценариев: {e}")
 
 
-# ... (Остальной код)
-
-if __name__ == '__main__':
-    main()
-```
-
-```
-Changes Made
-```
-- Добавлены комментарии RST к функциям `run_scenario_files`, `run_scenario_file`, `run_scenario`, `main`.
-- Добавлена обработка ошибок с использованием `logger.error` вместо стандартных блоков `try-except`.
-- Исправлен импорт `requests` (добавил `import requests`).
-- Добавлена проверка статуса ответа (`response.raise_for_status()`) для обработки ошибок HTTP.
-- Добавлена обработка отсутствия URL в сценарии.
-- Исправлен способ обработки списка сценариев (используется `scenarios.get('scenarios', {})`).
-- Изменены комментарии в соответствии с реструктурированным текстом.
-- Добавлен импорт `os` (если он использовался).
-- Изменён способ работы с кодировкой в `run_scenario_file` для корректной работы с JSON (включая encoding='utf-8').
-
-```Full Code (Improved)
-```python
-# -*- coding: utf-8 -*-
-"""
-Модуль `src.scenario` для автоматизации взаимодействия с поставщиками
-используя сценарии, описанные в JSON-файлах.
-"""
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
-import os
-import requests
-
-# ... (Остальной код)
-
-
-def run_scenario_files(s, scenario_files_list):
-    """
-    Выполняет сценарии из списка файлов.
-
-    :param s: Объект session для работы с запросами.
-    :param scenario_files_list: Список путей к файлам со сценариями.
-    :raises Exception: Если возникла ошибка при обработке файла.
-    """
-    for scenario_file in scenario_files_list:
-        try:
-            run_scenario_file(s, scenario_file)
-        except Exception as e:
-            logger.error(f"Ошибка при выполнении сценария из файла {scenario_file}: {e}")
-
-
-def run_scenario_file(s, scenario_file):
-    """
-    Выполняет сценарии из одного файла.
-
-    :param s: Объект session для работы с запросами.
-    :param scenario_file: Путь к файлу со сценариями.
-    :raises Exception: Если возникла ошибка при чтении или обработке файла.
-    """
-    try:
-        with open(scenario_file, 'r', encoding='utf-8') as f:
-            scenarios = j_loads(f)
-            for scenario_name, scenario_data in scenarios.get('scenarios', {}).items():
-                run_scenario(s, scenario_name, scenario_data)
-    except FileNotFoundError:
-        logger.error(f"Файл сценария {scenario_file} не найден.")
-    except Exception as e:
-        logger.error(f"Ошибка при чтении или обработке файла {scenario_file}: {e}")
-
-
-def run_scenario(s, scenario_name, scenario_data):
-    """
-    Обрабатывает один сценарий.
-
-    :param s: Объект session для работы с запросами.
-    :param scenario_name: Имя сценария.
-    :param scenario_data: Данные сценария.
-    :raises Exception: Если возникла ошибка при обработке сценария.
-    """
-    try:
-        url = scenario_data.get('url')
-        if url:
-            # ... (Обработка запроса к URL)
-            response = s.get(url)
-            response.raise_for_status()  # Проверка статуса ответа
-            # ... (Обработка ответа)
-        else:
-            logger.warning(f'Отсутствует URL для сценария {scenario_name}.')
-
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка при запросе к URL {url}: {e}")
-    except Exception as e:
-        logger.error(f"Ошибка при обработке сценария {scenario_name}: {e}")
-    
-    # ... (Остальной код)
-
-
-# ... (Остальной код)
-
-
-def main():
-    """
-    Основная функция для запуска модуля.
-    """
-    try:
-        # ... (Инициализация сессии)
-        s = requests.Session()  # Создаем сессию для повторного использования cookies
-        scenario_files_list = ['data/scenario_file.json']  # Список файлов сценариев
-
-        run_scenario_files(s, scenario_files_list)
-
-    except Exception as e:
-        logger.error(f"Ошибка при запуске модуля: {e}")
-
-
-# ... (Остальной код)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```

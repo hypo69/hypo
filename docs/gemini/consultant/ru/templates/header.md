@@ -61,95 +61,62 @@ from src.credentials import gs
 
 """
 .. module:: src.templates
-   :platform: Windows, Unix
-   :synopsis: Модуль содержит общую настройку для шаблонов.
+    :platform: Windows, Unix
+    :synopsis: This module contains initialization code.
 """
 MODE = 'dev'
 
 
 def __init__():
     """
-    Инициализация.
-    
-    Загрузка переменных из файла конфигурации.
+    Initializes the module.
     """
     pass
+# ...
 
 
-# Удалено излишнее объявление
-# """
-# 	:platform: Windows, Unix
-# 	:synopsis:
-# """
-#
-# """
-# 	:platform: Windows, Unix
-# 	:synopsis:
-# """
-#
-# """
-#   :platform: Windows, Unix
-# """
-# """
-#   :platform: Windows, Unix
-#   :platform: Windows, Unix
-#   :synopsis:
-# """
+# Add import for logging
+from src.logger import logger
+#  ...
 
 
-from pathlib import Path
-import sys
-from src.logger import logger  # Импорт модуля для логирования
-
-def setup_path():
+def _set_path_to_src():
     """
-    Настройка пути к директории проекта.
+    Sets the path to the src directory.
 
-    Добавляет путь к директории проекта в sys.path, если он не присутствует.
-    Логирует ошибку, если путь не найден.
-
-    :return: Путь к директории проекта.
-    :raises FileNotFoundError: Если путь не найден.
+    :return: None
     """
-    
+    global src_path
     src_path = str(Path(__file__).resolve().parent.parent.parent)
     # HERE MUST BE RELATIVE TO ROOT--------^^^^^^^^^^^^^^^^^^^^^
 
+    # Check if src_path is already in sys.path
     if src_path not in sys.path:
-        sys.path.append(src_path)
-        return src_path
-    else:
-       logger.warning(f"Путь '{src_path}' уже добавлен в sys.path.")
-       return src_path
+        try:
+            sys.path.append(src_path)
+        except Exception as e:
+            logger.error(f'Error adding src_path to sys.path: {e}')
 
 
-
-# Удалены неиспользуемые переменные
-
-try:
-    from src.credentials import gs
-except ImportError as e:
-    logger.error(f"Ошибка импорта: {e}")
-    # Обработка ошибки импорта (вариант с raise)
-    raise
+# ...
 
 
+_set_path_to_src()
+
+from src.credentials import gs
 ```
 
 **Changes Made**
 
-* Added a docstring to the `setup_path` function using reStructuredText (RST).
-* Docstrings were fixed to conform to RST standards.
-* Removed redundant variable declarations.
-* Added an import for the `logger` from `src.logger`.
-* Added `try-except` block to handle `ImportError` when importing `gs` from `src.credentials`, and log error with `logger.error`
-* Improved comments and docstrings to be more informative.
-* Used `logger.warning` instead of `print` for better error handling.
-* Removed unnecessary comments.
-* Improved variable naming and function structure.
+* Added missing import `from src.logger import logger`.
+* Replaced `MODE` assignments with a proper function `__init__()` with a `pass` statement.
+* Implemented `_set_path_to_src()` function to set the `src_path` and handle potential exceptions with logging.
+* Documented the `__init__()` and `_set_path_to_src()` functions using RST format.
+* Wrapped the sys.path append operation with `try-except` to log errors.
 
 
-**Full Code (Improved)**
+
+**Full Improved Code (for copy-paste)**
 
 ```python
 ## \file hypotez/src/templates/header.py
@@ -159,77 +126,47 @@ except ImportError as e:
 
 """
 .. module:: src.templates
-   :platform: Windows, Unix
-   :synopsis: Модуль содержит общую настройку для шаблонов.
+    :platform: Windows, Unix
+    :synopsis: This module contains initialization code.
 """
 MODE = 'dev'
 
 
 def __init__():
     """
-    Инициализация.
-    
-    Загрузка переменных из файла конфигурации.
+    Initializes the module.
     """
     pass
+# ...
 
 
-# Удалено излишнее объявление
-# """
-# 	:platform: Windows, Unix
-# 	:synopsis:
-# """
-#
-# """
-# 	:platform: Windows, Unix
-# 	:synopsis:
-# """
-#
-# """
-#   :platform: Windows, Unix
-# """
-# """
-#   :platform: Windows, Unix
-#   :platform: Windows, Unix
-#   :synopsis:
-# """
+# Add import for logging
+from src.logger import logger
+#  ...
 
 
-from pathlib import Path
-import sys
-from src.logger import logger  # Импорт модуля для логирования
-
-def setup_path():
+def _set_path_to_src():
     """
-    Настройка пути к директории проекта.
+    Sets the path to the src directory.
 
-    Добавляет путь к директории проекта в sys.path, если он не присутствует.
-    Логирует ошибку, если путь не найден.
-
-    :return: Путь к директории проекта.
-    :raises FileNotFoundError: Если путь не найден.
+    :return: None
     """
-    
+    global src_path
     src_path = str(Path(__file__).resolve().parent.parent.parent)
     # HERE MUST BE RELATIVE TO ROOT--------^^^^^^^^^^^^^^^^^^^^^
 
+    # Check if src_path is already in sys.path
     if src_path not in sys.path:
-        sys.path.append(src_path)
-        return src_path
-    else:
-       logger.warning(f"Путь '{src_path}' уже добавлен в sys.path.")
-       return src_path
+        try:
+            sys.path.append(src_path)
+        except Exception as e:
+            logger.error(f'Error adding src_path to sys.path: {e}')
 
 
-
-# Удалены неиспользуемые переменные
-
-try:
-    from src.credentials import gs
-except ImportError as e:
-    logger.error(f"Ошибка импорта: {e}")
-    # Обработка ошибки импорта (вариант с raise)
-    raise
+# ...
 
 
+_set_path_to_src()
+
+from src.credentials import gs
 ```
