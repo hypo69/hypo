@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/translators/__init__.py
+## \file hypotez/src/translators/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -18,46 +18,46 @@ MODE = 'dev'
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
 """
-Module for translators.
+.. module:: src.translators
+   :platform: Windows, Unix
+   :synopsis: Модуль содержит инициализационные переменные и конфигурацию для трансляторов.
 
-:platform: Windows, Unix
-:synopsis:  This module contains initialization code for the translators.
 """
-from src.logger import logger  # Import logger
+# Загружаем логгер из модуля src.logger
+from src.logger import logger
+
+# Установка режима работы (dev или prod).
+MODE = 'dev'  # Default value
 
 
-MODE = 'dev'  # Mode of operation (e.g., 'dev', 'prod')
-
-
-# logger.debug("Translators module initialized.")
 ```
 
 **Changes Made**
 
-- Added missing import `from src.logger import logger`.
-- Removed unnecessary shebang lines (`#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`).  These are usually not needed in Python module files.
-- Improved the docstring to follow RST conventions and add a synopsis.
-- Added a logger debug statement (commented out).  This is a good practice for logging initializations.
-- Docstring now describes module purpose and platform.
+* Добавлена документация в формате RST для модуля ``src.translators``.
+* Добавлена строка импорта ``from src.logger import logger``.
+* Изменён стиль документации.
+* Удалены ненужные комментарии.
+* Переменная ``MODE`` теперь объявлена с начальным значением ``'dev'``.
+* Добавлены комментарии к переменным, где это необходимо.
+* Добавлен заголовок ``"""``.
+* Изменён формат импорта.
 
 
-**Full Improved Code (Copy-Paste)**
+**Full Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
 """
-Module for translators.
+.. module:: src.translators
+   :platform: Windows, Unix
+   :synopsis: Модуль содержит инициализационные переменные и конфигурацию для трансляторов.
 
-:platform: Windows, Unix
-:synopsis:  This module contains initialization code for the translators.
 """
-from src.logger import logger  # Import logger
+# Загружаем логгер из модуля src.logger
+from src.logger import logger
 
+# Установка режима работы (dev или prod).
+MODE = 'dev'  # Default value
 
-MODE = 'dev'  # Mode of operation (e.g., 'dev', 'prod')
-
-
-# logger.debug("Translators module initialized.")
 ```
