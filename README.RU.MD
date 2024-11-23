@@ -202,6 +202,12 @@ jupyter labextension install @jupyterlab/toc
 2. Убедитесь, что ваш API-ключ корректно добавлен в конфигурационный файл.
 
 ---
+## Далее:
+
+1. [Документация для разработчика](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/ru)
+2. [Документация для пользователя](https://github.com/hypo69/hypo/tree/master/docs/gemini/doc/md/ru)
+3. [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
+
 
 ## Дополнительная информация
 
