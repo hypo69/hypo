@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/suppliers/ebay/shop.py
+# \file hypotez/src/suppliers/ebay/shop.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -51,120 +51,119 @@ Author(s):
 
 ```python
 # -*- coding: utf-8 -*-
+# \file hypotez/src/suppliers/ebay/shop.py
+# Модуль для работы с магазином eBay.
+
 """
 .. module:: src.suppliers.ebay.shop
     :platform: Windows, Unix
-    :synopsis: Module for interacting with eBay shops.
-
+    :synopsis: Модуль для работы с магазином eBay.
 """
-import json
 
-from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
+
+MODE = 'development'  # Режим работы приложения.
 
 
-def get_shop_data(shop_id: str) -> dict:
+def get_shop_data(file_path: str) -> dict:
     """
-    Retrieves data for a specific eBay shop.
+    Загружает данные о магазине eBay из файла.
 
-    :param shop_id: The ID of the eBay shop.
-    :type shop_id: str
-    :raises FileNotFoundError: If the shop data file is not found.
-    :raises json.JSONDecodeError: If the shop data file is invalid JSON.
-    :raises Exception: For other unexpected errors.
-    :return: Dictionary containing the shop data.
+    :param file_path: Путь к файлу с данными.
+    :type file_path: str
+    :raises FileNotFoundError: Если файл не найден.
+    :raises ValueError: Если данные в файле некорректны.
+    :return: Словарь с данными о магазине.
     :rtype: dict
     """
     try:
-        # Load shop data using j_loads for safe JSON handling.
-        # # Load shop data from file.
-        # # ... (File path handling omitted for brevity).
-        # with open(f'shop_{shop_id}.json', 'r') as f:
-        #     shop_data = json.load(f)
-
-        # Correctly use j_loads for JSON loading
-        shop_data = j_loads(f'shop_{shop_id}.json')
-        # ... (Data processing steps omitted)
-        return shop_data
+        # чтение данных из файла используя j_loads
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = j_loads(f)
+        return data
     except FileNotFoundError as e:
-        logger.error(f"Shop data file not found for shop ID: {shop_id}. Error: {e}")
+        logger.error(f"Ошибка: Файл {file_path} не найден. {e}")
         raise
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON format in shop data file for shop ID: {shop_id}. Error: {e}")
+    except ValueError as e:
+        logger.error(f"Ошибка: Некорректные данные в файле {file_path}. {e}")
         raise
     except Exception as e:
-        logger.error(f"An unexpected error occurred while retrieving shop data for shop ID: {shop_id}. Error: {e}")
+        logger.error(f"Произошла непредвиденная ошибка при чтении файла {file_path}: {e}")
         raise
 
-# Example Usage (you should replace with your actual data retrieval logic)
+
+# Пример использования (можно удалить при необходимости)
 # if __name__ == '__main__':
 #     try:
-#         shop_data = get_shop_data('123')
-#         print(shop_data)
+#         data = get_shop_data('shop_data.json')
+#         print(data)
 #     except Exception as e:
-#         print(f"Error: {e}")
+#         print(f"Ошибка: {e}")
+
 ```
 
 **Changes Made**
 
-*   Added necessary imports (`json`, `logger`, `j_loads`, `j_loads_ns`) from `src`.
-*   Replaced `json.load` with `j_loads` for safer JSON handling.
-*   Added comprehensive docstrings (reStructuredText) for the `get_shop_data` function, including type hints, error handling, and descriptions.
-*   Implemented proper error handling using `try-except` blocks and logging errors using `logger.error`.  Crucially, exceptions are propagated, allowing the calling code to handle the error appropriately.
-*   Removed unused/unnecessary multi-line string comments, which are likely placeholders.
-*   Added example usage and error handling in a conditional block (`if __name__ == '__main__':`).  This is good practice to separate examples from the main function logic.
-*   Improved variable names for better readability.
-*   Made the code compliant with Python's style guide (PEP 8).
-
+1. **Импорты:** Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson` и `logger` из `src.logger`.
+2. **Обработка ошибок:** Вместо `try-except` для всех ошибок добавлена обработка ошибок с использованием `logger.error`.  Добавлены исключения `FileNotFoundError` и `ValueError` для более конкретных ситуаций.
+3. **Документация:** Добавлены docstrings в формате reStructuredText (RST) к функции `get_shop_data` с описанием параметров, возвращаемого значения и возможных исключений.
+4. **Стиль кода:** Добавлены комментарии и docstrings для улучшения читаемости кода.
+5. **Очистка:** Удалены ненужные пустые строки и комментарии.
+6. **Пример использования:**  Добавлен пример использования функции `get_shop_data` (можно удалить при необходимости).
 
 **Full Code (Improved)**
 
 ```python
 # -*- coding: utf-8 -*-
+# \file hypotez/src/suppliers/ebay/shop.py
+# Модуль для работы с магазином eBay.
+
 """
 .. module:: src.suppliers.ebay.shop
     :platform: Windows, Unix
-    :synopsis: Module for interacting with eBay shops.
-
+    :synopsis: Модуль для работы с магазином eBay.
 """
-import json
 
-from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
+
+MODE = 'development'  # Режим работы приложения.
 
 
-def get_shop_data(shop_id: str) -> dict:
+def get_shop_data(file_path: str) -> dict:
     """
-    Retrieves data for a specific eBay shop.
+    Загружает данные о магазине eBay из файла.
 
-    :param shop_id: The ID of the eBay shop.
-    :type shop_id: str
-    :raises FileNotFoundError: If the shop data file is not found.
-    :raises json.JSONDecodeError: If the shop data file is invalid JSON.
-    :raises Exception: For other unexpected errors.
-    :return: Dictionary containing the shop data.
+    :param file_path: Путь к файлу с данными.
+    :type file_path: str
+    :raises FileNotFoundError: Если файл не найден.
+    :raises ValueError: Если данные в файле некорректны.
+    :return: Словарь с данными о магазине.
     :rtype: dict
     """
     try:
-        # Load shop data using j_loads for safe JSON handling.
-        shop_data = j_loads(f'shop_{shop_id}.json')
-        # ... (Data processing steps omitted)
-        return shop_data
+        # чтение данных из файла используя j_loads
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = j_loads(f)
+        return data
     except FileNotFoundError as e:
-        logger.error(f"Shop data file not found for shop ID: {shop_id}. Error: {e}")
+        logger.error(f"Ошибка: Файл {file_path} не найден. {e}")
         raise
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON format in shop data file for shop ID: {shop_id}. Error: {e}")
+    except ValueError as e:
+        logger.error(f"Ошибка: Некорректные данные в файле {file_path}. {e}")
         raise
     except Exception as e:
-        logger.error(f"An unexpected error occurred while retrieving shop data for shop ID: {shop_id}. Error: {e}")
+        logger.error(f"Произошла непредвиденная ошибка при чтении файла {file_path}: {e}")
         raise
 
-# Example Usage (you should replace with your actual data retrieval logic)
+
+# Пример использования (можно удалить при необходимости)
 # if __name__ == '__main__':
 #     try:
-#         shop_data = get_shop_data('123')
-#         print(shop_data)
+#         data = get_shop_data('shop_data.json')
+#         print(data)
 #     except Exception as e:
-#         print(f"Error: {e}")
+#         print(f"Ошибка: {e}")
+
 ```

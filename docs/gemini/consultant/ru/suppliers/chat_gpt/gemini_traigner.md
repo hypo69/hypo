@@ -40,81 +40,103 @@ MODE = 'development'
 **Improved Code**
 
 ```python
+# \file hypotez/src/suppliers/chat_gpt/gemini_traigner.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-.. module:: gemini_traigner
+.. module:: src.suppliers.chat_gpt.gemini_traigner
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с Gemini Trainer.
+   :synopsis:  Модуль для работы с Gemini Traigner.
 """
-from src.utils.jjson import j_loads  # Импорт необходимой функции для обработки JSON
-from src.logger import logger  # Импорт логгера
+import json
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
-# ...
+MODE = 'development'  # TODO:  Определить режим работы
 
-MODE = 'development'
-
-
-def some_function():
+def train_gemini(config_path: str) -> None:
     """
-    Пример функции для Gemini Trainer.
+    Обучает модель Gemini.
 
-    :return:
-        Описание возвращаемого значения.
+    :param config_path: Путь к файлу конфигурации.
+    :raises FileNotFoundError: Если файл конфигурации не найден.
+    :raises json.JSONDecodeError: Если файл конфигурации не валиден.
+    :return: None
     """
-    # ...  # Точка остановки
     try:
-        # ... # Код, который может вызвать ошибку
-        pass
-    except Exception as e:
-        logger.error(f"Ошибка в функции some_function: {e}")
-        # ... # Обработка ошибки
-
-# ...  # Точка остановки
+        # Загрузка конфигурации из файла.
+        with open(config_path, 'r') as f:
+            config = j_loads(f) # Используем j_loads вместо json.load
+        # ... (Обработка конфигурации)
+        # ... (Логика обучения модели)
+    except FileNotFoundError as e:
+        logger.error("Ошибка: файл конфигурации не найден: %s", config_path)
+        raise
+    except json.JSONDecodeError as e:
+        logger.error("Ошибка: некорректный формат файла конфигурации: %s", config_path)
+        raise
+    except Exception as e: # Обрабатываем все другие ошибки
+        logger.error("Произошла непредвиденная ошибка во время обучения модели: %s", e)
+        raise
 
 ```
 
 **Changes Made**
 
-*   Добавлен импорт `j_loads` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлен комментарий RST для модуля `gemini_traigner`.
-*   Добавлен комментарий RST для функции `some_function`.
-*   Добавлен блок `try-except` с использованием `logger.error` для обработки ошибок.
-*   Заменены все строковые комментарии в формате RST.
-*   Удалены лишние пустые строки и строки с неинформативными комментариями.
+- Добавлена строка импорта `from src.logger import logger`.
+- Функция `train_gemini` добавлена с документацией RST.
+- Изменён способ чтения файла (использование `j_loads` из `src.utils.jjson`).
+- Добавлена обработка ошибок с использованием `logger.error` и исключениями.
+- Добавлены docstrings к функциям.
+- Удалены пустые строки.
+- Добавлены примеры использования `TODO`.
+- Изменена документация на rst.
+- Заменены все `"""Docstring"""` на docstrings.
 
 
 **Complete Code (Improved)**
 
 ```python
+# \file hypotez/src/suppliers/chat_gpt/gemini_traigner.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-.. module:: gemini_traigner
+.. module:: src.suppliers.chat_gpt.gemini_traigner
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с Gemini Trainer.
+   :synopsis:  Модуль для работы с Gemini Traigner.
 """
-from src.utils.jjson import j_loads  # Импорт необходимой функции для обработки JSON
-from src.logger import logger  # Импорт логгера
+import json
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
-# ...
+MODE = 'development'  # TODO:  Определить режим работы
 
-
-MODE = 'development'
-
-
-def some_function():
+def train_gemini(config_path: str) -> None:
     """
-    Пример функции для Gemini Trainer.
+    Обучает модель Gemini.
 
-    :return:
-        Описание возвращаемого значения.
+    :param config_path: Путь к файлу конфигурации.
+    :raises FileNotFoundError: Если файл конфигурации не найден.
+    :raises json.JSONDecodeError: Если файл конфигурации не валиден.
+    :return: None
     """
-    # ...  # Точка остановки
     try:
-        # ... # Код, который может вызвать ошибку
-        pass
-    except Exception as e:
-        logger.error(f"Ошибка в функции some_function: {e}")
-        # ... # Обработка ошибки
-# ...  # Точка остановки
+        # Загрузка конфигурации из файла.
+        with open(config_path, 'r') as f:
+            config = j_loads(f) # Используем j_loads вместо json.load
+        # ... (Обработка конфигурации)
+        # ... (Логика обучения модели)
+    except FileNotFoundError as e:
+        logger.error("Ошибка: файл конфигурации не найден: %s", config_path)
+        raise
+    except json.JSONDecodeError as e:
+        logger.error("Ошибка: некорректный формат файла конфигурации: %s", config_path)
+        raise
+    except Exception as e: # Обрабатываем все другие ошибки
+        logger.error("Произошла непредвиденная ошибка во время обучения модели: %s", e)
+        raise
 ```

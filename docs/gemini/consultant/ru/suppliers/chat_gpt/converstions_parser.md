@@ -10,7 +10,6 @@
 .. module:: src.suppliers.chat_gpt
 	:platform: Windows, Unix
 	:synopsis:
-
 """
 MODE = 'development'
 
@@ -34,33 +33,36 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""
+MODE = 'development'
   
 import header
 from src import gs
 from pathlib import Path
 from bs4 import BeautifulSoup
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем j_loads и j_loads_ns
 
 def extract_conversations_from_html(file_path: Path):
     """Генератор, который читает один .html файл и извлекает все <div class="conversation">.
 
     :param file_path: Путь к .html файлу.
     """
-    # Открываем файл и парсим его содержимое
-    with file_path.open('r', encoding='utf-8') as file:
-        soup = BeautifulSoup(file, 'html.parser')
-        # Ищем все <div class="conversation">
-        conversations = soup.find_all('div', class_='conversation')
-        ...
-    # Возвращаем каждую найденную conversation
-    for conversation in conversations:
-        yield conversation
-
+    try:
+        # Открываем файл и парсим его содержимое
+        with file_path.open('r', encoding='utf-8') as file:
+            soup = BeautifulSoup(file, 'html.parser')
+            # Ищем все <div class="conversation">
+            conversations = soup.find_all('div', class_='conversation')
+            ...
+        # Возвращаем каждую найденную conversation
+        for conversation in conversations:
+            yield conversation
+    except Exception as e:
+        logger.error(f"Ошибка при обработке файла {file_path}: {e}")
 # Пример использования
-file_path = Path(gs.path.data / 'chat_gpt'  / 'chat.html')
-for conversation in extract_conversations_from_html(file_path):
-    print(conversation.prettify())  # Печатаем содержимое каждой найденной беседы
+#file_path = Path(gs.path.data / 'chat_gpt'  / 'chat.html')
+#for conversation in extract_conversations_from_html(file_path):
+#    print(conversation.prettify())  # Печатаем содержимое каждой найденной беседы
 ```
 
 **Improved Code**
@@ -74,24 +76,25 @@ for conversation in extract_conversations_from_html(file_path):
 """
 .. module:: src.suppliers.chat_gpt
     :platform: Windows, Unix
-    :synopsis: Модуль для парсинга HTML файлов с чатами.
+    :synopsis: Модуль для парсинга HTML файлов с беседами.
 """
 import logging
-MODE = 'development'
 from pathlib import Path
 from bs4 import BeautifulSoup
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+from src.logger import logger  # Импорт logger
+
+MODE = 'development'
 
 
 def extract_conversations_from_html(file_path: Path) -> None:
     """
-    Генератор для извлечения всех элементов <div class="conversation"> из HTML файла.
+    Генератор, который читает один .html файл и извлекает все <div class="conversation">.
 
-    :param file_path: Путь к HTML файлу.
+    :param file_path: Путь к .html файлу.
     :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: Если произошла ошибка при парсинге HTML.
+    :raises Exception: При других ошибках во время обработки.
     """
     try:
         with file_path.open('r', encoding='utf-8') as file:
@@ -99,40 +102,28 @@ def extract_conversations_from_html(file_path: Path) -> None:
             conversations = soup.find_all('div', class_='conversation')
             for conversation in conversations:
                 yield conversation
-    except FileNotFoundError:
-        logger.error(f"Файл не найден: {file_path}")
+    except FileNotFoundError as e:
+        logger.error(f"Файл {file_path} не найден: {e}")
         raise
     except Exception as e:
-        logger.error(f"Ошибка при парсинге HTML: {e}")
+        logger.error(f"Ошибка при обработке файла {file_path}: {e}")
         raise
-
-
-# Пример использования (можно перенести в отдельный модуль тестирования)
-if __name__ == "__main__":
-    file_path = Path(gs.path.data / 'chat_gpt' / 'chat.html')
-    try:
-        for conversation in extract_conversations_from_html(file_path):
-            print(conversation.prettify())
-    except Exception as e:
-        logger.error(f"Ошибка при обработке файла: {e}")
 
 ```
 
 **Changes Made**
 
-- Добавлена строка импорта `from src.logger import logger`.
-- Функция `extract_conversations_from_html` теперь имеет docstring в формате RST с описанием параметров, исключений и возвращаемого значения.
-- Добавлен обработчик исключения `FileNotFoundError` для обработки случаев, когда файл не найден.
-- Добавлен обработчик исключения `Exception` для обработки других возможных ошибок во время выполнения.
-- Добавлен блок `if __name__ == "__main__":` для того, чтобы код примера выполнения не запускался, если файл импортируется в другой скрипт.
-- Изменена структура импорта, чтобы соответствовать используемым модулям.
-- Убраны избыточные строки документации, не относящиеся к функции и содержащие только метаданные.
-- Вместо `...` добавлены обработчики исключений `try-except`, чтобы код был устойчивее к ошибкам.
-- Изменён формат вывода ошибки, чтобы он содержал имя файла.
-- Добавлены комментарии с использованием `#` для блоков кода, которые необходимо изменить, но не были изменены.
+*   Импортирован `logging` и `logger` для логирования ошибок.
+*   Добавлены обработчики исключений `try-except` для `FileNotFoundError` и других возможных исключений.
+*   Логирование ошибок теперь происходит с использованием `logger.error()`.
+*   Добавлены типы возвращаемых значений.
+*   Изменён формат docstrings на RST.
+*   Комментарии в начале модуля и функций оформлены как RST.
+*   Добавлен импорт `j_loads` и `j_loads_ns`.
+*   Удалены ненужные строки.
+*   Добавлена обработка ошибок и логирование.
+*   Изменён пример использования (он был удалён в улучшенном коде).
 
-
-**Full Code (Improved)**
 
 ```python
 # \file hypotez/src/suppliers/chat_gpt/converstions_parser.py
@@ -143,24 +134,25 @@ if __name__ == "__main__":
 """
 .. module:: src.suppliers.chat_gpt
     :platform: Windows, Unix
-    :synopsis: Модуль для парсинга HTML файлов с чатами.
+    :synopsis: Модуль для парсинга HTML файлов с беседами.
 """
 import logging
-MODE = 'development'
 from pathlib import Path
 from bs4 import BeautifulSoup
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+from src.logger import logger  # Импорт logger
+
+MODE = 'development'
 
 
 def extract_conversations_from_html(file_path: Path) -> None:
     """
-    Генератор для извлечения всех элементов <div class="conversation"> из HTML файла.
+    Генератор, который читает один .html файл и извлекает все <div class="conversation">.
 
-    :param file_path: Путь к HTML файлу.
+    :param file_path: Путь к .html файлу.
     :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: Если произошла ошибка при парсинге HTML.
+    :raises Exception: При других ошибках во время обработки.
     """
     try:
         with file_path.open('r', encoding='utf-8') as file:
@@ -168,20 +160,10 @@ def extract_conversations_from_html(file_path: Path) -> None:
             conversations = soup.find_all('div', class_='conversation')
             for conversation in conversations:
                 yield conversation
-    except FileNotFoundError:
-        logger.error(f"Файл не найден: {file_path}")
+    except FileNotFoundError as e:
+        logger.error(f"Файл {file_path} не найден: {e}")
         raise
     except Exception as e:
-        logger.error(f"Ошибка при парсинге HTML: {e}")
+        logger.error(f"Ошибка при обработке файла {file_path}: {e}")
         raise
-
-
-# Пример использования (можно перенести в отдельный модуль тестирования)
-if __name__ == "__main__":
-    file_path = Path(gs.path.data / 'chat_gpt' / 'chat.html')
-    try:
-        for conversation in extract_conversations_from_html(file_path):
-            print(conversation.prettify())
-    except Exception as e:
-        logger.error(f"Ошибка при обработке файла: {e}")
 ```

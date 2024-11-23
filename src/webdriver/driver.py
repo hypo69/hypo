@@ -267,6 +267,7 @@ class Driver:
         Raises:
             Exception: Если возникает ошибка при сохранении куки.
         """
+        return True # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ debug
         try:
             with open(gs.cookies_filepath, 'wb') as cookiesfile:
                 pickle.dump(self.driver.get_cookies(), cookiesfile)

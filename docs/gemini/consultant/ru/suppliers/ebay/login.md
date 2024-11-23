@@ -54,65 +54,67 @@ MODE = 'development'
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.ebay.login
+.. module:: hypotez.src.suppliers.ebay.login
    :platform: Windows, Unix
-   :synopsis: Модуль для авторизации на eBay через веб-драйвер.
+   :synopsis: Модуль для логина на eBay.
 """
-import json
+
+import logging
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger  # импорт логгера
-
-MODE = 'development'  # константа для режима работы
+from src.logger import logger
 
 
-def login(data):
+MODE = 'development'
+
+
+def login(credentials_file):
     """
-    Авторизуется на eBay через веб-драйвер.
+    Выполняет вход на eBay с использованием предоставленных данных.
 
-    :param data: Данные для авторизации (словарь).
-    :type data: dict
-    :raises ValueError: Если данные для авторизации некорректны.
-    :return: Результат авторизации (словарь).
+    :param credentials_file: Путь к файлу с данными для входа.
+    :type credentials_file: str
+    :raises FileNotFoundError: Если файл не найден.
+    :raises ValueError: Если данные в файле некорректны.
+    :raises Exception: Для других ошибок.
+    :return:  Данные пользователя после успешного входа.
     :rtype: dict
     """
     try:
-        # Обработка данных для авторизации.
-        # ... (Добавить проверку на наличие необходимых данных в словаре data)
-        # ... (Реализация логики авторизации)
-
-        # Возвращение данных об авторизации
-        return {'status': 'success', 'user_data': data}
+        # Загружаем данные из файла, используя j_loads.
+        credentials = j_loads(credentials_file)
+        # Проверка валидности загруженных данных.
+        if not credentials:
+            logger.error("Пустой файл credentials.")
+            raise ValueError("Пустой файл credentials.")
+        # ... (логика входа на eBay) ...
+        return {'user': 'user_name'} #Заглушка
+    except FileNotFoundError:
+        logger.error(f"Файл {credentials_file} не найден.")
+        raise
+    except ValueError as e:
+        logger.error(f"Ошибка валидации данных: {e}")
+        raise
     except Exception as e:
-        logger.error(f"Ошибка при авторизации: {e}")
-        raise ValueError(f"Ошибка при авторизации: {e}")
+        logger.error(f"Произошла ошибка при авторизации: {e}")
+        raise
 
 
-#Пример использования (необходимо заменить на реальные данные)
-# if __name__ == "__main__":
-#   try:
-#       with open("data.json", "r") as f:
-#           data_to_login = j_loads(f) # Чтение данных из файла
-#       result = login(data_to_login) # Вызов функции авторизации
-#       print(result) # Вывод результата
-#   except FileNotFoundError as e:
-#       logger.error(f"Файл не найден: {e}")
-#   except json.JSONDecodeError as e:
-#       logger.error(f"Ошибка декодирования JSON: {e}")
 ```
 
 **Changes Made**
 
-* Добавлена строка импорта `from src.logger import logger`.
-* Функция `login` снабжена документацией в формате RST.
-* Обработка исключений перенесена в блок `try-except`, используя `logger.error` для логирования ошибок.
-* Данные для авторизации читаются функцией `j_loads`.
-* Добавлена проверка корректности входных данных в `login`.
-* Добавлен пример использования (комментированный).
-* Изменен формат docstrings для функций.
-* Убраны лишние пустые строки комментариев.
+- Добавлено импортирование `logging` и `logger` из `src.logger`.
+- Добавлен docstring в формате RST для функции `login`, описывающий параметры, возвращаемое значение и возможные исключения.
+- Изменено `json.load` на `j_loads` из `src.utils.jjson` для загрузки данных из файла.
+- Добавлены блоки `try-except` для обработки `FileNotFoundError`, `ValueError` и общих исключений, используя `logger.error` для логирования ошибок.
+- Добавлены комментарии к строкам кода, которые необходимо изменить.
+- Заглушка возвращаемого значения изменена.
+- Изменён импорт, добавлен import logging.
+- Добавлены `:type` и `:raises` в docstring для ясности типов.
+- Исправлена логика обработки ошибок, используя `logger.error`.
 
 
-**Full Code (Improved)**
+**Full Code (improved)**
 
 ```python
 ## \file hypotez/src/suppliers/ebay/login.py
@@ -121,50 +123,49 @@ def login(data):
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.ebay.login
+.. module:: hypotez.src.suppliers.ebay.login
    :platform: Windows, Unix
-   :synopsis: Модуль для авторизации на eBay через веб-драйвер.
+   :synopsis: Модуль для логина на eBay.
 """
-import json
+
+import logging
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger  # импорт логгера
-
-MODE = 'development'  # константа для режима работы
+from src.logger import logger
 
 
-def login(data):
+MODE = 'development'
+
+
+def login(credentials_file):
     """
-    Авторизуется на eBay через веб-драйвер.
+    Выполняет вход на eBay с использованием предоставленных данных.
 
-    :param data: Данные для авторизации (словарь).
-    :type data: dict
-    :raises ValueError: Если данные для авторизации некорректны.
-    :return: Результат авторизации (словарь).
+    :param credentials_file: Путь к файлу с данными для входа.
+    :type credentials_file: str
+    :raises FileNotFoundError: Если файл не найден.
+    :raises ValueError: Если данные в файле некорректны.
+    :raises Exception: Для других ошибок.
+    :return:  Данные пользователя после успешного входа.
     :rtype: dict
     """
     try:
-        # Обработка данных для авторизации.
-        # Проверка на наличие необходимых данных в словаре data.
-        if not isinstance(data, dict) or 'username' not in data or 'password' not in data:
-            raise ValueError("Недостаточно данных для авторизации.")
-
-        # ... (Реализация логики авторизации) #TODO
-        # ... (Замените на реализацию авторизации через вебдрайвер)
-        return {'status': 'success', 'user_data': data}
+        # Загружаем данные из файла, используя j_loads.
+        credentials = j_loads(credentials_file)
+        # Проверка валидности загруженных данных.
+        if not credentials:
+            logger.error("Пустой файл credentials.")
+            raise ValueError("Пустой файл credentials.")
+        # ... (логика входа на eBay) ...
+        return {'user': 'user_name'} #Заглушка
+    except FileNotFoundError:
+        logger.error(f"Файл {credentials_file} не найден.")
+        raise
+    except ValueError as e:
+        logger.error(f"Ошибка валидации данных: {e}")
+        raise
     except Exception as e:
-        logger.error(f"Ошибка при авторизации: {e}")
-        raise ValueError(f"Ошибка при авторизации: {e}")
+        logger.error(f"Произошла ошибка при авторизации: {e}")
+        raise
 
 
-#Пример использования (необходимо заменить на реальные данные)
-# if __name__ == "__main__":
-#   try:
-#       with open("data.json", "r") as f:
-#           data_to_login = j_loads(f) # Чтение данных из файла
-#       result = login(data_to_login) # Вызов функции авторизации
-#       print(result) # Вывод результата
-#   except FileNotFoundError as e:
-#       logger.error(f"Файл не найден: {e}")
-#   except json.JSONDecodeError as e:
-#       logger.error(f"Ошибка декодирования JSON: {e}")
 ```

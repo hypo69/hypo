@@ -373,8 +373,9 @@ class ExecuteLocator:
         for event in events:
             if event == "click()":
                 try:
-                    await asyncio.to_thread(webelement.click)
-                    result.append(True)
+                    webelement.click()
+                    # await asyncio.to_thread(webelement.click)
+                    # result.append(True)
                     continue
                 except ElementClickInterceptedException as ex:
                     if MODE == 'debug': 

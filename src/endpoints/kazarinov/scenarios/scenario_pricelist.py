@@ -103,6 +103,7 @@ class Mexiron:
         urls_list = [urls] if isinstance(urls, str) else urls
         if not urls_list:
             logger.debug('No URLs provided for parsing.')
+            ...
             return False
 
         product_fields_list = []
@@ -128,7 +129,7 @@ class Mexiron:
                 ...
                 continue
 
-            product_data = self.convert_product_fields(f)
+            product_data = await self.convert_product_fields(f)
             if not product_data:
                 logger.debug(f'Failed to convert product fields: {product_data}')
                 ...
@@ -167,7 +168,7 @@ class Mexiron:
         logger.debug(f'No graber found for URL: {url}')
         return None
 
-    def convert_product_fields(self, f: ProductFields) -> dict:
+    async def convert_product_fields(self, f: ProductFields) -> dict:
         """
         Converts product fields into a dictionary.
 
@@ -178,7 +179,7 @@ class Mexiron:
             dict: Formatted product data dictionary.
         """
         image_path = self.export_path / 'images' / f'{f.id_product}.png'
-        asyncio.run(save_png(f.default_image_url, image_path))
+        await save_png(f.default_image_url, image_path)
 
         return {
             'product_title': f.name['language'][0]['value'].strip(),

@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/amazon/header.py
+## \file hypotez/src/suppliers/amazon/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -78,29 +78,35 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 **Improved Code**
 
 ```python
+## \file hypotez/src/suppliers/amazon/header.py
 # -*- coding: utf-8 -*-
-"""
-Module for handling project header information.
-"""
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
+"""
+.. module:: hypotez.src.suppliers.amazon.header
+    :platform: Windows, Unix
+    :synopsis: Module for handling Amazon supplier-related tasks.
+"""
 import sys
 import json
 from pathlib import Path
 from packaging.version import Version
 from src.utils.jjson import j_loads
-
-from src import gs
 from src.logger import logger
+
+
+MODE = 'development'
 
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project.
 
-    :param marker_files: Tuple of filenames to identify the project root.
+    :param marker_files: Filenames to identify the project root.
     :type marker_files: tuple
     :raises FileNotFoundError: If no marker file is found.
-    :returns: Path to the project root directory.
+    :returns: Path to the root directory.
     """
     current_path = Path(__file__).resolve().parent
     project_root = current_path
@@ -114,31 +120,46 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 
 
 # Get the root directory of the project
-project_root: Path = get_project_root()
+__root__ = get_project_root()
 
 
-settings: dict = None
+def load_settings(filepath: Path) -> dict:
+    """Loads settings from a JSON file.
+
+    :param filepath: Path to the settings file.
+    :type filepath: pathlib.Path
+    :raises FileNotFoundError: If the file is not found.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :returns: Loaded settings as a dictionary.
+    """
+    try:
+        return j_loads(filepath)
+    except FileNotFoundError:
+        logger.error(f"Settings file not found: {filepath}")
+        return {}
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding JSON in settings file: {filepath}, Error: {e}")
+        return {}
+
+
+
+settings = load_settings(__root__ / 'src' / 'settings.json')
+"""Settings (dict): Project settings."""
+
+
+doc_str = None
 try:
-    settings = j_loads((project_root / 'src' / 'settings.json').open())
-except FileNotFoundError:
-    logger.error("Settings file 'settings.json' not found.")
-except json.JSONDecodeError:
-    logger.error("Invalid JSON format in 'settings.json'.")
+    doc_str = open(__root__ / 'src' / 'README.MD', 'r').read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error(f"Error loading README.MD: {e}")
 
 
-doc_str: str = None
-try:
-    doc_str = (project_root / 'src' / 'README.MD').open().read()
-except FileNotFoundError:
-    logger.error("README.MD file not found.")
-
-
-__project_name__ = settings.get('project_name', 'hypotez')
-__version__ = settings.get('version', '')
+__project_name__ = settings.get("project_name", 'hypotez')
+__version__ = settings.get("version", '')
 __doc__ = doc_str if doc_str else ''
 __details__ = ''
-__author__ = settings.get('author', '')
-__copyright__ = settings.get('copyright', '')
+__author__ = settings.get("author", '')
+__copyright__ = settings.get("copyright", '')
 __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
 
 
@@ -146,46 +167,48 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 
 **Changes Made**
 
-- Replaced `json.load` with `j_loads` for reading JSON files.
-- Added `from src.logger import logger` for logging errors.
-- Replaced `MODE` with more appropriate `__project_name__`  and renamed other variables to follow Pythonic naming conventions.
-- Changed `try-except` blocks to handle specific errors (e.g., `FileNotFoundError`, `json.JSONDecodeError`) and use `logger.error` for logging.
-- Added missing imports (`from pathlib import Path` and `from src.logger import logger`).
-- Added comprehensive docstrings using RST format for functions.
-- Improved variable naming and added type hints.
-- Updated the `get_project_root` function to return `Path` object.
-- Fixed the error in the copyright variable name.
-- Removed unused `Version` import and `__details__` variable.
-- Renamed `settings_file` to `settings`.
-- Improved error handling; now logs errors instead of just using `...`.
-- Added type hints.
-
+- Replaced `json.load` with `j_loads` from `src.utils.jjson`.
+- Added type hints (e.g., `-> Path`).
+- Improved docstrings to RST format and added missing parameters to `get_project_root`.
+- Included error handling using `logger.error` instead of bare `try-except` blocks for better error reporting.
+- Added a function `load_settings` for better separation of concerns.
+- Added more descriptive docstrings for functions, classes, and variables.
+- Removed unnecessary docstrings.
+- Fixed typos ("copyrihgnt" to "copyright").
+- Fixed the path to the README file.
 
 **Full Code (Improved)**
 
 ```python
+## \file hypotez/src/suppliers/amazon/header.py
 # -*- coding: utf-8 -*-
-"""
-Module for handling project header information.
-"""
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
+"""
+.. module:: hypotez.src.suppliers.amazon.header
+    :platform: Windows, Unix
+    :synopsis: Module for handling Amazon supplier-related tasks.
+"""
 import sys
 import json
 from pathlib import Path
+from packaging.version import Version
 from src.utils.jjson import j_loads
-
-from src import gs
 from src.logger import logger
+
+
+MODE = 'development'
 
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project.
 
-    :param marker_files: Tuple of filenames to identify the project root.
+    :param marker_files: Filenames to identify the project root.
     :type marker_files: tuple
     :raises FileNotFoundError: If no marker file is found.
-    :returns: Path to the project root directory.
+    :returns: Path to the root directory.
     """
     current_path = Path(__file__).resolve().parent
     project_root = current_path
@@ -199,33 +222,46 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 
 
 # Get the root directory of the project
-project_root: Path = get_project_root()
+__root__ = get_project_root()
 
 
-settings: dict = None
+def load_settings(filepath: Path) -> dict:
+    """Loads settings from a JSON file.
+
+    :param filepath: Path to the settings file.
+    :type filepath: pathlib.Path
+    :raises FileNotFoundError: If the file is not found.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :returns: Loaded settings as a dictionary.
+    """
+    try:
+        return j_loads(filepath)
+    except FileNotFoundError:
+        logger.error(f"Settings file not found: {filepath}")
+        return {}
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding JSON in settings file: {filepath}, Error: {e}")
+        return {}
+
+
+
+settings = load_settings(__root__ / 'src' / 'settings.json')
+"""Settings (dict): Project settings."""
+
+
+doc_str = None
 try:
-    settings = j_loads((project_root / 'src' / 'settings.json').open())
-# Changed the error handling to specify exceptions and use logger.
-except FileNotFoundError:
-    logger.error("Settings file 'settings.json' not found.")
-except json.JSONDecodeError:
-    logger.error("Invalid JSON format in 'settings.json'.")
+    doc_str = open(__root__ / 'src' / 'README.MD', 'r').read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error(f"Error loading README.MD: {e}")
 
 
-doc_str: str = None
-try:
-    doc_str = (project_root / 'src' / 'README.MD').open().read()
-# Changed the error handling to specify exceptions and use logger.
-except FileNotFoundError:
-    logger.error("README.MD file not found.")
-
-
-__project_name__ = settings.get('project_name', 'hypotez')
-__version__ = settings.get('version', '')
+__project_name__ = settings.get("project_name", 'hypotez')
+__version__ = settings.get("version", '')
 __doc__ = doc_str if doc_str else ''
 __details__ = ''
-__author__ = settings.get('author', '')
-__copyright__ = settings.get('copyright', '')
+__author__ = settings.get("author", '')
+__copyright__ = settings.get("copyright", '')
 __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
 
 

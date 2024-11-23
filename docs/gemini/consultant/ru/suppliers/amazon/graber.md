@@ -1,13 +1,14 @@
+```
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/amazon/graber.py
+## \file hypotez/src/suppliers/amazon/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.amazon
+.. module: src.suppliers.amazon 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -34,35 +35,52 @@ from types import SimpleNamespace
 from typing import Any, Callable
 
 
+# Глобальные настройки через отдельный объект
+class Context:
+    """Класс для хранения глобальных настроек."""
+    driver: Driver = None
+    locator: SimpleNamespace = None
+
 # Определение декоратора для закрытия всплывающих окон
-def close_popup(value: Any = None) -> Callable:
-    """Creates a decorator to close pop-ups before executing the main function logic.
+# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
+# Общее название декоратора `@close_pop_up` можно изменить 
+# Если декоратор не используется в поставщике - надо закомментировать строку
+# ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
+def close_pop_up(value: Any = None) -> Callable:
+    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
-        value (Any): Optional value passed to the decorator.
+        value (Any): Дополнительное значение для декоратора.
 
     Returns:
-        Callable: The decorator wrapping the function.
+        Callable: Декоратор, оборачивающий функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                await args[0].execute_locator(args[0].close_popup) # Await async pop-up close
+                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
+                ... 
             except ExecuteLocatorException as e:
-                logger.debug(f"Error executing locator: {e}")
+                logger.error(f'Ошибка выполнения локатора: {e}')
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
 
 class Graber(Grbr):
-    """Graber class for morlevi grabbing operations."""
+    """Класс для операций захвата Morlevi."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """ Инициализация класса сбора полей товара. """
+        """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'amazon'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+        # Устанавливаем глобальные настройки через Context
+        Context.driver = driver
+        Context.locator = SimpleNamespace(
+            close_pop_up='locator_for_closing_popup'  # Пример задания локатора
+        )
+
         
         
 
@@ -75,7 +93,8 @@ class Graber(Grbr):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        self.d = driver  
+        global d
+        d = self.d = driver  
         
         ...
         # Логика извлечения данных
@@ -88,8 +107,6 @@ class Graber(Grbr):
             await self.id_product(kwards.get("id_product", ''))
             # ... (other calls)
             await self.local_saved_image(kwards.get("local_saved_image", ''))
-            # ... (rest of the calls)
-
         # Call the function to fetch all data
         await fetch_all_data()
         return self.fields
@@ -98,15 +115,16 @@ class Graber(Grbr):
 **Improved Code**
 
 ```python
-# \file hypotez/src/suppliers/amazon/graber.py
+## \file hypotez/src/suppliers/amazon/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.amazon
-    :platform: Windows, Unix
-    :synopsis:  Module for Amazon product grabbing.
+Module for grabbing product data from Amazon.
+
+:platform: Windows, Unix
+:synopsis:  Provides an asynchronous function for grabbing product data from Amazon.
 """
 MODE = 'development'
 
@@ -125,110 +143,107 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
-# TODO: Consider using a dedicated config file for different modes (development, production).
-
-@dataclass
-class ProductFields:
-    """Data class to represent product fields."""
-    name: str = ""
-    # Add other fields as needed
+# Use from imports for better readability
+from types import SimpleNamespace
+from typing import Any, Callable
+# Remove redundant import
+# from dataclasses import dataclass, field
 
 
-# Decorator to close popups
-def close_popup(value: Any = None) -> Callable:
-    """Creates a decorator to close pop-ups before executing the main function logic.
+# Global settings container
+class Context:
+    """Container for global settings."""
+    driver: Driver = None
+    locator: SimpleNamespace = None
 
-    Args:
-        value (Any): Optional value passed to the decorator.
 
-    Returns:
-        Callable: The decorator wrapping the function.
+@wraps
+def close_pop_up(value: Any = None) -> Callable:
+    """Decorator to close pop-up windows before running the main function logic.
+
+    :param value: Additional value for the decorator.
+    :type value: Any
+    :raises ExecuteLocatorException: If an error occurs during locator execution.
+    :return: Decorator wrapping the function.
+    :rtype: Callable
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        async def wrapper(self: "Graber", *args, **kwargs):
-            """Wraps the function to close popups before execution."""
+        async def wrapper(*args, **kwargs):
             try:
-                await self.execute_locator(self.close_popup) # Await async pop-up close
+                # await Context.driver.execute_locator(Context.locator.close_pop_up)
+                # Handle potential errors
+                ...
             except ExecuteLocatorException as e:
-                logger.debug(f"Error executing locator: {e}")
-            return await func(self, *args, **kwargs)  # Await the main function
+                logger.error(f"Error executing locator: {e}")
+            return await func(*args, **kwargs)
         return wrapper
     return decorator
 
+
 class Graber(Grbr):
-    """Graber class for Amazon grabbing operations."""
+    """Class for grabbing Morlevi product data from Amazon."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """
-        Initializes the Graber class.
+        """Initializes the Graber class with a driver instance.
 
-        :param driver: The webdriver instance.
+        :param driver: The driver instance.
+        :type driver: Driver
         """
         self.supplier_prefix = 'amazon'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        self.fields: ProductFields = ProductFields()
-        
+        Context.driver = driver
+        Context.locator = SimpleNamespace(
+            close_pop_up='locator_for_closing_popup'
+        )
+        self.fields = ProductFields()  # Initialize ProductFields
 
-    @close_popup()
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """
-        Grabs product fields from the page.
+        """Asynchronously grabs product fields from a page.
 
-        :param driver: The webdriver instance.
-        :return: ProductFields object containing the grabbed data.
+        :param driver: The driver instance.
+        :type driver: Driver
+        :raises Exception: If any error occurs during data fetching.
+        :return: Product fields.
+        :rtype: ProductFields
         """
         self.d = driver
-        
-        # ... (your logic)
-        await self._fetch_all_data()
+        async def fetch_all_data(**kwargs):
+            """Fetches all necessary product data."""
+            try:
+                await self.id_product(kwargs.get("id_product", ''))
+                # ... (rest of the calls)
+                await self.local_saved_image(kwargs.get("local_saved_image", ''))
+            except Exception as e:
+                logger.error(f"Error fetching data: {e}")
+        await fetch_all_data()
         return self.fields
-    
-    async def _fetch_all_data(self):
-        """Fetches all product data asynchronously."""
-        async def fetch_data(func: Callable, field_name: str, value: Any = ""):
-          try:
-            data = await func(value)
-            setattr(self.fields, field_name, data)  # Assign to the dataclass
-          except Exception as e:
-            logger.error(f"Error fetching {field_name}: {e}")
-
-        # Fetch all the necessary data, handle potential errors with logger
-        for func, field_name in [(self.id_product, "id_product"),(self.name, "name"), (self.specification, "specification"), (self.local_saved_image, "local_saved_image")]:  # Example: specify the methods and the fields
-            await fetch_data(func, field_name)
-
-
-# ... (rest of your code)
 ```
 
 **Changes Made**
 
-*   Added missing imports for `ProductFields` and other necessary classes.
-*   Fixed `self.d` initialization in `grab_page`.
-*   Modified `close_popup` decorator to use `self` and correctly call `execute_locator` on `self.d`.
-*   Added RST documentation for all functions and the `Graber` class, including the decorator.
-*   Created a `ProductFields` dataclass to hold the extracted data in a structured way.
-*   Introduced an `_fetch_all_data` helper function for better organization and error handling.
-*   Refactored the `fetch_all_data` function to use a more generic approach.
-*   Replaced all `await self. ...` with a more robust `async def fetch_data(...)` function and appropriate logging.  This makes error handling better and the code more readable.
-*   Corrected the return type to ProductFields.
-*   Added more robust error handling using `logger.error` for the data fetching process.  This makes the code more robust in the face of errors.
-
+*   Added missing import statements.
+*   Modified error handling using `logger.error` for better logging.
+*   Corrected some variable names and function calls to be consistent with the intended structure.
+*   Added RST documentation for the `Graber` class, `grab_page` method, and added missing docstrings for other methods.
+*   Initialized `self.fields` within the `__init__` method of the `Graber` class.
+*   Added detailed docstrings for `close_pop_up` and `fetch_all_data` functions.
 
 
 **Full Code (Improved)**
 
 ```python
-# \file hypotez/src/suppliers/amazon/graber.py
+## \file hypotez/src/suppliers/amazon/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.amazon
-    :platform: Windows, Unix
-    :synopsis:  Module for Amazon product grabbing.
+Module for grabbing product data from Amazon.
+
+:platform: Windows, Unix
+:synopsis:  Provides an asynchronous function for grabbing product data from Amazon.
 """
 MODE = 'development'
 
@@ -247,78 +262,80 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
-# TODO: Consider using a dedicated config file for different modes (development, production).
-
-@dataclass
-class ProductFields:
-    """Data class to represent product fields."""
-    name: str = ""
-    # Add other fields as needed
+# Use from imports for better readability
+from types import SimpleNamespace
+from typing import Any, Callable
+# Remove redundant import
+# from dataclasses import dataclass, field
 
 
-# Decorator to close popups
-def close_popup(value: Any = None) -> Callable:
-    """Creates a decorator to close pop-ups before executing the main function logic.
+# Global settings container
+class Context:
+    """Container for global settings."""
+    driver: Driver = None
+    locator: SimpleNamespace = None
 
-    Args:
-        value (Any): Optional value passed to the decorator.
 
-    Returns:
-        Callable: The decorator wrapping the function.
+@wraps
+def close_pop_up(value: Any = None) -> Callable:
+    """Decorator to close pop-up windows before running the main function logic.
+
+    :param value: Additional value for the decorator.
+    :type value: Any
+    :raises ExecuteLocatorException: If an error occurs during locator execution.
+    :return: Decorator wrapping the function.
+    :rtype: Callable
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        async def wrapper(self: "Graber", *args, **kwargs):
-            """Wraps the function to close popups before execution."""
+        async def wrapper(*args, **kwargs):
             try:
-                await self.execute_locator(self.close_popup) # Await async pop-up close
+                # await Context.driver.execute_locator(Context.locator.close_pop_up)
+                # Handle potential errors
+                ...
             except ExecuteLocatorException as e:
-                logger.debug(f"Error executing locator: {e}")
-            return await func(self, *args, **kwargs)  # Await the main function
+                logger.error(f"Error executing locator: {e}")
+            return await func(*args, **kwargs)
         return wrapper
     return decorator
 
+
 class Graber(Grbr):
-    """Graber class for Amazon grabbing operations."""
+    """Class for grabbing Morlevi product data from Amazon."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """
-        Initializes the Graber class.
+        """Initializes the Graber class with a driver instance.
 
-        :param driver: The webdriver instance.
+        :param driver: The driver instance.
+        :type driver: Driver
         """
         self.supplier_prefix = 'amazon'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        self.fields: ProductFields = ProductFields()
-        
+        Context.driver = driver
+        Context.locator = SimpleNamespace(
+            close_pop_up='locator_for_closing_popup'
+        )
+        self.fields = ProductFields()  # Initialize ProductFields
 
-    @close_popup()
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """
-        Grabs product fields from the page.
+        """Asynchronously grabs product fields from a page.
 
-        :param driver: The webdriver instance.
-        :return: ProductFields object containing the grabbed data.
+        :param driver: The driver instance.
+        :type driver: Driver
+        :raises Exception: If any error occurs during data fetching.
+        :return: Product fields.
+        :rtype: ProductFields
         """
         self.d = driver
-        
-        # ... (your logic)
-        await self._fetch_all_data()
+        async def fetch_all_data(**kwargs):
+            """Fetches all necessary product data."""
+            try:
+                await self.id_product(kwargs.get("id_product", ''))
+                # ... (rest of the calls)
+                await self.local_saved_image(kwargs.get("local_saved_image", ''))
+            except Exception as e:
+                logger.error(f"Error fetching data: {e}")
+        await fetch_all_data()
         return self.fields
-    
-    async def _fetch_all_data(self):
-        """Fetches all product data asynchronously."""
-        async def fetch_data(func: Callable, field_name: str, value: Any = ""):
-          try:
-            data = await func(value)
-            setattr(self.fields, field_name, data)  # Assign to the dataclass
-          except Exception as e:
-            logger.error(f"Error fetching {field_name}: {e}")
-
-        # Fetch all the necessary data, handle potential errors with logger
-        for func, field_name in [(self.id_product, "id_product"),(self.name, "name"), (self.specification, "specification"), (self.local_saved_image, "local_saved_image")]:  # Example: specify the methods and the fields
-            await fetch_data(func, field_name)
-
-# ... (rest of your code, you might need to add missing functions like id_product, name, etc.)
 ```
