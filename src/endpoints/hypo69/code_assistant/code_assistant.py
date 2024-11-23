@@ -258,7 +258,7 @@ if __name__ == '__main__':
     #main()
     while True:
         for lang in ['ru','en']:
-            for role in ['code_checker','doc_writer_md','pytest','doc_writer_rst']:
+            for role in ['code_checker','doc_writer_md','pytest','doc_writer_rst','code_explainer']:
                 logger.debug(f"Start role: {role}, lang: {lang}", None, False)
                 assistant_direct = CodeAssistant(
                     role=role,

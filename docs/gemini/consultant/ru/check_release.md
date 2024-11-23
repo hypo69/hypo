@@ -1,14 +1,15 @@
 **Received Code**
 
 ```python
+## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src
-   :platform: Windows, Unix
-   :synopsis:
+.. module: src 
+	:platform: Windows, Unix
+	:synopsis:
 
 """
 MODE = 'dev'
@@ -42,22 +43,23 @@ def check_latest_release(owner: str, repo: str):
 **Improved Code**
 
 ```python
+## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src
+.. module:: check_release
    :platform: Windows, Unix
-   :synopsis:
-   Проверка последней версии релиза на GitHub.
+   :synopsis: Модуль для проверки последней версии релиза на GitHub.
 """
-MODE = 'dev'
-
-
 import requests
 from src.logger import logger
 from src.utils.jjson import j_loads
+
+
+MODE = 'dev'
+
 
 def check_latest_release(owner: str, repo: str) -> str | None:
     """
@@ -67,58 +69,55 @@ def check_latest_release(owner: str, repo: str) -> str | None:
     :type owner: str
     :param repo: Название репозитория.
     :type repo: str
-    :raises requests.exceptions.RequestException: Если произошла ошибка при запросе к API GitHub.
-    :raises KeyError: Если в ответе API нет ключа 'tag_name'.
-    :return: Тег последней версии релиза, если доступен, иначе None.
-    :rtype: str | None
+    :raises requests.exceptions.RequestException: В случае ошибки при запросе к API GitHub.
+    :raises ValueError: В случае некорректного ответа от API.
+    :returns: Номер последней версии релиза (строка), или None, если релиз не найден или произошла ошибка.
     """
     url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Поднимает исключение для ошибок HTTP
+        response.raise_for_status()  # Поднимает исключение для некорректных кодов ответа
         latest_release = j_loads(response.text)
         return latest_release['tag_name']
     except requests.exceptions.RequestException as e:
         logger.error(f"Ошибка при запросе к API GitHub: {e}")
         return None
-    except KeyError as e:
-        logger.error(f"Ошибка: ключ 'tag_name' не найден в ответе API GitHub: {e}")
+    except (KeyError, ValueError) as e:
+        logger.error(f"Некорректный ответ от API GitHub: {e}")
         return None
 
 ```
 
 **Changes Made**
 
-- Заменено `json.load` на `j_loads` из `src.utils.jjson`.
-- Добавлен `try...except` блок для обработки ошибок запроса к API GitHub.
-- Использование `response.raise_for_status()` для обработки ошибок HTTP.
-- Добавлена обработка `KeyError` для случая, когда ключ `tag_name` отсутствует в ответе.
-- Изменено возвращаемое значение функции на `str | None` для явного указания возможности возврата `None`.
-- Добавлен docstring в формате reStructuredText (RST) к функции `check_latest_release`.
-- Добавлены описания параметров и возвращаемого значения.
-- Улучшены сообщения об ошибках в `logger.error`.
-- Улучшен стиль кода.
-- Удален ненужный `#TODO`.
-- Изменена логика возврата значения, в случае ошибки возвращается `None`, а не пустое значение.
+- Импортирован `j_loads` из `src.utils.jjson` для корректной обработки JSON данных.
+- Добавлен `try...except` блок для обработки возможных исключений при запросе к API GitHub, а также при обработке ответа, включая `KeyError` и `ValueError`.
+- Использование `response.raise_for_status()` для более явного выявления проблем с ответом.
+- Удален неиспользуемый код.
+- Изменен тип возвращаемого значения на `str | None`.
+- Добавлена подробная документация в формате RST для функции `check_latest_release` с указанием типов аргументов, возможных исключений и возвращаемого значения.
+- Изменены комментарии к функции для лучшей читабельности.
+- Добавлен `logger.error` для вывода ошибок при обработке исключений.
 
 
 ```python
+## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src
+.. module:: check_release
    :platform: Windows, Unix
-   :synopsis:
-   Проверка последней версии релиза на GitHub.
+   :synopsis: Модуль для проверки последней версии релиза на GitHub.
 """
-MODE = 'dev'
-
-
 import requests
 from src.logger import logger
 from src.utils.jjson import j_loads
+
+
+MODE = 'dev'
+
 
 def check_latest_release(owner: str, repo: str) -> str | None:
     """
@@ -128,21 +127,20 @@ def check_latest_release(owner: str, repo: str) -> str | None:
     :type owner: str
     :param repo: Название репозитория.
     :type repo: str
-    :raises requests.exceptions.RequestException: Если произошла ошибка при запросе к API GitHub.
-    :raises KeyError: Если в ответе API нет ключа 'tag_name'.
-    :return: Тег последней версии релиза, если доступен, иначе None.
-    :rtype: str | None
+    :raises requests.exceptions.RequestException: В случае ошибки при запросе к API GitHub.
+    :raises ValueError: В случае некорректного ответа от API.
+    :returns: Номер последней версии релиза (строка), или None, если релиз не найден или произошла ошибка.
     """
     url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Поднимает исключение для ошибок HTTP
+        response.raise_for_status()  # Поднимает исключение для некорректных кодов ответа
         latest_release = j_loads(response.text)
         return latest_release['tag_name']
     except requests.exceptions.RequestException as e:
         logger.error(f"Ошибка при запросе к API GitHub: {e}")
         return None
-    except KeyError as e:
-        logger.error(f"Ошибка: ключ 'tag_name' не найден в ответе API GitHub: {e}")
+    except (KeyError, ValueError) as e:
+        logger.error(f"Некорректный ответ от API GitHub: {e}")
         return None
 ```

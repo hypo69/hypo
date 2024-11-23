@@ -1,190 +1,192 @@
 **Received Code**
 
 ```
+# Модуль категоризации данных (класс Product), полученных от поставщика (класс Supplier)
+import json
+
+# ...
+
+
+class Supplier:
+    def __init__(self, data):
+        self.data = data  # Данные поставщика
+
+
+class Product:
+    def __init__(self, supplier_data, product_data):
+        # ...
+        self.supplier = supplier_data
+        self.product_data = product_data
+        # ...
+
+
+def categorize_products(supplier_data_path, product_data_path):
+    # ...
+    try:
+        with open(supplier_data_path, 'r') as f:
+            supplier_data = json.load(f)
+        with open(product_data_path, 'r') as f:
+            product_data = json.load(f)
+    except FileNotFoundError:
+        print('Файл не найден')
+        return []
+
+    supplier = Supplier(supplier_data)
+    products = []
+    for product_item in product_data:
+        # ...
+        new_product = Product(supplier, product_item)
+        products.append(new_product)
+        # ...
+    return products  # Возвращает список продуктов
 ```
 
 **Improved Code**
 
 ```python
 import json
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads
 from src.logger import logger
 
-# Модуль категоризации данных, полученных от поставщика.
-# Содержит класс Product и взаимодействие с Supplier.
+# Модуль категоризации данных (класс Product), полученных от поставщика (класс Supplier)
+# Содержит классы Supplier и Product, а также функцию categorize_products для
+# категоризации продуктов, полученных от поставщика.
+
 
 class Supplier:
     """
-    Представляет поставщика данных.
+    Класс для представления данных поставщика.
+
+    :param data: Данные поставщика в формате словаря.
     """
-
-    def __init__(self, data_source):
-        """
-        Инициализирует поставщика данных.
-
-        :param data_source: Источник данных поставщика.
-        """
-        self.data_source = data_source
-
-    def get_data(self):
-        """
-        Возвращает данные от поставщика.
-        
-        :raises FileNotFoundError: Если данные не найдены.
-        :raises json.JSONDecodeError: Если данные не являются корректным JSON.
-        :return: Данные в формате словаря.
-        """
-
-        try:
-           # Чтение данных из файла.  # TODO: Обработать исключения (FileNotFoundError, json.JSONDecodeError)
-           with open(self.data_source, 'r') as f:
-               data = j_loads(f)
-               return data
-        except FileNotFoundError as e:
-           logger.error(f"Ошибка чтения данных: файл {self.data_source} не найден. {e}")
-           raise
-        except json.JSONDecodeError as e:
-            logger.error(f"Ошибка чтения данных: {self.data_source} некорректный JSON. {e}")
-            raise
-        except Exception as e:
-            logger.error(f"Непредвиденная ошибка при чтении данных: {e}")
-            raise
-        
+    def __init__(self, data):
+        self.data = data  # Данные поставщика
 
 
 class Product:
     """
-    Представляет продукт, полученный от поставщика.
+    Класс для представления данных продукта.
+
+    :param supplier_data: Экземпляр класса Supplier.
+    :param product_data: Данные продукта в формате словаря.
     """
-
-    def __init__(self, product_data):
-        """
-        Инициализирует продукт.
-        
-        :param product_data: Данные о продукте в формате словаря.
-        :raises TypeError: Если product_data не является словарем.
-        """
-
-        if not isinstance(product_data, dict):
-            logger.error("Ошибка инициализации продукта: данные не в формате словаря.")
-            raise TypeError("product_data must be a dictionary")
+    def __init__(self, supplier_data, product_data):
+        self.supplier = supplier_data
         self.product_data = product_data
-        
-        # Добавьте логирование, если необходимо.
-        # logger.info(f"Продукт инициализирован: {self.product_data}")
+        # Добавьте логику обработки данных продукта
 
-    def categorize(self):
-        """
-        Категоризирует продукт.
-        Возвращает строку с категорией продукта или None, если категория не определена.
 
-        :raises TypeError: Если не определена категория продукта.
+def categorize_products(supplier_data_path, product_data_path):
+    """
+    Категоризирует продукты, полученные от поставщика.
 
-        """
+    :param supplier_data_path: Путь к файлу с данными поставщика.
+    :param product_data_path: Путь к файлу с данными продуктов.
+    :return: Список объектов Product. Возвращает пустой список, если файлы не найдены.
+    """
+    try:
+        # Используем j_loads для обработки JSON данных
+        supplier_data = j_loads(supplier_data_path)
+        product_data = j_loads(product_data_path)
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка: Файл не найден: {e}")
+        return []
+    except json.JSONDecodeError as e:
+        logger.error(f"Ошибка декодирования JSON: {e}")
+        return []
+    except Exception as e:
+        logger.error(f"Непредвиденная ошибка: {e}")
+        return []
+
+    supplier = Supplier(supplier_data)
+    products = []
+    for product_item in product_data:
         try:
-          category = self.product_data.get('category') # Получаем категорию.
-          return category
-        except AttributeError as e: #Обрабатываем исключения
-            logger.error(f"Ошибка категоризации: {e}")
-            raise TypeError("Нет категории продукта")
+            new_product = Product(supplier, product_item)
+            products.append(new_product)
+        except Exception as e:
+            logger.error(f"Ошибка при создании продукта: {e}, данные продукта: {product_item}")
+
+
+    return products
 ```
 
 **Changes Made**
 
-* Добавлена полная документация в формате RST для класса `Supplier` и `Product`.
-* Используется `j_loads` для чтения JSON данных.
-* Добавлена обработка исключений `FileNotFoundError` и `json.JSONDecodeError` с помощью `logger.error`.
-* Добавлено логирование ошибок с помощью `logger`.
-* Добавлены проверки типов данных (проверка на словарь в `Product`).
-* Проверка и добавление импортов.
-* Добавлена обработка исключения `AttributeError` в методе `categorize`.
-* Улучшена структура кода.
-* Изменён метод `categorize` в классе `Product`.
-* Добавлена документация для методов `get_data` и `categorize`.
+*   Добавлен импорт `from src.utils.jjson import j_loads` для использования `j_loads`.
+*   Добавлен импорт `from src.logger import logger` для логирования ошибок.
+*   Вместо `json.load` используются `j_loads` для загрузки данных из файлов.
+*   Добавлены обработка `FileNotFoundError`, `json.JSONDecodeError` и общая обработка исключений с использованием `logger.error` для улучшенной обработки ошибок.
+*   Добавлена полная документация в формате RST для классов `Supplier`, `Product` и функции `categorize_products` в соответствии с требованиями.
+*   Изменен стиль написания комментариев к коду на более читаемый и документированный в формате RST.
 
-
-**Full Improved Code (Copy and Paste)**
+**Full Code (Improved)**
 
 ```python
 import json
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads
 from src.logger import logger
 
-# Модуль категоризации данных, полученных от поставщика.
-# Содержит класс Product и взаимодействие с Supplier.
+# Модуль категоризации данных (класс Product), полученных от поставщика (класс Supplier)
+# Содержит классы Supplier и Product, а также функцию categorize_products для
+# категоризации продуктов, полученных от поставщика.
+
 
 class Supplier:
     """
-    Представляет поставщика данных.
+    Класс для представления данных поставщика.
+
+    :param data: Данные поставщика в формате словаря.
     """
-
-    def __init__(self, data_source):
-        """
-        Инициализирует поставщика данных.
-
-        :param data_source: Источник данных поставщика.
-        """
-        self.data_source = data_source
-
-    def get_data(self):
-        """
-        Возвращает данные от поставщика.
-        
-        :raises FileNotFoundError: Если данные не найдены.
-        :raises json.JSONDecodeError: Если данные не являются корректным JSON.
-        :return: Данные в формате словаря.
-        """
-
-        try:
-           # Чтение данных из файла.  # TODO: Обработать исключения (FileNotFoundError, json.JSONDecodeError)
-           with open(self.data_source, 'r') as f:
-               data = j_loads(f)
-               return data
-        except FileNotFoundError as e:
-           logger.error(f"Ошибка чтения данных: файл {self.data_source} не найден. {e}")
-           raise
-        except json.JSONDecodeError as e:
-            logger.error(f"Ошибка чтения данных: {self.data_source} некорректный JSON. {e}")
-            raise
-        except Exception as e:
-            logger.error(f"Непредвиденная ошибка при чтении данных: {e}")
-            raise
-        
+    def __init__(self, data):
+        self.data = data  # Данные поставщика
 
 
 class Product:
     """
-    Представляет продукт, полученный от поставщика.
+    Класс для представления данных продукта.
+
+    :param supplier_data: Экземпляр класса Supplier.
+    :param product_data: Данные продукта в формате словаря.
     """
-
-    def __init__(self, product_data):
-        """
-        Инициализирует продукт.
-        
-        :param product_data: Данные о продукте в формате словаря.
-        :raises TypeError: Если product_data не является словарем.
-        """
-
-        if not isinstance(product_data, dict):
-            logger.error("Ошибка инициализации продукта: данные не в формате словаря.")
-            raise TypeError("product_data must be a dictionary")
+    def __init__(self, supplier_data, product_data):
+        self.supplier = supplier_data
         self.product_data = product_data
-        
-        # Добавьте логирование, если необходимо.
-        # logger.info(f"Продукт инициализирован: {self.product_data}")
+        # Добавьте логику обработки данных продукта
 
-    def categorize(self):
-        """
-        Категоризирует продукт.
-        Возвращает строку с категорией продукта или None, если категория не определена.
 
-        :raises TypeError: Если не определена категория продукта.
+def categorize_products(supplier_data_path, product_data_path):
+    """
+    Категоризирует продукты, полученные от поставщика.
 
-        """
+    :param supplier_data_path: Путь к файлу с данными поставщика.
+    :param product_data_path: Путь к файлу с данными продуктов.
+    :return: Список объектов Product. Возвращает пустой список, если файлы не найдены.
+    """
+    try:
+        # Используем j_loads для обработки JSON данных
+        supplier_data = j_loads(supplier_data_path)
+        product_data = j_loads(product_data_path)
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка: Файл не найден: {e}")
+        return []
+    except json.JSONDecodeError as e:
+        logger.error(f"Ошибка декодирования JSON: {e}")
+        return []
+    except Exception as e:
+        logger.error(f"Непредвиденная ошибка: {e}")
+        return []
+
+    supplier = Supplier(supplier_data)
+    products = []
+    for product_item in product_data:
         try:
-          category = self.product_data.get('category') # Получаем категорию.
-          return category
-        except AttributeError as e: #Обрабатываем исключения
-            logger.error(f"Ошибка категоризации: {e}")
-            raise TypeError("Нет категории продукта")
+            # Обработка каждого элемента product_data
+            new_product = Product(supplier, product_item)
+            products.append(new_product)
+        except Exception as e:
+            logger.error(f"Ошибка при создании продукта: {e}, данные продукта: {product_item}")
+
+
+    return products
 ```

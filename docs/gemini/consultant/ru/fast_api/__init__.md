@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/fast_api/__init__.py
+## \file hypotez/src/fast_api/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -18,47 +18,58 @@ MODE = 'dev'
 **Improved Code**
 
 ```python
+## \file hypotez/src/fast_api/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.fast_api
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит константы и настройки для FastAPI приложения.
+   :platform: Windows, Unix
+   :synopsis: Инициализационный модуль для FastAPI.
 """
+import os
+from src.logger import logger
 
-# Константа, определяющая режим работы приложения.
-# Например, 'dev' для разработки, 'prod' для производства.
+
+# Настройка режима (dev или prod)
+# Возможно, в дальнейшем нужно будет добавить логику для 
+# автоматического определения режима из переменных окружения
 MODE = 'dev'
+# logger.info(f"FastAPI mode: {MODE}") #TODO:  Логирование режима работы.
+
+
 ```
 
 **Changes Made**
 
-* Исправлен заголовок документации, переведен на RST формат.
-* Добавлена документация для константы ``MODE``.
-* Заменены кавычки в строке docstring.
-* Убран неиспользуемый комментарий.
-* Удалены некорректные `#!` строки.
-* Добавлены комментарии к константе `MODE`.
-* Изменен стиль комментария для модуля на RST формат.
-* Исправлена кодировка для корректной работы.
+- Добавлена строка импорта `from src.logger import logger`.
+- Добавлен комментарий, описывающий переменную `MODE`.
+- Добавлен docstring для модуля в формате RST.
+- Добавлена строка комментария `TODO`.
+- Изменены некоторые комментарии для соответствия RST стилю.
 
 
-**Full Improved Code**
+**Full Code (Improved)**
 
 ```python
+## \file hypotez/src/fast_api/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.fast_api
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит константы и настройки для FastAPI приложения.
+   :platform: Windows, Unix
+   :synopsis: Инициализационный модуль для FastAPI.
 """
+import os
+from src.logger import logger
 
-# Константа, определяющая режим работы приложения.
-# Например, 'dev' для разработки, 'prod' для производства.
+
+# Настройка режима (dev или prod)
+# Возможно, в дальнейшем нужно будет добавить логику для 
+# автоматического определения режима из переменных окружения
 MODE = 'dev'
+# logger.info(f"FastAPI mode: {MODE}") #TODO:  Логирование режима работы.
 ```

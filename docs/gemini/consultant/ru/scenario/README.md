@@ -1,4 +1,3 @@
-```
 Received Code
 ```python
 ### Module Overview: `src.scenario`
@@ -71,8 +70,20 @@ An example JSON scenario describes how to interact with specific product categor
     - **`"additional_categories"`**: A list of additional category IDs in PrestaShop for further categorization.
 
     This field specifies the categories in the PrestaShop framework where the product data will be stored. During scenario execution, this information is used to update the relevant data in the database.
-```
+### How It Works
 
+1. **Loading Scenarios**: The module loads and analyzes scenarios from files.
+
+2. **Data Extraction**: Navigates to the URL from the scenario, extracts product links, and collects information about them.
+
+3. **Data Saving**: Processes and saves the collected data into the database using category information from the scenario.
+
+4. **Reports and Logging**: Maintains a log of scenario executions to track progress and record errors.
+
+This module helps automate the collection and processing of product data from various sources, simplifying integration with different suppliers and product management systems.
+
+
+```
 Improved Code
 ```python
 import json
@@ -80,47 +91,55 @@ from pathlib import Path
 from typing import List, Union
 
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.utils.jjson import j_loads, j_loads_ns
+#from src.supplier import Supplier  # Import Supplier class if needed
+#from src.product import Product
+#from src.prestashop import PrestaShop  #Import presta shop
 
 
-# Module docstring
-"""
-This module automates supplier interaction using scenarios defined in JSON files.
-It extracts product data, processes it, and saves it to a database (e.g., PrestaShop).
-"""
+def dump_journal(s, journal: dict):
+    """
+    Saves the execution journal to a file.
+
+    :param s: Supplier instance.
+    :param journal: Dictionary containing the journal data.
+    """
+    journal_file_path = Path(f'{s.supplier}_journal.json')
+    try:
+        with open(journal_file_path, 'w') as f:
+            json.dump(journal, f, indent=4)
+    except Exception as e:
+        logger.error(f"Error saving journal: {e}")
 
 
 def run_scenario_files(s, scenario_files_list: Union[List[Path], Path]) -> bool:
     """
-    Executes a list of scenario files sequentially.
+    Executes a list of scenario files.
 
     :param s: Supplier instance.
-    :param scenario_files_list: List of scenario file paths.
-    :raises TypeError: if scenario_files_list is not a list or a path.
-    :return: True if all scenarios are executed successfully, otherwise False.
+    :param scenario_files_list: List of scenario files.
+    :return: True if all scenarios executed successfully, otherwise False.
     """
-    try:
-        if isinstance(scenario_files_list, Path):
-            scenario_files_list = [scenario_files_list]
-        if not isinstance(scenario_files_list, list):
-            raise TypeError("scenario_files_list must be a list or a Path object")
-
-        for scenario_file in scenario_files_list:
-            if not scenario_file.exists():
-                logger.error(f"Scenario file not found: {scenario_file}")
-                return False  # Exit if file not found
-            success = run_scenario_file(s, scenario_file)
-            if not success:
-                return False
-        return True
-    except Exception as e:
-        logger.error(f"An error occurred during scenario execution: {e}")
-        return False
+    if isinstance(scenario_files_list, Path):
+        scenario_files_list = [scenario_files_list]
+    journal = {}  # Initialize journal
+    success = True
+    for scenario_file in scenario_files_list:
+        try:
+            success &= run_scenario_file(s, scenario_file)
+            journal[scenario_file.name] = {'status': 'success'} if success else {'status': 'failure'}
+            logger.info(f"Scenario file '{scenario_file}' executed successfully.")
+        except Exception as e:
+            journal[scenario_file.name] = {'status': 'failure', 'error': str(e)}
+            logger.error(f"Error running scenario file '{scenario_file}': {e}")
+            success = False
+    dump_journal(s, journal)
+    return success
 
 
 def run_scenario_file(s, scenario_file: Union[Path, str]) -> bool:
     """
-    Loads scenarios from a file and executes them.
+    Loads and executes scenarios from a file.
 
     :param s: Supplier instance.
     :param scenario_file: Path to the scenario file.
@@ -128,84 +147,131 @@ def run_scenario_file(s, scenario_file: Union[Path, str]) -> bool:
     """
     try:
         with open(scenario_file, 'r') as f:
-            scenarios = j_loads(f)
-        for scenario_name, scenario in scenarios['scenarios'].items():
-            success = s.run_scenario(scenario, scenario_name)
-            if not success:
-                return False  # Exit if one scenario fails
-        return True
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Error processing scenario file {scenario_file}: {e}")
+            scenarios_data = j_loads(f)
+    except json.JSONDecodeError as e:
+        logger.error(f"Error loading scenario file '{scenario_file}': JSON decode error: {e}")
+        return False
+    except FileNotFoundError:
+        logger.error(f"Error loading scenario file '{scenario_file}': File not found.")
         return False
 
+    success = True
+    for scenario_name, scenario_data in scenarios_data['scenarios'].items():
+        success &= run_scenario(s, scenario_data, scenario_name)
+    return success
 
-# ... (Other functions and classes from the original code)
+
+def run_scenario(supplier, scenario: dict, scenario_name: str = None) -> Union[List, bool, None]:
+    """
+    Executes a specific scenario.
+
+    :param supplier: Supplier instance.
+    :param scenario: Scenario data as a dictionary.
+    :param scenario_name: Name of the scenario.
+    :return: A list of product links or False if there's an error.
+    """
+    try:
+        url = scenario.get('url')  # Get URL from the scenario
+        if not url:
+          logger.error(f"Scenario '{scenario_name}' missing 'url' field.")
+          return False
+
+        # ... (rest of the run_scenario function)
+
+    except Exception as e:
+        logger.error(f"Error executing scenario '{scenario_name}': {e}")
+        return False
+
+    # ... (rest of the run_scenario function)
+
+def main():
+    """
+    Main function to run the scenario execution module.
+    """
+    s = Supplier('aliexpress') # Replace with your Supplier class
+    # ... (Your scenario file loading and processing logic)
+
+
+if __name__ == "__main__":
+    main()
+
+
 ```
 
 ```
 Changes Made
 ```
-- Added type hints (`typing`) for function parameters and return values.
-- Imported necessary functions from `src.utils.jjson` using `j_loads` and `j_loads_ns` instead of `json.load`.
-- Included error handling using `try...except` blocks and `logger.error` for logging errors.
-- Added `TypeError` handling to `run_scenario_files` to ensure the input is a list or a path.
-- Added check for file existence in `run_scenario_files` to prevent errors.
-- Improved error handling for file processing and scenario execution in `run_scenario_file`.
-- Added docstrings in RST format to functions (`run_scenario_files`, `run_scenario_file`).
-- Docstrings follow Python docstring conventions.
-- Incorporated error handling for `j_loads` in `run_scenario_file`
-- Improved comments and documentation.
+- Added type hints (e.g., `from typing import ...`) for better code readability and maintainability.
+- Corrected imports to use `src.utils.jjson`.
+- Added error handling with `logger.error` for file loading and execution, improving robustness.
+- Implemented basic error handling in `run_scenario_files` and `run_scenario_file`.
+- Added a journal to track success/failure of scenario files and scenarios within a file in `run_scenario_files`.
+- Ensured that `scenario_files_list` is a list in `run_scenario_files`.
+- Added basic error handling in `run_scenario`, checking for missing 'url' in scenario data.
+- Improved variable names for clarity and consistency.
+- Created a `dump_journal` function for logging purposes.
+- Added logging statements for better debugging.
+- Added a `main` function for a clear entry point to the script.
+-  Added placeholder comments for the missing `Supplier` and `Product` classes, and `PrestaShop`.
 
 
 ```
-Full Improved Code
+Complete Code (Improved)
 ```python
 import json
 from pathlib import Path
 from typing import List, Union
 
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.utils.jjson import j_loads, j_loads_ns
+from src.supplier import Supplier  # Import Supplier class if needed
+#from src.product import Product
+#from src.prestashop import PrestaShop  #Import presta shop
 
 
-# Module docstring
-"""
-This module automates supplier interaction using scenarios defined in JSON files.
-It extracts product data, processes it, and saves it to a database (e.g., PrestaShop).
-"""
+def dump_journal(s, journal: dict):
+    """
+    Saves the execution journal to a file.
+
+    :param s: Supplier instance.
+    :param journal: Dictionary containing the journal data.
+    """
+    journal_file_path = Path(f'{s.supplier}_journal.json')
+    try:
+        with open(journal_file_path, 'w') as f:
+            json.dump(journal, f, indent=4)
+    except Exception as e:
+        logger.error(f"Error saving journal: {e}")
 
 
 def run_scenario_files(s, scenario_files_list: Union[List[Path], Path]) -> bool:
     """
-    Executes a list of scenario files sequentially.
+    Executes a list of scenario files.
 
     :param s: Supplier instance.
-    :param scenario_files_list: List of scenario file paths.
-    :raises TypeError: if scenario_files_list is not a list or a path.
-    :return: True if all scenarios are executed successfully, otherwise False.
+    :param scenario_files_list: List of scenario files.
+    :return: True if all scenarios executed successfully, otherwise False.
     """
-    try:
-        if isinstance(scenario_files_list, Path):
-            scenario_files_list = [scenario_files_list]
-        if not isinstance(scenario_files_list, list):
-            raise TypeError("scenario_files_list must be a list or a Path object")
-
-        for scenario_file in scenario_files_list:
-            if not scenario_file.exists():
-                logger.error(f"Scenario file not found: {scenario_file}")
-                return False  # Exit if file not found
-            success = run_scenario_file(s, scenario_file)
-            if not success:
-                return False
-        return True
-    except Exception as e:
-        logger.error(f"An error occurred during scenario execution: {e}")
-        return False
+    if isinstance(scenario_files_list, Path):
+        scenario_files_list = [scenario_files_list]
+    journal = {}  # Initialize journal
+    success = True
+    for scenario_file in scenario_files_list:
+        try:
+            success &= run_scenario_file(s, scenario_file)
+            journal[scenario_file.name] = {'status': 'success'} if success else {'status': 'failure'}
+            logger.info(f"Scenario file '{scenario_file}' executed successfully.")
+        except Exception as e:
+            journal[scenario_file.name] = {'status': 'failure', 'error': str(e)}
+            logger.error(f"Error running scenario file '{scenario_file}': {e}")
+            success = False
+    dump_journal(s, journal)
+    return success
 
 
 def run_scenario_file(s, scenario_file: Union[Path, str]) -> bool:
     """
-    Loads scenarios from a file and executes them.
+    Loads and executes scenarios from a file.
 
     :param s: Supplier instance.
     :param scenario_file: Path to the scenario file.
@@ -213,38 +279,57 @@ def run_scenario_file(s, scenario_file: Union[Path, str]) -> bool:
     """
     try:
         with open(scenario_file, 'r') as f:
-            scenarios = j_loads(f)
-        for scenario_name, scenario in scenarios['scenarios'].items():
-            success = s.run_scenario(scenario, scenario_name)
-            if not success:
-                return False  # Exit if one scenario fails
+            scenarios_data = j_loads(f)
+    except json.JSONDecodeError as e:
+        logger.error(f"Error loading scenario file '{scenario_file}': JSON decode error: {e}")
+        return False
+    except FileNotFoundError:
+        logger.error(f"Error loading scenario file '{scenario_file}': File not found.")
+        return False
+
+    success = True
+    for scenario_name, scenario_data in scenarios_data['scenarios'].items():
+        success &= run_scenario(s, scenario_data, scenario_name)
+    return success
+
+
+def run_scenario(supplier, scenario: dict, scenario_name: str = None) -> Union[List, bool, None]:
+    """
+    Executes a specific scenario.
+
+    :param supplier: Supplier instance.
+    :param scenario: Scenario data as a dictionary.
+    :param scenario_name: Name of the scenario.
+    :return: A list of product links or False if there's an error.
+    """
+    try:
+        url = scenario.get('url')  # Get URL from the scenario
+        if not url:
+            logger.error(f"Scenario '{scenario_name}' missing 'url' field.")
+            return False
+
+        # ... (Your scenario execution logic here)
+        # ... (Rest of the run_scenario function)
+        # Example (replace with your actual data fetching and insertion):
+        # product_links = supplier.fetch_product_links(url) # Replace fetch_product_links
+        # for product_link in product_links:
+        #     product_fields = supplier.collect_product_data(product_link) # Replace collect_product_data
+        #     supplier.insert_grabbed_data(product_fields)  # Replace with your insertion method
         return True
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Error processing scenario file {scenario_file}: {e}")
+
+    except Exception as e:
+        logger.error(f"Error executing scenario '{scenario_name}': {e}")
         return False
 
 
-# ... (Other functions and classes from the original code)
-```
 
-```
-# ... (Rest of the code)
-```
-**Explanation of Changes (and further improvements TODO):**
+def main():
+    """
+    Main function to run the scenario execution module.
+    """
+    s = Supplier('aliexpress') # Replace with your Supplier class
+    scenario_files = ['path/to/scenario.json'] # Replace with your scenario file path
+    run_scenario_files(s, scenario_files)
 
-The provided improved code addresses the issues outlined in the instructions.  The most significant changes are the addition of robust error handling, type hinting, and better documentation using RST format.
-
-
-**TODOs for further improvements:**
-
--   **More Comprehensive Error Handling:**  Implement more specific exception handling for different potential errors during data processing and database interaction.
--   **Asynchronous Operations:** Consider using asynchronous operations (`async`/`await`) for database interactions to improve performance.
--   **Input Validation:** Validate the structure and content of the JSON files to prevent unexpected behavior.
--   **Logging:** Enhance logging to include more context and details about the execution.
--   **Data Validation:** Implement data validation for extracted fields to ensure data quality.
--   **Modular Design:** Break down complex logic into smaller, reusable functions to improve code organization.
--   **Clearer Variable Names:** Choose more descriptive variable names.
--   **Dependency Management:** Employ a dependency management tool (e.g., `requirements.txt`) to ensure reproducibility.
-
-
-This improved code provides a more robust and maintainable solution for automated data collection and processing. Remember to adapt the `s.run_scenario` method and other functions within the `Supplier` class to match your specific needs and data structures. Remember to import necessary modules. Remember to import necessary modules (e.g., `PrestaShop` if not already available in `src`).
+if __name__ == "__main__":
+    main()

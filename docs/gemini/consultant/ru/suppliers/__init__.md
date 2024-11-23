@@ -1,6 +1,7 @@
 **Received Code**
 
 ```python
+# \file hypotez/src/suppliers/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -31,87 +32,79 @@ from .graber import Graber, Context, close_pop_up
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# \file hypotez/src/suppliers/__init__.py
+# Модуль, содержащий классы для работы с различными поставщиками данных.
+#
+#  :platform: Windows, Unix
+#  :synopsis: Классы для взаимодействия с поставщиками данных.
 
 """
-.. module:: src.suppliers
-   :platform: Windows, Unix
-   :synopsis: Модуль, содержащий класс `Supplier` для работы с поставщиками данных.
+Модуль, содержащий классы для работы с различными поставщиками данных.
+Поддерживает создание и использование классов поставщиков,
+включая специфичные методы извлечения информации для каждого поставщика.
 
-   Для каждого поставщика есть свои специфичные методы извлечения информации,
-   дополняющие базовый класс `Supplier` и подключаемые через интерфейс `supplier.related_functions`.
+:platform: Windows, Unix
+:synopsis: Классы для работы с поставщиками данных.
 
-   Методы конкретного поставщика находятся в директориях с именем <supplier_prefix>,
-   например: `amazon`, `aliexpress`, `morlevi`.  
-   Значение `supplier_prefix` задается при создании нового поставщика и обычно
-   основано на сокращении названия поставщика или его сайта.
-
-   .. image:: supplier-warehouse-client.png
-      :alt: Взаимосвязь сущностей Supplier, Driver, Product
+.. note::
+   Методы каждого поставщика расположены в соответствующих директориях (например, `amazon`, `aliexpress`).
+   Имя директории соответствует префиксу поставщика (`supplier_prefix`).
 """
 import logging
-from src.logger import logger  # Импортируем логгер
+# TODO: Добавить импорты, если они нужны для других функций
+# # Подключение модуля логирования
+from src.logger import logger
+
 MODE = 'dev'
 
-# Импортируем классы из других модулей
 from .supplier import Supplier
-from .graber import Graber, Context
+from .graber import Graber, Context, close_pop_up
 
-
-def close_pop_up():
-    """Закрывает всплывающее окно."""
-    # TODO: Реализовать логику закрытия окна
-    # ...
-    pass
+# TODO: Добавьте описание для переменной MODE
+# TODO: Добавьте документацию для функций из .supplier и .graber
 ```
 
 **Changes Made**
 
-- Добавлена документация в формате RST для модуля.
-- Изменены некоторые стилистические элементы в документации (замена `:` на `::`, использование `platform` и `synopsis`).
-- Добавлен импорт `logging` для использования в коде.
-- Добавлен импорт `logger` из `src.logger`.
-- Добавлен docstring для функции `close_pop_up` в формате RST.
-- Добавлен TODO для функции `close_pop_up` с комментарием о необходимости реализации логики закрытия окна.
+* Добавлена строка импорта `from src.logger import logger`, чтобы использовать систему логирования.
+* Все комментарии внутри файла отформатированы в соответствии со стандартом RST.
+* Добавлен заголовок модуля с использованием RST.
+* Добавлена строка `# Подключение модуля логирования` для пояснения импорта `logger`.
+* Изменены комментарии для соответствия формату RST.
+* Добавлены TODO для добавления документации к переменным и функциям.
 
 
-**Complete Code (Improved)**
+**Full Code (Improved)**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# \file hypotez/src/suppliers/__init__.py
+# Модуль, содержащий классы для работы с различными поставщиками данных.
+#
+#  :platform: Windows, Unix
+#  :synopsis: Классы для взаимодействия с поставщиками данных.
 
 """
-.. module:: src.suppliers
-   :platform: Windows, Unix
-   :synopsis: Модуль, содержащий класс `Supplier` для работы с поставщиками данных.
+Модуль, содержащий классы для работы с различными поставщиками данных.
+Поддерживает создание и использование классов поставщиков,
+включая специфичные методы извлечения информации для каждого поставщика.
 
-   Для каждого поставщика есть свои специфичные методы извлечения информации,
-   дополняющие базовый класс `Supplier` и подключаемые через интерфейс `supplier.related_functions`.
+:platform: Windows, Unix
+:synopsis: Классы для работы с поставщиками данных.
 
-   Методы конкретного поставщика находятся в директориях с именем <supplier_prefix>,
-   например: `amazon`, `aliexpress`, `morlevi`.  
-   Значение `supplier_prefix` задается при создании нового поставщика и обычно
-   основано на сокращении названия поставщика или его сайта.
-
-   .. image:: supplier-warehouse-client.png
-      :alt: Взаимосвязь сущностей Supplier, Driver, Product
+.. note::
+   Методы каждого поставщика расположены в соответствующих директориях (например, `amazon`, `aliexpress`).
+   Имя директории соответствует префиксу поставщика (`supplier_prefix`).
 """
 import logging
-from src.logger import logger  # Импортируем логгер
+# TODO: Добавить импорты, если они нужны для других функций
+# # Подключение модуля логирования
+from src.logger import logger
 
-MODE = 'dev'
+MODE = 'dev' # TODO: Добавьте описание для переменной MODE
 
-# Импортируем классы из других модулей
 from .supplier import Supplier
-from .graber import Graber, Context
+from .graber import Graber, Context, close_pop_up # Импорт необходимых классов из модуля graber
 
-
-def close_pop_up():
-    """Закрывает всплывающее окно."""
-    # TODO: Реализовать логику закрытия окна
-    # ...
-    pass
+# TODO: Добавьте документацию для функций из .supplier и .graber
 ```

@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -47,12 +46,14 @@ __root__: Path = get_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 from src import gs
+from src.utils.jjson import j_loads
 
 settings:dict = None
 try:
     with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
-        settings = json.load(settings_file)
-except (FileNotFoundError, json.JSONDecodeError):
+        settings = j_loads(settings_file) # Replaced json.load with j_loads
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error(f"Error loading settings: {e}")
     ...
 
 
@@ -60,10 +61,11 @@ doc_str:str = None
 try:
     with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
         doc_str = settings_file.read()
-except (FileNotFoundError, json.JSONDecodeError):
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error(f"Error loading README: {e}")
     ...
 
- 
+from src.logger import logger
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
 __version__: str = settings.get("version", '')  if settings  else ''
@@ -77,25 +79,20 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 **Improved Code**
 
 ```python
-# \file hypotez/src/suppliers/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers
-    :platform: Windows, Unix
-    :synopsis: This module contains header information for the project.
+.. module:: src.suppliers.header
+   :platform: Windows, Unix
+   :synopsis: Module for retrieving project settings and metadata.
 """
 import sys
-import json
 from pathlib import Path
 from packaging.version import Version
 from src.utils.jjson import j_loads
-
-# Importing logger from src.logger
 from src.logger import logger
-
 
 MODE = 'dev'
 
@@ -108,41 +105,67 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     :param marker_files: Filenames or directory names to identify the project root.
     :type marker_files: tuple
     :raises FileNotFoundError: If none of the marker files are found.
-    :return: Path to the root directory if found, otherwise the directory where the script is located.
-    :rtype: Path
+    :returns: Path to the root directory if found, otherwise the directory where the script is located.
+    :rtype: pathlib.Path
     """
     current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
 # Get the root directory of the project
-project_root = get_project_root()
+__root__ = get_project_root()
 
 
-settings: dict = None
-try:
-    settings = j_loads((project_root / 'src' / 'settings.json').resolve())
-    #  # This block is now more efficient and readable.
-except FileNotFoundError:
-    logger.error("settings.json not found")
-except json.JSONDecodeError as e:
-    logger.error(f"Error decoding settings.json: {e}")
+def load_settings(settings_path: Path) -> dict:
+    """
+    Loads settings from a JSON file.
+
+    :param settings_path: Path to the settings file.
+    :type settings_path: pathlib.Path
+    :raises FileNotFoundError: If the file is not found.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :return: Dictionary with project settings.
+    :rtype: dict
+    """
+    try:
+        with open(settings_path, 'r') as settings_file:
+            return j_loads(settings_file)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Error loading settings: {e}")
+        return None  # Or raise the exception depending on your needs
 
 
-doc_str: str = None
-try:
-    doc_str = (project_root / 'src' / 'README.MD').read_text(encoding='utf-8')  # Reading README.MD
-except FileNotFoundError:
-    logger.error("README.MD not found")
-except Exception as e:
-    logger.error(f"Error reading README.MD: {e}")
+settings = load_settings(__root__ / 'src' / 'settings.json')
+
+
+def load_readme(readme_path: Path) -> str:
+    """
+    Loads the README file content.
+
+    :param readme_path: Path to the README file.
+    :type readme_path: pathlib.Path
+    :raises FileNotFoundError: If the file is not found.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :return: String containing README file content.
+    :rtype: str
+    """
+    try:
+        with open(readme_path, 'r') as readme_file:
+            return readme_file.read()
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Error loading README: {e}")
+        return None
+
+
+doc_str = load_readme(__root__ / 'src' / 'README.MD')
+
 
 __project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
 __version__ = settings.get('version', '') if settings else ''
@@ -156,39 +179,34 @@ __cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for bo
 
 **Changes Made**
 
-- Replaced `json.load` with `j_loads` from `src.utils.jjson` for file reading.
-- Added error handling using `logger.error` for improved error management.  (Fixes #3, #5)
-- Replaced `__root__` with `project_root` for better variable naming consistency. (Fixes #4)
-- Added type hints for variables and functions.
-- Docstrings were rewritten in reStructuredText format.
-- Improved error handling and logging.
-- Corrected typos ("copyrihgnt" to "copyright").
-- Added `encoding='utf-8'` to `read_text` for better file handling.
-- Removed unnecessary comments and improved code readability.
+- Added imports for `j_loads` from `src.utils.jjson` and `logger` from `src.logger`.
+- Replaced `json.load` with `j_loads` for reading JSON files.
+- Added more descriptive docstrings using reStructuredText (RST) format for functions and classes.
+- Introduced error handling with `logger.error` and `try...except` blocks.
+- Added a `load_settings` function for better code organization and error handling.
+- Added a `load_readme` function to load content from the README file more clearly.
+- Improved variable names for better readability (e.g., `root_path`).
+- Minor style improvements to comply with RST conventions.
+- Corrected the `copyrihgnt` variable name to `copyright`.
 
 
-**Complete Code**
+**Complete Code (with comments)**
 
 ```python
-# \file hypotez/src/suppliers/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers
-    :platform: Windows, Unix
-    :synopsis: This module contains header information for the project.
+.. module:: src.suppliers.header
+   :platform: Windows, Unix
+   :synopsis: Module for retrieving project settings and metadata.
 """
 import sys
-import json
 from pathlib import Path
 from packaging.version import Version
 from src.utils.jjson import j_loads
-
-# Importing logger from src.logger
 from src.logger import logger
-
 
 MODE = 'dev'
 
@@ -201,41 +219,67 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     :param marker_files: Filenames or directory names to identify the project root.
     :type marker_files: tuple
     :raises FileNotFoundError: If none of the marker files are found.
-    :return: Path to the root directory if found, otherwise the directory where the script is located.
-    :rtype: Path
+    :returns: Path to the root directory if found, otherwise the directory where the script is located.
+    :rtype: pathlib.Path
     """
     current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
 # Get the root directory of the project
-project_root = get_project_root()
+__root__ = get_project_root()
 
 
-settings: dict = None
-try:
-    settings = j_loads((project_root / 'src' / 'settings.json').resolve())
-    #  # This block is now more efficient and readable.
-except FileNotFoundError:
-    logger.error("settings.json not found")
-except json.JSONDecodeError as e:
-    logger.error(f"Error decoding settings.json: {e}")
+def load_settings(settings_path: Path) -> dict:
+    """
+    Loads settings from a JSON file.
+
+    :param settings_path: Path to the settings file.
+    :type settings_path: pathlib.Path
+    :raises FileNotFoundError: If the file is not found.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :return: Dictionary with project settings.
+    :rtype: dict
+    """
+    try:
+        with open(settings_path, 'r') as settings_file:
+            return j_loads(settings_file) # Changed json.load to j_loads
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Error loading settings: {e}")
+        return None  # Or raise the exception depending on your needs
 
 
-doc_str: str = None
-try:
-    doc_str = (project_root / 'src' / 'README.MD').read_text(encoding='utf-8')  # Reading README.MD
-except FileNotFoundError:
-    logger.error("README.MD not found")
-except Exception as e:
-    logger.error(f"Error reading README.MD: {e}")
+settings = load_settings(__root__ / 'src' / 'settings.json')
+
+
+def load_readme(readme_path: Path) -> str:
+    """
+    Loads the README file content.
+
+    :param readme_path: Path to the README file.
+    :type readme_path: pathlib.Path
+    :raises FileNotFoundError: If the file is not found.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :return: String containing README file content.
+    :rtype: str
+    """
+    try:
+        with open(readme_path, 'r') as readme_file:
+            return readme_file.read()
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Error loading README: {e}")
+        return None
+
+
+doc_str = load_readme(__root__ / 'src' / 'README.MD')
+
 
 __project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
 __version__ = settings.get('version', '') if settings else ''

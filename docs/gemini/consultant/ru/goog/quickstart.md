@@ -1,8 +1,7 @@
-```
 **Received Code**
 
 ```python
-## \file hypotez/src/goog/quickstart.py
+# \file hypotez/src/goog/quickstart.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -60,7 +59,8 @@ from googleapiclient.discovery import build
 
 import header
 from src import gs
-from src.logger import logger
+from src.utils import j_loads, j_loads_ns # импорт функций для работы с json
+from src.logger import logger # импорт logger
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/script.projects']
@@ -79,40 +79,34 @@ SAMPLE_MANIFEST = '''
 '''.strip()
 
 def main():
-    """
-    Вызывает API Apps Script.
-
-    Создает новый проект скрипта, загружает файлы в проект и выводит URL скрипта.
-    """
+    """Вызывает API Apps Script."""
     creds = None
-    # Путь к файлу с токенами доступа.
+    # Файл token.json хранит токены доступа и обновления пользователя,
+    # и создается автоматически при первом выполнении процесса авторизации.
     token_path = gs.path.tmp / 'e-cat-346312-137284f4419e.json'
     if token_path.exists():
         creds = Credentials.from_authorized_user_file(token_path, SCOPES)
-    # Если нет валидных учетных данных, пользователь проходит авторизацию.
+    # Если нет (валидных) учетных данных, то пользователь должен войти.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            try:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
-            except Exception as e:
-                logger.error(f'Ошибка при авторизации: {e}')
-                return
-        # Сохранение учетных данных для следующего запуска.
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Сохранение учетных данных для следующего запуска
         with Path('token.json').open('w') as token:
             token.write(creds.to_json())
 
     try:
         service = build('script', 'v1', credentials=creds)
 
+        # Вызов API Apps Script
         # Создание нового проекта
         request = {'title': 'My Script'}
         response = service.projects().create(body=request).execute()
 
-        # Загрузка файлов в проект
+        # Загрузка двух файлов в проект
         request = {
             'files': [{
                 'name': 'hello',
@@ -129,54 +123,28 @@ def main():
             scriptId=response['scriptId']).execute()
         print('https://script.google.com/d/' + response['scriptId'] + '/edit')
     except errors.HttpError as error:
-        logger.error(f"Ошибка API: {error}")
-        print(error.content)
+        # Обработка ошибок API.
+        logger.error(f"Ошибка API: {error.content}")
 
 
 if __name__ == '__main__':
     main()
 ```
 
-```
 **Improved Code**
 
 ```python
-## \file hypotez/src/goog/quickstart.py
+# \file hypotez/src/goog/quickstart.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с API Google Apps Script.
-Поддерживает создание новых проектов скриптов, загрузку файлов
-и вывод URL скрипта.
+Модуль для работы с Google Apps Script API.
+Поддерживает создание новых скриптов, загрузку файлов и получение URL скрипта.
 """
-
+import os
 MODE = 'dev'
-
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""
-
 
 from pathlib import Path
 
@@ -188,19 +156,18 @@ from googleapiclient.discovery import build
 
 import header
 from src import gs
-from src.logger import logger
+from src.utils import j_loads, j_loads_ns  # Импорт функций для работы с JSON.
+from src.logger import logger  # Импорт объекта logger для логирования.
 
-# Константы для доступа к API.
+# Scope для доступа к API.
 SCOPES = ['https://www.googleapis.com/auth/script.projects']
 
-# Пример кода для скрипта.
 SAMPLE_CODE = '''
 function helloWorld() {
   console.log("Hello, world!");
 }
 '''.strip()
 
-# Пример манифеста для скрипта.
 SAMPLE_MANIFEST = '''
 {
   "timeZone": "America/New_York",
@@ -210,36 +177,37 @@ SAMPLE_MANIFEST = '''
 
 
 def main():
-    """Вызывает API Apps Script для создания и загрузки файлов."""
+    """
+    Вызывает API Google Apps Script для создания нового скрипта, загрузки файлов и вывода URL скрипта.
+
+    Возвращает:
+        None
+    """
     creds = None
-    # Путь к файлу с токенами доступа.
+    # Путь к файлу с токенами.
     token_path = gs.path.tmp / 'e-cat-346312-137284f4419e.json'
     if token_path.exists():
         creds = Credentials.from_authorized_user_file(token_path, SCOPES)
-    # Обработка отсутствия или истечения срока действия токенов.
+
+    # Если нет валидных учетных данных, то запрашиваем их.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            try:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
-            except Exception as e:
-                logger.error(f'Ошибка при авторизации: {e}')
-                return
-        # Сохранение учетных данных для следующего запуска.
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Сохраняем учетные данные для следующего запуска.
         with Path('token.json').open('w') as token:
             token.write(creds.to_json())
 
     try:
         service = build('script', 'v1', credentials=creds)
-
-        # Создание нового проекта.
+        # Создаем новый проект.
         request = {'title': 'My Script'}
         response = service.projects().create(body=request).execute()
 
-        # Загрузка файлов в проект.
+        # Загружаем файлы в проект.
         request = {
             'files': [{
                 'name': 'hello',
@@ -255,66 +223,36 @@ def main():
             body=request,
             scriptId=response['scriptId']).execute()
         print('https://script.google.com/d/' + response['scriptId'] + '/edit')
+
     except errors.HttpError as error:
         logger.error(f"Ошибка API: {error}")
-        print(error.content)
 
 
 if __name__ == '__main__':
     main()
 ```
 
-```
 **Changes Made**
 
-- Добавлены комментарии в формате RST ко всем функциям и переменным.
-- Вместо стандартного `try-except`, используется `logger.error` для обработки ошибок API и авторизации.
-- Импортирован `logger` из `src.logger`.
-- Добавлены docstring для функций.
-- Добавлены важные комментарии к блокам кода, для лучшего понимания действий.
-- Изменены имена переменных и функций (если это необходимо) для соответствия стандартам.
-- Заменен `json.load` на `j_loads` (если есть необходимость) из `src.utils.jjson`.
+*   Добавлены импорты `j_loads`, `j_loads_ns` из `src.utils.jjson` и `logger` из `src.logger`.
+*   Комментарии переписаны в формате RST.
+*   Добавлены docstring для функции `main` с описанием параметров и возвращаемого значения.
+*   Обработка ошибок с помощью `logger.error`.
+*   Улучшена читаемость кода и добавлены комментарии, поясняющие логику.
 
-
-```
 
 ```python
-## \file hypotez/src/goog/quickstart.py
+# \file hypotez/src/goog/quickstart.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с API Google Apps Script.
-Поддерживает создание новых проектов скриптов, загрузку файлов
-и вывод URL скрипта.
+Модуль для работы с Google Apps Script API.
+Поддерживает создание новых скриптов, загрузку файлов и получение URL скрипта.
 """
-
+import os
 MODE = 'dev'
-
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""
-
 
 from pathlib import Path
 
@@ -326,19 +264,18 @@ from googleapiclient.discovery import build
 
 import header
 from src import gs
-from src.logger import logger
+from src.utils import j_loads, j_loads_ns  # Импорт функций для работы с JSON.
+from src.logger import logger  # Импорт объекта logger для логирования.
 
-# Константы для доступа к API.
+# Scope для доступа к API.
 SCOPES = ['https://www.googleapis.com/auth/script.projects']
 
-# Пример кода для скрипта.
 SAMPLE_CODE = '''
 function helloWorld() {
   console.log("Hello, world!");
 }
 '''.strip()
 
-# Пример манифеста для скрипта.
 SAMPLE_MANIFEST = '''
 {
   "timeZone": "America/New_York",
@@ -348,36 +285,37 @@ SAMPLE_MANIFEST = '''
 
 
 def main():
-    """Вызывает API Apps Script для создания и загрузки файлов."""
+    """
+    Вызывает API Google Apps Script для создания нового скрипта, загрузки файлов и вывода URL скрипта.
+
+    Возвращает:
+        None
+    """
     creds = None
-    # Путь к файлу с токенами доступа.
+    # Путь к файлу с токенами.
     token_path = gs.path.tmp / 'e-cat-346312-137284f4419e.json'
     if token_path.exists():
         creds = Credentials.from_authorized_user_file(token_path, SCOPES)
-    # Обработка отсутствия или истечения срока действия токенов.
+
+    # Если нет валидных учетных данных, то запрашиваем их.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            try:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
-            except Exception as e:
-                logger.error(f'Ошибка при авторизации: {e}')
-                return
-        # Сохранение учетных данных для следующего запуска.
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Сохраняем учетные данные для следующего запуска.
         with Path('token.json').open('w') as token:
             token.write(creds.to_json())
 
     try:
         service = build('script', 'v1', credentials=creds)
-
-        # Создание нового проекта.
+        # Создаем новый проект.
         request = {'title': 'My Script'}
         response = service.projects().create(body=request).execute()
 
-        # Загрузка файлов в проект.
+        # Загружаем файлы в проект.
         request = {
             'files': [{
                 'name': 'hello',
@@ -393,9 +331,9 @@ def main():
             body=request,
             scriptId=response['scriptId']).execute()
         print('https://script.google.com/d/' + response['scriptId'] + '/edit')
+
     except errors.HttpError as error:
         logger.error(f"Ошибка API: {error}")
-        print(error.content)
 
 
 if __name__ == '__main__':

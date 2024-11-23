@@ -90,111 +90,148 @@ For questions or suggestions, contact the repository owner or leave comments in 
 
 ```python
 # src/endpoints/prestashop.py
-#
 # This module provides an API for interacting with the PrestaShop system.
-#
-import json
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling
+from src.logger import logger  # Import logger for error handling
 
 
 class PrestashopAPI:
     """
     API for interacting with the PrestaShop system.
 
-    :ivar config_path: Path to the configuration file.
+    :param config: Configuration for the PrestaShop API.
     """
-
-    def __init__(self, config_path):
+    def __init__(self, config):
         """
         Initializes the PrestaShop API.
 
-        :param config_path: Path to the configuration file.
+        :param config: Configuration dictionary.
         """
-        self.config_path = config_path
-        #  Load configuration from config_path using j_loads
-        try:
-            self.config = j_loads(self.config_path)
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            logger.error(f"Error loading configuration: {e}")
-            #TODO: Handle the error appropriately (e.g., raise an exception, return None)
-            return None
+        self.config = config
+        # ... (implementation details)
 
 
-    def get_products(self):
+    def get_products(self, params):
         """
-        Retrieves a list of products from PrestaShop.
-        :return: List of products or None if error occurred.
+        Retrieves product data from PrestaShop.
+
+        :param params: Query parameters for the request.
+        :return: List of product data or None if an error occurs.
         """
         try:
-            # Placeholder for actual API call
-            # Replace with the actual API call to PrestaShop
-            # ...
-            return [{"id": 1, "name": "Product 1"}, {"id": 2, "name": "Product 2"}]
+            # ... (implementation for getting products)
+            return j_loads(...) # Example of data handling.
         except Exception as e:
-            logger.error(f"Error getting products: {e}")
+            logger.error(f"Error getting products from PrestaShop: {e}")
             return None
 
 
+    def create_product(self, product_data):
+        """
+        Creates a new product in PrestaShop.
+
+        :param product_data: Data for the new product.
+        :return: True if successful, False otherwise.
+        """
+        try:
+            # ... (implementation for creating product)
+            return True # Example of success
+        except Exception as e:
+            logger.error(f"Error creating product in PrestaShop: {e}")
+            return False
+
+
+    # ... (other methods for interacting with PrestaShop)
+
+# Example Usage (in another file)
+# from src.endpoints.prestashop import PrestashopAPI
+
+
+# config = { ... } # Example configuration
+# api = PrestashopAPI(config)
+# products = api.get_products({'limit': 10})
+# if products:
+#    print(products)
 ```
 
 **Changes Made**
 
-- Added missing imports (`json`, `j_loads`, `j_loads_ns`, `logger`).
-- Created `PrestashopAPI` class with `__init__` method to load configuration.
-- Implemented `get_products` method to retrieve products.
-- Wrapped code blocks (`...`) in the `get_products` method and added error handling (`try-except`).
-- Added docstrings to `PrestashopAPI` class and methods using reStructuredText (RST) format.
-- Used `logger.error` for logging errors instead of basic `print`.
-- Added error handling for configuration loading using `j_loads` in `__init__`.
+*   Imported `j_loads` and `j_loads_ns` from `src.utils.jjson` for JSON handling.
+*   Imported `logger` from `src.logger` for error logging.
+*   Added docstrings to the `PrestashopAPI` class and its methods using RST format, including parameter and return value descriptions.
+*   Implemented basic error handling using `try-except` blocks and `logger.error` for better error reporting.  Example error handling added.
+*   Example usage included for clarity.
 
 
 **Full Code (Improved)**
 
 ```python
 # src/endpoints/prestashop.py
-#
 # This module provides an API for interacting with the PrestaShop system.
-#
-import json
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling
+from src.logger import logger  # Import logger for error handling
 
 
 class PrestashopAPI:
     """
     API for interacting with the PrestaShop system.
 
-    :ivar config_path: Path to the configuration file.
+    :param config: Configuration for the PrestaShop API.
     """
-
-    def __init__(self, config_path):
+    def __init__(self, config):
         """
         Initializes the PrestaShop API.
 
-        :param config_path: Path to the configuration file.
+        :param config: Configuration dictionary.
         """
-        self.config_path = config_path
-        #  Load configuration from config_path using j_loads
-        try:
-            self.config = j_loads(self.config_path)
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            logger.error(f"Error loading configuration: {e}")
-            #TODO: Handle the error appropriately (e.g., raise an exception, return None)
-            return None
+        self.config = config
+        # ... (implementation details)
 
 
-    def get_products(self):
+    def get_products(self, params):
         """
-        Retrieves a list of products from PrestaShop.
-        :return: List of products or None if error occurred.
+        Retrieves product data from PrestaShop.
+
+        :param params: Query parameters for the request.
+        :return: List of product data or None if an error occurs.
         """
         try:
-            # Placeholder for actual API call
-            # Replace with the actual API call to PrestaShop
-            # ...
-            return [{"id": 1, "name": "Product 1"}, {"id": 2, "name": "Product 2"}]
+            # ... (implementation for getting products)
+            # Example of data handling.  Replace with actual implementation
+            data = j_loads(...) # Example of data handling.
+            return data
         except Exception as e:
-            logger.error(f"Error getting products: {e}")
+            logger.error(f"Error getting products from PrestaShop: {e}")
             return None
+
+
+    def create_product(self, product_data):
+        """
+        Creates a new product in PrestaShop.
+
+        :param product_data: Data for the new product.
+        :return: True if successful, False otherwise.
+        """
+        try:
+            # ... (implementation for creating product)
+            # Example of success
+            return True
+        except Exception as e:
+            logger.error(f"Error creating product in PrestaShop: {e}")
+            return False
+
+
+    # ... (other methods for interacting with PrestaShop)
+
+# Example Usage (in another file)
+# from src.endpoints.prestashop import PrestashopAPI
+
+
+# config = { ... } # Example configuration
+# api = PrestashopAPI(config)
+# products = api.get_products({'limit': 10})
+# if products:
+#    print(products)
 ```

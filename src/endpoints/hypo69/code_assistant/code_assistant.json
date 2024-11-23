@@ -54,12 +54,13 @@
     "doc_writer_rst": "<model>/doc/rst/<lang>",
     "doc_writer_md": "<model>/doc/md/<lang>",
     "code_checker": "<model>/consultant/<lang>",
-    "pytest": "../pytest/<model>/<lang>"
+    "pytest": "../pytest/<model>/<lang>",
+    "code_explainer": "<model>/explainer/<lang>"
   },
   "argparse": {
     "role": {
       "default": "code_checker",
-      "choices": [ "doc_writer_rst", "doc_writer_md", "code_checker", "pytest" ]
+      "choices": [ "doc_writer_rst", "doc_writer_md", "code_checker", "pytest", "code_explainer" ]
     },
     "lang": {
       "default": "en",

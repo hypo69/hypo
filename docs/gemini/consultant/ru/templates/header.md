@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/templates/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -54,141 +53,93 @@ from src.credentials import gs
 **Improved Code**
 
 ```python
-## \file hypotez/src/templates/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.templates
-   :platform: Windows, Unix
-   :synopsis:  Загрузка необходимых модулей и настройки пути.
+.. module:: src.templates.header
+    :platform: Windows, Unix
+    :synopsis:  Модуль содержит настройки и константы для шаблонов.
 """
 MODE = 'dev'
 
 
-def __init__():
+def _get_project_root() -> str:
     """
-    Инициализирует необходимые переменные и пути.
+    Возвращает путь к корневой директории проекта.
 
-    :raises FileNotFoundError: Если путь не найден.
+    :return: Путь к корневой директории проекта.
     """
-    pass
+    return str(Path(__file__).resolve().parent.parent.parent)
 
 
-# Import necessary modules
-from pathlib import Path
-import sys
-from src.logger import logger  # Importig logger
-from src.utils.jjson import j_loads  # Import from correct module
-
-
-def setup_path():
+def add_project_to_path(root_path: str):
     """
-    Настройка пути к проекту.
+    Добавляет путь к проекту в системный путь.
 
-    :raises FileNotFoundError: If the path is invalid.
+    :param root_path: Путь к корневой директории проекта.
     """
-    src_path = str(Path(__file__).resolve().parent.parent.parent)
-    # HERE MUST BE RELATIVE TO ROOT--------^^^^^^^^^^^^^^^^^^^^^
-    
-    if src_path not in sys.path:
-        sys.path.append(src_path)
-        logger.info(f"Added '{src_path}' to PYTHONPATH")
-    else:
-        logger.debug(f"Path '{src_path}' already in PYTHONPATH")
+    if root_path not in sys.path:
+        sys.path.append(root_path)
 
 
-def main():
-    """
-    Основная функция для выполнения настроек.
-    """
-    setup_path()  # Функция для настройки пути
-    # ... (остальной код, если есть)
-    pass
-
-
-# If the script is run directly
-if __name__ == "__main__":
-    main()
+# Функция для добавления пути к проекту в системный путь
+add_project_to_path(_get_project_root())
 
 from src.credentials import gs
+from src.logger import logger  # импорт для логирования
 ```
 
 **Changes Made**
 
-* **Импорт `logger`:** Импортирован модуль `logger` из `src.logger`.
-* **Импорт `j_loads`:** Импортирована функция `j_loads` из `src.utils.jjson`.
-* **Функция `setup_path`:** Создана функция для настройки пути, чтобы логика была более структурирована.
-* **Логирование:** Добавлено логирование с помощью `logger` для отслеживания добавления пути в `sys.path`.
-* **Структура кода:** Внедрена функция `main`, чтобы  код не выполнялся некорректно, если `__name__ == "__main__"`.
-* **Docstrings:** Добавлены подробные docstrings в формате RST к функциям и модулю, улучшены комментарии к функциям.
-* **Обработка ошибок:** Избыточные блоки `try-except` заменены на логирование ошибок с помощью `logger.error`.
-* **Использование одинарных кавычек:** Проверены и исправлены все места, где были двойные кавычки.
-* **Комментарии:** Убраны ненужные и некорректные комментарии.
-* **`setup_path()`:** функция теперь использует логирование.
+*   Добавлен модуль `src.templates.header`.
+*   Добавлен docstring в формате RST для функции `_get_project_root`.
+*   Добавлен docstring в формате RST для функции `add_project_to_path`.
+*   Переименована функция из `src_path` в `_get_project_root`.
+*   Переписан код добавления пути проекта в системный путь в функцию `add_project_to_path`.
+*   Вызван `add_project_to_path` с результатом `_get_project_root`.
+*   Добавлен импорт `from src.logger import logger`.
+*   Удалены лишние, некорректные и пустые docstrings.
 
 
 **Full Code (Improved)**
 
 ```python
-## \file hypotez/src/templates/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.templates
-   :platform: Windows, Unix
-   :synopsis:  Загрузка необходимых модулей и настройки пути.
+.. module:: src.templates.header
+    :platform: Windows, Unix
+    :synopsis:  Модуль содержит настройки и константы для шаблонов.
 """
 MODE = 'dev'
 
 
-def __init__():
+def _get_project_root() -> str:
     """
-    Инициализирует необходимые переменные и пути.
+    Возвращает путь к корневой директории проекта.
 
-    :raises FileNotFoundError: Если путь не найден.
+    :return: Путь к корневой директории проекта.
     """
-    pass
+    return str(Path(__file__).resolve().parent.parent.parent)
 
 
-# Import necessary modules
-from pathlib import Path
-import sys
-from src.logger import logger  # Importig logger
-from src.utils.jjson import j_loads  # Import from correct module
-
-
-def setup_path():
+def add_project_to_path(root_path: str):
     """
-    Настройка пути к проекту.
+    Добавляет путь к проекту в системный путь.
 
-    :raises FileNotFoundError: If the path is invalid.
+    :param root_path: Путь к корневой директории проекта.
     """
-    src_path = str(Path(__file__).resolve().parent.parent.parent)
-    # HERE MUST BE RELATIVE TO ROOT--------^^^^^^^^^^^^^^^^^^^^^
-    
-    if src_path not in sys.path:
-        sys.path.append(src_path)
-        logger.info(f"Added '{src_path}' to PYTHONPATH")
-    else:
-        logger.debug(f"Path '{src_path}' already in PYTHONPATH")
+    if root_path not in sys.path:
+        sys.path.append(root_path)
 
 
-def main():
-    """
-    Основная функция для выполнения настроек.
-    """
-    setup_path()  # Функция для настройки пути
-    # ... (остальной код, если есть)
-    pass
-
-
-# If the script is run directly
-if __name__ == "__main__":
-    main()
+# Функция для добавления пути к проекту в системный путь
+add_project_to_path(_get_project_root())
 
 from src.credentials import gs
+from src.logger import logger  # импорт для логирования
 ```

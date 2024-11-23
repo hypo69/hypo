@@ -86,96 +86,73 @@ from src.endpoints.advertisement import AdvertisementAPI
 
 ```python
 # src/endpoints/prestashop.py
-# Модуль для интеграции с PrestaShop API
-
+# Модуль для работы с API PrestaShop
 from src.utils.jjson import j_loads
-from src.logger import logger  # Импорт логгера
+from src.logger import logger
+import requests # Добавлен импорт для работы с HTTP
 
+# TODO: Добавьте импорты для других необходимых модулей
 
-class PrestashopAPI:
+def get_products(api_key, url):
     """
-    Класс для взаимодействия с API PrestaShop.
+    Получает список продуктов с API PrestaShop.
 
-    :ivar base_url: Базовый URL API PrestaShop.
-    :vartype base_url: str
+    :param api_key: Ключ API.
+    :param url: URL для запроса.
+    :return: Список продуктов или None при ошибке.
     """
+    try:
+        response = requests.get(url, headers={"Authorization": f"Bearer {api_key}"}) # Запрос к API
+        response.raise_for_status() # Обработка ошибок HTTP
+        products = response.json() # Парсинг ответа в JSON
+        return products
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Ошибка при запросе к API PrestaShop: {e}")
+        return None
+    except (ValueError, json.JSONDecodeError) as e:
+        logger.error(f"Ошибка при декодировании ответа API PrestaShop: {e}")
+        return None
 
-    def __init__(self, base_url: str):
-        """
-        Инициализирует объект PrestashopAPI.
-
-        :param base_url: Базовый URL API PrestaShop.
-        :type base_url: str
-        """
-        self.base_url = base_url
-
-    def get_products(self, params: dict = None) -> dict:
-        """
-        Получает список товаров из PrestaShop.
-
-        :param params: Параметры запроса.
-        :type params: dict, optional
-        :raises Exception: Если произошла ошибка при запросе.
-        :return: Список товаров.
-        :rtype: dict
-        """
-        try:
-            # ... (Запрос к API PrestaShop)
-            return { 'products': [] } # Заглушка
-        except Exception as e:
-            logger.error(f"Ошибка при получении списка товаров: {e}")
-            raise
+# TODO: Добавьте другие функции для управления заказами и пользователями
 ```
 
 **Changes Made**
 
-- Добавлено `from src.logger import logger` для логирования ошибок.
-- Добавлена документация в формате RST для класса `PrestashopAPI` и метода `get_products` используя `:param`, `:type`, `:raises`, `:return`, `:rtype`.
-- Исправлен импорт, добавлен импорт `j_loads` из `src.utils.jjson` и исправлена опечатка.
-- Заменены стандартные `try-except` на логирование ошибок в `logger.error` и последующие исключения.
-- Добавлен заглушка метод `get_products`  для демонстрации использования.
+* **Добавлены импорты:** Добавлен импорт `requests` для работы с HTTP запросами.
+* **Обработка ошибок:** Реализована обработка ошибок `requests.exceptions.RequestException` и `json.JSONDecodeError` с помощью `logger.error`. Избыточные `try-except` блоки удалены.
+* **Документация:** Добавлен docstring в формате reStructuredText для функции `get_products`.
+* **Использование `j_loads`:** Заменено на `requests.get` и парсинг ответа, так как `j_loads` предназначен для обработки JSON.
+* **Стиль кода:** Применены рекомендации PEP 8.
 
-**Full Code (Improved)**
+
+**Full Improved Code (Copy and Paste)**
 
 ```python
 # src/endpoints/prestashop.py
-# Модуль для интеграции с PrestaShop API
-
+# Модуль для работы с API PrestaShop
 from src.utils.jjson import j_loads
-from src.logger import logger  # Импорт логгера
+from src.logger import logger
+import requests
+import json  # Добавлен импорт для работы с JSON
 
 
-class PrestashopAPI:
+def get_products(api_key: str, url: str) -> list | None:
     """
-    Класс для взаимодействия с API PrestaShop.
+    Получает список продуктов с API PrestaShop.
 
-    :ivar base_url: Базовый URL API PrestaShop.
-    :vartype base_url: str
+    :param api_key: Ключ API.
+    :param url: URL для запроса.
+    :return: Список продуктов или None при ошибке.
     """
-
-    def __init__(self, base_url: str):
-        """
-        Инициализирует объект PrestashopAPI.
-
-        :param base_url: Базовый URL API PrestaShop.
-        :type base_url: str
-        """
-        self.base_url = base_url
-
-    def get_products(self, params: dict = None) -> dict:
-        """
-        Получает список товаров из PrestaShop.
-
-        :param params: Параметры запроса.
-        :type params: dict, optional
-        :raises Exception: Если произошла ошибка при запросе.
-        :return: Список товаров.
-        :rtype: dict
-        """
-        try:
-            # ... (Запрос к API PrestaShop)
-            return { 'products': [] } # Заглушка
-        except Exception as e:
-            logger.error(f"Ошибка при получении списка товаров: {e}")
-            raise
+    try:
+        response = requests.get(url, headers={"Authorization": f"Bearer {api_key}"})
+        response.raise_for_status()  # Обработка ошибок HTTP
+        products = response.json()
+        return products
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Ошибка при запросе к API PrestaShop: {e}")
+        return None
+    except (ValueError, json.JSONDecodeError) as e:
+        logger.error(f"Ошибка при декодировании ответа API PrestaShop: {e}")
+        return None
 ```
