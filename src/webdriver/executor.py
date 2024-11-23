@@ -379,12 +379,14 @@ class ExecuteLocator:
                     continue
                 except ElementClickInterceptedException as ex:
                     if MODE in ('dev','debug'): 
-                        logger.debug(f"Element click intercepted: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
-                    return False
+                        logger.debug(f"Element click intercepted:  {locator=}\n", ex, False)
+                        ...
+                    return 
                 except Exception as ex:
                     if MODE in ('dev','debug'): 
-                        logger.debug(f"Element click intercepted: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}\n", ex, False)
-                    return False
+                        logger.debug(f"Element click intercepted: {locator=}\n", ex, False)
+                        ...
+                    return 
 
             elif event.startswith("pause("):
                 match = re.match(r"pause\((\d+)\)", event)
@@ -394,7 +396,8 @@ class ExecuteLocator:
                     result.append(True)
                     continue
                 if MODE in ('dev','debug'):
-                    logger.debug(f"Invalid pause duration: {pprint(event, text_color='WHITE',bg_color='RED')}\n")
+                    logger.debug(f"Должна быть пауза, но что-то не срослось: {locator=}\n")
+                    ...
                 return False
 
             elif event == "upload_media()":
@@ -408,15 +411,17 @@ class ExecuteLocator:
                     continue
                 except Exception as ex:
                     if MODE in ('dev','debug'):
-                        logger.debug(f"Error uploading media: {pprint(message, text_color='WHITE',bg_color='RED')}", ex, False)
+                        logger.debug(f"Error uploading media: {message=}", ex, False)
+                        ...
                     return False
 
             elif event == "screenshot()":
                 try:
                     result.append(await self.get_webelement_as_screenshot(locator, webelement=webelement))
                 except Exception as ex:
-                    if MODE == 'debug':
-                        logger.error(f"Error taking screenshot: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
+                    if MODE in ('dev','debug'):
+                        logger.error(f"Error taking screenshot: {locator=}", ex, False)
+                        ...
                     return False
 
             elif event == "clear()":
@@ -424,7 +429,7 @@ class ExecuteLocator:
                     await asyncio.to_thread(webelement.clear)
                 except Exception as ex:
                     if MODE in ('dev','debug'):
-                        logger.error(f"Error clearing element: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
+                        logger.error(f"Error clearing element: {locator=}", ex, False)
                     return False
 
             elif event.startswith("send_keys("):
@@ -439,7 +444,7 @@ class ExecuteLocator:
                     await asyncio.to_thread(actions.perform)
                 except Exception as ex:
                     if MODE in ('dev','debug'):
-                        logger.error(f"Error sending keys: {pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex, False)
+                        logger.error(f"Error sending keys: {locator=}", ex, False)
                     return False
 
             elif event.startswith("type("):
@@ -603,7 +608,7 @@ class ExecuteLocator:
                             self.actions.perform()
                 except Exception as ex:
                     if MODE in ('dev','debug'):
-                        logger.error(f"Error typing message\n{letter=}\n{word=}\n{pprint(locator, text_color='YELLOW',bg_color='BLACK')}", ex)
+                        logger.error(f"Error typing message\n{message=}\n{word=}\n{letter=}", ex)
                     ...
                     continue  # <- если была ошибка в передаче буквы - пока игнорую ёё
                     """ TODO:
