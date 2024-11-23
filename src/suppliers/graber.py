@@ -84,11 +84,12 @@ def close_pop_up(value: Any = None) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
-            try:
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
-                ... 
-            except ExecuteLocatorException as e:
-                logger.debug(f'Ошибка выполнения локатора: {e}')
+            if Context.locator.close_pop_up:
+                try:
+                    await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
+                    ... 
+                except ExecuteLocatorException as e:
+                    logger.debug(f'Ошибка выполнения локатора: {e}')
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
@@ -939,7 +940,7 @@ class Graber:
     async def local_saved_image(self, value: Any = None):
         self.fields.local_saved_image = await self.set_field_value(
             value,
-            lambda: save_png_from_url(self.d.execute_locator(self.l.default_image_url), f.id_product),
+            lambda: save_png_from_url(self.d.execute_locator(self.l.default_image_url), self.fields.id_product),
             'local_saved_image'
         )
 

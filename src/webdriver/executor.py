@@ -111,11 +111,11 @@ class ExecuteLocator:
             str | list | dict | WebElement | bool: Outcome based on locator instructions.
         """
         locator = (
-            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
+            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
 
         async def _parse_locator(
-            l: Union[dict, SimpleNamespace], message: Optional[str]
+            locator: Union[dict, SimpleNamespace], message: Optional[str]
         ) -> str | list | dict | WebElement | bool:
             """ Parses and executes locator instructions.
 
@@ -127,7 +127,7 @@ class ExecuteLocator:
                 Union[str, list, dict, WebElement, bool]: Result of the execution.
             """
             locator = (
-                locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator)
+                locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
             )
             if all([locator.event, locator.attribute, locator.mandatory]) is None:
                 return 
@@ -186,7 +186,7 @@ class ExecuteLocator:
         """
     
         locator = (
-            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
+            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
 
         element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
@@ -287,7 +287,7 @@ class ExecuteLocator:
         """
         d = self.driver
         locator = (
-            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
+            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
         try:
             condition = EC.presence_of_element_located if timeout_for_event == 'presence_of_element_located' else EC.element_to_be_clickable
@@ -323,7 +323,7 @@ class ExecuteLocator:
             BinaryIO | None: Binary stream of the screenshot or None if failed.
         """
         locator = (
-            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
+            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
 
         if not webelement:
@@ -357,7 +357,7 @@ class ExecuteLocator:
             bool: Returns True if event execution was successful, False otherwise.
         """
         locator = (
-            locator if isinstance(locator, (SimpleNamespace, Locator)) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
+            locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
         events = str(locator.event).split(";")
         result: list = []

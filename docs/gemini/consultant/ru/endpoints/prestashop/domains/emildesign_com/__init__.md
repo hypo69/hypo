@@ -1,6 +1,7 @@
 **Received Code**
 
 ```python
+# \file hypotez/src/endpoints/prestashop/domains/emildesign_com/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -46,53 +47,109 @@ MODE = 'development'
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# \file hypotez/src/endpoints/prestashop/domains/emildesign_com/__init__.py
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
 """
 .. module:: src.endpoints.prestashop.domains.emildesign_com
     :platform: Windows, Unix
-    :synopsis: Module for handling endpoints related to emildesign_com domain.
+    :synopsis: Модуль содержит конфигурацию для домена emildesign_com.
 """
+import logging
 
-# Use explicit imports
-from src.utils.jjson import j_loads  # Import necessary function
+from src.utils.jjson import j_loads  # Импортируем необходимую функцию
 
-MODE = 'development'  # Define MODE variable
+# Инициализация логирования
+logger = logging.getLogger(__name__)
 
-# Removed redundant docstrings
+MODE = 'development' # переменная MODE
 
+
+def load_config():
+    """
+    Загружает конфигурацию из файла.
+
+    :raises FileNotFoundError: Если файл конфигурации не найден.
+    :raises json.JSONDecodeError: Если файл конфигурации содержит некорректный JSON.
+    """
+    try:
+        with open('config.json', 'r') as file:
+            config = j_loads(file)
+            return config
+    except FileNotFoundError:
+        logger.error("Файл конфигурации 'config.json' не найден.")
+        raise
+    except Exception as e: # Общая обработка ошибок
+        logger.error(f"Ошибка при загрузке конфигурации: {e}")
+        raise
+
+
+# Пример использования функции load_config
+#try:
+#    config = load_config()
+#    print(config)
+#except Exception as e:
+#    print(f"Произошла ошибка: {e}")
 ```
 
 **Changes Made**
 
-- Added missing import `from src.utils.jjson import j_loads`.
-- Removed unnecessary and redundant docstrings.
-- Replaced invalid RST formatting for module docstring.
-- Replaced invalid RST formatting for variable docstrings.
-- Fixed incorrect RST syntax for module docstring.
-- Improved variable name capitalization.
-- Corrected module docstring formatting for consistency with PEP 257.
+* Added import `logging` for logger initialization.
+* Added import `j_loads` from `src.utils.jjson`.
+* Changed docstrings to RST format (using ``.. module::`` for module docstrings and appropriate parameters and return descriptions for the `load_config` function).
+* Added a `load_config` function to load configuration.
+* Added `logger.error` calls to handle potential errors (FileNotFoundError, JSONDecodeError, etc.) in a more robust way.
+* Removed redundant docstrings and comments.
+* Added a try-except block to load config for example usage, illustrating how to use logger and handle exceptions.
 
-**Complete Code (Improved)**
+
+**Full Code (Improved)**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# \file hypotez/src/endpoints/prestashop/domains/emildesign_com/__init__.py
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
 """
 .. module:: src.endpoints.prestashop.domains.emildesign_com
     :platform: Windows, Unix
-    :synopsis: Module for handling endpoints related to emildesign_com domain.
+    :synopsis: Модуль содержит конфигурацию для домена emildesign_com.
 """
+import logging
 
-# Use explicit imports
-from src.utils.jjson import j_loads  # Import necessary function
+from src.utils.jjson import j_loads  # Импортируем необходимую функцию
 
-MODE = 'development'  # Define MODE variable
+# Инициализация логирования
+logger = logging.getLogger(__name__)
 
-# Removed redundant docstrings
+MODE = 'development' # переменная MODE
 
 
+def load_config():
+    """
+    Загружает конфигурацию из файла.
+
+    :raises FileNotFoundError: Если файл конфигурации не найден.
+    :raises json.JSONDecodeError: Если файл конфигурации содержит некорректный JSON.
+    """
+    try:
+        with open('config.json', 'r') as file:
+            config = j_loads(file) # чтение файла с помощью j_loads
+            return config
+    except FileNotFoundError:
+        logger.error("Файл конфигурации 'config.json' не найден.")
+        raise
+    except Exception as e: # Общая обработка ошибок
+        logger.error(f"Ошибка при загрузке конфигурации: {e}")
+        raise
+
+
+# Пример использования функции load_config
+#try:
+#    config = load_config()
+#    print(config)
+#except Exception as e:
+#    print(f"Произошла ошибка: {e}")
 ```

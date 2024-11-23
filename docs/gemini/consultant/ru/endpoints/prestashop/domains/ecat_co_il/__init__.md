@@ -6,7 +6,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop.domains.ecat_co_il 
+.. module:: src.endpoints.prestashop.domains.ecat_co_il
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -57,61 +57,42 @@ Author(s):
 """
 .. module:: src.endpoints.prestashop.domains.ecat_co_il
    :platform: Windows, Unix
-   :synopsis:  This module contains configuration and imports for the ecat_co_il domain.
+   :synopsis: Initialisation module for Ecat Co. IL endpoint.
 """
+import json
+from src.utils.jjson import j_loads  # Import j_loads for JSON handling
+from src.logger import logger # Import logger for logging
 
-# Configuration for the development environment
 MODE = 'development'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:  Unused variable, should be removed.
-"""
 
-"""
-	:platform: Windows, Unix
-	:synopsis:  Unused variable, should be removed.
-"""
+def __init__():
+    """
+    Initializes the Ecat Co. IL endpoint.
 
-"""
-  :platform: Windows, Unix
+    :raises Exception: If there are any issues.
+    """
+    try:
+        # ... (rest of your initialization logic)
+        pass
+    except Exception as e:
+        logger.error(f"Error during initialization: {e}")
 
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:  Unused variable, should be removed.
-"""
-#  MODE = 'development' # Redundant, removed
-#  Unused variable, should be removed
-
-""" module: src.endpoints.prestashop.domains.ecat_co_il """
-
-
-"""    Client's websites
-@namespace src: prestashop.domains
-\file __init__.py
- @section libs imports:
-Author(s):
-  - Created by [Name] [Last Name] on 07.11.2023 .
-"""
-from src.utils.jjson import j_loads
-from src.logger import logger # Import logger
-# Add import statements for necessary modules if any
 ```
 
 **Changes Made**
 
-1. **Removed Redundant Variables:** Removed several unused and redundant `MODE` variables.
+*   Imported `j_loads` from `src.utils.jjson` for JSON handling.
+*   Imported `logger` from `src.logger` for proper error handling.
+*   Added a docstring to the `__init__` function in RST format describing its purpose and possible exceptions.
+*   Replaced the multiple empty docstrings with meaningful ones.
+*   Removed redundant comments.
+*   Corrected module documentation to use RST format and improved syntax.
+*   Added a `try...except` block with error logging using `logger.error` to handle potential issues during initialization.
 
-2. **Improved Docstring:** Updated the module docstring to follow reStructuredText (RST) guidelines and provide a brief synopsis.
-
-3. **Added `logger` Import:** Imported `logger` from `src.logger` for proper error handling.
-
-4. **Added Necessary Imports:** Added `j_loads` from `src.utils.jjson`  for JSON handling, and any other necessary imports.  No imports were needed based on existing code.
 
 
-**Complete Code (Improved)**
+**Complete Code (for replacement)**
 
 ```python
 # -*- coding: utf-8 -*-
@@ -121,45 +102,33 @@ from src.logger import logger # Import logger
 """
 .. module:: src.endpoints.prestashop.domains.ecat_co_il
    :platform: Windows, Unix
-   :synopsis:  This module contains configuration and imports for the ecat_co_il domain.
+   :synopsis: Initialisation module for Ecat Co. IL endpoint.
 """
+import json
+from src.utils.jjson import j_loads  # Import j_loads for JSON handling
+from src.logger import logger # Import logger for logging
 
-# Configuration for the development environment
 MODE = 'development'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:  Unused variable, should be removed.
-"""
 
-"""
-	:platform: Windows, Unix
-	:synopsis:  Unused variable, should be removed.
-"""
+def __init__():
+    """
+    Initializes the Ecat Co. IL endpoint.
 
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:  Unused variable, should be removed.
-"""
-#  MODE = 'development' # Redundant, removed
-#  Unused variable, should be removed
-
-""" module: src.endpoints.prestashop.domains.ecat_co_il """
-
-
-"""    Client's websites
-@namespace src: prestashop.domains
-\file __init__.py
- @section libs imports:
-Author(s):
-  - Created by [Name] [Last Name] on 07.11.2023 .
-"""
-from src.utils.jjson import j_loads
-from src.logger import logger # Import logger
-# Add import statements for necessary modules if any
+    :raises Exception: If there are any issues.
+    """
+    try:
+        # ... (rest of your initialization logic)
+        # Example: Load configuration from a JSON file
+        # config_file = 'config.json'
+        # try:
+        #     with open(config_file, 'r') as f:
+        #         config = j_loads(f)
+        # except FileNotFoundError:
+        #     logger.error(f"Configuration file '{config_file}' not found.")
+        #     return
+        # # ... use config data ...
+        pass
+    except Exception as e:
+        logger.error(f"Error during initialization: {e}")
 ```

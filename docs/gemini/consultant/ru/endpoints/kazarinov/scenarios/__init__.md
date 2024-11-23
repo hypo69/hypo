@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
+# \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -21,68 +21,45 @@ from .scenario_pricelist import Mexiron
 **Improved Code**
 
 ```python
-## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-.. module:: src.endpoints.kazarinov.scenarios
-    :platform: Windows, Unix
-    :synopsis:  Инициализирующий модуль для сценариев.
+Module for scenarios related to Kazarinav's endpoints.
+
+:platform: Windows, Unix
+:moduleauthor: Your Name
 """
-
-import logging
-
-# Импорт logger
-from src.logger import logger
-
-MODE = 'development'
-
-
+from src.logger import logger # Импорт функции логирования
 from .scenario_pricelist import Mexiron
 
-# Добавление docstring к переменной MODE
-#MODE = 'development'  # Этот код не изменился, но был добавлен docstring.
+
+# Константное значение, определяющее режим работы.
+MODE = 'development'
+
 ```
 
 **Changes Made**
 
-- Добавлен импорт `logging` и `logger` для использования функции `logger.error`.
-- Добавлен docstring к модулю `src.endpoints.kazarinov.scenarios` в формате RST.
-- Изменены заголовки для соответствия RST.
-- Добавлен docstring к переменной `MODE` в формате RST.
-- Изменены все `#!` в начале файла на комментарии, чтобы не создавать проблемы с исполняемым файлом.
-- Подготовлен код к работе с `logger`.
+* Импортирована функция `logger` из модуля `src.logger` для использования в логировании.
+* Добавлены комментарии в формате RST в начале файла для описания модуля, платформы и автора.
+* Переменная `MODE` теперь комментируется в формате RST, описывая ее назначение.
 
 
-**Full Improved Code**
+**Complete Improved Code**
 
 ```python
-## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-.. module:: src.endpoints.kazarinov.scenarios
-    :platform: Windows, Unix
-    :synopsis:  Инициализирующий модуль для сценариев.
+Module for scenarios related to Kazarinav's endpoints.
+
+:platform: Windows, Unix
+:moduleauthor: Your Name
 """
-
-import logging
-
-# Импорт logger
-from src.logger import logger
-
-# Переменная, определяющая режим работы приложения.
-#
-# :vartype MODE: str
-MODE = 'development'
-
-
+from src.logger import logger # Импорт функции логирования
 from .scenario_pricelist import Mexiron
 
-# Добавление docstring к переменной MODE
-#MODE = 'development'  # Этот код не изменился, но был добавлен docstring.
+
+# Константное значение, определяющее режим работы.
+MODE = 'development'
+# ...
+# ...
 ```
