@@ -17,6 +17,11 @@
 6. [Конфигурация](#конфигурация)
    - [Настройка учетных данных](#настройка-учетных-данных)
 7. [Дополнительная информация](#дополнительная-информация)
+8. [Документация для разработчика](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/ru) ( **Не готова* 😕)        
+9. [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.RU.MD) ( **Не готова* 😕)
+10. [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
+
+
 
 ---
 
@@ -266,12 +271,6 @@ Copy-Item -Path "$currentPath\credentials.kdbx.example" -Destination "$currentPa
 Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\password.txt"
 ```
 ---
-## Далее:
-
-1. [Документация для разработчика](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/ru)
-2. [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.RU.MD)
-3. [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
-
 
 ## Дополнительная информация
 
