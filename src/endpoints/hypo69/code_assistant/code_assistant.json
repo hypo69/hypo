@@ -74,16 +74,18 @@
   ],
 
   "output_directory": {
-    "doc_writer_rst": "<model>/doc/rst/<lang>/src",
-    "doc_writer_md": "<model>/doc/md/<lang>/src",
     "code_checker": "<model>/consultant/<lang>/src",
+    "code_explainer": "<model>/explainer/<lang>/src",
     "pytest": "../pytest/<model>/<lang>/src",
-    "code_explainer": "<model>/explainer/<lang>/src"
+    "doc_writer_rst": "<model>/doc/<lang>/rst/src",
+    "doc_writer_md": "<model>/doc/<lang>/md/src",
+    "doc_writer_html": "<model>/doc/<lang>/html//src",
+    "how_to_writer": "<model>/how_to/<lang>/src"
   },
   "argparse": {
     "role": {
       "default": "code_checker",
-      "choices": [ "doc_writer_rst", "doc_writer_md", "code_checker", "pytest", "code_explainer" ]
+      "choices": [ "doc_writer_rst", "doc_writer_md", "doc_writer_html", "code_checker", "pytest", "code_explainer", "how_to_writer" ]
     },
     "lang": {
       "default": "en",
