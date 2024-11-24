@@ -12,6 +12,8 @@
 
   "exclude_dirs": [
     ".ipynb_checkpoints",
+    "resources",
+    "profiles",
     "_experiments",
     "db",
     "node_modules",

@@ -143,9 +143,7 @@ class GoogleGenerativeAI:
 
     def ask(self, q: str, attempts: int = 15) -> Optional[str]:
         """
-        Отправить запрос к модели и получить ответ.
-
-        Этот метод отправляет текстовый запрос модели и возвращает ответ.
+        метод отправляет текстовый запрос модели и возвращает ответ.
 
         Аргументы:
             q (str): Вопрос, который будет отправлен модели.
@@ -158,6 +156,8 @@ class GoogleGenerativeAI:
             >>> ai = GoogleGenerativeAI(api_key="your_api_key")
             >>> response = ai.ask("Какая погода сегодня?")
             >>> print(response)
+        TODO: 
+            препарировать `response`
         """
         for attempt in range(attempts):
             try:
@@ -193,7 +193,7 @@ class GoogleGenerativeAI:
                 time.sleep(2 ** attempt)
                 continue
             except ResourceExhausted as ex:
-                timeout = 5400
+                timeout = 10800
                 logger.debug(f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
                 time.sleep(timeout)
                 continue

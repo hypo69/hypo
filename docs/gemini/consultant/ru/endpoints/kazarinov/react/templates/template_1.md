@@ -74,21 +74,19 @@ MODE = 'debug'
 </html>
 ```
 
-```
 Improved Code
 ```python
 ## \file hypotez/src/endpoints/kazarinov/react/templates/template_1.html
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 
-"""
-Шаблон HTML для отображения списка продуктов.
+""" Шаблон HTML для отображения списка товаров.
+    =========================================================================================
 
-Этот шаблон использует Bootstrap для стилизации и динамически
-отображает список продуктов, полученных из переменной `products`.
-Также отображается общая стоимость и валюта.
-"""
-MODE = 'debug'
+    Этот шаблон использует язык разметки HTML и шаблонизатор Jinja2 для 
+    отображения списка продуктов с их изображениями, названиями и описаниями. 
+    Шаблон также включает информацию о общей стоимости товаров.
+    """
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -139,7 +137,7 @@ MODE = 'debug'
             {% for product in products %}
             <div class="col-md-6 product-card">
                 <h3>{{ product.product_title }}</h3>
-                <img src="{{ product.image_local_saved_path }}" 
+                <img src="{{ product.image_local_saved_path }}"
                      alt="{{ product.product_title }}" class="img-fluid" />
                 <p>{{ product.product_description }}</p>
             </div>
@@ -147,7 +145,7 @@ MODE = 'debug'
         </div>
 
         <div class="footer">
-            <p>Общая стоимость: 
+            <p>Общая стоимость:
                 <span class="price-tag">{{ price }} {{ currency }}</span>
             </p>
         </div>
@@ -157,28 +155,26 @@ MODE = 'debug'
 </html>
 ```
 
-```
 Changes Made
 ```
-
-- Добавлены RST комментарии к модулю.
-- Код оставлен без изменений, т.к. это HTML-шаблон, а не Python-код.  Изменения не требуются.
-
+- Added a docstring to the file describing its purpose and usage in reStructuredText format.
+- No functional changes were made to the code.
+- Formatting changes were applied to match RST guidelines.
 ```
-Complete Code
+
+Optimized Code
 ```python
 ## \file hypotez/src/endpoints/kazarinov/react/templates/template_1.html
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 
-"""
-Шаблон HTML для отображения списка продуктов.
+""" Шаблон HTML для отображения списка товаров.
+    =========================================================================================
 
-Этот шаблон использует Bootstrap для стилизации и динамически
-отображает список продуктов, полученных из переменной `products`.
-Также отображается общая стоимость и валюта.
-"""
-MODE = 'debug'
+    Этот шаблон использует язык разметки HTML и шаблонизатор Jinja2 для 
+    отображения списка продуктов с их изображениями, названиями и описаниями. 
+    Шаблон также включает информацию о общей стоимости товаров.
+    """
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -229,7 +225,7 @@ MODE = 'debug'
             {% for product in products %}
             <div class="col-md-6 product-card">
                 <h3>{{ product.product_title }}</h3>
-                <img src="{{ product.image_local_saved_path }}" 
+                <img src="{{ product.image_local_saved_path }}"
                      alt="{{ product.product_title }}" class="img-fluid" />
                 <p>{{ product.product_description }}</p>
             </div>
@@ -237,7 +233,7 @@ MODE = 'debug'
         </div>
 
         <div class="footer">
-            <p>Общая стоимость: 
+            <p>Общая стоимость:
                 <span class="price-tag">{{ price }} {{ currency }}</span>
             </p>
         </div>
@@ -245,3 +241,5 @@ MODE = 'debug'
 </body>
 
 </html>
+```
+```

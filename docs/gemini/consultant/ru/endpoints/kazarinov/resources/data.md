@@ -1,4 +1,3 @@
-
 # ИНСТРУКЦИЯ
 ## Основные требования:
 ## Output Language: RU (Русский)
@@ -38,60 +37,87 @@
 8. **Примеры кода**:
    - Включайте примеры документации RST и возможные улучшения в формате `TODO`.
 
-9. **Дополнительная инструкция**:
-   - Все комментарии к модулям, функциям, методам и переменным должны быть переписаны в формате reStructuredText (RST). Это включает:
-     - Описание модуля в начале файла.
-     - Документацию для каждой функции, метода и переменной.
-     - Соблюдение стандартов оформления docstring в Python (например, для Sphinx).
-
-     Пример формата документации для модуля:
-
-     ```python
-     """
-     Модуль для работы ассистента программиста
-     =========================================================================================
-
-     Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ, 
-     такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
-
-     Пример использования
-     --------------------
-
-     Пример использования класса `CodeAssistant`:
-
-     .. code-block:: python
-
-         assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-         assistant.process_files()
-     """
-     ```
-
-     Пример формата документации для функций:
-
-     ```python
-     def example_function(param1: str, param2: int) -> str:
-         """
-         Выполняет примерную задачу.
-
-         :param param1: Описание параметра 1.
-         :param param2: Описание параметра 2.
-         :return: Описание возвращаемого значения.
-         """
-         ...
-     ```
 
 ## Порядок блоков в ответе:
 
 1. **Исходный код**:  
-   <предоставленный код>
 
-2. **Улучшенный код**:  
-   <код с улучшениями>
+```
+pyinstaller --onefile --add-data "resources/*;resources" bot.py
+```
 
-3. **Внесённые изменения**:  
-   <список изменений>
+2. **Улучшенный код**:
 
-4. **Оптимизированный код**:  
-   <итоговый оптимизированный код>
-----------------------------
-** КОНЕЦ ИНСТРУКЦИИ **
+```python
+# Код для pyinstaller
+import sys
+import subprocess
+
+def compile_bot():
+    """
+    Компилирует приложение bot.py с помощью pyinstaller.
+
+    :return: Возвращает код возврата процесса pyinstaller.
+    """
+    try:
+        # Компилирует приложение bot.py с помощью pyinstaller
+        result = subprocess.run(['pyinstaller', '--onefile', '--add-data', '"resources/*;resources"', 'bot.py'],
+                                 capture_output=True, text=True, check=True)
+        # Возвращает код 0 если выполнено успешно
+        return 0
+    except FileNotFoundError:
+        logger.error("pyinstaller не найден. Убедитесь, что он установлен.")
+        return 1
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Ошибка при выполнении pyinstaller: {e.stderr}")
+        return e.returncode
+
+if __name__ == "__main__":
+    exit_code = compile_bot()
+    sys.exit(exit_code)
+
+
+```
+
+3. **Внесённые изменения**:
+
+- Добавлена функция `compile_bot()`, которая выполняет компиляцию с помощью `subprocess.run`.
+- Реализована обработка исключений `FileNotFoundError` и `subprocess.CalledProcessError` для улучшенной отказоустойчивости, и выводятся соответствующие сообщения в лог.
+- Улучшен вывод ошибок.
+- Добавлена обработка ошибок и логирование с использованием `logger`.
+- Использование одинарных кавычек в аргументе `--add-data`.
+-  Добавлены комментарии с документацией в формате RST.
+
+4. **Оптимизированный код**:
+
+```python
+# Код для pyinstaller
+import sys
+import subprocess
+from src.logger import logger # Импорт logger
+
+def compile_bot():
+    """
+    Компилирует приложение bot.py с помощью pyinstaller.
+
+    :return: Возвращает код возврата процесса pyinstaller.
+    """
+    try:
+        # Компилирует приложение bot.py с помощью pyinstaller
+        result = subprocess.run(['pyinstaller', '--onefile', '--add-data', '"resources/*;resources"', 'bot.py'],
+                                 capture_output=True, text=True, check=True)
+        # Возвращает код 0 если выполнено успешно
+        return 0
+    except FileNotFoundError:
+        logger.error("pyinstaller не найден. Убедитесь, что он установлен.")
+        return 1
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Ошибка при выполнении pyinstaller: {e.stderr}")
+        return e.returncode
+
+if __name__ == "__main__":
+    exit_code = compile_bot()
+    sys.exit(exit_code)
+
+
+```

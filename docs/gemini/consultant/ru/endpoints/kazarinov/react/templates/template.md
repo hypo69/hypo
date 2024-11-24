@@ -87,18 +87,15 @@ MODE = 'debug'
 ```
 Improved Code
 ```python
-## \file hypotez/src/endpoints/kazarinov/react/templates/template.html
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+<!--
+Template для отображения списка продуктов с изображениями и ценой.
+=======================================================================
 
-"""
-Шаблон HTML для отображения списка продуктов.
+Этот шаблон предназначен для отображения списка продуктов, 
+включая их изображения, названия и описания. 
+Также выводится общая стоимость всех продуктов.
 
-Этот шаблон использует Bootstrap для стилизации и
-отображает продукты в виде карточек.  Включает в себя
-заголовок, описание, изображения и общую стоимость продуктов.
-"""
-MODE = 'debug'
+-->
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -156,8 +153,7 @@ MODE = 'debug'
         <div class="row">
             {% for product in products %}
             <div class="col-md-12 product-card">
-                <img src="{{ product.image_local_saved_path }}" 
-                     alt="{{ product.product_title }}" class="img-fluid" />
+                <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" class="img-fluid" />
                 <div class="product-info">
                     <h3>{{ product.product_title }}</h3>
                     <p>{{ product.product_description }}</p>
@@ -167,7 +163,7 @@ MODE = 'debug'
         </div>
 
         <div class="footer">
-            <p>Общая стоимость: 
+            <p>Общая стоимость:
                 <span class="price-tag">{{ price }} {{ currency }}</span>
             </p>
         </div>
@@ -180,25 +176,22 @@ MODE = 'debug'
 ```
 Changes Made
 ```
-- Добавлена полная документация RST в начале файла.
-- Добавлены комментарии в формате RST к блокам стилей.
+- Добавлены комментарии в формате RST для описания модуля, шаблон предназначен для отображения списка продуктов.
+- Исправлен форматирование кода для лучшей читаемости.
+- Все комментарии, не требующие изменений, сохранены в исходном виде.
 
 ```
-Full Code (Improved)
+Optimized Code
 ```python
-```html
-## \file hypotez/src/endpoints/kazarinov/react/templates/template.html
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+<!--
+Template для отображения списка продуктов с изображениями и ценой.
+=======================================================================
 
-"""
-Шаблон HTML для отображения списка продуктов.
+Этот шаблон предназначен для отображения списка продуктов, 
+включая их изображения, названия и описания. 
+Также выводится общая стоимость всех продуктов.
 
-Этот шаблон использует Bootstrap для стилизации и
-отображает продукты в виде карточек.  Включает в себя
-заголовок, описание, изображения и общую стоимость продуктов.
-"""
-MODE = 'debug'
+-->
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -256,8 +249,7 @@ MODE = 'debug'
         <div class="row">
             {% for product in products %}
             <div class="col-md-12 product-card">
-                <img src="{{ product.image_local_saved_path }}" 
-                     alt="{{ product.product_title }}" class="img-fluid" />
+                <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" class="img-fluid" />
                 <div class="product-info">
                     <h3>{{ product.product_title }}</h3>
                     <p>{{ product.product_description }}</p>
@@ -267,7 +259,7 @@ MODE = 'debug'
         </div>
 
         <div class="footer">
-            <p>Общая стоимость: 
+            <p>Общая стоимость:
                 <span class="price-tag">{{ price }} {{ currency }}</span>
             </p>
         </div>
@@ -275,4 +267,3 @@ MODE = 'debug'
 </body>
 
 </html>
-```
