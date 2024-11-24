@@ -1,2 +1,0 @@
-
-make the picture vertical with the aspect ratio 1200X1600. Place the right part of the picture under the left part of the picture

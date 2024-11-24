@@ -3,6 +3,8 @@ name: Deploy mdBook site to Pages
 on:
   push:
     branches: ["master"]
+    paths:
+      - 'docs/gemini/consultant/ru/SUMMARY.md'  # Указание пути к файлу, изменения в котором триггерят сборку
   workflow_dispatch:
 
 permissions:
