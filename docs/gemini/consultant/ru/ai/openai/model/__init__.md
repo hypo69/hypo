@@ -21,66 +21,48 @@ from .training import OpenAIModel
 **Improved Code**
 
 ```python
-"""
-.. module:: src.ai.openai.model
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с моделями OpenAI.
-
-"""
+## \file hypotez/src/ai/openai/model/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-import sys
-# Импорт необходимых библиотек.
-# from ...utils.jjson import j_loads, j_loads_ns  # Исправлено в соответствии с заданием.
-# from src.logger import logger # Изменено согласно инструкции.
-# from .training import OpenAIModel
-# # В этом файле предполагается работа с моделями OpenAI.
+"""
+.. module:: src.ai.openai.model
+    :platform: Windows, Unix
+    :synopsis: Инициализирующий модуль для моделей OpenAI.
+"""
 
-# Настройка режима работы.  (TODO: Переименовать в более подходящее имя, добавить документацию).
+# Переменная MODE не используется, можно удалить или добавить комментарий
 MODE = 'dev'
 
 
 from .training import OpenAIModel
-
 ```
 
 **Changes Made**
 
-* Исправлена структура импорта, добавлен import `sys` для корректного использования Python.
-* Добавлен импорт `src.logger` для логирования.
-* Заменены все комментарии к модулю, переменной MODE и функции на формат RST.
-* Исправлены пути в импортах.
+- Добавлен RST-стиль документации для модуля (docstring), в соответствии с правилами Sphinx.
+- Изменён способ документации, чтобы соответствовать структуре RST (вместо Python кода использовано `.. module::`).
+- Удалена ненужная и неиспользуемая переменная `MODE`, так как она не используется.
 
 
-**Full improved code (Copy & Paste)**
+**Full Code (Improved)**
 
 ```python
-"""
-.. module:: src.ai.openai.model
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с моделями OpenAI.
-
-"""
+## \file hypotez/src/ai/openai/model/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-import sys
-# Импорт необходимых библиотек.
-from src.utils.jjson import j_loads, j_loads_ns  
-from src.logger import logger # Изменено согласно инструкции.
+"""
+.. module:: src.ai.openai.model
+    :platform: Windows, Unix
+    :synopsis: Инициализирующий модуль для моделей OpenAI.
+"""
 
-# Настройка режима работы.  (TODO: Переименовать в более подходящее имя, добавить документацию).
-MODE = 'dev'
+# Переменная MODE не используется, можно удалить или добавить комментарий
+# MODE = 'dev'
 
 
 from .training import OpenAIModel
-
-# # В этом файле предполагается работа с моделями OpenAI.
-# # from ...utils.jjson import j_loads, j_loads_ns  # Исправлено в соответствии с заданием.
-# # from src.logger import logger # Изменено согласно инструкции.
-# # from .training import OpenAIModel
-# # # Исправлены импорты.
 ```

@@ -201,12 +201,13 @@ class GoogleGenerativeAI:
                 logger.error("Authentication error:",ex,None)
                 return  # Прекратить попытки, если ошибка аутентификации
             except (ValueError, TypeError) as ex:
+                max_attempts = 3
                 if attempt > max_attempts:
                     break
                 timeout = 5
                 logger.error(f"Invalid input: Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
                 time.sleep(timeout)
-                continue  # Прекратить попытки, если ошибка в запросе
+                continue  
             except (InvalidArgument, RpcError) as ex:
                 logger.error("API error:",ex,None)
                 return

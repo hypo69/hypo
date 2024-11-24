@@ -30,8 +30,12 @@ MODE = 'dev'
 import sys
 import json
 from packaging.version import Version
-
 from pathlib import Path
+from src.utils.jjson import j_loads
+
+from src import gs
+
+# Get the root directory of the project
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project starting from the current file's directory,
@@ -43,54 +47,53 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     Returns:
         Path: Path to the root directory if found, otherwise the directory where the script is located.
     """
-    __root__:Path
-    current_path:Path = Path(__file__).resolve().parent
-    __root__ = current_path
+    current_path: Path = Path(__file__).resolve().parent
+    root_path: Path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            __root__ = parent
+            root_path = parent
             break
-    if __root__ not in sys.path:
-        sys.path.insert(0, str(__root__))
-    return __root__
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Get the root directory of the project
 __root__: Path = get_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
-from src import gs
-from src.utils import jjson # Добавляем импорт jjson
-
-settings:dict = None
+settings: dict = None
 try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
-        settings = jjson.j_loads(settings_file) # Используем j_loads
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading settings: {e}")
-    settings = {} # Устанавливаем пустой словарь для предотвращения ошибок
+    settings_path = __root__ / 'src' / 'settings.json'
+    with open(settings_path, 'r') as settings_file:
+        settings = j_loads(settings_file)
+except FileNotFoundError:
+    logger.error(f"Settings file not found: {settings_path}")
+except json.JSONDecodeError as e:
+    logger.error(f"Error decoding settings file: {e}")
 
-doc_str:str = None
+
+doc_str: str = None
 try:
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
-        doc_str = settings_file.read()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading README: {e}")
-    doc_str = ''
+    readme_path = __root__ / 'src' / 'README.MD'
+    with open(readme_path, 'r') as readme_file:
+        doc_str = readme_file.read()
+except FileNotFoundError:
+    logger.error(f"README file not found: {readme_path}")
+except Exception as e:
+    logger.error(f"Error reading README file: {e}")
+
+from src.logger import logger
 
 
- 
-from src.logger import logger # Импортируем logger
-__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
-__version__: str = settings.get("version", '')  if settings  else ''
-__doc__: str = doc_str if doc_str else ''
-__details__: str = ''
-__author__: str = settings.get("author", '')  if settings  else ''
-__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
-__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = doc_str if doc_str else ''
+__details__ = ''
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69') if settings else 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69'
 ```
 
-```
 **Improved Code**
 
 ```python
@@ -102,27 +105,27 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 """
 .. module:: src.ai.helicone.header
     :platform: Windows, Unix
-    :synopsis: Модуль, содержащий конфигурацию проекта и информацию о нём.
+    :synopsis: Module for getting project root and settings.
 """
+
 import sys
 import json
-from pathlib import Path
 from packaging.version import Version
+from pathlib import Path
+from src.utils.jjson import j_loads
 from src import gs
-from src.utils import jjson
 from src.logger import logger
-
-MODE = 'dev'
 
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Находит корневую директорию проекта, начиная с текущей.
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
 
-    :param marker_files: Список файлов/каталогов, по наличию которых определяется корень проекта.
+    :param marker_files: Filenames or directory names to identify the project root.
     :type marker_files: tuple
-    :returns: Путь к корневой директории проекта.
-    :rtype: Path
+    :return: Path to the root directory if found, otherwise the directory where the script is located.
+    :rtype: pathlib.Path
     """
     current_path = Path(__file__).resolve().parent
     root_path = current_path
@@ -136,64 +139,63 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 
 
 __root__ = get_project_root()
-"""__root__ (Path): Корневой путь к проекту."""
+"""__root__ (Path): Path to the root directory of the project"""
 
 
 def load_settings(settings_path: Path) -> dict:
-    """
-    Загружает настройки из файла.
+    """Loads settings from a JSON file.
 
-    :param settings_path: Путь к файлу настроек.
-    :type settings_path: Path
-    :returns: Словарь с настройками. Возвращает пустой словарь при ошибке.
+    :param settings_path: Path to the settings file.
+    :type settings_path: pathlib.Path
+    :raises FileNotFoundError: If the settings file is not found.
+    :raises json.JSONDecodeError: If there's an error decoding the JSON data.
+    :return: The loaded settings as a dictionary.
     :rtype: dict
     """
     try:
-        with open(settings_path, 'r') as f:
-            return jjson.j_loads(f)
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Ошибка при загрузке настроек: {e}")
-        return {}
+        with open(settings_path, 'r') as settings_file:
+            return j_loads(settings_file)
+    except FileNotFoundError:
+        logger.error(f"Settings file not found: {settings_path}")
+        return None
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding settings file: {e}")
+        return None
 
 
 settings = load_settings(__root__ / 'src' / 'settings.json')
-"""settings (dict): Словарь с настройками проекта."""
 
 doc_str = None
+readme_path = __root__ / 'src' / 'README.MD'
 try:
-    doc_str = open(gs.path.root / 'src' / 'README.MD', 'r').read()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Ошибка при загрузке README.MD: {e}")
-    doc_str = ''
+  with open(readme_path, 'r') as readme_file:
+    doc_str = readme_file.read()
+except FileNotFoundError:
+  logger.error(f"README file not found: {readme_path}")
+except Exception as e:
+  logger.error(f"Error reading README file: {e}")
 
 
-__project_name__ = settings.get('project_name', 'hypotez')
-__version__ = settings.get('version', '')
-__doc__ = doc_str
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = doc_str if doc_str else ''
 __details__ = ''
-__author__ = settings.get('author', '')
-__copyright__ = settings.get('copyright', '')
-__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69') if settings else 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69'
 ```
 
-```
 **Changes Made**
 
-- Добавлено импортирование `jjson` из `src.utils`.
-- Изменены все `json.load` на `jjson.j_loads` для чтения файлов.
-- Добавлено логирование ошибок при загрузке настроек и README.
-- Добавлена функция `load_settings` для загрузки настроек и обработки ошибок.
-- Переписаны все docstrings в формате RST.
-- Изменены имена переменных на более читаемые (например, `__root__` на `__root`).
-- Добавлено описание типов для параметров функций в docstrings.
-- Изменены имена файлов и переменных, чтобы избежать конфликтов с существующими.
-- Улучшен вывод ошибок.
+- Added type hints (:param, :type, :return, :rtype) to docstrings for better readability and maintainability.
+- Replaced `json.load` with `j_loads` from `src.utils.jjson` for data loading.
+- Created a separate function `load_settings` to encapsulate the loading logic.
+- Added error handling using `try-except` blocks and `logger.error` for logging errors instead of using `...`
+- Improved docstring formatting to conform to RST standards.
+- Correct handling of potential errors during `README.MD` reading.
 
 
-```
-
-```
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
 ## \file hypotez/src/ai/helicone/header.py
@@ -204,27 +206,27 @@ __cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for bo
 """
 .. module:: src.ai.helicone.header
     :platform: Windows, Unix
-    :synopsis: Модуль, содержащий конфигурацию проекта и информацию о нём.
+    :synopsis: Module for getting project root and settings.
 """
+
 import sys
 import json
-from pathlib import Path
 from packaging.version import Version
+from pathlib import Path
+from src.utils.jjson import j_loads
 from src import gs
-from src.utils import jjson
 from src.logger import logger
-
-MODE = 'dev'
 
 
 def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Находит корневую директорию проекта, начиная с текущей.
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
 
-    :param marker_files: Список файлов/каталогов, по наличию которых определяется корень проекта.
+    :param marker_files: Filenames or directory names to identify the project root.
     :type marker_files: tuple
-    :returns: Путь к корневой директории проекта.
-    :rtype: Path
+    :return: Path to the root directory if found, otherwise the directory where the script is located.
+    :rtype: pathlib.Path
     """
     current_path = Path(__file__).resolve().parent
     root_path = current_path
@@ -238,42 +240,48 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 
 
 __root__ = get_project_root()
-"""__root__ (Path): Корневой путь к проекту."""
+"""__root__ (Path): Path to the root directory of the project"""
 
 
 def load_settings(settings_path: Path) -> dict:
-    """
-    Загружает настройки из файла.
+    """Loads settings from a JSON file.
 
-    :param settings_path: Путь к файлу настроек.
-    :type settings_path: Path
-    :returns: Словарь с настройками. Возвращает пустой словарь при ошибке.
+    :param settings_path: Path to the settings file.
+    :type settings_path: pathlib.Path
+    :raises FileNotFoundError: If the settings file is not found.
+    :raises json.JSONDecodeError: If there's an error decoding the JSON data.
+    :return: The loaded settings as a dictionary.
     :rtype: dict
     """
     try:
-        with open(settings_path, 'r') as f:
-            return jjson.j_loads(f)
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Ошибка при загрузке настроек: {e}")
-        return {}
+        with open(settings_path, 'r') as settings_file:
+            return j_loads(settings_file)
+    except FileNotFoundError:
+        logger.error(f"Settings file not found: {settings_path}")
+        return None
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding settings file: {e}")
+        return None
 
 
 settings = load_settings(__root__ / 'src' / 'settings.json')
-"""settings (dict): Словарь с настройками проекта."""
 
 doc_str = None
+readme_path = __root__ / 'src' / 'README.MD'
 try:
-    doc_str = open(gs.path.root / 'src' / 'README.MD', 'r').read()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Ошибка при загрузке README.MD: {e}")
-    doc_str = ''
+  with open(readme_path, 'r') as readme_file:
+    doc_str = readme_file.read()
+except FileNotFoundError:
+  logger.error(f"README file not found: {readme_path}")
+except Exception as e:
+  logger.error(f"Error reading README file: {e}")
 
 
-__project_name__ = settings.get('project_name', 'hypotez')
-__version__ = settings.get('version', '')
-__doc__ = doc_str
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = doc_str if doc_str else ''
 __details__ = ''
-__author__ = settings.get('author', '')
-__copyright__ = settings.get('copyright', '')
-__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69') if settings else 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69'
 ```

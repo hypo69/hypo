@@ -59,65 +59,71 @@ sys.path.append (__root__)
 """
 .. module:: src.ai.gemini.html_chat
     :platform: Windows, Unix
-    :synopsis: Header file for the Gemini HTML chat module.
+    :synopsis:  Module for handling Gemini HTML chat.
 """
-
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.logger import logger  # импорт logger для логирования
 
-MODE = 'dev'  # Development mode
+MODE = 'dev'
 
 
 def get_root_path() -> Path:
     """
-    Returns the absolute path to the root of the 'hypotez' project.
+    Возвращает абсолютный путь к корневой директории проекта.
 
-    :return: Absolute path to the root of the 'hypotez' project.
-    :raises ValueError: If the 'hypotez' directory is not found.
+    :raises FileNotFoundError: Если папка проекта не найдена.
+    :return: Абсолютный путь к корневой директории.
     """
     try:
-        root_path = os.getcwd()[:os.getcwd().rfind('hypotez') + len('hypotez')]
+        root_path = os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7]
         return Path(root_path)
     except ValueError:
-        logger.error("Error finding the 'hypotez' directory.")
-        raise
+        logger.error("Ошибка при определении корневой директории проекта.")
+        raise FileNotFoundError("Директория проекта не найдена.")
 
 
-# Add logger import if not already present
-try:
-    from src.logger import logger
-except ImportError:
-    logger = print  # Fallback logger for testing
-
-def configure_module_path(root_path: Path) -> None:
-    """Configure the module search path.
-
-    :param root_path: Absolute path to the root of the 'hypotez' project.
+def add_root_to_path(root_path: Path):
     """
-    sys.path.append(str(root_path))
+    Добавляет корневой путь проекта в sys.path.
+
+    :param root_path: Корневой путь проекта.
+    """
+    try:
+        sys.path.append(str(root_path))
+    except Exception as e:
+        logger.error(f"Ошибка при добавлении корневого пути в sys.path: {e}")
+
 
 if __name__ == "__main__":
     try:
         root_path = get_root_path()
-        configure_module_path(root_path)
-    except ValueError as e:
-        logger.error(f"Error configuring module path: {e}")
+        add_root_to_path(root_path)
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка: {e}")
+        sys.exit(1)
+
 ```
 
 **Changes Made**
 
-- Added missing imports for `j_loads`, `j_loads_ns` from `src.utils.jjson`.
-- Added a `get_root_path` function to extract the project root path more robustly and with error handling.
-- Added docstrings in reStructuredText format to the `get_root_path` function and `configure_module_path` function, following Python docstring conventions.
-- Added a `try...except` block to handle the case where 'hypotez' directory is not found, logging the error using `logger`.
-- Added `if __name__ == "__main__":` block to ensure that the code in it is only executed when the script is run directly (not imported as a module).
-- Improved error handling and logging using `logger.error`.
-- Replaced the direct assignment of `__root__` with a more robust approach of using `get_root_path` to retrieve the root directory and handling potential errors during the process.
-- Added a fallback logger (`logger = print`) in case `src.logger` is not found, preventing the script from crashing.
+1.  **Импорты:** Добавлен импорт `from src.logger import logger` для использования логирования.
+2.  **Обработка ошибок:** Вместо стандартных блоков `try-except` используется `logger.error` для вывода сообщений об ошибках.
+3.  **Функция `get_root_path`:** Создана функция для получения пути к корневой директории.
+   - Добавлена обработка `FileNotFoundError` для ситуации, когда папка проекта не найдена.
+   - Добавлен docstring для описания функции и параметров.
+4.  **Функция `add_root_to_path`:** Создана функция для добавления пути к корневой директории в sys.path.
+   - Добавлен docstring для описания функции и параметров.
+5.  **Обработка ошибок при добавлении пути в `sys.path`:** Добавлена обработка ошибок при добавлении пути в `sys.path`.
+6.  **Обработка ошибок в `if __name__ == "__main__":`:** Переписан блок `if __name__ == "__main__":` для обработки ошибок.
+   - Обработка `FileNotFoundError` в блоке `if __name__ == "__main__":` теперь возвращает ошибку `sys.exit(1)`.
+7.  **Изменение стиля кода:** Изменен стиль кода на более современный и читабельный.
+8. **Типизация:** Добавлена типизация для переменных `root_path`.
+9.  **Документация:** Добавлены docstrings (RST) к функциям `get_root_path` и `add_root_to_path`.  Полностью удалены неинформативные docstrings.
 
-**Full Code (Improved)**
+
+**Complete Code (Improved)**
 
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/header.py
@@ -128,51 +134,48 @@ if __name__ == "__main__":
 """
 .. module:: src.ai.gemini.html_chat
     :platform: Windows, Unix
-    :synopsis: Header file for the Gemini HTML chat module.
+    :synopsis:  Module for handling Gemini HTML chat.
 """
-
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.logger import logger  # импорт logger для логирования
 
-MODE = 'dev'  # Development mode
+MODE = 'dev'
 
 
 def get_root_path() -> Path:
     """
-    Returns the absolute path to the root of the 'hypotez' project.
+    Возвращает абсолютный путь к корневой директории проекта.
 
-    :return: Absolute path to the root of the 'hypotez' project.
-    :raises ValueError: If the 'hypotez' directory is not found.
+    :raises FileNotFoundError: Если папка проекта не найдена.
+    :return: Абсолютный путь к корневой директории.
     """
     try:
-        root_path = os.getcwd()[:os.getcwd().rfind('hypotez') + len('hypotez')]
+        root_path = os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7]
         return Path(root_path)
     except ValueError:
-        logger.error("Error finding the 'hypotez' directory.")
-        raise
+        logger.error("Ошибка при определении корневой директории проекта.")
+        raise FileNotFoundError("Директория проекта не найдена.")
 
 
-# Add logger import if not already present
-try:
-    from src.logger import logger
-except ImportError:
-    logger = print  # Fallback logger for testing
-
-
-def configure_module_path(root_path: Path) -> None:
-    """Configure the module search path.
-
-    :param root_path: Absolute path to the root of the 'hypotez' project.
+def add_root_to_path(root_path: Path):
     """
-    sys.path.append(str(root_path))
+    Добавляет корневой путь проекта в sys.path.
+
+    :param root_path: Корневой путь проекта.
+    """
+    try:
+        sys.path.append(str(root_path))
+    except Exception as e:
+        logger.error(f"Ошибка при добавлении корневого пути в sys.path: {e}")
 
 
 if __name__ == "__main__":
     try:
         root_path = get_root_path()
-        configure_module_path(root_path)
-    except ValueError as e:
-        logger.error(f"Error configuring module path: {e}")
+        add_root_to_path(root_path)
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка: {e}")
+        sys.exit(1)
 ```

@@ -18,7 +18,6 @@ MODE = 'dev'
 **Improved Code**
 
 ```python
-## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -26,29 +25,29 @@ MODE = 'dev'
 """
 .. module:: src.ai.myai
    :platform: Windows, Unix
-   :synopsis:  This module contains initialisation code for the myai service.
+   :synopsis:  Инициализационный модуль для AI.
 """
+from src.logger import logger # Импорт для логирования
 
-# Initialize a logger for the module.
-from src.logger import logger
-
-MODE = 'dev'  # Current operating mode.
+MODE = 'dev' # Переменная режима.
 
 
+# Документация к переменной MODE
+#
+# :var MODE: Переменная, определяющая режим работы.
+#     Значение: 'dev'
+#     Доступные значения: 'dev', 'prod'.
 ```
 
 **Changes Made**
 
-- Added missing import statement `from src.logger import logger`.
-- Added a module-level docstring in reStructuredText format, describing the purpose of the module.
-- Updated docstring formatting to adhere to reStructuredText standards.
-- Added a comment explaining the purpose of the `MODE` variable.
-- Added a logger initialization to `src.ai.myai` module.
+1.  Добавлен импорт `from src.logger import logger`.
+2.  Добавлены docstring для модуля, описывающие его назначение, платформы и краткое описание.
+3.  Добавлен docstring для переменной `MODE`, описывающий её назначение и доступные значения.
 
-**Complete Code (with all changes)**
+**Full Code (Improved)**
 
 ```python
-## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -56,11 +55,16 @@ MODE = 'dev'  # Current operating mode.
 """
 .. module:: src.ai.myai
    :platform: Windows, Unix
-   :synopsis:  This module contains initialisation code for the myai service.
+   :synopsis:  Инициализационный модуль для AI.
 """
+from src.logger import logger # Импорт для логирования
 
-# Initialize a logger for the module.
-from src.logger import logger
+MODE = 'dev' # Переменная режима.
 
-MODE = 'dev'  # Current operating mode.
+
+# Документация к переменной MODE
+#
+# :var MODE: Переменная, определяющая режим работы.
+#     Значение: 'dev'
+#     Доступные значения: 'dev', 'prod'.
 ```

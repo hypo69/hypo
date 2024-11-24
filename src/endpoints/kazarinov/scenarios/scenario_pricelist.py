@@ -139,7 +139,7 @@ class Mexiron:
             self.save_product_data(product_data)
 
         # AI processing
-        ru, he = self.process_with_ai(products_list, price)
+        ru, he = self.process_ai(products_list, price)
         if ru and he:
             self.create_report()
             self.post_facebook(ru)
@@ -202,7 +202,7 @@ class Mexiron:
 
 
 
-    def process_with_ai(self, products_list:str, attemts:int = 3) -> tuple | bool:
+    def process_ai(self, products_list:str, attemts:int = 3) -> tuple | bool:
         """
         Processes the product list through the AI model.
 
@@ -218,7 +218,7 @@ class Mexiron:
         ...
         if attemts < 1:
             return
-        response = self.model.ask(self.command + products_list)
+        response = self.model.ask(self.model_command + products_list)
         if not response:
             logger.error("no response from gemini")
             ...
@@ -230,30 +230,30 @@ class Mexiron:
         if not data:
             logger.error(f"Error in data from gemini:{data}")
             ...
-            self.process_with_ai(products_list,attemts - 1)
+            self.process_ai(products_list,attemts - 1)
 
             if not j_dumps(data, base_path / 'ai' / f'{gs.now}.json', ensure_ascii=False): # <- певая проверка валидности полученных данных
                 ...
-                self.process_with_ai(products_list, attemts - 1)
+                self.process_ai(products_list, attemts - 1)
 
         try:
             if hasattr(data,'ru'):
                 ru:SimpleNamespace = data.ru
                 if not ru:
                     ...
-                    self.process_with_ai(products_list, attemts-1)
+                    self.process_ai(products_list, attemts-1)
             else:
                 ...
-                self.process_with_ai(products_list, attemts-1)
+                self.process_ai(products_list, attemts-1)
 
             if hasattr(data,'he'):
                 he:SimpleNamespace = data.he
                 if not he:
                     ...
-                    self.process_with_ai(products_list, attemts-1)
+                    self.process_ai(products_list, attemts-1)
             else:
                 ...
-                self.process_with_ai(products_list, attemts-1)
+                self.process_ai(products_list, attemts-1)
             return ru, he
         except Exception as ex:
             logger.debug(f"ошибка словаря")
