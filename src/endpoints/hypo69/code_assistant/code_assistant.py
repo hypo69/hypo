@@ -262,10 +262,17 @@ def main():
     assistant.run(start_file_number=args['start_file_number'])
 
 if __name__ == '__main__':
+    """Код запускает бесконечный цикл, в котором выполняется обработка файлов с учетом ролей и языков, указанных в конфигурации. 
+    Конфигурация обновляется в каждом цикле, что позволяет динамически изменять настройки во время работы программы. 
+    Для каждой комбинации языка и роли создается экземпляр класса CodeAssistant, который обрабатывает файлы, используя заданную модель ИИ
+    """
     #main()
+    config_path:Path = gs.path.endpopints / 'hypo69' / 'code_assistant' / 'code_assistant.json'
     while True:
-        for lang in ['ru','en']:
-            for role in ['code_checker','doc_writer_md','pytest','doc_writer_rst','code_explainer']:
+        config:SimpleNamespace = j_loads_ns(config_path)
+        for lang in config.languages:
+            
+            for role in config.roles:
                 logger.debug(f"Start role: {role}, lang: {lang}", None, False)
                 assistant_direct = CodeAssistant(
                     role=role,
@@ -276,4 +283,5 @@ if __name__ == '__main__':
 
                 )
                 assistant_direct.process_files(start_file_number = 1)
+                config:SimpleNamespace = j_loads_ns(config_path) # <- на случай, если я вношу изменения в файл конфигурации во время исполнения кода. 
 

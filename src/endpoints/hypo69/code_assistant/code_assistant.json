@@ -83,14 +83,8 @@
     "how_to_writer": "<model>/how_to/<lang>/src"
   },
   "argparse": {
-    "role": {
-      "default": "code_checker",
-      "choices": [ "doc_writer_rst", "doc_writer_md", "doc_writer_html", "code_checker", "pytest", "code_explainer", "how_to_writer" ]
-    },
-    "lang": {
-      "default": "en",
-      "choices": [ "en", "ru" ]
-    },
+    "roles": [ "doc_writer_rst", "doc_writer_md", "doc_writer_html", "code_checker", "pytest", "code_explainer", "how_to_writer" ],
+    "languages": [ "en", "ru" ],
     "model": {
       "default": [ "gemini" ],
       "choices": [ "gemini", "openai" ]
