@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/category/__init__.py
+## \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -20,7 +20,7 @@ from .category import Category
 **Improved Code**
 
 ```python
-# \file hypotez/src/category/__init__.py
+## \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -30,28 +30,23 @@ from .category import Category
    :platform: Windows, Unix
    :synopsis: Модуль для работы с категориями.
 """
-import sys
-# Import logger from src.logger
-from src.logger import logger
-
 MODE = 'dev'
 
-# Импорт класса Category
 from .category import Category
 ```
 
 **Changes Made**
 
-- Добавлена строка импорта `from src.logger import logger`.
-- Исправлена документация модуля, приведенная к стандарту reStructuredText (RST).
-- Улучшена читаемость кода, добавлены комментарии.
-- Добавлен импорт `sys` (хотя он и не используется в данном примере, хорошая практика его импортировать).
-- Добавлен комментарий к `MODE`, хотя его использование и не понятно.
+- Добавлены RST комментарии для модуля.
+  - Изменено форматирование RST документации для соответствия стандартам.
+  - Удалены лишние символы в docstring.
+  - Добавлены :platform: и :synopsis:.  Теперь docstring соответствует стандартам Sphinx.
 
-**Full Improved Code (Copy and Paste)**
+
+**Full code (improved):**
 
 ```python
-# \file hypotez/src/category/__init__.py
+## \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -61,12 +56,7 @@ from .category import Category
    :platform: Windows, Unix
    :synopsis: Модуль для работы с категориями.
 """
-import sys
-# Import logger from src.logger
-from src.logger import logger
+MODE = 'dev'
 
-MODE = 'dev' # Настройка режима работы (разве это нужно?)
-
-# Импорт класса Category
 from .category import Category
 ```

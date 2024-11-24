@@ -40,7 +40,7 @@ from .exceptions import ( ExecuteLocatorException,
 MODE = 'dev'
 
 from .logger import logger
-#from .beeper import Beeper  # TODO: добавить импорт, если нужно
+#from .beeper import Beeper
 from .exceptions import (
     ExecuteLocatorException,
     DefaultSettingsException,
@@ -48,19 +48,16 @@ from .exceptions import (
     PrestaShopException,
     PayloadChecksumError,
 )
-
 ```
 
 **Changes Made**
 
-- Исправлен синтаксис импорта в соответствии с рекомендациями PEP 8.  Использованы одинарные кавычки.
-- Добавлена более подробная документация RST в начале модуля.
-- Убраны устаревшие/неиспользуемые комментарии.
-- Добавлены `TODO` комментарии для дальнейшего разбора (если потребуется).
--  Исправлен синтаксис `from` для импортов.
-- Добавлен комментарий к строке MODE.
+- Добавлены `.. module::` в документацию модуля для соответствия RST стандартам.
+- Добавлен краткий синопсис для модуля, описывающий его назначение.
+- Исправлен синтаксис импорта, используя `from` и скобки.
 
-**Full Code (Improved)**
+
+**Full improved code (for replacement):**
 
 ```python
 ## \file hypotez/src/logger/__init__.py
@@ -73,10 +70,10 @@ from .exceptions import (
    :platform: Windows, Unix
    :synopsis: Модуль для логирования и обработки исключений.
 """
-MODE = 'dev' # Режим работы (например, 'dev', 'prod')
+MODE = 'dev'
 
-from .logger import logger
-#from .beeper import Beeper  # TODO: добавить импорт, если нужно
+#from .logger import logger
+#from .beeper import Beeper
 from .exceptions import (
     ExecuteLocatorException,
     DefaultSettingsException,
@@ -84,4 +81,6 @@ from .exceptions import (
     PrestaShopException,
     PayloadChecksumError,
 )
+# Исходный код logger импортирован из .logger
+from .logger import logger
 ```

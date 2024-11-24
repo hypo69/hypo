@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/bots/__init__.py
+## \file hypotez/src/bots/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -22,53 +22,71 @@ from .telegram import TelegramBot
 
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.bots
    :platform: Windows, Unix
-   :synopsis: Модуль для управления ботами.
+   :synopsis:  Инициализационный модуль для ботов.
 """
-import os
+import logging
 
-# --- TODO: Добавить проверку переменной MODE ---
-# --- TODO: Добавить логирование ---
-MODE = 'dev'  # Переменная для обозначения режима работы.
+MODE = 'dev'
 
 
-from .telegram import TelegramBot  # Импортируем класс TelegramBot
+from .telegram import TelegramBot
+
+# TODO: Добавить импорт необходимых модулей, если есть.
+# ...
+
+
+# Импортируем логгер
+from src.logger import logger
+
+#TODO: Обработать возможные исключения при импорте других модулей.
+
 ```
 
 **Changes Made**
 
-* Добавлена документация RST для модуля `src.bots`.
-* Добавлена строка импорта `import os`.  Необходима для работы с файловой системой в некоторых случаях.
-* Закомментированы строки `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`.  Эти строки устарели и их выполнение может привести к ошибкам.
-* Добавлена строка `# --- TODO: Добавить проверку переменной MODE ---` для обозначения необходимости проверки значения переменной `MODE`.
-* Добавлена строка `# --- TODO: Добавить логирование ---` для обозначения необходимости добавления логирования.
-* Изменены комментарии, чтобы соответствовать RST стандарту.
+- Добавлено импортирование `logging` для возможной работы с логгером.
+- Изменен синтаксис docstring на reStructuredText.
+- Добавлен импорт `from src.logger import logger`, чтобы использовать логирование.
+- Добавлен TODO комментарий, чтобы отметить необходимость обработки возможных исключений.
 
-
-**Full Improved Code (for replacement)**
+**Full Improved Code**
 
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.bots
    :platform: Windows, Unix
-   :synopsis: Модуль для управления ботами.
+   :synopsis:  Инициализационный модуль для ботов.
 """
-import os
-from src.logger import logger  # Импортируем logger для логирования.
+import logging
 
-# --- TODO: Добавить проверку переменной MODE ---
-# --- TODO: Добавить логирование ---
-MODE = 'dev'  # Переменная для обозначения режима работы.
+MODE = 'dev'
 
 
-from .telegram import TelegramBot  # Импортируем класс TelegramBot
-#  # Добавлена строка импорта logger.
+from .telegram import TelegramBot
+
+# TODO: Добавить импорт необходимых модулей, если есть.
+# ...
 
 
-# --- TODO: Добавить обработку ошибок для переменной MODE ---
-# --- TODO: Добавить проверки на корректность MODE ---
-# --- TODO: Добавить логирование ---
+# Импортируем логгер
+from src.logger import logger
+
+#TODO: Обработать возможные исключения при импорте других модулей.
+try:
+  # ... (Дополнительный код, если есть)
+  pass
+except Exception as e:
+  logger.error(f'Ошибка при импорте или инициализации: {e}')
+
+
 ```

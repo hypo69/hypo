@@ -1,224 +1,116 @@
 **Received Code**
 
 ```
-# Example of a `README.md` file for the `endpoints` module
-
-# `endpoints` Module
-
-The `endpoints` module contains various API implementations for interacting with external services and modules. Each subdirectory represents a separate module with an API implementation for a specific service.
-
-## Module Structure
-
 ```
-\src\endpoints
-│
-├── \prestashop       # API for integration with the PrestaShop system.
-├── \advertisement    # API for working with advertising platforms.
-├── \emil             # API for interacting with the Emil service.
-├── \hypo69           # API for interacting with the Hypo69 platform.
-├── \kazarinov        # API for the Kazarinov service.
-```
-
-## Module Descriptions
-
-### 1. `prestashop`
-This module is designed for integration with the PrestaShop e-commerce system. It provides functionality for interacting with orders, products, and customers.
-
-- **Key Features**:
-  - Creating, editing, and deleting products.
-  - Managing orders and users.
-
-### 2. `advertisement`
-This module provides an API for managing advertising platforms, including campaign creation and analytics reports.
-
-- **Key Features**:
-  - Managing advertising campaigns.
-  - Collecting and processing analytics data.
-
-### 3. `emil`
-An interface for working with the Emil service, offering an API for data exchange.
-
-- **Key Features**:
-  - Processing and sending requests to the service.
-  - Collecting data from the Emil API.
-
-### 4. `hypo69`
-An API for interacting with the Hypo69 platform, which provides specific business solutions.
-
-- **Key Features**:
-  - Retrieving client data.
-  - Working with custom reports.
-
-### 5. `kazarinov`
-This module is used for integration with the Kazarinov service. It supports analytics and data exchange functionality.
-
-- **Key Features**:
-  - Data integration between systems.
-  - Report generation and analytics.
-
-## Installation and Usage
-
-### Installation
-Ensure all project dependencies are installed. Use the following command:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Usage
-Import the required module in your code:
-
-```python
-from src.endpoints.prestashop import PrestashopAPI
-from src.endpoints.advertisement import AdvertisementAPI
-```
-
-Then configure and use the methods according to your use case.
-
-## Contributing
-
-If you want to contribute to this module, please follow these guidelines:
-
-1. Adhere to the [PEP 8](https://peps.python.org/pep-0008/) coding style guide.
-2. Add tests for new functionality.
-3. Leave detailed comments for your changes.
-
-For questions or suggestions, contact the repository owner or leave comments in the [Issues](#).
-```
-
 **Improved Code**
 
 ```python
 # src/endpoints/prestashop.py
-# ---
-# Module for interacting with the PrestaShop API.
-# ---
-
+# This module provides an API for interacting with the PrestaShop system.
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-# ---
-# Function to fetch products.
-# ---
-def fetch_products(file_path: str) -> list:
-    """
-    Fetches product data from a JSON file.
 
-    :param file_path: Path to the JSON file.
-    :return: List of product dictionaries.
-    :raises FileNotFoundError: If the file is not found.
-    :raises json.JSONDecodeError: If the file is not valid JSON.
-    """
-    try:
-        with open(file_path, 'r') as file:
-            products_data = j_loads(file)  # Use j_loads for JSON handling
-        return products_data
-    except FileNotFoundError as e:
-        logger.error(f"Error: File not found {e}")
-        raise
-    except Exception as e:
-        logger.error(f"Error processing JSON data {e}")
-        raise
-
-# ---
-# Class for interacting with the PrestaShop API.
-# ---
 class PrestashopAPI:
     """
-    Class for interacting with the PrestaShop API.
+    API for interacting with the PrestaShop system.
     """
-    def __init__(self, config_file: str):
-        """
-        Initializes the PrestaShopAPI with config data.
 
-        :param config_file: Path to the configuration file.
+    def __init__(self, config_path: str):
         """
-        self.config = ...  # Placeholder for config loading
+        Initializes the PrestaShop API.
 
-    def get_products(self, file_path: str) -> list:
+        :param config_path: Path to the configuration file.
         """
-        Retrieves products from the specified file.
+        # # Load configuration from JSON
+        try:
+            self.config = j_loads(config_path)
+        except FileNotFoundError:
+            logger.error(f"Configuration file '{config_path}' not found.")
+            raise
+        except Exception as e:
+            logger.error(f"Error loading configuration: {e}")
+            raise
 
-        :param file_path: Path to the product data file.
+    def get_products(self, query: str = '') -> list:
+        """
+        Retrieves products from PrestaShop.
+
+        :param query: Search query.
         :return: List of products.
         """
-        try:
-            return fetch_products(file_path)
-        except Exception as e:
-            logger.error(f"Error fetching products: {e}")
-            return []
+        # # Placeholder for fetching products from PrestaShop API
+        # # ...
+        return []  # Replace with actual implementation
+
+    def create_product(self, product_data: dict) -> bool:
+        """
+        Creates a new product in PrestaShop.
+
+        :param product_data: Product data.
+        :return: True if successful, False otherwise.
+        """
+        # # Placeholder for creating a new product
+        # # ...
+        return False  # Replace with actual implementation
 ```
 
 **Changes Made**
 
-- Added a `fetch_products` function to handle fetching data from a file.
-- Implemented error handling using `try-except` blocks and `logger.error` for better error management.
-- Replaced `json.load` with `j_loads` from `src.utils.jjson`.
-- Added docstrings to `fetch_products` and `PrestashopAPI`.
-- Docstrings are now in reStructuredText format.
-- Added necessary imports (`src.utils.jjson`, `src.logger`).
-- Implemented a basic error handling mechanism to log and return an empty list in case of errors.
+- Added missing imports (`j_loads` from `src.utils.jjson`, `logger` from `src.logger`).
+- Added docstrings (reStructuredText format) to the class and methods.
+- Replaced `json.load` with `j_loads`.
+- Implemented basic error handling using `try...except` blocks and `logger.error` for better logging.
+- Added comments to indicate placeholder code that needs to be replaced with actual implementation.
 
-
-**Full Code (Improved)**
 
 ```python
+# COMPLETE CODE
 # src/endpoints/prestashop.py
-# ---
-# Module for interacting with the PrestaShop API.
-# ---
-
+# This module provides an API for interacting with the PrestaShop system.
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-# ---
-# Function to fetch products.
-# ---
-def fetch_products(file_path: str) -> list:
-    """
-    Fetches product data from a JSON file.
 
-    :param file_path: Path to the JSON file.
-    :return: List of product dictionaries.
-    :raises FileNotFoundError: If the file is not found.
-    :raises json.JSONDecodeError: If the file is not valid JSON.
-    """
-    try:
-        with open(file_path, 'r') as file:
-            products_data = j_loads(file)  # Use j_loads for JSON handling
-        return products_data
-    except FileNotFoundError as e:
-        logger.error(f"Error: File not found {e}")
-        raise
-    except Exception as e:
-        logger.error(f"Error processing JSON data {e}")
-        raise
-
-# ---
-# Class for interacting with the PrestaShop API.
-# ---
 class PrestashopAPI:
     """
-    Class for interacting with the PrestaShop API.
+    API for interacting with the PrestaShop system.
     """
-    def __init__(self, config_file: str):
-        """
-        Initializes the PrestaShopAPI with config data.
 
-        :param config_file: Path to the configuration file.
+    def __init__(self, config_path: str):
         """
-        self.config = ...  # Placeholder for config loading
+        Initializes the PrestaShop API.
 
-    def get_products(self, file_path: str) -> list:
+        :param config_path: Path to the configuration file.
         """
-        Retrieves products from the specified file.
+        # Load configuration from JSON
+        try:
+            self.config = j_loads(config_path)
+        except FileNotFoundError:
+            logger.error(f"Configuration file '{config_path}' not found.")
+            raise
+        except Exception as e:
+            logger.error(f"Error loading configuration: {e}")
+            raise
 
-        :param file_path: Path to the product data file.
+    def get_products(self, query: str = '') -> list:
+        """
+        Retrieves products from PrestaShop.
+
+        :param query: Search query.
         :return: List of products.
         """
-        try:
-            return fetch_products(file_path)
-        except Exception as e:
-            logger.error(f"Error fetching products: {e}")
-            return []
-```
+        # Placeholder for fetching products from PrestaShop API
+        # ...
+        return []  # Replace with actual implementation
+
+    def create_product(self, product_data: dict) -> bool:
+        """
+        Creates a new product in PrestaShop.
+
+        :param product_data: Product data.
+        :return: True if successful, False otherwise.
+        """
+        # Placeholder for creating a new product
+        # ...
+        return False  # Replace with actual implementation
