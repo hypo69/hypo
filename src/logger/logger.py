@@ -155,7 +155,7 @@ class Logger(metaclass=SingletonMeta):
         logger = logging.getLogger(name)
         logger.setLevel(level)
         handler = logging.FileHandler(filename=log_path, mode=mode)
-        #handler.setFormatter(formatter or logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        handler.setFormatter(formatter or logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         logger.addHandler(handler)
         return logger
 
@@ -179,7 +179,6 @@ class Logger(metaclass=SingletonMeta):
 
         timestamp = datetime.datetime.now().strftime('%d%m%y%H%M')
 
-        # Console logger setup
         if not self.logger_console:
             self.logger_console = logging.getLogger(f'console_{timestamp}')
             self.logger_console.setLevel(logging.DEBUG)
@@ -187,17 +186,20 @@ class Logger(metaclass=SingletonMeta):
             console_handler.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
             self.logger_console.addHandler(console_handler)
 
-        # File loggers setup
         if info_log_path:
             self.logger_file_info = self._configure_logger(f'info_{timestamp}', info_log_path, logging.INFO)
+
         if debug_log_path:
             self.logger_file_debug = self._configure_logger(f'debug_{timestamp}', debug_log_path, logging.DEBUG)
+
         if errors_log_path:
             self.logger_file_errors = self._configure_logger(f'errors_{timestamp}', errors_log_path, logging.ERROR)
+
         if json_log_path:
             self.logger_file_json = self._configure_logger(f'json_{timestamp}', json_log_path, logging.DEBUG, JsonFormatter())
 
         self._initialized = True
+
 
     def _format_message(self, message, ex=None, color=None):
         """ Returns formatted message with optional color and exception information."""
