@@ -71,7 +71,6 @@ class CodeAssistant:
         self.config = j_loads_ns(self.base_path / 'code_assistant.json')
         self.gemini_model = None
         self.openai_model = None
-        self.start_file_number = kwargs.get('start_file_number', 1)
         self._initialize_models(**kwargs)
 
     def _initialize_models(self, **kwargs):
@@ -123,11 +122,10 @@ class CodeAssistant:
         """Загрузка переводов для ролей и языков."""
         return j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'translations' / 'translations.json')
 
-    def process_files(self, start_file_number: int = 1):
-        """Обработка файлов, взаимодействие с моделью и сохранение результата."""
+    def process_files(self, start_file_number: Optional[int] = 1):
+        """компиляция, отправка запроса и сохранение результата."""
         for i, (file_path, content) in enumerate(self._yield_files_content()):
-            while i < start_file_number:
-                i += 1
+            if i < start_file_number:
                 continue
             if file_path and content:
                 content_request = self._create_request(content)
@@ -136,12 +134,14 @@ class CodeAssistant:
                     response = self.gemini_model.ask(content_request)
                     
                     if response:
-                        response = self.remove_outer_quotes(response)
+                        #pprint(f"RAW response:\n{response}")
+                        response = self._remove_outer_quotes(response)
+                        #pprint(f"CLEAR response:\n{response}")
                         self._save_response(file_path, response, 'gemini')
 
             pprint(f'Processed file number: {i + 1}', text_color='yellow')
-            time.sleep(20)  
-
+            time.sleep(30) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  
+                                                 
     def _create_request(self, content: str) -> str:
         """Создание запроса с учетом роли и языка."""
         roles_translations = getattr(self.translations.roles, self.role)
@@ -207,7 +207,7 @@ class CodeAssistant:
         export_path.write_text(response, encoding="utf-8")
         pprint(f"Ответ модели сохранен в: {export_path}", text_color='green')
 
-    def remove_outer_quotes(self, response: str) -> str:
+    def _remove_outer_quotes(self, response: str) -> str:
         """
         Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
 
@@ -220,6 +220,7 @@ class CodeAssistant:
             Если строка '```md some content ```' будет передана в функцию,
             результат будет ' some content '.
         """
+        response = response.strip()
         # Если строка начинается с '```python', возвращаем её без изменений
         if response.startswith('```python'):
             return response
@@ -266,7 +267,6 @@ if __name__ == '__main__':
                     model=["gemini"],
                     #start_dirs=[Path("suppliers"), Path("webdriver")],
                     start_dirs=[".."],
-                    start_file_number = 0
 
                 )
                 assistant_direct.process_files(start_file_number = 1)
