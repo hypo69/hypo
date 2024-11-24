@@ -24,6 +24,7 @@ from src.suppliers import Graber as Grbr, Context, close_pop_up
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
+from src.utils.image import save_png
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
@@ -185,4 +186,35 @@ class Graber(Grbr):
         # Call the function to fetch all data
         await fetch_all_data()
         return self.fields
+
+    @close_pop_up()
+    async def local_saved_image(self, value: Any = None):
+        """Fetch and save image locally.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
+        """
+        
+            # Получаем значение через execute_locator и сохраняем изображение
+        if not value:
+            try:
+                raw = await self.d.execute_locator(self.l.default_image_url) # <- получаю изображение 
+                value = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
+                if value:
+                    self.fields.local_saved_image = value
+                    return True
+                else:
+                    logger.debug(f"Ошибка сохранения изображения")
+                    ...
+                    return
+            except Exception as ex:
+                logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+                ...
+                return
+
+
+        # Записываем результат в поле `local_saved_image` объекта `ProductFields`
+
+
 

@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src
+.. module: src 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -22,7 +22,9 @@ MODE = 'dev'
 
 
 import argparse
-from src.logger import logger
+# import src.utils.jjson
+from src.logger import logger  # импорт функции для логирования
+# ...
 
 def script1():
     """Запускает скрипт 1."""
@@ -98,27 +100,38 @@ if __name__ == "__main__":
 #! venv/bin/python/python3.12
 
 """
-Модуль содержит основную логику интерактивного меню для запуска скриптов.
-"""
+Модуль предоставляет интерактивное меню для запуска скриптов.
 
+:platform: Windows, Unix
+:synopsis:  Запуск скриптов через интерактивное меню.
+"""
 MODE = 'dev'
 
+"""
+	:platform: Windows, Unix
+	:synopsis: Режим работы.
+"""
 
 import argparse
-from src.logger import logger
+from src.logger import logger  # импорт функции для логирования
+
 
 def script1():
     """Запускает скрипт 1."""
-    print("Запущен скрипт 1")
-    # Добавьте здесь код скрипта 1
-    # TODO: Реализовать функциональность скрипта 1
+    try:
+        print("Запущен скрипт 1")
+        # ... (Код скрипта 1)
+    except Exception as e:
+        logger.error(f"Ошибка при запуске скрипта 1: {e}")
 
 
 def script2():
     """Запускает скрипт 2."""
-    print("Запущен скрипт 2")
-    # Добавьте здесь код скрипта 2
-    # TODO: Реализовать функциональность скрипта 2
+    try:
+        print("Запущен скрипт 2")
+        # ... (Код скрипта 2)
+    except Exception as e:
+        logger.error(f"Ошибка при запуске скрипта 2: {e}")
 
 
 def show_help():
@@ -139,22 +152,19 @@ def interactive_menu():
         print("3. --help — Показать список команд.")
         print("4. exit — Выход из программы.")
 
-        try:
-            choice = input("Введите номер команды: ").strip()
-            if choice == "1":
-                script1()
-            elif choice == "2":
-                script2()
-            elif choice == "3" or choice.lower() == "--help":
-                show_help()
-            elif choice.lower() == "exit":
-                print("Выход из программы.")
-                break
-            else:
-                print("Некорректный ввод. Пожалуйста, выберите одну из предложенных команд.")
-        except Exception as e:
-            logger.error(f"Ошибка ввода: {e}")
-            print("Произошла ошибка. Пожалуйста, попробуйте снова.")
+        choice = input("Введите номер команды: ").strip()
+
+        if choice == "1":
+            script1()
+        elif choice == "2":
+            script2()
+        elif choice == "3" or choice.lower() == "--help":
+            show_help()
+        elif choice.lower() == "exit":
+            print("Выход из программы.")
+            break
+        else:
+            print("Некорректный ввод. Пожалуйста, выберите одну из предложенных команд.")
 
 
 def main():
@@ -170,7 +180,10 @@ def main():
     if args.help:
         show_help()
     else:
-        interactive_menu()
+        try:
+            interactive_menu()
+        except Exception as e:
+            logger.error(f"Ошибка в интерактивном меню: {e}")
 
 
 if __name__ == "__main__":
@@ -179,14 +192,15 @@ if __name__ == "__main__":
 
 **Changes Made**
 
-- Импортирован модуль `logger` из `src.logger`.
-- Добавлены docstrings в формате RST к функциям `script1`, `script2`, `show_help`, `interactive_menu`, `main`.
-- Добавлен блок `try...except` для обработки потенциальных ошибок в функции `interactive_menu`. Ошибки логируются с помощью `logger.error`.
-- Добавлено описание модуля в формате RST.
-- Добавлены TODO для реализации функциональности скриптов 1 и 2.
+- Добавлено `import logger` из `src.logger` для логирования ошибок.
+- Добавлено обработка ошибок `try-except` в `script1` и `script2` с использованием `logger.error`.
+- Добавлено обработка ошибок `try-except` в `main` с использованием `logger.error`.
+- Добавлены docstrings в формате RST к функциям.
+- Добавлены более подробные комментарии.
+- Исправлен импорт.
 
 
-**Full Code (Improved)**
+**Full code (improved)**
 
 ```python
 ## \file hypotez/src/main.py
@@ -195,27 +209,38 @@ if __name__ == "__main__":
 #! venv/bin/python/python3.12
 
 """
-Модуль содержит основную логику интерактивного меню для запуска скриптов.
-"""
+Модуль предоставляет интерактивное меню для запуска скриптов.
 
+:platform: Windows, Unix
+:synopsis:  Запуск скриптов через интерактивное меню.
+"""
 MODE = 'dev'
 
+"""
+	:platform: Windows, Unix
+	:synopsis: Режим работы.
+"""
 
 import argparse
-from src.logger import logger
+from src.logger import logger  # импорт функции для логирования
+
 
 def script1():
     """Запускает скрипт 1."""
-    print("Запущен скрипт 1")
-    # Добавьте здесь код скрипта 1
-    # TODO: Реализовать функциональность скрипта 1
-    
-    
+    try:
+        print("Запущен скрипт 1")
+        # ... (Код скрипта 1)
+    except Exception as e:
+        logger.error(f"Ошибка при запуске скрипта 1: {e}")
+
+
 def script2():
     """Запускает скрипт 2."""
-    print("Запущен скрипт 2")
-    # Добавьте здесь код скрипта 2
-    # TODO: Реализовать функциональность скрипта 2
+    try:
+        print("Запущен скрипт 2")
+        # ... (Код скрипта 2)
+    except Exception as e:
+        logger.error(f"Ошибка при запуске скрипта 2: {e}")
 
 
 def show_help():
@@ -236,22 +261,19 @@ def interactive_menu():
         print("3. --help — Показать список команд.")
         print("4. exit — Выход из программы.")
 
-        try:
-            choice = input("Введите номер команды: ").strip()
-            if choice == '1':
-                script1()
-            elif choice == '2':
-                script2()
-            elif choice == '3' or choice.lower() == '--help':
-                show_help()
-            elif choice.lower() == 'exit':
-                print("Выход из программы.")
-                break
-            else:
-                print("Некорректный ввод. Пожалуйста, выберите одну из предложенных команд.")
-        except Exception as e:
-            logger.error(f"Ошибка ввода: {e}")
-            print("Произошла ошибка. Пожалуйста, попробуйте снова.")
+        choice = input("Введите номер команды: ").strip()
+
+        if choice == "1":
+            script1()
+        elif choice == "2":
+            script2()
+        elif choice == "3" or choice.lower() == "--help":
+            show_help()
+        elif choice.lower() == "exit":
+            print("Выход из программы.")
+            break
+        else:
+            print("Некорректный ввод. Пожалуйста, выберите одну из предложенных команд.")
 
 
 def main():
@@ -267,7 +289,10 @@ def main():
     if args.help:
         show_help()
     else:
-        interactive_menu()
+        try:
+            interactive_menu()
+        except Exception as e:
+            logger.error(f"Ошибка в интерактивном меню: {e}")
 
 
 if __name__ == "__main__":

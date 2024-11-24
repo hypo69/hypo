@@ -22,62 +22,48 @@ from .openai import OpenAIModel
 **Improved Code**
 
 ```python
+## \file hypotez/src/ai/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.ai
    :platform: Windows, Unix
-   :synopsis:  Модуль содержит абстракции для работы с моделями искусственного интеллекта.
-
+   :synopsis: Модуль содержит интерфейсы для работы с различными моделями искусственного интеллекта.
 """
-import os
-
 MODE = 'dev'
 
 
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
-from src.logger import logger
-#from src.utils.jjson import j_loads
 
-
-#TODO:  Рассмотреть возможность добавления других моделей ИИ,
-#       например, моделей от Hugging Face или других провайдеров.
-
-
+#TODO: Добавить документацию для переменной MODE
 ```
 
 **Changes Made**
 
-*   Добавлен импорт `os` (хотя он и не используется в данном примере).
-*   Добавлен импорт `from src.logger import logger`.
-*   Добавлена более развернутая документация для модуля `src.ai` в формате RST, описывающая его предназначение.
-*   Добавлены `TODO` пункты для будущих улучшений, например, возможность добавить другие модели ИИ.
-*   Удалены ненужные комментарии `#!`.
-*   Убрана неиспользуемая переменная `j_loads`.
-*   Добавлен импорт `os`.
+- Добавлен модульный docstring в формате RST, описывающий назначение модуля.
+- Переписан docstring для модуля в формате RST.
 
 
-**Full Improved Code (Copy-pasteable)**
+**Full Improved Code**
 
 ```python
+## \file hypotez/src/ai/__init__.py
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 .. module:: src.ai
    :platform: Windows, Unix
-   :synopsis:  Модуль содержит абстракции для работы с моделями искусственного интеллекта.
-
+   :synopsis: Модуль содержит интерфейсы для работы с различными моделями искусственного интеллекта.
 """
-import os
-
 MODE = 'dev'
+#TODO: Добавить документацию для переменной MODE
 
 
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
-from src.logger import logger
-#from src.utils.jjson import j_loads
-
-
-#TODO:  Рассмотреть возможность добавления других моделей ИИ,
-#       например, моделей от Hugging Face или других провайдеров.
 ```

@@ -94,9 +94,9 @@ class GoogleGenerativeAI:
         self.generation_config = generation_config or {"response_mime_type": "text/plain"}
         self.system_instruction = system_instruction
 
-        self.dialogue_log_path = gs.path.google_drive / 'AI' / 'log'
+        self.dialogue_log_path = gs.path.external_storage / 'AI' / 'log'
         self.dialogue_txt_path = self.dialogue_log_path / f"gemini_{gs.now}.txt"
-        self.history_dir = gs.path.google_drive / 'AI' / 'history'
+        self.history_dir = gs.path.external_storage / 'AI' / 'history'
         self.history_txt_file = self.history_dir / f"gemini_{gs.now}.txt"
         self.history_json_file = self.history_dir / f"gemini_{gs.now}.json"
 

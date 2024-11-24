@@ -230,7 +230,7 @@ class Mexiron:
         if not data:
             logger.error(f"Error in data from gemini:{data}")
             ...
-            ask_and_repair(products_list,attemts - 1)
+            self.process_with_ai(products_list,attemts - 1)
 
             if not j_dumps(data, base_path / 'ai' / f'{gs.now}.json', ensure_ascii=False): # <- певая проверка валидности полученных данных
                 ...
@@ -250,7 +250,7 @@ class Mexiron:
                 he:SimpleNamespace = data.he
                 if not he:
                     ...
-                    ask_and_repair(products_list, attemts-1)
+                    self.process_with_ai(products_list, attemts-1)
             else:
                 ...
                 self.process_with_ai(products_list, attemts-1)
