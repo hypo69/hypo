@@ -9,7 +9,7 @@ src_path = Path(gs.path.root / 'docs' / 'gemini' / 'consultant' / 'ru' / 'src')
 # Путь для сохранения SUMMARY.md
 summary_path = src_path / 'SUMMARY.md'
 
-def make_summary(src_dir: Path, summary_file: Path) -> None:
+def make_summary(src_dir: Path = src_path , summary_file: Path = summary_path) -> None:
     """
     Рекурсивно обходит папку и создает файл SUMMARY.md с главами на основе .md файлов.
     Если файл SUMMARY.md уже существует, он будет перезаписан.
