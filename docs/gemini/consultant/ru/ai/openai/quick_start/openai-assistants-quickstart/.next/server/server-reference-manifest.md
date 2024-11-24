@@ -1,105 +1,117 @@
 **Received Code**
 
-```
+```python
 self.__RSC_SERVER_MANIFEST="{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionKey\": \"XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc=\"\n}"
 ```
 
 **Improved Code**
 
 ```python
+# Модуль содержит конфигурацию сервера RSC.
 from src.utils.jjson import j_loads
 
-class MyClass:
+class RSCServerConfig:
     """
-    Класс для работы с манифестом сервера RSC.
-
-    .. versionadded:: 0.1.0
+    Класс для хранения конфигурации сервера RSC.
     """
 
     def __init__(self):
         """
-        Инициализирует класс.
-        """
-        pass
-
-    @property
-    def RSC_SERVER_MANIFEST(self):
-        """
-        Возвращает манифест сервера RSC.
-
-        :return: Манифест сервера RSC в формате JSON.
-        :rtype: dict
+        Инициализирует конфигурацию сервера RSC.
         """
         try:
-            # Парсим строку JSON
-            manifest_data = j_loads(self.__RSC_SERVER_MANIFEST)
-            return manifest_data
+            self.__RSC_SERVER_MANIFEST = '{\n  "node": {},\n  "edge": {},\n  "encryptionKey": "XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc="}\n'
+            # Загрузка данных из строки JSON.  В будущем следует перевести в j_loads
+            self.__manifest_data = j_loads(self.__RSC_SERVER_MANIFEST)
         except Exception as e:
-            logger.error('Ошибка при парсинге манифеста: %s', str(e))
+            logger.error(f"Ошибка при загрузке конфигурации сервера RSC: {e}")
+            self.__manifest_data = None # Устанавливаем значение по умолчанию
+
+    @property
+    def manifest_data(self):
+        """
+        Возвращает данные манифеста сервера.
+
+        :return: Словарь с данными манифеста или None, если произошла ошибка.
+        :rtype: dict or None
+        """
+        return self.__manifest_data
+
+    @property
+    def encryption_key(self):
+        """
+        Возвращает ключ шифрования.
+
+        :return: Ключ шифрования.
+        :rtype: str
+        """
+        if self.__manifest_data:
+            return self.__manifest_data.get('encryptionKey')
+        else:
+            logger.error("Конфигурация сервера RSC не загружена.")
             return None
 
-
-    __RSC_SERVER_MANIFEST = """
-    {
-        "node": {},
-        "edge": {},
-        "encryptionKey": "XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc="
-    }
-    """
+    # ... (Остальной код, если он есть)
 ```
 
 **Changes Made**
 
-1. **Импорты:** Добавлено `from src.utils.jjson import j_loads` для работы с JSON.
-2. **Комментарии:** Добавлены комментарии RST к классу `MyClass`, методу `__init__` и свойству `RSC_SERVER_MANIFEST`.
-3. **Обработка ошибок:** Добавлено `try...except` для обработки потенциальных ошибок при парсинге JSON.  Используется `logger.error` для записи ошибок в лог.
-4. **Формат JSON:**  Строка `__RSC_SERVER_MANIFEST` преобразована в многострочный  формат для лучшей читаемости.
-5. **Docstrings:** Docstrings переписаны в формате RST.
-6. **Переменная:** `self.__RSC_SERVER_MANIFEST` изменена на более читаемое имя `__RSC_SERVER_MANIFEST`.
-7. **`@property` декоратор:** Метод `RSC_SERVER_MANIFEST` преобразован в свойство `@property` для доступа к данным как к атрибуту объекта.
+1.  Добавлен класс `RSCServerConfig` для лучшей организации данных.
+2.  Добавлены docstrings в формате RST для класса и его методов.
+3.  Используется `j_loads` для загрузки данных, а не строковое представление.
+4.  Добавлена обработка ошибок при загрузке данных с использованием `logger.error`.
+5.  Добавлен `@property` для методов `manifest_data` и `encryption_key` для доступа к данным в виде атрибутов.
+6.  Добавлен `__init__` с try...except для обработки возможных ошибок при разборе JSON.
+7.  Возвращается `None` для `encryption_key` при ошибке.
 
 
-**Complete Code (Improved)**
+**Full Code (Improved)**
 
 ```python
+# Модуль содержит конфигурацию сервера RSC.
 from src.utils.jjson import j_loads
-from src.logger import logger
+from src.logger import logger # Импорт logger
 
-class MyClass:
+class RSCServerConfig:
     """
-    Класс для работы с манифестом сервера RSC.
-
-    .. versionadded:: 0.1.0
+    Класс для хранения конфигурации сервера RSC.
     """
 
     def __init__(self):
         """
-        Инициализирует класс.
-        """
-        pass # Необходимо ли что-то инициализировать?
-
-    @property
-    def RSC_SERVER_MANIFEST(self):
-        """
-        Возвращает манифест сервера RSC.
-
-        :return: Манифест сервера RSC в формате JSON.
-        :rtype: dict
+        Инициализирует конфигурацию сервера RSC.
         """
         try:
-            # Парсим строку JSON
-            manifest_data = j_loads(self.__RSC_SERVER_MANIFEST)
-            return manifest_data
+            self.__RSC_SERVER_MANIFEST = '{\n  "node": {},\n  "edge": {},\n  "encryptionKey": "XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc="}\n'
+            # Загрузка данных из строки JSON.  В будущем следует перевести в j_loads
+            self.__manifest_data = j_loads(self.__RSC_SERVER_MANIFEST)
         except Exception as e:
-            logger.error('Ошибка при парсинге манифеста: %s', str(e))
+            logger.error(f"Ошибка при загрузке конфигурации сервера RSC: {e}")
+            self.__manifest_data = None # Устанавливаем значение по умолчанию
+
+    @property
+    def manifest_data(self):
+        """
+        Возвращает данные манифеста сервера.
+
+        :return: Словарь с данными манифеста или None, если произошла ошибка.
+        :rtype: dict or None
+        """
+        return self.__manifest_data
+
+    @property
+    def encryption_key(self):
+        """
+        Возвращает ключ шифрования.
+
+        :return: Ключ шифрования.
+        :rtype: str
+        """
+        if self.__manifest_data:
+            return self.__manifest_data.get('encryptionKey')
+        else:
+            logger.error("Конфигурация сервера RSC не загружена.")
             return None
 
-
-    __RSC_SERVER_MANIFEST = """
-    {
-        "node": {},
-        "edge": {},
-        "encryptionKey": "XC9uIXAY0J3Kt1GKReoAsMh7bGSCqrZTkbAMU4yQblc="
-    }
-    """
+    # ... (Остальной код, если он есть)
 ```

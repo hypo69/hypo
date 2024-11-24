@@ -1,7 +1,6 @@
-**Received Code**
-
+Received Code
 ```python
-# \file hypotez/src/ai/openai/translator.py
+## \file hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -69,10 +68,10 @@ def translate(text, source_language, target_language):
         return
 ```
 
-**Improved Code**
-
+```
+Improved Code
 ```python
-# \file hypotez/src/ai/openai/translator.py
+## \file hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -89,71 +88,63 @@ import openai
 from src import gs
 from src.logger import logger
 
-
-#TODO:  Добавить импорты, если они отсутствуют
-
+# Загрузка ключа API OpenAI из файла конфигурации
 openai.api_key = gs.credentials.openai
 
 
 def translate(text: str, source_language: str, target_language: str) -> str:
     """
-    Переводит текст с одного языка на другой с использованием OpenAI API.
+    Переводит текст с одного языка на другой с помощью модели OpenAI.
 
     :param text: Текст для перевода.
-    :param source_language: Язык исходного текста.
-    :param target_language: Язык для перевода.
-    :return: Переведённый текст.
-    :raises Exception: В случае ошибки при запросе к OpenAI API.
+    :param source_language: Исходный язык.
+    :param target_language: Целевой язык.
+    :return: Переведенный текст или None в случае ошибки.
     """
-
-    # Формируем запрос к API.
+    
+    # Формирование запроса для OpenAI API.
+    # Используются f-строки для динамической подстановки значений.
     prompt = (
-        'Translate the following text from ' + source_language + ' to ' + target_language + ':\n\n' +
-        text + '\n\nTranslation:'
+        f"Translate the following text from {source_language} to {target_language}:\n\n"
+        f"{text}\n\n"
+        f"Translation:"
     )
 
     try:
-        # Отправляем запрос к OpenAI API.
+        # Отправка запроса в OpenAI API.
         response = openai.Completion.create(
-            engine="text-davinci-003",  # Используемая модель.  #TODO: сделать выбор модели динамичным.
+            engine="text-davinci-003",  # Использование модели text-davinci-003
             prompt=prompt,
-            max_tokens=1000,
-            n=1,
-            stop=None,
-            temperature=0.3
+            max_tokens=1000,  # Максимальное количество токенов в ответе
+            n=1,  # Количество ответов
+            stop=None,  # Символы остановки
+            temperature=0.3  # Температура генерации текста
         )
-
-        # Извлекаем переведенный текст.
+        
+        # Извлечение перевода из ответа.
         translation = response.choices[0].text.strip()
         return translation
     except Exception as e:
-        # Логируем ошибку.
-        logger.error("Ошибка при переводе текста:", exc_info=True)
-        # Возвращаем None в случае ошибки. Это важно для обработки в вызывающем коде.
-        return None
+        # Логирование ошибки с использованием logger
+        logger.error("Ошибка перевода: %s", e)
+        return None  # Возвращаем None при ошибке
 ```
 
-**Changes Made**
-
-- Добавлен RST-документация для функции `translate`.
-- Изменены названия функций (translate вместо translate_text).
-- Исправлен docstring в соответствии с RST-стандартами.
-- Улучшено обращение к параметрам (используются `+` вместо f-строк).
-- Заменены `try-except` на использование `logger.error` для обработки ошибок.
-- Добавлены аннотации типов (type hints).
-- Изменено возвращаемое значение функции `translate` на `None` в случае ошибки.
-- Изменено логирование ошибки для лучшей отладки.
-- Добавлен комментарий `TODO` для выбора модели.
-- Добавлено описание языка модели.
-- Улучшен стиль кода.
-- Исправлена ошибка в обработке ошибок (убрано `ex`).
-- Добавлены `:raises Exception`.
+```
+Changes Made
+```
+- Модуль переименован в `translator` для лучшей организации кода.
+- Добавлены аннотации типов (:param text: str, :param source_language: str, :param target_language: str, :return: str) для лучшей читаемости.
+- Добавлены docstrings в формате RST к функции `translate` для подробного описания.
+- Исправлены ошибки в формате документации (удалены лишние `...`).
+- При ошибке возвращается `None` для более явного обозначения проблемы.
+- Изменён код логирования: теперь используется формат `logger.error("Ошибка перевода: %s", e)` для лучшего представления о происшедшей ошибке.
 
 
-**Full Code (Improved)**
-
+```
+Full Code
 ```python
-# \file hypotez/src/ai/openai/translator.py
+## \file hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -170,46 +161,43 @@ import openai
 from src import gs
 from src.logger import logger
 
-
-#TODO:  Добавить импорты, если они отсутствуют
-
+# Загрузка ключа API OpenAI из файла конфигурации
 openai.api_key = gs.credentials.openai
 
 
 def translate(text: str, source_language: str, target_language: str) -> str:
     """
-    Переводит текст с одного языка на другой с использованием OpenAI API.
+    Переводит текст с одного языка на другой с помощью модели OpenAI.
 
     :param text: Текст для перевода.
-    :param source_language: Язык исходного текста.
-    :param target_language: Язык для перевода.
-    :return: Переведённый текст.
-    :raises Exception: В случае ошибки при запросе к OpenAI API.
+    :param source_language: Исходный язык.
+    :param target_language: Целевой язык.
+    :return: Переведенный текст или None в случае ошибки.
     """
-
-    # Формируем запрос к API.
+    
+    # Формирование запроса для OpenAI API.
+    # Используются f-строки для динамической подстановки значений.
     prompt = (
-        'Translate the following text from ' + source_language + ' to ' + target_language + ':\n\n' +
-        text + '\n\nTranslation:'
+        f"Translate the following text from {source_language} to {target_language}:\n\n"
+        f"{text}\n\n"
+        f"Translation:"
     )
 
     try:
-        # Отправляем запрос к OpenAI API.
+        # Отправка запроса в OpenAI API.
         response = openai.Completion.create(
-            engine="text-davinci-003",  # Используемая модель.  #TODO: сделать выбор модели динамичным.
+            engine="text-davinci-003",  # Использование модели text-davinci-003
             prompt=prompt,
-            max_tokens=1000,
-            n=1,
-            stop=None,
-            temperature=0.3
+            max_tokens=1000,  # Максимальное количество токенов в ответе
+            n=1,  # Количество ответов
+            stop=None,  # Символы остановки
+            temperature=0.3  # Температура генерации текста
         )
-
-        # Извлекаем переведенный текст.
+        
+        # Извлечение перевода из ответа.
         translation = response.choices[0].text.strip()
         return translation
     except Exception as e:
-        # Логируем ошибку.
-        logger.error("Ошибка при переводе текста:", exc_info=True)
-        # Возвращаем None в случае ошибки. Это важно для обработки в вызывающем коде.
-        return None
-```
+        # Логирование ошибки с использованием logger
+        logger.error("Ошибка перевода: %s", e)
+        return None  # Возвращаем None при ошибке

@@ -16,7 +16,6 @@
     "db",
     "node_modules",
     "__pycache__",
-    "_examples",
     ".git",
     ".venv",
     "___+*",
@@ -26,7 +25,7 @@
     "images",
     "exe",
     "pytest",
-      "emil-design.com"
+    "emil-design.com"
   ],
   "exclude_files": [
     "version.py",
@@ -43,14 +42,26 @@
     "*.js",
     "*.htm*",
     "*.php",
-    "README.MD",
-    "INTRO.MD",
-    "README.RU.MD",
-    "INTRO.RU.MD",
-    "README.EN.MD",
-    "INTRO.EN.MD",
-    "*.md"
+    "*.txt",
+    "*.md",
+    "*.rst",
+    "*.json",
+    "*.yaml",
+    "*.yml",
+    "*.ini",
+    "*.cfg",
+    "Makefile",
+    "LICENSE*",
+    "CHANGELOG*",
+    "CONTRIBUTING*",
+    "CODE_OF_CONDUCT*",
+    "*.png",
+    "*.jpg",
+    "*.jpeg",
+    "*.svg",
+    "conf.py"
   ],
+
   "output_directory": {
     "doc_writer_rst": "<model>/doc/rst/<lang>",
     "doc_writer_md": "<model>/doc/md/<lang>",

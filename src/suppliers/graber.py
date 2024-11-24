@@ -2383,7 +2383,8 @@ class Graber:
         try:
             # Получаем значение через execute_locator и сохраняем изображение
 
-            value = value if value else await save_png_from_url(self.d.execute_locator(self.l.default_image_url), self.fields.id_product)
+            value = value if value else await save_png_from_url(self.d.execute_locator(self.l.default_image_url), 
+                                                                gs.path.tmp / f'{self.fields.id_product}.png')
         except Exception as ex:
             logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
             ...

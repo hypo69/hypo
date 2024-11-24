@@ -35,13 +35,13 @@ import header
 from src import gs
 from src.bots.telegram import TelegramBot
 from src.utils.string import url
-from src.endpoints.kazarinov.bot_handlers_parser import HandlersParser
+from src.endpoints.kazarinov.bot_handlers import BotHandler
 from src.utils.file import recursively_read_text_files, save_text_file
 from src.utils.string.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
-class KazarinovTelegramBot(TelegramBot, HandlersParser):
+class KazarinovTelegramBot(TelegramBot, BotHandler):
     """Telegram bot with custom behavior for Kazarinov."""
 
     token: str
@@ -63,7 +63,7 @@ class KazarinovTelegramBot(TelegramBot, HandlersParser):
 
         Args:
             mode (Optional[str]): Operating mode, 'test' or 'production'. Defaults to 'test'.
-            webdriver_name (Optional[str]): Webdriver to use with HandlersParser. Defaults to 'firefox'.
+            webdriver_name (Optional[str]): Webdriver to use with BotHandler. Defaults to 'firefox'.
         """
         # Set the mode
         mode = mode or self.config.mode
@@ -77,7 +77,7 @@ class KazarinovTelegramBot(TelegramBot, HandlersParser):
 
         # Call parent initializers
         TelegramBot.__init__(self, self.token)
-        HandlersParser.__init__(self, webdriver_name)
+        BotHandler.__init__(self, webdriver_name)
 
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:

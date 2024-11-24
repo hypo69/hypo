@@ -30,7 +30,7 @@ from src.utils.printer import pprint
 from telegram import Update
 from telegram.ext import CallbackContext
 
-class HandlersParser():
+class BotHandler():
     """Исполнитель команд, полученных ботом."""
     mexiron: Mexiron
 

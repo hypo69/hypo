@@ -331,7 +331,7 @@ class ExecuteLocator:
             return
 
         try:
-            screenshot_stream = await asyncio.to_thread(webelement.screenshot_as_png)
+            screenshot_stream = webelement.screenshot_as_png
             return screenshot_stream
         except Exception as ex:
             logger.error(f"Не удалось захватить скриншот\n", ex)
