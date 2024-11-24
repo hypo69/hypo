@@ -30,7 +30,7 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
       - name: Build with mdBook
-        run: mdbook build docs/gemini/consultant/ru/src
+        run: mdbook build docs/gemini/consultant/ru
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
