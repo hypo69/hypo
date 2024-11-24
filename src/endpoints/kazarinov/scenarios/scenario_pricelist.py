@@ -67,7 +67,11 @@ class Mexiron:
             d (Driver): Selenium WebDriver instance.
             mexiron_name (Optional[str]): Custom name for the Mexiron process.
         """
-        self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarionv.json' )
+        self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json' )
+        if not self.config:
+            logger.error(f"Ошибка в файле конфигурации 'kazarinov.json'")
+            ...
+            return
         self.timestamp = gs.now
         self.driver = driver
         self.mexiron_name = mexiron_name or self.timestamp
@@ -288,7 +292,7 @@ class Mexiron:
     def create_report(self):
         """"""
         ...
-        generator = ReportGenerator( base_path = base_path, timestamp = self.timestamp )
+        generator = ReportGenerator( base_path = , timestamp = self.timestamp )
         for lang in ['he','ru']:
             generator.create_report(lang)
 

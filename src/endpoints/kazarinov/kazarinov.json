@@ -25,5 +25,5 @@
     "log_path": "bot_logs/<user_id>/<timestamp>.txt"
   },
   "storage": "external_storage",
-  "avaiable_storages": [ "data", "google_disk", "external_storage" ]
+  "avaiable_storages": [ "data", "google_drive", "external_storage" ]
 }

@@ -42,6 +42,28 @@ from src.utils.file import read_text_file
 from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.printer import pprint
 
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+    """
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
+
+    Args:
+        marker_files (tuple): Filenames or directory names to identify the project root.
+    
+    Returns:
+        Path: Path to the root directory if found, otherwise the directory where the script is located.
+    """
+    __root__:Path
+    current_path:Path = Path(__file__).resolve().parent
+    __root__ = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            __root__ = parent
+            break
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
+
 def singleton(cls):
     """Декоратор для реализации Singleton."""
     instances = {}
@@ -64,33 +86,8 @@ class ProgramSettings(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-        """
-        Finds the root directory of the project starting from the current file's directory,
-        searching upwards and stopping at the first directory containing any of the marker files.
 
-        Args:
-            marker_files (tuple): Filenames or directory names to identify the project root.
-    
-        Returns:
-            Path: Path to the root directory if found, otherwise the directory where the script is located.
-        """
-        __root__:Path
-        current_path:Path = Path(__file__).resolve().parent
-        __root__ = current_path
-        for parent in [current_path] + list(current_path.parents):
-            if any((parent / marker).exists() for marker in marker_files):
-                __root__ = parent
-                break
-        if __root__ not in sys.path:
-            sys.path.insert(0, str(__root__))
-        return __root__
-
-
-    # Get the root directory of the project
-    __root__: Path = set_project_root()
-
-    base_dir: Path = Field(default_factory=lambda: Path(__file__).resolve().parent.parent)
+    base_dir: Path = Field(default_factory=lambda: set_project_root())
     config: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
     credentials: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         aliexpress=SimpleNamespace(
@@ -155,17 +152,6 @@ class ProgramSettings(BaseModel):
         # Ваш код для выполнения __post_init__
 
         """ Выполняет инициализацию после создания экземпляра класса."""
-        
-        def _set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')):
-            """ Находит корневую директорию проекта, начиная с текущей директории."""
-            current_path = Path(__file__).resolve().parent
-            for parent in [current_path] + list(current_path.parents):
-                if any((parent / marker).exists() for marker in marker_files):
-                    return parent
-            return current_path
-
-        self.base_dir = _set_project_root()
-        sys.path.append(str(self.base_dir))
 
         self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')
         if not self.config:
