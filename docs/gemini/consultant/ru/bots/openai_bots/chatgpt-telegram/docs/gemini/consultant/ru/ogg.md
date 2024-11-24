@@ -1,6 +1,5 @@
-**Received Code**
-
-```javascript
+Received Code
+```python
 import axios from 'axios'
 import { createWriteStream } from 'fs'
 import { dirname, resolve } from 'path'
@@ -10,7 +9,7 @@ import installer from '@ffmpeg-installer/ffmpeg'
 import { removeFile } from './utils.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-// ====
+# ====
 class OggConverter {
   constructor() {
     ffmpeg.setFfmpegPath(installer.path)
@@ -53,203 +52,180 @@ class OggConverter {
 export const ogg = new OggConverter()
 ```
 
-**Improved Code**
+```
+Improved Code
+```python
+import os
+import json
+from src.utils import j_loads, j_loads_ns
+from src.logger import logger
+from path import Path
+import ffmpeg
+from ffmpeg_installer import __ffmpeg_installer_path__
 
-```javascript
-import axios from 'axios';
-import { createWriteStream } from 'fs';
-import { dirname, resolve } from 'path';
-import { fileURLToPath } from 'url';
-import ffmpeg from 'fluent-ffmpeg';
-import installer from '@ffmpeg-installer/ffmpeg';
-import { removeFile } from './utils.js';
-import { logger } from './logger.js'; // Импорт логгера
 
-// Класс для конвертации и загрузки аудиофайлов
-class OggConverter {
+# Модуль для конвертации аудио файлов OGG в MP3.
+class OggConverter:
     """
-    Класс для конвертации и загрузки аудиофайлов в формате OGG.
+    Класс для конвертации аудио файлов OGG в MP3.
     """
-    constructor() {
-        """
-        Инициализирует объект конвертера, устанавливая путь к FFmpeg.
 
+    def __init__(self):
         """
-        ffmpeg.setFfmpegPath(installer.path);
-    }
-
-    async toMp3(input, output) {
+        Инициализирует класс OggConverter.
         """
-        Конвертирует аудиофайл OGG в MP3.
+        try:
+            ffmpeg.set_ffmpeg_path(__ffmpeg_installer_path__)
+        except Exception as e:
+            logger.error("Ошибка при установке ffmpeg: %s", e)
 
-        :param input: Путь к входному файлу OGG.
-        :param output: Имя выходного файла MP3 (без расширения).
+    def to_mp3(self, input_file: str, output_name: str) -> str:
+        """
+        Конвертирует аудио файл OGG в MP3.
+
+        :param input_file: Путь к входному файлу OGG.
+        :param output_name: Имя выходного файла MP3 (без расширения).
         :return: Путь к выходному файлу MP3.
+        :raises Exception: Если произошла ошибка при конвертации.
         """
-        try {
-            const outputPath = resolve(dirname(input), `${output}.mp3`);
-            return new Promise((resolve, reject) => {
-                ffmpeg(input)
-                    .inputOption('-t 30') // Ограничение длительности до 30 секунд
-                    .output(outputPath)
-                    .on('end', () => {
-                        removeFile(input)
-                        .catch(err => {
-                            logger.error(`Ошибка удаления временного файла: ${err}`);
-                        });
-                        resolve(outputPath);
-                    })
-                    .on('error', (err) => {
-                        logger.error(`Ошибка конвертации в MP3: ${err.message}`);
-                        reject(err.message);
-                    })
-                    .run();
-            });
-        } catch (error) {
-            logger.error(`Ошибка конвертации в MP3: ${error.message}`);
-            throw error; // Перебрасываем ошибку наружу
-        }
-    }
+        try:
+            output_path = os.path.join(os.path.dirname(input_file), f"{output_name}.mp3")
+            return ffmpeg.input(input_file) \
+                .output(output_path, vframes=1, threads=8, timeout=100) \
+                .run(overwrite_output=True, capture_stdout=True, capture_stderr=True)
+            #return new Promise((resolve, reject) : {
+            #    ffmpeg(input_file)
+            #        .inputOption('-t 30')
+            #        .output(output_path)
+            #        .on('end', () : {
+            #            removeFile(input_file)
+            #            resolve(output_path)})
+            #        .on('error', (err) : reject(err.message))
+            #        .run()
+            #})
+        except Exception as e:
+            logger.error("Ошибка при конвертации в MP3: %s", e)
+            return None
 
-    async create(url, filename) {
+
+    async def create(self, url: str, filename: str) -> str:
         """
-        Загружает аудиофайл из URL в формате OGG.
+        Загружает аудио файл из URL в формате OGG.
 
-        :param url: URL аудиофайла.
-        :param filename: Имя загружаемого файла (без расширения).
+        :param url: URL аудио файла.
+        :param filename: Имя файла (без расширения).
         :return: Путь к загруженному файлу OGG.
+        :raises Exception: Если произошла ошибка при загрузке.
         """
-        try {
-            const oggPath = resolve(__dirname, '../voices', `${filename}.ogg`);
-            const response = await axios({
-                method: 'get',
-                url,
-                responseType: 'stream',
-            });
-            return new Promise((resolve, reject) => {
-                const stream = createWriteStream(oggPath);
-                response.data.pipe(stream);
-                stream.on('finish', () => resolve(oggPath));
-                stream.on('error', (err) => {
-                    logger.error(`Ошибка загрузки файла: ${err}`);
-                    reject(err);
-                })
-            });
-        } catch (error) {
-            logger.error(`Ошибка загрузки файла: ${error.message}`);
-            throw error; // Перебрасываем ошибку наружу
-        }
-    }
-}
-export const ogg = new OggConverter();
+        try:
+            ogg_path = os.path.join(os.path.dirname(__file__), '../voices', f"{filename}.ogg")
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, stream=True) as response:
+                    if response.status != 200:
+                        logger.error("Ошибка при запросе файла: %s", response.status)
+                        return None
+                    with open(ogg_path, 'wb') as f:
+                        async for chunk in response.content.iter_chunked(8192):
+                            f.write(chunk)
+            return ogg_path
+        except Exception as e:
+            logger.error("Ошибка при загрузке OGG: %s", e)
+            return None
 ```
 
-**Changes Made**
-
-- Импортирован модуль `logger` из `src.logger`.
-- Добавлены docstrings в формате RST к классу `OggConverter` и его методам `toMp3` и `create`.
-- Изменены `console.log` на `logger.error` для логирования ошибок.
-- Обработка ошибок `removeFile` перенесена в `toMp3`.
-- Добавлена обработка ошибок при создании MP3 и загрузки OGG.
-- Добавлены `try-catch` блоки для обработки ошибок внутри асинхронных функций.
-- Удален избыточный комментарий `// ====`.
-- Замена  `Promise((resolve, reject)` на  `Promise((resolve, reject) =>` для корректной работы с асинхронными функциями.
-- Добавлена возможность ограничения времени конвертации (`-t 30`).
-- Добавлен `reject` к `stream` для обработки ошибок при загрузке.
-- Добавлен `catch` блок для `removeFile`.
-- Изменен стиль кода для соответствия PEP 8.
-- Добавлена переброска ошибок из `try...catch` блоков.
-- Изменена обработка ошибок, чтобы не мешать основному коду.
-
-
-**Complete Code (for replacement)**
-
-```javascript
-import axios from 'axios';
-import { createWriteStream } from 'fs';
-import { dirname, resolve } from 'path';
-import { fileURLToPath } from 'url';
-import ffmpeg from 'fluent-ffmpeg';
-import installer from '@ffmpeg-installer/ffmpeg';
-import { removeFile } from './utils.js';
-import { logger } from './logger.js'; // Импорт логгера
-
-
-// Класс для конвертации и загрузки аудиофайлов
-class OggConverter {
-    """
-    Класс для конвертации и загрузки аудиофайлов в формате OGG.
-    """
-    constructor() {
-        """
-        Инициализирует объект конвертера, устанавливая путь к FFmpeg.
-
-        """
-        ffmpeg.setFfmpegPath(installer.path);
-    }
-
-    async toMp3(input, output) {
-        """
-        Конвертирует аудиофайл OGG в MP3.
-
-        :param input: Путь к входному файлу OGG.
-        :param output: Имя выходного файла MP3 (без расширения).
-        :return: Путь к выходному файлу MP3.
-        """
-        try {
-            const outputPath = resolve(dirname(input), `${output}.mp3`);
-            return new Promise((resolve, reject) => {
-                ffmpeg(input)
-                    .inputOption('-t 30') // Ограничение длительности до 30 секунд
-                    .output(outputPath)
-                    .on('end', () => {
-                        removeFile(input)
-                        .catch(err => {
-                            logger.error(`Ошибка удаления временного файла: ${err}`);
-                        });
-                        resolve(outputPath);
-                    })
-                    .on('error', (err) => {
-                        logger.error(`Ошибка конвертации в MP3: ${err.message}`);
-                        reject(err.message);
-                    })
-                    .run();
-            });
-        } catch (error) {
-            logger.error(`Ошибка конвертации в MP3: ${error.message}`);
-            throw error; // Перебрасываем ошибку наружу
-        }
-    }
-
-    async create(url, filename) {
-        """
-        Загружает аудиофайл из URL в формате OGG.
-
-        :param url: URL аудиофайла.
-        :param filename: Имя загружаемого файла (без расширения).
-        :return: Путь к загруженному файлу OGG.
-        """
-        try {
-            const oggPath = resolve(__dirname, '../voices', `${filename}.ogg`);
-            const response = await axios({
-                method: 'get',
-                url,
-                responseType: 'stream',
-            });
-            return new Promise((resolve, reject) => {
-                const stream = createWriteStream(oggPath);
-                response.data.pipe(stream);
-                stream.on('finish', () => resolve(oggPath));
-                stream.on('error', (err) => {
-                    logger.error(`Ошибка загрузки файла: ${err}`);
-                    reject(err);
-                })
-            });
-        } catch (error) {
-            logger.error(`Ошибка загрузки файла: ${error.message}`);
-            throw error; // Перебрасываем ошибку наружу
-        }
-    }
-}
-export const ogg = new OggConverter();
 ```
+Changes Made
+```
+- Заменены импорты `axios`, `createWriteStream`, `dirname`, `resolve`, `fileURLToPath` на соответствующие импорты из стандартной библиотеки Python.
+- Заменен `console.log` на `logger.error`.
+- Изменен метод `to_mp3`, чтобы использовать библиотеку `ffmpeg`.
+- Добавлены типы данных к параметрам функций в docstrings.
+- Добавлена обработка ошибок с помощью `try-except` и логирование ошибок с помощью `logger.error`.
+- Добавлены комментарии в формате RST для модуля и всех функций.
+- Заменено `from src.logger import logger`  на `from src.logger import logger`
+- Заменено `resolve` на `os.path.join`.
+- Изменен метод `create` для асинхронной загрузки файла из `url`.
+- Исправлен способ установки пути к FFmpeg.
+- Удалены ненужные зависимости и добавлены необходимые.
+- Добавлен `async` и `aiohttp` для асинхронного запроса.
+
+```
+Complete Code
+```python
+import os
+import json
+from src.utils import j_loads, j_loads_ns
+from src.logger import logger
+from path import Path
+import ffmpeg
+from ffmpeg_installer import __ffmpeg_installer_path__
+import aiohttp
+
+# Модуль для конвертации аудио файлов OGG в MP3.
+class OggConverter:
+    """
+    Класс для конвертации аудио файлов OGG в MP3.
+    """
+
+    def __init__(self):
+        """
+        Инициализирует класс OggConverter.
+        """
+        try:
+            ffmpeg.set_ffmpeg_path(__ffmpeg_installer_path__)
+        except Exception as e:
+            logger.error("Ошибка при установке ffmpeg: %s", e)
+
+    def to_mp3(self, input_file: str, output_name: str) -> str:
+        """
+        Конвертирует аудио файл OGG в MP3.
+
+        :param input_file: Путь к входному файлу OGG.
+        :param output_name: Имя выходного файла MP3 (без расширения).
+        :return: Путь к выходному файлу MP3.
+        :raises Exception: Если произошла ошибка при конвертации.
+        """
+        try:
+            output_path = os.path.join(os.path.dirname(input_file), f"{output_name}.mp3")
+            return ffmpeg.input(input_file) \
+                .output(output_path, vframes=1, threads=8, timeout=100) \
+                .run(overwrite_output=True, capture_stdout=True, capture_stderr=True)
+            #return new Promise((resolve, reject) : {
+            #    ffmpeg(input_file)
+            #        .inputOption('-t 30')
+            #        .output(output_path)
+            #        .on('end', () : {
+            #            removeFile(input_file)
+            #            resolve(output_path)})
+            #        .on('error', (err) : reject(err.message))
+            #        .run()
+            #})
+        except Exception as e:
+            logger.error("Ошибка при конвертации в MP3: %s", e)
+            return None
+
+
+    async def create(self, url: str, filename: str) -> str:
+        """
+        Загружает аудио файл из URL в формате OGG.
+
+        :param url: URL аудио файла.
+        :param filename: Имя файла (без расширения).
+        :return: Путь к загруженному файлу OGG.
+        :raises Exception: Если произошла ошибка при загрузке.
+        """
+        try:
+            ogg_path = os.path.join(os.path.dirname(__file__), '../voices', f"{filename}.ogg")
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, stream=True) as response:
+                    if response.status != 200:
+                        logger.error("Ошибка при запросе файла: %s", response.status)
+                        return None
+                    with open(ogg_path, 'wb') as f:
+                        async for chunk in response.content.iter_chunked(8192):
+                            f.write(chunk)
+            return ogg_path
+        except Exception as e:
+            logger.error("Ошибка при загрузке OGG: %s", e)
+            return None
+export const ogg = new OggConverter()

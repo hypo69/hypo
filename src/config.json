@@ -6,7 +6,7 @@
   "copyright": "2024, hypo69",
   "project_folder": "hypotez",
   "google_drive": "H:\\My Drive\\hypotez",
-  "external_storage": "E:\\hypotez_data",
+  "external_storage": "E:\\hypo69\\data",
   "mode": "dev",
   "avaible_modes": [ "dev", "debug", "test", "prod" ],
   "git_user": "hypo69",

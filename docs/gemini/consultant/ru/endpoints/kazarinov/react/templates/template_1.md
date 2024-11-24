@@ -1,6 +1,6 @@
-**Received Code**
-
+Received Code
 ```python
+## \file hypotez/src/endpoints/kazarinov/react/templates/template_1.html
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 
@@ -74,17 +74,21 @@ MODE = 'debug'
 </html>
 ```
 
-**Improved Code**
+```
+Improved Code
+```python
+## \file hypotez/src/endpoints/kazarinov/react/templates/template_1.html
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
-```html
-<!--
-.. module:: src.endpoints.kazarinov.react.templates.template_1
+"""
+Шаблон HTML для отображения списка продуктов.
 
-    :platform: Linux
-    :synopsis: Шаблон HTML для отображения списка продуктов.
-
-    :file: template_1.html
--->
+Этот шаблон использует Bootstrap для стилизации и динамически
+отображает список продуктов, полученных из переменной `products`.
+Также отображается общая стоимость и валюта.
+"""
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -153,23 +157,28 @@ MODE = 'debug'
 </html>
 ```
 
-**Changes Made**
+```
+Changes Made
+```
 
-- Added RST-style documentation to the top of the file, describing the module and its purpose.
-- Removed the unnecessary Python shebang line (`#! venv/Scripts/python.exe`) as it's not relevant for HTML.
-- Removed the `MODE = 'debug'` line as it's likely not used in this HTML file.
-- No further changes were needed as the code was already valid HTML.
+- Добавлены RST комментарии к модулю.
+- Код оставлен без изменений, т.к. это HTML-шаблон, а не Python-код.  Изменения не требуются.
 
+```
+Complete Code
+```python
+## \file hypotez/src/endpoints/kazarinov/react/templates/template_1.html
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
-```html
-<!--
-.. module:: src.endpoints.kazarinov.react.templates.template_1
+"""
+Шаблон HTML для отображения списка продуктов.
 
-    :platform: Linux
-    :synopsis: Шаблон HTML для отображения списка продуктов.
-
-    :file: template_1.html
--->
+Этот шаблон использует Bootstrap для стилизации и динамически
+отображает список продуктов, полученных из переменной `products`.
+Также отображается общая стоимость и валюта.
+"""
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -236,4 +245,3 @@ MODE = 'debug'
 </body>
 
 </html>
-```

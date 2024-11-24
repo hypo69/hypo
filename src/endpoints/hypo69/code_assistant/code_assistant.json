@@ -25,7 +25,8 @@
     "images",
     "exe",
     "pytest",
-    "emil-design.com"
+    "emil-design.com",
+    "openai-assistants-quickstart"
   ],
   "exclude_files": [
     "version.py",

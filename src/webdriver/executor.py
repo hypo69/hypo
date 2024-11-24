@@ -168,12 +168,12 @@ class ExecuteLocator:
     async def get_attribute_by_locator(                                     
         self,
         locator: SimpleNamespace | dict,
-        timeout: float = 5,
+        timeout: Optional[float] = 0,
         timeout_for_event: str = 'presence_of_element_located',
         message: Optional[str] = None,
         typing_speed: float = 0,
         continue_on_error: bool = True,
-    ) -> str | list | dict | WebElement | list[WebElement] | None:
+    ) ->  WebElement | list[WebElement] | None:
         """ Retrieves attributes from an element or list of elements found by the given locator.
 
         Args:
@@ -192,7 +192,7 @@ class ExecuteLocator:
         element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
         if not element:
             if MODE in ('dev','debug'):
-                logger.debug(f"Element not clickable: {pprint(locator, text_color='YELLOW', bg_color='BLACK')}\n", None, False)
+                logger.debug(f"Не нашелся : {locator=}\n", None, False)
             ...
             return
    
@@ -268,8 +268,8 @@ class ExecuteLocator:
     async def get_webelement_by_locator(
         self,
         locator: dict | SimpleNamespace,
-        timeout: float = 5,
-        timeout_for_event: str = 'presence_of_element_located',
+        timeout: Optional[float] = 0,
+        timeout_for_event:  Optional[str] = 'presence_of_element_located',
     ) -> WebElement | List[WebElement] | None:
         """Fetches web elements according to the locator.
 

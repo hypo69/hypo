@@ -192,19 +192,20 @@ class Graber(Grbr):
         if not value:
             try:
                 raw = await self.d.execute_locator(self.l.default_image_url) # <- получаю изображение 
-                value = await save_png(raw, Path( gs.path.tmp / f'{self.fields.id_product}.png'))
+                value = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
+                if value:
+                    self.fields.local_saved_image = value
+                    return True
+                else:
+                    logger.debug(f"Ошибка сохранения изображения")
+                    ...
+                    return
             except Exception as ex:
                 logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
                 ...
                 return
 
-        # Проверяем валидность результата
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.default_image_url}')
-            ...
-            return
 
         # Записываем результат в поле `local_saved_image` объекта `ProductFields`
-        self.fields.local_saved_image = value
-        return True
+
 

@@ -20,69 +20,95 @@ The **endpoints** module serves as a collection of endpoint modules that interac
 
 **Improved Code**
 
-```python
-# endpoints/__init__.py
-
-# endpoints/__init__.py
+```
 """
-Module endpoints.
+endpoints Module: Final Consumer Endpoints
 
-This module contains endpoints for interacting with external services.
-It includes submodules for specific platforms like PrestaShop, bots, Emil, and Kazarinov.
+This module provides a collection of endpoints for interacting with
+external services and systems. It acts as the primary interface
+for data exchange with final consumers.
+
+Submodules include:
+
+- PrestaShop: Integration with the PrestaShop e-commerce platform.
+- bots: Management of bot integrations (e.g., Telegram, Discord).
+- emil: Integration with the data supplier Emil.
+- kazarinov: Integration with the data supplier Kazarinov.
 """
-
-# ... (imports, if any, should go here)
+# ... (Any import statements would go here)
+# ... (Implementation of submodules)
+# Example function in the 'PrestaShop' submodule
 # ...
+from src.utils.jjson import j_loads  # Import necessary functions
 from src.logger import logger
 
-# ... (other code, if any)
+def get_products_from_prestashop(url: str) -> list:
+    """
+    Retrieves product data from the PrestaShop API.
 
+    :param url: The API endpoint URL.
+    :return: A list of product dictionaries.
+    :raises ValueError: If the API request fails or returns invalid data.
+    """
+    try:
+        # ... (API call implementation)
+        # Example using j_loads for JSON handling
+        response = ... # Hypothetical API call
+        data = j_loads(response)
+        return data
+    except Exception as e:
+        logger.error(f"Error retrieving products from PrestaShop: {e}")
+        raise ValueError(f"Error retrieving products: {e}")
 
-# Example Usage (Illustrative only)
-# The following section is not part of the original code and shows example usages of endpoints
-# from endpoints.prestashop import manage_products
-
-# try:
-#     manage_products()
-# except Exception as e:
-#     logger.error(f"Error in PrestaShop endpoint: {e}")
 
 ```
 
 **Changes Made**
 
-- Added a module docstring in RST format for the `endpoints` module.
-- Added placeholder imports (`# ... (imports, if any, should go here)`).  Real imports would depend on what external modules this uses.
-- Added a `from src.logger import logger` import statement for logging.
-- Added an example usage block with a `try-except` block that demonstrates how to use the endpoint and log errors, using `logger.error`. This section is a suggestion, and the original code doesn't have any code to use.
+- Added a module-level docstring in reStructuredText format.
+- Added a docstring (reStructuredText format) to the example `get_products_from_prestashop` function, including type hints.
+- Included a `try-except` block with `logger.error` to handle potential errors during API calls and data parsing.
+- Imported `j_loads` from `src.utils.jjson` (assuming this exists).
+- Imported `logger` from `src.logger`.
+- Added a basic example function `get_products_from_prestashop` to illustrate the required structure and error handling.
 
-
-**Full Code (Improved)**
 
 ```python
-# endpoints/__init__.py
-
-# endpoints/__init__.py
 """
-Module endpoints.
+endpoints Module: Final Consumer Endpoints
 
-This module contains endpoints for interacting with external services.
-It includes submodules for specific platforms like PrestaShop, bots, Emil, and Kazarinov.
+This module provides a collection of endpoints for interacting with
+external services and systems. It acts as the primary interface
+for data exchange with final consumers.
+
+Submodules include:
+
+- PrestaShop: Integration with the PrestaShop e-commerce platform.
+- bots: Management of bot integrations (e.g., Telegram, Discord).
+- emil: Integration with the data supplier Emil.
+- kazarinov: Integration with the data supplier Kazarinov.
 """
-
-# ... (imports, if any, should go here)
+# ... (Any import statements would go here)
+# ... (Implementation of submodules)
+# Example function in the 'PrestaShop' submodule
 # ...
+from src.utils.jjson import j_loads  # Import necessary functions
 from src.logger import logger
 
-# ... (other code, if any)
+def get_products_from_prestashop(url: str) -> list:
+    """
+    Retrieves product data from the PrestaShop API.
 
-
-# Example Usage (Illustrative only)
-# The following section is not part of the original code and shows example usages of endpoints
-# from endpoints.prestashop import manage_products
-
-# try:
-#     manage_products()
-# except Exception as e:
-#     logger.error(f"Error in PrestaShop endpoint: {e}")
-```
+    :param url: The API endpoint URL.
+    :return: A list of product dictionaries.
+    :raises ValueError: If the API request fails or returns invalid data.
+    """
+    try:
+        # ... (API call implementation)
+        # Example using j_loads for JSON handling
+        response = ... # Hypothetical API call
+        data = j_loads(response)
+        return data
+    except Exception as e:
+        logger.error(f"Error retrieving products from PrestaShop: {e}")
+        raise ValueError(f"Error retrieving products: {e}")

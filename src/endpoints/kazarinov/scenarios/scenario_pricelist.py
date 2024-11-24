@@ -56,7 +56,7 @@ class Mexiron:
     timestamp: str
     products_list: List = field(default_factory=list)
     model: GoogleGenerativeAI
-
+    model_command:str
     def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
         """
         Initializes Mexiron class with required components.
@@ -71,10 +71,10 @@ class Mexiron:
         self.export_path = gs.path.external_storage / 'kazarinov' / 'mexironim' / self.mexiron_name
 
         # Read system instructions for the AI model
-        system_instruction_path = gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md'
-        system_instruction = read_text_file(system_instruction_path)
-
-        api_key = gs.credentials.gemini.kazarinov
+       
+        system_instruction:str = Path( gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
+        self.model_command:str = Path( gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md').read_text(encoding='UTF-8')
+        api_key:str = gs.credentials.gemini.kazarinov
         self.model = GoogleGenerativeAI(
             api_key=api_key,
             system_instruction=system_instruction,
@@ -111,7 +111,7 @@ class Mexiron:
 
         for url in urls_list:
 
-            graber = self.get_graber_by_url(url)
+            graber = self.get_graber_by_supplier_url(url)
             if not graber:
                 ...
                 continue
@@ -147,7 +147,7 @@ class Mexiron:
 
         return True
 
-    def get_graber_by_url(self, url: str):
+    def get_graber_by_supplier_url(self, url: str):
         """
         Returns the appropriate graber for a given supplier URL.
 
@@ -178,8 +178,8 @@ class Mexiron:
         Returns:
             dict: Formatted product data dictionary.
         """
-        image_path = self.export_path / 'images' / f'{f.id_product}.png'
-        await save_png(f.default_image_url, image_path)
+        # image_path = self.export_path / 'images' / f'{f.id_product}.png'
+        # await save_png(f.default_image_url, image_path)
 
         return {
             'product_title': f.name['language'][0]['value'].strip(),
@@ -187,7 +187,7 @@ class Mexiron:
             'description_short': f.description_short['language'][0]['value'].strip(),
             'description': f.description['language'][0]['value'].strip(),
             'specification': f.specification['language'][0]['value'].strip(),
-            'local_saved_image': str(image_path),
+            #'local_saved_image': str(image_path),
         }
 
     def save_product_data(self, product_data: dict):
@@ -200,7 +200,9 @@ class Mexiron:
         file_path = self.export_path / 'products' / f"{product_data['product_id']}.json"
         j_dumps(product_data, file_path, ensure_ascii=False)
 
-    def process_with_ai(self, products_list: list, price: Optional[str]):
+
+
+    def process_with_ai(self, products_list:str, attemts:int = 3) -> tuple | bool:
         """
         Processes the product list through the AI model.
 
@@ -210,5 +212,50 @@ class Mexiron:
 
         Returns:
             tuple: Processed response in `ru` and `he` formats.
+        Notes:
+            Модель может возвращать невелидный результат. В таком случае я переспрашиваю модель
         """
         ...
+        if attemts < 1:
+            return
+        response = self.model.ask(self.command + products_list)
+        if not response:
+            logger.error("no response from gemini")
+            ...
+            return
+
+
+        data: SimpleNamespace = j_loads_ns(response) # <- вернет False в случае ошибки
+
+        if not data:
+            logger.error(f"Error in data from gemini:{data}")
+            ...
+            ask_and_repair(products_list,attemts - 1)
+
+            if not j_dumps(data, base_path / 'ai' / f'{gs.now}.json', ensure_ascii=False): # <- певая проверка валидности полученных данных
+                ...
+                self.process_with_ai(products_list, attemts - 1)
+
+        try:
+            if hasattr(data,'ru'):
+                ru:SimpleNamespace = data.ru
+                if not ru:
+                    ...
+                    self.process_with_ai(products_list, attemts-1)
+            else:
+                ...
+                self.process_with_ai(products_list, attemts-1)
+
+            if hasattr(data,'he'):
+                he:SimpleNamespace = data.he
+                if not he:
+                    ...
+                    ask_and_repair(products_list, attemts-1)
+            else:
+                ...
+                self.process_with_ai(products_list, attemts-1)
+            return ru, he
+        except Exception as ex:
+            logger.debug(f"ошибка словаря")
+            ...
+            return

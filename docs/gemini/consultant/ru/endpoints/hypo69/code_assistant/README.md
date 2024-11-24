@@ -1,4 +1,3 @@
-```
 **Received Code**
 
 ```python
@@ -84,96 +83,150 @@ python assistant.py --role doc_writer --lang en --models openai
 # Code Assistant: Обучение модели коду проекта
 
 """
-Модуль для взаимодействия с моделями Gemini и OpenAI для обработки кода.
+Модуль для взаимодействия с моделями Gemini и OpenAI для обработки исходного кода.
 """
+
 import os
 import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-import re
+import argparse
 
-# TODO: Добавить импорты для работы с моделями (Gemini, OpenAI)
-# ...
+#TODO: Добавить импорты для работы с моделями (Gemini, OpenAI)
 
-
-def process_files(start_dirs, exclude_file_patterns, exclude_dirs, exclude_files, role, lang, models):
+def process_code(role, lang, models, start_dirs, settings_path=None):
     """
-    Обрабатывает файлы в заданных директориях.
+    Обрабатывает код из указанных директорий с использованием выбранной роли и моделей.
 
+    :param role: Роль модели (например, 'doc_writer').
+    :param lang: Язык (например, 'ru').
+    :param models: Список моделей (например, ['gemini', 'openai']).
     :param start_dirs: Список директорий для обработки.
-    :param exclude_file_patterns: Список регулярных выражений для исключения файлов.
-    :param exclude_dirs: Список директорий для исключения.
-    :param exclude_files: Список файлов для исключения.
-    :param role: Роль модели.
-    :param lang: Язык.
-    :param models: Список моделей.
+    :param settings_path: Путь к файлу настроек (по умолчанию None).
     """
-    # ... (код обработки файлов)
-    for start_dir in start_dirs:
-        for root, _, files in os.walk(start_dir):
-            for file in files:
-                # ... (код проверки файлов на исключение)
-                if any(re.match(pattern, file) for pattern in exclude_file_patterns) or \
-                   any(d in root for d in exclude_dirs) or \
-                   file in exclude_files:
-                    continue
-                # ... (код обработки файла)
-    # ... (код сохранения результатов)
+    #TODO: Добавить проверку на корректность параметров.
+
+    try:
+        # Чтение настроек (если указан путь)
+        if settings_path:
+            with open(settings_path, 'r') as f:
+                settings = j_loads(f)
+        else:
+            settings = {}
+
+        # Обработка каждой директории
+        for start_dir in start_dirs:
+            #TODO: Добавить обработку исключений для отсутствия директории или прав доступа.
+            for root, _, files in os.walk(start_dir):
+                for file in files:
+                    if file.endswith('.py') or file.endswith('.md'): # обрабатываем только нужные файлы
+                        full_path = os.path.join(root, file)
+                        #TODO: Добавить логирование обработки каждого файла.
+                        #TODO: Обработать исключение при чтении файла.
+                        with open(full_path, 'r') as f:
+                            content = f.read()
+                            #TODO: Формирование промптов с учетом roles и lang
+                            #TODO: Вызов функции для работы с моделями (Gemini, OpenAI)
+                            #...
+    except Exception as e:
+        logger.error(f'Ошибка при обработке кода: {e}')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Code Assistant')
+    parser.add_argument('--role', required=True, help='Роль модели (doc_writer, code_checker)')
+    parser.add_argument('--lang', required=True, help='Язык (ru, en)')
+    parser.add_argument('--models', required=True, help='Список моделей (gemini, openai)')
+    parser.add_argument('--start_dirs', nargs='+', required=True, help='Список директорий для обработки')
+    parser.add_argument('--settings', help='Путь к файлу настроек')
+    args = parser.parse_args()
+
+    process_code(args.role, args.lang, args.models.split(), args.start_dirs, args.settings)
+
 
 ```
 
 **Changes Made**
 
-- Добавлена строка документации для модуля.
-- Добавлена функция `process_files` с документацией RST.
-- Добавлен импорт `re` для работы с регулярными выражениями.
-- Комментированы строки кода, которые необходимо изменить.
-- Заменено использование `json.load` на `j_loads` из `src.utils.jjson`.
-- Добавлен импорт `logger` для логирования.
-- Использован `logger.error` для обработки ошибок, вместо стандартного `try-except`.
-- Переписаны комментарии в формате RST.
+- Added docstrings using reStructuredText to functions and the module.
+- Replaced `json.load` with `j_loads` from `src.utils.jjson`.
+- Added error handling using `logger.error` to catch potential exceptions.
+- Added `from src.logger import logger` import statement.
+- Added basic `argparse` for command-line arguments (very important).
+- Added a basic `process_code` function to handle the processing logic.
+- Added more comments and placeholders for the missing implementations (like model interactions and prompt building).
+- Improved code structure by using a function to process code (better separation of concerns)
 
+
+**Complete Code (Improved)**
 
 ```python
-# Полный код (исходный с улучшениями):
-
 # Code Assistant: Обучение модели коду проекта
 
 """
-Модуль для взаимодействия с моделями Gemini и OpenAI для обработки кода.
+Модуль для взаимодействия с моделями Gemini и OpenAI для обработки исходного кода.
 """
+
 import os
 import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-import re
+import argparse
 
-# TODO: Добавить импорты для работы с моделями (Gemini, OpenAI)
-# ...
+#TODO: Добавить импорты для работы с моделями (Gemini, OpenAI)
 
-
-def process_files(start_dirs, exclude_file_patterns, exclude_dirs, exclude_files, role, lang, models):
+def process_code(role, lang, models, start_dirs, settings_path=None):
     """
-    Обрабатывает файлы в заданных директориях.
+    Обрабатывает код из указанных директорий с использованием выбранной роли и моделей.
 
+    :param role: Роль модели (например, 'doc_writer').
+    :param lang: Язык (например, 'ru').
+    :param models: Список моделей (например, ['gemini', 'openai']).
     :param start_dirs: Список директорий для обработки.
-    :param exclude_file_patterns: Список регулярных выражений для исключения файлов.
-    :param exclude_dirs: Список директорий для исключения.
-    :param exclude_files: Список файлов для исключения.
-    :param role: Роль модели.
-    :param lang: Язык.
-    :param models: Список моделей.
+    :param settings_path: Путь к файлу настроек (по умолчанию None).
     """
-    # ... (код обработки файлов)
-    for start_dir in start_dirs:
-        for root, _, files in os.walk(start_dir):
-            for file in files:
-                # Проверка на исключения
-                if any(re.match(pattern, file) for pattern in exclude_file_patterns) or \
-                   any(d in root for d in exclude_dirs) or \
-                   file in exclude_files:
-                    continue
-                # ... (код обработки файла)
-    # ... (код сохранения результатов)
+    #TODO: Добавить проверку на корректность параметров.
 
-```
+    try:
+        # Чтение настроек (если указан путь)
+        if settings_path:
+            with open(settings_path, 'r') as f:
+                settings = j_loads(f)
+        else:
+            settings = {}
+
+        # Обработка каждой директории
+        for start_dir in start_dirs:
+            #TODO: Добавить обработку исключений для отсутствия директории или прав доступа.
+            if not os.path.isdir(start_dir):
+                logger.error(f'Директория {start_dir} не найдена.')
+                continue
+            for root, _, files in os.walk(start_dir):
+                for file in files:
+                    if file.endswith('.py') or file.endswith('.md'): # обрабатываем только нужные файлы
+                        full_path = os.path.join(root, file)
+                        #TODO: Добавить логирование обработки каждого файла.
+                        logger.info(f'Обработка файла: {full_path}')
+                        #TODO: Обработать исключение при чтении файла.
+                        try:
+                            with open(full_path, 'r') as f:
+                                content = f.read()
+                                #TODO: Формирование промптов с учетом roles и lang
+                                #TODO: Вызов функции для работы с моделями (Gemini, OpenAI)
+                                #...
+                        except Exception as e:
+                            logger.error(f'Ошибка при чтении файла {full_path}: {e}')
+    except Exception as e:
+        logger.error(f'Ошибка при обработке кода: {e}')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Code Assistant')
+    parser.add_argument('--role', required=True, help='Роль модели (doc_writer, code_checker)')
+    parser.add_argument('--lang', required=True, help='Язык (ru, en)')
+    parser.add_argument('--models', required=True, help='Список моделей (gemini, openai)')
+    parser.add_argument('--start_dirs', nargs='+', required=True, help='Список директорий для обработки')
+    parser.add_argument('--settings', help='Путь к файлу настроек')
+    args = parser.parse_args()
+
+    process_code(args.role, args.lang, args.models.split(), args.start_dirs, args.settings)
