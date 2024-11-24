@@ -74,11 +74,11 @@
   ],
 
   "output_directory": {
-    "doc_writer_rst": "<model>/doc/rst/<lang>",
-    "doc_writer_md": "<model>/doc/md/<lang>",
-    "code_checker": "<model>/consultant/<lang>",
-    "pytest": "../pytest/<model>/<lang>",
-    "code_explainer": "<model>/explainer/<lang>"
+    "doc_writer_rst": "<model>/doc/rst/<lang>/src",
+    "doc_writer_md": "<model>/doc/md/<lang>/src",
+    "code_checker": "<model>/consultant/<lang>/src",
+    "pytest": "../pytest/<model>/<lang>/src",
+    "code_explainer": "<model>/explainer/<lang>/src"
   },
   "argparse": {
     "role": {

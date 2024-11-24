@@ -87,7 +87,7 @@ class ProgramSettings(BaseModel):
         arbitrary_types_allowed = True
 
 
-    base_dir: Path = Field(default_factory=lambda: set_project_root())
+    base_dir: Path = Field(default_factory=lambda: __root__ = set_project_root())
     config: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
     credentials: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         aliexpress=SimpleNamespace(
