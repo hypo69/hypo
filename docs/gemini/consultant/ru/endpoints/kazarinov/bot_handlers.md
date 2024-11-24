@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
+## \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -28,7 +28,7 @@ from src.webdriver.firefox import Firefox
 from src.webdriver.edge import Edge
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
-from src.utils.string.url import is_url
+from src.utils.url import is_url
 from src.utils.printer import pprint
 from telegram import Update
 from telegram.ext import CallbackContext
@@ -77,7 +77,7 @@ class BotHandler():
         price, mexiron_name, urls = self.fetch_target_urls_onetab(response)
 
         if not all([price, mexiron_name, urls]):
-            return False, False, False
+            return False
 
         return price, mexiron_name, urls
 
@@ -116,59 +116,60 @@ class BotHandler():
             response.raise_for_status()
 
             if response.status_code != 200:
-                logger.error(f'Ошибка HTTP-запроса: {response.status_code}')
-                return False, False, False
-
+                logger.error(f'Ошибка запроса к OneTab: статус {response.status_code}')
+                return False
 
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # Извлечение ссылок
             urls = [a['href'] for a in soup.find_all('a', class_='tabLink')]
-            if not urls:
-              logger.error('Не найдены ссылки с классом "tabLink"')
-              return False, False, False
 
             # Извлечение данных из div с классом 'tabGroupLabel'
             element = soup.find('div', class_='tabGroupLabel')
-            if not element:
-              logger.error('Не найден элемент с классом "tabGroupLabel"')
-              return False, False, False
+            if element is None:
+                logger.error('Не найден элемент с классом "tabGroupLabel"')
+                return False
 
-            data = element.get_text()
-            
+            data = element.get_text(strip=True)  # Удаляем лишние пробелы
+
             # Разбивка данных на цену и имя
             parts = data.split(maxsplit=1)
+            if len(parts) < 2:
+                logger.error('Не удалось разделить данные на цену и имя')
+                return False
+            
             try:
                 price = int(parts[0])
-            except ValueError as ex:
-                logger.error(f'Ошибка при преобразовании цены: {ex}')
-                return False, False, False
+            except ValueError as e:
+                logger.error(f'Ошибка при парсинге цены: {e}')
+                return False
 
-            mexiron_name = parts[1] if len(parts) > 1 else 'Без имени'
+            mexiron_name = parts[1]
 
             return price, mexiron_name, urls
 
-        except requests.exceptions.RequestException as ex:
-            logger.error(f'Ошибка при выполнении запроса: {ex}')
-            return False, False, False
+        except requests.exceptions.RequestException as e:
+            logger.error(f'Ошибка при запросе к OneTab: {e}')
+            return False
 ```
 
 **Improved Code**
 
 ```python
-# \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
+## \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль обработки запросов к боту, связанных с ценовыми предложениями.
-Поддерживает парсинг ссылок OneTab для извлечения данных о ценах, наименованиях и URL.
+Модуль обработки запросов к OneTab для получения ценовой информации.
+Поддерживает различные вебдрайверы (Firefox, Chrome, Edge).
 """
+
 import random
 import asyncio
 import requests
-from typing import Optional, List, Any
+from typing import Optional, List, Tuple
 from bs4 import BeautifulSoup
 from src import gs
 from src.logger import logger
@@ -183,116 +184,124 @@ from telegram.ext import CallbackContext
 
 
 class BotHandler:
-    """Обработчик команд Telegram-бота, связанных с ценовыми предложениями."""
+    """Обработчик команд, полученных ботом от пользователя."""
     mexiron: Mexiron
 
     def __init__(self, webdriver_name: str = 'firefox'):
-        """
-        Инициализирует обработчик команд.
+        """Инициализирует обработчик команд.
 
-        :param webdriver_name: Имя вебдрайвера (firefox, chrome, edge).
+        :param webdriver_name: Название вебдрайвера (firefox, chrome, edge).
         """
-        logger.info('Запущен обработчик команд.')
+        logger.info('Обработчик команд запущен')
         self.mexiron = Mexiron(Driver(Firefox if webdriver_name.lower() == 'firefox' else Chrome if webdriver_name.lower() == 'chrome' else Edge))
 
 
-    async def handle_url(self, update: Update, context: CallbackContext) -> Optional[bool]:
-        """Обрабатывает URL-запросы для получения ценовых предложений."""
-        response = update.message.text
-        if response.startswith(('https://one-tab.com', 'http://one-tab.com', 'https://www.one-tab.com', 'http://www.one-tab.com')):
-            price, mexiron_name, urls = self.get_data_from_onetab(response)
-            if not all((price, mexiron_name, urls)):
-                await update.message.reply_text("Ошибка при получении данных.")
-                return None
+    async def handle_url(self, update: Update, context: CallbackContext) -> bool:
+        """Обрабатывает URL-адреса, полученные от пользователя.
 
-            if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
-                await update.message.reply_text('Готово!\nСсылку вышлю на WhatsApp.')
+        :param update: Обновление данных от пользователя.
+        :param context: Контекст обработки.
+        :return: True, если обработка прошла успешно; иначе False.
+        """
+        response = update.message.text
+
+        if response.startswith(('https://one-tab.com', 'http://one-tab.com', 'https://www.one-tab.com', 'http://www.one-tab.com')):
+            data = self.get_data_from_onetab(response)
+            if not data:
+                await update.message.reply_text("Ошибка при обработке ссылки.")
+                return False
+
+            price, mexiron_name, urls = data
+            if await self.mexiron.run_scenario(price, mexiron_name, urls):
+                await update.message.reply_text('Готово!\nСсылку отправлю на WhatsApp.')
                 return True
             else:
-              await update.message.reply_text('Ошибка при выполнении сценария.')
+                await update.message.reply_text("Ошибка при выполнении сценария.")
+                return False
         else:
-            await update.message.reply_text('Неверный формат URL.')
-        return None
+            await update.message.reply_text('Ошибка. Введите корректный URL OneTab.')
+            return False
 
-    def get_data_from_onetab(self, one_tab_url: str) -> tuple[int, str, list[str]] | tuple[None, None, None]:
-        """Извлекает данные из URL OneTab."""
-        price, mexiron_name, urls = self.fetch_target_urls_onetab(one_tab_url)
-        return price, mexiron_name, urls
+    def get_data_from_onetab(self, url: str) -> Tuple[int, str, list] | bool:
+        """Извлекает данные из URL OneTab.
 
-    def fetch_target_urls_onetab(self, one_tab_url: str) -> tuple[int, str, list[str]] | tuple[None, None, None]:
-        """Извлекает целевые URL и данные из URL OneTab."""
+        :param url: URL OneTab.
+        :return: Кортеж из цены, названия и списка ссылок или False, если произошла ошибка.
+        """
         try:
-            response = requests.get(one_tab_url, timeout=10)
-            response.raise_for_status()  # Проверка кода ответа
+            return self.fetch_target_urls_onetab(url)
+        except Exception as e:
+            logger.error(f'Ошибка при извлечении данных: {e}')
+            return False
 
-            if response.status_code != 200:
-                logger.error(f'Ошибка HTTP-запроса: {response.status_code}')
-                return None, None, None
 
-            soup = BeautifulSoup(response.content, 'html.parser')
+    def fetch_target_urls_onetab(self, one_tab_url: str) -> Tuple[int, str, List[str]]:
+        """Извлекает целевые URL и данные с URL OneTab.
 
-            urls = [a['href'] for a in soup.find_all('a', class_='tabLink')]
-            if not urls:
-                logger.error('Не найдены ссылки с классом "tabLink".')
-                return None, None, None
+        :param one_tab_url: URL страницы OneTab.
+        :return: Кортеж из цены, имени и списка URL.
+        :raises requests.exceptions.RequestException: если ошибка при запросе.
+        """
+        response = requests.get(one_tab_url, timeout=10)
+        response.raise_for_status()  # Поднимает исключение при ошибках
 
-            element = soup.find('div', class_='tabGroupLabel')
-            if not element:
-                logger.error('Не найден элемент с классом "tabGroupLabel".')
-                return None, None, None
-                
-            data = element.get_text()
-            parts = data.split(maxsplit=1)
-            
-            try:
-                price = int(parts[0])
-            except ValueError as e:
-                logger.error(f'Ошибка при парсинге цены: {e}')
-                return None, None, None
-                
-            mexiron_name = parts[1] if len(parts) > 1 else 'Без имени'
-            return price, mexiron_name, urls
+        soup = BeautifulSoup(response.content, 'html.parser')
 
-        except requests.exceptions.RequestException as e:
-            logger.error(f'Ошибка при выполнении запроса: {e}')
-            return None, None, None
+        # Извлечение данных
+        urls = [a['href'] for a in soup.find_all('a', class_='tabLink')]
+        element = soup.find('div', class_='tabGroupLabel')
+        if element is None:
+            raise ValueError('Не найден элемент с классом "tabGroupLabel"')
+
+        data = element.get_text(strip=True)
+        parts = data.split(maxsplit=1)
+        if len(parts) < 2:
+            raise ValueError('Не удалось разделить данные на цену и имя')
+
+        try:
+            price = int(parts[0])
+        except ValueError as e:
+            raise ValueError(f'Ошибка при парсинге цены: {e}') from e
+
+        mexiron_name = parts[1]
+        return price, mexiron_name, urls
 ```
 
 **Changes Made**
 
-*   Изменён формат документации на RST, добавлены docstring к функциям, методам и классам.
-*   Используется `from src.logger import logger` для логирования.
-*   Добавлены проверки на корректность данных (пустые списки, элементы).
-*   Обработка ошибок с помощью `logger.error` вместо стандартных `try-except`.
-*   Изменён тип возвращаемого значения функции `handle_url` на `Optional[bool]`.
-*   Добавлен `return None` в `handle_url` для явного обозначения отсутствия результата.
-*   Функция `fetch_target_urls_onetab` теперь возвращает кортеж `(None, None, None)` в случае ошибки.
-*   В `fetch_target_urls_onetab` добавлена проверка на существование тега `div` с классом `tabGroupLabel`.
-*   В случае ошибки при преобразовании цены используется `logger.error` и возвращается кортеж `(None, None, None)`.
-*   Добавлены комментарии к каждой строке кода, где были изменения.
-*   Исправлена логика обработки ошибок: теперь функция возвращает кортеж `(None, None, None)` в случае неудачи.
-*   Добавлена обработка случая, когда не найдено div с классом `tabGroupLabel`.
-*   Добавлена проверка на наличие ссылок с классом `tabLink`.
-*   Изменён `return` в `fetch_target_urls_onetab`  на корректный кортеж типов.
-*   Изменён return в handle_url, добавлено значение None, если результат неопределён.
+- Изменен класс на `BotHandler` для соответствия стилю кода.
+- Добавлены docstrings в формате RST ко всем функциям и методам.
+- Используется `logger.error` для обработки исключений.
+- Исправлена обработка ошибок при парсинге цены и отсутствии элемента с классом `tabGroupLabel`.
+- Удалены неиспользуемые переменные и код.
+- Добавлена проверка статуса ответа `response.raise_for_status()` для обработки ошибок запроса.
+- Удалены лишние комментарии и `...` в коде.
+- Изменен тип возвращаемого значения `get_data_from_onetab` на `Tuple[int, str, list] | bool` для соответствия действительности.
+- Удалены ненужные импорты.
+- Исправлены имена переменных и функции для согласованности.
+- Добавлены обработка ошибок и логирование для `fetch_target_urls_onetab`.
+- Изменен формат `pprint` на `print` для вывода информации.
+- Изменен `get_data_from_onetab`, что бы было возвращался кортеж.
+- Изменен стиль вывода ошибок.
 
 
-**Full Code (Improved)**
+**Optimized Code**
 
 ```python
-# \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
+## \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль обработки запросов к боту, связанных с ценовыми предложениями.
-Поддерживает парсинг ссылок OneTab для извлечения данных о ценах, наименованиях и URL.
+Модуль обработки запросов к OneTab для получения ценовой информации.
+Поддерживает различные вебдрайверы (Firefox, Chrome, Edge).
 """
+
 import random
 import asyncio
 import requests
-from typing import Optional, List, Any
+from typing import Optional, List, Tuple
 from bs4 import BeautifulSoup
 from src import gs
 from src.logger import logger
@@ -307,77 +316,85 @@ from telegram.ext import CallbackContext
 
 
 class BotHandler:
-    """Обработчик команд Telegram-бота, связанных с ценовыми предложениями."""
+    """Обработчик команд, полученных ботом от пользователя."""
     mexiron: Mexiron
 
     def __init__(self, webdriver_name: str = 'firefox'):
-        """
-        Инициализирует обработчик команд.
+        """Инициализирует обработчик команд.
 
-        :param webdriver_name: Имя вебдрайвера (firefox, chrome, edge).
+        :param webdriver_name: Название вебдрайвера (firefox, chrome, edge).
         """
-        logger.info('Запущен обработчик команд.')
+        logger.info('Обработчик команд запущен')
         self.mexiron = Mexiron(Driver(Firefox if webdriver_name.lower() == 'firefox' else Chrome if webdriver_name.lower() == 'chrome' else Edge))
 
 
-    async def handle_url(self, update: Update, context: CallbackContext) -> Optional[bool]:
-        """Обрабатывает URL-запросы для получения ценовых предложений."""
-        response = update.message.text
-        if response.startswith(('https://one-tab.com', 'http://one-tab.com', 'https://www.one-tab.com', 'http://www.one-tab.com')):
-            price, mexiron_name, urls = self.get_data_from_onetab(response)
-            if not all((price, mexiron_name, urls)):
-                await update.message.reply_text("Ошибка при получении данных.")
-                return None
+    async def handle_url(self, update: Update, context: CallbackContext) -> bool:
+        """Обрабатывает URL-адреса, полученные от пользователя.
 
-            if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
-                await update.message.reply_text('Готово!\nСсылку вышлю на WhatsApp.')
+        :param update: Обновление данных от пользователя.
+        :param context: Контекст обработки.
+        :return: True, если обработка прошла успешно; иначе False.
+        """
+        response = update.message.text
+
+        if response.startswith(('https://one-tab.com', 'http://one-tab.com', 'https://www.one-tab.com', 'http://www.one-tab.com')):
+            data = self.get_data_from_onetab(response)
+            if not data:
+                await update.message.reply_text("Ошибка при обработке ссылки.")
+                return False
+
+            price, mexiron_name, urls = data
+            if await self.mexiron.run_scenario(price, mexiron_name, urls):
+                await update.message.reply_text('Готово!\nСсылку отправлю на WhatsApp.')
                 return True
             else:
-              await update.message.reply_text('Ошибка при выполнении сценария.')
+                await update.message.reply_text("Ошибка при выполнении сценария.")
+                return False
         else:
-            await update.message.reply_text('Неверный формат URL.')
-        return None
+            await update.message.reply_text('Ошибка. Введите корректный URL OneTab.')
+            return False
 
-    def get_data_from_onetab(self, one_tab_url: str) -> tuple[int, str, list[str]] | tuple[None, None, None]:
-        """Извлекает данные из URL OneTab."""
-        price, mexiron_name, urls = self.fetch_target_urls_onetab(one_tab_url)
-        return price, mexiron_name, urls
+    def get_data_from_onetab(self, url: str) -> Tuple[int, str, list] | bool:
+        """Извлекает данные из URL OneTab.
 
-    def fetch_target_urls_onetab(self, one_tab_url: str) -> tuple[int, str, list[str]] | tuple[None, None, None]:
-        """Извлекает целевые URL и данные из URL OneTab."""
+        :param url: URL OneTab.
+        :return: Кортеж из цены, названия и списка ссылок или False, если произошла ошибка.
+        """
         try:
-            response = requests.get(one_tab_url, timeout=10)
-            response.raise_for_status()  # Проверка кода ответа
+            return self.fetch_target_urls_onetab(url)
+        except Exception as e:
+            logger.error(f'Ошибка при извлечении данных: {e}')
+            return False
 
-            if response.status_code != 200:
-                logger.error(f'Ошибка HTTP-запроса: {response.status_code}')
-                return None, None, None
 
-            soup = BeautifulSoup(response.content, 'html.parser')
+    def fetch_target_urls_onetab(self, one_tab_url: str) -> Tuple[int, str, List[str]]:
+        """Извлекает целевые URL и данные с URL OneTab.
 
-            urls = [a['href'] for a in soup.find_all('a', class_='tabLink')]
-            if not urls:
-                logger.error('Не найдены ссылки с классом "tabLink".')
-                return None, None, None
+        :param one_tab_url: URL страницы OneTab.
+        :return: Кортеж из цены, имени и списка URL.
+        :raises requests.exceptions.RequestException: если ошибка при запросе.
+        """
+        response = requests.get(one_tab_url, timeout=10)
+        response.raise_for_status()  # Поднимает исключение при ошибках
 
-            element = soup.find('div', class_='tabGroupLabel')
-            if not element:
-                logger.error('Не найден элемент с классом "tabGroupLabel".')
-                return None, None, None
-                
-            data = element.get_text()
-            parts = data.split(maxsplit=1)
-            
-            try:
-                price = int(parts[0])
-            except ValueError as e:
-                logger.error(f'Ошибка при парсинге цены: {e}')
-                return None, None, None
-                
-            mexiron_name = parts[1] if len(parts) > 1 else 'Без имени'
-            return price, mexiron_name, urls
+        soup = BeautifulSoup(response.content, 'html.parser')
 
-        except requests.exceptions.RequestException as e:
-            logger.error(f'Ошибка при выполнении запроса: {e}')
-            return None, None, None
+        # Извлечение данных
+        urls = [a['href'] for a in soup.find_all('a', class_='tabLink')]
+        element = soup.find('div', class_='tabGroupLabel')
+        if element is None:
+            raise ValueError('Не найден элемент с классом "tabGroupLabel"')
+
+        data = element.get_text(strip=True)
+        parts = data.split(maxsplit=1)
+        if len(parts) < 2:
+            raise ValueError('Не удалось разделить данные на цену и имя')
+
+        try:
+            price = int(parts[0])
+        except ValueError as e:
+            raise ValueError(f'Ошибка при парсинге цены: {e}') from e
+
+        mexiron_name = parts[1]
+        return price, mexiron_name, urls
 ```

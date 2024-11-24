@@ -64,9 +64,34 @@ class ProgramSettings(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
+    def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+        """
+        Finds the root directory of the project starting from the current file's directory,
+        searching upwards and stopping at the first directory containing any of the marker files.
+
+        Args:
+            marker_files (tuple): Filenames or directory names to identify the project root.
+    
+        Returns:
+            Path: Path to the root directory if found, otherwise the directory where the script is located.
+        """
+        __root__:Path
+        current_path:Path = Path(__file__).resolve().parent
+        __root__ = current_path
+        for parent in [current_path] + list(current_path.parents):
+            if any((parent / marker).exists() for marker in marker_files):
+                __root__ = parent
+                break
+        if __root__ not in sys.path:
+            sys.path.insert(0, str(__root__))
+        return __root__
+
+
+    # Get the root directory of the project
+    __root__: Path = set_project_root()
 
     base_dir: Path = Field(default_factory=lambda: Path(__file__).resolve().parent.parent)
-    settings: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
+    config: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
     credentials: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         aliexpress=SimpleNamespace(
             api_key=None,
@@ -120,9 +145,10 @@ class ProgramSettings(BaseModel):
         data = None,
         secrets = None,
         google_drive = None,
+        external_storage = None,
         dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
     ))
-    config:SimpleNamespace = Field(default_factory=lambda:SimpleNamespace())
+    
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -130,7 +156,7 @@ class ProgramSettings(BaseModel):
 
         """ Выполняет инициализацию после создания экземпляра класса."""
         
-        def _get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')):
+        def _set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')):
             """ Находит корневую директорию проекта, начиная с текущей директории."""
             current_path = Path(__file__).resolve().parent
             for parent in [current_path] + list(current_path.parents):
@@ -138,7 +164,7 @@ class ProgramSettings(BaseModel):
                     return parent
             return current_path
 
-        self.base_dir = _get_project_root()
+        self.base_dir = _set_project_root()
         sys.path.append(str(self.base_dir))
 
         self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')

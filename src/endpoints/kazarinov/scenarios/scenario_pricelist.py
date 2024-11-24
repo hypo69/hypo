@@ -57,6 +57,8 @@ class Mexiron:
     products_list: List = field(default_factory=list)
     model: GoogleGenerativeAI
     model_command:str
+    config:SimpleNamespace
+
     def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
         """
         Initializes Mexiron class with required components.
@@ -65,9 +67,11 @@ class Mexiron:
             d (Driver): Selenium WebDriver instance.
             mexiron_name (Optional[str]): Custom name for the Mexiron process.
         """
+        self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarionv.json' )
         self.timestamp = gs.now
         self.driver = driver
         self.mexiron_name = mexiron_name or self.timestamp
+        storage = gs.path.external_storage if self.config.storage == 'external_storage' else  gs.path.data if  self.config.storage == 'data' else gs.path.goog
         self.export_path = gs.path.external_storage / 'kazarinov' / 'mexironim' / self.mexiron_name
 
         # Read system instructions for the AI model
@@ -139,11 +143,11 @@ class Mexiron:
             self.save_product_data(product_data)
 
         # AI processing
-        ru, he = self.process_ai(products_list, price)
+        ru, he = await self.process_ai(products_list, price)
         if ru and he:
-            self.create_report()
-            self.post_facebook(ru)
-            self.post_facebook(he)
+            await self.create_report()
+            await self.post_facebook(ru)
+            await self.post_facebook(he)
 
         return True
 
@@ -190,7 +194,7 @@ class Mexiron:
             #'local_saved_image': str(image_path),
         }
 
-    def save_product_data(self, product_data: dict):
+    async def save_product_data(self, product_data: dict):
         """
         Saves individual product data to a file.
 
@@ -200,9 +204,7 @@ class Mexiron:
         file_path = self.export_path / 'products' / f"{product_data['product_id']}.json"
         j_dumps(product_data, file_path, ensure_ascii=False)
 
-
-
-    def process_ai(self, products_list:str, attemts:int = 3) -> tuple | bool:
+    async def process_ai(self, products_list:str, attemts:int = 3) -> tuple | bool:
         """
         Processes the product list through the AI model.
 
@@ -218,7 +220,8 @@ class Mexiron:
         ...
         if attemts < 1:
             return
-        response = self.model.ask(self.model_command + products_list)
+        #response = self.model.ask(products_list)
+        response = self.model.ask(self.model_command + '\n' + str(products_list))
         if not response:
             logger.error("no response from gemini")
             ...
@@ -259,3 +262,34 @@ class Mexiron:
             logger.debug(f"ошибка словаря")
             ...
             return
+
+    async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
+        """"""
+        ...
+        self.d.get_url(r'https://www.facebook.com/profile.php?id=61566067514123')
+        currency = "ש''ח"
+        title = f'{mexiron.title}\n{mexiron.description}\n{mexiron.price} {currency}'
+        if not post_message_title(self.d, title):
+            logger.warning(f'Не получилось отправить название мехирона')
+            ...
+            return
+
+        if not upload_post_media(self.d, media = mexiron.products):
+            logger.warning(f'Не получилось отправить media')
+            ...
+            return
+        if not message_publish(self.d):
+            logger.warning(f'Не получилось отправить media')
+            ...
+            return
+
+        return True
+
+    def create_report(self):
+        """"""
+        ...
+        generator = ReportGenerator( base_path = base_path, timestamp = self.timestamp )
+        for lang in ['he','ru']:
+            generator.create_report(lang)
+
+

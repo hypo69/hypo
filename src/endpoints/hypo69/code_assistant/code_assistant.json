@@ -32,7 +32,11 @@
   "exclude_files": [
     "version.py",
     "__init__.py",
-    "header.py"
+    "header.py",
+    "___+.*",
+    "___*.*",
+    "*___*.*",
+    "*___*"
   ],
   "exclude_file_patterns": [
     ".*\\(.*\\).*",

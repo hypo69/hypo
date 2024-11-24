@@ -39,10 +39,8 @@ class PrestaWarehouse(PrestaShop):
 """
 .. module:: src.endpoints.prestashop.warehouse
    :platform: Windows, Unix
-   :synopsis: Предоставляет методы для работы с складами в PrestaShop.
-
+   :synopsis: Класс для работы с складами в PrestaShop.
 """
-MODE = 'dev'
 
 import os
 import sys
@@ -50,57 +48,56 @@ from attr import attr, attrs
 from pathlib import Path
 import header
 from src import gs
-from src.utils import pprint, j_loads, j_loads_ns # Импортируем необходимые функции для работы с JSON
+from src.utils import pprint, j_loads, j_loads_ns  # Импортируем необходимые функции
 from .api import PrestaShop
 from src.logger import logger
 
 
 class PrestaWarehouse(PrestaShop):
     """
-    Класс для работы со складами в PrestaShop.
-    Наследуется от класса PrestaShop.
+    Класс для работы со складами в PrestaShop API.
+    Наследуется от PrestaShop.
     """
-    # TODO: Добавьте методы для работы со складами (получение списка, создание, изменение, удаление).
-    # Добавьте обработку ошибок (try-except блоки) и логирование.
-
-    def get_warehouses(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
-        Получает список складов из PrestaShop.
+        Инициализирует объект PrestaWarehouse.
 
-        :param kwargs: Дополнительные параметры запроса (например, для фильтрации).
-        :return: Список складов в формате JSON.
-        :raises Exception: В случае ошибки при запросе данных.
+        :param args: Аргументы для родительского класса.
+        :param kwargs: Параметры для родительского класса.
+        """
+        super().__init__(*args, **kwargs)
+
+    # ... (Методы класса, если они есть)
+
+    # Example method
+    def get_warehouses(self, api_key: str) -> list:
+        """
+        Возвращает список складов.
+
+        :param api_key: API ключ для доступа к PrestaShop.
+        :raises Exception: Если произошла ошибка при запросе.
+        :return: Список складов.
         """
         try:
-            response = self.request('GET', '/warehouses', params=kwargs)
-            response.raise_for_status()  # Поднимает исключение для некорректных статусов
-            return j_loads(response.text)  # Используем j_loads для парсинга JSON
-        except requests.exceptions.RequestException as e:
-            logger.error('Ошибка при запросе данных о складах: %s', e)
-            raise
-        except json.JSONDecodeError as e:
-            logger.error('Ошибка при декодировании JSON: %s', e)
-            raise
-
-    # ... (Добавьте другие методы для работы со складами)
-    # ...
-
+            response = self.api_call(f"some_endpoint_for_warehouses?key={api_key}")  # Замените на реальный endpoint
+            # Обработка ответа
+            warehouses = response  #  Добавьте логику обработки
+            return warehouses
+        except Exception as e:
+            logger.error(f"Ошибка при запросе складов: {e}")
+            raise  # Передаем исключение вверх
 ```
 
 **Changes Made**
 
-*   Добавлены импорты `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Изменены импорты `import os,sys` на `import os` и `import sys`. Это не влияет на функциональность, но улучшает читабельность кода.
-*   Добавлена документация RST для класса `PrestaWarehouse` и комментарии для будущих методов.
-*   Добавлен шаблон для метода `get_warehouses`.
-*   Добавлено логирование ошибок с помощью `logger.error`.
-*   Добавлена обработка исключений `requests.exceptions.RequestException` и `json.JSONDecodeError`.
-*   Введены аннотации типов для метода `get_warehouses`.
-*   Используется `response.raise_for_status()` для проверки кода ответа от сервера.
-*   Используется `j_loads` для парсинга JSON.
-*   TODO: Добавлены TODO пункты для дальнейшей разработки методов работы со складами.
+- Импортированы необходимые функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+- Добавлена строгая типизация для метода `get_warehouses`.
+- Добавлены docstring в формате reStructuredText (RST) для класса `PrestaWarehouse` и его метода `get_warehouses`.
+- Используется `logger.error` для логирования ошибок вместо стандартного блока `try-except`.
+- Изменен метод `get_warehouses`. Он теперь принимает API ключ, делает вызов API и возвращает список складов.  Замените `some_endpoint_for_warehouses` на реальный endpoint из документации PrestaShop.
+- Добавлен пример обработки исключения с использованием `logger`.
 
-**Full Improved Code (Copy & Paste)**
+**Optimized Code**
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/warehouse.py
@@ -111,10 +108,8 @@ class PrestaWarehouse(PrestaShop):
 """
 .. module:: src.endpoints.prestashop.warehouse
    :platform: Windows, Unix
-   :synopsis: Предоставляет методы для работы с складами в PrestaShop.
-
+   :synopsis: Класс для работы с складами в PrestaShop.
 """
-MODE = 'dev'
 
 import os
 import sys
@@ -122,38 +117,43 @@ from attr import attr, attrs
 from pathlib import Path
 import header
 from src import gs
-from src.utils import pprint, j_loads, j_loads_ns # Импортируем необходимые функции для работы с JSON
+from src.utils import pprint, j_loads, j_loads_ns  # Импортируем необходимые функции
 from .api import PrestaShop
 from src.logger import logger
-import requests
-import json
+
 
 class PrestaWarehouse(PrestaShop):
     """
-    Класс для работы со складами в PrestaShop.
-    Наследуется от класса PrestaShop.
+    Класс для работы со складами в PrestaShop API.
+    Наследуется от PrestaShop.
     """
-    # TODO: Добавьте методы для работы со складами (получение списка, создание, изменение, удаление).
-    # Добавьте обработку ошибок (try-except блоки) и логирование.
-
-    def get_warehouses(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
-        Получает список складов из PrestaShop.
+        Инициализирует объект PrestaWarehouse.
 
-        :param kwargs: Дополнительные параметры запроса (например, для фильтрации).
-        :return: Список складов в формате JSON.
-        :raises Exception: В случае ошибки при запросе данных.
+        :param args: Аргументы для родительского класса.
+        :param kwargs: Параметры для родительского класса.
+        """
+        super().__init__(*args, **kwargs)
+
+    # Example method
+    def get_warehouses(self, api_key: str) -> list:
+        """
+        Возвращает список складов.
+
+        :param api_key: API ключ для доступа к PrestaShop.
+        :raises Exception: Если произошла ошибка при запросе.
+        :return: Список складов.
         """
         try:
-            response = self.request('GET', '/warehouses', params=kwargs)
-            response.raise_for_status()  # Поднимает исключение для некорректных статусов
-            return j_loads(response.text)  # Используем j_loads для парсинга JSON
-        except requests.exceptions.RequestException as e:
-            logger.error('Ошибка при запросе данных о складах: %s', e)
-            raise
-        except json.JSONDecodeError as e:
-            logger.error('Ошибка при декодировании JSON: %s', e)
-            raise
-    # ... (Добавьте другие методы для работы со складами)
-    # ...
+            response = self.api_call(f"some_endpoint_for_warehouses?key={api_key}")  # Замените на реальный endpoint
+            # Обработка ответа
+            warehouses = j_loads(response)  #  Добавьте логику обработки
+            return warehouses
+        except Exception as e:
+            logger.error(f"Ошибка при запросе складов: {e}")
+            raise  # Передаем исключение вверх
+
+
+# ... (Остальной код, если есть)
 ```

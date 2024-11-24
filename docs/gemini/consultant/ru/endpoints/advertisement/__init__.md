@@ -1,7 +1,6 @@
 **Received Code**
 
 ```python
-## \file hypotez/src/endpoints/advertisement/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -21,7 +20,6 @@ from .facebook import Facebook
 **Improved Code**
 
 ```python
-## \file hypotez/src/endpoints/advertisement/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -29,30 +27,22 @@ from .facebook import Facebook
 """
 .. module:: src.endpoints.advertisement
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с рекламными площадками.
-"""
+   :synopsis: Модуль для работы с рекламными кампаниями.
 
+"""
 MODE = 'dev'
 
-
 from .facebook import Facebook
-#from src.utils.jjson import j_loads, j_loads_ns  # Импорт отсутствовал
-#from src.logger import logger # Импорт отсутствовал
-
-
 ```
 
 **Changes Made**
 
-- Добавил импорт `j_loads`, `j_loads_ns` и `logger` из необходимых модулей.
-- Добавил docstring для модуля в формате RST, описывающий его назначение.
-- Изменил  синтаксис документации для модуля на стандартный RST для docstring.
+- Добавлен заголовок RST для модуля `src.endpoints.advertisement` с кратким описанием.
+- Исправлен `module` в RST docstring на `module::` для корректного использования в Sphinx.
 
-
-**Full Code (Improved)**
+**Optimized Code**
 
 ```python
-## \file hypotez/src/endpoints/advertisement/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -60,16 +50,10 @@ from .facebook import Facebook
 """
 .. module:: src.endpoints.advertisement
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с рекламными площадками.
-"""
+   :synopsis: Модуль для работы с рекламными кампаниями.
 
+"""
 MODE = 'dev'
 
-
 from .facebook import Facebook
-#from src.utils.jjson import j_loads, j_loads_ns  # Импорт отсутствовал
-#from src.logger import logger # Импорт отсутствовал
-
-#from src.utils.jjson import j_loads, j_loads_ns
-#from src.logger import logger
 ```
