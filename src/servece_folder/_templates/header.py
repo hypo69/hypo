@@ -1,10 +1,10 @@
-## \file hypotez/src/logger/header.py
+## \file /<script>
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-module: src.logger 
+module: src.<module>
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""

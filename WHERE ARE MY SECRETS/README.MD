@@ -1,6 +1,3 @@
-Here’s the updated version of the README.md with the additional instructions for creating the `secrets` folder and copying the example files, along with the PowerShell commands to perform these operations:
-
----
 
 # Service Folder
 
@@ -78,20 +75,38 @@ For a visual representation of the KeePass structure, please refer to the follow
 
 ## Initial Setup
 
-Before starting to work and program in the system, create a folder named `secrets` at the root of the project and copy the files `credentials.kdbx.example` and `password.txt` from the current directory into it. Then, remove the `.example` suffix from the filenames.
+Before starting to work and program in the system, you need to perform the following steps:
+
+1. **Create the `secrets` folder**:
+   - Open your file explorer and navigate to the root of your project.
+   - Right-click in an empty space in the directory and choose **New** → **Folder**.
+   - Name the folder `secrets`.
+
+2. **Copy the files**:
+   - Find the file `credentials.kdbx.example` in the current directory.
+   - Right-click on the file and select **Copy**.
+   - Navigate to the `secrets` folder you just created, right-click inside the folder, and select **Paste**.
+   
+3. **Rename the copied files**:
+   - In the `secrets` folder, right-click on the file `credentials.kdbx.example`.
+   - Select **Rename** and remove the `.example` suffix, so the file name becomes `credentials.kdbx`.
+
+4. **Create the `password.txt` file**:
+   - In the `secrets` folder, right-click on an empty space and choose **New** → **Text Document**.
+   - Name the document `password.txt`.
+   - Open the file, paste the password for the `credentials.kdbx` database in the first line, and save the file. **Note:** This is a security vulnerability, so it's better not to store passwords in plain text. If the program cannot find this file or it contains an incorrect password, it will prompt you to enter the password via the command line.
 
 ### PowerShell Commands
 
-You can perform these operations using the following PowerShell commands:
+Alternatively, you can perform these operations using the following PowerShell commands:
 
 ```powershell
 # Create the 'secrets' folder in the root of the project
 New-Item -ItemType Directory -Path ".\secrets"
 
-# Copy the example files to the 'secrets' folder
+# Copy the example file to the 'secrets' folder
 Copy-Item -Path ".\credentials.kdbx.example" -Destination ".\secrets\credentials.kdbx"
-Copy-Item -Path ".\password.txt" -Destination ".\secrets\password.txt"
 
 # Remove the .example suffix from the credentials file
 Rename-Item -Path ".\secrets\credentials.kdbx.example" -NewName ".\secrets\credentials.kdbx"
-```
+``` 
