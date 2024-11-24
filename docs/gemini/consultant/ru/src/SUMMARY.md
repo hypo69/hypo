@@ -548,10 +548,7 @@
         - [Borderify](webdriver/firefox/extentions/test_extention/borderify.md)
           - [Popup](webdriver/firefox/extentions/test_extention/html/popup.md)
           - [Send data](webdriver/firefox/extentions/test_extention/scripts/send_data.md)
-        - [Background](webdriver/firefox/extentions/test_extention - Copy/background.md)
-        - [Borderify](webdriver/firefox/extentions/test_extention - Copy/borderify.md)
-          - [Popup](webdriver/firefox/extentions/test_extention - Copy/html/popup.md)
-        - [Send data](webdriver/firefox/extentions/test_extention - Copy/send_data.md)
+
           - [Try xpath background](webdriver/firefox/extentions/try_path_1.3.5/background/try_xpath_background.md)
           - [Options](webdriver/firefox/extentions/try_path_1.3.5/pages/options.md)
           - [Show all results](webdriver/firefox/extentions/try_path_1.3.5/pages/show_all_results.md)
