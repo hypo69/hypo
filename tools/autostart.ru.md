@@ -1,0 +1,1 @@
+[start script on os starting](https://chatgpt.com/share/674356d7-7ef8-800d-a6ee-476fae293594)

@@ -7,7 +7,6 @@
       "de": "Ihre Spezialisierung ist die Codeprüfung",
       "he": "ההתמחות שלך היא בדיקת קוד"
     },
-
     "doc_writer_rst": {
       "ru": "Твоя специализация - создание документации для кода в формате `RST`",
       "en": "Your specialization is documentation creation in the `RST` format",
@@ -22,6 +21,28 @@
       "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `MD`-Format",
       "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `MD`"
     },
+    "doc_writer_html": {
+      "ru": "Твоя специализация - создание документации для кода в формате `HTML`",
+      "en": "Your specialization is documentation creation in the `HTML` format",
+      "fr": "Votre spécialisation est la création de documentation au format `HTML`",
+      "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `HTML`-Format",
+      "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `HTML`"
+    },
+    "code_explainer": {
+      "ru": "Твоя специализация - объяснение кода",
+      "en": "Your specialization is explaining code",
+      "fr": "Votre spécialisation est l'explication de code",
+      "de": "Ihre Spezialisierung ist das Erklären von Code",
+      "he": "ההתמחות שלך היא הסברת קוד"
+    },
+    "how_to_writer": {
+      "ru": "Твоя специализация - создание инструкций по использованию кода (how to..)",
+      "en": "Your specialization is creating usage guides for code (how to..)",
+      "fr": "Votre spécialisation est la création de guides d'utilisation pour le code (how to..)",
+      "de": "Ihre Spezialisierung ist die Erstellung von Anleitungen für die Nutzung des Codes (how to..)",
+      "he": "ההתמחות שלך היא יצירת מדריכי שימוש לקוד (how to..)"
+    },
+
     "pytest": {
       "ru": "Твоя специализация — написание тестов для кода",
       "en": "Your specialization is writing tests for code",
@@ -29,6 +50,13 @@
       "de": "Ihre Spezialisierung ist das Schreiben von Tests für Code",
       "he": "ההתמחות שלך היא כתיבת בדיקות לתוכנה"
     }
+  },
+  "file_location_translated": {
+    "ru": "Расположение файла",
+    "en": "File location",
+    "fr": "Emplacement du fichier",
+    "de": "Dateispeicherort",
+    "he": "מיקום הקובץ"
 
   }
 }

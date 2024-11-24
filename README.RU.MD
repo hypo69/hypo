@@ -271,7 +271,9 @@ Copy-Item -Path "$currentPath\credentials.kdbx.example" -Destination "$currentPa
 Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\password.txt"
 ```
 ---
-
+## Далее:
+1. [Документация для разработчика](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/ru) ( **Не готова* 😕
+2. [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.RU.MD) ( **Не готова* 😕)
+3. [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
 ## Дополнительная информация
-
-Для дополнительной информации о проекте перейдите на [вебсайт](https://davidka.net).
+[https://davidka.net](https://davidka.net).

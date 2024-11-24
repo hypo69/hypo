@@ -14,6 +14,10 @@
     ".ipynb_checkpoints",
     "resources",
     "profiles",
+    "sdk",
+    "skd",
+    "quickstart",
+    "quick_start",
     "_experiments",
     "db",
     "node_modules",
@@ -32,8 +36,13 @@
   "exclude_files": [
     "version.py",
     "__init__.py",
-    "header.py"
+    "header.py",
+    "*.png",
+    "*.jpg",
+    "*.jpeg",
+    "*.svg"
   ],
+
   "exclude_file_patterns": [
     ".*\\(.*\\).*",
     "___{3,}.*",
@@ -60,10 +69,6 @@
     "CHANGELOG*",
     "CONTRIBUTING*",
     "CODE_OF_CONDUCT*",
-    "*.png",
-    "*.jpg",
-    "*.jpeg",
-    "*.svg",
     "conf.py"
   ],
   "output_directory": {

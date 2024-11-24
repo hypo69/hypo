@@ -165,19 +165,23 @@ class CodeAssistant:
     def process_files(self, start_file_number: Optional[int] = 1):
         """компиляция, отправка запроса и сохранение результата."""
         for i, (file_path, content) in enumerate(self._yield_files_content()):
+            if not any((file_path, content)):    # <- ошибка чтения файла
+                continue
             if i < start_file_number:
                 continue
             if file_path and content:
                 content_request = self._create_request(file_path, content)
 
                 if self.gemini_model:
-                    #response = self.gemini_model.ask(str(content_request))
-                    continue # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ debug
+                    response = self.gemini_model.ask(str(content_request))
+                    # response = True # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (comment out the line above)
                     if response:
-                        # pprint(f"RAW response:\n{response}")
-                        response = self._remove_outer_quotes(response)
-                        # pprint(f"CLEAR response:\n{response}")
-                        self._save_response(file_path, response, "gemini")
+                        ... # comment for debug / uncomment for prod
+                        # pprint(f"RAW response:\n{response}") # посмотреть на ответ
+                        response = self._remove_outer_quotes(response) # <- ~~~~~~~~~~~~~~~~~~ DEBUG (comment line to skip remove_outer_quotes)
+                        # pprint(f"CLEAR response:\n{response}")  # посмотреть на очищенный ответ
+                        self._save_response(file_path, response, "gemini") # <- ~~~~~~~~~~~~~~~~~~ DEBUG (comment line to skip saving)
+                        ...
                     else:
                         logger.error("Ошибка ответа модели")
                         return
@@ -187,22 +191,27 @@ class CodeAssistant:
            
 
             time.sleep(
-                0
-            )  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG
+                20   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
+            )  
 
     def _create_request(self, file_path: str, content: str) -> str:
         """Создание запроса с учетом роли и языка."""
-        roles_translations = getattr(self.translations.roles, self.role)
-        role_description_translated = getattr(roles_translations, self.lang)
-        file_location_translated = getattr(roles_translations, self.lang)
-
-        content_request: dict = {
-            "role": f"{role_description_translated}",
-            "output_language": self.lang,
-            f"{file_location_translated}": get_relative_path(file_path, "hypotez"),
-            "instruction": self.code_instruction,
-            "input_code": f"```{content}```",
-        }
+        content_request = content
+        try:
+            roles_translations:SimpleNamespace = getattr(self.translations.roles, self.role)
+            role_description_translated:str = getattr(roles_translations, self.lang)
+            file_location_translated:str = getattr(self.translations.file_location_translated, self.lang)
+            
+            content_request: dict = {
+                "role": f"{role_description_translated}",
+                "output_language": self.lang,
+                f"{file_location_translated}": get_relative_path(file_path, "hypotez"),
+                "instruction": self.code_instruction,
+                "input_code": f"```{content}```",
+            }
+        except Exception as ex:
+            logger.error(f"Ошибка в составлении запроса ", ex)
+            ...
         return content_request
 
     def _yield_files_content(
@@ -239,34 +248,34 @@ class CodeAssistant:
                     exclude_dir in file_path.parts
                     for exclude_dir in self.config.exclude_dirs
                 ):
-                    pprint(
-                        f"Пропускаю файл в исключенной директории: {file_path}",
-                        text_color="cyan",
-                    )
+                    # pprint(
+                    #     f"Пропускаю файл в исключенной директории: {file_path}",
+                    #     text_color="cyan",
+                    # )
                     continue
 
                 # Проверяем исключенные файлы по паттерну
                 if any(
                     exclude.match(str(file_path)) for exclude in exclude_file_patterns
                 ):
-                    pprint(
-                        f"Пропускаю файл по паттерну исключения: {file_path}",
-                        text_color="cyan",
-                    )
+                    # pprint(
+                    #     f"Пропускаю файл по паттерну исключения: {file_path}",
+                    #     text_color="cyan",
+                    # )
                     continue
 
                 # Проверяем конкретные исключенные файлы
                 if str(file_path) in self.config.exclude_files:
-                    pprint(
-                        f"Пропускаю исключенный файл: {file_path}", text_color="cyan"
-                    )
+                    # pprint(
+                    #     f"Пропускаю исключенный файл: {file_path}", text_color="cyan"
+                    # )
                     continue
 
                 # Чтение содержимого файла
                 try:
                     content = file_path.read_text(encoding="utf-8")
                     yield file_path, content
-                    make_summary( docs_dir = start_dir.parent / 'docs' )  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ debug
+                    # make_summary( docs_dir = start_dir.parent / 'docs' )  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  (create `summary.md`)
                 except Exception as ex:
                     pprint(
                         f"Ошибка при чтении файла: {ex}",
@@ -305,7 +314,12 @@ class CodeAssistant:
             Если строка '```md some content ```' будет передана в функцию,
             результат будет ' some content '.
         """
-        response = response.strip()
+        try:
+            response = response.strip()
+        except Exception as ex:
+            logger.error("Exception in `remove_outer_quotes()`", ex)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG
+            ...
+            return
         # Если строка начинается с '```python', возвращаем её без изменений
         if response.startswith("```python"):
             return response
