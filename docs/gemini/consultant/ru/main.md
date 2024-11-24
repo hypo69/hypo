@@ -1,6 +1,7 @@
 **Received Code**
 
 ```python
+## \file hypotez/src/main.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -21,7 +22,7 @@ MODE = 'dev'
 
 
 import argparse
-# import necessary modules if any
+from src.logger import logger  # Импорт logger из модуля src.logger
 
 def script1():
     """Запускает скрипт 1."""
@@ -91,43 +92,37 @@ if __name__ == "__main__":
 **Improved Code**
 
 ```python
+## \file hypotez/src/main.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.main
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит основную функцию для запуска интерактивного меню.
+Модуль `main` предоставляет интерактивное меню для запуска скриптов.
 """
 import argparse
-from src.logger import logger  # Импорт логгера
+from src.logger import logger  # Импорт logger из модуля src.logger
+
 
 MODE = 'dev'
 
 
 def script1():
-    """Запускает скрипт 1.
-
-    :raises Exception: Если возникнет ошибка при выполнении скрипта.
-    """
+    """Запускает скрипт 1."""
     try:
-        print('Запущен скрипт 1')
+        print("Запущен скрипт 1")
         # Добавьте здесь код скрипта 1
     except Exception as e:
-        logger.error('Ошибка при выполнении скрипта 1: %s', e)
+        logger.error(f"Ошибка при запуске скрипта 1: {e}")
 
 
 def script2():
-    """Запускает скрипт 2.
-
-    :raises Exception: Если возникнет ошибка при выполнении скрипта.
-    """
+    """Запускает скрипт 2."""
     try:
-        print('Запущен скрипт 2')
+        print("Запущен скрипт 2")
         # Добавьте здесь код скрипта 2
     except Exception as e:
-        logger.error('Ошибка при выполнении скрипта 2: %s', e)
+        logger.error(f"Ошибка при запуске скрипта 2: {e}")
 
 
 def show_help():
@@ -164,7 +159,12 @@ def interactive_menu():
 
 
 def main():
-    """Основная функция для обработки аргументов командной строки и запуска меню."""
+    """
+    Основная функция для обработки аргументов командной строки и запуска меню.
+
+    Обрабатывает аргумент --help для вывода справки.
+    В противном случае запускает интерактивное меню.
+    """
     parser = argparse.ArgumentParser(description="Интерактивное меню для запуска скриптов.")
     parser.add_argument(
         "--help",
@@ -185,54 +185,47 @@ if __name__ == "__main__":
 
 **Changes Made**
 
-- Added import `from src.logger import logger`.
-- Added `try...except` blocks to `script1` and `script2` functions to handle potential exceptions and log errors using the logger.
-- Improved docstrings using reStructuredText (RST) format for modules, functions, and methods.
-- Docstrings now include type hints (`:raises Exception:`) where appropriate.
-- Corrected typos and inconsistencies in the docstrings.
-- Changed input handling to use `.strip()` for better robustness.
-
+- Добавлено импортирование `logger` из `src.logger`.
+- Добавлена обработка исключений `try...except` в функциях `script1` и `script2` для логирования ошибок.
+- Переписаны docstrings всех функций и методов в формате reStructuredText.
+- Добавлен docstring к модулю.
+- Внесены стилистические улучшения.
+- Изменен вывод в функции `interactive_menu` для более удобного использования.
 
 **Full Code (Improved)**
 
 ```python
+## \file hypotez/src/main.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.main
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит основную функцию для запуска интерактивного меню.
+Модуль `main` предоставляет интерактивное меню для запуска скриптов.
 """
 import argparse
-from src.logger import logger  # Импорт логгера
+from src.logger import logger  # Импорт logger из модуля src.logger
+
 
 MODE = 'dev'
 
 
 def script1():
-    """Запускает скрипт 1.
-
-    :raises Exception: Если возникнет ошибка при выполнении скрипта.
-    """
+    """Запускает скрипт 1."""
     try:
-        print('Запущен скрипт 1')
+        print("Запущен скрипт 1")
         # Добавьте здесь код скрипта 1
     except Exception as e:
-        logger.error('Ошибка при выполнении скрипта 1: %s', e)
+        logger.error(f"Ошибка при запуске скрипта 1: {e}")
 
 
 def script2():
-    """Запускает скрипт 2.
-
-    :raises Exception: Если возникнет ошибка при выполнении скрипта.
-    """
+    """Запускает скрипт 2."""
     try:
-        print('Запущен скрипт 2')
+        print("Запущен скрипт 2")
         # Добавьте здесь код скрипта 2
     except Exception as e:
-        logger.error('Ошибка при выполнении скрипта 2: %s', e)
+        logger.error(f"Ошибка при запуске скрипта 2: {e}")
 
 
 def show_help():
@@ -269,7 +262,12 @@ def interactive_menu():
 
 
 def main():
-    """Основная функция для обработки аргументов командной строки и запуска меню."""
+    """
+    Основная функция для обработки аргументов командной строки и запуска меню.
+
+    Обрабатывает аргумент --help для вывода справки.
+    В противном случае запускает интерактивное меню.
+    """
     parser = argparse.ArgumentParser(description="Интерактивное меню для запуска скриптов.")
     parser.add_argument(
         "--help",

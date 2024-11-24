@@ -138,6 +138,10 @@ class CodeAssistant:
                         response = self._remove_outer_quotes(response)
                         #pprint(f"CLEAR response:\n{response}")
                         self._save_response(file_path, response, 'gemini')
+                    else:
+                        logger.error("Ошибка ответа модели")
+                        return
+                        ...
 
             pprint(f'Processed file number: {i + 1}', text_color='yellow')
             time.sleep(30) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  

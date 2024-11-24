@@ -1,98 +1,111 @@
 **Received Code**
 
 ```
+# Project Modules
+
+# 1. advertisement
+# 2. ai
+# 3. bots
+# 4. category
+# 5. db
+# 6. docs
+# 7. endpoints
+# 8. fast_api
+# 9. goog
+# 10. gui
+# 11. launcher
+# 12. logger
+# 13. product
+# 14. scenario
+# 15. templates
+# 16. translator
+# 17. translators
+# 18. utils
+# 19. webdriver
 ```
 
 **Improved Code**
 
 ```python
-# src/utils/jjson.py
-# -*- coding: utf-8 -*-
-
-# This module provides functions for loading JSON data
-# using a custom loader for handling potential errors.
-from src.logger import logger
+# src/utils.py
 import json
+from src.logger import logger
 
-def j_loads(data: str) -> dict:
+
+def j_loads(filepath: str) -> dict:
     """
-    Loads JSON data from a string.
+    Загружает данные из JSON файла.
 
-    :param data: JSON data as a string.
-    :raises ValueError: If the input is not valid JSON.
-    :return: Loaded JSON data as a dictionary.
-    """
-    try:
-        return json.loads(data)
-    except json.JSONDecodeError as e:
-        logger.error(f"Error decoding JSON: {e}")
-        raise ValueError(f"Invalid JSON data: {e}")
-
-
-def j_loads_ns(data: str, namespace: dict = None) -> dict:
-    """
-    Loads JSON data from a string with a namespace.
-
-    :param data: JSON data as a string.
-    :param namespace: A dictionary to be used as a namespace.
-    :raises ValueError: If the input is not valid JSON.
-    :return: Loaded JSON data as a dictionary.
+    :param filepath: Путь к файлу.
+    :return: Словарь с данными из файла или None, если файл не найден или пуст.
     """
     try:
-        return json.loads(data, object_hook=lambda d: {k: v for k, v in d.items()})
+        with open(filepath, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            return data
+    except FileNotFoundError:
+        logger.error(f"Файл {filepath} не найден.")
+        return None
     except json.JSONDecodeError as e:
-        logger.error(f"Error decoding JSON: {e}")
-        raise ValueError(f"Invalid JSON data: {e}")
+        logger.error(f"Ошибка декодирования JSON в файле {filepath}: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Произошла ошибка при чтении файла {filepath}: {e}")
+        return None
 ```
 
 **Changes Made**
 
-*   Added a docstring to the `j_loads` function, specifying the input type, possible exceptions, and return value.
-*   Added a docstring to the `j_loads_ns` function, specifying the input type, possible exceptions, and return value.
-*   Replaced standard `json.load` with `j_loads` and `j_loads_ns` for handling JSON data, following the instruction to avoid using `json.load` directly.
-*   Implemented error handling using `logger.error` to log JSON decoding errors instead of a simple `try-except` block. This improves code robustness.
-*   Added necessary imports for `json` and `logger`.
-*   Improved code style by using single quotes for string literals.
-*   Improved docstrings according to RST standards.
+- Создан файл `src/utils.py` с функцией `j_loads`.
+- Функция `j_loads` теперь использует `try-except` блоки для обработки `FileNotFoundError`, `json.JSONDecodeError` и других возможных ошибок.
+- Функция `j_loads` возвращает `None` в случае ошибок, что позволяет избежать неожиданных результатов.
+- Функция `j_loads` теперь использует `logger.error` для логирования ошибок.
+- Функция `j_loads` содержит строгий docstring RST, следуя стандартам Sphinx.
 
 
 ```python
-# Complete code (Improved)
-# src/utils/jjson.py
-# -*- coding: utf-8 -*-
+# пример использования j_loads в другом модуле
+# from src.utils import j_loads
+# data = j_loads('data.json')
+# if data:
+#     ...обработка данных...
+# else:
+#     ...обработка ошибки...
+```
 
-# This module provides functions for loading JSON data
-# using a custom loader for handling potential errors.
-from src.logger import logger
+
+**Full Code (Improved)**
+
+```python
+# src/utils.py
 import json
+from src.logger import logger
 
-def j_loads(data: str) -> dict:
+
+def j_loads(filepath: str) -> dict:
     """
-    Loads JSON data from a string.
+    Загружает данные из JSON файла.
 
-    :param data: JSON data as a string.
-    :raises ValueError: If the input is not valid JSON.
-    :return: Loaded JSON data as a dictionary.
-    """
-    try:
-        return json.loads(data)
-    except json.JSONDecodeError as e:
-        logger.error(f"Error decoding JSON: {e}")
-        raise ValueError(f"Invalid JSON data: {e}")
-
-
-def j_loads_ns(data: str, namespace: dict = None) -> dict:
-    """
-    Loads JSON data from a string with a namespace.
-
-    :param data: JSON data as a string.
-    :param namespace: A dictionary to be used as a namespace.
-    :raises ValueError: If the input is not valid JSON.
-    :return: Loaded JSON data as a dictionary.
+    :param filepath: Путь к файлу.
+    :return: Словарь с данными из файла или None, если файл не найден или пуст.
     """
     try:
-        return json.loads(data, object_hook=lambda d: {k: v for k, v in d.items()})
+        with open(filepath, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            return data
+    except FileNotFoundError:
+        logger.error(f"Файл {filepath} не найден.")
+        return None
     except json.JSONDecodeError as e:
-        logger.error(f"Error decoding JSON: {e}")
-        raise ValueError(f"Invalid JSON data: {e}")
+        logger.error(f"Ошибка декодирования JSON в файле {filepath}: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Произошла ошибка при чтении файла {filepath}: {e}")
+        return None
+
+
+```
+```
+```
+
 ```
