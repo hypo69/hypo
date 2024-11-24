@@ -30,8 +30,5 @@
 -f:*.out*
 -f:*.tmp*
 -f:*.tex*
--f:*.vscode
--f:*.vs
 -f:*.ipynb_checkpoints
--f:*.dbeaver
 -d:data
