@@ -1,0 +1,10 @@
+20240505174244 Module
+=======================
+
+This module contains functions related to ... (Insert a brief description of the module's purpose here).
+
+
+.. automodule:: hypotez.src.suppliers.hb._journal.20240505174244
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,17 @@
+Scenarios Documentation
+=======================
+
+This file documents the available scenarios.  It describes the various categories and their associated URLs and PrestaShop categories.
+
+.. toctree::
+   :maxdepth: 2
+
+   scenarios_categories_20240503015900
+
+scenarios_categories_20240503015900
+----------------------------------
+
+.. automodule:: hypotez.src.suppliers.hb.scenarios.categories_20240503015900
+    :members:
+    :undoc-members:
+    :show-inheritance:

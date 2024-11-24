@@ -1,0 +1,21 @@
+20240503030003
+============
+
+.. automodule:: hypotez.src.suppliers.hb._journal.20240503030003
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Scenario Files
+--------------
+
+.. rubric:: categories_20240503015900.json
+
+~~~
+{
+    "מינרל+לחויותלפניםמינרליםותמציותצמחים": "failed"
+}
+~~~
+
+This file contains a scenario.  The `categories_20240503015900.json` file is expected to have a dictionary structure associating category names with success/failure status.
+In this specific case, `מינרל+לחויותלפניםמינרליםותמציותצמחים` has a failure status.

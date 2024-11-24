@@ -1,0 +1,13 @@
+Module 20240505141923
+=======================
+
+.. automodule:: hb._journal.20240505141923
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Functions
+--------
+
+.. autofunction:: hb._journal.20240505141923.function_name_1
+.. autofunction:: hb._journal.20240505141923.function_name_2

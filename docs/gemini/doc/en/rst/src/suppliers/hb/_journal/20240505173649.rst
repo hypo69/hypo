@@ -1,0 +1,14 @@
+Journal Data Processing
+=======================
+
+This module processes data related to journal entries.
+
+.. automodule:: hypotez.src.suppliers.hb._journal.journal_data_processor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Functions
+--------
+
+.. autofunction:: hypotez.src.suppliers.hb._journal.journal_data_processor.process_journal_data

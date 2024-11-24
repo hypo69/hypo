@@ -1,0 +1,15 @@
+Module 20240503024819
+=======================
+
+.. automodule:: hypotez.src.suppliers.hb._journal.20240503024819
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Scenario Files
+-------------
+
+.. automodule:: hypotez.src.suppliers.hb._journal.20240503024819.scenario_files
+    :members:
+    :undoc-members:
+    :show-inheritance:

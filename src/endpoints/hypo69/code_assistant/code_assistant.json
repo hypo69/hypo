@@ -40,7 +40,8 @@
     "*.png",
     "*.jpg",
     "*.jpeg",
-    "*.svg"
+    "*.svg",
+    "*.json"
   ],
 
   "exclude_file_patterns": [
@@ -59,7 +60,7 @@
     "*.txt",
     "*.md",
     "*.rst",
-    "*.json",
+    
     "*.yaml",
     "*.yml",
     "*.ini",

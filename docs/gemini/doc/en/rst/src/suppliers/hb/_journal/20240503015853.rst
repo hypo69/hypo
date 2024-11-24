@@ -1,0 +1,12 @@
+Module 20240503015853
+=======================
+
+.. automodule:: hypotez.src.suppliers.hb._journal.20240503015853
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Functions
+--------
+
+.. autofunction:: hypotez.src.suppliers.hb._journal.20240503015853.some_function

@@ -1,0 +1,16 @@
+Module hb_journal
+=================
+
+This module contains functions for interacting with the journal.
+
+
+.. automodule:: hypotez.src.suppliers.hb._journal.journal_20240505123735
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Functions
+---------
+
+.. autofunction:: hypotez.src.suppliers.hb._journal.journal_20240505123735.get_journal_data
+.. autofunction:: hypotez.src.suppliers.hb._journal.journal_20240505123735.process_journal_data

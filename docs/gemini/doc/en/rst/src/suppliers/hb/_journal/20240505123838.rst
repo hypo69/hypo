@@ -1,0 +1,9 @@
+Journal Data for 2024-05-05
+============================
+
+This file contains data for journal entries on 2024-05-05 at 12:38:38.
+
+.. toctree::
+   :maxdepth: 2
+
+   journal_data
