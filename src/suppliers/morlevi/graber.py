@@ -18,20 +18,24 @@ from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
 from pydantic import BaseModel
-from src import gs
-from src.suppliers import Graber as Grbr, Context, close_pop_up
-from src.product import ProductFields
-from src.webdriver import Driver
-from src.utils.jjson import j_loads_ns
-from src.logger import logger
-from src.logger.exceptions import ExecuteLocatorException
-
-from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Callable
 from functools import wraps
 from types import SimpleNamespace
 from typing import Any, Callable
+
+import header
+from src import gs
+from src.suppliers import Graber as Grbr, Context, close_pop_up
+from src.product import ProductFields
+from src.webdriver import Driver
+from src.utils.jjson import j_loads_ns
+from src.utils.image import save_png, save_png_from_url
+from src.logger import logger
+from src.logger.exceptions import ExecuteLocatorException
+
+from dataclasses import dataclass, field
+
 
 
 # # Определение декоратора для закрытия всплывающих окон
@@ -174,4 +178,33 @@ class Graber(Grbr):
         # Call the function to fetch all data
         await fetch_all_data()
         return self.fields
+
+    @close_pop_up()
+    async def local_saved_image(self, value: Any = None):
+        """Fetch and save image locally.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
+        """
+        
+            # Получаем значение через execute_locator и сохраняем изображение
+        if not value:
+            try:
+                raw = await self.d.execute_locator(self.l.default_image_url) # <- получаю изображение 
+                value = await save_png(raw)
+            except Exception as ex:
+                logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+                ...
+                return
+
+        # Проверяем валидность результата
+        if not value:
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.default_image_url}')
+            ...
+            return
+
+        # Записываем результат в поле `local_saved_image` объекта `ProductFields`
+        self.fields.local_saved_image = value
+        return True
 

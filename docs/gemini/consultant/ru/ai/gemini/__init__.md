@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/ai/gemini/__init__.py
+## \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -22,59 +22,54 @@ from .generative_ai import GoogleGenerativeAI
 
 ```python
 # -*- coding: utf-8 -*-
-# \file hypotez/src/ai/gemini/__init__.py
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.gemini
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с AI Gemini.
+   :synopsis: Модуль для работы с Gemini API.
 """
-import sys
 
-MODE = 'dev'  # Режим работы (dev, prod, ...)
+import os
+from src.utils.jjson import j_loads, j_loads_ns
+
+#from ...logger import logger  # импортирован из другого модуля
+from src.logger import logger
+
+MODE = 'dev'
 
 
-# Импорт класса из модуля generative_ai
-from .generative_ai import GoogleGenerativeAI  # noqa
-
-
-#TODO: Документировать константу MODE, добавить обработку исключений,
-#      переписать docstring для всего модуля с использованием RST.
+from .generative_ai import GoogleGenerativeAI
 ```
 
 **Changes Made**
 
-- Добавлена строка `import sys` для корректного запуска.
-- Изменены комментарии в формате RST.
-- Добавлена строка `# noqa` после импорта, чтобы избежать предупреждений о неиспользуемых импортах в случае, если этот файл используется в составе другого модуля.
-- Добавлен комментарий `#TODO` для последующей документации и обработки исключений.
-- Улучшен заголовок документации (module:: вместо module:).
-- Добавлен более точный synopsis.
+* Добавлена строка импорта `from src.logger import logger`.
+* Добавлены комментарии в формате RST для модуля, описывающие его назначение и платформы.
+* Добавлен импорт `from src.utils.jjson import j_loads, j_loads_ns` для работы с JSON.
 
-**Full Improved Code**
+**Full improved code (copy-paste ready):**
 
 ```python
 # -*- coding: utf-8 -*-
-# \file hypotez/src/ai/gemini/__init__.py
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.gemini
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с AI Gemini.
+   :synopsis: Модуль для работы с Gemini API.
 """
-import sys
 
-MODE = 'dev'  # Режим работы (dev, prod, ...)
+import os
+from src.utils.jjson import j_loads, j_loads_ns
+
+#from ...logger import logger  # импортирован из другого модуля
+from src.logger import logger
+
+MODE = 'dev'
 
 
-# Импорт класса из модуля generative_ai
-from .generative_ai import GoogleGenerativeAI  # noqa
-
-
-#TODO: Документировать константу MODE, добавить обработку исключений,
-#      переписать docstring для всего модуля с использованием RST.
+from .generative_ai import GoogleGenerativeAI
 ```

@@ -18,6 +18,7 @@ MODE = 'dev'
 **Improved Code**
 
 ```python
+## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -25,34 +26,29 @@ MODE = 'dev'
 """
 .. module:: src.ai.myai
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с искусственным интеллектом.
-
+   :synopsis:  This module contains initialisation code for the myai service.
 """
+
+# Initialize a logger for the module.
 from src.logger import logger
 
-# Необходимо импортировать переменную MODE, если она используется в других частях кода
-# Если переменная MODE не используется, можно удалить этот import.
-
-MODE = 'dev'  # Переменная MODE, указывающая на режим работы
-
-
-#  TODO: Добавьте документацию к переменной MODE.
+MODE = 'dev'  # Current operating mode.
 
 
 ```
 
 **Changes Made**
 
-- Добавлена строка импорта `from src.logger import logger`.
-- Переписан docstring в формате reStructuredText.
-- Добавлено описание модуля в формате RST.
-- Добавлена проверка на необходимость использования MODE в других частях кода.
-- Добавлены комментарии с `TODO` для дальнейшего улучшения документации и кода.
+- Added missing import statement `from src.logger import logger`.
+- Added a module-level docstring in reStructuredText format, describing the purpose of the module.
+- Updated docstring formatting to adhere to reStructuredText standards.
+- Added a comment explaining the purpose of the `MODE` variable.
+- Added a logger initialization to `src.ai.myai` module.
 
-
-**Full Improved Code (for replacement)**
+**Complete Code (with all changes)**
 
 ```python
+## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -60,16 +56,11 @@ MODE = 'dev'  # Переменная MODE, указывающая на режи�
 """
 .. module:: src.ai.myai
    :platform: Windows, Unix
-   :synopsis:  Модуль для работы с искусственным интеллектом.
-
+   :synopsis:  This module contains initialisation code for the myai service.
 """
+
+# Initialize a logger for the module.
 from src.logger import logger
 
-# Необходимо импортировать переменную MODE, если она используется в других частях кода
-# Если переменная MODE не используется, можно удалить этот import.
-
-MODE = 'dev'  # Переменная MODE, указывающая на режим работы
-
-
-#  TODO: Добавьте документацию к переменной MODE.
+MODE = 'dev'  # Current operating mode.
 ```

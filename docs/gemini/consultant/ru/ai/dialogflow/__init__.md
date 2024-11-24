@@ -47,89 +47,76 @@ https://habr.com/ru/articles/346606/
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src.ai.dialogflow
    :platform: Windows, Unix
    :synopsis: Модуль для работы с Dialogflow.
+
 """
-
+from src.logger import logger
 import json
-from src.utils.jjson import j_loads, j_loads_ns  # импорт необходимых функций
-from src.logger import logger  # импорт логгера
 
-
+# Конфигурация режима работы.
 MODE = 'dev'
 
 
-def process_dialogflow_response(response_data: str) -> dict:
-    """Обрабатывает ответ Dialogflow.
+def dialogflow_function():
+    """
+    Функция для работы с Dialogflow.
 
-    :param response_data: Данные ответа в формате JSON.
-    :return: Словарь, содержащий обработанные данные ответа.
-    :raises ValueError: Если данные не являются валидным JSON.
+    :return: Результат работы с Dialogflow.
+    :rtype: dict
+    :raises Exception: При возникновении ошибок.
     """
     try:
-        response_json = j_loads(response_data)
-        # ... Добавьте обработку ответа
-        return response_json  # Возвращаем обработанные данные
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON: {e}")
-        raise ValueError("Некорректный формат данных JSON") from e
-
-
-# ... Остальной код, если есть
+        # Заглушка для вызова Dialogflow API.
+        # Вставьте здесь код для взаимодействия с Dialogflow.
+        # ...
+        return {'result': 'OK'}
+    except Exception as e:
+        logger.error('Ошибка при работе с Dialogflow: %s', e)
+        raise
 ```
 
 **Changes Made**
 
-*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлена функция `process_dialogflow_response` с документацией RST.
-*   Добавлена обработка ошибок с использованием `logger.error`.
-*   Изменён способ обработки ошибок, используя `try-except` для `json.JSONDecodeError`.
-*   Исправлен формат заголовочной строки документации.
-*   Добавлены типы данных в аннотации функции.
-*   Добавлен комментарий для объяснения функции.
+- Добавлена импортная директива `from src.logger import logger`.
+- Добавлена функция `dialogflow_function` с документацией в формате RST.
+- Добавлена обработка исключений с использованием `logger.error` для более подробного логгирования ошибок.
+- Исправлены комментарии для соответствия стандарту RST.
+- Добавлена заглушка для вызова Dialogflow API (`# ...`).
+- Удалены неиспользуемые комментарии.
+- Добавлены типы возвращаемого значения для функции.
 
-**Full improved code (copy and paste)**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src.ai.dialogflow
    :platform: Windows, Unix
    :synopsis: Модуль для работы с Dialogflow.
+
 """
-
+from src.logger import logger
 import json
-from src.utils.jjson import j_loads, j_loads_ns  # импорт необходимых функций
-from src.logger import logger  # импорт логгера
 
-
+# Конфигурация режима работы.
 MODE = 'dev'
 
 
-def process_dialogflow_response(response_data: str) -> dict:
-    """Обрабатывает ответ Dialogflow.
+def dialogflow_function():
+    """
+    Функция для работы с Dialogflow.
 
-    :param response_data: Данные ответа в формате JSON.
-    :return: Словарь, содержащий обработанные данные ответа.
-    :raises ValueError: Если данные не являются валидным JSON.
+    :return: Результат работы с Dialogflow.
+    :rtype: dict
+    :raises Exception: При возникновении ошибок.
     """
     try:
-        response_json = j_loads(response_data)
-        # ... Добавьте обработку ответа
-        return response_json  # Возвращаем обработанные данные
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON: {e}")
-        raise ValueError("Некорректный формат данных JSON") from e
-
-
-# ... Остальной код, если есть
-```
+        # Заглушка для вызова Dialogflow API.
+        # Вставьте здесь код для взаимодействия с Dialogflow.
+        # ...
+        return {'result': 'OK'}
+    except Exception as e:
+        logger.error('Ошибка при работе с Dialogflow: %s', e)
+        raise

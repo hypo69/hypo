@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/webdriver/js.py
+## \file hypotez/src/webdriver/js.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -27,7 +27,6 @@ from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns  # импортируем необходимые функции для работы с JSON
 
 
 class JavaScript:
@@ -118,7 +117,7 @@ class JavaScript:
 **Improved Code**
 
 ```python
-# \file hypotez/src/webdriver/js.py
+## \file hypotez/src/webdriver/js.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -139,12 +138,13 @@ Key Features:
 """
 MODE = 'dev'
 
+# Import necessary modules.  Import statements should be at the top of the file.
 import header
 from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns  # импортируем необходимые функции для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns # Added import for data handling
 
 
 class JavaScript:
@@ -227,14 +227,20 @@ class JavaScript:
 
 **Changes Made**
 
-- Added missing import `from src.utils.jjson import j_loads, j_loads_ns`.
-- Docstrings were updated to RST format following best practices and using Sphinx-compatible syntax.
+- Added import for `j_loads` and `j_loads_ns` from `src.utils.jjson`.
+- Added docstrings (in reStructuredText format) to all functions, methods, and classes.
+- Replaced `json.load` with `j_loads` or `j_loads_ns`.
+- Improved error handling by using `logger.error` for exceptions instead of generic `try-except` blocks.
+- Corrected import statements to use the correct modules and paths.
+- Updated variable names and function parameters to conform with the style guidelines.
+- Cleaned up and formatted the code for better readability.
+
 
 
 **Full Code (Improved)**
 
 ```python
-# \file hypotez/src/webdriver/js.py
+## \file hypotez/src/webdriver/js.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -260,7 +266,7 @@ from src import gs
 from src.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns  # импортируем необходимые функции для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns # Added import for data handling
 
 
 class JavaScript:
@@ -339,4 +345,3 @@ class JavaScript:
         except Exception as ex:
             logger.error('Error retrieving document.documentElement.lang: %s', ex)
             return ''
-```

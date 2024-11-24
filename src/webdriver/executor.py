@@ -330,8 +330,13 @@ class ExecuteLocator:
         if not webelement:
             return
 
-        screenshot_stream = await asyncio.to_thread(webelement.screenshot_as_png)
-        return screenshot_stream
+        try:
+            screenshot_stream = await asyncio.to_thread(webelement.screenshot_as_png)
+            return screenshot_stream
+        except Exception as ex:
+            logger.error(f"Не удалось захватить скриншот\n", ex)
+            ...
+            return
 
     async def execute_event(self,              
                              locator: SimpleNamespace | dict,
@@ -608,7 +613,7 @@ class ExecuteLocator:
                             self.actions.perform()
                 except Exception as ex:
                     if MODE in ('dev','debug'):
-                        logger.error(f"Error typing message\n{message=}\n{word=}\n{letter=}", ex)
+                        logger.error(f"Error typing message\n{message=}\n{word=}\n{letter=}\n", ex)
                     ...
                     continue  # <- если была ошибка в передаче буквы - пока игнорую ёё
                     """ TODO:

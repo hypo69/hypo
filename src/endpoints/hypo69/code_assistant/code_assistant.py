@@ -230,7 +230,7 @@ class CodeAssistant:
             return response
 
         # Удаляем маркер для известных форматов, если строка обрамлена в '```'
-        known_prefixes = ['```md', '```markdown', '```rst', '```']
+        known_prefixes = ['```md', '```markdown', '```rst','```plaintext', '```']
         for prefix in known_prefixes:
             if response.startswith(prefix) and response.endswith('```'):
                 return response.removeprefix(prefix).removesuffix('```').strip()

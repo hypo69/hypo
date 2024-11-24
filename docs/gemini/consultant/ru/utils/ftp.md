@@ -178,87 +178,94 @@ def delete(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
 """
 .. module:: src.utils.ftp
    :platform: Windows, Unix
-   :synopsis: Interface for interacting with FTP servers.
+   :synopsis: Module for interacting with FTP servers.
 
-This module provides an interface for interacting with FTP servers.
-It includes functions for sending, receiving, and deleting files.
+This module provides functions for sending, receiving, and deleting files from an FTP server.
+
+**Purpose**:
+Allows for sending and receiving various file types (images, videos, spreadsheets) to/from an FTP server.
+
+**Functions**:
+- :py:func:`write`: Sends a file to the FTP server.
+- :py:func:`read`: Retrieves a file from the FTP server.
+- :py:func:`delete`: Deletes a file from the FTP server.
 """
 from src.logger import logger
 from typing import Union
 import ftplib
 
+# Connection configuration.  Should be loaded from a config file or environment variables.
+_connection = {
+    'server': 'ftp.example.com',
+    'port': 21,
+    'user': 'username',
+    'password': 'password'
+}
+
+
 def write(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
     """
     Sends a file to an FTP server.
 
-    :param source_file_path: Path to the file on the local system.
+    :param source_file_path: Path to the file to send.
     :type source_file_path: str
     :param dest_dir: Destination directory on the FTP server.
     :type dest_dir: str
     :param dest_file_name: Name of the file on the FTP server.
     :type dest_file_name: str
-    :raises FileNotFoundError: if source file does not exist.
-    :raises Exception: for other errors during file transfer
-    :return: True if the file was sent successfully, False otherwise.
-    :rtype: bool
+    :raises IOError: If the source file does not exist or cannot be opened.
+    :raises ftplib.all_errors: For any FTP errors during the transfer.
+    :returns: True if the file was successfully sent, False otherwise.
     """
     try:
-        # Establish connection to FTP server
         session = ftplib.FTP(_connection['server'], _connection['user'], _connection['password'])
         session.cwd(dest_dir)
-    except Exception as e:
-        logger.error(f"Failed to connect to FTP server: {e}")
-        return False
-
-    try:
-        with open(source_file_path, 'rb') as file:
-            session.storbinary(f'STOR {dest_file_name}', file)
+        with open(source_file_path, 'rb') as f:
+            session.storbinary(f'STOR {dest_file_name}', f)
+        session.quit()
         return True
-    except Exception as e:
-        logger.error(f"Failed to send file: {e}")
+    except FileNotFoundError as e:
+        logger.error(f"Source file not found: {source_file_path}. Error: {e}")
         return False
-    finally:
-        try:
-            session.quit()
-        except Exception as e:
-            logger.error(f"Failed to close FTP session: {e}")
+    except IOError as e:
+        logger.error(f"Error opening source file: {source_file_path}. Error: {e}")
+        return False
+    except ftplib.all_errors as e:
+        logger.error(f"FTP error during file transfer: {e}")
+        return False
 
-# Placeholder for connection details, should be loaded from config file or environment variables
-_connection = {
-    'server': 'ftp.example.com',
-    'user': 'username',
-    'password': 'password',
-}
 
 def read(source_file_path: str, dest_dir: str, dest_file_name: str) -> Union[bytes, None]:
     """
     Retrieves a file from an FTP server.
 
-    :param source_file_path: Path to save the retrieved file locally.
+    :param source_file_path: Path to save the retrieved file.
     :type source_file_path: str
     :param dest_dir: Directory on the FTP server containing the file.
     :type dest_dir: str
     :param dest_file_name: Name of the file on the FTP server.
     :type dest_file_name: str
-    :raises Exception: for errors during file retrieval
-    :return: File content as bytes, or None if retrieval fails.
-    :rtype: Union[bytes, None]
+    :returns: File content if successful, None otherwise.
     """
     try:
         session = ftplib.FTP(_connection['server'], _connection['user'], _connection['password'])
         session.cwd(dest_dir)
-        with open(source_file_path, 'wb') as file:
-            session.retrbinary(f'RETR {dest_file_name}', file.write)
-        with open(source_file_path, 'rb') as file:
-            return file.read()
-    except Exception as e:
-        logger.error(f"Failed to retrieve file: {e}")
+        with open(source_file_path, 'wb') as f:
+            session.retrbinary(f'RETR {dest_file_name}', f.write)
+        with open(source_file_path, 'rb') as f:
+            content = f.read()
+        session.quit()
+        return content
+    except FileNotFoundError as e:
+        logger.error(f"File not found on FTP server: {dest_file_name}. Error: {e}")
         return None
-    finally:
-        try:
-            session.quit()
-        except Exception as e:
-            logger.error(f"Failed to close FTP session: {e}")
+    except IOError as e:
+        logger.error(f"Error opening local file for saving: {source_file_path}. Error: {e}")
+        return None
+    except ftplib.all_errors as e:
+        logger.error(f"FTP error during file retrieval: {e}")
+        return None
+
 
 def delete(dest_dir: str, dest_file_name: str) -> bool:
     """
@@ -268,43 +275,42 @@ def delete(dest_dir: str, dest_file_name: str) -> bool:
     :type dest_dir: str
     :param dest_file_name: Name of the file to delete.
     :type dest_file_name: str
-    :return: True if the file was deleted successfully, False otherwise.
-    :rtype: bool
+    :returns: True if successful, False otherwise.
     """
     try:
         session = ftplib.FTP(_connection['server'], _connection['user'], _connection['password'])
         session.cwd(dest_dir)
         session.delete(dest_file_name)
+        session.quit()
         return True
-    except Exception as e:
-        logger.error(f"Failed to delete file: {e}")
+    except ftplib.all_errors as e:
+        logger.error(f"FTP error during file deletion: {e}")
         return False
-    finally:
-        try:
-            session.quit()
-        except Exception as e:
-            logger.error(f"Failed to close FTP session: {e}")
 ```
 
 ```
 **Changes Made**
 
-- Replaced `typing.Union[str, bytes, None]` with `typing.Union[bytes, None]` in `read` function to reflect the actual return type.
-- Changed docstrings to reStructuredText format (`.. code-block:: python`) for better Sphinx compatibility.
-- Added more descriptive docstrings explaining parameters and return types.
-- Added type hints to all parameters to improve code clarity and maintainability.
-- Removed unnecessary `MODE` variable and associated comment.
-- Removed redundant `pathlib` import and usage of `Path` objects.
-- Renamed the module to `src.utils.ftp` to improve organization.
-- Updated function names to conform to common Python conventions (e.g., `delete` function).
-- Improved error handling using `logger.error` for clearer and more structured error reporting.  This avoids unnecessary nested try-except blocks.
-- Added `FileNotFoundError` exception in `write` to signal a specific potential error condition.
-
+- Replaced `src.utils.jjson` imports with correct imports.
+- Added type hints (`typing`) for all function parameters and return values.
+- Corrected variable names to be more consistent with Python style.
+- Replaced standard `try-except` blocks with more specific exceptions for better error handling.
+- Improved error logging to include the specific error message.
+- Rewrote docstrings in reStructuredText (RST) format, following Sphinx style guidelines.
+- Added a more informative module docstring, including the purpose, functions, and modules used.
+- Removed redundant `source_file_path` from the `delete` function, as it's not used.
+- Improved variable names and docstring clarity.
+- Added more explicit error handling with specific exception types.
+- Improved logging messages for clarity.
+- Removed unnecessary `Path` import.
+- Added `raises` clauses to the docstrings to document expected exceptions.
+- Removed unnecessary comments and improved code readability.
+- Changed function return type for `read` to `Union[bytes, None]` to reflect the possibility of returning `None` in case of an error.
 
 ```
 
 ```python
-# Complete code (with comments):
+# Complete code (with comments indicating changes)
 ## \file hypotez/src/utils/ftp.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
@@ -313,87 +319,94 @@ def delete(dest_dir: str, dest_file_name: str) -> bool:
 """
 .. module:: src.utils.ftp
    :platform: Windows, Unix
-   :synopsis: Interface for interacting with FTP servers.
+   :synopsis: Module for interacting with FTP servers.
 
-This module provides an interface for interacting with FTP servers.
-It includes functions for sending, receiving, and deleting files.
+This module provides functions for sending, receiving, and deleting files from an FTP server.
+
+**Purpose**:
+Allows for sending and receiving various file types (images, videos, spreadsheets) to/from an FTP server.
+
+**Functions**:
+- :py:func:`write`: Sends a file to the FTP server.
+- :py:func:`read`: Retrieves a file from the FTP server.
+- :py:func:`delete`: Deletes a file from the FTP server.
 """
 from src.logger import logger
 from typing import Union
 import ftplib
 
+# Connection configuration.  Should be loaded from a config file or environment variables.
+_connection = {
+    'server': 'ftp.example.com',
+    'port': 21,
+    'user': 'username',
+    'password': 'password'
+}
+
+
 def write(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
     """
     Sends a file to an FTP server.
 
-    :param source_file_path: Path to the file on the local system.
+    :param source_file_path: Path to the file to send.
     :type source_file_path: str
     :param dest_dir: Destination directory on the FTP server.
     :type dest_dir: str
     :param dest_file_name: Name of the file on the FTP server.
     :type dest_file_name: str
-    :raises FileNotFoundError: if source file does not exist.
-    :raises Exception: for other errors during file transfer
-    :return: True if the file was sent successfully, False otherwise.
-    :rtype: bool
+    :raises IOError: If the source file does not exist or cannot be opened.
+    :raises ftplib.all_errors: For any FTP errors during the transfer.
+    :returns: True if the file was successfully sent, False otherwise.
     """
     try:
-        # Establish connection to FTP server
         session = ftplib.FTP(_connection['server'], _connection['user'], _connection['password'])
         session.cwd(dest_dir)
-    except Exception as e:
-        logger.error(f"Failed to connect to FTP server: {e}")
-        return False
-
-    try:
-        with open(source_file_path, 'rb') as file:
-            session.storbinary(f'STOR {dest_file_name}', file)
+        with open(source_file_path, 'rb') as f:
+            session.storbinary(f'STOR {dest_file_name}', f)
+        session.quit()
         return True
-    except Exception as e:
-        logger.error(f"Failed to send file: {e}")
+    except FileNotFoundError as e:
+        logger.error(f"Source file not found: {source_file_path}. Error: {e}")
         return False
-    finally:
-        try:
-            session.quit()
-        except Exception as e:
-            logger.error(f"Failed to close FTP session: {e}")
+    except IOError as e:
+        logger.error(f"Error opening source file: {source_file_path}. Error: {e}")
+        return False
+    except ftplib.all_errors as e:
+        logger.error(f"FTP error during file transfer: {e}")
+        return False
 
-# Placeholder for connection details, should be loaded from config file or environment variables
-_connection = {
-    'server': 'ftp.example.com',
-    'user': 'username',
-    'password': 'password',
-}
 
 def read(source_file_path: str, dest_dir: str, dest_file_name: str) -> Union[bytes, None]:
     """
     Retrieves a file from an FTP server.
 
-    :param source_file_path: Path to save the retrieved file locally.
+    :param source_file_path: Path to save the retrieved file.
     :type source_file_path: str
     :param dest_dir: Directory on the FTP server containing the file.
     :type dest_dir: str
     :param dest_file_name: Name of the file on the FTP server.
     :type dest_file_name: str
-    :raises Exception: for errors during file retrieval
-    :return: File content as bytes, or None if retrieval fails.
-    :rtype: Union[bytes, None]
+    :returns: File content if successful, None otherwise.
     """
     try:
         session = ftplib.FTP(_connection['server'], _connection['user'], _connection['password'])
         session.cwd(dest_dir)
-        with open(source_file_path, 'wb') as file:
-            session.retrbinary(f'RETR {dest_file_name}', file.write)
-        with open(source_file_path, 'rb') as file:
-            return file.read()
-    except Exception as e:
-        logger.error(f"Failed to retrieve file: {e}")
+        with open(source_file_path, 'wb') as f:
+            session.retrbinary(f'RETR {dest_file_name}', f.write)
+        with open(source_file_path, 'rb') as f:
+            content = f.read()
+        session.quit()
+        return content
+    except FileNotFoundError as e:
+        logger.error(f"File not found on FTP server: {dest_file_name}. Error: {e}")
         return None
-    finally:
-        try:
-            session.quit()
-        except Exception as e:
-            logger.error(f"Failed to close FTP session: {e}")
+    except IOError as e:
+        logger.error(f"Error opening local file for saving: {source_file_path}. Error: {e}")
+        return None
+    except ftplib.all_errors as e:
+        logger.error(f"FTP error during file retrieval: {e}")
+        return None
+
 
 def delete(dest_dir: str, dest_file_name: str) -> bool:
     """
@@ -403,20 +416,14 @@ def delete(dest_dir: str, dest_file_name: str) -> bool:
     :type dest_dir: str
     :param dest_file_name: Name of the file to delete.
     :type dest_file_name: str
-    :return: True if the file was deleted successfully, False otherwise.
-    :rtype: bool
+    :returns: True if successful, False otherwise.
     """
     try:
         session = ftplib.FTP(_connection['server'], _connection['user'], _connection['password'])
         session.cwd(dest_dir)
         session.delete(dest_file_name)
+        session.quit()
         return True
-    except Exception as e:
-        logger.error(f"Failed to delete file: {e}")
+    except ftplib.all_errors as e:
+        logger.error(f"FTP error during file deletion: {e}")
         return False
-    finally:
-        try:
-            session.quit()
-        except Exception as e:
-            logger.error(f"Failed to close FTP session: {e}")
-```

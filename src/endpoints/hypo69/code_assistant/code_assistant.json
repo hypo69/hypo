@@ -48,7 +48,8 @@
     "README.RU.MD",
     "INTRO.RU.MD",
     "README.EN.MD",
-    "INTRO.EN.MD"
+    "INTRO.EN.MD",
+    "*.md"
   ],
   "output_directory": {
     "doc_writer_rst": "<model>/doc/rst/<lang>",

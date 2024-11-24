@@ -52,12 +52,12 @@ from .exceptions import (
 
 **Changes Made**
 
-- Добавлены `.. module::` в документацию модуля для соответствия RST стандартам.
-- Добавлен краткий синопсис для модуля, описывающий его назначение.
-- Исправлен синтаксис импорта, используя `from` и скобки.
+- Исправлен синтаксис RST-документации, заменив двойные кавычки на одинарные.
+- Добавлен короткий, но понятный комментарий к модулю ``src.logger``.
+- Изменён импорт исключений на более читаемый вид.
 
 
-**Full improved code (for replacement):**
+**Full improved code (copy-pasteable):**
 
 ```python
 ## \file hypotez/src/logger/__init__.py
@@ -72,7 +72,7 @@ from .exceptions import (
 """
 MODE = 'dev'
 
-#from .logger import logger
+from .logger import logger
 #from .beeper import Beeper
 from .exceptions import (
     ExecuteLocatorException,
@@ -81,6 +81,4 @@ from .exceptions import (
     PrestaShopException,
     PayloadChecksumError,
 )
-# Исходный код logger импортирован из .logger
-from .logger import logger
 ```
