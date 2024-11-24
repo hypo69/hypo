@@ -11,47 +11,7 @@
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
 
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.goog.spreadsheet._examples """
-
-
-"""  Всякие манипуляции с гуглем
-
- 
- @section libs imports:
-  - __future__ 
-  - os.path 
-  - pathlib 
-  - google.auth.transport.requests 
-  - google.oauth2.credentials 
-  - google_auth_oauthlib.flow 
-  - googleapiclient.discovery 
-  - googleapiclient.errors 
-  
-Author(s):
-  - Created by Davidka on 15.11.2023 .
-"""
 from __future__ import print_function
                                               
 import os.path
