@@ -6,7 +6,7 @@ on:
       - master
     paths:
       - 'docs/gemini/consultant/ru/SUMMARY.md'  # Указание пути к файлу SUMMARY.md
-      - '.github/workflows/mdbook.yml'  # Указание пути к файлу mdbook.yml
+      - '.github/workflows/mdbook.yml'  # Указание пути к файлу mdbook.yml -
   workflow_dispatch:  # Позволяет вручную запускать workflow
 
 permissions:
