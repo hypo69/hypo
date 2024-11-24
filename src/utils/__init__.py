@@ -99,10 +99,16 @@ from .string import (
     ProductFieldsValidator,
     StringFormatter,
     StringNormalizer,
-    extract_url_params,
-    is_url
+    
 )
 
 from .video import (
     save_video_from_url
 )
+
+from .url import (
+    extract_url_params, 
+    is_url
+)
+
+from .path import get_relative_path

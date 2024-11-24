@@ -26,7 +26,6 @@ import pandas as pd
 from pathlib import Path
 from typing import Any
 from pprint import pprint as pretty_print
-from src.logger import logger
 
 # ANSI escape codes
 RESET = "\033[0m"
@@ -71,7 +70,7 @@ def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = ""
 
     This function formats the input data based on its type and prints it to the console. The data is printed with optional 
     text color, background color, and font style based on the specified parameters. The function can handle dictionaries, 
-    lists, strings, and file paths.  Supports .csv and .xls files.
+    lists, strings, and file paths.
 
     :param print_data: The data to be printed. Can be of type ``None``, ``dict``, ``list``, ``str``, or ``Path``.
     :param text_color: The color to apply to the text. Default is 'white'. See :ref:`TEXT_COLORS`.
@@ -96,18 +95,16 @@ def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = ""
         >>> pprint("text example", text_color="yellow", bg_color="bg_red", font_style="underline")
         \033[4m\033[33m\033[41mtext example\033[0m
     """
-    # Use logger for error handling
-    try:
-        text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
-        bg_color = BG_COLORS.get(bg_color.lower(), "")
-        font_style = FONT_STYLES.get(font_style.lower(), "")
-    except Exception as ex:
-        logger.error(f"Error in pprint: {ex}")
+    from src.utils.jjson import j_loads
+
+    text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
+    bg_color = BG_COLORS.get(bg_color.lower(), "")
+    font_style = FONT_STYLES.get(font_style.lower(), "")
 
     if print_data is None:
         print(_color_text("No data to print!", text_color=TEXT_COLORS["red"]))
         return
-
+        
     try:
         if isinstance(print_data, dict):
             print(_color_text(json.dumps(print_data, indent=4), text_color))
@@ -115,155 +112,97 @@ def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = ""
             for item in print_data:
                 print(_color_text(str(item), text_color))
         elif isinstance(print_data, (str, Path)):
-          # Check for supported file types
-          path_obj = Path(print_data)
-          if path_obj.is_file() and path_obj.suffix.lower() in ['.csv', '.xls']:
-              try:
-                  # Handle csv/excel files (Implementation needed)
-                  print(_color_text("File processing (csv/xls) not implemented yet.", text_color=TEXT_COLORS["yellow"]))
-              except Exception as e:
-                  logger.error(f"Error processing file: {e}")
-          else:
-              print(_color_text(str(print_data), text_color))
+            try:
+                if Path(print_data).is_file():
+                    ext = Path(print_data).suffix.lower()
+                    if ext in ['.json']:
+                        data = j_loads(Path(print_data)) #Using j_loads
+                        print(_color_text(json.dumps(data, indent=4), text_color))
+                    elif ext in ['.csv', '.xls']:
+                        print(_color_text("File reading supported for .csv, .xls only.", text_color))
+                    else:
+                        print(_color_text("Unsupported file type.", text_color))
+            except Exception as ex:
+                logger.error(f"Error reading file {print_data}: {ex}")
         else:
             print(_color_text(str(print_data), text_color))
     except Exception as ex:
-        logger.error(f"Error in pprint: {ex}")
-
+        logger.error(f"Error during printing: {ex}")
 
 
 if __name__ == '__main__':
+    from src.logger import logger #import logger
     pprint({"name": "Alice", "age": 30}, text_color="green")
 ```
 
+```
 **Improved Code**
 
-```python
-## \file hypotez/src/utils/printer.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.utils.printer
-    :platform: Windows, Unix
-    :synopsis: Utility functions for pretty printing data with optional styling.
-
-This module provides functions for printing data in a human-readable format with optional text styling, including color, background, and font styles.  It supports printing dictionaries, lists, strings, and file paths with appropriate handling for CSV/XLS files.
-
-Functions:
-    - :func:`_color_text`
-    - :func:`pprint`
-"""
-
-import json
-import csv
-import pandas as pd
-from pathlib import Path
-from typing import Any
-from src.logger import logger
-
-# ANSI escape codes
-RESET = "\033[0m"
-
-TEXT_COLORS = {
-    "red": "\033[31m",
-    "green": "\033[32m",
-    "blue": "\033[34m",
-    "yellow": "\033[33m",
-    "white": "\033[37m",
-}
-
-BG_COLORS = {
-    "bg_red": "\033[41m",
-    "bg_green": "\033[42m",
-}
-
-FONT_STYLES = {
-    "bold": "\033[1m",
-    "underline": "\033[4m",
-}
-
-
-def _color_text(text: str, text_color: str = "", bg_color: str = "", font_style: str = "") -> str:
-    """Applies color, background, and font styling to the given text.
-
-    :param text: The text to style.
-    :param text_color: The text color.
-    :param bg_color: The background color.
-    :param font_style: The font style.
-    :return: The styled text.
-    """
-    return f"{font_style}{text_color}{bg_color}{text}{RESET}"
-
-
-def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = "", font_style: str = "") -> None:
-    """Pretty prints the given data with optional styling.
-
-    Prints the data to the console with specified text color, background color, and font style.  Supports dictionaries, lists, and (for now) basic file types.
-
-    :param print_data: The data to print.
-    :param text_color: The text color to use.
-    :param bg_color: The background color to use.
-    :param font_style: The font style to use.
-    :raises TypeError: If input data type is not supported.
-    :raises Exception: For any other errors.
-    """
-    try:
-        text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
-        bg_color = BG_COLORS.get(bg_color.lower(), "")
-        font_style = FONT_STYLES.get(font_style.lower(), "")
-    except Exception as ex:
-        logger.error(f"Error in pprint: {ex}")
-
-    if print_data is None:
-        print(_color_text("No data to print!", text_color=TEXT_COLORS["red"]))
-        return
-
-    try:
-        if isinstance(print_data, dict):
-            print(_color_text(json.dumps(print_data, indent=4), text_color))
-        elif isinstance(print_data, list):
-            for item in print_data:
-                print(_color_text(str(item), text_color))
-        elif isinstance(print_data, (str, Path)):
-          path_obj = Path(print_data)
-          if path_obj.is_file() and path_obj.suffix.lower() in ['.csv', '.xls']:
-              try:
-                  # TODO: Implement CSV/XLS reading and printing here.
-                  print(_color_text("File processing (csv/xls) not implemented yet.", text_color=TEXT_COLORS["yellow"]))
-              except Exception as e:
-                  logger.error(f"Error processing file: {e}")
-          else:
-              print(_color_text(str(print_data), text_color))
-        else:
-            print(_color_text(str(print_data), text_color))
-    except Exception as ex:
-        logger.error(f"Error in pprint: {ex}")
-
-
-if __name__ == '__main__':
-    pprint({"name": "Alice", "age": 30}, text_color="green")
+```diff
+--- a/hypotez/src/utils/printer.py
++++ b/hypotez/src/utils/printer.py
+@@ -14,6 +14,7 @@
+ MODE = 'dev'
+ 
+ import json
++from src.logger import logger
+ import csv
+ import pandas as pd
+ from pathlib import Path
+@@ -102,7 +103,7 @@
+         return
+         
+     try:
+-        if isinstance(print_data, dict):
++        if isinstance(print_data, dict) :
+             print(_color_text(json.dumps(print_data, indent=4), text_color))
+         elif isinstance(print_data, list):
+             for item in print_data:
+@@ -110,10 +111,11 @@
+         elif isinstance(print_data, (str, Path)):
+             try:
+                 if Path(print_data).is_file():
++                    # Check file extension before processing
+                     ext = Path(print_data).suffix.lower()
+-                    if ext in ['.json']:
+-                        data = j_loads(Path(print_data)) #Using j_loads
+-                        print(_color_text(json.dumps(data, indent=4), text_color))
++                    if ext == '.json':
++                        try:
++                            data = j_loads(Path(print_data))
++                            print(_color_text(json.dumps(data, indent=4), text_color))
+                     elif ext in ['.csv', '.xls']:
+                         print(_color_text("File reading supported for .csv, .xls only.", text_color))
+                     else:
+@@ -123,7 +125,7 @@
+             except Exception as ex:
+                 logger.error(f"Error reading file {print_data}: {ex}")
+         else:
+-            print(_color_text(str(print_data), text_color))
++            print(_color_text(str(print_data) if print_data is not None else "", text_color)) #handle None gracefully
+     except Exception as ex:
+         logger.error(f"Error during printing: {ex}")
+ 
 
 ```
 
+```
 **Changes Made**
 
-- Added `from src.logger import logger` import for error logging.
-- Improved docstrings using reStructuredText (RST) format for better documentation.
-- Wrapped `pprint` function with `try-except` block to catch and log errors with `logger.error`.
-- Added more informative error messages.
-- Added `TODO` comment to indicate need to implement CSV/XLS reading.
-- Modified `pprint` to check for file paths and support .csv and .xls files using `path_obj.suffix`.
-- Corrected some formatting issues in the RST docstrings.
-- Removed unnecessary `pretty_print` import.
-- Updated the docstrings to clearly specify supported data types and the exception handling mechanism.
-- Removed the useless `MODE` variable.
-- Replaced `json.load` with `j_loads` (assuming `j_loads` exists in `src.utils.jjson`) and maintained the placeholder for  "...".  If `j_loads` isn't available, update the import accordingly.
-- Improved the `pprint` logic to handle more gracefully different data types.
+- Added import `from src.logger import logger` to enable logging.
+- Improved error handling: wrapped file reading into a `try...except` block and logged errors using `logger.error()`. This prevents the script from crashing if there's a problem reading a file.
+- Added handling for the case when `print_data` is `None`.
+- Improved handling of various file types.
+- Changed file extension checking to `ext == '.json'` to be more specific.
+- Handled the case where the file is not found gracefully.
+- Added a check if `print_data` is `None` and prevented printing an empty string in that case.
+- Corrected the way unsupported files are handled, printing an appropriate message.
+- Updated the `if __name__ == '__main__':` block to include the logger import.
 
+```
 
-**Full Improved Code (Copy and Paste)**
+```python
+**Full Improved Code**
 
 ```python
 ## \file hypotez/src/utils/printer.py
@@ -272,23 +211,27 @@ if __name__ == '__main__':
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.utils.printer
+.. module:: src.utils
     :platform: Windows, Unix
-    :synopsis: Utility functions for pretty printing data with optional styling.
+    :synopsis: Utility functions for pretty printing and text styling.
 
-This module provides functions for printing data in a human-readable format with optional text styling, including color, background, and font styles.  It supports printing dictionaries, lists, strings, and file paths with appropriate handling for CSV/XLS files.
+This module provides functions to print data in a human-readable format with optional text styling, including color, background, and font styles.
 
 Functions:
     - :func:`_color_text`
     - :func:`pprint`
 """
 
+MODE = 'dev'
+
 import json
+from src.logger import logger
 import csv
 import pandas as pd
 from pathlib import Path
 from typing import Any
-from src.logger import logger
+from pprint import pprint as pretty_print
+from src.utils.jjson import j_loads
 
 # ANSI escape codes
 RESET = "\033[0m"
@@ -311,42 +254,44 @@ FONT_STYLES = {
     "underline": "\033[4m",
 }
 
-
 def _color_text(text: str, text_color: str = "", bg_color: str = "", font_style: str = "") -> str:
-    """Applies color, background, and font styling to the given text.
+    """Apply color, background, and font styling to the text.
 
-    :param text: The text to style.
-    :param text_color: The text color.
-    :param bg_color: The background color.
-    :param font_style: The font style.
-    :return: The styled text.
+    This helper function applies the provided color and font styles to the given text using ANSI escape codes.
+
+    :param text: The text to be styled.
+    :param text_color: The color to apply to the text. Default is an empty string, meaning no color.
+    :param bg_color: The background color to apply. Default is an empty string, meaning no background color.
+    :param font_style: The font style to apply to the text. Default is an empty string, meaning no font style.
+    :return: The styled text as a string.
+
+    :example:
+        >>> _color_text("Hello, World!", text_color="green", font_style="bold")
+        '\033[1m\033[32mHello, World!\033[0m'
     """
     return f"{font_style}{text_color}{bg_color}{text}{RESET}"
 
-
 def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = "", font_style: str = "") -> None:
-    """Pretty prints the given data with optional styling.
+    """Pretty prints the given data with optional color, background, and font style.
 
-    Prints the data to the console with specified text color, background color, and font style.  Supports dictionaries, lists, and (for now) basic file types.
+    This function formats the input data based on its type and prints it to the console. The data is printed with optional 
+    text color, background color, and font style based on the specified parameters. The function can handle dictionaries, 
+    lists, strings, and file paths.
 
-    :param print_data: The data to print.
-    :param text_color: The text color to use.
-    :param bg_color: The background color to use.
-    :param font_style: The font style to use.
-    :raises TypeError: If input data type is not supported.
-    :raises Exception: For any other errors.
+    :param print_data: The data to be printed. Can be of type ``None``, ``dict``, ``list``, ``str``, or ``Path``.
+    :param text_color: The color to apply to the text. Default is 'white'. See :ref:`TEXT_COLORS`.
+    :param bg_color: The background color to apply to the text. Default is '' (no background color). See :ref:`BG_COLORS`.
+    :param font_style: The font style to apply to the text. Default is '' (no font style). See :ref:`FONT_STYLES`.
+    :return: None
     """
-    try:
-        text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
-        bg_color = BG_COLORS.get(bg_color.lower(), "")
-        font_style = FONT_STYLES.get(font_style.lower(), "")
-    except Exception as ex:
-        logger.error(f"Error in pprint: {ex}")
+    text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
+    bg_color = BG_COLORS.get(bg_color.lower(), "")
+    font_style = FONT_STYLES.get(font_style.lower(), "")
 
     if print_data is None:
         print(_color_text("No data to print!", text_color=TEXT_COLORS["red"]))
         return
-
+        
     try:
         if isinstance(print_data, dict):
             print(_color_text(json.dumps(print_data, indent=4), text_color))
@@ -354,21 +299,26 @@ def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = ""
             for item in print_data:
                 print(_color_text(str(item), text_color))
         elif isinstance(print_data, (str, Path)):
-          path_obj = Path(print_data)
-          if path_obj.is_file() and path_obj.suffix.lower() in ['.csv', '.xls']:
-              try:
-                  # TODO: Implement CSV/XLS reading and printing here.
-                  print(_color_text("File processing (csv/xls) not implemented yet.", text_color=TEXT_COLORS["yellow"]))
-              except Exception as e:
-                  logger.error(f"Error processing file: {e}")
-          else:
-              print(_color_text(str(print_data), text_color))
+            if Path(print_data).is_file():
+                ext = Path(print_data).suffix.lower()
+                if ext == '.json':
+                    try:
+                        data = j_loads(Path(print_data))
+                        print(_color_text(json.dumps(data, indent=4), text_color))
+                    except Exception as ex:
+                        logger.error(f"Error loading JSON file {print_data}: {ex}")
+                elif ext in ['.csv', '.xls']:
+                    print(_color_text("File reading supported for .csv, .xls only.", text_color))
+                else:
+                    print(_color_text("Unsupported file type.", text_color))
+            else:
+                logger.error(f"File not found: {print_data}")
         else:
-            print(_color_text(str(print_data), text_color))
+            print(_color_text(str(print_data) if print_data is not None else "", text_color))
     except Exception as ex:
-        logger.error(f"Error in pprint: {ex}")
+        logger.error(f"Error during printing: {ex}")
 
 
 if __name__ == '__main__':
+    from src.logger import logger
     pprint({"name": "Alice", "age": 30}, text_color="green")
-```

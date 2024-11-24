@@ -46,6 +46,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
 from src.utils.printer import pprint
+from src.utils.path import get_relative_path
 from src.logger import logger
 
 
@@ -128,7 +129,7 @@ class CodeAssistant:
             if i < start_file_number:
                 continue
             if file_path and content:
-                content_request = self._create_request(content)
+                content_request = self._create_request(file_path, content)
 
                 if self.gemini_model:
                     response = self.gemini_model.ask(content_request)
@@ -146,16 +147,17 @@ class CodeAssistant:
             pprint(f'Processed file number: {i + 1}', text_color='yellow')
             time.sleep(30) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  
                                                  
-    def _create_request(self, content: str) -> str:
+    def _create_request(self, file_path:str, content: str) -> str:
         """Создание запроса с учетом роли и языка."""
         roles_translations = getattr(self.translations.roles, self.role)
-        role_description = getattr(roles_translations, self.lang)
-    
-        content_request = (
-            f'**{role_description}**\n'
-            f'{self.code_instruction}\n'
-            f'Input code:\n\n```{content}```\n'
-        )
+        role_description_translated = getattr(roles_translations, self.lang)
+        file_location_translated = getattr(roles_translations, self.lang)
+
+        content_request:dict = {"role":f"{role_description_translated}",
+                                 "output_language":self.lang,
+                                 f"{file_location_translated}":get_relative_path(file_path,'hypotez'),
+                                 "instruction":self.code_instruction,
+                                 "input_code":f"```{content}```"}
         return content_request
 
     def _yield_files_content(

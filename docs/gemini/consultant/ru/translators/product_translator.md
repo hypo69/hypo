@@ -7,35 +7,15 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.translators 
+.. module:: src.translators
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: Модуль управления переводами.
+	  Слой связи между словарем полей товара, таблицей переводов и переводчиками
 
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
 
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
 """ module: src.translators """
 
 
@@ -47,8 +27,7 @@ MODE = 'dev'
     1. получает референс товара, параметры подключения к базе переводов престашоп и язык перевода в формате en_EN, he_HE, ru-RU 
     2. созадет условуе запроса
     3. возвращает результат
-    
-
+	
 @todo
     1. Продумать какой нибудж парсер для en_EN, he_HE, ru-RU
 """
@@ -60,7 +39,7 @@ from typing import List, Dict
 ...
 from src import gs
 from src.logger import logger
-from src.utils import j_loads, j_dumps,  pprint
+from src.utils import j_loads, j_dumps, pprint
 from src.db import ProductTranslationsManager
 from src.ai.openai import translate
 from src.endpoints.PrestaShop import PrestaShop
@@ -85,27 +64,7 @@ from src.endpoints.PrestaShop import PrestaShop
 #     'product_reference': presta_fields.get('reference'),
 #     'locale': i18n,
 #     'name': presta_fields.get('name', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'description': presta_fields.get('description', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'description_short': presta_fields.get('description_short', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'link_rewrite': presta_fields.get('link_rewrite', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'meta_description': presta_fields.get('meta_description', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'meta_keywords': presta_fields.get('meta_keywords', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'meta_title': presta_fields.get('meta_title', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'available_now': presta_fields.get('available_now', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'available_later': presta_fields.get('available_later', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'delivery_in_stock': presta_fields.get('delivery_in_stock', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'delivery_out_stock': presta_fields.get('delivery_out_stock', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'delivery_additional_message': presta_fields.get('delivery_additional_message', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'affiliate_short_link': presta_fields.get('affiliate_short_link', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'affiliate_text': presta_fields.get('affiliate_text', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'affiliate_summary': presta_fields.get('affiliate_summary', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'affiliate_summary_2': presta_fields.get('affiliate_summary_2', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'affiliate_image_small': presta_fields.get('affiliate_image_small', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'affiliate_image_medium': presta_fields.get('affiliate_image_medium', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'affiliate_image_large': presta_fields.get('affiliate_image_large', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'ingredients': presta_fields.get('ingredients', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'how_to_use': presta_fields.get('how_to_use', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
-#     'specification': presta_fields.get('specification', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
+#     # ... (остальные поля)
 #     }
 #     return  record
 
@@ -113,11 +72,12 @@ from src.endpoints.PrestaShop import PrestaShop
 
 
 def get_translations_from_presta_translations_table(product_reference: str, i18n: str = None) -> list:
-    """Функция возвращает словарь переводов полей товара.
+    """
+    Возвращает словарь переводов полей товара из базы данных.
 
     :param product_reference: Уникальный идентификатор товара.
-    :param i18n: Код языка (например, 'ru-RU').
-    :return: Список словарей с переводами. Возвращает пустой список, если не найдено.
+    :param i18n: Код языка (например, 'ru-RU'). По умолчанию None.
+    :return: Список словарей с переводами или пустой список если нет данных.
     """
     try:
         with ProductTranslationsManager() as translations_manager:
@@ -125,12 +85,13 @@ def get_translations_from_presta_translations_table(product_reference: str, i18n
             product_translations = translations_manager.select_record(**search_filter)
         return product_translations
     except Exception as e:
-        logger.error(f"Ошибка при получении переводов: {e}")
+        logger.error(f"Ошибка при получении переводов из базы данных: {e}")
         return []
 
 
 def insert_new_translation_to_presta_translations_table(record):
-    """Вставка новой записи перевода в таблицу переводов.
+    """
+    Вставляет новую запись перевода в таблицу переводов.
 
     :param record: Словарь с данными перевода.
     """
@@ -138,26 +99,24 @@ def insert_new_translation_to_presta_translations_table(record):
         with ProductTranslationsManager() as translations_manager:
             translations_manager.insert_record(record)
     except Exception as e:
-        logger.error(f"Ошибка при добавлении перевода: {e}")
+        logger.error(f"Ошибка при вставке новой записи перевода: {e}")
 
 
 def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
-    """Функция для перевода полей товара.
+    """
+    Переводит запись с использованием API OpenAI.
 
     :param record: Словарь с данными для перевода.
-    :param from_locale: Изначальный язык.
+    :param from_locale: Исходный язык.
     :param to_locale: Целевой язык.
-    :return: Словарь с переведенными данными.
+    :return: Словарь с переведенными данными. Возвращает исходный словарь при ошибке.
     """
     try:
         translated_record = translate(record, from_locale, to_locale)
-        # TODO: Добавить обработку переведенной записи
         return translated_record
     except Exception as e:
-        logger.error(f"Ошибка при переводе: {e}")
-        return None  # Возвращаем None при ошибке
-
-
+        logger.error(f"Ошибка при переводе записи: {e}")
+        return record  # Возвращаем исходную запись при ошибке
 ```
 
 **Improved Code**
@@ -165,60 +124,58 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
 ```diff
 --- a/hypotez/src/translators/product_translator.py
 +++ b/hypotez/src/translators/product_translator.py
-@@ -1,11 +1,11 @@
+@@ -1,18 +1,10 @@
 -## \file hypotez/src/translators/product_translator.py
-+"""Модуль для работы с переводами товаров.
-+
-+.. module:: hypotez.src.translators.product_translator
++"""
++Модуль для перевода данных о товарах.
++"""
  # -*- coding: utf-8 -*-
  #! venv/Scripts/python.exe
  #! venv/bin/python/python3.12
- 
+-
 -"""
 -.. module: src.translators 
 -	:platform: Windows, Unix
 -	:synopsis:
-+"""
+-
+-"""
+-MODE = 'dev'
+-
+-"""
+-	:platform: Windows, Unix
+-	:synopsis:
+-
+-"""
  
  """
  	:platform: Windows, Unix
-@@ -22,101 +22,107 @@
- 
- 
+@@ -26,14 +18,14 @@
  """
+ """
+ 
 -""" Модуль управления переводами.
--Слой связи между словарем полей товара, таблицей переводов и переводчиками
 +"""
-+.. module:: src.translators.product_translator
++Модуль для перевода данных о товарах.
+ Слой связи между словарем полей товара, таблицей переводов и переводчиками
  
  `get_translations_from_presta_translations_table(product_reference, credentials, i18n)`
 -    1. получает референс товара, параметры подключения к базе переводов престашоп и язык перевода в формате en_EN, he_HE, ru-RU 
 -    2. созадет условуе запроса
 -    3. возвращает результат
--    
--
--@todo
--    1. Продумать какой нибудж парсер для en_EN, he_HE, ru-RU
-+    1. Получает референс товара, параметры подключения к базе переводов PrestaShop и язык перевода (например, 'en_EN', 'ru-RU').
-+    2. Формирует запрос к базе данных.
+-	
++    1. Получает референс товара, параметры подключения к базе переводов PrestaShop и язык перевода (en_EN, he_HE, ru-RU).
++    2. Создает условие запроса.
 +    3. Возвращает результат запроса.
- """
- 
- ...
- from pathlib import Path
- from typing import List, Dict
--...
 +
-+from src.db import ProductTranslationsManager
- from src import gs
-+from src.endpoints.PrestaShop import PrestaShop
-+from src.utils import j_loads, j_dumps, pprint
- from src.logger import logger
--from src.utils import j_loads, j_dumps,  pprint
--from src.db import ProductTranslationsManager
+ @todo
+     1. Продумать какой нибудж парсер для en_EN, he_HE, ru-RU
+ """
+@@ -50,31 +42,6 @@
+ from src.utils import j_loads, j_dumps, pprint
+ from src.db import ProductTranslationsManager
  from src.ai.openai import translate
 -from src.endpoints.PrestaShop import PrestaShop
- 
+-
 -# def record(presta_fields:Dict, i18n:str = None, i:int = 0) -> Dict:
 -#     """ Вытаскивает из словаря полей престашоп 
 -#     `dict_product_fields` значения мультиязычных полей 
@@ -238,162 +195,91 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
 -#     record = {
 -#     'product_reference': presta_fields.get('reference'),
 -#     'locale': i18n,
--#     'name': presta_fields.get('name', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'description': presta_fields.get('description', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'description_short': presta_fields.get('description_short', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'link_rewrite': presta_fields.get('link_rewrite', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'meta_description': presta_fields.get('meta_description', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'meta_keywords': presta_fields.get('meta_keywords', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'meta_title': presta_fields.get('meta_title', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'available_now': presta_fields.get('available_now', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'available_later': presta_fields.get('available_later', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'delivery_in_stock': presta_fields.get('delivery_in_stock', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'delivery_out_stock': presta_fields.get('delivery_out_stock', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'delivery_additional_message': presta_fields.get('delivery_additional_message', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'affiliate_short_link': presta_fields.get('affiliate_short_link', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'affiliate_text': presta_fields.get('affiliate_text', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'affiliate_summary': presta_fields.get('affiliate_summary', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'affiliate_summary_2': presta_fields.get('affiliate_summary_2', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'affiliate_image_small': presta_fields.get('affiliate_image_small', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'affiliate_image_medium': presta_fields.get('affiliate_image_medium', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'affiliate_image_large': presta_fields.get('affiliate_image_large', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'ingredients': presta_fields.get('ingredients', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'how_to_use': presta_fields.get('how_to_use', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
--#     'specification': presta_fields.get('specification', {'language': [{'value': ''}]}).get('language', [{}])[i].get('value', ''),
+-#     # ... (остальные поля)
 -#     }
 -#     return  record
-+
-+
-+def get_translations_from_presta_translations_table(product_reference: str, i18n: str = None) -> list:
-+    """Возвращает список переводов для указанного товара.
-+
-+    :param product_reference: Идентификатор товара.
-+    :param i18n: Код языка (например, 'ru-RU').
-+    :raises ValueError: Если входные данные некорректны.
-+    :return: Список словарей переводов. Возвращает пустой список, если нет данных.
-+    """
-+    if not product_reference:
-+        raise ValueError("product_reference cannot be empty")
-+    try:
-+        with ProductTranslationsManager() as translations_manager:
-+            search_filter = {'product_reference': product_reference}
-+            translations = translations_manager.select_record(**search_filter)
-+        return translations
-+    except Exception as e:
-+        logger.error(f"Ошибка при получении переводов: {e}")
-+        return []
+-
  
  
  def get_translations_from_presta_translations_table(product_reference: str, i18n: str = None) -> list:
--    """Функция возвращает словарь переводов полей товара."""
--    with ProductTranslationsManager() as translations_manager:
--        search_filter = {'product_reference': product_reference}
--        product_translations = translations_manager.select_record(**search_filter)
--    return product_translations
-+    """Возвращает список переводов полей товара из базы данных.
-+
-+    :param product_reference: Идентификатор товара.
-+    :param i18n: Код языка.
-+    :return: Список словарей переводов.
-+    """
-+    # TODO: Добавить обработку некорректных входных данных.
-+    # TODO: Добавить проверку на тип данных.
-+    try:
-+      # ... (код для работы с базой данных)
-+        return get_translations_from_presta_translations_table(product_reference, i18n)
-+    except Exception as e:
-+        logger.error(f"Ошибка при чтении из базы данных: {e}")
-+        return []
- 
- def insert_new_translation_to_presta_translations_table(record):
--    with ProductTranslationsManager() as translations_manager:
--        translations_manager.insert_record(record)
-+    """Вставляет новую запись перевода в базу данных.
-+
-+    :param record: Словарь с данными перевода.
-+    """
-+    try:
-+        with ProductTranslationsManager() as translations_manager:
-+            translations_manager.insert_record(record)
-+    except Exception as e:
-+        logger.error(f"Ошибка при добавлении перевода: {e}")
- 
- def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
--    """Функция для перевода полей товара."""
-+    """Переводит данные в словаре.
-+
-+    :param record: Словарь с данными для перевода.
-+    :param from_locale: Изначальный язык.
-+    :param to_locale: Целевой язык.
-+    :return: Словарь с переведенными данными.
-+    :raises ValueError: Если входные данные некорректны.
-+    """
-     translated_record = translate(record, from_locale, to_locale)
--    ... # Добавить обработку переведенной записи
--    return translated_record
-+    try:
-+        # TODO: Добавить обработку переведенной записи
-+        return translated_record
-+    except Exception as e:
-+        logger.error(f"Ошибка при переводе: {e}")
-+        return None  # Возвращаем None при ошибке
- 
+
 ```
 
 **Changes Made**
 
-*   Добавлены docstring в формате RST к функциям `get_translations_from_presta_translations_table`, `insert_new_translation_to_presta_translations_table`, `translate_record`.
-*   Добавлены проверки корректности входных данных для функций.
-*   Добавлены обработчики ошибок с использованием `logger.error` для повышения устойчивости кода.
-*   Изменены возвращаемые значения функций (вместо `None` возвращаются пустые списки или `None` при ошибке), чтобы указывать на возможные ошибки.
-*   Исправлена структура импорта.
-*   Добавлены комментарии к функциям, методам и классам в формате RST.
-*   Убраны неиспользуемые комментарии и блоки кода.
-*   Изменены имена переменных и функций на более описательные.
-*   Исправлены потенциальные ошибки в обработке ошибок.
+- Добавлены docstring в формате RST к функциям `get_translations_from_presta_translations_table`, `insert_new_translation_to_presta_translations_table`, `translate_record`.  
+- Обработка ошибок с использованием `logger.error` внутри функций.
+- В функции `translate_record` возвращается исходная запись при ошибке, чтобы предотвратить сбой программы.
+- Удалены неиспользуемые части кода и комментарии.
+-  Комментарии к модулям, функциям, методам и переменным переписаны в формате reStructuredText (RST).
+- Исправлены стилистические ошибки и неточности в документации.
 
 
-**Full Code (Improved)**
+**Complete Code (Improved)**
 
 ```python
-"""Модуль для работы с переводами товаров.
-
-.. module:: hypotez.src.translators.product_translator
+"""
+Модуль для перевода данных о товарах.
+"""
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-
-MODE = 'dev'
-...
 from pathlib import Path
 from typing import List, Dict
 
-from src.db import ProductTranslationsManager
 from src import gs
-from src.endpoints.PrestaShop import PrestaShop
-from src.utils import j_loads, j_dumps, pprint
 from src.logger import logger
+from src.utils import j_loads, j_dumps, pprint
+from src.db import ProductTranslationsManager
 from src.ai.openai import translate
+# from src.endpoints.PrestaShop import PrestaShop
+
 
 def get_translations_from_presta_translations_table(product_reference: str, i18n: str = None) -> list:
-    """Возвращает список переводов для указанного товара.
-
-    :param product_reference: Идентификатор товара.
-    :param i18n: Код языка (например, 'ru-RU').
-    :raises ValueError: Если входные данные некорректны.
-    :return: Список словарей переводов. Возвращает пустой список, если нет данных.
     """
-    if not product_reference:
-        raise ValueError("product_reference cannot be empty")
+    Возвращает словарь переводов полей товара из базы данных.
+    
+    :param product_reference: Уникальный идентификатор товара.
+    :param i18n: Код языка (например, 'ru-RU'). По умолчанию None.
+    :return: Список словарей с переводами или пустой список если нет данных.
+    """
     try:
         with ProductTranslationsManager() as translations_manager:
             search_filter = {'product_reference': product_reference}
-            translations = translations_manager.select_record(**search_filter)
-        return translations
+            product_translations = translations_manager.select_record(**search_filter)
+        return product_translations
     except Exception as e:
-        logger.error(f"Ошибка при получении переводов: {e}")
+        logger.error(f"Ошибка при получении переводов из базы данных: {e}")
         return []
-# ...(другие функции)
+
+
+def insert_new_translation_to_presta_translations_table(record):
+    """
+    Вставляет новую запись перевода в таблицу переводов.
+    
+    :param record: Словарь с данными перевода.
+    """
+    try:
+        with ProductTranslationsManager() as translations_manager:
+            translations_manager.insert_record(record)
+    except Exception as e:
+        logger.error(f"Ошибка при вставке новой записи перевода: {e}")
+
+
+def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
+    """
+    Переводит запись с использованием API OpenAI.
+    
+    :param record: Словарь с данными для перевода.
+    :param from_locale: Исходный язык.
+    :param to_locale: Целевой язык.
+    :return: Словарь с переведенными данными. Возвращает исходный словарь при ошибке.
+    """
+    try:
+        translated_record = translate(record, from_locale, to_locale)
+        return translated_record
+    except Exception as e:
+        logger.error(f"Ошибка при переводе записи: {e}")
+        return record  # Возвращаем исходную запись при ошибке
 ```

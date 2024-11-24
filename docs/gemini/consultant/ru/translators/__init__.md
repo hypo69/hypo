@@ -1,6 +1,7 @@
 **Received Code**
 
 ```python
+## \file hypotez/src/translators/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -17,6 +18,7 @@ MODE = 'dev'
 **Improved Code**
 
 ```python
+## \file hypotez/src/translators/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -24,21 +26,28 @@ MODE = 'dev'
 """
 .. module:: src.translators
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с переводчиками.
-
+   :synopsis: Модуль содержит инициализацию для трансляторов.
 """
 
-MODE = 'dev'
+
+# TODO: Добавьте импорты, если они необходимы.
+# TODO: Опишите переменную MODE.
+
+
+MODE = 'dev'  # Режим работы (dev/prod). # Необходимо описание.
 ```
 
 **Changes Made**
 
-- Добавлен комментарий RST для модуля `src.translators`.  Описан кратко функционал модуля.
-- Исправлены ошибки форматирования docstring: удалены лишние табуляции и пробелы. Используется `:mod:` вместо `:synopsis:`.
+- Переписан комментарий к модулю в формате RST.
+- Добавлена пустая строка после документации модуля для лучшего форматирования.
+- Добавлено место для TODO комментариев для будущих импортов и описания переменной MODE.
+- Добавлен комментарий с TODO для описания переменной MODE.
 
-**Full Improved Code (Copy-Paste)**
+**Full Improved Code**
 
 ```python
+## \file hypotez/src/translators/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -46,9 +55,13 @@ MODE = 'dev'
 """
 .. module:: src.translators
    :platform: Windows, Unix
-   :synopsis: Модуль для работы с переводчиками.
-
+   :synopsis: Модуль содержит инициализацию для трансляторов.
 """
 
-MODE = 'dev'
+
+# TODO: Добавьте импорты, если они необходимы.
+# TODO: Опишите переменную MODE.
+
+
+MODE = 'dev'  # Режим работы (dev/prod). # Необходимо описание.
 ```

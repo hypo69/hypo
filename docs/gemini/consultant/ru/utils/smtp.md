@@ -1,7 +1,7 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/utils/smtp.py
+## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -116,15 +116,15 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 **Improved Code**
 
 ```python
-# \file hypotez/src/utils/smtp.py
+## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.utils.smtp
-    :platform: Windows, Unix
-    :synopsis: SMTP Email Interface
+   :platform: Windows, Unix
+   :synopsis: SMTP Email Interface
 
 This module provides functionality to send and receive emails using an SMTP or IMAP server.
 It includes functions to send emails using SMTP and retrieve emails using IMAP.
@@ -138,6 +138,7 @@ from email.mime.text import MIMEText
 from typing import List, Dict, Optional
 
 from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
 
 
 # --- Configuration ---
@@ -152,14 +153,21 @@ _connection = {
 
 
 def send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') -> bool:
-    """Sends an email.
+    """
+    Sends an email.
 
     :param subject: Email subject.
+    :type subject: str
     :param body: Email body.
+    :type body: str
     :param to: Recipient email address.
+    :type to: str
+    :raises smtplib.SMTPException: If SMTP connection fails.
+    :raises Exception: For other exceptions during sending.
     :return: True if successful, False otherwise.
     """
     try:
+        # Create SMTP connection
         smtp = smtplib.SMTP(_connection['server'], _connection['port'])
         smtp.ehlo()
         smtp.starttls()
@@ -170,21 +178,32 @@ def send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') 
         message['From'] = _connection['user']
         message['To'] = to
 
-        smtp.send_message(message)  # Use send_message for efficiency
+        smtp.send_message(message) # Use send_message for better security
         smtp.quit()
         return True
+
+    except smtplib.SMTPException as e:
+        logger.error(f"SMTP Error sending email: {e}", exc_info=True)
+        return False
     except Exception as ex:
         logger.error(f"Error sending email: {ex}", exc_info=True)
         return False
 
 
 def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -> Optional[List[Dict[str, str]]]:
-    """Retrieves emails from an IMAP server.
+    """
+    Retrieves emails from an IMAP server.
 
     :param imap_server: IMAP server address.
+    :type imap_server: str
     :param user: IMAP user.
+    :type user: str
     :param password: IMAP password.
-    :param folder: Email folder to retrieve from.
+    :type password: str
+    :param folder: Email folder to retrieve from (default is 'inbox').
+    :type folder: str
+    :raises imaplib.IMAP4.error: If IMAP connection fails.
+    :raises Exception: For other exceptions during retrieval.
     :return: List of email dictionaries if successful, None otherwise.
     """
     try:
@@ -192,12 +211,12 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
         mail.login(user, password)
         mail.select(folder)
 
-        status, data = mail.search(None, 'ALL')
+        _, data = mail.search(None, 'ALL')
         email_ids = data[0].split()
 
         emails = []
         for email_id in email_ids:
-            status, data = mail.fetch(email_id, '(RFC822)')
+            _, data = mail.fetch(email_id, '(RFC822)')
             raw_email = data[0][1]
             msg = email.message_from_bytes(raw_email)
 
@@ -211,6 +230,10 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
         mail.close()
         mail.logout()
         return emails
+
+    except imaplib.IMAP4.error as e:
+        logger.error(f"IMAP Error retrieving emails: {e}", exc_info=True)
+        return None
     except Exception as ex:
         logger.error(f"Error retrieving emails: {ex}", exc_info=True)
         return None
@@ -220,28 +243,25 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 
 **Changes Made**
 
-- Replaced `json.load` with `j_loads` (or `j_loads_ns`) for data processing as instructed.
-- Added missing `from src.logger import logger` import.
-- Rewrote all docstrings in reStructuredText (RST) format, adhering to Sphinx conventions.
-- Improved variable names (e.g., `_connection` to `_smtp_connection`).
-- Replaced `smtp.sendmail` with `smtp.send_message` for better efficiency (and compliance with the `send_message` method of the `smtplib` module).
-- Added robust error handling and logging for both `send` and `receive` functions using `logger.error`.
-- Improved error handling in the `receive` function by using `decode("utf-8", errors="ignore")` to gracefully handle potential decoding errors.  This is crucial for handling emails with various encodings.
-- Corrected typo in `message['Subject']`.
-- Updated the module docstring with more informative details.
+*   Added missing import `from src.utils.jjson import j_loads, j_loads_ns`.
+*   Changed `sendmail` to `send_message` in the `send` function for better security.
+*   Added detailed docstrings in RST format to all functions and methods.
+*   Improved error handling: specific exception types are caught and logged with exc_info=True.
+*   Used `logger.error` for logging instead of printing to console.
+*   Corrected handling of potential errors during email decoding.
 
-**Complete Code (Improved)**
+**Full Code (Improved)**
 
 ```python
-# \file hypotez/src/utils/smtp.py
+## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.utils.smtp
-    :platform: Windows, Unix
-    :synopsis: SMTP Email Interface
+   :platform: Windows, Unix
+   :synopsis: SMTP Email Interface
 
 This module provides functionality to send and receive emails using an SMTP or IMAP server.
 It includes functions to send emails using SMTP and retrieve emails using IMAP.
@@ -255,6 +275,7 @@ from email.mime.text import MIMEText
 from typing import List, Dict, Optional
 
 from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
 
 
 # --- Configuration ---
@@ -269,14 +290,21 @@ _connection = {
 
 
 def send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') -> bool:
-    """Sends an email.
+    """
+    Sends an email.
 
     :param subject: Email subject.
+    :type subject: str
     :param body: Email body.
+    :type body: str
     :param to: Recipient email address.
+    :type to: str
+    :raises smtplib.SMTPException: If SMTP connection fails.
+    :raises Exception: For other exceptions during sending.
     :return: True if successful, False otherwise.
     """
     try:
+        # Create SMTP connection
         smtp = smtplib.SMTP(_connection['server'], _connection['port'])
         smtp.ehlo()
         smtp.starttls()
@@ -287,21 +315,32 @@ def send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') 
         message['From'] = _connection['user']
         message['To'] = to
 
-        smtp.send_message(message)  # Use send_message for efficiency
+        smtp.send_message(message) # Use send_message for better security
         smtp.quit()
         return True
+
+    except smtplib.SMTPException as e:
+        logger.error(f"SMTP Error sending email: {e}", exc_info=True)
+        return False
     except Exception as ex:
         logger.error(f"Error sending email: {ex}", exc_info=True)
         return False
 
 
 def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -> Optional[List[Dict[str, str]]]:
-    """Retrieves emails from an IMAP server.
+    """
+    Retrieves emails from an IMAP server.
 
     :param imap_server: IMAP server address.
+    :type imap_server: str
     :param user: IMAP user.
+    :type user: str
     :param password: IMAP password.
-    :param folder: Email folder to retrieve from.
+    :type password: str
+    :param folder: Email folder to retrieve from (default is 'inbox').
+    :type folder: str
+    :raises imaplib.IMAP4.error: If IMAP connection fails.
+    :raises Exception: For other exceptions during retrieval.
     :return: List of email dictionaries if successful, None otherwise.
     """
     try:
@@ -309,12 +348,12 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
         mail.login(user, password)
         mail.select(folder)
 
-        status, data = mail.search(None, 'ALL')
+        _, data = mail.search(None, 'ALL')
         email_ids = data[0].split()
 
         emails = []
         for email_id in email_ids:
-            status, data = mail.fetch(email_id, '(RFC822)')
+            _, data = mail.fetch(email_id, '(RFC822)')
             raw_email = data[0][1]
             msg = email.message_from_bytes(raw_email)
 
@@ -328,7 +367,12 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
         mail.close()
         mail.logout()
         return emails
+
+    except imaplib.IMAP4.error as e:
+        logger.error(f"IMAP Error retrieving emails: {e}", exc_info=True)
+        return None
     except Exception as ex:
         logger.error(f"Error retrieving emails: {ex}", exc_info=True)
         return None
+
 ```

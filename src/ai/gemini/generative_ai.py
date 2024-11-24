@@ -122,6 +122,11 @@ class GoogleGenerativeAI:
                 system_instruction=self.system_instruction,       
             )
 
+    @property
+    def config():
+        """ Получаю конфигурацию из файла настроек"""
+        return j_loads_ns(gs.path.src / 'ai' / 'gemini' / 'generative_ai.json')
+
     def _save_dialogue(self, dialogue: list):
         """
         Сохранить диалог в текстовый и JSON файл с управлением размером файлов.
@@ -135,33 +140,8 @@ class GoogleGenerativeAI:
         for message in dialogue:
             j_dumps(data=message, file_path=self.history_json_file, mode='+a')
 
-    def ask(self, q: str, attempts: int = 3) -> Optional[str]:
 
-        
-        try:
-            
-            response = self.model.generate_content(q)
-
-            if not response:
-                logger.debug("No response from the model.")
-                return
-
-            messages = [
-                {"role": "user", "content": q},
-                {"role": "assistant", "content": response.text}
-                ]
-
-            self._save_dialogue([messages])
-            return response.text
-
-        except Exception as ex:
-            logger.error("Error during request", ex, False)
-            return
-
-
-
-
-    def ask(self, q: str, attempts: int = 5) -> Optional[str]:
+    def ask(self, q: str, attempts: int = 15) -> Optional[str]:
         """
         Отправить запрос к модели и получить ответ.
 
@@ -179,7 +159,6 @@ class GoogleGenerativeAI:
             >>> response = ai.ask("Какая погода сегодня?")
             >>> print(response)
         """
-        attempts = 10
         for attempt in range(attempts):
             try:
                 response = self.model.generate_content(q)
@@ -199,8 +178,8 @@ class GoogleGenerativeAI:
 
             except requests.exceptions.RequestException as ex:
                 timeout = 1200
-                max_attempts = 3
-                if attempt < max_attempts:
+                max_attempts = 5
+                if attempt > max_attempts:
                     break
                 logger.debug(f"Network error. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
                 time.sleep(timeout)
@@ -209,7 +188,7 @@ class GoogleGenerativeAI:
                 logger.error("Service unavailable:", ex, None)
                 # Экспоненциальный бэк-офф для повторных попыток
                 max_attempts = 3
-                if attempt < max_attempts:
+                if attempt > max_attempts:
                     break
                 time.sleep(2 ** attempt)
                 continue
@@ -222,7 +201,7 @@ class GoogleGenerativeAI:
                 logger.error("Authentication error:",ex,None)
                 return  # Прекратить попытки, если ошибка аутентификации
             except (ValueError, TypeError) as ex:
-                if attempt < max_attempts:
+                if attempt > max_attempts:
                     break
                 timeout = 5
                 logger.error(f"Invalid input: Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)

@@ -25,7 +25,7 @@ from src.webdriver.firefox import Firefox
 from src.webdriver.edge import Edge
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
-from src.utils.string.url import is_url
+from src.utils.url import is_url
 from src.utils.printer import pprint
 from telegram import Update
 from telegram.ext import CallbackContext

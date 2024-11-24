@@ -14,5 +14,5 @@ MODE = 'dev'
 from .formatter import StringFormatter
 from .validator import ProductFieldsValidator
 from .normalizer import StringNormalizer
-from .url import extract_url_params, is_url
+
 

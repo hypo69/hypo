@@ -34,10 +34,9 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 import header
 from src import gs
 from src.bots.telegram import TelegramBot
-from src.utils.string import url
 from src.endpoints.kazarinov.bot_handlers import BotHandler
 from src.utils.file import recursively_read_text_files, save_text_file
-from src.utils.string.url import is_url
+from src.utils.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 

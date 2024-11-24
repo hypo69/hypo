@@ -1,4 +1,13 @@
 {
   "storage": "external_storage",
-  "storage_choices": [ "external_storage" ]
-}
+  "storage_choices": [
+    "external_storage",
+    "data",
+    "google_drive"
+  ],
+  "model": "gemini-1.5-flash-8b-exp-0924",
+  "model_choices": [
+    "gemini-1.5-flash-8b-exp-0924",
+    "gemini-1.5-flash"
+  ]
+} 

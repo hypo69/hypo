@@ -20,53 +20,52 @@ from .spreadsheet import SpreadSheet
 **Improved Code**
 
 ```python
-## \file hypotez/src/goog/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.goog
-
-.. moduleauthor:: Your Name <your.email@example.com>
-
-This module provides access to Google services.
+.. module:: src.goog
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с Google сервисами.
 """
 
-# The mode of operation (e.g., 'dev', 'prod')
+# Конфигурационная переменная для режима работы.
 MODE = 'dev'
 
-# Import the SpreadSheet class from the spreadsheet module.
-from .spreadsheet import SpreadSheet
+from .spreadsheet import SpreadSheet  # Импорт класса SpreadSheet
+
+#TODO: Добавить логирование для модуля
 ```
 
 **Changes Made**
 
-* Added a module docstring in reStructuredText format, including a module author and a brief description.
-* Added an import docstring for `SpreadSheet`.
-* Removed the unnecessary platform and synopsis specifications in the module docstring.
-* Minor formatting improvements to the docstring.
+* Добавлен RST docstring для модуля ``src.goog``.
+* Изменён формат docstring на reStructuredText.
+* Добавлено описание переменной `MODE`.
+* Изменён стиль документации на более понятный и стандартный для RST.
+* Добавлен import для logging (TODO).
+* Добавлен комментарий TODO для добавления логирования.
 
 
-**Complete Code (for replacement)**
+**Complete Code (Improved)**
 
 ```python
-## \file hypotez/src/goog/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.goog
-
-.. moduleauthor:: Your Name <your.email@example.com>
-
-This module provides access to Google services.
+.. module:: src.goog
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с Google сервисами.
 """
 
-# The mode of operation (e.g., 'dev', 'prod')
+# Конфигурационная переменная для режима работы.
 MODE = 'dev'
 
-# Import the SpreadSheet class from the spreadsheet module.
-from .spreadsheet import SpreadSheet
+#TODO: Добавить логирование для модуля
+from .spreadsheet import SpreadSheet  # Импорт класса SpreadSheet
+# import logging
+# from src.logger import logger
 ```

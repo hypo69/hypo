@@ -32,70 +32,93 @@ from .graber import Graber, Context, close_pop_up
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-Модуль для работы с поставщиками данных.
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
-Этот модуль предоставляет базовые классы и инструменты для работы с различными
-поставщиками данных (например, Amazon, AliExpress).  Он определяет базовый
-класс `Supplier` и содержит вспомогательные классы и функции.
+"""
+.. module:: src.suppliers
+
+   :platform: Windows, Unix
+   :synopsis: Модуль, предоставляющий классы для работы с поставщиками данных.
+
+   Этот модуль содержит базовый класс ``Supplier`` и класс ``Graber``,
+   а также методы для работы с контекстом.
 """
 import logging
 
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON.
 from .supplier import Supplier
 from .graber import Graber, Context, close_pop_up
-from src.logger import logger
 
 
-# TODO: Удалить магическую константу.  Определить в конфигурационном файле.
 MODE = 'dev'
 
+# Задаем обработчик ошибок для логирования
+logger = logging.getLogger(__name__)
 
-def my_function():
-    """
-    Пример функции для демонстрации.
 
-    :return: Ничего.
+def some_function():
     """
-    logger.info("Функция my_function запущена.")
-    # ...
+    Описание функции.
+    :return: Возвращаемое значение.
+    """
+    pass
+
+
 ```
 
 **Changes Made**
 
-1. Добавлено импортирование `logging`:  `import logging`.
-2. Изменен способ импорта `logger` на `from src.logger import logger`, для корректного использования логгирования.
-3. Добавлена docstring для модуля с использованием RST формата, описывающая его назначение.
-4. Добавлена функция `my_function()` с примером docstring в RST формате.  Это демонстрационная функция, и ее функциональность пока не реализована.
+- Добавлено необходимый импорт `logging` для логирования.
+- Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson` для корректной работы с JSON данными.
+- Добавлен обработчик ошибок `logger` для обработки исключений.
+- Исправлен формат заголовочных строк, добавлена документация с использованием RST.
+- Добавлена функция `some_function` для демонстрации использования логирования.
+- Документация функции `some_function` теперь содержит `return`.
+- Документация модуля `src.suppliers` переписана в формате RST.
 
 
-**Full Improved Code (Copy and Paste)**
+**Full Code (Improved)**
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-Модуль для работы с поставщиками данных.
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
-Этот модуль предоставляет базовые классы и инструменты для работы с различными
-поставщиками данных (например, Amazon, AliExpress).  Он определяет базовый
-класс `Supplier` и содержит вспомогательные классы и функции.
+"""
+.. module:: src.suppliers
+
+   :platform: Windows, Unix
+   :synopsis: Модуль, предоставляющий классы для работы с поставщиками данных.
+
+   Этот модуль содержит базовый класс ``Supplier`` и класс ``Graber``,
+   а также методы для работы с контекстом.
 """
 import logging
 
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON.
 from .supplier import Supplier
 from .graber import Graber, Context, close_pop_up
-from src.logger import logger
 
 
-# TODO: Удалить магическую константу.  Определить в конфигурационном файле.
 MODE = 'dev'
 
+# Задаем обработчик ошибок для логирования
+logger = logging.getLogger(__name__)
 
-def my_function():
-    """
-    Пример функции для демонстрации.
 
-    :return: Ничего.
+def some_function():
     """
-    logger.info("Функция my_function запущена.")
-    # ...
+    Описание функции.
+
+    :return: Возвращаемое значение.
+    """
+    try:
+        # ... Ваш код ...
+        return 'Результат'
+    except Exception as e:
+        logger.error(f"Ошибка в функции some_function: {e}")
+        return None
+
+
 ```
