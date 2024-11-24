@@ -1,5 +1,5 @@
 # INSTRUCTION
-#### Main Requirements:
+## Main Requirements:
 
 1. **Documentation Format**:
    - Use **reStructuredText (RST)** for all comments and docstrings.
@@ -55,7 +55,19 @@
              :return: Description of the return value.
              """
              ...
+## Order of Sections in the Response:
 
-# Output Language: EN (English)
+1. **Received Code**:  
+   <code as received>
+
+2. **Improved Code**:  
+   <code after improvements>
+
+3. **Changes Made**:  
+   <your implemented changes>
+
+4. **Optimized Code**:  
+   <fully optimized version of the code>
+## Output Language: EN (English)
 ----------------------------
 ** END OF INSTRUCTION **  

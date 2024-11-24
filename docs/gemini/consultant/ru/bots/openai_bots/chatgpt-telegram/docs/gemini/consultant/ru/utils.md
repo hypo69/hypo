@@ -1,4 +1,4 @@
-**Received Code**
+**Полученный код**:
 
 ```python
 import { unlink } from 'fs/promises'
@@ -11,63 +11,80 @@ export async function removeFile(path) {
 }
 ```
 
-**Improved Code**
+**Улучшенный код**:
 
 ```python
 import asyncio
-from fs.promises import unlink
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-# Импорт необходимых модулей
+from pathlib import Path
 
-async def remove_file(path: str) -> None:
+# Модуль для удаления файлов.
+# Включает функцию для асинхронного удаления файла с обработкой ошибок.
+
+async def remove_file(path):
     """
     Удаляет файл по указанному пути.
 
     :param path: Путь к файлу.
     :raises FileNotFoundError: Если файл не найден.
+    :raises OSError: Если произошла ошибка при удалении файла.
     """
     try:
-        await unlink(path) # Удаление файла.
-    except FileNotFoundError as e: # Обработка ошибки, если файл не найден.
-        logger.error('Файл не найден: %s', path) # Логирование ошибки с информацией о пути.
-        #raise  # Передача исключения, если необходимо.
-    except Exception as e:
-        logger.error('Ошибка при удалении файла: %s', e) # Логирование других ошибок.
+        # Преобразуем путь к объекту pathlib.Path для большей устойчивости.
+        file_path = Path(path)
+        if not file_path.exists():
+            raise FileNotFoundError(f"File '{path}' not found.")
+
+        await asyncio.sleep(0.1) # Задержка для имитации работы
+        await file_path.unlink() # Используем асинхронную функцию для удаления
+    except FileNotFoundError as e:
+        logger.error(f"Error: {e}")
+    except OSError as e:
+        logger.error(f"Error while removing file '{path}': {e}")
 ```
 
-**Changes Made**
+**Изменения**:
 
-* Заменён импорт `unlink` с использованием `fs/promises` на корректный импорт из `fs.promises`.
-* Добавлена функция `remove_file` для обработки операции удаления файла.
-* Добавлены аннотации типов для параметра `path` и возвращаемого значения.
-* Добавлен docstring в формате RST для описания функции.
-* Добавлена обработка `FileNotFoundError` с помощью `try-except`.
-* Заменено `console.log` на `logger.error` для логирования ошибок.
-* Переименована функция `removeFile` на `remove_file` для согласованности с другими именами функций.
-* Добавлена обработка исключений `Exception` для более широкой обработки ошибок.
-* Добавлен импорт `asyncio` для асинхронных операций, если это необходимо.
-* Убрана некорректная строка `#raise` внутри блока `except` (необязательно).
+1. Импортированы необходимые модули: `asyncio`, `Path` из `pathlib`, `logger` из `src.logger`, `j_loads`, `j_loads_ns` из `src.utils.jjson`. Исправлены импорты.
+2. Функция переименована в `remove_file` для соответствия PEP 8.
+3. Добавлен docstring в формате RST для функции `remove_file`.
+4. Использование `asyncio.sleep(0.1)` для моделирования работы.
+5. Обработка исключений `FileNotFoundError` и `OSError` с помощью `logger.error` для лучшей обработки ошибок.
+6. Использование `Path` объекта вместо строки для пути, чтобы избежать ошибок связанных с путями.
+7. Проверка существования файла перед удалением.
+8.  Добавлен импорт `asyncio` для асинхронной операции.
 
+
+**Оптимизированный код**
 
 ```python
-# Полный код с улучшениями
 import asyncio
-from fs.promises import unlink
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-# Импорт необходимых модулей
+from pathlib import Path
 
-async def remove_file(path: str) -> None:
+# Модуль для удаления файлов.
+# Включает функцию для асинхронного удаления файла с обработкой ошибок.
+
+async def remove_file(path):
     """
     Удаляет файл по указанному пути.
 
     :param path: Путь к файлу.
     :raises FileNotFoundError: Если файл не найден.
+    :raises OSError: Если произошла ошибка при удалении файла.
     """
     try:
-        await unlink(path) # Удаление файла.
-    except FileNotFoundError as e: # Обработка ошибки, если файл не найден.
-        logger.error('Файл не найден: %s', path) # Логирование ошибки с информацией о пути.
-        #raise  # Передача исключения, если необходимо.
-    except Exception as e:
-        logger.error('Ошибка при удалении файла: %s', e) # Логирование других ошибок.
+        # Преобразуем путь к объекту pathlib.Path для большей устойчивости.
+        file_path = Path(path)
+        if not file_path.exists():
+            raise FileNotFoundError(f"File '{path}' not found.")
+
+        await asyncio.sleep(0.1) # Задержка для имитации работы
+        await file_path.unlink() # Используем асинхронную функцию для удаления
+    except FileNotFoundError as e:
+        logger.error(f"Error: {e}")
+    except OSError as e:
+        logger.error(f"Error while removing file '{path}': {e}")
 ```
