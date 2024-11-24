@@ -50,6 +50,7 @@
   "include_files": [
     "*.py",
     "*.js",
+    "*.mjs",
     "*.htm*",
     "*.php",
     "*.txt",
