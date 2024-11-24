@@ -5,8 +5,8 @@ on:
     branches:
       - master
     paths:
-      - 'docs/gemini/consultant/ru/SUMMARY.md'  # Указание пути к файлу, изменения в котором триггерят сборку
-      - '.github/mdbook.yml'  # Добавлен путь к файлу mdbook.yml для триггера сборки
+      - 'docs/gemini/consultant/ru/SUMMARY.md'  # Указание пути к файлу SUMMARY.md
+      - '.github/workflows/mdbook.yml'  # Указание пути к файлу mdbook.yml
   workflow_dispatch:  # Позволяет вручную запускать workflow
 
 permissions:
