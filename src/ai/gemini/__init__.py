@@ -6,7 +6,7 @@
 """
 .. module: src.ai.gemini 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: Модуль модели `gemini`
 
 """
 MODE = 'dev'

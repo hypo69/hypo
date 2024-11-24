@@ -20,8 +20,6 @@
     "__pycache__",
     ".git",
     ".venv",
-    "___+*",
-    "*___*",
     ".vs",
     ".vscode",
     "docs",
@@ -34,18 +32,14 @@
   "exclude_files": [
     "version.py",
     "__init__.py",
-    "header.py",
-    "___+.*",
-    "___*.*",
-    "*___*.*",
-    "*___*"
+    "header.py"
   ],
   "exclude_file_patterns": [
     ".*\\(.*\\).*",
-    "___+.*",
-    "___*.*",
-    "*___*.*",
-    "*___*"
+    "___{3,}.*",
+    "___.*",
+    ".*___.*\\..*",
+    ".*___.*"
   ],
   "include_files": [
     "*.py",
@@ -72,18 +66,25 @@
     "*.svg",
     "conf.py"
   ],
-
   "output_directory": {
     "code_checker": "<model>/consultant/<lang>/src",
     "code_explainer": "<model>/explainer/<lang>/src",
     "pytest": "../pytest/<model>/<lang>/src",
     "doc_writer_rst": "<model>/doc/<lang>/rst/src",
     "doc_writer_md": "<model>/doc/<lang>/md/src",
-    "doc_writer_html": "<model>/doc/<lang>/html//src",
+    "doc_writer_html": "<model>/doc/<lang>/html/src",
     "how_to_writer": "<model>/how_to/<lang>/src"
   },
   "argparse": {
-    "roles": [ "doc_writer_rst", "doc_writer_md", "doc_writer_html", "code_checker", "pytest", "code_explainer", "how_to_writer" ],
+    "roles": [
+      "doc_writer_rst",
+      "doc_writer_md",
+      "doc_writer_html",
+      "code_checker",
+      "pytest",
+      "code_explainer",
+      "how_to_writer"
+    ],
     "languages": [ "en", "ru" ],
     "model": {
       "default": [ "gemini" ],

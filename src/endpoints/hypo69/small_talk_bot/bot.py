@@ -11,31 +11,6 @@
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.endpoints.hypo69.small_talk_bot """
-
-
 ...
 """ t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
 import header
@@ -53,7 +28,7 @@ from src.bots.telegram import TelegramBot
 from src.webdriver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import read_text_file, recursively_read_text_files, save_text_file
-from src.utils.string.url import is_url
+from src.utils.url import is_url
 from src.logger import logger
 
 @dataclass

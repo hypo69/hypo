@@ -6,7 +6,7 @@
 """
 .. module: src.ai.openai 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: Модуль модели `openai`
 
 """
 MODE = 'dev'
