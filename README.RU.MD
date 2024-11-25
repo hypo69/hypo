@@ -89,10 +89,7 @@
 ## Необходимые инструменты и ПО
 
 - **Python** (версия 3.12)
-- **Playwright**
-- **Web-ext**
-- **Jupyter Lab**
-- **npm**
+- **Chrome/Edge/Firefox** веббраузер
 
 ---
 
@@ -139,16 +136,6 @@ sudo apt install python3.12
 #### Для macOS
 
 Установите Python через Homebrew:
-
-```bash
-brew install python@3.12
-```
-
-... (остальные инструкции остаются как в оригинале)
-```
-#### Для **macOS**:
-
-Можно использовать `brew` для установки Python 3.12:
 
 ```bash
 brew install python@3.12
