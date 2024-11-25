@@ -87,7 +87,8 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
             await self.handle_url(update, context)
             # <- add logic after url scenario ended
             ...
-        return
+            return # <- 
+
         log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
         save_text_file(f"User {user_id}: {response}\n", Path(log_path), mode='a')
 
@@ -101,7 +102,7 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
             return await self.handle_next_command(update)
 
         if not is_url(response):
-            answer = self.model.ask(q=response, history_file=f'{user_id}.txt')
+            answer = self.model.ask(q = response, history_file = f'{user_id}.txt')
             await update.message.reply_text(answer)
 
 

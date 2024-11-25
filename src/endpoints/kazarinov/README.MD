@@ -1,2 +1,9 @@
-Имя файла настроек `kazarionav.json`
-Почему не `config.json` 
+`KazarinovTelegramBot`
+- https://one-tab.co.il
+- https://morlevi.co.il
+- https://grandavance.co.il
+- https://ivory.co.il
+- https://ksp.co.il 
+-------- 
+`BotHandler` 
+- парсит линки

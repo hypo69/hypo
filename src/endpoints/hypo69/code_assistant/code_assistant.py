@@ -285,21 +285,53 @@ class CodeAssistant:
                     yield None, None
    
 
-    def _save_response(self, file_path: Path, response: str, model_name: str):
-        """Сохранение ответа модели в файл."""
-        output_directory: str = getattr(self.config.output_directory, self.role)
-        target_dir = "docs/" + output_directory.replace("<model>", model_name).replace(
-            "<lang>", self.lang
+    def _save_response(self, file_path: Path, response: str, model_name: str) -> None:
+        """Сохранение ответа модели в файл.
+
+        Этот метод сохраняет ответ модели в файл в формате, определяемом ролью
+        объекта. Путь к файлу строится с учётом настроек конфигурации и параметров 
+        модели. Файл сохраняется в соответствующей директории с правильным расширением.
+
+        Args:
+            file_path (Path): Исходный путь к файлу, в который будет записан ответ.
+            response (str): Ответ модели, который необходимо сохранить.
+            model_name (str): Имя модели, использованной для генерации ответа.
+
+        Raises:
+            OSError: Если не удаётся создать директорию или записать в файл.
+        """
+    
+        # Получаем директорию для вывода в зависимости от роли
+        output_directory = getattr(self.config.output_directory, self.role)
+    
+        # Формируем целевую директорию с учётом подстановки параметров <model> и <lang>
+        target_dir = (
+            f'docs/{output_directory}'
+            .replace('<model>', model_name)
+            .replace('<lang>', self.lang)
         )
-        file_path = str(file_path).replace(
-            "src", target_dir
-        )  # Convert Path to string for replace
+
+        # Заменяем часть пути на целевую директорию
+        file_path = str(file_path).replace('src', target_dir)
+    
+        # Формируем новый путь с нужным расширением в зависимости от роли
         export_path = Path(file_path).with_suffix(
-            ".md" if role != "doc_writer_rst" else ".rst"
-        )  # Convert back to Path and change suffix
+            {
+                'doc_writer_md': '.md',  # для роли "doc_writer_md" будет использоваться .md
+                'doc_writer_rst': '.rst',  # для роли "doc_writer_rst" будет использоваться .rst
+                'doc_writer_html': '.html',  # для роли "doc_writer_html" будет использоваться .html
+            }.get(self.role, '.rst')  # Если роль не соответствует ни одной из вышеуказанных, по умолчанию используется .rst
+        )
+
+        # Создаём родительскую директорию, если она ещё не существует
         export_path.parent.mkdir(parents=True, exist_ok=True)
-        export_path.write_text(response, encoding="utf-8")
-        pprint(f"Ответ модели сохранен в: {export_path}", text_color="green")
+
+        # Записываем ответ в файл с указанной кодировкой UTF-8
+        export_path.write_text(response, encoding='utf-8')
+
+        # Выводим сообщение о успешном сохранении файла
+        pprint(f'Ответ модели сохранен в: {export_path}', text_color='green')
+
 
     def _remove_outer_quotes(self, response: str) -> str:
         """
@@ -325,8 +357,8 @@ class CodeAssistant:
             return response
 
         # Удаляем маркер для известных форматов, если строка обрамлена в '```'
-        known_prefixes = ["```md", "```markdown", "```rst", "```plaintext", "```"]
-        for prefix in known_prefixes:
+        config = j_loads_ns(gs.path.endpoint / 'hypo69' / 'code_assistant' / 'code_assistant.json')
+        for prefix in config.known_prefixes:
             if response.startswith(prefix) and response.endswith("```"):
                 return response.removeprefix(prefix).removesuffix("```").strip()
 

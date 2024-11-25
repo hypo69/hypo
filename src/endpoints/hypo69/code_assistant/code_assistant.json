@@ -60,7 +60,7 @@
     "*.txt",
     "*.md",
     "*.rst",
-    
+
     "*.yaml",
     "*.yml",
     "*.ini",
@@ -71,6 +71,19 @@
     "CONTRIBUTING*",
     "CODE_OF_CONDUCT*",
     "conf.py"
+  ],
+  "known_prefixes": [
+    "```md",
+    "```markdown",
+    "```rst",
+    "```plaintext",
+    "```html",
+    "```MD",
+    "```MARKDOWN",
+    "```RST",
+    "```PALINTEXT",
+    "```HTML",
+    "```"
   ],
   "output_directory": {
     "code_checker": "<model>/consultant/<lang>/src",

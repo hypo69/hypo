@@ -131,7 +131,7 @@ sudo apt install python3.12
 
 #### Для Windows
 
-Скачайте установщик с [официального сайта Python](https://www.python.org/downloads/release/python-3120/) и запустите его. Убедитесь, что выбрана опция **Add Python to PATH**.
+Скачайте установщик с [официального сайта Python](https://www.python.org/downloads/release/python-3120/) и запустите его. (✎ Убедитесь, что выбрана опция **Add Python to PATH**).
 
 #### Для macOS
 
@@ -209,7 +209,7 @@ jupyter labextension install @jupyterlab/toc
 
 ### Setting Up Credentials
 
-Before starting, create a folder named `secrets` in the project root. Copy `credentials.kdbx.example` and `password.txt` from the service folder into `secrets`, and remove the `.example` suffix.
+Before starting, create a folder named `secrets` in the project root. Copy `credentials.kdbx.example` from the service folder into `secrets`, and remove the `.example` suffix.
 
 Here is the structure for credentials:
 

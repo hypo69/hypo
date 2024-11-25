@@ -291,7 +291,7 @@ class Mexiron:
 
     def create_report(self):
         """"""
-        #generator = ReportGenerator( base_path = , timestamp = self.timestamp )
+        generator = ReportGenerator( base_path = , timestamp = self.timestamp )
         ...
         for lang in ['he','ru']:
             generator.create_report(lang)

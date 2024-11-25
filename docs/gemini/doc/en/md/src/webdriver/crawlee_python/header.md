@@ -75,10 +75,10 @@ __root__ = set_project_root()
 
 from src import gs
 
-settings:dict = None
+config:dict = None
 try:
     with open(gs.path.root / \'src\' /  \'settings.json\', \'r\') as settings_file:
-        settings = json.load(settings_file)
+        config = json.load(f)
 except (FileNotFoundError, json.JSONDecodeError):
     ...
 

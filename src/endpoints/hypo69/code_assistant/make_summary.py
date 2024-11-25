@@ -1,10 +1,10 @@
-## \file /src/endpoints/hypo69/code_assistant/code_assistant.py
+## \file /src/endpoints/hypo69/code_assistant/make_summary.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-module: src.endpoints.hypo69.code_assistant.code_assistant
+module: src.endpoints.hypo69.code_assistant.make_summary
 	:platform: Windows, Unix
 	:synopsis: Модуль собирает файл `summary.md` для компиляции средствами `mdbook`
     Подробнее: https://chatgpt.com/share/6742f054-aaa0-800d-9f84-0ab035a2a2c2

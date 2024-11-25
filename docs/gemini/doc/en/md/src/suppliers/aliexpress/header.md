@@ -45,10 +45,10 @@ This module defines functions for setting the project root directory and loading
 
 **Code Snippets**
 ```python
-settings:dict = None
+config:dict = None
 try:
     with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
-        settings = json.load(settings_file)
+        config = json.load(f)
 except (FileNotFoundError, json.JSONDecodeError):
     ...
 ```
@@ -77,12 +77,12 @@ except (FileNotFoundError, json.JSONDecodeError):
 These variables are populated using data from the `settings` dictionary, with fallback values provided if `settings` is `None` or if a particular key is missing.
 
 ```python
-__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
-__version__: str = settings.get("version", '')  if settings  else ''
+__project_name__ = config.get("project_name", 'hypotez') if config else 'hypotez'
+__version__: str = config.get("version", '')  if config else ''
 __doc__: str = doc_str if doc_str else ''
 __details__: str = ''
-__author__: str = settings.get("author", '')  if settings  else ''
-__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
+__author__: str = config.get("author", '')  if config else ''
+__copyright__: str = config.get("copyrihgnt", '')  if config else ''
 __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
