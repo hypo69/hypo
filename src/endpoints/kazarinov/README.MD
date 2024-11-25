@@ -7,3 +7,5 @@
 -------- 
 `BotHandler` 
 - парсит линки
+
+bot -> handler -> scenario_pricelist -> pricelist_generator

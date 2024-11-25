@@ -163,19 +163,20 @@ class ProgramSettings(BaseModel):
         
         self.path = SimpleNamespace(
             root = Path(self.base_dir),
-            src = Path(self.base_dir) / 'src',
-            endpoints = Path(self.base_dir) / 'src' / 'endpoints',
-            bin = Path(self.base_dir) / 'bin',
-            log = Path(self.base_dir) / 'log',
-            tmp = Path(self.base_dir) / 'tmp',
-            data = Path(self.base_dir) / 'data',
-            secrets = Path(self.base_dir) / 'secrets',
-            google_drive = Path(self.config.google_drive),
-            external_storage = Path(self.config.external_storage)
+            bin = Path(self.base_dir / 'bin') # <- тут бинарники (chrome, firefox, ffmpeg, ...)
+            src = Path(self.base_dir) / 'src', # <- тут весь код
+            endpoints = Path(self.base_dir) / 'src' / 'endpoints', # <- тут все клиенты
+            secrets = Path(self.base_dir / 'secrets'),  # <- это папка с паролями и базой данных ! Ей нельзя попадать в гит
+
+            log = Path(getattr(self.config.path, 'log', self.base_dir / 'log')) 
+            tmp = Path(getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
+            data = Path(getattr(self.config.path, 'data', self.base_dir / 'data')),
+            google_drive = Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive'), # <- шоб не упало, если беда в json
+            external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage')
         )
 
         if check_latest_release(self.config.git_user, self.config.git):
-            ...  # Логика для новой версии
+            ...  # Логика что делать когда есть новая версия hypo69 на github 
 
         self.MODE = self.config.mode
 

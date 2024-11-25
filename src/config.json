@@ -5,12 +5,16 @@
   "author": "David Ben Avraham",
   "copyright": "2024, hypo69",
   "project_folder": "hypotez",
-  "google_drive": "H:\\My Drive\\hypotez",
-  "external_storage": "E:\\hypo69\\data",
   "mode": "dev",
   "avaible_modes": [ "dev", "debug", "test", "prod" ],
   "git_user": "hypo69",
   "git": "hypo",
   "cofee": "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+  "path": {
+    "google_drive": "H:\\My Drive\\hypotez",
+    "external_storage": "E:\\hypo69\\data",
+    "tmp": "E:\\hypo69\\tmp",
+    "log": "E:\\hypo69\\log"
+  }
 
 }

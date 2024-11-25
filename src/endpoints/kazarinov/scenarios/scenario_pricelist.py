@@ -107,6 +107,10 @@ class Mexiron:
 
         Returns:
             bool: True if the scenario executes successfully, False otherwise.
+
+        .. todo:
+            сделать логер перед отрицательным выходом из функции. 
+            Важно! модель ошибается. 
         """
         urls_list = [urls] if isinstance(urls, str) else urls
         if not urls_list:
@@ -148,16 +152,22 @@ class Mexiron:
 
         # AI processing
         ru, he = await self.process_ai(products_list, price)
+        """ сырые данные уходят в обработку моделью (`gemini`) -> 
+        модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
+        Внимание! модель может ошибаться"""
+
         if ru and he:
             await self.create_report()
             await self.post_facebook(ru)
             await self.post_facebook(he)
+            return True
+        return 
 
-        return True
 
     def get_graber_by_supplier_url(self, url: str):
         """
         Returns the appropriate graber for a given supplier URL.
+        Для каждого поставщика реализован свой грабер, который вытаскивает значения полей с целевой html страницы 
 
         Args:
             url (str): Supplier page URL.
@@ -174,11 +184,14 @@ class Mexiron:
         if url.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
             return IvoryGraber(self.driver)
         logger.debug(f'No graber found for URL: {url}')
-        return None
+        ...
+        return 
 
     async def convert_product_fields(self, f: ProductFields) -> dict:
         """
-        Converts product fields into a dictionary.
+        Converts product fields into a dictionary. 
+        Функция конвертирует поля из объекта `ProductFields` в простой словарь для модели ии.
+
 
         Args:
             f (ProductFields): Object containing parsed product data.
@@ -186,8 +199,6 @@ class Mexiron:
         Returns:
             dict: Formatted product data dictionary.
         """
-        # image_path = self.export_path / 'images' / f'{f.id_product}.png'
-        # await save_png(f.default_image_url, image_path)
 
         return {
             'product_title': f.name['language'][0]['value'].strip(),
@@ -195,7 +206,7 @@ class Mexiron:
             'description_short': f.description_short['language'][0]['value'].strip(),
             'description': f.description['language'][0]['value'].strip(),
             'specification': f.specification['language'][0]['value'].strip(),
-            #'local_saved_image': str(image_path),
+            'local_saved_image': f.local_saved_image,
         }
 
     async def save_product_data(self, product_data: dict):
@@ -218,8 +229,9 @@ class Mexiron:
 
         Returns:
             tuple: Processed response in `ru` and `he` formats.
-        Notes:
-            Модель может возвращать невелидный результат. В таком случае я переспрашиваю модель
+        .. note:
+            Модель может возвращать невелидный результат. 
+            В таком случае я переспрашиваю модель разумное количество раз
         """
         ...
         if attemts < 1:
@@ -248,7 +260,7 @@ class Mexiron:
                 ru:SimpleNamespace = data.ru
                 if not ru:
                     ...
-                    self.process_ai(products_list, attemts-1)
+                    self.process_ai(products_list, attemts-1)  # <- невалидный результат
             else:
                 ...
                 self.process_ai(products_list, attemts-1)
@@ -257,18 +269,18 @@ class Mexiron:
                 he:SimpleNamespace = data.he
                 if not he:
                     ...
-                    self.process_ai(products_list, attemts-1)
+                    self.process_ai(products_list, attemts-1)  # <- невалидный результат
             else:
                 ...
-                self.process_ai(products_list, attemts-1)
+                self.process_ai(products_list, attemts-1)  # <- невалидный результат
             return ru, he
         except Exception as ex:
-            logger.debug(f"ошибка словаря")
+            logger.debug(f"модель вернула невалидный результат!") # неудача!
             ...
             return
 
     async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
-        """"""
+        """Функция исполняет сценарий рекламного модуля `facvebook`."""
         ...
         self.d.get_url(r'https://www.facebook.com/profile.php?id=61566067514123')
         currency = "ש''ח"
@@ -290,8 +302,8 @@ class Mexiron:
         return True
 
     def create_report(self):
-        """"""
-        generator = ReportGenerator( base_path = , timestamp = self.timestamp )
+        """Функция отправляет задание на создание мехирона в форматax `html` и `pdf`"""
+        generator = ReportGenerator( base_path = self.export_path, timestamp = self.timestamp )
         ...
         for lang in ['he','ru']:
             generator.create_report(lang)

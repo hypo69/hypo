@@ -6,14 +6,7 @@
 """
 .. module: src.endpoints.kazarinov.react 
 	:platform: Windows, Unix
-	:synopsis:
-
-"""
-MODE = 'dev'
-
-#https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c
-
-""" Генератор HTML и PDF для мехиронов Казаринова
+	:synopsis: Генератор HTML и PDF для мехиронов Казаринова
 
 Описание работы:
 - Конструктор `__init__`: Принимает шаблон, базовый путь, метку времени и язык.
@@ -22,7 +15,13 @@ MODE = 'dev'
 - Метод `save_html`: Сохраняет HTML в файл.
 - Метод `generate_pdf`: Преобразует HTML в PDF.
 - Метод `create_report`: Запускает полный цикл генерации отчёта.
+
 """
+MODE = 'dev'
+
+#https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c
+
+
 import header
 from dataclasses import dataclass, field
 from src import gs

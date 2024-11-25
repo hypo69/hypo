@@ -39,17 +39,6 @@ from typing import Any, Callable
 
 
 
-# Глобальные настройки через объект `Context`
-class Context:
-    """Класс для хранения глобальных настроек."""
-    driver: Driver = None
-    locator: SimpleNamespace = None
-    supplier_prefix: str = 'aliexpress'
-
-
-
-
-
 # def close_pop_up(value: Any = None) -> Callable:
 #     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
