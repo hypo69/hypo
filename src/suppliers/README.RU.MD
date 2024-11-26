@@ -1,12 +1,36 @@
-Класс `Supplier` централизует управление поставщиками, включая настройки, аутентификацию и выполнение сценариев. Его можно расширять для новых поставщиков через наследование или добавление дополнительных модулей.
+# **Класс** `Supplier`
 
-```markdown
-# Документация класса Supplier
+* * в контексте кода `Supplier` - поставщик информации.
+Поставщиком может быть производитель какого-либо тавара, данных или информации
+Источники потавщика - целевая страница сайта, документ, база данных, таблица.
+Класс сводит разных поставщиков к одинаковому алгоритму действий внутри класса.
+У каждого поставщика есть свой уникальный префикс. * *
+---
+## Список реализованныx поставщиков:
 
-## **Класс** `Supplier`
+[aliexpress](aliexpress)
+[amazon](amazon)
+[bangood](bangood)
+[cdata](cdata)
+[chat_gpt](chat_gpt)
+[ebay](ebay)
+[etzmaleh](etzmaleh)
+[gearbest](gearbest)
+[grandadvance](grandadvance)
+[hb](hb)
+[ivory](ivory)
+[ksp](ksp)
+[kualastyle](kualastyle)
+[morlevi](morlevi)
+[visualdg](visualdg)
+[wallashop](wallashop)
+[wallmart](wallmart)
+
+
 ### **Базовый класс для всех поставщиков**
 
-Класс `Supplier` служит основой для управления взаимодействиями с поставщиками. Он выполняет инициализацию, настройку, аутентификацию и запуск сценариев для различных источников данных, таких как `amazon.com`, `walmart.com`, `mouser.com` и `digikey.com`. Клиент может определить дополнительные поставщики.
+Класс `Supplier` служит основой для управления взаимодействиями с поставщиками. 
+Он выполняет инициализацию, настройку, аутентификацию и запуск сценариев для различных источников данных, таких как `amazon.com`, `walmart.com`, `mouser.com` и `digikey.com`. Клиент может определить дополнительные поставщики.
 
 ---
 
@@ -144,31 +168,4 @@ def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
      ```python
      supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])
      ```
-
----
-
-## **Диаграмма класса**
-
-```plaintext
-Supplier
-├── Атрибуты
-│   ├── supplier_id: int
-│   ├── supplier_prefix: str
-│   ├── supplier_settings: dict
-│   ├── locale: str
-│   ├── price_rule: str
-│   ├── related_modules: module
-│   ├── scenario_files: list
-│   ├── current_scenario: dict
-│   ├── login_data: dict
-│   ├── locators: dict
-│   ├── driver: Driver
-│
-├── Методы
-│   ├── __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs)
-│   ├── _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool
-│   ├── login(self) -> bool
-│   ├── run_scenario_files(self, scenario_files: str | List[str] = None) -> bool
-│   ├── run_scenarios(self, scenarios: dict | list[dict]) -> bool
-```
 ```
