@@ -127,7 +127,7 @@ class Graber(Grbr):
             # await self.delivery_in_stock(kwards.get("delivery_in_stock", ''))
             # await self.delivery_out_stock(kwards.get("delivery_out_stock", ''))
             # await self.depth(kwards.get("depth", ''))
-            # await self.description(kwards.get("description", ''))
+            await self.description(kwards.get("description", ''))
             await self.description_short(kwards.get("description_short", ''))
             # await self.ean13(kwards.get("ean13", ''))
             # await self.ecotax(kwards.get("ecotax", ''))

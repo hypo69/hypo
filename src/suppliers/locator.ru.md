@@ -1,7 +1,8 @@
-# Локаторы полей на `HTML` странице
+# Локаторы полей на `HTML`-странице
+
 ### Пример локатора:
 ```json
-  "close_banner": {
+"close_banner": {
     "attribute": null, 
     "by": "XPATH",
     "selector": "//button[@id = 'closeXButton']",
@@ -9,19 +10,19 @@
     "use_mouse": false,
     "mandatory": false,
     "event": "click()",
-    "locator_description": "Закрываю pop-up окно, если оно не появилось - не страшно (`mandatory`:`false`)"
+    "locator_description": "Закрываю pop-up окно. Если оно не появилось — не страшно (`mandatory`: `false`)."
   },
-    "additional_images_urls": {
+  "additional_images_urls": {
     "attribute": "src",
     "by": "XPATH",
     "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
     "if_list": "all",
     "use_mouse": false,
     "mandatory": false,
-    "event": null
-    "locator_description": "получает список `url` дополнительных изображений"
+    "event": null,
+    "locator_description": "Получает список `url` дополнительных изображений."
   },
-    "id_supplier": {
+  "id_supplier": {
     "attribute": "innerText",
     "by": "XPATH",
     "selector": "//span[@class = 'ltr sku-copy']",
@@ -29,9 +30,9 @@
     "use_mouse": false,
     "mandatory": true,
     "event": null,
-    "locator_description": "SKU morlevi"
+    "locator_description": "SKU Morlevi."
   },
-    "default_image_url": {
+  "default_image_url": {
     "attribute": null,
     "by": "XPATH",
     "selector": "//a[@id = 'mainpic']//img",
@@ -39,55 +40,69 @@
     "use_mouse": false,
     "event": "screenshot()",
     "mandatory": true,
-    "locator_description": "Внимание! в морлеви картинка получается через screenshot и возвращается как png (`bytes`)"
-  },
+    "locator_description": "Внимание! В Morlevi картинка получается через screenshot и возвращается как PNG (`bytes`)."
+  }
 ```
-где:
-имя словаря - это имя поля класса `ProductFields` ([подробно о `ProductFields`](../product/product_fileds))
 
-- `attribute`: аттрибут, который мы хотим получить от вебэемента. Напринер: `innerText`,`src`,`id`,`href`,... Если установить значение аттрибута в `none/false`, то ведрайвер вернет весь вебеэлемент (`WebElement`) 
+### Детали:
+Имя словаря соответствует имени поля класса `ProductFields` ([подробнее о `ProductFields`](../product/product_fields)).
 
-- `by`: стратегия захвата элемента:
- 
-    `ID` соответствует `By.ID`  
-    `NAME` соответствует `By.NAME`  
-    `CLASS_NAME`  соответствует `By.CLASS_NAME`  
-    `TAG_NAME` соответствует `By.TAG_NAME`  
-    `LINK_TEXT` соответствует `By.LINK_TEXT`  
-    `PARTIAL_LINK_TEXT` соответствует `By.PARTIAL_LINK_TEXT`  
-    `CSS_SELECTOR` соответствует `By.CSS_SELECTOR`  
-    `XPATH` соответствует `By.XPATH`
+- **`attribute`**: Атрибут, который нужно получить от веб-элемента. Например: `innerText`, `src`, `id`, `href` и т.д.  
+  Если установить значение `attribute` в `none/false`, то WebDriver вернёт весь веб-элемент (`WebElement`).
 
-- `selector`: селектор, определяющий как найти вебэлемент. Примеры селекторов:
-    `(//li[@class = 'slide selected previous'])[1]//img`,`//a[@id = 'mainpic']//img`,`//span[@class = 'ltr sku-copy']`
+- **`by`**: Стратегия для поиска элемента:  
+  - `ID` соответствует `By.ID`  
+  - `NAME` соответствует `By.NAME`  
+  - `CLASS_NAME` соответствует `By.CLASS_NAME`  
+  - `TAG_NAME` соответствует `By.TAG_NAME`  
+  - `LINK_TEXT` соответствует `By.LINK_TEXT`  
+  - `PARTIAL_LINK_TEXT` соответствует `By.PARTIAL_LINK_TEXT`  
+  - `CSS_SELECTOR` соответствует `By.CSS_SELECTOR`  
+  - `XPATH` соответствует `By.XPATH`
 
-- `if_list`: определяет, что делать со списком полученных вебэлементов. Значения, которые можно установить:
-    `first` - брать первый из списка 
-    `all` - забрать весь список вебэлементов со страницы 
-    `last` - забрать последний вебэлемент из списка 
-    `even`, `odd` - забрать чётные/нечётные вебэелементы 
+- **`selector`**: Селектор, определяющий способ нахождения веб-элемента. Примеры:  
+  `(//li[@class = 'slide selected previous'])[1]//img`,  
+  `//a[@id = 'mainpic']//img`,  
+  `//span[@class = 'ltr sku-copy']`.
 
-- use_mouse`: `true` | `false`
+- **`if_list`**: Определяет, что делать со списком найденных веб-элементов (`web_element`). Возможные значения:  
+  - `first`: выбрать первый элемент из списка.  
+  - `all`: выбрать все элементы.  
+  - `last`: выбрать последний элемент.  
+  - `even`, `odd`: выбрать чётные/нечётные элементы.  
+  - Указание конкретных номеров, например, `1,2,...` или `[1,3,5]`: выбрать элементы с указанными номерами.  
 
-`event`: вебдрайвер может выполнить дейаствие над вебэлементом. Например, `click()`, `screenshot()`, `scroll()`, ...
-Важно! Если указан `event`, то он будет выполнен, до он будет выполнен, до того, как драйвер получит значение в `attribute`.
-Например, если 
-```json
-{"attribute":"href",
-....
-"event":"click()"
-}
-```
-то вначале драйвер передаст вебэлементу комманду, а потом получит его аттрибут.
-принцип такой: действие -> аттрибут.
+  Альтернативный способ — указать номер элемента прямо в селекторе, например:  
+  `(//div[contains(@class, 'description')])[2]//p`  
+  или  
+  `(//div[contains(@class, 'description')])[2]//div`.
 
-- `mandatory`: является ли локатор обязательным. Если да {`mandatory`:`True`}, то при невозможности взаимодейтвия с вебэлементом код выдаст ошибку, если нет - пропустит обработку вебэлемента
+- **`use_mouse`**: `true` | `false`  
+  Используется для выполнения действий с помощью мыши.
 
-- `locator_description`: Заметка о локатoре
+- **`event`**: WebDriver может выполнить действие с веб-элементом, например, `click()`, `screenshot()`, `scroll()` и т.д.  
+  **Важно**: Если указан `event`, он будет выполнен *до* получения значения из `attribute`.  
+  Например:  
+  ```json
+  {"attribute": "href",
+  ...
+  "event": "click()"
+  }
+  ```
+  В этом случае сначала драйвер выполнит `click()` на веб-элементе, а затем получит его атрибут `href`.  
+  Принцип работы: **действие -> атрибут**.
 
-Более сложные локаторы:
-В ключи локатора можно передавать списки/коретжи и словари.
-Пример локатора со списками:
+- **`mandatory`**: Является ли локатор обязательным.  
+  Если `{mandatory: true}` и взаимодействие с веб-элементом невозможно, код выбросит ошибку. Если `mandatory: false`, элемент будет пропущен.
+
+- **`locator_description`**: Описание локатора.
+
+---
+
+### Сложные локаторы:
+В ключи локатора можно передавать списки, кортежи или словари.
+
+#### Пример локатора со списками:
 ```json
 "sample_locator": {
     "attribute": [
@@ -116,20 +131,18 @@
       true
     ],
     "locator_description": [
-      "Нажимаю на таб для отркытия поля description",
-      "читаю данные из div"
+      "Нажимаю на вкладку для открытия поля description.",
+      "Читаю данные из div."
     ]
-  },
-}
+  }
 ```
-В данном примере вначале будет найден элемент  "//a[contains(@href, '#tab-description')]", драйвер пошлет ему комаду `click()` и после этого получит значение `href` элемента "//a[contains(@href, '#tab-description')]",
+В этом примере сначала будет найден элемент `//a[contains(@href, '#tab-description')]`.  
+Драйвер выполнит команду `click()`, затем получит значение атрибута `href` элемента `//a[contains(@href, '#tab-description')]`.
 
-Пример словаря в локаторе:
+#### Пример локатора со словарём:
 ```json
-"sample_locator":
-{
-"attribute":{"href":"name"},
-...
+"sample_locator": {
+  "attribute": {"href": "name"},
+  ...
 }
 ```
-[chatgpt](https://chatgpt.com/share/674617f1-ebb8-800d-b62b-a3ab2ab39d14)

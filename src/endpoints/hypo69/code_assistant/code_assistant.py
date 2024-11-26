@@ -337,7 +337,6 @@ class CodeAssistant:
         # Выводим сообщение о успешном сохранении файла
         pprint(f'Ответ модели сохранен в: {export_path}', text_color='green')
 
-
     def _remove_outer_quotes(self, response: str) -> str:
         """
         Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
@@ -356,20 +355,21 @@ class CodeAssistant:
         except Exception as ex:
             logger.error("Exception in `remove_outer_quotes()`", ex)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG
             ...
-            return
-        # Если строка начинается с '```python', возвращаем её без изменений
-        if response.startswith("```python"):
+            return ''
+
+        # Если строка начинается с '```python' или '```mermaid', возвращаем её без изменений
+        if response.startswith(('```python', '```mermaid')):
             return response
 
         # Удаляем маркер для известных форматов, если строка обрамлена в '```'
         config = j_loads_ns(gs.path.endpoint / 'hypo69' / 'code_assistant' / 'code_assistant.json')
         for prefix in config.known_prefixes:
-            if response.startswith(prefix) and response.endswith("```"):
+            # Сравниваем с префиксом без учёта регистра
+            if response.lower().startswith(prefix.lower()):
                 return response.removeprefix(prefix).removesuffix("```").strip()
 
         # Возвращаем строку без изменений, если условия не выполнены
         return response
-
 
     
     def run(self, start_file_number: int = 1):

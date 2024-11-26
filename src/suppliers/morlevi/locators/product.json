@@ -742,12 +742,12 @@
   "description": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//div[contains(@class, 'product-params')]//li",
-    "if_list": "all",
+    "selector": "//div[@class = 'description')]//li",
+    "if_list": "2",
     "use_mouse": false,
     "mandatory": true,
     "event": null,
-    "locator_description": "Технические характеристики. Оно нахосится в спанах под див"
+    "locator_description": "Описание"
   },
   "specification": {
     "attribute": "innerText",

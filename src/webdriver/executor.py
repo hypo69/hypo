@@ -189,13 +189,13 @@ class ExecuteLocator:
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
 
-        element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
-        if not element:
+        web_element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
+        if not web_element:
             if MODE in ('dev','debug'):
                 logger.debug(f"Не нашелся : {locator=}\n", None, False)
             ...
             return
-   
+
         def _parse_dict_string(attr_string: str) -> dict | None:
             """ Parses a string like '{attr1:attr2}' into a locator.
 
@@ -219,7 +219,7 @@ class ExecuteLocator:
                     logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
                 return
 
-        def _get_attributes_from_dict(element: WebElement, attr_dict: dict) -> dict:
+        def _get_attributes_from_dict(web_element: WebElement, attr_dict: dict) -> dict:
             """ Retrieves attribute values for each key in a given dictionary.
 
             Args:
@@ -242,19 +242,19 @@ class ExecuteLocator:
                     return
             return result
 
-        if element:
+        if web_element:
             # Check if the attribute is a dictionary-like string
             if isinstance(locator.attribute, str) and locator.attribute.startswith("{"):
                 attr_dict = _parse_dict_string(locator.attribute)
 
-                if isinstance(element, list):
-                    return [_get_attributes_from_dict(el, attr_dict) for el in element]
-                return _get_attributes_from_dict(element, attr_dict)
+                if isinstance(web_element, list):
+                    return [_get_attributes_from_dict(el, attr_dict) for el in web_element]
+                return _get_attributes_from_dict(web_element, attr_dict)
 
-            if isinstance(element, list):
+            if isinstance(web_element, list):
                 ret: list = []
                 try:
-                    for e in element:
+                    for e in web_element:
                         ret.append(f'{e.get_attribute(locator.attribute)}')
                     return ret if len(ret) > 1 else ret[0]
                 except Exception as ex:
@@ -262,7 +262,7 @@ class ExecuteLocator:
                         logger.debug(f"Error in get_attribute(): {pprint(locator, text_color='YELLOW', bg_color='BLACK')}\n", ex, False)
                     return
             
-            return element.get_attribute(locator.attribute)
+            return web_element.get_attribute(locator.attribute)
         return
 
     async def get_webelement_by_locator(
@@ -283,14 +283,44 @@ class ExecuteLocator:
         Returns:
             Optional[Union[WebElement, List[WebElement]]]: The located web element or list of elements.
         """
+        def parse_elements_list(web_element: WebElement | list[WebElement], locator: SimpleNamespace) -> WebElement | list[WebElement]:
+            """Возвращает вебэлементы из списка по правилу переданному через параметр `locator.if_list`
+
+            Args:
+                web_element (WebElement | list[WebElement]): вебэлемент или список вебэлементов
+                locator (SimpleNamespace): объект с параметром `if_list`, определяющим правила выбора из списка
+
+            Returns:
+                WebElement | list[WebElement]: возвращает выбранный вебэлемент или список вебэлементов в зависимости от правила
+            """
+            if not isinstance(web_element, list):
+                return web_element
+            if_list = locator.if_list
+            
+            if if_list == 'all':
+                return web_element
+            elif if_list == 'first':
+                return web_element[0]
+            elif if_list == 'last':
+                return web_element[-1]
+            elif if_list == 'even':
+                return [web_element[i] for i in range(0, len(web_element), 2)]
+            elif if_list == 'odd':
+                return [web_element[i] for i in range(1, len(web_element), 2)]
+            elif isinstance(if_list, (list, tuple)):
+                return [web_element[i] for i in if_list]
+            elif isinstance(if_list, int):
+                return web_element[if_list - 1]
+            ...
+
         d = self.driver
         locator = (
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
         try:
             condition = EC.presence_of_element_located if timeout_for_event == 'presence_of_element_located' else EC.element_to_be_clickable
-            element = await asyncio.to_thread(WebDriverWait(d, timeout).until, condition((locator.by, locator.selector)))
-            return element
+            web_element = await asyncio.to_thread(WebDriverWait(d, timeout).until, condition((locator.by, locator.selector)))
+            return parse_elements_list(web_element)
         except Exception as ex:
             if MODE == 'debug':
                 logger.debug(f"Locator issue: {locator}")

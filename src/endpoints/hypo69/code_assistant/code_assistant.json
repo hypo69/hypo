@@ -83,8 +83,9 @@
     "```RST",
     "```PALINTEXT",
     "```HTML",
-    "```"
+    "```\n"
   ],
+
   "output_directory": {
     "code_checker": "<model>/consultant/<lang>/src",
     "code_explainer": "<model>/explainer/<lang>/src",
