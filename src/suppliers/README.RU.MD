@@ -13,45 +13,56 @@
 ---
 ## Список реализованныx поставщиков:
 
-[aliexpress](aliexpress)  - Реализован в двух варианах сценариев: `webriver` и `api` 
+[aliexpress](aliexpress/README.RU.MD)  - Реализован в двух варианах сценариев: `webriver` и `api` 
 
-[amazon](amazon) - `webdriver` 
+[amazon](amazon/README.RU.MD) - `webdriver` 
 
-[bangood](bangood)  - `webdriver` 
+[bangood](bangood/README.RU.MD)  - `webdriver` 
 
-[cdata](cdata)  - `webdriver` 
+[cdata](cdata/README.RU.MD)  - `webdriver` 
 
-[chat_gpt](chat_gpt)  - Работа с чатом chatgpt (НЕ С МОДЕЛЬЮ!) 
+[chat_gpt](chat_gpt/README.RU.MD)  - Работа с чатом chatgpt (НЕ С МОДЕЛЬЮ!) 
 
-[ebay](ebay)  - `webdriver` 
+[ebay](ebay/README.RU.MD)  - `webdriver` 
 
-[etzmaleh](etzmaleh)  - `webdriver` 
+[etzmaleh](etzmaleh/README.RU.MD)  - `webdriver` 
 
-[gearbest](gearbest)  - `webdriver` 
+[gearbest](gearbest/README.RU.MD)  - `webdriver` 
 
-[grandadvance](grandadvance)  - `webdriver` 
+[grandadvance](grandadvance/README.RU.MD)  - `webdriver` 
 
-[hb](hb)  - `webdriver` 
+[hb](hb/README.RU.MD)  - `webdriver` 
 
-[ivory](ivory) - `webdriver` 
+[ivory](ivory/README.RU.MD) - `webdriver` 
 
-[ksp](ksp) - `webdriver`
+[ksp](ksp/README.RU.MD) - `webdriver`
 
-[kualastyle](kualastyle) `webdriver` 
+[kualastyle](kualastyle/README.RU.MD) `webdriver` 
 
-[morlevi](morlevi) `webdriver` 
+[morlevi](morlevi/README.RU.MD) `webdriver` 
 
-[visualdg](visualdg) `webdriver` 
+[visualdg](visualdg/README.RU.MD) `webdriver` 
 
-[wallashop](wallashop) `webdriver`  
+[wallashop](wallashop/README.RU.MD) `webdriver`  
 
-[wallmart](wallmart) `webdriver` 
+[wallmart](wallmart/README.RU.MD) `webdriver` 
 
-[подробно о вебдрайвере :class: `Driver`](../webdriver)    
-[подробно о сценариях :class: `Scenario`](../scenarios)
-
+[подробно о вебдрайвере :class: `Driver`](../webdriver/README.RU.MD)    
+[подробно о сценариях :class: `Scenario`](../scenarios/README.RU.MD)
 ---
+```mermaid
+graph TD
+    subgraph WebInteraction
+        webelement <--> executor
+        subgraph InnerInteraction
+            executor <--> webdriver
+        end
+    end
+    webdriver <--> supplier
+    supplier --> product_fields
+    product_fields --> endpoints
 
+```
 ## **Атрибуты**
 - **`supplier_id`** *(int)*: Уникальный идентификатор поставщика.
 - **`supplier_prefix`** *(str)*: Префикс поставщика, например, `'amazon'`, `'aliexpress'`.
