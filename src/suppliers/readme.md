@@ -51,7 +51,19 @@ It handles initialization, configuration, authentication, and execution of workf
 [Details on workflows :class: `Scenario`](../scenarios)
 
 ---
+```mermaid
+graph TD
+    subgraph WebInteraction
+        webelement <--> executor
+        subgraph InnerInteraction
+            executor <--> webdriver
+        end
+    end
+    webdriver <--> supplier
+    supplier --> product_fields
+    product_fields --> endpoints
 
+```
 ## **Attributes**
 - **`supplier_id`** *(int)*: Unique identifier for the supplier.  
 - **`supplier_prefix`** *(str)*: Supplier prefix, e.g., `'amazon'`, `'aliexpress'`.  
