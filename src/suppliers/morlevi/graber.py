@@ -78,7 +78,7 @@ class Graber(Grbr):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'morlevi'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.locator = self.locator.close_pop_up
+        Context.locator_for_decorator = self.locator.close_pop_up
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.
@@ -189,19 +189,18 @@ class Graber(Grbr):
     @close_pop_up()
     async def local_saved_image(self, value: Any = None):
         """Fetch and save image locally.
-        
+        Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
         """
-        
-            # Получаем значение через execute_locator и сохраняем изображение
+       
         if not value:
             try:
-                raw = await self.d.execute_locator(self.l.default_image_url) # <- получаю изображение 
-                value = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
-                if value:
-                    self.fields.local_saved_image = value
+                raw = await self.d.execute_locator(self.l.default_image_url) # <- получаю скриншот как `bytes` 
+                img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
+                if img_tmp_path:
+                    self.fields.local_saved_image = img_tmp_path
                     return True
                 else:
                     logger.debug(f"Ошибка сохранения изображения")
@@ -211,8 +210,3 @@ class Graber(Grbr):
                 logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
                 ...
                 return
-
-
-        # Записываем результат в поле `local_saved_image` объекта `ProductFields`
-
-

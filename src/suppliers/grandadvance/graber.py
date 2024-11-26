@@ -77,7 +77,7 @@ class Graber(Grbr):
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
         
-        Context.locator = None
+        Context.locator_for_decorator = None
 
         
 

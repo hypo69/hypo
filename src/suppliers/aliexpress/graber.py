@@ -52,7 +52,7 @@ from typing import Any, Callable
 #         @wraps(func)
 #         async def wrapper(*args, **kwargs):
 #             try:
-#                 if Context.locator.close_pop_up:
+#                 if Context.locator_for_decorator.close_pop_up:
 #                     await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close 
 #                 ...
 #             except ExecuteLocatorException as ex:
@@ -70,7 +70,7 @@ class Graber(Grbr):
         self.supplier_prefix = 'aliexpress'
         super().__init__(supplier_prefix=Context.supplier_prefix, driver=driver)
         
-        Context.locator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
+        Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
         
         
 

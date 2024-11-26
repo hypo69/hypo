@@ -66,15 +66,15 @@ class Context:
 
     # Атрибуты класса
     driver: Driver = None
-    locator: SimpleNamespace = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
+    locator_for_decorator: SimpleNamespace = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
     supplier_prefix: str = None
 
 
 # Определение декоратора для закрытия всплывающих окон
 # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
 # Общее название декоратора `@close_pop_up` можно изменить 
-# Если декоратор не используется в поставщике - надо закомментировать строку
-# ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
+# Если декоратор не используется в поставщике - поставь 
+
 def close_pop_up(value: Any = None) -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
@@ -87,12 +87,12 @@ def close_pop_up(value: Any = None) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
-            if Context.locator:
+            if Context.locator_for_decorator:
                 try:
-                    await Context.driver.execute_locator(Context.locator)  # Await async pop-up close  
+                    await Context.driver.execute_locator(Context.locator_for_decorator)  # Await async pop-up close  
                     ... 
-                except ExecuteLocatorException as e:
-                    logger.debug(f'Ошибка выполнения локатора: {e}')
+                except ExecuteLocatorException as ex:
+                    logger.debug(f'Ошибка выполнения локатора:', ex)
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
@@ -262,7 +262,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.additional_shipping_cost) or ''
+            value = value or  await self.d.execute_locator(self.l.additional_shipping_cost) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `additional_shipping_cost`", ex)
             ...
@@ -287,7 +287,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.delivery_in_stock) or ''
+            value = value or  await self.d.execute_locator(self.l.delivery_in_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `delivery_in_stock`", ex)
             ...
@@ -313,7 +313,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.active) or ''
+            value = value or  await self.d.execute_locator(self.l.active) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `active`", ex)
             ...
@@ -339,7 +339,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.additional_delivery_times) or ''
+            value = value or  await self.d.execute_locator(self.l.additional_delivery_times) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `additional_delivery_times`", ex)
             ...
@@ -365,7 +365,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.advanced_stock_management) or ''
+            value = value or  await self.d.execute_locator(self.l.advanced_stock_management) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `advanced_stock_management`", ex)
             ...
@@ -390,7 +390,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.affiliate_short_link) or ''
+            value = value or  await self.d.execute_locator(self.l.affiliate_short_link) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_short_link`", ex)
             ...
@@ -416,7 +416,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.affiliate_summary) or ''
+            value = value or  await self.d.execute_locator(self.l.affiliate_summary) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_summary`", ex)
             ...
@@ -442,7 +442,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.affiliate_summary_2) or ''
+            value = value or  await self.d.execute_locator(self.l.affiliate_summary_2) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_summary_2`", ex)
             ...
@@ -468,7 +468,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.affiliate_text) or ''
+            value = value or  await self.d.execute_locator(self.l.affiliate_text) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_text`", ex)
             ...
@@ -493,7 +493,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value if value else await self.d.execute_locator(self.l.affiliate_image_large) or ''
+            locator_result = value or  await self.d.execute_locator(self.l.affiliate_image_large) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_large`", ex)
             ...
@@ -519,7 +519,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value if value else await self.d.execute_locator(self.l.affiliate_image_medium) or ''
+            locator_result = value or  await self.d.execute_locator(self.l.affiliate_image_medium) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_medium`", ex)
             ...
@@ -545,7 +545,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value if value else await self.d.execute_locator(self.l.affiliate_image_small) or ''
+            locator_result = value or  await self.d.execute_locator(self.l.affiliate_image_small) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_small`", ex)
             ...
@@ -571,7 +571,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value if value else await self.d.execute_locator(self.l.available_date) or ''
+            locator_result = value or  await self.d.execute_locator(self.l.available_date) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_date`", ex)
             ...
@@ -596,7 +596,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.available_for_order) or ''
+            value = value or  await self.d.execute_locator(self.l.available_for_order) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_for_order`", ex)
             ...
@@ -622,7 +622,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.available_later) or ''
+            value = value or  await self.d.execute_locator(self.l.available_later) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_later`", ex)
             ...
@@ -648,7 +648,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.available_now) or ''
+            value = value or  await self.d.execute_locator(self.l.available_now) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_now`", ex)
             ...
@@ -677,7 +677,7 @@ class Graber:
         Returns:
         dict: Словарь с ID категорий.
         """
-        self.fields.additional_categories = value if value else ''
+        self.fields.additional_categories = value or  ''
         return {'additional_categories': self.fields.additional_categories}
 
     @close_pop_up()
@@ -690,7 +690,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.cache_default_attribute) or ''
+            value = value or  await self.d.execute_locator(self.l.cache_default_attribute) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_default_attribute`", ex)
             ...
@@ -715,7 +715,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.cache_has_attachments) or ''
+            value = value or  await self.d.execute_locator(self.l.cache_has_attachments) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_has_attachments`", ex)
             ...
@@ -741,7 +741,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.cache_is_pack) or ''
+            value = value or  await self.d.execute_locator(self.l.cache_is_pack) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_is_pack`", ex)
             ...
@@ -767,7 +767,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.condition) or ''
+            value = value or  await self.d.execute_locator(self.l.condition) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `condition`", ex)
             ...
@@ -793,7 +793,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.customizable) or ''
+            value = value or  await self.d.execute_locator(self.l.customizable) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `customizable`", ex)
             ...
@@ -818,7 +818,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.date_add) or ''
+            value = value or  await self.d.execute_locator(self.l.date_add) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `date_add`", ex)
             ...
@@ -844,7 +844,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.date_upd) or ''
+            value = value or  await self.d.execute_locator(self.l.date_upd) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `date_upd`", ex)
             ...
@@ -870,7 +870,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.delivery_out_stock) or ''
+            value = value or  await self.d.execute_locator(self.l.delivery_out_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `delivery_out_stock`", ex)
             ...
@@ -896,7 +896,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.depth) or ''
+            value = value or  await self.d.execute_locator(self.l.depth) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `depth`", ex)
             ...
@@ -921,7 +921,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.description) or ''
+            value = value or  await self.d.execute_locator(self.l.description) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description`", ex)
             ...
@@ -947,7 +947,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.description_short) or ''
+            value = value or  await self.d.execute_locator(self.l.description_short) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description_short`", ex)
             ...
@@ -985,13 +985,17 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.id_default_combination) or ''
+            value = (
+                    value or 
+                    await self.d.execute_locator(self.l.id_default_combination) or 
+                    ''
+                    )
         except Exception as ex:
             logger.error(f"Ошибка получения данных для поля `id_default_combination`", ex)
             ...
             return
 
-        # Проверяем валидность результата
+        # блок для проверки валидности результата, сюда можно повесть проверку `string normiliser`,`string formatter`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_default_combination}")
             ...
@@ -1018,7 +1022,7 @@ class Graber:
             return
     
         # Формируем id_product с учетом supplier_prefix
-        self.fields.id_product = f"{self.supplier_prefix}{f'-{self.fields.id_supplier}' if self.fields.id_supplier else ''}-{value}"
+        self.fields.id_product = value or f"{self.supplier_prefix}{f'-{self.fields.id_supplier}' if self.fields.id_supplier else ''}"
         return True
 
     @close_pop_up()
@@ -1049,7 +1053,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.id_default_image) or ''
+            value = value or  await self.d.execute_locator(self.l.id_default_image) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_default_image`", ex)
             ...
@@ -1076,7 +1080,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.ean13) or ''
+            value = value or  await self.d.execute_locator(self.l.ean13) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ean13`", ex)
             ...
@@ -1103,7 +1107,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.ecotax) or ''
+            value = value or  await self.d.execute_locator(self.l.ecotax) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ecotax`", ex)
             ...
@@ -1130,7 +1134,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.height) or ''
+            value = value or  await self.d.execute_locator(self.l.height) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `height`", ex)
             ...
@@ -1155,7 +1159,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.how_to_use) or ''
+            value = value or  await self.d.execute_locator(self.l.how_to_use) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `how_to_use`", ex)
             ...
@@ -1180,7 +1184,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.id_manufacturer) or ''
+            value = value or  await self.d.execute_locator(self.l.id_manufacturer) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_manufacturer`", ex)
             ...
@@ -1205,7 +1209,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.id_supplier) or ''
+            value = value or  await self.d.execute_locator(self.l.id_supplier) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_supplier`", ex)
             ...
@@ -1230,7 +1234,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.id_tax) or ''
+            value = value or  await self.d.execute_locator(self.l.id_tax) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_tax`", ex)
             ...
@@ -1255,7 +1259,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.id_type_redirected) or ''
+            value = value or  await self.d.execute_locator(self.l.id_type_redirected) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_type_redirected`", ex)
             ...
@@ -1280,7 +1284,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.images_urls) or ''
+            value = value or  await self.d.execute_locator(self.l.images_urls) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `images_urls`", ex)
             ...
@@ -1304,7 +1308,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.indexed) or ''
+            value = value or  await self.d.execute_locator(self.l.indexed) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `indexed`", ex)
             ...
@@ -1329,7 +1333,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.ingredients) or ''
+            value = value or  await self.d.execute_locator(self.l.ingredients) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ingredients`", ex)
             ...
@@ -1354,7 +1358,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.meta_description) or ''
+            value = value or  await self.d.execute_locator(self.l.meta_description) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_description`", ex)
             ...
@@ -1379,7 +1383,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.meta_keywords) or ''
+            value = value or  await self.d.execute_locator(self.l.meta_keywords) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_keywords`", ex)
             ...
@@ -1404,7 +1408,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.meta_title) or ''
+            value = value or  await self.d.execute_locator(self.l.meta_title) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_title`", ex)
             ...
@@ -1429,7 +1433,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.is_virtual) or ''
+            value = value or  await self.d.execute_locator(self.l.is_virtual) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `is_virtual`", ex)
             ...
@@ -1453,7 +1457,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.isbn) or ''
+            value = value or  await self.d.execute_locator(self.l.isbn) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `isbn`", ex)
             ...
@@ -1479,7 +1483,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.link_rewrite) or ''
+            value = value or  await self.d.execute_locator(self.l.link_rewrite) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `link_rewrite`", ex)
             ...
@@ -1505,7 +1509,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.location) or ''
+            value = value or  await self.d.execute_locator(self.l.location) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `location`", ex)
             ...
@@ -1531,7 +1535,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.low_stock_alert) or ''
+            value = value or  await self.d.execute_locator(self.l.low_stock_alert) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `low_stock_alert`", ex)
             ...
@@ -1556,7 +1560,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.low_stock_threshold) or ''
+            value = value or  await self.d.execute_locator(self.l.low_stock_threshold) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `low_stock_threshold`", ex)
             ...
@@ -1582,7 +1586,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.minimal_quantity) or ''
+            value = value or  await self.d.execute_locator(self.l.minimal_quantity) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `minimal_quantity`", ex)
             ...
@@ -1608,7 +1612,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.mpn) or ''
+            value = value or  await self.d.execute_locator(self.l.mpn) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `mpn`", ex)
             ...
@@ -1634,7 +1638,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.name) or ''
+            value = value or  await self.d.execute_locator(self.l.name) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `name`", ex)
             ...
@@ -1660,7 +1664,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.online_only) or ''
+            value = value or  await self.d.execute_locator(self.l.online_only) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `online_only`", ex)
             ...
@@ -1686,7 +1690,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.on_sale) or ''
+            value = value or  await self.d.execute_locator(self.l.on_sale) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `on_sale`", ex)
             ...
@@ -1712,7 +1716,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.out_of_stock) or ''
+            value = value or  await self.d.execute_locator(self.l.out_of_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `out_of_stock`", ex)
             ...
@@ -1736,7 +1740,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.pack_stock_type) or ''
+            value = value or  await self.d.execute_locator(self.l.pack_stock_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `pack_stock_type`', ex)
             ...
@@ -1763,7 +1767,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.price) or ''
+            value = value or  await self.d.execute_locator(self.l.price) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `price`', ex)
             ...
@@ -1790,7 +1794,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.product_type) or ''
+            value = value or  await self.d.execute_locator(self.l.product_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `product_type`', ex)
             ...
@@ -1817,7 +1821,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.quantity) or ''
+            value = value or  await self.d.execute_locator(self.l.quantity) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `quantity`', ex)
             ...
@@ -1844,7 +1848,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.quantity_discount) or ''
+            value = value or  await self.d.execute_locator(self.l.quantity_discount) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `quantity_discount`', ex)
             ...
@@ -1871,7 +1875,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.redirect_type) or ''
+            value = value or  await self.d.execute_locator(self.l.redirect_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `redirect_type`', ex)
             ...
@@ -1898,7 +1902,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.reference) or ''
+            value = value or  await self.d.execute_locator(self.l.reference) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `reference`', ex)
             ...
@@ -1924,7 +1928,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.show_condition) or ''
+            value = value or  await self.d.execute_locator(self.l.show_condition) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `show_condition`', ex)
             ...
@@ -1949,7 +1953,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.show_price) or ''
+            value = value or  await self.d.execute_locator(self.l.show_price) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `show_price`', ex)
             ...
@@ -1974,7 +1978,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.state) or ''
+            value = value or  await self.d.execute_locator(self.l.state) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `state`', ex)
             ...
@@ -1999,7 +2003,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.text_fields) or ''
+            value = value or  await self.d.execute_locator(self.l.text_fields) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `text_fields`', ex)
             ...
@@ -2024,7 +2028,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.unit_price_ratio) or ''
+            value = value or  await self.d.execute_locator(self.l.unit_price_ratio) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `unit_price_ratio`', ex)
             ...
@@ -2048,7 +2052,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.unity) or ''
+            value = value or  await self.d.execute_locator(self.l.unity) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `unity`', ex)
             ...
@@ -2073,7 +2077,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.upc) or ''
+            value = value or  await self.d.execute_locator(self.l.upc) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `upc`', ex)
             ...
@@ -2098,7 +2102,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.uploadable_files) or ''
+            value = value or  await self.d.execute_locator(self.l.uploadable_files) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `uploadable_files`', ex)
             ...
@@ -2123,7 +2127,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.default_image_url) or ''
+            value = value or  await self.d.execute_locator(self.l.default_image_url) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `default_image_url`', ex)
             ...
@@ -2148,7 +2152,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.visibility) or ''
+            value = value or  await self.d.execute_locator(self.l.visibility) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `visibility`', ex)
             ...
@@ -2173,7 +2177,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.weight) or ''
+            value = value or  await self.d.execute_locator(self.l.weight) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `weight`', ex)
             ...
@@ -2200,7 +2204,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.wholesale_price) or ''
+            value = value or  await self.d.execute_locator(self.l.wholesale_price) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `wholesale_price`', ex)
             ...
@@ -2227,7 +2231,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.width) or ''
+            value = value or  await self.d.execute_locator(self.l.width) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `width`', ex)
             ...
@@ -2254,7 +2258,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.specification) or ''
+            value = value or  await self.d.execute_locator(self.l.specification) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `specification`', ex)
             ...
@@ -2281,7 +2285,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.link) or ''
+            value = value or  await self.d.execute_locator(self.l.link) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `link`', ex)
             ...
@@ -2307,7 +2311,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.byer_protection) or ''
+            value = value or  await self.d.execute_locator(self.l.byer_protection) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `byer_protection`', ex)
             ...
@@ -2333,7 +2337,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.customer_reviews) or ''
+            value = value or  await self.d.execute_locator(self.l.customer_reviews) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `customer_reviews`', ex)
             ...
@@ -2359,7 +2363,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value if value else await self.d.execute_locator(self.l.link_to_video) or ''
+            value = value or  await self.d.execute_locator(self.l.link_to_video) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `link_to_video`', ex)
             ...
@@ -2386,7 +2390,7 @@ class Graber:
         try:
             # Получаем значение через execute_locator и сохраняем изображение
 
-            value = value if value else await save_png_from_url(self.d.execute_locator(self.l.default_image_url), 
+            value = value or  await save_png_from_url(self.d.execute_locator(self.l.default_image_url), 
                                                                 gs.path.tmp / f'{self.fields.id_product}.png')
         except Exception as ex:
             logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
@@ -2413,7 +2417,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator и сохраняем видео
-            value = value if value else await self.d.execute_locator(self.l.local_saved_video) or ''
+            value = value or  await self.d.execute_locator(self.l.local_saved_video) or ''
         except Exception as ex:
             logger.error(f'Ошибка сохранения видео в поле `local_saved_video`', ex)
             ...

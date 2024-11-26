@@ -80,7 +80,7 @@ class Graber(Grbr):
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
         
-        Context.locator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
+        Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
 
         
 
