@@ -58,9 +58,11 @@ graph TD
             executor <--> webdriver
         end
     end
-    webdriver <--> supplier
+    webdriver -->|result| supplier
+    supplier -->|locator| webdriver
     supplier --> product_fields
     product_fields --> endpoints
+    scenario -->|Specific scenario for supplier| supplier
 
 ```
 ## **Атрибуты**
