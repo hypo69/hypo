@@ -742,8 +742,8 @@
   "description": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//div[@class = 'description')]//li",
-    "if_list": "2",
+    "selector": "//div[contains(@class, 'product-params')]//li",
+    "if_list": "all",
     "use_mouse": false,
     "mandatory": true,
     "event": null,

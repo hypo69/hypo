@@ -137,8 +137,9 @@ class ExecuteLocator:
                 if locator.attribute:
                     locator.attribute = await self.evaluate_locator(locator.attribute)
             except Exception as ex:
-                if MODE == 'debug':
+                if MODE in ('dev','debug'):
                     logger.debug(f"Locator Error: {locator=}")
+                    ...
                 return
 
             if locator.event:
@@ -283,7 +284,7 @@ class ExecuteLocator:
         Returns:
             Optional[Union[WebElement, List[WebElement]]]: The located web element or list of elements.
         """
-        def parse_elements_list(web_element: WebElement | list[WebElement], locator: SimpleNamespace) -> WebElement | list[WebElement]:
+        async def _parse_elements_list(web_element: WebElement | list[WebElement], locator: SimpleNamespace) -> WebElement | list[WebElement]:
             """Возвращает вебэлементы из списка по правилу переданному через параметр `locator.if_list`
 
             Args:
@@ -318,11 +319,27 @@ class ExecuteLocator:
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
         try:
-            condition = EC.presence_of_element_located if timeout_for_event == 'presence_of_element_located' else EC.element_to_be_clickable
-            web_element = await asyncio.to_thread(WebDriverWait(d, timeout).until, condition((locator.by, locator.selector)))
-            return parse_elements_list(web_element)
+            condition = (
+                EC.presence_of_all_elements_located if timeout_for_event == 'presence_of_all_elements_located'
+                else EC.visibility_of_all_elements_located
+            )
+
+
+            # await asyncio.to_thread — это метод из стандартной библиотеки Python (начиная с версии 3.9), 
+            # который позволяет вызывать блокирующие функции в отдельном потоке, не блокируя выполнение текущего асинхронного цикла событий.
+            # Основная задача
+            # Этот метод помогает интегрировать синхронный (блокирующий) код в асинхронное приложение, выполняя его в фоновом потоке. 
+            # Это удобно, например, для работы с функциями, которые нельзя напрямую сделать асинхронными, такими как работа с файлами, 
+            # сетью или библиотеками, не поддерживающими async.
+            web_elements = await asyncio.to_thread(
+                WebDriverWait(d, timeout).until,
+                condition((locator.by, locator.selector))
+            )
+
+
+            return await _parse_elements_list(web_element, locator)
         except Exception as ex:
-            if MODE == 'debug':
+            if MODE in ('dev','debug'):
                 logger.debug(f"Locator issue: {locator}")
             return
 
@@ -519,73 +536,7 @@ class ExecuteLocator:
             >>> driver = Driver()
             >>> driver.send_message(locator={"id": "messageBox"}, message="Hello World", typing_speed=0.1)
             True
-        Flowchart:
-                    +-------------------------+
-                    |        Start            |
-                    +-------------------------+
-                                |
-                                V
-                    +-------------------------+
-                    | Convert Locator         |
-                    | - If dict, convert to   |
-                    |   SimpleNamespace       |
-                    | - If SimpleNamespace,   |
-                    |   use directly          |
-                    +-------------------------+
-                                |
-                                V
-                    +-------------------------+
-                    | Retrieve Web Element    |
-                    | - Call get_webelement_by|
-                    |   _locator(locator)     |
-                    +-------------------------+
-                                |
-                                V
-                    +-------------------------+
-                    | Is Web Element Valid?   |
-                    | - If None or empty list |
-                    |   return False          |
-                    +-------------------------+
-                            /       \
-                           /         \
-                          No          Yes
-                          |            |
-                          V            |
-        +-------------------------+    |
-        | Return False            |    |
-        | - Indicate failure      |    |
-        +-------------------------+    |
-                                       |
-                                       V
-                    +---------------------------+
-                    | Select Single Web Element |           
-                    | - If list, choose first   |
-                    +---------------------------+
-                                        |
-                                        V
-                    +-------------------------+
-                    | Move to Web Element     |
-                    | - Call actions.move_to_ |
-                    |   element(webelement)   |
-                    +-------------------------+
-                                        |
-                                        V
-                    +-------------------------+
-                    | Type Message            |
-                    | - Call type_message     |
-                    |   with parameters       |
-                    +-------------------------+
-                                        |
-                                        V
-                    +-------------------------+
-                    | Return True             |
-                    | - Indicate success      |
-                    +-------------------------+
-                                        |
-                                        V
-                    +-------------------------+
-                    |          End            |
-                    +-------------------------+
+       
 
         """
         ...
