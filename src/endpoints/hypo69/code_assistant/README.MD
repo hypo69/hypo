@@ -1,4 +1,4 @@
-[Русский](https://github.com/hypo69/hypo/blob/master/endpoints/code_assistant/README.RU.MD)
+[Русский](https://github.com/hypo69/hypo/blob/master/endpoints/hypo69/code_assistant/README.RU.MD)
 # Code Assistant: Обучение модели коду проекта
 
 ## Описание
