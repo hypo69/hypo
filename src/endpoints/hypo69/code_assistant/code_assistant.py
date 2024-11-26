@@ -17,7 +17,7 @@ MODE = "dev"
 =========================================================================================
 
 Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ, 
-такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
+такими как Google Gemini и OpenAI, для выполнения задач по обработке кода проекта hypotеz
 
 Пример использования
 --------------------
@@ -149,6 +149,7 @@ class CodeAssistant:
             ).read_text(encoding="UTF-8")
         except Exception as ex:
             logger.error(f"Error reading instruction file", ex)
+            ...
             return False
 
     @property
