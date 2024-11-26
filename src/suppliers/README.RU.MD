@@ -1,30 +1,43 @@
 # **Класс** `Supplier`
 
-* * в контексте кода `Supplier` - поставщик информации.
+*В контексте кода `Supplier` - поставщик информации.
 Поставщиком может быть производитель какого-либо тавара, данных или информации
 Источники потавщика - целевая страница сайта, документ, база данных, таблица.
 Класс сводит разных поставщиков к одинаковому алгоритму действий внутри класса.
-У каждого поставщика есть свой уникальный префикс. * *
+У каждого поставщика есть свой уникальный префикс.*
 ---
 ## Список реализованныx поставщиков:
 
-[aliexpress](aliexpress)
-[amazon](amazon)
-[bangood](bangood)
-[cdata](cdata)
-[chat_gpt](chat_gpt)
-[ebay](ebay)
-[etzmaleh](etzmaleh)
-[gearbest](gearbest)
-[grandadvance](grandadvance)
-[hb](hb)
-[ivory](ivory)
-[ksp](ksp)
-[kualastyle](kualastyle)
-[morlevi](morlevi)
-[visualdg](visualdg)
-[wallashop](wallashop)
-[wallmart](wallmart)
+[aliexpress](aliexpress)  - Реализован в двух варианах сценариев: webriver и api 
+
+[amazon](amazon) - `webdriver` 
+
+[bangood](bangood)  - `webdriver` 
+
+[cdata](cdata)  - `webdriver` 
+
+[chat_gpt](chat_gpt)  - Работа с чатом chatgpt (НЕ С МОДЕЛЬЮ!) 
+
+[ebay](ebay)  - `webdriver` 
+
+[etzmaleh](etzmaleh)  - `webdriver` 
+
+[gearbest](gearbest)  - `webdriver` 
+
+[grandadvance](grandadvance)  - `webdriver` 
+
+[hb](hb)  - `webdriver` 
+
+[ivory](ivory) - `webdriver` 
+
+[ksp](ksp) - `webdriver`
+
+[kualastyle](kualastyle) `webdriver`
+[morlevi](morlevi) `webdriver`
+[visualdg](visualdg) `webdriver` 
+[wallashop](wallashop) `webdriver` 
+[wallmart](wallmart) `webdriver` 
+
 
 
 ### **Базовый класс для всех поставщиков**
