@@ -1,3 +1,4 @@
+[Русский](https://github.com/hypo69/hypo/blob/master/README.RU.MD)
 ### Example of a `README.md` File for the `endpoints` Module
 
 # `endpoints` Module

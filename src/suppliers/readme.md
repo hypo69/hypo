@@ -1,3 +1,4 @@
+[Русский](https://github.com/hypo69/hypo/blob/master/README.RU.MD)
 # **Class** `Supplier`
 ### **Base class for all suppliers**
 *In the context of the code, `Supplier` represents an information provider.  
