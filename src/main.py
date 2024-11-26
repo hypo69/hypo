@@ -3,12 +3,18 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
 
-## \file hypotez/src/main.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+
+
+                    #################################################################################################
+                    #                                                                                               #
+                    #           THIS IS ONLY TEMPLATE FOR FUTURE REALISATION                                        #
+                    #                                                                                               #
+                    #################################################################################################
+
+
+
+MODE = 'dev'
 
 """
 Module for interactive script execution.
