@@ -266,26 +266,53 @@ class Mexiron:
                 self.process_ai(products_list, attemts - 1)
 
         try:
-            if hasattr(data,'ru'):
-                ru:SimpleNamespace = data.ru
-                if not ru:
+            if isinstance(data, list):
+                if len(data) == 2:
+                    ru = data[0]
+                    he = data[1]
+                    return ru,he
+                elif len(data) == 1:
+                    data = data[0]
                     ...
-                    self.process_ai(products_list, attemts-1)  # <- невалидный результат
-            else:
-                ...
-                self.process_ai(products_list, attemts-1)
+                    if hasattr(data,'ru'):
+                        ru:SimpleNamespace = data.ru
+                        if not ru:
+                            ...
+                            self.process_ai(products_list, attemts-1)  # <- невалидный результат
 
-            if hasattr(data,'he'):
-                he:SimpleNamespace = data.he
-                if not he:
+                    if hasattr(data,'he'):
+                        he:SimpleNamespace = data.he
+                        if not he:
+                            ...
+                            self.process_ai(products_list, attemts-1)  # <- невалидный результат
+
+                    return ru,he
+                else:
+                    logger.warning(f'Проблема парсинга ответа\n{pprint(data)}', None)
                     ...
-                    self.process_ai(products_list, attemts-1)  # <- невалидный результат
+
             else:
-                ...
-                self.process_ai(products_list, attemts-1)  # <- невалидный результат
+               if hasattr(data,'ru'):
+                    ru:SimpleNamespace = data.ru
+                    if not ru:
+                        ...
+                        self.process_ai(products_list, attemts-1)  # <- невалидный результат
+
+                    if hasattr(data,'he'):
+                        he:SimpleNamespace = data.he
+                        if not he:
+                            ...
+                            self.process_ai(products_list, attemts-1)  # <- невалидный результат
 
 
-            return decode_unicode_escape(ru), decode_unicode_escape(he)
+            # # Функция `decode_unicode_escape()` декодирует строки с Unicode-эскейпами для двух языков: русского (ru) и иврита (he).
+            # # Пример сырой строки для русского: 'Русский текст: \\u041f\\u0440\\u0438\\u0432\\u0435\\u0442'
+            # # Пример декодированной строки для русского: 'Русский текст: Привет'
+            # # Пример сырой строки для иврита: '\\u05e9\\u05d4\\u05d5\\u05d4'
+            # # Пример декодированной строки для иврита: 'שחור'
+            # ru = decode_unicode_escape(ru)
+            # he = decode_unicode_escape(he)
+            return ru, he
 
         except Exception as ex:
             logger.debug(f"модель вернула невалидный результат!") # неудача!

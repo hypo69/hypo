@@ -175,13 +175,7 @@ class GoogleGenerativeAI:
                 ]
 
                 self._save_dialogue([messages])
-
-                # Код декодирует строки с Unicode-эскейпами для двух языков: русского (ru) и иврита (he).
-                # Пример сырой строки для русского: 'Русский текст: \\u041f\\u0440\\u0438\\u0432\\u0435\\u0442'
-                # Пример декодированной строки для русского: 'Русский текст: Привет'
-                # Пример сырой строки для иврита: '\\u05e9\\u05d4\\u05d5\\u05d4'
-                # Пример декодированной строки для иврита: 'שחור'
-                return decode_unicode_escape(response.text)
+                return response.text
 
             except requests.exceptions.RequestException as ex:
                 timeout = 1200

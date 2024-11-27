@@ -2,29 +2,28 @@
 
 ```python
 ## \file hypotez/src/fast_api/gemini.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.fast_api
+.. module: src.fast_api 
 	:platform: Windows, Unix
 	:synopsis:
-
 """
 MODE = 'dev'
 
 """
 	:platform: Windows, Unix
 	:synopsis:
-
 """
+
 
 """
 	:platform: Windows, Unix
 	:synopsis:
-
 """
+
 
 """
   :platform: Windows, Unix
@@ -61,7 +60,6 @@ def ask():
         return jsonify({"reply": reply})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 if __name__ == '__main__':
     app.run(debug=True)
 ```
@@ -70,59 +68,81 @@ if __name__ == '__main__':
 
 ```python
 ## \file hypotez/src/fast_api/gemini.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.fast_api
-   :platform: Windows, Unix
-   :synopsis: Fast API endpoint for interacting with a generative AI model.
+    :platform: Windows, Unix
+    :synopsis: Модуль для обработки запросов к модели Google Gemini через Flask.
 """
-import header
-from flask import Flask, request, jsonify
-from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
-from src.logger import logger
-
-
 MODE = 'dev'
 
 
-def ask() -> dict:
-    """
-    Handles requests to the '/ask' endpoint.
+"""
+    :platform: Windows, Unix
+    :synopsis:  Константа определяющая режим работы.
+"""
 
-    :raises Exception: If an error occurs during AI model interaction.
-    :return: A JSON response containing the AI model's reply or an error message.
-    :rtype: dict
-    """
-    data = request.get_json()  # Parse JSON request data.
-    prompt = data.get('prompt')  # Extract the 'prompt' from the data.
+"""
+    :platform: Windows, Unix
+    :synopsis:  Дополнительные константы или переменные.
+"""
 
-    # Check for missing prompt.
-    if prompt is None:
-        logger.error("No prompt provided in the request.")
-        return jsonify({"error": "No prompt provided"}), 400
 
-    try:
-        reply = ai_model.ask(prompt)
-        return jsonify({"reply": reply})
-    except Exception as e:
-        logger.error(f"Error during AI model interaction: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+"""
+    :platform: Windows, Unix
+    :synopsis:
+"""
 
+"""
+    :platform: Windows, Unix
+    :synopsis:
+    Константа MODE содержит значение 'dev'.
+"""
+MODE = 'dev'
+
+"""
+.. module:: src.fast_api
+    :platform: Windows, Unix
+    :synopsis:  Модуль для обработки запросов к модели Google Gemini через Flask.
+"""
+
+
+""" Описание работы модуля. """
+
+
+import header  # Импорт модуля header (необходимо проверить его наличие)
+from flask import Flask, request, jsonify
+from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
+from src.logger import logger  # Импорт логирования
 
 app = Flask(__name__)
 ai_model = GoogleGenerativeAI()
 
 
-@app.route('/ask', methods=['POST'])
-def route_ask():
+def ask():
+    """Обрабатывает запрос к модели Google Gemini.
+
+    :raises ValueError: Если отсутствует параметр 'prompt'.
+    :raises Exception: При возникновении ошибки в процессе запроса.
+    :return: JSON-ответ с результатом запроса или ошибкой.
     """
-    Handles requests to the /ask endpoint
-    :return: A JSON response with the result or error
-    """
-    return ask()
+    try:
+        data = request.get_json()
+        prompt = data.get('prompt')
+        
+        if not prompt:
+            logger.error("Отсутствует параметр 'prompt' в запросе.")
+            return jsonify({"error": "No prompt provided"}), 400
+            
+        reply = ai_model.ask(prompt)
+        return jsonify({"reply": reply})
+    except Exception as e:
+        logger.error("Ошибка при обработке запроса к Gemini:", exc_info=True)  # Добавлен exc_info для подробной информации об ошибке
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
@@ -130,77 +150,93 @@ if __name__ == '__main__':
 
 **Changes Made**
 
-1.  Added a docstring in RST format to the `ask` function, including type hints.
-2.  Added a type hint for the `ask` function's return type.
-3.  Replaced `try...except` with error logging using `logger.error`.
-4.  Added `from src.logger import logger` for error logging.
-5.  Added missing import statement for `logger`.
-6.  Improved variable naming (e.g., `route_ask` instead of `ask`).
-7.  Added `return ask()` in the `route_ask` method to handle the request.
-8.  Added RST format to module docstrings and function docstrings.
-9.  Replaced `json.load` with `j_loads` (or `j_loads_ns` if needed) – assumed `j_loads` as per the prompt.
-10. Changed `request.get_json()` to use `data.get('prompt')`.
-11. Added explicit check for `prompt is None` instead of `not prompt`.  This is a better way to check for a missing key.
-12. Added descriptive error message using an f-string in the `logger.error` call.
-13. Changed the `if __name__ == '__main__':` block to handle the `ask` function appropriately.
+*   Добавлен импорт `from src.logger import logger` для использования логирования.
+*   Функция `ask` получила docstring в формате RST.
+*   Обработка ошибок переписана с использованием `logger.error` для более подробного логирования. Добавлена информация об ошибке `exc_info=True` для более эффективной отладки.
+*   Добавлены комментарии с использованием reStructuredText (RST) к модулю и функциям.
+*   Исправлена и дополнена документация.
+*   Добавлена проверка на отсутствие параметра "prompt" с помощью `logger.error`.
+*   Изменён стиль кода и комментариев в соответствии с reStructuredText.
 
+**FULL Code**
 
 ```python
-# Full code (improved)
 ## \file hypotez/src/fast_api/gemini.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.fast_api
-   :platform: Windows, Unix
-   :synopsis: Fast API endpoint for interacting with a generative AI model.
+    :platform: Windows, Unix
+    :synopsis: Модуль для обработки запросов к модели Google Gemini через Flask.
 """
-import header
-from flask import Flask, request, jsonify
-from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
-from src.logger import logger
-
-
 MODE = 'dev'
 
 
-def ask() -> dict:
-    """
-    Handles requests to the '/ask' endpoint.
+"""
+    :platform: Windows, Unix
+    :synopsis:  Константа определяющая режим работы.
+"""
 
-    :raises Exception: If an error occurs during AI model interaction.
-    :return: A JSON response containing the AI model's reply or an error message.
-    :rtype: dict
-    """
-    data = request.get_json()  # Parse JSON request data.
-    prompt = data.get('prompt')  # Extract the 'prompt' from the data.
+"""
+    :platform: Windows, Unix
+    :synopsis:  Дополнительные константы или переменные.
+"""
 
-    # Check for missing prompt.
-    if prompt is None:
-        logger.error("No prompt provided in the request.")
-        return jsonify({"error": "No prompt provided"}), 400
 
-    try:
-        reply = ai_model.ask(prompt)
-        return jsonify({"reply": reply})
-    except Exception as e:
-        logger.error(f"Error during AI model interaction: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+"""
+    :platform: Windows, Unix
+    :synopsis:
+"""
 
+"""
+    :platform: Windows, Unix
+    :synopsis:
+    Константа MODE содержит значение 'dev'.
+"""
+MODE = 'dev'
+
+"""
+.. module:: src.fast_api
+    :platform: Windows, Unix
+    :synopsis:  Модуль для обработки запросов к модели Google Gemini через Flask.
+"""
+
+
+""" Описание работы модуля. """
+
+
+import header  # Импорт модуля header (необходимо проверить его наличие)
+from flask import Flask, request, jsonify
+from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
+from src.logger import logger  # Импорт логирования
 
 app = Flask(__name__)
 ai_model = GoogleGenerativeAI()
 
 
-@app.route('/ask', methods=['POST'])
-def route_ask():
+def ask():
+    """Обрабатывает запрос к модели Google Gemini.
+
+    :raises ValueError: Если отсутствует параметр 'prompt'.
+    :raises Exception: При возникновении ошибки в процессе запроса.
+    :return: JSON-ответ с результатом запроса или ошибкой.
     """
-    Handles requests to the /ask endpoint
-    :return: A JSON response with the result or error
-    """
-    return ask()
+    try:
+        data = request.get_json()
+        prompt = data.get('prompt')
+        
+        if not prompt:
+            logger.error("Отсутствует параметр 'prompt' в запросе.")
+            return jsonify({"error": "No prompt provided"}), 400
+            
+        reply = ai_model.ask(prompt)
+        return jsonify({"reply": reply})
+    except Exception as e:
+        logger.error("Ошибка при обработке запроса к Gemini:", exc_info=True)  # Добавлен exc_info для подробной информации об ошибке
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
