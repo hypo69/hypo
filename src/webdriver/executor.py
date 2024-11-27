@@ -88,7 +88,7 @@ class ExecuteLocator:
             self.actions = ActionChains(self.driver)
 
 
-    async def execute_locator( # Improved docstring
+    async def execute_locator( 
         self,
         locator: dict | SimpleNamespace,
         timeout: Optional[float] = 0,
@@ -109,6 +109,32 @@ class ExecuteLocator:
 
         Returns:
             str | list | dict | WebElement | bool: Outcome based on locator instructions.
+
+        ```mermaid
+                graph TD
+            A[Start] --> B[Check if locator is SimpleNamespace or dict]
+            B --> C{Is locator SimpleNamespace?}
+            C -->|Yes| D[Use locator as is]
+            C -->|No| E[Convert dict to SimpleNamespace]
+            E --> D
+            D --> F[Define async function _parse_locator]
+            F --> G[Check if locator has event, attribute, or mandatory]
+            G -->|No| H[Return None]
+            G -->|Yes| I[Try to map by and evaluate attribute]
+            I --> J[Catch exceptions and log if needed]
+            J --> K{Does locator have event?}
+            K -->|Yes| L[Execute event]
+            K -->|No| M{Does locator have attribute?}
+            M -->|Yes| N[Get attribute by locator]
+            M -->|No| O[Get web element by locator]
+            L --> P[Return result of event]
+            N --> P[Return attribute result]
+            O --> P[Return web element result]
+            P --> Q[Return final result of _parse_locator]
+            Q --> R[Return result of execute_locator]
+            R --> S[End]
+
+    ```
         """
         locator = (
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
@@ -158,6 +184,18 @@ class ExecuteLocator:
 
         Returns:
             Union[str, List[str], dict]: Evaluated attributes.
+
+        ```mermaid
+                graph TD
+            A[Start] --> B[Check if attribute is list]
+            B -->|Yes| C[Iterate over each attribute in list]
+            C --> D[Call _evaluate for each attribute]
+            D --> E[Return gathered results from asyncio.gather]
+            B -->|No| F[Call _evaluate for single attribute]
+            F --> G[Return result of _evaluate]
+            G --> H[End]
+            E --> H
+            ```
         """
         async def _evaluate(attr: str) -> Optional[str]:
             return getattr(Keys, re.findall(r"%(\w+)%", attr)[0], None) if re.match(r"^%\w+%", attr) else attr
@@ -184,6 +222,29 @@ class ExecuteLocator:
 
         Returns:
             Union[str, list, dict, WebElement | list[WebElement] | None]: The attribute value(s) or dictionary with attributes.
+
+        ```mermaid
+                graph TD
+            A[Start] --> B[Check if locator is SimpleNamespace or dict]
+            B -->|Yes| C[Convert locator to SimpleNamespace if needed]
+            C --> D[Call get_webelement_by_locator]
+            D --> E[Check if web_element is found]
+            E -->|No| F[Log debug message and return]
+            E -->|Yes| G[Check if locator.attribute is a dictionary-like string]
+            G -->|Yes| H[Parse locator.attribute string to dict]
+            H --> I[Check if web_element is a list]
+            I -->|Yes| J[Retrieve attributes for each element in list]
+            J --> K[Return list of attributes]
+            I -->|No| L[Retrieve attributes for a single web_element]
+            L --> K
+            G -->|No| M[Check if web_element is a list]
+            M -->|Yes| N[Retrieve attributes for each element in list]
+            N --> O[Return list of attributes or single attribute]
+            M -->|No| P[Retrieve attribute for a single web_element]
+            P --> O
+            O --> Q[End]
+            F --> Q
+            ```
         """
     
         locator = (
@@ -284,7 +345,7 @@ class ExecuteLocator:
         Returns:
             Optional[Union[WebElement, List[WebElement]]]: The located web element or list of elements.
         """
-        async def _parse_elements_list(web_element: WebElement | list[WebElement], locator: SimpleNamespace) -> WebElement | list[WebElement]:
+        async def _parse_elements_list(web_elements: WebElement | list[WebElement], locator: SimpleNamespace) -> WebElement | list[WebElement]:
             """Возвращает вебэлементы из списка по правилу переданному через параметр `locator.if_list`
 
             Args:
@@ -294,24 +355,24 @@ class ExecuteLocator:
             Returns:
                 WebElement | list[WebElement]: возвращает выбранный вебэлемент или список вебэлементов в зависимости от правила
             """
-            if not isinstance(web_element, list):
-                return web_element
+            if not isinstance(web_elements, list):
+                return web_elements
             if_list = locator.if_list
             
             if if_list == 'all':
-                return web_element
+                return web_elements
             elif if_list == 'first':
-                return web_element[0]
+                return web_elements[0]
             elif if_list == 'last':
-                return web_element[-1]
+                return web_elements[-1]
             elif if_list == 'even':
-                return [web_element[i] for i in range(0, len(web_element), 2)]
+                return [web_elements[i] for i in range(0, len(web_element), 2)]
             elif if_list == 'odd':
-                return [web_element[i] for i in range(1, len(web_element), 2)]
+                return [web_elements[i] for i in range(1, len(web_element), 2)]
             elif isinstance(if_list, (list, tuple)):
-                return [web_element[i] for i in if_list]
+                return [web_elements[i] for i in if_list]
             elif isinstance(if_list, int):
-                return web_element[if_list - 1]
+                return web_elements[if_list - 1]
             ...
 
         d = self.driver
@@ -337,7 +398,7 @@ class ExecuteLocator:
             )
 
 
-            return await _parse_elements_list(web_element, locator)
+            return await _parse_elements_list(web_elements, locator)
         except Exception as ex:
             if MODE in ('dev','debug'):
                 logger.debug(f"Locator issue: {locator}")

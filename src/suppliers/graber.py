@@ -269,7 +269,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `additional_shipping_cost`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.additional_shipping_cost}")
             ...
@@ -295,7 +295,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.delivery_in_stock}")
             ...
@@ -321,7 +321,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.active}")
             ...
@@ -347,7 +347,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.additional_delivery_times}")
             ...
@@ -373,7 +373,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.advanced_stock_management}")
             ...
@@ -398,7 +398,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_short_link}")
             ...
@@ -424,7 +424,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_summary}")
             ...
@@ -450,7 +450,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_summary_2}")
             ...
@@ -476,7 +476,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_text}")
             ...
@@ -501,7 +501,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not locator_result:
             logger.debug(f"Невалидный результат {locator_result=}")
             ...
@@ -527,7 +527,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not locator_result:
             logger.debug(f"Невалидный результат {locator_result=}")
             ...
@@ -553,7 +553,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not locator_result:
             logger.debug(f"Невалидный результат {locator_result=}")
             ...
@@ -579,7 +579,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not locator_result:
             logger.debug(f"Невалидный результат {locator_result=}")
             ...
@@ -604,7 +604,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_for_order}")
             ...
@@ -630,7 +630,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_later}")
             ...
@@ -656,7 +656,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_now}")
             ...
@@ -698,7 +698,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_default_attribute}")
             ...
@@ -723,7 +723,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_has_attachments}")
             ...
@@ -749,7 +749,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_is_pack}")
             ...
@@ -775,7 +775,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.condition}")
             ...
@@ -801,7 +801,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.customizable}")
             ...
@@ -826,7 +826,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.date_add}")
             ...
@@ -852,7 +852,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.date_upd}")
             ...
@@ -878,7 +878,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.delivery_out_stock}")
             ...
@@ -904,7 +904,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.depth}")
             ...
@@ -929,11 +929,15 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.description}")
             ...
             return
+
+        # Если значение - список, код преобразовывает его в строку с разделителем `\n`
+        if isinstance(value, list):
+            value = '\n'.join(map(str, value))
 
         # Записываем результат в поле `description` объекта `ProductFields`
         self.fields.description = value
@@ -955,7 +959,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.description_short}")
             ...
@@ -1061,7 +1065,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_default_image}")
             ...
@@ -1088,7 +1092,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ean13}")
             ...
@@ -1115,7 +1119,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ecotax}")
             ...
@@ -1142,7 +1146,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.height}")
             ...
@@ -1167,7 +1171,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.how_to_use}")
             ...
@@ -1192,7 +1196,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_manufacturer}")
             ...
@@ -1217,7 +1221,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_supplier}")
             ...
@@ -1242,7 +1246,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_tax}")
             ...
@@ -1267,7 +1271,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_type_redirected}")
             ...
@@ -1292,7 +1296,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.images_urls}")
             ...
@@ -1315,7 +1319,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `indexed`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.indexed}")
             ...
@@ -1340,7 +1344,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `ingredients`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ingredients}")
             ...
@@ -1365,7 +1369,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `meta_description`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_description}")
             ...
@@ -1390,7 +1394,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `meta_keywords`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_keywords}")
             ...
@@ -1415,7 +1419,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `meta_title`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_title}")
             ...
@@ -1440,7 +1444,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `is_virtual`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.is_virtual}")
             ...
@@ -1465,7 +1469,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.isbn}")
             ...
@@ -1491,7 +1495,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.link_rewrite}")
             ...
@@ -1517,7 +1521,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.location}")
             ...
@@ -1543,7 +1547,7 @@ class Graber:
             ...
             return
         
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.low_stock_alert}")
             ...
@@ -1567,7 +1571,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `low_stock_threshold`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.low_stock_threshold}")
             ...
@@ -1593,7 +1597,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `minimal_quantity`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.minimal_quantity}")
             ...
@@ -1619,7 +1623,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `mpn`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.mpn}")
             ...
@@ -1645,7 +1649,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `name`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.name}")
             ...
@@ -1671,7 +1675,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `online_only`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.online_only}")
             ...
@@ -1697,7 +1701,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `on_sale`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.on_sale}")
             ...
@@ -1723,7 +1727,7 @@ class Graber:
             logger.error(f"Ошибка получения значения в поле `out_of_stock`", ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.out_of_stock}")
             ...
@@ -1748,7 +1752,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.pack_stock_type}')
             ...
@@ -1775,7 +1779,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.price}')
             ...
@@ -1802,7 +1806,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.product_type}')
             ...
@@ -1829,7 +1833,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.quantity}')
             ...
@@ -1856,7 +1860,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.quantity_discount}')
             ...
@@ -1883,7 +1887,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.redirect_type}')
             ...
@@ -1910,7 +1914,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.reference}')
             ...
@@ -1935,7 +1939,7 @@ class Graber:
             logger.error('Ошибка получения значения в поле `show_condition`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.show_condition}')
             ...
@@ -1960,7 +1964,7 @@ class Graber:
             logger.error('Ошибка получения значения в поле `show_price`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.show_price}')
             ...
@@ -1985,7 +1989,7 @@ class Graber:
             logger.error('Ошибка получения значения в поле `state`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.state}')
             ...
@@ -2010,7 +2014,7 @@ class Graber:
             logger.error('Ошибка получения значения в поле `text_fields`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.text_fields}')
             ...
@@ -2035,7 +2039,7 @@ class Graber:
             logger.error('Ошибка получения значения в поле `unit_price_ratio`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.unit_price_ratio}')
             ...
@@ -2059,7 +2063,7 @@ class Graber:
             logger.error(f'Ошибка получения значения в поле `unity`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.unity}')
             ...
@@ -2084,7 +2088,7 @@ class Graber:
             logger.error(f'Ошибка получения значения в поле `upc`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.upc}')
             ...
@@ -2109,7 +2113,7 @@ class Graber:
             logger.error(f'Ошибка получения значения в поле `uploadable_files`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.uploadable_files}')
             ...
@@ -2134,7 +2138,7 @@ class Graber:
             logger.error(f'Ошибка получения значения в поле `default_image_url`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.default_image_url}')
             ...
@@ -2159,7 +2163,7 @@ class Graber:
             logger.error(f'Ошибка получения значения в поле `visibility`', ex)
             ...
             return
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.visibility}')
             ...
@@ -2185,7 +2189,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.weight}')
             ...
@@ -2212,7 +2216,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.wholesale_price}')
             ...
@@ -2239,7 +2243,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.width}')
             ...
@@ -2259,20 +2263,24 @@ class Graber:
             Если `value` был передан, его значение подставляется в поле `ProductFields.specification`.
         """
         try:
-            # Получаем значение через execute_locator
+            # код получает значение через execute_locator
             value = value or  await self.d.execute_locator(self.l.specification) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `specification`', ex)
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности результата
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.specification}')
             ...
             return
 
-        # Записываем результат в поле `specification` объекта `ProductFields`
+        # Если значение - список, код преобразовывает его в строку с разделителем `\n`
+        if isinstance(value, list):
+            value = '\n'.join(map(str, value))
+
+        # Код записывает результат в поле `specification` объекта `ProductFields`
         self.fields.specification = value
         return True
 
@@ -2293,7 +2301,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.link}')
             ...
@@ -2319,7 +2327,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.byer_protection}')
             ...
@@ -2345,7 +2353,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.customer_reviews}')
             ...
@@ -2371,7 +2379,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.link_to_video}')
             ...
@@ -2399,7 +2407,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.default_image_url}')
             ...
@@ -2425,7 +2433,7 @@ class Graber:
             ...
             return
 
-        # Проверяем валидность результата
+        # Проверка валидности `value`
         if not value:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.local_saved_video}')
             ...

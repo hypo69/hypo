@@ -168,7 +168,42 @@ class CodeAssistant:
         )
 
     def process_files(self, start_file_number: Optional[int] = 1):
-        """компиляция, отправка запроса и сохранение результата."""
+        """компиляция, отправка запроса и сохранение результата.
+        ```meramid
+                sequenceDiagram
+            participant A as process_files
+            participant B as _yield_files_content
+            participant C as _create_request
+            participant D as Gemini Model
+            participant E as _remove_outer_quotes
+            participant F as _save_response
+            participant G as Console
+            participant H as Logger
+
+            A->>B: Enumerate files (file_path, content)
+            alt No file content or file path
+                A->>A: Continue loop if file_path or content is missing
+            end
+
+            alt File index < start_file_number
+                A->>A: Continue loop if index < start_file_number
+            end
+
+            A->>C: Create request using file_path and content
+            A->>D: Ask Gemini model with content_request
+            alt If response is successful
+                D->>E: Remove outer quotes from response
+                E->>F: Save response to file
+                F->>G: Print "Processed file number" to console
+            else Response failed
+                D->>H: Log "Ошибка ответа модели"
+                A->>A: Return from method
+            end
+
+            A->>A: Sleep for 20 seconds (debug)
+
+            ```
+        """
         for i, (file_path, content) in enumerate(self._yield_files_content()):
             if not any((file_path, content)):    # <- ошибка чтения файла
                 continue
@@ -304,42 +339,63 @@ class CodeAssistant:
 
         Raises:
             OSError: Если не удаётся создать директорию или записать в файл.
+
+        ```mermaid
+            sequenceDiagram
+                participant A as _save_response
+                participant B as Config
+                participant C as File System
+                participant D as Console
+
+                A->>B: Get output_directory from config (self.role)
+                A->>A: Create target_dir by replacing <model> and <lang>
+                A->>A: Replace 'src' with target_dir in file_path
+                A->>A: Form export_path with the correct extension based on role
+                A->>C: Create parent directory if it does not exist
+                A->>C: Write response to file with UTF-8 encoding
+                A->>D: Output success message to console
+
+        ```
         """
+        try:
+            # Получаем директорию для вывода в зависимости от роли
+            output_directory = getattr(self.config.output_directory, self.role)
     
-        # Получаем директорию для вывода в зависимости от роли
-        output_directory = getattr(self.config.output_directory, self.role)
-    
-        # Формируем целевую директорию с учётом подстановки параметров <model> и <lang>
-        target_dir = (
-            f'docs/{output_directory}'
-            .replace('<model>', model_name)
-            .replace('<lang>', self.lang)
-        )
+            # Формируем целевую директорию с учётом подстановки параметров <model> и <lang>
+            target_dir = (
+                f'docs/{output_directory}'
+                .replace('<model>', model_name)
+                .replace('<lang>', self.lang)
+            )
 
-        # Заменяем часть пути на целевую директорию
-        file_path = str(file_path).replace('src', target_dir)
+            # Заменяем часть пути на целевую директорию
+            file_path = str(file_path).replace('src', target_dir)
     
 
-        # Формируем новый путь с нужным расширением в зависимости от роли
-        export_path = Path(file_path).with_suffix(
-            {
-                f'code_checker': '.md',  # для роли "code_checker" будет использоваться .md
-                f'doc_writer_md': '.md',  # для роли "doc_writer_md" будет использоваться .md
-                f'doc_writer_rst': '.rst',  # для роли "doc_writer_rst" будет использоваться .rst
-                f'doc_writer_html': '.html',  # для роли "doc_writer_html" будет использоваться .html
-                f'code_explainer_md': '.md',  # для роли "code_explainer_md" будет использоваться .md
-                f'code_explainer_html': '.html',  # для роли "code_explainer_html" будет использоваться .html
-            }.get(self.role, '.rst')  # Если роль не соответствует ни одной из вышеуказанных, по умолчанию используется .rst
-        )
+            # Формируем новый путь с нужным расширением в зависимости от роли
+            export_path = Path(file_path).with_suffix(
+                {
+                    f'code_checker': '.md',  # для роли "code_checker" будет использоваться .md
+                    f'doc_writer_md': '.md',  # для роли "doc_writer_md" будет использоваться .md
+                    f'doc_writer_rst': '.rst',  # для роли "doc_writer_rst" будет использоваться .rst
+                    f'doc_writer_html': '.html',  # для роли "doc_writer_html" будет использоваться .html
+                    f'code_explainer_md': '.md',  # для роли "code_explainer_md" будет использоваться .md
+                    f'code_explainer_html': '.html',  # для роли "code_explainer_html" будет использоваться .html
+                }.get(self.role, '.rst')  # Если роль не соответствует ни одной из вышеуказанных, по умолчанию используется .rst
+            )
 
-        # Создаём родительскую директорию, если она ещё не существует
-        export_path.parent.mkdir(parents=True, exist_ok=True)
+            # Создаём родительскую директорию, если она ещё не существует
+            export_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Записываем ответ в файл с указанной кодировкой UTF-8
-        export_path.write_text(response, encoding='utf-8')
+            # Записываем ответ в файл с указанной кодировкой UTF-8
+            export_path.write_text(response, encoding='utf-8')
 
-        # Выводим сообщение о успешном сохранении файла
-        pprint(f'Ответ модели сохранен в: {export_path}', text_color='green')
+            # Выводим сообщение о успешном сохранении файла
+            pprint(f'Ответ модели сохранен в: {export_path}', text_color='green')
+
+        except Exception as ex:
+            logger.critical(f'Ошибка сохранения файла: {export_path=}')
+            sys.exit(0)
 
     def _remove_outer_quotes(self, response: str) -> str:
         """
@@ -353,6 +409,7 @@ class CodeAssistant:
         :example:
             Если строка '```md some content ```' будет передана в функцию,
             результат будет ' some content '.
+
         """
         try:
             response = response.strip()

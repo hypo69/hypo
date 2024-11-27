@@ -98,16 +98,13 @@
   },
   "argparse": {
     "roles": [
-      "code_explainer_html",
-      "code_explainer_md",
-      "doc_writer_rst",
-      "doc_writer_md",
-      "doc_writer_html",
       "code_checker",
+      "code_explainer_md",
+      "doc_writer_md",
       "pytest",
-
       "how_to_writer"
     ],
+    "exclude-roles": [ "code_explainer_html", "doc_writer_html", "doc_writer_rst" ],
     "languages": [ "ru", "en" ],
     "model": {
       "default": [ "gemini" ],
