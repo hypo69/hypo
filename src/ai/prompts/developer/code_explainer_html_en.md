@@ -80,5 +80,7 @@ Example:
 **Potential improvements**:  
 - Add type checks for arguments `a` and `b` to prevent errors.  
 - Localize the `calculate_sum` call within the module if it is not used elsewhere.
+- 
+## Response text format: `UTF-8`
 
 This prompt ensures that the model thoroughly analyzes the code and provides a complete explanation of how each element works in HTML format.

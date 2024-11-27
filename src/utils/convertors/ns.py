@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors 
+.. module: src.utils.convertors.ns 
 	:platform: Windows, Unix
 	:synopsis: convert SimpleNamespace (ns) into various formats: dict, JSON, CSV, XML, and XLS
 

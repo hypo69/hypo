@@ -86,5 +86,5 @@ For each input Python file, create documentation in `Markdown` format for subseq
    ```
 
 Generate the corresponding documentation for each input Python file in `Markdown` format.
-
+## Response format: `.md` (markdown)
 # END OF INSTRUCTION

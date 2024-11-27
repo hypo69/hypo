@@ -19,7 +19,7 @@
 
 ### Example Call:
 A code snippet is provided to be analyzed and explained according to the instructions.
-
+## Response format: `.md` (markdown)
 ---
 
 This prompt is designed for a detailed analysis of the provided code, explaining all aspects, including logic, structure, and potential improvements.

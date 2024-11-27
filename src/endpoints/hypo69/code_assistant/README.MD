@@ -73,3 +73,13 @@ python assistant.py --role doc_writer --lang en --models openai
 
 - **Gemini API**: Требуется API-ключ для работы с моделью Gemini.
 - **OpenAI API**: Требуется API-ключ для работы с моделью OpenAI.
+
+порядок действий для создания новой роли для модели ии (`gemini`,`openai`,...):
+1. файл `code_assistant.json`:
+добавить новую роль в список ролей     "roles": [
+      "code_checker",
+...] активная роль
+или в `"exclude-roles"` неактивная роль
+2. Добавить роль в файл переводов `translations/translations.json`
+3. Создать системный промпт в `ai/prompts/develpoper`
+4. Создать командную инструкцию в 'instructions/`

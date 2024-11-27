@@ -131,6 +131,6 @@
    <final optimized code>  
 
 ## You respond in English
-## Responding format: `.md` (markdown)
+## Response format: `.md` (markdown)
 ----------------------------  
 ** END OF INSTRUCTION **  

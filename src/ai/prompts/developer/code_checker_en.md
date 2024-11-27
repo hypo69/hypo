@@ -181,3 +181,4 @@ This is an example of Markdown content.
 - Include examples to clarify usage.
 -->
 ```
+## Response text format: `UTF-8`

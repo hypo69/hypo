@@ -79,5 +79,5 @@ Example:
 **Possible Improvements**:  
 - Add type checks for the `a` and `b` arguments to prevent errors.  
 - Localize the `calculate_sum` call within the module if it is not reused elsewhere.
-
+## Response text format: `UTF-8`
 This instruction is designed to ensure the model analyzes the code in detail and provides a comprehensive description of each element's functionality.```

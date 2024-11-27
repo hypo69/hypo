@@ -35,6 +35,8 @@ from src.endpoints.kazarinov.react import ReportGenerator
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
 from src.utils.image import save_png_from_url, save_png
+from src.utils.convertors.unicode import decode_unicode_escape
+from src.utils.printer import pprint
 from src.logger import logger
 
 class Mexiron:
@@ -148,13 +150,17 @@ class Mexiron:
                 continue
 
             products_list.append(product_data)
-            self.save_product_data(product_data)
+            if not await self.save_product_data(product_data):
+                logger.error(f"Data not saved! {pprint(product_data)}")
+                ...
+                
 
         # AI processing
         ru, he = await self.process_ai(products_list, price)
         """ сырые данные уходят в обработку моделью (`gemini`) -> 
         модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
         Внимание! модель может ошибаться"""
+
         j_dumps([ru,he], self.export_path / 'mexiron.json')
         if ru and he:
             await self.create_report()
@@ -217,7 +223,11 @@ class Mexiron:
             product_data (dict): Formatted product data.
         """
         file_path = self.export_path / 'products' / f"{product_data['product_id']}.json"
-        j_dumps(product_data, file_path, ensure_ascii=False)
+        if not j_dumps(product_data, file_path, ensure_ascii=False):
+            logger.error(f'Ошибка сохранения словаря {pprint(product_data)}\n Путь: {file_path}')
+            ...
+            return
+        return True
 
     async def process_ai(self, products_list:str, attemts:int = 3) -> tuple | bool:
         """
@@ -273,7 +283,10 @@ class Mexiron:
             else:
                 ...
                 self.process_ai(products_list, attemts-1)  # <- невалидный результат
-            return ru, he
+
+
+            return decode_unicode_escape(ru), decode_unicode_escape(he)
+
         except Exception as ex:
             logger.debug(f"модель вернула невалидный результат!") # неудача!
             ...

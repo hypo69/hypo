@@ -62,11 +62,11 @@ def j_dumps(
     Raises:
         ValueError: If the file mode is unsupported.
     """
-
+    
     path = Path(file_path) if isinstance(file_path, (str, Path)) else None
 
     def convert_to_dict(data):
-        """Convert SimpleNamespace instances to dictionaries recursively."""
+        """Convert SimpleNamespace instances and lists of dictionaries to dictionaries recursively."""
         if isinstance(data, SimpleNamespace):
             return vars(data)
         if isinstance(data, list):
@@ -78,14 +78,14 @@ def j_dumps(
     data = convert_to_dict(data)
 
     if mode not in {"w", "a+", "+a"}:
-        #raise ValueError(f"Unsupported file mode '{mode}'. Use 'w', 'a+', or '+a'.")
+        # Используем режим 'w', если указан неверный режим
         mode = 'w'
 
     # Чтение существующих данных из файла (если файл существует и режим 'a+' или '+a')
     existing_data = {}
     if path and path.exists() and mode in {"a+", "+a"}:
         try:
-            with path.open("r", encoding="utf-8") as f:  # Fixed: read in 'r' mode
+            with path.open("r", encoding="utf-8") as f:  # Чтение в режиме 'r'
                 existing_data = json.load(f)
         except json.JSONDecodeError as e:
             logger.error(f"Error decoding existing JSON in {path}: {e}", exc_info=exc_info)
@@ -96,25 +96,29 @@ def j_dumps(
 
     # Обработка данных в зависимости от режима
     if mode == "a+":
-        # Добавляем новые данные в начало существующего словаря
+        # Присоединение новых данных в начало существующего словаря
         try:
-            data.update(existing_data)
+            if isinstance(data, list) and isinstance(existing_data, list):
+                existing_data = data + existing_data  # Добавляем элементы из списка в начало
+            else:
+                data.update(existing_data)
         except Exception as ex:
             logger.error(ex)
             ...
 
     elif mode == "+a":
-        # Добавляем новые данные в конец существующего словаря
+        # Присоединение новых данных в конец существующего словаря
         try:
-            existing_data.update(data)
+            if isinstance(data, list) and isinstance(existing_data, list):
+                existing_data.extend(data)  # Добавляем элементы из списка в конец
+            else:
+                existing_data.update(data)
             data = existing_data
         except Exception as ex:
             logger.error(ex)
             ...
 
-
-    # Режим 'w' - просто перезаписываем файл новыми данными
-
+    # Режим 'w' - перезаписывает файл новыми данными
     if path:
         try:
             path.parent.mkdir(parents=True, exist_ok=True)

@@ -15,4 +15,5 @@ Analyze the provided code in detail and explain its functionality. The response 
 Additionally, construct a chain of relationships with other parts of the project (if applicable).  
 
 This ensures a comprehensive and structured analysis of the code.
+## Response format: `.md` (markdown)
 **END INSTRUCTION**

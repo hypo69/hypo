@@ -1,0 +1,20 @@
+flowchart TD
+    A[Start] --> B{Check 'mode' value}
+    B --> |"w"| C[Overwrite file with new data]
+    B --> |"a+"| D[Read existing file and prepend new data]
+    B --> |"+a"| E[Read existing file and append new data]
+
+    D --> F{Process data}
+    E --> F
+    C --> F
+    F --> G{Write to file}
+    G --> H[Write data to file if path is provided]
+    G --> I[Return data if no path is provided]
+    H --> J[End]
+    I --> J
+
+    subgraph Data Check and Conversion
+        K[Convert data to dictionary]
+    end
+
+    K --> B

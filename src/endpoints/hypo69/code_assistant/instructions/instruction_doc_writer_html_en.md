@@ -121,6 +121,6 @@ def function(param: str, param1: Optional[str | dict | str] = None) -> dict | No
 </ol>
 
 <p>Generate the corresponding documentation for each input Python file in <code>HTML</code> format.</p>
-
+<h1>## Response format: `.md` (markdown)</h1>
 <!-- END OF INSTRUCTION -->
 ```

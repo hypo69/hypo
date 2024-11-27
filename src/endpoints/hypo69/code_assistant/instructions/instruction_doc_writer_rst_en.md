@@ -57,5 +57,5 @@ For each input Python file, create documentation in `rst` format for subsequent 
    ```
 
 Generate the corresponding documentation for each input Python file in `rst` format.
-
+## Response format: `.md` (markdown)
 # END OF INSTRUCTION

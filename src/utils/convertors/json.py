@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors 
+.. module: src.utils.convertors.json 
 	:platform: Windows, Unix
 	:synopsis: convert JSON data into various formats: CSV, SimpleNamespace, XML, and XLS
 

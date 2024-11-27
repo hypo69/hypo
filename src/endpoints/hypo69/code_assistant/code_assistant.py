@@ -30,7 +30,7 @@ MODE = "dev"
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
     assistant.process_files()
 """
-
+import asyncio
 import argparse
 import sys
 from pathlib import Path
@@ -228,11 +228,8 @@ class CodeAssistant:
                         ...
 
             pprint(f"Processed file number: {i + 1}", text_color="yellow")
-           
 
-            time.sleep(
-                20   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
-            )  
+            asyncio.run(asyncio.sleep(20)) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
 
     def _create_request(self, file_path: str, content: str) -> str:
         """Создание запроса с учетом роли и языка."""

@@ -133,6 +133,5 @@ except FileNotFoundError as ex:
 </ol>
 
 <p>Follow these instructions for documenting your code. All comments should be clear, informative, and compliant with the Markdown standard.</p>
-
+<h1>## Response text format: `UTF-8`
 <!-- END OF INSTRUCTION -->
-```
