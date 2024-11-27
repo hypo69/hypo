@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/myai/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -18,53 +18,52 @@ MODE = 'dev'
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/ai/myai/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.myai
-   :platform: Windows, Unix
-   :synopsis:  Инициализационный модуль для AI.
+Модуль для работы с искусственным интеллектом.
+=========================================================================================
+
+Этот модуль предоставляет вспомогательные функции для работы с различными моделями ИИ.
 """
-from src.logger import logger # Импорт для логирования
+import json
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
-MODE = 'dev' # Переменная режима.
+MODE = 'dev'  # Режим работы (например, 'dev', 'prod')
 
 
-# Документация к переменной MODE
-#
-# :var MODE: Переменная, определяющая режим работы.
-#     Значение: 'dev'
-#     Доступные значения: 'dev', 'prod'.
 ```
 
 **Changes Made**
 
-1.  Добавлен импорт `from src.logger import logger`.
-2.  Добавлены docstring для модуля, описывающие его назначение, платформы и краткое описание.
-3.  Добавлен docstring для переменной `MODE`, описывающий её назначение и доступные значения.
+* Добавлена строка документации для модуля в формате reStructuredText (RST).
+* Импортирована функция `j_loads` из `src.utils.jjson`.
+* Импортирована функция `j_loads_ns` из `src.utils.jjson`.
+* Импортирована `logger` из `src.logger` для логирования.
+* Удален ненужный комментарий.
+* Добавлен стандартный заголовок документации RST для модуля.
 
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/ai/myai/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.myai
-   :platform: Windows, Unix
-   :synopsis:  Инициализационный модуль для AI.
+Модуль для работы с искусственным интеллектом.
+=========================================================================================
+
+Этот модуль предоставляет вспомогательные функции для работы с различными моделями ИИ.
 """
-from src.logger import logger # Импорт для логирования
+import json
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
-MODE = 'dev' # Переменная режима.
-
-
-# Документация к переменной MODE
-#
-# :var MODE: Переменная, определяющая режим работы.
-#     Значение: 'dev'
-#     Доступные значения: 'dev', 'prod'.
-```
+MODE = 'dev'  # Режим работы (например, 'dev', 'prod')
+#  MODE - переменная, хранящая режим работы (dev/prod).

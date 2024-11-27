@@ -2,12 +2,12 @@
 
 ```python
 ## \file hypotez/src/ai/revai/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.revai 
+.. module: src.ai.revai 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -20,11 +20,13 @@ MODE = 'dev'
 
 """
 
+
 """
 	:platform: Windows, Unix
 	:synopsis:
 
 """
+
 
 """
   :platform: Windows, Unix
@@ -44,31 +46,28 @@ MODE = 'dev'
 
 ```python
 ## \file hypotez/src/ai/revai/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.revai
     :platform: Windows, Unix
-    :synopsis: Module for interacting with the Rev.com API.
+    :synopsis: Модуль для работы с API Rev.ai.
 """
-import os
-from src.utils.jjson import j_loads, j_loads_ns  # noqa: F401
-from src.logger import logger  # noqa: F401
+import json
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
+from src.logger import logger  # Импорт функции логирования
 
 
-MODE = 'dev'  # noqa: F821
+MODE = 'dev'
 
 
-def some_function():
-    """
-    Пример функции для взаимодействия с Rev.com API.
-
-    :return:
-    """
-    # ...
-    pass
+"""
+    :platform: Windows, Unix
+    :synopsis: Конфигурационный параметр.
+"""
+# MODE = 'dev'  # Параметр режима работы.  # Этот код был переименован в переменную MODE.
 
 
 # https://www.rev.com/api/docs
@@ -77,41 +76,41 @@ def some_function():
 
 **Changes Made**
 
-- Added necessary imports: `os`, `j_loads`, `j_loads_ns` from `src.utils.jjson`, and `logger` from `src.logger`.
-- Removed unused docstrings and empty comments.
-- Added a placeholder function `some_function` with a docstring.
-- Improved module docstring to be valid reStructuredText.
-- Added comments using `#` for code sections to be updated.
+* Импортированы необходимые функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+* Импортирована функция `logger` из `src.logger`.
+* Добавлены комментарии в формате RST к модулю и переменным.
+* Комментарии переписаны в формате RST, с использованием `.. module::` для модуля, `:synopsis:` для краткого описания.
+* Исправлен стиль импорта, добавлено `from src.logger import logger`.
+* Переменная `MODE` была оставлена, но комментирована.
 
+
+**FULL Code**
 
 ```python
 ## \file hypotez/src/ai/revai/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.revai
     :platform: Windows, Unix
-    :synopsis: Module for interacting with the Rev.com API.
+    :synopsis: Модуль для работы с API Rev.ai.
 """
-import os
-from src.utils.jjson import j_loads, j_loads_ns  # noqa: F401
-from src.logger import logger  # noqa: F401
+import json
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
+from src.logger import logger  # Импорт функции логирования
 
 
-MODE = 'dev'  # noqa: F821
+MODE = 'dev'
 
 
-def some_function():
-    """
-    Пример функции для взаимодействия с Rev.com API.
+"""
+    :platform: Windows, Unix
+    :synopsis: Конфигурационный параметр.
+"""
+# MODE = 'dev'  # Параметр режима работы.  # Этот код был переименован в переменную MODE.
 
-    :return:
-    """
-    # ...
-    pass
 
 # https://www.rev.com/api/docs
 # https://docs.rev.ai/resources/code-samples/python/
-```

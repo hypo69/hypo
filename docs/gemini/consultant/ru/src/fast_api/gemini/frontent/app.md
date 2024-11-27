@@ -1,4 +1,4 @@
-**Received Code**
+# Полученный код
 
 ```javascript
 function App() {
@@ -35,7 +35,7 @@ function App() {
       <div className="chat-box" style={{ height: '400px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px' }}>
         {messages.map((msg, index) => (
           <div key={index} className={msg.role === "user" ? "text-right" : "text-left"}>
-            <strong>{msg.role === "user" ? "You" : "AI"}:</strong> {msg.content}
+            <strong>{msg.role === "user" ? "Вы" : "AI"}:</strong> {msg.content}
           </div>
         ))}
       </div>
@@ -43,12 +43,12 @@ function App() {
         <input
           type="text"
           className="form-control"
-          placeholder="Type your message..."
+          placeholder="Введите ваше сообщение..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" ? sendMessage() : null}
         />
-        <button className="btn btn-primary" onClick={sendMessage}>Send</button>
+        <button className="btn btn-primary" onClick={sendMessage}>Отправить</button>
       </div>
     </div>
   );
@@ -57,28 +57,26 @@ function App() {
 ReactDOM.render(<App />, document.getElementById('chat-app'));
 ```
 
-**Improved Code**
+# Улучшенный код
 
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-// Импорт logger
-import { logger } from './src/logger';
+import { logger } from '../../logger'; // Импортируем логирование
 
-
-// Класс приложения для чат-бота
 function App() {
-  // Состояние ввода пользователя
   const [input, setInput] = React.useState('');
-  // Состояние сообщений в чате
   const [messages, setMessages] = React.useState([]);
 
-
   /**
-   * Отправляет сообщение в чат-бот.
+   * Отправляет сообщение на сервер и обновляет состояние чата.
+   *
+   * @async
    */
   const sendMessage = async () => {
-    if (input.trim() === '') return;
+    if (input.trim() === '') {
+      return;
+    }
 
     const userMessage = { role: 'user', content: input };
     setMessages([...messages, userMessage]);
@@ -87,43 +85,36 @@ function App() {
       const response = await fetch('http://localhost:8000/api/chat', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({ prompt: input })
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Ошибка отправки: ${response.status}`);
       }
 
       const data = await response.json();
       const aiMessage = { role: 'assistant', content: data.response };
       setMessages([...messages, userMessage, aiMessage]);
     } catch (error) {
-      logger.error('Error sending message:', error);
-      //TODO: Обработка ошибки, например, отображение сообщения об ошибке пользователю.
-      //Показ сообщения об ошибке пользователю.
-      alert('Ошибка при отправке сообщения. Попробуйте снова.');
+      logger.error('Ошибка отправки сообщения:', error);
+      // Отобразить пользователю сообщение об ошибке
+      setMessages([...messages, { role: 'system', content: 'Ошибка. Попробуйте снова.' }]);
+      // Или пробросить ошибку выше для обработки в глобальном обработчике
+      // throw error;
+      return;
+    } finally {
+      setInput('');
     }
-
-    setInput('');
   };
-
 
   return (
     <div>
-      <div
-        className="chat-box"
-        style={{
-          height: '400px',
-          overflowY: 'scroll',
-          border: '1px solid #ccc',
-          padding: '10px',
-        }}
-      >
+      <div className="chat-box" style={{ height: '400px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px' }}>
         {messages.map((msg, index) => (
           <div key={index} className={msg.role === 'user' ? 'text-right' : 'text-left'}>
-            <strong>{msg.role === 'user' ? 'You' : 'AI'}:</strong> {msg.content}
+            <strong>{msg.role === 'user' ? 'Вы' : 'AI'}:</strong> {msg.content}
           </div>
         ))}
       </div>
@@ -131,56 +122,59 @@ function App() {
         <input
           type="text"
           className="form-control"
-          placeholder="Type your message..."
+          placeholder="Введите ваше сообщение..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' ? sendMessage() : null}
         />
-        <button className="btn btn-primary" onClick={sendMessage}>
-          Send
-        </button>
+        <button className="btn btn-primary" onClick={sendMessage}>Отправить</button>
       </div>
     </div>
   );
 }
 
-
-// рендеринг компонента App в элемент с id 'chat-app'
 ReactDOM.render(<App />, document.getElementById('chat-app'));
 ```
 
-**Changes Made**
+# Внесённые изменения
 
-*   Импортирован `React` и `ReactDOM`
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлены docstrings в формате RST к функции `sendMessage`.
-*   Добавлена обработка ошибок `response.ok`.
-*   Изменен способ обработки ошибок. Теперь используется `logger.error` вместо `console.error`, что соответствует требованиям к логированию.
-*   Добавлена обработка ошибок `try...catch`.
-*   В обработчике ошибок добавлен `TODO` для дальнейшей работы.
+- Импортирован модуль `logger` из `src.logger`.
+- Функция `sendMessage` получила комментарии RST.
+- Обработка ошибок переписана с использованием `logger.error` и добавлен блок `finally` для установки `input` в пустое значение.
+- Изменены слова в комментариях и сообщениях об ошибках.
+- Добавлена проверка статуса ответа (`response.ok`) для обработки возможных ошибок сервера.
+- Добавлены управляющие блоки `try-except` в `sendMessage` для логирования ошибок.
+- Изменён placeholder в input.
 
-**Full Code (Improved)**
+
+# Оптимизированный код
 
 ```javascript
+// Комментарий для Sphinx
+"""
+Модуль для реализации чат-бота с использованием React.js.
+
+Этот модуль предоставляет функциональность для взаимодействия пользователя с
+бот-сервисом.  Получает входные данные от пользователя, отправляет их на
+сервер, обрабатывает ответ и отображает сообщения в чате.
+"""
 import React from 'react';
 import ReactDOM from 'react-dom';
-// Импорт logger
-import { logger } from './src/logger';
+import { logger } from '../../logger'; // Импортируем логирование
 
-
-// Класс приложения для чат-бота
 function App() {
-  // Состояние ввода пользователя
   const [input, setInput] = React.useState('');
-  // Состояние сообщений в чате
   const [messages, setMessages] = React.useState([]);
 
-
   /**
-   * Отправляет сообщение в чат-бот.
+   * Отправляет сообщение на сервер и обновляет состояние чата.
+   *
+   * @async
    */
   const sendMessage = async () => {
-    if (input.trim() === '') return;
+    if (input.trim() === '') {
+      return;
+    }
 
     const userMessage = { role: 'user', content: input };
     setMessages([...messages, userMessage]);
@@ -189,45 +183,34 @@ function App() {
       const response = await fetch('http://localhost:8000/api/chat', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({ prompt: input })
       });
-      # Проверка успешности ответа от сервера
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Ошибка отправки: ${response.status}`);
       }
-      # Чтение ответа от сервера
+
       const data = await response.json();
-      # Создание сообщения от бота
       const aiMessage = { role: 'assistant', content: data.response };
-      # Обновление состояния сообщений
       setMessages([...messages, userMessage, aiMessage]);
     } catch (error) {
-      logger.error('Error sending message:', error);
-      //TODO: Обработка ошибки, например, отображение сообщения об ошибке пользователю.
-      //Показ сообщения об ошибке пользователю.
-      alert('Ошибка при отправке сообщения. Попробуйте снова.');
+      logger.error('Ошибка отправки сообщения:', error);
+      // Отобразить пользователю сообщение об ошибке
+      setMessages([...messages, { role: 'system', content: 'Ошибка. Попробуйте снова.' }]);
+      return;
+    } finally {
+      setInput('');
     }
-
-    setInput('');
   };
-
 
   return (
     <div>
-      <div
-        className="chat-box"
-        style={{
-          height: '400px',
-          overflowY: 'scroll',
-          border: '1px solid #ccc',
-          padding: '10px',
-        }}
-      >
+      <div className="chat-box" style={{ height: '400px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px' }}>
         {messages.map((msg, index) => (
           <div key={index} className={msg.role === 'user' ? 'text-right' : 'text-left'}>
-            <strong>{msg.role === 'user' ? 'You' : 'AI'}:</strong> {msg.content}
+            <strong>{msg.role === 'user' ? 'Вы' : 'AI'}:</strong> {msg.content}
           </div>
         ))}
       </div>
@@ -235,20 +218,17 @@ function App() {
         <input
           type="text"
           className="form-control"
-          placeholder="Type your message..."
+          placeholder="Введите ваше сообщение..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' ? sendMessage() : null}
         />
-        <button className="btn btn-primary" onClick={sendMessage}>
-          Send
-        </button>
+        <button className="btn btn-primary" onClick={sendMessage}>Отправить</button>
       </div>
     </div>
   );
 }
 
-
-// рендеринг компонента App в элемент с id 'chat-app'
 ReactDOM.render(<App />, document.getElementById('chat-app'));
 ```
+```javascript

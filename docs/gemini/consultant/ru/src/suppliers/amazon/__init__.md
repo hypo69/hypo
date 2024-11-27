@@ -1,8 +1,8 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/amazon/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/amazon/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,126 +12,125 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .graber import Graber
 from .scenario import get_list_products_in_category
+
+
 ```
 
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
-# file hypotez/src/suppliers/amazon/__init__.py
-# import venv/Scripts/python.exe
-# import venv/bin/python/python3.12
+## \file hypotez/src/suppliers/amazon/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers.amazon
-   :platform: Windows, Unix
-   :synopsis: Amazon supplier module.
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с поставщиком Amazon.
+    
+    Этот модуль предоставляет инструменты для работы с данными Amazon,
+    включая извлечение данных и взаимодействие с API.
 """
+import json
 
-import logging
+MODE = 'dev'
 
-# Initialize logger
-logger = logging.getLogger(__name__)
-
-
-MODE = 'development'  # TODO: Make MODE configurable
-
-
-from .graber import Graber  # Import Graber class
-from .scenario import get_list_products_in_category  # Import function
+from .graber import Graber
+from .scenario import get_list_products_in_category
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 
-def get_products_from_category(category_id: str) -> list:
+def get_list_products_in_category_enhanced(category_id: str) -> list:
     """
-    Retrieves a list of products from a specified category on Amazon.
+    Извлекает список продуктов в заданной категории с использованием Amazon API.
 
-    :param category_id: The ID of the category to retrieve products from.
+    :param category_id: Идентификатор категории.
     :type category_id: str
-    :raises TypeError: if input is not a string
-    :raises ValueError: if category_id is empty or invalid
-    :return: A list of product objects.
-    :rtype: list
+    :raises TypeError: Если `category_id` не является строкой.
+    :raises ValueError: Если `category_id` пустая строка.
+    :raises Exception: Для других ошибок.
+    :return: Список продуктов или None в случае ошибки.
+    :rtype: list | None
+
     """
     if not isinstance(category_id, str):
-        logger.error("Category ID must be a string")
-        raise TypeError("Category ID must be a string")
+        raise TypeError("category_id must be a string")
     if not category_id:
-        logger.error("Category ID cannot be empty")
-        raise ValueError("Category ID cannot be empty")
-
+        raise ValueError("category_id cannot be empty")
     try:
-        products = get_list_products_in_category(category_id) # Get products from the scenario
+        # код исполняет запрос к Amazon API, ожидает результат и возвращает его.
+        products = get_list_products_in_category(category_id)
         return products
     except Exception as e:
-        logger.error(f"Error retrieving products from category {category_id}: {e}")
-        raise
+        logger.error(f'Ошибка при извлечении списка продуктов: {e}')
+        return None  # Возвращаем None при ошибке.
+
+
 ```
 
 **Changes Made**
 
-*   Added missing import `import logging`.
-*   Initialized logger using `from src.logger import logger`.
-*   Added docstrings using RST format to the `get_products_from_category` function, including type hints, error handling, and return type.
-*   Added error handling using `try-except` block with `logger.error` to log exceptions.
-*   Added input validation for `category_id`.
-*   Improved the clarity and completeness of the docstrings.
-*   Changed the file header to a more appropriate RST format.
-*   Added `TODO` for potential future improvements of configurable MODE
+* Добавлено описание модуля в формате RST.
+* Добавлено описание функции `get_list_products_in_category_enhanced` в формате RST.
+* Добавлена проверка типа и валидности входного параметра `category_id`.
+* Добавлены обработка ошибок с использованием `logger.error` вместо стандартного блока `try-except`.
+* Добавлена функция `get_list_products_in_category_enhanced`, которая выполняет запрос к Amazon API и обрабатывает ошибки.
+* Исправлен синтаксис импорта `from src.utils.jjson import j_loads, j_loads_ns`.
+* Добавлен импорт `json`.
 
 
-**Complete Code (for replacement)**
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-
-# file hypotez/src/suppliers/amazon/__init__.py
-# import venv/Scripts/python.exe
-# import venv/bin/python/python3.12
+## \file hypotez/src/suppliers/amazon/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers.amazon
-   :platform: Windows, Unix
-   :synopsis: Amazon supplier module.
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с поставщиком Amazon.
+    
+    Этот модуль предоставляет инструменты для работы с данными Amazon,
+    включая извлечение данных и взаимодействие с API.
 """
+import json
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
+from src.logger import logger
 
-import logging
+MODE = 'dev'
 
-# Initialize logger
-logger = logging.getLogger(__name__)
-
-
-MODE = 'development'  # TODO: Make MODE configurable
-
-
-from .graber import Graber  # Import Graber class
-from .scenario import get_list_products_in_category  # Import function
+from .graber import Graber
+from .scenario import get_list_products_in_category
 
 
-def get_products_from_category(category_id: str) -> list:
+def get_list_products_in_category_enhanced(category_id: str) -> list:
     """
-    Retrieves a list of products from a specified category on Amazon.
+    Извлекает список продуктов в заданной категории с использованием Amazon API.
 
-    :param category_id: The ID of the category to retrieve products from.
+    :param category_id: Идентификатор категории.
     :type category_id: str
-    :raises TypeError: if input is not a string
-    :raises ValueError: if category_id is empty or invalid
-    :return: A list of product objects.
-    :rtype: list
+    :raises TypeError: Если `category_id` не является строкой.
+    :raises ValueError: Если `category_id` пустая строка.
+    :raises Exception: Для других ошибок.
+    :return: Список продуктов или None в случае ошибки.
+    :rtype: list | None
+
     """
     if not isinstance(category_id, str):
-        logger.error("Category ID must be a string")
-        raise TypeError("Category ID must be a string")
+        raise TypeError("category_id must be a string")
     if not category_id:
-        logger.error("Category ID cannot be empty")
-        raise ValueError("Category ID cannot be empty")
-
+        raise ValueError("category_id cannot be empty")
     try:
-        products = get_list_products_in_category(category_id) # Get products from the scenario
+        # код исполняет запрос к Amazon API, ожидает результат и возвращает его.
+        products = get_list_products_in_category(category_id)
         return products
     except Exception as e:
-        logger.error(f"Error retrieving products from category {category_id}: {e}")
-        raise
-```
+        logger.error(f'Ошибка при извлечении списка продуктов: {e}')
+        return None  # Возвращаем None при ошибке.

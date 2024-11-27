@@ -156,17 +156,24 @@ class Mexiron:
                 
 
         # AI processing
-        ru, he = await self.process_ai(products_list, price)
+        he,ru = await self.process_ai(products_list, price)
         """ сырые данные уходят в обработку моделью (`gemini`) -> 
         модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
         Внимание! модель может ошибаться"""
 
-        j_dumps([ru,he], self.export_path / 'mexiron.json')
-        if ru and he:
+        if he and ru:
+            if not j_dumps(he, self.export_path / 'he.json'):
+                logger.error(f'Ошибка сохранения словаря `he`')
+                ...
+                
+            if not j_dumps(ru, self.export_path / 'ru.json'):
+                logger.error(f'Ошибка сохранения словаря `ru`')
+                ...
             await self.create_report()
             await self.post_facebook(ru)
             await self.post_facebook(he)
             return True
+        ...
         return 
 
 
@@ -229,95 +236,82 @@ class Mexiron:
             return
         return True
 
-    async def process_ai(self, products_list:str, attemts:int = 3) -> tuple | bool:
+    async def process_ai(self, products_list: str, attempts: int = 3) -> tuple | bool:
         """
         Processes the product list through the AI model.
 
         Args:
-            products_list (list): List of product data dictionaries.
-            price (Optional[str]): Price to include in the response.
+            products_list (str): List of product data dictionaries as a string.
+            attempts (int, optional): Number of attempts to retry in case of failure. Defaults to 3.
 
         Returns:
             tuple: Processed response in `ru` and `he` formats.
+            bool: False if unable to get a valid response after retries.
+    
         .. note:
-            Модель может возвращать невелидный результат. 
-            В таком случае я переспрашиваю модель разумное количество раз
+            Модель может возвращать невелидный результат.
+            В таком случае я переспрашиваю модель разумное количество раз.
         """
-        ...
-        if attemts < 1:
-            return
-        #response = self.model.ask(products_list)
+        if attempts <= 0:
+            return False  # return early if no attempts are left
+
+        # Request response from the AI model
         response = self.model.ask(self.model_command + '\n' + str(products_list))
         if not response:
             logger.error("no response from gemini")
             ...
-            return
+            return self.process_ai(products_list, attempts - 1)  # Retry if no response
 
-
-        data: SimpleNamespace = j_loads_ns(response) # <- вернет False в случае ошибки
-
+        data: SimpleNamespace = j_loads_ns(response)  # Returns False on error
         if not data:
-            logger.error(f"Error in data from gemini:{data}")
+            logger.error(f"Error in data from gemini: {data}")
             ...
-            self.process_ai(products_list,attemts - 1)
-
-            if not j_dumps(data, base_path / 'ai' / f'{gs.now}.json', ensure_ascii=False): # <- певая проверка валидности полученных данных
-                ...
-                self.process_ai(products_list, attemts - 1)
+            return self.process_ai(products_list, attempts - 1)  # Retry if data is invalid
 
         try:
+            def extract_data(data: SimpleNamespace, language: str) -> SimpleNamespace:
+                """Helper function to extract language-specific data."""
+                if hasattr(data, language):
+                    result = getattr(data, language)
+                    if not result:
+                        logger.debug(f"Invalid {language} data")
+                        ...
+                        return self.process_ai(products_list, attempts - 1)  # Retry if data is invalid
+                    return result
+                return 
+
+            # Process response assuming data can be in list or direct object format
             if isinstance(data, list):
                 if len(data) == 2:
-                    ru = data[0]
-                    he = data[1]
-                    return ru,he
+                    he = extract_data(data[0], 'he')
+                    ru = extract_data(data[1], 'ru')
+                    if he and ru:
+                        return he, ru
+                    return ru, he
                 elif len(data) == 1:
-                    data = data[0]
-                    ...
-                    if hasattr(data,'ru'):
-                        ru:SimpleNamespace = data.ru
-                        if not ru:
-                            ...
-                            self.process_ai(products_list, attemts-1)  # <- невалидный результат
-
-                    if hasattr(data,'he'):
-                        he:SimpleNamespace = data.he
-                        if not he:
-                            ...
-                            self.process_ai(products_list, attemts-1)  # <- невалидный результат
-
-                    return ru,he
-                else:
-                    logger.warning(f'Проблема парсинга ответа\n{pprint(data)}', None)
-                    ...
-
-            else:
-               if hasattr(data,'ru'):
-                    ru:SimpleNamespace = data.ru
-                    if not ru:
+                    he = extract_data(data[0], 'he')
+                    ru = extract_data(data[0], 'ru')
+                    if he and ru:
+                        return he,ru
+                    else:
                         ...
-                        self.process_ai(products_list, attemts-1)  # <- невалидный результат
+                else:
+                    logger.warning(f'Problem parsing response\n{pprint(data)}')
+                    ...
+                    return self.process_ai(products_list, attempts - 1)  # Retry if data structure is invalid
 
-                    if hasattr(data,'he'):
-                        he:SimpleNamespace = data.he
-                        if not he:
-                            ...
-                            self.process_ai(products_list, attemts-1)  # <- невалидный результат
+            ru = extract_data(data, 'ru')
+            he = extract_data(data, 'he')
+            if not ru or not he:
+                ...
+                return self.process_ai(products_list, attempts - 1)  # Retry if any of the languages are invalid
 
-
-            # # Функция `decode_unicode_escape()` декодирует строки с Unicode-эскейпами для двух языков: русского (ru) и иврита (he).
-            # # Пример сырой строки для русского: 'Русский текст: \\u041f\\u0440\\u0438\\u0432\\u0435\\u0442'
-            # # Пример декодированной строки для русского: 'Русский текст: Привет'
-            # # Пример сырой строки для иврита: '\\u05e9\\u05d4\\u05d5\\u05d4'
-            # # Пример декодированной строки для иврита: 'שחור'
-            # ru = decode_unicode_escape(ru)
-            # he = decode_unicode_escape(he)
-            return ru, he
+            # Return successfully extracted data
+            return he,ru
 
         except Exception as ex:
-            logger.debug(f"модель вернула невалидный результат!") # неудача!
-            ...
-            return
+            logger.debug(f"Model returned invalid result: {str(ex)}")
+            return self.process_ai(products_list, attempts - 1)  # Retry on any exception
 
     async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
         """Функция исполняет сценарий рекламного модуля `facvebook`."""

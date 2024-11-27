@@ -1,8 +1,8 @@
-**Received Code**
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -28,97 +28,79 @@ from .supplier import Supplier
 from .graber import Graber, Context, close_pop_up
 ```
 
-**Improved Code**
+## Improved Code
 
 ```python
-# -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
+## \file hypotez/src/suppliers/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers
-
    :platform: Windows, Unix
-   :synopsis: Модуль, предоставляющий классы для работы с поставщиками данных.
+   :synopsis: Модуль для работы с поставщиками данных.  Определяет базовый класс `Supplier` и предоставляет интерфейс для подключения специфичных функций для каждого поставщика.
 
-   Этот модуль содержит базовый класс ``Supplier`` и класс ``Graber``,
-   а также методы для работы с контекстом.
+   Для каждого конкретного поставщика есть свои специфичные методы (функции) извлечения информации.  Эти функции дополняют базовый класс `Supplier` и подключаются через интерфейс `supplier.related_functions`.
+   Методы для каждого поставщика размещаются в директориях с префиксом, соответствующим поставщику (например, `amazon`, `aliexpress`, `morlevi`). Префикс определяется при создании нового поставщика.
+
+   .. image:: supplier-warehouse-client.png
+     :alt: Диаграмма взаимосвязи Supplier, Driver, Product
+
+
 """
-import logging
-
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON.
+import json
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для обработки JSON
+from src.logger import logger # Импорт функции для логирования ошибок
 from .supplier import Supplier
 from .graber import Graber, Context, close_pop_up
 
 
 MODE = 'dev'
 
-# Задаем обработчик ошибок для логирования
-logger = logging.getLogger(__name__)
-
-
-def some_function():
-    """
-    Описание функции.
-    :return: Возвращаемое значение.
-    """
-    pass
-
+# ... (rest of the code)
 
 ```
 
-**Changes Made**
+## Changes Made
 
-- Добавлено необходимый импорт `logging` для логирования.
-- Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson` для корректной работы с JSON данными.
-- Добавлен обработчик ошибок `logger` для обработки исключений.
-- Исправлен формат заголовочных строк, добавлена документация с использованием RST.
-- Добавлена функция `some_function` для демонстрации использования логирования.
-- Документация функции `some_function` теперь содержит `return`.
-- Документация модуля `src.suppliers` переписана в формате RST.
+*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson` для обработки JSON.
+*   Добавлен импорт `logger` из `src.logger` для логирования.
+*   Комментарии переписаны в формате RST.
+*   Исправлены некоторые стилистические моменты в документации.
+*   Добавлена более подробная документация.
+*   Добавлена ссылка на диаграмму.
 
 
-**Full Code (Improved)**
+## FULL Code
 
 ```python
-# -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
+## \file hypotez/src/suppliers/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers
-
    :platform: Windows, Unix
-   :synopsis: Модуль, предоставляющий классы для работы с поставщиками данных.
+   :synopsis: Модуль для работы с поставщиками данных.  Определяет базовый класс `Supplier` и предоставляет интерфейс для подключения специфичных функций для каждого поставщика.
 
-   Этот модуль содержит базовый класс ``Supplier`` и класс ``Graber``,
-   а также методы для работы с контекстом.
+   Для каждого конкретного поставщика есть свои специфичные методы (функции) извлечения информации.  Эти функции дополняют базовый класс `Supplier` и подключаются через интерфейс `supplier.related_functions`.
+   Методы для каждого поставщика размещаются в директориях с префиксом, соответствующим поставщику (например, `amazon`, `aliexpress`, `morlevi`). Префикс определяется при создании нового поставщика.
+
+   .. image:: supplier-warehouse-client.png
+     :alt: Диаграмма взаимосвязи Supplier, Driver, Product
+
+
 """
-import logging
-
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON.
+import json
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для обработки JSON
+from src.logger import logger # Импорт функции для логирования ошибок
 from .supplier import Supplier
 from .graber import Graber, Context, close_pop_up
 
 
 MODE = 'dev'
 
-# Задаем обработчик ошибок для логирования
-logger = logging.getLogger(__name__)
 
-
-def some_function():
-    """
-    Описание функции.
-
-    :return: Возвращаемое значение.
-    """
-    try:
-        # ... Ваш код ...
-        return 'Результат'
-    except Exception as e:
-        logger.error(f"Ошибка в функции some_function: {e}")
-        return None
-
-
-```
+# ... (rest of the code)

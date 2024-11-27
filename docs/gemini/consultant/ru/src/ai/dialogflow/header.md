@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/dialogflow/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -32,7 +32,7 @@ import json
 from packaging.version import Version
 
 from pathlib import Path
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
@@ -56,35 +56,34 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 
 
 # Get the root directory of the project
-__root__: Path = get_project_root()
+__root__ = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 from src import gs
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads  # Импорт функции для чтения JSON
 
 settings:dict = None
 try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file) # Используем j_loads для чтения файла
+    # Чтение файла настроек с помощью j_loads
+    settings = j_loads(gs.path.root / 'src' / 'settings.json')
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading settings: {e}")
-    # ... # Ошибка обработки
-    settings = {}
-
+    # Логирование ошибок при чтении файла настроек
+    logger.error('Ошибка чтения файла настроек:', e)
+    ...
 
 doc_str:str = None
 try:
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as settings_file:
         doc_str = settings_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading README: {e}")
-    # ... # Ошибка обработки
-    doc_str = ""
-
+    # Логирование ошибок при чтении README.MD
+    logger.error('Ошибка чтения README.MD:', e)
+    ...
 
 from src.logger import logger
 
-__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
+
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
 __version__: str = settings.get("version", '')  if settings  else ''
 __doc__: str = doc_str if doc_str else ''
 __details__: str = ''
@@ -97,185 +96,179 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 ```python
 ## \file hypotez/src/ai/dialogflow/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.dialogflow
     :platform: Windows, Unix
-    :synopsis: Модуль для работы с Dialogflow.
+    :synopsis: Модуль для работы с диалоговым интерфейсом.
 """
-
 MODE = 'dev'
 
 """
-.. data:: MODE
-    :type: str
-    :synopsis: Режим работы.
+Модуль содержит константу MODE, определяющую режим работы.
 """
 
 """
-.. moduleauthor:: Авторы
-   :platform: Windows, Unix
-   :synopsis: Модуль определяющий корневой путь к проекту.
-      Все импорты строятся относительно этого пути.
-   :TODO: В дальнейшем перенести в системную переменную
+.. module:: src.ai.dialogflow
+    :platform: Windows, Unix
+    :synopsis: Модуль содержит функции для определения корневого пути проекта и загрузки настроек.
 """
 
 import sys
 import json
-from pathlib import Path
 from packaging.version import Version
+from pathlib import Path
 from src.utils.jjson import j_loads
 from src.logger import logger
-from src import gs
 
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Находит корневой каталог проекта, начиная от текущей директории.
+    Определяет корневой каталог проекта.
 
-    :param marker_files: Список файлов или каталогов, указывающих на корень проекта.
+    :param marker_files: Список файлов, по наличию которых определяется корневой каталог.
     :type marker_files: tuple
-    :raises TypeError: если marker_files не является кортежем.
-    :returns: Путь к корневому каталогу проекта.
-    :rtype: pathlib.Path
+    :raises TypeError: Если входные данные не соответствуют ожидаемому типу.
+    :return: Корневой каталог проекта.
+    :rtype: Path
     """
-    current_path: Path = Path(__file__).resolve().parent
-    project_root = current_path
+    current_path = Path(__file__).resolve().parent
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-__root__ = get_project_root()
-"""__root__ (pathlib.Path): Корневой каталог проекта."""
+__root__ = set_project_root()
+"""__root__ (Path): Путь к корневому каталогу проекта."""
+
+from src import gs
 
 
 settings: dict = None
 try:
-    settings = j_loads((gs.path.root / 'src' / 'settings.json').open())
+    settings = j_loads(gs.path.root / 'src' / 'settings.json')
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Ошибка при загрузке настроек: {e}")
-    settings = {}
+    logger.error('Ошибка загрузки настроек:', e)
+    settings = {}  # Обработка случая отсутствия файла
 
 
 doc_str: str = None
 try:
-    doc_str = (gs.path.root / 'src' / 'README.MD').open().read()
+    doc_str = (gs.path.root / 'src' / 'README.MD').read_text()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Ошибка при загрузке README: {e}")
-    doc_str = ""
+    logger.error('Ошибка загрузки README.MD:', e)
+    doc_str = ''
 
 
-__project_name__: str = settings.get('project_name', 'hypotez')
-__version__: str = settings.get('version', '')
-__doc__: str = doc_str
-__details__: str = ''
-__author__: str = settings.get('author', '')
-__copyright__: str = settings.get('copyright', '')
-__cofee__: str = settings.get('cofee', "Treat the developer to a cup of coffee...")
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = doc_str if doc_str else ''
+__details__ = ''
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+
 ```
 
 **Changes Made**
 
-- Импортирован `j_loads` из `src.utils.jjson`.
-- Добавлены обработчики ошибок с использованием `logger.error` для корректной обработки исключений при чтении `settings.json` и `README.MD`.
-- Исправлен формат строки `__root__`.
-- Переписаны docstrings во всех функциях и переменных в формате reStructuredText (RST).
-- Удалены избыточные комментарии.
-- Изменены имена переменных на более читаемые и согласующиеся с PEP 8.
-- Добавлен `try...except` блок для обработки ошибок чтения файлов, используя `logger.error`.
-- Изменены переменные `doc_str`, `settings` на более корректные значения по умолчанию.
+- Добавлена строка импорта `from src.logger import logger`
+- Изменён способ чтения настроек (`settings.json`) на `j_loads`
+- Добавлено логирование ошибок при чтении файлов (`settings.json`, `README.MD`)
+- Исправлены неявные преобразования типов
+- Добавлены docstrings для функций и переменных в формате reStructuredText (RST)
+- Улучшен стиль кода и комментариев
+- Добавлена обработка пустого словаря настроек.
 
 
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/ai/dialogflow/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.dialogflow
     :platform: Windows, Unix
-    :synopsis: Модуль для работы с Dialogflow.
+    :synopsis: Модуль для работы с диалоговым интерфейсом.
 """
-
 MODE = 'dev'
 
 """
-.. data:: MODE
-    :type: str
-    :synopsis: Режим работы.
+Модуль содержит константу MODE, определяющую режим работы.
 """
 
 """
-.. moduleauthor:: Авторы
-   :platform: Windows, Unix
-   :synopsis: Модуль определяющий корневой путь к проекту.
-      Все импорты строятся относительно этого пути.
-   :TODO: В дальнейшем перенести в системную переменную
+.. module:: src.ai.dialogflow
+    :platform: Windows, Unix
+    :synopsis: Модуль содержит функции для определения корневого пути проекта и загрузки настроек.
 """
 
 import sys
 import json
-from pathlib import Path
 from packaging.version import Version
+from pathlib import Path
 from src.utils.jjson import j_loads
 from src.logger import logger
-from src import gs
 
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Находит корневой каталог проекта, начиная от текущей директории.
+    Определяет корневой каталог проекта.
 
-    :param marker_files: Список файлов или каталогов, указывающих на корень проекта.
+    :param marker_files: Список файлов, по наличию которых определяется корневой каталог.
     :type marker_files: tuple
-    :raises TypeError: если marker_files не является кортежем.
-    :returns: Путь к корневому каталогу проекта.
-    :rtype: pathlib.Path
+    :raises TypeError: Если входные данные не соответствуют ожидаемому типу.
+    :return: Корневой каталог проекта.
+    :rtype: Path
     """
-    current_path: Path = Path(__file__).resolve().parent
-    project_root = current_path
+    current_path = Path(__file__).resolve().parent
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-__root__ = get_project_root()
-"""__root__ (pathlib.Path): Корневой каталог проекта."""
+__root__ = set_project_root()
+"""__root__ (Path): Путь к корневому каталогу проекта."""
+
+from src import gs
 
 
 settings: dict = None
 try:
-    settings = j_loads((gs.path.root / 'src' / 'settings.json').open())
+    settings = j_loads(gs.path.root / 'src' / 'settings.json')
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Ошибка при загрузке настроек: {e}")
-    settings = {}
+    logger.error('Ошибка загрузки настроек:', e)
+    settings = {}  # Обработка случая отсутствия файла
 
 
 doc_str: str = None
 try:
-    doc_str = (gs.path.root / 'src' / 'README.MD').open().read()
+    doc_str = (gs.path.root / 'src' / 'README.MD').read_text()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Ошибка при загрузке README: {e}")
-    doc_str = ""
+    logger.error('Ошибка загрузки README.MD:', e)
+    doc_str = ''
 
 
-__project_name__: str = settings.get('project_name', 'hypotez')
-__version__: str = settings.get('version', '')
-__doc__: str = doc_str
-__details__: str = ''
-__author__: str = settings.get('author', '')
-__copyright__: str = settings.get('copyright', '')
-__cofee__: str = settings.get('cofee', "Treat the developer to a cup of coffee...")
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = doc_str if doc_str else ''
+__details__ = ''
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"

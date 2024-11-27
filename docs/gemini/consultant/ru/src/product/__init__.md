@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/product/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -28,64 +28,80 @@ from .product_fields.product_fields_translator import translate_presta_fields_di
 
 ```python
 ## \file hypotez/src/product/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.product
-   :platform: Windows, Unix
-   :synopsis: Product module
+Модуль для работы с продуктами.
+=========================================
 
-This module provides access to product data.
+Этот модуль предоставляет классы и функции для работы с информацией о продуктах.
+Включает классы :class:`Product` и :class:`ProductFields`, а также вспомогательные функции.
 
-External classes and attributes:
-- :py:class:`Product`: Methods and attributes of the product. Detailed description in :file:`product.py`.
-- :py:class:`ProductFields`: Product fields. Detailed description in :file:`product_fields.py`.
-- :py:data:`record`: A dictionary of product fields in flat format (without nesting).
-- :py:func:`translate_presta_fields_dict`: Function that translates multilingual fields of :py:class:`ProductFields`.
+.. attribute:: MODE
+
+    Режим работы модуля. По умолчанию 'dev'.
+
+.. attribute:: record
+
+    Словарь с данными о продукте в плоском формате (без вложенностей).
+
+.. attribute:: translate_presta_fields_dict
+
+    Функция для перевода многоязычных полей `ProductFields`.
+
 """
 MODE = 'dev'
 
 from .product import Product
 from .product_fields.product_fields import ProductFields
 from .product_fields.product_fields_translator import translate_presta_fields_dict
+from src.logger import logger # Импортируем logger для логирования
+
 ```
 
 **Changes Made**
 
-- Added a module docstring in reStructuredText format (RST) to describe the purpose and contents of the module.
-- Replaced single-line docstrings with multiline RST docstrings for better readability and consistency.
-- Replaced `:` with `:` for better reStructuredText format.
-- Added `:py:class:` and `:py:func:` directives to properly reference classes and functions for RST rendering (assuming Sphinx).
-- Corrected a minor typo in module description.
-- Improved the description of the `MODE` variable, though its use is unclear. This could be a variable describing the current mode (e.g., 'dev', 'prod'), but it is better to explain its meaning in the context of the module.
+* Добавлена документация в формате RST для модуля `src.product`.
+* Добавлен импорт `logger` из `src.logger`.
+* Исправлен стиль документации, удалены не информативные фразы.
 
 
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/product/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.product
-   :platform: Windows, Unix
-   :synopsis: Product module
+Модуль для работы с продуктами.
+=========================================
 
-This module provides access to product data.
+Этот модуль предоставляет классы и функции для работы с информацией о продуктах.
+Включает классы :class:`Product` и :class:`ProductFields`, а также вспомогательные функции.
 
-External classes and attributes:
-- :py:class:`Product`: Methods and attributes of the product. Detailed description in :file:`product.py`.
-- :py:class:`ProductFields`: Product fields. Detailed description in :file:`product_fields.py`.
-- :py:data:`record`: A dictionary of product fields in flat format (without nesting).
-- :py:func:`translate_presta_fields_dict`: Function that translates multilingual fields of :py:class:`ProductFields`.
+.. attribute:: MODE
+
+    Режим работы модуля. По умолчанию 'dev'.
+
+.. attribute:: record
+
+    Словарь с данными о продукте в плоском формате (без вложенностей).
+
+.. attribute:: translate_presta_fields_dict
+
+    Функция для перевода многоязычных полей `ProductFields`.
+
 """
 MODE = 'dev'
 
+#from .product import Product  # Не трогаем
+#from .product_fields.product_fields import ProductFields # Не трогаем
+#from .product_fields.product_fields_translator import translate_presta_fields_dict # Не трогаем
 from .product import Product
 from .product_fields.product_fields import ProductFields
 from .product_fields.product_fields_translator import translate_presta_fields_dict
-```
+from src.logger import logger # Импортируем logger для логирования

@@ -38,6 +38,7 @@ from collections import OrderedDict
 from src.logger import logger
 from src.utils.printer import pprint
 from .convertors.dict import dict2ns
+from .convertors.ns import ns2json 
 
 
 def j_dumps(
@@ -65,17 +66,41 @@ def j_dumps(
     
     path = Path(file_path) if isinstance(file_path, (str, Path)) else None
 
-    def convert_to_dict(data):
-        """Convert SimpleNamespace instances and lists of dictionaries to dictionaries recursively."""
-        if isinstance(data, SimpleNamespace):
-            return vars(data)
-        if isinstance(data, list):
-            return [convert_to_dict(item) for item in data]
-        if isinstance(data, dict):
-            return {key: convert_to_dict(value) for key, value in data.items()}
-        return data
+    if isinstance(data, str):
+        try:
+            data = repair_json(data)
+        except Exception as ex:
+            logger.error(f'Ошибка конвертации строки: {pprint(data)}', ex, False)
+            ...
+            return 
+
+    def convert_to_dict(raw_data: Any) -> Optional[dict | list | str]:
+        """Рекурсивно преобразует данные в словарь.
+
+        Преобразует объекты `SimpleNamespace`, списки словарей и строки, содержащие JSON, в словари.
+
+        Args:
+            raw_data (Any): Данные для обработки. Может быть объектом `SimpleNamespace`, списком, словарём или строкой.
+
+        Returns:
+            Optional[dict | list | str]: Преобразованные данные. 
+            Возвращает словарь, список, строку или `None`, если произошла ошибка.
+        """
+        if isinstance(raw_data, SimpleNamespace):
+            raw_data = ns2json(raw_data)
+    
+        if isinstance(raw_data, list):
+            return [convert_to_dict(item) for item in raw_data]
+    
+        if isinstance(raw_data, dict):
+            return {key: convert_to_dict(value) for key, value in raw_data.items()}
+
+        return raw_data
 
     data = convert_to_dict(data)
+
+
+    
 
     if mode not in {"w", "a+", "+a"}:
         # Используем режим 'w', если указан неверный режим
@@ -89,10 +114,12 @@ def j_dumps(
                 existing_data = json.load(f)
         except json.JSONDecodeError as e:
             logger.error(f"Error decoding existing JSON in {path}: {e}", exc_info=exc_info)
-            existing_data = {}
+            ...
+            return
         except Exception as ex:
             logger.error(f"Error reading {path=}: {ex}", exc_info=exc_info)
-            return None
+            ...
+            return 
 
     # Обработка данных в зависимости от режима
     if mode == "a+":

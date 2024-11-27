@@ -1,0 +1,44 @@
+sequenceDiagram
+    participant User
+    participant AI_Model
+    participant Logger
+
+    User->>AI_Model: Запрос на обработку продуктов (products_list)
+    AI_Model->>AI_Model: Обработка запроса с командой модели
+    AI_Model->>User: Ответ от модели
+
+    alt Нет ответа от модели
+        Logger->>Logger: Логирирование ошибки "no response from gemini"
+        User->>AI_Model: Повторный запрос (attempts - 1)
+    end
+
+    alt Невалидные данные (data)
+        Logger->>Logger: Логирирование ошибки "Error in data from gemini"
+        User->>AI_Model: Повторный запрос (attempts - 1)
+    end
+
+    alt Получены данные (data)
+        alt Данные в виде списка
+            alt Два элемента (ru, he)
+                User->>User: Извлечение ru и he
+            end
+            alt Один элемент
+                User->>User: Извлечение ru и he из первого элемента
+            end
+            alt Невалидная структура данных
+                Logger->>Logger: Логирирование ошибки "Проблема парсинга ответа"
+                User->>AI_Model: Повторный запрос (attempts - 1)
+            end
+        end
+
+        alt Данные в виде объекта
+            User->>User: Извлечение ru и he из объекта
+        end
+
+        alt Невалидные значения (ru или he)
+            Logger->>Logger: Логирирование ошибки "Invalid ru or he data"
+            User->>AI_Model: Повторный запрос (attempts - 1)
+        end
+
+        User->>User: Возврат результата ru и he
+    end

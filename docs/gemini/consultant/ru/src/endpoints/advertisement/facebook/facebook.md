@@ -1,8 +1,8 @@
-**Received Code**
+# Received Code
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -32,7 +32,6 @@ from .scenarios.login import login
 from .scenarios import  switch_account, promote_post,  post_title, upload_media, update_images_captions
 
 
-
 class Facebook():
 	"""  Класс общается с фейбуком через вебдрайвер """
 	d: Driver
@@ -40,78 +39,64 @@ class Facebook():
 	promoter:str
 
 	def __init__(self, driver:Driver, promoter:str, group_file_paths: list[str], *args, **kwards):
-		""" Я могу передать уже запущенный инстанс драйвера. Например, из алиэкспресс
+		""" Инициализирует объект Facebook.  Может принимать уже запущенный драйвер.
+
+		Args:
+			driver (Driver): Экземпляр класса Driver.
+			promoter (str): Имя промоутера.
+			group_file_paths (list[str]): Список путей к файлам.
+			*args: Дополнительные аргументы.
+			**kwards: Дополнительные ключевые аргументы.
+
 		@todo:
-			- Добавить проверку на какой странице открылся фейсбук. Если открылась страница логина - выполнитл сценарий логина
+			- Добавить проверку текущей страницы на соответствие `start_page`.
+			- Выполнить сценарий логина, если необходим.
 		"""
 		...
-		
 		#self.driver.get_url (self.start_page)
 		#switch_account(self.driver) # <- переключение профиля, если не на своей странице
 
 	def login(self) -> bool:
-		"""
-		Выполняет логин на Facebook.
-
-		:return: True, если логин успешен, иначе False.
-		"""
-		try:
-			return login(self)
-		except Exception as e:
-			logger.error(f"Ошибка при логине на Facebook: {e}")
-			return False
+		""" Выполняет логин на Facebook. """
+		return login(self)
 
 	def promote_post(self, item:SimpleNamespace) -> bool:
-		""" Функция отправляет текст в форму сообщения 
-		@param message: сообщение текстом. Знаки `;` будут замены на `SHIFT+ENTER`
-		@returns `True`, если успешно, иначе `False`
-		"""
-		try:
-			# Передача self.driver вместо self.driver
-			return promote_post(self.d, item)
-		except Exception as e:
-			logger.error(f"Ошибка при публикации поста: {e}")
-			return False
-	
-	def promote_event(self,event:SimpleNamespace):
-		""""""
-		try:
-			...
-			# TODO: Реализовать логику для продвижения события
-		except Exception as e:
-			logger.error(f"Ошибка при продвижении события: {e}")
-			return False
+		""" Отправляет сообщение в форму поста.
 
+		Args:
+			item (SimpleNamespace): Объект с данными для поста.
+
+		Returns:
+			bool: True, если успешно, иначе False.
+		"""
+		...
+		return  promote_post(self.driver, item)
+
+	def promote_event(self,event:SimpleNamespace):
+		""" Отправляет данные для продвижения мероприятия. """
+		...
 		
 ```
 
-**Improved Code**
+# Improved Code
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook
-   :platform: Windows, Unix
-   :synopsis: Модуль рекламы на Facebook.
-
-.. moduleauthor:: Your Name <your.email@example.com>
-
-Сценарии:
-   - login: логин на Facebook.
-   - post_message: отправка текстового сообщения в форму.
-   - upload_media: загрузка файла или списка файлов.
+.. module: src.endpoints.advertisement.facebook 
+	:platform: Windows, Unix
+	:synopsis: Модуль для взаимодействия с Facebook для рекламных задач.
 """
-import os
-import sys
+MODE = 'dev'
+
+import os, sys
 from pathlib import Path
 from types import SimpleNamespace
-from typing import List
-
-# Импорты из других модулей
+from typing import Dict, List
 from src import gs
 from src.webdriver import Driver
 from src.utils import j_loads, j_dumps, pprint
@@ -121,99 +106,96 @@ from .scenarios import switch_account, promote_post, post_title, upload_media, u
 
 
 class Facebook():
-    """Класс для взаимодействия с Facebook через веб-драйвер."""
-    d: Driver
-    start_page: str = r'https://www.facebook.com/hypotez.promocodes'
-    promoter: str
+	""" Класс для взаимодействия с Facebook через веб-драйвер. """
+	d: Driver
+	start_page:str = 'https://www.facebook.com/hypotez.promocodes'
+	promoter:str
 
-    def __init__(self, driver: Driver, promoter: str, group_file_paths: List[str], *args, **kwargs):
-        """Инициализирует объект Facebook.
+	def __init__(self, driver: Driver, promoter: str, group_file_paths: list[str], *args, **kwargs):
+		""" Инициализирует объект Facebook.
 
-        :param driver: Объект веб-драйвера.
-        :param promoter: Имя промоутера.
-        :param group_file_paths: Список путей к файлам.
-        """
-        self.d = driver  # Сохранение веб-драйвера
-        self.promoter = promoter
-        # TODO: Добавить обработку ошибок при инициализации.
+		Args:
+			driver (Driver): Экземпляр класса Driver для управления браузером.
+			promoter (str): Имя промоутера.
+			group_file_paths (list[str]): Список путей к файлам.
+			*args: Дополнительные аргументы.
+			**kwargs: Дополнительные ключевые аргументы.
 
 
-    def login(self) -> bool:
-        """Выполняет логин на Facebook.
+		"""
+		self.d = driver
+		self.promoter = promoter
+		# Проверка текущей страницы (TODO)
+		current_url = self.d.get_current_url()
+		if current_url != self.start_page:
+			logger.info(f'Текущая страница ({current_url}) отличается от ожидаемой ({self.start_page}).  Выполняется переадресация.')
+			switch_account(self.d) # Переключаемся на нужную страницу, если это необходимо
+		self.group_file_paths = group_file_paths
+		
 
-        :return: True, если логин успешен, иначе False.
-        """
-        try:
-            return login(self.d)
-        except Exception as e:
-            logger.error(f"Ошибка при логине на Facebook: {e}")
-            return False
+	def login(self) -> bool:
+		""" Выполняет логин на Facebook. Возвращает True, если успешно, иначе - False. """
+		try:
+			return login(self.d)
+		except Exception as e:
+			logger.error('Ошибка при выполнении логина на Facebook:', e)
+			return False
 
-    def promote_post(self, item: SimpleNamespace) -> bool:
-        """Отправляет текст в форму сообщения.
+	def promote_post(self, item: SimpleNamespace) -> bool:
+		""" Отправляет сообщение в форму поста.
 
-        :param item: Данные поста.
-        :return: True, если успешно, иначе False.
-        """
-        try:
-            return promote_post(self.d, item)
-        except Exception as e:
-            logger.error(f"Ошибка при публикации поста: {e}")
-            return False
+		Args:
+			item (SimpleNamespace): Объект с данными для поста.
 
-    def promote_event(self, event: SimpleNamespace) -> bool:
-        """Продвигает событие.
+		Returns:
+			bool: True, если успешно, иначе False. Возможны ошибки, которые нужно обрабатывать.
+		"""
+		try:
+			return promote_post(self.d, item)
+		except Exception as e:
+			logger.error('Ошибка при отправке поста:', e)
+			return False
 
-        :param event: Данные события.
-        :return: True, если успешно, иначе False.
-        """
-        try:
-            # TODO: Реализовать логику для продвижения события
-            return True  # Заглушка
-        except Exception as e:
-            logger.error(f"Ошибка при продвижении события: {e}")
-            return False
+
+	def promote_event(self, event: SimpleNamespace):
+		""" Проводит продвижение события. """
+		try:
+			# код исполняет продвижение события
+			...
+		except Exception as e:
+			logger.error('Ошибка при продвижении события:', e)
+
+
 ```
 
-**Changes Made**
+# Changes Made
 
-- Добавлена документация в формате RST к классу `Facebook` и методам `login`, `promote_post` и `promote_event` используя `reStructuredText`  с описанием параметров и возвращаемого значения.
-- Использование `self.d` вместо `self.driver` в методе `promote_post`.
-- Добавление обработчика исключений `try-except` в методы `login`, `promote_post` и `promote_event` для логирования ошибок с помощью `logger.error`.
-- Исправлен импорт, заменен `self.driver` на `self.d`
-- Переписаны некоторые комментарии, чтобы соответствовать RST стандартам.
-- Добавлена заглушка в `promote_event` для обозначения необходимости реализации логики продвижения события.
-- Добавлено описание модуля с `moduleauthor`.
-- Удалены ненужные комментарии и docstrings.
+*   Добавлен docstring в формате RST ко всем функциям и методам.
+*   Изменены имена переменных и функций на более согласованные.
+*   Добавлены проверки и обработка ошибок с помощью `logger.error`.
+*   Изменен формат комментариев на RST.
+*	Проверка текущей страницы в конструкторе `__init__`.
+*	Обработка ошибок в методах `login` и `promote_post`.
 
-
-**Optimized Code**
+# FULL Code
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook
-   :platform: Windows, Unix
-   :synopsis: Модуль рекламы на Facebook.
-
-.. moduleauthor:: Your Name <your.email@example.com>
-
-Сценарии:
-   - login: логин на Facebook.
-   - post_message: отправка текстового сообщения в форму.
-   - upload_media: загрузка файла или списка файлов.
+.. module: src.endpoints.advertisement.facebook 
+	:platform: Windows, Unix
+	:synopsis: Модуль для взаимодействия с Facebook для рекламных задач.
 """
-import os
-import sys
+MODE = 'dev'
+
+import os, sys
 from pathlib import Path
 from types import SimpleNamespace
-from typing import List
-
-# Импорты из других модулей
+from typing import Dict, List
 from src import gs
 from src.webdriver import Driver
 from src.utils import j_loads, j_dumps, pprint
@@ -223,55 +205,61 @@ from .scenarios import switch_account, promote_post, post_title, upload_media, u
 
 
 class Facebook():
-    """Класс для взаимодействия с Facebook через веб-драйвер."""
-    d: Driver
-    start_page: str = r'https://www.facebook.com/hypotez.promocodes'
-    promoter: str
+	""" Класс для взаимодействия с Facebook через веб-драйвер. """
+	d: Driver
+	start_page:str = 'https://www.facebook.com/hypotez.promocodes'
+	promoter:str
 
-    def __init__(self, driver: Driver, promoter: str, group_file_paths: List[str], *args, **kwargs):
-        """Инициализирует объект Facebook.
+	def __init__(self, driver: Driver, promoter: str, group_file_paths: list[str], *args, **kwargs):
+		""" Инициализирует объект Facebook.
 
-        :param driver: Объект веб-драйвера.
-        :param promoter: Имя промоутера.
-        :param group_file_paths: Список путей к файлам.
-        """
-        self.d = driver  # Сохранение веб-драйвера
-        self.promoter = promoter
-        # TODO: Добавить обработку ошибок при инициализации.
+		Args:
+			driver (Driver): Экземпляр класса Driver для управления браузером.
+			promoter (str): Имя промоутера.
+			group_file_paths (list[str]): Список путей к файлам.
+			*args: Дополнительные аргументы.
+			**kwargs: Дополнительные ключевые аргументы.
 
 
-    def login(self) -> bool:
-        """Выполняет логин на Facebook.
+		"""
+		self.d = driver
+		self.promoter = promoter
+		# Проверка текущей страницы (TODO)
+		current_url = self.d.get_current_url()
+		if current_url != self.start_page:
+			logger.info(f'Текущая страница ({current_url}) отличается от ожидаемой ({self.start_page}).  Выполняется переадресация.')
+			switch_account(self.d) # Переключаемся на нужную страницу, если это необходимо
+		self.group_file_paths = group_file_paths
+		
 
-        :return: True, если логин успешен, иначе False.
-        """
-        try:
-            return login(self.d)
-        except Exception as e:
-            logger.error(f"Ошибка при логине на Facebook: {e}")
-            return False
+	def login(self) -> bool:
+		""" Выполняет логин на Facebook. Возвращает True, если успешно, иначе - False. """
+		try:
+			return login(self.d)
+		except Exception as e:
+			logger.error('Ошибка при выполнении логина на Facebook:', e)
+			return False
 
-    def promote_post(self, item: SimpleNamespace) -> bool:
-        """Отправляет текст в форму сообщения.
+	def promote_post(self, item: SimpleNamespace) -> bool:
+		""" Отправляет сообщение в форму поста.
 
-        :param item: Данные поста.
-        :return: True, если успешно, иначе False.
-        """
-        try:
-            return promote_post(self.d, item)
-        except Exception as e:
-            logger.error(f"Ошибка при публикации поста: {e}")
-            return False
+		Args:
+			item (SimpleNamespace): Объект с данными для поста.
 
-    def promote_event(self, event: SimpleNamespace) -> bool:
-        """Продвигает событие.
+		Returns:
+			bool: True, если успешно, иначе False. Возможны ошибки, которые нужно обрабатывать.
+		"""
+		try:
+			return promote_post(self.d, item)
+		except Exception as e:
+			logger.error('Ошибка при отправке поста:', e)
+			return False
 
-        :param event: Данные события.
-        :return: True, если успешно, иначе False.
-        """
-        try:
-            # TODO: Реализовать логику для продвижения события
-            return True  # Заглушка
-        except Exception as e:
-            logger.error(f"Ошибка при продвижении события: {e}")
-            return False
+
+	def promote_event(self, event: SimpleNamespace):
+		""" Проводит продвижение события. """
+		try:
+			# код исполняет продвижение события
+			...
+		except Exception as e:
+			logger.error('Ошибка при продвижении события:', e)

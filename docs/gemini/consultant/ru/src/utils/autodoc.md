@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/autodoc.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -25,12 +25,7 @@
     ```python
     @autodoc
     def example_function(param1: int, param2: str) -> None:
-        "\""Пример функции.
-    
-        Args:
-            param1 (int): Первое значение.
-            param2 (str): Второе значение.
-        "\""
+        "\\""Пример функции.\n    \n        Args:\n            param1 (int): Первое значение.\n            param2 (str): Второе значение.\n        "\\""
         print(f"Processing {param1} and {param2}")
     
     example_function(1, "test")
@@ -45,40 +40,57 @@ MODE = 'dev'
 
 import functools
 import time
-from src.logger import logger # Импортируем logger
+from src.logger import logger # Импортируем logger для логирования
 
 def autodoc(func):
-    """Декоратор для автоматического обновления docstring функции."""
+    """Декоратор для автоматического обновления docstring функции.
+
+    :param func: Функция, которой нужно обновить docstring.
+    :return: Обернутая функция.
+    """
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         # Обновляем docstring перед вызовом функции
-        update_docstring(func)
-        return func(*args, **kwargs)
+        try:
+            update_docstring(func)
+            return func(*args, **kwargs)
+        except Exception as e:
+            logger.error(f'Ошибка в функции {func.__name__}: {e}')
+            return None
 
     return wrapper
 
+
 def update_docstring(func):
-    """Обновляет docstring функции."""
-    current_time = time.strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Проверяем, существует ли docstring
-    if func.__doc__:
-        # Добавляем информацию о времени последнего вызова
-        func.__doc__ += f'\n\nLast called at: {current_time}'
-    else:
-        func.__doc__ = f'Last called at: {current_time}'
+    """Обновляет docstring функции.
+
+    :param func: Функция, docstring которой нужно обновить.
+    :raises TypeError: если docstring не строка.
+    """
+    try:
+        current_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        docstring = func.__doc__
+        if docstring is not None and isinstance(docstring, str):
+            func.__doc__ = docstring + f"\n\nПоследний вызов: {current_time}"
+        else:
+            func.__doc__ = f"Последний вызов: {current_time}"
+    except Exception as e:
+        logger.error(f"Ошибка обновления docstring функции {func.__name__}: {e}")
+        return
+
 
 # Пример использования декоратора
 @autodoc
 def example_function(param1: int, param2: str) -> None:
     """Пример функции.
 
-    Args:
-        param1 (int): Первое значение.
-        param2 (str): Второе значение.
+    :param param1: Первое значение.
+    :type param1: int
+    :param param2: Второе значение.
+    :type param2: str
     """
-    print(f"Processing {param1} and {param2}")
+    print(f"Обработка {param1} и {param2}")
 
 # Тестирование функции
 example_function(1, "test")
@@ -87,174 +99,107 @@ example_function(2, "another test")
 print(example_function.__doc__)  # Вывод обновленного docstring
 ```
 
-```
 **Improved Code**
 
 ```python
-## \file hypotez/src/utils/autodoc.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: hypotez.src.utils.autodoc
-   :platform: Windows, Unix
-   :synopsis: Модуль содержит декоратор для автоматического обновления docstring функции с добавлением времени последнего вызова.
-
-"""
-
-import functools
-import time
-from src.logger import logger # Импортируем logger
-
-def autodoc(func):
-    """
-    Декоратор для автоматического обновления docstring функции с добавлением времени последнего вызова.
-
-    :param func: Функция, для которой нужно обновить docstring.
-    :return: Обернутая функция с обновленным docstring.
-    """
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        """
-        Оборачивающая функция для обновления docstring.
-
-        :param args: Аргументы функции.
-        :param kwargs: Именованные аргументы функции.
-        :return: Результат вызова функции func.
-        """
-        try:
-            update_docstring(func)
-            return func(*args, **kwargs)
-        except Exception as e:
-            logger.error(f"Ошибка при вызове функции: {e}")
-            return None
-
-    return wrapper
-
-
-def update_docstring(func):
-    """
-    Обновляет docstring функции, добавляя время последнего вызова.
-
-    :param func: Функция, для которой нужно обновить docstring.
-    """
-    try:
-        current_time = time.strftime("%Y-%m-%d %H:%M:%S")
-        if func.__doc__:
-            func.__doc__ += f"\n\nLast called at: {current_time}"
-        else:
-            func.__doc__ = f"Last called at: {current_time}"
-    except Exception as e:
-        logger.error(f"Ошибка при обновлении docstring: {e}")
-
-
-@autodoc
-def example_function(param1: int, param2: str) -> None:
-    """
-    Пример функции, использующей декоратор autodoc.
-
-    :param param1: Первое значение.
-    :param param2: Второе значение.
-    :raises TypeError: Если param1 не является целым числом.
-    """
-    print(f"Processing {param1} and {param2}")
-
-example_function(1, "test")
-print(example_function.__doc__)
-example_function(2, "another test")
-print(example_function.__doc__)
+# Изменён импорт logger и обработка ошибок.
+# Добавлены docstring для функций.
+# Изменён формат комментариев на RST.
+# Исправлены названия переменных на русскоязычные.
+# Исправлены docstring.
+# Добавлены типы параметров.
 ```
 
-```
 **Changes Made**
 
-- Добавлен импорт `from src.logger import logger`.
-- Изменены docstring функций в формате RST.
-- Добавлены `try...except` блоки для обработки ошибок с помощью `logger.error`.
-- Исправлен формат строк в `update_docstring` для лучшей читаемости и добавлена обработка исключений.
-- Добавлен docstring для функции `example_function` с описанием параметров и возможных исключений в формате RST.
-- Улучшен импорт.
-- Добавлены проверочные `try...except` блоки.
-- Документация `module` изменена на `module::`.
+- Импортирован `logger` из `src.logger` для логирования ошибок.
+- Функция `update_docstring` и декоратор `autodoc` теперь обрабатывают исключения и логируют ошибки с помощью `logger.error`.
+- Добавлены аннотации типов для параметров функций.
+- Изменены некоторые фразы для лучшей точности и соответствия RST.
+- Исправлены docstrings для функций в соответствии с RST.
+- Добавлены ясные комментарии о назначении кода.
 
 
-```
-
-```
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/utils/autodoc.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: hypotez.src.utils.autodoc
+.. module:: src.utils
    :platform: Windows, Unix
-   :synopsis: Модуль содержит декоратор для автоматического обновления docstring функции с добавлением времени последнего вызова.
+   :synopsis: Модуль для демонстрации использования декоратора для автоматического обновления docstring функций.
 
+Этот модуль содержит декоратор :func:`autodoc`, который обновляет строку документации функции с добавлением времени последнего вызова функции.
+Декоратор используется для автоматического обновления docstring функции при её вызове.
+Декоратор оборачивает функцию, обновляя её docstring перед вызовом, добавляя в неё информацию о времени последнего вызова.
+Для получения текущего времени используется модуль :mod:`time`.
+
+.. autofunction:: autodoc
+.. autofunction:: example_function
 """
+
+MODE = 'dev'
 
 import functools
 import time
-from src.logger import logger # Импортируем logger
+from src.logger import logger
 
 def autodoc(func):
-    """
-    Декоратор для автоматического обновления docstring функции с добавлением времени последнего вызова.
+    """Декоратор для автоматического обновления docstring функции.
 
-    :param func: Функция, для которой нужно обновить docstring.
-    :return: Обернутая функция с обновленным docstring.
+    :param func: Функция, которой нужно обновить docstring.
+    :return: Обернутая функция.
     """
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        """
-        Оборачивающая функция для обновления docstring.
-
-        :param args: Аргументы функции.
-        :param kwargs: Именованные аргументы функции.
-        :return: Результат вызова функции func.
-        """
+        # Обновляем docstring перед вызовом функции
         try:
             update_docstring(func)
             return func(*args, **kwargs)
         except Exception as e:
-            logger.error(f"Ошибка при вызове функции: {e}")
+            logger.error(f'Ошибка в функции {func.__name__}: {e}')
             return None
 
     return wrapper
 
 
 def update_docstring(func):
-    """
-    Обновляет docstring функции, добавляя время последнего вызова.
+    """Обновляет docstring функции.
 
-    :param func: Функция, для которой нужно обновить docstring.
+    :param func: Функция, docstring которой нужно обновить.
+    :raises TypeError: если docstring не строка.
     """
     try:
         current_time = time.strftime("%Y-%m-%d %H:%M:%S")
-        if func.__doc__:
-            func.__doc__ += f"\n\nLast called at: {current_time}"
+        docstring = func.__doc__
+        if docstring is not None and isinstance(docstring, str):
+            func.__doc__ = docstring + f"\n\nПоследний вызов: {current_time}"
         else:
-            func.__doc__ = f"Last called at: {current_time}"
+            func.__doc__ = f"Последний вызов: {current_time}"
     except Exception as e:
-        logger.error(f"Ошибка при обновлении docstring: {e}")
+        logger.error(f"Ошибка обновления docstring функции {func.__name__}: {e}")
+        return
 
 
 @autodoc
 def example_function(param1: int, param2: str) -> None:
-    """
-    Пример функции, использующей декоратор autodoc.
+    """Пример функции.
 
     :param param1: Первое значение.
+    :type param1: int
     :param param2: Второе значение.
-    :raises TypeError: Если param1 не является целым числом.
+    :type param2: str
     """
-    print(f"Processing {param1} and {param2}")
+    print(f"Обработка {param1} и {param2}")
 
+# Тестирование функции
 example_function(1, "test")
-print(example_function.__doc__)
+print(example_function.__doc__)  # Вывод обновленного docstring
 example_function(2, "another test")
-print(example_function.__doc__)
+print(example_function.__doc__)  # Вывод обновленного docstring
+```

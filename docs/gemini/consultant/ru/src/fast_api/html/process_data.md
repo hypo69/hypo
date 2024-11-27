@@ -1,8 +1,8 @@
-**Received Code**
+# Received Code
 
 ```python
-# \file hypotez/src/fast_api/html/process_data.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/fast_api/html/process_data.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -10,25 +10,23 @@
 .. module: src.fast_api.html 
 	:platform: Windows, Unix
 	:synopsis:
-
 """
 MODE = 'dev'
 
 """
 	:platform: Windows, Unix
 	:synopsis:
-
 """
+
 
 """
 	:platform: Windows, Unix
 	:synopsis:
-
 """
+
 
 """
   :platform: Windows, Unix
-
 """
 """
   :platform: Windows, Unix
@@ -44,121 +42,106 @@ from .. import main
 from main import process_dataa
 ```
 
-**Improved Code**
+# Improved Code
 
 ```python
-# \file hypotez/src/fast_api/html/process_data.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/fast_api/html/process_data.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.fast_api.html.process_data
-   :platform: Windows, Unix
-   :synopsis: Модуль для обработки данных в формате HTML.
+.. module:: src.fast_api.html
+    :platform: Windows, Unix
+    :synopsis: Модуль для обработки данных для HTML-страниц.
 """
-import logging
-from src.utils.jjson import j_loads
+import json
+from src.utils.jjson import j_loads  # Импортируем функцию для чтения JSON
 from src.logger import logger
 
-MODE = 'dev'  # TODO: Объяснить назначение этой переменной.
+MODE = 'dev'
 
 
-def process_data(input_file: str) -> None:
+def process_data(data_path: str) -> dict:
     """
     Обрабатывает данные из файла.
 
-    :param input_file: Путь к файлу с данными.
+    :param data_path: Путь к файлу с данными.
+    :type data_path: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: Если возникла ошибка при чтении или обработке данных.
+    :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
+    :return: Обработанные данные в формате dict.
+    :rtype: dict
     """
     try:
-        with open(input_file, 'r', encoding='utf-8') as file:
-            # Используем j_loads для обработки JSON данных.
-            data = j_loads(file)
-            # ... (место для обработки данных)
+        # Читаем данные из файла, используя j_loads для обработки JSON
+        data = j_loads(data_path)  
+        # ... выполнение дальнейшей обработки данных ...
+        return data # Возвращаем результат обработки данных
+
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл {input_file} не найден: {e}")
-        raise
-    except Exception as e:
-        logger.error(f"Ошибка при обработке файла {input_file}: {e}")
-        raise
+        logger.error(f"Ошибка: Файл не найден {e}", exc_info=True)
+        return None  # Возвращаем None при ошибке
+    except json.JSONDecodeError as e:
+        logger.error(f"Ошибка: Некорректный формат JSON {e}", exc_info=True)
+        return None # Возвращаем None при ошибке
 
 
-# Пример использования:
-# try:
-#     process_data('input.json')
-# except Exception as e:
-#    logger.error(f"Общая ошибка: {e}")
-
-
-from main import process_dataa # Проблема - двойное название
-# TODO: Заменить process_dataa на process_data
-# TODO: Добавьте обработку ошибок при импорте main.
 ```
 
-**Changes Made**
+# Changes Made
 
-*   Добавлен импорт `logging` и `j_loads` из `src.utils.jjson`.
+*   Добавлен импорт `j_loads` из `src.utils.jjson`.
 *   Добавлен импорт `logger` из `src.logger`.
-*   Добавлены проверки на `FileNotFoundError`.
-*   Функция `process_data` получила docstring в формате RST.
-*   Используется `j_loads` для чтения данных JSON.
-*   Переименовано `process_dataa` в `process_data` для соответствия именования.
-*   Добавлен обработка общих ошибок в `try-except` блоке.
-*   Улучшен logging, добавлены сообщения об ошибках.
-*   Изменён формат комментариев на RST.
+*   Функция `process_data` получила тип возвращаемого значения и параметр `data_path`.
+*   Добавлена документация RST к модулю и функции `process_data`.
+*   Добавлена обработка ошибок `FileNotFoundError` и `json.JSONDecodeError` с использованием `logger.error`.
+*   Изменен стиль обработки ошибок, теперь код возвращает `None` при ошибке.
+*   Добавлены `try...except` блоки для обработки ошибок.
+*   Добавлен комментарий `# ... выполнение дальнейшей обработки данных ...`, так как код не был завершён.
+*   Функция `process_data` возвращает `dict` если всё прошло успешно.
 
 
-**Full Improved Code (Copyable)**
+# FULL Code
 
 ```python
-# \file hypotez/src/fast_api/html/process_data.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/fast_api/html/process_data.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.fast_api.html.process_data
-   :platform: Windows, Unix
-   :synopsis: Модуль для обработки данных в формате HTML.
+.. module:: src.fast_api.html
+    :platform: Windows, Unix
+    :synopsis: Модуль для обработки данных для HTML-страниц.
 """
-import logging
-from src.utils.jjson import j_loads
+import json
+from src.utils.jjson import j_loads  # Импортируем функцию для чтения JSON
 from src.logger import logger
 
-MODE = 'dev'  # TODO: Объяснить назначение этой переменной.
+MODE = 'dev'
 
 
-def process_data(input_file: str) -> None:
+def process_data(data_path: str) -> dict:
     """
     Обрабатывает данные из файла.
 
-    :param input_file: Путь к файлу с данными.
+    :param data_path: Путь к файлу с данными.
+    :type data_path: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: Если возникла ошибка при чтении или обработке данных.
+    :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
+    :return: Обработанные данные в формате dict.
+    :rtype: dict
     """
     try:
-        with open(input_file, 'r', encoding='utf-8') as file:
-            # Используем j_loads для обработки JSON данных.
-            data = j_loads(file)
-            # ... (место для обработки данных)
+        # Читаем данные из файла, используя j_loads для обработки JSON
+        data = j_loads(data_path)  
+        # ... выполнение дальнейшей обработки данных ...
+        return data # Возвращаем результат обработки данных
+
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл {input_file} не найден: {e}")
-        raise
-    except Exception as e:
-        logger.error(f"Ошибка при обработке файла {input_file}: {e}")
-        raise
-
-
-# Пример использования:
-# try:
-#     process_data('input.json')
-# except Exception as e:
-#    logger.error(f"Общая ошибка: {e}")
-
-
-from main import process_data  # Проблема - двойное название
-# TODO: Заменить process_dataa на process_data
-# TODO: Добавьте обработку ошибок при импорте main.
-```
+        logger.error(f"Ошибка: Файл не найден {e}", exc_info=True)
+        return None  # Возвращаем None при ошибке
+    except json.JSONDecodeError as e:
+        logger.error(f"Ошибка: Некорректный формат JSON {e}", exc_info=True)
+        return None # Возвращаем None при ошибке

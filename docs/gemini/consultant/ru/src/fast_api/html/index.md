@@ -1,9 +1,8 @@
-```
-**Received Code**
+# Received Code
 
-```html+javascript
+```html
 ## \file hypotez/src/fast_api/html/index.html
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 
 """ module: src.fast_api.html """
@@ -48,12 +47,12 @@ MODE = 'debug'
             var firstName = $('#firstName').val();
             var lastName = $('#lastName').val();
 
-            // Отправляем данные на сервер
+            // Отправка данных на сервер
             $.ajax({
                 type: 'POST',
                 url: '/process_data',  // Замените '/process_data' на URL вашего FastAPI эндпоинта
                 contentType: 'application/json',
-                data: JSON.stringify({first_name: firstName, last_name: lastName}), // Преобразуем данные в формат JSON
+                data: JSON.stringify({first_name: firstName, last_name: lastName}), // Преобразуем данные в JSON
                 success: function(response) {
                     // Обработка успешного ответа от сервера
                     console.log('Ответ от сервера:', response);
@@ -71,15 +70,18 @@ MODE = 'debug'
 </html>
 ```
 
-**Improved Code**
+# Improved Code
 
-```html+javascript
+```html
 ## \file hypotez/src/fast_api/html/index.html
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 
-"""HTML страница для отправки данных на FastAPI сервер."""
-
+"""HTML страница для отправки данных на FastAPI.
+   Содержит форму для ввода имени и фамилии,
+   а также обработчик отправки данных через AJAX.
+"""
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -111,68 +113,60 @@ MODE = 'debug'
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script>
-        # Импортируем logger для обработки ошибок
-        // ...
-        $(document).ready(function() {
-            $('#dataForm').submit(function(event) {
-                event.preventDefault();
+        // Обработчик отправки формы
+        $('#dataForm').submit(function(event) {
+            # Предотвращение стандартного поведения формы
+            event.preventDefault();
 
-                # Получаем данные из полей ввода
-                let firstName = $('#firstName').val();
-                let lastName = $('#lastName').val();
+            # Получение данных из формы
+            let firstName = $('#firstName').val();
+            let lastName = $('#lastName').val();
 
-                # Создаём объект данных
-                let data = {
-                    first_name: firstName,
-                    last_name: lastName
-                };
+            # Создание объекта данных для отправки
+            let data = {first_name: firstName, last_name: lastName};
 
-                # Отправляем данные на сервер
-                $.ajax({
-                    type: 'POST',
-                    url: '/process_data', # Указываем путь к эндпоинту
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function(response) {
-                        console.log('Успех:', response);
-                        // ...
-                    },
-                    error: function(xhr, status, error) {
-                        logger.error('Ошибка при отправке данных:', error);
-                        console.error('Ошибка:', error);
-                    }
-                });
+            # Отправка данных на сервер
+            $.ajax({
+                type: 'POST',
+                url: '/process_data', # URL эндпоинта FastAPI
+                contentType: 'application/json',
+                data: JSON.stringify(data), # Преобразование в JSON
+                success: function(response) {
+                    # Обработка успешного ответа
+                    console.log('Ответ сервера:', response);
+                },
+                error: function(xhr, status, error) {
+                    # Обработка ошибки
+                    console.error('Ошибка при отправке данных:', error);
+                }
             });
         });
-
     </script>
 
 </body>
 </html>
 ```
 
-**Changes Made**
+# Changes Made
 
-*   Добавлен заголовок RST для файла.
-*   Заменен комментарий в начале файла на docstring в формате RST.
-*   Заменены `var` на `let` для объявления переменных внутри функции.
-*   Добавлен импорт `logger` для логирования ошибок.
-*   Использование `logger.error` для обработки ошибок в `$.ajax`
-*   Изменён формат данных для отправки серверу
-*   Изменен `console.error` на `logger.error`.
-*   Добавлены комментарии в формате RST для лучшей читабельности.
-*   Добавлена проверка `$(document).ready()`, чтобы избежать ошибок при загрузке.
-*   Изменён обработчик ошибки (logger.error)
+*   Добавлен комментарий RST к файлу, описывающий его назначение.
+*   Комментарии к коду переписаны в стиле RST, используя одинарные кавычки.
+*   Переменные `firstName` и `lastName` объявлены с использованием `let`.
+*   Создан объект `data` для более понятной структуры данных.
 
 
-```javascript
-// Полный код с изменениями (для копирования и вставки)
+# FULL Code
+
+```html
 ## \file hypotez/src/fast_api/html/index.html
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 
-"""HTML страница для отправки данных на FastAPI сервер."""
-
+"""HTML страница для отправки данных на FastAPI.
+   Содержит форму для ввода имени и фамилии,
+   а также обработчик отправки данных через AJAX.
+"""
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -204,44 +198,35 @@ MODE = 'debug'
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script>
-        # Импортируем logger для обработки ошибок
-        # ...
-        from src.logger import logger; # импорт logger
-        $(document).ready(function() {
-            $('#dataForm').submit(function(event) {
-                event.preventDefault();
+        // Обработчик отправки формы
+        $('#dataForm').submit(function(event) {
+            # Предотвращение стандартного поведения формы
+            event.preventDefault();
 
-                # Получаем данные из полей ввода
-                let firstName = $('#firstName').val();
-                let lastName = $('#lastName').val();
+            # Получение данных из формы
+            let firstName = $('#firstName').val();
+            let lastName = $('#lastName').val();
 
-                # Создаём объект данных
-                let data = {
-                    first_name: firstName,
-                    last_name: lastName
-                };
+            # Создание объекта данных для отправки
+            let data = {first_name: firstName, last_name: lastName};
 
-                # Отправляем данные на сервер
-                $.ajax({
-                    type: 'POST',
-                    url: '/process_data', # Указываем путь к эндпоинту
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function(response) {
-                        console.log('Успех:', response);
-                        // ...
-                    },
-                    error: function(xhr, status, error) {
-                        logger.error('Ошибка при отправке данных:', error);
-                        console.error('Ошибка:', error);
-                    }
-                });
+            # Отправка данных на сервер
+            $.ajax({
+                type: 'POST',
+                url: '/process_data', # URL эндпоинта FastAPI
+                contentType: 'application/json',
+                data: JSON.stringify(data), # Преобразование в JSON
+                success: function(response) {
+                    # Обработка успешного ответа
+                    console.log('Ответ сервера:', response);
+                },
+                error: function(xhr, status, error) {
+                    # Обработка ошибки
+                    console.error('Ошибка при отправке данных:', error);
+                }
             });
         });
-
     </script>
 
 </body>
 </html>
-```
-```

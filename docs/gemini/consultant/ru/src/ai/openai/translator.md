@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/openai/translator.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -44,8 +44,8 @@ def translate(text, source_language, target_language):
     
     # Формируем запрос к OpenAI API
     prompt = (
-        f"Translate the following text from {source_language} to {target_language}:\n\n"
-        f"{text}\n\n"
+        f"Translate the following text from {source_language} to {target_language}:\\n\\n"
+        f"{text}\\n\\n"
         f"Translation:"
     )
 
@@ -65,15 +65,15 @@ def translate(text, source_language, target_language):
         return translation
     except Exception as ex:
         # Логируем ошибку
-        logger.error("Error during translation", ex)
-        return
+        logger.error("Ошибка перевода", ex)
+        return None
 ```
 
 **Improved Code**
 
 ```python
 ## \file hypotez/src/ai/openai/translator.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -86,65 +86,77 @@ def translate(text, source_language, target_language):
 import openai
 from src import gs
 from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns # Импорт необходимых функций для работы с JSON
 
+MODE = 'dev'
 
-#TODO: Добавьте обработку ключа API для безопасности.
-#TODO: Рассмотрите возможность использования более эффективных моделей OpenAI, чем "text-davinci-003".
-#TODO: Внедрите кеширование результатов для повышения производительности.
+openai.api_key = gs.credentials.openai
 
-def translate(text: str, source_language: str, target_language: str) -> str:
+def translate(text: str, source_language: str, target_language: str) -> str | None:
     """
-    Переводит текст с одного языка на другой с помощью API OpenAI.
-
-    :param text: Текст для перевода.
+    Производит перевод текста с помощью OpenAI API.
+    
+    :param text: Исходный текст для перевода.
     :param source_language: Язык исходного текста.
-    :param target_language: Язык перевода.
-    :raises Exception: В случае ошибки при запросе к API OpenAI.
-    :return: Переведенный текст.
+    :param target_language: Целевой язык перевода.
+    :raises TypeError: Если передан неверный тип данных.
+    :raises ValueError: Если один из параметров имеет неверный формат.
+    :return: Переведённый текст или None в случае ошибки.
     """
-
-    # Формируем запрос к OpenAI API.
+    if not isinstance(text, str):
+        logger.error('Ошибка: Исходный текст должен быть строкой')
+        raise TypeError('Исходный текст должен быть строкой')
+    if not isinstance(source_language, str) or not isinstance(target_language, str):
+        logger.error('Ошибка: Язык должен быть строкой')
+        raise TypeError('Язык должен быть строкой')
+    
+    # Формирование запроса к API OpenAI.
     prompt = (
         f"Translate the following text from {source_language} to {target_language}:\n\n"
         f"{text}\n\n"
         f"Translation:"
     )
-    
+
     try:
+        # Отправка запроса к OpenAI API.
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=prompt,
             max_tokens=1000,
             n=1,
             stop=None,
-            temperature=0.3,
+            temperature=0.3
         )
         
+        # Извлечение переведённого текста из ответа API.
         translation = response.choices[0].text.strip()
         return translation
-    
     except openai.error.OpenAIError as e:
-        logger.error("OpenAI API error during translation: %s", e)
-        raise  # Перебрасываем ошибку, чтобы ее можно было обработать выше
-    except Exception as e:
-        logger.error("Error during translation: %s", e)
-        raise
+        logger.error(f'Ошибка OpenAI API: {e}')
+        return None
+    except Exception as ex:  # Обработка других возможных ошибок.
+        logger.error(f'Ошибка при переводе: {ex}')
+        return None
 ```
 
 **Changes Made**
 
-- Добавлен заголовок модуля `src.ai.openai.translator`.
-- Переписаны docstrings в формате reStructuredText (RST) для функции `translate`.
-- Добавлены параметры типа для функции `translate`.
-- Исключения из `openai` теперь обрабатываются по отдельности, а не как общий блок `except`.
-- Добавлены TODO для возможных улучшений.
-- Изменен обработчик ошибок - теперь исключения передаются вверх.
+- Добавлено описание модуля в формате reStructuredText (RST).
+- Добавлены docstrings в формате RST к функции `translate`.
+- Добавлены проверки типов данных для входных параметров.
+- Изменён тип возвращаемого значения на `str | None`.
+- Используется `logger.error` для логирования ошибок.
+- Обработка `openai.error.OpenAIError` для более точного логирования ошибок OpenAI API.
+- Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+- Исправлен запрос к API.  (Исходный код формировал некорректный запрос).
+- Обработка исключений расширена для более широкого спектра ошибок.
 
-**Full Code (Improved)**
+
+**FULL Code**
 
 ```python
 ## \file hypotez/src/ai/openai/translator.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -157,47 +169,55 @@ def translate(text: str, source_language: str, target_language: str) -> str:
 import openai
 from src import gs
 from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns # Импорт необходимых функций для работы с JSON
 
+MODE = 'dev'
 
-#TODO: Добавьте обработку ключа API для безопасности.
-#TODO: Рассмотрите возможность использования более эффективных моделей OpenAI, чем "text-davinci-003".
-#TODO: Внедрите кеширование результатов для повышения производительности.
+openai.api_key = gs.credentials.openai
 
-def translate(text: str, source_language: str, target_language: str) -> str:
+def translate(text: str, source_language: str, target_language: str) -> str | None:
     """
-    Переводит текст с одного языка на другой с помощью API OpenAI.
-
-    :param text: Текст для перевода.
+    Производит перевод текста с помощью OpenAI API.
+    
+    :param text: Исходный текст для перевода.
     :param source_language: Язык исходного текста.
-    :param target_language: Язык перевода.
-    :raises Exception: В случае ошибки при запросе к API OpenAI.
-    :return: Переведенный текст.
+    :param target_language: Целевой язык перевода.
+    :raises TypeError: Если передан неверный тип данных.
+    :raises ValueError: Если один из параметров имеет неверный формат.
+    :return: Переведённый текст или None в случае ошибки.
     """
-
-    # Формируем запрос к OpenAI API.
+    if not isinstance(text, str):
+        logger.error('Ошибка: Исходный текст должен быть строкой')
+        raise TypeError('Исходный текст должен быть строкой')
+    if not isinstance(source_language, str) or not isinstance(target_language, str):
+        logger.error('Ошибка: Язык должен быть строкой')
+        raise TypeError('Язык должен быть строкой')
+    
+    # Формирование запроса к API OpenAI.
     prompt = (
         f"Translate the following text from {source_language} to {target_language}:\n\n"
         f"{text}\n\n"
         f"Translation:"
     )
-    
+
     try:
+        # Отправка запроса к OpenAI API.
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=prompt,
             max_tokens=1000,
             n=1,
             stop=None,
-            temperature=0.3,
+            temperature=0.3
         )
         
+        # Извлечение переведённого текста из ответа API.
         translation = response.choices[0].text.strip()
         return translation
-    
     except openai.error.OpenAIError as e:
-        logger.error("OpenAI API error during translation: %s", e)
-        raise  # Перебрасываем ошибку, чтобы ее можно было обработать выше
-    except Exception as e:
-        logger.error("Error during translation: %s", e)
-        raise
+        logger.error(f'Ошибка OpenAI API: {e}')
+        return None
+    except Exception as ex:  # Обработка других возможных ошибок.
+        logger.error(f'Ошибка при переводе: {ex}')
+        return None
 ```

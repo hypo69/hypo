@@ -47,7 +47,6 @@ from typing import List, Dict
 from types import SimpleNamespace
 from src.logger import logger
 from src.utils.csv import read_csv_as_dict, read_csv_as_ns, save_csv_file, read_csv_file
-from src.utils.jjson import j_loads, j_dumps
 
 def csv2dict(csv_file: str | Path, *args, **kwargs) -> dict | None:
     """

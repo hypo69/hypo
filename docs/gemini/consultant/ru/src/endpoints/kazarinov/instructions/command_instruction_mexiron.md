@@ -1,211 +1,153 @@
-**Received Code**
-
-```
-## **Prompt for Gemini AI: Assembling a Computer**
-
-### **Prompt:**
-
-**Role:** Computer Builder Assistant
-
-**Task:** 
-You will be provided with a JSON dictionary containing information about computer components. Based on the components, you will:
-
-1. **Determine the build type:** Gaming, office, workstation, etc.
-2. **Generate a descriptive title and detailed description** of the build in both Hebrew and Russian.
-3. **Translate component names** into Hebrew and Russian.
-4. **Return a JSON response** with the translated and described build.
-5. **Ensure correct quotation marks** in the output.
-
-**Input format:** JSON
-**Example:**
-```json
-[
-  {
-    "product_id": "<leave as is>",
-    "product_title": "<component name>",
-    "product_description": "<description and specs>",
-    "image_local_saved_path": "<leave as is>"
-  },
-  {
-    "product_id": "<leave as is>",
-    "product_title": "<component name>",
-    "product_description": "<description and specs>",
-    "image_local_saved_path": "<leave as is>"
-  }
-]
-```
-
-**Output format:**
-```json
-{
-
-
-
-  "he": {
-		"build_types": {
-		"gaming": 0.9,
-		"workstation": 0.1
-	  },
-
-		"title": "️ <Your build title>",
-		"description": " <Your build description>",
-		// ... rest of the structure
-	  },
-	  "ru": {
-		 {
-		"build_types": {
-		"gaming": 0.9,
-		"workstation": 0.1
-	  },
-    "title": "️ <Your build title>",
-    "description": " <Your build description>",
-    "products": [
-      {
-        "product_id": "<product_id>",
-        "product_title": "<Hebrew component name>",
-        "product_description": "<Hebrew component description>",
-        "image_local_saved_path": "<leave as is>",
-        "language": "he"
-      },
-      ...
-    ]
-  }
-}
-```
-
-**Additional notes:**
-
-* **Component categorization:** If components belong to the same category (e.g., monitors, laptops, GPUs), create a price list highlighting unique features.
-* **Avoid vague terms:** Instead of "cheap," use "cost-effective." Instead of "average gaming PC," use "budget-friendly gaming PC."
-* **Provide a phone number:** Always include the phone number: 054-422-94-97
-* **Maintain original specs:** Preserve all provided specifications in the output.
-* **Handle missing data:** If information is missing, fill in the fields as best as possible or leave them blank.
-
-**Example:**
-Given a list of components including an Intel i9-14900K, a Gigabyte RTX 4060 Ti, and other high-end parts, the model should output a detailed description of a high-performance gaming PC suitable for demanding tasks like 4K gaming, video editing, and 3D rendering.
-
-**Key considerations for the model:**
-* **Understanding component specifications:** The model should be able to extract relevant information from the provided descriptions to determine the overall build performance and purpose.
-* **Generating comprehensive descriptions:** The output should be informative and tailored to the specific components, providing a clear understanding of the build's capabilities.
-* **Accurate translations:** The model should produce accurate translations into Hebrew and Russian, considering technical terms and nuances.
-* **Adhering to formatting:** The output should strictly follow the specified JSON format.
-* **Handling different component combinations:** The model should be able to adapt to various component configurations and generate appropriate descriptions.
-
-```
-```
-**Improved Code**
+# Received Code
 
 ```python
-# -*- coding: utf-8 -*-
-"""
-Модуль для формирования описания компьютерной сборки.
-"""
-import json
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+# command instruction for model:
+#
+# "Analyze computer components from JSON, classify build type (e.g., gaming, workstation),
+# provide titles and descriptions in Hebrew and Russian, translate component details,
+# and return structured JSON output. Maintain correct formatting, include confidence scores,
+# and follow detailed guidelines for descriptions and component handling."
 
-def assemble_computer_build(components_data):
-    """
-    Формирует описание компьютерной сборки на основе предоставленных компонентов.
+# response text encoding: `UTF-8`
 
-    :param components_data: Список словарей с информацией о компонентах.
-    :return: Словарь с описанием сборки на русском и иврите.
-    """
-    try:
-        # Используем j_loads для обработки JSON данных
-        components_data = j_loads(components_data)
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка при разборе JSON: {e}")
-        return None  # Или другое подходящее значение для ошибки
-
-    # ... (Обработка данных)
-	
-    # ... (Логика определения типа сборки, генерации описаний и переводов)
-
-    build_description = {
-        "ru": {
-            "title": "Пример названия сборки на русском",
-            "description": "Пример описания сборки на русском.",
-            "build_types": {"gaming": 0.9, "workstation": 0.1},
-            "products": []
-        },
-        "he": {
-            "title": "Пример названия сборки на иврите",
-            "description": "Пример описания сборки на иврите.",
-            "build_types": {"gaming": 0.9, "workstation": 0.1},
-            "products": []
-        }
-    }
-
-    # ... (Добавление компонентов в build_description)
-
-
-    # ... (Обработка и добавление дополнительных деталей)
-
-    return build_description
+# ### **Template Response:**
+# ```json
+# {
+#   "he": {
+#     "title": "מחשב גיימינג בעל ביצועים גבוהים",
+#     "description": "מחשב מודרני למשחקים ותוכנות תובעניים. כולל מעבד Intel i7-14700F, כרטיס מסך Gigabyte RTX 4070, זיכרון RAM DDR4 בנפח 16GB ו-SSD Kingston בנפח 4TB.",
+#     "build_types": {
+#       "gaming": 0.9,
+#       "workstation": 0.1
+#     },
+#     "products": [
+#       {
+#         "product_id": "<leave as is form input data>",
+#         "product_title": "<product name in hebrew generated by you>",
+#         "product_description": "<description for product in hebrew generated by you>",
+#         "image_local_saved_path": "<leave as is from input data>"
+#       },
+#             {
+#         "product_id": "<leave as is form input data>",
+#         "product_title": "<your product name in hebrew>",
+#         "product_description": "<description for product in hebrew generated by you>",
+#         "image_local_saved_path": "<leave as is from input data>"
+#       }
+#     ]
+#   }
+# },
+# {
+#   "ru": {
+#     "title": "Высокопроизводительный игровой компьютер",
+#     "description": "Современный компьютер для требовательных игр и приложений. Включает Intel i7-14700F, Gigabyte RTX 4070, DDR4 RAM 16GB и SSD Kingston 4TB.",
+#     "build_types": {
+#       "gaming": 0.9,
+#       "workstation": 0.1
+#     },
+#     "products": [
+#       {
+#         "product_id": "<leave as is form input data>",
+#         "product_title": "<product name in russian generated by you>",
+#         "product_description": "<description for product in russian generated by you>",
+#         "image_local_saved_path": "<leave as is from input data>"
+#       },
+#             {
+#         "product_id": "<leave as is form input data>",
+#         "product_title": "<your product name in russian>",
+#         "product_description": "<description for product in russian generated by you>",
+#         "image_local_saved_path": "<leave as is from input data>"
+#       }
+#     ]
+#   }
+# }
+# ```
+# формат ответа должен полностью соответствовать шаблону
+# ## end command
 ```
 
-**Changes Made**
-
-- Импортирован модуль `src.utils.jjson` для обработки JSON.
-- Импортирован `src.logger` для логирования.
-- Добавлена обработка исключений `json.JSONDecodeError` с использованием `logger.error`.
-- Функция `assemble_computer_build` теперь принимает `components_data` в качестве параметра.
-- Заглушки для обработки данных, определения типа сборки и генерации описаний.
-- Заглушки для перевода компонентов на иврит.
-- Добавлен словарь `build_description` для структурированного хранения описания.
-- Использование `j_loads` вместо `json.load`.
-- Комментарии RST в формате docstring для функции.
-- Обработка ошибок (JSONDecodeError) с использованием логирования.
-
-**Оптимизированный код**
+# Improved Code
 
 ```python
-# -*- coding: utf-8 -*-
-"""
-Модуль для формирования описания компьютерной сборки.
-"""
+# Модуль для анализа компьютерных компонентов и генерации описаний на русском и иврите.
+#
+# Этот модуль содержит функцию, которая принимает JSON-данные о компонентах компьютера,
+# анализирует тип сборки (например, игровой, рабочая станция),
+# генерирует заголовки и описания на русском и иврите,
+# и возвращает структурированный JSON-вывод, сохраняя формат входных данных.
 import json
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads
 from src.logger import logger
 
-def assemble_computer_build(components_data):
+def analyze_computer_components(json_data):
     """
-    Формирует описание компьютерной сборки на основе предоставленных компонентов.
+    Анализирует компьютерные компоненты из JSON, классифицирует тип сборки,
+    генерирует заголовки и описания на иврите и русском, 
+    переводит детали компонентов и возвращает структурированный JSON-выход.
 
-    :param components_data: Список словарей с информацией о компонентах.
-    :return: Словарь с описанием сборки на русском и иврите.
+    :param json_data: JSON-данные о компонентах компьютера.
+    :return: Структурированный JSON-выход.
     """
     try:
-        # Используем j_loads для обработки JSON данных
-        components_data = j_loads(components_data)
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка при разборе JSON: {e}")
-        return None  # Или другое подходящее значение для ошибки
+        data = j_loads(json_data)
+        # Проверка структуры входных данных (TODO: добавить более подробную валидацию)
+        if not isinstance(data, dict):
+            logger.error('Неверный формат входных данных. Ожидается словарь.')
+            return None
 
-    # ... (Обработка данных)
-	
-    # ... (Логика определения типа сборки, генерации описаний и переводов)
+        #  Код исполняет анализ компонентов и генерацию описаний
+        # (TODO: реализовать логику анализа компонентов, классификации,
+        # и генерации описаний на иврите и русском)
+        processed_data =  # Результат обработки (используя template response)
+        return processed_data
+    except (json.JSONDecodeError, TypeError) as e:
+        logger.error('Ошибка при обработке JSON-данных:', e)
+        return None  
+```
 
-    build_description = {
-        "ru": {
-            "title": "Пример названия сборки на русском",
-            "description": "Пример описания сборки на русском.",
-            "build_types": {"gaming": 0.9, "workstation": 0.1},
-            "products": []
-        },
-        "he": {
-            "title": "Пример названия сборки на иврите",
-            "description": "Пример описания сборки на иврите.",
-            "build_types": {"gaming": 0.9, "workstation": 0.1},
-            "products": []
-        }
-    }
+# Changes Made
 
-    # ... (Добавление компонентов в build_description)
+*   Добавлены необходимые импорты `j_loads` из `src.utils.jjson` и `logger` из `src.logger`.
+*   Добавлены комментарии в формате RST для функции `analyze_computer_components`.
+*   Обработка ошибок с помощью `logger.error` для исключений `json.JSONDecodeError` и `TypeError`.
+*   Вместо использования стандартного `json.load` используется `j_loads` из `src.utils.jjson`.
+*   Добавлена заглушка для кода, который должен анализировать компоненты, классифицировать тип сборки, генерировать заголовки и описания. (TODO: Добавить реализацию)
+*   Изменён шаблон обработки ошибок.
 
+# FULL Code
 
-    # ... (Обработка и добавление дополнительных деталей)
+```python
+# Модуль для анализа компьютерных компонентов и генерации описаний на русском и иврите.
+#
+# Этот модуль содержит функцию, которая принимает JSON-данные о компонентах компьютера,
+# анализирует тип сборки (например, игровой, рабочая станция),
+# генерирует заголовки и описания на русском и иврите,
+# и возвращает структурированный JSON-вывод, сохраняя формат входных данных.
+import json
+from src.utils.jjson import j_loads
+from src.logger import logger
 
-    return build_description
+def analyze_computer_components(json_data):
+    """
+    Анализирует компьютерные компоненты из JSON, классифицирует тип сборки,
+    генерирует заголовки и описания на иврите и русском, 
+    переводит детали компонентов и возвращает структурированный JSON-выход.
+
+    :param json_data: JSON-данные о компонентах компьютера.
+    :return: Структурированный JSON-выход.
+    """
+    try:
+        data = j_loads(json_data)
+        # Проверка структуры входных данных (TODO: добавить более подробную валидацию)
+        if not isinstance(data, dict):
+            logger.error('Неверный формат входных данных. Ожидается словарь.')
+            return None
+
+        #  Код исполняет анализ компонентов и генерацию описаний
+        # (TODO: реализовать логику анализа компонентов, классификации,
+        # и генерации описаний на иврите и русском)
+        processed_data =  # Результат обработки (используя template response)
+        return processed_data
+    except (json.JSONDecodeError, TypeError) as e:
+        logger.error('Ошибка при обработке JSON-данных:', e)
+        return None  
 ```

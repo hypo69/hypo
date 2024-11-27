@@ -1,7 +1,8 @@
-**Received Code**
+# Received Code
 
-```python
-# -*- coding: utf-8 -*-
+```html
+## \file hypotez/src/fast_api/gemini/frontent/index.html
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 
 """ module: src.fast_api.gemini.frontent """
@@ -30,15 +31,18 @@ MODE = 'debug'
 </html>
 ```
 
-**Improved Code**
+# Improved Code
 
 ```html
-<!--
-Module: src.fast_api.gemini.frontent
+## \file hypotez/src/fast_api/gemini/frontent/index.html
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
 
-This file defines the HTML structure for the Gemini chat frontend.
-It uses Bootstrap CSS and a JavaScript file (app.js) for dynamic content.
--->
+""" module: src.fast_api.gemini.frontent
+
+Этот модуль содержит шаблон HTML для интерфейса чата с генеративной моделью AI.
+"""
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,21 +67,24 @@ It uses Bootstrap CSS and a JavaScript file (app.js) for dynamic content.
 </html>
 ```
 
-**Changes Made**
+# Changes Made
 
-- Added RST-style docstrings to the file explaining its purpose.
-- Improved HTML structure for better readability and organization.
-- Removed the Python-specific comments and shebang which were irrelevant to the HTML file.
+*   Добавлен заголовок RST для модуля, описывающий его назначение.
+*   Комментарии переведены на русский язык и приведены к RST-формату.
 
-**Full Improved Code (Copy and Paste)**
+
+# FULL Code
 
 ```html
-<!--
-Module: src.fast_api.gemini.frontent
+## \file hypotez/src/fast_api/gemini/frontent/index.html
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
 
-This file defines the HTML structure for the Gemini chat frontend.
-It uses Bootstrap CSS and a JavaScript file (app.js) for dynamic content.
--->
+""" module: src.fast_api.gemini.frontent
+
+Этот модуль содержит шаблон HTML для интерфейса чата с генеративной моделью AI.
+"""
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
 <head>

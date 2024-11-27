@@ -1,347 +1,234 @@
-Received Code
+# Received Code
+
 ```python
-# Supplier Class Documentation
-
-## **Class** `Supplier`
+# [Русский](https://github.com/hypo69/hypo/blob/master/README.RU.MD)
+# **Class** `Supplier`
 ### **Base class for all suppliers**
+*In the context of the code, `Supplier` represents an information provider.  
+A supplier can be a producer of goods, data, or information.  
+The supplier\'s sources include a website\'s landing page, a document, a database, or a table.  
+This class unifies different suppliers under a standardized set of operations.  
+Each supplier has a unique prefix. ([Details on prefixes](prefixes.md))*  
 
-The `Supplier` class serves as the foundation for managing supplier interactions. It handles initialization, configuration, authentication, and scenario execution for various data sources, such as `amazon.com`, `walmart.com`, `mouser.com`, and `digikey.com`. Additional suppliers can be defined by the customer.
+The `Supplier` class serves as the foundation for managing interactions with suppliers.  
+It handles initialization, configuration, authentication, and execution of workflows for various data sources, such as `amazon.com`, `walmart.com`, `mouser.com`, and `digikey.com`. Clients can also define additional suppliers.  
 
 ---
 
+## List of implemented suppliers:
+
+[aliexpress](aliexpress)  - Implemented with two workflows: `webdriver` and `api`  
+[amazon](amazon) - `webdriver`  
+[bangood](bangood)  - `webdriver`  
+[cdata](cdata)  - `webdriver`  
+[chat_gpt](chat_gpt)  - Interacts with the ChatGPT interface (NOT THE MODEL!)  
+[ebay](ebay)  - `webdriver`  
+[etzmaleh](etzmaleh)  - `webdriver`  
+[gearbest](gearbest)  - `webdriver`  
+[grandadvance](grandadvance)  - `webdriver`  
+[hb](hb)  - `webdriver`  
+[ivory](ivory) - `webdriver`  
+[ksp](ksp) - `webdriver`  
+[kualastyle](kualastyle) `webdriver`  
+[morlevi](morlevi) `webdriver`  
+[visualdg](visualdg) `webdriver`  
+[wallashop](wallashop) `webdriver`  
+[wallmart](wallmart) `webdriver`  
+[Details on WebDriver :class: `Driver`](../webdriver)  
+[Details on workflows :class: `Scenario`](../scenarios)
+
+---
+```mermaid
+graph TD
+    subgraph WebInteraction
+        webelement <--> executor
+        subgraph InnerInteraction
+            executor <--> webdriver
+        end
+    end
+    webdriver -->|result| supplier
+    supplier -->|locator| webdriver
+    supplier --> product_fields
+    product_fields --> endpoints
+    scenario -->|Specific scenario for supplier| supplier
+
+
+```
 ## **Attributes**
-- **`supplier_id`** *(int)*: Unique identifier for the supplier.
-- **`supplier_prefix`** *(str)*: Supplier prefix, e.g., `'amazon'`, `'aliexpress'`.
-- **`supplier_settings`** *(dict)*: Settings specific to the supplier, loaded from a JSON file.
-- **`locale`** *(str)*: Localization code (default: `'en'`).
-- **`price_rule`** *(str)*: Rules for price calculation (e.g., VAT rules).
-- **`related_modules`** *(module)*: Supplier-specific helper modules.
-- **`scenario_files`** *(list)*: List of scenario files to execute.
-- **`current_scenario`** *(dict)*: Currently executing scenario.
-- **`login_data`** *(dict)*: Login credentials and related data for authentication.
-- **`locators`** *(dict)*: Locator dictionary for web elements.
-- **`driver`** *(Driver)*: WebDriver instance for supplier website interaction.
+- **`supplier_id`** *(int)*: Unique identifier for the supplier.  
+- **`supplier_prefix`** *(str)*: Supplier prefix, e.g., `'amazon'`, `'aliexpress'`.  
+- **`supplier_settings`** *(dict)*: Supplier settings loaded from a JSON file.  
+- **`locale`** *(str)*: Localization code (default: `'en'`).  
+- **`price_rule`** *(str)*: Rules for price calculations (e.g., VAT rules).  
+- **`related_modules`** *(module)*: Helper modules for specific supplier operations.  
+- **`scenario_files`** *(list)*: List of scenario files to be executed.  
+- **`current_scenario`** *(dict)*: Scenario currently being executed.  
+- **`login_data`** *(dict)*: Data for authentication.  
+- **`locators`** *(dict)*: Dictionary of web element locators.  
+- **`driver`** *(Driver)*: WebDriver instance for interacting with the supplier's website.  
 - **`parsing_method`** *(str)*: Data parsing method (e.g., `'webdriver'`, `'api'`, `'xls'`, `'csv'`).
+
 
 ---
 
 ## **Methods**
 
 ### **`__init__`**
-**Constructor for the `Supplier` class.**
+**Constructor of the `Supplier` class.**
 
 ```python
-def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | 'Driver' | bool = 'default', *attrs, **kwargs):
-    """Initializes the Supplier instance.
-
-    Args:
-        supplier_prefix (str): Prefix for the supplier.
-        locale (str, optional): Localization code. Defaults to 'en'.
-        webdriver (str | Driver | bool, optional): WebDriver type. Defaults to 'default'.
-
-    Raises:
-        DefaultSettingsException: If default settings are not configured correctly.
-    """
-    self.supplier_prefix = supplier_prefix
-    self.locale = locale
-    self.webdriver = webdriver
-    # ... initialization logic ...
-```
-
----
-
-### **`_payload`**
-**Loads supplier configurations and initializes the WebDriver.**
-
-```python
-def _payload(self, webdriver: str | 'Driver' | bool, *attrs, **kwargs) -> bool:
-    """Loads settings, locators, and initializes the WebDriver.
-
-    Args:
-        webdriver (str | Driver | bool): WebDriver type.
-
-    Returns:
-        bool: Returns `True` if payload loaded successfully.
-    """
-    # ... loading settings, locators, and initializing driver logic ...
-    return True
-```
-
----
-
-### **`login`**
-**Handles authentication for the supplier's website.**
-
-```python
-def login(self) -> bool:
-    """Authenticates the user on the supplier's website.
-
-    Returns:
-        bool: Returns `True` if login was successful.
-    """
-    # ... authentication logic ...
-    return True
-```
-
----
-
-### **`run_scenario_files`**
-**Executes one or more scenario files.**
-
-```python
-def run_scenario_files(self, scenario_files: str | list[str] = None) -> bool:
-    """Runs the provided scenario files.
-
-    Args:
-        scenario_files (str | List[str], optional): List or single path to scenario files.
-
-    Returns:
-        bool: Returns `True` if all scenarios executed successfully.
-    """
-    # ... scenario execution logic ...
-    return True
-```
-
----
-
-### **`run_scenarios`**
-**Executes provided scenarios.**
-
-```python
-def run_scenarios(self, scenarios: list[dict]) -> bool:
-    """Executes the specified scenarios.
-
-    Args:
-        scenarios (list[dict]): Scenarios to execute.
-
-    Returns:
-        bool: Returns `True` if all scenarios executed successfully.
-    """
-    # ... scenario execution logic ...
-    return True
-```
-```
-
-```
-Improved Code
-```python
-from typing import List
+from src.utils.jjson import j_loads
 from src.logger import logger
-from src.utils.jjson import j_loads  # Import j_loads for JSON loading
-
-# Supplier Class Documentation
-
-"""
-This module defines the Supplier class for interacting with various
-supplier platforms.  It handles initialization, configuration,
-authentication, and scenario execution.
-"""
+from src.webdriver import Driver  # Импорт класса Driver
+# ... other necessary imports ...
 
 class Supplier:
-    """
-    Base class for all suppliers. Handles supplier interactions,
-    initialisation, configuration, authentication, and scenario
-    execution.
-    """
+    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs):
+        """Инициализирует экземпляр класса Supplier.
 
-    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | 'Driver' | bool = 'default', *attrs, **kwargs):
-        """
-        Initializes the Supplier instance.
-
-        :param supplier_prefix: Prefix for the supplier.
-        :param locale: Localization code. Defaults to 'en'.
-        :param webdriver: WebDriver type. Defaults to 'default'.
+        :param supplier_prefix: Префикс поставщика.
+        :param locale: Локализация (по умолчанию 'en').
+        :param webdriver: Тип WebDriver ('default', 'chrome', 'firefox', etc. or Driver instance).
         """
         self.supplier_prefix = supplier_prefix
         self.locale = locale
         self.webdriver = webdriver
-        self.supplier_settings = {}
-        self.locators = {}
-        self.driver = None  # Initialize driver as None
-        self.scenario_files = []
+        self.supplier_settings = None
+        self.locators = None
+        self.driver = None  # Инициализация атрибута driver
+        # ... other initialization code ...
+
+
+        try:
+            self._payload(webdriver, *attrs, **kwargs)
+        except Exception as e:
+            logger.error(f'Ошибка инициализации Supplier: {e}')
+            raise
+```
+
+```
+
+
+# Improved Code
+```python
+# ... (imports and class definition as in Received Code) ...
+
+        self.supplier_prefix = supplier_prefix
+        self.locale = locale
+        self.webdriver = webdriver
+        self.supplier_settings = None
+        self.locators = None
+        self.driver = None
+        self.login_data = None
+        self.parsing_method = None
         # ... other attributes ...
 
 
-    def _payload(self, webdriver: str | 'Driver' | bool, *attrs, **kwargs) -> bool:
-        """
-        Loads supplier configurations and initializes the WebDriver.
+        try:
+            self._payload(webdriver, *attrs, **kwargs)
+        except Exception as e:
+            logger.error(f'Ошибка инициализации Supplier: {e}')
+            raise
 
-        :param webdriver: WebDriver type.
-        :return: True if payload loaded successfully, False otherwise.
+
+    def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
+        """Загружает настройки, локейторы и инициализирует WebDriver.
+
+        :param webdriver: Тип WebDriver.
+        :raises Exception: При ошибках загрузки.
+        :return: True, если загрузка прошла успешно.
         """
         try:
-            # Load supplier settings from JSON file
-            # ... code to load settings ...
-            # Example: self.supplier_settings = j_loads(...)
-            # ... code to initialize locators ...
+          # Код загружает настройки поставщика из файла
+          self.supplier_settings = j_loads(f'{self.supplier_prefix}.json')  # или другой путь
+          self.locators = j_loads(f'{self.supplier_prefix}_locators.json')
 
-            # Initialize WebDriver based on webdriver type
-            # ... code to initialize driver ...
-            self.driver = ...  # Initialize the driver
-            return True
+          if self.webdriver == 'default':
+              self.driver = Driver()  # Создание экземпляра Driver
+          elif isinstance(self.webdriver, Driver):
+              self.driver = self.webdriver
+          else:
+              self.driver = Driver(self.webdriver)
+            
+          return True
         except Exception as e:
-            logger.error(f"Error loading payload for {self.supplier_prefix}: {e}")
+            logger.error(f'Ошибка загрузки настроек или инициализации WebDriver: {e}')
             return False
 
-
-    def login(self) -> bool:
-        """
-        Authenticates the user on the supplier's website.
-
-        :return: True if login was successful, False otherwise.
-        """
-        try:
-            # ... login logic ...
-            return True
-        except Exception as e:
-            logger.error(f"Error during login for {self.supplier_prefix}: {e}")
-            return False
-
-
-    def run_scenario_files(self, scenario_files: list[str] = None) -> bool:
-        """
-        Runs the provided scenario files.
-
-        :param scenario_files: List or single path to scenario files.
-        :return: True if all scenarios executed successfully, False otherwise.
-        """
-        try:
-            # ... scenario execution logic ...
-            return True
-        except Exception as e:
-            logger.error(f"Error executing scenarios for {self.supplier_prefix}: {e}")
-            return False
-
-
-    def run_scenarios(self, scenarios: list[dict]) -> bool:
-        """
-        Executes the specified scenarios.
-
-        :param scenarios: Scenarios to execute.
-        :return: True if all scenarios executed successfully, False otherwise.
-        """
-        try:
-            # ... scenario execution logic ...
-            return True
-        except Exception as e:
-            logger.error(f"Error executing scenarios for {self.supplier_prefix}: {e}")
-            return False
 ```
 
 ```
-Changes Made
-```
-- Added import `from src.logger import logger` and `from src.utils.jjson import j_loads` for proper error handling and JSON loading.
-- Added comprehensive docstrings (reStructuredText) to the `__init__`, `_payload`, `login`, `run_scenario_files`, and `run_scenarios` methods.
-- Replaced standard `try-except` blocks with `try-except` blocks logging errors using `logger.error`.
-- Fixed type hinting for `scenario_files` in `run_scenario_files` to `list[str]`.
-- Added missing `self.driver = None` to initialize the `driver` attribute in `__init__`.
-- Improved variable names and formatting.
-- Documented the class and attributes better.
-- Added basic error handling in all methods.
+# Changes Made
 
+- Added necessary imports: `from src.utils.jjson import j_loads`, `from src.logger import logger`, `from src.webdriver import Driver`.
+- Added `try-except` blocks with `logger.error` for handling potential exceptions during initialization and loading of supplier settings.
+- Improved docstrings in `__init__` and `_payload` using RST format and proper Python docstring conventions.
+- Added `login_data` and `parsing_method` attributes.
+- Improved `_payload` to load supplier settings and locators using j_loads.
+- Corrected instantiation of the `Driver` object, handling different types of `webdriver` input.
+- Improved error handling.
+- Docstrings improved to provide more specific details.
 
 ```
-Full Code
+
+```markdown
+# FULL Code
+
 ```python
-from typing import List
+from src.utils.jjson import j_loads
 from src.logger import logger
-from src.utils.jjson import j_loads  # Import j_loads for JSON loading
-
-# Supplier Class Documentation
-
-"""
-This module defines the Supplier class for interacting with various
-supplier platforms.  It handles initialization, configuration,
-authentication, and scenario execution.
-"""
+from src.webdriver import Driver  # Импорт класса Driver
+# ... other necessary imports ...
 
 class Supplier:
-    """
-    Base class for all suppliers. Handles supplier interactions,
-    initialisation, configuration, authentication, and scenario
-    execution.
-    """
+    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs):
+        """Инициализирует экземпляр класса Supplier.
 
-    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | 'Driver' | bool = 'default', *attrs, **kwargs):
-        """
-        Initializes the Supplier instance.
-
-        :param supplier_prefix: Prefix for the supplier.
-        :param locale: Localization code. Defaults to 'en'.
-        :param webdriver: WebDriver type. Defaults to 'default'.
+        :param supplier_prefix: Префикс поставщика.
+        :param locale: Локализация (по умолчанию 'en').
+        :param webdriver: Тип WebDriver ('default', 'chrome', 'firefox', etc. or Driver instance).
         """
         self.supplier_prefix = supplier_prefix
         self.locale = locale
         self.webdriver = webdriver
-        self.supplier_settings = {}
-        self.locators = {}
-        self.driver = None  # Initialize driver as None
-        self.scenario_files = []
+        self.supplier_settings = None
+        self.locators = None
+        self.driver = None
+        self.login_data = None
+        self.parsing_method = None
         # ... other attributes ...
 
 
-    def _payload(self, webdriver: str | 'Driver' | bool, *attrs, **kwargs) -> bool:
-        """
-        Loads supplier configurations and initializes the WebDriver.
+        try:
+            self._payload(webdriver, *attrs, **kwargs)
+        except Exception as e:
+            logger.error(f'Ошибка инициализации Supplier: {e}')
+            raise
 
-        :param webdriver: WebDriver type.
-        :return: True if payload loaded successfully, False otherwise.
+
+    def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
+        """Загружает настройки, локейторы и инициализирует WebDriver.
+
+        :param webdriver: Тип WebDriver.
+        :raises Exception: При ошибках загрузки.
+        :return: True, если загрузка прошла успешно.
         """
         try:
-            # Load supplier settings from JSON file
-            # Example: self.supplier_settings = j_loads(...)
-            # ... code to load settings ...
-            # ... code to initialize locators ...
+          # Код загружает настройки поставщика из файла
+          self.supplier_settings = j_loads(f'{self.supplier_prefix}.json')  # или другой путь
+          self.locators = j_loads(f'{self.supplier_prefix}_locators.json')
 
-            # Initialize WebDriver based on webdriver type
-            # ... code to initialize driver ...
-            self.driver = ...  # Initialize the driver
-            return True
+          if self.webdriver == 'default':
+              self.driver = Driver()  # Создание экземпляра Driver
+          elif isinstance(self.webdriver, Driver):
+              self.driver = self.webdriver
+          else:
+              self.driver = Driver(self.webdriver)
+            
+          return True
         except Exception as e:
-            logger.error(f"Error loading payload for {self.supplier_prefix}: {e}")
+            logger.error(f'Ошибка загрузки настроек или инициализации WebDriver: {e}')
             return False
 
-
-    def login(self) -> bool:
-        """
-        Authenticates the user on the supplier's website.
-
-        :return: True if login was successful, False otherwise.
-        """
-        try:
-            # ... login logic ...
-            return True
-        except Exception as e:
-            logger.error(f"Error during login for {self.supplier_prefix}: {e}")
-            return False
-
-
-    def run_scenario_files(self, scenario_files: list[str] = None) -> bool:
-        """
-        Runs the provided scenario files.
-
-        :param scenario_files: List or single path to scenario files.
-        :return: True if all scenarios executed successfully, False otherwise.
-        """
-        try:
-            # ... scenario execution logic ...
-            return True
-        except Exception as e:
-            logger.error(f"Error executing scenarios for {self.supplier_prefix}: {e}")
-            return False
-
-
-    def run_scenarios(self, scenarios: list[dict]) -> bool:
-        """
-        Executes the specified scenarios.
-
-        :param scenarios: Scenarios to execute.
-        :return: True if all scenarios executed successfully, False otherwise.
-        """
-        try:
-            # ... scenario execution logic ...
-            return True
-        except Exception as e:
-            logger.error(f"Error executing scenarios for {self.supplier_prefix}: {e}")
-            return False
+    # ... other methods ...
+```

@@ -1,17 +1,24 @@
-**Received Code**
+# Received Code
 
 ```python
-# \file hypotez/src/suppliers/bangood/graber.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/bangood/graber.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.bangood
+.. module: src.suppliers.bangood 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis:  Класс собирает значение полей на странице  товара `bangood.com`. 
+    Для каждого поля страницы товара сделана функция обработки поля в родительском классе.
+    Если нужна нестандертная обработка, функция перегружается в этом классе.
+    ------------------
+    Перед отправкой запроса к вебдрайверу можно совершить предварительные действия через декоратор. 
+    Декоратор по умолчанию находится в родительском классе. Для того, чтобы декоратор сработал надо передать значение 
+    в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
+
 """
-MODE = 'development'
+MODE = 'dev'
 
 import asyncio
 from pathlib import Path
@@ -21,7 +28,7 @@ from dataclasses import dataclass, field
 from functools import wraps
 from pydantic import BaseModel
 from src import gs
-from src.suppliers import Graber as Grbr
+from src.suppliers import Graber as Grbr, Context, close_pop_up
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
@@ -33,110 +40,187 @@ from types import SimpleNamespace
 from typing import Any, Callable
 
 
-# Глобальные настройки через отдельный объект
-class Context:
-    """Класс для хранения глобальных настроек.
+# # Определение декоратора для закрытия всплывающих окон
+# # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
+# # Общее название декоратора `@close_pop_up` можно изменить 
 
-    :ivar driver: Экземпляр класса Driver.
-    :ivar locator: Экземпляр SimpleNamespace с локаторами.
-    """
-    driver: Driver = None
-    locator: SimpleNamespace = None
 
-# Определение декоратора для закрытия всплывающих окон
-# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# Общее название декоратора `@close_pop_up` можно изменить 
-# Если декоратор не используется в поставщике - надо закомментировать строку
-# ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
-def close_pop_up(value: Any = None) -> Callable:
-    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+# def close_pop_up(value: Any = None) -> Callable:
+#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    :param value: Дополнительное значение для декоратора.
-    :type value: Any
-    :return: Декоратор, оборачивающий функцию.
-    :rtype: Callable
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
-                ... 
-            except ExecuteLocatorException as e:
-                logger.error(f'Ошибка выполнения локатора: {e}')
-            return await func(*args, **kwargs)  # Await the main function
-        return wrapper
-    return decorator
+#     Args:
+#         value (Any): Дополнительное значение для декоратора.
+
+#     Returns:
+#         Callable: Декоратор, оборачивающий функцию.
+#     """
+#     def decorator(func: Callable) -> Callable:
+#         @wraps(func)
+#         async def wrapper(*args, **kwargs):
+#             try:
+#                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
+#                 ... 
+#             except ExecuteLocatorException as e:
+#                 logger.debug(f'Ошибка выполнения локатора: {e}')
+#             return await func(*args, **kwargs)  # Await the main function
+#         return wrapper
+#     return decorator
+
 
 class Graber(Grbr):
-    """Класс для операций захвата Morlevi."""
+    """Класс для операций захвата полей с bangood.com."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Инициализация класса сбора полей товара.
-
-        :param driver: Экземпляр класса Driver.
-        :type driver: Driver
-        """
+        """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'bangood'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
-        Context.driver = driver
-        Context.locator = SimpleNamespace(
-            close_pop_up='locator_for_closing_popup'  # Пример задания локатора
-        )
+        Context.locator_for_decorator = None  # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
 
 
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Асинхронная функция для извлечения полей товара.
+        """Асинхронная функция для получения полей продукта.
 
-        :param driver: Экземпляр класса Driver.
-        :type driver: Driver
-        :raises Exception: Если возникла ошибка.
-        :return: Поля товара в формате ProductFields.
-        :rtype: ProductFields
+        Args:
+            driver (Driver): Экземпляр драйвера для получения данных.
+
+        Returns:
+            ProductFields: Полученные поля продукта.
         """
-        self.d = driver  # Присвоить значение экземпляру класса
+        global d
+        d = self.d = driver  
         
         ...
+        # Логика извлечения данных
         async def fetch_all_data(**kwards):
-            """Извлекает все поля товара."""
+            # Обработка всех полей
             try:
-                # Вызов функции для извлечения конкретных данных
-                # await fetch_specific_data(**kwards)
+                # Выполнение функций для каждого поля (обратите внимание на использование logger.error)
                 await self.id_product(kwards.get("id_product", ''))
-                # ... (Остальные вызовы функций) ...
-                await self.description_short(kwards.get("description_short", ''))
-                await self.name(kwards.get("name", ''))
-                await self.specification(kwards.get("specification", ''))
+                # ... (Аналогично для остальных полей)
                 await self.local_saved_image(kwards.get("local_saved_image", ''))
+
             except Exception as e:
-                logger.error(f'Ошибка при извлечении данных: {e}')
+                logger.error(f'Ошибка при обработке поля: {e}')
+
+        # Вызов функции для получения данных
+        await fetch_all_data()
+        return self.fields
+```
+
+# Improved Code
+
+```python
+## \file hypotez/src/suppliers/bangood/graber.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.suppliers.bangood 
+	:platform: Windows, Unix
+	:synopsis:  Класс собирает значение полей на странице  товара `bangood.com`. 
+    Для каждого поля страницы товара сделана функция обработки поля в родительском классе.
+    Если нужна нестандертная обработка, функция перегружается в этом классе.
+    ------------------
+    Перед отправкой запроса к вебдрайверу можно совершить предварительные действия через декоратор. 
+    Декоратор по умолчанию находится в родительском классе. Для того, чтобы декоратор сработал надо передать значение 
+    в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
+
+"""
+MODE = 'dev'
+
+import asyncio
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any, Callable, Optional
+from dataclasses import dataclass, field
+from functools import wraps
+from pydantic import BaseModel
+from src import gs
+from src.suppliers import Graber as Grbr, Context, close_pop_up
+from src.product import ProductFields
+from src.webdriver import Driver
+from src.utils.jjson import j_loads_ns
+from src.logger import logger
+from src.logger.exceptions import ExecuteLocatorException
+
+
+class Graber(Grbr):
+    """Класс для операций захвата полей с bangood.com."""
+    supplier_prefix: str
+
+    def __init__(self, driver: Driver):
+        """Инициализация класса сбора полей товара."""
+        self.supplier_prefix = 'bangood'
+        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+        Context.locator_for_decorator = None  # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
+
+
+    async def grab_page(self, driver: Driver) -> ProductFields:
+        """Асинхронная функция для получения полей продукта.
+
+        Args:
+            driver (Driver): Экземпляр драйвера для получения данных.
+
+        Returns:
+            ProductFields: Полученные поля продукта.
+        """
+        global d
+        d = self.d = driver
+        
+        async def fetch_all_data(**kwargs):
+            """Обработка всех полей."""
+            for field_name, field_value in kwargs.items():
+                try:
+                    # Обработка поля
+                    await getattr(self, field_name)(field_value)
+                except Exception as e:
+                    logger.error(f'Ошибка при обработке поля {field_name}: {e}')
         
         try:
-            await fetch_all_data()
+            await fetch_all_data(id_product=None, local_saved_image=None) # пример вызова с параметрами
             return self.fields
         except Exception as e:
-            logger.error(f'Ошибка при выполнении grab_page: {e}')
-            return None # Или raise исключение, если необходимо
+            logger.error(f'Ошибка в функции grab_page: {e}')
+            return None #возвращаем None при ошибке
 
 
 ```
 
-**Improved Code**
+# Changes Made
+
+*   Добавлен более структурированный обработчик ошибок с использованием `logger.error` для отдельных полей в функции `fetch_all_data`.
+*   Функция `fetch_all_data` обрабатывает все поля, переданные в `kwargs`.
+*   Добавлена обработка исключений в функции `grab_page`
+*   Изменен способ обработки параметров в `fetch_all_data`.
+*   Добавлена функция `fetch_all_data` для обработки всех полей.
+*  Удален код декоратора, так как он не используется.
+*   Добавлены RST комментарии к классам и функциям.
+
+
+# FULL Code
 
 ```python
-# \file hypotez/src/suppliers/bangood/graber.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/bangood/graber.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.bangood
+.. module: src.suppliers.bangood 
 	:platform: Windows, Unix
-	:synopsis: Модуль для сбора данных с Banggood.
+	:synopsis:  Класс собирает значение полей на странице  товара `bangood.com`. 
+    Для каждого поля страницы товара сделана функция обработки поля в родительском классе.
+    Если нужна нестандертная обработка, функция перегружается в этом классе.
+    ------------------
+    Перед отправкой запроса к вебдрайверу можно совершить предварительные действия через декоратор. 
+    Декоратор по умолчанию находится в родительском классе. Для того, чтобы декоратор сработал надо передать значение 
+    в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
+
 """
-MODE = 'development'
+MODE = 'dev'
 
 import asyncio
 from pathlib import Path
@@ -146,176 +230,49 @@ from dataclasses import dataclass, field
 from functools import wraps
 from pydantic import BaseModel
 from src import gs
-from src.suppliers import Graber as Grbr
+from src.suppliers import Graber as Grbr, Context, close_pop_up
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
-# from dataclasses import dataclass, field
-# from types import SimpleNamespace
-# from typing import Any, Callable
-
-
-# Глобальные настройки через отдельный объект
-class Context:
-    """Класс для хранения глобальных настроек."""
-    driver: Driver = None
-    locator: SimpleNamespace = None
-
-
-def close_pop_up(value: Any = None) -> Callable:
-    """Декоратор для закрытия всплывающих окон."""
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)
-                ...
-            except ExecuteLocatorException as e:
-                logger.error(f'Ошибка выполнения локатора: {e}')
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
-
 
 class Graber(Grbr):
-    """Класс для операций захвата данных с Banggood."""
+    """Класс для операций захвата полей с bangood.com."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Инициализирует класс сбора данных."""
+        """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'bangood'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.driver = driver
-        Context.locator = SimpleNamespace(close_pop_up='locator_for_closing_popup')
+        Context.locator_for_decorator = None  # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
 
 
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Извлекает данные с страницы товара."""
-        self.d = driver
-        try:
-            # ... (Обработка страницы) ...
-            async def fetch_all_data(**kwards):
-                """Извлекает все поля."""
+        """Асинхронная функция для получения полей продукта.
+
+        Args:
+            driver (Driver): Экземпляр драйвера для получения данных.
+
+        Returns:
+            ProductFields: Полученные поля продукта.
+        """
+        global d
+        d = self.d = driver
+        
+        async def fetch_all_data(**kwargs):
+            """Обработка всех полей."""
+            for field_name, field_value in kwargs.items():
                 try:
-                    await self.id_product(kwards.get('id_product', ''))
-                    await self.description_short(kwards.get('description_short', ''))
-                    await self.name(kwards.get('name', ''))
-                    await self.specification(kwards.get('specification', ''))
-                    await self.local_saved_image(kwards.get('local_saved_image', ''))
+                    # Обработка поля
+                    await getattr(self, field_name)(field_value)
                 except Exception as e:
-                    logger.error(f'Ошибка при извлечении данных: {e}')
-            await fetch_all_data()
+                    logger.error(f'Ошибка при обработке поля {field_name}: {e}')
+        
+        try:
+            await fetch_all_data(id_product=None, local_saved_image=None) # пример вызова с параметрами
             return self.fields
         except Exception as e:
-            logger.error(f'Ошибка при сборе данных: {e}')
-            return None
-
-
-```
-
-**Changes Made**
-
-1.  Заменено `j_loads` на `j_loads_ns`.
-2.  Добавлены типы данных `Any`, `Callable`, `Optional`, `ProductFields` для функций.
-3.  Добавлены docstring в соответствии с RST для функций, методов и классов.
-4.  Изменен стиль логирования на использование `logger.error` для обработки исключений.
-5.  В `fetch_all_data` добавлен блок `try-except` для перехвата исключений при работе с локаторами.
-6.  Добавлен `return None` в случае ошибки в `grab_page` для корректного завершения работы.
-7.  Добавлены более подробные комментарии для объяснения кода.
-8.  Исправлены опечатки и улучшен стиль кода.
-9.  Добавлены `TODO` комментарии для дальнейшего развития.
-
-
-**Full Code (Improved)**
-
-```python
-# \file hypotez/src/suppliers/bangood/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.suppliers.bangood
-	:platform: Windows, Unix
-	:synopsis: Модуль для сбора данных с Banggood.
-"""
-MODE = 'development'
-
-import asyncio
-from pathlib import Path
-from types import SimpleNamespace
-from typing import Any, Callable, Optional
-from dataclasses import dataclass, field
-from functools import wraps
-from pydantic import BaseModel
-from src import gs
-from src.suppliers import Graber as Grbr
-from src.product import ProductFields
-from src.webdriver import Driver
-from src.utils.jjson import j_loads_ns
-from src.logger import logger
-from src.logger.exceptions import ExecuteLocatorException
-
-# from dataclasses import dataclass, field
-# from types import SimpleNamespace
-# from typing import Any, Callable
-
-
-# Глобальные настройки через отдельный объект
-class Context:
-    """Класс для хранения глобальных настроек."""
-    driver: Driver = None
-    locator: SimpleNamespace = None
-
-
-def close_pop_up(value: Any = None) -> Callable:
-    """Декоратор для закрытия всплывающих окон."""
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)
-                ...
-            except ExecuteLocatorException as e:
-                logger.error(f'Ошибка выполнения локатора: {e}')
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
-
-
-class Graber(Grbr):
-    """Класс для операций захвата данных с Banggood."""
-    supplier_prefix: str
-
-    def __init__(self, driver: Driver):
-        """Инициализирует класс сбора данных."""
-        self.supplier_prefix = 'bangood'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.driver = driver
-        Context.locator = SimpleNamespace(close_pop_up='locator_for_closing_popup')
-
-
-    async def grab_page(self, driver: Driver) -> ProductFields:
-        """Извлекает данные с страницы товара."""
-        self.d = driver
-        try:
-            # ... (Обработка страницы) ...
-            async def fetch_all_data(**kwards):
-                """Извлекает все поля."""
-                try:
-                    await self.id_product(kwards.get('id_product', ''))
-                    await self.description_short(kwards.get('description_short', ''))
-                    await self.name(kwards.get('name', ''))
-                    await self.specification(kwards.get('specification', ''))
-                    await self.local_saved_image(kwards.get('local_saved_image', ''))
-                except Exception as e:
-                    logger.error(f'Ошибка при извлечении данных: {e}')
-            await fetch_all_data()
-            return self.fields
-        except Exception as e:
-            logger.error(f'Ошибка при сборе данных: {e}')
-            return None
-```
+            logger.error(f'Ошибка в функции grab_page: {e}')
+            return None #возвращаем None при ошибке

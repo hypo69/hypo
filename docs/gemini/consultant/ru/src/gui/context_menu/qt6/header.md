@@ -2,11 +2,7 @@
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.gui.context_menu.qt6 
 	:platform: Windows, Unix
 	:synopsis:
@@ -26,6 +22,7 @@ MODE = 'dev'
 
 """
 
+
 """
   :platform: Windows, Unix
 
@@ -39,8 +36,6 @@ MODE = 'dev'
 """ module: src.gui.context_menu.qt6 """
 
 
-
-
 import sys,os
 from pathlib import Path
 __root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
@@ -51,76 +46,68 @@ sys.path.append (__root__)
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
 """
-.. module:: src.gui.context_menu.qt6
-    :platform: Windows, Unix
-    :synopsis:  Модуль содержит определения для контекстного меню, вероятно, для Qt6.
+Модуль для работы с контекстным меню в Qt6.
+=========================================================================================
+
+Этот модуль предоставляет инструменты для работы с контекстным меню в приложении, использующем Qt6.
 """
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # Импортируем logger
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
+from src.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+MODE = 'dev'  # Переменная MODE (возможно, будет использоваться в других частях проекта)
 
+__root__ : Path = Path(os.getcwd()).resolve().parent.parent.parent.parent  # Получение пути к корневой директории проекта
+# Этот код извлекает путь к родительским директориям, чтобы получить путь к корню проекта.
+# Он использует Path для лучшей работы с путями.
+# Лучше использовать Path.resolve() для получения абсолютного пути, предотвращая проблемы с относительными путями.
 
-def __init__():
-    """
-    Инициализирует модуль.
-    """
-    try:
-        __root__ = Path(os.getcwd()).resolve().parent / 'hypotez'
-        sys.path.append(str(__root__))
-    except Exception as e:
-        logger.error(f"Ошибка при инициализации __root__: {e}")
-
-__init__()
+try:
+    sys.path.append(str(__root__)) # Добавление пути к корневой директории в sys.path
+except Exception as ex:
+    logger.error("Ошибка добавления пути к корневой директории в sys.path", ex)
 ```
 
 **Changes Made**
 
-- Added necessary imports: `sys`, `os`, `pathlib`, and `logger` from `src.logger`.
-- Corrected and updated the module docstring using reStructuredText (RST) format, including a more descriptive synopsis.
-- Removed unnecessary and duplicated comments.
-- Introduced a `__init__` function to encapsulate initialization logic for `__root__`.
-- Added error handling using `logger.error` for the `__init__` function to catch exceptions during `__root__` initialization.
-- Removed extraneous multiline strings.
-- Moved the initialization logic into a function, which is called immediately after the imports.
+*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлен импорт `logger` из `src.logger`.
+*   Изменен способ получения пути к корневой директории проекта (`__root__`).  Использование `Path` и `.resolve()` для корректного получения абсолютного пути и предотвращения проблем с относительными путями.
+*   Добавлены комментарии RST для модуля и переменной `MODE`.
+*   Обработка ошибки при добавлении пути к корню проекта с использованием `logger`.
+*   Исправлен код, позволяющий добавить корень проекта в `sys.path`, так как путь к `__root__` имеет корректный тип `Path` (вместо строки)
+*   Удалены ненужные пустые строки с документацией.
 
-**Full Improved Code (Copy and Paste)**
+
+**FULL Code**
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
 """
-.. module:: src.gui.context_menu.qt6
-    :platform: Windows, Unix
-    :synopsis:  Модуль содержит определения для контекстного меню, вероятно, для Qt6.
+Модуль для работы с контекстным меню в Qt6.
+=========================================================================================
+
+Этот модуль предоставляет инструменты для работы с контекстным меню в приложении, использующем Qt6.
 """
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # Импортируем logger
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
+from src.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+MODE = 'dev'  # Переменная MODE (возможно, будет использоваться в других частях проекта)
 
+__root__ : Path = Path(os.getcwd()).resolve().parent.parent.parent.parent  # Получение пути к корневой директории проекта
+# Этот код извлекает путь к родительским директориям, чтобы получить путь к корню проекта.
+# Он использует Path для лучшей работы с путями.
+# Лучше использовать Path.resolve() для получения абсолютного пути, предотвращая проблемы с относительными путями.
 
-def __init__():
-    """
-    Инициализирует модуль.
-    """
-    try:
-        __root__ = Path(os.getcwd()).resolve().parent / 'hypotez'
-        sys.path.append(str(__root__))
-    except Exception as e:
-        logger.error(f"Ошибка при инициализации __root__: {e}")
-
-__init__()
-```
+try:
+    sys.path.append(str(__root__)) # Добавление пути к корневой директории в sys.path
+except Exception as ex:
+    logger.error("Ошибка добавления пути к корневой директории в sys.path", ex)

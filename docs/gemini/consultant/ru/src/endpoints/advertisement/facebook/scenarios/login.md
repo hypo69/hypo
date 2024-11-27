@@ -1,12 +1,13 @@
-Received Code
+**Received Code**
+
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook.scenarios 
+.. module: src.endpoints.advertisement.facebook.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Facebook login scenario
 
@@ -47,7 +48,7 @@ def login(d: Driver) -> bool:
         # Ввод логина
         d.send_key_to_webelement(locators.email, credentials.username)
     except Exception as ex:
-        logger.error("Invalid login", ex)
+        logger.error("Ошибка ввода логина", ex)
         return False
 
     d.wait(1.3)
@@ -55,7 +56,7 @@ def login(d: Driver) -> bool:
         # Ввод пароля
         d.send_key_to_webelement(locators['password'], credentials['password'])
     except Exception as ex:
-        logger.error("Invalid login", ex)
+        logger.error("Ошибка ввода пароля", ex)
         return False
 
     d.wait(0.5)
@@ -63,160 +64,193 @@ def login(d: Driver) -> bool:
         # Нажатие кнопки входа
         d.execute_locator(locators['button'])
     except Exception as ex:
-        logger.error("Invalid login", ex)
+        logger.error("Ошибка нажатия кнопки входа", ex)
         return False
 
     return True
 ```
 
-```
-Improved Code
+**Improved Code**
+
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook.scenarios
+.. module:: src.endpoints.advertisement.facebook.scenarios.login
    :platform: Windows, Unix
-   :synopsis: Facebook login scenario.
-"""
+   :synopsis: Модуль для сценария входа на Facebook.
 
-import json
+"""
+import logging
 from pathlib import Path
 from typing import Dict
-
 from src import gs
 from src.webdriver import Driver
 from src.utils import j_loads_ns
 from src.logger import logger
 
+# Настройка уровня логирования (опционально)
+# logging.basicConfig(level=logging.DEBUG)
+
 
 def login(d: Driver) -> bool:
     """
-    Выполняет вход на Facebook.
+    Выполняет вход на Facebook используя предоставленный драйвер.
 
-    Использует переданный экземпляр драйвера для авторизации.
+    Проверяет загрузку локаторов и выполняет последовательность действий: ввод логина,
+    ввод пароля, нажатие кнопки входа. Обрабатывает возможные ошибки с помощью
+    logger.error.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-элементами.
+    :param d: Объект драйвера для взаимодействия с веб-элементами.
     :type d: Driver
-    :raises Exception: Если возникает ошибка во время авторизации.
-    :return: True, если авторизация прошла успешно, иначе False.
+    :raises Exception: Возникает, если происходит ошибка при вводе данных или нажатии кнопки входа.
+    :return: True, если вход выполнен успешно, иначе False.
     :rtype: bool
     """
     try:
-        # Загрузка локаторов из файла
-        locators_path = Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json')
-        locators = j_loads_ns(locators_path)
+        # Загрузка локаторов из файла.
+        locators = j_loads_ns(
+            Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json')
+        )
         if not locators:
-            logger.error(f"Файл локаторов '{locators_path}' не найден или пуст.")
+            logger.error("Ошибка загрузки локаторов из файла.")
             return False
-
-        credentials = gs.facebook_credentials[0]
-
-        # Ввод логина
-        d.send_key_to_webelement(locators.get('email'), credentials.username)
-        
-        # Ожидание
-        d.wait(1.3)
-
-        # Ввод пароля
-        d.send_key_to_webelement(locators.get('password'), credentials.password)  # Исправление
-
-        # Ожидание
-        d.wait(0.5)
-
-        # Нажатие кнопки входа
-        d.execute_locator(locators.get('button'))
-        return True
-
-    except (KeyError, AttributeError) as e:
-        logger.error(f"Ошибка при авторизации: {e}")
-        return False
     except Exception as e:
-        logger.exception("Непредвиденная ошибка при авторизации:")
+        logger.error("Ошибка при чтении локаторов из файла:", exc_info=True)
         return False
-```
-
-```
-Changes Made
-```
-- Заменено `j_loads` на `j_loads_ns` для корректной обработки JSON.
-- Добавлен обработчик ошибок `Exception` для перехвата необработанных исключений и логирования.
-- Исправлен доступ к элементам словаря `locators` с использованием метода `get()`.  Это предотвращает ошибки `KeyError`.
-- Добавлена проверка существования файла локаторов и логирование ошибки, если файл не найден или пуст.
-- Улучшены комментарии в формате RST, добавлено описание параметров и возвращаемого значения в документации.
-- Переименовано `locators.email` на `locators.get('email')` для безопасного доступа к данным.
-- Исправлена ошибка доступа к `credentials['password']`. Доступ производится через `credentials.password`.
-- Улучшена обработка ошибок. Используется `logger.exception` для вывода полной информации об ошибке, включая стек вызовов.
+    
+    # Получение учетных данных.
+    credentials = gs.facebook_credentials[0]
+    if not credentials:
+        logger.error("Учетные данные не найдены.")
+        return False
 
 
+    try:
+        # Отправка логина на веб-элемент.
+        d.send_key_to_webelement(locators.email, credentials.username)
+    except Exception as e:
+        logger.error("Ошибка ввода логина:", exc_info=True)
+        return False
+
+    d.wait(1.3)  # Ожидание
+
+    try:
+        # Отправка пароля на веб-элемент.
+        d.send_key_to_webelement(locators['password'], credentials['password'])
+    except Exception as e:
+        logger.error("Ошибка ввода пароля:", exc_info=True)
+        return False
+
+    d.wait(0.5)  # Ожидание
+
+    try:
+        # Выполнение нажатия кнопки входа.
+        d.execute_locator(locators['button'])
+    except Exception as e:
+        logger.error("Ошибка нажатия кнопки входа:", exc_info=True)
+        return False
+
+    return True
 ```
-Optimized Code
+
+**Changes Made**
+
+*   Добавлен модуль docstring в формате RST.
+*   Добавлены docstring для функции `login` в формате RST.
+*   Использование `j_loads_ns` для чтения файла локаторов.
+*   Обработка потенциальных ошибок при чтении локаторов и отсутствии учетных данных с помощью `logger.error`.
+*   Улучшены сообщения об ошибках, добавлена информация об исключении.
+*   Исправлены опечатки и стилистические улучшения.
+*   Вместо `...`  использована обработка ошибок для повышения надежности кода.
+
+
+**FULL Code**
+
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook.scenarios
+.. module:: src.endpoints.advertisement.facebook.scenarios.login
    :platform: Windows, Unix
-   :synopsis: Facebook login scenario.
-"""
+   :synopsis: Модуль для сценария входа на Facebook.
 
-import json
+"""
+import logging
 from pathlib import Path
 from typing import Dict
-
 from src import gs
 from src.webdriver import Driver
 from src.utils import j_loads_ns
 from src.logger import logger
 
+# Настройка уровня логирования (опционально)
+# logging.basicConfig(level=logging.DEBUG)
+
 
 def login(d: Driver) -> bool:
     """
-    Выполняет вход на Facebook.
+    Выполняет вход на Facebook используя предоставленный драйвер.
 
-    Использует переданный экземпляр драйвера для авторизации.
+    Проверяет загрузку локаторов и выполняет последовательность действий: ввод логина,
+    ввод пароля, нажатие кнопки входа. Обрабатывает возможные ошибки с помощью
+    logger.error.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-элементами.
+    :param d: Объект драйвера для взаимодействия с веб-элементами.
     :type d: Driver
-    :raises Exception: Если возникает ошибка во время авторизации.
-    :return: True, если авторизация прошла успешно, иначе False.
+    :raises Exception: Возникает, если происходит ошибка при вводе данных или нажатии кнопки входа.
+    :return: True, если вход выполнен успешно, иначе False.
     :rtype: bool
     """
     try:
-        # Загрузка локаторов из файла
-        locators_path = Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json')
-        locators = j_loads_ns(locators_path)
+        # Загрузка локаторов из файла.
+        locators = j_loads_ns(
+            Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json')
+        )
         if not locators:
-            logger.error(f"Файл локаторов '{locators_path}' не найден или пуст.")
+            logger.error("Ошибка загрузки локаторов из файла.")
             return False
-
-        credentials = gs.facebook_credentials[0]
-
-        # Ввод логина
-        d.send_key_to_webelement(locators.get('email'), credentials.username)
-        
-        # Ожидание
-        d.wait(1.3)
-
-        # Ввод пароля
-        d.send_key_to_webelement(locators.get('password'), credentials.password)  # Исправление
-
-        # Ожидание
-        d.wait(0.5)
-
-        # Нажатие кнопки входа
-        d.execute_locator(locators.get('button'))
-        return True
-
-    except (KeyError, AttributeError) as e:
-        logger.error(f"Ошибка при авторизации: {e}")
-        return False
     except Exception as e:
-        logger.exception("Непредвиденная ошибка при авторизации:")
+        logger.error("Ошибка при чтении локаторов из файла:", exc_info=True)
         return False
+    
+    # Получение учетных данных.
+    credentials = gs.facebook_credentials[0]
+    if not credentials:
+        logger.error("Учетные данные не найдены.")
+        return False
+
+
+    try:
+        # Отправка логина на веб-элемент.
+        d.send_key_to_webelement(locators.email, credentials.username)
+    except Exception as e:
+        logger.error("Ошибка ввода логина:", exc_info=True)
+        return False
+
+    d.wait(1.3)  # Ожидание
+
+    try:
+        # Отправка пароля на веб-элемент.
+        d.send_key_to_webelement(locators['password'], credentials['password'])
+    except Exception as e:
+        logger.error("Ошибка ввода пароля:", exc_info=True)
+        return False
+
+    d.wait(0.5)  # Ожидание
+
+    try:
+        # Выполнение нажатия кнопки входа.
+        d.execute_locator(locators['button'])
+    except Exception as e:
+        logger.error("Ошибка нажатия кнопки входа:", exc_info=True)
+        return False
+
+    return True
+```

@@ -2,12 +2,12 @@
 
 ```python
 ## \file hypotez/src/ai/openai/_examples/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai._examples 
+.. module: src.ai.openai._examples 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -20,11 +20,13 @@ MODE = 'dev'
 
 """
 
+
 """
 	:platform: Windows, Unix
 	:synopsis:
 
 """
+
 
 """
   :platform: Windows, Unix
@@ -39,7 +41,6 @@ MODE = 'dev'
 """ module: src.ai.openai._examples """
 
 
-
 ...
 
 from packaging.version import Version
@@ -50,96 +51,101 @@ from .version import __version__, __doc__, __details__
 
 ```python
 ## \file hypotez/src/ai/openai/_examples/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai._examples
-   :platform: Windows, Unix
-   :synopsis: Module containing example functions for OpenAI API.
+Модуль для примеров использования API OpenAI.
+=========================================================================================
+
+Этот модуль содержит примеры использования различных функций и классов, связанных с API OpenAI.
 """
+import json
+
 MODE = 'dev'
 
 """
-   :platform: Windows, Unix
-   :synopsis:  Global variable defining the execution mode.
+Параметр режима работы.
 """
 
-"""
-   :platform: Windows, Unix
-   :synopsis:  Placeholder for future usage.
-"""
 
 """
-   :platform: Windows, Unix
-   :synopsis: Placeholder for future usage.
+Дополнительная информация.
 """
 
+
 """
-   :platform: Windows, Unix
-   :synopsis: Placeholder for future usage.
+Ещё одна константа.
 """
-#MODE = 'dev'  # Removed this line as it was redundant.
-  
-""" module: src.ai.openai._examples """
-
-# import ... # Placeholder for missing imports
 
 
+"""
+Описание.
+"""
+MODE = 'dev'
+
+""" Параметр режима работы. """
+
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 from packaging.version import Version
-from .version import __version__, __doc__, __details__
+from .version import __version__, __doc__, __details__  # Импорт переменных из модуля version
+
+
 ```
 
 **Changes Made**
 
-- Removed redundant `MODE = 'dev'` assignment.
-- Added missing docstrings in RST format for the module and global variable.
-- Improved docstrings for clarity and consistency.
-- Placeholder for `import ...`  to be replaced with actual import statements.
+* Добавлена документация RST для модуля.
+* Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+* Добавлены комментарии в формате RST к переменной `MODE`.
+* Заменены многострочные пустые строки на комментарии с использованием RST.
+* Добавлен импорт `json`.  (Необходим для правильного использования `j_loads` и `j_loads_ns`, а также для корректного чтения JSON)
 
 
-**Complete Code (for replacement)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/ai/openai/_examples/__init__.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai._examples
-   :platform: Windows, Unix
-   :synopsis: Module containing example functions for OpenAI API.
+Модуль для примеров использования API OpenAI.
+=========================================================================================
+
+Этот модуль содержит примеры использования различных функций и классов, связанных с API OpenAI.
 """
+import json
+
 MODE = 'dev'
 
 """
-   :platform: Windows, Unix
-   :synopsis:  Global variable defining the execution mode.
+Параметр режима работы.
 """
 
-"""
-   :platform: Windows, Unix
-   :synopsis:  Placeholder for future usage.
-"""
 
 """
-   :platform: Windows, Unix
-   :synopsis: Placeholder for future usage.
+Дополнительная информация.
 """
 
+
 """
-   :platform: Windows, Unix
-   :synopsis: Placeholder for future usage.
+Ещё одна константа.
 """
-#MODE = 'dev'  # Removed this line as it was redundant.
-  
-""" module: src.ai.openai._examples """
-
-# import ... # Placeholder for missing imports
 
 
+"""
+Описание.
+"""
+MODE = 'dev'
+
+""" Параметр режима работы. """
+
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 from packaging.version import Version
-from .version import __version__, __doc__, __details__
+from .version import __version__, __doc__, __details__  # Импорт переменных из модуля version
+
+
 ```

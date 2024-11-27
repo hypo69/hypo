@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/goog/drive/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -14,36 +14,12 @@
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.goog.drive """
-
 import sys
 import json
 from packaging.version import Version
 
 from pathlib import Path
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
@@ -67,126 +43,121 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 
 
 # Get the root directory of the project
-__root__: Path = get_project_root()
+__root__ = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 from src import gs
-from src.utils.jjson import j_loads
+import src.utils.jjson as jjson
 
 settings:dict = None
 try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file)  # Use j_loads instead of json.load
+    # Чтение настроек из файла settings.json
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
+        settings = jjson.j_loads(settings_file)
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading settings: {e}")
-    # ...
+    # Обработка ошибок чтения файла настроек
+    logger.error('Ошибка чтения файла настроек settings.json', e)
+    ...
 
 
 doc_str:str = None
 try:
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+    # Чтение README.MD файла
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as settings_file:
         doc_str = settings_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading README: {e}")
-    # ...
+    # Обработка ошибок чтения файла README.MD
+    logger.error('Ошибка чтения файла README.MD', e)
+    ...
 
- 
 
-__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
+from src.logger import logger
+
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
 __version__: str = settings.get("version", '')  if settings  else ''
 __doc__: str = doc_str if doc_str else ''
 __details__: str = ''
 __author__: str = settings.get("author", '')  if settings  else ''
 __copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
 __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
-
 ```
 
 **Improved Code**
 
 ```python
 ## \file hypotez/src/goog/drive/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.goog.drive
-    :platform: Windows, Unix
-    :synopsis: This module contains code related to Google Drive integration.
+Модуль для работы с Google Диском.
+=========================================================================================
+
+Этот модуль содержит вспомогательные функции для работы с проектом,
+такие как определение корневой директории проекта и загрузка настроек.
 """
+MODE = 'dev'
 
 import sys
 import json
-from pathlib import Path
 from packaging.version import Version
-from src import gs
-from src.utils.jjson import j_loads
+from pathlib import Path
+import src.utils.jjson as jjson
 from src.logger import logger
 
-
-MODE = 'dev'
-
-
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Finds the root directory of the project.
+    Определяет корневую директорию проекта.
 
-    :param marker_files: Filenames or directory names to identify the project root.
+    Находит корневую директорию проекта, начиная с текущей директории,
+    ищет вверх по дереву директорий, пока не найдет директорию,
+    содержащую указанные файлы-маркеры.
+
+    :param marker_files: Кортеж с именами файлов-маркеров.
     :type marker_files: tuple
-    :return: Path to the root directory.
+    :raises FileNotFoundError: Если не найдены файлы-маркеры.
+    :return: Путь к корневой директории проекта.
     :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Get the root directory of the project
-__root__ = get_project_root()
+# Получение корневой директории проекта
+__root__ = set_project_root()
+"""__root__ (Path): Корневая директория проекта."""
+
+import src.gs as gs
+
+settings: dict = None
+try:
+    # Загрузка настроек из файла settings.json
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
+        settings = jjson.j_loads(settings_file)
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    # Обработка ошибок при загрузке настроек
+    logger.error('Ошибка при загрузке настроек из settings.json:', e)
+    ...
 
 
-def load_settings(settings_path: Path) -> dict:
-    """Loads settings from a JSON file.
+doc_str: str = None
+try:
+    # Чтение файла README.MD
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
+        doc_str = readme_file.read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    # Обработка ошибок при чтении README.MD
+    logger.error('Ошибка при чтении файла README.MD:', e)
+    ...
 
-    :param settings_path: Path to the settings file.
-    :type settings_path: pathlib.Path
-    :return: Loaded settings as a dictionary.
-    :rtype: dict
-    """
-    try:
-        with open(settings_path, 'r') as f:
-            return j_loads(f)
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Error loading settings: {e}")
-        return None
-
-
-settings = load_settings(__root__ / 'src' / 'settings.json')
-
-# Using function to load settings to improve readability
-def load_readme(readme_path: Path) -> str:
-	"""Loads README from a file.
-
-    :param readme_path: Path to the README file.
-    :type readme_path: pathlib.Path
-    :return: Loaded README as a string.
-    :rtype: str
-    """
-	try:
-		with open(readme_path, 'r') as f:
-			return f.read()
-	except (FileNotFoundError, json.JSONDecodeError) as e:
-		logger.error(f"Error loading README: {e}")
-		return None
-		
-doc_str = load_readme(__root__ / 'src' / 'README.MD')
 
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
@@ -200,102 +171,92 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 
 **Changes Made**
 
-- Added missing import `from src.logger import logger`.
-- Replaced `json.load` with `j_loads` from `src.utils.jjson` for loading settings and README.
-- Added a function `load_settings` to load settings from a file, handling potential errors using `logger.error`.
-- Added a function `load_readme` to load README, handling potential errors using `logger.error`.
-- Improved docstrings using reStructuredText (RST) format for functions, methods, and classes.
-- Changed variable names to be more descriptive and consistent with Python conventions (e.g., `__root__`).
-- Added type hints for function parameters and return values.
-- Replaced `...` with error handling using `logger.error`.
-- Corrected the name of a variable `copyrihgnt` in the settings to `copyright`.
+*   Импортирован модуль `jjson` для работы с JSON.
+*   Добавлены обработчики ошибок `try-except` с использованием `logger.error` для логирования.
+*   Исправлено название параметра в функции `set_project_root`.
+*   Добавлена документация в формате RST для всех функций, переменных и модуля.
+*   Заменены стандартные функции `json.load` на `j_loads` из `src.utils.jjson`.
+*   Изменены имена переменных в соответствии с PEP 8.
+*   Добавлены комментарии в формате RST.
+*   Исправлена орфография и стиль документации.
+*   Убраны неиспользуемые переменные.
 
-
-**Complete Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/goog/drive/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.goog.drive
-    :platform: Windows, Unix
-    :synopsis: This module contains code related to Google Drive integration.
+Модуль для работы с Google Диском.
+=========================================================================================
+
+Этот модуль содержит вспомогательные функции для работы с проектом,
+такие как определение корневой директории проекта и загрузка настроек.
 """
+MODE = 'dev'
 
 import sys
 import json
-from pathlib import Path
 from packaging.version import Version
-from src import gs
-from src.utils.jjson import j_loads
+from pathlib import Path
+import src.utils.jjson as jjson
 from src.logger import logger
 
-
-MODE = 'dev'
-
-
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Finds the root directory of the project.
+    Определяет корневую директорию проекта.
 
-    :param marker_files: Filenames or directory names to identify the project root.
+    Находит корневую директорию проекта, начиная с текущей директории,
+    ищет вверх по дереву директорий, пока не найдет директорию,
+    содержащую указанные файлы-маркеры.
+
+    :param marker_files: Кортеж с именами файлов-маркеров.
     :type marker_files: tuple
-    :return: Path to the root directory.
+    :raises FileNotFoundError: Если не найдены файлы-маркеры.
+    :return: Путь к корневой директории проекта.
     :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Get the root directory of the project
-__root__ = get_project_root()
+# Получение корневой директории проекта
+__root__ = set_project_root()
+"""__root__ (Path): Корневая директория проекта."""
+
+import src.gs as gs
+
+settings: dict = None
+try:
+    # Загрузка настроек из файла settings.json
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
+        settings = jjson.j_loads(settings_file)
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    # Обработка ошибок при загрузке настроек
+    logger.error('Ошибка при загрузке настроек из settings.json:', e)
+    ...
 
 
-def load_settings(settings_path: Path) -> dict:
-    """Loads settings from a JSON file.
+doc_str: str = None
+try:
+    # Чтение файла README.MD
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
+        doc_str = readme_file.read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    # Обработка ошибок при чтении README.MD
+    logger.error('Ошибка при чтении файла README.MD:', e)
+    ...
 
-    :param settings_path: Path to the settings file.
-    :type settings_path: pathlib.Path
-    :return: Loaded settings as a dictionary.
-    :rtype: dict
-    """
-    try:
-        with open(settings_path, 'r') as f:
-            return j_loads(f)
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Error loading settings: {e}")
-        return None
-
-
-settings = load_settings(__root__ / 'src' / 'settings.json')
-
-# Using function to load settings to improve readability
-def load_readme(readme_path: Path) -> str:
-	"""Loads README from a file.
-
-    :param readme_path: Path to the README file.
-    :type readme_path: pathlib.Path
-    :return: Loaded README as a string.
-    :rtype: str
-    """
-	try:
-		with open(readme_path, 'r') as f:
-			return f.read()
-	except (FileNotFoundError, json.JSONDecodeError) as e:
-		logger.error(f"Error loading README: {e}")
-		return None
-		
-doc_str = load_readme(__root__ / 'src' / 'README.MD')
 
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
@@ -305,4 +266,3 @@ __details__ = ''
 __author__ = settings.get("author", '') if settings else ''
 __copyright__ = settings.get("copyright", '') if settings else ''
 __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
-```

@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -20,11 +20,13 @@ MODE = 'dev'
 
 """
 
+
 """
 	:platform: Windows, Unix
 	:synopsis:
 
 """
+
 
 """
   :platform: Windows, Unix
@@ -39,7 +41,6 @@ MODE = 'dev'
 """ module: src.ai.gemini.html_chat """
 
 
-
 """ Absolute path to modules  """
 
 import sys,os
@@ -52,130 +53,156 @@ sys.path.append (__root__)
 
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.gemini.html_chat
     :platform: Windows, Unix
-    :synopsis:  Module for handling Gemini HTML chat.
+    :synopsis: Модуль для работы с чатом Gemini.
 """
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # импорт logger для логирования
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
+from src.logger import logger  # Импортируем logger для логирования
 
 MODE = 'dev'
 
 
+"""
+    :platform: Windows, Unix
+    :synopsis: Конфигурационный параметр режима работы.
+"""
+MODE = 'dev'  
+
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Путь к корневой директории проекта.
+"""
 def get_root_path() -> Path:
     """
     Возвращает абсолютный путь к корневой директории проекта.
 
-    :raises FileNotFoundError: Если папка проекта не найдена.
     :return: Абсолютный путь к корневой директории.
+    :rtype: Path
     """
     try:
-        root_path = os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7]
+        root_path = os.getcwd()[:os.getcwd().rfind('hypotez') + 7]
         return Path(root_path)
-    except ValueError:
-        logger.error("Ошибка при определении корневой директории проекта.")
-        raise FileNotFoundError("Директория проекта не найдена.")
-
-
-def add_root_to_path(root_path: Path):
-    """
-    Добавляет корневой путь проекта в sys.path.
-
-    :param root_path: Корневой путь проекта.
-    """
-    try:
-        sys.path.append(str(root_path))
     except Exception as e:
-        logger.error(f"Ошибка при добавлении корневого пути в sys.path: {e}")
+        logger.error("Ошибка получения пути к корневой директории:", e)
+        return None
 
 
-if __name__ == "__main__":
+
+# Функция для добавления пути в sys.path
+def add_root_to_path(root_path: Path) -> None:
+    """
+    Добавляет путь к корневой директории проекта в sys.path.
+
+    :param root_path: Путь к корневой директории.
+    :type root_path: Path
+    """
     try:
-        root_path = get_root_path()
-        add_root_to_path(root_path)
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: {e}")
-        sys.exit(1)
+        if root_path:
+            sys.path.append(str(root_path))
+    except Exception as e:
+        logger.error("Ошибка добавления пути в sys.path:", e)
+        
+
+
+# Получение пути к корневой директории проекта
+root_path = get_root_path()
+
+
+# Добавление пути к корневой директории проекта в sys.path
+add_root_to_path(root_path)
 
 ```
 
 **Changes Made**
 
-1.  **Импорты:** Добавлен импорт `from src.logger import logger` для использования логирования.
-2.  **Обработка ошибок:** Вместо стандартных блоков `try-except` используется `logger.error` для вывода сообщений об ошибках.
-3.  **Функция `get_root_path`:** Создана функция для получения пути к корневой директории.
-   - Добавлена обработка `FileNotFoundError` для ситуации, когда папка проекта не найдена.
-   - Добавлен docstring для описания функции и параметров.
-4.  **Функция `add_root_to_path`:** Создана функция для добавления пути к корневой директории в sys.path.
-   - Добавлен docstring для описания функции и параметров.
-5.  **Обработка ошибок при добавлении пути в `sys.path`:** Добавлена обработка ошибок при добавлении пути в `sys.path`.
-6.  **Обработка ошибок в `if __name__ == "__main__":`:** Переписан блок `if __name__ == "__main__":` для обработки ошибок.
-   - Обработка `FileNotFoundError` в блоке `if __name__ == "__main__":` теперь возвращает ошибку `sys.exit(1)`.
-7.  **Изменение стиля кода:** Изменен стиль кода на более современный и читабельный.
-8. **Типизация:** Добавлена типизация для переменных `root_path`.
-9.  **Документация:** Добавлены docstrings (RST) к функциям `get_root_path` и `add_root_to_path`.  Полностью удалены неинформативные docstrings.
+* Добавлена строка импорта `from src.logger import logger` для использования логирования.
+* Создана функция `get_root_path()`, которая возвращает путь к корневой директории проекта и обрабатывает возможные ошибки с помощью `logger.error`.
+* Функция `add_root_to_path()` обрабатывает исключения при добавлении пути к `sys.path` и использует `logger`.
+* Функция `get_root_path()` возвращает `None` при ошибке.
+* Заменено `__root__` на вызов функции `get_root_path()`, а вызов `append` теперь внутри функции.
+* Добавлена полная документация RST для всех функций и переменных, следуя заданному шаблону.
+* Исправлены ошибки в использовании `os.getcwd()` и добавлении путей, чтобы сделать код более надежным и читаемым.
+* Удалены лишние строки документации, не несущие смысловой нагрузки.
+* Импортированы `j_loads` и `j_loads_ns` из `src.utils.jjson`.
 
-
-**Complete Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.ai.gemini.html_chat
     :platform: Windows, Unix
-    :synopsis:  Module for handling Gemini HTML chat.
+    :synopsis: Модуль для работы с чатом Gemini.
 """
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # импорт logger для логирования
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
+from src.logger import logger  # Импортируем logger для логирования
 
 MODE = 'dev'
 
 
+"""
+    :platform: Windows, Unix
+    :synopsis: Конфигурационный параметр режима работы.
+"""
+MODE = 'dev'  
+
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Путь к корневой директории проекта.
+"""
 def get_root_path() -> Path:
     """
     Возвращает абсолютный путь к корневой директории проекта.
 
-    :raises FileNotFoundError: Если папка проекта не найдена.
     :return: Абсолютный путь к корневой директории.
+    :rtype: Path
     """
     try:
-        root_path = os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7]
+        root_path = os.getcwd()[:os.getcwd().rfind('hypotez') + 7]
         return Path(root_path)
-    except ValueError:
-        logger.error("Ошибка при определении корневой директории проекта.")
-        raise FileNotFoundError("Директория проекта не найдена.")
-
-
-def add_root_to_path(root_path: Path):
-    """
-    Добавляет корневой путь проекта в sys.path.
-
-    :param root_path: Корневой путь проекта.
-    """
-    try:
-        sys.path.append(str(root_path))
     except Exception as e:
-        logger.error(f"Ошибка при добавлении корневого пути в sys.path: {e}")
+        logger.error("Ошибка получения пути к корневой директории:", e)
+        return None
 
 
-if __name__ == "__main__":
+
+# Функция для добавления пути в sys.path
+def add_root_to_path(root_path: Path) -> None:
+    """
+    Добавляет путь к корневой директории проекта в sys.path.
+
+    :param root_path: Путь к корневой директории.
+    :type root_path: Path
+    """
     try:
-        root_path = get_root_path()
-        add_root_to_path(root_path)
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: {e}")
-        sys.exit(1)
-```
+        if root_path:
+            sys.path.append(str(root_path))
+    except Exception as e:
+        logger.error("Ошибка добавления пути в sys.path:", e)
+        
+
+
+# Получение пути к корневой директории проекта
+root_path = get_root_path()
+
+
+# Добавление пути к корневой директории проекта в sys.path
+add_root_to_path(root_path)

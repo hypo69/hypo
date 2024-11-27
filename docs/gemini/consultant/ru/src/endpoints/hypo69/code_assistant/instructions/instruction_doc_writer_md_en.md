@@ -1,195 +1,97 @@
-Received Code
+# ИНСТРУКЦИЯ ПО ДОКУМЕНТИРОВАНИЮ
+
+## Основные требования:
+
+Этот документ описывает формат документации для Python-файлов.  Должны быть соблюдены следующие правила:
+
+1. **Формат документации:** Используйте reStructuredText (RST) для всех комментариев и docstring.  Всегда используйте одинарные кавычки (`'`) в Python-коде.
+
+2. **Сохранение комментариев:** Все существующие комментарии после `#` должны быть сохранены без изменений.  Блоки кода, которые необходимо изменить, должны быть прокомментированы построчно с использованием символа `#`.
+
+3. **Обработка данных:** Используйте `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.load` для чтения файлов.  Оставляйте любые `...` в коде без изменений, как точки остановки.
+
+4. **Анализ структуры:** Проверьте и добавьте отсутствующие импорты.  Приведите в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
+
+5. **Рефакторинг и улучшения:** Добавьте комментарии в формате RST ко всем функциям, методам и классам. Используйте `from src.logger import logger` для логирования ошибок.  Избегайте избыточного использования стандартных блоков `try-except`. Предпочитайте обработку ошибок с помощью `logger.error`. В комментариях избегайте слов 'получаем', 'делаем' и подобных.  Используйте конкретные формулировки, например: 'проверка', 'отправка', 'код исполняет ...'.
+
+6. **Формат ответа:** Ответ должен включать разделы: **Исходный код**, **Улучшенный код**, **Изменения**, **Полный код**.  Не используйте ` ``` ` в начале ответа. Используйте их только для блоков кода.
+
+7. **Полный код:** В конце ответа должен быть представлен полный код (исходный с улучшениями) в одном блоке для копирования и вставки. Все изменённые части кода должны быть прокомментированы построчно с использованием `#` в этом блоке.
+
+8. **Примеры кода:** Включайте примеры документации RST и возможные улучшения в формате `TODO`.
+
+9. **Дополнительная инструкция:** Все комментарии к модулям, функциям, методам и переменным должны быть переписаны в формате reStructuredText (RST). Это включает: описание модуля в начале файла, документацию для каждой функции, метода и переменной. Соблюдайте стандарты оформления docstring в Python для Sphinx.
+
+## Примеры
+
+
 ```python
-#INSTRUCTION
-
-# For each input Python file, create documentation in `Markdown` format for subsequent use. The documentation must meet the following requirements:
-
-# 1. Documentation Format:
-#    - Use the `Markdown (.md)` standard.
-#    - Each file should begin with a header and a brief description of its contents.
-#    - For all classes and functions, use the following comment format:
-#      ```python
-#      def function(param: str, param1: Optional[str | dict | str] = None) -> dict | None:
-#          """
-#          Args:
-#              param (str): Description of the `param` parameter.
-#              param1 (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
-#
-#          Returns:
-#              dict | None: Description of the return value. Returns a dictionary or `None`.
-#
-#          Raises:
-#              SomeError: Description of the situation in which the `SomeError` exception is raised.
-#          """
-#      ```
-#    - Use `ex` instead of `e` in exception handling blocks.
-
-# 2. TOC (Table of Contents):
-#    - Include a table of contents section at the beginning of each documentation file.
-#    - The structure should include links to all major sections of the module documentation.
-
-# 3. Documentation Formatting:
-#    - Use proper Markdown syntax for all headers, lists, and links.
-#    - For documenting classes, functions, and methods, include structured sections with descriptions, parameter details, return values, and raised exceptions. Example:
-#      ```markdown
-#      ## Functions
-#
-#      ### `function_name`
-#
-#      **Description**: Brief description of the function.
-#
-#      **Parameters**:
-#      - `param` (str): Description of the `param` parameter.
-#      - `param1` (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
-#
-#      **Returns**:
-#      - `dict | None`: Description of the return value.
-#
-#      **Raises**:
-#      - `SomeError`: Description of the situation in which the `SomeError` exception is raised.
-#      ```
-
-# 4. Section Headings:
-#    - Use level 1 headers (`#`), level 2 headers (`##`), level 3 headers (`###`), and level 4 headers (`####`) consistently throughout the file.
-
-# 5. Example File:
-#    ```markdown
-#    # Module Name
-#
-#    ## Overview
-#
-#    Brief description of the module's purpose.
-#
-#    ## Classes
-#
-#    ### `ClassName`
-#
-#    **Description**: Brief description of the class.
-#
-#    **Methods**:
-#    - `method_name`: Brief description of the method.
-#
-#    ## Functions
-#
-#    ### `function_name`
-#
-#    **Description**: Brief description of the function.
-#
-#    **Parameters**:
-#    - `param` (str): Description of the `param` parameter.
-#    - `param1` (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
-#
-#    **Returns**:
-#    - `dict | None`: Description of the return value.
-#
-#    **Raises**:
-#    - `SomeError`: Description of the situation in which the `SomeError` exception is raised.
-#    ```
-
-# END OF INSTRUCTION
-```
-
-```
-Improved Code
-```python
-# This module provides functions for processing data.
-#
-# .. moduleauthor:: Your Name
-# .. versionadded:: 0.0.1
-import json
-from typing import Optional
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
-
-def process_data(file_path: str, param1: Optional[str] = None) -> dict | None:
+# Пример документации для функции
+def my_function(param1: str, param2: int) -> str:
     """
-    Processes data from a JSON file.
+    Выполняет задачу обработки данных.
 
-    :param file_path: Path to the JSON file.
-    :param param1: Optional parameter. Defaults to None.
-    :return: Processed data as a dictionary, or None if an error occurred.
-    :raises FileNotFoundError: If the file does not exist.
+    :param param1: Первичный параметр.
+    :type param1: str
+    :param param2: Вспомогательный параметр.
+    :type param2: int
+    :return: Результат обработки.
+    :rtype: str
     """
-    # TODO: Add more robust error handling
-    try:
-        with open(file_path, 'r') as file:
-            data = j_loads(file)
-            # ... further processing ...
-            return data
-    except FileNotFoundError as ex:
-        logger.error(f"File not found: {file_path}", exc_info=True)
-        return None
-    except json.JSONDecodeError as ex:
-        logger.error(f"Error decoding JSON: {file_path}", exc_info=True)
-        return None
-    except Exception as ex:
-        logger.error(f"An unexpected error occurred: {file_path}", exc_info=True)
-        return None
+    # Проверка входных данных
+    if not param1:
+        logger.error("Ошибка: параметр param1 не задан.")
+        return ""  # Возвращаем пустую строку при ошибке
 
-# Example usage (for testing):
-# if __name__ == "__main__":
-#     try:
-#         result = process_data('data.json')
-#         if result:
-#             print(result)
-#     except Exception as ex:
-#         logger.error(f"Error during example usage: {ex}", exc_info=True)
+    # Далее код для обработки данных
+    result = param1 + str(param2)
+    return result
 ```
 
-```
-Changes Made
-```
-- Added missing imports (`json`, `Optional`, `j_loads`, `j_loads_ns`, `logger`).
-- Added docstrings (reStructuredText format) to the `process_data` function.
-- Replaced `json.load` with `j_loads` (per instruction).
-- Improved error handling:
-    - Used `try-except` blocks to catch `FileNotFoundError` and `json.JSONDecodeError`.
-    - Logged errors using `logger.error`.
-    - Added a general `except Exception` block to catch other potential errors.
-- Added `TODO` comment to suggest more robust error handling in the future.
+```markdown
+# Модуль my_module
+
+## Обзор
+
+Этот модуль содержит функцию для обработки данных.
+
+
+## Функции
+
+### `my_function`
+
+**Описание**: Функция `my_function` обрабатывает данные, используя переданные параметры.
+
+**Параметры**:
+
+- `param1` (str): Первичный параметр.
+- `param2` (int): Вспомогательный параметр.
+
+**Возвращаемое значение**:
+
+- str: Результат обработки.
+
+**Возможные исключения**:
+
+- `TypeError`: Если входные данные имеют неправильный тип.
+
 
 ```
-Optimized Code
-```python
-# This module provides functions for processing data.
-#
-# .. moduleauthor:: Your Name
-# .. versionadded:: 0.0.1
-import json
-from typing import Optional
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
 
-def process_data(file_path: str, param1: Optional[str] = None) -> dict | None:
-    """
-    Processes data from a JSON file.
 
-    :param file_path: Path to the JSON file.
-    :param param1: Optional parameter. Defaults to None.
-    :return: Processed data as a dictionary, or None if an error occurred.
-    :raises FileNotFoundError: If the file does not exist.
-    """
-    # TODO: Add more robust error handling, potentially using a dedicated exception class
-    try:
-        with open(file_path, 'r') as file:
-            data = j_loads(file)
-            # ... further processing ...
-            return data
-    except FileNotFoundError as ex:
-        logger.error(f"File not found: {file_path}", exc_info=True)
-        return None
-    except json.JSONDecodeError as ex:
-        logger.error(f"Error decoding JSON in {file_path}: {ex}", exc_info=True)
-        return None
-    except Exception as ex:
-        logger.error(f"An unexpected error occurred while processing {file_path}: {ex}", exc_info=True)
-        return None
+## Порядок блоков в ответе:
 
-# Example usage (for testing):
-# if __name__ == "__main__":
-#     try:
-#         result = process_data('data.json')
-#         if result:
-#             print(result)
-#     except Exception as ex:
-#         logger.error(f"Error during example usage: {ex}", exc_info=True)
+1. **Исходный код**
+   <Исходный код>
+
+2. **Улучшенный код**
+   <Улучшенный код>
+
+3. **Внесённые изменения**
+   <Список изменений>
+
+4. **Оптимизированный код**
+   <Оптимизированный код>
+
+
+**КОНЕЦ ИНСТРУКЦИИ**

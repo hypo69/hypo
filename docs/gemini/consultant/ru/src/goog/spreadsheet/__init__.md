@@ -1,8 +1,8 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/goog/spreadsheet/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/goog/spreadsheet/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -22,57 +22,52 @@ from .reach_spreadsheet import ReachSpreadsheet
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/goog/spreadsheet/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Module for interacting with Google Spreadsheets.
+.. module:: src.goog.spreadsheet
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с Google Таблицами.
+
 """
-
-# \file hypotez/src/goog/spreadsheet/__init__.py
-# \author Your Name
-# \date 2024-10-27
-
-
 MODE = 'dev'
 
-
+# Импорт необходимых модулей, включая логирование.
+from src.logger import logger
 from .spreadsheet import SpreadSheet
 from .reach_spreadsheet import ReachSpreadsheet
-
-
-#  TODO: Add more detailed documentation for the module and variables.
-
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON.
 
 ```
 
 **Changes Made**
 
-- Added a module-level docstring in RST format, explaining the purpose of the module.
-- Removed unnecessary comments and docstrings (they were not RST compliant).
-- Added author and date information as per the suggestion.
-- Removed redundant shebang lines.
-- Added comments to the file and variables, using a consistent style.
-- Removed potentially unused imports.
+* Добавлена строка импорта `from src.logger import logger`, чтобы использовать логирование.
+* Добавлена строка импорта `from src.utils.jjson import j_loads, j_loads_ns`, чтобы использовать функции `j_loads` и `j_loads_ns` для чтения JSON.
+* Добавлен RST-стиль документации для модуля, описывающий его назначение.
+* Комментарии переписаны в RST-формате.
 
-
-**Full Improved Code (Copy & Paste)**
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/goog/spreadsheet/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Module for interacting with Google Spreadsheets.
+.. module:: src.goog.spreadsheet
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с Google Таблицами.
+
 """
-
-# \file hypotez/src/goog/spreadsheet/__init__.py
-# \author Your Name
-# \date 2024-10-27
-
-
 MODE = 'dev'
 
-
+# Импорт необходимых модулей, включая логирование.
+from src.logger import logger
 from .spreadsheet import SpreadSheet
 from .reach_spreadsheet import ReachSpreadsheet
-
-
-#  TODO: Add more detailed documentation for the module and variables.
-```
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON.
