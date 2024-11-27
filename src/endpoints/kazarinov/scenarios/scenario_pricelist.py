@@ -155,7 +155,7 @@ class Mexiron:
         """ сырые данные уходят в обработку моделью (`gemini`) -> 
         модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
         Внимание! модель может ошибаться"""
-
+        j_dumps([ru,he], self.export_path / 'mexiron.json')
         if ru and he:
             await self.create_report()
             await self.post_facebook(ru)

@@ -965,6 +965,10 @@ class Graber:
             ...
             return
 
+        # Если значение - список, код преобразовывает его в строку с разделителем `\n`
+        if isinstance(value, list):
+            value = '\n'.join(map(str, value))
+
         # Записываем результат в поле `description_short` объекта `ProductFields`
         self.fields.description_short = value
         return True
