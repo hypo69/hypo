@@ -120,7 +120,10 @@ class ProgramSettings(BaseModel):
             assistant_id=SimpleNamespace(), 
             project_api=None
         ),
-        gemini=SimpleNamespace(api_key=SimpleNamespace()),
+        gemini=SimpleNamespace(api_key=None),
+        rev_com=SimpleNamespace(client_api=None,
+                                user_api=None),
+        shutter_stock=SimpleNamespace(token=None),
         discord=SimpleNamespace(
             application_id=None, 
             public_key=None, 
@@ -167,7 +170,7 @@ class ProgramSettings(BaseModel):
             bin = Path(self.base_dir / 'bin'), # <- тут бинарники (chrome, firefox, ffmpeg, ...)
             src = Path(self.base_dir) / 'src', # <- тут весь код
             endpoints = Path(self.base_dir) / 'src' / 'endpoints', # <- тут все клиенты
-            secrets = Path(self.base_dir / 'secrets'),  # <- это папка с паролями и базой данных ! Ей нельзя попадать в гит
+            secrets = Path(self.base_dir / 'secrets'),  # <- это папка с паролями и базой данных ! Ей нельзя попадать в гит!!!
 
             log = Path(getattr(self.config.path, 'log', self.base_dir / 'log')), 
             tmp = Path(getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
