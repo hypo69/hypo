@@ -88,7 +88,8 @@
 
   "output_directory": {
     "code_checker": "<model>/consultant/<lang>/src",
-    "code_explainer": "<model>/explainer/<lang>/src",
+    "code_explainer_md": "<model>/explainer/<lang>/md/src",
+    "code_explainer_html": "<model>/explainer/<lang>/html/src",
     "pytest": "../pytest/<model>/<lang>/src",
     "doc_writer_rst": "<model>/doc/<lang>/rst/src",
     "doc_writer_md": "<model>/doc/<lang>/md/src",
@@ -97,15 +98,17 @@
   },
   "argparse": {
     "roles": [
+      "code_explainer_html",
+      "code_explainer_md",
       "doc_writer_rst",
       "doc_writer_md",
       "doc_writer_html",
       "code_checker",
       "pytest",
-      "code_explainer",
+
       "how_to_writer"
     ],
-    "languages": [ "en", "ru" ],
+    "languages": [ "ru", "en" ],
     "model": {
       "default": [ "gemini" ],
       "choices": [ "gemini", "openai" ]

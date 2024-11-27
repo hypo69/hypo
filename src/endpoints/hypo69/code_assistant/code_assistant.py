@@ -319,12 +319,16 @@ class CodeAssistant:
         # Заменяем часть пути на целевую директорию
         file_path = str(file_path).replace('src', target_dir)
     
+
         # Формируем новый путь с нужным расширением в зависимости от роли
         export_path = Path(file_path).with_suffix(
             {
-                'doc_writer_md': '.md',  # для роли "doc_writer_md" будет использоваться .md
-                'doc_writer_rst': '.rst',  # для роли "doc_writer_rst" будет использоваться .rst
-                'doc_writer_html': '.html',  # для роли "doc_writer_html" будет использоваться .html
+                f'code_checker': '.md',  # для роли "code_checker" будет использоваться .md
+                f'doc_writer_md': '.md',  # для роли "doc_writer_md" будет использоваться .md
+                f'doc_writer_rst': '.rst',  # для роли "doc_writer_rst" будет использоваться .rst
+                f'doc_writer_html': '.html',  # для роли "doc_writer_html" будет использоваться .html
+                f'code_explainer_md': '.md',  # для роли "code_explainer_md" будет использоваться .md
+                f'code_explainer_html': '.html',  # для роли "code_explainer_html" будет использоваться .html
             }.get(self.role, '.rst')  # Если роль не соответствует ни одной из вышеуказанных, по умолчанию используется .rst
         )
 
@@ -362,7 +366,7 @@ class CodeAssistant:
             return response
 
         # Удаляем маркер для известных форматов, если строка обрамлена в '```'
-        config = j_loads_ns(gs.path.endpoint / 'hypo69' / 'code_assistant' / 'code_assistant.json')
+        config = j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json')
         for prefix in config.known_prefixes:
             # Сравниваем с префиксом без учёта регистра
             if response.lower().startswith(prefix.lower()):

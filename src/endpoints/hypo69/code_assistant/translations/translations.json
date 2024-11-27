@@ -22,25 +22,33 @@
       "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `MD`"
     },
     "doc_writer_html": {
-      "ru": "Твоя специализация - создание документации для кода в формате `HTML`",
+      "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `HTML`-Format",
       "en": "Your specialization is documentation creation in the `HTML` format",
       "fr": "Votre spécialisation est la création de documentation au format `HTML`",
-      "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `HTML`-Format",
-      "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `HTML`"
+      "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `HTML`",
+      "ru": "Твоя специализация - создание документации для кода в формате `HTML`"
     },
-    "code_explainer": {
-      "ru": "Твоя специализация - объяснение кода",
-      "en": "Your specialization is explaining code",
-      "fr": "Votre spécialisation est l'explication de code",
-      "de": "Ihre Spezialisierung ist das Erklären von Code",
-      "he": "ההתמחות שלך היא הסברת קוד"
+    "code_explainer_md": {
+      "ru": "Твоя специализация - объяснение кода. Формат ответа - `MD`.",
+      "en": "Your specialization is code explanation. Response format - `MD`.",
+      "fr": "Votre spécialisation est l'explication de code. Format de réponse - `MD`.",
+      "de": "Ihre Spezialisierung ist die Erklärung von Code. Antwortformat - `MD`.",
+      "he": "ההתמחות שלך היא הסברת קוד. פורמט תשובה - `MD`."
     },
+    "code_explainer_html": {
+      "ru": "Твоя специализация - объяснение кода. Формат ответа - `HTML`.",
+      "en": "Your specialization is code explanation. Response format - `HTML`.",
+      "fr": "Votre spécialisation est l'explication de code. Format de réponse - `HTML`.",
+      "de": "Ihre Spezialisierung ist die Erklärung von Code. Antwortformat - `HTML`.",
+      "he": "ההתמחות שלך היא הסברת קוד. פורמט תשובה - `HTML`."
+    },
+
     "how_to_writer": {
-      "ru": "Твоя специализация - создание инструкций по использованию кода (how to..)",
-      "en": "Your specialization is creating usage guides for code (how to..)",
-      "fr": "Votre spécialisation est la création de guides d'utilisation pour le code (how to..)",
-      "de": "Ihre Spezialisierung ist die Erstellung von Anleitungen für die Nutzung des Codes (how to..)",
-      "he": "ההתמחות שלך היא יצירת מדריכי שימוש לקוד (how to..)"
+      "ru": "Твоя специализация - создание инструкций по использованию кода (how to..) Формат ответа - `MD`.",
+      "en": "Your specialization is creating usage guides for code (how to..). Response format - `MD`.",
+      "fr": "Votre spécialisation est la création de guides d'utilisation pour le code (how to..).  Format de réponse - `MD`.",
+      "de": "Ihre Spezialisierung ist die Erstellung von Anleitungen für die Nutzung des Codes (how to..). Antwortformat - `HTML`.",
+      "he": "ההתמחות שלך היא יצירת מדריכי שימוש לקוד (how to..) - `HTML`."
     },
 
     "pytest": {

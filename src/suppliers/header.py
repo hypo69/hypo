@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers 
+.. module: src.suppliers.header 
 	:platform: Windows, Unix
 	:synopsis:
 

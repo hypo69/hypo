@@ -4,9 +4,9 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers 
+.. module: src.suppliers.supplier 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: Base class for suppliers
 
 """
 MODE = 'dev'

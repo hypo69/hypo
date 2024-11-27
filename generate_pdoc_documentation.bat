@@ -1,0 +1,1 @@
+pdoc --output-dir docs/html src --no-imports
