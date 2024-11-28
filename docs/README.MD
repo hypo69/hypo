@@ -1,5 +1,17 @@
 
 # Project Documentation
+TOC:
+- requirements - файл содержит список библиотек для `Sphinx`  - `pip install -r requirements`
+- assets - изображения, иконки для документации
+- dot
+- gemini
+- mermaid
+- scenarios
+- sphinx
+- conf.py
+- jeykill.md
+- mdbook.md
+
 
 The `docs` folder contains compiled documentation, as well as recommendations and documentation created by artificial intelligence models. The following materials are gathered here:
 
