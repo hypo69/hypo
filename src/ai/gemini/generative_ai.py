@@ -224,11 +224,11 @@ class GoogleGenerativeAI:
 
         return
 
-    def send_chat_message(self, message:str) -> str:
+    def chat(self, q:str) -> str:
         """"""
         ...
         try:
-            response = self.chat.send_message(message)
+            response = self.chat.send_message(q)
             return response.text
         except Exception as ex:
             logger.error(f"Ошибка чата {response=}",ex)

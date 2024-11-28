@@ -81,29 +81,22 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
         """Handle text messages with URL-based routing."""
-        response = update.message.text
+        q = update.message.text
         user_id = update.effective_user.id
-        if is_url(response):
+        if is_url(q):
             await self.handle_url(update, context)
             # <- add logic after url scenario ended
             ...
             return # <- 
 
-        log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
-        save_text_file(f"User {user_id}: {response}\n", Path(log_path), mode='a')
+        # log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
+        # save_text_file(f"User {user_id}: {response}\n", Path(log_path), mode='a')
 
-        if self.handle_onetab_url(update, response):
-            await update.message.reply_text("OK")
-
-        if self.handle_supplier_url(response):
-            return await handler(update, response)
-
-        if response in ('--next', '-next', '__next', '-n', '-q'):
+        if q in ('--next', '-next', '__next', '-n', '-q'):
             return await self.handle_next_command(update)
 
-        if not is_url(response):
-            answer = self.model.ask(q = response, history_file = f'{user_id}.txt')
-            await update.message.reply_text(answer)
+        answer = self.model.chat(q)
+        await update.message.reply_text(answer)
 
 
 if __name__ == "__main__":
