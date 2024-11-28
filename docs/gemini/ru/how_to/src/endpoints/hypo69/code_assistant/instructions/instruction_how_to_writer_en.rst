@@ -1,0 +1,13 @@
+Как использовать этот блок кода
+=========================================================================================\n
+\nОписание
+-------------------------
+Этот код выполняет валидацию вводимых данных. Он проверяет тип и корректность данных, поступающих из внешнего источника.  В случае несоответствия ожидаемому формату, генерируется ошибка.\n\nШаги выполнения
+-------------------------
+1. Функция получает входные данные (`data`).\n
+2. Проверяет тип данных (`data`). Если тип не соответствует ожидаемому (например, не строка или число), генерируется исключение `TypeError` с подробным сообщением об ошибке.\n
+3. В зависимости от типа данных, выполняется дополнительная проверка корректности (например, проверка формата строки, диапазона чисел).\n
+4. Если данные валидны, функция возвращает True. В противном случае, генерируется исключение `ValueError` с описанием ошибки.\n\nПример использования
+-------------------------
+.. code-block:: python
+\n\n    def validate_input(data):\n        if not isinstance(data, str) and not isinstance(data, int) and not isinstance(data, float):\n            raise TypeError(\"Входные данные должны быть строкой, целым или вещественным числом.\")\n\n        if isinstance(data, str):\n            if not data.isalnum():\n                raise ValueError(\"Строка должна содержать только буквы и цифры.\")\n        elif isinstance(data, int):\n            if not 0 <= data <= 100:\n                raise ValueError(\"Целое число должно быть в диапазоне от 0 до 100.\")\n        elif isinstance(data, float):\n            if not 0.0 <= data <= 100.0:\n                raise ValueError(\"Вещественное число должно быть в диапазоне от 0.0 до 100.0.\")\n\n        return True\n\n    try:\n        result = validate_input(\"123abc\")\n        if result:\n            print(\"Валидные данные\")\n    except TypeError as e:\n        print(f\"Ошибка: {e}\")\n    except ValueError as e:\n        print(f\"Ошибка: {e}\")\n\n    try:\n        result = validate_input(150)\n        if result:\n            print(\"Валидные данные\")\n    except TypeError as e:\n        print(f\"Ошибка: {e}\")\n    except ValueError as e:\n        print(f\"Ошибка: {e}\")\n    try:\n        result = validate_input(50.5)\n        if result:\n            print(\"Валидные данные\")\n    except TypeError as e:\n        print(f\"Ошибка: {e}\")\n    except ValueError as e:\n        print(f\"Ошибка: {e}\")
