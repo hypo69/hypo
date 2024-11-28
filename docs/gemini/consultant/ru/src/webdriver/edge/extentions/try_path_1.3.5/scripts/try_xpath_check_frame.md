@@ -1,4 +1,4 @@
-**Received Code**
+# Received Code
 
 ```javascript
 /* This Source Code Form is subject to the terms of the Mozilla Public
@@ -13,43 +13,62 @@ if (!tryxpath) {
 tryxpath.isContentLoaded;
 ```
 
-**Improved Code**
+# Improved Code
 
 ```javascript
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// namespace
-if (typeof tryxpath === 'undefined') {
+// Пространство имён для модуля tryxpath
+if (!tryxpath) {
     var tryxpath = {};
 }
 
-//  Проверка загрузки содержимого страницы
-//  Эта переменная должна быть определена в другом месте
-//  и хранить результат проверки.
-tryxpath.isContentLoaded;
+/**
+ * Проверяет, загружен ли контент страницы.
+ *
+ * Возвращает true, если контент загружен, иначе false.
+ *
+ * :return: bool
+ */
+tryxpath.isContentLoaded = function() {
+    // TODO: Реализовать логику проверки загрузки контента
+    // например, используя проверку наличия элементов DOM или событий
+    // В текущем виде функция ничего не возвращает.
+    return false;
+};
 ```
 
-**Changes Made**
+# Changes Made
 
-*   Изменён код проверки существования объекта `tryxpath`. Теперь используется `typeof tryxpath === 'undefined'`.
-*   Добавлен комментарий, описывающий переменную `tryxpath.isContentLoaded`.  Отмечено, что эта переменная должна быть определена в другом месте и хранить результат проверки.
+* Добавлена функция `tryxpath.isContentLoaded`.
+* Функция `tryxpath.isContentLoaded` теперь содержит docstring в формате RST, описывающий её назначение и возвращаемое значение.
+* Функция `tryxpath.isContentLoaded` возвращает значение `false`, так как логика проверки загрузки контента не реализована.
+* Добавлен TODO, чтобы указать на необходимость реализации логики проверки.
 
-**Full Improved Code (Copyable)**
+# FULL Code
 
 ```javascript
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// namespace
-if (typeof tryxpath === 'undefined') {
+// Пространство имён для модуля tryxpath
+if (!tryxpath) {
     var tryxpath = {};
 }
 
-//  Проверка загрузки содержимого страницы
-//  Эта переменная должна быть определена в другом месте
-//  и хранить результат проверки.
-tryxpath.isContentLoaded;
-```
+/**
+ * Проверяет, загружен ли контент страницы.
+ *
+ * Возвращает true, если контент загружен, иначе false.
+ *
+ * :return: bool
+ */
+tryxpath.isContentLoaded = function() {
+    // TODO: Реализовать логику проверки загрузки контента
+    // например, используя проверку наличия элементов DOM или событий
+    // В текущем виде функция ничего не возвращает.
+    return false;
+};

@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -25,6 +25,7 @@ MODE = 'development'
 	:synopsis:
 
 """
+
 
 """
   :platform: Windows, Unix
@@ -34,10 +35,9 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.utils.powershell.examples.pprint """
-
 
 
 """ Absolute path to modules  """
@@ -51,150 +51,120 @@ sys.path.append (__root__)
 **Improved Code**
 
 ```python
-## \file hypotez/src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.utils.powershell.examples.pprint
-   :platform: Windows, Unix
-   :synopsis: This module provides functions for pretty printing output.
+    :platform: Windows, Unix
+    :synopsis: Модуль для форматирования вывода PowerShell.
 """
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # Import logger for error handling
+from src.logger import logger  # Импортируем logger для логирования
 
-MODE = 'development'
+MODE = 'dev'
 
 
 def get_root_path() -> Path:
     """
-    Returns the absolute path to the hypotez project root directory.
+    Возвращает абсолютный путь к корневой директории проекта.
 
-    :return: Absolute path to the hypotez project root directory.
-    :raises FileNotFoundError: If the 'hypotez' directory is not found.
+    :return: Абсолютный путь к корню проекта.
+    :rtype: Path
     """
     try:
-        root_path = os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7]
-        return Path(root_path)
-    except ValueError:
-        logger.error("Directory 'hypotez' not found.")
-        raise FileNotFoundError("Directory 'hypotez' not found.")
+        root_path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])
+        return root_path
+    except Exception as e:
+        logger.error('Ошибка получения пути к корню проекта', e)
+        return None  # Или другой обработчик ошибки
 
 
 def append_root_to_path(root_path: Path):
     """
-    Appends the given root path to the Python sys.path.
+    Добавляет путь к корневой директории в sys.path.
 
-    :param root_path: The path to append.
-    :raises TypeError: If root_path is not a Path object.
+    :param root_path: Путь к корневой директории.
+    :type root_path: Path
     """
-    if not isinstance(root_path, Path):
-        logger.error("root_path must be a Path object.")
-        raise TypeError("root_path must be a Path object.")
-    
     try:
-        sys.path.append(str(root_path))  # Convert Path to string
+        if root_path:
+            sys.path.append(str(root_path))
     except Exception as e:
-        logger.error(f"Error appending path to sys.path: {e}")
-        raise
+        logger.error('Ошибка добавления пути к корневому каталогу в sys.path', e)
 
 
-if __name__ == "__main__":
-    try:
-        root_path = get_root_path()
-        append_root_to_path(root_path)
-    except FileNotFoundError as e:
-        logger.error(f"Error getting root path: {e}")
-        sys.exit(1)  # Exit with error code
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
-        sys.exit(1)
+
+root_path = get_root_path()
+append_root_to_path(root_path)
+
 ```
 
 **Changes Made**
 
-- Added a docstring to the `get_root_path` function using RST syntax, including a description of the function's purpose, parameter, and return value.
-- Added a docstring to the `append_root_to_path` function using RST syntax, including a description of the function's purpose, parameter, and potential error handling.
-- Imported `logger` from `src.logger` for error handling.
-- Replaced the direct assignment of `__root__` with a function `get_root_path` for better code structure.
-- Added a check for the type of `root_path` in `append_root_to_path` to prevent type errors.
-- Added a try-except block around the path appending to handle potential errors.
-- Added error logging using `logger.error` for improved error handling.
-- Added exception handling to `get_root_path` function to catch `ValueError` during path searching.
-- Moved `sys.path.append` into a dedicated function.
-- Added an `if __name__ == "__main__":` block to ensure that the `get_root_path` and `append_root_to_path` functions are called only when the script is run directly, not imported as a module.
-- Corrected missing `sys` import.
-- Removed redundant/unnecessary comments and docstrings.
-- Converted a list of redundant strings to correct docstrings using RST.
-- Added an appropriate return type for the `get_root_path` function.
-- Added exit code 1 to the `except` blocks, indicating an error during execution, to conform with the best practices.
-- Added import statements from `src.logger`.
+* Добавлено docstring в формате RST к функции `get_root_path` и `append_root_to_path`.
+* Заменено присвоение переменной `__root__` на вызов функции `get_root_path`.
+* Добавлен импорт `from src.logger import logger`.
+* Добавлена обработка ошибок с помощью `logger.error` в `get_root_path` и `append_root_to_path`.
+* Изменен стиль и структура кода для улучшения читаемости и соответствия PEP 8.
+* Удалены ненужные комментарии.
+* Функция `append_root_to_path` для обработки ошибок и лучшей структуризации кода.
+* Изменены имена переменных, чтобы соответствовать PEP 8.
 
-**Full Code (Improved)**
+
+**FULL Code**
 
 ```python
-## \file hypotez/src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.utils.powershell.examples.pprint
-   :platform: Windows, Unix
-   :synopsis: This module provides functions for pretty printing output.
+    :platform: Windows, Unix
+    :synopsis: Модуль для форматирования вывода PowerShell.
 """
 import sys
 import os
 from pathlib import Path
-from src.logger import logger  # Import logger for error handling
+from src.logger import logger  # Импортируем logger для логирования
 
-MODE = 'development'
+MODE = 'dev'
 
 
 def get_root_path() -> Path:
     """
-    Returns the absolute path to the hypotez project root directory.
+    Возвращает абсолютный путь к корневой директории проекта.
 
-    :return: Absolute path to the hypotez project root directory.
-    :raises FileNotFoundError: If the 'hypotez' directory is not found.
+    :return: Абсолютный путь к корню проекта.
+    :rtype: Path
     """
     try:
-        root_path = os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7]
-        return Path(root_path)
-    except ValueError:
-        logger.error("Directory 'hypotez' not found.")
-        raise FileNotFoundError("Directory 'hypotez' not found.")
+        root_path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])
+        return root_path
+    except Exception as e:
+        logger.error('Ошибка получения пути к корню проекта', e)
+        return None  # Или другой обработчик ошибки
 
 
 def append_root_to_path(root_path: Path):
     """
-    Appends the given root path to the Python sys.path.
+    Добавляет путь к корневой директории в sys.path.
 
-    :param root_path: The path to append.
-    :raises TypeError: If root_path is not a Path object.
+    :param root_path: Путь к корневой директории.
+    :type root_path: Path
     """
-    if not isinstance(root_path, Path):
-        logger.error("root_path must be a Path object.")
-        raise TypeError("root_path must be a Path object.")
-    
     try:
-        sys.path.append(str(root_path))  # Convert Path to string
+        if root_path:
+            sys.path.append(str(root_path))
     except Exception as e:
-        logger.error(f"Error appending path to sys.path: {e}")
-        raise
+        logger.error('Ошибка добавления пути к корневому каталогу в sys.path', e)
 
 
-if __name__ == "__main__":
-    try:
-        root_path = get_root_path()
-        append_root_to_path(root_path)
-    except FileNotFoundError as e:
-        logger.error(f"Error getting root path: {e}")
-        sys.exit(1)  # Exit with error code
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
-        sys.exit(1)
+
+root_path = get_root_path()
+append_root_to_path(root_path)
 ```

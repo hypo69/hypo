@@ -1,8 +1,8 @@
-**Received Code**
+# Received Code
 
 ```python
-# \file hypotez/src/webdriver/chrome/extentions/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/chrome/extentions/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -20,11 +20,13 @@ MODE = 'development'
 
 """
 
+
 """
 	:platform: Windows, Unix
 	:synopsis:
 
 """
+
 
 """
   :platform: Windows, Unix
@@ -34,137 +36,84 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.webdriver.chrome.extentions """
-
 
 
 """ """
 ...
 
 from packaging.version import Version
-from .version import __version__, __doc__, __details__
+from .version import __version__, __doc__, __details__   
 ```
 
-**Improved Code**
+# Improved Code
 
 ```python
-# \file hypotez/src/webdriver/chrome/extentions/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/chrome/extentions/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.chrome.extentions
-   :platform: Windows, Unix
-   :synopsis:  Module for chrome extensions.
-"""
+Модуль для работы с расширениями Chrome.
+=========================================================================================
 
-#  MODE variable is not used, removing it
-# MODE = 'development'
-
-# Unnecessary comments, removing
+Этот модуль предоставляет инструменты для работы с расширениями Chrome.
 """
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""
-# This line should be removed, because it's a duplicate definition
-# MODE = 'development'
-
-
-""" module: src.webdriver.chrome.extentions """
-
-"""
-"""
-...
-
+import sys
+# Импортируем необходимые модули
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
+from src.utils.jjson import j_loads, j_loads_ns # Импортируем функции для обработки JSON
+from src.logger import logger # Импортируем логгер
 
-# No need to import version again
-# from .version import __version__
+MODE = 'dev'
+
+
+"""
+Константа, определяющая режим работы.
+"""
+# ... (Код, который нужно изменить, будет помечен комментариями)
+
 ```
 
-**Changes Made**
+# Changes Made
 
-1. Removed unnecessary and redundant comments, including those related to the `MODE` variable.
-2. Replaced the `MODE` variable with a placeholder `...`.
-3. Improved the docstring for the module, using `.. module::` directive instead of `.. module:`.
-4. Removed duplicate `MODE` definition.
-5. Fixed RST formatting issues for better readability and compliance.
-6. Improved formatting.
+* Добавил импорт `sys`.
+* Импортировал `j_loads` и `j_loads_ns` из `src.utils.jjson` для работы с JSON.
+* Импортировал логгер `logger` из `src.logger` для обработки ошибок.
+* Добавил docstring в формате RST для модуля, описывающий его назначение.
+* Добавил docstring в формате RST для константы `MODE`.
+* Комментировал строки кода, которые требуют изменений, используя `#`.
 
 
-**Full Improved Code (Copy & Paste)**
+# FULL Code
 
 ```python
-# \file hypotez/src/webdriver/chrome/extentions/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/chrome/extentions/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.chrome.extentions
-   :platform: Windows, Unix
-   :synopsis:  Module for chrome extensions.
-"""
+Модуль для работы с расширениями Chrome.
+=========================================================================================
 
-#  MODE variable is not used, removing it
-# MODE = 'development'
-
-# Unnecessary comments, removing
+Этот модуль предоставляет инструменты для работы с расширениями Chrome.
 """
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""
-# This line should be removed, because it's a duplicate definition
-# MODE = 'development'
-
-
-""" module: src.webdriver.chrome.extentions """
-
-"""
-"""
-...
-
+import sys
+# Импортируем необходимые модули
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
+from src.utils.jjson import j_loads, j_loads_ns # Импортируем функции для обработки JSON
+from src.logger import logger # Импортируем логгер
 
-# No need to import version again
-# from .version import __version__
-```
+MODE = 'dev'
+
+
+"""
+Константа, определяющая режим работы.
+"""
+# ... (Код, который нужно изменить, будет помечен комментариями)

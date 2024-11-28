@@ -2,9 +2,9 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/requests.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.helpers """
 from types import SimpleNamespace
 from time import sleep
@@ -13,7 +13,6 @@ from src.utils import pprint
 import json
 
 from ..errors import ApiRequestException, ApiRequestResponseException
-
 
 def api_request(request, response_name, attemps:int = 1):
     try:
@@ -51,152 +50,150 @@ def api_request(request, response_name, attemps:int = 1):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/requests.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-"""
-Module for handling API requests to AliExpress.
-"""
+## ~~~~~~~~~~~~~\
+""" module: src.suppliers.aliexpress.api.helpers """
 from types import SimpleNamespace
+from time import sleep
 from src.logger import logger
-from src.utils import pprint, j_loads
-import json
+from src.utils import pprint
+from src.utils.jjson import j_loads  # Импортируем необходимую функцию
 
 from ..errors import ApiRequestException, ApiRequestResponseException
 
 
-def api_request(request, response_name, attemps: int = 1) -> object | None:
+def api_request(request: object, response_name: str, attempts: int = 1) -> object:
     """
-    Handles a single API request.
+    Отправляет запрос и обрабатывает ответ API.
 
-    :param request: The request object.
-    :param response_name: The name of the response field.
-    :param attemps: The number of retry attempts.
-    :raises ApiRequestException: if there's an error during the request.
-    :raises ApiRequestResponseException: if the response is invalid or has an error code.
-    :returns: The result of the successful request, otherwise None
+    :param request: Объект запроса.
+    :param response_name: Имя поля в ответе, содержащее результат.
+    :param attempts: Количество попыток отправки запроса.
+    :raises ApiRequestException: При ошибке отправки запроса.
+    :raises ApiRequestResponseException: При ошибке обработки ответа.
+    :return: Результат запроса или None при ошибке.
     """
-    try:
-        response = request.getResponse()
-        # Check if the response is valid
-        if response is None:
-            logger.error("Empty response from request.")
-            return None
-    except Exception as error:
-        if hasattr(error, 'message'):
-            logger.critical(f"Error during request: {error.message}")
-            return None
-        logger.critical(f"Unexpected error during request: {error}")
-        return None  # Important: return None in case of error
+    for _ in range(attempts):
+        try:
+            # Попытка получения ответа
+            response = request.getResponse()
+            break  # Выходим из цикла, если запрос успешен
+        except Exception as error:
+            # Логирование ошибки при получении ответа
+            if hasattr(error, 'message'):
+                logger.error(f'Ошибка получения ответа: {error.message}')
+            else:
+                logger.error(f'Ошибка получения ответа: {error}', exc_info=True)
+            sleep(1)  # Пауза перед следующей попыткой
+
+
+        
+    else:
+        # Обработка случая, когда все попытки отправки запроса завершились ошибкой
+        logger.error('Все попытки отправки запроса завершились ошибкой')
+        return None  # Возвращаем None для обозначения ошибки
+
+
 
     try:
-        # Using j_loads for better error handling and data validation
-        response_data = response.get(response_name, {}).get('resp_result')
-        if response_data is None:
-            logger.error(f"Missing 'resp_result' in response.")
-            return None
-
-        response_json = j_loads(json.dumps(response_data))
-    except (json.JSONDecodeError, TypeError) as error:
-        logger.critical(f"Error decoding response: {error}", exc_info=False)
+        # Парсинг результата
+        response = response[response_name]['resp_result']
+        response = j_loads(response, object_hook=lambda d: SimpleNamespace(**d))  # Использование j_loads
+    except (KeyError, json.JSONDecodeError) as error:
+        logger.critical(f'Ошибка парсинга ответа: {error}', exc_info=True)
         return None
 
+
     try:
-        if response_json.resp_code == 200:
-            return response_json.result
+        # Проверка кода ответа
+        if response.resp_code == 200:
+            return response.result
         else:
-            logger.warning(f"API request failed: {response_json.resp_code} - {response_json.resp_msg}")
+            logger.warning(f'Код ответа: {response.resp_code}, сообщение: {response.resp_msg}')
             return None
-    except AttributeError as e:
-        logger.critical(f"Error accessing response attributes: {e}")
+    except AttributeError as error:
+        logger.critical(f'Ошибка доступа к атрибутам ответа: {error}', exc_info=True)
         return None
-    except Exception as e:
-        logger.error(f"Unexpected error processing response: {e}")
-        return None
-
 ```
 
 **Changes Made**
 
-*   Added type hints to the `api_request` function.
-*   Added a docstring to the `api_request` function with detailed descriptions.
-*   Used `j_loads` from `src.utils.jjson` for parsing JSON responses.
-*   Improved error handling by checking for empty responses, missing fields, and handling `AttributeError` during response processing.
-*   Returns `None` for failed requests instead of raising exceptions (more robust).
-*   Modified error logging to provide more context.
-*   Corrected variable names and added more descriptive variable names.
-*   Removed unnecessary `...` and comments related to exceptions (no longer needed with logger).
-*   Changed `json.loads` to `j_loads` (as per instructions).
-*   Added logging for missing 'resp_result'.
-*   Improved error handling by checking if response_data is None.
-*   Removed potentially problematic `pprint` calls from critical/error logs.
-*   Fixed potential issues with response JSON structure (e.g. missing result).
+* Добавлено docstring в функцию `api_request` с описанием параметров, возвращаемого значения и исключений.
+* Исправлен импорт `j_loads` из `src.utils.jjson`.
+* Заменено использование `json.loads` на `j_loads` для чтения JSON.
+* Внесены улучшения в обработку ошибок, используется `logger.error` для логирования, добавлено `exc_info=True` для отладки.
+* Добавлен цикл `for` для обработки нескольких попыток запроса.
+* Улучшена обработка ошибок при получении ответа и парсинге.
+* Добавлена проверка на `AttributeError` для обработки ситуаций, когда атрибут `resp_code` или `resp_msg` не существует.
 
 
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/requests.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-"""
-Module for handling API requests to AliExpress.
-"""
+## ~~~~~~~~~~~~~\
+""" module: src.suppliers.aliexpress.api.helpers """
 from types import SimpleNamespace
+from time import sleep
 from src.logger import logger
-from src.utils import pprint, j_loads
-import json
+from src.utils import pprint
+from src.utils.jjson import j_loads  # Импортируем необходимую функцию
 
 from ..errors import ApiRequestException, ApiRequestResponseException
 
 
-def api_request(request, response_name, attemps: int = 1) -> object | None:
+def api_request(request: object, response_name: str, attempts: int = 1) -> object:
     """
-    Handles a single API request.
+    Отправляет запрос и обрабатывает ответ API.
 
-    :param request: The request object.
-    :param response_name: The name of the response field.
-    :param attemps: The number of retry attempts.
-    :raises ApiRequestException: if there's an error during the request.
-    :raises ApiRequestResponseException: if the response is invalid or has an error code.
-    :returns: The result of the successful request, otherwise None
+    :param request: Объект запроса.
+    :param response_name: Имя поля в ответе, содержащее результат.
+    :param attempts: Количество попыток отправки запроса.
+    :raises ApiRequestException: При ошибке отправки запроса.
+    :raises ApiRequestResponseException: При ошибке обработки ответа.
+    :return: Результат запроса или None при ошибке.
     """
-    try:
-        response = request.getResponse()
-        # Check if the response is valid
-        if response is None:
-            logger.error("Empty response from request.")
-            return None
-    except Exception as error:
-        if hasattr(error, 'message'):
-            logger.critical(f"Error during request: {error.message}")
-            return None
-        logger.critical(f"Unexpected error during request: {error}")
-        return None  # Important: return None in case of error
+    for _ in range(attempts):
+        try:
+            # Попытка получения ответа
+            response = request.getResponse()
+            break  # Выходим из цикла, если запрос успешен
+        except Exception as error:
+            # Логирование ошибки при получении ответа
+            if hasattr(error, 'message'):
+                logger.error(f'Ошибка получения ответа: {error.message}')
+            else:
+                logger.error(f'Ошибка получения ответа: {error}', exc_info=True)
+            sleep(1)  # Пауза перед следующей попыткой
+
+
+        
+    else:
+        # Обработка случая, когда все попытки отправки запроса завершились ошибкой
+        logger.error('Все попытки отправки запроса завершились ошибкой')
+        return None  # Возвращаем None для обозначения ошибки
+
+
 
     try:
-        # Using j_loads for better error handling and data validation
-        response_data = response.get(response_name, {}).get('resp_result')
-        if response_data is None:
-            logger.error(f"Missing 'resp_result' in response.")
-            return None
-
-        response_json = j_loads(json.dumps(response_data))
-    except (json.JSONDecodeError, TypeError) as error:
-        logger.critical(f"Error decoding response: {error}", exc_info=False)
+        # Парсинг результата
+        response = response[response_name]['resp_result']
+        response = j_loads(response, object_hook=lambda d: SimpleNamespace(**d))  # Использование j_loads
+    except (KeyError, json.JSONDecodeError) as error:
+        logger.critical(f'Ошибка парсинга ответа: {error}', exc_info=True)
         return None
 
+
     try:
-        if response_json.resp_code == 200:
-            return response_json.result
+        # Проверка кода ответа
+        if response.resp_code == 200:
+            return response.result
         else:
-            logger.warning(f"API request failed: {response_json.resp_code} - {response_json.resp_msg}")
+            logger.warning(f'Код ответа: {response.resp_code}, сообщение: {response.resp_msg}')
             return None
-    except AttributeError as e:
-        logger.critical(f"Error accessing response attributes: {e}")
+    except AttributeError as error:
+        logger.critical(f'Ошибка доступа к атрибутам ответа: {error}', exc_info=True)
         return None
-    except Exception as e:
-        logger.error(f"Unexpected error processing response: {e}")
-        return None
-```

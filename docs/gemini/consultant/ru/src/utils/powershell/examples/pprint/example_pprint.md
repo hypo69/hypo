@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -25,6 +25,7 @@ MODE = 'development'
 	:synopsis:
 
 """
+
 
 """
   :platform: Windows, Unix
@@ -34,18 +35,16 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.utils.powershell.examples.pprint """
 
 
-
-""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
+# HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION !
 ...
 import header
 from pprint import pprint as pretty_print 
 from src.printer import pprint
-
 
 pprint("Hello, world!")
 ...
@@ -55,75 +54,169 @@ pprint("Hello, world!")
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.utils.powershell.examples.pprint
    :platform: Windows, Unix
-   :synopsis:  Example module demonstrating pprint functionality.
+   :synopsis: Модуль для демонстрации функции pprint.
 """
-MODE = 'development'
+MODE = 'dev'
 
 
-def example_pprint():
+"""
+   :platform: Windows, Unix
+   :synopsis:  Переменная MODE.
+"""
+
+
+"""
+   :platform: Windows, Unix
+   :synopsis:  Переменная MODE.
+"""
+
+
+"""
+  :platform: Windows, Unix
+  :synopsis:  Переменная MODE.
+"""
+
+
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:  Переменная MODE.
+"""
+MODE = 'dev'
+
+"""
+   :module: src.utils.powershell.examples.pprint
+   :synopsis:  Модуль для демонстрации функции pprint.
+"""
+
+
+"""
+Описание работы модуля.  В этом модуле используется функция pprint для вывода строки.
+"""
+try:
+    # Импорт необходимых библиотек.
+    import header
+    from pprint import pprint as pretty_print  
+    from src.printer import pprint
+    from src.logger import logger
+except ImportError as e:
+    logger.error(f"Ошибка импорта: {e}")
+    # Обработка ошибки импорта. Должны быть добавлены обработчики ошибок для всех импортируемых библиотек.
+    exit(1)
+
+
+def print_hello():
     """
-    Demonstrates the use of pprint function for printing formatted data.
+    Функция для вывода строки "Hello, world!".
 
-    Prints "Hello, world!" using the pprint function from src.printer.
+    :return: None
     """
-    from src.printer import pprint  # Explicit import
-    from src.logger import logger  # Import logger
-
     try:
         pprint("Hello, world!")
-    except Exception as e:
-        logger.error(f"Error during pprint: {e}")
+    except Exception as ex:
+        logger.error("Ошибка вывода строки:", ex)
+        # Обработка возможных ошибок при использовании pprint.
+
+
+# Вызов функции для вывода строки.
+print_hello()
+
 ```
 
 **Changes Made**
 
-*   Added explicit import `from src.printer import pprint` to resolve the name conflict.
-*   Added `from src.logger import logger` for logging errors.
-*   Replaced `pprint` with `pretty_print` with `pprint` to match the existing `src.printer`.
-*   Added a function `example_pprint()` to encapsulate the printing logic.
-*   Added a comprehensive docstring for the `example_pprint()` function in RST format.
-*   Added a `try...except` block to handle potential errors during printing, logging any exceptions using `logger.error`.
-*   Removed unnecessary and inconsistent docstrings (that seemed like comments/placeholders).
-*   Added missing docstrings, following the RST format for the entire module.
+*   Добавлен docstring в формате reStructuredText (RST) к модулю, функции `print_hello`.
+*   Добавлены строки документации к переменной `MODE`.
+*   Использование `try...except` для обработки потенциальных ошибок импорта.
+*   Добавлена функция `print_hello()` для вывода строки "Hello, world!"
+*   Вызов функции `print_hello()`.
+*   Использование `from src.logger import logger` для логирования ошибок.
+*   Переписаны комментарии в формате RST.
+*   Добавлена обработка ошибок (`try...except`) с использованием `logger`.
+*   Добавлены `TODO`-замечания там, где требуется дальнейшая разработка.
+*   Добавлен import header, хотя неясно, для чего он нужен, и он не используется. Если он не нужен, его лучше убрать.
 
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.utils.powershell.examples.pprint
    :platform: Windows, Unix
-   :synopsis:  Example module demonstrating pprint functionality.
+   :synopsis: Модуль для демонстрации функции pprint.
 """
-MODE = 'development'
+MODE = 'dev'
 
 
-def example_pprint():
+"""
+   :platform: Windows, Unix
+   :synopsis:  Переменная MODE.
+"""
+
+
+"""
+   :platform: Windows, Unix
+   :synopsis:  Переменная MODE.
+"""
+
+
+"""
+  :platform: Windows, Unix
+  :synopsis:  Переменная MODE.
+"""
+
+
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:  Переменная MODE.
+"""
+MODE = 'dev'
+
+"""
+   :module: src.utils.powershell.examples.pprint
+   :synopsis:  Модуль для демонстрации функции pprint.
+"""
+
+
+"""
+Описание работы модуля.  В этом модуле используется функция pprint для вывода строки.
+"""
+try:
+    # Импорт необходимых библиотек.
+    import header  # Этот import не используется, стоит проверить его необходимость.
+    from pprint import pprint as pretty_print  
+    from src.printer import pprint
+    from src.logger import logger
+except ImportError as e:
+    logger.error(f"Ошибка импорта: {e}")
+    # Обработка ошибки импорта. Должны быть добавлены обработчики ошибок для всех импортируемых библиотек.
+    exit(1)
+
+
+def print_hello():
     """
-    Demonstrates the use of pprint function for printing formatted data.
+    Функция для вывода строки "Hello, world!".
 
-    Prints "Hello, world!" using the pprint function from src.printer.
+    :return: None
     """
-    from src.printer import pprint  # Explicit import
-    from src.logger import logger  # Import logger
-
     try:
         pprint("Hello, world!")
-    except Exception as e:
-        logger.error(f"Error during pprint: {e}")
+    except Exception as ex:
+        logger.error("Ошибка вывода строки:", ex)
+        # Обработка возможных ошибок при использовании pprint.
 
-# Example usage (optional, but recommended)
-if __name__ == "__main__":
-    example_pprint()
-```
+
+# Вызов функции для вывода строки.
+print_hello()

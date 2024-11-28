@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/string/normalizer.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,7 +12,7 @@
 	:synopsis: Module for normalizing product fields and handling various data types
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from decimal import Decimal, InvalidOperation
@@ -99,7 +99,8 @@ class StringNormalizer:
             return int(float(input_data))
         except (ValueError, TypeError, InvalidOperation) as e:
             logger.error(f"Error in normalize_int: {e}")
-            return None  # Corrected return value
+            return None # Corrected return value
+
 
     @staticmethod
     def normalize_float(value: Any) -> float | None:
@@ -121,13 +122,20 @@ class StringNormalizer:
             Warning: Cannot convert 'abc' to float.
             None
         """
-        if not value:
-            return 0
-        # Handle lists and tuples by recursively converting each element
+        if value is None:
+            return None  # Handle None explicitly
+        if value is not None and not isinstance(value, (str, int, float, list, tuple, Decimal)):
+            logger.warning("Input value is not a string, integer, float, list, tuple or Decimal.")
+            return None
+
         if isinstance(value, (list, tuple)):
-            return [v for v in (StringNormalizer.normalize_float(v) for v in value) if v is not None]
+            result = []
+            for item in value:
+                converted_item = StringNormalizer.normalize_float(item)
+                if converted_item is not None:
+                    result.append(converted_item)
+            return result
         
-        # Attempt to convert single value to float
         try:
             return float(value)
         except (ValueError, TypeError):
@@ -139,238 +147,226 @@ class StringNormalizer:
 
 ```python
 ## \file hypotez/src/utils/string/normalizer.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.utils.string.normalizer
    :platform: Windows, Unix
-   :synopsis: Module for normalizing product fields and handling various data types.
-
+   :synopsis: Модуль для нормализации полей продуктов и обработки различных типов данных.
 """
-MODE = 'development'
-
 
 from decimal import Decimal, InvalidOperation
 from typing import Any, List, Union
-from src.utils.jjson import j_loads, j_loads_ns
 from .formatter import StringFormatter as sf
 from src.logger import logger
 
+
 class StringNormalizer:
-    """Class for normalizing product fields."""
+    """Класс для нормализации полей продуктов."""
 
     @staticmethod
     def normalize_boolean(input_data: Any) -> bool:
-        """Normalize data into a boolean.
+        """Нормализует данные в булево значение.
 
-        :param input_data: Data that can represent a boolean (e.g., bool, string, integer).
+        :param input_data: Данные, которые могут представлять булево значение (например, bool, строка, целое число).
         :type input_data: Any
-        :raises TypeError: If input is not convertible to a boolean.
-        :returns: Boolean representation of the input.
+        :raises TypeError: Если тип данных не поддерживается.
+        :return: Булево представление входных данных.
         :rtype: bool
         """
+        if input_data is None:
+            return False
+
         if isinstance(input_data, bool):
             return input_data
 
         try:
             input_str = str(input_data).strip().lower()
-            if input_str in ('true', '1', 'yes', 'y', 'on'):
+            if input_str in ('true', '1', 'yes', 'y', 'on', True, 1):
                 return True
-            elif input_str in ('false', '0', 'no', 'n', 'off'):
+            elif input_str in ('false', '0', 'no', 'n', 'off', False, 0):
                 return False
         except Exception as e:
-            logger.error(f"Error converting '{input_data}' to boolean: {e}")
-            return False  # Default to False on error
-        
-        logger.warning(f"Unrecognized boolean value: {input_data}")
+            logger.error(f"Ошибка в normalize_boolean: {e}")
+            return False  # Возвращаем False при ошибке
+
+        logger.debug(f"Неожиданный ввод для boolean: {input_data}")
         return False
 
-
-    @staticmethod
-    def normalize_string(input_data: Union[str, List[str]]) -> str:
-        """Normalize a string or a list of strings.
-
-        :param input_data: Input data (string or list of strings).
-        :type input_data: str | List[str]
-        :returns: Cleaned and normalized string.
-        :rtype: str
-        """
-        if isinstance(input_data, list):
-            input_data = ' '.join(map(str, input_data))  # Properly convert list elements to strings
-
-        try:
-            normalized_str = sf.remove_htmls(input_data)
-            normalized_str = sf.remove_line_breaks(normalized_str)
-            normalized_str = sf.remove_special_characters(normalized_str)
-            return ' '.join(normalized_str.split()).strip()  # Corrected string normalization
-        except Exception as e:
-            logger.error(f"Error normalizing string: {e}")
-            return ""
-
-
-    @staticmethod
-    def normalize_int(input_data: Union[str, int, float, Decimal]) -> int | None:
-        """Normalize data into an integer.
-
-        :param input_data: Input data (string, integer, float, or Decimal).
-        :type input_data: str | int | float | Decimal
-        :returns: Integer representation of the input, or None if conversion fails.
-        :rtype: int | None
-        """
-        try:
-            if isinstance(input_data, Decimal):
-                return int(input_data)
-            return int(float(input_data))
-        except (ValueError, TypeError, InvalidOperation) as e:
-            logger.error(f"Error converting '{input_data}' to integer: {e}")
-            return None
+    # ... (other methods)
 
     @staticmethod
     def normalize_float(value: Any) -> float | None:
-        """Safely convert input values to float or list of floats.
-        
-        :param value: Input value (single or iterable).
+        """Безопасно преобразует входные значения в float или список float.
+
+        :param value: Входное значение для преобразования. Может быть одиночным значением (число или строка) или итерируемым (список/кортеж).
         :type value: Any
-        :returns: float or list of floats, None on conversion error.
-        :rtype: float | list[float] | None
+        :raises TypeError: Если тип данных не поддерживается.
+        :return: Значение float, список float или None, если преобразование не удалось.
+        :rtype: float | List[float] | None
         """
-        if not value:
+        if value is None:
             return None
+        if not isinstance(value, (str, int, float, list, tuple, Decimal)):
+            logger.warning("Входное значение не является строкой, целым числом, числом с плавающей точкой, списком или кортежем.")
+            return None
+
+
         if isinstance(value, (list, tuple)):
-            return [StringNormalizer.normalize_float(item) for item in value if StringNormalizer.normalize_float(item) is not None]
+            result = []
+            for item in value:
+                converted_item = StringNormalizer.normalize_float(item)
+                if converted_item is not None:
+                    result.append(converted_item)
+            return result
+        
         try:
             return float(value)
-        except (ValueError, TypeError):
-            logger.warning(f"Warning: Cannot convert '{value}' to float.")
+        except (ValueError, TypeError) as e:
+            logger.warning(f"Преобразование '{value}' в float не удалось: {e}.")
             return None
 ```
 
 **Changes Made**
 
-* Added missing import `from src.utils.jjson import j_loads, j_loads_ns`.
-* Changed `...` return in `normalize_int` to `None` for better handling.
-* Improved error handling and logging in all methods.
-* Updated docstrings to RST format with type hints and more comprehensive descriptions.
-* Corrected the string normalization in `normalize_string` to handle potential errors and return empty string on failure.
-* Removed unnecessary `input_str` variable and directly returned from `normalize_boolean` if the input was a boolean.
-* Changed the return from `normalize_boolean` to `False` on error; it's better than `return False`.
-* Changed the handling of empty `value` in `normalize_float` to return `None` for consistent error handling.
-* Updated `normalize_float` to handle lists/tuples of any type recursively.
-* Improved comments for better clarity.
-* Corrected boolean checks in `normalize_boolean` to exclude converting True/False to strings.
-* Added more informative logging messages to help diagnose issues.
+*   Добавлены комментарии в формате RST ко всем функциям, методам и классам.
+*   Используется `from src.logger import logger` для логирования ошибок.
+*   Изменены некоторые возвращаемые значения (например, `...` заменено на `None` в `normalize_int`).
+*   Добавлена обработка `None` в `normalize_float` и `normalize_boolean`.
+*   Добавлена проверка типа данных в `normalize_float`.
+*   Комментарии переписаны в соответствии с реструктурированным текстом (RST).
+*   Исправлены некоторые стилистические ошибки в комментариях.
+*   Добавлена обработка `None` в `normalize_boolean`.
 
 
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/utils/string/normalizer.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.utils.string.normalizer
    :platform: Windows, Unix
-   :synopsis: Module for normalizing product fields and handling various data types.
-
+   :synopsis: Модуль для нормализации полей продуктов и обработки различных типов данных.
 """
-MODE = 'development'
-
 
 from decimal import Decimal, InvalidOperation
 from typing import Any, List, Union
-from src.utils.jjson import j_loads, j_loads_ns
 from .formatter import StringFormatter as sf
 from src.logger import logger
 
+
 class StringNormalizer:
-    """Class for normalizing product fields."""
+    """Класс для нормализации полей продуктов."""
 
     @staticmethod
     def normalize_boolean(input_data: Any) -> bool:
-        """Normalize data into a boolean.
+        """Нормализует данные в булево значение.
 
-        :param input_data: Data that can represent a boolean (e.g., bool, string, integer).
+        :param input_data: Данные, которые могут представлять булево значение (например, bool, строка, целое число).
         :type input_data: Any
-        :raises TypeError: If input is not convertible to a boolean.
-        :returns: Boolean representation of the input.
+        :raises TypeError: Если тип данных не поддерживается.
+        :return: Булево представление входных данных.
         :rtype: bool
         """
+        if input_data is None:
+            return False
+
         if isinstance(input_data, bool):
             return input_data
 
         try:
             input_str = str(input_data).strip().lower()
-            if input_str in ('true', '1', 'yes', 'y', 'on'):
+            if input_str in ('true', '1', 'yes', 'y', 'on', True, 1):
                 return True
-            elif input_str in ('false', '0', 'no', 'n', 'off'):
+            elif input_str in ('false', '0', 'no', 'n', 'off', False, 0):
                 return False
         except Exception as e:
-            logger.error(f"Error converting '{input_data}' to boolean: {e}")
-            return False  # Default to False on error
-        
-        logger.warning(f"Unrecognized boolean value: {input_data}")
-        return False
+            logger.error(f"Ошибка в normalize_boolean: {e}")
+            return False  # Возвращаем False при ошибке
 
+        logger.debug(f"Неожиданный ввод для boolean: {input_data}")
+        return False
 
     @staticmethod
     def normalize_string(input_data: Union[str, List[str]]) -> str:
-        """Normalize a string or a list of strings.
+        """Нормализует строку или список строк.
 
-        :param input_data: Input data (string or list of strings).
+        :param input_data: Входные данные, которые могут быть строкой или списком строк.
         :type input_data: str | List[str]
-        :returns: Cleaned and normalized string.
+        :return: Очищенная и нормализованная строка.
         :rtype: str
         """
-        if isinstance(input_data, list):
-            input_data = ' '.join(map(str, input_data))  # Properly convert list elements to strings
-
-        try:
-            normalized_str = sf.remove_htmls(input_data)
-            normalized_str = sf.remove_line_breaks(normalized_str)
-            normalized_str = sf.remove_special_characters(normalized_str)
-            return ' '.join(normalized_str.split()).strip()  # Corrected string normalization
-        except Exception as e:
-            logger.error(f"Error normalizing string: {e}")
+        if input_data is None:
             return ""
 
+        if isinstance(input_data, list):
+            input_data = ' '.join(map(str, input_data))
+
+        try:
+            cleaned_str = sf.remove_htmls(input_data)
+            cleaned_str = sf.remove_line_breaks(cleaned_str)
+            cleaned_str = sf.remove_special_characters(cleaned_str)
+            normalized_str = ' '.join(cleaned_str.split())
+            return normalized_str.strip()
+        except Exception as e:
+            logger.error(f"Ошибка в normalize_string: {e}")
+            return ''
 
     @staticmethod
     def normalize_int(input_data: Union[str, int, float, Decimal]) -> int | None:
-        """Normalize data into an integer.
+        """Нормализует данные в целое число.
 
-        :param input_data: Input data (string, integer, float, or Decimal).
+        :param input_data: Входные данные, которые могут быть числом или строковым представлением числа.
         :type input_data: str | int | float | Decimal
-        :returns: Integer representation of the input, or None if conversion fails.
+        :return: Целочисленное представление входных данных или None при ошибке.
         :rtype: int | None
         """
+        if input_data is None:
+            return None
+
         try:
             if isinstance(input_data, Decimal):
                 return int(input_data)
             return int(float(input_data))
         except (ValueError, TypeError, InvalidOperation) as e:
-            logger.error(f"Error converting '{input_data}' to integer: {e}")
+            logger.error(f"Ошибка в normalize_int: {e}")
             return None
+
 
     @staticmethod
     def normalize_float(value: Any) -> float | None:
-        """Safely convert input values to float or list of floats.
-        
-        :param value: Input value (single or iterable).
+        """Безопасно преобразует входные значения в float или список float.
+
+        :param value: Входное значение для преобразования. Может быть одиночным значением (число или строка) или итерируемым (список/кортеж).
         :type value: Any
-        :returns: float or list of floats, None on conversion error.
-        :rtype: float | list[float] | None
+        :raises TypeError: Если тип данных не поддерживается.
+        :return: Значение float, список float или None, если преобразование не удалось.
+        :rtype: float | List[float] | None
         """
-        if not value:
+        if value is None:
             return None
+        if not isinstance(value, (str, int, float, list, tuple, Decimal)):
+            logger.warning("Входное значение не является строкой, целым числом, числом с плавающей точкой, списком или кортежем.")
+            return None
+
+
         if isinstance(value, (list, tuple)):
-            return [StringNormalizer.normalize_float(item) for item in value if StringNormalizer.normalize_float(item) is not None]
+            result = []
+            for item in value:
+                converted_item = StringNormalizer.normalize_float(item)
+                if converted_item is not None:
+                    result.append(converted_item)
+            return result
+        
         try:
             return float(value)
-        except (ValueError, TypeError):
-            logger.warning(f"Warning: Cannot convert '{value}' to float.")
+        except (ValueError, TypeError) as e:
+            logger.warning(f"Преобразование '{value}' в float не удалось: {e}.")
             return None
 ```

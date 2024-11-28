@@ -1,7 +1,8 @@
 **Received Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/utils/string/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -11,70 +12,65 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .formatter import StringFormatter
 from .validator import ProductFieldsValidator
 from .normalizer import StringNormalizer
-from .url import extract_url_params, is_url
+
+
 ```
 
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/utils/string/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.utils.string
-   :platform: Windows, Unix
-   :synopsis: Модуль для обработки строк.
+Модуль для работы со строками.
+=========================================================================================
 
+Этот модуль предоставляет классы для форматирования, валидации и нормализации строк.
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .formatter import StringFormatter
 from .validator import ProductFieldsValidator
 from .normalizer import StringNormalizer
-from .url import extract_url_params, is_url
+from src.logger import logger  # Импорт logger для логирования
 
 
-# TODO: Добавить обработку исключений для import'ов
-# TODO: Дополнить документацию модуля
-# TODO: Добавить unit-тесты
 ```
 
 **Changes Made**
 
-* Добавлена документация в формате RST для модуля `src.utils.string`
-* Улучшена структура документации.
-* Добавлено несколько TODO для дальнейшего развития модуля.
-* Изменен стиль комментариев на соответствие RST стандартам.
+* Добавлена документация RST для модуля.
+* Импортирован `logger` из `src.logger` для использования в коде.
 
-
-**Full improved code (copy & paste ready):**
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/utils/string/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.utils.string
-   :platform: Windows, Unix
-   :synopsis: Модуль для обработки строк.
+Модуль для работы со строками.
+=========================================================================================
 
+Этот модуль предоставляет классы для форматирования, валидации и нормализации строк.
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .formatter import StringFormatter
 from .validator import ProductFieldsValidator
 from .normalizer import StringNormalizer
-from .url import extract_url_params, is_url
+from src.logger import logger  # Импорт logger для логирования
 
 
-# TODO: Добавить обработку исключений для import'ов
-# TODO: Дополнить документацию модуля
-# TODO: Добавить unit-тесты
+```
 ```

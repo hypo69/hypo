@@ -1,8 +1,8 @@
-**Received Code**
+# Received Code
 
-```
+```html
 ## \file hypotez/src/webdriver/firefox/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 
 """ module: src.webdriver.firefox.extentions.test_extention.html """
@@ -21,23 +21,20 @@ MODE = 'debug'
 </html>
 ```
 
-**Improved Code**
+# Improved Code
 
-```python
-# -*- coding: utf-8 -*-
-"""
-Module: hypotez.src.webdriver.firefox.extentions.test_extention.html.popup
-This module defines the HTML content for a Firefox extension popup.
-"""
+```html
+## \file hypotez/src/webdriver/firefox/extentions/test_extention/html/popup.html
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
 
-# #! venv/Scripts/python.exe  # This line is irrelevant for an HTML file.
+"""
+Модуль для отображения HTML страницы в расширении Firefox.
+==========================================================================================
+
+Этот модуль содержит HTML шаблон для отображения страницы расширения.
+"""
 MODE = 'debug'
-
-
-"""
-HTML content for the Firefox extension popup.
-"""
-html_content = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,38 +44,31 @@ html_content = """
 </head>
 <body>
     <h1>Hypotez</h1>
-    <p>Привет, Это Давидка. Я обучаю модель</p>
+    <p>Привет, это Давидка. Я обучаю модель.</p>
 </body>
 </html>
-"""
 ```
 
-**Changes Made**
+# Changes Made
 
-*   The file is now a Python file containing the HTML content as a string.
-*   The irrelevant shebang line (`#! venv/Scripts/python.exe`) is removed.
-*   A docstring in RST format is added to the top of the file, describing the module's purpose.
-*   The HTML content is now stored in a variable `html_content` as a multiline string, making it easier to use and manage.
-*   Appropriate comments were added.
+* Добавлен комментарий RST в начале файла, описывающий модуль.
+* Исправлена пунктуация в тексте сообщения.
+* Добавлены пробелы для лучшей читаемости.
 
+# FULL Code
 
-**Full Code (Improved)**
-
-```python
-# -*- coding: utf-8 -*-
-"""
-Module: hypotez.src.webdriver.firefox.extentions.test_extention.html.popup
-This module defines the HTML content for a Firefox extension popup.
-"""
-
-# #! venv/Scripts/python.exe  # This line is irrelevant for an HTML file.
-MODE = 'debug'
-
+```html
+## \file hypotez/src/webdriver/firefox/extentions/test_extention/html/popup.html
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
 
 """
-HTML content for the Firefox extension popup.
+Модуль для отображения HTML страницы в расширении Firefox.
+==========================================================================================
+
+Этот модуль содержит HTML шаблон для отображения страницы расширения.
 """
-html_content = """
+# MODE = 'debug'  # Переменная MODE не используется в HTML. Удалить или переименовать.
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,8 +78,7 @@ html_content = """
 </head>
 <body>
     <h1>Hypotez</h1>
-    <p>Привет, Это Давидка. Я обучаю модель</p>
+    <p>Привет, это Давидка. Я обучаю модель.</p>
 </body>
 </html>
-"""
 ```

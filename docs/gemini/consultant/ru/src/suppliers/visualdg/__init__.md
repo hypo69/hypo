@@ -1,7 +1,7 @@
-**Received Code**
-
+Received Code
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/visualdg/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -11,49 +11,63 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .graber import Graber
 ```
 
-**Improved Code**
-
+Improved Code
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/visualdg/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.visualdg
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком данных visualdg.
+Модуль visualdg для работы с поставщиком данных.
+=========================================================
 
+Этот модуль предоставляет функции для взаимодействия с поставщиком данных visualdg.
 """
-MODE = 'development'
+import json  # Импортируем модуль json для работы с JSON данными
+
+MODE = 'dev'
 
 from .graber import Graber
+
+# from src.utils.jjson import j_loads, j_loads_ns  # Импортируем функции для работы с JSON
+
+# ...  # Точка остановки
 ```
 
-**Changes Made**
+Changes Made
+* Добавлено описание модуля в формате RST.
+* Добавлены импорты `json` (необходимо для работы с JSON).
+* Комментарии переформатированы в соответствии с RST.
+* Убраны комментарии, которые не были нужны.
+* Добавлена строка документации для модуля.
 
-- Исправлен формат документации модуля, переписав его с использованием reStructuredText (RST) в соответствии с заданием.  Теперь модуль имеет ясное описание с `:synopsis:` и платформенной привязкой `:platform:`
-- Добавлена пустая строка между описанием модуля и переменной `MODE` для лучшего визуального разделения.
 
-
-**Full Code (Improved)**
-
+FULL Code
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/visualdg/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.visualdg
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком данных visualdg.
+Модуль visualdg для работы с поставщиком данных.
+=========================================================
 
+Этот модуль предоставляет функции для взаимодействия с поставщиком данных visualdg.
 """
-MODE = 'development'
+import json  # Импортируем модуль json для работы с JSON данными
+
+MODE = 'dev'
 
 from .graber import Graber
+
+# from src.utils.jjson import j_loads, j_loads_ns  # Импортируем функции для работы с JSON
+
+# ...  # Точка остановки
 ```

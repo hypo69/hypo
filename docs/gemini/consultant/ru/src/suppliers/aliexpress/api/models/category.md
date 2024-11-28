@@ -2,9 +2,9 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/category.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 class Category:
     category_id: int
@@ -19,26 +19,26 @@ class ChildCategory(Category):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/category.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.suppliers.aliexpress.api.models
-
-This module defines models for categories on AliExpress.
+## ~~~~~~~~~~~~~~~
 """
-from src.logger import logger  # Import logger for logging
+Модуль :mod:`src.suppliers.aliexpress.api.models.category`
+=========================================================
 
-# Import jjson library for JSON handling
-# ...
-from src.utils.jjson import j_loads, j_loads_ns
+Этот модуль содержит классы :class:`Category` и :class:`ChildCategory` для представления категорий на AliExpress.
+"""
+from src.logger import logger
+#import ... # Возможно необходимый импорт, если есть другие классы/модули
+
 
 class Category:
     """
-    Represents a category on AliExpress.
+    Класс для представления категории товаров.
 
-    :ivar category_id: Unique identifier of the category.
+    :ivar category_id: Идентификатор категории.
     :vartype category_id: int
-    :ivar category_name: Name of the category.
+    :ivar category_name: Название категории.
     :vartype category_name: str
     """
     category_id: int
@@ -47,9 +47,9 @@ class Category:
 
 class ChildCategory(Category):
     """
-    Represents a child category on AliExpress, inheriting from Category.
+    Класс для представления дочерней категории товаров. Наследуется от :class:`Category`.
 
-    :ivar parent_category_id: Identifier of the parent category.
+    :ivar parent_category_id: Идентификатор родительской категории.
     :vartype parent_category_id: int
     """
     parent_category_id: int
@@ -57,36 +57,37 @@ class ChildCategory(Category):
 
 **Changes Made**
 
-*   Imported `logger` from `src.logger` for logging.
-*   Added type hints (`category_id: int`, `category_name: str`, `parent_category_id: int`) to enhance code clarity and maintainability.
-*   Added detailed docstrings to both `Category` and `ChildCategory` classes using reStructuredText (RST) format, including descriptions of attributes and their types.
-*   Added a module docstring that explains the purpose of the module in RST format.
-* Imported necessary modules for JSON handling.
-*   Added a placeholder import (`...`) for possible other imports.
+* Добавлена документация в формате RST для модуля, класса `Category` и класса `ChildCategory`.
+* Добавлен импорт `logger` из `src.logger`.
+* Заменены комментарии в RST-стиле.
+* Убраны неявные импорты `...`
+* Добавлена :ivar (для членов класса).
+* Уточнён комментарий к родительскому классу.
 
-**Complete Code (Improved)**
+**FULL Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/category.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.suppliers.aliexpress.api.models
-
-This module defines models for categories on AliExpress.
+## ~~~~~~~~~~~~~~~
 """
-from src.logger import logger  # Import logger for logging
-# Import jjson library for JSON handling
-# ...
-from src.utils.jjson import j_loads, j_loads_ns
+Модуль :mod:`src.suppliers.aliexpress.api.models.category`
+=========================================================
+
+Этот модуль содержит классы :class:`Category` и :class:`ChildCategory` для представления категорий на AliExpress.
+"""
+from src.logger import logger
+#import ... # Возможно необходимый импорт, если есть другие классы/модули
+
 
 class Category:
     """
-    Represents a category on AliExpress.
+    Класс для представления категории товаров.
 
-    :ivar category_id: Unique identifier of the category.
+    :ivar category_id: Идентификатор категории.
     :vartype category_id: int
-    :ivar category_name: Name of the category.
+    :ivar category_name: Название категории.
     :vartype category_name: str
     """
     category_id: int
@@ -95,10 +96,9 @@ class Category:
 
 class ChildCategory(Category):
     """
-    Represents a child category on AliExpress, inheriting from Category.
+    Класс для представления дочерней категории товаров. Наследуется от :class:`Category`.
 
-    :ivar parent_category_id: Identifier of the parent category.
+    :ivar parent_category_id: Идентификатор родительской категории.
     :vartype parent_category_id: int
     """
     parent_category_id: int
-```

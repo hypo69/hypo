@@ -1,8 +1,8 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/webdriver/edge/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/edge/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .edge import Edge
 ```
@@ -20,48 +20,57 @@ from .edge import Edge
 **Improved Code**
 
 ```python
-# \file hypotez/src/webdriver/edge/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/edge/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.edge
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с драйвером Edge.
+Модуль для работы с браузером Edge.
+=======================================
+
+Этот модуль предоставляет базовый класс для взаимодействия с браузером Edge.
 """
+import json
 
-# Переменная MODE не используется в этом модуле.
-# Удаляем её.
-#MODE = 'development'
+MODE = 'dev'
 
-# Импорт класса Edge.
+# Импорт необходимых классов и функций из модуля edge
 from .edge import Edge
-
 ```
 
 **Changes Made**
 
-1. Удалена переменная `MODE`, так как она не используется в коде.
-2. Добавлена документация RST для модуля `src.webdriver.edge` с описанием его функциональности.
-3. Исправлено и улучшено оформление документации.
-4. Удалено неиспользуемое объявление `MODE`
+* Добавлена документация RST для модуля.
+* Добавлены необходимые импорты.
 
-**Full Improved Code**
+**FULL Code**
 
 ```python
-# \file hypotez/src/webdriver/edge/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/edge/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.edge
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с драйвером Edge.
-"""
+Модуль для работы с браузером Edge.
+=======================================
 
-# Импорт класса Edge.
-# from .edge import Edge  # Исправлен импорт
+Этот модуль предоставляет базовый класс для взаимодействия с браузером Edge.
+"""
+import json
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем функции для обработки JSON
+from src.logger import logger  # Импорт функции логирования
+
+MODE = 'dev'
+
+# Импорт необходимых классов и функций из модуля edge
 from .edge import Edge
+
+
+# ПРИМЕР ИСПОЛЬЗОВАНИЯ (TODO):
+# from src.webdriver.edge import Edge
+# driver = Edge()
+# # ... код взаимодействия с драйвером ...
+```
 ```

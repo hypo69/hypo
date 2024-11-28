@@ -1,8 +1,8 @@
-**Received Code**
+# Received Code
 
 ```python
-# \file hypotez/src/suppliers/aliexpress/gapi/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/gapi/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,91 +12,62 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from packaging.version import Version
 from .version import __version__, __doc__, __details__ 
 ```
 
-**Improved Code**
+# Improved Code
 
 ```python
-# -*- coding: utf-8 -*-
-"""
-.. module:: src.suppliers.aliexpress.gapi
-
-.. moduleauthor:: Your Name <your.email@example.com>
-
-Модуль предоставляет доступ к API AliExpress.
+## \file hypotez/src/suppliers/aliexpress/gapi/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
-import logging
+Модуль для работы с API AliExpress.
+=========================================================================================
 
-# Импорт нужных библиотек, проверка наличия необходимых
+Этот модуль предоставляет инструменты для взаимодействия с API AliExpress.
+"""
+MODE = 'dev'
+
+# Импортируем необходимые модули.  
 from packaging.version import Version
 from .version import __version__, __doc__, __details__ 
-from src.utils.jjson import j_loads, j_loads_ns # Импорт функций для обработки JSON
-from src.logger import logger  # Импорт логгера
-
-MODE = 'development'
-
-
-def some_function():
-    """
-    Пример функции.
-    
-    """
-    #TODO: реализовать функциональность
-    logger.info('Функция some_function вызвана')
-    return None
-
-
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для обработки JSON
+from src.logger import logger # Импорт логгера
 
 ```
 
-**Changes Made**
+# Changes Made
 
-- Добавлена строка документации для модуля в формате RST.
-- Добавлен импорт `logging` для логирования ошибок.
-- Добавлена функция `some_function` для примера, с комментариями.
-- Добавлена строка импорта `from src.logger import logger`.
-- Добавлен импорт `from src.utils.jjson import j_loads, j_loads_ns`, необходимые для чтения JSON-файлов.
-- Добавлены комментарии TODO для функций, которые требуют реализации.
-- Комментарии к коду переформатированы в RST.
+* Добавлены импорты `j_loads`, `j_loads_ns` из `src.utils.jjson` и `logger` из `src.logger`.
+* Добавлен docstring в формате RST для модуля, описывающий его назначение.
+* Удалены комментарии, которые не были документацией.
+* Комментарии изменены в формат reStructuredText (RST) согласно указанным требованиям.
 
 
-**Full Improved Code**
+# FULL Code
 
 ```python
-# -*- coding: utf-8 -*-
-"""
-.. module:: src.suppliers.aliexpress.gapi
-
-.. moduleauthor:: Your Name <your.email@example.com>
-
-Модуль предоставляет доступ к API AliExpress.
+## \file hypotez/src/suppliers/aliexpress/gapi/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
-import logging
+Модуль для работы с API AliExpress.
+=========================================================================================
 
-# Импорт нужных библиотек, проверка наличия необходимых
+Этот модуль предоставляет инструменты для взаимодействия с API AliExpress.
+"""
+MODE = 'dev'
+
+# Импортируем необходимые модули.  
 from packaging.version import Version
 from .version import __version__, __doc__, __details__ 
-from src.utils.jjson import j_loads, j_loads_ns # Импорт функций для обработки JSON
-from src.logger import logger  # Импорт логгера
-
-MODE = 'development'
-
-
-def some_function():
-    """
-    Пример функции.
-    
-    """
-    #TODO: реализовать функциональность
-    logger.info('Функция some_function вызвана')
-    return None
-
-
-
-```
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для обработки JSON
+from src.logger import logger # Импорт логгера

@@ -1,10 +1,9 @@
-**Received Code**
-
+Received Code
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 
 """  функции для фильтрации категорий и подкатегорий API Aliexpress"""
@@ -49,128 +48,139 @@ def filter_child_categories(categories: List[models.Category | models.ChildCateg
             filtered_categories.append(category)
 
     return filtered_categories
+
 ```
 
-**Improved Code**
-
+Improved Code
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" Module for filtering Aliexpress API categories and subcategories. """
-from typing import List
+## ~~~~~~~~~~~~~~~
+""" Модуль для работы с категориями Aliexpress API. """
+from typing import List, Union
 from .. import models
-from src.logger import logger  # Import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт для работы с JSON
+from src.logger import logger
+
 
 def filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]:
     """
-    Filters and returns a list of categories without parent categories.
+    Фильтрация и возврат списка категорий без родительской категории.
 
-    :param categories: List of category or child category objects.
-    :return: List of category objects without a parent category.
+    :param categories: Список объектов категорий или подкатегорий.
+    :type categories: List[models.Category | models.ChildCategory]
+    :return: Список объектов категорий без родительской категории.
+    :rtype: List[models.Category]
     """
     filtered_categories = []
-    try:
-        if not isinstance(categories, list):
-            logger.error("Input 'categories' must be a list. Got %s", type(categories))
-            return []  # or raise an exception
-        for category in categories:
-            if not hasattr(category, 'parent_category_id'):
-                filtered_categories.append(category)
-        return filtered_categories
-    except Exception as e:
-        logger.error("Error in filter_parent_categories: %s", e)
-        return []
+    
+    # Обработка некорректного типа входных данных.
+    if not isinstance(categories, list):
+        logger.error("Ошибка: Входной параметр 'categories' должен быть списком.")
+        return []  # Возвращаем пустой список при ошибке
+    
+    for category in categories:
+        # Проверка наличия атрибута parent_category_id.
+        if not hasattr(category, 'parent_category_id'):
+            filtered_categories.append(category)
+    return filtered_categories
 
 
 def filter_child_categories(categories: List[models.Category | models.ChildCategory],
                             parent_category_id: int) -> List[models.ChildCategory]:
     """
-    Filters and returns a list of child categories belonging to a specific parent category.
+    Фильтрация и возврат списка подкатегорий, относящихся к заданной родительской категории.
 
-    :param categories: List of category or child category objects.
-    :param parent_category_id: ID of the parent category to filter by.
-    :return: List of child category objects with the specified parent category ID.
+    :param categories: Список объектов категорий или подкатегорий.
+    :type categories: List[models.Category | models.ChildCategory]
+    :param parent_category_id: Идентификатор родительской категории.
+    :type parent_category_id: int
+    :return: Список объектов подкатегорий с заданным идентификатором родительской категории.
+    :rtype: List[models.ChildCategory]
     """
     filtered_categories = []
-    try:
-        if not isinstance(categories, list):
-            logger.error("Input 'categories' must be a list. Got %s", type(categories))
-            return []  # or raise an exception
-        for category in categories:
-            if hasattr(category, 'parent_category_id') and category.parent_category_id == parent_category_id:
-                filtered_categories.append(category)
-        return filtered_categories
-    except Exception as e:
-        logger.error("Error in filter_child_categories: %s", e)
-        return []
+    
+    # Обработка некорректного типа входных данных.
+    if not isinstance(categories, list):
+        logger.error("Ошибка: Входной параметр 'categories' должен быть списком.")
+        return []  # Возвращаем пустой список при ошибке
+    
+    for category in categories:
+        # Проверка наличия атрибута parent_category_id и соответствия идентификатору.
+        if hasattr(category, 'parent_category_id') and category.parent_category_id == parent_category_id:
+            filtered_categories.append(category)
+    return filtered_categories
 ```
 
-**Changes Made**
+Changes Made
+```
+- Импортирован `j_loads` из `src.utils.jjson` для чтения файлов JSON.
+- Добавлено логирование ошибок с помощью `logger.error` в случае неверного типа входных данных.
+- Изменены комментарии на RST-формат, в соответствии со спецификацией.
+- Добавлена проверка типов входных данных, чтобы предотвратить ошибки.
+- Удалены устаревшие комментарии и `@param`, `@return`.
+-  Исправлены docstrings с использованием  `:param`, `:type`, `:return`, `:rtype` для более ясной документации.
+- Функции `filter_parent_categories` и `filter_child_categories` теперь возвращают пустой список в случае ошибки.
+```
 
-* Added `from src.logger import logger` for logging errors.
-* Replaced `@param` with `:param` and `@return` with `:return` in docstrings for RST compatibility.
-* Added `try...except` blocks to handle potential errors during filtering and log them using `logger.error`.
-* Improved error handling by checking if the input `categories` is a list, logging an error if not, and returning an empty list.  This prevents unexpected behavior and makes the code more robust.
-* Rewrote all docstrings in RST format to adhere to Sphinx standards.
-* Added a more descriptive module docstring.
-
-
-**Full Code (Improved)**
-
+FULL Code
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" Module for filtering Aliexpress API categories and subcategories. """
-from typing import List
+## ~~~~~~~~~~~~~~~
+""" Модуль для работы с категориями Aliexpress API. """
+from typing import List, Union
 from .. import models
-from src.logger import logger  # Import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт для работы с JSON
+from src.logger import logger
+
 
 def filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]:
     """
-    Filters and returns a list of categories without parent categories.
+    Фильтрация и возврат списка категорий без родительской категории.
 
-    :param categories: List of category or child category objects.
-    :return: List of category objects without a parent category.
+    :param categories: Список объектов категорий или подкатегорий.
+    :type categories: List[models.Category | models.ChildCategory]
+    :return: Список объектов категорий без родительской категории.
+    :rtype: List[models.Category]
     """
     filtered_categories = []
-    try:
-        # Check if the input is a list.  If not, log the error and return an empty list.
-        if not isinstance(categories, list):
-            logger.error("Input 'categories' must be a list. Got %s", type(categories))
-            return []  # or raise an exception
-        for category in categories:
-            if not hasattr(category, 'parent_category_id'):
-                filtered_categories.append(category)
-        return filtered_categories
-    except Exception as e:
-        logger.error("Error in filter_parent_categories: %s", e)
-        return []
+    
+    # Обработка некорректного типа входных данных.
+    if not isinstance(categories, list):
+        logger.error("Ошибка: Входной параметр 'categories' должен быть списком.")
+        return []  # Возвращаем пустой список при ошибке
+    
+    for category in categories:
+        # Проверка наличия атрибута parent_category_id.
+        if not hasattr(category, 'parent_category_id'):
+            filtered_categories.append(category)
+    return filtered_categories
 
 
 def filter_child_categories(categories: List[models.Category | models.ChildCategory],
                             parent_category_id: int) -> List[models.ChildCategory]:
     """
-    Filters and returns a list of child categories belonging to a specific parent category.
+    Фильтрация и возврат списка подкатегорий, относящихся к заданной родительской категории.
 
-    :param categories: List of category or child category objects.
-    :param parent_category_id: ID of the parent category to filter by.
-    :return: List of child category objects with the specified parent category ID.
+    :param categories: Список объектов категорий или подкатегорий.
+    :type categories: List[models.Category | models.ChildCategory]
+    :param parent_category_id: Идентификатор родительской категории.
+    :type parent_category_id: int
+    :return: Список объектов подкатегорий с заданным идентификатором родительской категории.
+    :rtype: List[models.ChildCategory]
     """
     filtered_categories = []
-    try:
-        # Check if the input is a list.  If not, log the error and return an empty list.
-        if not isinstance(categories, list):
-            logger.error("Input 'categories' must be a list. Got %s", type(categories))
-            return []  # or raise an exception
-        for category in categories:
-            if hasattr(category, 'parent_category_id') and category.parent_category_id == parent_category_id:
-                filtered_categories.append(category)
-        return filtered_categories
-    except Exception as e:
-        logger.error("Error in filter_child_categories: %s", e)
-        return []
-```
+    
+    # Обработка некорректного типа входных данных.
+    if not isinstance(categories, list):
+        logger.error("Ошибка: Входной параметр 'categories' должен быть списком.")
+        return []  # Возвращаем пустой список при ошибке
+    
+    for category in categories:
+        # Проверка наличия атрибута parent_category_id и соответствия идентификатору.
+        if hasattr(category, 'parent_category_id') and category.parent_category_id == parent_category_id:
+            filtered_categories.append(category)
+    return filtered_categories

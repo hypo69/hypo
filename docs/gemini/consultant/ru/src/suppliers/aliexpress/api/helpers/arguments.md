@@ -1,26 +1,25 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.helpers """
 
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException
 
-
 def get_list_as_string(value):
     if value is None:
         return
-
+    
     if isinstance(value, str):
         return value
-
+    
     elif isinstance(value, list):
         return ','.join(value)
-
+    
     else:
         raise InvalidArgumentException('Argument should be a list or string: ' + str(value))
 
@@ -42,57 +41,48 @@ def get_product_ids(values):
 **Improved Code**
 
 ```python
-# \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
-# -*- coding: utf-8 -*-
-"""
-Helper functions for argument validation and processing.
-"""
-from src.logger import logger
+## \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~\
+""" Модуль для работы с аргументами при взаимодействии с API AliExpress. """
+
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException
-import json
+from src.logger import logger # Импорт логгера
 
 def get_list_as_string(value):
-    """
-    Converts a list to a comma-separated string, or returns the input string as-is.
-    Handles None values gracefully.
-
-    :param value: Input value (string or list).
-    :type value: str or list
-    :raises InvalidArgumentException: if input is not a string or list.
-    :return:  Comma-separated string or input string, or None if input is None.
-    :rtype: str or None
+    """ Преобразует список или строку в строку, разделенную запятыми.
+    
+    :param value: Значение для преобразования. Может быть строкой или списком.
+    :raises InvalidArgumentException: Если значение не является строкой или списком.
+    :return: Строковое представление значения, разделенного запятыми, или None, если значение None.
     """
     if value is None:
-        return None  # Return None for None input
-
+        return
+    # Проверка типа входного значения
     if isinstance(value, str):
         return value
     elif isinstance(value, list):
-        return ','.join(value)
+        return ','.join(map(str, value)) # Преобразование элементов списка в строки для корректного объединения
     else:
-        logger.error("Invalid argument type for get_list_as_string: %s", type(value))
-        raise InvalidArgumentException(f"Argument should be a string or list, but got {type(value)}")
+        logger.error('Неверный тип аргумента для get_list_as_string: %s', type(value))
+        raise InvalidArgumentException('Аргумент должен быть строкой или списком.')
 
 
 def get_product_ids(values):
+    """ Преобразует строку или список в список идентификаторов продуктов.
+    
+    :param values: Список или строка с идентификаторами продуктов, разделенными запятыми.
+    :raises InvalidArgumentException: Если входной параметр не является строкой или списком.
+    :return: Список идентификаторов продуктов.
     """
-    Extracts product IDs from a string or list of product identifiers.
-
-    :param values:  String or list of product identifiers (e.g., 'id1,id2,id3' or ['id1','id2','id3']).
-    :type values: str or list
-    :raises InvalidArgumentException: if input is not a string or list.
-    :return: List of extracted product IDs.
-    :rtype: list
-    """
-    if values is None:
-        return []  # Return empty list for None input
-
     if isinstance(values, str):
         values = values.split(',')
+    # Обработка ошибки некорректного типа входных данных
     elif not isinstance(values, list):
-        logger.error("Invalid argument type for get_product_ids: %s", type(values))
-        raise InvalidArgumentException(f"Argument should be a string or list, but got {type(values)}")
+        logger.error('Неверный тип аргумента для get_product_ids: %s', type(values))
+        raise InvalidArgumentException('Аргумент product_ids должен быть строкой или списком.')
 
     product_ids = []
     for value in values:
@@ -100,80 +90,65 @@ def get_product_ids(values):
             product_id = get_product_id(value)
             product_ids.append(product_id)
         except Exception as e:
-            logger.error("Error processing product ID '%s': %s", value, e)
-            # Optionally re-raise or handle the specific exception type
-            # raise  # Re-raise the exception
-            pass #Ignore invalid IDs
+            logger.error('Ошибка при получении идентификатора продукта: %s, значение: %s', e, value)
 
     return product_ids
-
 ```
 
 **Changes Made**
 
-* Added type hints (`:param`, `:type`, `:return`, `:rtype`) to functions for better readability and type checking.
-* Replaced `json.load` with `j_loads` (assuming it's from `src.utils.jjson`) and added `import json` for robustness (in case it's not used).
-* Added docstrings in reStructuredText format to all functions for better documentation.
-* Introduced `logger.error` for error handling instead of relying on exceptions for all cases. This allows more informative error messages and prevents unnecessary exception handling in calling code.
-* Added `try...except` block in `get_product_ids` to handle potential errors during `get_product_id` calls.
-* Improved error messages using f-strings for clarity and information about the actual input value.
-* Fixed potential `None` value issue in both functions. Added handling for `None` input by returning `None` or an appropriate default (empty list in `get_product_ids`).
-* Removed redundant comments and improved formatting.
+*   Добавлен импорт `from src.logger import logger`.
+*   Добавлены docstring в формате RST для функций `get_list_as_string` и `get_product_ids`.
+*   Изменен способ обработки списка в `get_list_as_string`, теперь элементы списка преобразуются в строки, что гарантирует корректное объединение.
+*   Добавлен блок `try-except` в `get_product_ids` для перехвата и логирования ошибок при вызове `get_product_id`.
+*   Комментарии изменены на RST формат.
+*   Добавлены более информативные сообщения об ошибках в `logger.error`.
 
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
-# \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
-# -*- coding: utf-8 -*-
-"""
-Helper functions for argument validation and processing.
-"""
-from src.logger import logger
+## \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~\
+""" Модуль для работы с аргументами при взаимодействии с API AliExpress. """
+
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException
-import json #Added for completeness
+from src.logger import logger # Импорт логгера
 
 def get_list_as_string(value):
-    """
-    Converts a list to a comma-separated string, or returns the input string as-is.
-    Handles None values gracefully.
-
-    :param value: Input value (string or list).
-    :type value: str or list
-    :raises InvalidArgumentException: if input is not a string or list.
-    :return:  Comma-separated string or input string, or None if input is None.
-    :rtype: str or None
+    """ Преобразует список или строку в строку, разделенную запятыми.
+    
+    :param value: Значение для преобразования. Может быть строкой или списком.
+    :raises InvalidArgumentException: Если значение не является строкой или списком.
+    :return: Строковое представление значения, разделенного запятыми, или None, если значение None.
     """
     if value is None:
-        return None  # Return None for None input
-
+        return
+    # Проверка типа входного значения
     if isinstance(value, str):
         return value
     elif isinstance(value, list):
-        return ','.join(value)
+        return ','.join(map(str, value)) # Преобразование элементов списка в строки для корректного объединения
     else:
-        logger.error("Invalid argument type for get_list_as_string: %s", type(value))
-        raise InvalidArgumentException(f"Argument should be a string or list, but got {type(value)}")
+        logger.error('Неверный тип аргумента для get_list_as_string: %s', type(value))
+        raise InvalidArgumentException('Аргумент должен быть строкой или списком.')
 
 
 def get_product_ids(values):
+    """ Преобразует строку или список в список идентификаторов продуктов.
+    
+    :param values: Список или строка с идентификаторами продуктов, разделенными запятыми.
+    :raises InvalidArgumentException: Если входной параметр не является строкой или списком.
+    :return: Список идентификаторов продуктов.
     """
-    Extracts product IDs from a string or list of product identifiers.
-
-    :param values:  String or list of product identifiers (e.g., 'id1,id2,id3' or ['id1','id2','id3']).
-    :type values: str or list
-    :raises InvalidArgumentException: if input is not a string or list.
-    :return: List of extracted product IDs.
-    :rtype: list
-    """
-    if values is None:
-        return []  # Return empty list for None input
-
     if isinstance(values, str):
         values = values.split(',')
+    # Обработка ошибки некорректного типа входных данных
     elif not isinstance(values, list):
-        logger.error("Invalid argument type for get_product_ids: %s", type(values))
-        raise InvalidArgumentException(f"Argument should be a string or list, but got {type(values)}")
+        logger.error('Неверный тип аргумента для get_product_ids: %s', type(values))
+        raise InvalidArgumentException('Аргумент product_ids должен быть строкой или списком.')
 
     product_ids = []
     for value in values:
@@ -181,10 +156,6 @@ def get_product_ids(values):
             product_id = get_product_id(value)
             product_ids.append(product_id)
         except Exception as e:
-            logger.error("Error processing product ID '%s': %s", value, e)
-            # Optionally re-raise or handle the specific exception type
-            # raise  # Re-raise the exception
-            pass #Ignore invalid IDs
+            logger.error('Ошибка при получении идентификатора продукта: %s, значение: %s', e, value)
 
     return product_ids
-```

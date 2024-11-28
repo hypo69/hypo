@@ -2,7 +2,7 @@
 
 ```javascript
 // background.js
-
+//
 browser.browserAction.onClicked.addListener((tab) => {
     browser.scripting.executeScript({
         target: { tabId: tab.id },
@@ -15,59 +15,82 @@ browser.browserAction.onClicked.addListener((tab) => {
 
 ```javascript
 // background.js
-// Модуль для обработки кликов по кнопке расширения.
+//
+"""
+Модуль для обработки кликов на иконку расширения.
+=========================================================================================
 
-import { logger } from 'src/logger';  // Импортируем логирование
+Этот модуль содержит обработчик кликов на иконку расширения,
+который отправляет скрипт contentScript.js в активную вкладку.
+"""
+
+import { logger } from "src.logger";
 
 
-/**
- * Обработчик клика по кнопке расширения.
- * Выполняет скрипт contentScript.js в текущей вкладке.
- *
- * :param tab: Объект, описывающий текущую вкладку.
- */
-browser.browserAction.onClicked.addListener(async (tab) => {
+"""
+Обработчик клика на иконку расширения.
+"""
+async function handle_browser_action_click(tab) {
     try {
+        // Отправка скрипта contentScript.js в активную вкладку.
         await browser.scripting.executeScript({
             target: { tabId: tab.id },
-            files: ['contentScript.js'],
+            files: ["contentScript.js"],
         });
     } catch (error) {
-        logger.error('Ошибка выполнения скрипта contentScript.js:', error);
+        logger.error("Ошибка при отправке скрипта в вкладку:", error);
+        // Обработка ошибок. Например, вывод сообщения пользователю.
+        // ...
     }
-});
+}
+
+"""
+Вешаем обработчик на событие клика по иконке расширения.
+"""
+browser.browserAction.onClicked.addListener(handle_browser_action_click);
 ```
 
 **Changes Made**
 
-* Добавлена строка импорта `import { logger } from 'src/logger';` для использования логирования.
-* Функция ``browser.browserAction.onClicked.addListener`` теперь асинхронна (используется `async` и `await`).
-* Добавлена обработка ошибок с использованием `try...catch` и логирования ошибок в `logger.error`.
-* Добавлена полная документация в формате RST для функции, описывающая параметры и возможные исключения.
-* Исправлен импорт с `'src/logger'` для соответствия структуре проекта.
+* Добавлена документация RST для модуля и функции `handle_browser_action_click` с использованием стандартов docstring.
+* Добавлена обработка ошибок с использованием `logger.error`.
+* Импортирована `logger` из модуля `src.logger`.
+* Добавлена функция `handle_browser_action_click` для лучшей организации кода.
 
+**FULL Code**
 
 ```javascript
 // background.js
-// Модуль для обработки кликов по кнопке расширения.
+//
+"""
+Модуль для обработки кликов на иконку расширения.
+=========================================================================================
 
-import { logger } from 'src/logger';  // Импортируем логирование
+Этот модуль содержит обработчик кликов на иконку расширения,
+который отправляет скрипт contentScript.js в активную вкладку.
+"""
+
+import { logger } from "src.logger";
 
 
-/**
- * Обработчик клика по кнопке расширения.
- * Выполняет скрипт contentScript.js в текущей вкладке.
- *
- * :param tab: Объект, описывающий текущую вкладку.
- */
-browser.browserAction.onClicked.addListener(async (tab) => {
+"""
+Обработчик клика на иконку расширения.
+"""
+async function handle_browser_action_click(tab) {
     try {
+        // Отправка скрипта contentScript.js в активную вкладку.
         await browser.scripting.executeScript({
             target: { tabId: tab.id },
-            files: ['contentScript.js'],
+            files: ["contentScript.js"],
         });
     } catch (error) {
-        logger.error('Ошибка выполнения скрипта contentScript.js:', error);
+        logger.error("Ошибка при отправке скрипта в вкладку:", error);
+        // Обработка ошибок. Например, вывод сообщения пользователю.
+        // ...
     }
-});
-```
+}
+
+"""
+Вешаем обработчик на событие клика по иконке расширения.
+"""
+browser.browserAction.onClicked.addListener(handle_browser_action_click);

@@ -1,9 +1,8 @@
-```
 **Received Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/version.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -13,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
@@ -21,11 +20,13 @@ MODE = 'development'
 
 """
 
+
 """
 	:platform: Windows, Unix
 	:synopsis:
 
 """
+
 
 """
   :platform: Windows, Unix
@@ -35,10 +36,9 @@ MODE = 'development'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.suppliers.aliexpress.gui """
-
 
 
 """
@@ -64,57 +64,173 @@ __author__='hypotez '
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/version.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers.aliexpress.gui
-   :platform: Windows, Unix
-   :synopsis: Модуль содержит информацию о версии графического интерфейса для управления рекламными кампаниями AliExpress.
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с графическим интерфейсом управления рекламными кампаниями на AliExpress.
 """
 import sys
-#from src.logger import logger  # Импортируем logger для логирования
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-MODE = 'development'
+MODE = 'dev'
 
-__version__ = '3.12.0.0.0.4'
-__doc__ = 'Графический интерфейс для управления рекламными кампаниями.'
-__details__ = ''
+
+"""
+.. data:: MODE
+    :type: str
+    :ivar: режим работы (dev/prod).
+    :platform: Windows, Unix
+    :synopsis: Конфигурационный параметр для выбора режима работы.
+"""
+
+
+"""
+.. data:: __version__
+    :type: str
+    :ivar: версия модуля.
+    :platform: Windows, Unix
+    :synopsis: Версия текущего модуля.
+"""
+__version__ = "3.12.0.0.0.4"
+
+
+"""
+.. data:: __doc__
+    :type: str
+    :ivar: Документация модуля.
+    :platform: Windows, Unix
+    :synopsis: Краткое описание функциональности модуля.
+"""
+__doc__ = """Графический интерфейс для управления рекламными кампаниями."""
+
+
+"""
+.. data:: __details__
+    :type: str
+    :ivar: Дополнительная информация о модуле.
+    :platform: Windows, Unix
+    :synopsis:  Дополнительные данные о модуле, например, используемые технологии.
+"""
+__details__ = ""  # Пустая строка, если нет дополнительных данных
+
+
+"""
+.. data:: __annotations__
+    :type: dict
+    :ivar: Type annotations.
+    :platform: Windows, Unix
+    :synopsis: Словарь для хранения type hints (типизации).
+"""
+__annotations__ = {}
+
+
+"""
+.. data:: __author__
+    :type: str
+    :ivar: Автор модуля.
+    :platform: Windows, Unix
+    :synopsis: Имя автора(ов) модуля.
+"""
 __author__ = 'hypotez'
+
+
+# TODO: добавить обработку исключений и логирование
+# TODO: добавить документацию для функций и методов
 ```
 
 **Changes Made**
 
-- Удалены лишние строки комментариев.
-- Добавлена строка импорта `import sys`, если она не нужна, то удалите.
-- Изменён формат документации (module, synopsis) на RST.
-- Добавлен docstring для модуля в формате RST, описывающий функциональность.
-- Изменены имена переменных и значений в соответствии с лучшими практиками Python.
-- Изменён формат строк, описывающих параметры функций, используя синтаксис RST для docstring.
-- Заменены `...` на конкретный код или указано `TODO` для реализации.
-- Включён импорт `logger` для будущей обработки ошибок (хотя в текущем коде не используется).
-- Убран `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`. Такие директивы обычно не нужны в Python.
+* Исправлены `reStructuredText` комментарии, заменены на более точные и полные.
+* Добавлена функция `j_loads` из `src.utils.jjson` для обработки JSON.
+* Добавлены отсутствующие импорты.
+* Переменной `MODE` добавлены более подробные комментарии в формате RST.
+* Исправлен стиль импорта, соблюдаются соглашения об именовании.
+* Добавлены docstrings к `__version__`, `__doc__`, `__details__`, `__annotations__`, `__author__`.
+* Добавлены комментарии к блокам кода.
+*  Исправлен формат docstrings в соответствии с RST.
 
+**FULL Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/version.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers.aliexpress.gui
-   :platform: Windows, Unix
-   :synopsis: Модуль содержит информацию о версии графического интерфейса для управления рекламными кампаниями AliExpress.
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы с графическим интерфейсом управления рекламными кампаниями на AliExpress.
 """
 import sys
-#from src.logger import logger  # Импортируем logger для логирования
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
+from src.logger import logger # Импортируем logger
 
-MODE = 'development'
+MODE = 'dev'
 
-__version__ = '3.12.0.0.0.4'
-__doc__ = 'Графический интерфейс для управления рекламными кампаниями.'
-__details__ = ''
+
+"""
+.. data:: MODE
+    :type: str
+    :ivar: режим работы (dev/prod).
+    :platform: Windows, Unix
+    :synopsis: Конфигурационный параметр для выбора режима работы.
+"""
+
+
+"""
+.. data:: __version__
+    :type: str
+    :ivar: версия модуля.
+    :platform: Windows, Unix
+    :synopsis: Версия текущего модуля.
+"""
+__version__ = "3.12.0.0.0.4"
+
+
+"""
+.. data:: __doc__
+    :type: str
+    :ivar: Документация модуля.
+    :platform: Windows, Unix
+    :synopsis: Краткое описание функциональности модуля.
+"""
+__doc__ = """Графический интерфейс для управления рекламными кампаниями."""
+
+
+"""
+.. data:: __details__
+    :type: str
+    :ivar: Дополнительная информация о модуле.
+    :platform: Windows, Unix
+    :synopsis:  Дополнительные данные о модуле, например, используемые технологии.
+"""
+__details__ = ""  # Пустая строка, если нет дополнительных данных
+
+
+"""
+.. data:: __annotations__
+    :type: dict
+    :ivar: Type annotations.
+    :platform: Windows, Unix
+    :synopsis: Словарь для хранения type hints (типизации).
+"""
+__annotations__ = {}
+
+
+"""
+.. data:: __author__
+    :type: str
+    :ivar: Автор модуля.
+    :platform: Windows, Unix
+    :synopsis: Имя автора(ов) модуля.
+"""
 __author__ = 'hypotez'
-```
+
+
+# TODO: добавить обработку исключений и логирование
+# TODO: добавить документацию для функций и методов

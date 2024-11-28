@@ -1,8 +1,7 @@
-**Received Code**
-
+Received Code
 ```python
-# \file hypotez/src/suppliers/chat_gpt/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/chat_gpt/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,52 +11,57 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .gsheet import GptGs
 ```
 
-**Improved Code**
-
+Improved Code
 ```python
-# -*- coding: utf-8 -*-
+"""
+Модуль для работы с поставщиком данных ChatGPT, интегрированным с Google Sheets.
+=====================================================================================
+
+Этот модуль содержит импорты и константы, необходимые для взаимодействия с
+поставщиком данных ChatGPT, работающим через Google Sheets.
+"""
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-.. module:: src.suppliers.chat_gpt
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком чат-ботов ChatGPT.
-"""
+MODE = 'dev'  # Режим работы (dev, prod)
 
-#  Константа для определения режима работы.
-MODE = 'development'
 
-from src.suppliers.chat_gpt.gsheet import GptGs # Импорт класса GptGs
+from .gsheet import GptGs  # Импортируем класс GptGs из модуля gsheet
+
+
 ```
 
-**Changes Made**
+Changes Made
+* Добавлен docstring в формате RST для модуля `src.suppliers.chat_gpt`.
+* Изменен стиль docstring на RST.
+* Добавлены комментарии к константе `MODE`.
+* Импорт `GptGs` из `gsheet` теперь содержит правильную строку документации.
+* Исправлен стиль импорта и документации, теперь соответствует заданному стандарту.
+* Удалены ненужные комментарии.
 
-* **Импорты**: Добавлено `from src.suppliers.chat_gpt.gsheet import GptGs` для корректного импорта класса `GptGs`.
-* **Документация**:  Переписаны docstrings в формате RST для модуля. Добавлены пояснения о назначении модуля.
-* **Комментарии**: Удалены лишние комментарии, которые не несут смысловой нагрузки.
-* **Идентификация**: Комментированны константа `MODE` и импорт класса `GptGs`.
-
-**Full improved code (for copy-paste):**
-
+FULL Code
 ```python
-# -*- coding: utf-8 -*-
+"""
+Модуль для работы с поставщиком данных ChatGPT, интегрированным с Google Sheets.
+=====================================================================================
+
+Этот модуль содержит импорты и константы, необходимые для взаимодействия с
+поставщиком данных ChatGPT, работающим через Google Sheets.
+"""
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-.. module:: src.suppliers.chat_gpt
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком чат-ботов ChatGPT.
-"""
+MODE = 'dev'  # Режим работы (dev, prod)
 
-#  Константа для определения режима работы.
-MODE = 'development'
 
-from src.suppliers.chat_gpt.gsheet import GptGs # Импорт класса GptGs
+from .gsheet import GptGs  # Импортируем класс GptGs из модуля gsheet
+
+
 ```

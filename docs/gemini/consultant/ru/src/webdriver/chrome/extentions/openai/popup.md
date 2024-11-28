@@ -1,8 +1,8 @@
-**Received Code**
+# Received Code
 
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/openai/popup.html
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 
 """ module: src.webdriver.chrome.extentions.openai """
@@ -18,7 +18,7 @@ MODE = 'debug'
 </head>
 <body ng-app="openaiApp" ng-controller="MainController">
     <h1>OpenAI Model Interface</h1>
-    
+
     <!-- Навигационные вкладки -->
     <ul class="tabs">
         <li ng-class="{active: isTabActive('chat')}" ng-click="setActiveTab('chat')">Chat</li>
@@ -62,16 +62,18 @@ MODE = 'debug'
 </html>
 ```
 
-**Improved Code**
+# Improved Code
 
 ```html
-<!-- \file hypotez/src/webdriver/chrome/extentions/openai/popup.html -->
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/chrome/extentions/openai/popup.html
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 
-"""
-HTML-шаблон для интерфейса взаимодействия с моделью OpenAI.
-Осуществляет отображение и управление вкладками "Чат" и "Модель".
+"""HTML интерфейс для взаимодействия с моделью OpenAI.
+
+Представляет собой страницу с навигационными вкладками для чата
+и управления моделью. Содержит поля для ввода сообщений,
+выбора ассистента и данных для обучения модели.
 """
 MODE = 'debug'
 <!DOCTYPE html>
@@ -85,14 +87,14 @@ MODE = 'debug'
 </head>
 <body ng-app="openaiApp" ng-controller="MainController">
     <h1>OpenAI Model Interface</h1>
-    
+
     <!-- Навигационные вкладки -->
     <ul class="tabs">
         <li ng-class="{active: isTabActive('chat')}" ng-click="setActiveTab('chat')">Чат</li>
         <li ng-class="{active: isTabActive('model')}" ng-click="setActiveTab('model')">Модель</li>
     </ul>
 
-    <!-- Содержимое вкладки 'Чат' -->
+    <!-- Содержимое вкладки 'Chat' -->
     <div ng-show="isTabActive('chat')">
         <h2>Чат с моделью</h2>
         <!-- Выпадающий список ассистентов -->
@@ -112,14 +114,14 @@ MODE = 'debug'
         </div>
     </div>
 
-    <!-- Содержимое вкладки 'Модель' -->
+    <!-- Содержимое вкладки 'Model' -->
     <div ng-show="isTabActive('model')">
         <h2>Обучение и статус модели</h2>
         <p>Здесь можно начать обучение или проверить статус модели.</p>
 
-        <!-- Поле для ввода обучающих данных -->
-        <label for="data">Обучающие данные:</label>
-        <textarea id="data" ng-model="trainingData" placeholder="Введите обучающие данные"></textarea>
+        <!-- Поле для ввода данных обучения -->
+        <label for="data">Данные для обучения:</label>
+        <textarea id="data" ng-model="trainingData" placeholder="Введите данные для обучения"></textarea>
         <button ng-click="trainModel()">Обучить</button>
 
         <h3>Статус обучения:</h3>
@@ -129,23 +131,25 @@ MODE = 'debug'
 </html>
 ```
 
-**Changes Made**
+# Changes Made
 
-*   Добавлены RST-комментарии к файлу и к функциям.
-*   Изменены имена кнопок и элементов на русский язык.
-*   Добавлены комментарии к элементам.
+* Изменены названия вкладок на более точные: "Чат" и "Модель".
+* Изменены подписи элементов на более точные и понятные формулировки.
+* Добавлены комментарии, описывающие назначение файла и его структуру.
+* Исправлены некоторые стилистические моменты.
 
-
-**Full Code (Improved)**
+# FULL Code
 
 ```html
-<!-- \file hypotez/src/webdriver/chrome/extentions/openai/popup.html -->
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/chrome/extentions/openai/popup.html
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 
-"""
-HTML-шаблон для интерфейса взаимодействия с моделью OpenAI.
-Осуществляет отображение и управление вкладками "Чат" и "Модель".
+"""HTML интерфейс для взаимодействия с моделью OpenAI.
+
+Представляет собой страницу с навигационными вкладками для чата
+и управления моделью. Содержит поля для ввода сообщений,
+выбора ассистента и данных для обучения модели.
 """
 MODE = 'debug'
 <!DOCTYPE html>
@@ -159,14 +163,14 @@ MODE = 'debug'
 </head>
 <body ng-app="openaiApp" ng-controller="MainController">
     <h1>OpenAI Model Interface</h1>
-    
+
     <!-- Навигационные вкладки -->
     <ul class="tabs">
         <li ng-class="{active: isTabActive('chat')}" ng-click="setActiveTab('chat')">Чат</li>
         <li ng-class="{active: isTabActive('model')}" ng-click="setActiveTab('model')">Модель</li>
     </ul>
 
-    <!-- Содержимое вкладки 'Чат' -->
+    <!-- Содержимое вкладки 'Chat' -->
     <div ng-show="isTabActive('chat')">
         <h2>Чат с моделью</h2>
         <!-- Выпадающий список ассистентов -->
@@ -186,14 +190,14 @@ MODE = 'debug'
         </div>
     </div>
 
-    <!-- Содержимое вкладки 'Модель' -->
+    <!-- Содержимое вкладки 'Model' -->
     <div ng-show="isTabActive('model')">
         <h2>Обучение и статус модели</h2>
         <p>Здесь можно начать обучение или проверить статус модели.</p>
 
-        <!-- Поле для ввода обучающих данных -->
-        <label for="data">Обучающие данные:</label>
-        <textarea id="data" ng-model="trainingData" placeholder="Введите обучающие данные"></textarea>
+        <!-- Поле для ввода данных обучения -->
+        <label for="data">Данные для обучения:</label>
+        <textarea id="data" ng-model="trainingData" placeholder="Введите данные для обучения"></textarea>
         <button ng-click="trainModel()">Обучить</button>
 
         <h3>Статус обучения:</h3>
@@ -201,4 +205,3 @@ MODE = 'debug'
     </div>
 </body>
 </html>
-```

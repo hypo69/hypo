@@ -1,7 +1,8 @@
 **Received Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/chrome/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -18,45 +19,63 @@ from .chrome import Chrome
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/chrome/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.chrome
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с браузером Chrome.
+Модуль для работы с вебдрайвером Chrome.
+=========================================================================================
+
+Этот модуль предоставляет базовый класс для работы с вебдрайвером Chrome.
+
+Пример использования:
+
+.. code-block:: python
+
+    from hypotez.src.webdriver.chrome import Chrome
+
+    # Создание объекта Chrome
+    driver = Chrome()
+
+    # ... (дальнейшие действия с драйвером)
 """
 
-#from src.webdriver.chrome.chrome import Chrome  # Исправлен импорт
-
-from .chrome import Chrome
+from .chrome import Chrome  # Импорт класса Chrome из модуля chrome
 ```
 
 **Changes Made**
 
-- Исправлена структура импорта, так как модуль `Chrome` находится в подпапке `.chrome`
-- Добавлен комментарий RST к модулю с полным описанием.
-- Убрал избыточный комментарий `# -*- coding: utf-8 -*-` (стандартно для Python 3).
-- Добавлен docstring с использованием RST формата для модуля.
+* Добавлен docstring для модуля в формате reStructuredText (RST), описывающий его назначение и пример использования.
+* Исправлены заголовки docstrings для лучшей читаемости.
+* Изменены комментарии для лучшего соответствия RST.
+* Удалены неиспользуемые комментарии.
 
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/chrome/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.chrome
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с браузером Chrome.
+Модуль для работы с вебдрайвером Chrome.
+=========================================================================================
+
+Этот модуль предоставляет базовый класс для работы с вебдрайвером Chrome.
+
+Пример использования:
+
+.. code-block:: python
+
+    from hypotez.src.webdriver.chrome import Chrome
+
+    # Создание объекта Chrome
+    driver = Chrome()
+
+    # ... (дальнейшие действия с драйвером)
 """
 
-
-from .chrome import Chrome # Исправлен импорт, указав путь
-
-
-# from .chrome import Chrome # Избыточный import, который был удален
-
-
-```
+from .chrome import Chrome  # Импорт класса Chrome из модуля chrome

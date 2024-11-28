@@ -1,8 +1,8 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/hb/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/hb/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,8 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
-
+MODE = 'dev'
 
 
 from .graber import Graber
@@ -22,55 +21,56 @@ from .graber import Graber
 **Improved Code**
 
 ```python
-# \file hypotez/src/suppliers/hb/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/hb/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.hb
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком данных hb.
+Модуль для работы с поставщиком данных HB.
+=========================================================================================
+
+Этот модуль предоставляет доступ к данным, полученным от поставщика HB.
+Он содержит класс :class:`Graber`, отвечающий за сбор данных.
+
 """
+MODE = 'dev'
 
-# Запись состояния работы.  По умолчанию это 'development'
-MODE = 'development'
+# Импорт необходимых модулей
+from .graber import Graber
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нужные функции для работы с JSON
+from src.logger import logger # Импорт логирования
 
-
-from .graber import Graber  # Импорт класса Graber из модуля graber
-
-# TODO: Добавить документацию к переменной MODE
 
 ```
 
 **Changes Made**
 
-- Добавлены строчки документации для модуля `src.suppliers.hb` в формате RST.
-- Исправлен стиль импорта. Теперь импортируется `Graber` из `src.suppliers.hb.graber` (добавлен модуль `src.suppliers`).
-- Добавлены `TODO` для дальнейшего улучшения документации переменной `MODE`.
-- Улучшены комментарии с использованием синтаксиса RST.
+* Добавлена строка документации RST для модуля, описывающая его назначение и функциональность.
+* Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson` для корректной обработки JSON.
+* Добавлен импорт `logger` из `src.logger`.
+* Изменены комментарии, чтобы соответствовать стандартам RST.  Комментарии теперь более точны и избегают неопределенных глаголов ('получаем', 'делаем').
 
 
-
-**Full Improved Code (for copy-paste)**
+**FULL Code**
 
 ```python
-# \file hypotez/src/suppliers/hb/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/hb/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.hb
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком данных hb.
+Модуль для работы с поставщиком данных HB.
+=========================================================================================
+
+Этот модуль предоставляет доступ к данным, полученным от поставщика HB.
+Он содержит класс :class:`Graber`, отвечающий за сбор данных.
+
 """
+MODE = 'dev'
 
-# Запись состояния работы.  По умолчанию это 'development'
-MODE = 'development'
-
-
-from .graber import Graber  # Импорт класса Graber из модуля graber
-
-# TODO: Добавить документацию к переменной MODE
-```
+# Импорт необходимых модулей
+from .graber import Graber
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нужные функции для работы с JSON
+from src.logger import logger # Импорт логирования

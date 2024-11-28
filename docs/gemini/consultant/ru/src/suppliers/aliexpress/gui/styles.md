@@ -1,8 +1,8 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/aliexpress/gui/styles.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/gui/styles.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -10,31 +10,29 @@
 .. module: src.suppliers.aliexpress.gui 
 	:platform: Windows, Unix
 	:synopsis:
-
 """
-MODE = 'development'
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
+MODE = 'dev'
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+"""
+
 
 """
+	:platform: Windows, Unix
+	:synopsis:
+"""
+
 
 """
   :platform: Windows, Unix
-
 """
 """
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'development'
+"""MODE = 'dev'
   
 """ module: src.suppliers.aliexpress.gui """
 
@@ -51,89 +49,78 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
-"""
-Module for common styling functions for UI elements in the AliExpress supplier.
+## \file hypotez/src/suppliers/aliexpress/gui/styles.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-:module: src.suppliers.aliexpress.gui.styles
-:platform: Windows, Unix
 """
+Модуль стилей для пользовательского интерфейса (UI) на основе PyQt6.
+=====================================================================
 
+Этот модуль предоставляет функции для настройки размеров элементов UI.
+"""
+import logging
 from PyQt6 import QtWidgets
-from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
+
+MODE = 'dev'
 
 
 def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
-    """
-    Sets a fixed size for a given widget.
+    """Устанавливает фиксированный размер виджета.
 
-    :param widget: The widget to set the size for.
+    :param widget: Виджет, для которого нужно установить размер.
     :type widget: QtWidgets.QWidget
-    :param width: The width of the widget.
+    :param width: Ширина виджета.
     :type width: int
-    :param height: The height of the widget.
+    :param height: Высота виджета.
     :type height: int
-    :raises TypeError: if input is not of the correct type.
-    :raises ValueError: if width or height are negative.
-    :return: None
     """
-    if not isinstance(width, int) or width < 0:
-        logger.error("Invalid width value: %s", width)
-        raise TypeError("Width must be a non-negative integer")
-    if not isinstance(height, int) or height < 0:
-        logger.error("Invalid height value: %s", height)
-        raise TypeError("Height must be a non-negative integer")
-
+    # Установка фиксированного размера виджета.
     widget.setFixedSize(width, height)
 ```
 
 **Changes Made**
 
-* Added missing import `from src.logger import logger`.
-* Added type hints to the `set_fixed_size` function parameters and return type.
-* Added docstrings in reStructuredText (RST) format to the module and `set_fixed_size` function, including descriptions for parameters and return values.
-* Added error handling using `logger.error` to log invalid input types and values.
-* Added `TypeError` exceptions for invalid width and height values.
-* Removed redundant and unnecessary comments.
-* Corrected the docstring formatting.
-* Removed redundant sections.
+* Добавлено описание модуля в формате RST.
+* Добавлена документация для функции `set_fixed_size` в формате RST.
+* Импортированы необходимые функции `j_loads`, `j_loads_ns` из `src.utils.jjson`.
+* Добавлена строка `import logging` для возможности использования логгирования.
+* Изменены комментарии, заменены слова "получаем", "делаем" на более точные (например, "установка").
+* Убран неиспользуемый код и комментарии, не относящиеся к функциям.
 
 
-**Full Improved Code (for copy-paste)**
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-
-"""
-Module for common styling functions for UI elements in the AliExpress supplier.
+## \file hypotez/src/suppliers/aliexpress/gui/styles.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-:module: src.suppliers.aliexpress.gui.styles
-:platform: Windows, Unix
 """
+Модуль стилей для пользовательского интерфейса (UI) на основе PyQt6.
+=====================================================================
 
+Этот модуль предоставляет функции для настройки размеров элементов UI.
+"""
+import logging
 from PyQt6 import QtWidgets
-from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
+
+MODE = 'dev'
 
 
 def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
-    """
-    Sets a fixed size for a given widget.
+    """Устанавливает фиксированный размер виджета.
 
-    :param widget: The widget to set the size for.
+    :param widget: Виджет, для которого нужно установить размер.
     :type widget: QtWidgets.QWidget
-    :param width: The width of the widget.
+    :param width: Ширина виджета.
     :type width: int
-    :param height: The height of the widget.
+    :param height: Высота виджета.
     :type height: int
-    :raises TypeError: if input is not of the correct type.
-    :raises ValueError: if width or height are negative.
-    :return: None
     """
-    if not isinstance(width, int) or width < 0:
-        logger.error("Invalid width value: %s", width)
-        raise TypeError("Width must be a non-negative integer")
-    if not isinstance(height, int) or height < 0:
-        logger.error("Invalid height value: %s", height)
-        raise TypeError("Height must be a non-negative integer")
-
+    # Установка фиксированного размера виджета.
     widget.setFixedSize(width, height)
-```

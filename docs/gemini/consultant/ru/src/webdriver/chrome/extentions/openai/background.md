@@ -1,6 +1,6 @@
 **Received Code**
 
-```python
+```javascript
 chrome.runtime.onInstalled.addListener(() => {
     console.log('OpenAI Model Interface Extension Installed');
 });
@@ -8,48 +8,64 @@ chrome.runtime.onInstalled.addListener(() => {
 
 **Improved Code**
 
-```python
-import chrome # импорт модуля chrome
-from src.logger import logger # импорт функции логирования
+```javascript
+# Модуль обработки событий установки расширения.
+"""
+Обработка события установки расширения OpenAI Model Interface Extension.
+"""
 
+import json
 
-def on_installation():
+from src.logger import logger
+
+# Функция обработки события установки расширения.
+# Она записывает сообщение в консоль браузера.
+def on_installed():
     """
-    Обработчик события установки расширения.
-
-    Выводит сообщение в консоль о том, что расширение установлено.
+    Записывает сообщение в консоль браузера об установке расширения.
     """
-    logger.info('OpenAI Model Interface Extension Installed')
+    logger.info('Расширение OpenAI Model Interface Extension установлено.')
 
 
-chrome.runtime.onInstalled.addListener(on_installation) # обработчик установки
+# Обработчик события установки расширения.
+# Функция вызывается при установке расширения.
+chrome.runtime.onInstalled.addListener(on_installed)
 ```
 
 **Changes Made**
 
-- Импортирован `logger` из `src.logger` для логирования.
-- Создана функция `on_installation()`, которая обрабатывает событие установки расширения.  Функция логирует информацию о событии.
-- Функция `on_installation` теперь имеет docstring в формате RST, описывающий ее назначение и параметры.
-- Использование `console.log` заменено на `logger.info`, что обеспечивает логирование в консоль и позволяет использовать логирование для отладки.
-- Исправлен синтаксис импорта для использования `chrome` в соответствии с контекстом (вероятно, из другого файла).  Предположение о необходимости импорта `chrome`.
+* Добавлено описание модуля с использованием RST.
+* Добавлена функция `on_installed()` для обработки события.
+* Функция `on_installed()` получила docstring в формате RST.
+* Импортирована библиотека `logger` из `src.logger`.
+* Изменен вызов `console.log` на `logger.info` для использования логгирования.
+* Заменен устаревший комментарий на более понятный и информативный.
 
+**FULL Code**
 
-**Full Code (Improved)**
+```javascript
+# Модуль обработки событий установки расширения.
+"""
+Обработка события установки расширения OpenAI Model Interface Extension.
+"""
 
-```python
-import chrome # импорт модуля chrome
-from src.logger import logger # импорт функции логирования
+import json
 
+from src.logger import logger
 
-def on_installation():
+# Функция обработки события установки расширения.
+# Она записывает сообщение в консоль браузера.
+def on_installed():
     """
-    Обработчик события установки расширения.
-
-    Выводит сообщение в консоль о том, что расширение установлено.
+    Записывает сообщение в консоль браузера об установке расширения.
     """
-    logger.info('OpenAI Model Interface Extension Installed')
+    logger.info('Расширение OpenAI Model Interface Extension установлено.')
 
 
-chrome.runtime.onInstalled.addListener(on_installation) # обработчик установки
-# добавлено логирование для отслеживания событий установки
-```
+# Обработчик события установки расширения.
+# Функция вызывается при установке расширения.
+# Исходный код заменен на обработчик события, использующий logger.
+# # chrome.runtime.onInstalled.addListener(() => {
+# #     console.log('OpenAI Model Interface Extension Installed');
+# # });
+chrome.runtime.onInstalled.addListener(on_installed)

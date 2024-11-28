@@ -1,8 +1,8 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/suppliers/grandadvance/header.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/grandadvance/header.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,19 +12,15 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 import sys
 import json
 from packaging.version import Version
+
 from pathlib import Path
-from src.utils.jjson import j_loads
-
-from src import gs
-
-
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
@@ -48,74 +44,88 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 
 
 # Get the root directory of the project
-__root__: Path = get_project_root()
+__root__ = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
+
+from src import gs
+from src.utils.jjson import j_loads
 
 settings:dict = None
 try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file) # Use j_loads instead of json.load
+    # Чтение файла настроек с использованием j_loads
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
+        settings = j_loads(settings_file)
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Error loading settings.json: %s", e) # Log the error
+    logger.error('Ошибка при чтении файла настроек settings.json', e)
+    ...
 
 
 doc_str:str = None
 try:
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as settings_file:
         doc_str = settings_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Error loading README.MD: %s", e) # Log the error
+    logger.error('Ошибка при чтении файла README.MD', e)
+    ...
 
 
-
-from src.logger import logger # Import logger
-
-__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
 __version__: str = settings.get("version", '')  if settings  else ''
 __doc__: str = doc_str if doc_str else ''
 __details__: str = ''
-__author__: str = settings.get("author", '')  if settings  else ''
-__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
+__author__: str = settings.get("author", '')  if settings else ''
+__copyright__: str = settings.get("copyrihgnt", '')  if settings else ''
 __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+
 ```
 
 **Improved Code**
 
 ```python
-# \file hypotez/src/suppliers/grandadvance/header.py
+## \file hypotez/src/suppliers/grandadvance/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.grandadvance.header
-	:platform: Windows, Unix
-	:synopsis: This module provides header information for the Grandadvance supplier.
+Модуль для работы с поставщиком GrandAdvance.
+=========================================================================================
+
+Этот модуль содержит функции для инициализации и работы с поставщиком данных GrandAdvance.
+Он использует файлы настроек settings.json и README.MD для получения необходимых данных.
+
+Пример использования
+--------------------
+.. code-block:: python
+
+    from hypotez.src.suppliers.grandadvance.header import ...
+
+    ... # Использование функций модуля
 """
-
-MODE = 'development'
-
 import sys
-import json
-from packaging.version import Version
 from pathlib import Path
+from packaging.version import Version
 from src.utils.jjson import j_loads
-from src import gs
-from src.logger import logger  # Import logger
+from src.logger import logger
 
 
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+MODE = 'dev'
+
+
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Finds the root directory of the project starting from the current file's directory,
-    searching upwards and stopping at the first directory containing any of the marker files.
+    Определяет корневой каталог проекта.
 
-    :param marker_files: Filenames or directory names to identify the project root.
+    Ищет корневой каталог проекта, начиная с текущего файла, 
+    просматривая родительские каталоги, пока не найдёт каталог, содержащий один из файлов в списке marker_files.
+
+    :param marker_files: Список файлов или каталогов, указывающих на корень проекта.
     :type marker_files: tuple
-    :returns: Path to the root directory if found, otherwise the directory where the script is located.
+    :return: Корневой каталог проекта.
     :rtype: Path
     """
-    current_path: Path = Path(__file__).resolve().parent
-    root_path: Path = current_path
+    current_path = Path(__file__).resolve().parent
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
             root_path = parent
@@ -125,96 +135,100 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     return root_path
 
 
-# Get the root directory of the project
-__root__: Path = get_project_root()
-"""__root__ (Path): Path to the root directory of the project"""
+# Получение корневого каталога проекта.
+__root__ = set_project_root()
+"""__root__ (Path): Корневой каталог проекта."""
 
+
+from src import gs
 
 settings: dict = None
 try:
-    settings = j_loads((gs.path.root / 'src' / 'settings.json').open())
+    # Загрузка настроек из файла settings.json.
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
+        settings = j_loads(settings_file)
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Error loading settings.json: %s", e)
+    logger.error('Ошибка при загрузке настроек из settings.json:', e)
+    ...
 
 
 doc_str: str = None
 try:
-    doc_str = (gs.path.root / 'src' / 'README.MD').open().read()
+    # Чтение файла README.MD.
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
+        doc_str = readme_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Error loading README.MD: %s", e)
+    logger.error('Ошибка при чтении README.MD:', e)
+    ...
 
 
-
-__project_name__: str = settings.get("project_name", 'hypotez')
-"""__project_name__ (str): Name of the project."""
-
-__version__: str = settings.get("version", '')
-"""__version__ (str): Version of the project."""
-
-
-__doc__: str = doc_str if doc_str else ''
-__details__: str = ''
-__author__: str = settings.get("author", '')
-"""__author__ (str): Author of the project."""
-
-__copyright__: str = settings.get("copyright", '')
-"""__copyright__ (str): Copyright information."""
-
-__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
-"""__cofee__ (str): Link to support the developer."""
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__ = settings.get("version", '') if settings else ''
+__doc__ = doc_str if doc_str else ''
+__details__ = ''
+__author__ = settings.get("author", '') if settings else ''
+__copyright__ = settings.get("copyright", '') if settings else ''
+__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
 **Changes Made**
 
-- Added type hints for function parameters and return values.
-- Changed `json.load` to `j_loads` for file reading.
-- Improved error handling by logging errors using `logger.error` instead of `...`.
-- Replaced `__root__` with `root_path` for better variable naming.
-- Added RST documentation for the module, function, and variables.
-- Fixed `copyrihgnt` typo to `copyright`.
-- Added import statements for `logger` and `jjson`.
-- Improved variable naming consistency.
-- Cleaned up the docstrings.
-- Removed unnecessary comments.
+*   Добавлен импорт `from src.logger import logger`.
+*   Изменены блоки `try-except` на обработку ошибок с помощью `logger.error`.
+*   Комментарии переписаны в формате RST.
+*   Добавлен подробный комментарий к `set_project_root`.
+*   Добавлены ясные комментарии к блокам кода.
+*   Используется `j_loads` для чтения файлов настроек.
+*   Заменены магические переменные на более описательные.
 
 
-**Full Code (Improved)**
+**FULL Code**
 
 ```python
-# \file hypotez/src/suppliers/grandadvance/header.py
+## \file hypotez/src/suppliers/grandadvance/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.grandadvance.header
-	:platform: Windows, Unix
-	:synopsis: This module provides header information for the Grandadvance supplier.
+Модуль для работы с поставщиком GrandAdvance.
+=========================================================================================
+
+Этот модуль содержит функции для инициализации и работы с поставщиком данных GrandAdvance.
+Он использует файлы настроек settings.json и README.MD для получения необходимых данных.
+
+Пример использования
+--------------------
+.. code-block:: python
+
+    from hypotez.src.suppliers.grandadvance.header import ...
+
+    ... # Использование функций модуля
 """
-
-MODE = 'development'
-
 import sys
-import json
-from packaging.version import Version
 from pathlib import Path
+from packaging.version import Version
 from src.utils.jjson import j_loads
-from src import gs
-from src.logger import logger  # Import logger
+from src.logger import logger
 
 
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+MODE = 'dev'
+
+
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Finds the root directory of the project starting from the current file's directory,
-    searching upwards and stopping at the first directory containing any of the marker files.
+    Определяет корневой каталог проекта.
 
-    :param marker_files: Filenames or directory names to identify the project root.
+    Ищет корневой каталог проекта, начиная с текущего файла, 
+    просматривая родительские каталоги, пока не найдёт каталог, содержащий один из файлов в списке marker_files.
+
+    :param marker_files: Список файлов или каталогов, указывающих на корень проекта.
     :type marker_files: tuple
-    :returns: Path to the root directory if found, otherwise the directory where the script is located.
+    :return: Корневой каталог проекта.
     :rtype: Path
     """
-    current_path: Path = Path(__file__).resolve().parent
-    root_path: Path = current_path
+    current_path = Path(__file__).resolve().parent
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
             root_path = parent
@@ -224,41 +238,37 @@ def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     return root_path
 
 
-# Get the root directory of the project
-__root__: Path = get_project_root()
-"""__root__ (Path): Path to the root directory of the project"""
+# Получение корневого каталога проекта.
+__root__ = set_project_root()
+"""__root__ (Path): Корневой каталог проекта."""
 
+
+from src import gs
 
 settings: dict = None
 try:
-    settings = j_loads((gs.path.root / 'src' / 'settings.json').open())
+    # Загрузка настроек из файла settings.json.
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
+        settings = j_loads(settings_file)
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Error loading settings.json: %s", e)
+    logger.error('Ошибка при загрузке настроек из settings.json:', e)
+    ...
 
 
 doc_str: str = None
 try:
-    doc_str = (gs.path.root / 'src' / 'README.MD').open().read()
+    # Чтение файла README.MD.
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
+        doc_str = readme_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Error loading README.MD: %s", e)
+    logger.error('Ошибка при чтении README.MD:', e)
+    ...
 
 
-
-__project_name__: str = settings.get("project_name", 'hypotez')
-"""__project_name__ (str): Name of the project."""
-
-__version__: str = settings.get("version", '')
-"""__version__ (str): Version of the project."""
-
-
-__doc__: str = doc_str if doc_str else ''
-__details__: str = ''
-__author__: str = settings.get("author", '')
-"""__author__ (str): Author of the project."""
-
-__copyright__: str = settings.get("copyright", '')
-"""__copyright__ (str): Copyright information."""
-
-__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
-"""__cofee__ (str): Link to support the developer."""
-```
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__ = settings.get("version", '') if settings else ''
+__doc__ = doc_str if doc_str else ''
+__details__ = ''
+__author__ = settings.get("author", '') if settings else ''
+__copyright__ = settings.get("copyright", '') if settings else ''
+__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"

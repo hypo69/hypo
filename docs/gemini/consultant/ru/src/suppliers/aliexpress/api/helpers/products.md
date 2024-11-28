@@ -1,14 +1,14 @@
 **Received Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 def parse_product(product):
     product.product_small_image_urls = product.product_small_image_urls.string
     return product
-
 
 def parse_products(products):
     new_products = []
@@ -22,125 +22,126 @@ def parse_products(products):
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-"""
-Module: src.suppliers.aliexpress.api.helpers.products
+## ~~~~~~~~~~~~~~~
+""" Модуль для обработки данных о продуктах с AliExpress. """
 
-This module provides helper functions for parsing product data.
-"""
-import logging
-from src.utils.jjson import j_loads, j_loads_ns  # Added import
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
+from src.logger import logger # Импортируем logger для логирования ошибок
 
-from src.logger import logger  # Import logger
+# Этот модуль содержит функции для обработки данных о продуктах, полученных с сайта AliExpress.
 
 
 def parse_product(product):
     """
-    Parses a single product object.
+    Обрабатывает данные о конкретном продукте.
 
-    :param product: The product object to parse.
-    :type product: object
-    :return: The parsed product object.
-    :rtype: object
+    :param product: Объект с данными о продукте.
+    :return: Объект с обработанными данными о продукте.
     """
     try:
-        product.product_small_image_urls = product.product_small_image_urls.string
+        # Проверка, что атрибут product_small_image_urls существует и является объектом, имеющим атрибут string.
+        if hasattr(product, 'product_small_image_urls') and hasattr(product.product_small_image_urls, 'string'):
+            product.product_small_image_urls = product.product_small_image_urls.string
+        else:
+            logger.error("Ошибка: Невозможно получить значение product_small_image_urls.")
+            return product  # Возвращаем исходный объект при ошибке
         return product
-    except AttributeError as e:
-        logger.error(f"Error parsing product: {e}")
-        return None  # Return None on error
+    except Exception as e:
+        logger.error(f"Ошибка при обработке продукта: {e}")
+        return None
 
 
 def parse_products(products):
     """
-    Parses a list of product objects.
+    Обрабатывает список продуктов.
 
-    :param products: The list of product objects to parse.
-    :type products: list
-    :return: The list of parsed product objects.
-    :rtype: list
+    :param products: Список объектов с данными о продуктах.
+    :return: Список обработанных объектов продуктов.
     """
     new_products = []
     try:
         for product in products:
-            parsed_product = parse_product(product)
-            if parsed_product:
-                new_products.append(parsed_product)
+            processed_product = parse_product(product)
+            if processed_product:
+                new_products.append(processed_product)
             else:
-                logger.warning(f"Skipping malformed product.")
-        return new_products
+                logger.warning(f"Продукт не обработан: {product}")
     except Exception as e:
-        logger.error(f"Error parsing products: {e}")
-        return None  # Return None on error
+        logger.error(f"Ошибка при обработке списка продуктов: {e}")
+        return [] # Возвращаем пустой список при ошибке
+
+    return new_products
 ```
 
 **Changes Made**
 
-* Added import statements for `j_loads`, `j_loads_ns` and `logger`.
-* Wrapped `parse_product` and `parse_products` functions with `try...except` blocks to handle potential `AttributeError` and other exceptions.
-* Logged errors using `logger.error` for better error handling and debugging.
-* Added informative error messages to the log.
-* Added type hints to `parse_product` and `parse_products` functions.
-* Docstrings were added to functions in reStructuredText format, providing clear descriptions for each function, including parameters, return values and exceptions.
-* Changed `new_products.append(parse_product(product))` to `if parsed_product: new_products.append(parsed_product)` in the loop in `parse_products` to correctly handle potentially `None` return values.
-* Added `logger.warning` in `parse_products` to log skipping of malformed products.
-*  Replaced `return []` with `return None` in `parse_products` to indicate failure cases, as the empty list isn't a correct signal.
-* Corrected docstrings for more accurate descriptions.
-* Added a `TODO` section to the docstrings for possible improvements to the code (e.g., using a more robust error handling or input validation).
+* Добавлена строка импорта `from src.logger import logger` для использования логирования.
+* Добавлена обработка ошибок с помощью `try...except` блоков и `logger.error`.
+* Добавлены комментарии в формате RST ко всем функциям и методам.
+* Изменены docstrings на RST формат.
+* Проверка на существование атрибутов `product_small_image_urls` и `string` для предотвращения ошибок.
+* Обработка возможной ошибки при получении значения `product_small_image_urls`.
+* Возвращение `None` при ошибке в функции `parse_product` для индикации ошибки.
+* Добавлена обработка ошибок в функции `parse_products` для предотвращения падения программы при ошибках в цикле.
+* Возврат пустого списка при ошибках в `parse_products`, что более корректно, чем падение программы.
+* Добавлена логика обработки случая, когда `parse_product` возвращает `None` (продукт не обработан), для более корректной работы.
+
+
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-"""
-Module: src.suppliers.aliexpress.api.helpers.products
+## ~~~~~~~~~~~~~~~
+""" Модуль для обработки данных о продуктах с AliExpress. """
 
-This module provides helper functions for parsing product data.
-"""
-import logging
-from src.utils.jjson import j_loads, j_loads_ns  # Added import
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
+from src.logger import logger # Импортируем logger для логирования ошибок
 
-from src.logger import logger  # Import logger
+# Этот модуль содержит функции для обработки данных о продуктах, полученных с сайта AliExpress.
 
 
 def parse_product(product):
     """
-    Parses a single product object.
+    Обрабатывает данные о конкретном продукте.
 
-    :param product: The product object to parse.
-    :type product: object
-    :return: The parsed product object.  Returns None if error occurs.
-    :rtype: object
+    :param product: Объект с данными о продукте.
+    :return: Объект с обработанными данными о продукте.
     """
     try:
-        product.product_small_image_urls = product.product_small_image_urls.string
+        # Проверка, что атрибут product_small_image_urls существует и является объектом, имеющим атрибут string.
+        if hasattr(product, 'product_small_image_urls') and hasattr(product.product_small_image_urls, 'string'):
+            product.product_small_image_urls = product.product_small_image_urls.string
+        else:
+            logger.error("Ошибка: Невозможно получить значение product_small_image_urls.")
+            return product  # Возвращаем исходный объект при ошибке
         return product
-    except AttributeError as e:
-        logger.error(f"Error parsing product: {e}")
-        return None  # Return None on error
+    except Exception as e:
+        logger.error(f"Ошибка при обработке продукта: {e}")
+        return None
 
 
 def parse_products(products):
     """
-    Parses a list of product objects.
+    Обрабатывает список продуктов.
 
-    :param products: The list of product objects to parse.
-    :type products: list
-    :return: The list of parsed product objects. Returns None if error occurs.
-    :rtype: list
+    :param products: Список объектов с данными о продуктах.
+    :return: Список обработанных объектов продуктов.
     """
     new_products = []
     try:
         for product in products:
-            parsed_product = parse_product(product)
-            if parsed_product:
-                new_products.append(parsed_product)
+            processed_product = parse_product(product)
+            if processed_product:
+                new_products.append(processed_product)
             else:
-                logger.warning(f"Skipping malformed product.")
-        return new_products
+                logger.warning(f"Продукт не обработан: {product}")
     except Exception as e:
-        logger.error(f"Error parsing products: {e}")
-        return None  # Return None on error
-```
+        logger.error(f"Ошибка при обработке списка продуктов: {e}")
+        return [] # Возвращаем пустой список при ошибке
+
+    return new_products

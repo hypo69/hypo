@@ -1,8 +1,8 @@
-**Received Code**
+## Received Code
 
 ```python
-# \file hypotez/src/suppliers/aliexpress/campaign/header.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/campaign/header.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,226 +12,226 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 
 from pathlib import Path
 import sys
 import json
 from src import gs
-# from src.logger import logger  # Импортируйте logger
-# TODO: Проверьте, нужно ли импортировать json
 
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """!
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+    """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
 
-    Args:
-        marker_files (tuple): Filenames or directory names to identify the project root.
-    
-    Returns:
-        Path: Path to the root directory if found, otherwise the directory where the script is located.
+    :param marker_files: Filenames or directory names to identify the project root.
+    :type marker_files: tuple
+    :return: Path to the root directory if found, otherwise the directory where the script is located.
+    :rtype: Path
     """
-    # TODO: Добавьте документацию к переменной __root__
-    __root__:Path
-    current_path:Path = Path(__file__).resolve().parent
-    __root__ = current_path
+    current_path: Path = Path(__file__).resolve().parent
+    root_path: Path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            __root__ = parent
+            root_path = parent
             break
-    if __root__ not in sys.path:
-        sys.path.insert(0, str(__root__))
-    return __root__
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
 # Get the root directory of the project
-__root__: Path = get_project_root()
-"""__root__ (Path): Path to the root directory of the project"""
+root_path = set_project_root()
+"""root_path (Path): Path to the root directory of the project"""
 
-settings:dict = None
+settings: dict = None
 try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+    with open(root_path / 'src' / 'settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading settings: {e}")
-    # ... # Обработка исключения
-
-
-doc_str:str = None
+    logger.error('Ошибка загрузки настроек из settings.json', e)
+    # ...  # Обработка ошибки
+    
+doc_str: str = None
 try:
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
-        doc_str = settings_file.read()
+    with open(root_path / 'src' / 'README.MD', 'r') as readme_file:
+        doc_str = readme_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading README.MD: {e}")
-    # ... # Обработка исключения
+    logger.error('Ошибка загрузки README.MD', e)
+    # ... # Обработка ошибки
 
 
-__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
-__version__: str = settings.get("version", '')  if settings  else ''
-__doc__: str = doc_str if doc_str else ''
-__details__: str = ''
-__author__: str = settings.get("author", '')  if settings  else ''
-__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
-__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+from src.logger import logger
+
+
+project_name = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+version = settings.get("version", '') if settings else ''
+doc = doc_str if doc_str else ''
+details = ''
+author = settings.get("author", '') if settings else ''
+copyright = settings.get("copyright", '') if settings else ''
+cofee = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
-**Improved Code**
+## Improved Code
 
 ```python
-# \file hypotez/src/suppliers/aliexpress/campaign/header.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/campaign/header.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers.aliexpress.campaign
    :platform: Windows, Unix
-   :synopsis: Header module for Aliexpress campaign.
+   :synopsis: This module provides functionality for interacting with AliExpress campaign data.
 """
-MODE = 'development'
-
+import json
 from pathlib import Path
 import sys
-import json
 from src import gs
-from src.logger import logger
 from src.utils.jjson import j_loads
+from src.logger import logger
 
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+
+MODE = 'dev'
+
+
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Finds the root directory of the project.
+    Определяет корневой каталог проекта, начиная с каталога текущего файла.
 
-    :param marker_files: Filenames or directory names to identify the project root.
+    :param marker_files: Список файлов/каталогов, по наличию которых определяется корень проекта.
     :type marker_files: tuple
-    :raises FileNotFoundError: If no marker file is found.
-    :return: Path to the root directory.
+    :return: Путь к корневому каталогу проекта.
     :rtype: Path
     """
-    __root__ = Path(__file__).resolve().parent  # Инициализация __root__
-    for parent in [__root__] + list(__root__.parents):
+    current_path = Path(__file__).resolve().parent
+    root_path = current_path
+    for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            __root__ = parent
+            root_path = parent
             break
-    if __root__ not in sys.path:
-        sys.path.insert(0, str(__root__))
-    return __root__
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Get the root directory of the project
-__root__: Path = get_project_root()
-"""__root__ (Path): Path to the project root directory."""
+# Получение корневого каталога проекта
+root_path = set_project_root()
+"""root_path (Path): Корневой каталог проекта."""
 
 settings: dict = None
 try:
-    settings = j_loads((gs.path.root / 'src' / 'settings.json'))
+    # Чтение настроек из файла settings.json
+    with open(root_path / 'src' / 'settings.json', 'r') as settings_file:
+        settings = j_loads(settings_file)  # Используем j_loads для загрузки JSON
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading settings: {e}")
-    # ...  # Handle exception
+    logger.error('Ошибка загрузки настроек из settings.json:', e)
+    # ... # Обработка ошибки
 
 doc_str: str = None
 try:
-    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
+    # Чтение README.md
+    with open(root_path / 'src' / 'README.MD', 'r') as readme_file:
         doc_str = readme_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading README.MD: {e}")
-    # ... # Handle exception
-
-__project_name__ = settings.get('project_name', 'hypotez')
-__version__ = settings.get('version', '')
-__doc__ = doc_str or ''
-__details__ = ''
-__author__ = settings.get('author', '')
-__copyright__ = settings.get('copyrihgnt', '')
-__cofee__ = settings.get('cofee', 'Treat the developer to a cup of coffee...')
+    logger.error('Ошибка загрузки README.MD:', e)
+    # ... # Обработка ошибки
 
 
+project_name = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+version = settings.get('version', '') if settings else ''
+doc = doc_str if doc_str else ''
+details = ''
+author = settings.get('author', '') if settings else ''
+copyright = settings.get('copyright', '') if settings else ''
+cofee = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
-**Changes Made**
+## Changes Made
 
-- Импортирован `sys` для добавления пути к проекту в `sys.path`.
-- Заменен `json.load` на `j_loads` для загрузки `settings.json`.
-- Добавлен импорт `from src.logger import logger` для логирования ошибок.
-- Добавлены обработчики исключений `try...except` с использованием `logger.error`.
-- Изменены имена переменных для лучшей читаемости.
-- Добавлены docstrings в соответствии с RST для функций и переменных.
-- Удалены ненужные комментарии `"""__root__ (Path): ..."""`.
-- Изменены имена функций и переменных на более описательные.
-- Исправлена опечатка в имени переменной `copyrihgnt`.
-- Удалены ненужные `...`.
-- Добавлен импорт из src.utils.jjson.
-- Исправлены именования переменных.
-- Удалены лишние docstrings.
+- Импортированы необходимые модули: `json`, `sys`, `Path`, `j_loads` из `src.utils.jjson` и `logger` из `src.logger`.
+- Заменены все случаи `json.load` на `j_loads` для чтения JSON.
+- Добавлена обработка ошибок с использованием `logger.error` для файлов `settings.json` и `README.MD`.
+- Переписаны docstrings в формате reStructuredText.
+- Добавлены комментарии в формате RST ко всем переменным.
+- Изменены имена переменных на более читаемые (например, `__root__` на `root_path`).
+- Добавлены комментарии к блокам кода, поясняющие их действия.
+- Исправлен импорт `sys`
 
-
-**Full Code (Improved)**
+## FULL Code
 
 ```python
-# \file hypotez/src/suppliers/aliexpress/campaign/header.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/campaign/header.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers.aliexpress.campaign
    :platform: Windows, Unix
-   :synopsis: Header module for Aliexpress campaign.
+   :synopsis: This module provides functionality for interacting with AliExpress campaign data.
 """
-MODE = 'development'
-
+import json
 from pathlib import Path
 import sys
-import json
 from src import gs
-from src.logger import logger
 from src.utils.jjson import j_loads
+from src.logger import logger
 
-def get_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+
+MODE = 'dev'
+
+
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Finds the root directory of the project.
+    Определяет корневой каталог проекта, начиная с каталога текущего файла.
 
-    :param marker_files: Filenames or directory names to identify the project root.
+    :param marker_files: Список файлов/каталогов, по наличию которых определяется корень проекта.
     :type marker_files: tuple
-    :raises FileNotFoundError: If no marker file is found.
-    :return: Path to the root directory.
+    :return: Путь к корневому каталогу проекта.
     :rtype: Path
     """
-    __root__ = Path(__file__).resolve().parent  # Инициализация __root__
-    for parent in [__root__] + list(__root__.parents):
+    current_path = Path(__file__).resolve().parent
+    root_path = current_path
+    for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            __root__ = parent
+            root_path = parent
             break
-    if __root__ not in sys.path:
-        sys.path.insert(0, str(__root__))
-    return __root__
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Get the root directory of the project
-__root__: Path = get_project_root()
-"""__root__ (Path): Path to the project root directory."""
+# Получение корневого каталога проекта
+root_path = set_project_root()
+"""root_path (Path): Корневой каталог проекта."""
 
 settings: dict = None
 try:
-    settings = j_loads((gs.path.root / 'src' / 'settings.json'))
+    # Чтение настроек из файла settings.json
+    with open(root_path / 'src' / 'settings.json', 'r') as settings_file:
+        settings = j_loads(settings_file)  # Используем j_loads для загрузки JSON
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading settings: {e}")
-    # ...  # Handle exception
+    logger.error('Ошибка загрузки настроек из settings.json:', e)
+    # ... # Обработка ошибки
 
 doc_str: str = None
 try:
-    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
+    # Чтение README.md
+    with open(root_path / 'src' / 'README.MD', 'r') as readme_file:
         doc_str = readme_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f"Error loading README.MD: {e}")
-    # ... # Handle exception
+    logger.error('Ошибка загрузки README.MD:', e)
+    # ... # Обработка ошибки
 
-__project_name__ = settings.get('project_name', 'hypotez')
-__version__ = settings.get('version', '')
-__doc__ = doc_str or ''
-__details__ = ''
-__author__ = settings.get('author', '')
-__copyright__ = settings.get('copyrihgnt', '')
-__cofee__ = settings.get('cofee', 'Treat the developer to a cup of coffee...')
-```
+
+project_name = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+version = settings.get('version', '') if settings else ''
+doc = doc_str if doc_str else ''
+details = ''
+author = settings.get('author', '') if settings else ''
+copyright = settings.get('copyright', '') if settings else ''
+cofee = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"

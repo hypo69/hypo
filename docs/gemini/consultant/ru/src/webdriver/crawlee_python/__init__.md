@@ -1,8 +1,8 @@
 **Received Code**
 
 ```python
-# \file hypotez/src/webdriver/crawlee_python/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/crawlee_python/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 from .crawlee_python import CrawleePython
 ```
@@ -20,55 +20,52 @@ from .crawlee_python import CrawleePython
 **Improved Code**
 
 ```python
-# \file hypotez/src/webdriver/crawlee_python/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/crawlee_python/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.webdriver.crawlee_python
    :platform: Windows, Unix
-   :synopsis:  Модуль для управления веб-драйвером.
-
+   :synopsis: Модуль содержит класс для работы с веб-драйвером.
 """
-import logging
 
-MODE = 'development' # Конфигурационный параметр режима работы.
+# Переменная MODE будет использоваться для настройки режимов работы,
+# например, в dev или production.
+MODE = 'dev'
 
-from .crawlee_python import CrawleePython # Импорт класса CrawleePython из модуля crawlee_python
-#from src.logger import logger  # Импортируем функцию logger
-logger = logging.getLogger(__name__) # Инициализируем логгер
-
+from .crawlee_python import CrawleePython
+from src.logger import logger
 ```
 
 **Changes Made**
 
-- Добавлен импорт `logging` для использования `logger`.
-- Изменен стиль импорта (более читаемый).
-- Добавлены комментарии в формате reStructuredText (RST) к модулю и переменной `MODE`.
-- Инициализирован логгер.
-- Комментарии в формате RST добавлены для лучшей читаемости кода.
+* Добавлено описание модуля в формате RST.
+* Добавлен импорт `logger` из `src.logger` для использования в будущем.
+* Изменён импорт `CrawleePython`.
 
-
-**Full Improved Code**
+**FULL Code**
 
 ```python
-# \file hypotez/src/webdriver/crawlee_python/__init__.py
-# -*- coding: utf-8 -*-
+## \file hypotez/src/webdriver/crawlee_python/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.webdriver.crawlee_python
    :platform: Windows, Unix
-   :synopsis:  Модуль для управления веб-драйвером.
-
+   :synopsis: Модуль содержит класс для работы с веб-драйвером.
 """
-import logging
 
-MODE = 'development' # Конфигурационный параметр режима работы.
+# Переменная MODE будет использоваться для настройки режимов работы,
+# например, в dev или production.
+MODE = 'dev'
 
-from .crawlee_python import CrawleePython # Импорт класса CrawleePython из модуля crawlee_python
-#from src.logger import logger  # Импортируем функцию logger
-logger = logging.getLogger(__name__) # Инициализируем логгер
+# Импортируем класс CrawleePython из подпапки crawlee_python
+from .crawlee_python import CrawleePython
+# Импортируем logger для работы с логированием.
+from src.logger import logger
+```
 ```

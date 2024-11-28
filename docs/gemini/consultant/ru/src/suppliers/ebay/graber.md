@@ -1,18 +1,24 @@
-**Received Code**
+# Received Code
 
 ```python
 ## \file hypotez/src/suppliers/ebay/graber.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module: src.suppliers.ebay 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis:  Класс собирает значение полей на странице  товара `ebay.com`. 
+    Для каждого поля страницы товара сделана функция обработки поля в родительском классе.
+    Если нужна нестандертная обработка, функция перегружается в этом классе.
+    ------------------
+    Перед отправкой запроса к вебдрайверу можно совершить предварительные действия через декоратор. 
+    Декоратор по умолчанию находится в родительском классе. Для того, чтобы декоратор сработал надо передать значение 
+    в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 
 """
-MODE = 'development'
+MODE = 'dev'
 
 import asyncio
 from pathlib import Path
@@ -22,7 +28,7 @@ from dataclasses import dataclass, field
 from functools import wraps
 from pydantic import BaseModel
 from src import gs
-from src.suppliers import Graber as Grbr
+from src.suppliers import Graber as Grbr, Context, close_pop_up
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
@@ -34,144 +40,187 @@ from types import SimpleNamespace
 from typing import Any, Callable
 
 
-# Глобальные настройки через отдельный объект
-class Context:
-    """Класс для хранения глобальных настроек."""
-    driver: Driver = None
-    locator: SimpleNamespace = None
+# # Определение декоратора для закрытия всплывающих окон
+# # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
+# # Общее название декоратора `@close_pop_up` можно изменить 
 
-# Определение декоратора для закрытия всплывающих окон
-# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# Общее название декоратора `@close_pop_up` можно изменить 
-# Если декоратор не используется в поставщике - надо закомментировать строку
-# ```await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close``` 
-def close_pop_up(value: Any = None) -> Callable:
-    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    Args:
-        value (Any): Дополнительное значение для декоратора.
+# def close_pop_up(value: Any = None) -> Callable:
+#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    Returns:
-        Callable: Декоратор, оборачивающий функцию.
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
-                ... 
-            except ExecuteLocatorException as e:
-                logger.debug(f'Ошибка выполнения локатора: {e}')
-            return await func(*args, **kwargs)  # Await the main function
-        return wrapper
-    return decorator
+#     Args:
+#         value (Any): Дополнительное значение для декоратора.
+
+#     Returns:
+#         Callable: Декоратор, оборачивающий функцию.
+#     """
+#     def decorator(func: Callable) -> Callable:
+#         @wraps(func)
+#         async def wrapper(*args, **kwargs):
+#             try:
+#                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
+#                 ... 
+#             except ExecuteLocatorException as e:
+#                 logger.debug(f'Ошибка выполнения локатора: {e}')
+#             return await func(*args, **kwargs)  # Await the main function
+#         return wrapper
+#     return decorator
+
 
 class Graber(Grbr):
-    """Класс для операций захвата Morlevi."""
+    """Класс для операций захвата данных с ebay."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Инициализация класса сбора полей товара."""
+        """Инициализация класса для сбора данных с eBay.
+
+        Args:
+            driver (Driver): Экземпляр драйвера WebDriver.
+        """
         self.supplier_prefix = 'ebay'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
-        Context.driver = driver
-        Context.locator = SimpleNamespace(
-            close_pop_up='locator_for_closing_popup'  # Пример задания локатора
-        )
+        Context.locator_for_decorator = None  # Для использования декоратора в родительском классе
 
-        
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Asynchronous function to grab product fields.
+        """Асинхронная функция для сбора полей товара.
 
         Args:
-            driver (Driver): The driver instance to use for grabbing.
+            driver (Driver): Экземпляр драйвера WebDriver.
 
         Returns:
-            ProductFields: The grabbed product fields.
+            ProductFields: Объект с собранными полями товара.
         """
-        global d
-        d = self.d = driver  
+        self.d = driver  # Сохранение экземпляра драйвера
         
         ...
         # Логика извлечения данных
-        async def fetch_all_data(**kwards):
+        async def fetch_all_data(**kwargs):
+            # Вызов функции для извлечения конкретных данных
+            # await fetch_specific_data(**kwargs)
+
+            # Извлечение данных для каждого поля (необходимо переписать с использованием j_loads)
+            # await self.id_product(kwargs.get("id_product", ''))  # Пример извлечения id_product.
+            # ... (остальные поля)
+            for attr_name in [attr for attr in dir(self) if not attr.startswith('_') and callable(getattr(self, attr))]:
+                try:
+                  await getattr(self, attr)(kwargs.get(attr_name, ''))  # Извлечение данных для каждого поля
+                except Exception as e:
+                  logger.error(f'Ошибка при извлечении данных для поля {attr_name}: {e}')
+
+        # Вызов функции для извлечения всех данных
+        await fetch_all_data()
+        return self.fields
+```
+
+# Improved Code
+
+```python
+## \file hypotez/src/suppliers/ebay/graber.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module:: src.suppliers.ebay.graber
+	:platform: Windows, Unix
+	:synopsis: Класс для сбора данных с eBay.
+"""
+
+import asyncio
+from pathlib import Path
+from typing import Any, Callable, Optional
+from dataclasses import dataclass, field
+from functools import wraps
+from pydantic import BaseModel
+from src import gs
+from src.suppliers import Graber as Grbr, Context, close_pop_up
+from src.product import ProductFields
+from src.webdriver import Driver
+from src.utils.jjson import j_loads_ns
+from src.logger import logger
+from src.logger.exceptions import ExecuteLocatorException
+
+
+class Graber(Grbr):
+    """Класс для сбора данных с eBay."""
+    supplier_prefix: str
+
+    def __init__(self, driver: Driver):
+        """Инициализирует класс для сбора данных с eBay.
+
+        Args:
+            driver (Driver): Экземпляр драйвера WebDriver.
+        """
+        self.supplier_prefix = 'ebay'
+        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+        Context.locator_for_decorator = None  # Для использования декоратора в родительском классе
+
+
+    async def grab_page(self, driver: Driver) -> ProductFields:
+        """Сбор полей товара с eBay.
+
+        Args:
+            driver (Driver): Экземпляр драйвера WebDriver.
+
+        Returns:
+            ProductFields: Объект с собранными полями.
+        """
+        self.d = driver  # Сохранение экземпляра драйвера
+        self.fields = ProductFields() # Инициализация ProductFields
         
-            # Call function to fetch specific data
-            # await fetch_specific_data(**kwards)  
+        async def fetch_all_data(**kwargs):
+            """Извлечение всех данных с страницы."""
+            for attr_name in [attr for attr in dir(self) if not attr.startswith('_') and callable(getattr(self, attr))]:
+                try:
+                    data = await getattr(self, attr)(kwargs.get(attr_name, None))
+                    if data is not None:
+                        setattr(self.fields, attr_name.replace("id_","").replace("get","").replace("set","").replace("_"," "), data)  # Запись данных в ProductFields
+                except Exception as e:
+                    logger.error(f"Ошибка при извлечении данных для поля {attr_name}: {e}")
 
-            # Uncomment the following lines to fetch specific data
-            await self.id_product(kwards.get("id_product", ''))
-            # ... (rest of the code)
-
-        # Call the function to fetch all data
         await fetch_all_data()
         return self.fields
 
+
 ```
 
-**Improved Code**
+# Changes Made
+
+*   Добавлен заголовок RST для модуля `src.suppliers.ebay.graber`.
+*   Добавлена подробная документация RST для класса `Graber` и метода `grab_page`.
+*   Изменен способ извлечения данных с помощью цикла `for` для обработки всех доступных методов.
+*   Добавлен `try-except` блок для обработки возможных ошибок при извлечении данных.
+*   Исправлена логика записи данных в `ProductFields`.
+*   Использование `setattr` для записи данных в `ProductFields` с более корректными именами полей.
+
+# FULL Code
 
 ```python
 ## \file hypotez/src/suppliers/ebay/graber.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для сбора данных с eBay.
-:platform: Windows, Unix
-:synopsis:  Сбор данных о товарах с eBay.
+.. module:: src.suppliers.ebay.graber
+	:platform: Windows, Unix
+	:synopsis: Класс для сбора данных с eBay.
 """
-MODE = 'development'
 
 import asyncio
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
 from pydantic import BaseModel
 from src import gs
-from src.suppliers import Graber as Grbr
+from src.suppliers import Graber as Grbr, Context, close_pop_up
 from src.product import ProductFields
 from src.webdriver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
-
-# Импорты, которые могли быть необходимы в дальнейшем, но пока не используются.
-# from src.presta_categories import additional_categories
-# ...
-
-
-# Глобальные настройки через отдельный объект
-class Context:
-    """Класс для хранения глобальных настроек."""
-    driver: Driver = None
-    locator: SimpleNamespace = None
-
-
-def close_pop_up(value: Any = None) -> Callable:
-    """Декоратор для закрытия всплывающих окон.
-
-    :param value: Дополнительные параметры.
-    :type value: Any
-    :returns: Декоратор.
-    :rtype: Callable
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # Обработка закрытия всплывающих окон, если это необходимо
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)
-                pass  # Пока не используется
-            except ExecuteLocatorException as e:
-                logger.error(f'Ошибка при закрытии всплывающих окон: {e}')
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
 
 
 class Graber(Grbr):
@@ -179,146 +228,37 @@ class Graber(Grbr):
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Инициализация класса сбора полей товара."""
+        """Инициализирует класс для сбора данных с eBay.
+
+        Args:
+            driver (Driver): Экземпляр драйвера WebDriver.
+        """
         self.supplier_prefix = 'ebay'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.driver = driver
-        Context.locator = SimpleNamespace(close_pop_up='locator_for_closing_popup')
+        Context.locator_for_decorator = None  # Для использования декоратора в родительском классе
 
 
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Асинхронная функция для сбора полей товара.
+        """Сбор полей товара с eBay.
 
-        :param driver: Экземпляр драйвера.
-        :type driver: Driver
-        :returns: Поля товара.
-        :rtype: ProductFields
+        Args:
+            driver (Driver): Экземпляр драйвера WebDriver.
+
+        Returns:
+            ProductFields: Объект с собранными полями.
         """
-        self.d = driver  # Присваиваем driver для последующего использования
-        self.fields = ProductFields() # Инициализируем ProductFields
-
+        self.d = driver  # Сохранение экземпляра драйвера
+        self.fields = ProductFields() # Инициализация ProductFields
+        
         async def fetch_all_data(**kwargs):
-            """Функция для сбора всех данных."""
-            try:
-                await self.id_product(kwargs.get('id_product', ''))
-                # Добавьте обработку других полей в соответствии с требованиями
-            except Exception as e:
-                logger.error(f'Ошибка при сборе данных: {e}')
-
+            """Извлечение всех данных с страницы."""
+            for attr_name in [attr for attr in dir(self) if not attr.startswith('_') and callable(getattr(self, attr))]:
+                try:
+                    data = await getattr(self, attr)(kwargs.get(attr_name, None))
+                    if data is not None:
+                        setattr(self.fields, attr_name.replace("id_","").replace("get","").replace("set","").replace("_"," "), data)  # Запись данных в ProductFields
+                except Exception as e:
+                    logger.error(f"Ошибка при извлечении данных для поля {attr_name}: {e}")
 
         await fetch_all_data()
         return self.fields
-```
-
-**Changes Made**
-
-- Added missing imports for `ProductFields` and `ExecuteLocatorException` from the `src` package and `additional_categories` is commented out.
-- Replaced all occurrences of `json.load` with `j_loads_ns` from `src.utils.jjson`.
-- Added type hints for function parameters and return values.
-- Docstrings are formatted according to reStructuredText standards for the `Graber` class, `grab_page` function, `close_pop_up` decorator and `Context` class,
-- Removed unused global variable `d`.
-- Added `self.fields = ProductFields()` inside `grab_page` function to initialize `ProductFields`
-- Replaced `logger.debug` with `logger.error` for error handling and added proper exception handling in `fetch_all_data`
-- Improved the `fetch_all_data` function to properly handle exceptions with `try-except`.
-- Removed unnecessary comments and updated docstrings.
-
-
-**Full Code (Improved)**
-
-```python
-## \file hypotez/src/suppliers/ebay/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-Модуль для сбора данных с eBay.
-:platform: Windows, Unix
-:synopsis:  Сбор данных о товарах с eBay.
-"""
-MODE = 'development'
-
-import asyncio
-from pathlib import Path
-from types import SimpleNamespace
-from typing import Any, Callable, Optional
-from dataclasses import dataclass, field
-from functools import wraps
-from pydantic import BaseModel
-from src import gs
-from src.suppliers import Graber as Grbr
-from src.product import ProductFields
-from src.webdriver import Driver
-from src.utils.jjson import j_loads_ns
-from src.logger import logger
-from src.logger.exceptions import ExecuteLocatorException
-
-# Импорты, которые могли быть необходимы в дальнейшем, но пока не используются.
-# from src.presta_categories import additional_categories
-# ...
-
-
-# Глобальные настройки через отдельный объект
-class Context:
-    """Класс для хранения глобальных настроек."""
-    driver: Driver = None
-    locator: SimpleNamespace = None
-
-
-def close_pop_up(value: Any = None) -> Callable:
-    """Декоратор для закрытия всплывающих окон.
-
-    :param value: Дополнительные параметры.
-    :type value: Any
-    :returns: Декоратор.
-    :rtype: Callable
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # Обработка закрытия всплывающих окон, если это необходимо
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)
-                pass  # Пока не используется
-            except ExecuteLocatorException as e:
-                logger.error(f'Ошибка при закрытии всплывающих окон: {e}')
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
-
-
-class Graber(Grbr):
-    """Класс для сбора данных с eBay."""
-    supplier_prefix: str
-
-    def __init__(self, driver: Driver):
-        """Инициализация класса сбора полей товара."""
-        self.supplier_prefix = 'ebay'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.driver = driver
-        Context.locator = SimpleNamespace(close_pop_up='locator_for_closing_popup')
-
-
-    async def grab_page(self, driver: Driver) -> ProductFields:
-        """Асинхронная функция для сбора полей товара.
-
-        :param driver: Экземпляр драйвера.
-        :type driver: Driver
-        :returns: Поля товара.
-        :rtype: ProductFields
-        """
-        self.d = driver  # Присваиваем driver для последующего использования
-        self.fields = ProductFields() # Инициализируем ProductFields
-
-        async def fetch_all_data(**kwargs):
-            """Функция для сбора всех данных."""
-            try:
-                await self.id_product(kwargs.get('id_product', ''))
-                # Добавьте обработку других полей в соответствии с требованиями
-            except Exception as e:
-                logger.error(f'Ошибка при сборе данных: {e}')
-
-
-        await fetch_all_data()
-        return self.fields
-```

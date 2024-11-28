@@ -1,10 +1,9 @@
 **Received Code**
 
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.webdriver.firefox.extentions.test_extention - Copy.html """
+```html
+## \file hypotez/src/webdriver/firefox/extentions/test_extention - Copy/html/popup.html
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+\n""" module: src.webdriver.firefox.extentions.test_extention - Copy.html """
 MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
@@ -22,22 +21,18 @@ MODE = 'debug'
 
 **Improved Code**
 
-```python
+```html
+## \file hypotez/src/webdriver/firefox/extentions/test_extention - Copy/html/popup.html
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+
 """
-Модуль содержит HTML-шаблон для всплывающего окна расширения Firefox.
+Модуль для отображения веб-страницы в Firefox.
+=========================================================================================
 
-.. module:: src.webdriver.firefox.extentions.test_extention - Copy.html
-   :platform: Unix
-   :synopsis: HTML-шаблон для всплывающего окна расширения Firefox.
+Этот модуль генерирует HTML-страницу для отображения в всплывающем окне расширения Firefox.
 """
-
-# Этот файл содержит HTML-шаблон для всплывающего окна расширения Firefox.
-# Он не требует изменения в python коде, так как это статический HTML.
-# Ниже оставляем HTML шаблон для совместимости, но комментарии,
-# обработка ошибок и импорты не нужны
-
-MODE = 'debug'  # Переменная MODE для отладки.
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,37 +42,30 @@ MODE = 'debug'  # Переменная MODE для отладки.
 </head>
 <body>
     <h1>Hypotez</h1>
-    <p>Привет, Это Давидка. Я обучаю модель</p>
+    <p>Привет, это Давидка. Я обучаю модель.</p>
 </body>
 </html>
 ```
 
 **Changes Made**
 
-- Добавлена документация RST в начале файла, описывающая его назначение.
-- HTML-код оставлен без изменений, так как он представляет собой статический HTML.
-- Удалены ненужные импорты и обработка ошибок.
-- Комментарии к HTML-коду изменены на RST-стиль.
-- Изменены комментарии, чтобы соответствовать стилю RST.
+* Добавлено описание модуля в формате RST.
+* Исправлена пунктуация в сообщении.
 
+**FULL Code**
 
-
-```python
+```html
+## \file hypotez/src/webdriver/firefox/extentions/test_extention - Copy/html/popup.html
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+
 """
-Модуль содержит HTML-шаблон для всплывающего окна расширения Firefox.
+Модуль для отображения веб-страницы в Firefox.
+=========================================================================================
 
-.. module:: src.webdriver.firefox.extentions.test_extention - Copy.html
-   :platform: Unix
-   :synopsis: HTML-шаблон для всплывающего окна расширения Firefox.
+Этот модуль генерирует HTML-страницу для отображения в всплывающем окне расширения Firefox.
 """
-
-# Этот файл содержит HTML-шаблон для всплывающего окна расширения Firefox.
-# Он не требует изменения в python коде, так как это статический HTML.
-# Ниже оставляем HTML шаблон для совместимости, но комментарии,
-# обработка ошибок и импорты не нужны
-
-MODE = 'debug'  # Переменная MODE для отладки.
+MODE = 'debug'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,7 +75,11 @@ MODE = 'debug'  # Переменная MODE для отладки.
 </head>
 <body>
     <h1>Hypotez</h1>
-    <p>Привет, Это Давидка. Я обучаю модель</p>
+    <p>Привет, это Давидка. Я обучаю модель.</p>
 </body>
 </html>
+```
+```
+```
+```
 ```

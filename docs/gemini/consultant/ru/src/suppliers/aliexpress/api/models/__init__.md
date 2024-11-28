@@ -1,9 +1,10 @@
 **Received Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.models """
 from .languages import Language
 from .currencies import Currency
@@ -12,16 +13,21 @@ from .affiliate_link import AffiliateLink
 from .hotproducts import HotProductsResponse
 from .product import Product
 from .category import Category, ChildCategory
+
 ```
 
 **Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" Модуль моделей API AliExpress. """
-# import statements
+## ~~~~~~~~~~~~~\
+""" Модуль для работы с моделями данных API AliExpress.
+    Содержит классы для представления различных сущностей,
+    таких как языки, валюты, типы продуктов, параметры сортировки,
+    ссылки, горячие продукты и продукты.
+"""
 from .languages import Language
 from .currencies import Currency
 from .request_parameters import ProductType, SortBy, LinkType
@@ -29,24 +35,25 @@ from .affiliate_link import AffiliateLink
 from .hotproducts import HotProductsResponse
 from .product import Product
 from .category import Category, ChildCategory
-
-# Добавьте импорты, если необходимы
-# from ... import ...
-
 ```
 
 **Changes Made**
 
-- Добавлен комментарий RST к модулю, описывающий его назначение.
+* Добавлена строка документации RST для модуля, описывающая его назначение и содержимое.
+* Комментарии в формате RST оформлены по стандарту.
 
-**Full Improved Code**
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" Модуль моделей API AliExpress. """
-# import statements
+## ~~~~~~~~~~~~~\
+""" Модуль для работы с моделями данных API AliExpress.
+    Содержит классы для представления различных сущностей,
+    таких как языки, валюты, типы продуктов, параметры сортировки,
+    ссылки, горячие продукты и продукты.
+"""
 from .languages import Language
 from .currencies import Currency
 from .request_parameters import ProductType, SortBy, LinkType
@@ -54,7 +61,3 @@ from .affiliate_link import AffiliateLink
 from .hotproducts import HotProductsResponse
 from .product import Product
 from .category import Category, ChildCategory
-
-# Добавьте импорты, если необходимы
-# from ... import ...
-```
