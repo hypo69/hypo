@@ -378,6 +378,7 @@ class CodeAssistant:
                     f'doc_writer_html': '.html',  # для роли "doc_writer_html" будет использоваться .html
                     f'code_explainer_md': '.md',  # для роли "code_explainer_md" будет использоваться .md
                     f'code_explainer_html': '.html',  # для роли "code_explainer_html" будет использоваться .html
+                    f'pytest': '.md',  # для роли "code_explainer_html" будет использоваться .html
                 }.get(self.role, '.rst')  # Если роль не соответствует ни одной из вышеуказанных, по умолчанию используется .rst
             )
 
