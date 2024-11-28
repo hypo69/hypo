@@ -128,6 +128,11 @@ class GoogleGenerativeAI:
         """ Получаю конфигурацию из файла настроек"""
         return j_loads_ns(gs.path.src / 'ai' / 'gemini' / 'generative_ai.json')
 
+    def start_chat(self):
+        """"""
+        ...
+        chat = self.model.start_chat(history=[])
+
     def _save_dialogue(self, dialogue: list):
         """
         Сохранить диалог в текстовый и JSON файл с управлением размером файлов.
@@ -160,6 +165,7 @@ class GoogleGenerativeAI:
         TODO: 
             препарировать `response`
         """
+        self.model.
         for attempt in range(attempts):
             try:
                 response = self.model.generate_content(q)
@@ -218,6 +224,16 @@ class GoogleGenerativeAI:
 
         return
 
+    def send_chat_message(self, message:str) -> str:
+        """"""
+        ...
+        try:
+            response = self.chat.send_message(message)
+            return response.text
+        except Exception as ex:
+            logger.error(f"Ошибка чата {response=}",ex)
+            ...
+            return
 
     def describe_image(self, image_path: Path) -> Optional[str]:
         """
@@ -248,31 +264,7 @@ class GoogleGenerativeAI:
             return
 
 
-def chat():
-    """
-    Запускает интерактивную сессию чата.
 
-    Этот метод запускает цикл общения с пользователем, где можно задавать вопросы модели и получать ответы.
-
-    Пример:
-        >>> chat()  # Запуск чата
-    """
-    logger.debug("Hello, I am the AI assistant. Ask your questions.",None,False)
-    print("Type 'exit' to end the chat.\n")
-
-    system_instruction = input("Enter system instruction (or press Enter to skip): ")
-    
-    # Передаем значение api_key и system_instruction при инициализации
-    ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction=system_instruction or None)
-
-    while True:
-        user_input = input("> Question: ")
-        if user_input.lower() == 'exit':
-            print("Chat ended.")
-            break
-
-        response = ai.ask(q=user_input)
-        print(f">> Response:\n{response}\n")
 
 if __name__ == "__main__":
     chat()
