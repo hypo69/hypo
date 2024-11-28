@@ -1,181 +1,256 @@
-[Русский](https://github.com/hypo69/hypo/blob/master/README.RU.MD)
+# Project Hypotez
 
-# Hypotez Project
+## Contents
 
-## Table of Contents
-- [Project Description](#project-description)
+- [Project Overview](#project-overview)
 - [Key Features](#key-features)
-- [Setup Instructions](#setup-instructions)
-  - [Required Software](#required-software)
-  - [Installation Steps](#installation-steps)
-  - [Configuration](#configuration)
-- [Licenses](#licenses)
+- [Required Tools and Software](#required-tools-and-software)
+- [Installation Instructions](#installation-instructions)
+  - [Checking Python Version](#checking-python-version)
+  - [Installing Python 3.12](#installing-python-312)
+  - [Setting Up a Virtual Environment](#setting-up-a-virtual-environment)
+  - [Installing Dependencies](#installing-dependencies)
+  - [Installing npm and web-ext](#installing-npm-and-web-ext)
+  - [Installing Jupyter Lab Extensions](#installing-jupyter-lab-extensions)
+  - [Installing Playwright](#installing-playwright)
+- [Configuration](#configuration)
+  - [Setting Up Credentials](#setting-up-credentials)
+- [Additional Information](#additional-information)
+- [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/en) (**Not Ready* 😕)
+- [User Documentation](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.MD) (**Not Ready* 😕)
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest)
 
-## Project Description
+## Project Overview
 
-**In a Nutshell**:
-<br>
-<img src="images/now_feature.png" alt="Feature Image" width="270" height="320" />
-<br>
+I am working on the `hypotez` project, aimed at creating a versatile AI assistant. This assistant is designed to handle a wide range of tasks — from managing emails to analyzing market data.
 
-The `hypotez` project is your personal AI assistant designed to help with a wide range of tasks. Whether you need a virtual insurance agent, a real estate assistant, a sales specialist, an HR representative, or even an email secretary, `hypotez` has you covered. Our goal is to create a versatile assistant that can adapt to different roles and handle complex tasks as if you have a personal helper for every situation.
+### Goals and Objectives:
+- **Automating routine processes** to save time and boost efficiency.  
+- **Accurate and fast data analysis** to simplify decision-making.  
+- **Seamless interaction with technology**, tailored to user needs.
 
-Additionally, `hypotez` is a powerful data analysis tool. It comes with various libraries for statistics and visualization, helping you quickly make sense of your data and make informed decisions.
+---
 
-On top of that, the project features a handy parser and scraper that automatically gather data from websites and documents. This means you can skip the tedious data collection and get the insights you need for analysis and decision-making right away. In short, `hypotez` is your go-to assistant that speeds up your work and helps you make smart, well-informed choices.
+## Key Directions
+
+1. **Smart Assistant**: Designed for sales, HR, insurance, and task management.  
+2. **Analysis Tools**: Data visualization and decision support.  
+3. **Automated Information Gathering**: Extracting data from documents, emails, and web pages.
 
 ---
 
 ## Key Features
 
-1. **Lead Management**:
-   - Capture and store lead information.
-   - Track interactions (emails, calls, meetings).
-   - Rank leads based on potential value and engagement.
+### 1. Workflow Automation Assistant  
+- Generate meeting summaries with key points and sentiment analysis.  
+- Automate message handling and integrate with email services and messengers.
 
-2. **Sales Pipeline Management**:
-   - Monitor deals through different pipeline stages.
-   - Predict future sales performance.
-   - Assign and track tasks for each lead.
+### 2. Price Lists and Procurement  
+- Keep price lists up to date for internal and external processes.  
+- Automatically match product items from various sources.
 
-3. **Reporting and Analytics**:
-   - Generate sales performance and lead conversion reports.
-   - Create custom reports for specific sales aspects.
+### 3. Market Data Analysis  
+- Monitor market trends relevant to business, with automated report generation.  
+- Identify new opportunities based on analytical data.
 
-4. **Communication Tools**:
-   - Email integration and communication tracking.
-   - Schedule meetings and follow-ups.
+### 4. Data Processing and Analysis  
+- Integrate sales and procurement data for pattern analysis.  
+- Prepare performance metric reports.
 
-5. **Automation**:
-   - Automate email campaigns and marketing.
-   - Reduce manual entry with automated data capture.
+### 5. Parsing and Web Scraping  
+- Extract structured data from web pages, documents, and emails.  
+- Automate data collection with subsequent processing and filtering.  
+- Integrate data with internal systems for enhanced analytics.
 
-6. **Team Collaboration**:
-   - Share real-time dashboards.
-   - Enable team collaboration with shared notes and comments.
+### 6. Task Automation  
+- Reduce manual effort by automating data entry and report management.  
+- Integrate with CRM systems for automated workflows.
+
+### 7. Client and Communication Management  
+- Consolidate data from emails and messengers.  
+- Log client interactions and set reminders for tasks.
+
+### 8. Platform Integration  
+- Synchronize data with PrestaShop and other systems.  
+- Analyze customer behavior to improve user experience.
+
+### 9. Sales Funnel Management  
+- Monitor deal stages and forecast sales.  
+- Generate reports on departmental performance.
+
+### 10. Communication and Planning Tools  
+- Integrate with email services to manage communications.  
+- Automatically schedule meetings and task reminders.
+
+### 11. Analytics and Reporting  
+- Dynamic business process reports with custom metric support.  
+- Tailored data analysis for specific tasks.
+
+### 12. Advanced Automation  
+- Collect data through APIs and complex integrations.  
+- Configure scenarios for automatic document creation.
 
 ---
 
-## Setup Instructions
+## Required Tools and Software
 
-### Required Software
-
-Ensure the following software is installed on your system:
-
-1. **Web Browsers**:
-   - Firefox
-   - Chrome
-   - Edge
-
-2. **PowerShell**: For task automation and script execution.
-
-3. **Python 3.12**: Specific version required for compatibility with dependencies.
-
-4. **npm**: For managing JavaScript project dependencies.
+- **Python** (version 3.12)  
+- **Chrome/Edge/Firefox** web browsers  
 
 ---
 
-### Installation Steps
+## Installation Instructions
 
-1. **Clone the repository**:
-   ```powershell
-   # Clone the repository
-   git clone https://github.com/hypo69/hypo.git
+### Checking Python Version
+
+*The project is optimized for version 3.12.*
+
+Run the following command to check your installed Python version:
+
+```bash
+python --version
+```
+
+or
+
+```bash
+python3 --version
+```
+
+If you have multiple Python versions installed, verify with:
+
+```bash
+python3.12 --version
+python3.13 --version
+```
+
+### Installing Python 3.12
+
+#### For Linux
+
+Install Python 3.12 on Ubuntu:
+
+```bash
+sudo apt update
+sudo apt install python3.12
+```
+
+#### For Windows
+
+Download the installer from the [official Python website](https://www.python.org/downloads/release/python-3120/) and run it. (✎ Ensure the **Add Python to PATH** option is selected).
+
+#### For macOS
+
+Install Python via Homebrew:
+
+```bash
+brew install python@3.12
+```
+
+---
+
+### Setting Up a Virtual Environment
+
+1. **DEPRECATED** Install `virtualenv` using the following command:
+   ```bash
+   pip install virtualenv
    ```
-   Navigate to the `hypotez` directory.
-
-2. **Download the `bin` directory**:
-   [Download bin directory](https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo)
-   - Unzip the downloaded file into the `hypotez` folder.
-
-   Ensure the `bin` folder is unzipped directly into the project folder (select "Extract Here").
-
-3. **Set Execution Policy** (Windows):
-   ```powershell
-   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-   ```
-
-4. **Install Python 3.12**:
-   - Verify Python version:
-     ```bash
-     python --version
-     ```
-   - If Python 3.12 is not installed, follow the instructions below:
-
-     - **Linux**:
-       ```bash
-       sudo apt update
-       sudo apt install python3.12
-       ```
-
-     - **Windows**:
-       Download from [python.org](https://www.python.org/downloads/release/python-3120/) and install.
-
-     - **macOS**:
-       ```bash
-       brew install python@3.12
-       ```
-
-5. **Create Virtual Environment**:
-   After installing Python 3.12, create a virtual environment:
+2. Create a virtual environment:
    ```bash
    python3.12 -m venv venv
    ```
 
-6. **Activate Virtual Environment**:
-   - **Windows**:
+3. Activate the virtual environment:
+   - On Windows:
      ```bash
      .\venv\Scripts\activate
      ```
-   - **Linux/macOS**:
+   - On macOS/Linux:
      ```bash
      source venv/bin/activate
      ```
 
-7. **Upgrade `pip`**:
-   ```bash
-   pip install --upgrade pip setuptools wheel
-   ```
+### Installing Dependencies
 
-8. **Install Dependencies**:
+1. Install the dependencies listed in `requirements.txt`:
    ```bash
    pip install -r requirements.txt
    ```
 
-9. **Install npm and Web Extensions**:
+### Installing npm and web-ext
+
+1. Install npm:
    ```bash
    npm install -g npm
+   ```
+
+2. Install `web-ext`:
+   ```bash
    npm install -g web-ext
    ```
 
-10. **Install Playwright**:
-    ```bash
-    playwright install
-    ```
+### Installing Jupyter Lab Extensions
+
+```bash
+jupyter labextension install @jupyterlab/toc
+```
+
+### Installing Playwright
+
+1. Install Playwright:
+   ```bash
+   pip install playwright
+   ```
+
+2. Install browsers:
+   ```bash
+   playwright install
+   ```
 
 ---
 
-### Configuration
+## Configuration
 
-1. **Create `secrets` folder**:
-   ```powershell
-   $currentPath = (Get-Location).Path
-   New-Item -ItemType Directory -Path "$currentPath\secrets"
-   ```
+### Setting Up Credentials
 
-2. **Copy Credentials**:
-   Copy `credentials.kdbx.example` and `password.txt` from the `service` folder into `secrets` and remove `.example` suffix.
+Before starting, create a folder named `secrets` in the project root. Copy `credentials.kdbx.example` from the service folder into `secrets`, and remove the `.example` suffix.
 
-   ```powershell
-   Copy-Item -Path "$currentPath\credentials.kdbx.example" -Destination "$currentPath\secrets\credentials.kdbx"
-   Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\password.txt"
-   ```
+Credential structure:
 
-3. **Set API Keys and Credentials**:
-   Ensure correct API keys and credentials are configured for services like Aliexpress, OpenAI, Telegram, and others.
+1. **Suppliers > Aliexpress > API**
+   - `api_key`: Aliexpress API key.
+   - `secret`: Secret key.
+   - `tracking_id`: Tracking ID.
+   - `email`: Aliexpress account email.
+   - `password`: Aliexpress account password.
+
+2. **OpenAI**
+   - `api_key`: API key for OpenAI.
+
+3. **Telegram**, **Discord**, **Prestashop**, **SMTP**, **Facebook**, **Google API**, etc.
+
+Ensure all details are entered correctly for optimal assistant performance.
+
+```powershell
+# Define current path
+$currentPath = (Get-Location).Path
+
+# Create the 'secrets' folder
+New-Item -ItemType Directory -Path "$currentPath\secrets"
+
+# Copy example files to 'secrets' folder
+Copy-Item -Path "$currentPath\credentials.kdbx.example" -Destination "$currentPath\secrets\credentials.kdbx"
+Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\password.txt"
+```
 
 ---
 
-## Licenses
+## Next Steps
 
-Check the [LICENSE](LICENSE) file for the project’s licensing details.
+1. [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/en) (**Not Ready* 😕)  
+2. [User Documentation](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.MD) (**Not Ready* 😕)  
+3. [Tests](https://github.com/hypo69/hypo/tree/master/pytest)
+
+## Additional Information
+
+[https://davidka.net](https://davidka.net).  
