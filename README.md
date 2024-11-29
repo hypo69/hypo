@@ -1,3 +1,4 @@
+[Русский](README.ru.md)
 # Project Hypotez
 
 ## Contents
