@@ -87,7 +87,7 @@
   ],
 
   "output_directory": {
-    "code_checker": "<model><lang>/consultant/src",
+    "code_checker": "<model>/<lang>/consultant/src",
     "code_explainer_md": "<model>/<lang>/explainer/md/src",
     "code_explainer_html": "<model>/<lang>explainer/html/src",
     "pytest": "../pytest/<model>/<lang>/src",
