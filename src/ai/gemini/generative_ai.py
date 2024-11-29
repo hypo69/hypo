@@ -165,7 +165,7 @@ class GoogleGenerativeAI:
         TODO: 
             препарировать `response`
         """
-        self.model.
+        ### self.model.
         for attempt in range(attempts):
             try:
                 response = self.model.generate_content(q)
