@@ -1,18 +1,50 @@
-# Модуль `endpoints`
+[English](https://github.com/hypo69/hypo/endpoints/blob/master/readme.md)
+Модуль конечных точек взаимодействия с потребителями данных  
+=========================================================================================  
 
-Модуль `endpoints` содержит различные реализации API-конечных точек для взаимодействия с внешними сервисами и модулями. Каждая поддиректория представляет отдельный модуль с реализацией API для определенного сервиса.
+Модуль `endpoints` предоставляет реализацию API для взаимодействия с потребителями данных.  
+Каждая поддиректория представляет собой отдельный модуль, реализующий API для определённого сервиса.  
+Модуль `endpoints` включает подмодули для интеграции с различными системами потребителей,  
+обеспечивая взаимодействие с внешними сервисами.  
+
 
 ## Структура модуля
+```mermaid
+flowchart LR
+    %% Определение стиля для узлов
+    classDef unifiedWidth fill:#888,stroke:#333,stroke-width:2px,width:800px;
+    
+    %% Основная диаграмма
+    src["src.endpoints"] --> prestashop[".prestashop: API for integration with PrestaShop system"]
+    src --> advertisement[".advertisement: API for working with advertisement platforms.  f.e. `Facebook`"]
+    src --> emil[".emil: API for Emil service"]
+    src --> hypo69[".hypo69: API for interacting with Hypo69 platform"]
+    src --> kazarinov[".kazarinov: API for Kazarinov service"]
+    src --> websites["фреймворки клиентов `sergey.mymaster.co.il`,`emil-design.com`"]
+
+    %% Применение стиля
+    %% class prestashop,advertisement,emil,hypo69,kazarinov,websites unifiedWidth;
+
 
 ```
-\src\endpoints
-│
-├── \prestashop       # API для интеграции с системой PrestaShop.
-├── \advertisement    # API для работы с рекламными платформами.
-├── \emil             # API для работы с сервисом Emil.
-├── \hypo69           # API для взаимодействия с платформой Hypo69.
-├── \kazarinov        # API для сервиса Kazarinov.
-```
+
+### Final Consumer Endpoints
+
+
+# 1. **PrestaShop**
+Интеграция с API PrestaShop. Использует стандартные api.
+
+# 2. **bots**
+Подмодуль для управления интеграцией с ботами Telegram и Discord.
+
+
+# 3. **emil**
+Подмодуль для интеграции с клиентом  https://emil-design.com (prestashop + facebook)
+
+
+
+# 4. **kazarinov**
+Подмодуль для интеграции с поставщиком данных Kazarinov. (pricelist creator, facebook promotion)
 
 ## Описание модулей
 

@@ -1,84 +1,108 @@
-[Русский](https://github.com/hypo69/hypo/blob/master/README.RU.MD)
-### Example of a `README.md` File for the `endpoints` Module
+[Русский](https://github.com/hypo69/hypo/endpoints/blob/master/README.RU.MD)
+### Data Consumer Endpoints Module  
+=========================================================================================  
 
-# `endpoints` Module
+The `endpoints` module provides an implementation of APIs for interacting with data consumers.  
+Each subdirectory represents a separate module that implements the API for a specific service.  
+The `endpoints` module includes submodules for integration with various consumer systems,  
+ensuring seamless interaction with external services.  
 
-The `endpoints` module contains various API implementations for interacting with external services and modules. Each subdirectory represents a separate module with an API implementation for a specific service.
+## Module Structure  
+```mermaid  
+flowchart LR  
+    %% Node Style Definition  
+    classDef unifiedWidth fill:#888,stroke:#333,stroke-width:2px,width:800px;  
+    
+    %% Main Diagram  
+    src["src.endpoints"] --> prestashop[".prestashop: API for integration with PrestaShop system"]  
+    src --> advertisement[".advertisement: API for working with advertisement platforms.  f.e. `Facebook`"]  
+    src --> emil[".emil: API for Emil service"]  
+    src --> hypo69[".hypo69: API for interacting with Hypo69 platform"]  
+    src --> kazarinov[".kazarinov: API for Kazarinov service"]  
+    src --> websites["Client frameworks `sergey.mymaster.co.il`,`emil-design.com`"]  
+    
+    %% Apply Style  
+    %% class prestashop,advertisement,emil,hypo69,kazarinov,websites unifiedWidth;  
+```  
 
-## Module Structure
+### Final Consumer Endpoints  
 
-```
-\src\endpoints
-│
-├── \prestashop       # API for integration with the PrestaShop system.
-├── \advertisement    # API for working with advertising platforms.
-├── \emil             # API for interacting with the Emil service.
-├── \hypo69           # API for interacting with the Hypo69 platform.
-├── \kazarinov        # API for the Kazarinov service.
-```
+#### 1. **PrestaShop**  
+Integration with the PrestaShop API, utilizing standard API features.  
 
-## Module Descriptions
+#### 2. **bots**  
+Submodule for managing integration with Telegram and Discord bots.  
 
-### 1. `prestashop`
-This module is designed for integration with the PrestaShop e-commerce system. It provides functionality for interacting with orders, products, and customers.
+#### 3. **emil**
+`https://emil-design.com`
+Submodule for integrating with the client at https://emil-design.com (PrestaShop + Facebook).  
 
-- **Key Features**:
-  - Creating, editing, and deleting products.
-  - Managing orders and users.
+#### 4. **kazarinov**
+`https://sergey.mymaster.co.il`,`@hypo69_kazarinov_bot`
+Submodule for integrating with the Kazarinov data provider (pricelist creator, Facebook promotion).  
 
-### 2. `advertisement`
-This module provides an API for managing advertising platforms, including campaign creation and analytics reports.
+## Module Descriptions  
 
-- **Key Features**:
-  - Managing advertising campaigns.
-  - Collecting and processing analytics data.
+### 1. `prestashop`  
+This module is designed for integration with the PrestaShop e-commerce system. It implements functionality for managing orders, products, and customers.  
 
-### 3. `emil`
-An interface for working with the Emil service, offering an API for data exchange.
+- **Key Features**:  
+  - Create, edit, and delete products.  
+  - Manage orders and users.  
 
-- **Key Features**:
-  - Processing and sending requests to the service.
-  - Collecting data from the Emil API.
+### 2. `advertisement`  
+The module provides an API for managing advertising platforms, including campaign creation and analytical reports.  
 
-### 4. `hypo69`
-An API for interacting with the Hypo69 platform, which provides specific business solutions.
+- **Key Features**:  
+  - Manage advertising campaigns.  
+  - Collect and process analytics data.  
 
-- **Key Features**:
-  - Retrieving client data.
-  - Working with custom reports.
+### 3. `emil`  
+Interface for working with the Emil service, providing an API for data exchange.  
 
-### 5. `kazarinov`
-This module is used for integration with the Kazarinov service. It supports analytics and data exchange functionality.
+- **Key Features**:  
+  - Process and send requests to the service.  
+  - Retrieve data from the Emil API.  
 
-- **Key Features**:
-  - Data integration between systems.
-  - Report generation and analytics.
+### 4. `hypo69`  
+API for interacting with the Hypo69 platform, which offers specific business solutions.  
 
-## Installation and Usage
+- **Key Features**:  
+  - Retrieve client data.  
+  - Work with custom reports.  
 
-### Installation
-Ensure all project dependencies are installed. Use the following command:
+### 5. `kazarinov`  
+Module for integrating with the Kazarinov service. It supports analytics and data exchange functionality.  
 
-```bash
-pip install -r requirements.txt
-```
+- **Key Features**:  
+  - Data integration between systems.  
+  - Generate reports and perform analytics.  
 
-### Usage
-Import the required module in your code:
+## Installation and Usage  
 
-```python
-from src.endpoints.prestashop import PrestashopAPI
-from src.endpoints.advertisement import AdvertisementAPI
-```
+### Installation  
+Ensure all project dependencies are installed before starting. Use the following command:  
 
-Then configure and use the methods according to your use case.
+```bash  
+pip install -r requirements.txt  
+```  
 
-## Contributing
+### Usage  
+Import the required module into your code:  
 
-If you want to contribute to this module, please follow these guidelines:
+```python  
+from src.endpoints.prestashop import PrestashopAPI  
+from src.endpoints.advertisement import AdvertisementAPI  
+```  
 
-1. Adhere to the [PEP 8](https://peps.python.org/pep-0008/) coding style guide.
-2. Add tests for new functionality.
-3. Leave detailed comments for your changes.
+Then configure and use the methods depending on your use case.  
 
-For questions or suggestions, contact the repository owner or leave comments in the [Issues](#).
+## Contribution  
+
+If you want to contribute to the module, please follow these guidelines:  
+
+1. Follow [PEP 8](https://peps.python.org/pep-0008/) for code style.  
+2. Add tests for new features.  
+3. Leave detailed comments for any changes.  
+
+For questions and suggestions, contact the repository owner or leave comments in [Issues](#).  
