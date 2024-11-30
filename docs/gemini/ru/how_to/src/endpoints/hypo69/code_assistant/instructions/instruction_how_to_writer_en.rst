@@ -1,13 +1,40 @@
 Как использовать этот блок кода
-=========================================================================================\n
-\nОписание
+=========================================================================================
+
+Описание
 -------------------------
-Этот код выполняет валидацию вводимых данных. Он проверяет тип и корректность данных, поступающих из внешнего источника.  В случае несоответствия ожидаемому формату, генерируется ошибка.\n\nШаги выполнения
+Этот блок кода реализует функцию проверки корректности ввода данных. Он принимает строку и проверяет, содержит ли она только цифры.
+
+Шаги выполнения
 -------------------------
-1. Функция получает входные данные (`data`).\n
-2. Проверяет тип данных (`data`). Если тип не соответствует ожидаемому (например, не строка или число), генерируется исключение `TypeError` с подробным сообщением об ошибке.\n
-3. В зависимости от типа данных, выполняется дополнительная проверка корректности (например, проверка формата строки, диапазона чисел).\n
-4. Если данные валидны, функция возвращает True. В противном случае, генерируется исключение `ValueError` с описанием ошибки.\n\nПример использования
+1. Функция принимает на вход строку `input_string`.
+2. Она использует метод `isdigit()` для проверки, состоит ли вся строка только из цифр.
+3. Если строка содержит только цифры, функция возвращает `True`.
+4. В противном случае функция возвращает `False`.
+
+
+Пример использования
 -------------------------
 .. code-block:: python
-\n\n    def validate_input(data):\n        if not isinstance(data, str) and not isinstance(data, int) and not isinstance(data, float):\n            raise TypeError(\"Входные данные должны быть строкой, целым или вещественным числом.\")\n\n        if isinstance(data, str):\n            if not data.isalnum():\n                raise ValueError(\"Строка должна содержать только буквы и цифры.\")\n        elif isinstance(data, int):\n            if not 0 <= data <= 100:\n                raise ValueError(\"Целое число должно быть в диапазоне от 0 до 100.\")\n        elif isinstance(data, float):\n            if not 0.0 <= data <= 100.0:\n                raise ValueError(\"Вещественное число должно быть в диапазоне от 0.0 до 100.0.\")\n\n        return True\n\n    try:\n        result = validate_input(\"123abc\")\n        if result:\n            print(\"Валидные данные\")\n    except TypeError as e:\n        print(f\"Ошибка: {e}\")\n    except ValueError as e:\n        print(f\"Ошибка: {e}\")\n\n    try:\n        result = validate_input(150)\n        if result:\n            print(\"Валидные данные\")\n    except TypeError as e:\n        print(f\"Ошибка: {e}\")\n    except ValueError as e:\n        print(f\"Ошибка: {e}\")\n    try:\n        result = validate_input(50.5)\n        if result:\n            print(\"Валидные данные\")\n    except TypeError as e:\n        print(f\"Ошибка: {e}\")\n    except ValueError as e:\n        print(f\"Ошибка: {e}\")
+
+    def is_numeric(input_string):
+        """
+        Проверяет, состоит ли строка только из цифр.
+
+        :param input_string: Строка, которую нужно проверить.
+        :return: True, если строка содержит только цифры, False в противном случае.
+        """
+        if input_string.isdigit():
+            return True
+        else:
+            return False
+
+    # Пример использования
+    string_with_digits = "12345"
+    string_with_letters = "abc123"
+
+    result_digits = is_numeric(string_with_digits)
+    result_letters = is_numeric(string_with_letters)
+
+    print(f"'{string_with_digits}' содержит только цифры: {result_digits}")  # Выведет True
+    print(f"'{string_with_letters}' содержит только цифры: {result_letters}")  # Выведет False

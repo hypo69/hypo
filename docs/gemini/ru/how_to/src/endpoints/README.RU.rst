@@ -1,51 +1,53 @@
-Как использовать модуль endpoints
-========================================================================================
+Как использовать модуль конечных точек (endpoints)
+=========================================================================================
 
 Описание
 -------------------------
-Модуль `endpoints` предоставляет API-конечные точки для взаимодействия с различными внешними сервисами (PrestaShop, рекламные платформы, Emil, Hypo69, Kazarinov).  Каждая поддиректория (например, `prestashop`, `advertisement`) содержит API для конкретного сервиса.  Модуль структурирован для удобства интеграции и расширения.
+Модуль `endpoints` предоставляет API для взаимодействия с внешними системами (PrestaShop, рекламные платформы, Emil, Hypo69, Kazarinov).  Каждая поддиректория (`prestashop`, `advertisement`, `emil`, `hypo69`, `kazarinov`) представляет отдельный модуль для работы с конкретной системой.  Модуль обеспечивает интеграцию с различными внешними сервисами.
 
 Шаги выполнения
 -------------------------
-1. **Установка зависимостей:**  Убедитесь, что все необходимые библиотеки установлены. Используйте команду `pip install -r requirements.txt`.
+1. **Установка зависимостей**: Убедитесь, что все необходимые библиотеки установлены. Для этого выполните команду:
 
-2. **Импорт нужного модуля:**  Импортируйте API-класс из нужной поддиректории. Например, для работы с PrestaShop:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-   .. code-block:: python
+2. **Импорт необходимых модулей**: Импортируйте нужный модуль в свой код. Например, для работы с PrestaShop:
 
-       from src.endpoints.prestashop import PrestashopAPI
+   ```python
+   from src.endpoints.prestashop import PrestashopAPI
+   ```
 
-3. **Инициализация API-объекта:** Создайте экземпляр класса API, передавая необходимые параметры (например, логин, пароль, URL).
+3. **Инициализация API**: Создайте экземпляр класса API, соответствующего необходимой системе.  Используйте необходимые параметры для подключения (например, API-ключ, URL).  Пример инициализации для PrestaShop:
 
-   .. code-block:: python
+   ```python
+   api = PrestashopAPI(api_key='YOUR_API_KEY', api_url='YOUR_API_URL')
+   ```
 
-       # Пример (конкретные параметры зависят от API)
-       api = PrestashopAPI(api_key="YOUR_API_KEY", api_secret="YOUR_API_SECRET", base_url="YOUR_BASE_URL")
+4. **Вызов методов**: Используйте методы API для выполнения операций, таких как получение данных, отправка запросов или выполнение других действий.  Пример использования метода для получения списка товаров в PrestaShop:
 
-4. **Вызов методов API:**  Используйте методы API для взаимодействия с внешним сервисом.  Документация к конкретному API-модулю (например, `prestashop`) должна содержать список доступных методов и их параметры.
+   ```python
+   products = api.get_products()
+   ```
 
-   .. code-block:: python
-
-       # Пример (конкретные методы зависят от API)
-       products = api.get_products()
-       order = api.create_order(customer_id=123, product_id=456)
-
+5. **Обработка результатов**: Обработайте полученные данные или результаты выполнения запроса.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from src.endpoints.prestashop import PrestashopAPI
+   from src.endpoints.prestashop import PrestashopAPI
 
-    # Замените на ваши данные
-    api_key = "YOUR_API_KEY"
-    api_secret = "YOUR_API_SECRET"
-    base_url = "YOUR_BASE_URL"
+   # Замените на ваши ключи и URL
+   api_key = 'YOUR_API_KEY'
+   api_url = 'YOUR_API_URL'
+   api = PrestashopAPI(api_key=api_key, api_url=api_url)
 
-    try:
-        api = PrestashopAPI(api_key, api_secret, base_url)
-        products = api.get_products()
-        for product in products:
-            print(product['name'])
-    except Exception as e:
-        print(f"Ошибка: {e}")
+   try:
+       # Получение списка продуктов
+       products = api.get_products()
+       for product in products:
+           print(f"ID: {product['id']}, Название: {product['name']}")
+   except Exception as e:
+       print(f"Ошибка: {e}")

@@ -3,24 +3,22 @@
 
 Описание
 -------------------------
-Этот код импортирует модули из пакета `hypotez/src/gui/openai_trаigner`, в том числе `AssistantMainWindow` из модуля `main_window`.  Он, вероятно, является частью инициализации или настройки графического интерфейса приложения (GUI), связанного с обучением OpenAI.  В частности, код определяет константу `MODE`, имеющую значение 'dev', и импортирует данные о версии из файла `version.py` и модуль `AssistantMainWindow`.
+Файл `hypotez/src/gui/openai_trаigner/__init__.py` содержит импортные инструкции и константы.  Этот файл инициализирует модуль `src.gui.openai_trаigner`.  Он импортирует необходимый функционал, в частности, класс `AssistantMainWindow` из подмодуля `main_window`.
 
 Шаги выполнения
 -------------------------
-1. Импортируется модуль `Version` из пакета `packaging`.
-2. Импортируются переменные `__version__`, `__doc__`, `__details__` из модуля `version.py`.
-3. Импортируется модуль `AssistantMainWindow` из модуля `main_window`.
-4. Определяется константа `MODE` со значением 'dev'.
+1. Импортирует модуль `Version` из библиотеки `packaging`.
+2. Импортирует переменные `__version__`, `__doc__`, `__details__` из файла `version.py`.
+3. Импортирует класс `AssistantMainWindow` из файла `main_window.py`.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    # Предполагается, что вы уже импортировали необходимые модули, 
-    # например, для запуска приложения
+    # Этот пример демонстрирует импорт из файла __init__.py
     from hypotez.src.gui.openai_trаigner import AssistantMainWindow
-    # ... остальные импорты и инициализации ...
 
-    # Далее вы можете использовать AssistantMainWindow для создания и работы с окном приложения
-    main_window = AssistantMainWindow()
-    main_window.show()
+    # Далее вы можете использовать импортированный класс AssistantMainWindow
+    # Например, чтобы создать экземпляр класса:
+    mainWindow = AssistantMainWindow()
+    mainWindow.show()  # отобразить главное окно

@@ -6,7 +6,7 @@
 """
 .. module: src.endpoints.kazarinov.react 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: 
 
 """
 MODE = 'dev'

@@ -3,23 +3,30 @@
 
 Описание
 -------------------------
-Этот код реализует Telegram-бота KazarinovTelegramBot, предназначенного для обработки различных команд и сообщений. Бот взаимодействует с парсером Mexiron, моделью Google Generative AI и обрабатывает текстовые сообщения, документы и URL-адреса.  Он инициализируется из конфигурационного файла `kazarinov.json`, регистрирует команды и обработчики сообщений, маршрутизирует текстовые сообщения по URL, использует Mexiron для парсинга данных и генерации прайс-листов, генерирует ответы с помощью Google Generative AI и логирует сообщения пользователей.  В данном примере показано, как обработать текстовое сообщение, содержащее URL.  Также показано обращение к методам для обработки команды `next`.
+Данный код определяет класс `KazarinovTelegramBot`, представляющий собой Telegram-бота для проекта Kazarinov.  Бот обрабатывает текстовые сообщения, URL-адреса, команды и взаимодействует с внешними сервисами (Mexiron, Google Generative AI) для выполнения различных задач.  Код загружает конфигурацию из файла `kazarinov.json`, определяет инструкции и логирует сообщения пользователей.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых библиотек:**  Код импортирует необходимые библиотеки для работы с Telegram API, файлами, URL-адресами, JSON-данными, обработкой текста и т.д.
+1. **Импортирование библиотек:** Импортируются необходимые библиотеки для работы с Telegram API, файловой системой, URL, парсингом JSON, логированием и другими задачами.
 
-2. **Определение класса `KazarinovTelegramBot`:** Создается класс `KazarinovTelegramBot`, наследующий от `TelegramBot` и `BotHandler`.  В классе задаются пути к файлам с инструкциями и конфигурационному файлу, а также переменная `token` для авторизации бота в Telegram.
+2. **Определение констант и переменных:** Определяется переменная `MODE` (в данном случае 'dev') и пути к файлам конфигурации, инструкциям и списка вопросов.
 
-3. **Инициализация бота:** В методе `__init__` происходит инициализация объекта бота с заданными параметрами (режим работы, драйвер браузера) и подстановкой токена для `test` или `production` режима из переменной `config`.
+3. **Класс `KazarinovTelegramBot`:**
+    * Наследуется от `TelegramBot` и `BotHandler`, получая функциональность базовых классов.
+    * Инициализирует Telegram-бота с токеном, загружает конфигурацию из файла `kazarinov.json` и загружает инструкции.
+    *  Устанавливает режим работы (test или production) в зависимости от переменной `mode`.
+    * Инициализирует необходимые переменные: `token` (токен Telegram бота), `config` (загруженная конфигурация), инструкции `system_instruction` и `mexiron_command_instruction`, путь к списку вопросов `questions_list_path`.
 
-4. **Обработка сообщений:** Метод `handle_message` обрабатывает текстовые сообщения.
+4. **Обработка текстовых сообщений:** Метод `handle_message` обрабатывает текстовые сообщения.
+    * Если сообщение является URL, вызывает метод `handle_url` для обработки.
+    * Если сообщение является командой `--next`, `-next`, `__next`, `-n`, `-q`, вызывает метод `handle_next_command`.
+    * В противном случае, отправляет сообщение в модель Google Generative AI для получения ответа и отправляет ответ пользователю.
 
-    - **Обработка URL:** Если сообщение содержит URL, вызывается метод `handle_url` для дальнейшей обработки.
-    - **Обработка команд `next`:**  Если сообщение содержит команды типа `--next`, `-next`, `__next` ,  `-n` или `-q` вызывается `handle_next_command`.
-    - **Обработка текстовых сообщений:** В противном случае, сообщение обрабатывается моделью Google Generative AI и результат отправляется пользователю.
+5. **Обработка URL:** Метод `handle_url` (не показан в данном фрагменте, но подразумевается).
 
-5. **Запуск бота:** В блоке `if __name__ == "__main__":` инициализируется объект бота и запускается основной цикл обработки сообщений.
+6. **Обработка команды `--next`:** Метод `handle_next_command` (не показан в данном фрагменте, но подразумевается).
+
+7. **Инициализация и запуск бота:** В блоке `if __name__ == "__main__":` создаётся экземпляр бота `KazarinovTelegramBot` и запускается метод `run_polling` для начала работы бота.
 
 
 Пример использования
@@ -29,22 +36,17 @@
     import asyncio
     from telegram import Update
     from telegram.ext import CallbackContext
-    from hypotez.src.endpoints.kazarinov.kazarinov_bot import KazarinovTelegramBot
+    # ... (Импорты, определение класса KazarinovTelegramBot из файла)
 
-    async def example_message_handling(update: Update, context: CallbackContext) -> None:
-        """Example message handling using KazarinovTelegramBot."""
-        bot = KazarinovTelegramBot(mode='test')  # Initialize the bot
-        await bot.handle_message(update, context)  # Handle the message
-        # Add any necessary post-processing steps here, if needed.
+    async def my_function(update: Update, context: CallbackContext) -> None:
+        bot: KazarinovTelegramBot = context.bot # type: ignore
+        # ... (ваш код для использования методов KazarinovTelegramBot)
+        await bot.handle_message(update, context)  # Пример использования метода
 
-    async def example_url_handling(update: Update, context: CallbackContext) -> None:
-        """Example handling URL in a message"""
-        bot = KazarinovTelegramBot(mode='test')
-        # Simulate an update with a URL message
-        update.message.text = "https://example.com"
-        await bot.handle_message(update, context)
 
+    async def main():
+        kt = KazarinovTelegramBot(mode='test', webdriver_name='chrome')
+        await kt.application.run_polling()
 
     if __name__ == "__main__":
-        asyncio.run(example_message_handling(None, None)) # Replace with actual Update and context for testing
-        asyncio.run(example_url_handling(None, None)) # Replace with actual Update and context for testing
+        asyncio.run(main())

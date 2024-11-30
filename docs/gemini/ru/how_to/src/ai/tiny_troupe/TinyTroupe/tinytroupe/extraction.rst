@@ -3,54 +3,65 @@
 
 Описание
 -------------------------
-Этот код содержит классы для извлечения и обработки данных из симуляций TinyTroupe.  `ResultsExtractor` позволяет извлекать результаты из объектов `TinyPerson` и `TinyWorld`, используя запросы к LLM.  `ResultsReducer` обрабатывает результаты, применяя к ним правила, а `ArtifactExporter` экспортирует данные в различные форматы (JSON, TXT, DOCX).  `Normalizer` нормализует текстовые элементы.  Модуль демонстрирует взаимодействие с LLM для структурированного извлечения данных из симуляций.
+Этот модуль предоставляет инструменты для извлечения данных из элементов TinyTroupe, таких как агенты и миры. Он также включает механизм для сокращения извлечённых данных и экспорта артефактов из элементов TinyTroupe. Модуль демонстрирует один из способов отличия симуляций агентов от AI-помощников, так как последние не предназначены для такого рода интроспекции. Модуль содержит классы `ResultsExtractor`, `ResultsReducer` и `ArtifactExporter`, а также функцию `default_extractor`.  `ResultsExtractor` извлекает результаты из агентов и миров на основе заданных параметров. `ResultsReducer` сокращает полученные данные. `ArtifactExporter` экспортирует данные в различные форматы (JSON, TXT, DOCX).  `default_extractor` — это экземпляр класса `ResultsExtractor`.
 
 Шаги выполнения
 -------------------------
-1. **Импорт необходимых библиотек:**
-   Импортируются библиотеки `os`, `json`, `chevron`, `logging`, `pandas`, `pypandoc`, `markdown`, `typing`, а также специфичные для TinyTroupe классы (`TinyPerson`, `TinyWorld`, `JsonSerializableRegistry`).
+1. **Импортирование необходимых библиотек:** Модуль использует `os`, `json`, `chevron`, `logging`, `pandas`, `pypandoc`, `markdown`, `typing`, а также собственные модули TinyTroupe.
 
-2. **Инициализация `ResultsExtractor`:**
-   Создается экземпляр класса `ResultsExtractor`, который отвечает за взаимодействие с LLM для извлечения данных. Он инициализирует путь к шаблону запроса.
+2. **Инициализация `ResultsExtractor`:** Создайте экземпляр класса `ResultsExtractor`, чтобы начать извлечение данных.
 
-3. **Извлечение результатов от `TinyPerson`:**
-   Метод `extract_results_from_agent` извлекает результаты от объекта `TinyPerson`.  Он принимает объект `TinyPerson`, целевой запрос и другие параметры (например, `extraction_objective`,  `situation`, список полей для извлечения и др.). Он генерирует запрос к LLM для обработки истории взаимодействий агента и сохраняет результат в `self.agent_extraction`.
+3. **Извлечение данных из агента (метод `extract_results_from_agent`):**
+    - Передайте экземпляр `TinyPerson` в качестве аргумента `tinyperson`.
+    - Укажите `extraction_objective` (цель извлечения).
+    - Добавьте `situation` (контекст).
+    - Можно указать `fields` (поля для извлечения) и `fields_hints` (подсказки к полям).
+    - Установите `verbose=True` для вывода отладочных сообщений.
+    - Метод `pretty_current_interactions` извлекает историю взаимодействий агента.
+    - Метод `send_message` из библиотеки `openai_utils` отправляет запрос на API OpenAI.
+    - Результат извлечения сохраняется в словаре `self.agent_extraction`.
 
-4. **Извлечение результатов от `TinyWorld`:**
-   Аналогично, метод `extract_results_from_world` извлекает результаты от объекта `TinyWorld`, обрабатывая историю взаимодействий всех агентов в среде.
+4. **Извлечение данных из мира (метод `extract_results_from_world`):** Аналогично шагу 3, но для экземпляра `TinyWorld` и с учётом взаимодействия нескольких агентов.
 
-5. **Сохранение результатов:**
-   Метод `save_as_json` сохраняет результаты извлечения (`self.agent_extraction`, `self.world_extraction`) в JSON-файл.
+5. **Сохранение результатов (метод `save_as_json`):**
+    - Сохраните извлечённые данные в JSON-файл с помощью `save_as_json`.
+    - Укажите имя файла.
+    - Установите `verbose=True` для отображения сообщения о сохранении.
 
-6. **Редукция результатов (`ResultsReducer`):**
-   Класс `ResultsReducer` позволяет применять правила к извлечённым данным.  Метод `add_reduction_rule` добавляет пользовательские правила, которые применяются к данным из истории взаимодействия. Метод `reduce_agent` применяет эти правила к истории агента, возвращая обработанные данные.
 
-7. **Преобразование в DataFrame:**
-   Метод `reduce_agent_to_dataframe` преобразует полученные данные в DataFrame pandas для удобной обработки и анализа.
+6. **Сокращение результатов (класс `ResultsReducer`):**
+    - Создайте экземпляр `ResultsReducer`.
+    - Используйте `add_reduction_rule`, чтобы определить правила сокращения.  Функции  `func` обрабатывают стимулы и действия.
+    - Метод `reduce_agent` применяет правила к истории взаимодействия агента.
+    - Метод `reduce_agent_to_dataframe` преобразует сокращённые данные в таблицу Pandas.
 
-8. **Экспорт данных (`ArtifactExporter`):**
-   Класс `ArtifactExporter` позволяет экспортировать извлеченные данные в различные форматы (JSON, TXT, DOCX).  Метод `export` принимает данные для экспорта, имя файла и формат для сохранения, обеспечивая валидацию и преобразование данных.
+7. **Экспорт артефактов (класс `ArtifactExporter`):**
+    - Создайте экземпляр класса `ArtifactExporter` и передайте путь к основной папке вывода в качестве аргумента.
+    - Используйте метод `export`, чтобы экспортировать артефакты в выбранный формат (JSON, TXT, DOCX).
+    - Укажите имя артефакта, данные, тип контента, формат контента, целевой формат и флаг `verbose`.
 
-9. **Нормализация данных (`Normalizer`):**
-   Класс `Normalizer` нормализует список текстовых элементов, используя LLM.  Метод `normalize` применяет предварительно подготовленные LLM-правила для нормализации входных данных.
+
+8. **Нормализация данных (класс `Normalizer`):**
+    - Создайте экземпляр класса `Normalizer`.
+    - Передайте список элементов для нормализации и `n` (количество элементов вывода).
+    - Используйте метод `normalize`, чтобы нормализовать заданные элементы.
+
+
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from tinytroupe.extraction import ResultsExtractor, ArtifactExporter
+    from tinytroupe.extraction import ResultsExtractor, ArtifactExporter, Normalizer
     from tinytroupe.agent import TinyPerson
-    # ... (инициализация TinyPerson) ...
+    from tinytroupe.environment import TinyWorld
 
+    # Предположим, что вы уже инициализировали TinyPerson и TinyWorld
     extractor = ResultsExtractor()
-    results = extractor.extract_results_from_agent(my_agent, extraction_objective="Ключевые моменты", situation="Обычная ситуация")
+    agent_results = extractor.extract_results_from_agent(tinyperson, extraction_objective="Краткое изложение разговора")
 
-    exporter = ArtifactExporter("path/to/output")
-    exporter.export("agent_results", results, "agent_interactions", target_format="json")
+    exporter = ArtifactExporter(base_output_folder="output_data")
+    exporter.export(artifact_name="agent_summary", artifact_data=agent_results, content_type="agent_interactions", target_format="json", verbose=True)
 
-    # Пример использования ResultsReducer (если требуется)
-    from tinytroupe.extraction import ResultsReducer
-    reducer = ResultsReducer()
-    reducer.add_reduction_rule("question", lambda x: x['content'].split('?')[0])
-    reduced_results = reducer.reduce_agent(my_agent)
-```
+    normalizer = Normalizer(elements=["element1", "element2"], n=2)
+    normalized_elements = normalizer.normalize(["element1"])

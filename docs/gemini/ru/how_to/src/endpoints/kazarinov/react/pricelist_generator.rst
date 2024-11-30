@@ -3,48 +3,49 @@
 
 Описание
 -------------------------
-Этот код реализует класс `ReportGenerator` для генерации отчетов в HTML и PDF форматах.  Класс принимает данные в формате JSON, шаблон HTML-документа и пути к файлам для сохранения HTML и PDF.  Он использует Jinja2 для рендеринга шаблона с данными, а `pdfkit` для преобразования HTML в PDF.  Код также содержит методы для загрузки данных, генерации HTML, сохранения HTML-файла и генерации PDF-файла.  Важная часть - корректная настройка пути к `wkhtmltopdf` для успешного преобразования.
+Этот код реализует класс `ReportGenerator` для генерации HTML и PDF отчётов на основе данных из JSON-файла.  Класс использует Jinja2 для рендеринга HTML-шаблона и библиотеку pdfkit для преобразования HTML в PDF. Он предоставляет методы для загрузки данных, генерации HTML, сохранения HTML в файл, генерации PDF, а также для запуска полного цикла генерации отчета.  Код также включает настройку `wkhtmltopdf` для корректной работы с PDF-генерацией.
 
 Шаги выполнения
 -------------------------
-1. **Инициализация класса `ReportGenerator`**: Создается экземпляр класса `ReportGenerator`, который принимает путь к шаблону HTML.
-2. **Загрузка данных**:  Метод `create_report` принимает данные в формате словаря (dict) и пути к файлам для сохранения HTML и PDF.
-3. **Генерация HTML**: Метод `generate_html` рендерит HTML-шаблон с использованием данных, переданных в `create_report`.  Он использует Jinja2 для подстановки данных в шаблон.
-4. **Сохранение HTML**: Метод `create_report` сохраняет сгенерированный HTML-код в указанный файл.
-5. **Генерация PDF**: Метод `create_report` преобразует HTML-код в PDF-файл используя `html2pdf`.
-6. **Сохранение PDF**:  Метод `create_report` сохраняет сгенерированный PDF-файл в указанный файл.
+1. **Импортирует необходимые библиотеки**:  Код импортирует необходимые модули, включая `json`, `jinja2`, `pdfkit`, `pathlib`,  `dataclass`, и другие утилиты для работы с файлами, данными и преобразованием HTML в PDF. Он также настраивает `pdfkit` для использования указанного исполняемого файла `wkhtmltopdf`.
 
+2. **Определяет класс `ReportGenerator`**: Определяет класс `ReportGenerator`, содержащий методы для генерации отчётов.
+
+3. **Инициализирует класс `ReportGenerator`**: В методе `__init__` задаются необходимые пути к шаблону и загружаются необходимые данные.
+
+4. **Генерирует HTML-контент**: Метод `generate_html` принимает словарь данных (`data`) и рендерит HTML-шаблон с помощью Jinja2, используя переданные данные.  Для этого считывает HTML-шаблон из файла.
+
+5. **Сохраняет HTML в файл**: Метод `create_report` сохраняет сгенерированный HTML-код в указанный файл.
+
+6. **Генерирует PDF**: Метод `create_report` преобразует сгенерированный HTML-код в PDF-файл с помощью библиотеки `pdfkit`.  Код пытается использовать разные методы для конвертации HTML в PDF, включая `html2pdf`.
+
+7. **Обрабатывает ошибки и логирование**:  В коде отсутствует явная обработка ошибок.  Было бы желательно добавить обработку исключений для корректного завершения процесса в случае проблем.
+
+8. **Запуск основной функции `main`**: Функция `main` загружает данные из JSON, генерирует HTML и PDF отчёты, используя класс `ReportGenerator`, и сохраняет их в указанные файлы.
+
+9. **Основная точка входа (`if __name__ == "__main__":`)**:  Код запускает функцию `main` с определёнными параметрами (`mexiron` и `lang`), чтобы сгенерировать отчеты для заданных данных.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    import json
+    import os
     from pathlib import Path
-    from hypotez.src.endpoints.kazarinov.react.pricelist_generator import ReportGenerator  # Импорт класса
+    from hypotez.src.endpoints.kazarinov.react.pricelist_generator import main
 
-    # Пути к файлам
-    base_path = Path("./data/kazarinov/mexironim/202410262326")
-    data_file = base_path / "202410262326_ru.json"
-    html_file = base_path / "202410262326_ru.html"
-    pdf_file = base_path / "202410262326_ru.pdf"
+    # Замените на фактические пути и значения.
+    mexiron_name = "24_11_30_19_19_06_068"
+    lang = "ru"
+    base_dir = Path("./your_data_folder") # Путь к папке с данными.  ВАЖНО!
+    # Создайте папки, если их нет.
+    Path(base_dir / "kazarinov" / "mexironim" / mexiron_name).mkdir(parents=True, exist_ok=True)
 
-    try:
-        # Загрузка данных
-        with open(data_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
 
-        # Создание экземпляра класса ReportGenerator
-        generator = ReportGenerator()
+    # Создание файла для данных
+    with open(base_dir / "kazarinov" / "mexironim" / mexiron_name / "ru.json", "w") as f:
+        json.dump({}, f, indent=4) #  Замените пустой словарь на ваши данные.
 
-        # Генерация отчета
-        generator.create_report(data, html_file, pdf_file)
 
-        print(f"Отчет успешно сгенерирован в {html_file} и {pdf_file}")
-
-    except FileNotFoundError:
-        print(f"Ошибка: Файл {data_file} не найден.")
-    except json.JSONDecodeError:
-        print(f"Ошибка: Некорректный формат данных в файле {data_file}.")
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
+    result = main(mexiron_name, lang)
+    if result:
+        print(f"Отчеты успешно сгенерированы для {mexiron_name}.")

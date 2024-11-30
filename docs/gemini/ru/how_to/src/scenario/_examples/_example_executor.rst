@@ -3,52 +3,31 @@
 
 Описание
 -------------------------
-Этот файл (`hypotez/src/scenario/_examples/_example_executor.py`) содержит примеры использования модуля `executor` из пакета `src.scenario.executor`.  Примеры демонстрируют, как запускать сценарии, работать с файлами сценариев, взаимодействовать с API PrestaShop, включая добавление купонов и синхронную/асинхронную загрузку данных.
+Этот файл содержит примеры использования модуля `executor` из пакета `src.scenario.executor`. Он демонстрирует, как запускать сценарии, обрабатывать файлы сценариев, взаимодействовать с API PrestaShop.  Примеры включают запуск списка файлов сценариев, одиночного файла, одиночного сценария, загрузки страницы продукта, добавления купона.  Файл предоставляет функции для выполнения различных задач:  запуск сценариев, работа с файлами сценариев, вставка данных, полученных со страниц продуктов, добавление купонов в PrestaShop.
 
 Шаги выполнения
 -------------------------
-1. **Импорт необходимых модулей**:  Код импортирует нужные библиотеки, такие как `asyncio`, `pathlib`, функции для работы со сценариями (`run_scenario_files`, `run_scenario_file`, `run_scenarios`, `run_scenario`), для работы с PrestaShop (`execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`, `add_coupon`) и другие вспомогательные функции.
+1. **Импортирование необходимых модулей:**  Код импортирует нужные модули, включая `run_scenario_files`, `run_scenario_file`, `run_scenarios`, `run_scenario`, `insert_grabbed_data`, `execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`, `add_coupon` из модуля `src.scenario.executor`,  `j_loads` из `src.utils`, `ProductFields` из `src.product`, `PrestaShop` из `src.endpoints.PrestaShop`.
+2. **Определение вспомогательных классов:** Вводятся классы `MockSupplier`, `MockRelatedModules`, `MockDriver`. Эти классы имитируют взаимодействия с внешними системами, такими как поставщик данных, модули, драйвер браузера, что позволяет тестировать и использовать код без необходимости подключения к реальным ресурсам.
+3. **Определение функций-примеров:**  Код содержит несколько функций-примеров, демонстрирующих использование различных функций модуля `executor`.
+   - `example_run_scenario_files`: Запуск списка файлов сценариев.
+   - `example_run_scenario_file`: Запуск одного файла сценария.
+   - `example_run_scenario`: Запуск одного сценария.
+   - `example_insert_grabbed_data`: Вставка данных, полученных со страницы продукта, в PrestaShop.
+   - `example_add_coupon`: Добавление купона в PrestaShop.
+   - `example_execute_PrestaShop_insert_async`: Асинхронное выполнение вставки данных в PrestaShop.
+   - `example_execute_PrestaShop_insert`: Синхронное выполнение вставки данных в PrestaShop.
 
-2. **Определение вспомогательных классов**:  Создаются имитации классов `MockSupplier`, `MockRelatedModules`, `MockDriver`, которые имитируют работу с данными для тестирования. Это важно для изоляции тестирования и упрощения примеров без реального взаимодействия с системами.
-
-3. **Определение функций-примеров**:  Файл содержит функции `example_run_scenario_files`, `example_run_scenario_file`, `example_run_scenario`, `example_insert_grabbed_data`, `example_add_coupon` и т.д., демонстрирующие различные способы использования функций из модуля `executor`.
-
-4. **Заполнение данных для примеров**: В примерах используются примерные данные, такие как пути к сценариям, URL, данные продукта, настройки API.
-
-5. **Вызов функций-примеров**: Основная часть кода (`if __name__ == "__main__":`) выполняет примеры запуска сценариев и добавления купонов, а также запуск асинхронных операций.
-
-6. **Обработка результатов**: Примеры проверяют результат выполнения и выводят соответствующие сообщения (успех или неудачу).
-
-7. **Асинхронные операции**: В примере `example_execute_PrestaShop_insert_async` показано использование `asyncio.run` для выполнения асинхронной операции.
-
+4. **Вызов функций-примеров:** В блоке `if __name__ == "__main__":` выполняется вызов функций-примеров для демонстрации их работы.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    # Пример запуска сценариев из списка файлов
-    def example_run_scenario_files():
-        supplier = MockSupplier()
-        scenario_files = [Path('scenarios/scenario1.json'), Path('scenarios/scenario2.json')]
-        result = run_scenario_files(supplier, scenario_files)
-        if result:
-            print("Все сценарии выполнены успешно.")
-        else:
-            print("Некоторые сценарии не выполнены.")
+    # Пример использования функции example_run_scenario_files
+    from hypotez.src.scenario._examples._example_executor import example_run_scenario_files
+    example_run_scenario_files()
 
-
-    # Пример запуска асинхронного добавления данных в PrestaShop
-    async def example_execute_PrestaShop_insert_async():
-        product_fields = ProductFields(
-            presta_fields_dict={'reference': 'REF123', 'name': [{'id': 1, 'value': 'Sample Product'}], 'price': 100},
-            assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'],
-                               'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'})
-        await execute_PrestaShop_insert_async(product_fields)
-        print("Данные продукта добавлены в PrestaShop асинхронно.")
-
-
-    # Запуск примеров
-    if __name__ == "__main__":
-        example_run_scenario_files()
-        # ... (Другие примеры) ...
-        asyncio.run(example_execute_PrestaShop_insert_async())
+    # Пример использования функции example_add_coupon
+    from hypotez.src.scenario._examples._example_executor import example_add_coupon
+    example_add_coupon()

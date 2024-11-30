@@ -3,36 +3,29 @@
 
 Описание
 -------------------------
-Этот файл (`hypotez/src/endpoints/kazarinov/react/__init__.py`) импортирует класс `ReportGenerator` из модуля `pricelist_generator`.  Он также определяет константу `MODE` со значением 'dev'.  Этот файл, скорее всего, является частью более крупного проекта, связанного с генерацией прайслистов в разных форматах (pdf, html).
+Этот модуль (`hypotez/src/endpoints/kazarinov/react/__init__.py`) импортирует класс `ReportGenerator` из файла `pricelist_generator.py`, расположенного в той же директории.  Также он определяет константу `MODE` со значением 'dev'. Этот модуль, по всей видимости, является начальной точкой для генерации прайслистов в формате PDF и HTML.
 
 Шаги выполнения
 -------------------------
-1. Импортируется класс `ReportGenerator` из модуля `pricelist_generator`.  Этот шаг подготавливает к использованию функциональности, предоставляемой модулем.
-2. Определяется константа `MODE` со значением 'dev'.  Это, вероятно, конфигурационная переменная, используемая для управления режимом работы программы (например, 'dev' для разработки, 'prod' для производства).
+1. Импортируется класс `ReportGenerator` из модуля `pricelist_generator`.
+2. Переменная `MODE` устанавливается в значение 'dev'.  Это, скорее всего, определяет режим работы приложения (например, режим разработки).
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    # Предполагается, что модуль pricelist_generator содержит класс ReportGenerator
-    from hypotez.src.endpoints.kazarinov.react import ReportGenerator
-    
-    # Создание экземпляра генератора прайслиста
-    generator = ReportGenerator()
-    
-    # Получение данных для генерации прайслиста (например, из базы данных).
-    data = get_pricelist_data()  # Предполагаемый метод для получения данных
-    
-    # Генерация прайслиста в формате PDF
-    pdf_report = generator.generate_pricelist(data, format='pdf')
-    
-    # Сохранение сгенерированного PDF
-    with open('pricelist.pdf', 'wb') as f:
-        f.write(pdf_report)
+    # Предполагается, что в файле pricelist_generator.py определен класс ReportGenerator
+    # и методы для генерации PDF и HTML прайслистов
 
-    # Генерация прайслиста в формате HTML
-    html_report = generator.generate_pricelist(data, format='html')
-    
-    # Сохранение сгенерированного HTML
-    with open('pricelist.html', 'w', encoding='utf-8') as f:
-        f.write(html_report)
+    from hypotez.src.endpoints.kazarinov.react import ReportGenerator
+
+    # Создание экземпляра ReportGenerator
+    generator = ReportGenerator()
+
+    # Пример генерации PDF прайслиста (замените на ваши данные):
+    generator.generate_pdf_report(data_for_report)  # Необходимо определить data_for_report
+    # ... далее вы можете обработку результата.
+
+    # Пример генерации HTML прайслиста:
+    html_report = generator.generate_html_report(data_for_report) # Необходимо определить data_for_report
+    # ... далее вы можете обработку результата.

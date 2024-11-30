@@ -3,60 +3,32 @@
 
 Описание
 -------------------------
-Этот код определяет класс `EventHandler`, который обрабатывает события потокового ответа от OpenAI API.  Класс наследуется от `AssistantEventHandler` и переопределяет методы для обработки разных событий, таких как создание текста, изменение текста, создание запроса к инструменту и изменение запроса к инструменту.  Это позволяет собирать и выводить  информацию в потоковом режиме из ответов OpenAI.
+Этот код определяет класс `EventHandler`, который обрабатывает события, возвращаемые API OpenAI для диалоговых моделей.  Класс наследуется от `AssistantEventHandler` и переопределяет методы для обработки различных событий, таких как создание текста, изменения текста, создание вызовов инструментов и изменения вызовов инструментов.  Класс предназначен для обработки потоковой передачи данных от OpenAI.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых библиотек:**
-   Код импортирует необходимые модули, включая `AssistantEventHandler`, `OpenAI`,  типы данных для текстовых и инструментальных вызовов из `openai` библиотеки.
+1. **Импортирует необходимые модули:** Импортирует классы `AssistantEventHandler`, `OpenAI`, `Text`, `TextDelta`, `ToolCall`, и `ToolCallDelta` из библиотеки `openai`. Также импортирует `override` из `typing_extensions`.
 
-2. **Определение класса `EventHandler`:**
-   Создается класс `EventHandler`, наследующийся от `AssistantEventHandler`.
+2. **Определяет класс `EventHandler`:** Создает класс `EventHandler`, наследующийся от `AssistantEventHandler`.  Этот класс содержит переопределенные методы для обработки событий.
 
-3. **Переопределение методов для обработки событий:**
-   - Метод `on_text_created` выводит сообщение "assistant > " перед новым текстом.
-   - Метод `on_text_delta` добавляет новые символы текста.
-   - Метод `on_tool_call_created` выводит тип инструмента.
-   - Метод `on_tool_call_delta` обрабатывает изменения в запросе к инструменту. Если запрос — к  "code_interpreter",  и есть входные данные, выводит их. Затем, если есть выводы ("outputs"), выводит "output >" и отображает логи (если тип "logs").
+3. **Переопределяет методы для обработки событий:**
+    - `on_text_created`: Печатает префикс "assistant >" перед новым текстом.
+    - `on_text_delta`: Печатает изменения в тексте.
+    - `on_tool_call_created`: Печатает тип инструмента.
+    - `on_tool_call_delta`: Обрабатывает изменения в вызове инструмента. Если тип инструмента - "code_interpreter" и есть входные данные, выводит их.  Если есть выходные данные, выводит "output >" и содержимое логов.
 
-4. **Использование класса (пример):**
-   В примере кода показан общий способ использования этого класса: для создания объекта `EventHandler` и работы с ним, например, в методах API, обрабатывающих потоковый вывод.  Этот блок кода сам по себе не включает в себя вызов OpenAI API, но готовит класс для его использования.
-
+4. **Использует `stream` SDK-помощник:** (Этот шаг описан в комментарии, но не показан в предоставленном коде. Требуется дополнительный код для использования `EventHandler` с API.)
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from typing_extensions import override
-    from openai import AssistantEventHandler, OpenAI
-    from openai.types.beta.threads import Text, TextDelta
-    from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
-    
-    
-    class EventHandler(AssistantEventHandler):
-      @override
-      def on_text_created(self, text: Text) -> None:
-        print(f"\\nassistant > ", end="", flush=True)
-      
-      @override
-      def on_text_delta(self, delta: TextDelta, snapshot: Text):
-        print(delta.value, end="", flush=True)
-      
-      @override
-      def on_tool_call_created(self, tool_call: ToolCall):
-        print(f"\\nassistant > {tool_call.type}\\n", flush=True)
-      
-      @override
-      def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall):
-        if delta.type == "code_interpreter" and delta.code_interpreter:
-          if delta.code_interpreter.input:
-            print(delta.code_interpreter.input, end="", flush=True)
-          if delta.code_interpreter.outputs:
-            print(f"\\n\\noutput >", flush=True)
-            for output in delta.code_interpreter.outputs:
-              if output.type == "logs":
-                print(f"\\n{output.logs}", flush=True)
-    
-    # Пример использования, который должен быть частью функции или класса, обрабатывающего поток:
+    # ... (необходимый импорт и инициализация OpenAI)
+
+    # Создаем экземпляр класса EventHandler
     event_handler = EventHandler()
-    # ... Здесь код вызова OpenAI API и передачи потока в event_handler ...
+
+    # ... (Обработка события, с использованием stream API OpenAI)
+
+    # Например, вызов API:
+    # response = openai.ChatCompletion.create(...)

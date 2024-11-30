@@ -1,42 +1,36 @@
-Как использовать функцию проверки email
-========================================================================================
+Как использовать функцию проверки валидности email
+==========================================================================================
 
 Описание
 -------------------------
-Функция проверяет корректность введённого адреса электронной почты,
-убеждаясь, что он соответствует общепринятому формату.
+Функция проверяет корректность введённого email адреса, используя библиотеку `email_validator`. Она возвращает True, если адрес валидный, и False, если нет.  Возможные ошибки содержатся в атрибуте `errors`.
 
 Шаги выполнения
 -------------------------
-1. Функция принимает строку, представляющую адрес электронной почты, в качестве аргумента.
-2. Используя регулярное выражение, она проверяет, соответствует ли строка формату адреса электронной почты. Регулярное выражение проверяет наличие определенных символов и последовательностей, как например @, точки и т.д.
-3. Если строка соответствует формату, функция возвращает True, иначе - False.
+1. Импортируйте функцию `validate_email` из модуля `email_validator`.
+2. Передайте строку с email адресом в функцию `validate_email` как аргумент.
+3. Функция вернёт `True` если email валиден, или `False` - в противном случае.  Атрибут `errors` содержит информацию об ошибках, если они есть.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    import re
-
-    def validate_email(email):
-        pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-        if re.match(pattern, email):
-            return True
-        else:
-            return False
+    from email_validator import validate_email, EmailNotValidError
 
     email_address = "test@example.com"
-    is_valid = validate_email(email_address)
 
-    if is_valid:
-        print("Адрес электронной почты корректен.")
-    else:
-        print("Адрес электронной почты некорректен.")
+    try:
+        validated_email = validate_email(email_address)
+        print(f"Email '{email_address}' является валидным: {validated_email.email_valid}")
+    except EmailNotValidError as e:
+        print(f"Ошибка при проверке email '{email_address}': {e}")
 
-    invalid_email = "invalid_email"
-    is_valid = validate_email(invalid_email)
+    email_address_invalid = "invalid-email"
 
-    if is_valid:
-        print("Адрес электронной почты корректен.")
-    else:
-        print("Адрес электронной почты некорректен.")
+    try:
+        validated_email = validate_email(email_address_invalid)
+        print(f"Email '{email_address_invalid}' является валидным: {validated_email.email_valid}")
+    except EmailNotValidError as e:
+        print(f"Ошибка при проверке email '{email_address_invalid}': {e}")
+
+    print(f"Ошибки: {validated_email.errors}") # Печать ошибок, если email не валиден

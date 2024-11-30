@@ -1,25 +1,25 @@
 Как использовать класс PrestaLanguage
-=========================================================================================
+========================================================================================
 
 Описание
 -------------------------
-Этот код определяет класс `PrestaLanguage`, наследующий от класса `PrestaShop`.  Он предназначен для управления языками в магазине PrestaShop. Класс предоставляет методы для добавления, удаления, обновления и получения информации о языковых настройках.  Класс инициализируется с помощью API-ключа и домена API.
+Этот код определяет класс `PrestaLanguage`, который наследуется от класса `PrestaShop`.  Он предназначен для работы с настройками языков в магазине PrestaShop.  Класс предоставляет методы для добавления, удаления, обновления и получения подробностей о языках. Он также включает валидацию входных параметров для предотвращения ошибок.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых модулей:** Код импортирует необходимые модули, включая `PrestaShop`, `gs`, `pprint`, `header`, `logger`, `PrestaShopException`, и `SimpleNamespace`.
+1. **Импортирование необходимых модулей**:  Код импортирует необходимые библиотеки, включая `PrestaShop`, `gs`, `pprint`, `header`, `logger`, `PrestaShopException` и `SimpleNamespace` для работы с API PrestaShop и другими вспомогательными функциями.
 
-2. **Определение класса `PrestaLanguage`:** Определяется класс `PrestaLanguage`, наследующий от `PrestaShop`.  В конструкторе происходит инициализация необходимых параметров.
+2. **Определение класса `PrestaLanguage`**: Определяется класс `PrestaLanguage`, который наследуется от `PrestaShop`,  позволяя использовать методы родительского класса.
 
-3. **Инициализация класса:** При создании объекта `PrestaLanguage` необходимо передать данные для подключения к API Престашоп. Это могут быть параметры `api_domain`, `api_key` или объект `credentials`, содержащий эти параметры.
+3. **Документирование класса и методов**: Класс и его методы содержат строковые комментарии (docstrings), которые подробно описывают назначение класса и каждого метода, включая примеры использования. Это важный шаг для удобочитаемости и поддержки кода.
 
-4. **Проверка параметров:**  Код проверяет, что `api_domain` и `api_key` были переданы или получены из `credentials`.  Если они отсутствуют, генерируется исключение `ValueError`.
+4. **Конструктор `__init__`**: Конструктор `__init__` принимает параметры `credentials`, `api_domain` и `api_key`. Он позволяет инициализировать класс с данными, полученными из словаря или объекта `SimpleNamespace`.
 
-5. **Использование методов:** После инициализации можно использовать методы класса для работы с языками:
-    * `add_language_PrestaShop(name, code)`: Добавляет новый язык.
-    * `delete_language_PrestaShop(id)`: Удаляет язык по его идентификатору.
-    * `update_language_PrestaShop(id, name)`: Обновляет имя языка по его идентификатору.
-    * `get_language_details_PrestaShop(id)`: Возвращает подробную информацию о языке по его идентификатору.
+5. **Валидация входных данных**:  Код проверяет, что значения `api_domain` и `api_key`  установлены. Если нет, генерирует исключение `ValueError`.
+
+6. **Наследование и инициализация родительского класса**:  Вызов `super().__init__(api_domain, api_key, *args, **kwards)` инициализирует родительский класс `PrestaShop` с полученными данными.
+
+7. **Методы для работы с языками**: Класс предоставляет методы `add_language_PrestaShop`, `delete_language_PrestaShop`, `update_language_PrestaShop` и `get_language_details_PrestaShop` для управления языками в PrestaShop.
 
 
 Пример использования
@@ -27,26 +27,21 @@
 .. code-block:: python
 
     from hypotez.src.endpoints.prestashop.language import PrestaLanguage
-    from types import SimpleNamespace
+    import os
 
-    # Пример использования с credentials
-    credentials = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
-    prestalanguage = PrestaLanguage(credentials=credentials)
+    # Замените на ваши данные
+    API_DOMAIN = os.environ.get('API_DOMAIN')
+    API_KEY = os.environ.get('API_KEY')
 
-    # Добавление языка
-    prestalanguage.add_language_PrestaShop('English', 'en')
-
-    # Удаление языка
-    prestalanguage.delete_language_PrestaShop(3)
-
-
-    # Обновление языка
-    prestalanguage.update_language_PrestaShop(4, 'Updated Language Name')
-
-    # Получение данных о языке
-    language_details = prestalanguage.get_language_details_PrestaShop(5)
-    print(language_details)
-
-
-    # Пример использования с отдельными параметрами
-    prestalanguage2 = PrestaLanguage(api_domain='your_api_domain', api_key='your_api_key')
+    prestalanguage = PrestaLanguage(api_domain=API_DOMAIN, api_key=API_KEY)
+    try:
+        prestalanguage.add_language_PrestaShop('English', 'en')
+        print("Язык добавлен успешно.")
+    except Exception as e:
+        print(f"Ошибка при добавлении языка: {e}")
+    
+    try:
+        language_details = prestalanguage.get_language_details_PrestaShop(1)
+        print(language_details)
+    except Exception as e:
+        print(f"Ошибка при получении данных о языке: {e}")

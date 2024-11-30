@@ -3,19 +3,16 @@
 
 Описание
 -------------------------
-Функция `translate_presta_fields_dict` переводит мультиязычные поля товара, содержащиеся в словаре `presta_fields_dict`, в соответствии со схемой языков клиента `client_langs_schema`.  Она обновляет атрибут `id` для языковых полей, используя идентификаторы из `client_langs_schema`  соответствующий языку страницы `page_lang`. Если перевод не найден, функция добавляет новый перевод в базу данных.
+Функция `translate_presta_fields_dict` переводит мультиязычные поля товара, представленные в словаре `presta_fields_dict`, в соответствии со схемой языков клиента `client_langs_schema`.  Она обновляет идентификаторы языков в словаре `presta_fields_dict` на соответствующие идентификаторы из схемы `client_langs_schema` используя язык страницы `page_lang`. Если перевода в базе данных нет, функция создает новый перевод.
 
 Шаги выполнения
 -------------------------
-1. **Переупорядочивает языковые ключи.** Функция вызывает `rearrange_language_keys` для предварительной обработки словаря `presta_fields_dict`. Это подготавливает данные для последующего перевода.
-2. **Получает переводы из базы данных.** Функция ищет существующие переводы для товара, используя `get_translations_from_presta_translations_table` с идентификатором товара из поля `reference` в `presta_fields_dict`.
-3. **Обрабатывает отсутствие переводов.** Если переводы не найдены или база данных пуста, функция создает новый перевод с помощью `insert_new_translation_to_presta_translations_table`. Она создает запись, используя поля из входного словаря `presta_fields_dict`.
-4. **Циклически проходит по схеме языков клиента.** Функция итерирует по списку `client_langs_schema`.
-5. **Находит переводы в базе данных.** Внутри цикла, она итерирует по списку `enabled_product_translations`.
-6. **Проверяет соответствие языков.**  Если `iso_code` языка из `client_langs_schema` содержится в `locale` перевода из базы данных, функция обновляет значение поля в `presta_fields_dict`.  Ключ поля берется из входного словаря.  Значение поля устанавливается в словарь с языком и id в соответствии со схемой.
-7. **Обработка ошибок.** Если возникает ошибка при обработке перевода, функция записывает сообщение об ошибке в лог с помощью `logger.error`.
-8. **Возвращает обновлённый словарь.** В результате функция возвращает словарь `presta_fields_dict` с обновлёнными переводами.
-
+1. Функция сначала вызывает функцию `rearrange_language_keys`, которая обновляет идентификаторы языков в словаре `presta_fields_dict` в соответствии с языком страницы `page_lang` и схемой `client_langs_schema`.
+2. Функция получает из базы данных переводы для товара, используя его `reference` в `get_translations_from_presta_translations_table`.
+3. Если переводы не найдены или их недостаточно, функция создает новый перевод, используя класс `record` и функцию `insert_new_translation_to_presta_translations_table`.
+4. Функция итерируется по схеме языков `client_langs_schema` и переводит поля товара, используя переводы из базы данных.
+5. Для каждого перевода из базы данных, если код языка из схемы `client_langs_schema` совпадает с локалью перевода, поля `presta_fields_dict` обновляются соответствующим переводом и идентификатором языка из схемы `client_langs_schema`.
+6. Возвращает обновлённый словарь `presta_fields_dict`.
 
 Пример использования
 -------------------------
@@ -24,13 +21,23 @@
     import json
 
     # Пример данных
-    presta_fields_dict = {"reference": "12345", "name": {"language": [{"attrs": {"id": "2"}, "value": "Product Name"}]}, "description": {"language": [{"attrs": {"id": "2"}, "value": "Product Description"}]}}
-    client_langs_schema = [{"id": 1, "locale": "en-US", "iso_code": "en"}, {"id": 2, "locale": "ru-RU", "iso_code": "ru"}]
-    page_lang = "ru-RU"
+    client_langs_schema = [
+        {'id': 1, 'iso_code': 'en', 'locale': 'en-US', 'language_code': 'en-us'},
+        {'id': 2, 'iso_code': 'ru', 'locale': 'ru-RU', 'language_code': 'ru-ru'}
+    ]
 
-    # Предположим, что get_translations_from_presta_translations_table и insert_new_translation_to_presta_translations_table определены в других частях кода
-    # ... (определения функций) ...
+    presta_fields_dict = {
+        'reference': '12345',
+        'name': {'language': [{'attrs': {'id': '1'}, 'value': 'Product Name'}]},
+        'description': {'language': [{'attrs': {'id': '1'}, 'value': 'Product Description'}]}
+    }
+    
+    page_lang = 'en-US'
 
+    # Использование функции
     translated_dict = translate_presta_fields_dict(presta_fields_dict, client_langs_schema, page_lang)
 
-    print(json.dumps(translated_dict, indent=2))
+    # Вывод результата
+    print(json.dumps(translated_dict, indent=4, ensure_ascii=False))
+```
+**Примечание:**  В примере использования предполагается, что функции `rearrange_language_keys`, `get_translations_from_presta_translations_table`, `insert_new_translation_to_presta_translations_table`, и класс `record`  определены в других частях кода.  Также,  важно учесть, что для корректной работы функция `translate_presta_fields_dict` требует наличия  входных параметров `presta_fields_dict`, `client_langs_schema`, и `page_lang`.  Обратите внимание на возможные исключения, обработанные в коде `try...except`, и на необходимость логгирования ошибок.

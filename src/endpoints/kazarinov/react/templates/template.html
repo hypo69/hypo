@@ -1,9 +1,3 @@
-## \file hypotez/src/endpoints/kazarinov/react/templates/template.html
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
-""" module: src.endpoints.kazarinov.react.templates """
-MODE = 'debug'
 <!DOCTYPE html>
 <html lang="{{ language }}">
 
@@ -61,7 +55,7 @@ MODE = 'debug'
         <div class="row">
             {% for product in products %}
             <div class="col-md-12 product-card">
-                <img src="{{ product.image_local_saved_path }}" 
+                <img src="file:///{{ product.image_local_saved_path }}" 
                      alt="{{ product.product_title }}" class="img-fluid" />
                 <div class="product-info">
                     <h3>{{ product.product_title }}</h3>

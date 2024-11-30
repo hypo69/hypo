@@ -1,34 +1,30 @@
 Как использовать этот блок кода
-=========================================================================================
+=========================================================================================\n
 
 Описание
 -------------------------
-Этот код определяет класс `FacebookGroupsWidget`, который создает и отображает выпадающий список (`Dropdown`) с URL адресами групп Facebook.  Список URL-адресов загружается из JSON файла.  Класс позволяет динамически создавать и отображать этот виджет для выбора группы в интерфейсе, например, в Jupyter Notebook.
+Этот код определяет класс `FacebookGroupsWidget`, предназначенный для создания и отображения выпадающего списка групп Facebook.  Класс получает на вход JSON-файл с информацией о группах и URL-адресами, парсит его и генерирует виджет Dropdown в iPython.  Виджет позволяет выбрать одну группу из списка.
 
 Шаги выполнения
 -------------------------
-1. **Импортирует необходимые библиотеки:**  Код импортирует библиотеки `header`, `IPython.display`, `ipywidgets`, `src.utils`, `types`, и `pathlib`.  Библиотеки `IPython.display` и `ipywidgets` необходимы для создания и отображения виджетов в Jupyter Notebook, `src.utils` предполагается содержит функцию для загрузки данных из JSON, а `types` и `pathlib`  - для работы с данными.
-
-2. **Определяет класс `FacebookGroupsWidget`:**  Класс `FacebookGroupsWidget` содержит методы для работы с виджетом.
-
-3. **Инициализирует класс `FacebookGroupsWidget`:** Конструктор `__init__` принимает путь к JSON-файлу `json_file_path` в качестве аргумента.  Внутри конструктора данные из JSON файла загружаются и сохраняются в `self.groups_data`.  Затем вызывается метод `create_dropdown()` для создания виджета.
-
-4. **Создает выпадающий список:** Метод `create_dropdown` создает экземпляр виджета `Dropdown`.  Он извлекает список ключей (URL-адресов групп) из данных `self.groups_data`.  Эти URL-адреса устанавливаются как опции для выпадающего списка.  Описание выпадающего списка устанавливается как 'Facebook Groups:'.
-
-5. **Отображает виджет:** Метод `display_widget` отображает созданный виджет `self.dropdown` с помощью `display()`.
+1. Импортируются необходимые библиотеки: `header`, `IPython.display`, `ipywidgets`, `src.utils`, `types`, `pathlib`.  Это включает инструменты для работы с файлами, обработкой JSON, отображением виджетов в Jupyter Notebook.
+2. Определяется класс `FacebookGroupsWidget`.
+3. В конструкторе `__init__` класса происходит загрузка данных из JSON-файла, указанного в `json_file_path`, с помощью функции `j_loads_ns`.  Результатом является объект `SimpleNamespace`, содержащий данные о группах Facebook.
+4. Метод `create_dropdown` создает виджет `Dropdown` из списка URL-адресов групп, полученных из данных JSON.  Эти URL-адреса извлекаются из атрибутов `SimpleNamespace`.  В виджете устанавливаются описание ("Facebook Groups:") и отключается возможность его изменения.
+5. Метод `display_widget` отображает созданный виджет с помощью `display`.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from pathlib import Path
     from hypotez.src.endpoints.advertisement.facebook.facebook_groups_widgets import FacebookGroupsWidget
+    from pathlib import Path
 
-    # Путь к вашему JSON файлу
-    json_file_path = Path("./path/to/your/groups.json")
+    # Путь к вашему JSON-файлу
+    json_file_path = Path("path/to/your/facebook_groups.json")
 
     # Создаем экземпляр класса
-    facebook_groups_widget = FacebookGroupsWidget(json_file_path)
+    fb_groups_widget = FacebookGroupsWidget(json_file_path)
 
     # Отображаем виджет
-    facebook_groups_widget.display_widget()
+    fb_groups_widget.display_widget()

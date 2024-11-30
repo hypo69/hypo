@@ -1,0 +1,27 @@
+{
+  "dejavu-sans.book": {
+    "family": "DejaVuSans",
+    "path": "dejavu-sans.book.ttf",
+    "style": "book",
+    "uni": true
+  },
+  "dejavu-sans.oblique": {
+    "family": "DejaVuSans",
+    "path": "dejavu-sans.oblique.ttf",
+    "style": "oblique",
+    "uni": true
+  },
+  "dejavu-sans.bold": {
+    "family": "DejaVuSans",
+    "path": "dejavu-sans.bold.ttf",
+    "style": "bold",
+    "uni": true
+  },
+
+  "dejavu-sans.extralight": {
+    "family": "DejaVuSans",
+    "path": "dejavu-sans.extralight.ttf",
+    "style": "extralight",
+    "uni": true
+  }
+}

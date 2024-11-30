@@ -59,7 +59,7 @@ class ReportGenerator:
             str: HTML-контент.
         """
         #template = self.env.get_template(self.template_path)
-        template_string = read_text_file(self.template_path)
+        template_string = Path(self.template_path).read_text(encoding = 'UTF-8')
         template = self.env.from_string(template_string)
         return template.render(**data)
 
@@ -73,16 +73,28 @@ class ReportGenerator:
         """
         html_content = self.generate_html(data)
         save_text_file(html_content, html_file)
-        html2pdf(html_content,pdf_file)
+        html2pdf = PDFUtils()
+        if not html2pdf.save_pdf_fpdf(html_content,pdf_file):
+            if not html2pdf.save_pdf_pdfkit(html_content,pdf_file):
+                if not html2pdf.save_pdf_weasyprint(html_content,pdf_file):
+                    if not html2pdf.save_pdf_xhtml2pdf(html_content,pdf_file):
+                        logger.error(f"Не скопмилировался PDF")
+                        ...
         #save_pdf(html_content,pdf_file)
         # pdfkit.from_string(html_content, pdf_file, configuration=config, options={"enable-local-file-access": ""})
         # pdfkit.from_file(html_file, pdf_file, configuration=config, options={"enable-local-file-access": ""})
         # logger.info(f"Файлы созданы: {html_file} и {pdf_file}")
 
-
-
-if __name__ == "__main__":
-    html_file:Path = gs.path.external_data / 'kazarinov' /  / '202410262326_ru.html' 
-    pdf_file:Path = base_path / '202410262326_ru.pdf' 
+def main(mexiron:str,lang:str) ->bool:
+    base_path:Path =  gs.path.external_storage / 'kazarinov' / 'mexironim' / mexiron
+    data:dict = j_loads(base_path / 'ru.json')
+    html_file:Path =  base_path / f'{mexiron}_{lang}.html' 
+    pdf_file:Path = base_path / f'{mexiron}_{lang}.pdf' 
     r = ReportGenerator()
     r.create_report(data, html_file, pdf_file)
+
+if __name__ == "__main__":
+    mexiron:str = '24_11_30_19_19_06_068'
+    lang:str = 'ru'
+    main(mexiron,lang)
+

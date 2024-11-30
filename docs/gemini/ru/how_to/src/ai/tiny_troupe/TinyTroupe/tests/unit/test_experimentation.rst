@@ -3,35 +3,26 @@
 
 Описание
 -------------------------
-Этот код содержит тесты для класса `ABRandomizer`, который реализует алгоритм рандомизации для A/B тестирования. Функции `randomize`, `derandomize` и `derandomize_name` обеспечивают генерацию случайных вариантов, их дерандомизацию и получение исходного имени порандомизированному значению. Тесты проверяют корректность работы этих функций для разных входов.
+Данный код содержит тесты для класса `ABRandomizer`, который реализует алгоритм рандомизации для A/B-тестирования.  Тесты проверяют корректность работы методов `randomize`, `derandomize`, `derandomize_name` и `passtrough_name`. Функции `test_randomize`, `test_derandomize`, `test_derandomize_name`, и `test_passtrough_name`  содержат циклы для проверки работы алгоритма на большом количестве данных.
 
 Шаги выполнения
 -------------------------
-1. Импортируются необходимые модули, включая `ABRandomizer` и вспомогательные функции из `testing_utils`.
-2. Создается экземпляр класса `ABRandomizer`.
-3. В цикле `for` функция `randomize` вызывается несколько раз (в примере - 20 раз) для разных индексов и вариантов `option1` и `option2`.
-4. Проверяется, что сгенерированные пары `(a, b)` соответствуют выбранному случайному варианту (0,1) или (1,0) из массива `randomizer.choices`. Возникает исключение, если не найдено соответствия.
-5. Функция `derandomize` используется для проверки корректной дерандомизации. Проверяется, что возвращаемая пара `(c, d)` совпадает с исходной парой `(option1, option2)`.
-6. Функция `test_derandomize_name` тестирует `derandomize_name`. Она проверяет, что полученное имя соответствует либо "control", либо "treatment", основываясь на значениях из `randomizer.choices`.
-7. В `test_passtrough_name` демонстрируется, как можно настроить `ABRandomizer`, чтобы определенные значения проходили через рандомизацию без изменения.
-8. Функции `test_intervention_1` пока не реализованы.
-
+1. **Импорт необходимых библиотек:** Код импортирует `pytest`, `sys` для управления путями, `testing_utils` (предполагается, что содержит вспомогательные функции), и `ABRandomizer` из модуля `experimentation`.
+2. **Инициализация рандомизатора:** Создается экземпляр класса `ABRandomizer`.
+3. **Проверка метода `randomize`:**  Функция `test_randomize` вызывает `randomize` с разными входными данными и проверяет, что возвращаемые пары значений ("option1", "option2")  соответствуют выбранным вариантам в `randomizer.choices`.
+4. **Проверка метода `derandomize`:** Функция `test_derandomize`  вызывает `randomize` и `derandomize`, сравнивая результат с первоначальными значениями.
+5. **Проверка метода `derandomize_name`:** Функция `test_derandomize_name` проверяет, что метод возвращает корректное название варианта (control или treatment).
+6. **Проверка метода `passtrough_name`:** Функция `test_passtrough_name` проверяет, что метод `derandomize_name` правильно обрабатывает значения, заданные в `passtrough_name`.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
     import sys
-    sys.path.append('path/to/tinytroupe')  # Замените на фактический путь
-    sys.path.append('path/to/testing_utils')  # Замените на фактический путь
-
+    sys.path.append('path/to/tinytroupe')  # Замените на реальный путь
     from tinytroupe.experimentation import ABRandomizer
-    from testing_utils import *  # Замените на фактический импорт
 
-    randomizer = ABRandomizer()
-    a, b = randomizer.randomize(10, "Вариант A", "Вариант B")
-    print(f"Рандомизированные варианты: {a}, {b}")
-    c, d = randomizer.derandomize(10, a, b)
-    print(f"Дерандомизированные варианты: {c}, {d}")
-    real_name = randomizer.derandomize_name(10, a)
-    print(f"Исходное имя: {real_name}")
+    randomizer = ABRandomizer(passtrough_name=["option3"])
+    a, b = randomizer.randomize(0, "option1", "option2")
+    real_name = randomizer.derandomize_name(0, "option3")
+    print(f"Результат: {real_name}")

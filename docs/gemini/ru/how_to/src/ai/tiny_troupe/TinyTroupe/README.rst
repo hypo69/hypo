@@ -3,43 +3,51 @@
 
 Описание
 -------------------------
-Этот код представляет собой README файл для библиотеки TinyTroupe, которая позволяет создавать симуляции поведения людей с определенными личностями, интересами и целями с использованием больших языковых моделей (LLM).  Он описывает принципы работы библиотеки, предоставляет инструкции по установке и использованию, примеры использования и рекомендации по применению.  Он также содержит информацию о предварительных требованиях, структуре проекта, возможностях конфигурации и поведению в случае отказа API.
+Этот код представляет собой описание библиотеки TinyTroupe, которая позволяет моделировать людей с определёнными личностями, интересами и целями, используя мощь больших языковых моделей (LLM), в частности GPT-4.  Библиотека предназначена для исследования различных взаимодействий и типов потребителей, с высоконастраиваемыми персонами и в заданных условиях.  Она фокусируется на понимании человеческого поведения, а не на его непосредственной поддержке (в отличие от, например, AI помощников).  В документации описываются принципы работы, установка, примеры использования, структура проекта и другие важные аспекты.
 
 Шаги выполнения
 -------------------------
-1. **Установка TinyTroupe:**
-    - Убедитесь, что у вас установлена Python 3.10 или выше.  Рекомендуется использовать Anaconda.
-    - Создайте новую среду Python: `conda create -n tinytroupe python=3.10`
-    - Активируйте среду: `conda activate tinytroupe`
-    - Установите библиотеку из репозитория, а не с PyPI: `git clone https://github.com/microsoft/tinytroupe; cd tinytroupe; pip install .`
-    - Установите необходимые ключи API (Azure OpenAI или OpenAI) в качестве переменных окружения, как описано в разделе "Предварительные требования".  Обязательно используйте фильтры контента (особенно с Azure OpenAI).
-2. **Создание TinyPerson:**
-    - Используйте предопределенные агенты из `tinytroupe.examples`:  `from tinytroupe.examples import create_lisa_the_data_scientist; lisa = create_lisa_the_data_scientist()`.
-    - Или создайте своего агента с помощью `TinyPersonFactory`: `from tinytroupe.factory import TinyPersonFactory; factory = TinyPersonFactory("A hospital in São Paulo."); person = factory.generate_person("Create a Brazilian person that is a doctor, like pets and the nature and love heavy metal.")`.
-3. **Создание TinyWorld:**
-    - Создайте среду `TinyWorld`: `world = TinyWorld("Chat Room", [agent1, agent2])`.
-4. **Взаимодействие агентов:**
-    - Используйте методы `listen`, `see`, `act` или `listen_and_act` для взаимодействия агентов в среде.
-    - Пример: `world.make_everyone_accessible(); lisa.listen("Talk to Oscar to know more about him"); world.run(4)`.
-5. **Обработка результатов:**
-    - Используйте `ResultsExtractor` и `ResultsReducer`, чтобы извлечь и обработать результаты взаимодействия агентов.
-6. **Использование кэширования:**
-    - Используйте механизмы кэширования для повышения производительности, особенно при многократном использовании LLM.
+1. **Установка:**
+    - Установите Python 3.10 или выше. (рекомендуется использовать Anaconda).
+    - Добавьте ключи доступа к Azure OpenAI Service или OpenAI API в качестве переменных окружения (AZURE_OPENAI_KEY, AZURE_OPENAI_ENDPOINT или OPENAI_API_KEY соответственно).
+    - Отклонируйте репозиторий TinyTroupe локально (git clone).
+    - Установите библиотеку из репозитория: `pip install .` (**не с PyPI**).
+    - Если необходимо, выполните локальную установку в режиме редактирования (для изменения кода): `pip install -e .`.
+
+2. **Инициализация TinyPerson:**
+   - Создайте экземпляр класса `TinyPerson` или воспользуйтесь предопределенными агентами из `tinytroupe.examples`, например, `create_lisa_the_data_scientist()`.
+   -  Используйте методы `define`, `define_several` для настройки характеристик персоны (возраст, профессия, интересы и т.д.).
+   - Для создания агентов автоматически, воспользуйтесь `TinyPersonFactory`, указав необходимые параметры.
+
+3. **Инициализация TinyWorld:**
+   - Создайте объект `TinyWorld` для описания среды, в которую помещаются агенты.
+   - Укажите агентов, участвующих в симуляции, передав их в конструктор `TinyWorld`.
+   - Если необходимо, используйте методы для управления доступом агентов друг к другу.
+   - Используйте методы `listen` и `act` для управления взаимодействием агентов.
+
+4. **Запуск симуляции:**
+   - Используйте метод `world.run()` для запуска симуляции, передав количество шагов.
+   - Можно контролировать сохранение состояния симуляции с помощью методов `control.begin`, `control.checkpoint`, `control.end` в модуле `tinytroupe.control`.
+   - При необходимости, используйте инструменты для извлечения и обработки результатов (`ResultsExtractor`, `ResultsReducer`).
 
 Пример использования
 -------------------------
 .. code-block:: python
 
     from tinytroupe.examples import create_lisa_the_data_scientist
-    from tinytroupe.world import TinyWorld
+    from tinytroupe.core import TinyWorld
 
+    # Создание агентов
     lisa = create_lisa_the_data_scientist()
     oscar = TinyPerson("Oscar")
     oscar.define("occupation", "Architect")
 
-    world = TinyWorld("Discussion", [lisa, oscar])
+    # Создание мира
+    world = TinyWorld("Chat Room", [lisa, oscar])
     world.make_everyone_accessible()
-    lisa.listen("Tell me about your work, Oscar.")
-    world.run(5)
 
-    # Обработка результатов (не показано в примере)
+    # Начало диалога
+    lisa.listen("Talk to Oscar to know more about him")
+
+    # Запуск симуляции на 4 шага
+    world.run(4)

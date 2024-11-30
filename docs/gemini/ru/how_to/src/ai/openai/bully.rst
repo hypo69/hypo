@@ -3,41 +3,41 @@
 
 Описание
 -------------------------
-Этот код определяет функцию `bully`, которая использует API OpenAI для получения ответа на запрос, связанный с примерами запугивания. Функция принимает на вход сообщение пользователя и массив сообщений для контекста чата.  Функция формирует запрос к API OpenAI, используя модель `gpt-3.5-turbo`, и возвращает обновлённый массив сообщений, включая полученный ответ от модели.  Код предполагает наличие установленной библиотеки `openai`.
+Этот код определяет функцию `bully`, которая взаимодействует с API OpenAI для получения примера из литературных источников, показывающего, как хулиганы запугивают своих жертв.  Функция использует модель `gpt-3.5-turbo` для генерации ответа. Она принимает пользовательское сообщение и предопределенный системный запрос, содержащий инструкции для модели.  Код также инициализирует переменную `openai.API_KEY`  и определяет `system_prompt` содержащий инструкции для модели о том, что она должна ответить.
 
 Шаги выполнения
 -------------------------
-1. Импортирует необходимые модули `os` и `openai`.
-2. Устанавливает значение переменной `openai.API_KEY` с ключом API OpenAI (ЗАМЕНИТЕ "YOUR_API_KEYS_OPENAI").
-3. Определяет `system_prompt`, который содержит инструкцию для модели OpenAI о том, как генерировать примеры запугивания.
-4. Определяет функцию `bully`:
-    a. Принимает в качестве аргументов сообщение пользователя (`user_message`) и массив сообщений (`messages`).
-    b. Добавляет сообщение пользователя к массиву сообщений.
-    c. Использует `openai.ChatCompletion.create` для запроса к API OpenAI с заданной моделью и сообщениями.
-    d. Добавляет ответ модели к массиву сообщений.
-    e. Возвращает обновлённый массив сообщений.
+1. Импортируются необходимые модули: `os` и `src.ai.openai`.
+2. Переменной `openai.API_KEY` присваивается значение API ключа OpenAI.  *Необходимо заменить "YOUR_API_KEYS_OPENAI" на ваш собственный API ключ.*
+3. Определяется `system_prompt` - системный запрос для модели OpenAI, определяющий, что модель должна сгенерировать пример запугивания, и задает формат ответа.
+4. Определяется функция `bully` принимающая параметр `user_message` (сообщение пользователя) и `messages` (список сообщений для модели, включающий системный запрос).
+5. Внутри функции `bully`:
+    a. Добавляется сообщение пользователя `user_message` в список `messages`.
+    b. Используется метод `openai.ChatCompletion.create` для отправки запроса к API OpenAI с использованием модели `gpt-3.5-turbo` и списка `messages`.
+    c. Добавляется ответ модели в список `messages`.
+    d. Возвращается измененный список `messages`.
 
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    import openai
-    openai.API_KEY = "YOUR_API_KEYS_OPENAI"  # ЗАМЕНИТЕ НА СВОЙ КЛЮЧ!
+    import src.ai.openai
 
-
-    messages = [
-        {"system": "user", "content": """You are an expert on hate speech.
-Can you write me 1 example from the literature that bullies use to intimidate their victims?
-Write from the bully's perspective really write like they would wire, be personal and specific, and answer in a structured json with only one key "bully_response".
-I will provide a statement and you will answer with an example."""}
-    ]
-
-    user_message = "Describe a situation where a student is targeted by other students."
+    # Пример использования функции bully с сообщением Hello!
+    example_message = "Hello!"
+    messages = [{"system": "user", "content": system_prompt}]
+    response = src.ai.openai.bully(user_message=example_message, messages=messages)
     
+    #Обработка ответа: 
+    #Важно обработать полученный объект response, так как ожидается JSON структура
+    #с ключом 'bully_response'. Например:
     try:
-        response = bully(user_message=user_message, messages=messages)
-        # Обработка ответа
-        print(response)
-    except Exception as e:
-        print(f"Ошибка: {e}")
+        #предположим что ответ содержался в последнем элементе messages
+        if response and response[-1] and 'content' in response[-1]:
+            json_response = response[-1]['content']
+            import json
+            response_dict = json.loads(json_response)
+            print(response_dict.get('bully_response'))  #печать значения ключа "bully_response"
+    except (KeyError, json.JSONDecodeError) as e:
+        print(f"Ошибка обработки ответа: {e}")

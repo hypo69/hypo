@@ -3,21 +3,36 @@
 
 Описание
 -------------------------
-Этот код предоставляет примеры создания агентов (TinyPerson) с определенными характеристиками, включая возраст, национальность, профессию, рутину, описание профессии, личностные черты, профессиональные и личные интересы, навыки и отношения.  Функции `create_oscar_the_architect()`, `create_lisa_the_data_scientist()`, `create_marcos_the_physician()`, и `create_lila_the_linguist()` демонстрируют, как создавать таких агентов, заполняя различные атрибуты.
-
+Этот код предоставляет примеры создания агентов с помощью библиотеки tinytroupe.  Он демонстрирует, как создавать персонализированных агентов с различными характеристиками, такими как возраст, национальность, профессия, описание профессии, личностные черты, профессиональные и личные интересы, навыки и отношения.  Функции `create_oscar_the_architect`, `create_lisa_the_data_scientist`, `create_marcos_the_physician` и `create_lila_the_linguist` возвращают объекты `TinyPerson` с заданными параметрами.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование класса:**  Импортируется класс `TinyPerson` из модуля `tinytroupe.agent`.
+1. **Импортируйте необходимый модуль:**
+   ```python
+   from tinytroupe.agent import TinyPerson
+   ```
 
-2. **Определение агента:** Функции `create_oscar_the_architect()`, `create_lisa_the_data_scientist()`, `create_marcos_the_physician()` и `create_lila_the_linguist()` определяют и конфигурируют агентов.
+2. **Выберите нужную функцию создания агента:**
+   - `create_oscar_the_architect()`: создает агента Оскара, архитектора.
+   - `create_lisa_the_data_scientist()`: создает агента Лизу, специалиста по данным.
+   - `create_marcos_the_physician()`: создает агента Маркоса, врача-невролога.
+   - `create_lila_the_linguist()`: создает агента Лилу, лингвиста.
 
-3. **Использование методов `define`, `define_several`:** Эти методы используются для задания различных характеристик агента:
-    - `define("атрибут", "значение")`: для задания единичных атрибутов (например, `age`, `nationality`).
-    - `define_several("атрибут", [{"ключ":"значение"}, ...])`: для задания нескольких значений одного атрибута (например, `personality_traits`, `skills`).
 
+3. **Вызовите функцию, соответствующую вашему агенту:**
+   ```python
+   oscar = create_oscar_the_architect()
+   lisa = create_lisa_the_data_scientist()
+   marcos = create_marcos_the_physician()
+   lila = create_lila_the_linguist()
+   ```
 
-4. **Возврат объекта:** Каждая функция возвращает созданный объект `TinyPerson`.
+4. **Получите доступ к атрибутам агента (при необходимости):**
+   ```python
+   print(oscar.get_attribute("occupation"))
+   print(lisa.get_several_attributes(["age", "nationality"]))
+   ```
+   Для получения нескольких атрибутов используется метод `get_several_attributes`.  В `get_attribute` передается имя атрибута.
 
 
 Пример использования
@@ -25,13 +40,20 @@
 .. code-block:: python
 
     from tinytroupe.agent import TinyPerson
-    from hypotez.src.ai.tiny_troupe.TinyTroupe.tinytroupe.examples import create_oscar_the_architect
 
-    # Создание агента "Oscar, the architect"
-    oscar = create_oscar_the_architect()
+    # Пример создания и использования агента архитектора
+    def main():
+        oscar = create_oscar_the_architect()
 
-    # Вывод некоторых характеристик агента (пример)
-    print(f"Имя: {oscar.name}")
-    print(f"Возраст: {oscar.age}")
-    print(f"Профессия: {oscar.occupation}")
-    print(f"Описание профессии:\n{oscar.occupation_description}")
+        # Вывод профессии
+        print(oscar.get_attribute("occupation"))  # Выведет "Architect"
+
+        # Вывод описания профессии
+        print(oscar.get_attribute("occupation_description"))
+
+    if __name__ == "__main__":
+        main()
+```
+```python
+```
+**Примечание:**  Код примера в  `examples.py` предоставляет несколько функций для создания разных агентов.  Чтобы использовать какой-либо из примеров, просто вызовите соответствующую функцию, например `create_oscar_the_architect()`, и сохранённый результат присвойте переменной (как показано в примере). Затем вы можете получить доступ к атрибутам агента с помощью метода `get_attribute`. Обратите внимание на разные атрибуты для разных агентов.
