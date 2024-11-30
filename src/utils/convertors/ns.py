@@ -27,41 +27,39 @@ from src.utils.xls import save_xls_file
 from src.logger import logger
 
 
-def ns2dict(ns_obj: SimpleNamespace) -> dict:
+from types import SimpleNamespace
+from typing import Any, Dict
+
+def ns2dict(ns_obj: SimpleNamespace) -> Dict[str, Any]:
     """
-    Convert SimpleNamespace object to a dictionary.
+    Recursively convert a SimpleNamespace object to a dictionary.
 
     Args:
         ns_obj (SimpleNamespace): The SimpleNamespace object to convert.
 
     Returns:
-        dict: Converted dictionary.
+        Dict[str, Any]: Converted dictionary with nested structures handled.
     """
-    return vars(ns_obj)
+    def convert(value: Any) -> Any:
+        """
+        Recursively process values to handle nested SimpleNamespace, dict, or list.
 
+        Args:
+            value (Any): Value to process.
 
-def ns2json(ns_obj: SimpleNamespace, json_file_path: str | Path = None) -> str | bool:
-    """
-    Convert SimpleNamespace object to JSON format.
+        Returns:
+            Any: Converted value.
+        """
+        if isinstance(value, SimpleNamespace):
+            return {key: convert(val) for key, val in vars(value).items()}
+        elif isinstance(value, dict):
+            return {key: convert(val) for key, val in value.items()}
+        elif isinstance(value, list):
+            return [convert(item) for item in value]
+        return value
 
-    Args:
-        ns_obj (SimpleNamespace): The SimpleNamespace object to convert.
-        json_file_path (str | Path, optional): Path to save the JSON file. If not provided, returns the JSON string.
+    return convert(ns_obj)
 
-    Returns:
-        str | bool: JSON string if no file path is provided, otherwise True if the file is written successfully.
-    """
-    try:
-        data = ns2dict(ns_obj)
-        json_data = json.dumps(data, indent=4)
-        
-        if json_file_path:
-            with open(json_file_path, 'w', encoding='utf-8') as json_file:
-                json_file.write(json_data)
-            return True
-        return json_data
-    except Exception as ex:
-        logger.error(f"ns2json failed", ex, True)
 
 
 def ns2csv(ns_obj: SimpleNamespace, csv_file_path: str | Path) -> bool:

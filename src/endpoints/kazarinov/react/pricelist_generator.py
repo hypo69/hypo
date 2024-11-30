@@ -44,7 +44,7 @@ class ReportGenerator:
     Класс для генерации HTML- и PDF-отчётов на основе данных из JSON.
     """
 
-    template_path: str  = field(default_factory=lambda: str(gs.path.src / 'suppliers' / 'kazarinov' / 'react' / 'templates' / 'template.html'))
+    template_path: str  = field(default_factory=lambda: str(gs.path.endpoints / 'kazarinov' / 'react' / 'templates' / 'template.html'))
 
     env: Environment = field(default_factory=lambda: Environment(loader=FileSystemLoader('.')))
 
@@ -82,9 +82,7 @@ class ReportGenerator:
 
 
 if __name__ == "__main__":
-    base_path = gs.path.data / 'kazarinov' / 'mexironim' / '202410262326' 
-    data:dict = j_loads(base_path / '202410262326_ru.json')
-    html_file:Path = base_path / '202410262326_ru.html' 
+    html_file:Path = gs.path.external_data / 'kazarinov' /  / '202410262326_ru.html' 
     pdf_file:Path = base_path / '202410262326_ru.pdf' 
     r = ReportGenerator()
     r.create_report(data, html_file, pdf_file)

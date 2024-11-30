@@ -18,6 +18,7 @@ The functions in this module handle various aspects of working with JSON and CSV
 """
 MODE = 'dev'
 from datetime import datetime
+import copy
 from math import log
 from pathlib import Path
 from typing import List, Dict, Optional, Any
@@ -38,7 +39,7 @@ from collections import OrderedDict
 from src.logger import logger
 from src.utils.printer import pprint
 from .convertors.dict import dict2ns
-from .convertors.ns import ns2json 
+# from .convertors.ns import ns2dict 
 
 
 def j_dumps(
@@ -66,7 +67,8 @@ def j_dumps(
     
     path = Path(file_path) if isinstance(file_path, (str, Path)) else None
 
-    if isinstance(data, str):
+     # Eсли данные пришли в виде  строки - код попытается распарсить ее через `repair_json()`
+    if isinstance(data, str): 
         try:
             data = repair_json(data)
         except Exception as ex:
@@ -74,36 +76,30 @@ def j_dumps(
             ...
             return 
 
-    def convert_to_dict(raw_data: Any) -> Optional[dict | list | str]:
-        """Рекурсивно преобразует данные в словарь.
-
-        Преобразует объекты `SimpleNamespace`, списки словарей и строки, содержащие JSON, в словари.
+    def _convert(value: Any) -> Any:
+        """
+        Recursively process values to handle nested SimpleNamespace, dict, or list.
 
         Args:
-            raw_data (Any): Данные для обработки. Может быть объектом `SimpleNamespace`, списком, словарём или строкой.
+            value (Any): Value to process.
 
         Returns:
-            Optional[dict | list | str]: Преобразованные данные. 
-            Возвращает словарь, список, строку или `None`, если произошла ошибка.
+            Any: Converted value.
         """
-        if isinstance(raw_data, SimpleNamespace):
-            raw_data = ns2json(raw_data)
-    
-        if isinstance(raw_data, list):
-            return [convert_to_dict(item) for item in raw_data]
-    
-        if isinstance(raw_data, dict):
-            return {key: convert_to_dict(value) for key, value in raw_data.items()}
+        if isinstance(value, SimpleNamespace):
+            return {key: _convert(val) for key, val in vars(value).items()}
+        elif isinstance(value, dict):
+            return {key: _convert(val) for key, val in value.items()}
+        elif isinstance(value, list):
+            return [_convert(item) for item in value]
+        return value
 
-        return raw_data
+    tmp_data = copy.copy(data) 
+    # Конвертация входных данных в валидный словарь `dict` 
+    data = _convert(data)
 
-    data = convert_to_dict(data)
-
-
-    
-
-    if mode not in {"w", "a+", "+a"}:
-        # Используем режим 'w', если указан неверный режим
+    # если указан неверный режим записи в файл - будет установлен 'w',
+    if mode not in {"w", "a+", "+a"}:     
         mode = 'w'
 
     # Чтение существующих данных из файла (если файл существует и режим 'a+' или '+a')
@@ -308,54 +304,6 @@ def j_loads_ns(
         return  dict2ns(data)
     return  data 
 
-def replace_key_in_json(data, old_key, new_key) -> dict:
-    """
-    Recursively replaces a key in a dictionary or list.
-    
-    Args:
-        data (dict | list): The dictionary or list where key replacement occurs.
-        old_key (str): The key to be replaced.
-        new_key (str): The new key.
-    
-    Returns:
-        dict: The updated dictionary with replaced keys.
-
-    Example Usage:
-
-        replace_key_in_json(data, 'name', 'category_name')
-
-        # Example 1: Simple dictionary
-        data = {"old_key": "value"}
-        updated_data = replace_key_in_json(data, "old_key", "new_key")
-        # updated_data becomes {"new_key": "value"}
-
-        # Example 2: Nested dictionary
-        data = {"outer": {"old_key": "value"}}
-        updated_data = replace_key_in_json(data, "old_key", "new_key")
-        # updated_data becomes {"outer": {"new_key": "value"}}
-
-        # Example 3: List of dictionaries
-        data = [{"old_key": "value1"}, {"old_key": "value2"}]
-        updated_data = replace_key_in_json(data, "old_key", "new_key")
-        # updated_data becomes [{"new_key": "value1"}, {"new_key": "value2"}]
-
-        # Example 4: Mixed nested structure with lists and dictionaries
-        data = {"outer": [{"inner": {"old_key": "value"}}]}
-        updated_data = replace_key_in_json(data, "old_key", "new_key")
-        # updated_data becomes {"outer": [{"inner": {"new_key": "value"}}]}
-
-    """
-    if isinstance(data, dict):
-        for key in list(data.keys()):
-            if key == old_key:
-                data[new_key] = data.pop(old_key)
-            if isinstance(data[key], (dict, list)):
-                replace_key_in_json(data[key], old_key, new_key)
-    elif isinstance(data, list):
-        for item in data:
-            replace_key_in_json(item, old_key, new_key)
-    
-    return data
 
 def process_json_file(json_file: Path):
     """

@@ -36,27 +36,54 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from src.utils.xls import save_xls_file
 
-# def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:
-#     """
-#     Recursively convert dictionaries to SimpleNamespace.
+def replace_key_in_dict(data, old_key, new_key) -> dict:
+    """
+    Recursively replaces a key in a dictionary or list.
+    
+    Args:
+        data (dict | list): The dictionary or list where key replacement occurs.
+        old_key (str): The key to be replaced.
+        new_key (str): The new key.
+    
+    Returns:
+        dict: The updated dictionary with replaced keys.
 
-#     Args:
-#         data (Dict[str, Any] | List[Any]): The data to convert.
+    Example Usage:
 
-#     Returns:
-#         Any: Converted data as a SimpleNamespace or a list of SimpleNamespace.
-#     """
-#     if isinstance(data, dict):
-#         for key, value in data.items():
-#             if isinstance(value, dict):
-#                 data[key] = dict2ns(value)
-#             elif isinstance(value, list):
-#                 data[key] = [dict2ns(item) if isinstance(item, dict) else item for item in value]
-#         return SimpleNamespace(**data)
-#     elif isinstance(data, list):
-#         return [dict2ns(item) if isinstance(item, dict) else item for item in data]
-#     return data
+        replace_key_in_json(data, 'name', 'category_name')
 
+        # Example 1: Simple dictionary
+        data = {"old_key": "value"}
+        updated_data = replace_key_in_json(data, "old_key", "new_key")
+        # updated_data becomes {"new_key": "value"}
+
+        # Example 2: Nested dictionary
+        data = {"outer": {"old_key": "value"}}
+        updated_data = replace_key_in_json(data, "old_key", "new_key")
+        # updated_data becomes {"outer": {"new_key": "value"}}
+
+        # Example 3: List of dictionaries
+        data = [{"old_key": "value1"}, {"old_key": "value2"}]
+        updated_data = replace_key_in_json(data, "old_key", "new_key")
+        # updated_data becomes [{"new_key": "value1"}, {"new_key": "value2"}]
+
+        # Example 4: Mixed nested structure with lists and dictionaries
+        data = {"outer": [{"inner": {"old_key": "value"}}]}
+        updated_data = replace_key_in_json(data, "old_key", "new_key")
+        # updated_data becomes {"outer": [{"inner": {"new_key": "value"}}]}
+
+    """
+    if isinstance(data, dict):
+        for key in list(data.keys()):
+            if key == old_key:
+                data[new_key] = data.pop(old_key)
+            if isinstance(data[key], (dict, list)):
+                replace_key_in_json(data[key], old_key, new_key)
+    elif isinstance(data, list):
+        for item in data:
+            replace_key_in_json(item, old_key, new_key)
+    
+    return data
 
 
 # Функция для конвертации словаря в PDF

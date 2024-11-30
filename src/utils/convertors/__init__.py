@@ -82,6 +82,7 @@ from .dict import ( dict2ns,
                     dict2html,
                     dict2xls, 
                     dict2xml,
+                    replace_key_in_dict
                     )
 
 from .dot import dot2png
@@ -119,7 +120,6 @@ from .md2dict import (
 from .ns import (
                     ns2csv, 
                     ns2dict, 
-                    ns2json, 
                     ns2xls, 
                     ns2xml
                     )

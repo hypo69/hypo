@@ -335,8 +335,9 @@ class Mexiron:
 
         return True
 
-    def create_report(self):
+    def create_report(self, data:dict, html_file:Path, pdf_file:Path):
         """Функция отправляет задание на создание мехирона в форматax `html` и `pdf`"""
+
         generator = ReportGenerator( base_path = self.export_path, timestamp = self.timestamp )
         ...
         for lang in ['he','ru']:

@@ -64,9 +64,9 @@ from .convertors import (
     md2dict,
     ns2csv,
     ns2dict,
-    ns2json,
     ns2xls,
     ns2xml,
+    replace_key_in_dict,
     speech_recognizer,
     text2speech,
     webp2png,
@@ -103,8 +103,7 @@ from .image import (
 from .jjson import (
     j_dumps,
     j_loads,
-    j_loads_ns,
-    replace_key_in_json
+    j_loads_ns
 )
 
 from .pdf import (
