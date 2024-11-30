@@ -21,6 +21,7 @@ from typing import Optional, List
 from types import SimpleNamespace
 from dataclasses import field
 
+import header
 from src import gs
 from src.product.product_fields import ProductFields
 from src.webdriver import Driver

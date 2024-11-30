@@ -193,6 +193,8 @@ class Graber(Grbr):
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
+        .. note:
+            путь к изображению ведет в директорию  `tmp`
         .. todo:
             - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
             - Как передать путь кроме жестко указанного   
