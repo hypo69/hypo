@@ -204,12 +204,22 @@ class PDFUtils:
         try:
             with open(pdf_file, "w+b") as result_file:
                 if isinstance(data, str):
-                    pisa.CreatePDF(data, dest=result_file)
+                    try:
+                        pisa.CreatePDF(data, dest=result_file, encoding = 'UTF-8')
+                    except Exception as ex:
+                        logger.error(f"Ошибка компиляции PDF: ",ex)
+                        ...
                 else:
                     with open(data, "r", encoding="utf-8") as source_file:
-                        pisa.CreatePDF(source_file.read(), dest=result_file)
+                        try:
+                            pisa.CreatePDF(source_file.read(), dest=result_file, encoding = 'UTF-8')
+                        except Exception as ex:
+                            logger.error(f"Ошибка компиляции PDF: ",ex)
+                            ...
             logger.info(f"PDF успешно сохранен: {pdf_file}")
+            ...
             return True
         except Exception as ex:
             logger.error("Ошибка при сохранении PDF через xhtml2pdf: ", ex)
+            ...
             return False

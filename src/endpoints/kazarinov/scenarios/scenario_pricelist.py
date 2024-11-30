@@ -15,6 +15,7 @@ MODE = 'dev'
 
 import asyncio
 import random
+import shutil
 from pathlib import Path
 from typing import Optional, List
 from types import SimpleNamespace
@@ -169,7 +170,8 @@ class Mexiron:
             if not j_dumps(ru, self.export_path / 'ru.json'):
                 logger.error(f'Ошибка сохранения словаря `ru`')
                 ...
-            await self.create_report()
+            await self.create_report(he,Path(self.export_path/'he.html'),Path(self.export_path/'he.pdf'))
+            await self.create_report(ru,Path(self.export_path/'ru.html'),Path(self.export_path/'ru.pdf'))
             await self.post_facebook(ru)
             await self.post_facebook(he)
             return True
@@ -213,13 +215,29 @@ class Mexiron:
             dict: Formatted product data dictionary.
         """
 
+        # Исходный путь файла
+        source_file = Path(f.local_saved_image)  # Это полный путь к файлу
+
+        # Форматирование целевого пути
+        target_dir = Path('images')  # Папка для копирования файла
+        target_file = target_dir / source_file.name  # Полный путь к целевому файлу в папке 'images'
+
+        # Создание директории 'images', если её нет
+        target_dir.mkdir(parents=True, exist_ok=True)
+
+        # Копирование файла
+        shutil.copy2(source_file, target_file)  # Сохранение метаданных файла
+
+        print(f'Файл {source_file} скопирован в {target_file}')
+
+
         return {
             'product_title': f.name['language'][0]['value'].strip(),
             'product_id': f.id_product,
             'description_short': f.description_short['language'][0]['value'].strip(),
             'description': f.description['language'][0]['value'].strip(),
             'specification': f.specification['language'][0]['value'].strip(),
-            'local_saved_image': f.local_saved_image,
+            'local_saved_image': target_file,
         }
 
     async def save_product_data(self, product_data: dict):
