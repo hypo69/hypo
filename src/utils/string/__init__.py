@@ -13,6 +13,11 @@ MODE = 'dev'
 
 from .formatter import StringFormatter
 from .validator import ProductFieldsValidator
-from .normalizer import StringNormalizer
+from .normalizer import (
+						normalize_string,
+						normalize_int,
+						normalize_float,
+						normalize_boolean,
+					)
 
 

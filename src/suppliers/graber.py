@@ -48,10 +48,11 @@ from src.category import Category
 from src.webdriver import Driver
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png_from_url
-from src.utils import pprint
-from src.logger import logger
+from src.utils.string.normalizer import normalize_string, normalize_int, normalize_float, normalize_boolean
 from src.logger.exceptions import ExecuteLocatorException
 from src.endpoints.prestashop import PrestaShop
+from src.utils import pprint
+from src.logger import logger
 
 # Глобальные настройки через объект `Context`
 class Context:
@@ -939,6 +940,7 @@ class Graber:
         if isinstance(value, list):
             value = '\n'.join(map(str, value))
 
+        value = normalize_string(value)
         # Записываем результат в поле `description` объекта `ProductFields`
         self.fields.description = value
         return True
@@ -953,7 +955,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.description_short) or ''
+            value =  value or  await self.d.execute_locator(self.l.description_short) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description_short`", ex)
             ...
@@ -969,6 +971,7 @@ class Graber:
         if isinstance(value, list):
             value = '\n'.join(map(str, value))
 
+        value = normalize_string(value)
         # Записываем результат в поле `description_short` объекта `ProductFields`
         self.fields.description_short = value
         return True
@@ -1658,7 +1661,7 @@ class Graber:
             logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.name}")
             ...
             return
-
+        value = normalize_string(value)
         # Записываем результат в поле `name` объекта `ProductFields`
         self.fields.name = value
         return True
