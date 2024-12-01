@@ -117,7 +117,10 @@ from .printer import (
 from .string import (
     ProductFieldsValidator,
     StringFormatter,
-    StringNormalizer
+    normalize_string,
+    normalize_int,
+    normalize_float,
+    normalize_boolean
 )
 
 from .url import (

@@ -94,7 +94,7 @@ def j_dumps(
             return [_convert(item) for item in value]
         return value
 
-    tmp_data = copy.copy(data) 
+
     # Конвертация входных данных в валидный словарь `dict` 
     data = _convert(data)
 
@@ -148,7 +148,8 @@ def j_dumps(
             with path.open("w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=ensure_ascii, indent=4)
         except Exception as ex:
-            logger.error(f"Failed to write to {path}: {ex}", exc_info=exc_info)
+            logger.error(f"Failed to write to {path}: ",ex, exc_info=exc_info)
+            ...
             return
     else:
         return data

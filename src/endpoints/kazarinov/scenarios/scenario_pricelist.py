@@ -151,11 +151,10 @@ class Mexiron:
                 ...
                 continue
 
-            products_list.append(product_data)
             if not await self.save_product_data(product_data):
                 logger.error(f"Data not saved! {pprint(product_data)}")
                 ...
-                
+            products_list.append(product_data)    
 
         # AI processing
         he,ru = await self.process_ai(products_list, price)
@@ -220,17 +219,14 @@ class Mexiron:
         source_file = Path(f.local_saved_image)  # Это полный путь к файлу
 
         # Форматирование целевого пути
-        target_dir = Path('images')  # Папка для копирования файла
+        target_dir = Path(self.export_path / 'images')  # Папка для копирования файла
         target_file = target_dir / source_file.name  # Полный путь к целевому файлу в папке 'images'
 
         # Создание директории 'images', если её нет
         target_dir.mkdir(parents=True, exist_ok=True)
 
         # Копирование файла
-        shutil.copy2(source_file, target_file)  # Сохранение метаданных файла
-
-        print(f'Файл {source_file} скопирован в {target_file}')
-
+        shutil.copy2(source_file, target_file)
 
         return {
             'product_title': f.name['language'][0]['value'].strip(),
@@ -238,7 +234,7 @@ class Mexiron:
             'description_short': f.description_short['language'][0]['value'].strip(),
             'description': f.description['language'][0]['value'].strip(),
             'specification': f.specification['language'][0]['value'].strip(),
-            'local_saved_image': target_file,
+            'local_saved_image': f"images/{target_file.name}",
         }
 
     async def save_product_data(self, product_data: dict):

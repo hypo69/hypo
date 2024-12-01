@@ -125,7 +125,7 @@ class Graber(Grbr):
             # await self.customizable(kwards.get("customizable", ''))
             # await self.date_add(kwards.get("date_add", ''))
             # await self.date_upd(kwards.get("date_upd", ''))
-            # await self.default_image_url(kwards.get("default_image_url", ''))
+            await self.default_image_url(kwards.get("default_image_url", ''))
             # await self.delivery_in_stock(kwards.get("delivery_in_stock", ''))
             # await self.delivery_out_stock(kwards.get("delivery_out_stock", ''))
             # await self.depth(kwards.get("depth", ''))
@@ -181,41 +181,10 @@ class Graber(Grbr):
             # await self.weight(kwards.get("weight", ''))
             # await self.wholesale_price(kwards.get("wholesale_price", ''))
             # await self.width(kwards.get("width", ''))
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            # await self.local_saved_image(kwards.get("local_saved_image", ''))
             # await self.local_saved_video(kwards.get("local_saved_video", ''))
 
         # Call the function to fetch all data
         await fetch_all_data()
         return self.fields
-
-    @close_pop_up()
-    async def local_saved_image(self, value: Any = None):
-        """Fetch and save image locally.
-        
-        Args:
-        value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
-        """
-        
-            # Получаем значение через execute_locator и сохраняем изображение
-        if not value:
-            try:
-                raw = await self.d.execute_locator(self.l.default_image_url) # <- получаю изображение 
-                value = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
-                if value:
-                    self.fields.local_saved_image = value
-                    return True
-                else:
-                    logger.debug(f"Ошибка сохранения изображения")
-                    ...
-                    return
-            except Exception as ex:
-                logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
-                ...
-                return
-
-
-        # Записываем результат в поле `local_saved_image` объекта `ProductFields`
-
-
 

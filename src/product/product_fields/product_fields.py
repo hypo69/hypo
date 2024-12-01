@@ -224,7 +224,6 @@ import header
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.category import Category
-from src.utils.string import StringNormalizer as sn
 from src.utils.string import StringFormatter as sf
 from src.utils.file import read_text_file
 from src.logger import logger
@@ -534,7 +533,7 @@ class ProductFields:
             bool: _ @details_
         """
         try:
-            self.presta_fields.on_sale = sn.normalize_boolean(value)
+            self.presta_fields.on_sale = value
 
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'On sale (0/1)' данными {value}
@@ -556,7 +555,7 @@ class ProductFields:
     def online_only(self, value = 0) -> bool:
         """   <sub>*[setter]*</sub> """
         try:
-            self.presta_fields.online_only = sn.normalize_boolean(value)
+            self.presta_fields.online_only = value
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'online_only' данными {value}""",ex)
@@ -664,7 +663,7 @@ class ProductFields:
     def ecotax(self, value:str = None, lang:str = 'en') -> bool:
         """   <sub>*[setter]*</sub>  """
         try:
-            self.presta_fields.ecotax = sn.normalize_float(value)
+            self.presta_fields.ecotax = value
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'ecotax' данными {value}""", ex)
@@ -706,7 +705,7 @@ class ProductFields:
     def minimal_quantity(self, value: int = 0) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
-            self.presta_fields.minimal_quantity = sn.normalize_int(value)
+            self.presta_fields.minimal_quantity = value
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'minimal_quantity' данными {value}
@@ -772,7 +771,7 @@ class ProductFields:
         try:
             if not value:
                 return 0
-            self.presta_fields.price = sn.normalize_float(value)
+            self.presta_fields.price = value
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'price' данными {value}""",ex)
@@ -794,7 +793,7 @@ class ProductFields:
         """  <sub>*[setter]*</sub>   """
         try:
             #self.presta_fields.wholesale_price = str (StringNormalizer.normalize_price (value) )
-            self.presta_fields.wholesale_price = sn.normalize_float(value)
+            self.presta_fields.wholesale_price = value
             return True
         except ProductFieldException as ex:
             logger.error(f"""
@@ -1821,7 +1820,7 @@ class ProductFields:
             #     value = ', '.join(map(str, value))
         
             self.presta_fields.description: dict = {
-                'language': [{'attrs': {'id': '1'}, 'value': sn.normalize_string(value)}]
+                'language': [{'attrs': {'id': '1'}, 'value': value}]
             }
             return True
 
@@ -1953,7 +1952,7 @@ class ProductFields:
         try:
             self.presta_fields.name: dict = {'language':
                                                         [
-                                                            {'attrs':{'id':self.language[lang]}, 'value': sn.normalize_string (value) },
+                                                            {'attrs':{'id':self.language[lang]}, 'value': value},
                                                         ]
                                                      }
             return True

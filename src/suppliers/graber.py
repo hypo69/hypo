@@ -47,7 +47,7 @@ from src.product.product_fields import ProductFields
 from src.category import Category
 from src.webdriver import Driver
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import save_png_from_url
+from src.utils.image import save_png_from_url, save_png
 from src.utils.string.normalizer import normalize_string, normalize_int, normalize_float, normalize_boolean
 from src.logger.exceptions import ExecuteLocatorException
 from src.endpoints.prestashop import PrestaShop
@@ -243,7 +243,7 @@ class Graber:
             # await self.weight(kwards.get("weight", ''))
             # await self.wholesale_price(kwards.get("wholesale_price", ''))
             # await self.width(kwards.get("width", ''))
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            # await self.local_saved_image(kwards.get("local_saved_image", ''))
             # await self.local_saved_video(kwards.get("local_saved_video", ''))
 
         # Call the function to fetch all data
@@ -2399,30 +2399,34 @@ class Graber:
     @close_pop_up()
     async def local_saved_image(self, value: Any = None):
         """Fetch and save image locally.
-        
+        Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
         Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
+        .. note:
+            путь к изображению ведет в директорию  `tmp`
+        .. todo:
+            - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
+            - Как передать путь кроме жестко указанного   
         """
-        try:
-            # Получаем значение через execute_locator и сохраняем изображение
-
-            value = value or  await save_png_from_url(self.d.execute_locator(self.l.default_image_url), 
-                                                                gs.path.tmp / f'{self.fields.id_product}.png')
-        except Exception as ex:
-            logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
-            ...
-            return
-
-        # Проверка валидности `value`
+       
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.default_image_url}')
-            ...
-            return
-
-        # Записываем результат в поле `local_saved_image` объекта `ProductFields`
-        self.fields.local_saved_image = value
-        return True
+            try:
+                if not self.fields.id_product:
+                    self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
+                raw = await self.d.execute_locator(self.l.default_image_url) # <- получаю скриншот как `bytes` 
+                img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
+                if img_tmp_path:
+                    self.fields.local_saved_image = img_tmp_path
+                    return True
+                else:
+                    logger.debug(f"Ошибка сохранения изображения")
+                    ...
+                    return
+            except Exception as ex:
+                logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+                ...
+                return
 
     @close_pop_up()
     async def local_saved_video(self, value: Any = None):
