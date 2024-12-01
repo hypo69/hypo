@@ -1,9 +1,0 @@
-Categories 20240503015900
-=========================
-
-This file contains a JSON object describing various categories for a product catalog, likely related to skincare and body care products.  It defines various product categories, including those for facial care, body care, hair care, and health products.  Each category has associated URLs, names, and PrestaShop category information.
-
-.. toctree::
-   :maxdepth: 2
-
-   modules/suppliers/hb/_journal/categories_20240503015900

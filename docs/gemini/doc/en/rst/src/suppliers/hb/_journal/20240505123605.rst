@@ -1,9 +1,0 @@
-20240505123605 Module
-=======================
-
-This module contains... (insert a brief description of the module contents here).
-
-.. automodule:: hypotez.src.suppliers.hb._journal.20240505123605
-    :members:
-    :undoc-members:
-    :show-inheritance:

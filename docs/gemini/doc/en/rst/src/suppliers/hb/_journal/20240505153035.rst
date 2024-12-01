@@ -1,9 +1,0 @@
-20240505153035
-============
-
-This file contains documentation for the scenario identified by the timestamp '20240505153035'.  It likely describes a specific scenario or configuration, but without further context, the specifics are unknown.
-
-.. automodule:: hypotez.src.suppliers.hb._journal.20240505153035
-    :members:
-    :undoc-members:
-    :show-inheritance:
