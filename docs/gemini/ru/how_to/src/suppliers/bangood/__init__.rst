@@ -3,30 +3,58 @@
 
 Описание
 -------------------------
-Данный модуль (`hypotez/src/suppliers/bangood/__init__.py`) предоставляет функции для работы с сайтом Banggood. Он импортирует классы и функции из подмодулей `graber` и `scenario`, предназначенных для сбора данных о категориях и продуктах.  Константа `MODE` установлена в 'dev'.
+Этот модуль предоставляет функции для работы с поставщиком Banggood.  Он содержит классы и функции для получения данных о категориях и продуктах с сайта Banggood.
 
 Шаги выполнения
 -------------------------
-1. Модуль импортирует необходимые классы и функции из подмодулей `graber` и `scenario`: `Graber`, `get_list_categories_from_site`, `get_list_products_in_category`.
-2. Устанавливает константу `MODE` со значением 'dev'.  Это, скорее всего, конфигурационная переменная, определяющая режим работы модуля (например, режим разработки).
+1. Импортируйте необходимые классы и функции:
+   ```python
+   from .graber import Graber
+   from .scenario import get_list_categories_from_site, get_list_products_in_category
+   ```
+
+2. Инициализируйте класс `Graber`, если требуется (в зависимости от вашей задачи). Например, для получения списка категорий:
+   ```python
+   graber = Graber() # Если класс требует инициализации
+   categories = get_list_categories_from_site() 
+   ```
+
+3. Используйте функцию `get_list_categories_from_site()` для получения списка категорий с сайта Banggood. Результатом будет список ссылок на категории.
+
+4. Для получения списка продуктов в конкретной категории используйте функцию `get_list_products_in_category()`. Передайте ей ссылку на категорию, полученную на предыдущем шаге.
+   ```python
+   category_url = categories[0]  #  Взяли первую категорию из списка
+   products = get_list_products_in_category(category_url)
+   ```
+   Функция возвращает список с информацией о продуктах.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.bangood import Graber, get_list_categories_from_site, get_list_products_in_category
+    from .graber import Graber
+    from .scenario import get_list_categories_from_site, get_list_products_in_category
+    
+    # Инициализация (если требуется)
+    graber = Graber()
 
-    # Получение списка категорий с сайта Banggood
-    categories = get_list_categories_from_site()
-    print(categories)
+    try:
+        categories = get_list_categories_from_site()
+        if categories:
+            print("Получены категории:")
+            for category_url in categories:
+                print(f"- {category_url}")
 
-    # Пример работы с классом Graber (предполагается, что у него есть метод для работы с конкретным продуктом)
-    graber = Graber()  #  инициализируем объект Graber
-    # Пример, как использовать  graber (предполагаем метод для получения данных о продуктах)
-    product_data = graber.get_product_details(product_id=12345)  # Замените 12345 на реальный ID продукта
-    print(product_data)
-
-    # Получение списка продуктов в заданной категории
-    selected_category = 'Electronics'  # Замените на реальное значение
-    products = get_list_products_in_category(category_name=selected_category)
-    print(products)
+            # Получение продуктов из первой категории
+            first_category_url = categories[0]
+            products = get_list_products_in_category(first_category_url)
+            if products:
+                print("\nПолучены продукты из первой категории:")
+                for product in products:
+                    print(product) #  Предполагается, что product имеет атрибуты, которые можно распечатать.
+            else:
+                print("Список продуктов пуст.")
+        else:
+            print("Список категорий пуст.")
+    except Exception as e:
+        print(f"Ошибка: {e}")

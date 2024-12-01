@@ -34,6 +34,9 @@ from src.suppliers.ksp.graber import Graber as KspGraber
 from src.suppliers.ivory.graber import Graber as IvoryGraber
 from src.suppliers.grandadvance.graber import Graber as GrandadvanceGraber
 from src.endpoints.kazarinov.react import ReportGenerator
+from telegram import Update
+from telegram.ext import CallbackContext
+
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
 from src.utils.image import save_png_from_url, save_png
@@ -98,7 +101,8 @@ class Mexiron:
         system_instruction: Optional[str] = None, 
         price: Optional[str] = None, 
         mexiron_name: Optional[str] = None, 
-        urls: Optional[str | List[str]] = None
+        urls: Optional[str | List[str]] = None,
+        update: Update = None, 
     ) -> bool:
         """
         Executes the scenario: parses products, processes them via AI, and stores data.
@@ -126,7 +130,7 @@ class Mexiron:
         products_list = []
 
         for url in urls_list:
-
+            await update.message.reply_text(f"Старт: {url}")
             graber = self.get_graber_by_supplier_url(url)
             if not graber:
                 ...

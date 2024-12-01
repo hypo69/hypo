@@ -107,7 +107,7 @@ class GoogleGenerativeAI:
             model_name=self.model_name,
             generation_config=self.generation_config
         )
-        self._chat = self.model.start_chat()
+        self._chat = self.model._start_chat()
 
     def __post_init__(self):
         """
@@ -129,10 +129,10 @@ class GoogleGenerativeAI:
         """ Получаю конфигурацию из файла настроек"""
         return j_loads_ns(gs.path.src / 'ai' / 'gemini' / 'generative_ai.json')
 
-    def start_chat(self):
+    def _start_chat(self):
         """"""
         ...
-        chat = self.model.start_chat(history=[])
+        return self.model.start_chat(history=[])
 
     def _save_dialogue(self, dialogue: list):
         """
