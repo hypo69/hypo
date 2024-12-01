@@ -33,7 +33,7 @@ from src.suppliers.morlevi.graber import Graber as MorleviGraber
 from src.suppliers.ksp.graber import Graber as KspGraber
 from src.suppliers.ivory.graber import Graber as IvoryGraber
 from src.suppliers.grandadvance.graber import Graber as GrandadvanceGraber
-from src.endpoints.kazarinov.react import ReportGenerator
+from src.endpoints.kazarinov.scenarios.pricelist_generator import ReportGenerator
 from telegram import Update
 from telegram.ext import CallbackContext
 
@@ -130,7 +130,8 @@ class Mexiron:
         products_list = []
 
         for url in urls_list:
-            await update.message.reply_text(f"Старт: {url}")
+            if update:
+                await update.message.reply_text(f"Старт: {url}")
             graber = self.get_graber_by_supplier_url(url)
             if not graber:
                 ...
@@ -218,21 +219,6 @@ class Mexiron:
         Returns:
             dict: Formatted product data dictionary.
         """
-        def copy_from_tmp():
-
-            # Исходный путь файла
-            source_file = Path(f.local_saved_image)  # Это полный путь к файлу
-
-            # Форматирование целевого пути
-            target_dir = Path(self.export_path / 'images')  # Папка для копирования файла
-            target_file = target_dir / source_file.name  # Полный путь к целевому файлу в папке 'images'
-
-            # Создание директории 'images', если её нет
-            target_dir.mkdir(parents=True, exist_ok=True)
-
-            # Копирование файла
-            shutil.copy2(source_file, target_file)
-            return target_file
 
         return {
             'product_title': f.name['language'][0]['value'].strip(),

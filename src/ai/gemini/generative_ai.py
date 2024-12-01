@@ -107,22 +107,22 @@ class GoogleGenerativeAI:
             model_name=self.model_name,
             generation_config=self.generation_config
         )
-        self._chat = self.model._start_chat()
+        self._chat = self._start_chat()
 
-    def __post_init__(self):
-        """
-        Метод для инициализации модели и других параметров после создания экземпляра.
+    # def __post_init__(self):
+    #     """
+    #     Метод для инициализации модели и других параметров после создания экземпляра.
 
-        Этот метод гарантирует, что модель будет инициализирована, если ключ API указан, но модель еще не была
-        настроена в конструкторе.
-        """
-        if self.api_key and not self.model:
-            genai.configure(api_key=self.api_key)
-            self.model = genai.GenerativeModel(
-                model_name=self.model_name,
-                generation_config=self.generation_config,
-                system_instruction=self.system_instruction,       
-            )
+    #     Этот метод гарантирует, что модель будет инициализирована, если ключ API указан, но модель еще не была
+    #     настроена в конструкторе.
+    #     """
+    #     if self.api_key and not self.model:
+    #         genai.configure(api_key=self.api_key)
+    #         self.model = genai.GenerativeModel(
+    #             model_name=self.model_name,
+    #             generation_config=self.generation_config,
+    #             system_instruction=self.system_instruction,       
+    #         )
 
     @property
     def config():

@@ -74,22 +74,12 @@ class ReportGenerator:
         html_content = self.generate_html(data)
         save_text_file(html_content, html_file)
         pdf = PDFUtils()
-        # if not pdf.save_pdf_fpdf(html_content,pdf_file):
-        #     if not pdf.save_pdf_pdfkit(html_content,pdf_file):
-        #         if not pdf.save_pdf_weasyprint(html_content,pdf_file):
-        #             if not pdf.save_pdf_xhtml2pdf(html_content,pdf_file):
-        #                 logger.error(f"Не скопмилировался PDF")
 
-        #if not pdf.save_pdf_xhtml2pdf(html_content,pdf_file):
         if not pdf.save_pdf_pdfkit(html_content,pdf_file):
             logger.error(f"Не скопмилировался PDF")
             ...
         ...
 
-        #save_pdf(html_content,pdf_file)
-        # pdfkit.from_string(html_content, pdf_file, configuration=config, options={"enable-local-file-access": ""})
-        # pdfkit.from_file(html_file, pdf_file, configuration=config, options={"enable-local-file-access": ""})
-        # logger.info(f"Файлы созданы: {html_file} и {pdf_file}")
 
 def main(mexiron:str,lang:str) ->bool:
     base_path:Path =  gs.path.external_storage / 'kazarinov' / 'mexironim' / mexiron

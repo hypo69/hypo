@@ -2,13 +2,28 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-.. module: src.endpoints.kazarinov 
+.. module: src.endpoints.kazarinov.bot_handlers 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: Обработка событий телеграм бота
 
+Модуль для работы с событиями телеграм-бота
+=========================================================================================
+
+Этот модуль обрабатывает команды, переданные телеграм-боту, такие как работа с ссылками OneTab
+и выполнение связанных сценариев.
+
+Пример использования
+--------------------
+
+Пример использования класса `BotHandler`:
+
+.. code-block:: python
+
+    handler = BotHandler(webdriver_name='firefox')
+    handler.handle_url(update, context)
 """
+
 MODE = 'dev'
 
 import header
@@ -30,47 +45,63 @@ from src.utils.printer import pprint
 from telegram import Update
 from telegram.ext import CallbackContext
 
-class BotHandler():
+
+class BotHandler:
     """Исполнитель команд, полученных ботом."""
+
     mexiron: Mexiron
 
     def __init__(self, webdriver_name: Optional[str] = 'firefox'):
-        """"""
+        """
+        Инициализация обработчика событий телеграм-бота.
+
+        Args:
+            webdriver_name (Optional[str]): Название веб-драйвера для запуска.
+        """
         logger.info('handler started')
 
-        self.mexiron: Mexiron = Mexiron(
+        self.mexiron = Mexiron(
             Driver(
-                Firefox if webdriver_name.lower() == 'firefox' 
-                else Chrome if webdriver_name.lower() == 'chrome' 
+                Firefox if webdriver_name.lower() == 'firefox'
+                else Chrome if webdriver_name.lower() == 'chrome'
                 else Edge
             )
         )
 
     async def handle_url(self, update: Update, context: CallbackContext) -> Any:
-        """В первую очередь я ожидаю ссылку onetab, именно оттуда Сергей отправляет запрос на построение ценового предложения"""
+        """
+        Обработка URL, присланного пользователем.
+
+        Args:
+            update (Update): Объект обновления из телеграма.
+            context (CallbackContext): Контекст выполнения.
+        """
         ...
-        # handle `https://one-tab.com`
         response = update.message.text
-        if response.startswith(('https://one-tab.com','http://one-tab.com','https://www.one-tab.com','http://www.one-tab.com')):
+        if response.startswith(('https://one-tab.com', 'http://one-tab.com',
+                                'https://www.one-tab.com', 'http://www.one-tab.com')):
             price, mexiron_name, urls = self.get_data_from_onetab(response)
             if not all([price, mexiron_name, urls]):
-                await update.message.reply_text("хуйня какая-то")
+                await update.message.reply_text('Некорректные данные.')
 
-            if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls):
+            if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls, update=update):
                 await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
                 return True
         else:
             await update.message.reply_text('Ошибка. Попробуй ещё раз.')
             ...
-            return 
-
+            return
 
     def get_data_from_onetab(self, response: str) -> list[int | float, str, list] | bool:
-        """Handle name, price, supplier_urls from OneTab
-        price, name приходят через строчку названия таба в one-tab [price] [name] с пробельным разделителем.
-        цена определяется значениен до первого пробела, остльное - название (необязательно)
         """
+        Извлечение данных (цена, имя, ссылки) из OneTab.
 
+        Args:
+            response (str): Ссылка на страницу OneTab.
+
+        Returns:
+            list[int | float, str, list] | bool: Данные OneTab или False в случае ошибки.
+        """
         price, mexiron_name, urls = self.fetch_target_urls_onetab(response)
 
         if not all([price, mexiron_name, urls]):
@@ -79,7 +110,12 @@ class BotHandler():
         return price, mexiron_name, urls
 
     async def handle_next_command(self, update: Update) -> None:
-        """Handle '--next' and related commands."""
+        """
+        Обработка команды '--next' и её аналогов.
+
+        Args:
+            update (Update): Объект обновления из телеграма.
+        """
         try:
             question = random.choice(self.questions_list)
             answer = self.model.ask(question)
@@ -88,25 +124,22 @@ class BotHandler():
                 update.message.reply_text(answer)
             )
         except Exception as ex:
-            logger.debug("Ошибка чтения вопросов: %s", ex)
+            logger.debug('Ошибка чтения вопросов: %s', ex)
             ...
             await update.message.reply_text('Произошла ошибка при чтении вопросов.')
 
     def fetch_target_urls_onetab(self, one_tab_url: str) -> list[str] | bool:
-        """Извлекает целевые URL с указанного URL OneTab.
+        """
+        Извлечение целевых URL с указанного URL OneTab.
 
-        Выполняет GET-запрос к указанному URL, парсит HTML-контент
-        и извлекает все ссылки из тегов 'a' с классом 'tabLink'.
+        Выполняется GET-запрос к указанному URL, парсится HTML-контент
+        и извлекаются ссылки из тегов 'a' с классом 'tabLink'.
 
         Args:
-            target_page_url (str): URL страницы OneTab для извлечения целевых URL.
+            one_tab_url (str): URL страницы OneTab.
 
         Returns:
-            Tuple[int, str, List[str]] | bool: Кортеж из цены, имени и списка URL 
-            или `False`, если произошла ошибка.
-
-        Raises:
-            requests.exceptions.RequestException: При ошибке запроса.
+            list[str] | bool: Список целевых URL или False при ошибке.
         """
         try:
             response = requests.get(one_tab_url, timeout=10)
@@ -115,7 +148,7 @@ class BotHandler():
             if response.status_code != 200:
                 logger.debug(f'Ошибка response\n{pprint(response)}')
                 ...
-                return 
+                return
 
             soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -128,22 +161,22 @@ class BotHandler():
 
             if not data:
                 ...
-                return 
+                return
 
             # Разбивка данных на цену и имя
             parts = data.split(maxsplit=1)
             try:
                 price = int(parts[0])
             except ValueError as ex:
-                logger.error(f'Ошибка при преобразовании цены: {ex}')
+                logger.error('Ошибка при преобразовании цены: %s', ex)
                 ...
-                return 
+                return
 
             mexiron_name = parts[1] if len(parts) > 1 else gs.now
 
             return price, mexiron_name, urls
 
         except requests.exceptions.RequestException as ex:
-            logger.error(f'Ошибка при выполнении запроса: {ex}')
+            logger.error('Ошибка при выполнении запроса: %s', ex)
             ...
-            return 
+            return
