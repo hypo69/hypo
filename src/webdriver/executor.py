@@ -401,7 +401,7 @@ class ExecuteLocator:
             return await _parse_elements_list(web_elements, locator)
         except Exception as ex:
             if MODE in ('dev','debug'):
-                logger.debug(f"Locator issue: {locator}")
+                logger.debug(f"Locator issue: {locator}", ex, False)
             return
 
     async def get_webelement_as_screenshot(

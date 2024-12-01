@@ -238,7 +238,6 @@ class Mexiron:
             'description_short': f.description_short['language'][0]['value'].strip(),
             'description': f.description['language'][0]['value'].strip(),
             'specification': f.specification['language'][0]['value'].strip(),
-            #'local_saved_image': f"images/{target_file.name}",
             'local_saved_image': str(f.local_saved_image),
         }
 

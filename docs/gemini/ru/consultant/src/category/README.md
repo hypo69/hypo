@@ -1,186 +1,175 @@
-**Received Code**
+# Received Code
 
 ```python
 # Модуль категоризации данных (класс `Product`), полученных от поставщика (класс `Supplier`)
 ```
 
-**Improved Code**
+# Improved Code
 
 ```python
 """
-Модуль категоризации данных (класс `Product`), полученных от поставщика (класс `Supplier`).
-====================================================================================================
+Модуль для категоризации данных продуктов, полученных от поставщика.
 
-Этот модуль определяет класс `Product`, который используется для хранения и категоризации данных,
-полученных от класса `Supplier`.
+Содержит классы :class:`Product` и :class:`Supplier`,
+обеспечивающие взаимодействие и обработку данных.
 """
 from src.utils.jjson import j_loads
-from src.logger import logger  # Импортируем logger для логирования
+from src.logger import logger
+import json
+
 
 class Supplier:
     """
-    Класс поставщика данных.
-    ========================
-    Этот класс предоставляет методы для получения данных.
-    """
-    def get_data(self, file_path):
-        """
-        Получение данных из файла.
+    Класс для представления поставщика данных продуктов.
 
-        :param file_path: Путь к файлу.
-        :return: Данные в формате словаря или None при ошибке.
+    :ivar data: Данные поставщика (словарь).
+    """
+    def __init__(self, data):
+        """
+        Инициализирует объект Supplier.
+
+        :param data: Словарь с данными поставщика.
+        """
+        self.data = data  # Данные поставщика
+
+    def get_products(self):
+        """
+        Возвращает список продуктов, полученных от поставщика.
+
+        :return: Список объектов Product. Возвращает пустой список,
+        если данные поставщика некорректны или отсутствуют.
         """
         try:
-            # Код читает данные из файла используя j_loads
-            with open(file_path, 'r') as f:
-                data = j_loads(f.read())
-            return data
-        except FileNotFoundError:
-            logger.error(f'Ошибка: файл {file_path} не найден.')
-            return None
-        except Exception as e:
-            logger.error(f'Ошибка при чтении файла {file_path}: {e}')
-            return None
+            products_data = j_loads(self.data) # чтение данных поставщика
+        except json.JSONDecodeError as e:
+            logger.error('Ошибка декодирования JSON данных поставщика:', e)
+            return [] # Возврат пустого списка при ошибке
+        if not isinstance(products_data, list):
+            logger.error('Некорректный формат данных поставщика (не список).')
+            return []
+        products = []
+        for product_data in products_data: # обработка каждого продукта из списка
+            products.append(Product(product_data))  # Добавление каждого элемента в список
+        return products # Возвращаем список объектов Product
 
 
 class Product:
     """
-    Класс для хранения и категоризации данных продукта.
-    ======================================================
+    Класс для представления продукта.
 
-    Этот класс хранит данные о продукте и выполняет категоризацию.
+    :ivar data: Данные продукта (словарь).
     """
-    def __init__(self, supplier_data):
+    def __init__(self, data):
         """
-        Инициализация объекта Product.
+        Инициализирует объект Product.
 
-        :param supplier_data: Данные, полученные от поставщика.
+        :param data: Словарь с данными продукта.
         """
-        # Проверка валидности входных данных
-        if not isinstance(supplier_data, dict):
-            logger.error("Ошибка: входные данные не являются словарем.")
-            # Обработка ошибки, например, установка значения по умолчанию или выход
-            self.data = {}
-        else:
-            self.data = supplier_data
-        # ...
+        self.data = data  # Данные продукта
 
-    def categorize(self):
+    def get_category(self):
         """
-        Категоризация продукта.
+        Возвращает категорию продукта.
 
-        :return: Словарь с результатами категоризации или None при ошибке.
+        :return: Строка с категорией продукта. Возвращает пустую строку,
+         если категория не найдена или данные некорректны.
         """
         try:
-            # ... (Код категоризации)
-            # Пример обработки данных
-            if 'name' in self.data:
-                category = 'general' if self.data['name'] == 'product' else 'other'
-            else:
-              category = 'unknown'
-            return {'category': category}
-        except Exception as e:
-            logger.error(f'Ошибка при категоризации: {e}')
-            return None
+            category = self.data['category'] # Получение категории
+            return category  # Возврат категории
+        except (KeyError, TypeError):
+            logger.error('Ошибка получения категории продукта:', self.data) # Логирование ошибки
+            return ''
 
-
-# Пример использования
-# ... (Пример использования классов Supplier и Product)
 ```
 
-**Changes Made**
+# Changes Made
 
-* Добавлено описание модуля в формате RST.
-* Добавлена документация в формате RST для класса `Supplier` и метода `get_data`.
-* Добавлена документация в формате RST для класса `Product` и метода `__init__`.
-* Добавлен метод `categorize` в класс `Product` с документацией RST.
-* Используется `j_loads` для чтения данных из файла.
-* Добавлена обработка ошибок с помощью `logger.error`.
-* Исправлена проверка типа данных `supplier_data`.
-* Добавлены комментарии с объяснением кода.
-* Импортирован `logger` из `src.logger`.
-* Добавлена обработка исключений `FileNotFoundError`.
+*   Добавлен модуль документации в формате RST.
+*   Добавлены docstring в формате RST для классов `Supplier` и `Product` и методов.
+*   Использование `j_loads` из `src.utils.jjson` для чтения данных.
+*   Обработка ошибок с помощью `logger.error`.
+*   Проверка типа данных для корректного парсинга.
+*   Возврат пустого списка в случае ошибок декодирования или некорректного формата данных.
+*   Улучшены сообщения об ошибках с указанием места ошибки.
+*   Изменён `return` в `get_products`, чтобы возвращать пустой список в случае ошибок.
+*   Добавлены комментарии в формате RST для функций и методов.
+*   Использование `isinstance()` для проверки типа данных.
 
 
-**FULL Code**
+# FULL Code
 
 ```python
 """
-Модуль категоризации данных (класс `Product`), полученных от поставщика (класс `Supplier`).
-====================================================================================================
+Модуль для категоризации данных продуктов, полученных от поставщика.
 
-Этот модуль определяет класс `Product`, который используется для хранения и категоризации данных,
-полученных от класса `Supplier`.
+Содержит классы :class:`Product` и :class:`Supplier`,
+обеспечивающие взаимодействие и обработку данных.
 """
 from src.utils.jjson import j_loads
-from src.logger import logger  # Импортируем logger для логирования
+from src.logger import logger
+import json
+
 
 class Supplier:
     """
-    Класс поставщика данных.
-    ========================
-    Этот класс предоставляет методы для получения данных.
-    """
-    def get_data(self, file_path):
-        """
-        Получение данных из файла.
+    Класс для представления поставщика данных продуктов.
 
-        :param file_path: Путь к файлу.
-        :return: Данные в формате словаря или None при ошибке.
+    :ivar data: Данные поставщика (словарь).
+    """
+    def __init__(self, data):
+        """
+        Инициализирует объект Supplier.
+
+        :param data: Словарь с данными поставщика.
+        """
+        self.data = data  # Данные поставщика
+
+    def get_products(self):
+        """
+        Возвращает список продуктов, полученных от поставщика.
+
+        :return: Список объектов Product. Возвращает пустой список,
+        если данные поставщика некорректны или отсутствуют.
         """
         try:
-            # Код читает данные из файла используя j_loads
-            with open(file_path, 'r') as f:
-                data = j_loads(f.read())
-            return data
-        except FileNotFoundError:
-            logger.error(f'Ошибка: файл {file_path} не найден.')
-            return None
-        except Exception as e:
-            logger.error(f'Ошибка при чтении файла {file_path}: {e}')
-            return None
+            products_data = j_loads(self.data) # чтение данных поставщика
+        except json.JSONDecodeError as e:
+            logger.error('Ошибка декодирования JSON данных поставщика:', e)
+            return [] # Возврат пустого списка при ошибке
+        if not isinstance(products_data, list):
+            logger.error('Некорректный формат данных поставщика (не список).')
+            return []
+        products = []
+        for product_data in products_data: # обработка каждого продукта из списка
+            products.append(Product(product_data))  # Добавление каждого элемента в список
+        return products # Возвращаем список объектов Product
 
 
 class Product:
     """
-    Класс для хранения и категоризации данных продукта.
-    ======================================================
+    Класс для представления продукта.
 
-    Этот класс хранит данные о продукте и выполняет категоризацию.
+    :ivar data: Данные продукта (словарь).
     """
-    def __init__(self, supplier_data):
+    def __init__(self, data):
         """
-        Инициализация объекта Product.
+        Инициализирует объект Product.
 
-        :param supplier_data: Данные, полученные от поставщика.
+        :param data: Словарь с данными продукта.
         """
-        # Проверка валидности входных данных
-        if not isinstance(supplier_data, dict):
-            logger.error("Ошибка: входные данные не являются словарем.")
-            # Обработка ошибки, например, установка значения по умолчанию или выход
-            self.data = {}
-        else:
-            self.data = supplier_data
-        # ...
+        self.data = data  # Данные продукта
 
-    def categorize(self):
+    def get_category(self):
         """
-        Категоризация продукта.
+        Возвращает категорию продукта.
 
-        :return: Словарь с результатами категоризации или None при ошибке.
+        :return: Строка с категорией продукта. Возвращает пустую строку,
+         если категория не найдена или данные некорректны.
         """
         try:
-            # ... (Код категоризации)
-            # Пример обработки данных
-            if 'name' in self.data:
-                category = 'general' if self.data['name'] == 'product' else 'other'
-            else:
-              category = 'unknown'
-            return {'category': category}
-        except Exception as e:
-            logger.error(f'Ошибка при категоризации: {e}')
-            return None
-
-
-# Пример использования
-# ... (Пример использования классов Supplier и Product)
+            category = self.data['category'] # Получение категории
+            return category  # Возврат категории
+        except (KeyError, TypeError):
+            logger.error('Ошибка получения категории продукта:', self.data) # Логирование ошибки
+            return ''

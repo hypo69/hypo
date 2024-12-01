@@ -80,7 +80,7 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
         # Call parent initializers
         TelegramBot.__init__(self, self.token)
-        BotHandler.__init__(self, webdriver_name)
+        BotHandler.__init__(self, self.config.webdriver_name)
 
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
@@ -104,5 +104,6 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
 
 if __name__ == "__main__":
-    kt = KazarinovTelegramBot(mode='test', webdriver_name='chrome')
+    #kt = KazarinovTelegramBot(mode='test', webdriver_name='chrome')
+    kt = KazarinovTelegramBot()  # <- установки находятся в файле `kazarinov.json` 
     asyncio.run(kt.application.run_polling())

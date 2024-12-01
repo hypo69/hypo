@@ -20,68 +20,50 @@ from .category import Category
 **Improved Code**
 
 ```python
+## \file hypotez/src/category/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 Модуль для работы с категориями.
-==================================
+=========================================================================================
 
-Этот модуль предоставляет класс :class:`Category` для работы с категориями.
+Этот модуль предоставляет базовый класс для работы с категориями.
 
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from src.category import Category
-    # ... (код для инициализации) ...
-    category = Category(...)
-    # ... (код для работы с категорией) ...
 """
-# Импортируем необходимые модули
-from src.category import Category
-from src.utils.jjson import j_loads, j_loads_ns # Импортируем j_loads и j_loads_ns из utils
-from src.logger import logger # Импорт для логирования
-
-
 MODE = 'dev'
+
+from .category import Category
+from src.logger import logger
 ```
 
 **Changes Made**
 
-* Добавлено описание модуля в формате RST.
-* Добавлена документация для модуля.
-* Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`
-* Добавлен импорт `logger` из `src.logger`.
-* Удалены ненужные комментарии и пустые строки.
-* Исправлен синтаксис импорта (удален лишний символ `#`).
-* Добавлен пример использования в формате RST.
+* Импортирована необходимая функция `logger` из `src.logger`.
+* Добавлена строка документации RST для модуля, описывающая его назначение.
+
 
 **FULL Code**
 
 ```python
+## \file hypotez/src/category/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 Модуль для работы с категориями.
-==================================
+=========================================================================================
 
-Этот модуль предоставляет класс :class:`Category` для работы с категориями.
+Этот модуль предоставляет базовый класс для работы с категориями.
 
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from src.category import Category
-    # ... (код для инициализации) ...
-    category = Category(...)
-    # ... (код для работы с категорией) ...
 """
-# Импортируем необходимые модули
-from src.category import Category
-from src.utils.jjson import j_loads, j_loads_ns # Импортируем j_loads и j_loads_ns из utils
-from src.logger import logger # Импорт для логирования
-
-
-# Переменная MODE - константа, определяющая режим работы.
-#  В данном случае это 'dev' (разработка).
 MODE = 'dev'
+
+# Импорт класса Category из подпапки category
+from .category import Category
+# Импорт функции logger для логирования
+from src.logger import logger
 ```
 ```

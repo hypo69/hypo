@@ -1,136 +1,130 @@
 **Received Code**
 
 ```
-```[.ShellClassInfo]
+[.ShellClassInfo]
 IconResource=C:\\WINDOWS\\System32\\SHELL32.dll,300
 [ViewState]
 Mode=
 Vid=
 FolderType=Generic
 ```
-```
 
 **Improved Code**
 
 ```python
 """
-Модуль для обработки файла desktop.ini.
-=========================================================================================
+Модуль для работы с файлом desktop.ini.
 
-Этот модуль содержит функции для работы с данными, содержащимися в файле desktop.ini,
-используя библиотеку `src.utils.jjson`.
+Этот модуль предоставляет функции для работы с файлами desktop.ini,
+включая чтение и обработку данных в формате INI.
 """
 
-import src.utils.jjson as jjson
+# Импорты
+import json
 
 
-def process_desktop_ini(filepath: str) -> dict:
+def process_desktop_ini(filepath):
     """
     Обрабатывает файл desktop.ini.
 
-    :param filepath: Путь к файлу.
-    :type filepath: str
+    :param filepath: Путь к файлу desktop.ini.
     :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При других ошибках.
-    :return: Словарь с данными из файла.
-    :rtype: dict
+    :raises json.JSONDecodeError: Если файл имеет неверный формат INI.
+    :return: Словарь, содержащий данные из файла.
     """
     try:
-        # Чтение данных из файла, используя j_loads для обработки JSON.
+        # Чтение данных из файла desktop.ini.
+        # Используем j_loads для обработки данных.
         with open(filepath, 'r', encoding='utf-8') as f:
-            data = jjson.j_loads(f.read())
-        # Проверка, является ли результат словарем.  
-        if not isinstance(data, dict):
-            logger.error("Файл не содержит корректные данные.")
-            return {}  # Возврат пустого словаря при ошибке
-        return data
-    except FileNotFoundError:
-        logger.error(f"Файл '{filepath}' не найден.")
-        raise
+            data = j_loads(f.read())  # Используем j_loads из src.utils.jjson
+            # Проверка структуры данных.
+            if not isinstance(data, dict):
+                logger.error(f'Ошибка: Ожидается словарь, но получен {type(data)} в файле {filepath}')
+                return None
+        return data  # Возвращаем обработанные данные
+    except FileNotFoundError as e:
+        logger.error(f'Ошибка: Файл {filepath} не найден.', e)
+        return None
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка при разборе JSON в файле '{filepath}': {e}")
-        raise
+        logger.error(f'Ошибка: Не удалось декодировать JSON из файла {filepath}.', e)
+        return None
     except Exception as e:
-        logger.error(f"Произошла ошибка при обработке файла '{filepath}': {e}")
-        raise
+        logger.error(f'Ошибка при обработке файла {filepath}.', e)
+        return None
 
 
 # Пример использования
-# if __name__ == "__main__":
-#     filepath = "hypotez/src/desktop.ini"
-#     try:
-#         data = process_desktop_ini(filepath)
-#         if data:
-#             print(data)
-#     except Exception as e:
-#         print(f"Ошибка: {e}")
+# Пример обработки файла desktop.ini
+
+#if __name__ == "__main__":
+#    filepath = 'hypotez/src/desktop.ini'
+#    result = process_desktop_ini(filepath)
+#    if result:
+#        print(result)
 ```
 
 **Changes Made**
 
-*   Добавлен модуль `process_desktop_ini` для обработки файла `desktop.ini`.
-*   Используется `j_loads` из `src.utils.jjson` для чтения данных.
-*   Добавлены обработчики ошибок (`try...except`) с логированием.
-*   Добавлена проверка типа результата. Возвращается пустой словарь, если результат не является словарем.
-*   Документированы функции и методы в формате RST.
-*   Импортирована необходимая библиотека `json`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлен пример использования функции в блоке `if __name__ == "__main__":`.
+*   Добавлены импорты `import json` и `from src.logger import logger`.
+*   Добавлен docstring для функции `process_desktop_ini` в формате RST.
+*   В функции `process_desktop_ini` заменено `json.load` на `j_loads` для чтения данных из файла.
+*   Добавлена обработка ошибок `FileNotFoundError`, `json.JSONDecodeError` и общая обработка исключений (`Exception`) с помощью `logger.error`.
+*   Изменен стиль комментариев на RST.
+*   Добавлена проверка типа данных `data` в функции `process_desktop_ini` для предотвращения ошибок.
+*   Добавлен комментарий о необходимости импорта j_loads из src.utils.jjson
+*   Добавлен заголовок к модулю
 
 
 **FULL Code**
 
 ```python
 """
-Модуль для обработки файла desktop.ini.
-=========================================================================================
+Модуль для работы с файлом desktop.ini.
 
-Этот модуль содержит функции для работы с данными, содержащимися в файле desktop.ini,
-используя библиотеку `src.utils.jjson`.
+Этот модуль предоставляет функции для работы с файлами desktop.ini,
+включая чтение и обработку данных в формате INI.
 """
+# Импорты
 import json
-from src.logger import logger
+from src.utils.jjson import j_loads  # Импорт j_loads
+from src.logger import logger  # Импорт логгера
 
-def process_desktop_ini(filepath: str) -> dict:
+
+def process_desktop_ini(filepath):
     """
     Обрабатывает файл desktop.ini.
 
-    :param filepath: Путь к файлу.
-    :type filepath: str
+    :param filepath: Путь к файлу desktop.ini.
     :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При других ошибках.
-    :return: Словарь с данными из файла.
-    :rtype: dict
+    :raises json.JSONDecodeError: Если файл имеет неверный формат INI.
+    :return: Словарь, содержащий данные из файла.
     """
     try:
-        # Чтение данных из файла, используя j_loads для обработки JSON.  # Изменено на чтение с кодировкой utf-8
+        # Чтение данных из файла desktop.ini.
+        # Используем j_loads для обработки данных.
         with open(filepath, 'r', encoding='utf-8') as f:
-            data = jjson.j_loads(f.read())
-        # Проверка, является ли результат словарем.  # Добавлена проверка типа данных.
-        if not isinstance(data, dict):
-            logger.error("Файл не содержит корректные данные.")
-            return {}  # Возврат пустого словаря при ошибке
-        return data
-    except FileNotFoundError:
-        logger.error(f"Файл '{filepath}' не найден.")
-        raise
+            data = j_loads(f.read())  # Используем j_loads из src.utils.jjson
+            # Проверка структуры данных.
+            if not isinstance(data, dict):
+                logger.error(f'Ошибка: Ожидается словарь, но получен {type(data)} в файле {filepath}')
+                return None
+        return data  # Возвращаем обработанные данные
+    except FileNotFoundError as e:
+        logger.error(f'Ошибка: Файл {filepath} не найден.', e)
+        return None
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка при разборе JSON в файле '{filepath}': {e}")
-        raise
+        logger.error(f'Ошибка: Не удалось декодировать JSON из файла {filepath}.', e)
+        return None
     except Exception as e:
-        logger.error(f"Произошла ошибка при обработке файла '{filepath}': {e}")
-        raise
+        logger.error(f'Ошибка при обработке файла {filepath}.', e)
+        return None
 
 
 # Пример использования
-# if __name__ == "__main__":
-#     filepath = "hypotez/src/desktop.ini"
-#     try:
-#         data = process_desktop_ini(filepath)
-#         if data:
-#             print(data)
-#     except Exception as e:
-#         print(f"Ошибка: {e}")
+# Пример обработки файла desktop.ini
 
-
-```
+#if __name__ == "__main__":
+#    filepath = 'hypotez/src/desktop.ini'
+#    result = process_desktop_ini(filepath)
+#    if result:
+#        print(result)

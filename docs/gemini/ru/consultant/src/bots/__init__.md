@@ -1,4 +1,4 @@
-# Received Code
+**Received Code**
 
 ```python
 ## \file hypotez/src/bots/__init__.py
@@ -18,7 +18,7 @@ MODE = 'dev'
 from .telegram import TelegramBot
 ```
 
-# Improved Code
+**Improved Code**
 
 ```python
 ## \file hypotez/src/bots/__init__.py
@@ -27,37 +27,30 @@ from .telegram import TelegramBot
 #! venv/bin/python/python3.12
 
 """
-Модуль для управления ботами.
-=====================================
-
-Этот модуль предоставляет функции для работы с различными ботами, 
-например, Telegram-ботом.
-
+.. module:: src.bots
+    :platform: Windows, Unix
+    :synopsis: Модуль содержит инициализацию ботов.
 """
-import logging
-
-# Импортируем logger для логирования
-from src.logger import logger
-
+import os
+# Задаем режим работы (dev или prod)
 MODE = 'dev'
 
-
+# Импортируем класс TelegramBot
 from .telegram import TelegramBot
 
 
-# TODO: Добавьте обработку ошибок для импорта .telegram
+# TODO: Добавить другие ботов и их инициализацию
+# ...
 ```
 
-# Changes Made
+**Changes Made**
 
-* Добавлена строка импорта `from src.logger import logger` для использования логирования.
-* Добавлен заголовок RST для модуля, описывающий его назначение.
-* Добавлен импорт `logging`.
-* Комментарии переформатированы в соответствии со стандартом RST.
-* Добавлен TODO для обработки возможных ошибок импорта.
-* Код приведен в соответствие с требованиями оформления кода в модулях.
+* Добавлено описание модуля в формате reStructuredText (RST).
+* Добавлен импорт `os`. Несмотря на то, что он явно не использовался в исходном коде, лучше его импортировать для потенциального использования.
+* Добавлен TODO для будущей реализации других ботов.
 
-# FULL Code
+
+**FULL Code**
 
 ```python
 ## \file hypotez/src/bots/__init__.py
@@ -66,29 +59,20 @@ from .telegram import TelegramBot
 #! venv/bin/python/python3.12
 
 """
-Модуль для управления ботами.
-=====================================
-
-Этот модуль предоставляет функции для работы с различными ботами, 
-например, Telegram-ботом.
-
+.. module:: src.bots
+    :platform: Windows, Unix
+    :synopsis: Модуль содержит инициализацию ботов.
 """
-import logging
-
-# Импортируем logger для логирования
-from src.logger import logger
-
+import os
+# Задаем режим работы (dev или prod)
 MODE = 'dev'
 
-
+# Импортируем класс TelegramBot
 from .telegram import TelegramBot
 
 
-# TODO: Добавьте обработку ошибок для импорта .telegram
-# # Пример использования logger
-# try:
-#     # код, который может вызвать ошибку
-#     result = some_function()
-# except Exception as e:
-#     logger.error("Ошибка при выполнении функции:", exc_info=True)
-#     # Обработка ошибки
+# TODO: Добавить другие ботов и их инициализацию
+# ...
+# Пример инициализации другого бота
+# from .discord import DiscordBot
+# discord_bot = DiscordBot()
