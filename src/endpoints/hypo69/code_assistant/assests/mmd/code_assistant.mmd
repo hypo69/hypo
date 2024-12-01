@@ -1,0 +1,42 @@
+%% module src.endpoints.hypo69.code_assistant.code_assistant
+graph TD
+    subgraph Инициализация
+        A[CodeAssistant] --> B(Загрузка конфигурации)
+        B --> C{Инициализация моделей}
+        C --> D[GeminiModel]
+        C --> E[OpenAIModel]
+    end
+    
+    subgraph Разбор аргументов
+        A --> F(parse_args)
+        F --> G[Аргументы]
+    end
+    
+    subgraph Обработка файлов
+        G --> H(_yield_files_content)
+        H --> I[Список файлов]
+        I --> J(_create_request)
+        J --> K(Запрос)
+        K --> L(GeminiModel)
+        L --> M(_remove_outer_quotes)
+        M --> N(_save_response)
+        N --> O[Сохранение ответа]
+        O --> P(Вывод)
+        
+        subgraph alt [Ошибка]
+            L --> Q[Ошибка ответа]
+            Q --> R(Логирование)
+        end
+    end
+    
+    subgraph Обработка прерывания
+        A --> S(_signal_handler)
+        S --> T[Обработка Ctrl+C]
+    end
+
+    P --> U{Цикл обработки}
+    U --> A
+
+    style B fill:#11f,stroke:#333,stroke-width:2px
+    style C fill:#11f,stroke:#333,stroke-width:2px
+    style F fill:#11f,stroke:#333,stroke-width:2px

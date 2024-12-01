@@ -25,45 +25,66 @@ from src.utils.string import StringFormatter
 from src.endpoints.prestashop import PrestaShop, PrestaCategory
 
 
+## \file hypotez/src/category/category.py
+# -*- coding: utf-8 -*-
+"""
+Module for working with categories, primarily for PrestaShop.
+============================================================
+
+This module provides classes for interacting with and
+processing product category data, particularly relevant for PrestaShop.
+"""
+
+import asyncio
+from pathlib import Path
+import os
+from typing import Dict
+from lxml import html
+import requests
+
+import header
+from src import gs
+from src.logger import logger
+from src.utils import j_loads, j_dumps
+from src.utils.string import StringFormatter
+from src.endpoints.prestashop import PrestaShop, PrestaCategory
+
+
 class Category(PrestaCategory):
-    """
-    Category class for handling product categories. Inherits from PrestaCategory.
-    """
+    """Category handler for product categories. Inherits from PrestaCategory."""
     credentials: Dict = None
 
     def __init__(self, api_credentials, *args, **kwargs):
-        """
-        Initializes the Category object.
+        """Initializes a Category object.
 
-        :param api_credentials: API credentials.
-        :param args: Variable length argument list.
-        :param kwargs: Keyword arguments.
+        :param api_credentials: API credentials for accessing the category data.
+        :param args: Variable length argument list (unused).
+        :param kwargs: Keyword arguments (unused).
         """
         super().__init__(api_credentials, *args, **kwargs)
 
     def get_parents(self, id_category, dept):
-        """
-        Retrieves parent categories.
+        """Retrieves a list of parent categories.
 
-        :param id_category: Category ID.
-        :param dept: Category depth.
-        :return: List of parent categories.
+        :param id_category: The ID of the category to retrieve parents for.
+        :param dept: Depth level of the category.
+        :returns: A list of parent categories.
         """
         return super().get_list_parent_categories(id_category)
 
-    async def crawl_categories_async(self, url, depth, driver, locator, dump_file, id_category_default, category=None):
-        """
-        Asynchronously crawls categories and builds a hierarchical dictionary.
+    async def crawl_categories_async(self, url, depth, driver, locator, dump_file, default_category_id, category=None):
+        """Asynchronously crawls categories, building a hierarchical dictionary.
 
-        :param url: URL of the page to crawl.
-        :param depth: Depth of recursion.
-        :param driver: Selenium WebDriver instance.
-        :param locator: XPath locator for finding category links.
-        :param dump_file: File for saving the hierarchical dictionary.
-        :param id_category_default: Default category ID.
-        :param category: Category dictionary (default is None).
-        :return: Hierarchical dictionary of categories and their URLs.
+        :param url: The URL of the category page.
+        :param depth: The depth of the crawling recursion.
+        :param driver: The Selenium WebDriver instance.
+        :param locator: The XPath locator for category links.
+        :param dump_file: The path to the JSON file for saving results.
+        :param default_category_id: The default category ID.
+        :param category: (Optional) An existing category dictionary (default=None).
+        :returns: The updated or new category dictionary.
         """
+
         if category is None:
             category = {
                 'url': url,
@@ -95,8 +116,8 @@ class Category(PrestaCategory):
             await asyncio.gather(*tasks)
 
             return category
-        except Exception as e:
-            logger.error(f"An error occurred during category crawling: {e}")
+        except Exception as ex:
+            logger.error(f"An error occurred during category crawling: ",ex)
             return category
 
     def crawl_categories(self, url, depth, driver, locator, dump_file, id_category_default, category={}):
@@ -141,8 +162,8 @@ class Category(PrestaCategory):
             category = {**loaded_data, **category}
             j_dumps(category, dump_file)
             return category
-        except Exception as e:
-            logger.error(f"An error occurred during category crawling: {e}")
+        except Exception as ex:
+            logger.error(f"An error occurred during category crawling: ",ex)
             return category
 
     def _is_duplicate_url(self, category, url):
@@ -156,14 +177,14 @@ class Category(PrestaCategory):
         return url in (item['url'] for item in category.values())
 
 
-def compare_and_print_new_keys(current_dict, file_path):
+def compare_and_print_missing_keys(current_dict, file_path):
     """
     Compares current dictionary with data in a file and prints missing keys.
     """
     try:
         data_from_file = j_loads(file_path)
-    except Exception as e:
-        logger.error(f"Error loading data from file: {e}")
+    except Exception as ex:
+        logger.error(f"Error loading data from file: ",ex)
         return  # Or raise the exception
 
 
@@ -369,7 +390,7 @@ def compare_and_print_new_keys(current_dict, file_path):
 #     return False
 
 
-# def compare_and_print_new_keys(current_dict, file_path):
+# def compare_and_print_missing_keys(current_dict, file_path):
 #     """ Сравнение актуальных значений с теми, что в файле.
 
 #     :param current_dict: Текущий словарь для сравнения.
