@@ -92,11 +92,11 @@
 
   "output_directory": {
     "code_checker": "<model>/<lang>/consultant/src",
-    "code_explainer_md": "<model>/<lang>/explainer/md/src",
+    "code_explainer_md": "<model>/<lang>/explainer/src",
     "code_explainer_html": "<model>/<lang>explainer/html/src",
     "pytest": "../pytest/<model>/<lang>/src",
     "doc_writer_rst": "<model>/<lang>/doc/rst/src",
-    "doc_writer_md": "<model>/<lang>/doc/md/src",
+    "doc_writer_md": "<model>/<lang>/doc/src",
     "doc_writer_html": "<model>/<lang>/doc/html/src",
     "how_to_writer": "<model>/<lang>/how_to/src"
   },
