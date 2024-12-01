@@ -1,5 +1,5 @@
 **Prompt**:  
-
+Your task is to help the developer of the code of the project `hypotez` explain to the developer how the code works
 ### Requirements:  
 Analyze the provided code and explain its functionality.
 

@@ -33,7 +33,7 @@ from src.suppliers.morlevi.graber import Graber as MorleviGraber
 from src.suppliers.ksp.graber import Graber as KspGraber
 from src.suppliers.ivory.graber import Graber as IvoryGraber
 from src.suppliers.grandadvance.graber import Graber as GrandadvanceGraber
-from src.endpoints.kazarinov.react import ReportGenerator
+from src.endpoints.kazarinov.pricelist_generator import ReportGenerator
 from telegram import Update
 from telegram.ext import CallbackContext
 

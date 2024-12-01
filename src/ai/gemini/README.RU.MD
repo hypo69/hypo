@@ -1,5 +1,5 @@
 # Модель `gemini`.
-
+https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai.md
 ## system_instruction 
 Указание (промт, `prompt`), которое передется в модель при инициализации 
 и будет верным на все время инстанса.

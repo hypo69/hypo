@@ -204,6 +204,54 @@ class CodeAssistant:
 
             ```
         """
+
+
+        def send_file(file_path: Path, file_name: Optional[str] = None) -> bool:
+            """
+            Отправка файла в модель.
+
+            Args:
+                file_path (Path): Абсолютный путь к файлу, который нужно отправить.
+                file_name (Optional[str]): Имя файла для отправки. Если не указано и 'src' отсутствует, используется имя файла без изменений.
+
+            Returns:
+                bool: Успешность выполнения операции.
+            """
+            try:
+                # Пропуск файлов с именем __init__.py
+                if file_path.name == '__init__.py':
+                    logger.info(f'Пропущен файл: {file_path}')
+                    return False
+
+                # Если file_name не задан, извлекается часть пути начиная с 'src'
+                if not file_name:
+                    if 'src' in file_path.parts:
+                        index = file_path.parts.index('src')
+                        relative_path = Path(*file_path.parts[index:])
+
+                        # Заменяется `/` на `--` и игнорируется суффикс файла
+                        file_name = 'src--' + '--'.join(relative_path.parts[1:-1]) + '--' + relative_path.stem
+                    else:
+                        # Если 'src' нет, используется имя файла без изменений
+                        file_name = file_path.stem
+
+                file_name: str = file_name.replace('_', '-')
+
+                # Отправка файла в модель
+                response = self.gemini_model.upload_file(file_path, file_name)
+                if response:
+                    pprint(response, text_color='light_gray')
+                    if hasattr(response, 'url'):
+                        return response.url
+                return False
+            except Exception as ex:
+                # Логирование ошибки при отправке файла
+                logger.error('Ошибка при отправке файла: ', ex)
+                ...
+                return False
+
+
+
         for i, (file_path, content) in enumerate(self._yield_files_content()):
             if not any((file_path, content)):    # <- ошибка чтения файла
                 continue
@@ -213,6 +261,7 @@ class CodeAssistant:
                 content_request = self._create_request(file_path, content)
 
                 if self.gemini_model:
+                    model_saved_file = send_file(file_path) # <- отправляет файл целиком
                     response = self.gemini_model.ask(str(content_request))
                     # response = True # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (comment out the line above)
                     if response:
@@ -220,6 +269,9 @@ class CodeAssistant:
                         # pprint(f"RAW response:\n{response}") # посмотреть на ответ
                         response = self._remove_outer_quotes(response) # <- ~~~~~~~~~~~~~~~~~~ DEBUG (comment line to skip remove_outer_quotes)
                         # pprint(f"CLEAR response:\n{response}")  # посмотреть на очищенный ответ
+                        if model_saved_file:
+                            response = response + '\n' + '##### filename saved in GEMINI model: ' + model_saved_file 
+
                         self._save_response(file_path, response, "gemini") # <- ~~~~~~~~~~~~~~~~~~ DEBUG (comment line to skip saving)
                         ...
                     else:

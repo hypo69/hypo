@@ -7,11 +7,13 @@
 .. module:: src.ai.gemini
    :platform: Windows, Unix
    :synopsis: Google generative AI integration
+   https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai.md
 """
 
 MODE = 'dev'
 import time
 import json
+from io import IOBase
 from pathlib import Path
 from datetime import datetime
 from typing import Optional, Dict
@@ -109,20 +111,6 @@ class GoogleGenerativeAI:
         )
         self._chat = self._start_chat()
 
-    # def __post_init__(self):
-    #     """
-    #     Метод для инициализации модели и других параметров после создания экземпляра.
-
-    #     Этот метод гарантирует, что модель будет инициализирована, если ключ API указан, но модель еще не была
-    #     настроена в конструкторе.
-    #     """
-    #     if self.api_key and not self.model:
-    #         genai.configure(api_key=self.api_key)
-    #         self.model = genai.GenerativeModel(
-    #             model_name=self.model_name,
-    #             generation_config=self.generation_config,
-    #             system_instruction=self.system_instruction,       
-    #         )
 
     @property
     def config():
@@ -265,8 +253,36 @@ class GoogleGenerativeAI:
             logger.error(f"Error describing image:" , ex)
             return
 
+    def upload_file(self, file: str | Path | IOBase, file_name:Optional[str] = None) -> bool:
+        """
+        https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai/upload_file.md
+        """
+        
+        response = None
+        try:
+            response =  genai.upload_file( 
+                    path = file,
+                    mime_type = None,
+                    name = file_name,
+                    display_name = file_name,
+                    resumable = True
+                )
+            logger.debug(f"Файл {file_name} записан", None, False)
+            return response
+        except Exception as ex:
+            logger.error(f"Ошибка записи файла {file_name=}", ex, False)
+            try:
+                response = genai.delete_file(file_name)
+                logger.debug(f"Файл {file_name} удален", None, False)
+                self.upload_file(file,file_name)
+            except Exception as ex:
+                logger.error(f"Общая ошибка модели: ", ex, False)   
+                ...
+                return
+
+
 
 
 
 if __name__ == "__main__":
-    chat()
+    ...

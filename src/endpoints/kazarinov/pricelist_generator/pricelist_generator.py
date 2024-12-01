@@ -35,7 +35,8 @@ from src.utils.pdf import PDFUtils
 from src.utils.convertors.html import html2pdf
 from src.utils.printer import pprint
 from src.logger import logger
-config = pdfkit.configuration(wkhtmltopdf= str( gs.path.bin / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe' ) )
+
+# config = pdfkit.configuration(wkhtmltopdf= str( gs.path.bin / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe' ) )
 
 
 @dataclass
