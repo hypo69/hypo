@@ -107,6 +107,7 @@ class GoogleGenerativeAI:
             model_name=self.model_name,
             generation_config=self.generation_config
         )
+        self._chat = self.model.start_chat()
 
     def __post_init__(self):
         """
@@ -227,8 +228,9 @@ class GoogleGenerativeAI:
     def chat(self, q:str) -> str:
         """"""
         ...
+        response = None
         try:
-            response = self.chat.send_message(q)
+            response = self._chat.send_message(q)
             return response.text
         except Exception as ex:
             logger.error(f"Ошибка чата {response=}",ex)

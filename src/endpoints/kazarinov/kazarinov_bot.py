@@ -35,6 +35,8 @@ import header
 from src import gs
 from src.bots.telegram import TelegramBot
 from src.endpoints.kazarinov.bot_handlers import BotHandler
+from src.ai.openai import OpenAIModel
+from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import recursively_read_text_files, save_text_file
 from src.utils.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
@@ -46,15 +48,17 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
     token: str
     config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
 
-    system_instruction: str = Path(
-        gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md'
-    ).read_text(encoding='UTF-8')
+    # system_instruction: str = Path(
+    #     gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md'
+    # ).read_text(encoding='UTF-8')
 
-    mexiron_command_instruction: str = Path(
-        gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md'
-    ).read_text(encoding='UTF-8')
+    # mexiron_command_instruction: str = Path(
+    #     gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md'
+    # ).read_text(encoding='UTF-8')
 
-    questions_list_path = config.questions_list_path
+    # questions_list_path = config.questions_list_path
+
+    model:GoogleGenerativeAI = GoogleGenerativeAI(api_key = gs.credentials.gemini.kazarinov, generation_config = {"response_mime_type": "text/plain"})
 
     def __init__(self, mode: Optional[str] = 'test', webdriver_name: Optional[str] = 'firefox'):
         """
