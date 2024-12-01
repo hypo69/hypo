@@ -1,5 +1,5 @@
 ## \file hypotez/src/endpoints/kazarinov/scenarios/scenario_pricelist.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -33,7 +33,7 @@ from src.suppliers.morlevi.graber import Graber as MorleviGraber
 from src.suppliers.ksp.graber import Graber as KspGraber
 from src.suppliers.ivory.graber import Graber as IvoryGraber
 from src.suppliers.grandadvance.graber import Graber as GrandadvanceGraber
-from src.endpoints.kazarinov.scenarios.pricelist_generator import ReportGenerator
+from src.endpoints.kazarinov.react import ReportGenerator
 from telegram import Update
 from telegram.ext import CallbackContext
 
@@ -43,6 +43,7 @@ from src.utils.image import save_png_from_url, save_png
 from src.utils.convertors.unicode import decode_unicode_escape
 from src.utils.printer import pprint
 from src.logger import logger
+
 
 class Mexiron:
     """
@@ -63,38 +64,49 @@ class Mexiron:
     timestamp: str
     products_list: List = field(default_factory=list)
     model: GoogleGenerativeAI
-    model_command:str
-    config:SimpleNamespace
+    model_command: str
+    config: SimpleNamespace
 
     def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
         """
         Initializes Mexiron class with required components.
 
         Args:
-            d (Driver): Selenium WebDriver instance.
+            driver (Driver): Selenium WebDriver instance.
             mexiron_name (Optional[str]): Custom name for the Mexiron process.
         """
-        self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json' )
-        if not self.config:
-            logger.error(f"Ошибка в файле конфигурации 'kazarinov.json'")
-            ...
-            return
+        try:
+            self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
+        except Exception as e:
+            logger.error(f"Error loading configuration: {e}")
+            return  # or raise an exception, depending on your error handling strategy
+
         self.timestamp = gs.now
         self.driver = driver
         self.mexiron_name = mexiron_name or self.timestamp
-        storage = gs.path.external_storage if self.config.storage == 'external_storage' else  gs.path.data if  self.config.storage == 'data' else gs.path.goog
-        self.export_path = gs.path.external_storage / 'kazarinov' / 'mexironim' / self.mexiron_name
 
-        # Read system instructions for the AI model
-       
-        system_instruction:str = Path( gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
-        self.model_command:str = Path( gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md').read_text(encoding='UTF-8')
-        api_key:str = gs.credentials.gemini.kazarinov
-        self.model = GoogleGenerativeAI(
-            api_key=api_key,
-            system_instruction=system_instruction,
-            generation_config={'response_mime_type': 'application/json'}
-        )
+        try:
+            storage = gs.path.external_storage if self.config.storage == 'external_storage' else gs.path.data if self.config.storage == 'data' else gs.path.goog
+            self.export_path = storage / 'kazarinov' / 'mexironim' / self.mexiron_name
+        except Exception as e:
+            logger.error(f"Error constructing export path: {e}")
+            return
+
+
+        try:
+            system_instruction = (gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
+            self.model_command = (gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md').read_text(encoding='UTF-8')
+            api_key = gs.credentials.gemini.kazarinov
+            self.model = GoogleGenerativeAI(
+                api_key=api_key,
+                system_instruction=system_instruction,
+                generation_config={'response_mime_type': 'application/json'}
+            )
+        except Exception as ex:
+            logger.error(f"Error loading instructions or API key:", ex)
+            return
+
+        # ... (rest of the __init__ method)
 
     async def run_scenario(
         self, 
