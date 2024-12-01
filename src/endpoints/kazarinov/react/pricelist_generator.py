@@ -80,7 +80,8 @@ class ReportGenerator:
         #             if not pdf.save_pdf_xhtml2pdf(html_content,pdf_file):
         #                 logger.error(f"Не скопмилировался PDF")
 
-        if not pdf.save_pdf_xhtml2pdf(html_content,pdf_file):
+        #if not pdf.save_pdf_xhtml2pdf(html_content,pdf_file):
+        if not pdf.save_pdf_pdfkit(html_content,pdf_file):
             logger.error(f"Не скопмилировался PDF")
             ...
         ...
@@ -99,7 +100,7 @@ def main(mexiron:str,lang:str) ->bool:
     r.create_report(data, html_file, pdf_file)
 
 if __name__ == "__main__":
-    mexiron:str = '24_11_30_19_19_06_068'
+    mexiron:str = '24_12_01_03_18_24_269'
     lang:str = 'ru'
     main(mexiron,lang)
 

@@ -62,11 +62,7 @@ if not wkhtmltopdf_exe.exists():
     logger.error("Не найден wkhtmltopdf.exe по указанному пути.")
     raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
 
-configuration = pdfkit.configuration(
-    wkhtmltopdf=str(wkhtmltopdf_exe)
-)
 
-options = {"enable-local-file-access": ""}
 
 
 class PDFUtils:
@@ -90,7 +86,13 @@ class PDFUtils:
             pdfkit.PDFKitError: Ошибка генерации PDF через `pdfkit`.
             OSError: Ошибка доступа к файлу.
         """
+
         try:
+            configuration = pdfkit.configuration(
+                            wkhtmltopdf=str(wkhtmltopdf_exe)
+                            )
+
+            options = {"enable-local-file-access": ""}
             if isinstance(data, str):
                 # Преобразование HTML-контента в PDF
                 pdfkit.from_string(data, pdf_file, configuration=configuration, options=options)
@@ -99,11 +101,12 @@ class PDFUtils:
                 pdfkit.from_file(str(data), pdf_file, configuration=configuration, options=options)
             logger.info(f"PDF успешно сохранен: {pdf_file}")
             return True
-        except (pdfkit.PDFKitError, OSError) as ex:
-            logger.error("Ошибка генерации PDF: ", ex)
-            return False
+        # except (pdfkit.PDFKitError, OSError) as ex:
+        #     logger.error("Ошибка генерации PDF: ", ex)
+        #     return False
         except Exception as ex:
             logger.error("Неожиданная ошибка: ", ex)
+            ...
             return False
 
     @staticmethod
@@ -204,17 +207,21 @@ class PDFUtils:
         try:
             with open(pdf_file, "w+b") as result_file:
                 if isinstance(data, str):
+                    # Убедимся, что строка имеет кодировку UTF-8
+                    data_utf8 = data.encode('utf-8').decode('utf-8')  # Преобразуем строку обратно в UTF-8, если нужно
                     try:
-                        pisa.CreatePDF(data, dest=result_file, encoding = 'UTF-8')
+                        pisa.CreatePDF(data, dest=result_file)
                     except Exception as ex:
-                        logger.error(f"Ошибка компиляции PDF: ",ex)
+                        logger.error("Ошибка компиляции PDF: ", ex)
                         ...
                 else:
                     with open(data, "r", encoding="utf-8") as source_file:
                         try:
-                            pisa.CreatePDF(source_file.read(), dest=result_file, encoding = 'UTF-8')
+                            # Прочитаем файл в кодировке UTF-8
+                            source_data = source_file.read()
+                            pisa.CreatePDF(source_data, dest=result_file, encoding='UTF-8')
                         except Exception as ex:
-                            logger.error(f"Ошибка компиляции PDF: ",ex)
+                            logger.error("Ошибка компиляции PDF: ", ex)
                             ...
             logger.info(f"PDF успешно сохранен: {pdf_file}")
             ...

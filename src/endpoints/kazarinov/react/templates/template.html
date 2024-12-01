@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ language }}">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -22,8 +22,8 @@
             margin: 15px 0;
         }
         .product-card img {
-            width: 400px;
-            height: 300px;
+            width: 320px;
+            height: 280px;
             object-fit: contain; /* Сохранение пропорций изображения */
             border-radius: 5px;
             background-color: white; /* Белый фон под изображением */
@@ -55,7 +55,7 @@
         <div class="row">
             {% for product in products %}
             <div class="col-md-12 product-card">
-                <img src="file:///{{ product.image_local_saved_path }}" 
+                <img src="{{ product.image_local_saved_path }}" 
                      alt="{{ product.product_title }}" class="img-fluid" />
                 <div class="product-info">
                     <h3>{{ product.product_title }}</h3>

@@ -214,19 +214,21 @@ class Mexiron:
         Returns:
             dict: Formatted product data dictionary.
         """
+        def copy_from_tmp():
 
-        # Исходный путь файла
-        source_file = Path(f.local_saved_image)  # Это полный путь к файлу
+            # Исходный путь файла
+            source_file = Path(f.local_saved_image)  # Это полный путь к файлу
 
-        # Форматирование целевого пути
-        target_dir = Path(self.export_path / 'images')  # Папка для копирования файла
-        target_file = target_dir / source_file.name  # Полный путь к целевому файлу в папке 'images'
+            # Форматирование целевого пути
+            target_dir = Path(self.export_path / 'images')  # Папка для копирования файла
+            target_file = target_dir / source_file.name  # Полный путь к целевому файлу в папке 'images'
 
-        # Создание директории 'images', если её нет
-        target_dir.mkdir(parents=True, exist_ok=True)
+            # Создание директории 'images', если её нет
+            target_dir.mkdir(parents=True, exist_ok=True)
 
-        # Копирование файла
-        shutil.copy2(source_file, target_file)
+            # Копирование файла
+            shutil.copy2(source_file, target_file)
+            return target_file
 
         return {
             'product_title': f.name['language'][0]['value'].strip(),
@@ -234,7 +236,8 @@ class Mexiron:
             'description_short': f.description_short['language'][0]['value'].strip(),
             'description': f.description['language'][0]['value'].strip(),
             'specification': f.specification['language'][0]['value'].strip(),
-            'local_saved_image': f"images/{target_file.name}",
+            #'local_saved_image': f"images/{target_file.name}",
+            'local_saved_image': str(f.local_saved_image),
         }
 
     async def save_product_data(self, product_data: dict):

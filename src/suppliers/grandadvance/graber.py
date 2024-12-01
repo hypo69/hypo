@@ -181,7 +181,7 @@ class Graber(Grbr):
             # await self.weight(kwards.get("weight", ''))
             # await self.wholesale_price(kwards.get("wholesale_price", ''))
             # await self.width(kwards.get("width", ''))
-            # await self.local_saved_image(kwards.get("local_saved_image", ''))
+            await self.local_saved_image(kwards.get("local_saved_image", ''))
             # await self.local_saved_video(kwards.get("local_saved_video", ''))
 
         # Call the function to fetch all data
