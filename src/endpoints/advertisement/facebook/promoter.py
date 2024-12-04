@@ -38,7 +38,7 @@ from src.utils import (read_text_file,
                         get_filenames,
                         get_directory_names,
                         )
-from src.utils import j_loads_ns, j_dumps
+from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.cursor_spinner import spinning_cursor
 from src.logger import logger
 

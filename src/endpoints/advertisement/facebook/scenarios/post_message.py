@@ -19,7 +19,8 @@ from typing import Dict, List, Optional
 from selenium.webdriver.remote.webelement import WebElement
 from src import gs
 from src.webdriver.driver import Driver
-from src.utils import j_loads_ns, pprint
+from src.utils.jjson import j_loads_ns
+from src.utils.printer import pprint
 from src.logger import logger
 
 # Load locators from JSON file.

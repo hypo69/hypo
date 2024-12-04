@@ -49,7 +49,7 @@ from selenium.common.exceptions import WebDriverException
 from fake_useragent import UserAgent
 
 from src import gs
-from src.utils import j_loads_ns
+from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
 class Firefox(WebDriver):

@@ -14,7 +14,7 @@ MODE = 'dev'
 import header 
 from IPython.display import display
 from ipywidgets import Dropdown
-from src.utils import j_loads_ns
+from src.utils.jjson import j_loads_ns
 from types import SimpleNamespace
 from pathlib import Path
 

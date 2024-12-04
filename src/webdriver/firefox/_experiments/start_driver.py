@@ -56,7 +56,7 @@ import header
 from header import __root__
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from src.webdriver.driver import Driver, Firefox, Chrome
-from src.utils import j_loads_ns
+from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
 __bin__ = Path(__root__, 'bin')

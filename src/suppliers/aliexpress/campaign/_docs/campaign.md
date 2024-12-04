@@ -53,7 +53,7 @@ Imports:
 │   ├── from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
 │   └── from src.suppliers.aliexpress.utils.set_full_https import ensure_https
 ├── JSON Utilities
-│   ├── from src.utils import j_loads_ns, j_loads
+│   ├── from src.utils.jjson import j_loads_ns, j_loads
 │   └── from src.utils.jjson import j_dumps
 ├── Converters and Helpers
 │   ├── from src.utils.convertors import list2string, csv2dict

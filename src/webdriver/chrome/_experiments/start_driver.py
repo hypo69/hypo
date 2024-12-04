@@ -54,7 +54,7 @@ from typing import Optional
 import header
 from header import __root__
 from src.webdriver import  Driver, Firefox, Chrome
-from src.utils import j_loads_ns
+from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
 __bin__ =  Path(__root__, 'bin')

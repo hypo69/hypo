@@ -47,7 +47,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from PyQt6 import QtWidgets, QtGui, QtCore
 from qasync import QEventLoop, asyncSlot
-from src.utils import j_loads_ns, j_dumps
+from src.utils.jjson import j_loads_ns, j_dumps
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 
 class CategoryEditor(QtWidgets.QWidget):

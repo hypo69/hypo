@@ -46,7 +46,7 @@ import sys
 from PyQt6 import QtWidgets, QtGui, QtCore
 from qasync import QEventLoop
 from pathlib import Path
-from src.utils import j_loads_ns, j_dumps
+from src.utils.jjson import j_loads_ns, j_dumps
 from product import ProductEditor
 from campaign import CampaignEditor
 from category import CategoryEditor
