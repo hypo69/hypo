@@ -48,8 +48,7 @@ graph TD
     Q --> S[Update Journal]
     R --> S
     S --> T[Return True/False]
-
-    ```
+```
 
 ## Основные компоненты модуля
 

@@ -26,7 +26,6 @@ The `src.scenario` module is designed to automate interactions with suppliers us
 4. **Logging Execution**: Maintaining logs with details of scenario execution and results for tracking progress and identifying errors.
 
 ```mermaid
-
 graph TD
     A[Supplier Instance] --> B{Scenario Files List}
     B -- Valid List --> C[Run Scenario Files]
@@ -48,8 +47,8 @@ graph TD
     Q --> S[Update Journal]
     R --> S
     S --> T[Return True/False]
+```
 
-    ```
 
 ## Main Components of the Module
 
