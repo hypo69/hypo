@@ -45,7 +45,7 @@ dir_src = Path (dir_root, 'src')
 sys.path.append (str (dir_root) ) 
 # ----------------
 
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 
 d = Driver()
 

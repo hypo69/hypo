@@ -41,7 +41,7 @@ MODE = 'dev'
 ...
 import header
 from src.suppliers.aliexpress import DealsFromXLS 
-from src.utils import pprint
+from src.utils.printer import pprint
 
 deals_parser = DealsFromXLS(language='EN', currency= 'USD')
 

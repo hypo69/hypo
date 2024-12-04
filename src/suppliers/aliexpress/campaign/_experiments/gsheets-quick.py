@@ -45,7 +45,7 @@ from types import SimpleNamespace
 from gspread import Worksheet, Spreadsheet
 from src.suppliers.aliexpress.campaign import AliCampaignGoogleSheet
 from src.suppliers.aliexpress.campaign.ttypes import CampaignType, CategoryType, ProductType
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 

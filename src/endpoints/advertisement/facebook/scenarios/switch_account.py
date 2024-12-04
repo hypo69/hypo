@@ -13,7 +13,7 @@ MODE = 'dev'
 from pathlib import Path
 from types import SimpleNamespace
 from src import gs
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.utils import j_loads_ns
 
 # Load locators from JSON file.

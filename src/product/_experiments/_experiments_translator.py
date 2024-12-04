@@ -44,7 +44,7 @@ from src import gs, j_dumps, j_loads
 from src.db import ProductTranslationsManager
 from src.ai import translate
 from src.endpoints.PrestaShop import PrestaShop
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from header import ecat_api_credentials,emil_api_credentials
 from src.db import ProductTranslationsManager
 from src.translator import translate_product_fields as translator

@@ -57,7 +57,7 @@ Imports:
 │   └── from src.utils.jjson import j_dumps
 ├── Converters and Helpers
 │   ├── from src.utils.convertors import list2string, csv2dict
-│   └── from src.utils import pprint
+│   └── from src.utils.printer import pprint
 ├── File Operations
 │   └── from src.utils.file import read_text_file, get_filenames
 └── Logging

@@ -64,7 +64,7 @@ from src.utils.file import get_filenames, read_text_file, get_directory_names
 from src.utils.jjson import j_dumps, j_loads_ns, j_loads
 from src.utils.convertors import csv2dict
 from src.utils.file import save_text_file
-from src.utils import pprint
+from src.utils.printer import pprint
 
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
 from src.logger import logger

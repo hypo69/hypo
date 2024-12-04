@@ -27,7 +27,7 @@ from types import SimpleNamespace
 
 import header
 from src import gs
-from src.utils import j_loads
+from src.utils.jjson import j_loads
 from .api import PrestaShop
 from src.logger import logger
 

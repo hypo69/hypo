@@ -45,7 +45,7 @@ from gspread import Spreadsheet, Worksheet
 from src.suppliers.aliexpress import campaign
 from src.suppliers.aliexpress.campaign import AliCampaignGoogleSheet , AliCampaignEditor
 from src.suppliers.aliexpress.campaign.ttypes import CampaignType, CategoryType, ProductType
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 

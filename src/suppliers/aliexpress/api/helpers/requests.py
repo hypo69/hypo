@@ -6,7 +6,7 @@
 from types import SimpleNamespace
 from time import sleep
 from src.logger import logger
-from src.utils import pprint
+from src.utils.printer import pprint
 import json
 
 from ..errors import ApiRequestException, ApiRequestResponseException

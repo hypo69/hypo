@@ -65,6 +65,6 @@ src.webdriver.driver
 │   │   │   │   ├── driver_payload()
 └── Driver(metaclass=DriverMeta)
     ├── Usage Example
-    │   ├── from src.webdriver import Driver, Chrome, Firefox, Edge
+    │   ├── from src.webdriver.driver import Driver, Chrome, Firefox, Edge
     │   ├── d = Driver(Chrome)
 </pre>

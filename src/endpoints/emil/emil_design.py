@@ -45,7 +45,7 @@ import time
 
 from src import gs, logger
 from src.endpoints.PrestaShop.api.api import PrestaShop
-from src.webdriver import Driver, Chrome
+from src.webdriver.driver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
 from src.product import Product

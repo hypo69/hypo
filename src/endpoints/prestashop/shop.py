@@ -16,7 +16,7 @@ from typing import Optional
 import header
 from src import gs
 from src.logger import logger
-from src.utils import j_loads as j_loads
+from src.utils.jjson import j_loads
 from .api import PrestaShop
 from src.logger.exceptions import PrestaShopException
 from pathlib import Path

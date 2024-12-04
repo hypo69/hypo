@@ -40,7 +40,7 @@ import tempfile
 import header
 from src import gs
 from src.utils import j_loads,j_dumps
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 def htmlColorToJSON(htmlColor):

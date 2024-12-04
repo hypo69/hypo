@@ -13,7 +13,7 @@ MODE = 'dev'
 
 
 import header 
-from src.webdriver import Driver, Chrome
+from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
 from src.logger import logger
 

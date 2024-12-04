@@ -37,7 +37,7 @@ MODE = 'dev'
 
 
 import header
-from src.webdriver import Driver, Firefox, Chrome, Edge
+from src.webdriver.driver import Driver, Firefox, Chrome, Edge
 
 
 d = Driver(Chrome)

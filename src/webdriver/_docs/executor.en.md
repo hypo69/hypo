@@ -23,7 +23,7 @@ The `ExecuteLocator` class is designed to execute navigation algorithms and inte
    from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
    from src import gs 
-   from src.utils import pprint, j_loads, j_loads_ns, j_dumps, save_png
+   from src.utils.printer import pprint, j_loads, j_loads_ns, j_dumps, save_png
    from src.utils.string import StringFormatter
    from src.logger import logger
    from src.logger.exceptions import DefaultSettingsException, WebDriverException, ExecuteLocatorException
@@ -300,7 +300,7 @@ The module relies on Selenium for WebDriver operations, including finding elemen
 ## Example Usage
 
 ```python
-from src.webdriver import Driver, Chrome
+from src.webdriver.driver import Driver, Chrome
 from selenium.webdriver.common.by import By
 
 def main():

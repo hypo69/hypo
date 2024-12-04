@@ -51,9 +51,9 @@ from src import gs
 from src.suppliers import Supplier
 from src.product import ProductFields, record
 from src.category import Category
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils import pprint 
+from src.utils.printer import pprint 
 from src.logger import logger 
 from src.logger.exceptions import ExecuteLocatorException
 from src.endpoints.PrestaShop import PrestaShop

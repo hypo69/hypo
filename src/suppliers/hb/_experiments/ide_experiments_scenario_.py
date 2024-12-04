@@ -62,7 +62,7 @@ from src.product import Product, ProductFields
 from src.scenario import run_scenarios
 
 from src.logger import logger, ExecuteLocatorException
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.utils import StringFormatter, StringNormalizer
 
 

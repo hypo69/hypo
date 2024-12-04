@@ -50,11 +50,11 @@ import header
 from src import gs
 from src.logger import logger
 from src.suppliers.chat_gpt import GptGs
-from src.webdriver import Driver, Chrome, Firefox, Edge
+from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 from src.ai.openai.model import Model
 from src.utils import j_dumps, j_loads, j_loads_ns, clean_string
 from src.utils.convertors import dict2csv, json2csv
-from src.utils import pprint
+from src.utils.printer import pprint
 
 locator = j_loads_ns(gs.path.src / 'suppliers' / 'chat_gpt' / 'locators' / 'chat.json')
 

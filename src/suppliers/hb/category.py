@@ -56,7 +56,7 @@ from pathlib import Path
 
 from src import gs
 from src.logger import logger
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.suppliers import Supplier
 
 

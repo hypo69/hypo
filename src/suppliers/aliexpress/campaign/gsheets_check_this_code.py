@@ -14,12 +14,12 @@ MODE = 'dev'
 
 import time
 from types import SimpleNamespace
-from src.webdriver import Driver, Chrome, Firefox, Edge
+from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 from gspread.worksheet import Worksheet
 from src.goog.spreadsheet.spreadsheet import SpreadSheet
 from src.suppliers.aliexpress.campaign.ali_campaign_editor import AliCampaignEditor
 from src.utils import j_dumps
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 
@@ -37,8 +37,8 @@ from gspread_formatting import (
     Color
 )
 from src.goog.spreadsheet.spreadsheet import SpreadSheet
-from src.webdriver import Driver, Chrome
-from src.utils import pprint
+from src.webdriver.driver import Driver, Chrome
+from src.utils.printer import pprint
 from src.logger import logger
 
 class AliCampaignGoogleSheet(SpreadSheet):

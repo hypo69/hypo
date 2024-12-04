@@ -33,7 +33,7 @@ from google.api_core.exceptions import (
 from google.auth.exceptions import DefaultCredentialsError, RefreshError
 from src.logger import logger
 from src import gs
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.utils.file import read_text_file, save_text_file
 from src.utils.date_time import TimeoutCheck
 from src.utils.convertors.unicode import decode_unicode_escape

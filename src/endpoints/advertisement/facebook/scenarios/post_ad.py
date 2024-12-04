@@ -20,7 +20,7 @@ from urllib.parse import urlencode
 from selenium.webdriver.remote.webelement import WebElement
 
 from src import gs
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
 from src.utils import j_loads_ns, pprint
 from src.logger import logger

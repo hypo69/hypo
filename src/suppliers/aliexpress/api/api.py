@@ -16,7 +16,7 @@ API in an easier way.
 from typing import List, Union
 
 from src.logger import logger
-from src.utils import pprint
+from src.utils.printer import pprint
 
 from .models import ( 
                     AffiliateLink as model_AffiliateLink, 

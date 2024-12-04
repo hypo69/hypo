@@ -37,11 +37,12 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.common.exceptions import WebDriverException
+
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
 from fake_useragent import UserAgent
 from src import gs
-from src.utils import j_loads_ns
+from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
 

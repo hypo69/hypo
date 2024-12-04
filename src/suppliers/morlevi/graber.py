@@ -33,9 +33,9 @@ from typing import Any, Callable
 
 import header
 from src import gs
-from src.suppliers import Graber as Grbr, Context, close_pop_up
-from src.product import ProductFields
-from src.webdriver import Driver
+from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
+from src.product.product_fields import ProductFields
+from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.utils.image import save_png, save_png_from_url
 from src.logger import logger

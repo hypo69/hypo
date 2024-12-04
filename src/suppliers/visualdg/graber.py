@@ -30,7 +30,7 @@ from src import gs
 
 from src.suppliers import Graber as Grbr, Context, close_pop_up, Locator
 from src.product import ProductFields
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException

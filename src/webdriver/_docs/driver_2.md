@@ -29,7 +29,7 @@ from selenium.common.exceptions import (
 from src import gs
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.javascript.js import JavaScript
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 from src.logger.exceptions import WebDriverException
 ```
@@ -89,7 +89,7 @@ class Driver(metaclass=DriverMeta):
     A dynamically created WebDriver class that inherits from DriverBase and a specified WebDriver class.
     
     @code
-    from src.webdriver import Driver, Chrome, Firefox, Edge
+    from src.webdriver.driver import Driver, Chrome, Firefox, Edge
     d = Driver(Chrome)
     @endcode
     """
@@ -103,7 +103,7 @@ class Driver(metaclass=DriverMeta):
 Этот код позволяет создавать веб-драйверы для различных браузеров, используя следующий синтаксис:
 
 ```python
-from src.webdriver import Driver, Chrome, Firefox, Edge
+from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 
 # Создаем объект для браузера Chrome
 d = Driver(Chrome)

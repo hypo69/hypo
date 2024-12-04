@@ -45,7 +45,7 @@ Feel free to adjust any specifics or add more details based on the actual implem
 
 """ Examples for using `Driver` and `Chrome` classes """
 
-from src.webdriver import Driver, Chrome
+from src.webdriver.driver import Driver, Chrome
 from selenium.webdriver.common.by import By
 
 def main():
@@ -144,7 +144,7 @@ The `Driver` module provides a dynamic WebDriver implementation that integrates 
      - A dynamically created WebDriver class that inherits from both `DriverBase` and the specified WebDriver class.
    - **Usage Example:**
      - ```python
-       from src.webdriver import Driver, Chrome, Firefox, Edge
+       from src.webdriver.driver import Driver, Chrome, Firefox, Edge
        d = Driver(Chrome)
        ```
 
@@ -269,7 +269,7 @@ The `ExecuteLocator` class is designed to execute navigation algorithms and inte
    from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
    from src import gs 
-   from src.utils import pprint, j_loads, j_loads_ns, j_dumps, save_png
+   from src.utils.printer import pprint, j_loads, j_loads_ns, j_dumps, save_png
    from src.utils.string import StringFormatter
    from src.logger import logger
    from src.logger.exceptions import DefaultSettingsException, WebDriverException, ExecuteLocatorException
@@ -546,7 +546,7 @@ The module relies on Selenium for WebDriver operations, including finding elemen
 ## Example Usage
 
 ```python
-from src.webdriver import Driver, Chrome
+from src.webdriver.driver import Driver, Chrome
 from selenium.webdriver.common.by import By
 
 def main():
@@ -668,6 +668,6 @@ src.webdriver.driver
 │   │   │   │   ├── driver_payload()
 └── Driver(metaclass=DriverMeta)
     ├── Usage Example
-    │   ├── from src.webdriver import Driver, Chrome, Firefox, Edge
+    │   ├── from src.webdriver.driver import Driver, Chrome, Firefox, Edge
     │   ├── d = Driver(Chrome)
 </pre>

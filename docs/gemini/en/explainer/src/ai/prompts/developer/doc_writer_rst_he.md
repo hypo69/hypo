@@ -1,0 +1,27 @@
+# <input code>
+
+```
+"prompt": "אתה צריך לתעד את הקוד בסגנון הבא. כל ההערות בקוד, כולל תיאורי המודול, מחלקות ופונקציות, צריכות להיות כתובות בפורמט reStructuredText (RST). לכל מודול, מחלקה ופונקציה, עקוב אחרי התבנית הבאה:\n\n1. **מודול**:\n    - תיאור המודול צריך להיכתב בכותרת, תוך ציון מטרתו.\n    - ספק דוגמאות לשימוש במודול, אם אפשר. דוגמאות קוד צריכות להיות בתוך בלוק `.. code-block:: python`.\n    - ציין את הפלטפורמות והסינופסיס של המודול.\n    - השתמש בכותרות עבור מאפיינים ושיטות של המודול כשנדרש.\n\nדוגמה לתיעוד מודול:\n```\nמודול לעבודה עם עוזר תוכנה\n=========================================================================================\n\nמודול זה מכיל את המחלקה :class:`CodeAssistant`, המשמשת לעבודה עם דגמי AI שונים, \nכגון Google Gemini ו-OpenAI, לביצוע משימות עיבוד קוד.\n\nשימוש לדוגמה\n--------------------\n\nשימוש במחלקה `CodeAssistant`:\n\n.. code-block:: python\n\n    assistant = CodeAssistant(role=\'code_checker\', lang=\'ru\', model=[\'gemini\'])\n    assistant.process_files()\n```\n\n2. **מחלקות**:\n    - כל מחלקה צריכה להיות מתועדת בהתאם למטרתה. כלל תיאור למחלקה, מאפיינים ושיטות שלה.\n    - בחלק המחלקות, ציין את כל השיטות, מטרתן ודוגמאות לשימוש.\n    - לכל שיטה, כלל תיאור של פרמטרים וערכים מוחזרים, ודוגמאות לשימוש.\n\nדוגמה לתיעוד מחלקה:\n```\nמחלקה לעבודה עם עוזר תוכנה\n=========================================================================================\n\nהמחלקה :class:`CodeAssistant` משמשת לעבודה עם דגמי AI שונים כמו Google Gemini, \nומספקת שיטות לניתוח ויצירת תיעוד עבור קוד.\n\nמאפיינים:\n----------\n- `role`: תפקיד העוזר (למשל, \'code_checker\').\n- `lang`: השפה בה העוזר יעבוד (למשל, \'ru\').\n- `model`: רשימה של דגמי AI בשימוש (למשל, [\'gemini\']).\n\nשיטות:\n--------\n- `process_files`: שיטה לעיבוד קבצי קוד.\n\nשימוש לדוגמה:\n---------------------\n\n.. code-block:: python\n\n    assistant = CodeAssistant(role=\'code_checker\', lang=\'ru\', model=[\'gemini\'])\n    assistant.process_files()\n```\n\n3. **פונקציות ושיטות**:\n    - תעד כל פונקציה או שיטה, תוך ציון פרמטרים וערכים מוחזרים.\n    - עבור כל פונקציה, ספק תיאור של מטרתה ודוגמאות לשימוש בפורמט `.. code-block:: python`.\n\nדוגמה לתיעוד שיטה:\n```\nשיטה לעיבוד קבצים\n=========================================================================================\n\nשיטה זו משמשת לניתוח ועיבוד קבצי קוד.\n\nפרמטרים:\n-----------\n- `files`: רשימה של קבצים לעיבוד.\n- `options`: פרמטרים נוספים לשימוש בקביעת עיבוד הקבצים.\n\nערך מוחזר:\n----------------------\n- מחזיר את תוצאת העיבוד כרשימה של נתונים מעובדים.\n\nשימוש לדוגמה:\n---------------------\n\n.. code-block:: python\n\n    assistant = CodeAssistant(role=\'code_checker\', lang=\'ru\', model=[\'gemini\'])\n    result = assistant.process_files(files=[\'file1.py\', \'file2.py\'], options={})\n```\n\n4. **הערות בקוד**:\n    - כל ההערות בקוד צריכות להיות כתובות בפורמט RST ולציין מה עושה חלק ספציפי בקוד.\n    - השאר הערות בבלוקים, ולא בשורות בודדות. השתמש בהערות כדי להסביר את הלוגיקה ולהסביר החלטות או פתרונות זמניים בקוד.\n    - דוגמה:\n    ```\n    # כאן מתבצע טיפול בשגיאות כדי להמשיך בביצוע אם הקובץ לא נמצא\n    try:\n        process_file(file)\n    except FileNotFoundError as ex:\n        handle_exception(ex)\n    ```\n\n5. **שגיאות (Exceptions)**:\n    - תעד את השגיאות במחלקות, שיטות ופונקציות.\n    - ציין אילו שגיאות עשויות להתעורר ובאילו נסיבות.\n\nדוגמה לתיעוד שגיאה:\n```\nשגיאת קובץ לא נמצא\n=========================================================================================\n\nשגיאה זו מתעוררת כאשר קובץ לא נמצא במהלך העיבוד.\n\nפרמטרים:\n-----------\n- `file`: נתיב הקובץ שלא נמצא.\n\nשימוש לדוגמה:\n---------------------\n\n.. code-block:: python\n\n    try:\n        open(file)\n    except FileNotFoundError as ex:\n        raise FileNotFoundError("הקובץ לא נמצא") from ex\n```\n\nעקוב אחרי ההוראות האלה לתיעוד הקוד שלך. כל ההערות צריכות להיות ברורות, אינפורמטיביות ולעמוד בסטנדרט RST."
+```
+
+# <algorithm>
+
+No code is present to analyze for algorithm. The input is a set of instructions for code documentation.  There is no executable code to analyze the flow of execution.
+
+# <mermaid>
+
+No code to generate a mermaid diagram.  This input is documentation instructions, not code.
+
+# <explanation>
+
+The input is a set of instructions for writing RST-style documentation for Python code. It describes the format, structure, and content of the documentation for modules, classes, functions, and methods. It doesn't contain any Python code to analyze.  It specifies the desired format for documentation, including examples of how to document different elements of a codebase.
+
+**Potential Errors or Areas for Improvement**:
+
+* **Lack of concrete code:** The instructions, while thorough, don't provide actual code to analyze.  This makes it impossible to discuss specific code elements like variables, their types, or interactions between modules.
+* **Overly prescriptive:** The detailed template for documentation may be too rigid.  Adapting the instructions to specific projects and code styles may be more flexible and practical.
+* **Missing code examples:** While example code is included in the template, there aren't any actual example Python classes, functions, or modules for the given instructions to work with.
+
+**Chain of Relationships (if applicable):**
+
+Since there's no code, there are no relationships to other parts of a project.

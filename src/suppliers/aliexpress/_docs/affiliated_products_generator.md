@@ -27,7 +27,7 @@ from src.suppliers.aliexpress.utils.set_full_https import ensure_https
 from src.utils.convertor.csv2json import csv2dict 
 from src.utils import j_dumps
 from src.utils import save_png_from_url, save_video_from_url
-from src.utils import pprint 
+from src.utils.printer import pprint 
 from src.utils.file import read_text_file, save_text_file
 
 from src.logger import logger

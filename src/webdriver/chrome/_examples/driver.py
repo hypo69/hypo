@@ -39,7 +39,7 @@ MODE = 'dev'
 
 """ Examples for using `Driver` and `Chrome` classes """
 
-from src.webdriver import Driver, Chrome
+from src.webdriver.driver import Driver, Chrome
 from selenium.webdriver.common.by import By
 
 def main():

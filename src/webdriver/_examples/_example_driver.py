@@ -38,7 +38,7 @@ MODE = 'dev'
 
 # example.py
 
-from src.webdriver import Driver, Chrome, Firefox, Edge
+from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 
 def main():
     """ Main function to demonstrate how to use the Driver class with different web browsers."""

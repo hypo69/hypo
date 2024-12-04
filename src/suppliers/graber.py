@@ -45,13 +45,13 @@ from src import gs
 
 from src.product.product_fields import ProductFields
 from src.category import Category
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png_from_url, save_png
 from src.utils.string.normalizer import normalize_string, normalize_int, normalize_float, normalize_boolean
 from src.logger.exceptions import ExecuteLocatorException
 from src.endpoints.prestashop import PrestaShop
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 # Глобальные настройки через объект `Context`

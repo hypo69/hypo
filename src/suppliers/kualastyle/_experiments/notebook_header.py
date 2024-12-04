@@ -52,7 +52,7 @@ from src.suppliers import Supplier
 from src.product import Product, ProductFields
 from categories import Category
 from src.utils import StringFormatter, StringNormalizer, translate
-from src.utils import  pprint
+from src.utils.printer import  pprint
 
 #from src.endpoints.PrestaShop import Product as PrestaProduct, PrestaAPIV1, PrestaAPIV2, PrestaAPIV3
 # ----------------

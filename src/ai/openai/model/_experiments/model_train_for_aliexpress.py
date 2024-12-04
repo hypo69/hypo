@@ -45,7 +45,7 @@ from src import gs
 from src.ai import OpenAIModel, GoogleGenerativeAI
 from src.utils.file import recursively_get_filenames, read_text_file
 from src.utils.convertors import csv2json_csv2dict
-from src.utils import pprint
+from src.utils.printer import pprint
 
 product_titles_files:list = recursively_get_filenames(gs.path.google_drive / 'aliexpress' / 'campaigns','product_titles.txt')
 system_instruction_path = gs.path.src / 'ai' / 'prompts' / 'aliexpress_campaign' / 'system_instruction.txt'

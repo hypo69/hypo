@@ -24,7 +24,7 @@ from typing import Optional
 
 from src import gs
 from src.endpoints.advertisement import facebook
-from src.webdriver import Driver, Chrome
+from src.webdriver.driver import Driver, Chrome
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.endpoints.advertisement.facebook.scenarios import (post_message, 
                                                   post_event, 

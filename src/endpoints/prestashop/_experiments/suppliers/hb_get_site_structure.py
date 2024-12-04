@@ -51,7 +51,7 @@ MODE = 'dev'
 """
 # ---------------------------------
 from src import gs
-from src.utils import  pprint
+from src.utils.printer import  pprint
 
 from src.endpoints.PrestaShop import Product as PrestaProduct, Category as PrestaCategory
 # ---------------------------------

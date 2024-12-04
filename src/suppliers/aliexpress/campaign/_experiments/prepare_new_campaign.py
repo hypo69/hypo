@@ -48,7 +48,7 @@ from src import gs
 
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.utils import get_filenames, get_directory_names
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 campaign_name = 'rc'

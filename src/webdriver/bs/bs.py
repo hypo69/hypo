@@ -29,7 +29,7 @@ from lxml import etree
 import requests
 from pathlib import Path
 from src import gs
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.logger import logger
 
 class BS:

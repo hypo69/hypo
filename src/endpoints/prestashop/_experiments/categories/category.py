@@ -50,7 +50,7 @@ from typing import Union
 
 
 from src import gs
-from src.utils import  pprint
+from src.utils.printer import  pprint
 
 from src.endpoints.PrestaShop import PrestaCategory
 # -----------------------------------

@@ -26,7 +26,9 @@ from xml.parsers.expat import ExpatError
 import header
 from src import gs
 from src.utils.file import save_text_file
-from src.utils.convertors import dict2xml, xml2dict, base64_to_tmpfile
+from src.utils.convertors.base64 import  base64_to_tmpfile
+from src.utils.convertors.dict import dict2xml
+from src.utils.convertors.xml2dict import xml2dict
 from src.utils.image import save_png_from_url
 from src.utils.printer import pprint
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps

@@ -52,7 +52,7 @@ sys.path.append (str (dir_root) )
 # ----------------
 
 from src import gs
-from src.utils import pprint,jprint
+from src.utils.printer import pprint,jprint
 #from src.suppliers import Supplier
 #from src.product import Product, ProductFields
 from src.logger import logger

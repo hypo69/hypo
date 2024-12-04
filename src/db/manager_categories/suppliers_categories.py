@@ -25,7 +25,7 @@ from sqlalchemy.exc import IntegrityError
 
 from src import gs
 from src.logger import logger
-from src.utils import pprint
+from src.utils.printer import pprint
 
 # Получение учетных данных для подключения к базе данных davidka.net 
 credentials = gs.credentials.presta.translations  

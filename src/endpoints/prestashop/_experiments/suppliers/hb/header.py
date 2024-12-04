@@ -48,7 +48,7 @@ sys.path.append(hypotez_root_path)  # Добавляю корневую папк
 
 # ---------------------------------
 from src import gs
-from src.utils import  pprint
+from src.utils.printer import  pprint
 
 
 # ------------------------------------

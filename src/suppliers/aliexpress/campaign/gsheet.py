@@ -14,11 +14,11 @@ MODE = 'dev'
 import time
 from types import SimpleNamespace
 from typing import Optional, Any
-#from src.webdriver import Driver, Chrome, Firefox, Edge
+#from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 from gspread.worksheet import Worksheet
 from src.goog.spreadsheet.spreadsheet import SpreadSheet
 from src.utils import j_dumps
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 
@@ -36,7 +36,7 @@ from typing import Optional, List, Dict
 #     Color
 # )
 # from src.goog.spreadsheet.spreadsheet import SpreadSheet
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 class AliCampaignGoogleSheet(SpreadSheet):

@@ -54,7 +54,7 @@ sys.path.append(str(dir_root))
 
 # ---------------------------------
 from src import gs
-from src.utils import  pprint
+from src.utils.printer import  pprint
 
 
 # -----------------------------------

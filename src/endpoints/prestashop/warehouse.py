@@ -16,7 +16,7 @@ from attr import attr, attrs
 from pathlib import Path
 import header
 from src import gs
-from src.utils import  pprint
+from src.utils.printer import  pprint
 from .api import PrestaShop
 from src.logger import logger
 

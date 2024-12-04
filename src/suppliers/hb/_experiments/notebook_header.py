@@ -54,12 +54,12 @@ import re
 
 
 from src import gs
-from src.webdriver import Driver, executor
+from src.webdriver.driver import Driver, executor
 from src.suppliers import Supplier
 from src.product import Product, ProductFields
 from src.category import Category
 from src.utils import StringFormatter, StringNormalizer
-from src.utils import  pprint
+from src.utils.printer import  pprint
 , save_text_file
 from src.scenario import run_scenarios
 # ----------------

@@ -46,7 +46,7 @@ import json
 import re
 # ----------------
 from hypotez import gs
-from src.utils import  pprint
+from src.utils.printer import  pprint
 
 from src.scenario import Scenario
 from src.suppliers import Supplier

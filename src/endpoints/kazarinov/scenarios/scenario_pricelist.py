@@ -24,7 +24,7 @@ from dataclasses import field
 import header
 from src import gs
 from src.product.product_fields import ProductFields
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.advertisement.facebook.scenarios import (
     post_message_title, upload_post_media, message_publish

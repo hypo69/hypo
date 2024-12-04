@@ -14,7 +14,7 @@ MODE = 'dev'
 from pathlib import Path
 from typing import Dict
 from src import gs
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.utils import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 

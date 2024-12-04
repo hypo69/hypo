@@ -11,7 +11,9 @@ module: src.suppliers.morlevi._experiments.close_pop_up
 MODE = 'dev'
 import header
 from src import gs
-from src.webdriver import Driver, Chrome, Firefox, Edge
+from src.webdriver.driver import Driver
+#from src.webdriver.chrome import Chrome
+from src.webdriver.firefox import Firefox
 from src.suppliers.morlevi.graber import Graber as MorleviGraber
 from src.utils.jjson import j_loads_ns
 

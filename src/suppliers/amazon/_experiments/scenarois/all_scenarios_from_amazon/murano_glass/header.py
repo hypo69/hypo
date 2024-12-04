@@ -49,10 +49,10 @@ import re
 from src import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields
-from src.webdriver import Driver
+from src.webdriver.driver import Driver
 from src.category import Category
 from src.utils import StringFormatter, StringNormalizer
-from src.utils import  pprint
+from src.utils.printer import  pprint
 
 from src.endpoints.PrestaShop import PrestaAPIV, upload_image
 # ----------------

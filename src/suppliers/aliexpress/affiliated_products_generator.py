@@ -29,7 +29,7 @@ from src.utils.image import save_png_from_url
 from src.utils.video import save_video_from_url
 from src.utils.file import get_directory_names, get_filenames, read_text_file, save_text_file
 from src.utils.jjson import j_loads_ns, j_dumps
-from src.utils import pprint
+from src.utils.printer import pprint
 from src.logger import logger
 
 
