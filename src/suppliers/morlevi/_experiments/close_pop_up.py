@@ -19,4 +19,6 @@ from src.utils.jjson import j_loads_ns
 
 driver = Driver(Firefox)
 graber = MorleviGraber(driver)
+driver.get_url('https://www.morlevi.co.il/product/19041')
+product_id = graber.id_product
 ...

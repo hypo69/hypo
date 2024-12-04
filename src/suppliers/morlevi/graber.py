@@ -90,7 +90,7 @@ class Graber(Grbr):
             ProductFields: The grabbed product fields.
         """
         d = self.d = driver  
-        
+        d.get_url(driver.current_url) # <- refresh
         ...
         # Logic for extracting data
         async def fetch_all_data(**kwards):

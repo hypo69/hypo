@@ -13,6 +13,9 @@ Your task: to process and document code following specific formatting and docume
      - **Changes Made**: A detailed list of modifications and justifications.
    - Code blocks must use the appropriate syntax highlighting tags (e.g., `python`, `markdown`, `json`).
 
+    If you encounter another comment format - automatically correct in RST.
+    Always check the relevance of comments to the code
+
 2. **Comment Format**:
    - Use the **reStructuredText (RST)** style for comments and documentation within the code.
    - Example:
