@@ -25,6 +25,31 @@ The `src.scenario` module is designed to automate interactions with suppliers us
 3. **Processing Data**: Transforming extracted data into a format suitable for the database and saving it.
 4. **Logging Execution**: Maintaining logs with details of scenario execution and results for tracking progress and identifying errors.
 
+```mermaid
+graph TD
+    A[Supplier Instance] --> B{Scenario Files List}
+    B -- Valid List --> C[Run Scenario Files]
+    B -- Invalid List --> D[Error Handling]
+    C --> E{Iterate Through Each Scenario File}
+    E --> F[Run Scenario File]
+    F --> G{Load Scenarios}
+    G --> H[Iterate Through Each Scenario]
+    H --> I[Run Scenario]
+    I --> J[Navigate to URL]
+    J --> K[Get List of Products]
+    K --> L{Iterate Through Products}
+    L --> M[Navigate to Product Page]
+    M --> N[Grab Product Fields]
+    N --> O[Create Product Object]
+    O --> P[Insert Product into PrestaShop]
+    P -- Success --> Q[Success]
+    P -- Failure --> R[Error Handling]
+    Q --> S[Update Journal]
+    R --> S
+    S --> T[Return True/False]
+
+    ```
+
 ## Main Components of the Module
 
 ### `run_scenario_files(s, scenario_files_list)`

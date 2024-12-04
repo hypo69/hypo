@@ -10,35 +10,7 @@
 Scenario executor for suppliers.
 ----
 
-
-The logic executed is as follows:
-<pre>
-  +-----------+
-  |  Scenario |
-  +-----------+
-        |
-        | Defines
-        |
-        v
-  +-----------+
-  | Executor  |
-  +-----------+
-        |
-        | Uses
-        |
-        v
-  +-----------+        +-----------+
-  |  Supplier | <----> |  Driver   |
-  +-----------+        +-----------+
-        |                     |
-        | Provides Data        | Provides Interface
-        |                     |
-        v                     v
-  +-----------+        +-----------+
-  |  PrestaShop       | Other Suppliers |
-  +-----------+        +-----------+
-</pre>
-@code
+.. :codeblock:
 s = Supplier('aliexpress')
 
 run_scenario_files(s, 'file1')
@@ -55,7 +27,7 @@ run_scenarios(s, scenario1)
 list_of_scenarios = [scenario1, ...]
 run_scenarios(s, list_of_scenarios)
 
-@endcode
+.. :examples:
 Example of a scenario file:
 ```json
 {
