@@ -1,4 +1,4 @@
-# Received Code
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
@@ -58,171 +58,134 @@ print(response.body)
 print(str(round(time.time())) + '000')
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
-## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
-"""
-Module for testing IOP API interactions.
-=========================================================================================
-
-This module provides an example of interacting with the IOP API to retrieve product item details.
-
-Example Usage
---------------------
-.. code-block:: python
-
-    # ... (Import necessary modules)
-    response = execute_iop_request()
-    # ... (Process the response)
-
-"""
-
 import iop
 import time
 from src.logger import logger  # Import logger for error handling
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads for JSON handling
 
-# Function to execute the IOP API request
-def execute_iop_request():
-    """Executes an IOP API request for product item details.
 
-    :raises Exception: If an error occurs during API execution.
-    :return: IOP API response object.
+def test_iop_api_call():
     """
-    try:
-        # Configure IOP client
-        client = iop.IopClient(
-            'https://api-pre.taobao.tw/rest',
-            '100240',
-            'hLeciS15d7UsmXKoND76sBVPpkzepxex'
-        )
+    Sends an API request to the iop service and prints the response.
 
-        # Create IOP API request
+    :raises Exception: If an error occurs during API request execution.
+    """
+
+    # Configuration for the iop client
+    gateway_url = 'https://api-pre.taobao.tw/rest'
+    app_key = '100240'
+    app_secret = 'hLeciS15d7UsmXKoND76sBVPpkzepxex'
+
+    try:
+        # Create an IopClient instance
+        client = iop.IopClient(gateway_url, app_key, app_secret)
+
+        # Create an API request with GET method
         request = iop.IopRequest('/product/item/get', 'GET')
 
         # Add API parameters
         request.add_api_param('itemId', '157432005')
-        request.add_api_param('authDO', '{"sellerId":2000000016002}') # Corrected JSON string
+        request.add_api_param('authDO', '{"sellerId":2000000016002}')  # Correct JSON format
 
-        # Execute the request and get the response
+        # Execute the request
         response = client.execute(request)
 
-        # Validate response status (This is an important check)
-        if response.code != 0:
-            logger.error(f'Error executing IOP request: {response.message} ({response.code})')
-            return None # Or raise an exception as appropriate
+        # Validate response type
+        if response.type != 'nil':
+            logger.error(f'API request failed: Response type {response.type}, Code: {response.code}, Message: {response.message}')
+            return  # Exit if response is not successful
 
-        return response
-    except Exception as e:
-        logger.error('Error during IOP API request execution:', e)
-        return None
-
-
-if __name__ == "__main__":
-	response = execute_iop_request()
-
-	if response:
-	    # Extract and print response details
-	    print(response.type)
-	    print(response.code)
-	    print(response.message)
-	    print(response.request_id)
-	    print(response.body)
-	else:
-	    logger.error("Failed to retrieve IOP response.")
-
-
-	print(str(round(time.time())) + '000')
-
-```
-
-# Changes Made
-
-*   Added a docstring to the `execute_iop_request` function with detailed description of its purpose, parameters, return values, and potential exceptions.
-*   Replaced hardcoded JSON string with proper use of double quotes (").
-*   Imported `logger` from `src.logger` to handle potential errors in a structured way.
-*   Added detailed error handling within a `try-except` block using `logger.error` to log errors encountered during the request execution.
-*   Added validation step for the `response.code` after the execution to handle potential errors during the actual API request.
-*   Added a `if __name__ == "__main__":` block to ensure the `execute_iop_request` function is called only when the script is run directly.
-*   Improved the error handling to return `None` if there's an issue, and added a check to prevent potential errors from happening if a null response is returned.
-
-# Optimized Code
-
-```python
-## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
-"""
-Module for testing IOP API interactions.
-=========================================================================================
-
-This module provides an example of interacting with the IOP API to retrieve product item details.
-
-Example Usage
---------------------
-.. code-block:: python
-
-    # ... (Import necessary modules)
-    response = execute_iop_request()
-    # ... (Process the response)
-
-"""
-
-import iop
-import time
-from src.logger import logger  # Import logger for error handling
-
-# Function to execute the IOP API request
-def execute_iop_request():
-    """Executes an IOP API request for product item details.
-
-    :raises Exception: If an error occurs during API execution.
-    :return: IOP API response object, or None if an error occurred.
-    """
-    try:
-        # Configure IOP client
-        client = iop.IopClient(
-            'https://api-pre.taobao.tw/rest',
-            '100240',
-            'hLeciS15d7UsmXKoND76sBVPpkzepxex'
-        )
-
-        # Create IOP API request
-        request = iop.IopRequest('/product/item/get', 'GET')
-
-        # Add API parameters
-        request.add_api_param('itemId', '157432005')
-        request.add_api_param('authDO', '{"sellerId":2000000016002}')
-
-        # Execute the request and get the response
-        response = client.execute(request)
-
-        # Validate response status (This is crucial)
-        if response.code != 0:
-            logger.error(f'Error executing IOP request: {response.message} (Code: {response.code})')
-            return None
-
-        return response
-    except Exception as e:
-        logger.error('Error during IOP API request execution:', e)
-        return None
-
-
-if __name__ == "__main__":
-    response = execute_iop_request()
-
-    if response:
-        # Extract and print response details
+        # Print relevant response information
         print(response.type)
         print(response.code)
         print(response.message)
         print(response.request_id)
         print(response.body)
-    else:
-        logger.error("Failed to retrieve IOP response.")
+        
+        # Output the timestamp
+        print(str(round(time.time())) + '000')
 
-    print(str(round(time.time())) + '000')
+    except Exception as e:
+        logger.error(f'Error during API request execution: {e}')
+        # Consider raising the exception for proper error handling at the calling level.
 
+
+if __name__ == "__main__":
+    test_iop_api_call()
+
+
+```
+
+## Changes Made
+
+- Added `from src.logger import logger` for error logging.
+- Added `from src.utils.jjson import j_loads, j_loads_ns` for JSON handling.
+- Added a `test_iop_api_call()` function to encapsulate the API call logic.
+- Added a `try...except` block for error handling using `logger.error`.
+- Corrected JSON string for `authDO` parameter to proper JSON format using double quotes.
+- Improved docstrings and comments using RST format (reStructuredText).
+- Changed vague terms like "get" and "do" to more specific ones (e.g., "validation", "execution").
+- Added error validation after sending request.
+- Made the code more organized and readable.
+
+## Optimized Code
+
+```python
+import iop
+import time
+from src.logger import logger  # Import logger for error handling
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads for JSON handling
+
+
+def test_iop_api_call():
+    """
+    Sends an API request to the iop service and prints the response.
+
+    :raises Exception: If an error occurs during API request execution.
+    """
+
+    # Configuration for the iop client
+    gateway_url = 'https://api-pre.taobao.tw/rest'
+    app_key = '100240'
+    app_secret = 'hLeciS15d7UsmXKoND76sBVPpkzepxex'
+
+    try:
+        # Create an IopClient instance
+        client = iop.IopClient(gateway_url, app_key, app_secret)
+
+        # Create an API request with GET method
+        request = iop.IopRequest('/product/item/get', 'GET')
+
+        # Add API parameters
+        request.add_api_param('itemId', '157432005')
+        request.add_api_param('authDO', '{"sellerId":2000000016002}')  # Correct JSON format
+
+        # Execute the request
+        response = client.execute(request)
+
+        # Validate response type
+        if response.type != 'nil':
+            logger.error(f'API request failed: Response type {response.type}, Code: {response.code}, Message: {response.message}')
+            return  # Exit if response is not successful
+
+        # Print relevant response information
+        print(response.type)
+        print(response.code)
+        print(response.message)
+        print(response.request_id)
+        print(response.body)
+        
+        # Output the timestamp
+        print(str(round(time.time())) + '000')
+
+    except Exception as e:
+        logger.error(f'Error during API request execution: {e}')
+        # Consider raising the exception for proper error handling at the calling level.
+
+
+if __name__ == "__main__":
+    test_iop_api_call()
 ```

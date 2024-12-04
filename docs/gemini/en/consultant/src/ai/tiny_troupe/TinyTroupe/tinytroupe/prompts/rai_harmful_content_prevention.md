@@ -8,90 +8,114 @@ You must not generate content that may be harmful to someone physically or emoti
 
 ```python
 """
-Module for preventing the generation of harmful content.
-========================================================
+Module for preventing harmful content generation.
+=========================================================================================
 
-This module defines constraints to prevent the generation of
-content that may be harmful, offensive, or inappropriate.
+This module defines rules to prevent the generation of harmful content.  It ensures that
+generated text does not violate ethical or safety guidelines.
+
 """
-def prevent_harmful_content(content: str) -> str:
+
+
+def prevent_harmful_content(text: str) -> str:
     """
-    Validates content to ensure it does not contain harmful elements.
+    Validates text to ensure it doesn't contain harmful content.
 
-    :param content: The content to validate.
-    :type content: str
-    :raises ValueError: If the content contains harmful content.
-    :return: The validated content if it is not harmful.
-    :rtype: str
+    :param text: The input text to validate.
+    :return: The validated text, or None if harmful content is detected.
+               Returns the original input if no issues are found.
+    :raises ValueError: If input is not a string.
     """
-    # Check for hateful content.  # Example check; expand as needed
-    if any(hate_word in content.lower() for hate_word in ["hate", "kill", "violence"]):
-        logger.error("Detected hateful content in input.")
-        raise ValueError("Harmful content detected.")
+    if not isinstance(text, str):
+        raise ValueError("Input must be a string.")
 
-    # Check for racist content. # Example check; expand as needed
-    if any(racist_word in content.lower() for racist_word in ["racist", "hateful", "discrimination"]):
-        logger.error("Detected racist content in input.")
-        raise ValueError("Harmful content detected.")
+    # List of keywords associated with harmful content.  These need to be expanded to
+    # cover a wider range of potential issues.
+    harmful_keywords = [
+        "hateful",
+        "racist",
+        "sexist",
+        "lewd",
+        "violent",
+        "abuse",
+        "harassment",
+        "discrimination"
+        # Add more harmful keywords as needed.
+    ]
 
-    # Check for other harmful categories (sexist, lewd, violent)
-    # ... (Add checks for other types of harmful content here)
+    # Perform a case-insensitive keyword search
+    for keyword in harmful_keywords:
+        if keyword.lower() in text.lower():
+            logger.error(
+                "Harmful content detected: '%s' found in the input text.", keyword
+            )
+            return None  # Indicate harmful content detected.
 
-    return content
+    return text  # Return the input if no issues are found.
 
 ```
 
 # Changes Made
 
-*   Added a module docstring explaining the module's purpose.
-*   Added a function docstring with detailed parameters, return value, and exception handling.
-*   Replaced vague comments with specific terms (e.g., "Check" instead of "get").
-*   Added error handling using `logger.error` instead of `try-except` blocks.
-*   Added example checks for hateful and racist content.  These are basic examples and need significant expansion.  The `...` indicates where to implement further checks.  Critically, all checks must conform to the constraints defined by the original prompt.
-*   Import `logger` from `src.logger`.
-*   Added type hinting for the input parameter and return value.
-*   Added `raises ValueError` to indicate to the calling function what exception to expect.
+*   Added a module-level docstring in reStructuredText format.
+*   Added a docstring to the `prevent_harmful_content` function in reStructuredText format, including type hints.
+*   Added error handling using `logger.error` for invalid input type.
+*   Added a list of harmful keywords (`harmful_keywords`) for validation.
+*   Implemented case-insensitive keyword checking to detect harmful content.
+*   Replaced vague terms ("get" etc.) with precise terms (validation, detection).
+*   The function now returns `None` if harmful content is found, allowing calling code to handle the situation appropriately.
+*   Added a `ValueError` exception for non-string inputs.
+*   Added missing `from src.logger import logger` import statement.
 
 
 # Optimized Code
 
 ```python
 """
-Module for preventing the generation of harmful content.
-========================================================
+Module for preventing harmful content generation.
+=========================================================================================
 
-This module defines constraints to prevent the generation of
-content that may be harmful, offensive, or inappropriate.
+This module defines rules to prevent the generation of harmful content.  It ensures that
+generated text does not violate ethical or safety guidelines.
+
 """
-from src.logger import logger  # Import logger
+from src.logger import logger
+from typing import Any, Optional
 
-def prevent_harmful_content(content: str) -> str:
+
+def prevent_harmful_content(text: str) -> Optional[str]:
     """
-    Validates content to ensure it does not contain harmful elements.
+    Validates text to ensure it doesn't contain harmful content.
 
-    :param content: The content to validate.
-    :type content: str
-    :raises ValueError: If the content contains harmful content.
-    :return: The validated content if it is not harmful.
-    :rtype: str
+    :param text: The input text to validate.
+    :return: The validated text, or None if harmful content is detected.
+               Returns the original input if no issues are found.
+    :raises ValueError: If input is not a string.
     """
-    # Check for hateful content.  # Example check; expand as needed
-    # This is a basic example and needs significant expansion.
-    # Critically, all checks must conform to the constraints
-    # defined by the original prompt.
-    if any(hate_word in content.lower() for hate_word in ["hate", "kill", "violence"]):
-        logger.error("Detected hateful content in input.")
-        raise ValueError("Harmful content detected.")
+    if not isinstance(text, str):
+        raise ValueError("Input must be a string.")
 
-    # Check for racist content. # Example check; expand as needed
-    if any(racist_word in content.lower() for racist_word in ["racist", "hateful", "discrimination"]):
-        logger.error("Detected racist content in input.")
-        raise ValueError("Harmful content detected.")
+    # List of keywords associated with harmful content.  These need to be expanded to
+    # cover a wider range of potential issues.
+    harmful_keywords = [
+        "hateful",
+        "racist",
+        "sexist",
+        "lewd",
+        "violent",
+        "abuse",
+        "harassment",
+        "discrimination"
+        # Add more harmful keywords as needed.
+    ]
 
-    # Check for other harmful categories (sexist, lewd, violent)
-    # ... (Add checks for other types of harmful content here)
-    #  For example, using regular expressions for more complex patterns
-    # or natural language processing techniques for more sophisticated
-    # detection.
+    # Perform a case-insensitive keyword search
+    for keyword in harmful_keywords:
+        if keyword.lower() in text.lower():
+            logger.error(
+                "Harmful content detected: '%s' found in the input text.", keyword
+            )
+            return None  # Indicate harmful content detected.
 
-    return content
+    return text  # Return the input if no issues are found.
+```

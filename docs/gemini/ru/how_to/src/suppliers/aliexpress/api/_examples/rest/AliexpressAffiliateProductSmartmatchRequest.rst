@@ -3,34 +3,32 @@
 
 Описание
 -------------------------
-Этот код определяет класс `AliexpressAffiliateProductSmartmatchRequest`, который, по всей видимости, представляет собой запрос к API AliExpress для поиска продуктов, подходящих для партнерской программы.  Класс наследуется от `RestApi` и предоставляет методы для настройки параметров запроса и получения имени API.
+Этот код определяет класс `AliexpressAffiliateProductSmartmatchRequest`, который представляет собой запрос к API AliExpress для поиска продуктов по ключевым словам.  Класс наследуется от базового класса `RestApi`, что предполагает использование REST-API.  Он инициализирует необходимые параметры запроса и предоставляет метод `getapiname` для получения имени API-метода.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование класса `RestApi`:**  Код импортирует базовый класс `RestApi` из модуля `..base`.
+1. **Импортирование класса `RestApi`**: Код импортирует класс `RestApi` из модуля `..base`. Это указывает на то, что этот класс использует базовые функции для работы с API.
+2. **Инициализация класса `AliexpressAffiliateProductSmartmatchRequest`**: Создается экземпляр класса `AliexpressAffiliateProductSmartmatchRequest`. При инициализации принимаются аргументы `domain` (по умолчанию `api-sg.aliexpress.com`) и `port` (по умолчанию `80`).  В конструкторе также инициализируются параметры для запроса (например, `app`, `country`, `keywords`, `page_no` и т.д.). Все эти параметры, кроме `domain` и `port`,  должны быть установлены перед использованием.
+3. **Установка параметров запроса**: Разработчик должен установить значения для параметров, таких как `app`, `country`, `keywords`, `page_no`, и другие поля, необходимые для поиска.
+4. **Получение имени API-метода**: Метод `getapiname()` возвращает строку `'aliexpress.affiliate.product.smartmatch'`. Это имя метода, который будет использован для запроса к API AliExpress.
 
-2. **Определение класса `AliexpressAffiliateProductSmartmatchRequest`:**  Создается класс, который расширяет функциональность класса `RestApi`.
-
-3. **Инициализация параметров запроса:** Конструктор класса `__init__` инициализирует атрибуты, представляющие параметры запроса к API.  Эти атрибуты позволяют задать различные параметры поиска, такие как: приложение, подпись к приложению, страна, устройство, идентификатор устройства, поля, ключевые слова, номер страницы, идентификатор продукта, сайт, целевая валюта, целевой язык, идентификатор отслеживания и пользователя.
-
-4. **Получение имени API:** Метод `getapiname` возвращает строку 'aliexpress.affiliate.product.smartmatch', которая, вероятно, используется для идентификации конкретного API-эндпоинта для данного запроса.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateProductSmartmatchRequest
+    from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
 
-    # Создание экземпляра класса
-    request = AliexpressAffiliateProductSmartmatchRequest()
+    # Создаем экземпляр класса, устанавливая параметры запроса.
+    request = AliexpressAffiliateProductSmartmatchRequest(
+        domain="api-sg.aliexpress.com",
+        app="your_app_id",  # Замените на ваш ID приложения
+        country="US",  # Замените на нужную страну
+        keywords="smartwatch"  # Ключевые слова для поиска
+    )
 
-    # Настройка параметров запроса
-    request.keywords = "смартфоны"
-    request.target_language = "ru"
-    request.page_no = 1
+    # Обратите внимание, что другие параметры, такие как page_no, fields, и так далее, должны быть установлены в соответствии с документацией API.
 
-    # Получение имени API
+    # Получаем имя API-метода.
     api_name = request.getapiname()
-    print(f"Имя API: {api_name}")
-
-    # (В реальном приложении здесь следует добавить код для выполнения запроса к API и обработки полученного ответа.)
+    print(f"Имя API-метода: {api_name}")

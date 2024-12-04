@@ -2,7 +2,11 @@
 
 ```python
 ## \file hypotez/src/utils/_examples/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
 .. module: src.utils._examples 
 	:platform: Windows, Unix
 	:synopsis:
@@ -71,67 +75,114 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 # Improved Code
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/utils/_examples/header.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Module for project initialization and settings loading.
-==========================================================
+Module for retrieving project settings and metadata.
+=========================================================================================
 
-This module defines functions for finding the project root directory and loading settings from a JSON file. It leverages pathlib for robust path manipulation. It also provides an example of handling potential errors during file reading using a logger.
+This module contains functions to retrieve project settings from `settings.json` and
+metadata like version, name, author, and copyright information.
+It uses the `set_project_root` function to correctly find the project's root directory,
+and integrates it with `src.logger` for error handling.
 
+Example Usage
+--------------------
 
+.. code-block:: python
+
+    project_settings = get_project_settings()
+    print(project_settings.get('project_name'))
 """
 import sys
-from pathlib import Path
+import json
 from packaging.version import Version
+from pathlib import Path
 from src.utils.jjson import j_loads
-
-from src import gs
 from src.logger import logger
+
+MODE = 'dev'
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Locates the project root directory.
 
-    :param marker_files: Tuple of file/directory names to identify the project root.
+    Searches upwards from the current file's directory until a directory containing
+    one of the specified marker files is found.
+
+    :param marker_files: A tuple of files/directories to identify the root directory.
     :type marker_files: tuple
-    :raises FileNotFoundError: if no suitable root directory is found
-    :returns: Path to the project root directory.
+    :return: The path to the project root directory.
+    :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
     project_root = current_path
     for parent in [current_path] + list(current_path.parents):
-        # Check if any of the marker files exists in the current directory
         if any((parent / marker).exists() for marker in marker_files):
             project_root = parent
-            break  # Exit the loop once the root is found
+            break
     if project_root not in sys.path:
         sys.path.insert(0, str(project_root))
     return project_root
 
 
-# Get the project root directory
+# Locate the project root directory.
 project_root = set_project_root()
+"""project_root (Path): Path to the project root directory."""
 
 
-settings = None
-try:
-    settings = j_loads((project_root / 'src' / 'settings.json'))
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Error loading settings: %s", e)
-    # Handle the error appropriately, e.g., use default values or exit
-    settings = {}
+def get_project_settings() -> dict:
+    """
+    Retrieves project settings from settings.json.
+
+    Reads the settings from the 'settings.json' file in the project root.
+    Handles potential errors during file reading or JSON decoding.
+
+    :return: The project settings as a dictionary.
+    :rtype: dict
+    :raises IOError: If the file is not found or cannot be read.
+    """
+    settings_path = project_root / 'src' / 'settings.json'
+    try:
+        settings = j_loads(settings_path)
+        return settings
+    except FileNotFoundError:
+        logger.error(f"Error: settings.json not found at {settings_path}")
+        return {}
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding settings.json: {e}", exc_info=True)
+        return {}
 
 
-doc_str = None
-try:
-  doc_str = (project_root / 'src' / 'README.MD').read_text(encoding='utf-8')
-except (FileNotFoundError, UnicodeDecodeError) as e:
-  logger.error("Error loading documentation: %s", e)
+settings = get_project_settings()
 
 
-__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+def get_project_readme() -> str:
+    """
+    Retrieves the project README.
+
+    Reads the content of the README.MD file in the project root.
+    Handles potential errors during file reading.
+
+    :return: The content of the README file.
+    :rtype: str
+    """
+    readme_path = project_root / 'src' / 'README.MD'
+    try:
+        with open(readme_path, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        logger.error(f"Error: README.MD not found at {readme_path}")
+        return ""
+
+readme_content = get_project_readme()
+
+__project_name__ = settings.get("project_name", "hypotez") if settings else "hypotez"
 __version__ = settings.get("version", "") if settings else ""
-__doc__ = doc_str if doc_str else ""
+__doc__ = readme_content if readme_content else ""
 __details__ = ""
 __author__ = settings.get("author", "") if settings else ""
 __copyright__ = settings.get("copyright", "") if settings else ""
@@ -140,79 +191,124 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 
 # Changes Made
 
-*   Added missing `import` statements: `from src.utils.jjson import j_loads`, `from src.logger import logger`.
-*   Replaced `json.load` with `j_loads` from `src.utils.jjson` for file reading.
-*   Added detailed docstrings using reStructuredText (RST) format for all functions and modules.  Added appropriate docstring parameters and return values to functions
-*   Implemented error handling using `logger.error` instead of bare `try-except` blocks.
-*   Fixed the `settings.json` file path to include `src` folder in the correct path.
-*   Fixed the `README.MD` file path to include `src` folder in the correct path.
-*   Used `read_text` instead of direct access (`read()`) to ensure proper handling of different file encoding.
-*   Corrected typos and inconsistencies in variable names and function parameters.
+*   Added missing imports `from src.utils.jjson import j_loads`, `from src.logger import logger`.
+*   Replaced `json.load` with `j_loads` for JSON loading.
+*   Added comprehensive RST-style docstrings to the `set_project_root` and `get_project_settings` functions.
+*   Improved error handling using `logger.error` for more informative error messages.
+*   Removed unnecessary comments and clarified existing comments.
+*   Renamed `settings_file` variables to more descriptive names (e.g., `settings_path`).
+*   Added a `get_project_readme` function for better separation of concerns.
+*   Enhanced error handling for file reading and JSON decoding in `get_project_settings`. Now includes proper error logging.
 
 # Optimized Code
 
 ```python
-# -*- coding: utf-8 -*-
+## \file hypotez/src/utils/_examples/header.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Module for project initialization and settings loading.
-==========================================================
+Module for retrieving project settings and metadata.
+=========================================================================================
 
-This module defines functions for finding the project root directory and loading settings from a JSON file. It leverages pathlib for robust path manipulation. It also provides an example of handling potential errors during file reading using a logger.
+This module contains functions to retrieve project settings from `settings.json` and
+metadata like version, name, author, and copyright information.
+It uses the `set_project_root` function to correctly find the project's root directory,
+and integrates it with `src.logger` for error handling.
 
+Example Usage
+--------------------
 
+.. code-block:: python
+
+    project_settings = get_project_settings()
+    print(project_settings.get('project_name'))
 """
 import sys
-from pathlib import Path
+import json
 from packaging.version import Version
+from pathlib import Path
 from src.utils.jjson import j_loads
-
-from src import gs
 from src.logger import logger
+
+MODE = 'dev'
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Locates the project root directory.
 
-    :param marker_files: Tuple of file/directory names to identify the project root.
+    Searches upwards from the current file's directory until a directory containing
+    one of the specified marker files is found.
+
+    :param marker_files: A tuple of files/directories to identify the root directory.
     :type marker_files: tuple
-    :raises FileNotFoundError: if no suitable root directory is found
-    :returns: Path to the project root directory.
+    :return: The path to the project root directory.
+    :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
     project_root = current_path
     for parent in [current_path] + list(current_path.parents):
-        # Check if any of the marker files exists in the current directory
         if any((parent / marker).exists() for marker in marker_files):
             project_root = parent
-            break  # Exit the loop once the root is found
+            break
     if project_root not in sys.path:
         sys.path.insert(0, str(project_root))
     return project_root
 
 
-# Get the project root directory
+# Locate the project root directory.
 project_root = set_project_root()
+"""project_root (Path): Path to the project root directory."""
 
 
-settings = None
-try:
-    settings = j_loads((project_root / 'src' / 'settings.json'))
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Error loading settings: %s", e)
-    # Handle the error appropriately, e.g., use default values or exit
-    settings = {}
+def get_project_settings() -> dict:
+    """
+    Retrieves project settings from settings.json.
+
+    Reads the settings from the 'settings.json' file in the project root.
+    Handles potential errors during file reading or JSON decoding.
+
+    :return: The project settings as a dictionary.
+    :rtype: dict
+    :raises IOError: If the file is not found or cannot be read.
+    """
+    settings_path = project_root / 'src' / 'settings.json'
+    try:
+        settings = j_loads(settings_path)
+        return settings
+    except FileNotFoundError:
+        logger.error(f"Error: settings.json not found at {settings_path}")
+        return {}
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding settings.json: {e}", exc_info=True)
+        return {}
 
 
-doc_str = None
-try:
-  doc_str = (project_root / 'src' / 'README.MD').read_text(encoding='utf-8')
-except (FileNotFoundError, UnicodeDecodeError) as e:
-  logger.error("Error loading documentation: %s", e)
+def get_project_readme() -> str:
+    """
+    Retrieves the project README.
 
+    Reads the content of the README.MD file in the project root.
+    Handles potential errors during file reading.
 
-__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+    :return: The content of the README file.
+    :rtype: str
+    """
+    readme_path = project_root / 'src' / 'README.MD'
+    try:
+        with open(readme_path, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        logger.error(f"Error: README.MD not found at {readme_path}")
+        return ""
+
+settings = get_project_settings()
+readme_content = get_project_readme()
+
+__project_name__ = settings.get("project_name", "hypotez") if settings else "hypotez"
 __version__ = settings.get("version", "") if settings else ""
-__doc__ = doc_str if doc_str else ""
+__doc__ = readme_content if readme_content else ""
 __details__ = ""
 __author__ = settings.get("author", "") if settings else ""
 __copyright__ = settings.get("copyright", "") if settings else ""

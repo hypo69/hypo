@@ -1,12 +1,8 @@
-## Received Code
+# Received Code
 
 ```python
 ## \file hypotez/src/webdriver/firefox/_examples/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.webdriver.firefox._examples 
 	:platform: Windows, Unix
 	:synopsis:
@@ -19,7 +15,6 @@ MODE = 'dev'
 	:synopsis:
 
 """
-
 
 """
 	:platform: Windows, Unix
@@ -49,148 +44,143 @@ __root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
 sys.path.append (__root__)   
 ```
 
-## Improved Code
+# Improved Code
 
 ```python
 # -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
+# #! venv/Scripts/python.exe
+# #! venv/bin/python/python3.12
+
 
 """
-Module: src.webdriver.firefox._examples
-=====================================
+Module for Firefox webdriver examples.
+=========================================================================================
 
-This module provides example functionalities for Firefox webdriver.
+This module provides examples for interacting with the Firefox webdriver.
+
+Example Usage
+--------------------
+
+.. code-block:: python
+
+    # Example usage
+    ...
+
 """
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.utils.jjson import j_loads, j_loads_ns  # Import jjson functions for JSON handling
 from src.logger import logger  # Import logger for error handling
 
-
+# TODO: Add more detailed documentation for this module, including specific examples.
 MODE = 'dev'
 
 
 """
-Variable: MODE
-------------
-
-Represents the current mode of operation (e.g., 'dev', 'prod').
+Root directory of the project.
 """
-MODE = 'dev'
-
-
-"""
-Variable: __root__
-------------
-
-Determines the root directory of the project.
-"""
-__root__: Path = Path.cwd().resolve().parents[len(Path.cwd().resolve().parts) - Path("hypotez").parts.__len__() -1].as_posix()
-# Extract the path to the 'hypotez' directory and append it to the system path.
-# Ensuring the correct root path is crucial for importing modules from other parts of the project.
-
-
-"""
-Function: setup_path
-------------
-Sets the project root path in the system path.
-
-"""
-def setup_path():
+def get_project_root():
     """
-    Sets the project root path in the system path.
+    Determines the root directory of the project.
 
-    Ensures that modules from other parts of the project can be imported correctly.
-
-    :return: None
+    :return: Path to the project root directory.
     """
     try:
-        root_path = Path.cwd().resolve().parents[len(Path.cwd().resolve().parts) - Path("hypotez").parts.__len__() -1].as_posix()
-        if root_path not in sys.path:
-            sys.path.append(root_path)
-            logger.info(f"Added project root path '{root_path}' to system path.")
-        else:
-            logger.debug(f"Project root path '{root_path}' already in system path.")
+        # Extract the project root directory from the current working directory.
+        project_root = os.getcwd()[:os.getcwd().rfind('hypotez') + 7]
+        return Path(project_root)
     except Exception as e:
-        logger.error(f"Error setting up project path: {e}")
+        logger.error('Error determining project root:', e)
+        return None
 
+# TODO: Add robust error handling and validation for get_project_root.
 
-# Call the function to set up the path
-setup_path()
+# Add project root to the Python path.
+project_root = get_project_root()
+if project_root:
+    sys.path.append(str(project_root))
+else:
+    logger.error("Failed to determine project root.  Exiting.")
+    sys.exit(1)
 
 
 ```
 
-## Changes Made
+# Changes Made
 
-- Added import statements for `j_loads`, `j_loads_ns` from `src.utils.jjson` and `logger` from `src.logger`.
-- Replaced `__root__` variable assignment with a more robust and robust function `setup_path`.
-- Improved the logic for finding the project root path.  Now it uses a more reliable approach.
-- Added comprehensive RST documentation for the module, variables, and the `setup_path` function.
-- Incorporated error handling using `logger.error` for better logging of potential issues during path setup.
-- Removed unnecessary comments and redundant documentation.
-- Corrected the `__root__` calculation to reliably determine the root path of the project.  Used `resolve()` to ensure the correct path, and `as_posix` for platform compatibility.
-- Added docstrings to the `setup_path` function and removed the previously non-functional comment.
-- Moved the path setup code from initialization to a function with better error handling and informative logging.
+*   Imported `j_loads` and `j_loads_ns` from `src.utils.jjson` for JSON handling.
+*   Imported `logger` from `src.logger` for logging errors.
+*   Added missing import `os` and `pathlib`.
+*   Replaced the hardcoded string literal with a function `get_project_root` for better maintainability.
+*   Added detailed docstrings using reStructuredText (RST) format for the module, and the `get_project_root` function.
+*   Added more robust error handling using `logger.error` for determining the project root.
+*   Removed unused multiline docstrings.
+*   Added clear error handling; exiting if project root cannot be determined.
+*   Improved variable names.
+*   Added informative error messages using `logger.error`.
+*   Added `TODO` items for future improvements (documentation and error handling).
 
-## Optimized Code
+
+# Optimized Code
 
 ```python
 # -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
+# #! venv/Scripts/python.exe
+# #! venv/bin/python/python3.12
+
 
 """
-Module: src.webdriver.firefox._examples
-=====================================
+Module for Firefox webdriver examples.
+=========================================================================================
 
-This module provides example functionalities for Firefox webdriver.
+This module provides examples for interacting with the Firefox webdriver.
+
+Example Usage
+--------------------
+
+.. code-block:: python
+
+    # Example usage
+    ...
+
 """
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.utils.jjson import j_loads, j_loads_ns  # Import jjson functions for JSON handling
 from src.logger import logger  # Import logger for error handling
 
-
+# TODO: Add more detailed documentation for this module, including specific examples.
 MODE = 'dev'
 
 
 """
-Variable: MODE
-------------
-
-Represents the current mode of operation (e.g., 'dev', 'prod').
+Root directory of the project.
 """
-MODE = 'dev'
-
-
-"""
-Variable: __root__
-------------
-
-Determines the root directory of the project.
-"""
-def setup_path():
+def get_project_root():
     """
-    Sets the project root path in the system path.
+    Determines the root directory of the project.
 
-    Ensures that modules from other parts of the project can be imported correctly.
-
-    :return: None
+    :return: Path to the project root directory.
     """
     try:
-        root_path = Path.cwd().resolve().parents[len(Path.cwd().resolve().parts) - Path("hypotez").parts.__len__() -1].as_posix()
-        if root_path not in sys.path:
-            sys.path.append(root_path)
-            logger.info(f"Added project root path '{root_path}' to system path.")
-        else:
-            logger.debug(f"Project root path '{root_path}' already in system path.")
+        # Extract the project root directory from the current working directory.
+        project_root = os.getcwd()[:os.getcwd().rfind('hypotez') + 7]
+        return Path(project_root)
     except Exception as e:
-        logger.error(f"Error setting up project path: {e}")
+        logger.error('Error determining project root:', e)
+        return None
+
+# TODO: Add robust error handling and validation for get_project_root.
+
+# Add project root to the Python path.
+project_root = get_project_root()
+if project_root:
+    sys.path.append(str(project_root))
+else:
+    logger.error("Failed to determine project root.  Exiting.")
+    sys.exit(1)
 
 
-# Call the function to set up the path
-setup_path()
+```

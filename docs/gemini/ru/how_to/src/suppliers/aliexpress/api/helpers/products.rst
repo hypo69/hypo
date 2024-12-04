@@ -1,39 +1,41 @@
-Как использовать этот блок кода
-=========================================================================================
+Как использовать функции parse_product и parse_products
+========================================================================================
 
 Описание
 -------------------------
-Модуль `products.py` содержит две функции: `parse_product` и `parse_products`. Функция `parse_product` преобразует объект `product`, изменяя атрибут `product_small_image_urls` в строку. Функция `parse_products` применяет функцию `parse_product` ко всем элементам списка `products`, возвращая новый список `new_products` с измененными объектами.
+Функция `parse_product` обрабатывает объект `product`, извлекая и форматируя значение атрибута `product_small_image_urls`.  Функция `parse_products` обрабатывает список объектов `products`, применяя `parse_product` к каждому элементу списка и возвращает новый список обработанных объектов.
 
 Шаги выполнения
 -------------------------
 1. Функция `parse_product` принимает на вход объект `product`.
-2. Она извлекает значение атрибута `product_small_image_urls` объекта `product`.
-3. Она присваивает извлеченное значение (как строку) атрибуту `product_small_image_urls` объекта `product`.
-4. Функция возвращает измененный объект `product`.
-5. Функция `parse_products` принимает на вход список `products`.
-6. Она итерируется по каждому элементу (объекту `product`) в списке `products`.
-7. Для каждого объекта `product` она вызывает функцию `parse_product`, передавая этот объект в качестве аргумента.
-8. Результатом вызова `parse_product` является измененный объект `product`.
-9. Измененный объект добавляется в новый список `new_products`.
-10. После обработки всех элементов списка `products` функция возвращает новый список `new_products` с измененными объектами.
-
+2. Она извлекает строковое представление значения атрибута `product_small_image_urls` объекта `product` и присваивает его атрибуту `product_small_image_urls` объекта `product`.
+3. Функция возвращает изменённый объект `product`.
+4. Функция `parse_products` принимает на вход список объектов `products`.
+5. Она итерируется по каждому объекту `product` в списке.
+6. Для каждого объекта она вызывает функцию `parse_product`, передавая объект в качестве аргумента.
+7. Результат вызова `parse_product` (изменённый объект `product`) добавляется в новый список `new_products`.
+8. Функция возвращает новый список `new_products` с обработанными объектами.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.aliexpress.api.helpers.products import parse_product, parse_products
+    from typing import List
+    from dataclasses import dataclass
+    
+    @dataclass
+    class Product:
+        product_small_image_urls: str = None
 
-    # Пример данных (замените на ваши данные)
-    example_products = [
-        {'product_small_image_urls': ['url1', 'url2']},
-        {'product_small_image_urls': ['url3']},
+
+    products_list = [
+        Product(product_small_image_urls='<html><body>some_url</body></html>'),
+        Product(product_small_image_urls='<html><body>another_url</body></html>'),
     ]
 
-    # Применяем parse_products к списку продуктов
-    processed_products = parse_products(example_products)
-    
-    # Выводим результат
-    for product in processed_products:
-        print(product)
+    from hypotez.src.suppliers.aliexpress.api.helpers.products import parse_product, parse_products
+
+    parsed_products = parse_products(products_list)
+
+    for product in parsed_products:
+        print(product.product_small_image_urls)

@@ -1,6 +1,6 @@
-# Received Code
+### Received Code
 
-```python
+```
 ### Руководство для Тестера
 
 #### Введение
@@ -83,177 +83,83 @@
 Убедитесь, что все тесты пройдены и функциональность модуля работает корректно. В случае возникновения проблем или ошибок, сообщите разработчикам для исправления.
 ```
 
-```markdown
-# Improved Code
+### Improved Code
 
-```python
-"""
-Module for testing campaign preparation on AliExpress platform.
-=================================================================
+```diff
+--- a/hypotez/src/suppliers/aliexpress/campaign/_pytest/guide_test.md
++++ b/hypotez/src/suppliers/aliexpress/campaign/_pytest/guide_test.md
+@@ -137,6 +137,21 @@
+     - Убедитесь, что при возникновении ошибки функция логгирует сообщение об ошибке и возвращает `False`.
+ 
+ 3. **Проверка успешной обработки категории**:
++    - Тест `test_process_campaign_category_success` проверяет успешную обработку категории в кампании.
++    - Убедитесь, что функция `process_campaign_category` корректно обрабатывает категорию и возвращает результат без ошибок.
++
++    ```python
++    # TODO: Add example of expected output for successful category processing.
++    # TODO: Include example RST docstring for function process_campaign_category.
++    ```
++
++4. **Проверка обработки ошибки при обработке категории**:
+     - Тест `test_process_campaign_category_success` проверяет успешную обработку категории в кампании.
+     - Убедитесь, что функция `process_campaign_category` корректно обрабатывает категорию и возвращает результат без ошибок.
+ 
 
-This module provides test cases for the campaign preparation module,
-covering file operations, category processing, and overall campaign execution.
-"""
-
-from src.logger import logger
-from src.utils.jjson import j_loads  # Import j_loads for JSON handling
-
-# ... (Import statements for other necessary modules) ...
-
-
-def update_category(category_data: str, file_path: str) -> bool:
-    """Updates a category in a JSON file.
-
-    :param category_data: JSON data of the category to update.
-    :param file_path: Path to the JSON file.
-    :return: True if successful, False otherwise.
-    """
-    try:
-        # Load existing data from the JSON file.  # Load using j_loads.
-        existing_data = j_loads(file_path)
-        # ... (Update the category data in existing_data) ...
-        # ... (Save updated data to the file) ...
-        return True
-    except Exception as e:
-        logger.error("Error updating category:", e)
-        return False
-
-
-def process_campaign_category(category_id: int, campaign_data: dict) -> dict:
-    """Processes a specific category within a campaign.
-
-    :param category_id: ID of the category to process.
-    :param campaign_data: Data for the entire campaign.
-    :return: Result of processing the category, or None if failed.
-    """
-    try:
-        # ... (Logic to process the category) ...
-        return processed_result  # Return the processing result
-    except Exception as e:
-        logger.error(f"Error processing category {category_id}:", e)
-        return None
-
-
-def process_campaign(campaign_id: int, campaign_data: dict) -> dict:
-    """Processes the entire campaign.
-
-    :param campaign_id: ID of the campaign to process.
-    :param campaign_data: Data for the entire campaign.
-    :return: Result of processing the campaign, or None if failed.
-    """
-    try:
-        # ... (Iterate through categories, call process_campaign_category) ...
-        return processed_campaign_results
-    except Exception as e:
-        logger.error(f"Error processing campaign {campaign_id}:", e)
-        return None
-
-
-async def main(campaign_id: int):
-    """Executes the campaign processing asynchronously.
-
-    :param campaign_id: ID of the campaign to process.
-    """
-    try:
-        # ... (Load campaign data) ...
-        result = await process_campaign(campaign_id, campaign_data)
-        if result:
-            # ... (Handle successful processing results) ...
-        else:
-            logger.error(f"Campaign processing failed for {campaign_id}.")
-    except Exception as e:
-        logger.error(f"Error during campaign processing: {e}")
 ```
 
-```markdown
-# Changes Made
+### Changes Made
 
-- Added missing imports (`from src.logger import logger`, `from src.utils.jjson import j_loads`).
-- Replaced `json.load` with `j_loads` for JSON loading.
-- Added comprehensive docstrings to functions, methods, and variables, following RST standards and including Sphinx-style.
-- Introduced error handling using `logger.error` instead of generic `try-except` blocks.
-- Removed vague terms like 'get' and 'do' from comments, using more specific terms like 'validation', 'execution'.
-- Commented all code blocks with `#` to clearly explain the code's purpose and action.
-- Corrected the documentation format, improving the readability and maintainability.
+- Added `TODO` sections for example outputs and RST docstrings for improved code clarity and maintainability.
+- Minor formatting adjustments for better readability.
 
 
-# Optimized Code
+### Optimized Code
 
-```python
-"""
-Module for testing campaign preparation on AliExpress platform.
-=================================================================
+```diff
+--- a/hypotez/src/suppliers/aliexpress/campaign/_pytest/guide_test.md
++++ b/hypotez/src/suppliers/aliexpress/campaign/_pytest/guide_test.md
+@@ -137,12 +137,30 @@
+     - Убедитесь, что при возникновении ошибки функция логгирует сообщение об ошибке и возвращает `False`.
+ 
+ 3. **Проверка успешной обработки категории**:
+-    - Тест `test_process_campaign_category_success` проверяет успешную обработку категории в кампании.
+-    - Убедитесь, что функция `process_campaign_category` корректно обрабатывает категорию и возвращает результат без ошибок.
+-
+-    ```python
+-    # TODO: Add example of expected output for successful category processing.
+-    # TODO: Include example RST docstring for function process_campaign_category.
++    - Тест `test_process_campaign_category_success` проверяет успешную обработку категории в кампании.  
++    - Убедитесь, что функция `process_campaign_category` корректно обрабатывает категорию и возвращает ожидаемый результат.
++    
++    ```python
++    def process_campaign_category(category_data):
++        """
++        Process a specific category within a campaign.
++
++        :param category_data: Category data (e.g., as JSON).
++        :raises ValueError: If invalid input data is provided.
++        :return: Processed category data or None if error occurs.
++        """
++        try:
++            # Validate category_data
++            if not isinstance(category_data, dict):
++                raise ValueError("Invalid category data format.")
++            
++            # Process category data
++            ...
++            
++            return processed_data
++        except ValueError as e:
++            logger.error(f"Error processing category: {e}")
++            return None
++        except Exception as ex:
++            logger.error(f"Unexpected error: {ex}")
++            return None
+     ```
+ 
+ 4. **Проверка обработки ошибки при обработке категории**:
 
-This module provides test cases for the campaign preparation module,
-covering file operations, category processing, and overall campaign execution.
-"""
-
-from src.logger import logger
-from src.utils.jjson import j_loads  # Import j_loads for JSON handling
-
-# ... (Import statements for other necessary modules) ...
-
-
-def update_category(category_data: str, file_path: str) -> bool:
-    """Updates a category in a JSON file.
-
-    :param category_data: JSON data of the category to update.
-    :param file_path: Path to the JSON file.
-    :return: True if successful, False otherwise.
-    """
-    try:
-        # Load existing data from the JSON file.  # Load using j_loads.
-        existing_data = j_loads(file_path)
-        # ... (Update the category data in existing_data) ...
-        # ... (Save updated data to the file) ...
-        return True
-    except Exception as e:
-        logger.error("Error updating category:", e)
-        return False
-
-
-def process_campaign_category(category_id: int, campaign_data: dict) -> dict:
-    """Processes a specific category within a campaign.
-
-    :param category_id: ID of the category to process.
-    :param campaign_data: Data for the entire campaign.
-    :return: Result of processing the category, or None if failed.
-    """
-    try:
-        # ... (Logic to process the category) ...
-        return processed_result  # Return the processing result
-    except Exception as e:
-        logger.error(f"Error processing category {category_id}:", e)
-        return None
-
-
-def process_campaign(campaign_id: int, campaign_data: dict) -> dict:
-    """Processes the entire campaign.
-
-    :param campaign_id: ID of the campaign to process.
-    :param campaign_data: Data for the entire campaign.
-    :return: Result of processing the campaign, or None if failed.
-    """
-    try:
-        # ... (Iterate through categories, call process_campaign_category) ...
-        return processed_campaign_results
-    except Exception as e:
-        logger.error(f"Error processing campaign {campaign_id}:", e)
-        return None
-
-
-async def main(campaign_id: int):
-    """Executes the campaign processing asynchronously.
-
-    :param campaign_id: ID of the campaign to process.
-    """
-    try:
-        # ... (Load campaign data) ...
-        result = await process_campaign(campaign_id, campaign_data)
-        if result:
-            # ... (Handle successful processing results) ...
-        else:
-            logger.error(f"Campaign processing failed for {campaign_id}.")
-    except Exception as e:
-        logger.error(f"Error during campaign processing: {e}")
 ```
+```
+
+This response now includes the requested format and restructuring.  Please note that the `...` placeholders in the improved code require further implementation based on the actual logic of the functions.  The `TODO` comments are also included for future expansion. Remember to replace the `...` parts with actual code. Also, import statements and the `logger` object are missing. You'll need to add appropriate import statements for `logger` and other necessary modules.  Finally, replace `src.utils.jjson` with the actual path to that file.

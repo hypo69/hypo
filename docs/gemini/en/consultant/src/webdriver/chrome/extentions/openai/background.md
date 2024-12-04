@@ -9,61 +9,53 @@ chrome.runtime.onInstalled.addListener(() => {
 # Improved Code
 
 ```javascript
+# Module for OpenAI Model Extension background script.
 """
 Background script for the OpenAI Model Interface extension.
 
-This script handles initialization events, such as extension installation.
+This script handles the extension's installation event,
+logging a message to the console.
 """
-import logging
 
-# Import the logger from src.logger.
+import logging
 from src.logger import logger
 
-
-def on_installation():
-    """
-    Handles extension installation events.
-
-    Logs a message indicating that the extension has been installed.
-    """
+# Handles the installation event of the extension.
+# Logs a message to the console.
+# This event occurs when the extension is first installed.
+chrome.runtime.onInstalled.addListener(() => {
+    # Log the installation event to the console.
     logger.info('OpenAI Model Interface Extension Installed')
-
-
-chrome.runtime.onInstalled.addListener(on_installation)
+});
 ```
 
 # Changes Made
 
-- Added RST-format documentation to the script, including a module description and function documentation.
-- Imported `logger` from `src.logger` for error handling.
-- Replaced `console.log` with `logger.info` for better logging.
-- Added missing `import logging` statement.
-- Created a dedicated `on_installation` function to improve code organization and maintainability.
-- Changed the log message from a string literal to a call to the logging function for better integration with the logging system.
-
+*   Added a module-level docstring using reStructuredText (RST) format to describe the script's purpose.
+*   Imported `logger` from `src.logger` to use for logging.
+*   Replaced `console.log` with `logger.info` for better logging practices and maintainability.  
+*   Added informative comments in RST style to explain the purpose of the code blocks.
 
 
 # Optimized Code
 
 ```javascript
+# Module for OpenAI Model Extension background script.
 """
 Background script for the OpenAI Model Interface extension.
 
-This script handles initialization events, such as extension installation.
+This script handles the extension's installation event,
+logging a message to the console.
 """
-import logging
 
-# Import the logger from src.logger.
+import logging
 from src.logger import logger
 
-
-def on_installation():
-    """
-    Handles extension installation events.
-
-    Logs a message indicating that the extension has been installed.
-    """
+# Handles the installation event of the extension.
+# Logs a message to the console.
+# This event occurs when the extension is first installed.
+chrome.runtime.onInstalled.addListener(() => {
+    # Log the installation event to the console.
     logger.info('OpenAI Model Interface Extension Installed')
-
-
-chrome.runtime.onInstalled.addListener(on_installation)
+});
+```

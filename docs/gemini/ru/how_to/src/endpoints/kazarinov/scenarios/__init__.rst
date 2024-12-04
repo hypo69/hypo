@@ -3,12 +3,13 @@
 
 Описание
 -------------------------
-Этот файл (`hypotez/src/endpoints/kazarinov/scenarios/__init__.py`) импортирует класс `Mexiron` из модуля `scenario_pricelist`.  Он также определяет константу `MODE`, которая, скорее всего, задаёт режим работы приложения (например, 'dev' - для разработки).
+Этот файл `hypotez/src/endpoints/kazarinov/scenarios/__init__.py` является инициализационным модулем для сценариев, связанных с ценами (pricelist).  Он импортирует класс `Mexiron` из модуля `scenario_pricelist`.  Переменная `MODE` устанавливает режим работы (в данном примере, 'dev').
 
 Шаги выполнения
 -------------------------
-1. Импортирует класс `Mexiron` из модуля `scenario_pricelist`, который находится в подпапке `scenarios` внутри папки `kazarinov/endpoints` в проекте `hypotez`.
-2. Определяет переменную `MODE` со значением 'dev'.  Это, скорее всего, конфигурационная переменная, определяющая режим работы приложения.
+1. Определяется переменная `MODE` со значением 'dev'.  Это, вероятно, конфигурационная переменная, определяющая режим работы (например, 'dev', 'prod').
+2. Импортируется класс `Mexiron` из модуля `scenario_pricelist`.  Это указывает на то, что в модуле `scenario_pricelist` определён класс, связанный со сценариями, ориентированными на ценовые списки (`pricelist`).
+
 
 Пример использования
 -------------------------
@@ -16,8 +17,9 @@
 
     from hypotez.src.endpoints.kazarinov.scenarios import Mexiron
 
-    # Пример использования, предполагая что класс Mexiron имеет метод для работы с ценами.
-    # Например, метод для получения списка цен:
-    mexiron_instance = Mexiron()  
-    price_list = mexiron_instance.get_pricelist()  # Предполагаем, что есть метод get_pricelist
-    print(price_list)
+    # Пример использования класса Mexiron (предполагается, что он определен в scenario_pricelist.py)
+    # Должны быть другие методы или атрибуты класса Mexiron, которые используются в этом примере.
+    mexiron_instance = Mexiron() 
+    # ... выполнение каких-то действий с mexiron_instance, например:
+    result = mexiron_instance.get_pricelist(product_id='XYZ')
+    print(result)

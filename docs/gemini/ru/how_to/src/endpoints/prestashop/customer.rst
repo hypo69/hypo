@@ -1,51 +1,60 @@
 Как использовать класс PrestaCustomer
-========================================================================================
+=========================================================================================
 
 Описание
 -------------------------
-Класс `PrestaCustomer` предоставляет методы для взаимодействия с клиентами в системе PrestaShop через API. Он наследуется от класса `PrestaShop`, предоставляя базовые функции работы с API.  Класс позволяет добавлять, удалять, обновлять клиентов и получать их детали.  Он также обрабатывает валидацию входных данных и выдает исключения при проблемах.
+Класс `PrestaCustomer` предоставляет методы для взаимодействия с клиентами в системе управления интернет-магазином PrestaShop. Он наследуется от класса `PrestaShop`, предоставляя базовые функции API.  Класс позволяет добавлять, удалять, обновлять и получать информацию о клиентах.  Инициализация требует параметров `api_domain` и `api_key`, которые могут быть переданы как через отдельные аргументы, так и в виде словаря или объекта `SimpleNamespace`.
+
 
 Шаги выполнения
 -------------------------
-1. **Инициализация:**  Создается экземпляр класса `PrestaCustomer`, передавая необходимые параметры:
-    - `credentials`: Словарь или объект `SimpleNamespace`, содержащий `api_domain` и `api_key`.
-    - `api_domain`: Домен API PrestaShop.
-    - `api_key`: Ключ API PrestaShop.
+1. **Импортирование необходимых модулей:**  Код импортирует необходимые библиотеки, включая `attr`, `pathlib`, `typing`, `SimpleNamespace`, `header`, `gs`, `logger`, `j_loads`, `PrestaShop`,  и другие, необходимые для работы с API PrestaShop и логирования.
 
-    Если `credentials` не передан, необходимо передать `api_domain` и `api_key` напрямую.
+2. **Определение класса `PrestaCustomer`:**  Класс наследуется от `PrestaShop`. Он содержит конструктор `__init__`, который инициализирует необходимые параметры.
 
-2. **Проверка валидности входных данных:**  Метод `__init__` проверяет, что `api_domain` и `api_key`  переданы.  Если хотя бы один параметр отсутствует, генерируется исключение `ValueError`.
+3. **Обработка входных данных:**  Конструктор проверяет, были ли переданы `credentials`. Если да, то извлекает значения `api_domain` и `api_key` из `credentials`.
 
-3. **Использование методов:** После успешной инициализации, можно использовать методы класса для работы с клиентами:
-    - `add_customer_PrestaShop(name, email)`: Добавляет нового клиента с заданным именем и email.
-    - `delete_customer_PrestaShop(id)`: Удаляет клиента по его идентификатору.
-    - `update_customer_PrestaShop(id, new_name)`: Обновляет имя клиента по его идентификатору.
-    - `get_customer_details_PrestaShop(id)`: Возвращает детали клиента по его идентификатору.
+4. **Проверка параметров:** Если `api_domain` или `api_key` не были заданы, то генерируется исключение `ValueError` с сообщением об обязательности указания обоих параметров.
 
-4. **Обработка возможных ошибок:**  Класс использует  класс `PrestaShopException` для обработки ошибок, которые могут возникнуть при взаимодействии с API PrestaShop.  В случае возникновения ошибки, будет выброшено соответствующее исключение.
+5. **Вызов конструктора родительского класса:**  `super().__init__(api_domain, api_key, *args, **kwards)` вызывает конструктор родительского класса `PrestaShop`, передавая необходимые параметры.
+
+6. **Методы для работы с клиентами:**  Класс `PrestaCustomer` содержит методы для добавления (`add_customer_PrestaShop`), удаления (`delete_customer_PrestaShop`), обновления (`update_customer_PrestaShop`) и получения данных (`get_customer_details_PrestaShop`) клиентов.
 
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from types import SimpleNamespace
+    from hypotez.src.endpoints.prestashop.customer import PrestaCustomer
     import os
+
+    # Замените на ваши данные
+    API_DOMAIN = os.environ.get("API_DOMAIN")
+    API_KEY = os.environ.get("API_KEY")
+
+    if not API_DOMAIN or not API_KEY:
+        raise ValueError("Необходимо указать API_DOMAIN и API_KEY")
+        
+    credentials = {"api_domain": API_DOMAIN, "api_key": API_KEY}
+    prestacustomer = PrestaCustomer(credentials=credentials)
     
-    # Замените на ваши реальные значения
-    API_DOMAIN = os.environ.get('API_DOMAIN')
-    API_KEY = os.environ.get('API_KEY')
-
-    credentials = SimpleNamespace(api_domain=API_DOMAIN, api_key=API_KEY)
-
     try:
-        prestacustomer = PrestaCustomer(credentials=credentials)
-        # Добавление клиента
-        prestacustomer.add_customer_PrestaShop('John Doe', 'johndoe@example.com')
-        # Получение деталей клиента
-        customer_details = prestacustomer.get_customer_details_PrestaShop(1)
-        print(customer_details)
-    except ValueError as e:
-        print(f"Ошибка валидации: {e}")
-    except PrestaShopException as e:
-        print(f"Ошибка взаимодействия с API: {e}")
+        # Добавление нового клиента
+        result = prestacustomer.add_customer_PrestaShop('John Doe', 'johndoe@example.com')
+        print(f"Результат добавления: {result}")
+
+
+        # Удаление клиента
+        result = prestacustomer.delete_customer_PrestaShop(123) # Замените 123 на ID клиента
+        print(f"Результат удаления: {result}")
+
+
+        # Обновление клиента
+        result = prestacustomer.update_customer_PrestaShop(123, 'Updated Customer Name')
+        print(f"Результат обновления: {result}")
+
+        # Получение данных о клиенте
+        result = prestacustomer.get_customer_details_PrestaShop(123)
+        print(f"Подробности о клиенте: {result}")
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")

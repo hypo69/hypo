@@ -1,49 +1,37 @@
-Как использовать модуль hypotez/src/product
-========================================================================================
+Как использовать модуль hypotez/src/product/__init__.py
+==========================================================================================
 
 Описание
 -------------------------
-Модуль `hypotez/src/product` предоставляет классы и функции для работы с продуктами.  Он содержит классы `Product` и `ProductFields`, а также функцию `translate_presta_fields_dict` для работы с данными продуктов. Также определен словарь `record` для хранения данных продуктов в плоском формате.  Модуль определяет константу `MODE`,  вероятно используемую для управления режимами работы.
+Этот модуль предоставляет доступ к классам и функциям, связанным с продуктами. Он импортирует классы `Product` и `ProductFields` из соответствующих файлов, а также функцию `translate_presta_fields_dict`.  Модуль определяет константу `MODE`,  равную 'dev'.  Он также содержит словарь `record`, представляющий продукт в плоском формате.
 
 Шаги выполнения
 -------------------------
-1. Импортируйте необходимые классы и функции из соответствующих файлов:
-    ```python
-    from .product import Product
-    from .product_fields.product_fields import ProductFields
-    from .product_fields.product_fields_translator import translate_presta_fields_dict
-    ```
+1. Импорт необходимых классов и функций: Модуль импортирует классы `Product` и `ProductFields` из своих соответствующих файлов. Функция `translate_presta_fields_dict` также импортируется.
 
-2. Используйте класс `Product` для работы с объектами продуктов.  Подробности о методах и атрибутах этого класса описаны в файле `product.py`.
+2. Определение константы `MODE`: Модуль устанавливает значение константы `MODE` в 'dev'.
 
-3. Используйте класс `ProductFields` для работы с полями продуктов. Подробности о методах и атрибутах этого класса описаны в файле `product_fields.py`.
+3. Доступ к классам и функциям:  Теперь можно использовать классы `Product` и `ProductFields`, а также функцию `translate_presta_fields_dict` в вашем коде.  С помощью `Product` можно работать с объектами продукта, с помощью `ProductFields` - с полями продукта. `translate_presta_fields_dict` используется для перевода мультиязычных полей.
 
-4. Используйте функцию `translate_presta_fields_dict`, чтобы перевести многоязычные поля `ProductFields`.  Функция ожидает словарь в качестве аргумента, вероятно, содержащий исходные данные полей.  Подробности о возвращаемом значении и параметрах функции находятся в файле `product_fields_translator.py`.
-
-5. Используйте словарь `record` для доступа к данным продуктов в плоском формате.
-
-6.  Используйте константу `MODE` для управления режимом работы (например, `dev`, `prod`).
+4. Использование `record` (если необходимо):  Если в вашем коде используется словарь `record`, он представляет собой плоский формат данных продукта, где нет вложенных структур.
 
 
 Пример использования
 -------------------------
 .. code-block:: python
 
+    from hypotez.src.product import Product, ProductFields, translate_presta_fields_dict
+
     # Пример использования класса Product
-    my_product = Product(product_id=123, name="My Product")
+    my_product = Product(product_id=123, name="Example Product")
     print(my_product.name)
 
     # Пример использования ProductFields
-    fields = ProductFields(my_product.product_id)  # Предполагается, что product_id существует
-    translated_fields = translate_presta_fields_dict(fields.presta_fields)
-    # ... дальнейшие действия с переведёнными полями ...
+    product_fields = ProductFields()
+    translated_fields = translate_presta_fields_dict(product_fields.multilingual_fields, 'en')
 
-    # Пример использования record (если доступно)
-    if 'record' in locals():
-        product_data = record.get(123)
-        if product_data:
-            print(product_data.get('name'))
+    # Пример использования функции translate_presta_fields_dict
+    print(translated_fields)
 
-    # Пример использования константы MODE
-    if MODE == 'dev':
-        print("Запущен в режиме разработки")
+    # (Пример использования record, если он используется в вашем коде)
+    # print(record['product_name'])

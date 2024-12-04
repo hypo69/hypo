@@ -48,17 +48,17 @@ export const openai = new OpenAI(config.get('OPENAI_KEY'))
 import { Configuration, OpenAIApi } from 'openai';
 import config from 'config';
 import { createReadStream } from 'fs';
-import { logger } from './src/logger'; // Import logger
+import { logger } from 'src.logger'; // Import logger
 
 /**
- * @brief OpenAI API interaction module.
- *
- * This module provides asynchronous methods for interacting with the OpenAI API,
- * including chat and transcription functionalities.
+ * @module openai
+ * @description This module provides an interface for interacting with the OpenAI API.
+ * It handles chat completions and transcription tasks.
  */
 class OpenAI {
     /**
-     * @brief Defines roles for chat messages.
+     * @member {object} roles - An object containing roles for chat messages.
+     * @description Contains constants for defining roles in chat messages (e.g., assistant, user, system).
      */
     roles = {
         ASSISTANT: 'assistant',
@@ -67,11 +67,9 @@ class OpenAI {
     };
 
     /**
-     * @brief OpenAI API client initialization.
-     *
-     * Initializes the OpenAI API client with the provided API key.
-     *
-     * @param {string} apiKey - The OpenAI API key.
+     * @param {string} apiKey - The API key for the OpenAI API.
+     * @constructor
+     * @description Creates an OpenAI API client instance.
      */
     constructor(apiKey) {
         const configuration = new Configuration({
@@ -81,104 +79,11 @@ class OpenAI {
     }
 
     /**
-     * @brief Sends a chat message to the OpenAI API.
-     *
-     * Sends a chat message to the OpenAI API and returns the response message.  Handles potential errors.
-     *
-     * @param {object[]} messages - Array of chat messages.
-     * @returns {object} - The OpenAI API response message. Returns undefined in case of error.
-     */
-    async chat(messages) {
-        try {
-            const response = await this.openai.createChatCompletion({
-                model: 'gpt-3.5-turbo',
-                messages,
-            });
-            return response.data.choices[0].message; // Return the message directly
-        } catch (error) {
-            logger.error('Error while sending chat message', error);
-            return undefined; // Indicate an error occurred
-        }
-    }
-
-    /**
-     * @brief Transcribes audio to text using the OpenAI API.
-     *
-     * Transcribes audio file to text using the OpenAI whisper API.  Handles potential errors.
-     *
-     * @param {string} filepath - Path to the audio file.
-     * @returns {string} - The transcribed text. Returns an empty string in case of error.
-     */
-    async transcription(filepath) {
-        try {
-            const response = await this.openai.createTranscription(
-                createReadStream(filepath),
-                'whisper-1'
-            );
-            return response.data.text;
-        } catch (error) {
-            logger.error('Error during transcription', error);
-            return ''; // Return empty string to indicate error
-        }
-    }
-}
-
-export const openai = new OpenAI(config.get('OPENAI_KEY'));
-```
-
-# Changes Made
-
-- Added missing import `import { logger } from './src/logger';`
-- Replaced `console.log` with `logger.error` for error handling.
-- Added detailed RST-style docstrings to the `OpenAI` class, `constructor`, `chat`, and `transcription` methods.
-- Changed return values in `chat` and `transcription` to handle errors appropriately (returning `undefined` or empty string).
-- Improved error handling: now uses `logger.error` to log errors, which is more appropriate and consistent.
-
-# Optimized Code
-
-```javascript
-import { Configuration, OpenAIApi } from 'openai';
-import config from 'config';
-import { createReadStream } from 'fs';
-import { logger } from './src/logger';
-
-/**
- * @brief OpenAI API interaction module.
- *
- * This module provides asynchronous methods for interacting with the OpenAI API,
- * including chat and transcription functionalities.
- */
-class OpenAI {
-    /**
-     * @brief Defines roles for chat messages.
-     */
-    roles = {
-        ASSISTANT: 'assistant',
-        USER: 'user',
-        SYSTEM: 'system',
-    };
-
-    /**
-     * @brief OpenAI API client initialization.
-     *
-     * Initializes the OpenAI API client with the provided API key.
-     *
-     * @param {string} apiKey - The OpenAI API key.
-     */
-    constructor(apiKey) {
-        const configuration = new Configuration({
-            apiKey,
-        });
-        this.openai = new OpenAIApi(configuration);
-    }
-
-    /**
-     * @brief Sends a chat message to the OpenAI API.
-     *
-     * Sends a chat message to the OpenAI API and returns the response message.  Handles potential errors.
-     *
-     * @param {object[]} messages - Array of chat messages.
-     * @returns {object} - The OpenAI API response message. Returns undefined in case of error.
+     * @function chat
+     * @async
+     * @param {object[]} messages - An array of chat messages.
+     * @returns {object} - The message returned by the OpenAI API. Returns undefined on errors.
+     * @description Sends a chat message to the OpenAI API and returns the response.
      */
     async chat(messages) {
         try {
@@ -188,18 +93,17 @@ class OpenAI {
             });
             return response.data.choices[0].message;
         } catch (error) {
-            logger.error('Error while sending chat message', error);
-            return undefined;
+            logger.error('Error during OpenAI chat completion:', error);
+            return undefined; // Indicate failure
         }
     }
 
     /**
-     * @brief Transcribes audio to text using the OpenAI API.
-     *
-     * Transcribes audio file to text using the OpenAI whisper API.  Handles potential errors.
-     *
-     * @param {string} filepath - Path to the audio file.
-     * @returns {string} - The transcribed text. Returns an empty string in case of error.
+     * @function transcription
+     * @async
+     * @param {string} filepath - Path to the file for transcription.
+     * @returns {string} - The transcribed text. Returns undefined on errors.
+     * @description Transcribes audio from a file using the OpenAI Whisper API.
      */
     async transcription(filepath) {
         try {
@@ -209,11 +113,101 @@ class OpenAI {
             );
             return response.data.text;
         } catch (error) {
-            logger.error('Error during transcription', error);
-            return '';
+            logger.error('Error during OpenAI transcription:', error);
+            return undefined; // Indicate failure
         }
     }
 }
 
+// Instantiate the OpenAI client
+export const openai = new OpenAI(config.get('OPENAI_KEY'));
+```
+
+# Changes Made
+
+*   Added import `import { logger } from 'src.logger';` for error logging.
+*   Replaced `console.log` with `logger.error` for error handling.
+*   Added detailed RST-style docstrings for the `OpenAI` class, constructor, `chat`, and `transcription` methods, including return types and descriptions.
+*   Modified the `chat` and `transcription` functions to return `undefined` on errors, indicating failure.  This is a crucial improvement, as `console.log` doesn't stop execution or provide useful error data for debugging or recovery.
+*   Improved error handling.  Now, a `logger.error` call is used to send error details to the logging system.
+
+# Optimized Code
+
+```javascript
+import { Configuration, OpenAIApi } from 'openai';
+import config from 'config';
+import { createReadStream } from 'fs';
+import { logger } from 'src.logger';
+
+/**
+ * @module openai
+ * @description This module provides an interface for interacting with the OpenAI API.
+ * It handles chat completions and transcription tasks.
+ */
+class OpenAI {
+    /**
+     * @member {object} roles - An object containing roles for chat messages.
+     * @description Contains constants for defining roles in chat messages (e.g., assistant, user, system).
+     */
+    roles = {
+        ASSISTANT: 'assistant',
+        USER: 'user',
+        SYSTEM: 'system',
+    };
+
+    /**
+     * @param {string} apiKey - The API key for the OpenAI API.
+     * @constructor
+     * @description Creates an OpenAI API client instance.
+     */
+    constructor(apiKey) {
+        const configuration = new Configuration({
+            apiKey,
+        });
+        this.openai = new OpenAIApi(configuration);
+    }
+
+    /**
+     * @function chat
+     * @async
+     * @param {object[]} messages - An array of chat messages.
+     * @returns {object} - The message returned by the OpenAI API. Returns undefined on errors.
+     * @description Sends a chat message to the OpenAI API and returns the response.
+     */
+    async chat(messages) {
+        try {
+            const response = await this.openai.createChatCompletion({
+                model: 'gpt-3.5-turbo',
+                messages,
+            });
+            return response.data.choices[0].message;
+        } catch (error) {
+            logger.error('Error during OpenAI chat completion:', error);
+            return undefined; // Indicate failure
+        }
+    }
+
+    /**
+     * @function transcription
+     * @async
+     * @param {string} filepath - Path to the file for transcription.
+     * @returns {string} - The transcribed text. Returns undefined on errors.
+     * @description Transcribes audio from a file using the OpenAI Whisper API.
+     */
+    async transcription(filepath) {
+        try {
+            const response = await this.openai.createTranscription(
+                createReadStream(filepath),
+                'whisper-1'
+            );
+            return response.data.text;
+        } catch (error) {
+            logger.error('Error during OpenAI transcription:', error);
+            return undefined; // Indicate failure
+        }
+    }
+}
+
+// Instantiate the OpenAI client
 export const openai = new OpenAI(config.get('OPENAI_KEY'));
 ```

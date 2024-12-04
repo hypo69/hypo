@@ -1,47 +1,42 @@
-Как использовать этот блок кода
-=========================================================================================
+Как использовать класс PrestaSupplier
+========================================================================================
 
 Описание
 -------------------------
-Этот код определяет класс `PrestaSupplier`, наследующийся от класса `PrestaShop`.  Этот класс предназначен для работы с поставщиками в системе PrestaShop.  Он инициализируется данными для доступа к API, а также содержит методы для взаимодействия с поставщиками.  Важная часть кода - проверка обязательности параметров `api_domain` и `api_key`. Если они не предоставлены, то генерируется исключение `ValueError`.
+Класс `PrestaSupplier` предназначен для работы с поставщиками в системе PrestaShop. Он наследуется от класса `PrestaShop` и предоставляет методы для взаимодействия с API.  Класс инициализируется данными для доступа к API, такими как домен и ключ.  Если данные передаются в виде словаря или объекта `SimpleNamespace`, то значения `api_domain` и `api_key` из него будут использованы в качестве параметров инициализации. Если эти параметры не предоставлены явно, то возникает ошибка.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых модулей:** Код импортирует необходимые модули, такие как `SimpleNamespace`, `Optional`, `header`, `gs`, `logger`, `j_loads`, `PrestaShop`. Это необходимо для использования функций и классов из других частей проекта.
+1. Импортировать необходимые модули: `SimpleNamespace`, `Optional`, `header`, `gs`, `logger`, `j_loads`, `PrestaShop` из соответствующих модулей.
 
-2. **Определение класса `PrestaSupplier`:** Определяется класс `PrestaSupplier`, наследующийся от класса `PrestaShop`. Это означает, что `PrestaSupplier` получает все возможности и атрибуты класса `PrestaShop`.
+2. Создать экземпляр класса `PrestaSupplier`.  При создании экземпляра можно передать параметры инициализации:
+    - `credentials`: Словарь или объект `SimpleNamespace` содержащий `api_domain` и `api_key`.
+    - `api_domain`: Домен API PrestaShop.
+    - `api_key`: Ключ API PrestaShop.
+    Если `credentials` предоставлен, то значения `api_domain` и `api_key` из него будут использованы.
 
-3. **Инициализация класса:** Метод `__init__` инициализирует экземпляр класса. Он принимает необязательные аргументы `credentials`, `api_domain`, `api_key` и `*args, **kwards`.  Если `credentials` предоставлен, то значения `api_domain` и `api_key` берутся из него, в противном случае используются переданные аргументы.
+3. Проверить корректность параметров.  Если `api_domain` или `api_key` не заданы, вызовется исключение `ValueError` с сообщением "Необходимы оба параметра: api_domain и api_key".
 
-4. **Проверка параметров:** Код проверяет, что `api_domain` и `api_key` установлены. Если один из них отсутствует, то генерируется исключение `ValueError`, уведомляющее о необходимости предоставления обоих параметров.
-
-5. **Вызов конструктора родительского класса:**  В случае успешной проверки, `super().__init__(api_domain, api_key, *args, **kwards)` вызывает конструктор родительского класса `PrestaShop`, передавая ему полученные данные для авторизации в системе.
+4. Инициализировать родительский класс `PrestaShop`, передавая полученные `api_domain` и `api_key`.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
+    from types import SimpleNamespace
     from hypotez.src.endpoints.prestashop.supplier import PrestaSupplier
-    import os
-
-    # Пример использования с creds как dict:
-    credentials = {
-        'api_domain': 'your_api_domain',
-        'api_key': 'your_api_key'
-    }
-
-    try:
-        supplier = PrestaSupplier(credentials=credentials)
-        # Теперь можно использовать методы класса PrestaSupplier,
-        # например, методы, унаследованные от PrestaShop.
-        # ...
-    except ValueError as e:
-        print(f"Ошибка: {e}")
-
-    # Пример использования с creds как SimpleNamespace (менее распространён):
-    credentials_ns = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
-    try:
-        supplier_ns = PrestaSupplier(credentials=credentials_ns)
-        # ...
-    except ValueError as e:
-        print(f"Ошибка: {e}")
+    
+    # Пример 1: передача параметров через credentials
+    credentials = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
+    supplier = PrestaSupplier(credentials=credentials)
+    
+    # Пример 2: передача параметров напрямую
+    supplier2 = PrestaSupplier(api_domain='your_api_domain', api_key='your_api_key')
+    
+    # Обратите внимание, что далее нужно использовать методы, определенные в родительском классе PrestaShop.
+    # Например, чтобы получить данные, нужно использовать методы этого класса
+    # try:
+    #     response = supplier.get_products()
+    #     print(response.json())  # Обработка ответа
+    # except Exception as e:
+    #     print(f"Ошибка: {e}")

@@ -3,24 +3,20 @@
 
 Описание
 -------------------------
-Этот файл (`hypotez/src/webdriver/crawlee_python/__init__.py`) представляет собой инициализационный модуль для пакета `crawlee_python`. Он импортирует класс `CrawleePython` из подмодуля `crawlee_python` и определяет константу `MODE`, которая, вероятно, задаёт режим работы.
+Файл `hypotez/src/webdriver/crawlee_python/__init__.py` определяет константу `MODE` со значением 'dev' и импортирует класс `CrawleePython` из модуля `crawlee_python`.
 
 Шаги выполнения
 -------------------------
-1. Определяется константа `MODE` со значением 'dev'.
-2. Импортируется класс `CrawleePython` из модуля `crawlee_python`.
+1. Устанавливается значение константы `MODE` равным строке 'dev'.
+2. Импортируется класс `CrawleePython` из модуля `crawlee_python`.  Это предполагает, что в подмодуле `crawlee_python` находится класс с таким именем, который, вероятно, содержит реализацию логики сбора данных (crawling).
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    # Предполагается, что модуль crawlee_python уже импортирован.
     from hypotez.src.webdriver.crawlee_python import CrawleePython
-    
-    # Проверка константы MODE.
-    print(CrawleePython.MODE)  # Выведет 'dev'
 
-    # Возможность использования класса CrawleePython (если есть методы)
-    # Например:
-    # my_crawlee = CrawleePython()
-    # my_crawlee.some_method()
+    # Пример использования класса CrawleePython (если он доступен)
+    # Пример предполагает, что в классе CrawleePython есть метод run()
+    my_crawlee = CrawleePython()
+    my_crawlee.run()

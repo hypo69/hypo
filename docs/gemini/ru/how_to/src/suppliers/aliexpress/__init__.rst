@@ -3,34 +3,28 @@
 
 Описание
 -------------------------
-Этот код импортирует модули, необходимые для работы с поставщиком AliExpress.  Он определяет константу `MODE`, вероятно, для выбора режима работы (например, `dev`, `prod`).  Импортируются классы для работы с API AliExpress,  запросами, кампаниями и генерацией HTML-отчетов.
+Этот код импортирует классы и модули из пакета `aliexpress`, предназначенные для работы с AliExpress. Он определяет константу `MODE`, которая вероятно используется для выбора режима работы (например, 'dev' для разработки, 'prod' для производства).  Импортируются классы для работы с API, запросами, кампаниями и генерацией HTML.
 
 Шаги выполнения
 -------------------------
-1. Определяется константа `MODE`, указывающая на режим работы (например, `dev`).
-2. Импортируются классы:
-    - `Aliexpress`: Вероятно, класс для взаимодействия с основными данными AliExpress.
-    - `AliApi`: Класс для взаимодействия с API AliExpress.
-    - `AliRequests`: Класс для обработки запросов к API.
-    - `AliCampaignEditor`: Класс для редактирования кампаний AliExpress.
-    - `ProductHTMLGenerator`, `CategoryHTMLGenerator`, `CampaignHTMLGenerator`: Классы для генерации HTML-отчетов о продуктах, категориях и кампаниях соответственно.
-3. Импорты организованы по логическим группам, облегчая поиск и использование необходимых компонентов.
+1. Определяется константа `MODE` со значением 'dev'.
+2. Импортируются классы `Aliexpress`, `AliApi`, `AliRequests`, `AliCampaignEditor` из соответствующих подмодулей.
+3. Импортируются классы `ProductHTMLGenerator`, `CategoryHTMLGenerator` и `CampaignHTMLGenerator` для генерации HTML-представлений продуктов, категорий и кампаний соответственно.
+
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.aliexpress import Aliexpress, AliApi, AliRequests, AliCampaignEditor
-    from hypotez.src.suppliers.aliexpress.campaign.html_generators import ProductHTMLGenerator
+    from hypotez.src.suppliers.aliexpress import Aliexpress, AliApi, AliCampaignEditor
 
-    # Пример использования класса AliApi
-    api_client = AliApi()
-    response = api_client.get_products()
-    
-    # Пример использования класса ProductHTMLGenerator
-    product_html_generator = ProductHTMLGenerator()
-    html_report = product_html_generator.generate_report(response)
-    
-    # Пример использования класса Aliexpress (предполагая, что он взаимодействует с данными)
+    # Пример использования (неполный):
+    # Инициализация объекта Aliexpress
     aliexpress_instance = Aliexpress()
-    data = aliexpress_instance.get_campaign_data()
+
+    # Получение данных с API
+    api_instance = AliApi()
+
+    # Изменение кампании
+    campaign_editor = AliCampaignEditor()
+    campaign_editor.update_campaign(campaign_id=123, new_title="Новое название")

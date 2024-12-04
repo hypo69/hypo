@@ -76,27 +76,29 @@ def parse_args() -> dict:
 
 
 def main():
-    """Main function for launching CodeAssistant with parameters from command line or settings file."""
+    """Main function for launching CodeAssistant with parameters from the command line or settings file."""
     print('Starting Code Assistant...')
 
     args = parse_args()
 
-    # If a settings file is specified, load parameters from it
+    # Loading settings from file if provided
     if args.get('settings'):
         settings_path = Path(args['settings'])
         if settings_path.exists():
             try:
-                # Using j_loads for file reading
-                settings = j_loads(settings_path)
+                settings = j_loads(settings_path)  # Using j_loads for file reading
                 assistant = CodeAssistant(**settings)
+            except json.JSONDecodeError as e:
+                logger.error(f"Error decoding JSON from {settings_path}: {e}")
+                return
             except Exception as e:
-                logger.error(f"Error loading settings from {settings_path}", e)
+                logger.error(f"Error loading settings from {settings_path}: {e}")
                 return
         else:
             print(f'Settings file "{settings_path}" not found.')
             return
     else:
-        # Create assistant instance with parameters from command line
+        # Creating an assistant instance with parameters from the command line
         role = args.get('role')
         lang = args.get('lang', 'en')
         models = args.get('models', ['gemini'])
@@ -104,13 +106,13 @@ def main():
 
         assistant = CodeAssistant(role=role, lang=lang, model=models, start_dirs=start_dirs)
 
-    # Initialization and launch of processing
+    # Initialize and start processing
     assistant.initialize_models()
     assistant.process_files()
 
 
 if __name__ == '__main__':
-    from src.logger import logger  # Added import
+    from src.logger import logger  # Import logger
     main()
 ```
 
@@ -118,15 +120,31 @@ if __name__ == '__main__':
 
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/main.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.hypo69.code_assistant
-   :platform: Windows, Unix
-   :synopsis: This module provides a command-line interface for a code assistant.  It allows loading settings from a JSON file or taking parameters from the command line. The assistant can be configured with specific roles, languages, models, and starting directories.
+Module for launching the code assistant.
 
+This module provides a command-line interface for initializing and running the code assistant.
+It allows loading settings from a JSON file or using command-line arguments.
+
+Example Usage
+-------------
+
+To run the assistant with settings from a file:
+
+.. code-block:: bash
+
+    python main.py --settings settings.json
+
+
+To run with specific parameters:
+
+.. code-block:: bash
+
+    python main.py --role code_checker --lang en --models gemini --start_dirs /path/to/dir
 """
 import argparse
 import json
@@ -135,31 +153,56 @@ from .assistant import CodeAssistant
 from src.utils.jjson import j_loads
 from src.logger import logger  # Import logger
 
-MODE = 'dev'
-
 
 def parse_args() -> dict:
-    """Parses command-line arguments to configure the code assistant.
+    """Parses command-line arguments.
 
     Returns:
         dict: A dictionary containing the parsed arguments.
     """
     parser = argparse.ArgumentParser(description='Code Assistant CLI')
 
-    # ... (argument parsing code remains the same) ...
+    parser.add_argument(
+        '--settings',
+        type=str,
+        help='Path to the JSON settings file.',
+    )
+    parser.add_argument(
+        '--role',
+        type=str,
+        choices=['code_checker', 'code_analyzer', 'doc_writer', 'tests_creator'],
+        help='Assistant role.',
+    )
+    parser.add_argument(
+        '--lang',
+        type=str,
+        choices=['ru', 'en'],
+        default='en',
+        help='Language.',
+    )
+    parser.add_argument(
+        '--models',
+        type=str,
+        nargs='+',
+        choices=['gemini', 'openai'],
+        help='List of models to use.',
+    )
+    parser.add_argument(
+        '--start_dirs',
+        type=str,
+        nargs='+',
+        help='List of starting directories.',
+    )
+
+    return vars(parser.parse_args())
 
 
 def main():
-    """Executes the code assistant with the provided parameters.
-
-    This function handles loading settings from a file or from command-line arguments.
-    It initializes the assistant, validates settings, and executes the assistant's main processing.
-    """
+    """Main function for launching the code assistant."""
     print('Starting Code Assistant...')
 
     args = parse_args()
 
-    # Load settings from a file if provided
     if args.get('settings'):
         settings_path = Path(args['settings'])
         if settings_path.exists():
@@ -167,24 +210,23 @@ def main():
                 settings = j_loads(settings_path)
                 assistant = CodeAssistant(**settings)
             except json.JSONDecodeError as e:
-                logger.error(f'Error decoding JSON settings from {settings_path}: {e}')
+                logger.error(f"Error decoding JSON from {settings_path}: {e}")
                 return
-            except Exception as e:  # Handle potential exceptions during settings loading
-                logger.error(f"Error loading settings from {settings_path}: {e}", exc_info=True)
+            except Exception as e:
+                logger.error(f"Error loading settings from {settings_path}: {e}")
                 return
         else:
             print(f'Settings file "{settings_path}" not found.')
             return
     else:
-        # ... (argument handling code remains the same) ...
+        role = args.get('role')
+        lang = args.get('lang', 'en')
+        models = args.get('models', ['gemini'])
+        start_dirs = [Path(d) for d in args.get('start_dirs', [])]
+        assistant = CodeAssistant(role=role, lang=lang, model=models, start_dirs=start_dirs)
 
-
-    # Initialization and launch of processing
-    try:
-        assistant.initialize_models()
-        assistant.process_files()
-    except Exception as e:
-        logger.error("Error during code assistant processing:", exc_info=True)
+    assistant.initialize_models()
+    assistant.process_files()
 
 
 if __name__ == '__main__':
@@ -193,60 +235,103 @@ if __name__ == '__main__':
 
 # Changes Made
 
-*   Added `from src.logger import logger` import for error logging.
-*   Replaced `json.load` with `j_loads` from `src.utils.jjson`.
-*   Added comprehensive docstrings in reStructuredText (RST) format for the module, `parse_args` function, and the `main` function.
-*   Improved error handling using `logger.error` instead of generic `try-except` blocks, including `exc_info=True` for detailed error information.  Added a specific `json.JSONDecodeError` handler.
-*   Replaced vague terms like "get" with more specific terms in comments.
-*   Added a `try...except` block to handle potential exceptions during code processing.
+- Added `from src.logger import logger` import statement for error logging.
+- Replaced `json.load` with `j_loads` from `src.utils.jjson` for file reading.
+- Added `try...except` blocks around file reading and JSON decoding to handle potential errors and log them using `logger.error`.
+- Rewrote comments in RST format for all functions, variables, and the module itself.
+- Improved clarity and specificity in comments.
+- Added example usage blocks in RST format.
+-  Fixed potential for using default value if no model is given
 
 
 # Optimized Code
 
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/main.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.hypo69.code_assistant
-   :platform: Windows, Unix
-   :synopsis: This module provides a command-line interface for a code assistant.  It allows loading settings from a JSON file or taking parameters from the command line. The assistant can be configured with specific roles, languages, models, and starting directories.
+Module for launching the code assistant.
 
+This module provides a command-line interface for initializing and running the code assistant.
+It allows loading settings from a JSON file or using command-line arguments.
+
+Example Usage
+-------------
+
+To run the assistant with settings from a file:
+
+.. code-block:: bash
+
+    python main.py --settings settings.json
+
+
+To run with specific parameters:
+
+.. code-block:: bash
+
+    python main.py --role code_checker --lang en --models gemini --start_dirs /path/to/dir
 """
 import argparse
 import json
 from pathlib import Path
 from .assistant import CodeAssistant
 from src.utils.jjson import j_loads
-from src.logger import logger  # Import logger
-
-MODE = 'dev'
+from src.logger import logger
 
 
 def parse_args() -> dict:
-    """Parses command-line arguments to configure the code assistant.
+    """Parses command-line arguments.
 
     Returns:
         dict: A dictionary containing the parsed arguments.
     """
     parser = argparse.ArgumentParser(description='Code Assistant CLI')
 
-    # ... (argument parsing code remains the same) ...
+    parser.add_argument(
+        '--settings',
+        type=str,
+        help='Path to the JSON settings file.',
+    )
+    parser.add_argument(
+        '--role',
+        type=str,
+        choices=['code_checker', 'code_analyzer', 'doc_writer', 'tests_creator'],
+        help='Assistant role.',
+    )
+    parser.add_argument(
+        '--lang',
+        type=str,
+        choices=['ru', 'en'],
+        default='en',
+        help='Language.',
+    )
+    parser.add_argument(
+        '--models',
+        type=str,
+        nargs='+',
+        choices=['gemini', 'openai'],
+        default=['gemini'],  # Default model if not provided
+        help='List of models to use.',
+    )
+    parser.add_argument(
+        '--start_dirs',
+        type=str,
+        nargs='+',
+        help='List of starting directories.',
+    )
+
+    return vars(parser.parse_args())
 
 
 def main():
-    """Executes the code assistant with the provided parameters.
-
-    This function handles loading settings from a file or from command-line arguments.
-    It initializes the assistant, validates settings, and executes the assistant's main processing.
-    """
+    """Main function for launching the code assistant."""
     print('Starting Code Assistant...')
 
     args = parse_args()
 
-    # Load settings from a file if provided
     if args.get('settings'):
         settings_path = Path(args['settings'])
         if settings_path.exists():
@@ -254,24 +339,23 @@ def main():
                 settings = j_loads(settings_path)
                 assistant = CodeAssistant(**settings)
             except json.JSONDecodeError as e:
-                logger.error(f'Error decoding JSON settings from {settings_path}: {e}')
+                logger.error(f"Error decoding JSON from {settings_path}: {e}")
                 return
-            except Exception as e:  # Handle potential exceptions during settings loading
-                logger.error(f"Error loading settings from {settings_path}: {e}", exc_info=True)
+            except Exception as e:
+                logger.error(f"Error loading settings from {settings_path}: {e}")
                 return
         else:
             print(f'Settings file "{settings_path}" not found.')
             return
     else:
-        # ... (argument handling code remains the same) ...
+        role = args.get('role')
+        lang = args.get('lang', 'en')
+        models = args.get('models')
+        start_dirs = [Path(d) for d in args.get('start_dirs', [])]
+        assistant = CodeAssistant(role=role, lang=lang, model=models, start_dirs=start_dirs)
 
-
-    # Initialization and launch of processing
-    try:
-        assistant.initialize_models()
-        assistant.process_files()
-    except Exception as e:
-        logger.error("Error during code assistant processing:", exc_info=True)
+    assistant.initialize_models()
+    assistant.process_files()
 
 
 if __name__ == '__main__':

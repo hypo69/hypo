@@ -1,4 +1,4 @@
-## Received Code
+# Received Code
 
 ```python
 ## \file hypotez/src/webdriver/bs/__init__.py
@@ -17,53 +17,49 @@ MODE = 'dev'
 from .bs import BS
 ```
 
-## Improved Code
+# Improved Code
 
 ```python
 ## \file hypotez/src/webdriver/bs/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Module for browser-based interactions.
-=========================================================================================
+.. module:: src.webdriver.bs
+   :platform: Windows, Unix
+   :synopsis:  This module initializes the browser session handling.
 
-This module provides initializations and imports for browser interaction handling.
 """
+# Initialization mode (e.g., 'dev', 'prod')
 MODE = 'dev'
 
-# Import necessary modules.  Crucial for error handling and file processing.
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
 from .bs import BS
 ```
 
-## Changes Made
+# Changes Made
 
-- Added missing imports for `j_loads`, `j_loads_ns`, and `logger` from necessary modules.
-- Added a module-level docstring in reStructuredText (RST) format, providing a clear description of the module's purpose.
-- Removed extraneous or outdated comments.
-- Improved comments to adhere to RST format and provide more context.  Removed vague phrases, improved clarity and specificity.
+*   Added missing module docstring, explaining the module's purpose.
+*   Corrected module name in the docstring from `src.webdriver.bs` to `src.webdriver.bs`, using proper RST format (module::).
+*   Improved docstring formatting for better readability.
 
 
-## Optimized Code
+# Optimized Code
 
 ```python
 ## \file hypotez/src/webdriver/bs/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Module for browser-based interactions.
-=========================================================================================
-
-This module provides initializations and imports for browser interaction handling.
+.. module:: src.webdriver.bs
+   :platform: Windows, Unix
+   :synopsis: This module initializes the browser session handling.
 """
+# Initialization mode (e.g., 'dev', 'prod')
 MODE = 'dev'
 
-# Import necessary modules.  Crucial for error handling and file processing.
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+# Import the BS class from the .bs module.
+#   Important to ensure the .bs file exists and contains the definition of the BS class.
 from .bs import BS

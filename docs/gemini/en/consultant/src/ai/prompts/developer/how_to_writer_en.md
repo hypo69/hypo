@@ -1,139 +1,127 @@
-# Received Code
+## Received Code
 
 ```python
-# This is a placeholder for the original code.  The actual code will be placed here.
+# This is a placeholder for the received code.
+# It needs to be filled in with the actual code.
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
-# This is a placeholder for the improved code.  The actual improved code will be placed here.  The following is a template to demonstrate the expected structure.
-
 """
-Module for How-To Documentation
-=========================================================================================
+Module for generating 'how to' documentation for code blocks.
+================================================================
 
-This module contains functions for generating how-to documentation for code blocks.
+This module contains functions to create detailed documentation
+in reStructuredText (RST) format explaining how to use code blocks.
 
-Example Usage
+Example Usage:
 --------------------
 
 .. code-block:: python
 
-    # Placeholder for example usage.
-    generate_documentation(code_block)
+    doc = generate_how_to_doc(code_block)
+    print(doc)
 """
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
+import re
 
-
-def generate_documentation(code_block):
+def generate_how_to_doc(code_block: str) -> str:
     """
-    Generates how-to documentation for a given code block.
+    Generates 'how to' documentation for a given code block.
 
     :param code_block: The code block to document.
-    :type code_block: str
-    :raises TypeError: If input is not a string.
-    :return: The generated RST documentation.
-    :rtype: str
+    :return: The documentation string in reStructuredText format.
     """
-
-    if not isinstance(code_block, str):
-        raise TypeError("Input must be a string.")
-    
-    documentation = """
-How to Use This Code Block
+    #TODO: Add error handling using logger.error
+    try:
+        doc_string = """
+How to use this code block
 =========================================================================================
 
 Description
 -------------------------
-This code block [brief description of the code's functionality].
+#TODO: Describe the code block action and what task it solves.
 
-Execution Steps
+Execution steps
 -------------------------
-1. [Step 1: Description of the first action]
-2. [Step 2: Description of the second action]
-# ... (More steps as needed)
+#TODO: Detail the execution steps and what happens at each step
 
-Usage Example
+Usage example
 -------------------------
 .. code-block:: python
-
-    # Example code usage (replace with actual code).
-    # ...
+    #TODO: Insert a usage example of the code block
 """
-    return documentation
-
-
-
+        doc_string = doc_string.replace("#TODO", "TODO") #Temporary replace
+        return doc_string
+    except Exception as ex:
+        logger.error("Error generating documentation", ex)
+        return "Error generating documentation"
 ```
 
-# Changes Made
+## Changes Made
 
--   Placeholder code added for the original and improved code sections.
--   A template for `generate_documentation` function and its docstring was provided to demonstrate the expected RST format.
--   Error handling was added to ensure the input is a string.
--   Added a module docstring that provides a broader description of the module's purpose.
+- Added a docstring to the `generate_how_to_doc` function in RST format, describing its purpose and parameters.
+- Added a placeholder for the received code.
+- Replaced placeholders like #TODO with comments for further development.
+- Imported `logger` from `src.logger` for error handling.
+- Added basic error handling using `logger.error`.
 
 
-# Optimized Code
+## Optimized Code
 
 ```python
-# This is a placeholder for the full improved code.  The actual improved code with all changes will be placed here.  This is a template.
-
-
 """
-Module for How-To Documentation
-=========================================================================================
+Module for generating 'how to' documentation for code blocks.
+================================================================
 
-This module contains functions for generating how-to documentation for code blocks.
+This module contains functions to create detailed documentation
+in reStructuredText (RST) format explaining how to use code blocks.
 
-Example Usage
+Example Usage:
 --------------------
 
 .. code-block:: python
 
-    # Placeholder for example usage.
-    documentation = generate_documentation(code_block)
-    print(documentation)
+    doc = generate_how_to_doc(code_block)
+    print(doc)
 """
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
+import re
 
-
-def generate_documentation(code_block):
+def generate_how_to_doc(code_block: str) -> str:
     """
-    Generates how-to documentation for a given code block.
+    Generates 'how to' documentation for a given code block.
 
     :param code_block: The code block to document.
-    :type code_block: str
-    :raises TypeError: If input is not a string.
-    :return: The generated RST documentation.
-    :rtype: str
+    :return: The documentation string in reStructuredText format.
     """
-
-    if not isinstance(code_block, str):
-        raise TypeError("Input must be a string.")
-    
-    documentation = """
-How to Use This Code Block
+    try:
+        doc_string = """
+How to use this code block
 =========================================================================================
 
 Description
 -------------------------
-This code block [brief description of the code's functionality].  # Description of the code block
+This code block performs a placeholder action.  #TODO:  Describe the specific action.
 
-Execution Steps
+Execution steps
 -------------------------
-1. [Step 1: Description of the first action]  #Detailed description of the first step.
-2. [Step 2: Description of the second action]  #Detailed description of the second step.
-# ... (More steps as needed)
+1. #TODO: Describe the first step (e.g., "Retrieves data from the database").
+2. #TODO: Describe the second step (e.g., "Validates the data").
+3. #TODO: Describe subsequent steps (if any).
 
-Usage Example
+Usage example
 -------------------------
 .. code-block:: python
-
-    # Example code usage (replace with actual code).
-    # ...
+    #TODO: Provide a complete usage example.  For instance:
+    # result = generate_how_to_doc("your code here")
+    # print(result)
 """
-    return documentation
+        return doc_string
+    except Exception as ex:
+        logger.error("Error generating documentation", ex)
+        return "Error generating documentation"
 ```
-```
-
-**Explanation:**  The provided improved code and changes are placeholders.  To provide a complete response, the actual code from `hypotez/src/ai/prompts/developer/how_to_writer_en.md` needs to be inserted into the placeholder spots in the "Received Code" section.  The improved code will then be generated based on that received code, incorporating RST formatting, error handling, and docstrings.  The "Changes Made" and "Optimized Code" sections will accurately reflect the alterations made. Remember to replace placeholders with the actual code.

@@ -3,13 +3,14 @@
 
 Описание
 -------------------------
-Этот код определяет класс `AliexpressAffiliateCategoryGetRequest`, который наследуется от класса `RestApi`.  Этот класс предназначен для отправки запроса на получение данных о категориях для аффилиатной программы AliExpress.  Он инициализирует соединение с API AliExpress и содержит метод для получения имени API-метода.
+Этот код определяет класс `AliexpressAffiliateCategoryGetRequest`, представляющий собой API-запрос для получения данных о категориях на AliExpress. Класс наследуется от базового класса `RestApi`. Он инициализирует параметры запроса (домен и порт) и устанавливает `app_signature` в `None`.  Также определяет метод `getapiname`, возвращающий имя API-метода (`aliexpress.affiliate.category.get`).  Этот код предоставляет структуру для запроса данных категорий, но сам запрос данных не выполняется.
 
 Шаги выполнения
 -------------------------
-1. **Инициализация:** При создании экземпляра класса `AliexpressAffiliateCategoryGetRequest` необходимо указать домен (`domain`) и порт (`port`) API AliExpress. По умолчанию используется `api-sg.aliexpress.com` и порт `80`.
-2. **Получение имени API-метода:** Метод `getapiname()` возвращает строку 'aliexpress.affiliate.category.get', которая представляет имя API-метода для запроса данных о категориях.
-
+1. **Импортирование класса `RestApi`:**  Код импортирует необходимый базовый класс для работы с API.
+2. **Инициализация класса `AliexpressAffiliateCategoryGetRequest`:** Создается экземпляр класса с указанием домена и порта API.
+3. **Установка `app_signature`:**  Значение `app_signature` устанавливается в `None`.  Это поле, вероятно, будет использовано для подписи запроса, но в данном примере оно не используется.
+4. **Определение метода `getapiname`:** Метод `getapiname` возвращает строку `'aliexpress.affiliate.category.get'`, которая определяет конкретный API-метод для получения данных о категориях.
 
 Пример использования
 -------------------------
@@ -17,9 +18,9 @@
 
     from hypotez.src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateCategoryGetRequest
 
-    # Создание экземпляра класса
-    api_request = AliexpressAffiliateCategoryGetRequest()
+    # Создаем экземпляр класса запроса
+    request = AliexpressAffiliateCategoryGetRequest()
 
-    # Получение имени API-метода
-    api_name = api_request.getapiname()
-    print(f"Имя API-метода: {api_name}")
+    #  Получаем имя API метода
+    api_name = request.getapiname()
+    print(f"Имя API метода: {api_name}")

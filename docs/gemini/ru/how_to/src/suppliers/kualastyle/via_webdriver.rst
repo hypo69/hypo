@@ -3,32 +3,29 @@
 
 Описание
 -------------------------
-Функция `get_list_products_in_category` извлекает список ссылок на продукты, находящиеся на странице категории. Она использует драйвер веб-драйвера для взаимодействия с сайтом и находит ссылки на продукты, используя локаторы.
+Функция `get_list_products_in_category` предназначена для получения списка ссылок на продукты из страницы категории.  Она использует веб-драйвер для взаимодействия с сайтом поставщика. Функция принимает объект `s`, представляющий поставщика, и возвращает список URL-адресов продуктов, или `None`, если список получить не удалось.
 
 Шаги выполнения
 -------------------------
-1. Функция принимает в качестве аргумента объект `s`, содержащий информацию о поставщике, включая веб-драйвер (`s.driver`) и локаторы (`s.locators`).
-2. Получает локаторы элементов на странице категории (`l = s.locators.get('category')`).
-3. Прокручивает страницу вниз (`d.scroll(scroll_count = 10, direction = "forward")`). Это необходимо, если ссылки на продукты находятся ниже видимой области страницы.
-4. Выполняет поиск ссылок на продукты, используя `d.execute_locator` с локаторами (`l['product_links']`).
-5. Возвращает список ссылок на продукты (`list_products_in_category`).
+1. Функция принимает объект `s`, содержащий веб-драйвер (`s.driver`) и локеры (`s.locators`).
+2. Происходит прокрутка страницы вниз на заданное количество пунктов (`d.scroll(scroll_count = 10, direction = "forward")`). Это необходимо для того, чтобы все ссылки на продукты были загружены в область видимости.
+3. Функция использует `d.execute_locator` для поиска элементов на странице, соответствующих локаторам, заданным в словаре `l['product_links']`.
+4. Возвращает список найденных ссылок на продукты (`list_products_in_category`).
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    # Предполагается, что у вас есть объект "supplier_object" с необходимыми атрибутами.
-    from src.suppliers.kualastyle import via_webdriver # or import the specific file
-    import src.suppliers.kualastyle as supplier
-    
-    supplier_object = supplier.Supplier(...)  # Замените ... на инициализацию вашего объекта
-    
-    try:
-        product_links = via_webdriver.get_list_products_in_category(supplier_object)
-        if product_links:
-            for link in product_links:
-                print(link)
-        else:
-            print("Список ссылок на продукты пуст или не найден.")
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
+    # Предполагая, что у вас есть объект 'supplier_object' с веб-драйвером и локаторами
+    from src.suppliers.kualastyle import via_webdriver # Импортируем нужный модуль
+    from your_module import Supplier  # Пример импорта вашего класса Supplier
+
+    supplier_object = Supplier(...) # Инициализируйте объект Supplier
+
+    list_of_products = via_webdriver.get_list_products_in_category(supplier_object)
+
+    if list_of_products:
+        for product_url in list_of_products:
+            print(product_url)
+    else:
+        print("Список продуктов не получен.")

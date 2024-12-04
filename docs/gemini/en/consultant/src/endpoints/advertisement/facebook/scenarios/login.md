@@ -2,11 +2,7 @@
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.endpoints.advertisement.facebook.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Facebook login scenario
@@ -76,9 +72,9 @@ def login(d: Driver) -> bool:
 """
 Module for Facebook login scenarios.
 
-This module provides functions for logging into Facebook using a given webdriver instance.
+This module provides functions for logging into Facebook using a provided webdriver instance.
 """
-import json
+import sys
 from pathlib import Path
 from typing import Dict
 from src import gs
@@ -86,75 +82,79 @@ from src.webdriver import Driver
 from src.utils import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
+# Ensure correct file paths are used
+# path_to_locators = gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'
 
 def login(driver: Driver) -> bool:
-    """Logs into Facebook using the provided webdriver instance.
+    """Logs into Facebook using the provided webdriver.
 
-    Loads Facebook login locators from a JSON file.
-    Sends username and password to the corresponding fields and clicks the login button.
+    Validates login credentials and executes the login process.
 
-    :param driver: The webdriver instance for interacting with web elements.
+    :param driver: Webdriver instance for interacting with webpage elements.
     :type driver: Driver
-    :raises Exception: If an error occurs during login.
     :return: True if login is successful, False otherwise.
     :rtype: bool
     """
+    # Load login credentials.  Ensure gs.facebook_credentials is defined and populated.
     try:
-        # Load locators from JSON file.  Crucial for dynamic element location.
-        locators_path = Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json')
-        locators = j_loads_ns(locators_path)
+        credentials = gs.facebook_credentials[0]
+    except IndexError:
+        logger.error("Facebook credentials not found or empty.")
+        return False
+
+    # Load locators for Facebook login page elements.
+    try:
+        locators = j_loads_ns(Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'))
         if not locators:
-            logger.error(f"Error loading login locators from {locators_path}")
-            return False  # Indicate failure to load locators
+            logger.error("Failed to load Facebook login locators.")
+            return False
+
     except FileNotFoundError as e:
-        logger.error(f"Login locators file not found: {locators_path}", e)
-        return False
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON format in login locators file: {locators_path}", e)
+        logger.error(f"File not found: {e}")
         return False
 
-    credentials = gs.facebook_credentials[0]
-
-    try:
-        # Send username to the email field.
-        driver.send_key_to_webelement(locators.email, credentials.username)
     except Exception as e:
-        logger.error("Error sending username:", e)
+        logger.error(f"Error loading locators: {e}")
         return False
-
-    driver.wait(1.3)  # Wait for the input field to be updated
-
+    
+    # Send username to the email field.
     try:
-        # Send password to the password field.
+        driver.send_key_to_webelement(locators.email, credentials.username)  
+    except Exception as e:
+        logger.error(f"Error sending username: {e}")
+        return False
+    
+    driver.wait(1.3) # Wait for page to update.
+    
+    # Send password to the password field.
+    try:
         driver.send_key_to_webelement(locators['password'], credentials['password'])
     except Exception as e:
-        logger.error("Error sending password:", e)
+        logger.error(f"Error sending password: {e}")
         return False
-
-    driver.wait(0.5)  # Allow time for the password to be entered
-
+    
+    driver.wait(0.5)
+    
+    # Click the login button.
     try:
-        # Click the login button.  Assumes 'button' locator exists.
         driver.execute_locator(locators['button'])
     except Exception as e:
-        logger.error("Error clicking login button:", e)
+        logger.error(f"Error clicking login button: {e}")
         return False
-
+    
     return True
 ```
 
 ## Changes Made
 
--   Added type hints (e.g., `driver: Driver`) for better code clarity and maintainability.
--   Replaced `j_loads` with `j_loads_ns` for proper handling of JSON objects.
--   Added `try...except` blocks to handle potential `FileNotFoundError` and `json.JSONDecodeError` during locator loading.  This prevents crashes if the file is missing or corrupted.
--   Improved error handling by using `logger.error` to log exceptions and providing more descriptive error messages.
--   Added docstrings for the `login` function using reStructuredText (RST) format, following Sphinx standards.
--   Modified variable names to be more descriptive (e.g., `driver` instead of `d`).
--   Added comments to explain the purpose of each code block.
--   Corrected the `locators` loading to use `j_loads_ns`.
--   Improved error handling when loading locators to handle potential JSON decoding errors.
-
+- Replaced `j_loads` with `j_loads_ns` for JSON loading as instructed.
+- Added comprehensive docstrings in reStructuredText format for the module and the `login` function, including type hints.
+- Improved error handling using `logger.error` for better debugging and reporting.
+- Added `try...except` blocks around crucial operations to gracefully handle potential errors and log them.
+- Changed variable name `d` to `driver` for better clarity and consistency with the docstring and other files.
+- Added validation for missing or empty Facebook credentials to prevent unexpected errors.
+- Improved error logging messages to provide context and details.
+- Added robustness by handling `FileNotFoundError` during locator loading.
 
 ## Optimized Code
 
@@ -162,9 +162,9 @@ def login(driver: Driver) -> bool:
 """
 Module for Facebook login scenarios.
 
-This module provides functions for logging into Facebook using a given webdriver instance.
+This module provides functions for logging into Facebook using a provided webdriver instance.
 """
-import json
+import sys
 from pathlib import Path
 from typing import Dict
 from src import gs
@@ -172,59 +172,65 @@ from src.webdriver import Driver
 from src.utils import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
+# Ensure correct file paths are used
+# path_to_locators = gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'
 
 def login(driver: Driver) -> bool:
-    """Logs into Facebook using the provided webdriver instance.
+    """Logs into Facebook using the provided webdriver.
 
-    Loads Facebook login locators from a JSON file.
-    Sends username and password to the corresponding fields and clicks the login button.
+    Validates login credentials and executes the login process.
 
-    :param driver: The webdriver instance for interacting with web elements.
+    :param driver: Webdriver instance for interacting with webpage elements.
     :type driver: Driver
-    :raises Exception: If an error occurs during login.
     :return: True if login is successful, False otherwise.
     :rtype: bool
     """
+    # Load login credentials.  Ensure gs.facebook_credentials is defined and populated.
     try:
-        # Load locators from JSON file.  Crucial for dynamic element location.
-        locators_path = Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json')
-        locators = j_loads_ns(locators_path)
+        credentials = gs.facebook_credentials[0]
+    except IndexError:
+        logger.error("Facebook credentials not found or empty.")
+        return False
+
+    # Load locators for Facebook login page elements.
+    try:
+        locators = j_loads_ns(Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'))
         if not locators:
-            logger.error(f"Error loading login locators from {locators_path}")
-            return False  # Indicate failure to load locators
+            logger.error("Failed to load Facebook login locators.")
+            return False
+
     except FileNotFoundError as e:
-        logger.error(f"Login locators file not found: {locators_path}", e)
-        return False
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON format in login locators file: {locators_path}", e)
+        logger.error(f"File not found: {e}")
         return False
 
-    credentials = gs.facebook_credentials[0]
-
-    try:
-        # Send username to the email field.
-        driver.send_key_to_webelement(locators.email, credentials.username)
     except Exception as e:
-        logger.error("Error sending username:", e)
+        logger.error(f"Error loading locators: {e}")
         return False
-
-    driver.wait(1.3)  # Wait for the input field to be updated
-
+    
+    # Send username to the email field.
     try:
-        # Send password to the password field.
+        driver.send_key_to_webelement(locators.email, credentials.username)  
+    except Exception as e:
+        logger.error(f"Error sending username: {e}")
+        return False
+    
+    driver.wait(1.3) # Wait for page to update.
+    
+    # Send password to the password field.
+    try:
         driver.send_key_to_webelement(locators['password'], credentials['password'])
     except Exception as e:
-        logger.error("Error sending password:", e)
+        logger.error(f"Error sending password: {e}")
         return False
-
-    driver.wait(0.5)  # Allow time for the password to be entered
-
+    
+    driver.wait(0.5)
+    
+    # Click the login button.
     try:
-        # Click the login button.  Assumes 'button' locator exists.
         driver.execute_locator(locators['button'])
     except Exception as e:
-        logger.error("Error clicking login button:", e)
+        logger.error(f"Error clicking login button: {e}")
         return False
-
+    
     return True
 ```

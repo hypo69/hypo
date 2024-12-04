@@ -3,16 +3,29 @@
 
 Описание
 -------------------------
-Этот код реализует класс `AliRequests`, предназначенный для отправки HTTP-запросов к сайту AliExpress.  Класс загружает куки с диска, обновляет сессию и осуществляет GET-запросы, включая куки.  Ключевой функционал – загрузка и использование куки для аутентификации на сайте.  Также, присутствует функция для получения короткой аффилиатной ссылки.
+Этот код определяет класс `AliRequests`, предназначенный для работы с API AliExpress. Он загружает куки с вебдрайвера, обновляет сессию и выполняет запросы GET, обрабатывая куки и JSESSIONID.  Класс позволяет получать короткие аффилированные ссылки.
 
 Шаги выполнения
 -------------------------
-1. **Инициализация класса `AliRequests`**: Создается экземпляр класса `AliRequests`, опционально указывая имя драйвера браузера (`webdriver_for_cookies`), для загрузки куки.
-2. **Загрузка куки**: Метод `_load_webdriver_cookies_file` загружает куки из файла на диске, используя `pickle`.  Путь к файлу формируется по заданному шаблону.  Он итерирует по списку куки и устанавливает их в `RequestsCookieJar`.  Обработка ошибок (например, `FileNotFoundError`) позволяет программе корректно завершаться.
-3. **Обновление сессии**: Метод `_refresh_session_cookies` обновляет сессию, используя полученные куки.  Он отправляет GET-запрос на страницу AliExpress, для обновления сессии.  
-4. **Обработка JSESSIONID**: Метод `_handle_session_id` обрабатывает куки `JSESSIONID` в ответе от сервера.  Если `JSESSIONID` найден, он обновляет `self.session_id` и обновляет куки `self.cookies_jar`.
-5. **Отправка GET-запроса**: Метод `make_get_request` отправляет GET-запрос на заданный URL, используя текущие куки.  В случае успеха возвращает объект `requests.Response`, иначе - `False`.
-6. **Получение короткой аффилиатной ссылки**: Метод `short_affiliate_link` формирует URL для генерации короткой аффилиатной ссылки и использует `make_get_request` для её получения.
+1. **Инициализация класса:**
+   - Создается экземпляр класса `AliRequests`, который принимает необязательный параметр `webdriver_for_cookies` для указания типа вебдрайвера (например, 'chrome').  Этот параметр используется для загрузки куки из файла.
+   - Объект класса `AliRequests` инициализирует `RequestsCookieJar` для хранения куки, `session` для сессии запросов и `headers` для определения user-agent.
+2. **Загрузка куки из файла:**
+   - Метод `_load_webdriver_cookies_file` загружает куки из файла, определяемого путем `gs.dir_cookies`,  `aliexpress.com`, именем вебдрайвера (например, 'chrome') и именем файла 'cookie'.
+   - Файл должен содержать данные в формате, поддерживаемом `pickle`.
+   - Если куки загружены успешно, логгер сообщает об этом.
+3. **Обновление сессии куки:**
+   - Метод `_refresh_session_cookies` обновляет сессию куки, делая запрос на  `https://portals.aliexpress.com` для получения актуальных куки, включая `JSESSIONID`.
+   - Если запрос успешен, функция `_handle_session_id` обновляет `session_id` и добавляет его в `cookies_jar`.
+   - Если `JSESSIONID` не найден, генерируется предупреждение.
+4. **Выполнение GET запроса:**
+   - Метод `make_get_request` выполняет запрос GET на переданную URL.
+   - Если запрос успешен, функция `_handle_session_id` обрабатывает куки и обновляет сессию.
+   - Возвращает объект `requests.Response` при успешном выполнении, `False` в противном случае.
+5. **Сокращение аффилированной ссылки:**
+   - Метод `short_affiliate_link` создает URL для получения короткой аффилированной ссылки, добавляя параметры `trackId` и `targetUrl`.
+   - Вызывает метод `make_get_request` для выполнения запроса.
+   - Возвращает результат запроса.
 
 
 Пример использования
@@ -20,27 +33,17 @@
 .. code-block:: python
 
     from hypotez.src.suppliers.aliexpress.alirequests import AliRequests
+    from pathlib import Path
 
-    # Инициализация
-    aliexpress_requests = AliRequests(webdriver_for_cookies='chrome')
+    # Предполагается, что gs.dir_cookies и путь к файлу куки настроены.
+    aliexpress_requests = AliRequests('chrome')
 
-    # Проверка загрузки куки
-    if aliexpress_requests._load_webdriver_cookies_file():
-        # Отправка запроса
-        url = "https://www.aliexpress.com"  # Замените на нужный URL
-        response = aliexpress_requests.make_get_request(url)
+    if aliexpress_requests:
+        url_to_shorten = "https://www.example.com"
+        response = aliexpress_requests.short_affiliate_link(url_to_shorten)
 
         if response:
-            # Обработка ответа
-            print(response.status_code)
-            print(response.text)
+            short_link = response.url
+            print(f"Укороченная ссылка: {short_link}")
         else:
-            print("Ошибка при отправке запроса")
-
-
-    # Получение короткой ссылки
-    short_link_response = aliexpress_requests.short_affiliate_link("https://example.com")
-    if short_link_response:
-        print("Короткая ссылка:", short_link_response.url)
-    else:
-        print("Ошибка при получении короткой ссылки")
+            print("Ошибка при получении короткой ссылки.")

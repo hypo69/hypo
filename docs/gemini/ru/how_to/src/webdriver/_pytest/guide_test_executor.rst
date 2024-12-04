@@ -1,50 +1,62 @@
-Как использовать тесты для класса ExecuteLocator
-==========================================================================================
+Как использовать этот блок кода для тестирования класса ExecuteLocator
+===================================================================================
 
 Описание
 -------------------------
-Данное руководство описывает, как написать и запустить тесты для класса `ExecuteLocator`, который работает с веб-элементами через Selenium WebDriver. Оно включает в себя инструкции по установке зависимостей, настройке WebDriver, созданию файлов тестов, реализации тестов и запуску процесса тестирования.
+Данный блок кода представляет собой руководство по тестированию класса `ExecuteLocator` в Python, использующего Selenium WebDriver для взаимодействия с веб-элементами. Руководство охватывает подготовку окружения, написание тестов, их запуск и проверку результатов.
 
 Шаги выполнения
 -------------------------
-1. **Установка зависимостей:**
-    - Установите необходимые библиотеки, используя команду:
-      ```bash
-      pip install -r requirements.txt
-      ```
-    - Файл `requirements.txt` должен содержать:
-      ```text
-      pytest==7.4.0
-      selenium==4.16.1
-      ```
+1. **Установка зависимостей**: Установите необходимые библиотеки, выполнив команду:
 
-2. **Настройка WebDriver:**
-    - Установите WebDriver для вашего браузера (например, ChromeDriver для Chrome) по соответствующей инструкции.
+   .. code-block:: bash
 
-3. **Создание файла тестов:**
-    - Создайте файл `test_executor.py` в директории `tests`.  Этот файл будет содержать тесты для `ExecuteLocator`.  Примеры тестов показаны в предоставленном коде.
+       pip install -r requirements.txt
 
-4. **Реализация тестов:**
-    - Реализуйте тесты для каждого метода класса `ExecuteLocator`, используя `pytest` и `unittest.mock` для мокирования веб-драйвера (Selenium).
-    - Тесты должны проверять различные сценарии:
-        - **`get_webelement_by_locator`:**  проверка поиска одного элемента, нескольких элементов и отсутствия элементов.
-        - **`get_attribute_by_locator`:** проверка получения атрибута элемента.
-        - **`send_message`:** проверка отправки сообщения элементу, включая проверку с задержкой между символами.
-    - Обратите внимание на примеры в предоставленном коде `test_executor.py`, которые демонстрируют, как реализовать тесты для каждого метода.
+   Файл `requirements.txt` должен содержать следующие зависимости:
 
-5. **Запуск тестов:**
-    - Перейдите в корневую директорию проекта.
-    - Запустите тесты, используя команду:
-      ```bash
-      pytest tests/test_executor.py
-      ```
+   .. code-block:: text
 
-6. **Проверка результатов:**
-    - Проверьте вывод `pytest`. Все тесты должны пройти успешно. Если есть ошибки или неудачи, `pytest` покажет детали и информацию о неисправностях, которые необходимо исправить.
+       pytest==7.4.0
+       selenium==4.16.1
 
-7. **Обновление тестов:**
-    - По мере изменений в коде `ExecuteLocator` обновляйте соответствующие тесты, чтобы они проверяли новые или измененные функциональные возможности.
-    - Поддерживайте актуальность документации, чтобы отражать изменения в тестах.
+2. **Настройка WebDriver**: Установите WebDriver для вашего браузера (например, ChromeDriver для Chrome).
+
+3. **Создание файла тестов**: Создайте файл `test_executor.py` в директории `tests`. Файл должен содержать тесты для методов класса `ExecuteLocator`. Пример структуры файла:
+
+   .. code-block:: python
+
+       import pytest
+       from unittest.mock import MagicMock, patch
+       from selenium.webdriver.remote.webelement import WebElement
+       from selenium.webdriver.common.by import By
+       from src.webdriver.executor import ExecuteLocator
+       from src.logger.exceptions import ExecuteLocatorException
+
+       @pytest.fixture
+       def driver_mock():
+           return MagicMock()
+
+       @pytest.fixture
+       def execute_locator(driver_mock):
+           return ExecuteLocator(driver_mock)
+
+       # Примеры тестов...
+
+4. **Реализация тестов**:  Реализуйте тесты для методов `get_webelement_by_locator`, `get_attribute_by_locator`, `send_message`, используя мокирование `driver_mock` для имитации работы с веб-драйвером. Важно правильно проверить возвращаемые значения и вызванные методы.  Примеры реализации тестов показаны в предоставленном коде.
+
+5. **Запуск тестов**: Запустите тесты из корневой директории проекта, используя команду:
+
+   .. code-block:: bash
+
+       pytest tests/test_executor.py
+
+6. **Проверка результатов**: Проверьте вывод `pytest` на наличие ошибок или неудачных тестов.  Если тесты не прошли, обратите внимание на сообщения об ошибках для анализа причин и исправления.
+
+7. **Обновление тестов**: Если код `ExecuteLocator` изменяется, обновите тесты, чтобы они отражали новые функциональности.
+
+8. **Документация**: Если вы добавляете или изменяете тесты, обновите документацию, чтобы она отражала текущий набор тестов.  Примеры документации показаны в предоставленном коде.
+
 
 Пример использования
 -------------------------
@@ -55,6 +67,8 @@
     from selenium.webdriver.remote.webelement import WebElement
     from selenium.webdriver.common.by import By
     from src.webdriver.executor import ExecuteLocator
+
+    # ... (и другие импорты) ...
 
     @pytest.fixture
     def driver_mock():
@@ -67,7 +81,12 @@
     def test_get_webelement_by_locator_single_element(execute_locator, driver_mock):
         element = MagicMock(spec=WebElement)
         driver_mock.find_elements.return_value = [element]
-        locator = {"by": "XPATH", "selector": "//div[@id='test']"}
+
+        locator = {
+            "by": "XPATH",
+            "selector": "//div[@id='test']"
+        }
+
         result = execute_locator.get_webelement_by_locator(locator)
         driver_mock.find_elements.assert_called_once_with(By.XPATH, "//div[@id='test']")
         assert result == element

@@ -3,46 +3,57 @@
 
 Описание
 -------------------------
-Этот класс предоставляет методы для работы с товарами в системе PrestaShop через API.  Он наследуется от класса `PrestaShop`, предоставляя общие методы для взаимодействия с API.  Класс содержит методы для проверки наличия товара по артикулу, расширенного поиска и получения информации о товаре по ID.  Он также включает инициализацию с параметрами для подключения к API.
+Класс `PrestaProduct` предоставляет методы для взаимодействия с API PrestaShop, позволяя проверять наличие товара, искать товары по фильтрам и получать информацию о товаре по его ID.  Он наследуется от класса `PrestaShop`, предоставляя базовые методы для работы с API.  Класс инициализируется данными для подключения к API.
 
 Шаги выполнения
 -------------------------
-1. **Инициализация:** Создайте экземпляр класса `PrestaProduct`, передав необходимые данные для подключения к API.  Это могут быть `credentials` (словарь или `SimpleNamespace` с `api_domain` и `api_key`), или `api_domain` и `api_key` напрямую.  Если `credentials` переданы, `api_domain` и `api_key` из него будут взяты по умолчанию.
+1. **Импортирование необходимых модулей**: Импортируются необходимые модули, такие как `SimpleNamespace`, `typing`, `logger`, `printer`, и `PrestaShop`.
 
-2. **Проверка наличия товара (check):**  Вызовите метод `check(product_reference: str)`, передав в качестве аргумента `product_reference` (SKU или MKT товара).  Метод вернет словарь с информацией о товаре, если он найден, иначе вернёт `False`.
+2. **Инициализация класса `PrestaProduct`**:  Создается экземпляр класса `PrestaProduct`, передавая параметры для подключения к API:
+    - `credentials`: Словарь или объект `SimpleNamespace` с полями `api_domain` и `api_key`.
+    - `api_domain`: Домен API.
+    - `api_key`: Ключ API.
 
-3. **Расширенный поиск (search):** Вызовите метод `search(filter: str, value: str)`, передав `filter` (например, `name`, `reference`) и `value` (значение для фильтра). Метод выполнит поиск и вернет результат.
+3. **Проверка параметров**: Проверяется, что `api_domain` и `api_key` заданы. Если нет, то генерируется исключение `ValueError`.
 
-4. **Получение информации о товаре по ID (get):** Вызовите метод `get(id_product)`, передав `id_product` (ID товара). Метод вернет словарь с информацией о товаре.
+4. **Инициализация родительского класса**: Вызывается метод `__init__` родительского класса `PrestaShop` с полученными параметрами `api_domain` и `api_key`.
 
-5. **Обработка исключений:**  Код содержит проверку на наличие `api_domain` и `api_key`. Если они не предоставлены, будет выброшено исключение `ValueError`. Обработайте это исключение, чтобы избежать сбоев программы.
+5. **Вызов методов класса `PrestaProduct`**: После успешной инициализации, можно использовать методы класса:
+    - `check(product_reference: str)`:  Проверяет наличие товара в базе данных по заданному `product_reference` (например, SKU или MKT). Возвращает словарь с информацией о товаре, если он найден, иначе `False`.
+    - `search(filter: str, value: str)`: Выполняет расширенный поиск по базе данных, используя заданные `filter` и `value`.
+    - `get(id_product)`: Возвращает подробную информацию о товаре по его уникальному `id_product`.
+
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.endpoints.prestashop.product import PrestaProduct
     from types import SimpleNamespace
+    from hypotez.src.endpoints.prestashop.product import PrestaProduct
+    
+    # Пример данных для авторизации
+    credentials = SimpleNamespace(api_domain="ваш_домен_api", api_key="ваш_ключ_api")
 
-    # Инициализация с использованием credentials
-    credentials = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
-    product_api = PrestaProduct(credentials=credentials)
+    try:
+        # Создание экземпляра класса
+        product_api = PrestaProduct(credentials=credentials)
 
-    # Проверка наличия товара
-    product_data = product_api.check('12345')
-    if product_data:
-        pprint(product_data)
-    else:
-        print("Товар не найден.")
+        # Пример проверки товара по SKU
+        product_info = product_api.check("12345")
+        if product_info:
+            pprint(product_info)  # Вывод информации о товаре
+        else:
+            print("Товар не найден")
 
-    # Расширенный поиск
-    search_results = product_api.search('name', 'футболка')
-    pprint(search_results)
+        # Пример поиска товара
+        search_results = product_api.search(filter="name", value="футболка")
+        pprint(search_results)  # Вывод результатов поиска
 
+        # Пример получения товара по id
+        product_details = product_api.get(12345)
+        pprint(product_details)
 
-    # Получение товара по ID
-    product_by_id = product_api.get(10)
-    pprint(product_by_id)
-
-    # Инициализация с передачей api_domain и api_key напрямую
-    product_api2 = PrestaProduct(api_domain='your_api_domain', api_key='your_api_key')
+    except ValueError as e:
+        print(f"Ошибка: {e}")
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")

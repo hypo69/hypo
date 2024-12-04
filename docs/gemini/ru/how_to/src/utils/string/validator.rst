@@ -1,32 +1,22 @@
-Как использовать модуль валидации строк (validator.py)
+Как использовать модуль валидации строк
 ========================================================================================
 
 Описание
 -------------------------
-Модуль `validator.py` предоставляет набор статических методов для валидации различных типов строк, таких как цена, вес, артикул и URL.  Он проверяет соответствие строк определенным критериям, например, правильный формат цены (число с плавающей точкой), валидный артикул, корректный URL.
+Модуль `validator.py` предоставляет набор статических методов для валидации строк. Он предназначен для проверки различных типов строк, таких как цены, веса, артикулы и URL-адреса, на соответствие определенным критериям.  Включает в себя проверку на наличие числового значения, длины, корректного формата и т.д.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование модуля:**  Для использования функций валидации необходимо импортировать класс `ProductFieldsValidator`.
-
+1. **Импортируйте класс `ProductFieldsValidator`:**
    ```python
    from hypotez.src.utils.string.validator import ProductFieldsValidator
    ```
 
-2. **Выбор функции валидации:**  Выберите необходимую функцию для проверки конкретного типа строки (например, `validate_price`, `validate_weight`, `validate_url`).
+2. **Выберите метод для валидации:**  Модуль предоставляет методы для проверки различных типов данных. Выберите метод, соответствующий типу строки, которую вы хотите валидировать.
 
-3. **Передача значения:** Передайте строку, которую нужно валидировать, в качестве аргумента функции.
+3. **Передайте строку в качестве параметра:**  Передайте строку, которую нужно валидировать, в соответствующий метод в качестве аргумента.
 
-4. **Обработка результата:** Результат функции – булевое значение (`True`, если строка валидна, иначе `None` или `False` в зависимости от функции).  Необходимо обработать возвращаемое значение. Пример:
-
-   ```python
-   price = "123.45"
-   is_valid_price = ProductFieldsValidator.validate_price(price)
-   if is_valid_price:
-       print("Цена валидна")
-   else:
-       print("Цена невалидна")
-   ```
+4. **Получите результат:**  Метод вернет `True`, если строка соответствует критериям валидации, и `None` (или `False`, в случае, если код не обрабатывает исключения), если не соответствует. Обратите внимание на возвращаемый тип данных.
 
 Пример использования
 -------------------------
@@ -34,35 +24,65 @@
 
     from hypotez.src.utils.string.validator import ProductFieldsValidator
 
-    # Пример валидации цены
-    price = "1234.56"
-    is_price_valid = ProductFieldsValidator.validate_price(price)
-    if is_price_valid:
+    # Пример проверки цены
+    price_string = "123.45"
+    is_valid_price = ProductFieldsValidator.validate_price(price_string)
+
+    if is_valid_price:
         print("Цена валидна")
     else:
-        print("Цена невалидна")
+        print("Цена не валидна")
 
-    # Пример валидации веса
-    weight = "10.5кг"
-    is_weight_valid = ProductFieldsValidator.validate_weight(weight)
-    if is_weight_valid:
+    # Пример проверки веса
+    weight_string = "5,5 kg"
+    is_valid_weight = ProductFieldsValidator.validate_weight(weight_string)
+
+    if is_valid_weight:
         print("Вес валиден")
     else:
-        print("Вес невалиден")
+        print("Вес не валиден")
 
-    # Пример валидации артикула
-    sku = "ABC123"
-    is_sku_valid = ProductFieldsValidator.validate_sku(sku)
-    if is_sku_valid:
+
+    # Пример проверки артикула
+    sku_string = "ABC12345"
+    is_valid_sku = ProductFieldsValidator.validate_sku(sku_string)
+
+    if is_valid_sku:
         print("Артикул валиден")
     else:
-        print("Артикул невалиден")
+        print("Артикул не валиден")
 
+    # Пример проверки URL
+    url_string = "https://www.example.com"
+    is_valid_url = ProductFieldsValidator.validate_url(url_string)
 
-    # Пример валидации URL
-    url = "https://example.com"
-    is_url_valid = ProductFieldsValidator.validate_url(url)
-    if is_url_valid:
+    if is_valid_url:
         print("URL валиден")
     else:
-        print("URL невалиден")
+        print("URL не валиден")
+
+    #Пример невалидного URL (только адрес, без протокола)
+    url_string = "www.example.com"
+    is_valid_url = ProductFieldsValidator.validate_url(url_string)
+
+    if is_valid_url:
+        print("URL валиден")
+    else:
+        print("URL не валиден")
+
+    # Пример проверки на целое число
+    int_string = "123"
+    is_integer = ProductFieldsValidator.isint(int_string)
+
+    if is_integer:
+        print(f"Строка '{int_string}' - целое число")
+    else:
+        print(f"Строка '{int_string}' - не целое число")
+
+    # Пример проверки на целое число - НЕЧИСЛЕННОЕ значение
+    int_string = "abc"
+    is_integer = ProductFieldsValidator.isint(int_string)
+    if is_integer:
+        print(f"Строка '{int_string}' - целое число")
+    else:
+        print(f"Строка '{int_string}' - не целое число")

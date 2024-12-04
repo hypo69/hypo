@@ -3,73 +3,80 @@
 
 Описание
 -------------------------
-Этот код представляет класс `AliCampaignGoogleSheet`, предназначенный для работы с Google Таблицами в контексте управления рекламными кампаниями AliExpress. Он наследует класс `SpreadSheet` и предоставляет методы для:
+Этот код представляет класс `AliCampaignGoogleSheet`, предназначенный для работы с Google Таблицами в контексте управления рекламными кампаниями AliExpress.  Он наследует класс `SpreadSheet` и предоставляет методы для:
 
-- Управления листами Google Таблиц (создание, удаление).
-- Записи данных о кампаниях, категориях и продуктах.
-- Форматирования листов (установка ширины столбцов, высоты строк, форматирование заголовков).
+- Управления рабочими листами (удаление, копирование).
+- Записи данных о кампании (название, описание, язык, валюта).
+- Записи данных о категориях (имена, заголовки, описания, количество продуктов).
+- Записи данных о продуктах (идентификатор, цена, ссылка и т.д.) в отдельные листы для каждой категории.
+- Форматирования листов (установка ширины столбцов, высоты строк, стилей ячеек для заголовков).
 - Очистки данных на листах.
 
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых библиотек:** Код импортирует нужные модули, включая `time`, `SimpleNamespace`, `Driver`, `Chrome`, `Worksheet`, `SpreadSheet`, `AliCampaignEditor`, `j_dumps`, `pprint`, `logger`, и другие библиотеки для работы с Google Таблицами и веб-драйвером.
+1. **Импортирование необходимых библиотек**:  Код импортирует нужные модули, такие как `time`, `SimpleNamespace`, `Driver`, `SpreadSheet`, `AliCampaignEditor`,  `logger` и другие для работы с Google Таблицами, веб-драйверами и другими функциональными возможностями.
 
-2. **Инициализация класса `AliCampaignGoogleSheet`:**
-    - Создание экземпляра класса `AliCampaignGoogleSheet` с параметрами кампании (название, язык, валюта).
-    - Инициализация родительского класса `SpreadSheet` с ID Google Таблицы.
-    - Создание экземпляра `AliCampaignEditor` для работы с данными кампании.
-    - Очистка листов таблицы (`self.clear()`).
-    - Установка листов для кампании и категорий (`self.set_campaign_worksheet`, `self.set_categories_worksheet`).
-    - Откройте Google таблицу в браузере, используя драйвер веб-драйвера (`self.driver.get_url(...)`).
+2. **Создание класса `AliCampaignGoogleSheet`**: Создается класс, наследующий от `SpreadSheet`.  Этот класс предоставляет методы для работы с Google Таблицами, связанными с кампаниями AliExpress.
 
-3. **Очистка листов (`self.clear()`):** Удаляет все листы в Google Таблицах, кроме `'categories'` и `'product_template'`.
+3. **Установка параметров**: Конструктор класса (`__init__`) принимает имя кампании, язык и валюту, необходимую для создания кампании в Google Таблицах.
 
-4. **Установка данных кампании на лист `'campaign'` (`self.set_campaign_worksheet`):**
-    - Получает лист `'campaign'`.
-    - Записывает данные кампании (имя, заголовок, язык, валюта, описание) в вертикальном формате в ячейки.
+4. **Очистка листов**: Метод `clear()` удаляет все листы в Google Таблицах, за исключением листов `categories` и `product_template`.  Это позволяет избежать дублирования данных.
 
-5. **Установка данных категорий на лист `'categories'` (`self.set_categories_worksheet`):**
-    - Очищает лист `'categories'`.
-    - Получает данные категорий из объекта `SimpleNamespace`.
-    - Записывает данные категорий (имя, заголовок, описание, теги, количество продуктов) в ячейки.
-    - Форматирует лист категорий (`self._format_categories_worksheet`).
+5. **Удаление листов**: Метод `delete_products_worksheets()` удаляет все листы, кроме 'categories' и 'product_template',  обеспечивая, что данные сохраняются в ожидаемом формате.
 
-6. **Установка данных продуктов на лист `<category_name>` (`self.set_products_worksheet`):**
-    -  Если категория указана (`category_name`), получает список продуктов из этой категории.
-    - Копирует шаблон листа `'product'` в новый лист с именем, соответствующим имени категории.
-    - Записывает данные продуктов из объекта `SimpleNamespace` в ячейки.
-    - Форматирует лист продуктов (`self._format_category_products_worksheet`).
+6. **Запись данных кампании**: Метод `set_campaign_worksheet()` записывает данные о кампании в лист 'campaign'. Данные берутся из объекта `campaign` (типа `SimpleNamespace`).
 
+7. **Запись данных категорий**: Метод `set_categories_worksheet()` записывает данные о категориях в лист 'categories'. Данные берутся из объекта `categories` (типа `SimpleNamespace`).
 
-7. **Форматирование листов (`_format_categories_worksheet`, `_format_category_products_worksheet`):** Настраивает ширину столбцов и высоту строк, а также форматирует заголовки для лучшей читаемости.
+8. **Запись данных продуктов**: Метод `set_products_worksheet()` записывает данные о продуктах в отдельный лист для каждой категории.  Данные берутся из объекта `products` (типа `SimpleNamespace`).
 
-8. **Получение данных категорий (`self.get_categories`):** Возвращает данные категорий из таблицы в виде списка словарей.
+9. **Форматирование листов**: Методы `_format_categories_worksheet()` и `_format_category_products_worksheet()` форматируют листы, устанавливая ширину столбцов и форматируя заголовки для лучшего восприятия данных.
 
-9. **Запись данных о продуктах в новую таблицу (`self.set_category_products`):** Записывает данные продуктов в новую таблицу, используя уже имеющиеся заголовки.
+10. **Получение данных**: Метод `get_categories()` возвращает данные из листа 'categories' в формате списка словарей.
 
+11. **Запись данных о продуктах в определенную категорию**: Метод `set_category_products()` записывает данные о продуктах в определенную категорию.
 
 
 Пример использования
 -------------------------
-.. code-block:: python
+```python
+from hypotez.src.suppliers.aliexpress.campaign.gsheets_check_this_code import AliCampaignGoogleSheet
+from types import SimpleNamespace
 
-    from hypotez.src.suppliers.aliexpress.campaign.gsheets_check_this_code import AliCampaignGoogleSheet
-    from types import SimpleNamespace
+# Пример данных кампании
+campaign_data = SimpleNamespace(
+    name="Campaign Name Example",
+    title="Campaign Title Example",
+    language="ru",
+    currency="USD",
+    description="Campaign Description",
+)
 
-    # Пример данных кампании
-    campaign_data = SimpleNamespace(
-        name="Campaign Name",
-        title="Campaign Title",
-        language="ru",
-        currency="USD",
-        description="Campaign description"
-    )
-    
-    # Инициализируем класс
-    gsheets = AliCampaignGoogleSheet(campaign_name="MyCampaign")
+# Пример данных категорий
+category_data = SimpleNamespace(
+    category1=SimpleNamespace(name='Category 1', title='Category Title 1', description='Description', tags=['tag1', 'tag2'], products_count=10, products=[]),
+)
 
-    # Записываем данные кампании
-    gsheets.set_campaign_worksheet(campaign_data)
+# Создание экземпляра класса AliCampaignGoogleSheet
+gsheets_campaign = AliCampaignGoogleSheet("My Campaign", language="ru", currency="USD")
 
-    # ... (заполнение данных о категориях и продуктах аналогично)
+
+# Заполнение данных для кампании
+gsheets_campaign.set_campaign_worksheet(campaign_data)
+
+# Заполнение данных для категорий
+gsheets_campaign.set_categories_worksheet(category_data.category1)
+
+# Заполнение данных для продуктов (внутри категории)
+# (Необходимо заполнить products внутри category_data.category1)
+
+gsheets_campaign.set_products_worksheet("category1")
+
+# Получение данных
+categories_data = gsheets_campaign.get_categories()
+print(categories_data)
+```
+```
+```
+**Примечание:** Пример использования предполагает, что у вас есть  `campaign_data` и `category_data`  объекты с соответствующими атрибутами. В реальном использовании вам нужно будет заполнить эти данные из ваших источников.  Также, важно учесть, что `products` внутри `category_data`  должны быть заполнены списком объектов SimpleNamespace с данными продуктов.

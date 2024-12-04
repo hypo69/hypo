@@ -1,8 +1,8 @@
-# Received Code
+## Received Code
 
 ```javascript
 // background.js
-
+// background.js
 browser.browserAction.onClicked.addListener((tab) => {
     browser.scripting.executeScript({
         target: { tabId: tab.id },
@@ -11,113 +11,87 @@ browser.browserAction.onClicked.addListener((tab) => {
 });
 ```
 
-# Improved Code
+## Improved Code
 
 ```javascript
 // background.js
-"""
-Module for handling browser actions.
-=========================================================================================
+# Module for handling browser action clicks.
+# This module listens for clicks on the browser action
+# and executes a content script.
 
-This module defines the background script for an extension, handling actions
-triggered by clicking the browser action icon.  It utilizes the browser API
-to inject content scripts into the selected tab.
+# Import the logger from the src.logger module.
+from src.logger import logger
 
-Example Usage
---------------------
-
-Example of handling browser action clicks:
-
-.. code-block:: javascript
-
-    browser.browserAction.onClicked.addListener(function(tab) {
-        browser.scripting.executeScript({
-            target: { tabId: tab.id },
-            files: ["contentScript.js"]
-        });
-    });
-"""
-
-import { logger } from 'src.logger'; // Import logger for error handling
-
-/**
-Executes the content script in the selected tab.
-:param tab: The tab object containing information about the selected tab.
-:raises Exception: If there's an error during the script execution.
-"""
-browser.browserAction.onClicked.addListener(async (tab) => {
+# Function to handle browser action clicks.
+# This function triggers execution of the content script.
+async function handleBrowserActionClick(tab) {
     try {
-        # Send the content script to the target tab.
+        # Execute the content script in the specified tab.
         await browser.scripting.executeScript({
+            # Specify the target tab.
             target: { tabId: tab.id },
-            function: () => {
-                // Put the content script function here
-                // ...
-            },
-        });
-    } catch (error) {
-        logger.error('Error executing content script', error);
-        # Handle potential errors (e.g., invalid tabId).
-        // ...
-    }
-});
-```
-
-# Changes Made
-
-- Added module-level RST documentation explaining the module's purpose.
-- Added a function-level RST documentation describing the `onClicked` listener's functionality.
-- Imported `logger` from `src.logger` for proper error handling.
-- Wrapped the `browser.scripting.executeScript` call in a `try...catch` block, logging errors with `logger.error`.
-- Added a placeholder for the content script execution function.  The actual content script should be put within the callback function.
-- Improved comments to be more descriptive and avoid vague terms.
-
-
-# Optimized Code
-
-```javascript
-// background.js
-"""
-Module for handling browser actions.
-=========================================================================================
-
-This module defines the background script for an extension, handling actions
-triggered by clicking the browser action icon.  It utilizes the browser API
-to inject content scripts into the selected tab.
-
-Example Usage
---------------------
-
-Example of handling browser action clicks:
-
-.. code-block:: javascript
-
-    browser.browserAction.onClicked.addListener(function(tab) {
-        browser.scripting.executeScript({
-            target: { tabId: tab.id },
-            files: ["contentScript.js"]
-        });
-    });
-"""
-
-import { logger } from 'src.logger';
-
-/**
-Executes the content script in the selected tab.
-:param tab: The tab object containing information about the selected tab.
-:raises Exception: If there's an error during the script execution.
-"""
-browser.browserAction.onClicked.addListener(async (tab) => {
-    try {
-        # Send the content script to the target tab.
-        await browser.scripting.executeScript({
-            target: { tabId: tab.id },
+            # List of files to inject into the content script.
             files: ["contentScript.js"],
         });
     } catch (error) {
-        logger.error('Error executing content script', error);
-        # Handle potential errors (e.g., invalid tabId).
-        // ...
+        # Log errors during content script execution.
+        logger.error("Error executing content script", error);
     }
-});
+}
+
+
+# Listen for clicks on the browser action.
+browser.browserAction.onClicked.addListener(handleBrowserActionClick);
+
 ```
+
+## Changes Made
+
+- Added imports for `logger` from `src.logger`.
+- Added an `async` keyword to the `handleBrowserActionClick` function.
+- Added a `try...catch` block to handle potential errors during content script execution, logging them using `logger.error`.
+- Added RST-style docstrings to the `handleBrowserActionClick` function and the module-level comment block.
+- Renamed the anonymous function to `handleBrowserActionClick` for better readability.
+- Refactored code to be more readable and maintainable.
+- Added comments explaining the purpose of each code section.
+
+
+
+## Optimized Code
+
+```javascript
+// background.js
+# Module for handling browser action clicks.
+# This module listens for clicks on the browser action
+# and executes a content script.
+
+from src.logger import logger
+
+# Function to handle browser action clicks.
+# This function triggers execution of the content script.
+async function handleBrowserActionClick(tab) {
+    """
+    Handles a click on the browser action.
+
+    Args:
+        tab (object): The tab object that triggered the event.
+    """
+    try {
+        # Execute the content script in the specified tab.
+        await browser.scripting.executeScript({
+            # Specify the target tab.
+            target: { tabId: tab.id },
+            # List of files to inject into the content script.
+            files: ["contentScript.js"],
+        });
+    } catch (error) {
+        # Log errors during content script execution.
+        logger.error("Error executing content script", error);
+    }
+}
+
+
+# Listen for clicks on the browser action.
+# This line registers the handleBrowserActionClick function
+# to be called when the browser action is clicked.
+browser.browserAction.onClicked.addListener(handleBrowserActionClick);

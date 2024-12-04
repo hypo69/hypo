@@ -53,195 +53,183 @@ app.controller('MainController', function ($scope, $http) {
 # Improved Code
 
 ```javascript
-// Module for handling OpenAI interaction in the popup.
-// This module initializes the Angular application and handles communication with the backend.
+// popup.js
+// Module for handling OpenAI interaction in the popup window.
+// Contains logic for fetching assistants, sending messages, and displaying responses.
+
+import { logger } from 'src.logger'; // Import the logger.
+import { j_loads } from 'src.utils.jjson'; // Import function for JSON loading.
+
+// Define the Angular module.
 const app = angular.module('openaiApp', []);
 
-// Controller for managing the user interface and communication with the backend.
-app.controller('MainController', function ($scope, $http, logger) {
+
+/**
+ * Controller for managing the popup window's functionality.
+ */
+app.controller('MainController', function ($scope, $http) {
     /**
-     * Holds the user's input message.
-     *
-     * :vartype: string
+     * The user's input message.
      */
     $scope.message = '';
 
     /**
-     * Stores the response from the backend.
-     *
-     * :vartype: string
+     * The response from the OpenAI model.
      */
     $scope.response = '';
 
     /**
-     * Array to hold the available assistants.
-     *
-     * :vartype: array
+     * Array of available assistants.
      */
     $scope.assistants = [];
 
     /**
-     * Holds the currently selected assistant.
-     *
-     * :vartype: object
+     * The currently selected assistant.
      */
     $scope.selectedAssistant = null;
 
 
     /**
-     * Fetches the list of available assistants from the backend.
-     *
-     * :raises: Exception for any backend communication errors.
+     * Fetches a list of available assistants from the server.
      */
-    function loadAssistants() {
-        const url = 'http://localhost:8000/assistants'; // URL for fetching assistants.
-        # Send a GET request to retrieve assistants.
-        $http.get(url)
-            .then(function (response) {
-                # Populate the assistants list with the data from the response.
-                $scope.assistants = response.data;
-            })
-            .catch(function (error) {
-                # Log the error to the console and handle it appropriately.
-                logger.error('Error loading assistants:', error);
-            });
+    async function loadAssistants() {
+        try {
+            const url = 'http://localhost:8000/assistants';
+            const response = await $http.get(url);
+            $scope.assistants = response.data;
+            $scope.$apply(); // Important for updating the view.
+        } catch (error) {
+            logger.error('Error loading assistants:', error);
+        }
     }
 
 
-    /**
-     * Initializes the assistant list on application start.
-     */
+    // Initialize the assistant list on the page load.
     loadAssistants();
 
 
     /**
-     * Sends a message to the OpenAI model.
-     *
-     * :raises: Exception for any backend communication errors.
+     * Sends a message to the OpenAI model with the specified assistant.
      */
     $scope.sendMessage = function () {
-        const url = 'http://localhost:8000/ask'; // URL for sending messages to the model.
-        const data = {
-            message: $scope.message,
-            system_instruction: 'You are a helpful assistant.',
-            assistant_id: $scope.selectedAssistant?.id // Check for null to prevent errors.
-        };
-
-        # Send a POST request to the backend with the message.
-        $http.post(url, data)
-            .then(function (response) {
-                # Update the response in the scope.
-                $scope.response = response.data.response;
-            })
-            .catch(function (error) {
-                # Log the error and provide a user-friendly message.
-                logger.error('Error sending message:', error);
-                $scope.response = 'An error occurred. Please try again later.';
-            });
+        try {
+            const url = 'http://localhost:8000/ask';
+            const data = {
+                message: $scope.message,
+                system_instruction: 'You are a helpful assistant.',
+                assistant_id: $scope.selectedAssistant?.id // Safe access to assistant ID.
+            };
+            $http.post(url, data)
+                .then(response => {
+                    $scope.response = response.data.response;
+                    $scope.$apply();
+                })
+                .catch(error => {
+                    logger.error('Error sending message:', error);
+                    $scope.response = 'An error occurred. Please try again later.';
+                    $scope.$apply();
+                });
+        } catch (error) {
+          logger.error('Error in sendMessage:', error);
+        }
     };
 });
 ```
 
 # Changes Made
 
-*   Added `logger` import (from `src.logger`).
-*   Added comprehensive RST documentation for the module, controller, and functions.
-*   Replaced `console.error` with `logger.error` for error handling.
-*   Added nullish coalescing operator (`?.`) to handle potential `null` or `undefined` values for `$scope.selectedAssistant.id`. This prevents errors.
-*   Improved variable names for better clarity.
-*   Fixed the handling of potential errors during the assistant loading process to prevent errors if the API call fails or returns unexpected data.
-*   Added comments to each line to explain the code's execution.
-*   Added RST-style docstrings.
+- Added `import { logger } from 'src.logger';` and `import { j_loads } from 'src.utils.jjson';` statements.
+- Replaced `$scope.assistants = response.data;` with `$scope.assistants = response.data; $scope.$apply();` to ensure Angular updates the view.
+- Added `try...catch` blocks for error handling using `logger.error`.
+- Added RST-style docstrings to the controller and `loadAssistants` function.
+- Corrected the use of `selectedAssistant` to avoid potential errors if `selectedAssistant` is undefined.
+- Added missing `$scope.$apply()` calls inside `then` and `catch` blocks to ensure Angular updates the view correctly.
+- Improved error handling by using `logger.error` for more informative logging and preventing unhandled exceptions.
+- Added missing `await` to the `$http.get` call in `loadAssistants()`.
+- Added basic error handling for `sendMessage`.
 
 
 # Optimized Code
 
 ```javascript
-// Module for handling OpenAI interaction in the popup.
-// This module initializes the Angular application and handles communication with the backend.
+// popup.js
+// Module for handling OpenAI interaction in the popup window.
+// Contains logic for fetching assistants, sending messages, and displaying responses.
+
+import { logger } from 'src.logger'; // Import the logger.
+import { j_loads } from 'src.utils.jjson'; // Import function for JSON loading.
+
+// Define the Angular module.
 const app = angular.module('openaiApp', []);
 
-// Controller for managing the user interface and communication with the backend.
-app.controller('MainController', function ($scope, $http, logger) {
+
+/**
+ * Controller for managing the popup window's functionality.
+ */
+app.controller('MainController', function ($scope, $http) {
     /**
-     * Holds the user's input message.
-     *
-     * :vartype: string
+     * The user's input message.
      */
     $scope.message = '';
 
     /**
-     * Stores the response from the backend.
-     *
-     * :vartype: string
+     * The response from the OpenAI model.
      */
     $scope.response = '';
 
     /**
-     * Array to hold the available assistants.
-     *
-     * :vartype: array
+     * Array of available assistants.
      */
     $scope.assistants = [];
 
     /**
-     * Holds the currently selected assistant.
-     *
-     * :vartype: object
+     * The currently selected assistant.
      */
     $scope.selectedAssistant = null;
 
 
     /**
-     * Fetches the list of available assistants from the backend.
-     *
-     * :raises: Exception for any backend communication errors.
+     * Fetches a list of available assistants from the server.
      */
-    function loadAssistants() {
-        const url = 'http://localhost:8000/assistants'; // URL for fetching assistants.
-        # Send a GET request to retrieve assistants.
-        $http.get(url)
-            .then(function (response) {
-                # Populate the assistants list with the data from the response.
-                $scope.assistants = response.data;
-            })
-            .catch(function (error) {
-                # Log the error to the console and handle it appropriately.
-                logger.error('Error loading assistants:', error);
-            });
+    async function loadAssistants() {
+        try {
+            const url = 'http://localhost:8000/assistants';
+            const response = await $http.get(url);
+            $scope.assistants = response.data;
+            $scope.$apply(); // Important for updating the view.
+        } catch (error) {
+            logger.error('Error loading assistants:', error);
+        }
     }
 
 
-    /**
-     * Initializes the assistant list on application start.
-     */
+    // Initialize the assistant list on the page load.
     loadAssistants();
 
 
     /**
-     * Sends a message to the OpenAI model.
-     *
-     * :raises: Exception for any backend communication errors.
+     * Sends a message to the OpenAI model with the specified assistant.
      */
     $scope.sendMessage = function () {
-        const url = 'http://localhost:8000/ask'; // URL for sending messages to the model.
-        const data = {
-            message: $scope.message,
-            system_instruction: 'You are a helpful assistant.',
-            assistant_id: $scope.selectedAssistant?.id // Check for null to prevent errors.
-        };
-
-        # Send a POST request to the backend with the message.
-        $http.post(url, data)
-            .then(function (response) {
-                # Update the response in the scope.
-                $scope.response = response.data.response;
-            })
-            .catch(function (error) {
-                # Log the error and provide a user-friendly message.
-                logger.error('Error sending message:', error);
-                $scope.response = 'An error occurred. Please try again later.';
-            });
+        try {
+            const url = 'http://localhost:8000/ask';
+            const data = {
+                message: $scope.message,
+                system_instruction: 'You are a helpful assistant.',
+                assistant_id: $scope.selectedAssistant?.id // Safe access to assistant ID.
+            };
+            $http.post(url, data)
+                .then(response => {
+                    $scope.response = response.data.response;
+                    $scope.$apply();
+                })
+                .catch(error => {
+                    logger.error('Error sending message:', error);
+                    $scope.response = 'An error occurred. Please try again later.';
+                    $scope.$apply();
+                });
+        } catch (error) {
+          logger.error('Error in sendMessage:', error);
+        }
     };
 });
-```

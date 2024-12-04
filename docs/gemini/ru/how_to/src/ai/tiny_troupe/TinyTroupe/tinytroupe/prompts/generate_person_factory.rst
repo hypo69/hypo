@@ -3,14 +3,19 @@
 
 Описание
 -------------------------
-Этот блок кода описывает задачу генерации множества контекстов для создания описаний людей.  Входной параметр — общее описание, содержащее характеристики потенциальных людей (возраст, место проживания, профессия, семейное положение и т.д.).  На выходе — массив контекстов, каждый из которых содержит более конкретные характеристики, необходимые для создания описания отдельного человека.  Цель — создать множество разнообразных персонажей на основе общего описания.
+Этот блок кода описывает задачу генерации множества контекстов для создания описаний персонажей.  Задача заключается в получении широкого контекста (например, демографические данные, характеристики, поведение, убеждения) и генерации из него более конкретных контекстов, сохраняя при этом связь с исходным.  В результате возвращается массив JSON с контекстами для последующей генерации описаний персонажей.
 
 Шаги выполнения
 -------------------------
-1. **Определите широкую характеристику**:  Укажите общие параметры для генерируемых персонажей (например, «житель Латинской Америки», «возраст 20-40 лет», «профессия — врач»).
-2. **Укажите количество**: Определите нужное количество персонажей, которые должны быть сгенерированы.
-3. **Используйте функцию генерации**: Функция принимает широкую характеристику и количество персонажей и возвращает массив контекстов.
-4. **Используйте контексты**: Каждый контекст в массиве используется как входной параметр для генерации подробного описания конкретного персонажа.
+1. **Определите входной контекст**:  Задайте общий контекст для генерации персонажей.  Это может включать демографические данные (национальность, возраст, социальный статус), физические характеристики, особенности поведения, верования и т.д.
+
+
+2. **Опишите желаемое количество контекстов**:  Укажите, сколько конкретных контекстов требуется сгенерировать.
+
+3. **Используйте блок кода**: Вызовите функцию, которая принимает входной контекст и количество контекстов. Функция должна вернуть массив JSON, каждый элемент которого содержит отдельный контекст, готовый для генерации описания персонажа.
+
+4. **Обработайте результат**: Получите массив JSON с контекстами. Каждый контекст представляет собой строку, используемую как запрос для последующей генерации описания конкретного персонажа.
+
 
 Пример использования
 -------------------------
@@ -18,23 +23,29 @@
 
     import json
 
-    def generate_person_contexts(broad_context, num_persons):
-        """Генерирует массив контекстов для создания описаний людей."""
-        # Заглушка - здесь должен быть вызов функции для генерации массива контекстов на основе входных данных.
-        # Пример (заменить на ваш код):
-        if broad_context == "Please, generate 3 person(s) description(s) based on the following broad context: Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can be have children or not, it can be a professional or not, it can be a worker or not":
-            contexts = [
-                "Mexican person that has formed as lawyer but now works in other are, is single, like sports and movies",
-                "Create a Brazilian person that is a doctor, like pets and the nature and love heavy metal.",
-                "Create a Colombian person that is a lawyer, like to read and drink coffee and is married with 2 children."
-            ]
-        else:
-            contexts = []  # Если нет подходящего контекста, возвращаем пустой массив.
-
-        return json.dumps(contexts, indent=2)
+    def generate_person_factory(input_context, num_contexts):
+        # Эта функция должна быть реализована в вашем коде.
+        # Она принимает входной контекст и количество желаемых контекстов.
+        # Возвращает массив JSON с контекстами.
+        # В примере ниже - возвращается пустой массив, замените его на реализацию.
 
 
-    broad_context = "Please, generate 3 person(s) description(s) based on the following broad context: Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can be have children or not, it can be a professional or not, it can be a worker or not"
-    num_persons = 3
-    contexts = generate_person_contexts(broad_context, num_persons)
-    print(contexts)
+        #  Пример как должна выглядеть реализация
+        contexts = []
+        if input_context and num_contexts:
+           for i in range(num_contexts):
+               contexts.append(f"Create a {input_context} person {i+1}")
+
+        return json.dumps(contexts)
+
+
+
+    # Пример использования:
+    input_context = "Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can have children or not, it can be a professional or not, it can be a worker or not"
+    num_contexts = 3
+
+
+    result = generate_person_factory(input_context, num_contexts)
+    print(result)
+    #Пример вывода:
+    #["Create a Latin American person 1", "Create a Latin American person 2", "Create a Latin American person 3"]

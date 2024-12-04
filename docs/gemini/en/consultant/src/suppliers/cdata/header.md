@@ -2,11 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/cdata/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.cdata 
 	:platform: Windows, Unix
 	:synopsis:
@@ -51,14 +47,14 @@ from src import gs
 
 settings:dict = None
 try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
 except (FileNotFoundError, json.JSONDecodeError):
     ...
 
 doc_str:str = None
 try:
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as settings_file:
         doc_str = settings_file.read()
 except (FileNotFoundError, json.JSONDecodeError):
     ...
@@ -76,55 +72,38 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 # Improved Code
 
 ```python
-## \file hypotez/src/suppliers/cdata/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Module for handling data from the cdata supplier.
-======================================================
-
-This module defines functions for retrieving and handling
-data from the cdata supplier.  It uses the project root
-and settings data for configuration.
+Module for handling data from settings.json and README.MD files.
+================================================================================
+This module provides functions for retrieving and processing data
+from settings.json and README.MD files, ensuring proper handling of errors.
 
 Example Usage
---------------------
-
+------------
 .. code-block:: python
 
-    # ... (Import necessary modules) ...
+    from hypotez.src.suppliers.cdata.header import get_settings
 
-    # Get project root
-    project_root = set_project_root()
+    settings = get_settings()
+    print(settings)
 
-    # ... (Other code to use retrieved data) ...
 """
-import json
 import sys
-from pathlib import Path
+import json
 from packaging.version import Version
+from pathlib import Path
 from src.utils.jjson import j_loads  # Import j_loads for JSON handling
-
-from src import gs
-from src.logger import logger  # Import logger for error handling
-
-
-MODE = 'dev'
-
+from src.logger import logger # Import logger for error handling
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """Find project root directory.
+    """
+    Determine the project root directory.
 
-    Searches up from the current file's directory until
-    a directory containing any of the marker files is found.
+    Searches upward from the current file's directory until a directory
+    containing any of the specified marker files is found.
 
-    :param marker_files: Filenames or directory names to identify the project root.
-    :type marker_files: tuple
-    :raises FileNotFoundError: if none of the marker files are found.
-    :return: Path to the project root directory.
-    :rtype: Path
+    :param marker_files: A tuple of filenames/directory names to identify the project.
+    :return: The path to the project root directory. If no root is found, returns the current directory.
     """
     current_path = Path(__file__).resolve().parent
     project_root = current_path
@@ -137,111 +116,106 @@ def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     return project_root
 
 
-# Retrieve project root
-project_root = set_project_root()
-"""project_root (Path): Path to the project root."""
+def get_settings() -> dict:
+    """
+    Retrieves project settings from settings.json.
 
-
-settings: dict = None
-try:
-    # Load settings from JSON file using j_loads.
+    :return: A dictionary containing project settings. Returns None if the file is not found or if there's a JSON decoding error.
+    """
+    project_root = set_project_root()
     settings_path = project_root / 'src' / 'settings.json'
-    settings = j_loads(settings_path)  # Use j_loads instead of json.load
-except FileNotFoundError:
-    logger.error('Error loading settings.json: File not found.')
-except json.JSONDecodeError as e:
-    logger.error(f'Error decoding settings.json: {e}')
-except Exception as ex:
-    logger.error('Unexpected error loading settings.json:', ex)
-    # ...  # Handle the exception appropriately
-    # ... (Example: return an empty dictionary or raise a more specific exception)
+    try:
+        settings = j_loads(settings_path)
+        return settings
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error("Error loading settings from settings.json: %s", e)
+        return None
 
 
+def get_readme_content() -> str:
+    """
+    Reads the content of the README.MD file.
 
-doc_str: str = None
-try:
-    # Load README.MD file using j_loads
+    :return: The content of README.MD as a string. Returns an empty string if the file is not found or if there's an error.
+    """
+    project_root = set_project_root()
     readme_path = project_root / 'src' / 'README.MD'
-    doc_str = readme_path.read_text()  # Use .read_text() for better error handling
-except FileNotFoundError:
-    logger.error('Error loading README.MD: File not found.')
-except Exception as e:
-    logger.error(f'Error loading README.MD: {e}')
+    try:
+        with open(readme_path, 'r') as readme_file:
+            return readme_file.read()
+    except FileNotFoundError as e:
+        logger.error("Error reading README.MD: %s", e)
+        return ""
 
 
-__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
-__version__ = settings.get("version", '') if settings else ''
-__doc__ = doc_str if doc_str else ''
+# Get project settings (Improved with error handling)
+settings = get_settings()
+# Retrieve README content
+readme_content = get_readme_content()
+
+
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = readme_content if readme_content else ''
 __details__ = ''
-__author__ = settings.get("author", '') if settings else ''
-__copyright__ = settings.get("copyright", '') if settings else ''
-__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+
 ```
 
 # Changes Made
 
-*   Added imports: `from src.utils.jjson import j_loads`, `from src.logger import logger`.
-*   Replaced `json.load` with `j_loads` for JSON file reading.
-*   Added comprehensive RST-style docstrings to the `set_project_root` function and module.
-*   Implemented error handling using `logger.error` for improved robustness.
-*   Added explicit error handling for file not found and JSON decoding errors.
-*   Corrected variable names to match Python style conventions (e.g., `__root__` to `project_root`).
-*   Changed file reading to use `read_text()` for improved error handling.
-*   Improved clarity and conciseness of comments.
+*   Imported `j_loads` from `src.utils.jjson` for JSON loading.
+*   Imported `logger` from `src.logger` for error handling.
+*   Added comprehensive docstrings to functions, adhering to reStructuredText format.
+*   Replaced the standard `try-except` blocks with error handling using `logger.error` for improved error management.
+*   Removed unnecessary variable assignments (e.g., `__root__` was assigned twice, redundant).
+*   Revised comments to use specific terms and follow RST standards.
+*   Corrected the file name `copyrihgnt` to `copyright`.
+*   Created a `get_readme_content()` function for better organization.
+*   Modified the code to correctly load settings and README content using a function approach.
+*   Improved variable naming to be more descriptive (e.g., `project_root`).
 
 
 # Optimized Code
 
 ```python
-## \file hypotez/src/suppliers/cdata/header.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Module for handling data from the cdata supplier.
-======================================================
-
-This module defines functions for retrieving and handling
-data from the cdata supplier.  It uses the project root
-and settings data for configuration.
+Module for handling data from settings.json and README.MD files.
+================================================================================
+This module provides functions for retrieving and processing data
+from settings.json and README.MD files, ensuring proper handling of errors.
 
 Example Usage
---------------------
-
+------------
 .. code-block:: python
 
-    # ... (Import necessary modules) ...
+    from hypotez.src.suppliers.cdata.header import get_settings, get_readme_content
 
-    # Get project root
-    project_root = set_project_root()
+    settings = get_settings()
+    readme_content = get_readme_content()
+    print(settings)
+    print(readme_content)
 
-    # ... (Other code to use retrieved data) ...
 """
-import json
 import sys
-from pathlib import Path
+import json
 from packaging.version import Version
-from src.utils.jjson import j_loads  # Import j_loads for JSON handling
-
-from src import gs
-from src.logger import logger  # Import logger for error handling
-
-
-MODE = 'dev'
+from pathlib import Path
+from src.utils.jjson import j_loads
+from src.logger import logger
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """Find project root directory.
+    """
+    Determine the project root directory.
 
-    Searches up from the current file's directory until
-    a directory containing any of the marker files is found.
+    Searches upward from the current file's directory until a directory
+    containing any of the specified marker files is found.
 
-    :param marker_files: Filenames or directory names to identify the project root.
-    :type marker_files: tuple
-    :raises FileNotFoundError: if none of the marker files are found.
-    :return: Path to the project root directory.
-    :rtype: Path
+    :param marker_files: A tuple of filenames/directory names to identify the project.
+    :return: The path to the project root directory. If no root is found, returns the current directory.
     """
     current_path = Path(__file__).resolve().parent
     project_root = current_path
@@ -254,40 +228,50 @@ def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     return project_root
 
 
-# Retrieve project root
-project_root = set_project_root()
-"""project_root (Path): Path to the project root."""
+def get_settings() -> dict:
+    """
+    Retrieves project settings from settings.json.
 
-
-settings: dict = None
-try:
-    # Load settings from JSON file using j_loads.
+    :return: A dictionary containing project settings. Returns None if the file is not found or if there's a JSON decoding error.
+    """
+    project_root = set_project_root()
     settings_path = project_root / 'src' / 'settings.json'
-    settings = j_loads(settings_path)  # Use j_loads instead of json.load
-except FileNotFoundError:
-    logger.error('Error loading settings.json: File not found.')
-except json.JSONDecodeError as e:
-    logger.error(f'Error decoding settings.json: {e}')
-except Exception as ex:
-    logger.error('Unexpected error loading settings.json:', ex)
+    try:
+        settings = j_loads(settings_path)
+        return settings
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error("Error loading settings from settings.json: %s", e)
+        return None
 
 
-doc_str: str = None
-try:
-    # Load README.MD file using j_loads
+def get_readme_content() -> str:
+    """
+    Reads the content of the README.MD file.
+
+    :return: The content of README.MD as a string. Returns an empty string if the file is not found or if there's an error.
+    """
+    project_root = set_project_root()
     readme_path = project_root / 'src' / 'README.MD'
-    doc_str = readme_path.read_text()  # Use .read_text() for better error handling
-except FileNotFoundError:
-    logger.error('Error loading README.MD: File not found.')
-except Exception as e:
-    logger.error(f'Error loading README.MD: {e}')
+    try:
+        with open(readme_path, 'r') as readme_file:
+            return readme_file.read()
+    except FileNotFoundError as e:
+        logger.error("Error reading README.MD: %s", e)
+        return ""
 
 
-__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
-__version__ = settings.get("version", '') if settings else ''
-__doc__ = doc_str if doc_str else ''
+# Get project settings (Improved with error handling)
+settings = get_settings()
+# Retrieve README content
+readme_content = get_readme_content()
+
+
+__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
+__version__ = settings.get('version', '') if settings else ''
+__doc__ = readme_content if readme_content else ''
 __details__ = ''
-__author__ = settings.get("author", '') if settings else ''
-__copyright__ = settings.get("copyright", '') if settings else ''
-__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__author__ = settings.get('author', '') if settings else ''
+__copyright__ = settings.get('copyright', '') if settings else ''
+__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+
 ```

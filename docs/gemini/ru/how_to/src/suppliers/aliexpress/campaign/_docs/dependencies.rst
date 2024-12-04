@@ -1,52 +1,39 @@
-Как использовать зависимости модуля AliExpress кампаний
-==============================================================================================
+Как использовать зависимости модуля AliExpress Campaign
+============================================================================================
 
 Описание
 -------------------------
-Данный документ описывает зависимости модуля AliExpress кампаний. Он предоставляет информацию о внешних модулях и файлах, необходимых для корректной работы модуля.  Это помогает разработчикам понять, какие библиотеки и ресурсы им нужны для интеграции или расширения функциональности.
+Этот документ описывает зависимости модуля AliExpress Campaign, используемые для управления рекламными кампаниями. Он объясняет, как модуль использует внешние библиотеки и другие модули, а также предоставляет примеры.
 
 Шаги выполнения
 -------------------------
-1. **Установка зависимостей**:
-    Модуль `gsheet.py` использует библиотеки `gspread`, `pandas` и файл `src.settings.gs`.  Необходимо установить их, используя менеджер пакетов (например, `pip`):
-    ```bash
-    pip install gspread pandas
-    ```
-    Убедитесь, что файл `src.settings.gs` доступен в указанном пути.
-2. **Импорты**:
-    Для использования зависимостей, таких как `AliCampaignGoogleSheet` из `src.suppliers.aliexpress`, необходимо импортировать необходимые модули в ваш код:
-    ```python
-    from src.suppliers.aliexpress import AliCampaignGoogleSheet
-    ```
-3. **Использование**:
-    После установки и импорта зависимостей, можно использовать функциональность, предоставляемую `AliCampaignGoogleSheet` в `ali_promo_campaign.py` или в других модулях.
-    Пример, как использовать этот класс:
-    ```python
-    # Внутри ali_promo_campaign.py
-    from src.suppliers.aliexpress import AliCampaignGoogleSheet
+1. **Модуль `ali_promo_campaign.py`:** Этот модуль управляет рекламными кампаниями AliExpress.  Он зависит от модуля `AliCampaignGoogleSheet` из `src.suppliers.aliexpress`. Это означает, что для корректной работы `ali_promo_campaign.py` требуется доступ к функциям и данным, предоставляемым `AliCampaignGoogleSheet`.
 
-    # ... (другие импорты и инициализации) ...
+2. **Модуль `gsheet.py`:**  Этот модуль отвечает за взаимодействие с Google Sheets.  Он зависит от библиотек `gspread`, `pandas` и `src.settings.gs`.  `gspread` используется для работы с Google Sheets API, `pandas` для обработки данных, а `src.settings.gs` содержит настройки для доступа к Google Sheets.
 
-    campaign_data = AliCampaignGoogleSheet().get_campaign_data()
-    # Далее работа с данными из campaign_data
-    ```
-4. **Конфигурация:**
-    Убедитесь, что `src.settings.gs` содержит корректные настройки для доступа к Google Sheets.  Некорректные настройки могут привести к ошибкам в работе модуля.
+3. **Связь между модулями:** `ali_promo_campaign.py` использует функциональность `gsheet.py` для получения и работы с данными о рекламных кампаниях из Google Sheets.
+
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    # Пример, показывающий импорт и использование AliCampaignGoogleSheet
+    # Пример использования из ali_promo_campaign.py
     from src.suppliers.aliexpress import AliCampaignGoogleSheet
 
-    # Предположим, что у вас есть объект gs_client, полученный из модуля gspread
-    gs_client = # ... ваш код для создания объекта gspread
-    gs_sheet = AliCampaignGoogleSheet(gs_client)  # Инициализация с объектом gs_client
+    # ... (другие импорты) ...
 
-    campaign_data = gs_sheet.get_campaign_data()
+    # Инициализация AliCampaignGoogleSheet
+    google_sheets_handler = AliCampaignGoogleSheet(spreadsheet_id='YOUR_SPREADSHEET_ID', sheet_name='CAMPAIGNS')
 
-    if campaign_data:
-        print("Данные кампании получены успешно:", campaign_data)
-    else:
-        print("Ошибка при получении данных кампании.")
+    # Получение данных о кампаниях
+    campaigns_data = google_sheets_handler.get_campaign_data()
+
+    # Обработка полученных данных (например, создание, редактирование или удаление кампаний)
+    # ...
+
+    # Пример работы с pandas (если используется)
+    import pandas as pd
+    campaigns_df = pd.DataFrame(campaigns_data)
+    campaigns_df['campaign_cost'] = campaigns_df['cost'].astype(float) * 2 # Умножает стоимость на 2
+    # ... (дальнейшая работа с данными) ...

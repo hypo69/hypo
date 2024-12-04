@@ -1,4 +1,5 @@
-Received Code
+# Received Code
+
 ```html
 <input code>
 from src.utils.calculator import calculate_sum
@@ -8,71 +9,100 @@ def add_numbers(a, b):
     return result
 ```
 
-Improved Code
+# Improved Code
+
 ```python
 """
-Module for adding two numbers.
-==============================
+Module for basic arithmetic operations.
+=========================================================================================
 
-This module contains a function for adding two numbers.
-It imports the `calculate_sum` function from the `src.utils.calculator` module.
+This module provides functions for performing simple arithmetic calculations.
+
+Example Usage
+--------------------
+
+.. code-block:: python
+
+    result = add_numbers(5, 3)
+    print(result)
 """
-from src.utils.calculator import calculate_sum  # Import the calculate_sum function
+from src.utils.calculator import calculate_sum
+from src.logger import logger
 
 def add_numbers(a: int, b: int) -> int:
     """
-    Adds two numbers.
+    Adds two numbers together.
 
     :param a: The first number.
     :param b: The second number.
     :return: The sum of a and b.
+    :raises TypeError: if input values are not integers.
     """
+    # Input validation.  Crucial to prevent unexpected behavior.
+    if not isinstance(a, int) or not isinstance(b, int):
+        logger.error("Input values must be integers for addition.")
+        raise TypeError("Input values must be integers.")
+
     try:
-        # Execute the calculation
+        # Calculate the sum using the external function.
         result = calculate_sum(a, b)
         return result
     except Exception as e:
-        # Log the error
-        logger.error("Error adding numbers:", e)
-        return None  # Or raise the exception, depending on the desired behavior
+        logger.error(f"Error during calculation: {e}")
+        raise  # Re-raise the exception to handle it at a higher level
 ```
 
-Changes Made
-- Added type hints (`a: int`, `b: int`, `-> int`) to the `add_numbers` function, specifying the expected types of inputs and return values.
-- Added a docstring to the `add_numbers` function using reStructuredText (RST) format, documenting the function's purpose, parameters, and return value.
-- Added a docstring to the module using RST format, providing a description of the module's purpose.
-- Added `from src.logger import logger` import statement for error logging.
-- Wrapped the `calculate_sum` call in a `try-except` block to handle potential exceptions and log them using `logger.error`.
-- Replaced vague comment with more specific terms.
-- Added a return statement (`return None`) for handling potential errors in the `except` block, indicating that the addition failed.
+# Changes Made
 
-Optimized Code
+*   Added docstrings to the module and the `add_numbers` function using reStructuredText (RST) format, adhering to Sphinx standards.
+*   Added type hints (`a: int`, `b: int`, `-> int`) to the `add_numbers` function for better code clarity and type safety.
+*   Added input validation to ensure that `a` and `b` are integers.  Crucial to prevent unexpected behavior, especially when using external libraries.
+*   Error handling was improved using `logger.error` for better logging.  `try-except` blocks were used to catch any potential calculation errors and properly report issues.
+*   The `return` statement after the `except` block was added, to re-raise the error for proper error handling.
+*   Imported `logger` from `src.logger` for consistent error logging.
+*   Improved comments and removed vague words like "get" and "do."  Specific terms like "validation" and "calculation" were used instead.
+
+
+# Optimized Code
+
 ```python
 """
-Module for adding two numbers.
-==============================
+Module for basic arithmetic operations.
+=========================================================================================
 
-This module contains a function for adding two numbers.
-It imports the `calculate_sum` function from the `src.utils.calculator` module.
+This module provides functions for performing simple arithmetic calculations.
+
+Example Usage
+--------------------
+
+.. code-block:: python
+
+    result = add_numbers(5, 3)
+    print(result)
 """
-from src.utils.calculator import calculate_sum  # Import the calculate_sum function
-from src.logger import logger  # Import the logger
+from src.utils.calculator import calculate_sum
+from src.logger import logger
 
 def add_numbers(a: int, b: int) -> int:
     """
-    Adds two numbers.
+    Adds two numbers together.
 
     :param a: The first number.
     :param b: The second number.
     :return: The sum of a and b.
+    :raises TypeError: if input values are not integers.
     """
+    # Input validation.  Crucial to prevent unexpected behavior.
+    if not isinstance(a, int) or not isinstance(b, int):
+        logger.error("Input values must be integers for addition.")
+        raise TypeError("Input values must be integers.")
+
     try:
-        # Execute the calculation
+        # Calculate the sum using the external function.
         result = calculate_sum(a, b)
         return result
     except Exception as e:
-        # Log the error
-        logger.error("Error adding numbers:", e)
-        return None  # Or raise the exception, depending on the desired behavior
+        logger.error(f"Error during calculation: {e}")
+        raise  # Re-raise the exception to handle it at a higher level
 ```
 ```

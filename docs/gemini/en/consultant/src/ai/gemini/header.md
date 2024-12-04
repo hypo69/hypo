@@ -2,11 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/gemini/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.ai.gemini 
 	:platform: Windows, Unix
 	:synopsis: Модуль интерфейса с моделью от Coogle - generativeai
@@ -76,103 +72,69 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 # Improved Code
 
 ```python
-## \file hypotez/src/ai/gemini/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# -*- coding: utf-8 -*-
 """
-Module for Gemini AI interaction.
-=========================================================================================
+Module for Gemini AI interactions.
 
-This module handles interactions with the Google Gemini AI model.
-It includes functions for configuration loading and project root determination.
-
-
-Example Usage
---------------------
-
-.. code-block:: python
-
-    from hypotez.src.ai.gemini.header import ...  # Import necessary functions
-
-    root_path = set_project_root() # Find project root directory
-    config = load_config(root_path)  # Loads config.json from the project root
+This module provides functions for interacting with the Google Gemini AI model.
+It handles configuration loading, error handling and loading the project root.
 """
-MODE = 'dev'
-
 
 import sys
 import json
 from packaging.version import Version
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns from src.utils.jjson
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads, j_loads_ns
+from src.logger import logger  # Import error logging
+
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """
-    Determines the project root directory.
+    """Find the project root directory.
 
-    :param marker_files: Files/directories used to identify the project root.
-    :return: Path to the project root.
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
+
+    :param marker_files: Filenames or directory names to identify the project root.
+    :type marker_files: tuple
+    :return: Path to the root directory.
+    :rtype: Path
     """
-    # Determine the project root directory.
     current_path = Path(__file__).resolve().parent
-    root_dir = current_path
-    for parent_dir in [current_path] + list(current_path.parents):
-        if any((parent_dir / marker).exists() for marker in marker_files):
-            root_dir = parent_dir
+    project_root = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            project_root = parent
             break
-    # Add project root to Python path if it's not already there.
-    if root_dir not in sys.path:
-        sys.path.insert(0, str(root_dir))
-    return root_dir
+    if project_root not in sys.path:
+        sys.path.insert(0, str(project_root))
+    return project_root
 
 
-# Get the root directory of the project.
+# Get the root directory of the project
 project_root = set_project_root()
-"""project_root (Path): The root directory of the project."""
-
-
-from src import gs
-from src.logger import logger
+"""project_root (Path): Path to the project root."""
 
 
 config: dict = None
-
-def load_config(root_path:Path):
-    """Loads configuration from config.json."""
-    config_path = root_path / 'src' / 'config.json'
-    try:
-        config = j_loads(config_path)
-        return config
-    except FileNotFoundError:
-        logger.error(f"Configuration file 'config.json' not found at {config_path}")
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f"Error decoding configuration file 'config.json': {e}", exc_info=True)
-        return None
-
-# Loads config from the project root directory
-config = load_config(project_root)
-
+try:
+    # Load configuration from config.json
+    config_path = project_root / 'src' / 'config.json'
+    config = j_loads(config_path)  # Use j_loads for JSON loading
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Error loading configuration:', e)
+    # Handle missing or invalid configuration (e.g., set default values)
+    config = {}
 
 
 doc_str: str = None
-def load_readme(root_path:Path):
-    """Loads README.MD content."""
-    readme_path = root_path / 'src' / 'README.MD'
-    try:
-        with open(readme_path, 'r', encoding='utf-8') as f:  # Added encoding for utf-8 compatibility
-            return f.read()
-    except FileNotFoundError:
-        logger.error(f"README.MD file not found at {readme_path}")
-        return None
-    except Exception as e:
-        logger.error(f"Error loading README.MD: {e}", exc_info=True)
-        return None
-
-# Loads README content, handling potential errors.
-doc_str = load_readme(project_root)
+try:
+    # Load documentation from README.md
+    readme_path = project_root / 'src' / 'README.MD'
+    with open(readme_path, 'r') as readme_file:
+        doc_str = readme_file.read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Error loading documentation:', e)
+    doc_str = ""
 
 
 __project_name__ = config.get("project_name", 'hypotez') if config else 'hypotez'
@@ -181,121 +143,89 @@ __doc__ = doc_str if doc_str else ''
 __details__ = ''
 __author__ = config.get("author", '') if config else ''
 __copyright__ = config.get("copyright", '') if config else ''
+# Handling potential missing 'cofee' key. Use a default value or handle the error.
+__cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if config else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 
-# Using logger to handle potential errors when accessing settings
-try:
-    __cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
-except AttributeError as e:
-    logger.error(f"Error accessing config 'cofee': {e}")
-    __cofee__ = "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
 # Changes Made
 
-- Added imports for `j_loads` and `j_loads_ns` from `src.utils.jjson`.
-- Replaced `json.load` with `j_loads` for configuration loading.
-- Added comprehensive docstrings using reStructuredText (RST) for all functions and variables.
-- Implemented error handling using `logger.error` instead of `try-except` where appropriate.
-- Added type hints where applicable.
-- Corrected variable names (e.g., `copyrihgnt` to `copyright`).
-- Improved variable naming conventions to be more descriptive (e.g., `__root__` to `project_root`).
-- Added a function `load_config` to load the configuration file and handle potential errors.
-- Included `exc_info=True` in `logger.error` for better debugging.
-- Added `encoding='utf-8'` to the `open()` function for proper handling of README.MD file.
-- Created `load_readme` function to load README and handle errors.
-
+-   Imported `j_loads` and `j_loads_ns` from `src.utils.jjson`.
+-   Imported `logger` from `src.logger`.
+-   Replaced `json.load` with `j_loads`.
+-   Added comprehensive docstrings using reStructuredText (RST) format for the module, function, and variables.
+-   Replaced `...` with appropriate error handling using `logger.error`.
+-   Improved variable names (e.g., `__root__` to `project_root`).
+-   Added more descriptive comments to improve code readability.
+-   Fixed typo in `__copyright__`.
+-   Handled the potential missing `cofee` key.
 
 # Optimized Code
 
 ```python
-## \file hypotez/src/ai/gemini/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# -*- coding: utf-8 -*-
 """
-Module for Gemini AI interaction.
-=========================================================================================
+Module for Gemini AI interactions.
 
-This module handles interactions with the Google Gemini AI model.
-It includes functions for configuration loading and project root determination.
-
-
-Example Usage
---------------------
-
-.. code-block:: python
-
-    from hypotez.src.ai.gemini.header import ...  # Import necessary functions
-
-    root_path = set_project_root() # Find project root directory
-    config = load_config(root_path)  # Loads config.json from the project root
+This module provides functions for interacting with the Google Gemini AI model.
+It handles configuration loading, error handling and loading the project root.
 """
-MODE = 'dev'
-
 
 import sys
 import json
 from packaging.version import Version
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns from src.utils.jjson
-from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads, j_loads_ns
+from src.logger import logger  # Import error logging
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """
-    Determines the project root directory.
+    """Find the project root directory.
 
-    :param marker_files: Files/directories used to identify the project root.
-    :return: Path to the project root.
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
+
+    :param marker_files: Filenames or directory names to identify the project root.
+    :type marker_files: tuple
+    :return: Path to the root directory.
+    :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
-    root_dir = current_path
-    for parent_dir in [current_path] + list(current_path.parents):
-        if any((parent_dir / marker).exists() for marker in marker_files):
-            root_dir = parent_dir
+    project_root = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            project_root = parent
             break
-    if root_dir not in sys.path:
-        sys.path.insert(0, str(root_dir))
-    return root_dir
+    if project_root not in sys.path:
+        sys.path.insert(0, str(project_root))
+    return project_root
 
 
+# Get the root directory of the project
 project_root = set_project_root()
-"""project_root (Path): The root directory of the project."""
+"""project_root (Path): Path to the project root."""
 
 
-def load_config(root_path: Path) -> dict | None:
-    """Loads configuration from config.json."""
-    config_path = root_path / 'src' / 'config.json'
-    try:
-        config = j_loads(config_path)
-        return config
-    except FileNotFoundError:
-        logger.error(f"Configuration file 'config.json' not found at {config_path}")
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f"Error decoding configuration file 'config.json': {e}", exc_info=True)
-        return None
+config: dict = None
+try:
+    # Load configuration from config.json
+    config_path = project_root / 'src' / 'config.json'
+    config = j_loads(config_path)  # Use j_loads for JSON loading
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Error loading configuration:', e)
+    # Handle missing or invalid configuration (e.g., set default values)
+    config = {}
 
 
-config = load_config(project_root)
-
-
-def load_readme(root_path: Path) -> str | None:
-    """Loads README.MD content."""
-    readme_path = root_path / 'src' / 'README.MD'
-    try:
-        with open(readme_path, 'r', encoding='utf-8') as f:  # Added encoding for utf-8 compatibility
-            return f.read()
-    except FileNotFoundError:
-        logger.error(f"README.MD file not found at {readme_path}")
-        return None
-    except Exception as e:
-        logger.error(f"Error loading README.MD: {e}", exc_info=True)
-        return None
-
-
-doc_str = load_readme(project_root)
+doc_str: str = None
+try:
+    # Load documentation from README.md
+    readme_path = project_root / 'src' / 'README.MD'
+    with open(readme_path, 'r') as readme_file:
+        doc_str = readme_file.read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Error loading documentation:', e)
+    doc_str = ""
 
 
 __project_name__ = config.get("project_name", 'hypotez') if config else 'hypotez'
@@ -304,10 +234,7 @@ __doc__ = doc_str if doc_str else ''
 __details__ = ''
 __author__ = config.get("author", '') if config else ''
 __copyright__ = config.get("copyright", '') if config else ''
+# Handling potential missing 'cofee' key. Use a default value or handle the error.
+__cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if config else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 
-try:
-    __cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
-except (AttributeError, TypeError) as e:  # More specific error handling
-    logger.error(f"Error accessing config 'cofee': {e}")
-    __cofee__ = "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```

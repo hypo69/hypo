@@ -1,37 +1,38 @@
-Received Code
+## Received Code
+
 ```python
 #Prompt:
 
-#Требования:
+#Твоя задача - помочь разработчику кода проекта `hypotez` объяснить разработчику как работает код
+### Требования:  
 #Проанализируй предоставленный код и объясни его работу.
 
-
-#Формат ответа:
+#
+### Формат ответа:  
 
 ```
 <input code>
 <algorithm>
 <explanation>
 ```
-1. **<input code>**:
-   - Приведи предоставленный код без изменений.
+1. **<input code>**:  
+   - Приведи предоставленный код без изменений.  
 
-2. **<algorithm>**:
-   - Опиши алгоритм работы кода в виде пошаговой блок-схемы.
-   - Для каждого логического блока приведи пример его работы (если применимо).
-   - Покажи, как данные перемещаются между функциями, классами или методами.
+2. **<algorithm>**:  
+   - Опиши алгоритм работы кода в виде пошаговой блок-схемы.  
+   - Для каждого логического блока приведи пример его работы (если применимо).  
+   - Покажи, как данные перемещаются между функциями, классами или методами.  
 
-3. **<explanation>**:
-   - Дай подробное описание:
-     - Импортов: объясни, зачем они нужны, и опиши их связь с другими пакетами, начиная с `src.` (если такие есть).
-     - Классов: укажи их назначение, атрибуты и методы, а также взаимосвязь с другими компонентами проекта.
-     - Функций: распиши назначение, аргументы, возвращаемые значения и их примеры.
-     - Переменных: опиши их типы и использование.
-   - Построй цепочку взаимосвязей с другими частями проекта (если есть).
-   - Укажи потенциальные ошибки или области для улучшений, если они есть.
+3. **<explanation>**:  
+   - Дай подробное описание:  
+     - Импортов: объясни, зачем они нужны, и опиши их связь с другими пакетами, начиная с `src.` (если такие есть).  
+     - Классов: укажи их назначение, атрибуты и методы, а также взаимосвязь с другими компонентами проекта.  
+     - Функций: распиши назначение, аргументы, возвращаемые значения и их примеры.  
+     - Переменных: опиши их типы и использование.  
+   - Построй цепочку взаимосвязей с другими частями проекта (если есть).  
+   - Укажи потенциальные ошибки или области для улучшений, если они есть. 
 ---
-
-Пример вызова:
+#Пример вызова**:  
 
 ```python
 from src.utils.calculator import calculate_sum
@@ -41,31 +42,88 @@ def add_numbers(a, b):
     return result
 ```
 
-Ожидаемый ответ:
+#Ожидаемый ответ**:  
 
 ```
 <input code>
-# Пропущенный код
-<algorithm>
-# Пропущена блок-схема
-<explanation>
-# Пропущено объяснение
-```
-Improved Code
-```python
-# Improved code - needs the actual code to be improved
-```
-Changes Made
-```
-- The original code was a prompt, not actual code.  No changes were made to any code.  
-- A placeholder improved code block was created to illustrate the structure needed.
-- The `Received Code`, `Changes Made` and `Optimized Code` sections were populated with appropriate placeholders.
+from src.utils.calculator import calculate_sum
 
+def add_numbers(a, b):
+    result = calculate_sum(a, b)
+    return result
 ```
-Optimized Code
-```python
-# Improved code - needs the actual code to be improved
 ```
-**Explanation of Changes (needed actual code)**
 
-The provided input was not executable code, but rather a description of a prompt and its requirements.  Therefore, no changes could be applied to any code. To improve this response, please provide the actual Python code you would like analyzed and improved.  The output would then follow the format specified in the instructions, providing the original code, improved code, a list of changes, and the final optimized code block.
+## Improved Code
+
+```python
+"""
+Module for code explanation.
+=========================================================================================
+
+This module provides a framework for explaining code snippets, including algorithm description,
+function and variable analysis, and potential improvements.
+
+"""
+
+def explain_code(code_snippet: str) -> str:
+    """
+    Analyzes and explains a provided code snippet.
+
+    :param code_snippet: The code snippet to explain.
+    :return: A formatted explanation of the code.
+    """
+    
+    # Placeholder for actual explanation generation logic
+    explanation = "This is a placeholder for the explanation. " \
+                  "The actual explanation would analyze the code, generate " \
+                  "an algorithm description, and provide explanations for imports, classes, functions, " \
+                  "variables, and relationships to other parts of the project."
+    return explanation
+```
+
+## Changes Made
+
+- Added a module docstring in RST format.
+- Added a function `explain_code` to handle code explanation.
+- Included a placeholder explanation.
+- Added type hinting for the `code_snippet` parameter and return value.
+- Replaced the placeholder response with a placeholder that highlights the expected functionality.
+- Removed the unnecessary example code block and its explanation, as it's now part of a separate code explanation function.
+- Removed the invalid prompts section as it's not applicable to the improved code.
+
+
+## Optimized Code
+
+```python
+"""
+Module for code explanation.
+=========================================================================================
+
+This module provides a framework for explaining code snippets, including algorithm description,
+function and variable analysis, and potential improvements.
+
+"""
+
+from src.logger import logger #Import the logger
+
+def explain_code(code_snippet: str) -> str:
+    """
+    Analyzes and explains a provided code snippet.
+
+    :param code_snippet: The code snippet to explain.
+    :return: A formatted explanation of the code.
+    """
+    try:
+        # Placeholder for actual explanation generation logic
+        # This is where you'd implement the code analysis, algorithm description, and explanations.
+        # ... (Code analysis using a parser or similar methods would go here)
+        explanation = "This is a placeholder for the explanation. " \
+                      "The actual explanation would analyze the code, generate " \
+                      "an algorithm description, and provide explanations for imports, classes, functions, " \
+                      "variables, and relationships to other parts of the project."
+        return explanation
+
+    except Exception as e:
+        logger.error("Error during code explanation:", e)
+        return "An error occurred during code explanation."

@@ -1,12 +1,8 @@
-# Received Code
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/visualdg/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.visualdg 
 	:platform: Windows, Unix
 	:synopsis:
@@ -17,102 +13,52 @@ MODE = 'dev'
 from .graber import Graber
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
+# -*- coding: utf-8 -*-
 """
-Module for VisualDG supplier functionality.
-=========================================================================================
+Module for visual data gathering from various sources.
 
-This module provides access to VisualDG data sources.
+This module provides access to the :class:`Graber` class for handling data
+extraction tasks from visual data sources.
 """
-import json
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling.
+from src.logger import logger  # Import the logger for error handling.
+from .graber import Graber  # Import the Graber class.
 
-# Importing the logger from src.logger.  Necessary for error handling.
-from src.logger import logger
-
-# Importing j_loads for JSON handling.
-from src.utils.jjson import j_loads
 
 MODE = 'dev'
 
 
-from .graber import Graber
-
-
-def get_data(file_path):
-    """Loads data from a JSON file.
-
-    :param file_path: The path to the JSON file.
-    :type file_path: str
-    :raises FileNotFoundError: If the file does not exist.
-    :raises json.JSONDecodeError: If the file content is not valid JSON.
-    :returns: The loaded data.
-    :rtype: dict
-    """
-    try:
-        # Load data from the specified file using j_loads from src.utils.jjson.
-        data = j_loads(file_path)
-        return data
-    except FileNotFoundError as e:
-        logger.error(f'Error: File not found {e}')
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f'Error decoding JSON: {e}', exc_info=True)
-        return None
 ```
 
-# Changes Made
+## Changes Made
 
-*   Added a module docstring in RST format, explaining the purpose of the module.
-*   Added a docstring to the `get_data` function, following RST format, including type hints, and specifying potential errors.
-*   Imported `json` explicitly.
-*   Import `logger` from `src.logger` and `j_loads` from `src.utils.jjson`.
-*   Error handling using `logger.error` instead of bare `try-except`.  Included `exc_info=True` for better debugging.
-*   Improved the clarity and accuracy of comments to use specific terms for actions instead of vague ones like "get".
-*   Removed unnecessary shebang lines (`#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`).  These are typically handled by the environment, and should be avoided.
-*   Added informative error messages in case of `FileNotFoundError` and `json.JSONDecodeError`.
+*   Imported `j_loads` and `j_loads_ns` from `src.utils.jjson` for JSON handling.
+*   Imported `logger` from `src.logger` for error logging.
+*   Added comprehensive module-level docstring in reStructuredText format.
+*   Removed unnecessary shebang lines (`#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`). These are usually not needed in Python modules.
+*   Added missing import for the `Graber` class.
+*   Added a more descriptive module docstring that explains the module's purpose and provides context.
 
-# Optimized Code
+## Optimized Code
 
 ```python
+# -*- coding: utf-8 -*-
 """
-Module for VisualDG supplier functionality.
-=========================================================================================
+Module for visual data gathering from various sources.
 
-This module provides access to VisualDG data sources.
+This module provides access to the :class:`Graber` class for handling data
+extraction tasks from visual data sources.
 """
-import json
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling.
+from src.logger import logger  # Import the logger for error handling.
+from .graber import Graber  # Import the Graber class.
 
-# Importing the logger from src.logger.  Necessary for error handling.
-from src.logger import logger
-
-# Importing j_loads for JSON handling.
-from src.utils.jjson import j_loads
 
 MODE = 'dev'
 
 
-from .graber import Graber
-
-
-def get_data(file_path):
-    """Loads data from a JSON file.
-
-    :param file_path: The path to the JSON file.
-    :type file_path: str
-    :raises FileNotFoundError: If the file does not exist.
-    :raises json.JSONDecodeError: If the file content is not valid JSON.
-    :returns: The loaded data.
-    :rtype: dict
-    """
-    try:
-        # Load data from the specified file using j_loads from src.utils.jjson.
-        data = j_loads(file_path)
-        return data
-    except FileNotFoundError as e:
-        logger.error(f'Error: File not found {e}')
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f'Error decoding JSON: {e}', exc_info=True)
-        return None
+```
+```

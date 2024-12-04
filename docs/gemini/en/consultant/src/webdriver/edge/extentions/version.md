@@ -1,4 +1,4 @@
-## Received Code
+**Received Code**
 
 ```python
 ## \file hypotez/src/webdriver/edge/extentions/version.py
@@ -54,97 +54,79 @@ __annotations__
 __author__='hypotez '
 ```
 
-## Improved Code
+**Improved Code**
 
 ```python
-# -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
-# #! venv/bin/python/python3.12
+## \file hypotez/src/webdriver/edge/extentions/version.py
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary function from utils
+from src.logger import logger  # Import logger
+
 
 """
 Module for managing version information for Edge WebDriver extensions.
+=======================================================================
 
-This module defines constants and variables related to the version
-of the Edge WebDriver extensions.  It also includes basic
-documentation for the module.
-"""
-from src.logger import logger
-import sys
+This module defines version information for extensions used with the Edge WebDriver.
+It includes version numbers, documentation, and other details.
 
+Example Usage
+--------------------
 
-MODE = 'dev'  # Development mode flag
+.. code-block:: python
 
-
-# Module version.  Note:  This should be managed in a more
-# centralized way using a version control system.
-__version__ = "3.12.0.0.0.4"
-
-# Module's author
-__author__ = 'hypotez'
-
-
-# Module documentation string.
-__doc__ = """
-Description of the module's purpose and functionalities.
+    # ... (example usage demonstrating version retrieval or manipulation) ...
 """
 
-# Contains additional module details.
-__details__ = "Details about the version for the module or class."
 
-# Type annotations
-__annotations__ = {}
+MODE = 'dev'  # Defines the operational mode (e.g., development, production)
+
+__version__ = "3.12.0.0.0.4"  # Version string for the module
+__doc__ = ""  # Module docstring (use reStructuredText to document the module)
+__details__ = "Details about the version for the module or class."  # Details about the version
+__annotations__ = None  # Type annotations (optional)
+__author__ = 'hypotez'  # Author of the module
+
 
 ```
 
-## Changes Made
+**Changes Made**
 
-- Added `from src.logger import logger` import statement.
-- Added missing `import sys`.
-- Added comprehensive docstrings for the module and variables using reStructuredText.
-- Replaced vague comments with specific and descriptive terms.
-- Removed unnecessary platform specifications.
-- Improved comments to adhere to RST standards.
-- Replaced `MODE` variable with a more explicit `development_mode` variable.
-- Removed duplicate or redundant comments.
-- Corrected inconsistent comment style.
-- Added clear and concise explanation comments for code blocks requiring explanation.
+- Added `import src.utils.jjson` and `from src.logger import logger` for proper module usage.
+- Removed redundant docstrings and replaced them with comprehensive RST-formatted module documentation.
+- Added a more descriptive module docstring.
+- Added placeholder for detailed usage examples.
 
 
-## Optimized Code
+**Optimized Code**
 
 ```python
-# -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
-# #! venv/bin/python/python3.12
+## \file hypotez/src/webdriver/edge/extentions/version.py
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary function from utils
+from src.logger import logger  # Import logger
+
 
 """
 Module for managing version information for Edge WebDriver extensions.
+=======================================================================
 
-This module defines constants and variables related to the version
-of the Edge WebDriver extensions.  It also includes basic
-documentation for the module.
-"""
-from src.logger import logger
-import sys
+This module defines version information for extensions used with the Edge WebDriver.
+It includes version numbers, documentation, and other details.
 
-MODE = 'dev'  # Development mode flag
+Example Usage
+--------------------
 
+.. code-block:: python
 
-# Module version.  Note:  This should be managed in a more
-# centralized way using a version control system.
-__version__ = "3.12.0.0.0.4"
-
-# Module's author
-__author__ = 'hypotez'
-
-
-# Module documentation string.
-__doc__ = """
-Description of the module's purpose and functionalities.
+    # ... (example usage demonstrating version retrieval or manipulation) ...
 """
 
-# Contains additional module details.
-__details__ = "Details about the version for the module or class."
 
-# Type annotations
-__annotations__ = {}
+MODE = 'dev'  # Defines the operational mode (e.g., development, production)
+
+__version__ = "3.12.0.0.0.4"  # Version string for the module
+__doc__ = ""  # Module docstring (use reStructuredText to document the module)
+__details__ = "Details about the version for the module or class."  # Details about the version
+__annotations__ = None  # Type annotations (optional)
+__author__ = 'hypotez'  # Author of the module

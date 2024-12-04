@@ -1,50 +1,17 @@
-Как использовать модуль hypotez/src/endpoints/advertisement/facebook
+Как использовать модуль src.endpoints.advertisement.facebook
 ========================================================================================
 
 Описание
 -------------------------
-Модуль `hypotez/src/endpoints/advertisement/facebook` предоставляет инструменты для работы с рекламными объявлениями на Facebook. Он содержит классы для взаимодействия с API Facebook, определения полей и управления рекламными кампаниями.
+Модуль `src.endpoints.advertisement.facebook` предоставляет инструменты для работы с рекламной платформой Facebook.  Он содержит классы для взаимодействия с API Facebook, определения полей данных и работы с промоутерами.  Константа `MODE` определяет режим работы (в данном случае 'dev').
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых классов:** Модуль экспортирует классы `Facebook`, `FacebookFields`, `FacebookPromoter` и функцию `get_event_url`.  Необходимо импортировать нужные классы в свой код, например:
+1. **Импорт необходимых классов:** Модуль импортирует классы `Facebook`, `FacebookFields`, `FacebookPromoter`, и функцию `get_event_url` из подмодулей внутри `src.endpoints.advertisement.facebook`.
 
-   .. code-block:: python
+2. **Инициализация и использование:**  Для работы с API Facebook необходимо создать экземпляр класса `Facebook`.  В зависимости от задач, можно использовать классы `FacebookFields` для определения полей, `FacebookPromoter` для работы с промоутерами.
 
-       from hypotez.src.endpoints.advertisement.facebook import Facebook, FacebookFields, FacebookPromoter, get_event_url
-
-
-2. **Инициализация объекта Facebook:**  Для взаимодействия с Facebook API необходимо создать экземпляр класса `Facebook`.  Параметры инициализации зависят от способа аутентификации и подключения к API.
-
-   .. code-block:: python
-
-       # Пример инициализации (замените на ваши данные)
-       facebook_instance = Facebook(access_token='YOUR_ACCESS_TOKEN')
-
-
-3. **Работа с полями:** Класс `FacebookFields` предоставляет набор полей, которые могут быть использованы для запросов к API Facebook.  Используйте эти поля для точной настройки запросов.
-
-   .. code-block:: python
-
-       # Пример использования FacebookFields
-       fields = FacebookFields()
-       specific_fields = fields.get_fields(['name', 'description'])
-
-
-4. **Управление рекламными кампаниями (Promoter):**  Класс `FacebookPromoter` позволяет управлять рекламными кампаниями. Используйте его методы для создания, редактирования или получения информации о кампаниях.
-
-   .. code-block:: python
-
-       # Пример использования FacebookPromoter (замените на ваши данные)
-       promoter = FacebookPromoter(facebook_instance)
-       campaign_data = promoter.get_campaign_details(campaign_id='YOUR_CAMPAIGN_ID')
-
-
-5. **Получение URL события:**  Функция `get_event_url` возвращает URL-адрес события.
-
-   .. code-block:: python
-
-       event_url = get_event_url(event_id='YOUR_EVENT_ID')
+3. **Использование функции `get_event_url`:** Функция `get_event_url` вероятно возвращает URL-адрес определенного события. Для ее использования, нужно передать необходимые аргументы.
 
 
 Пример использования
@@ -53,20 +20,17 @@
 
     from hypotez.src.endpoints.advertisement.facebook import Facebook, FacebookFields, FacebookPromoter, get_event_url
 
-    # Замените на ваши данные
-    access_token = 'YOUR_ACCESS_TOKEN'
-    campaign_id = 'YOUR_CAMPAIGN_ID'
-    event_id = 'YOUR_EVENT_ID'
+    # Инициализация Facebook
+    facebook_instance = Facebook()
 
-    facebook_instance = Facebook(access_token=access_token)
-    promoter = FacebookPromoter(facebook_instance)
+    # Пример использования FacebookFields
+    facebook_fields = FacebookFields()
+    fields_list = facebook_fields.get_required_fields()
+    print(fields_list)
 
-    try:
-        campaign_details = promoter.get_campaign_details(campaign_id=campaign_id)
-        print(f"Подробности кампании: {campaign_details}")
+    # Пример использования FacebookPromoter (предполагается, что есть объект promoter)
+    promoter_instance = FacebookPromoter()
+    event_url = get_event_url(promoter_instance.event_id)  #  Пример вызова, предполагая, что у объекта FacebookPromoter есть атрибут event_id
+    print(f"Ссылка на событие: {event_url}")
 
-        event_url = get_event_url(event_id=event_id)
-        print(f"Ссылка на событие: {event_url}")
-
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
+    # ... другие операции с Facebook API ...

@@ -3,51 +3,57 @@
 
 Описание
 -------------------------
-Класс `TinyTool` служит основой для создания специализированных инструментов, которые могут быть использованы агентами. Он предоставляет методы для инициализации, обработки действий, проверки прав доступа, а также генерирует подсказки для определений и ограничений действий.  Этот класс абстрактный и требует реализации методов `_process_action`, `actions_definitions_prompt`, и `actions_constraints_prompt` в подклассах.
+Этот класс `TinyTool` служит основой для инструментов, позволяющих агентам выполнять специализированные задачи.  Он предоставляет методы для инициализации инструмента, обработки действий, проверки реальных последствий, проверки владения инструментом и генерации подсказок для определений и ограничений действий.  Подклассы должны реализовать метод `_process_action` для выполнения конкретных задач инструмента.
 
 Шаги выполнения
 -------------------------
-1. **Инициализация:**  Создается экземпляр класса `TinyTool` с заданными параметрами:
-    - `name`: Имя инструмента.
-    - `description`: Краткое описание инструмента.
-    - `owner`: Агент, владеющий инструментом (по умолчанию - любой агент).
-    - `real_world_side_effects`: Флаг, указывающий, может ли инструмент иметь последствия в реальном мире.
-    - `exporter`: Экспортер, позволяющий экспортировать результаты работы инструмента.
-    - `enricher`: Обогатитель, улучшающий результаты.
-
-
-2. **Обработка действия:** Метод `process_action` обрабатывает действие, переданное инструменту.
-    - Вызывается `_protect_real_world()`, чтобы вывести предупреждение, если инструмент имеет реальные последствия.
-    - Вызывается `_enforce_ownership(agent)`, чтобы проверить, владеет ли агент инструментом.
-    - Вызывается абстрактный метод `_process_action(agent, action)`, который должен быть реализован в подклассах.
-
-
-3. **Определение и ограничения действий:** Методы `actions_definitions_prompt` и `actions_constraints_prompt` генерируют подсказки для определения и ограничений доступных действий.
+1. **Инициализация:** Создать экземпляр класса `TinyTool` с указанием имени, описания, владельца (если применимо), наличия реальных последствий и опциональными экспортером и обогатителем результатов.
+2. **Обработка действия:** Вызвать метод `process_action` с агентом и словарем `action`.
+3. **Обработка внутреннего действия:** Внутри `process_action`, выполняется проверка на реальные последствия (`_protect_real_world`) и проверка на владение (`_enforce_ownership`).  Затем метод `_process_action` (который должен быть реализован в подклассе) выполняет конкретное действие.
+4. **Генерация подсказок:** Методы `actions_definitions_prompt` и `actions_constraints_prompt` возвращают подсказки, описывающие допустимые типы действий и ограничения для инструмента.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
+    import logging
     import json
-    from tinytroupe.tools import TinyTool, TinyWordProcessor  # Импортируем необходимые классы
+    import tinytroupe.utils as utils
+    from tinytroupe.extraction import ArtifactExporter
+    from tinytroupe.enrichment import TinyEnricher
+    from tinytroupe.tools import TinyTool
 
-    # Создаем экземпляр инструмента
-    word_processor = TinyWordProcessor(owner="agent1", exporter=None, enricher=None)
+    # Пример экспортера (необязательно)
+    class MyExporter(ArtifactExporter):
+        def export(self, artifact_name, artifact_data, content_type, content_format, target_format):
+            print(f"Экспортировано: {artifact_name} ({content_type})")
 
-    # Пример действия в формате JSON
+    # Пример обогатителя (необязательно)
+    class MyEnricher(TinyEnricher):
+        def enrich_content(self, requirements, content, content_type, context_info, context_cache, verbose):
+            return content + " - (обогащенное содержимое)"
+
+    # Создание инструмента
+    my_tool = TinyTool(
+        name="Мой инструмент",
+        description="Мой инструмент выполняет какую-то задачу",
+        real_world_side_effects=False,
+        exporter=MyExporter(),
+        enricher=MyEnricher()
+    )
+
+    # Пример действия (в словаре)
     action = {
-        'type': 'WRITE_DOCUMENT',
-        'content': json.dumps({
-            'title': 'Мой документ',
-            'content': '# Заголовок\nТекст документа.',
-            'author': 'agent1'
-        })
+        "type": "ЗАДАЧА1",
+        "content": json.dumps({"параметр1": "значение1"})
     }
 
     # Обработка действия
-    result = word_processor.process_action(agent="agent1", action=action)
-
-    if result:
-        print("Документ успешно создан.")
-    else:
-        print("Ошибка при создании документа.")
+    try:
+        result = my_tool.process_action(agent="agent1", action=action)
+        if result:
+            print("Действие выполнено успешно")
+        else:
+            print("Действие не выполнено")
+    except ValueError as e:
+        print(f"Ошибка: {e}")

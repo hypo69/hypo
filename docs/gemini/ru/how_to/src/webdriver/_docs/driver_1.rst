@@ -1,39 +1,49 @@
-Как использовать этот блок кода
+Как использовать метакласс для динамического создания класса Driver
 ========================================================================================
 
 Описание
 -------------------------
-Этот код определяет метакласс `DriverMeta`, предназначенный для динамического создания класса `Driver`, который наследует как от базового класса `Driver`, так и от указанного класса Selenium WebDriver (`Chrome`, `Firefox` или `Edge`). Метакласс отвечает за инициализацию корректной комбинации этих классов.
+Этот код определяет метакласс `DriverMeta`, который динамически создаёт класс `Driver`, наследующий от базового класса `Driver` и указанного класса Selenium WebDriver (`Chrome`, `Firefox` или `Edge`). Метакласс отвечает за создание правильного сочетания этих классов.  Он обеспечивает гибкую и динамическую инициализацию WebDriver с дополнительными настраиваемыми функциями.
 
 Шаги выполнения
 -------------------------
-1. **Определение метакласса `DriverMeta`**: Код определяет метакласс `DriverMeta`, который используется для управления созданием нового класса `Driver`.
+1. **Определение метакласса `DriverMeta`:**  Создаётся метакласс `DriverMeta`, отвечающий за создание новых классов `Driver`.
 
-2. **Метод `__call__`**: Метод `__call__` метакласса вызывается при создании экземпляра класса. В данном случае он используется для создания нового класса `Driver`, который наследует от базового класса `Driver` и одного из классов Selenium WebDriver (`Chrome`, `Firefox`, или `Edge`). Он принимает `cls` (базовый класс `Driver`), `webdriver_cls` (класс Selenium WebDriver) и аргументы `*args` и `**kwargs` для конструктора класса `Driver`.
+2. **Метод `__call__`:** Этот метод вызывается при создании экземпляра класса `Driver`.
+    - Принимает `cls` (базовый класс `Driver`), `webdriver_cls` (класс Selenium WebDriver), а также `*args` и `**kwargs` (аргументы и ключевые аргументы для конструктора класса `Driver`).
+    - Проверяет, что `webdriver_cls` является классом (`isinstance`) и является подклассом одного из разрешённых WebDriver классов (`Chrome`, `Firefox`, `Edge`) (`issubclass`).
+    - Динамически создаёт новый класс `Driver`, наследующий от `cls` и `webdriver_cls`.
+    - В конструкторе нового класса `Driver` (`__init__`) происходит логирование инициализации WebDriver с его именем и аргументами.
+    - Используется `super()` для вызова конструкторов родительских классов.
+    - Вызывается метод `driver_payload`.
 
-3. **Проверка типов**: Код проверяет, что `webdriver_cls` является классом (`isinstance(webdriver_cls, type)`) и что это подкласс одного из допустимых классов WebDriver (`Chrome`, `Firefox` или `Edge`) (`issubclass(webdriver_cls, Chrome | Firefox | Edge)`).
+3. **Метод `driver_payload`:** Этот метод, определённый в динамически созданном классе `Driver`, вызывается метод `driver_payload` из базового класса `Driver`. Это гарантирует выполнение любой дополнительной инициализации, необходимой классу `Driver`.
 
-4. **Динамическое создание класса `Driver`**:  Внутри метода `__call__` динамически определяется новый класс `Driver`. Этот новый класс наследует как от `cls` (базового класса `Driver`), так и от `webdriver_cls` (указанного класса WebDriver).
-
-5. **Конструктор класса `Driver`**: Конструктор `__init__` динамически созданного класса `Driver` регистрирует инициализацию WebDriver с его именем и аргументами, вызывает конструкторы родительских классов с помощью `super()`, а также вызывает метод `driver_payload`.
-
-6. **Метод `driver_payload`**: Этот метод определен внутри динамически созданного класса `Driver` и вызывает метод `driver_payload` из родительского класса `Driver`. Это гарантирует выполнение любых дополнительных инициализаций, необходимых классу `Driver`.
-
-7. **Возврат динамически созданного класса `Driver`**: Новый класс `Driver` инициализируется с предоставленными аргументами и возвращается.
-
+4. **Возвращение динамического класса:**  Созданный динамически класс `Driver` возвращается с предоставленными аргументами.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
     from selenium import webdriver
-    from selenium.webdriver.chrome.service import Service  # Пример
-    from selenium.webdriver.chrome.options import Options # Пример
+    from selenium.webdriver.chrome.service import Service
+    from selenium.webdriver.chrome.options import Options  # Пример использования options
+    from webdriver import Driver, DriverMeta, Chrome, Firefox # Подставьте путь к вашим файлам
 
-    # ... (определение базового класса Driver и классов WebDriver) ...
 
-    # Создание экземпляра драйвера с Chrome
+    # Пример использования с Chrome
     chrome_options = Options()
-    chrome_options.add_argument("--headless") # Пример
-    service = Service('path/to/chromedriver') # Пример
-    chrome_driver = Driver(webdriver.Chrome, service=service, options=chrome_options)
+    chrome_options.add_argument("--headless")  # Пример использования options
+    service = Service('path/to/chromedriver')  # Замените на свой путь
+    chrome_driver = Driver[DriverMeta](webdriver.Chrome(service=service, options=chrome_options), *args, **kwargs)
+
+    # Пример использования с Firefox
+    firefox_driver = Driver[DriverMeta](webdriver.Firefox(), *args, **kwargs)
+
+    # Пример использования с любым из поддерживаемых WebDriver (Chrome, Firefox, Edge)
+    driver = Driver[DriverMeta](webdriver_cls, *args, **kwargs)
+
+
+    # Далее, вы можете использовать chrome_driver или firefox_driver как обычный объект WebDriver.
+    chrome_driver.get("https://www.example.com")
+    # ...

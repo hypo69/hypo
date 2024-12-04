@@ -3,21 +3,18 @@
 
 Описание
 -------------------------
-Этот код предоставляет класс `SpreadSheet` для работы с Google Таблицами.  Он позволяет создавать новые таблицы, загружать данные из CSV файла в существующую таблицу, и управлять листами.  Код использует библиотеку `gspread` для взаимодействия с API Google Таблиц.  Он требует наличия файла с ключами доступа (`e-cat-346312-137284f4419e.json`), который должен быть расположен в папке `secrets` внутри директории, заданной в переменной `gs.path.secrets`.  Также код использует `pandas` для чтения CSV-файлов.
+Этот код представляет класс `SpreadSheet`, предназначенный для работы с Google Таблицами. Он позволяет создавать новые таблицы, подключаться к существующим, загружать данные из CSV-файла в выбранный лист.  Код включает обработку ошибок и использование библиотек `gspread` и `pandas` для эффективной работы с Google Таблицами.
 
 Шаги выполнения
 -------------------------
-1. **Импорт необходимых библиотек:** Код импортирует `gspread`, `ServiceAccountCredentials`, `pandas`, `Path`, `logger` и другие необходимые модули из указанных библиотек.
+1. **Импортирование необходимых библиотек:** Код импортирует необходимые библиотеки, такие как `gspread`, `pandas`, `pathlib` и `logger`.  Это позволяет использовать функции и классы из этих библиотек в дальнейшем коде.
+2. **Создание экземпляра класса `SpreadSheet`:** Создается экземпляр класса `SpreadSheet` с параметрами `spreadsheet_id`, `spreadsheet_name` и `sheet_name`. Если `spreadsheet_id` равно `None`, то будет создана новая таблица с указанным именем `spreadsheet_name`. Если `spreadsheet_id` задано, то будет открыта таблица с указанным `spreadsheet_id`.
+3. **Создание/подключение к Google Таблицам:** Используя `self.credentials` и `self.client`, код авторизуется для доступа к Google Таблицам.  В случае отсутствия таблицы с указанным ID, возникает исключение `SpreadsheetNotFound`.
+4. **Получение листа:**  Метод `get_worksheet()` получает лист в таблице с заданным именем `sheet_name`. Если листа нет, он создается с помощью `create_worksheet()`.
+5. **Загрузка данных из CSV:** Метод `upload_data_to_sheet()` читает данные из CSV-файла, используя `pd.read_csv()`. Подготавливает данные в формате, подходящем для записи в Google Таблицы (списком списков).
+6. **Запись данных в Google Таблицы:** Данные записываются в лист с помощью `self.worksheet.update('A1', data_list)`.  Это записывает данные в ячейки листа, начиная с ячейки A1.
+7. **Обработка ошибок:**  Код содержит обработку исключений (`try...except`) для предотвращения аварийного завершения при возникновении проблем, таких как отсутствие файла, ошибки при подключении к Google Таблицам и т.п.  Логирование ошибок выполняется через `logger`.
 
-2. **Создание объекта `SpreadSheet`:** Создается экземпляр класса `SpreadSheet`, передавая ему ID таблицы в Google Таблицах (`spreadsheet_id`) и имя листа (`sheet_name`).  Если `spreadsheet_id` равен `None`, то будет создана новая таблица с именем, указанным в `spreadsheet_name`.
-
-3. **Установка пути к файлу данных:** Устанавливается путь к CSV файлу с помощью `data_file = Path(\'/mnt/data/google_extracted/your_data_file.csv\')`.  Этот путь должен быть изменен на фактический путь к вашему файлу.
-
-4. **Установка имени листа:** Устанавливается имя листа в Google Таблицах с помощью `sheet_name = \'Sheet1\'`.  Этот параметр должен быть изменен на фактическое имя вашего листа.
-
-5. **Загрузка данных в таблицу:** Метод `upload_data_to_sheet()` загружает данные из CSV файла в указанный лист.  Эта функция предварительно читает данные из CSV файла с помощью `pandas.read_csv()`, а затем использует `worksheet.update('A1', data_list)` для записи в таблицу.
-
-6. **Обработка ошибок:** Код содержит обработку ошибок (`try...except`), чтобы справиться с возможными проблемами, такими как отсутствие файла, ошибка доступа к API или некорректные данные.
 
 Пример использования
 -------------------------
@@ -26,19 +23,13 @@
     from pathlib import Path
     from hypotez.src.goog.spreadsheet.spreadsheet import SpreadSheet
 
-    data_file = Path('/mnt/data/google_extracted/your_data_file.csv')  # Замените на фактический путь
-    sheet_name = 'Sheet1'  # Замените на фактическое имя листа
-    spreadsheet_id = None  # Укажите ID таблицы или None для создания новой
-    spreadsheet_name = 'My New Spreadsheet'  # Название новой таблицы (если spreadsheet_id = None)
+    data_file = Path('/mnt/data/google_extracted/your_data_file.csv')  # Замените на реальный путь
+    sheet_name = 'Sheet1'  # Замените на реальное имя листа
 
-    try:
-        google_sheet_handler = SpreadSheet(
-            spreadsheet_id=spreadsheet_id,
-            sheet_name=sheet_name,
-            spreadsheet_name=spreadsheet_name
-        )
-        google_sheet_handler.data_file = data_file
-        google_sheet_handler.upload_data_to_sheet()
-        print("Данные успешно загружены в Google Таблицы.")
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
+    # Создание новой таблицы
+    google_sheet_handler = SpreadSheet(
+        spreadsheet_id=None,
+        sheet_name=sheet_name,
+        spreadsheet_name='My New Spreadsheet'
+    )
+    google_sheet_handler.upload_data_to_sheet()

@@ -1,12 +1,8 @@
-# Received Code
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/ivory/login.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.ivory 
 	:platform: Windows, Unix
 	:synopsis:
@@ -45,108 +41,155 @@ MODE = 'dev'
 
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
 import json
-# import necessary modules
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-# Module for Ivory supplier login functionality
-def ivory_login(file_path):
-    """
-    Performs login for the Ivory supplier.
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
-    :param file_path: Path to the login data file.
+
+"""
+Module for Ivory supplier login operations.
+=========================================================================================
+
+This module handles login procedures for the Ivory supplier.  It uses j_loads for JSON
+handling and logs errors using the logger.
+
+Example Usage
+--------------------
+
+.. code-block:: python
+
+    # ... (Example usage code) ...
+"""
+MODE = 'dev'
+
+
+"""
+Configuration settings for the Ivory supplier.
+=========================================================================================
+
+This variable likely stores configuration details for the Ivory supplier.
+"""
+
+
+"""
+Login function for the Ivory supplier.
+=========================================================================================
+
+This function handles the login process for the Ivory supplier.
+"""
+def login(login_data_path: str) -> dict:
+    """
+    Performs login for Ivory supplier.
+
+    :param login_data_path: Path to the login data file.
     :raises FileNotFoundError: If the login data file is not found.
-    :raises json.JSONDecodeError: If the login data file is not in valid JSON format.
-    :raises Exception: For any other exception during file reading or processing.
-    :return: Login success status (True if successful, False otherwise).
+    :raises json.JSONDecodeError: If the login data is not valid JSON.
+    :returns: Login data dictionary.
     """
     try:
-        # Attempt to load login data from the specified file using j_loads.
-        with open(file_path, 'r') as f:
-            # Load JSON data using j_loads
+        # Attempt to load login data from the specified path using j_loads.
+        with open(login_data_path, 'r') as f:
             login_data = j_loads(f)
-        # ... (Add your login logic using login_data here)
-        # Example: Perform validation, authentication, or database interaction
-        
-        # Validate login data
-        if not login_data.get('username') or not login_data.get('password'):
-            logger.error('Missing username or password in login data.')
-            return False
-        
-        # Example: Simulate successful login
-        # (replace with your actual login process)
-        logger.info('Login data successfully loaded')
-        return True # Login Successful
-
+        # ... (Further processing of login_data) ...
+        # Example validation
+        if not isinstance(login_data, dict):
+            logger.error("Invalid login data format. Expected a dictionary.")
+            return None
+        # ... (Rest of login logic) ...
+        return login_data
     except FileNotFoundError as e:
-        logger.error(f'Login data file not found: {file_path}', e)
-        return False
+        logger.error(f"Login data file not found: {e}", exc_info=True)
+        return None
     except json.JSONDecodeError as e:
-        logger.error(f'Invalid JSON format in login data file: {file_path}', e)
-        return False
-    except Exception as e:
-        logger.error(f'Error processing login data from {file_path}', e)
-        return False
+        logger.error(f"Error decoding login data: {e}", exc_info=True)
+        return None
+
 
 ```
 
-# Changes Made
+## Changes Made
 
-*   Added necessary import statements for `j_loads` from `src.utils.jjson` and `logger` from `src.logger`.
-*   Added detailed docstrings (reStructuredText) for the `ivory_login` function, specifying parameters, potential errors, and return values.
-*   Replaced `json.load` with `j_loads` for JSON loading.
-*   Implemented basic error handling using `try-except` blocks to catch `FileNotFoundError`, `json.JSONDecodeError`, and other potential exceptions.  Error messages now include file paths for context.
-*   Added logging for successful loading and errors.
-*   Added basic validation to check for required fields.
-*   Updated comments for clarity and conciseness to use RST.
+*   Added necessary imports: `json`, `j_loads` from `src.utils.jjson`, and `logger` from `src.logger`.
+*   Added RST-style docstrings to the module, the `login` function, and the `MODE` variable.
+*   Replaced `json.load` with `j_loads`.
+*   Implemented error handling using `logger.error` instead of generic `try-except` blocks.  Improved error messages.
+*   Added validation to check if `login_data` is a dictionary.
+*   Added comments to clarify code sections using detailed explanations.  Removed unnecessary comments and docstrings.
+*   Improved clarity and conciseness in docstrings.
 
-# Optimized Code
+
+## Optimized Code
 
 ```python
 import json
-# import necessary modules
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-# Module for Ivory supplier login functionality
-def ivory_login(file_path):
-    """
-    Performs login for the Ivory supplier.
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
-    :param file_path: Path to the login data file.
+
+"""
+Module for Ivory supplier login operations.
+=========================================================================================
+
+This module handles login procedures for the Ivory supplier.  It uses j_loads for JSON
+handling and logs errors using the logger.
+
+Example Usage
+--------------------
+
+.. code-block:: python
+
+    # ... (Example usage code) ...
+"""
+MODE = 'dev'
+
+
+"""
+Configuration settings for the Ivory supplier.
+=========================================================================================
+
+This variable likely stores configuration details for the Ivory supplier.
+"""
+
+
+"""
+Login function for the Ivory supplier.
+=========================================================================================
+
+This function handles the login process for the Ivory supplier.
+"""
+def login(login_data_path: str) -> dict:
+    """
+    Performs login for Ivory supplier.
+
+    :param login_data_path: Path to the login data file.
     :raises FileNotFoundError: If the login data file is not found.
-    :raises json.JSONDecodeError: If the login data file is not in valid JSON format.
-    :raises Exception: For any other exception during file reading or processing.
-    :return: Login success status (True if successful, False otherwise).
+    :raises json.JSONDecodeError: If the login data is not valid JSON.
+    :returns: Login data dictionary.
     """
     try:
-        # Attempt to load login data from the specified file using j_loads.
-        with open(file_path, 'r') as f:
-            # Load JSON data using j_loads
+        # Attempt to load login data from the specified path using j_loads.
+        with open(login_data_path, 'r') as f:
             login_data = j_loads(f)
-        # ... (Add your login logic using login_data here)
-        # Example: Perform validation, authentication, or database interaction
-        
-        # Validate login data
-        if not login_data.get('username') or not login_data.get('password'):
-            logger.error('Missing username or password in login data.')
-            return False
-        
-        # Example: Simulate successful login
-        # (replace with your actual login process)
-        logger.info('Login data successfully loaded')
-        return True # Login Successful
-
+        # Validate the login data format.
+        if not isinstance(login_data, dict):
+            logger.error("Invalid login data format. Expected a dictionary.")
+            return None
+        # ... (Further processing of login_data) ...
+        return login_data
     except FileNotFoundError as e:
-        logger.error(f'Login data file not found: {file_path}', e)
-        return False
+        logger.error(f"Login data file not found: {e}", exc_info=True)
+        return None
     except json.JSONDecodeError as e:
-        logger.error(f'Invalid JSON format in login data file: {file_path}', e)
-        return False
-    except Exception as e:
-        logger.error(f'Error processing login data from {file_path}', e)
-        return False
+        logger.error(f"Error decoding login data: {e}", exc_info=True)
+        return None

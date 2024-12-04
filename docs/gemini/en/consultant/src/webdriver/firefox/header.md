@@ -2,8 +2,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/firefox/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.webdriver.firefox 
 	:platform: Windows, Unix
 	:synopsis:
@@ -44,31 +43,23 @@ __root__ = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 from src import gs
-from src.utils.jjson import j_loads
 
 settings:dict = None
 try:
-    # Attempt to load settings from settings.json
-    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file)  # Use j_loads instead of json.load
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Error loading settings.json', exc_info=True)  # Log error with exception info
+    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
     ...
-
 
 doc_str:str = None
 try:
-    # Attempt to load documentation from README.MD
-    with open(gs.path.root / 'src' / 'README.MD', 'r') as settings_file:
-        doc_str = settings_file.read()  # Read the content of the file
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Error loading README.MD', exc_info=True)
+    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+        doc_str = settings_file.read()
+except (FileNotFoundError, json.JSONDecodeError):
     ...
 
 
-from src.logger import logger  # Import logger
-
-__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
 __version__: str = settings.get("version", '')  if settings  else ''
 __doc__: str = doc_str if doc_str else ''
 __details__: str = ''
@@ -81,189 +72,189 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 ```python
 ## \file hypotez/src/webdriver/firefox/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
+
 """
-Module for loading project settings and documentation.
+Module for initial project setup and configuration.
 =========================================================================================
 
-This module loads project settings from `settings.json` and documentation from `README.MD`.
-It also sets the project root directory in `sys.path`.
-
+This module handles the retrieval of project settings, version information, and documentation.
+It utilizes the `set_project_root` function to locate the project root directory and adds it to the Python path.
+It then loads settings from a JSON file and potentially a README.MD file.  Essential project metadata is extracted from the settings.
 
 Example Usage
 --------------------
-
 .. code-block:: python
 
-    from hypotez.src.webdriver.firefox import header
+    # ... (Import necessary modules) ...
+    from hypotez.src.webdriver.firefox.header import __project_name__, __version__
+    print(f"Project: {__project_name__}, Version: {__version__}")
 
-    header.__root__ # Access the project root path
-    header.__version__ # Access project version.
 """
 import sys
 import json
 from pathlib import Path
 from packaging.version import Version
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-from src import gs
 
 MODE = 'dev'
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """
-    Finds the project root directory.
+    """Find project root directory.
 
-    Searches upwards from the current file's directory until it finds a directory
-    containing one of the specified marker files.
+    Searches up the directory tree from the current file's location until it finds a directory
+    containing any of the specified marker files.  Adds the root directory to Python's path.
 
-    :param marker_files: Tuple of filenames/directory names to search for.
+    :param marker_files: Tuple of filenames or directory names to search for.
     :return: Path to the project root directory.
     """
     current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Set the project root.  
+# Get the root directory of the project
 __root__ = set_project_root()
-"""__root__ (Path): Path to the project root."""
+"""__root__ (Path): Path to the root directory of the project"""
+
+__project_name__: str
+__version__: str
+__doc__: str
+__details__: str
+__author__: str
+__copyright__: str
+__cofee__: str
 
 
 settings: dict = None
 try:
-    # Load settings from settings.json using j_loads.
-    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file)
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Error loading settings.json', exc_info=True)
-    # Handle the case where settings.json doesn't exist or is invalid.
-    # ...  (This is a placeholder to indicate further action)
-    
-    
-doc_str: str = None
-try:
-    # Load documentation from README.MD
-    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
-        doc_str = readme_file.read()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Error loading README.MD', exc_info=True)
-    # Handle the case where README.MD doesn't exist or is invalid.
-    # ...  (This is a placeholder for further action.)
+    settings_path = __root__ / 'src' / 'settings.json'
+    settings = j_loads(settings_path) # Using j_loads
+except FileNotFoundError as e:
+    logger.error(f"Settings file not found: {settings_path}", e)
+    settings = {} # Handle missing file gracefully
+except json.JSONDecodeError as e:
+    logger.error(f"Error decoding settings file: {settings_path}", e)
+    settings = {}  # Handle decoding errors gracefully
 
-__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
-__version__ = settings.get('version', '') if settings else ''
-__doc__ = doc_str if doc_str else ''
+__project_name__ = settings.get("project_name", 'hypotez')
+__version__ = settings.get("version", '')
+__doc__ = (__root__ / 'src' / 'README.MD').read_text(encoding='utf-8', errors='ignore') if (__root__ / 'src' / 'README.MD').exists() else ''
 __details__ = ''
-__author__ = settings.get('author', '') if settings else ''
-__copyright__ = settings.get('copyrihgnt', '') if settings else ''
-__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__author__ = settings.get("author", '')
+__copyright__ = settings.get("copyright", '') # Corrected spelling
+__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
 ```
 
 # Changes Made
 
-*   Added `from src.logger import logger` import statement.
-*   Replaced `json.load` with `j_loads` for file reading from `src.utils.jjson`.
-*   Added comprehensive RST-style docstrings for the `set_project_root` function and the module.
-*   Implemented error handling using `logger.error` for file loading operations. Included `exc_info=True` to provide the error details in log messages.
-*   Improved variable names (e.g., `__root__` to `project_root`) for better readability.
-*   Corrected typos (e.g., `copyrihgnt` to `copyright`).
-*   Added missing imports: `from pathlib import Path` and `from packaging.version import Version`.
+*   Added missing imports: `from src.logger import logger`, `from pathlib import Path`, `from src.utils.jjson import j_loads`.
+*   Replaced `json.load` with `j_loads` from `src.utils.jjson`.
+*   Added comprehensive docstrings (RST format) for the `set_project_root` function and the entire module.
+*   Improved error handling using `logger.error` to catch `FileNotFoundError` and `json.JSONDecodeError`.  Provided more descriptive error messages.
+*   Corrected typo in `__copyright__`.
+*   Added comments to clarify the role of each code block and explain the purpose of operations, making the code more understandable.
+*   Fixed incorrect encoding assumption for `README.MD` and added fallback to prevent errors during run time in the `README` reading operation.
 
 
 # Optimized Code
 
 ```python
 ## \file hypotez/src/webdriver/firefox/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
+
 """
-Module for loading project settings and documentation.
+Module for initial project setup and configuration.
 =========================================================================================
 
-This module loads project settings from `settings.json` and documentation from `README.MD`.
-It also sets the project root directory in `sys.path`.
-
+This module handles the retrieval of project settings, version information, and documentation.
+It utilizes the `set_project_root` function to locate the project root directory and adds it to the Python path.
+It then loads settings from a JSON file and potentially a README.MD file.  Essential project metadata is extracted from the settings.
 
 Example Usage
 --------------------
-
 .. code-block:: python
 
-    from hypotez.src.webdriver.firefox import header
+    # ... (Import necessary modules) ...
+    from hypotez.src.webdriver.firefox.header import __project_name__, __version__
+    print(f"Project: {__project_name__}, Version: {__version__}")
 
-    header.__root__ # Access the project root path
-    header.__version__ # Access project version.
 """
 import sys
 import json
 from pathlib import Path
 from packaging.version import Version
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-from src import gs
 
 MODE = 'dev'
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """
-    Finds the project root directory.
+    """Find project root directory.
 
-    Searches upwards from the current file's directory until it finds a directory
-    containing one of the specified marker files.
+    Searches up the directory tree from the current file's location until it finds a directory
+    containing any of the specified marker files.  Adds the root directory to Python's path.
 
-    :param marker_files: Tuple of filenames/directory names to search for.
+    :param marker_files: Tuple of filenames or directory names to search for.
     :return: Path to the project root directory.
     """
     current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Set the project root.  
+# Get the root directory of the project
 __root__ = set_project_root()
-"""__root__ (Path): Path to the project root."""
+"""__root__ (Path): Path to the root directory of the project"""
+
+__project_name__: str
+__version__: str
+__doc__: str
+__details__: str
+__author__: str
+__copyright__: str
+__cofee__: str
 
 
 settings: dict = None
 try:
-    # Load settings from settings.json using j_loads.
-    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file)
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Error loading settings.json', exc_info=True)
-    # Handle the case where settings.json doesn't exist or is invalid.
-    # ...  (This is a placeholder to indicate further action)
-    
-    
-doc_str: str = None
-try:
-    # Load documentation from README.MD
-    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
-        doc_str = readme_file.read()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Error loading README.MD', exc_info=True)
-    # Handle the case where README.MD doesn't exist or is invalid.
-    # ...  (This is a placeholder for further action.)
+    settings_path = __root__ / 'src' / 'settings.json'
+    settings = j_loads(settings_path) # Using j_loads
+except FileNotFoundError as e:
+    logger.error(f"Settings file not found: {settings_path}", e)
+    settings = {} # Handle missing file gracefully
+except json.JSONDecodeError as e:
+    logger.error(f"Error decoding settings file: {settings_path}", e)
+    settings = {}  # Handle decoding errors gracefully
 
-__project_name__ = settings.get('project_name', 'hypotez') if settings else 'hypotez'
-__version__ = settings.get('version', '') if settings else ''
-__doc__ = doc_str if doc_str else ''
+__project_name__ = settings.get("project_name", 'hypotez')
+__version__ = settings.get("version", '')
+try:
+  __doc__ = ( __root__ / 'src' / 'README.MD' ).read_text(encoding='utf-8', errors='ignore') if (__root__ / 'src' / 'README.MD').exists() else ''
+except Exception as e:
+  logger.error(f"Error reading README: {e}")
+  __doc__ = ""
 __details__ = ''
-__author__ = settings.get('author', '') if settings else ''
-__copyright__ = settings.get('copyright', '') if settings else ''
-__cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__author__ = settings.get("author", '')
+__copyright__ = settings.get("copyright", '') # Corrected spelling
+__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")
 ```

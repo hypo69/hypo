@@ -3,14 +3,17 @@
 
 Описание
 -------------------------
-Этот код определяет класс `AliexpressAffiliateHotproductDownloadRequest`, который представляет собой запрос к API AliExpress для скачивания горячих продуктов. Класс наследуется от `RestApi`, предоставляя базовый функционал для работы с API.  Он инициализирует параметры запроса, такие как домен, ID категории, страну и т.д., и определяет имя API-метода.
+Этот код определяет класс `AliexpressAffiliateHotproductDownloadRequest`, представляющий запрос для скачивания горячих продуктов из API AliExpress.  Класс наследуется от базового класса `RestApi`, обеспечивая общую функциональность для работы с REST API.  Он позволяет настраивать параметры запроса, такие как идентификатор категории, страну, язык и другие критерии.  Метод `getapiname` возвращает имя API-метода.
 
 Шаги выполнения
 -------------------------
-1. **Импортирует необходимый класс:** `RestApi` импортируется из модуля `..base`.
-2. **Инициализирует класс:** Создаёт экземпляр класса `AliexpressAffiliateHotproductDownloadRequest`, передавая необходимые параметры, такие как домен ("api-sg.aliexpress.com") и порт (80).
-3. **Устанавливает параметры запроса:**  Класс инициализирует переменные для хранения различных параметров, необходимых для запроса (например, `category_id`, `country`, `fields` и т.д.)
-4. **Определяет имя API-метода:** Метод `getapiname` возвращает строку 'aliexpress.affiliate.hotproduct.download', которая используется для вызова соответствующего API-метода.
+1. **Импортирование класса `RestApi`:**  Код импортирует базовый класс `RestApi` из модуля `..base`.
+
+2. **Определение класса `AliexpressAffiliateHotproductDownloadRequest`:** Создается класс, который наследуется от `RestApi`.
+
+3. **Инициализация параметров запроса:** Конструктор класса инициализирует атрибуты, представляющие параметры запроса (например, `category_id`, `country`, `page_no`, `page_size` и др.).  Значения по умолчанию не заданы.
+
+4. **Установка имени API-метода:** Метод `getapiname` возвращает строку 'aliexpress.affiliate.hotproduct.download', идентифицирующую необходимый API-метод.
 
 Пример использования
 -------------------------
@@ -18,20 +21,20 @@
 
     from hypotez.src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateHotproductDownloadRequest
 
-    # Создаем экземпляр класса, устанавливая необходимые параметры
-    request = AliexpressAffiliateHotproductDownloadRequest(
-        domain="api-sg.aliexpress.com",
-        # ... добавьте другие параметры, такие как category_id, country, etc.
-    )
+    # Создаем экземпляр класса
+    request = AliexpressAffiliateHotproductDownloadRequest()
 
+    # Устанавливаем значения параметров
     request.category_id = 123
     request.country = "US"
-    # ... задаем другие параметры
+    request.page_no = 1
+    request.page_size = 10
 
+    # (Добавьте другие параметры, если необходимо)
 
-    #  (В реальном приложении здесь должен быть вызов метода для отправки запроса к API)
-    #  Например, если у класса RestApi есть метод для отправки, то его вызов был бы здесь.
+    # Получаем имя API-метода
+    api_name = request.getapiname()
+    print(api_name)  # Выведет: aliexpress.affiliate.hotproduct.download
 
-    # Пример:
-    # api_response = request.send_request()
-    # print(api_response)
+    # Далее можно использовать объект request для выполнения запроса к API AliExpress.
+    # (Обратите внимание, что в примере отсутствует выполнение самого запроса).

@@ -3,38 +3,35 @@
 
 Описание
 -------------------------
-Этот блок кода реализует функцию проверки корректности ввода данных. Он принимает строку и проверяет, содержит ли она только цифры.
+Этот блок кода представляет собой функцию, которая проверяет, является ли введенное значение числом.  Если значение числовое, функция возвращает True, иначе - False.  Она игнорирует пустые или пробельные строки.
 
 Шаги выполнения
 -------------------------
-1. Функция принимает на вход строку `input_string`.
-2. Она использует метод `isdigit()` для проверки, состоит ли вся строка только из цифр.
-3. Если строка содержит только цифры, функция возвращает `True`.
-4. В противном случае функция возвращает `False`.
-
+1. Функция принимает на вход значение `input_value`.
+2. Она проверяет, является ли `input_value` пустой строкой или содержит только пробельные символы. Если да, функция возвращает `False`.
+3. Далее, функция проверяет, является ли `input_value` числом, используя функцию `isdigit()` или `isnumeric()`.
+4. Если `input_value` - число, функция возвращает `True`; в противном случае - `False`.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    def is_numeric(input_string):
-        """
-        Проверяет, состоит ли строка только из цифр.
-
-        :param input_string: Строка, которую нужно проверить.
-        :return: True, если строка содержит только цифры, False в противном случае.
-        """
-        if input_string.isdigit():
-            return True
-        else:
+    def is_number(input_value):
+        if not input_value:
+            return False
+        
+        if input_value.isspace():
             return False
 
-    # Пример использования
-    string_with_digits = "12345"
-    string_with_letters = "abc123"
-
-    result_digits = is_numeric(string_with_digits)
-    result_letters = is_numeric(string_with_letters)
-
-    print(f"'{string_with_digits}' содержит только цифры: {result_digits}")  # Выведет True
-    print(f"'{string_with_letters}' содержит только цифры: {result_letters}")  # Выведет False
+        try:
+            float(input_value)
+            return True
+        except ValueError:
+            return False
+    
+    # Примеры использования
+    print(is_number("123"))  # Вывод: True
+    print(is_number("abc"))  # Вывод: False
+    print(is_number(""))  # Вывод: False
+    print(is_number("   "))  # Вывод: False
+    print(is_number("12.34")) # Вывод: True

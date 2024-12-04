@@ -60,7 +60,7 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
     model:GoogleGenerativeAI = GoogleGenerativeAI(api_key = gs.credentials.gemini.kazarinov, generation_config = {"response_mime_type": "text/plain"})
 
-    def __init__(self, mode: Optional[str] = 'test', webdriver_name: Optional[str] = 'firefox'):
+    def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox'):
         """
         Initialize the KazarinovTelegramBot instance.
 
@@ -70,7 +70,6 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
         """
         # Set the mode
         mode = mode or self.config.mode
-        logger.info(f'{mode=}')
         # Initialize the token based on mode
         self.token = (
             gs.credentials.telegram.hypo69_test_bot
@@ -104,6 +103,9 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
 
 if __name__ == "__main__":
-    #kt = KazarinovTelegramBot(mode='test', webdriver_name='chrome')
-    kt = KazarinovTelegramBot()  # <- установки находятся в файле `kazarinov.json` 
+
+    if gs.host_name == 'Vostro-3888':
+        kt = KazarinovTelegramBot(mode='test')
+    else:
+        kt = KazarinovTelegramBot() 
     asyncio.run(kt.application.run_polling())

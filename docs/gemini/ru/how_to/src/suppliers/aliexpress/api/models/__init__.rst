@@ -3,30 +3,23 @@
 
 Описание
 -------------------------
-Этот файл `hypotez/src/suppliers/aliexpress/api/models/__init__.py` является модулем, который содержит импорты для классов, представляющих различные модели данных, используемые в API AliExpress. Он импортирует классы из различных подмодулей, таких как `languages`, `currencies`, `request_parameters`, `affiliate_link`, `hotproducts`, `product` и `category`.  Эти классы, вероятно, представляют различные структуры данных, такие как типы языков, валют, параметров запроса к продуктам, аффилированные ссылки, горячие продукты и сами продукты и категории.
+Этот модуль (`hypotez/src/suppliers/aliexpress/api/models/__init__.py`) содержит импорты, определяющие различные модели данных, связанные с API AliExpress. Он предоставляет доступ к классам, представляющим языки, валюты, параметры запроса для продуктов, ссылки на партнёрские программы, информацию о популярных продуктах, сами продукты и категории.
 
 Шаги выполнения
 -------------------------
-1. **Импорт моделей**: Модуль импортирует необходимые классы из подмодулей (`languages`, `currencies`, `request_parameters`, `affiliate_link`, `hotproducts`, `product`, `category`).  Это позволяет использовать эти классы в других частях проекта.
-2. **Определение пространства имен**: Файл организует импортированные классы в единое пространство имен, делая их доступными для использования в других частях проекта, используя относительные импорты (`from .languages import Language`).
-3. **Использование моделей**: После импорта классы могут быть использованы для работы с данными API AliExpress, например, для создания объектов `Product`, `Category`, или получения данных `AffiliateLink`.
+1. Модуль импортирует классы из других файлов внутри папки `models`, например, `languages`, `currencies`, `request_parameters`, `affiliate_link`, `hotproducts`, `product`, `category`, и `ChildCategory`.
+2. Импортированные классы представляют собой определения различных типов данных, необходимых для работы с API AliExpress.
+3. Модуль экспортирует эти классы, делая их доступными для использования в других частях приложения.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.aliexpress.api.models import Product, Language
+    from hypotez.src.suppliers.aliexpress.api.models import Product, Language, Currency
 
-    # Пример создания объекта Product
-    product_data = {
-        "id": 123,
-        "name": "Example Product",
-        "price": 10.99,
-        "language": Language.ENGLISH
-    }
+    # Пример использования классов
+    my_product = Product(id=123, title="Example Product", price=19.99, currency=Currency.USD)
+    my_language = Language(code="en", name="English")
 
-    my_product = Product(**product_data)
-
-    print(my_product.name)
-    # Доступ к другим полям объекта
-    print(my_product.price)
+    print(my_product.title)
+    print(my_language.name)

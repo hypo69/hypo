@@ -66,171 +66,169 @@ function sendDataToServer(url) {
 
 ```javascript
 // background.js
-// Module for handling data collection and sending to a server.
+// Module for handling data collection and sending to the server.
 
-// Import necessary modules.  # Import necessary modules for logging.
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
-
-# Documentation for the background script.
-"""
-Module for handling data collection and sending to a server.
-
-This module listens for messages from content scripts, collects data,
-validates it, and sends it to a specified server endpoint.
-
-"""
+import { j_loads } from 'src.utils.jjson'; // Import necessary functions for JSON handling
+import { logger } from 'src.logger'; // Import the logger
 
 
-# Function to handle message from content scripts. # Function to listen for messages related to data collection.
-def on_message_listener(message, sender, send_response):  
-    """Listens for messages with 'collectData' action.
+/**
+ * Handles data collection and sending to the server.
+ * 
+ * This module listens for messages from content scripts or other background scripts
+ * and sends the collected data to a server.
+ */
 
-    Sends the collected data to the server.
+// Function to handle messages from other parts of the extension.
+chrome.browserAction.onClicked.addListener(handleTabClick);
 
-    :param message: Message object containing the URL.
-    :param sender: Sender information.
-    :param send_response: Function to send a response.
-    :return: None
-    """
-    # Validate the message action to ensure it's for data collection.
-    if message.get("action") == "collectData":
-        # Validate the message URL to ensure it's valid. # Sends data to the server.
-        try:
-            send_data_to_server(message.get("url"))
-        except Exception as e:
-            logger.error(f"Error processing collectData message: {e}")
+/**
+ * Handles the click on the browser action.
+ * 
+ * @param {chrome.tabs.Tab} tab - The clicked tab object.
+ */
+function handleTabClick(tab) {
+  chrome.tabs.sendMessage(tab.id, { action: 'collectData', url: tab.url });
+}
 
+/**
+ * Listens for messages from other parts of the extension.
+ * 
+ * @param {object} message - The message object received from the sender.
+ * @param {object} sender - Information about the sender.
+ * @param {function} sendResponse - Callback for sending responses.
+ * @returns {boolean} - True to indicate that the message was handled.
+ */
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'collectData') {
+        sendDataToServer(message.url);
+    }
+    return true; // Important: return true to allow asynchronous response
+});
 
-# Function to send data to the server.  # Function to send data to the server.
-def send_data_to_server(url):
-    """Sends collected data to the server.
+/**
+ * Sends collected data to the server.
+ * 
+ * @param {string} url - The URL of the webpage.
+ */
+function sendDataToServer(url) {
+    const serverUrl = 'http://127.0.0.1/hypotez.online/api/'; // Change to your server endpoint
 
-    :param url: URL to send data with.
-    :return: None
-    """
-    server_url = 'http://127.0.0.1/hypotez.online/api/'  # Server endpoint.  # Server endpoint.
-
-    # Retrieve collected data from storage.
-    try:
-        collected_data = chrome.storage.local.get("collectedData")
-    except Exception as e:
-        logger.error("Error retrieving collected data:", e)
-        return
-
-
-    if collected_data:
-        try:
-            # Send the data using a fetch request.
-            response = fetch(server_url, {
-                "method": "POST",
-                "headers": {"Content-Type": "application/json"},
-                "body": JSON.stringify(collected_data)
+    chrome.storage.local.get('collectedData', (result) => {
+        const collectedData = result.collectedData;
+        if (collectedData) {
+            fetch(serverUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(collectedData)
             })
-
-            # Validate the response status.
-            if not response.ok:
-                error_message = 'Failed to send data to server'
-                logger.error(error_message)
-                raise Exception(error_message)
-
-            logger.info("Data sent to server successfully")
-        except Exception as e:
-            logger.error("Error sending data to server:", e)
-    else:
-        logger.warning("No collected data found.")
-
-
-# Listen for messages related to data collection.
-chrome.runtime.onMessage.addListener(on_message_listener)  # This function should handle the message
+            .then(response => {
+                if (!response.ok) {
+                  const err = new Error(`Failed to send data to server: ${response.status}`);
+                  logger.error(err);
+                  return; // Crucial to stop the chain if there's an error
+                }
+                logger.info('Data sent to server successfully');
+            })
+            .catch(err => {
+                logger.error('Error sending data to server:', err);
+            });
+        } else {
+            logger.error('No collected data found');
+        }
+    });
+}
 ```
 
 # Changes Made
 
-*   Added imports for `logger` and `j_loads/j_loads_ns` from `src.utils.jjson`.
-*   Replaced `json.load` with `j_loads` or `j_loads_ns`.
-*   Added detailed docstrings in RST format to functions and variables.
-*   Implemented error handling using `logger.error` to improve error reporting.
-*   Replaced `console.log/console.error` with `logger` calls.
-*   Fixed variable naming and use of camelCase.
-*   Changed `sendDataToServer` to `send_data_to_server`.
-*   Improved code clarity by separating concerns (function for listening, function for sending).
-*   Added input validation and error handling.
-
+- Imported `j_loads` from `src.utils.jjson` and `logger` from `src.logger`.
+- Added detailed RST-style docstrings to functions and blocks of code.
+- Replaced `console.log` and `console.error` with `logger.info` and `logger.error` for better error handling.
+- Improved error handling by using `.catch` for `fetch` errors and logging them.
+- Added a `return true;` statement in `chrome.runtime.onMessage.addListener` to handle asynchronous responses.
+- Ensured that the error handling in the `fetch` call stops the rest of the process if there's a problem.
+- Added descriptive variable names and comments.
+- Added a docstring to the `handleTabClick` function.
 
 # Optimized Code
 
 ```javascript
 // background.js
-// Module for handling data collection and sending to a server.
+// Module for handling data collection and sending to the server.
 
-// Import necessary modules.
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
-
-# Documentation for the background script.
-"""
-Module for handling data collection and sending to a server.
-
-This module listens for messages from content scripts, collects data,
-validates it, and sends it to a specified server endpoint.
-
-"""
+import { j_loads } from 'src.utils.jjson'; // Import necessary functions for JSON handling
+import { logger } from 'src.logger'; // Import the logger
 
 
-# Function to handle message from content scripts.
-def on_message_listener(message, sender, send_response):  
-    """Listens for messages with 'collectData' action.
+/**
+ * Handles data collection and sending to the server.
+ * 
+ * This module listens for messages from content scripts or other background scripts
+ * and sends the collected data to a server.
+ */
 
-    Sends the collected data to the server.
+// Function to handle messages from other parts of the extension.
+chrome.browserAction.onClicked.addListener(handleTabClick);
 
-    :param message: Message object containing the URL.
-    :param sender: Sender information.
-    :param send_response: Function to send a response.
-    :return: None
-    """
-    if message.get("action") == "collectData":
-        try:
-            send_data_to_server(message.get("url"))
-        except Exception as e:
-            logger.error(f"Error processing collectData message: {e}")
+/**
+ * Handles the click on the browser action.
+ * 
+ * @param {chrome.tabs.Tab} tab - The clicked tab object.
+ */
+function handleTabClick(tab) {
+  chrome.tabs.sendMessage(tab.id, { action: 'collectData', url: tab.url });
+}
 
+/**
+ * Listens for messages from other parts of the extension.
+ * 
+ * @param {object} message - The message object received from the sender.
+ * @param {object} sender - Information about the sender.
+ * @param {function} sendResponse - Callback for sending responses.
+ * @returns {boolean} - True to indicate that the message was handled.
+ */
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'collectData') {
+        sendDataToServer(message.url);
+    }
+    return true; // Important: return true to allow asynchronous response
+});
 
-# Function to send data to the server.
-def send_data_to_server(url):
-    """Sends collected data to the server.
+/**
+ * Sends collected data to the server.
+ * 
+ * @param {string} url - The URL of the webpage.
+ */
+function sendDataToServer(url) {
+    const serverUrl = 'http://127.0.0.1/hypotez.online/api/'; // Change to your server endpoint
 
-    :param url: URL to send data with.
-    :return: None
-    """
-    server_url = 'http://127.0.0.1/hypotez.online/api/'  # Server endpoint.
-
-    try:
-        collected_data = chrome.storage.local.get("collectedData")
-    except Exception as e:
-        logger.error("Error retrieving collected data:", e)
-        return
-
-    if collected_data:
-        try:
-            response = fetch(server_url, {
-                "method": "POST",
-                "headers": {"Content-Type": "application/json"},
-                "body": JSON.stringify(collected_data)
+    chrome.storage.local.get('collectedData', (result) => {
+        const collectedData = result.collectedData;
+        if (collectedData) {
+            fetch(serverUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(collectedData)
             })
-
-            if not response.ok:
-                error_message = 'Failed to send data to server'
-                logger.error(error_message)
-                raise Exception(error_message)
-
-            logger.info("Data sent to server successfully")
-        except Exception as e:
-            logger.error("Error sending data to server:", e)
-    else:
-        logger.warning("No collected data found.")
-
-
-# Listen for messages related to data collection.
-chrome.runtime.onMessage.addListener(on_message_listener)  
+            .then(response => {
+                if (!response.ok) {
+                  const err = new Error(`Failed to send data to server: ${response.status}`);
+                  logger.error(err);
+                  return; // Crucial to stop the chain if there's an error
+                }
+                logger.info('Data sent to server successfully');
+            })
+            .catch(err => {
+                logger.error('Error sending data to server:', err);
+            });
+        } else {
+            logger.error('No collected data found');
+        }
+    });
+}
 ```

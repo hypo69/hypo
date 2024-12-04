@@ -21,102 +21,109 @@ document.getElementById("sendUrlButton").addEventListener("click", () => {
 # Improved Code
 
 ```javascript
-# Import necessary modules.  # Note: This code block needs `from src.logger import logger`
-# from src.logger import logger # Removed unnecessary comments
-# from src.utils.jjson import j_loads #Import j_loads
+import { logger } from "../../logger"; // Import error logging utility.
 
-# This module provides functionality to send the active tab's URL to a background script.
+"""
+Module for sending the active tab URL to the background script.
+================================================================
+This module handles the user interaction to send the currently
+active tab's URL to the background script.
+"""
 
-# Function to handle the click event on the "sendUrlButton".
-async function sendActiveTabUrl() {
-    """Sends the URL of the active tab to the background script."""
-    try {
-        # Get the active tab's URL.
-        # Query for the active tab in the current window.
-        let tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+"""
+Function to handle the click event on the 'sendUrlButton'.
+This function retrieves the URL of the active tab and sends it
+to the background script via a message.
+"""
+document.getElementById("sendUrlButton").addEventListener("click", () => {
+    # Display a message to the user (Consider removing this for a better UX)
+    alert("Sending active tab URL..."); 
+    
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs.length === 0) {
-            logger.error('No active tab found.');
-            return;
+            logger.error("No active tabs found.");
+            alert("No active tabs found.");
+            return; # Exit if no active tab is found
         }
-        let activeTab = tabs[0];
-        let activeTabUrl = activeTab.url;
+        const activeTab = tabs[0];
+        const activeTabUrl = activeTab.url;
         
-        # Validate if URL is available.
+        # Validate if the URL is valid.  Critically important!
         if (!activeTabUrl) {
-            logger.error('Active tab URL is not available.');
+            logger.error("Active tab URL is invalid or empty.");
+            alert("Invalid active tab URL.");
             return;
         }
-        
-        # Send a message to the background script with the active tab's URL.
+
         chrome.runtime.sendMessage({ action: "sendUrl", url: activeTabUrl }, (response) => {
-            if (response.status === "success") {
+            if (response && response.status === "success") {
                 alert("URL sent successfully!");
             } else {
-                logger.error("Failed to send URL:", response.message || "No specific error message."); # Use logger for error handling.
+                const errorMessage = response ? response.message : "Unknown error sending URL.";
+                logger.error(`Failed to send URL: ${errorMessage}`);
+                alert(`Failed to send URL: ${errorMessage}`);
             }
         });
-    } catch (error) {
-        logger.error('Error sending URL:', error);
-    }
-}
-
-
-# Add event listener to send URL on click.
-document.getElementById("sendUrlButton").addEventListener("click", sendActiveTabUrl);
+    });
+});
 ```
 
 # Changes Made
 
-*   Added a missing `from src.logger import logger` import statement.
-*   Added error handling using `logger.error` to catch potential exceptions during URL retrieval and sending.
-*   Improved clarity and detail in comments using RST format.
-*   Added a function `sendActiveTabUrl` for better code organization and readability.
-*   Added validation to check if the active tab is available and if the URL exists.
-*   Replaced `alert` for error messages with proper logging using `logger.error`.
+*   Imported `logger` from `src.logger`.
+*   Added RST-style docstrings to the module and the function.
+*   Added error handling to check if active tabs exist and if the `activeTabUrl` is valid before sending the message.  This prevents unexpected errors.
+*   Used `logger.error` for error logging instead of simple `alert` (although alerts are kept for user feedback).
+*   Improved error handling in the response handling; the code now checks if the response exists before accessing properties.
+*   Added explicit return statements after error handling.
+*   Improved message to user, making it more specific and informative.
 
 
 # Optimized Code
 
 ```javascript
-# Import necessary modules.
-from src.logger import logger
-from src.utils.jjson import j_loads
+import { logger } from "../../logger";
 
-# This module provides functionality to send the active tab's URL to a background script.
+"""
+Module for sending the active tab URL to the background script.
+================================================================
+This module handles the user interaction to send the currently
+active tab's URL to the background script.
+"""
 
-# Function to handle the click event on the "sendUrlButton".
-async function sendActiveTabUrl() {
-    """Sends the URL of the active tab to the background script."""
-    try {
-        # Get the active tab's URL.
-        # Query for the active tab in the current window.
-        let tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+"""
+Function to handle the click event on the 'sendUrlButton'.
+This function retrieves the URL of the active tab and sends it
+to the background script via a message.
+"""
+document.getElementById("sendUrlButton").addEventListener("click", () => {
+    # Display a message to the user (Consider removing this for a better UX)
+    alert("Sending active tab URL..."); 
+    
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs.length === 0) {
-            logger.error('No active tab found.');
+            logger.error("No active tabs found.");
+            alert("No active tabs found.");
             return;
         }
-        let activeTab = tabs[0];
-        let activeTabUrl = activeTab.url;
+        const activeTab = tabs[0];
+        const activeTabUrl = activeTab.url;
         
-        # Validate if URL is available.
+        # Validate if the URL is valid.  Critically important!
         if (!activeTabUrl) {
-            logger.error('Active tab URL is not available.');
+            logger.error("Active tab URL is invalid or empty.");
+            alert("Invalid active tab URL.");
             return;
         }
-        
-        # Send a message to the background script with the active tab's URL.
+
         chrome.runtime.sendMessage({ action: "sendUrl", url: activeTabUrl }, (response) => {
-            if (response.status === "success") {
+            if (response && response.status === "success") {
                 alert("URL sent successfully!");
             } else {
-                logger.error("Failed to send URL:", response.message || "No specific error message.");
+                const errorMessage = response ? response.message : "Unknown error sending URL.";
+                logger.error(`Failed to send URL: ${errorMessage}`);
+                alert(`Failed to send URL: ${errorMessage}`);
             }
         });
-    } catch (error) {
-        logger.error('Error sending URL:', error);
-    }
-}
-
-
-# Add event listener to send URL on click.
-document.getElementById("sendUrlButton").addEventListener("click", sendActiveTabUrl);
+    });
+});

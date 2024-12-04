@@ -1,4 +1,4 @@
-# Received Code
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
@@ -22,79 +22,120 @@ class LinkType:
     HOTLINK = 2
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
+## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~\
 """
-Module for defining request parameters for AliExpress API.
-=========================================================================================
+Module for defining request parameters for the AliExpress API.
 
-This module defines enums for product types, sorting options, and link types used in AliExpress API requests.
+This module defines classes for representing product types, sorting
+criteria, and link types used in API requests.
 """
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.utils.jjson import j_loads, j_loads_ns # Import jjson for JSON handling
+from src.logger import logger  # Import the logger
 
-# Define product types
+
 class ProductType:
-    """Product type enum."""
+    """
+    Represents different product types.
+
+    :ivar ALL: Constant for representing all product types.
+    :ivar PLAZA: Constant for representing PLAZA product type.
+    :ivar TMALL: Constant for representing TMALL product type.
+    """
     ALL = 'ALL'
     PLAZA = 'PLAZA'
     TMALL = 'TMALL'
 
 
-# Define sorting options
 class SortBy:
-    """Sorting options enum."""
-    SALE_PRICE_ASC = 'SALE_PRICE_ASC'  # Sort by sale price ascending
-    SALE_PRICE_DESC = 'SALE_PRICE_DESC'  # Sort by sale price descending
-    LAST_VOLUME_ASC = 'LAST_VOLUME_ASC'  # Sort by last volume ascending
-    LAST_VOLUME_DESC = 'LAST_VOLUME_DESC'  # Sort by last volume descending
+    """
+    Represents different sorting criteria for product listings.
+
+    :ivar SALE_PRICE_ASC: Sort by sale price in ascending order.
+    :ivar SALE_PRICE_DESC: Sort by sale price in descending order.
+    :ivar LAST_VOLUME_ASC: Sort by last volume in ascending order.
+    :ivar LAST_VOLUME_DESC: Sort by last volume in descending order.
+    """
+    SALE_PRICE_ASC = 'SALE_PRICE_ASC'
+    SALE_PRICE_DESC = 'SALE_PRICE_DESC'
+    LAST_VOLUME_ASC = 'LAST_VOLUME_ASC'
+    LAST_VOLUME_DESC = 'LAST_VOLUME_DESC'
 
 
-# Define link types
 class LinkType:
-    """Link type enum."""
-    NORMAL = 0  # Normal link
-    HOTLINK = 2  # Hotlink
+    """
+    Represents different types of product links.
+
+    :ivar NORMAL: Constant for a normal link.
+    :ivar HOTLINK: Constant for a hotlink.
+    """
+    NORMAL = 0
+    HOTLINK = 2
 ```
 
-# Changes Made
+## Changes Made
 
-*   Added missing import `from src.utils.jjson import j_loads, j_loads_ns`.
-*   Added comprehensive RST-style docstrings to the module, classes, and enums, explaining their purpose and usage.
-*   Added detailed comments (`#`) explaining the purpose of each enum value.  This is important for clarity and maintainability.
-*   Corrected potential errors in the previous code (if any).  This ensures the code functions as expected.
+*   Imported `j_loads` and `j_loads_ns` from `src.utils.jjson` for JSON handling.
+*   Imported `logger` from `src.logger` for error logging.
+*   Added comprehensive RST-style docstrings to the `ProductType`, `SortBy`, and `LinkType` classes and their attributes. This includes detailed descriptions of each class and its members, following Sphinx-style guidelines.
 
 
-# Optimized Code
+## Optimized Code
 
 ```python
+## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~\
 """
-Module for defining request parameters for AliExpress API.
-=========================================================================================
+Module for defining request parameters for the AliExpress API.
 
-This module defines enums for product types, sorting options, and link types used in AliExpress API requests.
+This module defines classes for representing product types, sorting
+criteria, and link types used in API requests.
 """
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.utils.jjson import j_loads, j_loads_ns # Import jjson for JSON handling
+from src.logger import logger  # Import the logger
 
-# Define product types
+
 class ProductType:
-    """Product type enum."""
+    """
+    Represents different product types.
+
+    :ivar ALL: Constant for representing all product types.
+    :ivar PLAZA: Constant for representing PLAZA product type.
+    :ivar TMALL: Constant for representing TMALL product type.
+    """
     ALL = 'ALL'
     PLAZA = 'PLAZA'
     TMALL = 'TMALL'
 
 
-# Define sorting options
 class SortBy:
-    """Sorting options enum."""
-    SALE_PRICE_ASC = 'SALE_PRICE_ASC'  # Sort by sale price ascending
-    SALE_PRICE_DESC = 'SALE_PRICE_DESC'  # Sort by sale price descending
-    LAST_VOLUME_ASC = 'LAST_VOLUME_ASC'  # Sort by last volume ascending
-    LAST_VOLUME_DESC = 'LAST_VOLUME_DESC'  # Sort by last volume descending
+    """
+    Represents different sorting criteria for product listings.
+
+    :ivar SALE_PRICE_ASC: Sort by sale price in ascending order.
+    :ivar SALE_PRICE_DESC: Sort by sale price in descending order.
+    :ivar LAST_VOLUME_ASC: Sort by last volume in ascending order.
+    :ivar LAST_VOLUME_DESC: Sort by last volume in descending order.
+    """
+    SALE_PRICE_ASC = 'SALE_PRICE_ASC'
+    SALE_PRICE_DESC = 'SALE_PRICE_DESC'
+    LAST_VOLUME_ASC = 'LAST_VOLUME_ASC'
+    LAST_VOLUME_DESC = 'LAST_VOLUME_DESC'
 
 
-# Define link types
 class LinkType:
-    """Link type enum."""
-    NORMAL = 0  # Normal link
-    HOTLINK = 2  # Hotlink
+    """
+    Represents different types of product links.
+
+    :ivar NORMAL: Constant for a normal link.
+    :ivar HOTLINK: Constant for a hotlink.
+    """
+    NORMAL = 0
+    HOTLINK = 2

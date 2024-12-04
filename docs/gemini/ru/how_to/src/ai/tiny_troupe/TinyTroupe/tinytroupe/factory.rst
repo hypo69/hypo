@@ -3,41 +3,41 @@
 
 Описание
 -------------------------
-Этот код определяет базовый класс `TinyFactory` и производный класс `TinyPersonFactory` для создания и управления объектами.  `TinyFactory` предоставляет механизмы для создания, хранения и управления множеством фабрик, а `TinyPersonFactory` специализируется на генерации объектов `TinyPerson` с помощью OpenAI. Код включает в себя функциональность для хранения состояний фабрик, генерации персон и взаимодействия с OpenAI.
+Класс `TinyFactory` — базовый класс для различных типов фабрик.  Он предназначен для упрощения расширения системы, особенно в отношении кэширования транзакций.  Класс управляет списком всех созданных фабрик, предоставляя статические методы для добавления, удаления и доступа к ним.  Также реализованы механизмы кэширования состояния фабрики с помощью методов `encode_complete_state` и `decode_complete_state` для сохранения и восстановления состояния.  Подкласс `TinyPersonFactory` отвечает за генерацию экземпляров `TinyPerson` на основе предоставленного контекста.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых библиотек:** Код импортирует библиотеки `os`, `json`, `chevron`, `logging`, `copy`, `openai_utils`, `TinyPerson`, `utils`, и `transactional`. Это необходимые инструменты для работы с файлами, данными, шаблонами, логгированием, копированием, API OpenAI и транзакционным кэшированием.
+1. **Создание экземпляра:** Для создания экземпляра фабрики необходимо вызвать конструктор `__init__(self, simulation_id=None)`.  Аргумент `simulation_id` используется для связи с конкретной симуляцией.  Фабрика автоматически получает уникальное имя, формируемое с помощью `utils.fresh_id()`.
 
-2. **Определение класса `TinyFactory`:** Класс `TinyFactory` служит основой для других типов фабрик. Он содержит методы для инициализации фабрик (`__init__`), представления фабрики (`__repr__`), добавления фабрик в глобальный список (`add_factory`), очистки глобального списка (`clear_factories`), а также кодирования и декодирования состояния фабрики (`encode_complete_state`, `decode_complete_state`).
+2. **Регистрация фабрики:** Экземпляр фабрики автоматически регистрируется в глобальном словаре `all_factories` класса `TinyFactory` с использованием статического метода `add_factory()`.  Имя фабрики должно быть уникальным.  Ошибка `ValueError` возникает, если фабрика с таким же именем уже существует.
 
-3. **Определение класса `TinyPersonFactory`:**  `TinyPersonFactory` наследуется от `TinyFactory`. Он предоставляет методы для инициализации (`__init__`), генерации списка `TinyPersonFactory` (`generate_person_factories`) и генерации отдельной персоны (`generate_person`) с использованием OpenAI.
+3. **Установка симуляции:**  Для свободных окружений (где `simulation_id` равен `None`), можно использовать статический метод `set_simulation_for_free_factories()`, чтобы добавить фабрику в симуляцию.
 
-4. **Генерация персон (`generate_person_factories`):** Этот метод использует шаблон `generate_person_factory.md` для создания запроса к OpenAI. Он получает ответ, извлекает из него информацию и создает соответствующие объекты `TinyPersonFactory`.
+4. **Сохранение и восстановление состояния:**  Методы `encode_complete_state()` и `decode_complete_state()` позволяют сериализовать и десериализовать состояние фабрики.  Подклассы должны переопределять эти методы, если содержат не сериализуемые элементы.
 
-5. **Генерация персоны (`generate_person`):** Этот метод использует шаблон `generate_person.mustache` для создания запроса к OpenAI, основываясь на контексте и желаемых особенностях персонажа. Он обрабатывает ответы от OpenAI и создает объект `TinyPerson`.
+5. **Генерация TinyPersonFactory:** Для генерации списка `TinyPersonFactory` используется статический метод `generate_person_factories()`.  Он принимает количество фабрик и общий контекст.  Внутри метода, используется OpenAI's LLM для создания описаний `TinyPerson` на основе контекста.
 
-6. **Транзакционное кэширование (`@transactional`):** Декоратор `@transactional` используется для добавления кэширования в методы, вызывающие API OpenAI. Это помогает избежать повторных обращений к OpenAI для одинаковых запросов.
+6. **Генерация TinyPerson:** Метод `generate_person()` генерирует `TinyPerson` на основе контекста и дополнительных характеристик.  Используется шаблон `prompt` из файла `prompts/generate_person.mustache`.  Метод использует кэширование (`generated_minibios` и `generated_names`) для избежания дублирования.
+
+7. **Настройка агента:** Метод `_setup_agent()` настраивает сгенерированного агента `TinyPerson` с помощью предоставленных параметров.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    import os
-    from tinytroupe.factory import TinyPersonFactory
+    import tinytroupe.utils as utils
+    from tinytroupe.factory import TinyFactory, TinyPersonFactory
+    
+    # Создание TinyPersonFactory
+    context = "Описание контекста"
+    factory = TinyPersonFactory(context_text=context)
 
-    # Контекст для генерации персон
-    generic_context_text = "Это описание для генерации персон."
+    # Генерация списка TinyPersonFactory
+    num_factories = 5
+    factories = TinyPersonFactory.generate_person_factories(number_of_factories=num_factories, generic_context_text=context)
 
-    # Количество персон для генерации
-    number_of_factories = 3
+    # Генерация TinyPerson
+    person = factory.generate_person(agent_particularities="Дополнительные параметры агента")
 
-    # Генерируем список TinyPersonFactory
-    factories = TinyPersonFactory.generate_person_factories(number_of_factories, generic_context_text)
-
-    if factories:
-        for factory in factories:
-            # Можно использовать методы класса TinyPersonFactory, например:
-            person = factory.generate_person()
-            if person:
-                print(f"Сгенерированная персона: {person}")
+    if person:
+        print(person.get("name"))

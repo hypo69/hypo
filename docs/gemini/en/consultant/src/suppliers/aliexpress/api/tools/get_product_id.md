@@ -1,10 +1,10 @@
-# Received Code
+**Received Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
+## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.tools """
 """Some useful tools."""
 
@@ -25,15 +25,27 @@ def get_product_id(raw_product_id: str) -> str:
     #     raise ProductIdNotFoundException('Product id not found: ' + text)
 ```
 
-# Improved Code
+**Improved Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
-""" module: src.suppliers.aliexpress.api.tools """
-"""Tools for extracting product IDs from various sources."""
+## ~~~~~~~~~~~~~~~
+"""
+Module for retrieving product IDs from various sources.
+=========================================================================================
+
+This module provides a function to extract product IDs from raw input strings.
+
+Example Usage
+--------------------
+
+.. code-block:: python
+
+    product_id = get_product_id("https://www.aliexpress.com/item/1234567890.html")
+    print(product_id)
+"""
 
 from ..errors import ProductIdNotFoundException
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
@@ -41,45 +53,59 @@ import re
 from src.logger import logger
 
 def get_product_id(raw_product_id: str) -> str:
-    """Extracts the product ID from a given string.
+    """
+    Extracts the product ID from the input string.
 
-    :param raw_product_id: The input string potentially containing a product ID.
+    :param raw_product_id: The raw string potentially containing the product ID.
     :type raw_product_id: str
-    :raises ProductIdNotFoundException: If no valid product ID is found.
-    :returns: The extracted product ID as a string.
+    :raises ProductIdNotFoundException: If the product ID cannot be found.
+    :return: The extracted product ID as a string.
+    :rtype: str
     """
     try:
-        # Attempt to extract the product ID using the dedicated function.
+        # Attempt to extract the product ID using the extract_prod_ids function
         product_id = extract_prod_ids(raw_product_id)
-        # Validation: Check if a valid product ID was returned.
-        if not product_id:
-            raise ProductIdNotFoundException(f"No product ID found in '{raw_product_id}'")
+        # Return the extracted product ID
         return product_id
-    except Exception as e:  # More specific exception handling.
-        logger.error(f"Error extracting product ID from '{raw_product_id}': {e}")
-        raise ProductIdNotFoundException(f"Error extracting product ID: {e}")
+    except Exception as e:
+        # Log the error if the extraction fails, along with the original input
+        logger.error(f"Failed to extract product ID from '{raw_product_id}'", exc_info=True)
+        # Raise the ProductIdNotFoundException with a more descriptive message
+        raise ProductIdNotFoundException(f"Product ID not found in '{raw_product_id}'") from e
+
 ```
 
-# Changes Made
+**Changes Made**
 
-*   Added missing import `from src.logger import logger`.
-*   Replaced the potentially problematic `json.load` with `j_loads` or `j_loads_ns`.
-*   Added detailed docstrings in reStructuredText format for the module and the `get_product_id` function.
-*   Improved error handling using `logger.error` and more specific exception handling.
-*   Removed unnecessary `try-except` blocks and replaced with a more focused error handling approach, raising the `ProductIdNotFoundException` on failures.
-*   Replaced vague comments with specific terms like 'extraction', 'validation'.
-*   The code now correctly uses the `extract_prod_ids` function from the specified module, eliminating the need for `re.search`-based extraction.
-*   Validation was added to ensure that a valid product ID was returned by `extract_prod_ids`.
+*   Added a module docstring in RST format, describing the module's purpose and providing example usage.
+*   Added function docstrings in RST format, including detailed parameter descriptions, return types, and potential exceptions.
+*   Replaced the previous `try...except` block with a `try...except` block using `logger.error` for error logging, including the input string.  This provides more context for debugging.
+*   Added `from src.logger import logger` import statement.
+*   Removed unnecessary comments and code that were not relevant to the core functionality.
+*   Improved error handling to log the specific error and the input string.
 
-# Optimized Code
+
+**Optimized Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
-""" module: src.suppliers.aliexpress.api.tools """
-"""Tools for extracting product IDs from various sources."""
+## ~~~~~~~~~~~~~~~
+"""
+Module for retrieving product IDs from various sources.
+=========================================================================================
+
+This module provides a function to extract product IDs from raw input strings.
+
+Example Usage
+--------------------
+
+.. code-block:: python
+
+    product_id = get_product_id("https://www.aliexpress.com/item/1234567890.html")
+    print(product_id)
+"""
 
 from ..errors import ProductIdNotFoundException
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
@@ -87,20 +113,23 @@ import re
 from src.logger import logger
 
 def get_product_id(raw_product_id: str) -> str:
-    """Extracts the product ID from a given string.
+    """
+    Extracts the product ID from the input string.
 
-    :param raw_product_id: The input string potentially containing a product ID.
+    :param raw_product_id: The raw string potentially containing the product ID.
     :type raw_product_id: str
-    :raises ProductIdNotFoundException: If no valid product ID is found.
-    :returns: The extracted product ID as a string.
+    :raises ProductIdNotFoundException: If the product ID cannot be found.
+    :return: The extracted product ID as a string.
+    :rtype: str
     """
     try:
-        # Attempt to extract the product ID using the dedicated function.
+        # Attempt to extract the product ID using the extract_prod_ids function
         product_id = extract_prod_ids(raw_product_id)
-        # Validation: Check if a valid product ID was returned.
-        if not product_id:
-            raise ProductIdNotFoundException(f"No product ID found in '{raw_product_id}'")
+        # Return the extracted product ID
         return product_id
-    except Exception as e:  # More specific exception handling.
-        logger.error(f"Error extracting product ID from '{raw_product_id}': {e}")
-        raise ProductIdNotFoundException(f"Error extracting product ID: {e}")
+    except Exception as e:
+        # Log the error if the extraction fails, along with the original input
+        logger.error(f"Failed to extract product ID from '{raw_product_id}'", exc_info=True)
+        # Raise the ProductIdNotFoundException with a more descriptive message
+        raise ProductIdNotFoundException(f"Product ID not found in '{raw_product_id}'") from e
+```

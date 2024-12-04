@@ -19,6 +19,7 @@ import os
 import sys
 import json
 import warnings
+import socket
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import SimpleNamespace
@@ -87,6 +88,8 @@ class ProgramSettings(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
+    host_name:str = socket.gethostname()
+    print(f'Имя машины: {host_name}')
 
     base_dir: Path = Field(default_factory=lambda: set_project_root())
     config: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
@@ -136,7 +139,7 @@ class ProgramSettings(BaseModel):
         facebook=[],
         gapi={}
     ))
-    MODE: str = Field(default='development')
+    MODE: str = Field(default='dev')
     path: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(
         root = None,
         src = None,
@@ -147,6 +150,7 @@ class ProgramSettings(BaseModel):
         secrets = None,
         google_drive = None,
         external_storage = None,
+        tools = None,
         dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
     ))
     
@@ -171,12 +175,13 @@ class ProgramSettings(BaseModel):
             src = Path(self.base_dir) / 'src', # <- тут весь код
             endpoints = Path(self.base_dir) / 'src' / 'endpoints', # <- тут все клиенты
             secrets = Path(self.base_dir / 'secrets'),  # <- это папка с паролями и базой данных ! Ей нельзя попадать в гит!!!
+            toolbox = Path(self.base_dir / 'toolbox'), # <- служебные утилиты
 
             log = Path(getattr(self.config.path, 'log', self.base_dir / 'log')), 
             tmp = Path(getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
             data = Path(getattr(self.config.path, 'data', self.base_dir / 'data')), # <- данные от endpoints (hypo69, kazarinov, prestashop, etc ...)
-            google_drive = Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')), # <- шоб не упало, если беда в json
-            external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage') )
+            google_drive = Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')), # <- GOOGLE DRIVE ЧЕРЕЗ ЛОКАЛЬНЫЙ ДИСК (NOT API) 
+            external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage') ),
         )
 
         if check_latest_release(self.config.git_user, self.config.git):
@@ -247,7 +252,7 @@ class ProgramSettings(BaseModel):
         """
         while retry > 0:
             try:
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~ ФАЙЛ ПАРОЛЯ В ОТКРЫТОМ ВИДЕ ~~~~~~~~~~~~~~~~~~~~~~~
                 password:str = Path( self.path.secrets / 'password.txt').read_text(encoding="utf-8") or None
                 """password: содержит строку пароля в открытом виде. Можно удалить или сам файл или вытереть его содржимое """
                 

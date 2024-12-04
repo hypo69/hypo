@@ -3,41 +3,29 @@
 
 Описание
 -------------------------
-Этот код определяет класс `AliexpressAffiliateOrderListbyindexRequest`, который представляет собой запрос к API AliExpress для получения списка заказов по аффилированным ссылкам.  Он наследуется от базового класса `RestApi` и предоставляет атрибуты для настройки параметров запроса (например, временные рамки, размер страницы, статус заказа). Метод `getapiname` возвращает имя API-метода.
-
+Этот код определяет класс `AliexpressAffiliateOrderListbyindexRequest`, который наследуется от класса `RestApi`.  Этот класс предназначен для работы с API AliExpress и позволяет получать список заказов по аффилированным ссылкам.  Он инициализирует параметры запроса, необходимые для получения списка заказов (время начала и конца, размер страницы, индекс начала, статус).  Также он содержит метод `getapiname`, который возвращает имя API-метода.
 
 Шаги выполнения
 -------------------------
-1. Импортирует класс `RestApi` из модуля `..base`.
-2. Определяет класс `AliexpressAffiliateOrderListbyindexRequest`, который наследуется от `RestApi`.
-3. В конструкторе `__init__` инициализирует параметры запроса:
-    - `domain`:  устанавливает доменное имя API (по умолчанию `api-sg.aliexpress.com`).
-    - `port`: устанавливает порт API (по умолчанию `80`).
-    - `app_signature`, `end_time`, `fields`, `page_size`, `start_query_index_id`, `start_time`, `status`:  инициализирует атрибуты для указания параметров запроса (например, подписи приложения, временные рамки, поля, размер страницы и т.д.).  Эти параметры могут быть изменены перед использованием запроса.
-4. Определяет метод `getapiname`, который возвращает имя API-метода (`aliexpress.affiliate.order.listbyindex`).  Этот метод необходим для идентификации запроса в API.
-
+1. **Инициализация класса:**  Создается экземпляр класса `AliexpressAffiliateOrderListbyindexRequest`, передавая необходимые параметры, такие как домен (`domain`) и порт (`port`) API AliExpress.  Этот шаг инициализирует атрибуты класса, которые будут использоваться для формирования запроса к API.
+2. **Установка параметров запроса:**  К объекту класса `AliexpressAffiliateOrderListbyindexRequest` устанавливаются параметры, такие как `start_time`, `end_time`, `page_size`, `start_query_index_id`, `status`.  Эти параметры определяют фильтры для поиска заказов.
+3. **Получение имени API-метода:** Метод `getapiname()` возвращает строку 'aliexpress.affiliate.order.listbyindex', которая соответствует названию API-метода для получения списка заказов.  Эта информация используется для формирования правильного запроса.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateOrderListbyindexRequest import AliexpressAffiliateOrderListbyindexRequest
+    from hypotez.src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateOrderListbyindexRequest
 
-    # Создаем экземпляр класса запроса
-    request = AliexpressAffiliateOrderListbyindexRequest(
-        domain="your-aliexpress-domain.com",  # Укажите ваш домен
-        port=8080  # Укажите порт
-    )
-
-    # Устанавливаем параметры запроса
-    request.app_signature = "your_app_signature"
+    # Создаем экземпляр класса, задавая параметры
+    request = AliexpressAffiliateOrderListbyindexRequest()
     request.start_time = "2023-10-26"
     request.end_time = "2023-10-27"
-    request.page_size = 100
-    request.status = "paid"  # Например, статус заказа
+    request.page_size = 10
+    request.start_query_index_id = 1
 
+    # Получаем имя API-метода
+    api_name = request.getapiname()
+    print(api_name) # Выведет: aliexpress.affiliate.order.listbyindex
 
-    # Далее нужно вызвать метод для отправки запроса к API (который отсутствует в данном коде)
-    # Например,  result = request.execute() или аналогичный метод.
-    # Обратите внимание, что  request.execute()  необходимо реализовать в другом месте вашего кода
-    # для выполнения фактического запроса к API.
+    # Дальше необходимо использовать полученные данные для взаимодействия с API (например, с помощью `RestApi.execute`)

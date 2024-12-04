@@ -3,50 +3,32 @@
 
 Описание
 -------------------------
-Этот модуль (`hypotez/src/suppliers/__init__.py`) предоставляет базовый класс `Supplier` и инструменты для работы с поставщиками.  Он определяет структуру для добавления методов, специфичных для каждого поставщика, например, Amazon, Aliexpress, Morlevi. Эти специфичные методы реализуются в отдельных файлах, соответствующих префиксу имени поставщика (например, `amazon.py`, `aliexpress.py`).  Модуль также импортирует классы `Graber`, `Context` и функцию `close_pop_up` из модуля `graber`.  Константа `MODE` определяет режим работы.
+Модуль `suppliers` предоставляет класс `Supplier` для работы с поставщиками данных.  Каждый поставщик имеет специфичные методы извлечения данных, которые дополняют базовый класс `Supplier`.  Эти методы размещаются в соответствующих подпапках (например, `amazon`, `aliexpress`),  называемых префиксом поставщика (`supplier_prefix`). Префикс задается при создании нового поставщика. Модуль содержит также классы `Graber`, `Context` и функцию `close_pop_up` для обработки данных и взаимодействия с приложениями.
 
 Шаги выполнения
 -------------------------
-1. Импортировать необходимые классы и функции из модуля:
-   ```python
-   from hypotez.src.suppliers.supplier import Supplier
-   from hypotez.src.suppliers.graber import Graber, Context, close_pop_up
-   ```
-2. Создать экземпляр класса `Supplier` (или наследовать от него).
-3. Импортировать методы конкретного поставщика:
-   ```python
-   from hypotez.src.suppliers.<supplier_prefix> import <specific_method>
-   ```
-   Например, для работы с Amazon:
-   ```python
-   from hypotez.src.suppliers.amazon import get_amazon_products
-   ```
-4. Вызвать метод `supplier.specific_method()` для выполнения действий, специфичных для данного поставщика.
-5.  Использовать классы `Graber`, `Context` и функцию `close_pop_up` для взаимодействия с веб-драйвером.
+1. **Импортировать необходимые классы**: Модуль `suppliers` импортирует классы `Supplier`, `Graber`, `Context`, и функцию `close_pop_up` из соответствующих файлов.
+2. **Создать экземпляр класса `Supplier`**:  Для каждого поставщика необходимо создать экземпляр класса `Supplier`, передавая необходимые параметры.
+3. **Использовать специфичные методы**: Вызывать методы, определенные для конкретного поставщика, из его подпапки, чтобы извлечь данные. Например, если поставщик `amazon` имеет функцию `get_products`, то вызов будет выглядеть как `amazon_supplier_instance.get_products()`.  Эти функции должны быть подключены через интерфейс `supplier.related_functions`.
+4. **Обработать полученные данные**: После вызова метода поставщика, необходимо обработать полученные данные, используя классы `Graber` и `Context` или любые другие вспомогательные средства.
+5. **Закрыть диалоговые окна (если необходимо)**:  Использовать функцию `close_pop_up`, если требуется закрыть всплывающие окна или диалоговые окна, связанные с взаимодействием с поставщиком.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.supplier import Supplier
-    from hypotez.src.suppliers.graber import Graber, Context, close_pop_up
-    from hypotez.src.suppliers.amazon import get_amazon_products
+    from hypotez.src.suppliers import Supplier, Graber, Context, close_pop_up
+    from hypotez.src.suppliers.amazon import AmazonSupplier
 
-    # Предполагаем, что у вас есть необходимая инициализация веб-драйвера
-    driver = Graber()
-    context = Context(driver)
+    # Создаем экземпляр поставщика Amazon
+    amazon_supplier = AmazonSupplier()
 
-    # Создаем экземпляр класса Supplier, возможно с дополнительными параметрами
-    supplier = Supplier(context=context)
+    # Извлекаем данные о товарах
+    products_data = amazon_supplier.get_products()
 
-    # Добавляем специфичный метод для Amazon
-    supplier.add_method(get_amazon_products)
+    # Обрабатываем полученные данные (пример)
+    context = Context() # Инициализация контекста
+    products = Graber().extract_products(products_data, context) # Предполагаемый метод обработки данных
 
-    # Вызываем метод для получения продуктов с Amazon
-    products_data = supplier.get_amazon_products()  # Используем имя метода, добавленного в Supplier
-
-    # ... Обработка полученных данных ...
-
-    # Закрываем окно браузера
-    close_pop_up(driver)
-    driver.close()
+    # Закрываем диалоговое окно (если необходимо)
+    close_pop_up()

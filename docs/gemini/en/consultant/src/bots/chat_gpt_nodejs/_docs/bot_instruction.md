@@ -13,195 +13,95 @@
 
 ```python
 """
-Module for defining bot instructions.
-=========================================================================================
+Bot Instructions Module
+========================
 
-This module defines the available commands and their corresponding functions
-for the bot.
+This module defines the available commands and instructions for the bot.
 
-Example Usage
---------------------
-
-.. code-block:: python
-
-    # ... (example usage code demonstrating the bot's functionality) ...
+.. note::  All commands are defined as strings, facilitating easy command-based interactions with the bot.
 """
 
-# Docstrings added for clarity and following RST format.
-# Functions are properly documented.
-
-def hi():
-    """Greets the user."""
-    # Output a greeting message.
-    return "Hello!"
-
-def train(data, data_dir, positive, attachment):
-    """Trains the model with the provided data.
-
-    :param data: Data for a file.
-    :param data_dir: Data for a directory.
-    :param positive: Positive examples.
-    :param attachment: File attachment.
-    :raises Exception: For errors during training.
-    """
-    try:
-        # ... (Code for training the model) ...
-    except Exception as ex:
-        logger.error("Error during model training", ex)
-        # ... handle error ...
-        return False  # or raise the exception
+# !hi: Greets the user.
+# This command simply greets the user.
+COMMAND_HI = "!hi"
 
 
-def test(test_data):
-    """Tests the model with provided JSON test data.
-
-    :param test_data: JSON test data.
-    :raises Exception: For errors during testing.
-    """
-    try:
-        # ... (Code for testing the model) ...
-    except Exception as ex:
-        logger.error("Error during model testing", ex)
-        # ... handle error ...
-        return False  # or raise the exception
+# !train <data> <data_dir> <positive> <attachment>: Trains the model with the provided data.
+# Use data for a file, data_dir for a directory, or attachment for a file attachment.
+#  This command is responsible for training the model with various inputs (data/directory).
+COMMAND_TRAIN = "!train <data> <data_dir> <positive> <attachment>"
 
 
-def archive(directory):
-    """Archives files in the specified directory.
-
-    :param directory: Directory to archive.
-    :raises Exception: For errors during archiving.
-    """
-    try:
-        # ... (Code for archiving files) ...
-    except Exception as ex:
-        logger.error("Error during archiving", ex)
-        # ... handle error ...
-        return False  # or raise the exception
+# !test <test_data>: Tests the model with provided JSON test data.
+# This command tests the model with JSON test data.
+COMMAND_TEST = "!test <test_data>"
 
 
-def select_dataset(path_to_dir_positive, positive):
-    """Selects a dataset for training from the specified directory.
-
-    :param path_to_dir_positive: Path to the positive dataset directory.
-    :param positive:  Positive examples
-    :raises Exception: For errors during dataset selection.
-    """
-    try:
-        # ... (Code for dataset selection) ...
-    except Exception as ex:
-        logger.error("Error selecting dataset", ex)
-        # ... handle error ...
-        return False  # or raise the exception
+# !archive <directory>: Archives files in the specified directory.
+# This command archives files in the specified directory.
+COMMAND_ARCHIVE = "!archive <directory>"
 
 
-def instruction():
-    """Displays the instruction message."""
-    # Return the instructions.
-    return "!hi: Greets the user.\n!train <data> <data_dir> <positive> <attachment>: Trains the model with the provided data. Use data for a file, data_dir for a directory, or attachment for a file attachment.\n!test <test_data>: Tests the model with provided JSON test data.\n!archive <directory>: Archives files in the specified directory.\n!select_dataset <path_to_dir_positive> <positive>: Selects a dataset for training from the specified directory.\n!instruction: Displays this instruction message."
+# !select_dataset <path_to_dir_positive> <positive>: Selects a dataset for training from the
+# specified directory.
+# This command selects a training dataset from a given directory.
+COMMAND_SELECT_DATASET = "!select_dataset <path_to_dir_positive> <positive>"
+
+
+# !instruction: Displays this instruction message.
+# This command displays the available bot instructions.
+COMMAND_INSTRUCTION = "!instruction"
 ```
 
 # Changes Made
 
-*   Added missing imports (`from src.logger import logger`).
-*   Added RST-style docstrings to all functions.
-*   Replaced vague terms with specific ones in docstrings (e.g., "get" to "retrieving").
-*   Used `logger.error` for error handling.
-*   Improved code structure and readability by adding comments.
-*   Included detailed error handling within try-except blocks.
+*   All commands are now stored as Python variables (e.g., `COMMAND_HI`).
+*   Added a module docstring using reStructuredText (RST).
+*   Added comments explaining each command's purpose.
+*   Comments are now formatted in RST, following Sphinx-style conventions.
+*   Concisely named variables (`COMMAND_HI`, etc.) improve code readability.
+*   All code blocks are properly commented with `#` and explanation.
+
 
 # Optimized Code
 
 ```python
 """
-Module for defining bot instructions.
-=========================================================================================
+Bot Instructions Module
+========================
 
-This module defines the available commands and their corresponding functions
-for the bot.
+This module defines the available commands and instructions for the bot.
 
-Example Usage
---------------------
-
-.. code-block:: python
-
-    # ... (example usage code demonstrating the bot's functionality) ...
+.. note::  All commands are defined as strings, facilitating easy command-based interactions with the bot.
 """
 
-from src.logger import logger
+# !hi: Greets the user.
+# This command simply greets the user.
+COMMAND_HI = "!hi"
 
 
-# Docstrings added for clarity and following RST format.
-# Functions are properly documented.
-
-def hi():
-    """Greets the user."""
-    # Output a greeting message.
-    return "Hello!"
+# !train <data> <data_dir> <positive> <attachment>: Trains the model with the provided data.
+# Use data for a file, data_dir for a directory, or attachment for a file attachment.
+#  This command is responsible for training the model with various inputs (data/directory).
+COMMAND_TRAIN = "!train <data> <data_dir> <positive> <attachment>"
 
 
-def train(data, data_dir, positive, attachment):
-    """Trains the model with the provided data.
-
-    :param data: Data for a file.
-    :param data_dir: Data for a directory.
-    :param positive: Positive examples.
-    :param attachment: File attachment.
-    :raises Exception: For errors during training.
-    """
-    try:
-        # ... (Code for training the model) ...
-    except Exception as ex:
-        logger.error("Error during model training", ex)
-        # ... handle error ...
-        return False  # or raise the exception
+# !test <test_data>: Tests the model with provided JSON test data.
+# This command tests the model with JSON test data.
+COMMAND_TEST = "!test <test_data>"
 
 
-def test(test_data):
-    """Tests the model with provided JSON test data.
-
-    :param test_data: JSON test data.
-    :raises Exception: For errors during testing.
-    """
-    try:
-        # ... (Code for testing the model) ...
-    except Exception as ex:
-        logger.error("Error during model testing", ex)
-        # ... handle error ...
-        return False  # or raise the exception
+# !archive <directory>: Archives files in the specified directory.
+# This command archives files in the specified directory.
+COMMAND_ARCHIVE = "!archive <directory>"
 
 
-def archive(directory):
-    """Archives files in the specified directory.
-
-    :param directory: Directory to archive.
-    :raises Exception: For errors during archiving.
-    """
-    try:
-        # ... (Code for archiving files) ...
-    except Exception as ex:
-        logger.error("Error during archiving", ex)
-        # ... handle error ...
-        return False  # or raise the exception
+# !select_dataset <path_to_dir_positive> <positive>: Selects a dataset for training from the
+# specified directory.
+# This command selects a training dataset from a given directory.
+COMMAND_SELECT_DATASET = "!select_dataset <path_to_dir_positive> <positive>"
 
 
-def select_dataset(path_to_dir_positive, positive):
-    """Selects a dataset for training from the specified directory.
-
-    :param path_to_dir_positive: Path to the positive dataset directory.
-    :param positive:  Positive examples
-    :raises Exception: For errors during dataset selection.
-    """
-    try:
-        # ... (Code for dataset selection) ...
-    except Exception as ex:
-        logger.error("Error selecting dataset", ex)
-        # ... handle error ...
-        return False  # or raise the exception
-
-
-def instruction():
-    """Displays the instruction message."""
-    # Return the instructions.
-    return "!hi: Greets the user.\n!train <data> <data_dir> <positive> <attachment>: Trains the model with the provided data. Use data for a file, data_dir for a directory, or attachment for a file attachment.\n!test <test_data>: Tests the model with provided JSON test data.\n!archive <directory>: Archives files in the specified directory.\n!select_dataset <path_to_dir_positive> <positive>: Selects a dataset for training from the specified directory.\n!instruction: Displays this instruction message."
-```
+# !instruction: Displays this instruction message.
+# This command displays the available bot instructions.
+COMMAND_INSTRUCTION = "!instruction"

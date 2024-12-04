@@ -7,7 +7,7 @@
     "use_mouse": false,
     "event": "click()",
     "mandatory": true,
-    "locator_description": "Закрыти попап окна"
+    "locator_description": "Кнопка закрытия попап окна"
   },
   "id": {
     "attribute": null,

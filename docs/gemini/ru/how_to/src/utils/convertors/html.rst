@@ -1,61 +1,96 @@
-Как использовать модуль html конвертации
-========================================================================================
+Как использовать функции преобразования HTML в hypotez/src/utils/convertors/html.py
+============================================================================================
 
 Описание
 -------------------------
-Этот модуль предоставляет функции для конвертации HTML-кода в различные форматы: escape-последовательности, словари, объекты SimpleNamespace и PDF.  Он также включает функции для обратной конвертации из escape-последовательностей в HTML.
+Этот файл содержит функции для конвертации HTML в различные форматы, включая escape-последовательности, словари, объекты SimpleNamespace и PDF.  Он предоставляет инструменты для работы с HTML-данными, например, для обработки и вывода данных в формате HTML.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование модуля:** Импортируйте необходимый модуль.
+1. **Импорт модуля:**  Для использования функций из этого файла необходимо импортировать его в ваш код:
+
    ```python
    from hypotez.src.utils.convertors.html import html2escape, escape2html, html2dict, html2ns, html2pdf
    ```
 
-2. **Вызов нужной функции:** Выберите подходящую функцию для конвертации, в зависимости от требуемого результата:
-   - `html2escape(input_str)`: Конвертирует HTML-теги в escape-последовательности.
-   - `escape2html(input_str)`: Конвертирует escape-последовательности обратно в HTML-теги.
-   - `html2dict(html_str)`: Конвертирует HTML в словарь, где ключами являются теги, а значениями - их содержимое.
-   - `html2ns(html_str)`: Конвертирует HTML в объект `SimpleNamespace`.
-   - `html2pdf(html_str, pdf_file)`: Конвертирует HTML в PDF-файл.
+2. **Вызов функции `html2escape`:**  Эта функция преобразует HTML-теги в escape-последовательности, например, `<` заменяется на `&lt;`.
 
-3. **Передача аргументов:**  Передайте требуемый HTML-код или escape-последовательность в качестве аргумента функции. При конвертации в PDF, также укажите имя файла для сохранения результата.
+   ```python
+   html_input = "<p>Hello, <b>world!</b></p>"
+   escaped_html = html2escape(html_input)
+   print(escaped_html)  # Вывод: &lt;p&gt;Hello, &lt;b&gt;world!&lt;/b&gt;&lt;/p&gt;
+   ```
 
-4. **Обработка возвращаемого значения:**  Функции возвращают соответствующие результаты. При использовании `html2pdf`, функция возвращает `True` при успешной конвертации или `None` при возникновении ошибки.
+3. **Вызов функции `escape2html`:**  Обратный процесс – конвертирует escape-последовательности обратно в HTML-теги.
 
-Пример использования
--------------------------
-.. code-block:: python
+   ```python
+   escaped_html = "&lt;p&gt;Hello, &lt;b&gt;world!&lt;/b&gt;&lt;/p&gt;"
+   unescaped_html = escape2html(escaped_html)
+   print(unescaped_html)  # Вывод: <p>Hello, <b>world!</b></p>
+   ```
 
-    from hypotez.src.utils.convertors.html import html2escape, escape2html, html2dict, html2ns, html2pdf
-    import io
+4. **Вызов функции `html2dict`:** Преобразует HTML-строку в словарь, где ключами являются теги, а значениями – содержимое тегов.
 
-    # Пример конвертации HTML в escape-последовательности
-    html_code = "<p>Hello, world!</p>"
-    escaped_html = html2escape(html_code)
-    print(escaped_html)  # Вывод: &lt;p&gt;Hello, world!&lt;/p&gt;
+   ```python
+   html_input = "<p>Hello</p><a href='link'>World</a>"
+   html_dict = html2dict(html_input)
+   print(html_dict) # Вывод: {'p': 'Hello', 'a': 'World'}
+   ```
 
+5. **Вызов функции `html2ns`:**  Преобразует HTML-строку в объект SimpleNamespace, где атрибуты объекта соответствуют тегам, а значения атрибутов – содержимому тегов.
 
-    # Пример конвертации escape-последовательностей в HTML
-    escaped_string = "&lt;p&gt;Hello, world!&lt;/p&gt;"
-    unescaped_html = escape2html(escaped_string)
-    print(unescaped_html) # Вывод: <p>Hello, world!</p>
+   ```python
+   html_input = "<p>Hello</p><a href='link'>World</a>"
+   html_ns = html2ns(html_input)
+   print(html_ns.p)  # Вывод: Hello
+   print(html_ns.a)  # Вывод: World
+   ```
 
-    # Пример конвертации HTML в словарь
-    html_string = "<p>Hello</p><a href='link'>World</a>"
-    html_dict = html2dict(html_string)
-    print(html_dict)  # Вывод: {'p': 'Hello', 'a': 'World'}
-
-    # Пример конвертации HTML в SimpleNamespace
-    html_namespace = html2ns(html_string)
-    print(html_namespace.p)  # Вывод: Hello
-    print(html_namespace.a)  # Вывод: World
+6. **Вызов функции `html2pdf`:** Преобразует HTML-строку в PDF-файл.  Необходимо указать путь к выходному PDF-файлу.
 
 
+   ```python
+   html_input = "<html><body><h1>Hello, world!</h1></body></html>"
+   pdf_output_file = "output.pdf"
+   success = html2pdf(html_input, pdf_output_file)
 
-    # Пример конвертации HTML в PDF
-    html_content = "<html><body><h1>Example</h1></body></html>"
-    pdf_file_path = "output.pdf"
-    success = html2pdf(html_content, pdf_file_path)
-    if success:
-        print(f"PDF успешно сохранён в {pdf_file_path}")
+   if success:
+       print(f"PDF успешно сгенерирован в {pdf_output_file}")
+   ```
+
+
+
+Пример использования (html2pdf):
+```python
+import os
+from pathlib import Path
+
+from hypotez.src.utils.convertors.html import html2pdf
+
+# Пример использования
+html_content = "<html><body><h1>Hello, World!</h1></body></html>"
+output_path = Path("output.pdf")
+success = html2pdf(html_content, output_path)
+
+if success:
+    print(f"PDF успешно создан по пути {output_path}")
+else:
+    print("Ошибка при создании PDF")
+```
+
+
+Обратите внимание, что для `html2pdf` необходима библиотека `WeasyPrint`.  Убедитесь, что она установлена.
+
+
+```bash
+pip install weasyprint
+```
+
+
+```
+```
+```
+```
+```
+
+```

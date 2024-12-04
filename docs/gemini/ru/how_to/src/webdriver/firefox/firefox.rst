@@ -1,37 +1,34 @@
-Как использовать класс Firefox
-========================================================================================
+Как использовать этот блок кода
+=========================================================================================
 
 Описание
 -------------------------
-Этот код определяет подкласс `webdriver.Firefox`, названный `Firefox`. Он предоставляет дополнительную функциональность, такую как запуск Firefox в режиме киоска и настройку профиля Firefox для WebDriver.  Код настраивает WebDriver Firefox, включая установку профиля, версии Firefox и geckodriver, а также пользовательского user-agent.  Он также инициализирует объекты для работы с JavaScript и исполнением локейтеров.
+Этот код определяет подкласс `webdriver.Firefox` под названием `Firefox`. Он предоставляет дополнительную функциональность, такую как запуск Firefox в режиме киоска и настройку профиля Firefox для WebDriver. Код также загружает исполнители для локаторов и сценариев JavaScript. Он использует конфигурацию из файла `firefox.json` для настройки драйвера Firefox.
 
 Шаги выполнения
 -------------------------
-1. **Импортирует необходимые библиотеки:** `os`, `Path`, `typing`, `selenium.webdriver`, `selenium.webdriver.firefox`, `selenium.webdriver.firefox.firefox_profile`, `selenium.common.exceptions`, `src.webdriver.executor`, `src.webdriver.js`, `fake_useragent`, `src`, `src.utils`, `src.logger`.  Это подключает нужные инструменты для работы с WebDriver, профилями, файлами, обработкой ошибок, JavaScript, user-agent и т.д.
-
-2. **Определяет класс `Firefox`:** Наследуется от `webdriver.Firefox`, добавляя дополнительные атрибуты и методы.  Этот класс управляет настройками и запуском браузера Firefox.
-
-3. **Инициализирует WebDriver:** Метод `__init__` принимает параметры для настройки профиля, версий Firefox и geckodriver, а также пользовательского user-agent.
-
-4. **Настраивает `service`, `options` и `profile`:** Задает путь к geckodriver, двоичному файлу Firefox и директории профиля. Настраивает параметры `options` для браузера (например, аргументы командной строки). Устанавливает пользовательский user-agent.
-
-5. **Запускает Firefox:** Использует `super().__init__(service=service, options=options)` для запуска браузера с настроенными параметрами.  Обрабатывает возможные исключения `WebDriverException` при старте браузера.
-
-6. **Загружает `executors`:** Метод `_payload` загружает исполнители для locators и JavaScript, создавая объекты для последующего использования.
-
-7. **Инициализирует дополнительные методы:**  Метод `_payload` создаёт и присваивает классу `Firefox` объекты, необходимые для работы с JavaScript (например, `get_page_lang`, `ready_state`) и локейтерами (например, `execute_locator`, `get_webelement_by_locator`).
-
+1. **Импортирование необходимых библиотек**: Код импортирует необходимые библиотеки, такие как `selenium.webdriver`, `pathlib`, `typing`, `fake_useragent`,  и другие, для работы с браузером Firefox и его настройкой.
+2. **Определение класса `Firefox`**: Определяется подкласс `WebDriver` с именем `Firefox`. Этот класс настраивает WebDriver, используя параметры из файла конфигурации `firefox.json`.
+3. **Настройка сервиса `Service`**: Создает экземпляр класса `Service`, используя путь к исполняемому файлу geckodriver, полученный из файла конфигурации.
+4. **Настройка опций `Options`**: Создает экземпляр класса `Options`.  Настраивает дополнительные параметры запуска Firefox, включая аргументы из файла конфигурации (например, режимы).  Устанавливает случайный пользовательский агент.
+5. **Настройка профиля `FirefoxProfile`**: Создает экземпляр класса `FirefoxProfile`.  Настраивает директорию профиля Firefox. Если задан параметр `profile_name`, добавляет имя профиля в путь к профилю. Использует конфигурацию из файла `firefox.json` для настройки профиля.
+6. **Инициализация WebDriver**: Используя параметры `service` и `options`, инициализирует экземпляр WebDriver (Firefox).  Инициализирует вспомогательные функции (javascript, локэйторы).
+7. **Обработка исключений**: Обрабатывает потенциальные исключения при запуске драйвера, например, если Firefox не установлен или не найден.
+8. **Инициализация JavaScript и исполнителей локаторов**: Загружает JavaScript и исполнителей для локаторов.  Инициализирует необходимые методы для работы с страницей.
+9. **Примеры использования**: Приведен пример использования класса `Firefox`, демонстрирующий как его запустить, получить доступ к странице и закрыть браузер.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.webdriver.firefox.firefox import Firefox
+    from hypotez.src.webdriver.firefox import Firefox
 
-    profile_name = "custom_profile"
-    geckodriver_version = "v0.29.0"
-    firefox_version = "78.0"
-
-    browser = Firefox(profile_name=profile_name, geckodriver_version=geckodriver_version, firefox_version=firefox_version)
-    browser.get("https://www.example.com")
-    browser.quit()
+    # Пример использования
+    if __name__ == "__main__":
+        profile_name = "custom_profile"
+        geckodriver_version = "v0.29.0"
+        firefox_version = "78.0"
+        
+        browser = Firefox(profile_name=profile_name, geckodriver_version=geckodriver_version, firefox_version=firefox_version)
+        browser.get("https://www.example.com")
+        browser.quit()

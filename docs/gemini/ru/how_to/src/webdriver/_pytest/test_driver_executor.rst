@@ -3,26 +3,29 @@
 
 Описание
 -------------------------
-Этот блок кода содержит набор тестов для проверки функциональности класса `ExecuteLocator`.  Тесты проверяют различные аспекты работы с WebDriver (Selenium), включая навигацию по страницам, поиск элементов, отправку сообщений, получение атрибутов и обработку событий.  Он использует `pytest` для организации и запуска тестов, а также `pytest` фикстуры для настройки WebDriver и `ExecuteLocator`.
+Этот код содержит набор тестов для модуля `ExecuteLocator` из файла `test_driver_executor.py`. Тесты проверяют функциональность WebDriver и `ExecuteLocator`, включая навигацию по страницам, поиск элементов, взаимодействие с ними (например, отправку сообщений, клики), проверку атрибутов элементов и обработку ошибок.  Тесты написаны с использованием фреймворка pytest и зависят от наличия драйвера WebDriver (Chrome в данном случае).  Код организован в виде тестов, которые используют фикстуры для подготовки и очистки WebDriver.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых библиотек:** Импортируются `pytest`, `selenium` (для работы с WebDriver),  `webdriver.Chrome`, `by` (для локаторов), `ActionChains`, `WebDriverWait`, `expected_conditions`, `ExecuteLocator`, и `ExecuteLocatorException`.
+1. **Импорт необходимых библиотек:** Код импортирует `pytest`, `webdriver`, `Service`, `By`, `Options`, `WebElement`, `ActionChains`, `WebDriverWait`, `expected_conditions`, `ExecuteLocator`, `ExecuteLocatorException`. Эти импорты необходимы для работы тестов.
 
-2. **Инициализация `WebDriver` (фиксча `driver`):**  Создается экземпляр `webdriver.Chrome` с использованием `Options` (с аргументом `--headless` для работы в бескрайнем режиме). Устанавливается путь к chromedriver.  Открывается стартовая страница `http://example.com`.  Этот метод инициализирует браузер и устанавливает начальную страницу для тестов.
+2. **Определение фикстуры `driver`:** Фикстура `driver` настраивает WebDriver (Chrome в данном случае), добавляет опцию "--headless" для запуска в бескрайнем режиме (без отображения окна браузера), устанавливает путь к драйверу ChromeDriver и открывает страницу `http://example.com`.  После выполнения тестов, фикстура закрывает драйвер.
 
-3. **Инициализация `ExecuteLocator` (фиксча `execute_locator`):** Создается экземпляр класса `ExecuteLocator` с переданным `driver`, чтобы использовать его в тестах.
+3. **Определение фикстуры `execute_locator`:** Фикстура `execute_locator` создает экземпляр класса `ExecuteLocator`, передавая в него драйвер, установленный в фикстуре `driver`.
 
-4. **Определение тестов:**  Определены различные тестовые функции (`test_navigate_to_page`, `test_get_webelement_by_locator_single_element`, и т.д.) для проверки разных функциональных возможностей.
+4. **Определение тестов:**  Код содержит несколько тестов, каждый из которых проверяет определенную функциональность `ExecuteLocator`.  Тесты используют `execute_locator` для выполнения действий и проверяют их результат (например, утверждение `assert`).
 
-5. **Проверка функций `ExecuteLocator`:** Каждая тестовая функция использует методы класса `ExecuteLocator` (например, `get_webelement_by_locator`, `send_message`, `execute_locator`) для взаимодействия с WebDriver и выполнения определённых действий.
+5. **Тестирование навигации:** Тест `test_navigate_to_page` проверяет, что WebDriver успешно переходит на указанную страницу.
 
+6. **Тестирование поиска элементов:** Тесты `test_get_webelement_by_locator_single_element` и `test_get_webelement_by_locator_no_element` проверяют корректность поиска элементов по локаторам.
 
-6. **Использование ассертов (assert):** В каждом тесте используются утверждения `assert`, чтобы проверить корректность результатов выполнения методов `ExecuteLocator`.
+7. **Тестирование взаимодействия с элементами:** Тесты `test_send_message`, `test_get_attribute_by_locator`, `test_execute_locator_event` проверяют отправку сообщений, получение атрибутов и выполнение событий на элементах.
 
-7. **Обработка исключений:**  Тест `test_invalid_locator` демонстрирует использование `pytest.raises` для проверки обработки исключения `ExecuteLocatorException` в случае некорректного локатора.
+8. **Тестирование получения ключей локатора:** Тест `test_get_locator_keys` проверяет, что метод `get_locator_keys` возвращает ожидаемые ключи локатора.
 
-8. **Закрытие WebDriver (фиксча `driver`):** После выполнения всех тестов WebDriver закрывается с помощью `driver.quit()`.
+9. **Тестирование последовательной навигации и взаимодействия:** Тест `test_navigate_and_interact` проверяет навигацию по страницам и взаимодействие с элементами на разных страницах.
+
+10. **Тестирование обработки некорректных локаторов:** Тест `test_invalid_locator` проверяет, что при некорректном локаторе генерируется ожидаемое исключение `ExecuteLocatorException`.
 
 
 Пример использования
@@ -30,43 +33,27 @@
 .. code-block:: python
 
     import pytest
-    from selenium import webdriver
-    from selenium.webdriver.chrome.service import Service
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.chrome.options import Options
-    from src.webdriver.executor import ExecuteLocator
-    from src.logger.exceptions import ExecuteLocatorException
+    # ... (импорты из кода)
 
-    # ... (Импорт необходимых библиотек - см. выше)
+    # Предположим, что у вас есть экземпляр драйвера (например, от фикстуры)
+    driver = webdriver.Chrome()
 
+    # Инициализируйте ExecuteLocator
+    execute_locator = ExecuteLocator(driver)
 
-    @pytest.fixture(scope="module")
-    def driver():
-        # ... (Инициализация WebDriver - см. выше)
-
-    @pytest.fixture
-    def execute_locator(driver):
-        # ... (Инициализация ExecuteLocator - см. выше)
+    # Локатор для элемента
+    locator = {"by": "XPATH", "selector": "//h1"}
 
 
-    def test_navigate_and_interact(execute_locator, driver):
-        # Навигация на новую страницу
-        driver.get("https://www.wikipedia.org/")
-        assert driver.current_url == "https://www.wikipedia.org/"
+    # Попробуйте получить элемент
+    element = execute_locator.get_webelement_by_locator(locator)
 
-        # Поиск и отправка текста в поле поиска
-        locator = {"by": "XPATH", "selector": "//input[@id='searchInput']"}
-        execute_locator.send_message(locator, "Selenium", typing_speed=0, continue_on_error=True)
+    # Проверьте результат (например, если элемент найден, выполните действие)
+    if element:
+        element.click()
+    else:
+        print("Элемент не найден")
 
-        # Поиск и клик по кнопке поиска
-        locator = {"by": "XPATH", "selector": "//button[@type='submit']"}
-        execute_locator.execute_locator(locator, message="click")
 
-        # Проверка наличия результата поиска
-        assert "Selenium" in driver.title
-
-        # Дополнительная проверка элемента на странице результатов
-        result_locator = {"by": "XPATH", "selector": "//h1[contains(text(), 'Selenium')]"}
-        result = execute_locator.get_webelement_by_locator(result_locator)
-        assert isinstance(result, WebElement)
-        assert result.text == "Selenium"
+    # Убедитесь, что вы корректно закрываете драйвер
+    driver.quit()

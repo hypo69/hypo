@@ -58,7 +58,6 @@ class BotHandler:
         Args:
             webdriver_name (Optional[str]): Название веб-драйвера для запуска.
         """
-        logger.info('handler started')
 
         self.mexiron = Mexiron(
             Driver(

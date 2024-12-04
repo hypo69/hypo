@@ -3,14 +3,14 @@
 
 Описание
 -------------------------
-Этот код определяет класс `AffiliateLink`, который представляет собой модель для ссылки на партнерскую программу AliExpress.  Модель имеет два атрибута: `promotion_link` (ссылка на промоакцию) и `source_value` (значение источника).
+Этот код определяет класс `AffiliateLink`, представляющий данные об аффилиатной ссылке.  Класс содержит два атрибута: `promotion_link` (строка, представляющая промо-ссылку) и `source_value` (строка, содержащая исходные данные).
 
 Шаги выполнения
 -------------------------
-1. Создается класс `AffiliateLink`.
-2. Определяются два атрибута класса:
-    - `promotion_link`:  хранит строку, представляющую собой ссылку на партнерскую программу.
-    - `source_value`: хранит строку, содержащую значение источника.
+1. Определяется класс `AffiliateLink`.
+2. В классе определяются два атрибута:
+    - `promotion_link`:  будет хранить строковое значение промо-ссылки.
+    - `source_value`: будет хранить строковое значение исходных данных.
 
 Пример использования
 -------------------------
@@ -18,13 +18,14 @@
 
     from hypotez.src.suppliers.aliexpress.api.models.affiliate_link import AffiliateLink
 
-    # Создание объекта AffiliateLink
+    # Создание экземпляра класса AffiliateLink
     affiliate_link = AffiliateLink()
 
-    # Присвоение значений атрибутам
-    affiliate_link.promotion_link = "https://www.aliexpress.com/somepromotionlink"
-    affiliate_link.source_value = "SomeSourceValue"
+    # Установка значений атрибутов
+    affiliate_link.promotion_link = "https://example.com/promotion"
+    affiliate_link.source_value = "aliexpress_product_123"
 
-    # Вывод значений атрибутов (или использование в дальнейшем в коде)
-    print(affiliate_link.promotion_link)
-    print(affiliate_link.source_value)
+
+    # Вывод значений атрибутов
+    print(affiliate_link.promotion_link)  # Выведет: https://example.com/promotion
+    print(affiliate_link.source_value)  # Выведет: aliexpress_product_123

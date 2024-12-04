@@ -1,20 +1,23 @@
-Как использовать модуль logger
-========================================================================================
+Как использовать модуль логгирования `src.logger`
+==========================================================================================
 
 Описание
 -------------------------
-Модуль `src.logger` предоставляет гибкую систему логирования, поддерживающую консоль, файлы и JSON-логирование. Он использует паттерн Singleton для обеспечения того, что в приложении используется только один экземпляр логгера. Логгер поддерживает различные уровни логирования (например, `INFO`, `ERROR`, `DEBUG`) и включает цветной вывод для консольных логов. Также можно настраивать форматы вывода логов и управлять логированием в разные файлы.
+Модуль `src.logger` предоставляет гибкую систему логгирования, поддерживающую вывод в консоль, файлы и JSON-формат. Он использует паттерн Singleton, гарантируя, что в приложении используется только один экземпляр логгера.  Логгер поддерживает различные уровни логгирования (например, `INFO`, `ERROR`, `DEBUG`) и включает цветной вывод для логов в консоль.  Вы можете настроить форматы вывода логов и управлять логгированием в разные файлы.
 
 Шаги выполнения
 -------------------------
 1. **Импортируйте модуль:**
    ```python
-   from hypotez.src.logger import Logger
-   import logging
-   import colorama  # Необходимо для цветного вывода
+   import src.logger as logger
    ```
 
-2. **Создайте конфигурационный словарь:**
+2. **Создайте экземпляр логгера:**
+   ```python
+   logger_instance = logger.Logger()
+   ```
+
+3. **Настройте логгирование для файлов (необязательно):**
    ```python
    config = {
        'info_log_path': 'logs/info.log',
@@ -22,64 +25,48 @@
        'errors_log_path': 'logs/errors.log',
        'json_log_path': 'logs/log.json'
    }
+   logger_instance.initialize_loggers(**config)
    ```
-   Замените пути (`'info_log_path'`, `'debug_log_path'`, `'errors_log_path'`, `'json_log_path'`) на нужные вам.
+   Данный шаг инициализирует логгирование в файлы, указанные в словаре `config`.
 
-3. **Инициализируйте логгер:**
+4. **Запишите лог-сообщения с различными уровнями:**
    ```python
-   logger: Logger = Logger()
-   logger.initialize_loggers(**config)
+   logger_instance.info('Это информационное сообщение')
+   logger_instance.debug('Это отладочное сообщение')
+   logger_instance.error('Это сообщение об ошибке', ex=Exception('Ошибка!'))
    ```
-   Это создает и настраивает логгер, используя пути из `config`.
+   Эти методы запишут сообщения в соответствующие файлы/консоль.  Можно передавать исключения (`ex`) для записи подробностей ошибки.
 
-4. **Логируйте сообщения:**
-   ```python
-   logger.info('Это информационное сообщение')
-   logger.warning('Это предупреждающее сообщение')
-   logger.error('Это ошибка', ex=Exception('some error')) # Логирование исключения
-   logger.debug('Это отладочное сообщение')
-   ```
-   Используйте методы `info`, `warning`, `error`, `debug`, `success` и т.д. для записи сообщений различных уровней. Аргумент `ex` позволяет логгировать исключения.
 
-5. **Настройте цвета для консольного вывода (необязательно):**
+5. **Настройте цвета вывода в консоль (необязательно):**
    ```python
-   logger.info('Это информационное сообщение с цветом', colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
+   import colorama
+   logger_instance.info('Это сообщение с зеленым цветом', colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
    ```
-   Укажите `colors` как кортеж с кодами цвета для текста и фона, используя библиотеку `colorama`.
-
-6. **Закройте логгер (необязательно, но рекомендуется):**
-   ```python
-   logger.close_loggers()
-   ```
-   Этот шаг рекомендуется для корректного закрытия файлов логов.
+   Для использования цветов в консоли необходимо предварительно импортировать `colorama`.
 
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    import logging
-    import colorama
-    from hypotez.src.logger import Logger
+   import src.logger as logger
+   import colorama
+   colorama.init()  # Инициализация colorama для работы с цветами
 
-    colorama.init(autoreset=True)  # Инициализация colorama
+   config = {
+       'info_log_path': 'logs/info.log',
+       'debug_log_path': 'logs/debug.log'
+   }
 
-    config = {
-        'info_log_path': 'logs/info.log',
-        'debug_log_path': 'logs/debug.log'
-    }
+   logger_instance = logger.Logger()
+   logger_instance.initialize_loggers(**config)
 
-    logger: Logger = Logger()
-    logger.initialize_loggers(**config)
+   try:
+       result = 10 / 0
+   except Exception as e:
+       logger_instance.error("Произошла ошибка:", ex=e, exc_info=True, colors=(colorama.Fore.RED, colorama.Back.WHITE))
 
-    try:
-        result = 10 / 0
-    except ZeroDivisionError as e:
-        logger.error("Деление на ноль!", ex=e, exc_info=True)
+   logger_instance.info('Данные успешно обработаны', colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
 
-    logger.info("Выполнение прошло успешно")
-
-    logger.close_loggers()
-```
-```
-**Примечание:**  Библиотека `colorama` необходима для работы цветного вывода. Не забудьте ее установить: `pip install colorama`.  Так же, не забудьте заменить пути в `config` на ваши собственные.
+   logger_instance.debug("Дополнительная информация о процессе")

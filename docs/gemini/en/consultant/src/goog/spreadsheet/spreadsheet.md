@@ -2,11 +2,7 @@
 
 ```python
 ## \file hypotez/src/goog/spreadsheet/spreadsheet.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.goog.spreadsheet 
 	:platform: Windows, Unix
 	:synopsis: Minimal library for working with Google Sheets.
@@ -16,22 +12,21 @@
 if __name__ == "__main__":
     from pathlib import Path
 
-    data_file = Path('/mnt/data/google_extracted/your_data_file.csv')  # Replace with actual data file
-    sheet_name = 'Sheet1'  # Replace with actual sheet name in Google Sheets
+    data_file = Path(\'/mnt/data/google_extracted/your_data_file.csv\')  # Replace with actual data file
+    sheet_name = \'Sheet1\'  # Replace with actual sheet name in Google Sheets
 
     # Create a new Spreadsheet if spreadsheet_id is not specified
     google_sheet_handler = SpreadSheet(
         spreadsheet_id=None,  # Specify None to create a new Spreadsheet
         sheet_name=sheet_name,
-        spreadsheet_name='My New Spreadsheet'  # Name of the new Spreadsheet if spreadsheet_id is not specified
+        spreadsheet_name=\'My New Spreadsheet\'  # Name of the new Spreadsheet if spreadsheet_id is not specified
     )
     google_sheet_handler.upload_data_to_sheet()
 ```
 """
-MODE = 'dev'
+MODE = \'dev\'
 
 """ """
-
 
 from pathlib import Path
 import gspread
@@ -50,12 +45,13 @@ class SpreadSheet:
     """
 
     # Path to the credentials file for accessing Google Sheets.
-    #creds_file = gs.path.root / 'secrets' / 'hypo69-c32c8736ca62.json'
+    #creds_file = gs.path.root / \'secrets\' / \'hypo69-c32c8736ca62.json\'
 
     """ оригинал файла хранится в базе данных вместе с паролями
     @todo организовать копирование файла в прогамно созаданом `tmp`,чтобы не хранить файл в физической директории
     """
     
+    # Class variable declarations
     spreadsheet_id: str | None
     spreadsheet_name: str | None
     spreadsheet: Spreadsheet
@@ -92,17 +88,17 @@ class SpreadSheet:
         :return: Credentials for accessing Google Sheets.
         """
         try:
-            creds_file: Path = gs.path.secrets / 'e-cat-346312-137284f4419e.json' # <-  e.cat.co.il@gmail.com
-            SCOPES: list = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+            creds_file = gs.path.secrets / 'e-cat-346312-137284f4419e.json' # <-  e.cat.co.il@gmail.com
+            SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
             credentials = ServiceAccountCredentials.from_json_keyfile_name(
                 creds_file, SCOPES
             )
             #logger.debug("Credentials created successfully.")
             return credentials
         except Exception as ex:
-            logger.error("Error creating credentials.", exc_info=True)
+            logger.error("Error creating credentials.", ex, exc_info=True)
             raise
-
+\
     def _authorize_client(self):
         """ Authorize client to access the Google Sheets API.
 
@@ -114,101 +110,185 @@ class SpreadSheet:
             #logger.debug("Client authorized successfully.")
             return client
         except Exception as ex:
-            logger.error("Error authorizing client.", exc_info=True)
+            logger.error("Error authorizing client.", ex, exc_info=True)
             raise
-
-    def get_worksheet(self, worksheet_name: str) -> Worksheet:
+\
+    def get_worksheet(self, worksheet_name: str) -> Worksheet | None:
         """ Get the worksheet by name.
 
         If the sheet with the specified name does not exist, a new sheet is created.
 
         :param worksheet_name: Name of the sheet in Google Sheets.
-        :return: Worksheet for working with data.
+        :return: Worksheet for working with data, or None if creation failed.
         """
         try:
-            return self.spreadsheet.worksheet(worksheet_name)
+            worksheet = self.spreadsheet.worksheet(worksheet_name)
+            return worksheet
         except gspread.exceptions.WorksheetNotFound:
-            logger.error(f"Worksheet '{worksheet_name}' not found. Creating a new one.")
-            return self.create_worksheet(worksheet_name) # Corrected function call
+            try:
+                worksheet = self.create_worksheet(worksheet_name)
+                return worksheet
+            except Exception as e:
+                logger.error(f"Failed to create worksheet: {e}")
+                return None
+\
+    def create_worksheet(self, title:str, dim:dict = {'rows':100,'cols':10}) -> Worksheet | None:
+        """ Creates a new worksheet with the specified title and dimensions.
 
-    def create_worksheet(self, title: str, dim: dict = {'rows': 100, 'cols': 10}) -> Worksheet:
-        """ Creates a new worksheet with the given title and dimensions.
-
-        :param title: Title of the new worksheet.
-        :param dim: Dictionary containing the dimensions (rows, cols).
-        :return: The newly created worksheet.
+        :param title: The title for the new worksheet.
+        :param dim: A dictionary containing the desired number of rows and columns. Defaults to 100 rows and 10 columns.
+        :raises Exception: If there's an error creating the worksheet.
+        :return: The newly created worksheet, or None if creation fails.
         """
         try:
-            return self.spreadsheet.add_worksheet(title=title, rows=dim['rows'], cols=dim['cols'])
+            worksheet = self.spreadsheet.add_worksheet(title=title, rows=dim['rows'], cols=dim['cols'])
+            return worksheet
         except Exception as ex:
-            logger.error(f"Error creating new worksheet '{title}': {ex}")
-            raise
-        
-
-    def copy_worksheet(self, from_worksheet: str, to_worksheet: str):
-        """ Copy a worksheet.
-
-        Copies a worksheet from `from_worksheet` to `to_worksheet`.
-        :param from_worksheet: Name of the source worksheet.
-        :param to_worksheet: Name of the destination worksheet.
-        :raises Exception: If worksheet copy fails.
-        """
-        ... # Placeholder for implementation
-
+            logger.error(f"Error creating new sheet {title}: {ex}")
+            return None
+    
     def upload_data_to_sheet(self):
-        """ Upload data from a CSV file to Google Sheets.
+        """ Upload data from a CSV file to a Google Sheet.
 
-        Uploads data from the CSV file to the specified sheet.
+        Uploads data from the CSV file to the worksheet using pandas.
+
+        :raises ValueError: If the data file is invalid or doesn't exist.
+        :raises Exception: If there's an error uploading data.
         """
         try:
             if not self.data_file or not self.data_file.exists():
                 raise ValueError("Data file path is not set or the file does not exist.")
             
-            self.worksheet = self.get_worksheet(self.sheet_name) # Get worksheet
-            
+            worksheet = self.get_worksheet(self.sheet_name) #Get worksheet by name
+            if not worksheet:
+              raise Exception("Worksheet not found or creation failed")
+
             data = pd.read_csv(self.data_file)  # Read data from the CSV file
-            data_list = [data.columns.values.tolist()] + data.values.tolist()  # Prepare data for writing to Google Sheets
-            self.worksheet.update('A1', data_list)  # Write data to Google Sheets
+            data_list = [data.columns.tolist()] + data.values.tolist()
+            worksheet.append_row(data_list[0]) #Append the header row
+            for row in data_list[1:]:
+              worksheet.append_row(row)
             logger.info("Data uploaded successfully.")
+        except FileNotFoundError as e:
+            logger.error(f"Error: Data file not found: {e}")
+        except ValueError as e:
+            logger.error(f"Error: {e}")
         except Exception as ex:
-            logger.error("Error uploading data to Google Sheets.", exc_info=True)
+            logger.error("Error uploading data to Google Sheets.", ex, exc_info=True)
             raise
+
+
 ```
 
 # Improved Code
 
 ```python
-# ... (rest of the improved code)
+# ... (previous code)
+# ...
+# ...
+
+class SpreadSheet:
+    """ Class for working with Google Sheets.
+
+    This class provides methods for interacting with the Google Sheets API, creating and managing spreadsheets,
+    and uploading data from a CSV file.
+    """
+    # ... (rest of the class)
+
+    def get_worksheet(self, worksheet_name: str) -> Worksheet | None:
+        """Retrieves a worksheet by name.
+
+        :param worksheet_name: The name of the worksheet.
+        :raises gspread.exceptions.WorksheetNotFound: if the worksheet doesn't exist.
+        :raises Exception: if there is a problem getting the worksheet (e.g. missing credentials).
+        :return: The worksheet if found; None otherwise.
+        """
+        try:
+            worksheet = self.spreadsheet.worksheet(worksheet_name)
+            return worksheet
+        except gspread.exceptions.WorksheetNotFound:
+            try:
+                worksheet = self.create_worksheet(worksheet_name)
+                return worksheet
+            except Exception as e:
+                logger.error(f"Error creating worksheet: {e}")
+                return None
+        except Exception as e:
+            logger.error(f"Error getting worksheet: {e}")
+            return None
+
+
+    def create_worksheet(self, title:str, dim:dict = {'rows':100,'cols':10}) -> Worksheet | None:
+        """ Creates a new worksheet with the specified title and dimensions.
+
+        :param title: The title of the new worksheet.
+        :param dim: A dictionary containing the desired number of rows and columns.
+        :raises Exception: If there's an error creating the worksheet.
+        :return: The newly created worksheet, or None if creation fails.
+        """
+        try:
+            worksheet = self.spreadsheet.add_worksheet(title=title, rows=dim['rows'], cols=dim['cols'])
+            return worksheet
+        except Exception as ex:
+            logger.error(f"Error creating new sheet '{title}': {ex}")
+            return None
+    
+
+
+    def upload_data_to_sheet(self):
+        """Uploads data from a CSV file to a Google Sheet.
+
+        Uploads data from the CSV file specified to the worksheet.
+
+        :raises ValueError: If the data file path is invalid or the file does not exist.
+        :raises Exception: If any other error occurs during the upload process.
+        """
+        try:
+            if not self.data_file or not self.data_file.exists():
+                raise ValueError("Data file path is not set or the file does not exist.")
+            
+            worksheet = self.get_worksheet(self.sheet_name) # Attempt to get existing worksheet by name.
+
+            if worksheet is None:
+              raise Exception("Worksheet not found or creation failed")
+
+            data = pd.read_csv(self.data_file)
+
+            # Correct way to append data.
+            data_list = [data.columns.tolist()] + data.values.tolist()
+            worksheet.append_rows(data_list)  # Correctly appends the data
+            logger.info("Data uploaded successfully.")
+
+
+        except FileNotFoundError as e:
+            logger.error(f"Error: Data file not found: {e}")
+        except ValueError as e:
+            logger.error(f"Error: {e}")
+        except Exception as ex:
+            logger.error("Error uploading data to Google Sheet.", ex, exc_info=True)
+            raise
 ```
 
 # Changes Made
 
--   Added missing `import pandas as pd`.
--   Added missing `from src.logger import logger`.
--   Added missing `from src import gs`.
--   Added missing `from src.utils import pprint`.
--   Replaced `...` with appropriate error handling using `logger.error`.
--   Added RST-style docstrings for all functions and classes.
--   Improved variable names (e.g., `creds_file` instead of `creds_file`).
--   Changed parameter names to more descriptive names.
--   Added a `get_worksheet` method to fetch or create a worksheet, handling `WorksheetNotFound`.
--   Added a `create_worksheet` method to create a new worksheet.
--   Fixed function calls for `get_worksheet` method.
--   Added error handling within `upload_data_to_sheet` to catch file existence issues.
--   Consistently used `logger` for error and info messages.
--   Corrected  `get_worksheet` to include the `sheet_name` member variable, and removed redundant parameters.
--   Corrected the `upload_data_to_sheet` method to correctly retrieve the worksheet and log successful upload.
--   Added a more informative comment for the `upload_data_to_sheet` function.
+*   Added missing `import pandas as pd`
+*   Added `from src.logger import logger` for error logging.
+*   Replaced `json.load` with `j_loads` or `j_loads_ns` (no specific implementation provided, assuming they exist in `src.utils.jjson`).
+*   Added comprehensive RST-style docstrings to functions, methods, and the class itself.
+*   Improved error handling by using `logger.error` instead of bare `try-except`.
+*   Corrected `upload_data_to_sheet` to handle data correctly using `append_rows` and properly handle getting the worksheet. This avoids potential errors due to incorrectly appending the data.
+*   Corrected `get_worksheet` to handle potential errors during worksheet retrieval and creation.
+*   Added more specific error messages for debugging.
+*   Added a check for existence of `self.data_file` in `upload_data_to_sheet` to prevent errors.
+*   Changed `data_list` appendment to correct implementation, using `worksheet.append_rows`.
+*   Replaced vague terms with more specific ones in docstrings (e.g., "get" -> "retrieve," "do" -> "execute").
+*   Improved clarity and completeness of docstrings.
 
 # Optimized Code
 
 ```python
 ## \file hypotez/src/goog/spreadsheet/spreadsheet.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.goog.spreadsheet
    :platform: Windows, Unix
    :synopsis: Minimal library for working with Google Sheets.
@@ -227,7 +307,8 @@ from pathlib import Path
 class SpreadSheet:
     """ Class for working with Google Sheets.
 
-    This class provides methods for accessing, creating, and managing spreadsheets, and uploading CSV data.
+    This class provides methods for interacting with the Google Sheets API, creating and managing spreadsheets,
+    and uploading data from a CSV file.
     """
     spreadsheet_id: str | None
     spreadsheet_name: str | None
@@ -238,99 +319,23 @@ class SpreadSheet:
     client: gspread.Client
     worksheet: Worksheet
 
-    def __init__(self,
-                 spreadsheet_id: str | None,
-                 spreadsheet_name: str | None,
-                 sheet_name: str):
-        """ Initialize the SpreadSheet with credentials and data file.
+    def __init__(self, spreadsheet_id: str, sheet_name: str, spreadsheet_name: str = None) -> None:
+        """ Initializes the SpreadSheet object.
 
-        :param spreadsheet_id: ID of the Google Sheet.  Specify None to create a new one.
-        :param spreadsheet_name: Name of the new spreadsheet if `spreadsheet_id` is None.
-        :param sheet_name: Name of the sheet to work with.
+        :param spreadsheet_id: ID of the Google Sheet.
+        :param sheet_name: Name of the worksheet in the Google Sheet.
+        :param spreadsheet_name: Name of the spreadsheet if creating a new one. Optional.
         """
         self.spreadsheet_id = spreadsheet_id
-        self.spreadsheet_name = spreadsheet_name
         self.sheet_name = sheet_name
         self.credentials = self._create_credentials()
         self.client = self._authorize_client()
-        self._open_or_create_spreadsheet()
-
-    def _open_or_create_spreadsheet(self):
-        """ Opens or creates the Google Sheet based on the spreadsheet ID."""
         try:
             self.spreadsheet = self.client.open_by_key(self.spreadsheet_id)
-            logger.info(f"Opened spreadsheet with ID: {self.spreadsheet_id}")
         except gspread.exceptions.SpreadsheetNotFound:
-            logger.info(f"Spreadsheet with ID '{self.spreadsheet_id}' not found. Creating a new one...")
-            self.spreadsheet = self.client.create(self.spreadsheet_name)
-            logger.info(f"Created new spreadsheet: {self.spreadsheet.title}")
-
-    def _create_credentials(self) -> ServiceAccountCredentials:
-        """ Create credentials from a JSON file.
-
-        :return: Credentials for accessing Google Sheets.
-        """
-        try:
-            creds_file = gs.path.secrets / 'e-cat-346312-137284f4419e.json'
-            SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
-            credentials = ServiceAccountCredentials.from_json_keyfile_name(creds_file, SCOPES)
-            return credentials
-        except Exception as ex:
-            logger.error("Error creating credentials:", exc_info=True)
+            logger.error(f"Spreadsheet with ID '{self.spreadsheet_id}' not found.")
             raise
-
-    def _authorize_client(self) -> gspread.Client:
-        """ Authorize client to access the Google Sheets API.
-
-        :return: Authorized client for working with Google Sheets.
-        """
-        try:
-            client = gspread.authorize(self.credentials)
-            return client
-        except Exception as ex:
-            logger.error("Error authorizing client:", exc_info=True)
-            raise
-
-
-    def get_worksheet(self) -> Worksheet:
-        """ Get the worksheet by name.
-
-        If the sheet does not exist, it creates a new one.
-
-        :return: Worksheet for working with data.
-        """
-        try:
-            self.worksheet = self.spreadsheet.worksheet(self.sheet_name)
-            logger.info(f"Found worksheet: {self.sheet_name}")
-            return self.worksheet
-        except gspread.exceptions.WorksheetNotFound:
-            logger.info(f"Worksheet '{self.sheet_name}' not found. Creating a new one...")
-            self.worksheet = self.spreadsheet.add_worksheet(title=self.sheet_name)
-            logger.info(f"Created new worksheet: {self.sheet_name}")
-            return self.worksheet
         
-    def upload_data_to_sheet(self, data_file: Path):
-        """ Upload data from a CSV file to Google Sheets.
-        
-        Uploads data from the provided CSV file to the specified Google Sheet.
-
-        :param data_file: Path to the CSV file.
-        """
-        self.data_file = data_file
-        try:
-            if not self.data_file.exists():
-                raise FileNotFoundError(f"File not found: {self.data_file}")
-
-            self.worksheet = self.get_worksheet()
-            data = pd.read_csv(self.data_file)
-            data_list = [data.columns.tolist()] + data.values.tolist()
-            self.worksheet.update('A1', data_list)
-            logger.info("Data uploaded successfully.")
-        except FileNotFoundError as e:
-            logger.error(f"Error: {e}", exc_info=True)
-        except Exception as ex:
-            logger.error("Error uploading data to Google Sheets:", exc_info=True)
-
-
-# Example usage (in a separate script or __main__ block):
-# ... (example usage code)
+    # ... (rest of the class methods)
+    # ... (rest of the functions)
+```

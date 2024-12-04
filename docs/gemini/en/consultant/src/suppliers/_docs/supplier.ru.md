@@ -1,4 +1,4 @@
-# Received Code
+## Received Code
 
 ```python
 Класс `Supplier` в данном коде является базовым классом для работы с поставщиками данных в вашем приложении. Вот подробное объяснение его назначения и функциональности:
@@ -86,198 +86,193 @@ supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])
 
 ```
 
-```markdown
-# Improved Code
+## Improved Code
 
 ```python
 """
-Module for handling data suppliers.
-==========================================
+Модуль для работы с поставщиками данных.
+=========================================================================================
 
-This module provides the base :class:`Supplier` class for interacting with various data providers (e.g., Amazon, AliExpress).
-It defines common attributes and methods for data extraction, configuration loading, and scenario execution.
+Этот модуль содержит базовый класс :class:`Supplier` для взаимодействия с различными
+поставщиками данных (например, Amazon, AliExpress, Walmart).  Он предоставляет
+общие методы и атрибуты для обработки данных.
+
+Пример использования:
+
+.. code-block:: python
+
+    from src.suppliers import Supplier
+    from selenium import webdriver  # Пример импорта
+
+    supplier = Supplier('aliexpress', locale='en', webdriver='chrome')
+    supplier.run_scenario_files(['scenario_file.json'])
+
 """
-from typing import List, Dict, Any
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
-from src.logger import logger  # Import logger for error handling
-from selenium import webdriver  # Import webdriver library
-from selenium.webdriver import Driver
+from typing import List, Dict
+from src.utils.jjson import j_loads, j_loads_ns
+from selenium import webdriver # Импорт библиотеки webdriver
+from src.logger import logger # Импорт логгера
+
 
 class Supplier:
     """
-    Base class for interacting with data suppliers.
+    Базовый класс для работы с поставщиками данных.
 
-    :param supplier_prefix: Prefix identifying the supplier (e.g., 'aliexpress').
-    :param locale: Locale for the supplier (default 'en').
-    :param webdriver: Webdriver type or path (default 'default').  Accepts 'chrome', 'firefox', 'path/to/driver'.
-    :param *attrs: Additional attributes passed to the class
-    :param **kwargs: Additional keyword arguments
+    :param supplier_prefix: Префикс идентификатора поставщика.
+    :param locale: Локализация.
+    :param webdriver: Название веб-драйвера (например, 'chrome').
+    :param *attrs: Дополнительные атрибуты.
+    :param **kwargs: Дополнительные ключевые аргументы.
     """
-    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs):
-        """
-        Initializes the supplier object.
-        Loads configuration, initializes driver if necessary.
-        """
+    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | webdriver.Chrome = 'default', *attrs, **kwargs):
+        # Инициализация префикса поставщика, локали и веб-драйвера
         self.supplier_prefix = supplier_prefix
         self.locale = locale
-        self.webdriver = webdriver
-        # ... Initialization logic ... # Initialize other attributes based on kwargs and attrs
-        # ...
+        self.driver = self._initialize_webdriver(webdriver)  # Инициализация веб-драйвера
+        # ... (добавьте инициализацию других атрибутов)
+        self.supplier_settings = None
+        self.login_data = None
+        self.locators = None
+        self.scenario_files = None
+        self.current_scenario = None
 
-    def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
-        """
-        Loads supplier settings and initializes the webdriver.
-
-        :param webdriver: Webdriver type or path (default 'default').
-        :param *attrs: Additional attributes.
-        :param **kwargs: Additional keyword arguments.
-        :raises Exception: If configuration loading fails.
-        :return: True if successful, False otherwise.
-        """
+        # Загрузка настроек.  Обработка ошибок с использованием логгера.
         try:
-            # Load supplier settings using j_loads or j_loads_ns
-            # ...
-            return True  # or False if loading fails
-        except Exception as ex:
-            logger.error(f'Error loading supplier configuration for {self.supplier_prefix}:', ex)
-            return False
+            self.supplier_settings = j_loads(f"config/{supplier_prefix}_settings.json") # Загрузка настроек из файла
+        except Exception as e:
+            logger.error(f"Ошибка загрузки настроек для {supplier_prefix}: {e}")
+            self.supplier_settings = {}
+
+
+    def _initialize_webdriver(self, webdriver_type: str) -> webdriver.Chrome:
+        """Инициализирует веб-драйвер."""
+        #  ... (код инициализации веб-драйвера)
+        if webdriver_type == 'chrome':
+            options = webdriver.ChromeOptions()
+            return webdriver.Chrome(options=options)
+        else:
+            return None  # Или выбросить исключение
+
+    def _payload(self) -> bool:
+        """Загрузка конфигурационных файлов и инициализация веб-драйвера."""
+        # ... (загрузка данных, проверка)
+        return True  # Возвращает True, если инициализация успешна
 
     def login(self) -> bool:
-        """
-        Performs login to the supplier website if required.
-
-        :raises Exception: If login fails.
-        :return: True if login successful, False otherwise.
-        """
-        try:
-            # Login logic using locators and credentials
-            # ...
-            return True  # or False if login fails
-        except Exception as ex:
-            logger.error(f'Error during login to {self.supplier_prefix}', ex)
-            return False
+        """Выполнение входа на сайт поставщика."""
+        # ... (код логина)
+        return True  # Возвращает True, если вход успешен
 
     def run_scenario_files(self, scenario_files: List[str] = None) -> bool:
-        """
-        Executes scenarios from specified files.
-
-        :param scenario_files: List of scenario file paths.
-        :return: True if successful, False otherwise.
-        """
-        # ...  Execution of scenario files based on the content. ...
+        """Выполнение сценариев из файлов."""
+        # ... (код выполнения сценариев)
         return True
 
-    def run_scenarios(self, scenarios: Dict[str, Any]) -> bool:
-        """
-        Executes specified scenarios.
-
-        :param scenarios: Dictionary of scenarios to execute.
-        :return: True if successful, False otherwise.
-        """
-        # ... Execution logic based on the scenarios. ...
+    def run_scenarios(self, scenarios: List[Dict] = None) -> bool:
+        """Выполнение заданных сценариев."""
+        # ... (код выполнения сценариев)
         return True
 ```
 
-```markdown
-# Changes Made
+## Changes Made
 
-- Added RST-style docstrings to the `Supplier` class and its methods.
-- Added imports `from src.logger import logger` and `from selenium import webdriver`.  Missing `Driver` import was added as part of the `selenium` library.
-- Replaced `json.load` with `j_loads` or `j_loads_ns` from `src.utils.jjson` for file reading.
-- Added error handling using `logger.error` instead of generic `try-except` blocks.
-- Replaced vague terms like "get" and "do" with specific actions (e.g., "validation," "execution," "sending").
-- Added type hints (e.g., `supplier_prefix: str`).
-- Improved code readability with line comments explaining code sections.
+- Added docstrings (reStructuredText) to the `Supplier` class and its methods, explaining their purpose and parameters.
+- Corrected imports: added `from typing import List, Dict`, `from selenium import webdriver`
+- Imported `logger` from `src.logger` for error logging.
+- Replaced `json.load` with `j_loads` from `src.utils.jjson`.
+- Introduced error handling using `logger.error` for loading settings.
+- Added `_initialize_webdriver` method to encapsulate webdriver initialization logic.
+- Added placeholder code for `_payload`, `login`, `run_scenario_files`, and `run_scenarios` with comments and proper return types.
+- Example import added and commented to make the code more illustrative.
+- Corrected the docstring format to be more readable and informative.
+- Improved comments and explanations to be more specific and accurate.
+- Replaced vague terms with precise actions (e.g., "loading" instead of "get").
 
 
-# Optimized Code
+## Optimized Code
 
 ```python
 """
-Module for handling data suppliers.
-==========================================
+Модуль для работы с поставщиками данных.
+=========================================================================================
 
-This module provides the base :class:`Supplier` class for interacting with various data providers (e.g., Amazon, AliExpress).
-It defines common attributes and methods for data extraction, configuration loading, and scenario execution.
+Этот модуль содержит базовый класс :class:`Supplier` для взаимодействия с различными
+поставщиками данных (например, Amazon, AliExpress, Walmart).  Он предоставляет
+общие методы и атрибуты для обработки данных.
+
+Пример использования:
+
+.. code-block:: python
+
+    from src.suppliers import Supplier
+    from selenium import webdriver  # Пример импорта
+
+    supplier = Supplier('aliexpress', locale='en', webdriver='chrome')
+    supplier.run_scenario_files(['scenario_file.json'])
+
 """
-from typing import List, Dict, Any
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
-from src.logger import logger  # Import logger for error handling
-from selenium import webdriver  # Import webdriver library
-from selenium.webdriver import Driver
+from typing import List, Dict
+from selenium import webdriver # Импорт библиотеки webdriver
+from src.utils.jjson import j_loads
+from src.logger import logger # Импорт логгера
+
 
 class Supplier:
     """
-    Base class for interacting with data suppliers.
+    Базовый класс для работы с поставщиками данных.
 
-    :param supplier_prefix: Prefix identifying the supplier (e.g., 'aliexpress').
-    :param locale: Locale for the supplier (default 'en').
-    :param webdriver: Webdriver type or path (default 'default').  Accepts 'chrome', 'firefox', 'path/to/driver'.
-    :param *attrs: Additional attributes passed to the class
-    :param **kwargs: Additional keyword arguments
+    :param supplier_prefix: Префикс идентификатора поставщика.
+    :param locale: Локализация.
+    :param webdriver: Название веб-драйвера (например, 'chrome').
+    :param *attrs: Дополнительные атрибуты.
+    :param **kwargs: Дополнительные ключевые аргументы.
     """
-    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs):
-        """
-        Initializes the supplier object.
-        Loads configuration, initializes driver if necessary.
-        """
+    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | webdriver.Chrome = 'default', *attrs, **kwargs):
+        # Инициализация префикса поставщика, локали и веб-драйвера
         self.supplier_prefix = supplier_prefix
         self.locale = locale
-        self.webdriver = webdriver
-        # ... Initialization logic ... # Initialize other attributes based on kwargs and attrs
-        # ...
+        self.driver = self._initialize_webdriver(webdriver)  # Инициализация веб-драйвера
+        # ... (добавьте инициализацию других атрибутов)
+        self.supplier_settings = None
+        self.login_data = None
+        self.locators = None
+        self.scenario_files = None
+        self.current_scenario = None
 
-
-    def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
-        """
-        Loads supplier settings and initializes the webdriver.
-
-        :param webdriver: Webdriver type or path (default 'default').
-        :param *attrs: Additional attributes.
-        :param **kwargs: Additional keyword arguments.
-        :raises Exception: If configuration loading fails.
-        :return: True if successful, False otherwise.
-        """
+        # Загрузка настроек.  Обработка ошибок с использованием логгера.
         try:
-            # Load supplier settings using j_loads or j_loads_ns
-            # ...
-            return True  # or False if loading fails
-        except Exception as ex:
-            logger.error(f'Error loading supplier configuration for {self.supplier_prefix}:', ex)
-            return False
+            self.supplier_settings = j_loads(f"config/{supplier_prefix}_settings.json") # Загрузка настроек из файла
+        except Exception as e:
+            logger.error(f"Ошибка загрузки настроек для {supplier_prefix}: {e}")
+            self.supplier_settings = {}
+
+
+    def _initialize_webdriver(self, webdriver_type: str) -> webdriver.Chrome:
+        """Инициализирует веб-драйвер."""
+        #  ... (код инициализации веб-драйвера)
+        if webdriver_type == 'chrome':
+            options = webdriver.ChromeOptions()
+            return webdriver.Chrome(options=options)
+        else:
+            logger.error(f"Неподдерживаемый тип веб-драйвера: {webdriver_type}")
+            return None  # Или выбросить исключение
+
+    def _payload(self) -> bool:
+        """Загрузка конфигурационных файлов и инициализация веб-драйвера."""
+        # ... (загрузка данных, проверка)
+        return True  # Возвращает True, если инициализация успешна
 
     def login(self) -> bool:
-        """
-        Performs login to the supplier website if required.
-
-        :raises Exception: If login fails.
-        :return: True if login successful, False otherwise.
-        """
-        try:
-            # Login logic using locators and credentials
-            # ...
-            return True  # or False if login fails
-        except Exception as ex:
-            logger.error(f'Error during login to {self.supplier_prefix}', ex)
-            return False
+        """Выполнение входа на сайт поставщика."""
+        # ... (код логина)
+        return True  # Возвращает True, если вход успешен
 
     def run_scenario_files(self, scenario_files: List[str] = None) -> bool:
-        """
-        Executes scenarios from specified files.
-
-        :param scenario_files: List of scenario file paths.
-        :return: True if successful, False otherwise.
-        """
-        # ...  Execution of scenario files based on the content. ...
+        """Выполнение сценариев из файлов."""
+        # ... (код выполнения сценариев)
         return True
 
-    def run_scenarios(self, scenarios: Dict[str, Any]) -> bool:
-        """
-        Executes specified scenarios.
-
-        :param scenarios: Dictionary of scenarios to execute.
-        :return: True if successful, False otherwise.
-        """
-        # ... Execution logic based on the scenarios. ...
+    def run_scenarios(self, scenarios: List[Dict] = None) -> bool:
+        """Выполнение заданных сценариев."""
+        # ... (код выполнения сценариев)
         return True
-```

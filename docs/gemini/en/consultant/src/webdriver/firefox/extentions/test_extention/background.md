@@ -1,8 +1,8 @@
-## Received Code
+# Received Code
 
 ```javascript
 // background.js
-// background.js
+// background script
 
 browser.browserAction.onClicked.addListener((tab) => {
     browser.scripting.executeScript({
@@ -12,93 +12,120 @@ browser.browserAction.onClicked.addListener((tab) => {
 });
 ```
 
-## Improved Code
+# Improved Code
 
 ```javascript
 // background.js
+// Background script for the extension.
+
 """
-Background script for the extension.  This script handles interactions
-with the browser action and triggers execution of the content script.
+Background script for the extension. This script handles user interactions with the browser action button.
+It injects the content script 'contentScript.js' into the currently active tab when the button is clicked.
 """
 
-import { logger } from 'src.logger'; // Import logger from src.logger
+import { logger } from 'src.logger'; // Import error logging
 
-
-# Import necessary modules.
-# These imports are likely needed based on other files in the project.
-
-async function executeContentScript(tabId) {
+async function executeContentScript(tabId: number): Promise<void> {
     """
-    Executes the content script in the specified tab.
+    Injects the content script into the specified tab.
 
-    :param tabId: The ID of the tab where the script should run.
-    :raises Exception: If there's an error executing the script.
+    :param tabId: The ID of the tab to inject the script into.
+    :raises Exception: If any error occurs during script injection.
     """
+
     try {
-        # Attempt to execute the content script.
+        // Inject the content script into the specified tab.
         await browser.scripting.executeScript({
-            target: { tabId: tabId },
+            target: { tabId },
             files: ["contentScript.js"],
         });
-        
     } catch (error) {
-        # Log errors during script execution.
-        logger.error('Error executing content script.', error);
-        # Handle error appropriately. For example, you might want to display an error message to the user.
-        # ...
+        logger.error('Error injecting content script:', error);
+        // Handle the error appropriately, e.g., display an error message to the user.
+        // ...
     }
 }
 
 
+
 browser.browserAction.onClicked.addListener(async (tab) => {
-    # Execute the content script when the browser action is clicked.
-    await executeContentScript(tab.id);
+    """
+    Handles the click event of the browser action button.
+
+    :param tab: The tab object containing information about the clicked tab.
+    :raises Exception: If any error occurs during script execution.
+    """
+
+    try {
+        // Execute the content script in the clicked tab.
+        await executeContentScript(tab.id);
+    } catch (error) {
+        logger.error('Error executing content script:', error);
+        // Handle the error appropriately, e.g., display an error message to the user.
+        // ...
+    }
 });
 ```
 
-## Changes Made
+# Changes Made
 
-- Added a docstring to the `background.js` module.
-- Added a `executeContentScript` function to encapsulate the script execution logic, improving code organization.
-- Added a `try...catch` block and error logging using `logger.error` to handle potential errors during script execution. This adheres to best practices and provides more detailed error information in case the script execution fails.
-- Added import statement for `logger` from `src.logger`.
-- Added missing imports.
-- Reformatted comments using RST format.
-- Improved function documentation to use RST format and appropriate parameters.
-- Replaced `//` comments with `#`.
+*   Added missing `import { logger } from 'src.logger';` statement.
+*   Added comprehensive RST-formatted docstrings to the script, function, and event listener.
+*   Implemented asynchronous operations using `async`/`await`.
+*   Added error handling using `try...catch` blocks and `logger.error` for improved error management.
+*   Added detailed comments to clarify code logic and explain potential errors.
 
 
-## Optimized Code
+# Optimized Code
 
 ```javascript
 // background.js
+// Background script for the extension.
+
 """
-Background script for the extension.  This script handles interactions
-with the browser action and triggers execution of the content script.
+Background script for the extension. This script handles user interactions with the browser action button.
+It injects the content script 'contentScript.js' into the currently active tab when the button is clicked.
 """
 
-import { logger } from 'src.logger';
+import { logger } from 'src.logger'; // Import error logging
 
-async function executeContentScript(tabId) {
+async function executeContentScript(tabId: number): Promise<void> {
     """
-    Executes the content script in the specified tab.
+    Injects the content script into the specified tab.
 
-    :param tabId: The ID of the tab where the script should run.
-    :raises Exception: If there's an error executing the script.
+    :param tabId: The ID of the tab to inject the script into.
+    :raises Exception: If any error occurs during script injection.
     """
+
     try {
+        // Inject the content script into the specified tab.
         await browser.scripting.executeScript({
-            target: { tabId: tabId },
+            target: { tabId },
             files: ["contentScript.js"],
         });
     } catch (error) {
-        logger.error('Error executing content script.', error);
-        # Handle error appropriately. For example, you might want to display an error message to the user.
-        # ...
+        logger.error('Error injecting content script:', error);
+        // Handle the error appropriately, e.g., display an error message to the user.
+        // ...
     }
 }
 
 
+
 browser.browserAction.onClicked.addListener(async (tab) => {
-    await executeContentScript(tab.id);
+    """
+    Handles the click event of the browser action button.
+
+    :param tab: The tab object containing information about the clicked tab.
+    :raises Exception: If any error occurs during script execution.
+    """
+
+    try {
+        // Execute the content script in the clicked tab.
+        await executeContentScript(tab.id);
+    } catch (error) {
+        logger.error('Error executing content script:', error);
+        // Handle the error appropriately, e.g., display an error message to the user.
+        // ...
+    }
 });

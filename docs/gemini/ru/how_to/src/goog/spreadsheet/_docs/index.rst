@@ -1,100 +1,88 @@
-Как использовать этот блок кода для создания и заполнения Google таблиц с помощью API v4
-=================================================================================================
+Как использовать этот блок кода
+=========================================================================================
 
 Описание
 -------------------------
-Этот код демонстрирует, как использовать Google Sheets API v4 для создания, настройки и заполнения Google таблиц.  Он включает создание сервисного аккаунта, установку необходимых библиотек, а также демонстрирует методы для задания ширины столбцов, объединения ячеек, форматирования, и заполнения данных в таблицу.  Код содержит подробные примеры и объяснения.  Он также демонстрирует класс Spreadsheet для удобного взаимодействия с API.
+Этот код демонстрирует, как создавать и изменять Google-таблицы с помощью Google Sheets API v4.  Он показывает, как создавать новые таблицы, устанавливать ширину столбцов, заполнять ячейки данными, объединять ячейки, настраивать форматирование (цвет фона, шрифт, выравнивание), а также как получить доступ к созданным таблицам.  Код содержит класс-обертку `Spreadsheet`, упрощающий работу с API.
 
 Шаги выполнения
 -------------------------
-1. **Установка необходимых библиотек:**
-   - Установите библиотеку `google-api-python-client` с помощью pip:
-     ```bash
-     pip install --upgrade google-api-python-client
-     ```
-   - Эта команда автоматически установит необходимые зависимости, такие как `oauth2client` и другие.
+1. **Установка библиотек:** Установите библиотеку `google-api-python-client` с помощью pip:
+   ```bash
+   pip install --upgrade google-api-python-client
+   ```
 
-2. **Создание сервисного аккаунта:**
-   - В Google Developers Console создайте проект и включите необходимые API: Drive API и Sheets API.
-   - Создайте учетные данные для сервисного аккаунта и сохраните закрытый ключ в файл (например, `test-proj-for-habr-article-1ab131d98a6b.json`).
+2. **Загрузка закрытого ключа:**  Подготовьте файл JSON с закрытым ключом для сервисного аккаунта, который будет использоваться для доступа к Google Таблицам.  Этот файл (`test-proj-for-habr-article-1ab131d98a6b.json` в примере) содержит необходимые данные для аутентификации.
 
-3. **Импорт необходимых библиотек:**
-   - Импортируйте необходимые библиотеки: `httplib2`, `apiclient.discovery`, `ServiceAccountCredentials`.
+3. **Импортирование необходимых библиотек:** Импортируйте необходимые модули:
+   ```python
+   import httplib2
+   import apiclient.discovery
+   from oauth2client.service_account import ServiceAccountCredentials
+   ```
 
-4. **Авторизация и создание service-объекта:**
-   - Используйте `ServiceAccountCredentials` для загрузки закрытого ключа и создания объекта авторизации `httpAuth`.
-   - Создайте объект `service` для взаимодействия с Google Sheets API.
+4. **Создание `service`-объекта:** Создайте `service`-объект, необходимый для взаимодействия с Google Sheets API:
+   ```python
+   CREDENTIALS_FILE = 'test-proj-for-habr-article-1ab131d98a6b.json'  # Имя файла с ключом
+   credentials = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILE, ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive'])
+   httpAuth = credentials.authorize(httplib2.Http())
+   service = apiclient.discovery.build('sheets', 'v4', http=httpAuth)
+   ```
 
-5. **Создание Google таблицы (spreadsheet):**
-   - Используйте метод `service.spreadsheets().create()`, чтобы создать новую таблицу.
-     - Передайте `body` с настройками, например, `title` и `locale` для локализации.  Важно также задать `sheets` с настройками `sheetId`, `sheetType` и `gridProperties` для размера таблицы (строки и столбцы).
+5. **Создание нового документа (spreadsheet):** Используйте метод `spreadsheets.create` для создания нового Google-документа (spreadsheet):
+   ```python
+   spreadsheet = service.spreadsheets().create(body={'properties': {'title': 'Название документа', 'locale': 'ru_RU'}, 'sheets': [{'properties': {'sheetType': 'GRID', 'sheetId': 0, 'title': 'Название листа', 'gridProperties': {'rowCount': 8, 'columnCount': 5}}} ]}).execute()
+   ```
+   Обратите внимание на `spreadsheetId`, полученный в ответе. Он необходим для дальнейших операций.
 
-6. **Назначение доступа к новой таблице:**
-   - Используйте Google Drive API для предоставления доступа к таблице сервисному аккаунту. Используйте метод `driveService.permissions().create()`  для назначения прав доступа (`reader` или `writer`) конкретным пользователям или группам.
+6. **Получение доступа к документу:** Используйте Google Drive API, чтобы выдать доступ сервисному аккаунту к только что созданному документу:
+   ```python
+   driveService = apiclient.discovery.build('drive', 'v3', http=httpAuth)
+   shareRes = driveService.permissions().create(fileId=spreadsheet['spreadsheetId'], body={'type': 'anyone', 'role': 'reader'}, fields='id').execute()
+   ```
 
-7. **Задать ширину столбцов:**
-   - Используйте метод `spreadsheets.batchUpdate()`, чтобы задать ширину столбцов.
-   - В `requests` добавьте `updateDimensionProperties` с параметрами `range`, `properties` (включая `pixelSize`) и `fields`.  Важно использовать корректные `startIndex` и `endIndex`.
+7. **Установка ширины столбцов:**  Используя `spreadsheets.batchUpdate`, задайте ширину столбцов.  Обратите внимание на использование `UpdateDimensionPropertiesRequest` для изменения свойств столбцов:
+   ```python
+    # Пример задания ширины столбцов (A, B, C, D, E) в пикселях
+   # ... (код из примера) ...
+   ```
 
-8. **Заполнение ячеек данных:**
-   - Используйте метод `spreadsheets.values.batchUpdate()`, чтобы заполнить ячейки.
-   - В `data` добавьте `range` (в формате A1-нотации, например, "A1:B2"), `majorDimension` (обычно "ROWS") и `values`.
-   - Для формул в ячейках используйте `USER_ENTERED` в `valueInputOption`.
+8. **Заполнение ячеек данными:**  Используйте `spreadsheets.values.batchUpdate` для заполнения ячеек данными:
+   ```python
+   # ... (код из примера) ...
+   ```
 
+9. **Настройка форматирования:** Используйте `UpdateCellsRequest`, `MergeCellsRequest` и другие запросы, чтобы настроить форматирование ячеек (цвет фона, шрифт, объединение, границы):
+   ```python
+   # ... (код из примера) ...
+   ```
 
-9. **Другие настройки (объединение ячеек, форматирование и т.д.):**
-   - Используйте другие запросы `request` в `spreadsheets.batchUpdate` для объединения ячеек, форматирования текста, изменения цвета фона и границ.
-     -  Для каждого типа запроса (объединение, форматирование) посмотрите соответствующий метод `prepare_*` в классе `Spreadsheet`.
-
-
-10. **Использование класса `Spreadsheet` (рекомендуется):**
-    - Этот класс-обёртка (Spreadsheet) значительно упрощает взаимодействие с API, скрывая детали низкоуровневых запросов.
-    - Методы `prepare_*` (например, `prepare_setColumnWidth`, `prepare_setValues`, `prepare_mergeCells`) подготавливают запросы, которые затем объединяются в `batchUpdate`.
-    - Метод `runPrepared` выполняет подготовленные запросы.
+10. **Использование класса-обертки `Spreadsheet`:**  Используйте класс `Spreadsheet` для упрощения работы с API, как показано в примере.
 
 **Пример использования (фрагмент):**
+
 ```python
-import httplib2
-import apiclient.discovery
-from oauth2client.service_account import ServiceAccountCredentials
-# ... (ваш код для импорта и инициализации Spreadsheet класса)
+from your_spreadsheet_class import Spreadsheet
 
-ss = Spreadsheet(service, spreadsheet_id, sheet_id, sheet_title)
+spreadsheet_id = "YOUR_SPREADSHEET_ID"  # Получите ID из предыдущего шага
+sheet_title = "Название листа"
 
+ss = Spreadsheet(service, spreadsheet_id, sheet_title)
 ss.prepare_setColumnWidth(0, 317)
 ss.prepare_setColumnWidth(1, 200)
-ss.prepare_setValues("A1:B2", [["Значение 1", "Значение 2"], ["Значение 3", "Значение 4"]])
+ss.prepare_setColumnsWidth(2, 3, 165)
 ss.runPrepared()
 ```
 
-**Важно:**  Замените `'test-proj-for-habr-article-1ab131d98a6b.json'` на фактический путь к файлу с закрытым ключом сервисного аккаунта.  Обратите внимание на правильное использование `sheetId` и `spreadsheetId` в вашем коде.  Подробное руководство и примеры использования класса `Spreadsheet` доступны по ссылке в коде.
+**Важно:** Замените `YOUR_SPREADSHEET_ID` на фактический ID документа.  Полный пример использования класса `Spreadsheet` и примеры настройки форматирования приведены в исходном коде.
 
 
-Пример использования класса `Spreadsheet`:
-
-
+```
+```
 ```python
-# ... ваш код инициализации
-ss.prepare_setColumnWidth(0, 100)
-ss.prepare_setValues("A1:B2", [["Value 1", "Value 2"], ["Value 3", "Value 4"]])
-ss.runPrepared()
-
-
-```
-
-
 ```
 ```
 ```
-```
-```
-```
-```
-```
-
-
-```
-
 ```
 ```
 ```

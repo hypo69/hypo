@@ -16,7 +16,6 @@
 
 MODE = 'dev'
 
-
 """
 Module for interactive script execution.
 =========================================================================================
@@ -107,81 +106,67 @@ if __name__ == "__main__":
 
 # <algorithm>
 
-1. **Parse Arguments:** The `main` function uses `argparse` to parse command-line arguments, specifically checking for `--help`.
-
-    * **Example:** `python main.py --help`
-
-2. **Conditional Execution:** If `--help` is provided, `show_help` is called, otherwise `interactive_menu` is executed.
-
-3. **Interactive Menu:**
-    * **Display Menu:** Presents options to the user (run script 1, run script 2, help, exit).
-    * **Get User Input:** Takes user input regarding which script to execute.
-    * **Choice Handling:** Based on user's choice, corresponding functions (`script1`, `script2`, `show_help`) are called or the program exits.
-
-    * **Example:** User enters "1", `script1` is called.
-    * **Example:** User enters "3", `show_help` is called.
-    * **Example:** User enters "exit", the program terminates.
-4. **Script Execution (script1 and script2):** Placeholder functions, waiting to be implemented with actual script logic.
+1. **Initialization**: The script initializes the `MODE` variable.
+2. **Import Modules**: Imports `argparse` for command-line argument parsing, `j_loads` and `j_loads_ns` from `src.utils.jjson` (likely for JSON handling) and `logger` from `src.logger`.
+3. **Function Definitions**: Defines functions `script1`, `script2`, `show_help`, `interactive_menu`, and `main` to encapsulate different parts of the program's logic.
+4. **`script1` and `script2`**: These functions are placeholders to execute scripts 1 and 2 (not implemented yet).
+5. **`show_help`**: This function displays available commands.
+6. **`interactive_menu`**: Presents a menu to the user, reads input, and calls the appropriate function (e.g., `script1`, `show_help`).
+7. **Error Handling**: Includes `logger.error` for handling invalid user input.
+8. **`main`**: Processes command-line arguments (`--help`). If `--help` is provided, calls `show_help()`; otherwise, calls `interactive_menu()`.
 
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[main] --> B{Parse Args};
-    B -- help == true --> C[show_help];
-    B -- help != true --> D[interactive_menu];
-    D --> E{Display Menu};
-    E --> F{Get User Input};
-    F -- choice == 1 --> G[script1];
-    F -- choice == 2 --> H[script2];
-    F -- choice == help --> C;
-    F -- choice == exit --> I[Exit Program];
-    G --> J[Execute Script 1];
-    H --> K[Execute Script 2];
-    C --> L[Display Help];
-    I --> M[Program Terminated];
-    J --> E;
-    K --> E;
-    L --> E;
+graph LR
+    A[main] --> B{Parse args};
+    B -- help --> C[show_help];
+    B -- no help --> D[interactive_menu];
+    D --> E{Get user choice};
+    E -- 1 --> F[script1];
+    E -- 2 --> G[script2];
+    E -- 3/--help --> C;
+    E -- exit --> H[Exit];
+    F --> I(Print "Script 1 started");
+    G --> J(Print "Script 2 started");
+    C --> K(Print help text);
+    H --> L(Print "Exiting");
+    subgraph Imports
+        subgraph src.utils.jjson
+          j_loads --> src.utils.jjson;
+          j_loads_ns --> src.utils.jjson;
+        end
+        subgraph src.logger
+          logger --> src.logger;
+        end
+
+        argparse --> argparse;
+    end
 ```
 
-**Dependencies Analysis:**
-
+**Dependencies Analysis**:
 * `argparse`: Used for command-line argument parsing.
-* `src.utils.jjson`: Likely for JSON handling, based on the import name. This likely relates to utilities for working with JSON data.
-* `src.logger`: Used for logging.  This implies other packages in the `src` directory handle logging and/or other aspects of the application. The exact functions and behavior are not visible from this file alone.
+* `j_loads`, `j_loads_ns`: Likely for JSON loading and handling from the `src.utils.jjson` module.
+* `logger`:  Likely a custom logging module from the `src.logger` module, used for error handling.  The imported modules are part of a larger project structure, suggesting dependencies on files or packages within the `src` directory.
 
 
 # <explanation>
 
-* **Imports:**
-    * `argparse`:  Provides tools to parse command-line arguments. Necessary for handling the `--help` option.
-    * `src.utils.jjson`:  Implements functions for loading JSON data. The exact relationship with other parts of the project depends on the specific implementations within `src.utils.jjson`.
-    * `src.logger`: Likely a custom logger with additional functionalities.  It likely defines methods for logging errors, which `main` uses in case of invalid input.  This would have further context within the `src` folder.
-
-* **Classes:** None defined in the given code.
-
-* **Functions:**
-    * `script1()`, `script2()`: Placeholder functions for future script implementations.  These functions do not do anything but print a message, they are placeholders and need to have code added to execute the actual scripts.
-    * `show_help()`: Displays a help message for possible commands, useful for users to understand how to use this program.
-    * `interactive_menu()`: Implements the interactive command-line menu. This function handles user input, selecting and calling scripts.
-    * `main()`: Handles command-line arguments, determines whether to display help or start the interactive menu.
-
-
-* **Variables:**
-    * `MODE`: A string variable, likely a configuration flag (e.g., 'dev', 'prod'). It seems to be unused in the current code and is defined twice.
-
-* **Potential Errors/Improvements:**
-    * The code is a template and lacks actual script implementations (`script1` and `script2`).
-    * The script logic should be added to `script1` and `script2`.
-    * `MODE` variable usage is not consistent.
-    * Error handling is basic.  The error handling when input is invalid is logged using the `logger` object, but the error isn't directly shown to the user.
-
-
-**Relationships:**
-
-This file (`main.py`) is likely a starting point for an interactive application. It interacts with other parts of the `hypotez` project (`src.utils.jjson`, `src.logger`) for data handling and logging. The missing script implementations in `script1` and `script2` will likely call functions or classes defined elsewhere in the `hypotez/src` folder, possibly to perform specific tasks.  The `src` package is likely to contain modules for different functionality; thus, other files within the `hypotez/src` folder could have a crucial role.
-
-
-```
+* **Imports**:
+    * `argparse`: Used to process command-line arguments (`--help`).  It's a standard Python module.
+    * `j_loads`, `j_loads_ns` (from `src.utils.jjson`): These are custom functions probably related to JSON data handling, suggesting a custom implementation for JSON manipulation in the `src.utils` package.
+    * `logger` (from `src.logger`): This is a custom logger, likely configured for specific output formats or destinations (e.g., logging to a file).  It implies a structured logging system in the project (`src.logger`).
+* **Classes**: There are no classes in this file.
+* **Functions**:
+    * `script1`, `script2`: These are placeholders for user-defined scripts.  They need to be filled with actual code to execute tasks.
+    * `show_help`: Provides a help menu for the interactive program.
+    * `interactive_menu`: Creates an interactive menu to allow users to choose and run scripts, or show the help.
+    * `main`: The entry point for the script, handles parsing command-line arguments to decide whether to run the interactive menu or show the help menu.
+* **Variables**:
+    * `MODE`: A string variable initialized to 'dev'. Its role is unclear without more context (probably related to development mode or other configuration).
+* **Potential Errors/Improvements**:
+    * The placeholder `script1` and `script2` functions are not implemented.
+    * The code is well-commented, but adding specific docstrings to the parameters of functions would enhance clarity further.
+    * Add error handling for cases where JSON parsing or other external tasks might fail (use `try...except` blocks where necessary).
+* **Relationship with other parts of the project**: The code relies on `src.utils.jjson` for JSON handling and `src.logger` for logging, indicating that this `main.py` file is a part of a larger Python project.  It depends on the functionality provided by these other modules within the `src` directory.

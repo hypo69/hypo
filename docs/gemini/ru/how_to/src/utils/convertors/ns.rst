@@ -1,58 +1,46 @@
-Как использовать этот блок кода
-=========================================================================================
+Как использовать модуль ns для преобразования SimpleNamespace в различные форматы
+==================================================================================
 
 Описание
 -------------------------
-Этот код содержит функции для преобразования объекта `SimpleNamespace` в различные форматы: словарь (dict), JSON, CSV, XML и XLS.  Функции позволяют работать с вложенными структурами данных.  В частности, `ns2dict` рекурсивно преобразует `SimpleNamespace` в словарь, обрабатывая вложенные объекты `SimpleNamespace`, словари и списки.  Функции `ns2csv`, `ns2xml`, `ns2xls`  соответственно сохраняют данные в CSV, XML и XLS файлы.  Используется логирование для обработки ошибок.
-
+Этот модуль `hypotez/src/utils/convertors/ns.py` предоставляет функции для преобразования объектов `SimpleNamespace` в различные форматы, включая `dict`, `JSON`, `CSV`, `XML` и `XLS`.  Он обрабатывает вложенные структуры данных и обеспечивает удобный способ сохранения данных в разных форматах.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых библиотек**: Модули `json`, `csv`, `pathlib`, `typing`, `xml2dict` (из другого модуля), `save_csv_file`, `save_xls_file`, `logger` (из других модулей) импортируются для работы с различными форматами и логированием.
-
-2. **Определение функции `ns2dict`**: Функция `ns2dict` преобразует объект `SimpleNamespace` в словарь. Внутри функции `convert` реализована рекурсия для обработки вложенных структур.
-
-3. **Определение функции `ns2csv`**: Функция `ns2csv` принимает объект `SimpleNamespace` и путь к CSV файлу. Она преобразует объект в словарь с помощью `ns2dict`, затем сохраняет его в CSV файл с помощью `save_csv_file`. Обрабатывает возможные ошибки.
-
-4. **Определение функции `ns2xml`**: Функция `ns2xml` принимает объект `SimpleNamespace` и имя тега корневого элемента (по умолчанию "root"). Она преобразует объект в словарь с помощью `ns2dict`, затем генерирует XML-представление данных с помощью `xml2dict` и возвращает его в виде строки.  Обрабатывает возможные ошибки.
-
-5. **Определение функции `ns2xls`**: Функция `ns2xls` принимает объект `SimpleNamespace` и путь к XLS файлу. Она сохраняет данные в XLS файл с помощью функции `save_xls_file`. Возвращает True при успехе, False при ошибке. Обрабатывает возможные ошибки.
-
+1. **Импортирование необходимых библиотек:** Модуль импортирует необходимые библиотеки, такие как `json`, `csv`, `pathlib`, `SimpleNamespace`, функции из модулей `src.utils.convertors`, `src.utils.csv`, `src.utils.xls` и `src.logger`, а также тип `SimpleNamespace` и типы данных `Any`, `Dict`.
+2. **Определение функций преобразования:** Функции `ns2dict`, `ns2csv`, `ns2xml`, `ns2xls` определяют алгоритмы преобразования.
+3. **Функция `ns2dict`:**  Рекурсивно преобразует объект `SimpleNamespace` в словарь (`dict`). Обрабатывает вложенные `SimpleNamespace`, `dict` и `list`.
+4. **Функция `ns2csv`:** Преобразует объект `SimpleNamespace` в формат CSV. Принимает объект `SimpleNamespace` и путь к файлу CSV в качестве аргументов. Использует функцию `ns2dict` для преобразования объекта в словарь и функцию `save_csv_file` для сохранения данных в файл CSV. Логирует ошибки при возникновении проблем.
+5. **Функция `ns2xml`:** Преобразует объект `SimpleNamespace` в XML-строку. Принимает объект `SimpleNamespace` и необязательный тег корня для XML. Использует функцию `ns2dict` для преобразования объекта в словарь и функцию `xml2dict` для генерации XML-строки. Логирует ошибки при возникновении проблем.
+6. **Функция `ns2xls`:** Преобразует объект `SimpleNamespace` в формат XLS. Принимает объект `SimpleNamespace` и путь к файлу XLS в качестве аргументов. Использует функцию `save_xls_file` для сохранения данных в файл XLS. Возвращает `True` в случае успеха и `False` при ошибке.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    import os
     from types import SimpleNamespace
     from pathlib import Path
-    from hypotez.src.utils.convertors.ns import ns2dict, ns2csv, ns2xml, ns2xls
+    import hypotez.src.utils.convertors.ns as ns
 
+    # Создание объекта SimpleNamespace
+    ns_object = SimpleNamespace(name="John Doe", age=30, city="New York")
 
-    # Пример создания объекта SimpleNamespace
-    ns_obj = SimpleNamespace(name="John Doe", age=30, city="New York")
-
-    # Пример сохранения в CSV
-    csv_file_path = Path("output.csv")
-    success = ns2csv(ns_obj, csv_file_path)
-    if success:
-        print(f"Файл {csv_file_path} успешно создан.")
-    else:
-        print("Ошибка при создании CSV файла.")
-        
-    # Пример сохранения в XML
-    xml_output = ns2xml(ns_obj)
-    print(xml_output)
-
-
-    #Пример сохранения в XLS (предполагается, что save_xls_file корректно обрабатывает данные)
-    xls_file_path = Path("output.xls")
-    success = ns2xls(ns_obj, xls_file_path)
-    if success:
-        print(f"Файл {xls_file_path} успешно создан.")
-    else:
-        print("Ошибка при создании XLS файла.")
-
-    # Пример преобразования в словарь
-    dict_representation = ns2dict(ns_obj)
+    # Преобразование в словарь
+    dict_representation = ns.ns2dict(ns_object)
     print(dict_representation)
+
+    # Преобразование в CSV
+    csv_file_path = Path("output.csv")
+    ns.ns2csv(ns_object, csv_file_path)  # Сохранит данные в output.csv
+
+    # Преобразование в XML
+    xml_representation = ns.ns2xml(ns_object)
+    print(xml_representation)  # Выведет XML-представление
+
+    # Преобразование в XLS
+    xls_file_path = Path("output.xls")
+    success = ns.ns2xls(ns_object, xls_file_path)  # Сохранит данные в output.xls
+    if success:
+        print("Файл XLS успешно сохранен.")
+    else:
+        print("Ошибка при сохранении файла XLS.")

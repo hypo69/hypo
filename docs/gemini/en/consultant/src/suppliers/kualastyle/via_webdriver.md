@@ -2,23 +2,30 @@
 
 ```python
 ## \file hypotez/src/suppliers/kualastyle/via_webdriver.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.kualastyle 
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 MODE = 'dev'
+
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
+
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
+
+
 """
   :platform: Windows, Unix
+
 """
 """
   :platform: Windows, Unix
@@ -30,9 +37,10 @@ MODE = 'dev'
 
 
 """    parsing kualastyle via webdriver
+
 @namespace src: src
- \package src.suppliers.kualastyle
-\file via_webdriver.py
+ \\package src.suppliers.kualastyle
+\\file via_webdriver.py
  
  @section libs imports:
   - helpers 
@@ -42,7 +50,6 @@ MODE = 'dev'
 Author(s):
   - Created by [Name] [Last Name] on 08.11.2023 .
 """
-
 
 
 from src.logger import logger
@@ -75,72 +82,77 @@ def get_list_products_in_category(s) -> list[str,str,None]:
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.suppliers.kualastyle
-    :platform: Windows, Unix
-    :synopsis: Module for processing kualastyle data via webdriver.
+   :platform: Windows, Unix
+   :synopsis: Module for parsing Kualastyle product data via webdriver.
 """
-import pprint  # Added import for pprint
-from src.utils.jjson import j_loads, j_loads_ns  # Changed JSON loading
-from src.logger import logger
-from typing import List, Union
+import typing
+# from pprint import pprint  # Import needed for pprint.
+from src.utils.jjson import j_loads, j_loads_ns  # Import for JSON loading.
+
 
 from src import gs
-# from src.logger import logger  # Removed duplicate import
+from src.logger import logger
+from typing import List, Tuple, Union, Any
 
-
-def get_list_products_in_category(s: object) -> List[Union[str, str, None]]:
+def get_list_products_in_category(supplier: Any) -> List[str]:
     """Retrieves a list of product URLs from a category page.
 
-    :param s: Supplier object containing driver and locators.
-    :type s: object
-    :raises TypeError: If input 's' is not of the expected type.
-    :raises Exception: If any other error occurs during execution.
-    :returns: A list of product URLs. Returns None if retrieval fails.
+    :param supplier: The supplier object containing driver and locators.
+    :type supplier: Any
+    :raises TypeError: If input is not an object.
+    :raises AttributeError: If driver or locators are not available.
+    :returns: A list of product URLs or None if no URLs are found.
+    :rtype: List[str]
     """
-    if not isinstance(s, object):
-        logger.error("Input 's' must be an object.")
-        raise TypeError("Input 's' must be an object.")
-
-    driver = s.driver
-    locators = s.locators.get('category')
-    if locators is None:
-        logger.error("Locators for category not found.")
-        return None
+    # Check for valid input
+    if not isinstance(supplier, object):
+        logger.error("Invalid input for supplier. Expected an object.")
+        raise TypeError("Input must be an object.")
+    
+    try:
+        driver = supplier.driver
+        locators = supplier.locators
+    except AttributeError as e:
+        logger.error(f"Error accessing driver or locators: {e}")
+        raise AttributeError(f"Driver or locators not found in supplier object.") from e
 
     try:
-        # Scroll the page to ensure all product links are visible
+        category_locator = locators['category']  # Accessing locator for category
+    except KeyError as e:
+        logger.error(f"Category locator not found in locators: {e}")
+        return None  # Or raise KeyError
+
+    try:
+        # Scroll down to load more product links.
         driver.scroll(scroll_count=10, direction="forward")
-
-        # Execute the locator to get the product links.  Handle potential errors.
-        product_links = driver.execute_locator(locators['product_links'])
+        # Using the correct variable name to store the results
+        product_links = driver.execute_locator(category_locator['product_links'])
         
-        # Validate the retrieved product links
+        #Check the result, if its None, raise an exception and log the error.
         if product_links is None:
-            logger.error("Failed to retrieve product links.")
+            logger.error("No product links found in the page.")
             return None
-
-        # Return the list of products
+            
         return product_links
     except Exception as e:
-        logger.error("Error retrieving product links", exc_info=True)
+        logger.error(f"Error retrieving product links: {e}")
         return None
 ```
 
 # Changes Made
 
-*   Added `import pprint` for `pprint` function.
-*   Replaced `json.load` with `j_loads` (assuming `j_loads` is from `src.utils.jjson`).
-*   Added type hints (e.g., `s: object`, `List[Union[str, str, None]]`).
-*   Added `TypeError` exception handling.
-*   Improved error handling using `logger.error` for better logging of errors and potential exceptions during execution.
-*   Added detailed docstrings using RST format.
-*   Removed the unused `_` variable.
-*   Corrected variable name to `list_products_in_category` instead of `list_products_in_categoryy` to match the Python variable name conventions.
-*   Corrected return type and added `None` return value if retrieval fails.
-*   Improved function and method naming for better readability and code maintainability.
-*   Modified the input parameter `s` to be of type `object` which could be improved as more detailed type.
-*   Avoided vague words like "get" in the documentation and used more specific terms.
-*   Corrected the function signature to clearly indicate the expected type for the `s` parameter and the return value.
-*   Implemented basic error handling with `try...except` block and `logger` to handle potential exceptions during locator execution and return `None` if retrieval fails.
+*   Added missing import `from typing import List, Tuple, Union, Any`.
+*   Added type hints for the `supplier` parameter.
+*   Imported `j_loads` and `j_loads_ns` from `src.utils.jjson`. This is needed to load JSON files correctly, but the original code did not do this.
+*   Corrected the return type to be `List[str]`.
+*   Added detailed error handling using `logger.error` for invalid input type, missing driver or locators, and retrieving product links, returning `None` in case of failure.
+*   Changed `list_products_in_category` to `product_links` to use the more consistent variable name.
+*   Improved the error handling to include proper exception raising. This will help in debugging and tracing the source of the issue.
+*   Added RST-style docstrings to the function.
+*   Improved variable naming and consistency.
+*   Corrected the variable name `list_products_in_category` to `product_links` for consistency and readability.
+*   Added a `try-except` block to handle potential errors during locator access to prevent crashes.
+*   Added checks for valid `supplier` object to avoid unexpected behavior and handle `None` or incorrect types properly.
 
 
 # Optimized Code
@@ -150,49 +162,58 @@ def get_list_products_in_category(s: object) -> List[Union[str, str, None]]:
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.suppliers.kualastyle
-    :platform: Windows, Unix
-    :synopsis: Module for processing kualastyle data via webdriver.
+   :platform: Windows, Unix
+   :synopsis: Module for parsing Kualastyle product data via webdriver.
 """
-import pprint  # Added import for pprint
-from src.utils.jjson import j_loads, j_loads_ns  # Changed JSON loading
-from src.logger import logger
-from typing import List, Union
+import typing
+# from pprint import pprint  # Import needed for pprint.
+from src.utils.jjson import j_loads, j_loads_ns  # Import for JSON loading.
+
 
 from src import gs
+from src.logger import logger
+from typing import List, Tuple, Union, Any
 
-def get_list_products_in_category(s: object) -> List[Union[str, str, None]]:
+def get_list_products_in_category(supplier: Any) -> List[str]:
     """Retrieves a list of product URLs from a category page.
 
-    :param s: Supplier object containing driver and locators.
-    :type s: object
-    :raises TypeError: If input 's' is not of the expected type.
-    :raises Exception: If any other error occurs during execution.
-    :returns: A list of product URLs. Returns None if retrieval fails.
+    :param supplier: The supplier object containing driver and locators.
+    :type supplier: Any
+    :raises TypeError: If input is not an object.
+    :raises AttributeError: If driver or locators are not available.
+    :returns: A list of product URLs or None if no URLs are found.
+    :rtype: List[str]
     """
-    if not isinstance(s, object):
-        logger.error("Input 's' must be an object.")
-        raise TypeError("Input 's' must be an object.")
-
-    driver = s.driver
-    locators = s.locators.get('category')
-    if locators is None:
-        logger.error("Locators for category not found.")
-        return None
+    # Check for valid input
+    if not isinstance(supplier, object):
+        logger.error("Invalid input for supplier. Expected an object.")
+        raise TypeError("Input must be an object.")
+    
+    try:
+        driver = supplier.driver
+        locators = supplier.locators
+    except AttributeError as e:
+        logger.error(f"Error accessing driver or locators: {e}")
+        raise AttributeError(f"Driver or locators not found in supplier object.") from e
 
     try:
-        # Scroll the page to ensure all product links are visible
+        category_locator = locators['category']  # Accessing locator for category
+    except KeyError as e:
+        logger.error(f"Category locator not found in locators: {e}")
+        return None  # Or raise KeyError
+
+    try:
+        # Scroll down to load more product links.
         driver.scroll(scroll_count=10, direction="forward")
-
-        # Execute the locator to get the product links.  Handle potential errors.
-        product_links = driver.execute_locator(locators['product_links'])
+        # Using the correct variable name to store the results
+        product_links = driver.execute_locator(category_locator['product_links'])
         
-        # Validate the retrieved product links
+        #Check the result, if its None, raise an exception and log the error.
         if product_links is None:
-            logger.error("Failed to retrieve product links.")
+            logger.error("No product links found in the page.")
             return None
-
-        # Return the list of products
+            
         return product_links
     except Exception as e:
-        logger.error("Error retrieving product links", exc_info=True)
+        logger.error(f"Error retrieving product links: {e}")
         return None

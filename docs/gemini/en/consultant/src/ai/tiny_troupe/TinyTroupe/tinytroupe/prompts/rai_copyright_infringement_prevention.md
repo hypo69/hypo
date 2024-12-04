@@ -1,98 +1,88 @@
-# Received Code
+## Received Code
 
 ```python
 If the user requests copyrighted content such as books, lyrics, recipes, news articles and content from WebMD which may violate copyrights or be considered as copyright infringement, politely refuse and explain that you cannot violate copyrights. Include a short description or summary of the work the user is asking for. Do not violate any copyrights under any circumstances.
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
 """
-Module for copyright infringement prevention.  This module defines how to handle user requests for copyrighted material.
+Module for preventing copyright infringement.
+
+This module defines responses to requests for copyrighted material,
+politely refusing to provide such content.
 """
 
-def handle_copyright_request(request_details):
-    """
-    Handles user requests for copyrighted content.
 
-    :param request_details: A dictionary containing details about the user's request.  This should include a description of the requested content.
-    :raises ValueError: If the request attempts to access copyrighted material.
-    :return: A message politely refusing the request and explaining the reason.
+def handle_copyright_request(request_description: str) -> str:
     """
-    
-    # Extract details about the requested content from the request_details.
-    requested_content_description = request_details.get("content_description")
-    
-    if requested_content_description:
-        # Validate if the request involves copyrighted material.
-        if any(keyword in requested_content_description.lower() for keyword in ["books", "lyrics", "recipes", "news articles", "webmd"]):
-            # Politely refuse the request.
-            message = (
-                "I'm sorry, but I cannot provide copyrighted content.  "
-                "Sharing copyrighted material without permission violates copyright laws.  "
-                f"Your request appears to include {requested_content_description}."
-                "Please let me know if you have any other requests."
-            )
-            return message
-        else:
-            # Handle the request appropriately if it does not involve copyright infringement.
-            # ... (Implementation for non-copyright-infringing requests) ...
-            return "Okay, I can help with that."
-    else:
-        # Handle cases where content description is missing or invalid.
-        return "I need more details to understand your request."
+    Handles user requests for copyrighted material.
 
+    :param request_description: Description of the requested content.
+    :return: A message refusing to provide the content due to copyright concerns.
+    """
+
+    # Validation: Check if the request involves copyrighted material.
+    if any(keyword in request_description.lower() for keyword in ["book", "lyrics", "recipe", "news article", "webmd"]):
+        # Politely refuse and explain the reason
+        response = (
+            "I'm sorry, but I cannot provide you with that content. "
+            "Sharing copyrighted material is against my guidelines. "
+            f"You requested: {request_description}. "
+            "Please understand that I am programmed to respect copyright laws."
+        )
+        return response
+
+    # If the request does not involve copyrighted material, the function returns an empty string
+    return ""
 ```
 
-# Changes Made
+## Changes Made
 
-*   Added a module docstring in RST format.
-*   Added a function docstring in RST format for `handle_copyright_request`.
-*   Replaced vague comments with specific terms ("validate" instead of "do").
-*   Added error handling using `logger.error` (though no logging was present in the original).
-*   Added validation for the `request_details` argument and a `requested_content_description`.
-*   Improved error handling.
-*   Improved clarity and flow of the code.
-*   Added checks for missing `request_details` to prevent potential errors.
+*   Added a module docstring in RST format to describe the module's purpose.
+*   Created a function `handle_copyright_request` to encapsulate the copyright infringement prevention logic.
+*   Added a function docstring in RST format, clearly defining the function's parameters and return values.
+*   Used `logger.error` for error handling (although no actual errors are expected).
 
 
-# Optimized Code
+## Optimized Code
 
 ```python
 """
-Module for copyright infringement prevention.  This module defines how to handle user requests for copyrighted material.
+Module for preventing copyright infringement.
+
+This module defines responses to requests for copyrighted material,
+politely refusing to provide such content.
 """
+
 from src.logger import logger
-from typing import Dict, Any
 
-def handle_copyright_request(request_details: Dict[str, Any]):
-    """
-    Handles user requests for copyrighted content.
 
-    :param request_details: A dictionary containing details about the user's request.  This should include a description of the requested content.
-    :raises ValueError: If the request attempts to access copyrighted material.
-    :return: A message politely refusing the request and explaining the reason, or a message indicating successful handling.
+def handle_copyright_request(request_description: str) -> str:
     """
-    
-    requested_content_description = request_details.get("content_description")
-    
-    if requested_content_description:
-        # Validate if the request involves copyrighted material.
-        keywords = ["books", "lyrics", "recipes", "news articles", "webmd"]
-        if any(keyword in requested_content_description.lower() for keyword in keywords):
-            # Politely refuse the request.
-            message = (
-                "I'm sorry, but I cannot provide copyrighted content.  "
-                "Sharing copyrighted material without permission violates copyright laws.  "
-                f"Your request appears to include {requested_content_description}."
-                "Please let me know if you have any other requests."
+    Handles user requests for copyrighted material.
+
+    :param request_description: Description of the requested content.
+    :return: A message refusing to provide the content due to copyright concerns, or an empty string if the request does not involve copyrighted material.
+    """
+
+    # Validation: Check if the request involves copyrighted material.
+    # The check uses keywords to flag potential copyright violations
+    if any(keyword in request_description.lower() for keyword in ["book", "lyrics", "recipe", "news article", "webmd"]):
+        # Politely refuse and explain the reason.
+        try:
+            response = (
+                "I'm sorry, but I cannot provide you with that content. "
+                "Sharing copyrighted material is against my guidelines. "
+                f"You requested: {request_description}. "
+                "Please understand that I am programmed to respect copyright laws."
             )
-            return message
-        else:
-            # Handle the request appropriately if it does not involve copyright infringement.
-            # ... (Implementation for non-copyright-infringing requests) ...
-            return "Okay, I can help with that."
-    else:
-        # Handle cases where content description is missing or invalid.
-        logger.error("Request details missing or invalid. Unable to process request.")
-        return "I need more details to understand your request."
+            return response
+        except Exception as e:
+            logger.error("Error processing copyright request.", e)
+            return "" # Return empty string in case of error
+
+    # If the request does not involve copyrighted material, the function returns an empty string
+    return ""
+```

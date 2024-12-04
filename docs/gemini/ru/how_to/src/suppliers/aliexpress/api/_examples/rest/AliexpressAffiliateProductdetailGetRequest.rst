@@ -3,42 +3,32 @@
 
 Описание
 -------------------------
-Этот код определяет класс `AliexpressAffiliateProductdetailGetRequest`, представляющий собой запрос к API AliExpress для получения подробной информации о продукте.  Класс наследуется от базового класса `RestApi` и предоставляет методы для инициализации запроса и получения имени API.  Он позволяет настраивать параметры запроса, такие как идентификаторы продуктов, валюту и язык.
+Этот код определяет класс `AliexpressAffiliateProductdetailGetRequest`, который представляет собой API-запрос для получения деталей продукта на AliExpress.  Класс наследуется от базового класса `RestApi`, обеспечивая общие методы для работы с API.  Класс инициализируется с информацией о домене и порте, а также позволяет установить параметры запроса (например, идентификаторы продуктов, язык, валюту). Метод `getapiname` возвращает имя API-метода.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование класса `RestApi`**: Код импортирует базовый класс `RestApi` из модуля `..base`.
-
-2. **Инициализация класса `AliexpressAffiliateProductdetailGetRequest`**:  Создается экземпляр класса `AliexpressAffiliateProductdetailGetRequest`, принимая в качестве аргументов домен API (`api-sg.aliexpress.com`) и порт (80). Базовый класс `RestApi` также инициализируется в этом шаге.
-
-3. **Настройка параметров запроса**: Класс предоставляет атрибуты для настройки параметров запроса:
-    - `app_signature`: Подпись приложения.
-    - `country`: Страна.
-    - `fields`: Список полей для возврата.
-    - `product_ids`: Список идентификаторов продуктов.
-    - `target_currency`: Целевая валюта.
-    - `target_language`: Целевой язык.
-    - `tracking_id`: Идентификатор отслеживания.
-    Можно задавать значения этих параметров при создании экземпляра класса или позже.
-
-
-4. **Получение имени API**: Метод `getapiname()` возвращает строку 'aliexpress.affiliate.productdetail.get', которая представляет имя API-метода для запроса деталей продукта.
+1. **Импортирование:** Импортируется базовый класс `RestApi`.
+2. **Инициализация класса:** Создается экземпляр класса `AliexpressAffiliateProductdetailGetRequest`, указывая домен и порт API.  При этом можно задать дополнительные параметры запроса, такие как идентификаторы продуктов, валюту, язык и т.д.
+3. **Получение имени API-метода:** Вызывается метод `getapiname`, который возвращает имя API-метода для запроса (`aliexpress.affiliate.productdetail.get`).  Это имя необходимо для отправки запроса через соответствующий API.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateProductdetailGetRequest import AliexpressAffiliateProductdetailGetRequest
+    from hypotez.src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateProductdetailGetRequest
 
-    # Создание экземпляра класса с настройкой параметров
-    request = AliexpressAffiliateProductdetailGetRequest(domain="api-sg.aliexpress.com", port=80)
-    request.product_ids = [123, 456]  # Устанавливаем идентификаторы продуктов
-    request.target_currency = "USD"  # Устанавливаем валюту
-    request.target_language = "en"  # Устанавливаем язык
-
-    # Получение имени API
+    # Инициализация запроса с указанием параметров
+    request = AliexpressAffiliateProductdetailGetRequest(
+        domain="api-sg.aliexpress.com",
+        port=80
+    )
+    request.product_ids = ['12345', '67890']
+    request.target_currency = 'USD'
+    request.target_language = 'en'
+    
+    # Получение имени API-метода
     api_name = request.getapiname()
-    print(f"Имя API: {api_name}")
-
-    # Дальнейшие действия с запросом (например, отправка запроса и обработка ответа) 
-    #  (в примере показан только метод получения имени).
+    print(f"Имя API-метода: {api_name}")
+    # Далее можно использовать полученное имя для отправки запроса к API.
+    # Пример неполный, так как для выполнения запроса нужны дополнительные методы,
+    # которые предоставляются классом RestApi, не показанным в примере.

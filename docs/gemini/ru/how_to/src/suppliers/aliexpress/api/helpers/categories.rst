@@ -1,29 +1,24 @@
-Как использовать этот блок кода
+Как использовать функции для фильтрации категорий Aliexpress
 =========================================================================================
 
 Описание
 -------------------------
-Этот код содержит две функции для работы с категориями и подкатегориями API AliExpress. Функция `filter_parent_categories` возвращает список категорий, у которых нет родительской категории. Функция `filter_child_categories` возвращает список подкатегорий, относящихся к указанной родительской категории. Код также обрабатывает случай, когда на вход подаётся не список, а отдельное значение.
+Данный код содержит две функции для фильтрации категорий и подкатегорий API AliExpress.
+Функция `filter_parent_categories` возвращает список родительских категорий, не имеющих родительской категории.
+Функция `filter_child_categories` возвращает список подкатегорий, относящихся к заданной родительской категории.
+Обе функции обрабатывают различные типы входных данных, включая списки категорий и отдельные значения (целые числа, строки, числа с плавающей точкой), преобразовывая их в списки для корректной обработки.
 
 Шаги выполнения
 -------------------------
-1. **Импорт необходимых модулей:** Модули `List`, `Union` и `models` импортируются из соответствующего пространства имён.
-
-2. **Определение функции `filter_parent_categories`:**
-    * Функция принимает список объектов `Category` или `ChildCategory` в качестве аргумента `categories`.
-    * Инициализирует пустой список `filtered_categories`.
-    * Обрабатывает случай, когда вход `categories` - не список, преобразуя его в список из одного элемента.
-    * Проходит по каждому элементу `category` в списке `categories`.
-    * Проверяет, есть ли у объекта `category` атрибут `parent_category_id`. Если его нет, добавляет `category` в список `filtered_categories`.
-    * Возвращает список `filtered_categories`.
-
-3. **Определение функции `filter_child_categories`:**
-    * Функция принимает список объектов `Category` или `ChildCategory` в качестве аргумента `categories` и идентификатор родительской категории `parent_category_id`.
-    * Инициализирует пустой список `filtered_categories`.
-    * Обрабатывает случай, когда вход `categories` - не список, преобразуя его в список из одного элемента.
-    * Проходит по каждому элементу `category` в списке `categories`.
-    * Проверяет, есть ли у объекта `category` атрибут `parent_category_id` и соответствует ли он значению `parent_category_id`. Если да, добавляет `category` в список `filtered_categories`.
-    * Возвращает список `filtered_categories`.
+1. **Импорт необходимых модулей:** Код импортирует необходимые типы данных `List`, `Union` и модели `Category` и `ChildCategory` из модуля `models`.
+2. **Определение функции `filter_parent_categories`:** Функция принимает на вход список категорий (`categories`).
+3. **Проверка типа входных данных:** Функция проверяет, является ли входной параметр `categories` списком. Если нет (строка, число), преобразует его в список.
+4. **Фильтрация родительских категорий:** Функция итерируется по элементам списка `categories`. Для каждого элемента проверяет, содержит ли он атрибут `parent_category_id`. Если атрибут отсутствует, то элемент добавляется в `filtered_categories`.
+5. **Возврат результата:** Функция возвращает список `filtered_categories` содержащий родительские категории без родителя.
+6. **Определение функции `filter_child_categories`:** Функция принимает на вход список категорий (`categories`) и идентификатор родительской категории (`parent_category_id`).
+7. **Проверка типа входных данных:** Функция проверяет, является ли входной параметр `categories` списком. Если нет (строка, число), преобразует его в список.
+8. **Фильтрация дочерних категорий:** Функция итерируется по элементам списка `categories`. Для каждого элемента проверяет, содержит ли он атрибут `parent_category_id` и равен ли он переданному `parent_category_id`. Если оба условия истинны, элемент добавляется в `filtered_categories`.
+9. **Возврат результата:** Функция возвращает список `filtered_categories` содержащий дочерние категории с заданным `parent_category_id`.
 
 Пример использования
 -------------------------
@@ -32,23 +27,21 @@
     from hypotez.src.suppliers.aliexpress.api.helpers import categories
     from hypotez.src.suppliers.aliexpress.api import models
 
-    # Пример данных
+    # Пример данных (предполагается, что модели определены)
     parent_category = models.Category(id=1, name='Электроника')
     child_category1 = models.ChildCategory(id=2, name='Телефоны', parent_category_id=1)
-    child_category2 = models.ChildCategory(id=3, name='Ноутбуки', parent_category_id=1)
-    child_category3 = models.ChildCategory(id=4, name='Наушники', parent_category_id=5)  # Отсутствует в списке родительских категорий
+    child_category2 = models.ChildCategory(id=3, name='Наушники', parent_category_id=1)
+    child_category3 = models.ChildCategory(id=4, name='Ноутбуки', parent_category_id=5)  # Другая категория
 
     categories_list = [parent_category, child_category1, child_category2, child_category3]
 
-    # Получение категорий без родителей
+
     parent_categories = categories.filter_parent_categories(categories_list)
-    print(parent_categories)  # Выведет [<__main__.Category object at ...>,]
+    print(f"Родительские категории: {parent_categories}")
 
-    # Получение подкатегорий с родительской категорией ID 1
-    child_categories_filtered = categories.filter_child_categories(categories_list, 1)
-    print(child_categories_filtered)  # Выведет [<__main__.ChildCategory object at ...>, <__main__.ChildCategory object at ...>]
+    child_categories = categories.filter_child_categories(categories_list, parent_category_id=1)
+    print(f"Подкатегории для категории {parent_category.name}: {child_categories}")
 
-    # Пример с не-списком как аргументом
-    single_category = child_category1
-    filtered_categories = categories.filter_child_categories(single_category, 1)
-    print(filtered_categories)
+    # Пример с неверным типом данных
+    result = categories.filter_parent_categories(123)
+    print(result)

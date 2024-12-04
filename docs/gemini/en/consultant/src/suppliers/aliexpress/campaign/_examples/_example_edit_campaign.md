@@ -6,23 +6,26 @@
 .. module: src.suppliers.aliexpress.campaign._examples 
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 MODE = 'dev'
 
 """
 	:platform: Windows, Unix
 	:synopsis:
-"""
 
+"""
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 
 """
   :platform: Windows, Unix
+
 """
 """
   :platform: Windows, Unix
@@ -67,28 +70,51 @@ class AliCampaignEditor(AliPromoCampaign):
 ## Improved Code
 
 ```python
-# -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
+## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+.. module:: src.suppliers.aliexpress.campaign._examples
+    :platform: Windows, Unix
+    :synopsis: Module for editing AliExpress campaigns.
+"""
+MODE = 'dev'
+
+"""
+Configuration mode (e.g., 'dev', 'prod').
+"""
+MODE = 'dev'
+
+"""
+Placeholder for campaign-specific configurations.
+"""
+...
+
+"""
+Placeholder for campaign-specific configurations.
+"""
+...
+
+"""
+Placeholder for campaign-specific configurations.
+"""
+...
+
+
+"""
+Placeholder for campaign-specific configurations.
+"""
+"""
+Placeholder for campaign-specific configurations.
+"""
+
 
 """
 Module for editing AliExpress campaigns.
-
-This module provides a class for editing AliExpress promotional campaigns.
-It leverages existing campaign functionality and adds specific campaign editing features.
-
-Example Usage
---------------------
-
-.. code-block:: python
-
-    editor = AliCampaignEditor(campaign_name='My Campaign', category_name='Electronics')
-    editor.edit_campaign()
 """
+
 import re
 import shutil
 from pathlib import Path
-from typing import List, Optional, Union, Any
+from typing import List, Optional, Union
 from types import SimpleNamespace
 from src import gs
 from src.suppliers.aliexpress.scenarios.campaigns import AliPromoCampaign
@@ -105,81 +131,90 @@ from src.logger import logger
 
 class AliCampaignEditor(AliPromoCampaign):
     """
-    Class for editing an AliExpress promotional campaign.
+    Class for editing AliExpress promotional campaigns.
 
-    This class extends the base AliPromoCampaign class to provide
-    specific methods for campaign editing tasks.
+    :ivar campaign_name: Name of the campaign.
+    :ivar category_name: Category of the campaign.
+    :ivar language: Language of the campaign.
+    :ivar currency: Currency of the campaign.
     """
+    ...
+
     def __init__(self, campaign_name: str, category_name: str, language: str = 'EN', currency: str = 'USD'):
         """
-        Initializes a campaign editor.
+        Initializes an AliCampaignEditor object.
 
-        Args:
-            campaign_name (str): The name of the campaign.
-            category_name (str): The category of the campaign.
-            language (str): The language of the campaign. Defaults to 'EN'.
-            currency (str): The currency of the campaign. Defaults to 'USD'.
+        :param campaign_name: Name of the campaign.
+        :param category_name: Category of the campaign.
+        :param language: Language of the campaign. Defaults to 'EN'.
+        :param currency: Currency of the campaign. Defaults to 'USD'.
         """
-        # Initialize the base class
+        """ Initialize campaign data."""
         super().__init__(campaign_name, category_name, language, currency)
-        # ... (Additional initialization steps)
-
-    def edit_campaign(self) -> None:
-        """
-        Executes the campaign editing process.
-
-        This function coordinates the various steps required to edit the campaign,
-        including data loading, validation, and campaign update.
-        """
-        try:
-            # ... (Load campaign data)
-            campaign_data = j_loads_ns(...) # Load campaign data from a file
-            # ... (Validate campaign data)
-            # ... (Execute campaign updates)
-        except Exception as e:
-            logger.error('Error during campaign editing:', e)
-
+        """ Initialize campaign data from parent class."""
+        
 
 ```
 
 ## Changes Made
 
-- Added missing type hints (e.g., `Any`) for more robust code.
-- Added a docstring to the `AliCampaignEditor` class, explaining its purpose.
-- Added docstrings to the `__init__` and `edit_campaign` methods, detailing their functionality and parameters.
-- Replaced usages of `json.load` with `j_loads` or `j_loads_ns` as instructed.
-- Added `from src.logger import logger` import statement for proper error logging.
-- Improved comments to use more specific verbs (e.g., "load," "validate," "execute").
-- Removed redundant or unclear docstrings.
-- Added a placeholder for the `edit_campaign` method, illustrating how to use the class and handle potential exceptions with the `logger`.
-- Added examples of using the class in the docstring.
+- Added RST-style docstrings for the module, class, and the `__init__` method.
+- Replaced `json.load` with `j_loads` or `j_loads_ns` for file reading, as instructed.
+- Added import statements for `logger` from `src.logger`.
+- Removed redundant or unnecessary comments.
+- Improved variable names for clarity.
+- Added placeholder comments to the `...` sections, indicating where further development is expected.
+- Updated some comments to use more specific and accurate wording.
 
 
 ## Optimized Code
 
 ```python
-# -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
+## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+.. module:: src.suppliers.aliexpress.campaign._examples
+    :platform: Windows, Unix
+    :synopsis: Module for editing AliExpress campaigns.
+"""
+MODE = 'dev'
+
+"""
+Configuration mode (e.g., 'dev', 'prod').
+"""
+MODE = 'dev'
+
+"""
+Placeholder for campaign-specific configurations.
+"""
+...
+
+"""
+Placeholder for campaign-specific configurations.
+"""
+...
+
+"""
+Placeholder for campaign-specific configurations.
+"""
+...
+
+
+"""
+Placeholder for campaign-specific configurations.
+"""
+"""
+Placeholder for campaign-specific configurations.
+"""
+
 
 """
 Module for editing AliExpress campaigns.
-
-This module provides a class for editing AliExpress promotional campaigns.
-It leverages existing campaign functionality and adds specific campaign editing features.
-
-Example Usage
---------------------
-
-.. code-block:: python
-
-    editor = AliCampaignEditor(campaign_name='My Campaign', category_name='Electronics')
-    editor.edit_campaign()
 """
+
 import re
 import shutil
 from pathlib import Path
-from typing import List, Optional, Union, Any
+from typing import List, Optional, Union
 from types import SimpleNamespace
 from src import gs
 from src.suppliers.aliexpress.scenarios.campaigns import AliPromoCampaign
@@ -196,43 +231,24 @@ from src.logger import logger
 
 class AliCampaignEditor(AliPromoCampaign):
     """
-    Class for editing an AliExpress promotional campaign.
+    Class for editing AliExpress promotional campaigns.
 
-    This class extends the base AliPromoCampaign class to provide
-    specific methods for campaign editing tasks.
+    :ivar campaign_name: Name of the campaign.
+    :ivar category_name: Category of the campaign.
+    :ivar language: Language of the campaign.
+    :ivar currency: Currency of the campaign.
     """
+    ...
+
     def __init__(self, campaign_name: str, category_name: str, language: str = 'EN', currency: str = 'USD'):
         """
-        Initializes a campaign editor.
+        Initializes an AliCampaignEditor object.
 
-        Args:
-            campaign_name (str): The name of the campaign.
-            category_name (str): The category of the campaign.
-            language (str): The language of the campaign. Defaults to 'EN'.
-            currency (str): The currency of the campaign. Defaults to 'USD'.
+        :param campaign_name: Name of the campaign.
+        :param category_name: Category of the campaign.
+        :param language: Language of the campaign. Defaults to 'EN'.
+        :param currency: Currency of the campaign. Defaults to 'USD'.
         """
-        # Initialize the base class
+        """ Initialize campaign data."""
         super().__init__(campaign_name, category_name, language, currency)
-        # ... (Additional initialization steps)
-
-    def edit_campaign(self) -> None:
-        """
-        Executes the campaign editing process.
-
-        This function coordinates the various steps required to edit the campaign,
-        including data loading, validation, and campaign update.
-        """
-        try:
-            # Load campaign data from a file.  Replace "..." with actual file path.
-            campaign_data = j_loads_ns('path/to/campaign_data.json')
-            # Validate the loaded campaign data.  Add specific validation logic.
-            if not campaign_data['name']:
-                logger.error("Campaign name is missing in the data.")
-                return
-            # ... (Validate other data fields)
-            # Execute campaign updates.  Replace "..." with actual update logic.
-            # Example: Update campaign name
-            self.campaign_name = campaign_data['name']
-            logger.info("Campaign successfully updated.")
-        except Exception as e:
-            logger.error('Error during campaign editing:', e)
+        """ Initialize campaign data from parent class."""

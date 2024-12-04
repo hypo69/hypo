@@ -1,16 +1,15 @@
 Как использовать этот блок кода
-=========================================================================================\n
+=========================================================================================
 
 Описание
 -------------------------
-Этот код импортирует классы `Spreadsheet` и `ReachSpreadsheet` из модулей `spreadsheet` и `reach_spreadsheet` соответственно, которые, предположительно, содержат функционал для работы со  спредшитами Google.  Также он определяет константу `MODE`, которая, вероятно, задаёт режим работы (например, 'dev', 'prod').
+Этот код импортирует классы `Spreadsheet` и `ReachSpreadsheet` из модуля `spreadsheet`. Он также определяет константу `MODE` со значением 'dev'.
 
 Шаги выполнения
 -------------------------
-1. Импортирует класс `Spreadsheet` из модуля `src.goog.spreadsheet.spreadsheet`.
-2. Импортирует класс `ReachSpreadsheet` из модуля `src.goog.spreadsheet.reach_spreadsheet`.
-3. Определяет константу `MODE` со значением 'dev'.
-
+1. Определяет константу `MODE` и присваивает ей строковое значение 'dev'.
+2. Импортирует класс `Spreadsheet` из подмодуля `spreadsheet`.
+3. Импортирует класс `ReachSpreadsheet` из подмодуля `reach_spreadsheet`.
 
 Пример использования
 -------------------------
@@ -18,12 +17,17 @@
 
     from hypotez.src.goog.spreadsheet import SpreadSheet, ReachSpreadsheet
 
-    # Пример использования класса SpreadSheet (замените на фактические параметры)
-    spreadsheet_object = SpreadSheet(spreadsheet_id='your_spreadsheet_id', credentials='your_credentials')
-    data = spreadsheet_object.get_data()
-    print(data)
+    # Пример использования класса Spreadsheet
+    spreadsheet_object = SpreadSheet()
+    # Здесь вы можете вызвать методы класса Spreadsheet,
+    # например, методы для работы с Google Таблицами.
 
-    # Пример использования класса ReachSpreadsheet (замените на фактические параметры)
-    reach_spreadsheet = ReachSpreadsheet(reach_spreadsheet_id='your_reach_spreadsheet_id', credentials='your_reach_credentials')
-    updated_data = reach_spreadsheet.update_data(new_data={"column1": "value1", "column2": "value2"})
-    print(updated_data)
+    # Пример использования класса ReachSpreadsheet
+    reach_spreadsheet_object = ReachSpreadsheet()
+    # Здесь вы можете вызвать методы класса ReachSpreadsheet,
+    # например, методы для взаимодействия с Google Таблицами
+    # через другой API.
+
+    #  Например, если вы хотите проверить константу MODE:
+    if MODE == 'dev':
+        print("Сейчас используется режим разработки")

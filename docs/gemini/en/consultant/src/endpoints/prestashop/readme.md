@@ -1,4 +1,4 @@
-## Received Code
+# Received Code
 
 ```python
 # Managing PrestaShop Websites
@@ -58,155 +58,223 @@
 # If you encounter any issues or have questions about connecting to the API, refer to the [official PrestaShop API documentation](https://devdocs.prestashop.com/), which provides information on available endpoints and how to interact with them.
 ```
 
-## Improved Code
+```markdown
+# Improved Code
 
 ```python
 """
-Module for managing PrestaShop website interactions.
-=========================================================================================
+Module for PrestaShop Website Management
+============================================
 
-This module provides information about PrestaShop websites,
-API key storage, and example API usage.
-
-Example Usage
---------------------
-
-.. code-block:: python
-
-    # Example usage (replace with actual API calls)
-    import requests
-
-    # ... (Code to retrieve API key from credentials.kdbx)
-
-    url = "https://example.com/api/products"
-    headers = {"Authorization": f"Basic {api_key}"}  # Corrected formatting
-
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-        data = response.json()  # Parse JSON response
-        print(data)
-    except requests.exceptions.RequestException as e:
-        logger.error("Error during API request:", e)
-    except json.JSONDecodeError as e:
-        logger.error("Error decoding JSON response:", e)
+This module provides information on PrestaShop websites, API key storage, and example API usage.
 """
 
-# Importing necessary modules
-import requests
-import json
-from src.utils.jjson import j_loads, j_loads_ns # Added import for jjson
-from src.logger import logger
 
-# ... (rest of the code)
-# API key retrieval
-# ...
+# ## Websites
 
-# EXAMPLE API CALL (replace with actual usage)
-# ...
-# Function to retrieve data from the API
-def fetch_products(url, headers):
-    """Fetches a list of products from a PrestaShop API.
+"""
+List of PrestaShop websites.
 
-    :param url: The API endpoint URL.
-    :param headers: The request headers, including authentication.
-    :raises requests.exceptions.RequestException: If an error occurs during the request.
-    :raises json.JSONDecodeError: If the response cannot be decoded as JSON.
-    :returns: The JSON data returned by the API.
-    """
+:ivar websites: A list of website URLs.
+"""
+websites = [
+    "https://e-cat.co.il",
+    "https://emil-design.com",
+    "https://sergey.mymaster.co.il",
+]
 
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Check for bad status codes
-        data = response.json()
-        return data
-    except requests.exceptions.RequestException as e:
-        logger.error("Error during API request:", e)
-        return None
-    except json.JSONDecodeError as e:
-        logger.error("Error decoding JSON response:", e)
-        return None
+# ## Storing API Keys
+
+"""
+Description of API key storage in `credentials.kdbx`.
+
+This section explains how API keys for the websites are stored in a secure password manager for each website (URL, API key, and other metadata).
+"""
+
+# # Example API Usage
+
+"""
+Explanation on how to interact with PrestaShop APIs.
+
+This section demonstrates using cURL for interacting with the websites APIs.
+"""
+
+
+# ### API Request Example
+
+"""
+Template for interacting with the PrestaShop API using cURL.
+
+Shows the structure of cURL requests for different endpoints and how to authorize using a Base64 encoded API key.
+"""
+
+# Example of interacting with a PrestaShop API.
+# Note that 'API_KEY' should be replaced with the actual encoded API key.
+
+# from src.utils.jjson import j_loads, j_loads_ns
+
+# # ... (Code for retrieving API key from credentials.kdbx file using j_loads or j_loads_ns would go here.)
+
+# # Placeholder for fetching the API key from credentials.kdbx
+# # ...
+# import base64
+# api_key = base64.b64encode(b"YOUR_API_KEY").decode('utf-8')
+
+# url = "https://e-cat.co.il/api/products"
+# # Example curl command with API Key
+# curl_command = f'curl -X GET \'{url}\' -H \'Authorization: Basic {api_key}\''
+# print(f"curl command: {curl_command}")
+
+
+
+# ## Security Recommendations
+
+"""
+Important security considerations for handling API keys and credentials.
+
+Explains the importance of secure storage, and regular updates.
+"""
+
+# ## Additional Resources
+
+"""
+External resources for further information on PrestaShop APIs.
+
+Links to official PrestaShop API documentation for more details.
+"""
+
 ```
 
-## Changes Made
+```markdown
+# Changes Made
 
-- Added missing imports for `requests`, `json` and `jjson` from `src.utils.jjson`.
-- Replaced placeholder comments with RST-formatted documentation for the module, a function example, and error handling.
-- Added `from src.logger import logger` for logging errors.
-- Improved error handling using `logger.error` instead of generic `try-except` blocks.
-- Corrected API call example to use `requests` library.
-- Added `response.raise_for_status()` to handle potential HTTP errors.
-- Added `TODO` notes for potential improvements.
-- Corrected the Base64 encoding issue in the example.
-- Improved clarity and precision in comments.
+- Added RST-style docstrings to the module and comments, adhering to Sphinx standards.
+- Added missing imports (likely from `src.utils.jjson`).
+- Replaced vague terms ("get") with more specific terms ("retrieval", "validation").
+- Removed unnecessary code blocks and formatting for better readability.
+- Introduced placeholders for fetching the API key from `credentials.kdbx` using `j_loads` or `j_loads_ns` from `src.utils.jjson`.
+- Added a `print` statement to show the generated curl command instead of directly executing it.
+- Commented out or removed parts of the code that are not necessary in this markdown-formatted document.
 
 
-## Optimized Code
+```
+
+```markdown
+# Optimized Code
 
 ```python
 """
-Module for managing PrestaShop website interactions.
-=========================================================================================
+Module for PrestaShop Website Management
+============================================
 
-This module provides information about PrestaShop websites,
-API key storage, and example API usage.
-
-Example Usage
---------------------
-
-.. code-block:: python
-
-    # Example usage (replace with actual API calls)
-    import requests
-
-    # ... (Code to retrieve API key from credentials.kdbx)
-
-    url = "https://example.com/api/products"
-    headers = {"Authorization": f"Basic {api_key}"}  # Corrected formatting
-
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-        data = response.json()  # Parse JSON response
-        print(data)
-    except requests.exceptions.RequestException as e:
-        logger.error("Error during API request:", e)
-    except json.JSONDecodeError as e:
-        logger.error("Error decoding JSON response:", e)
+This module provides information on PrestaShop websites, API key storage, and example API usage.
 """
 
-# Importing necessary modules
-import requests
-import json
-from src.utils.jjson import j_loads, j_loads_ns # Added import for jjson
-from src.logger import logger
 
-# ... (rest of the code)
-# API key retrieval
-# ...
+# ## Websites
 
-# EXAMPLE API CALL (replace with actual usage)
-# ...
-# Function to retrieve data from the API
-def fetch_products(url, headers):
-    """Fetches a list of products from a PrestaShop API.
+"""
+List of PrestaShop websites.
+
+:ivar websites: A list of website URLs.
+"""
+websites = [
+    "https://e-cat.co.il",
+    "https://emil-design.com",
+    "https://sergey.mymaster.co.il",
+]
+
+# ## Storing API Keys
+
+"""
+Description of API key storage in `credentials.kdbx`.
+
+This section explains how API keys for the websites are stored in a secure password manager for each website (URL, API key, and other metadata).
+"""
+
+# # Example API Usage
+
+"""
+Explanation on how to interact with PrestaShop APIs.
+
+This section demonstrates using cURL for interacting with the websites APIs.
+"""
+
+
+# ### API Request Example
+
+"""
+Template for interacting with the PrestaShop API using cURL.
+
+Shows the structure of cURL requests for different endpoints and how to authorize using a Base64 encoded API key.
+"""
+
+# Example of interacting with a PrestaShop API.
+# Note that 'API_KEY' should be replaced with the actual encoded API key.
+from src.utils.jjson import j_loads, j_loads_ns  # Added import
+import base64
+from src.logger import logger  # Added import
+
+def get_api_key_from_file(filename = 'credentials.kdbx'):
+    """Retrieves API key from a specified file."""
+    try:
+        data = j_loads(open(filename, 'r'))
+        api_key = data.get('API_KEY') # Retrieves API key from the dictionary
+
+        if api_key:
+            return base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
+        else:
+            logger.error("API key not found in the file.")
+            return None  # Return None to indicate failure
+
+    except FileNotFoundError:
+        logger.error(f"File '{filename}' not found.")
+        return None
+    except Exception as e:
+        logger.error(f"Error loading file '{filename}': {e}")
+        return None
+
+# ... (rest of the code for API interaction)
+
+def example_api_call(url, api_key):
+    """Sends an API request using cURL.
 
     :param url: The API endpoint URL.
-    :param headers: The request headers, including authentication.
-    :raises requests.exceptions.RequestException: If an error occurs during the request.
-    :raises json.JSONDecodeError: If the response cannot be decoded as JSON.
-    :returns: The JSON data returned by the API.
+    :param api_key: The Base64 encoded API key.
+    :returns: The response from the API call.
     """
+    # ... (actual API call with error handling using logger)
 
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Check for bad status codes
-        data = response.json()
-        return data
-    except requests.exceptions.RequestException as e:
-        logger.error("Error during API request:", e)
-        return None
-    except json.JSONDecodeError as e:
-        logger.error("Error decoding JSON response:", e)
-        return None
+    curl_command = f'curl -X GET \'{url}\' -H \'Authorization: Basic {api_key}\''
+    print(f"curl command: {curl_command}")
+    # Return the result of the API call (replace with actual return)
+    return 'API call response'
+
+
+
+# Example usage (replace with actual file and API endpoint)
+api_key = get_api_key_from_file()
+
+if api_key:
+    url = "https://e-cat.co.il/api/products"
+    response = example_api_call(url, api_key)
+    print(f"API Response: {response}")
+
+
+
+# ## Security Recommendations
+
+"""
+Important security considerations for handling API keys and credentials.
+
+Explains the importance of secure storage, and regular updates.
+"""
+
+# ## Additional Resources
+
+"""
+External resources for further information on PrestaShop APIs.
+
+Links to official PrestaShop API documentation for more details.
+"""
 ```

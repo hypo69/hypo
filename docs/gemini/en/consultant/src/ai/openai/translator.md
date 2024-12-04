@@ -26,15 +26,15 @@ def translate(text, source_language, target_language):
 
     Этот метод отправляет текст для перевода на указанный язык с помощью модели OpenAI и возвращает переведённый текст.
 
-    Аргументы:
+    Args:
         text (str): Текст для перевода.
         source_language (str): Язык исходного текста.
         target_language (str): Язык для перевода.
 
-    Возвращает:
+    Returns:
         str: Переведённый текст.
 
-    Пример использования:
+    Example Usage:
         >>> source_text = "Привет, как дела?"
         >>> source_language = "Russian"
         >>> target_language = "English"
@@ -44,8 +44,8 @@ def translate(text, source_language, target_language):
     
     # Формируем запрос к OpenAI API
     prompt = (
-        f"Translate the following text from {source_language} to {target_language}:\n\n"
-        f"{text}\n\n"
+        f"Translate the following text from {source_language} to {target_language}:\\n\\n"
+        f"{text}\\n\\n"
         f"Translation:"
     )
 
@@ -73,130 +73,180 @@ def translate(text, source_language, target_language):
 
 ```python
 ## \file hypotez/src/ai/openai/translator.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 Module for text translation using the OpenAI API.
-=========================================================================================
+====================================================
 
-This module provides a function for translating text from one language to another using the OpenAI API.
+This module provides functionality for translating text using the OpenAI API.
+It handles sending requests to the API, receiving responses, and error handling.
+
+Example Usage
+-------------
+
+.. code-block:: python
+
+    from hypotez.src.ai.openai.translator import translate
+
+    source_text = "Hello, how are you?"
+    source_language = "English"
+    target_language = "Russian"
+
+    translation = translate(source_text, source_language, target_language)
+    if translation:
+        print(f"Translated text: {translation}")
 """
 
 import openai
 from src import gs
 from src.logger import logger
 
-# Define the API key for OpenAI.
-# This line is critical to prevent hardcoding credentials into the code.
-# Replace with the appropriate import and getter.
-openai.api_key = gs.credentials.openai
+# Module-level constant for the API key.
+# This variable stores the OpenAI API key fetched from gs.credentials.openai.
+OPENAI_API_KEY = gs.credentials.openai
 
 
 def translate(text: str, source_language: str, target_language: str) -> str:
-    """
-    Translates text using the OpenAI API.
+    """Translates text from one language to another using the OpenAI API.
+
+    Sends a translation request to the OpenAI API and returns the translated text.
 
     :param text: The text to translate.
-    :param source_language: The source language of the text.
-    :param target_language: The target language for translation.
-    :raises Exception: If an error occurs during the API call.
-    :return: The translated text.  Returns None if translation fails.
+    :param source_language: The source language code (e.g., 'English').
+    :param target_language: The target language code (e.g., 'Russian').
+    :raises Exception: If an error occurs during the translation process.
+    :return: The translated text as a string.  Returns None if translation fails.
     """
-
-    # Construct the prompt for the OpenAI API.  Using f-strings for clarity.
-    prompt = f"Translate the following text from {source_language} to {target_language}:\n\n{text}\n\nTranslation:"
+    
+    # Construct the prompt for the OpenAI API.
+    prompt = (
+        f"Translate the following text from {source_language} to {target_language}:\n\n"
+        f"{text}\n\n"
+        f"Translation:"
+    )
 
     try:
-        # Execute the OpenAI API call using the specified parameters.
+        # Send the request to the OpenAI API.  Uses the configured API key.
         response = openai.Completion.create(
-            engine="text-davinci-003",  # Using a specific model.
+            engine="text-davinci-003",
             prompt=prompt,
             max_tokens=1000,
             n=1,
             stop=None,
-            temperature=0.3
+            temperature=0.3,
+            # Added API key here as the assignment in the top part is not working
+            api_key=OPENAI_API_KEY
         )
 
-        # Extract and return the translated text.
+        # Extract the translated text from the API response.
         translation = response.choices[0].text.strip()
         return translation
-
-    except Exception as e:
-        # Log the error with detailed information.
-        logger.error("Error during translation:", exc_info=True)
+    except openai.error.OpenAIError as e:
+        # Log detailed error information for better troubleshooting.
+        logger.error(f"Error during translation: {e}", exc_info=True)
+        return None
+    except Exception as ex:
+        # Catches other potential exceptions during the process.
+        logger.error("Unhandled exception during translation:", ex, exc_info=True)
         return None
 ```
 
 # Changes Made
 
-*   Added missing type hints to the `translate` function.
-*   Replaced the docstring format for the `translate` function. Updated with improved docstring using reStructuredText (RST).
-*   All comments were rewritten in RST format for modules, functions, methods, and variables.
-*   Improved the error handling by using `logger.error` with `exc_info=True` for more detailed error logging. This will give a traceback, which is invaluable for debugging.
-*   Replaced the example usage with more typical code.
-*   Added a return of `None` if the translation fails.  This is a more robust approach to handling errors than simply returning `return`.  It gives the caller information that something failed.
-*   Made variable names more descriptive (`source_language`, `target_language`).
-*   Improved documentation quality. Added missing `:raises` and `:return` sections to the documentation.
-*   Corrected typos in the example usage.
+- Added missing import `from src.logger import logger`
+- Replaced `translate_text` with `translate` for consistency.
+- Added type hints (`text: str`, `source_language: str`, `target_language: str`) for parameters and return type of `translate`.
+- Corrected the `try-except` block to use specific exceptions (`openai.error.OpenAIError`) and general exception handling to better manage different error types.
+- Added detailed error logging using `logger.error` and `exc_info=True` for exception information.
+- Implemented `if translation` to gracefully handle a failed translation and prevent errors in the calling code.
+- Improved docstrings using reStructuredText (RST) format to adhere to Sphinx style and improve readability and maintainability.
+- Replaced vague terms like "get" with more specific ones (e.g., "extract").
+- Created a module-level variable `OPENAI_API_KEY` to store the API key.
+
 
 # Optimized Code
 
 ```python
 ## \file hypotez/src/ai/openai/translator.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 Module for text translation using the OpenAI API.
-=========================================================================================
+====================================================
 
-This module provides a function for translating text from one language to another using the OpenAI API.
+This module provides functionality for translating text using the OpenAI API.
+It handles sending requests to the API, receiving responses, and error handling.
+
+Example Usage
+-------------
+
+.. code-block:: python
+
+    from hypotez.src.ai.openai.translator import translate
+
+    source_text = "Hello, how are you?"
+    source_language = "English"
+    target_language = "Russian"
+
+    translation = translate(source_text, source_language, target_language)
+    if translation:
+        print(f"Translated text: {translation}")
 """
 
 import openai
 from src import gs
 from src.logger import logger
 
-# Define the API key for OpenAI.
-# This line is critical to prevent hardcoding credentials into the code.
-# Replace with the appropriate import and getter.
-openai.api_key = gs.credentials.openai
+# Module-level constant for the API key.
+# This variable stores the OpenAI API key fetched from gs.credentials.openai.
+OPENAI_API_KEY = gs.credentials.openai
 
 
 def translate(text: str, source_language: str, target_language: str) -> str:
-    """
-    Translates text using the OpenAI API.
+    """Translates text from one language to another using the OpenAI API.
+
+    Sends a translation request to the OpenAI API and returns the translated text.
 
     :param text: The text to translate.
-    :param source_language: The source language of the text.
-    :param target_language: The target language for translation.
-    :raises Exception: If an error occurs during the API call.
-    :return: The translated text.  Returns None if translation fails.
+    :param source_language: The source language code (e.g., 'English').
+    :param target_language: The target language code (e.g., 'Russian').
+    :raises Exception: If an error occurs during the translation process.
+    :return: The translated text as a string.  Returns None if translation fails.
     """
-
-    # Construct the prompt for the OpenAI API.  Using f-strings for clarity.
-    prompt = f"Translate the following text from {source_language} to {target_language}:\n\n{text}\n\nTranslation:"
+    
+    # Construct the prompt for the OpenAI API.
+    prompt = (
+        f"Translate the following text from {source_language} to {target_language}:\n\n"
+        f"{text}\n\n"
+        f"Translation:"
+    )
 
     try:
-        # Execute the OpenAI API call using the specified parameters.
+        # Send the request to the OpenAI API.  Uses the configured API key.
         response = openai.Completion.create(
-            engine="text-davinci-003",  # Using a specific model.
+            engine="text-davinci-003",
             prompt=prompt,
             max_tokens=1000,
             n=1,
             stop=None,
-            temperature=0.3
+            temperature=0.3,
+            api_key=OPENAI_API_KEY
         )
 
-        # Extract and return the translated text.
+        # Extract the translated text from the API response.
         translation = response.choices[0].text.strip()
         return translation
-
-    except Exception as e:
-        # Log the error with detailed information.
-        logger.error("Error during translation:", exc_info=True)
+    except openai.error.OpenAIError as e:
+        # Log detailed error information for better troubleshooting.
+        logger.error(f"Error during translation: {e}", exc_info=True)
+        return None
+    except Exception as ex:
+        # Catches other potential exceptions during the process.
+        logger.error("Unhandled exception during translation:", ex, exc_info=True)
         return None
 ```

@@ -3,45 +3,62 @@
 
 Описание
 -------------------------
-Этот JavaScript-код отображает результаты поиска, полученные из расширения браузера. Он получает данные о результатах поиска (results), извлекает информацию из объекта `results` и заполняет соответствующие HTML-элементы на странице.  Код также обрабатывает таблицу результатов и позволяет пользователю фокусироваться на определенных элементах.  Он использует функцию `updateDetailsTable`, чтобы добавить детализированную информацию в таблицу.  Ключевым элементом является обработка событий кликов на кнопки в таблицах для взаимодействия с браузером.
+Этот JavaScript-код отвечает за отображение результатов поиска, выполненного расширением `tryxpath`. Он получает данные о результатах поиска (в переменной `results`) и заполняет различные элементы HTML на странице, включая заголовки, URL, выражения поиска, детали контекста и результаты поиска.  Код также предоставляет возможность скачать результаты в текстовом формате (с JSON и без).  Он обрабатывает контекстные данные (`results.context`) и основные результаты (`results.main`), заполняя соответствующие таблицы.  При нажатии на кнопки в таблицах, код отправляет сообщения в активную вкладку, чтобы сфокусироваться на конкретном элементе.
 
 Шаги выполнения
 -------------------------
-1. **Получение результатов:** Код ожидает загрузку страницы и отправляет запрос `browser.runtime.sendMessage({"event":"loadResults"})` в браузерное расширение.
-2. **Обработка результата запроса:** Если в результате есть данные (`if (results)`), то значения из объекта `results` устанавливаются в соответствующие HTML-элементы страницы (message, title, href, frameId, и т.д.).
-3. **Обработка контекста (results.context):** Если `results.context` содержит данные, то функция заполняет HTML-элементы, относящиеся к контексту (method, expression, specifiedResultType, resultType, resolver, itemDetail).
-4. **Обработка основной информации (results.main):** Функция заполняет HTML-элементы, относящиеся к основной части результатов (method, expression, specifiedResultType, resultType, resolver, itemDetails, count).
-5. **Обновление таблиц:** Функция `fu.updateDetailsTable` использует данные `itemDetails` для обновления таблиц, отображающих детали результатов.
-6. **Обработка событий кликов:** Обработчик событий `addEventListener` для `context-detail` и `main-details` реагирует на клики по кнопкам в таблицах. В зависимости от нажатой кнопки, отправляется сообщение `browser.tabs.sendMessage` в активную вкладку.
-7. **Создание ссылок для скачивания:** Создаются ссылки для скачивания информации в текстовом формате (makeInfoText, makeConvertedInfoText).
+1. **Получение результатов:** Код ожидает получения данных о результатах поиска через событие `load`.  `browser.runtime.sendMessage` отправляет запрос, а затем обрабатывает полученные данные (`results`).
+
+
+2. **Обработка результатов:**
+    - Заполняет элементы HTML с данными из `results` (заголовок, сообщение, URL, `frameId`, и т.д.).
+    - Обрабатывает контекстные данные (`results.context`):
+        - Если контекст есть, обновляет элементы HTML, связанные с контекстом.
+        - Обновляет таблицу с деталями контекста (`fu.updateDetailsTable`) используя функцию `fu.updateDetailsTable`.
+    - Обрабатывает основные результаты (`results.main`)
+        - Обновляет элементы HTML, связанные с основными результатами.
+        - Обновляет таблицу с деталями основных результатов (`fu.updateDetailsTable`).
+
+
+3. **Обработка ошибок:** При ошибках вызов `catch(fu.onError)` обрабатывает исключения.
+
+4. **Функция `makeTextDownloadUrl`**:  Создает ссылку для скачивания текста.
+
+5. **Функции `makeInfoText` и `makeConvertedInfoText`**:  Формируют текстовое представление результатов для скачивания (с/без JSON).
+
+
+6. **Обработка событий клика:**
+    - При клике по кнопке в таблице контекста отправляет сообщение `browser.tabs.sendMessage` в активную вкладку, чтобы сфокусироваться на соответствующем контекстном элементе.
+    - При клике по кнопке в таблице основных результатов (`main-details`) отправляет сообщение в активную вкладку, чтобы сфокусироваться на элементе по индексу.
+
+7. **Установление обработчиков событий:**  Добавляет обработчики событий `load`, клика на кнопки в таблице контекста и в таблице основных результатов.
+
 
 Пример использования
 -------------------------
 .. code-block:: javascript
 
-    // Предполагается, что tryxpath и tryxpath.functions уже определены.
-    // Доступны результаты поиска.
-    var results = {
-        "message": "Message text",
-        "title": "Title of results",
-        "href": "https://example.com",
+    // Пример того, как вызвать функцию showAllResults
+    let sampleResults = {
+        "message": "some message",
+        "title": "some title",
+        "href": "some url",
         "frameId": 123,
         "context": {
-            "method": "method1",
-            "expression": "expression1",
-            "specifiedResultType": "type1",
-            "resultType": "type2",
-            "resolver": "resolver1",
-            "itemDetail": [...] // массив деталей
+            "method": "some method",
+            "expression": "some expression",
+            "specifiedResultType": "some type",
+            "resultType": "some type",
+            "resolver": "some resolver",
+            "itemDetail": [{"type": "type1", "name": "name1", "value": "value1", "textContent": "text1"}]
         },
         "main": {
-            "method": "method2",
-            "expression": "expression2",
-            "specifiedResultType": "type3",
-            "resultType": "type4",
-            "resolver": "resolver2",
-            "itemDetails": [...] // массив деталей
+            "method": "some method",
+            "expression": "some expression",
+            "specifiedResultType": "some type",
+            "resultType": "some type",
+            "resolver": "some resolver",
+            "itemDetails": [{"type": "type1", "name": "name1", "value": "value1", "textContent": "text1"}, {"type": "type2", "name": "name2", "value": "value2", "textContent": "text2"}]
         }
     };
-
-    showAllResults(results);
+    showAllResults(sampleResults);

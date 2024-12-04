@@ -3,61 +3,55 @@
 
 Описание
 -------------------------
-Этот документ описывает, как запустить и выполнить тесты, расположенные в файле `test_driver_executor.py`.  Данные тесты проверяют функциональность классов `Driver` и `ExecuteLocator`, а также взаимодействие между ними. Документ содержит инструкции по установке зависимостей, настройке WebDriver, запуску тестов, а также описание каждого теста и ожидаемого результата.
+Данный документ описывает, как запустить и выполнить тесты для классов `Driver` и `ExecuteLocator` в файле `test_driver_executor.py`.  Документ содержит руководство для тестеров, описание тестов, их целей, а также инструкцию по запуску тестов и интерпретации результатов.
 
 Шаги выполнения
 -------------------------
-1. **Установка зависимостей:**
-   - Убедитесь, что на вашем компьютере установлены необходимые библиотеки. Выполните команду в терминале:
+1. **Установка зависимостей**: Убедитесь, что все необходимые библиотеки установлены. Для этого необходимо выполнить команду:
 
-     .. code-block:: bash
-        pip install -r requirements.txt
+   .. code-block:: bash
 
-   - Эта команда устанавливает все зависимости, перечисленные в файле `requirements.txt`, включая `pytest` и `selenium`.
+       pip install -r requirements.txt
 
-2. **Настройка WebDriver:**
-   - Тесты используют Chrome WebDriver. Убедитесь, что у вас установлен ChromeDriver.
-   - Найдите и запишите путь к исполняемому файлу `chromedriver` в вашем проекте.
-   - В файле `test_driver_executor.py` замените `/path/to/chromedriver` на фактический путь к вашему файлу `chromedriver`:
+   Файл `requirements.txt` должен содержать список зависимостей, включая `pytest` и `selenium`.
 
-     .. code-block:: python
-        from selenium.webdriver.chrome.service import Service
-        service = Service(executable_path="/path/to/chromedriver")
+2. **Настройка WebDriver**: Укажите путь к исполняемому файлу ChromeDriver в коде.  Замените `/path/to/chromedriver` на фактический путь к вашему исполняемому файлу:
 
-3. **Запуск тестов:**
-   - Откройте терминал и перейдите в директорию проекта.
-   - Используйте команду `pytest` для запуска тестов:
+   .. code-block:: python
 
-     .. code-block:: bash
-        pytest src/webdriver/_pytest/test_driver_executor.py
-
-   - Эта команда выполнит все тесты, определенные в файле `test_driver_executor.py`.
+       from selenium.webdriver.chrome.service import Service
+       service = Service(executable_path="/path/to/chromedriver")
 
 
-4. **Просмотр отчета:**
-   - После запуска тестов вы увидите результат в терминале. Для получения более подробной информации (в том числе прохождения и проваленных тестов), используйте флаги командной строки:
+3. **Запуск тестов**: Для запуска всех тестов в файле `test_driver_executor.py` используйте команду:
 
-     - Для текстового отчета:
+   .. code-block:: bash
 
-       .. code-block:: bash
-         pytest src/webdriver/_pytest/test_driver_executor.py -v
+       pytest src/webdriver/_pytest/test_driver_executor.py
 
-     - Для HTML отчета (установив сначала `pytest-html`):
 
-       .. code-block:: bash
-         pip install pytest-html
-         pytest src/webdriver/_pytest/test_driver_executor.py --html=report.html
+4. **Просмотр результатов**:  После запуска тестов pytest выведет результаты в терминале. Вы можете использовать дополнительные флаги для получения более подробной информации, например:
 
-     HTML отчет будет сохранен в файле `report.html`.
+   .. code-block:: bash
+
+       pytest src/webdriver/_pytest/test_driver_executor.py -v
+
+   Для создания HTML-отчета установите `pytest-html`:
+
+   .. code-block:: bash
+
+       pip install pytest-html
+       pytest src/webdriver/_pytest/test_driver_executor.py --html=report.html
+
+   HTML-отчет будет сохранен в файле `report.html`.
+
+
+5. **Проверка результатов:**  Изучите результаты тестов, обращая внимание на пройденные и проваленные тесты.  Если тест провален,  изучите вывод ошибки в консоли, чтобы понять причину.  Документация содержит описание каждого теста, что позволяет интерпретировать результаты.
 
 
 Пример использования
 -------------------------
-.. code-block:: python
+.. code-block:: bash
 
-    # Пример кода из файла test_driver_executor.py (фрагмент)
-    # (Подразумевается, что необходимые импорты и setup уже выполнены)
-
-    def test_navigate_to_page(driver):
-        driver.get("http://example.com")
-        assert driver.current_url == "http://example.com"
+    # Пример запуска тестов с дополнительными параметрами для подробного отчета:
+    pytest src/webdriver/_pytest/test_driver_executor.py -v --html=report.html

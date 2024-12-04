@@ -3,57 +3,58 @@
 
 Описание
 -------------------------
-Этот код предоставляет примеры создания агентов с помощью библиотеки tinytroupe.  Он демонстрирует, как создавать персонализированных агентов с различными характеристиками, такими как возраст, национальность, профессия, описание профессии, личностные черты, профессиональные и личные интересы, навыки и отношения.  Функции `create_oscar_the_architect`, `create_lisa_the_data_scientist`, `create_marcos_the_physician` и `create_lila_the_linguist` возвращают объекты `TinyPerson` с заданными параметрами.
+Этот код содержит функции для создания объектов `TinyPerson` с определенными характеристиками (возраст, национальность, профессия, описание профессии, черты личности, профессиональные и личные интересы, навыки, отношения).  Функции `create_oscar_the_architect`, `create_lisa_the_data_scientist`, `create_marcos_the_physician` и `create_lila_the_linguist` возвращают созданные объекты `TinyPerson` с заданными параметрами.  Эти функции могут быть использованы напрямую или изменены для создания собственных агентов.
 
 Шаги выполнения
 -------------------------
 1. **Импортируйте необходимый модуль:**
+   Импортируйте класс `TinyPerson` из модуля `tinytroupe.agent`:
+
    ```python
    from tinytroupe.agent import TinyPerson
    ```
 
-2. **Выберите нужную функцию создания агента:**
-   - `create_oscar_the_architect()`: создает агента Оскара, архитектора.
-   - `create_lisa_the_data_scientist()`: создает агента Лизу, специалиста по данным.
-   - `create_marcos_the_physician()`: создает агента Маркоса, врача-невролога.
-   - `create_lila_the_linguist()`: создает агента Лилу, лингвиста.
+2. **Выберите функцию создания персонажа:**
+   Выберите одну из функций (например, `create_oscar_the_architect`), которая соответствует нужному агенту.
 
+3. **Вызовите функцию:**
+   Вызовите выбранную функцию для создания объекта `TinyPerson`:
 
-3. **Вызовите функцию, соответствующую вашему агенту:**
    ```python
    oscar = create_oscar_the_architect()
-   lisa = create_lisa_the_data_scientist()
-   marcos = create_marcos_the_physician()
-   lila = create_lila_the_linguist()
    ```
 
-4. **Получите доступ к атрибутам агента (при необходимости):**
+4. **Доступ к атрибутам персонажа:**
+   После создания объекта, вы можете получить доступ к атрибутам, таким как `age`, `occupation` и т.д.  Например, чтобы получить значение возраста:
    ```python
-   print(oscar.get_attribute("occupation"))
-   print(lisa.get_several_attributes(["age", "nationality"]))
+   print(oscar.age)
    ```
-   Для получения нескольких атрибутов используется метод `get_several_attributes`.  В `get_attribute` передается имя атрибута.
 
+5. **Изменение атрибутов (необязательно):**
+   В случае необходимости, можно изменить значения атрибутов объекта TinyPerson.
+
+   ```python
+   oscar.age = 35
+   ```
 
 Пример использования
 -------------------------
 .. code-block:: python
 
     from tinytroupe.agent import TinyPerson
-
-    # Пример создания и использования агента архитектора
-    def main():
-        oscar = create_oscar_the_architect()
-
-        # Вывод профессии
-        print(oscar.get_attribute("occupation"))  # Выведет "Architect"
-
-        # Вывод описания профессии
-        print(oscar.get_attribute("occupation_description"))
-
-    if __name__ == "__main__":
-        main()
+    from examples import create_oscar_the_architect
+    
+    # Создаем объект Oscar
+    oscar = create_oscar_the_architect()
+    
+    # Выводим значение профессии
+    print(oscar.occupation)
+    
+    # Изменяем возраст
+    oscar.age = 31
+    
+    # Выводим измененный возраст
+    print(oscar.age)
 ```
-```python
 ```
-**Примечание:**  Код примера в  `examples.py` предоставляет несколько функций для создания разных агентов.  Чтобы использовать какой-либо из примеров, просто вызовите соответствующую функцию, например `create_oscar_the_architect()`, и сохранённый результат присвойте переменной (как показано в примере). Затем вы можете получить доступ к атрибутам агента с помощью метода `get_attribute`. Обратите внимание на разные атрибуты для разных агентов.
+```

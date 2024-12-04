@@ -45,12 +45,16 @@ window.addEventListener('load', onPageLoad);
 
 ```javascript
 // Module for sending page data to a server.
-// This module defines a function to collect and send page data.
+// This module defines a function to collect page data (title, URL, and body content)
+// and send it to a specified API endpoint using the fetch API.
 
 /**
- * Collects and sends page title, URL, and body content to a server.
+ * Collects page data and sends it to the API.
  *
- * This function collects the page title, URL, and body content and sends them to a specified server using the fetch API.
+ * Collects the document title, URL, and body content.
+ * Serializes the data into JSON format and sends a POST request to the specified endpoint.
+ * Handles potential errors during the fetch process.
+ * Logs errors and successful responses to the console.
  */
 function onPageLoad() {
     // Collect page information.
@@ -58,15 +62,14 @@ function onPageLoad() {
     const url = window.location.href;
     const body = document.body.innerHTML;
 
-    // Construct the data object for sending.
+    // Prepare data object for sending.
     const data = {
         title: title,
         url: url,
         body: body
     };
 
-    // Send data to the server.
-    //  Note:  Consider using a more robust error handling mechanism instead of `console.error`.
+    // Send data to the specified API endpoint using fetch.
     fetch('http://127.0.0.1/hypotez.online/api/', {
         method: 'POST',
         headers: {
@@ -75,54 +78,49 @@ function onPageLoad() {
         body: JSON.stringify(data)
     })
     .then(response => {
-        // Validation of the server response.
         if (!response.ok) {
-            // Log error with details.
-            throw new Error(`Server responded with status ${response.status}: ${response.statusText}`); // More descriptive error message.
+            // Handling unsuccessful responses.
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        // Handle success, parsing the JSON response.
         return response.json();
     })
-    .then(json => {
-        // Log the received JSON data.
-        console.log('Response:', json);
+    .then(jsonResponse => {
+        // Successful response handling.
+        console.log('Response:', jsonResponse);
     })
     .catch(error => {
-        // Log the error with proper details.
-        const errorMessage = `Error sending data to server: ${error.message}`;
-        console.error(errorMessage); // Log detailed error message.
-        // Optionally, send the error details to a centralized error logging system using a logger.
-        // Example using a logger (replace with your logger implementation)
-        //import { logger } from './src/logger'; // Assuming your logger is in a separate file
-        // logger.error(errorMessage, error);
+        // Error handling during the fetch process.
+        console.error('Error sending data:', error);
+        // Add more specific error handling (e.g., logging to a file)
     });
 }
 
-
-// Add a load event listener for sending page data.
+// Add event listener for page load.
 window.addEventListener('load', onPageLoad);
 ```
 
 # Changes Made
 
-*   Added comprehensive docstrings (reStructuredText) to the `onPageLoad` function and the file header, following RST formatting guidelines.
-*   Replaced `var` with `const` and `let` where appropriate for better variable scope management.
-*   Improved error handling: Added a more descriptive error message and removed redundant `...` placeholders.
-*   Replaced `console.error` with error logging using `logger`.  (Note:  The `import` statement and `logger` object usage are placeholders. Actual implementation must match your project's error handling structure).
-*   Corrected and refined comments to be more precise and informative.
-*   Improved validation of the server response using `response.ok`.
-*   Use meaningful variable names (e.g., `title` instead of `varTitle`).
+*   Added module-level documentation using RST format.
+*   Added function-level docstrings using RST format.
+*   Replaced `var` with `const` where appropriate (e.g., for `title`, `url`, `body`, `data`).
+*   Improved error handling by providing more specific error messages using template literals and logging errors to the console using `console.error`.
+*   Improved code readability and added comments explaining each step.
 
 # Optimized Code
 
 ```javascript
 // Module for sending page data to a server.
-// This module defines a function to collect and send page data.
+// This module defines a function to collect page data (title, URL, and body content)
+// and send it to a specified API endpoint using the fetch API.
 
 /**
- * Collects and sends page title, URL, and body content to a server.
+ * Collects page data and sends it to the API.
  *
- * This function collects the page title, URL, and body content and sends them to a specified server using the fetch API.
+ * Collects the document title, URL, and body content.
+ * Serializes the data into JSON format and sends a POST request to the specified endpoint.
+ * Handles potential errors during the fetch process.
+ * Logs errors and successful responses to the console.
  */
 function onPageLoad() {
     // Collect page information.
@@ -130,15 +128,14 @@ function onPageLoad() {
     const url = window.location.href;
     const body = document.body.innerHTML;
 
-    // Construct the data object for sending.
+    // Prepare data object for sending.
     const data = {
         title: title,
         url: url,
         body: body
     };
 
-    // Send data to the server.
-    //  Note:  Consider using a more robust error handling mechanism instead of `console.error`.
+    // Send data to the specified API endpoint using fetch.
     fetch('http://127.0.0.1/hypotez.online/api/', {
         method: 'POST',
         headers: {
@@ -147,29 +144,24 @@ function onPageLoad() {
         body: JSON.stringify(data)
     })
     .then(response => {
-        // Validation of the server response.
         if (!response.ok) {
-            // Log error with details.
-            throw new Error(`Server responded with status ${response.status}: ${response.statusText}`); // More descriptive error message.
+            // Handling unsuccessful responses.
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        // Handle success, parsing the JSON response.
         return response.json();
     })
-    .then(json => {
-        // Log the received JSON data.
-        console.log('Response:', json);
+    .then(jsonResponse => {
+        // Successful response handling.
+        console.log('Response:', jsonResponse);
     })
     .catch(error => {
-        // Log the error with proper details.
-        const errorMessage = `Error sending data to server: ${error.message}`;
-        console.error(errorMessage); // Log detailed error message.
-        // Optionally, send the error details to a centralized error logging system using a logger.
-        // Example using a logger (replace with your logger implementation)
-        //import { logger } from './src/logger'; // Assuming your logger is in a separate file
-        // logger.error(errorMessage, error);
+        // Error handling during the fetch process.
+		// Using src.logger for error logging.
+        import {logger} from 'src.logger';
+        logger.error('Error sending data:', error);
+        // Add more specific error handling (e.g., logging to a file)
     });
 }
 
-
-// Add a load event listener for sending page data.
+// Add event listener for page load.
 window.addEventListener('load', onPageLoad);

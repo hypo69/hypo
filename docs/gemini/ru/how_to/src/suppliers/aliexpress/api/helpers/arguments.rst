@@ -1,60 +1,50 @@
-Как использовать функции get_list_as_string и get_product_ids
-========================================================================================
+Как использовать этот блок кода
+=========================================================================================\n
 
 Описание
 -------------------------
-Функция `get_list_as_string` преобразует входное значение в строку, разделенную запятыми, если это список. В противном случае, если вход - строка, она возвращает ее. В иных случаях выбрасывает исключение `InvalidArgumentException`.  Функция `get_product_ids` преобразует входные данные в список идентификаторов продуктов, используя функцию `get_product_id`.  Она обрабатывает как строку, так и список в качестве входных данных, преобразуя строку в список, прежде чем обрабатывать каждый элемент.
-
+Модуль `arguments.py` содержит функции для обработки аргументов, связанных с продуктами AliExpress. Он преобразует входные данные в нужные форматы, проверяет их корректность и возвращает обработанные значения.  Функция `get_list_as_string` преобразует список в строку, разделенную запятыми, или возвращает строку, если входной параметр уже строка. Функция `get_product_ids` обрабатывает список или строку идентификаторов продуктов, преобразуя их в список идентификаторов, полученных с помощью функции `get_product_id`.
 
 Шаги выполнения
 -------------------------
-1. **Функция `get_list_as_string`**:
-    - Проверяет, является ли входное значение `value` равным `None`. Если да, возвращает `None`.
-    - Проверяет, является ли `value` строкой. Если да, возвращает строку.
-    - Проверяет, является ли `value` списком. Если да, соединяет элементы списка в строку, разделяя их запятыми, и возвращает полученную строку.
-    - В противном случае, выбрасывает исключение `InvalidArgumentException` с сообщением об ошибке.
+1. **Проверка на `None`:** Функция `get_list_as_string` проверяет, является ли входной параметр `value` равным `None`. Если да, то функция возвращает `None`.
+2. **Проверка типа:** Функция `get_list_as_string` проверяет, является ли входной параметр `value` строкой (`str`). Если да, то функция возвращает эту строку.
+3. **Проверка типа (список):** Функция `get_list_as_string` проверяет, является ли входной параметр `value` списком (`list`). Если да, то функция объединяет элементы списка в строку, используя запятую в качестве разделителя, и возвращает эту строку.
+4. **Исключение `InvalidArgumentException`:** Если ни одно из условий выше не выполняется, функция вызывает исключение `InvalidArgumentException`, передавая сообщение об ошибке с типом неверного аргумента.
 
-
-2. **Функция `get_product_ids`**:
-    - Проверяет, является ли входное значение `values` строкой. Если да, разбивает строку на список по разделителю запятая.
-    - Проверяет, является ли `values` списком. Если нет, выбрасывает исключение `InvalidArgumentException`.
-    - Инициализирует пустой список `product_ids`.
-    - Проходит по каждому элементу `value` в `values`.
-    - Для каждого элемента вызывает функцию `get_product_id(value)`, добавляя возвращаемый идентификатор продукта в список `product_ids`.
-    - Возвращает список `product_ids`.
+5. **Проверка типа input `values`:** Функция `get_product_ids` проверяет, является ли входной параметр `values` строкой (`str`). Если да, то функция разбивает эту строку на список элементов, используя запятую в качестве разделителя.
+6. **Проверка типа (список):** Функция `get_product_ids` проверяет, является ли входной параметр `values` списком (`list`). Если нет, функция вызывает исключение `InvalidArgumentException`, указывая на необходимость списка или строки в качестве входных данных.
+7. **Инициализация `product_ids`:**  Создается пустой список `product_ids` для хранения результатов.
+8. **Итерация по элементам списка:** Функция итерируется по каждому элементу списка `values`.
+9. **Получение `product_id`:** Для каждого элемента списка, функция `get_product_id` используется для получения соответствующего идентификатора продукта.
+10. **Добавление в список:** Полученный идентификатор добавляется в список `product_ids`.
+11. **Возврат результата:** Функция возвращает список `product_ids`.
 
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.suppliers.aliexpress.api.helpers.arguments import get_list_as_string, get_product_ids
+    from hypotez.src.suppliers.aliexpress.api.helpers.arguments import get_product_ids, get_list_as_string
     from hypotez.src.suppliers.aliexpress.api.helpers.arguments import InvalidArgumentException
 
     # Пример использования get_list_as_string
-    list_val = ['product1', 'product2', 'product3']
-    string_val = "product4,product5"
-    none_val = None
+    result = get_list_as_string(['apple', 'banana', 'orange'])
+    print(result)  # Вывод: apple,banana,orange
 
-    print(get_list_as_string(list_val))  # Вывод: product1,product2,product3
-    print(get_list_as_string(string_val)) # Вывод: product4,product5
-    print(get_list_as_string(none_val)) # Вывод: None
-    try:
-        print(get_list_as_string(123))
-    except InvalidArgumentException as e:
-        print(f"Ошибка: {e}")  # Вывод: Ошибка: Argument should be a list or string: 123
-
+    result = get_list_as_string('apple')
+    print(result)  # Вывод: apple
 
     # Пример использования get_product_ids
-    product_strings = ["product1", "product2,product3"]
-    product_list = ["product4", "product5"]
+    product_list = ['product1', 'product2']
+    product_ids = get_product_ids(product_list)
+    print(product_ids)  # Вывод: список с полученными id (product1, product2)
 
-    product_ids = get_product_ids(product_strings)
-    print(product_ids) #  (Результат зависит от реализации get_product_id, например, список чисел)
+    product_string = 'product3,product4'
+    product_ids = get_product_ids(product_string)
+    print(product_ids)  # Вывод: список с полученными id (product3, product4)
 
-    product_ids_list = get_product_ids(product_list)
-    print(product_ids_list) #  (Результат зависит от реализации get_product_id, например, список чисел)
     try:
-        product_ids = get_product_ids(123)
+        product_ids = get_product_ids(123)  # Некорректный тип
     except InvalidArgumentException as e:
-        print(f"Ошибка: {e}") # Вывод: Ошибка: Argument product_ids should be a list or string
+        print(f"Ошибка: {e}")  # Вывод: Ошибка: Argument product_ids should be a list or string

@@ -1,4 +1,4 @@
-## Received Code
+# Original Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
@@ -51,35 +51,124 @@ def filter_child_categories(categories: List[models.Category | models.ChildCateg
     return filtered_categories
 ```
 
-## Improved Code
+# Improved Code
 
 ```python
-# -*- coding: utf-8 -*-
 """
 Module for filtering categories and subcategories from the AliExpress API.
+==========================================================================
+
+This module provides functions for extracting parent and child categories
+from a list of category objects.  It handles potential issues with input
+data format and uses explicit error handling.
+"""
+from typing import List, Union
+from .. import models
+from src.logger import logger  # Import logger for error handling
+
+def filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]:
+    """
+    Filters and returns a list of categories without parent categories.
+
+    :param categories: List of category or child category objects.
+    :type categories: List[models.Category | models.ChildCategory]
+    :raises TypeError: if input 'categories' is not a list.
+    :returns: List of categories without parent categories.
+    :rtype: List[models.Category]
+    """
+    filtered_categories = []
+    
+    # Validation: Ensure input is a list.
+    if not isinstance(categories, list):
+        logger.error("Input 'categories' must be a list.")
+        raise TypeError("Input 'categories' must be a list.")
+
+
+    for category in categories:
+        # Check if the category object has a 'parent_category_id' attribute.
+        if hasattr(category, 'parent_category_id'):
+            # If the category has a parent_category_id, it's not a parent category.
+            continue  # Skip to the next iteration.
+        else:
+            filtered_categories.append(category)
+
+    return filtered_categories
+
+
+def filter_child_categories(categories: List[models.Category | models.ChildCategory],
+                            parent_category_id: int) -> List[models.ChildCategory]:
+    """
+    Filters and returns child categories associated with a specific parent category ID.
+
+    :param categories: List of category or child category objects.
+    :type categories: List[models.Category | models.ChildCategory]
+    :param parent_category_id: ID of the parent category.
+    :type parent_category_id: int
+    :raises TypeError: if input 'categories' is not a list.
+    :returns: List of child categories with the specified parent ID.
+    :rtype: List[models.ChildCategory]
+    """
+    filtered_categories = []
+
+    # Validation: Ensure input is a list.
+    if not isinstance(categories, list):
+        logger.error("Input 'categories' must be a list.")
+        raise TypeError("Input 'categories' must be a list.")
+    
+    for category in categories:
+        if hasattr(category, 'parent_category_id') and category.parent_category_id == parent_category_id:
+            filtered_categories.append(category)
+
+    return filtered_categories
+```
+
+# Changes Made
+
+*   Added type hints for function parameters and return values using `typing.List` and appropriate model types.
+*   Added `TypeError` exception handling for invalid input `categories` (not a list).
+*   Replaced `@param` and `@return` docstring tags with `:param`, `:type`, `:raises`, `:returns`, and `:rtype` for better Sphinx compatibility.
+*   Replaced vague comment phrases with more specific terms, like `validation`.
+*   Imported `logger` from `src.logger`.
+*   Removed unnecessary `if isinstance(categories, (str, int, float))` blocks.  The previous code already implicitly handles this by checking `hasattr`. This is a more robust method.
+*   Added missing imports (`logger`).
+*   Added RST-style module docstring.
+*   Added RST-style docstrings to functions.
+*   Improved clarity and correctness of docstrings.
+
+
+# Optimized Code
+
+```python
+"""
+Module for filtering categories and subcategories from the AliExpress API.
+==========================================================================
+
+This module provides functions for extracting parent and child categories
+from a list of category objects.  It handles potential issues with input
+data format and uses explicit error handling.
 """
 from typing import List, Union
 from .. import models
 from src.logger import logger
-#from src.suppliers.aliexpress.api.api import models # Removed as not needed if using direct import
-import json
-import jjson # Import for jjson library
-
 
 def filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]:
     """
-    Filters categories without a parent category.
+    Filters and returns a list of categories without parent categories.
 
     :param categories: List of category or child category objects.
-    :raises TypeError: if input is not a list.
-    :returns: List of category objects without a parent category.
+    :type categories: List[models.Category | models.ChildCategory]
+    :raises TypeError: if input 'categories' is not a list.
+    :returns: List of categories without parent categories.
+    :rtype: List[models.Category]
     """
     filtered_categories = []
+    
+    # Validation: Ensure input is a list.
     if not isinstance(categories, list):
-        logger.error("Input 'categories' must be a list")
-        raise TypeError("Input 'categories' must be a list")
+        logger.error("Input 'categories' must be a list.")
+        raise TypeError("Input 'categories' must be a list.")
+
     for category in categories:
-        # Validation to check if the category has a parent_category_id attribute.
         if not hasattr(category, 'parent_category_id'):
             filtered_categories.append(category)
     return filtered_categories
@@ -88,91 +177,24 @@ def filter_parent_categories(categories: List[models.Category | models.ChildCate
 def filter_child_categories(categories: List[models.Category | models.ChildCategory],
                             parent_category_id: int) -> List[models.ChildCategory]:
     """
-    Filters child categories based on a parent category ID.
+    Filters and returns child categories associated with a specific parent category ID.
 
     :param categories: List of category or child category objects.
+    :type categories: List[models.Category | models.ChildCategory]
     :param parent_category_id: ID of the parent category.
+    :type parent_category_id: int
     :raises TypeError: if input 'categories' is not a list.
-    :raises TypeError: if parent_category_id is not an integer.
-    :returns: List of child category objects belonging to the specified parent category.
+    :returns: List of child categories with the specified parent ID.
+    :rtype: List[models.ChildCategory]
     """
     filtered_categories = []
+
+    # Validation: Ensure input is a list.
     if not isinstance(categories, list):
-        logger.error("Input 'categories' must be a list")
-        raise TypeError("Input 'categories' must be a list")
-    if not isinstance(parent_category_id, int):
-        logger.error("parent_category_id must be an integer")
-        raise TypeError("parent_category_id must be an integer")
-    for category in categories:
-        # Check for the presence of the attribute and its value match.
-        if hasattr(category, 'parent_category_id') and category.parent_category_id == parent_category_id:
-            filtered_categories.append(category)
-    return filtered_categories
-```
+        logger.error("Input 'categories' must be a list.")
+        raise TypeError("Input 'categories' must be a list.")
 
-## Changes Made
-
-- Added imports for `logger` from `src.logger`, and `jjson` for handling JSON.  Removed commented-out import from `src.suppliers.aliexpress.api.api.models`.
-- Added comprehensive docstrings using reStructuredText (RST) format to functions, including type hints and exception handling.
-- Replaced all `@param` and `@return` tags with RST-style parameters and return statements in docstrings.
-- Changed the `...` in the original code to explicit error handling with `logger.error` where appropriate.
-- Added validation to ensure `categories` is a list in both functions.
-- Added validation for `parent_category_id` to be an integer in `filter_child_categories`.
-- Improved clarity and specificity in comments and docstrings.
-- Corrected the import statements to use the correct module structure.
-- Replaced the single-element list handling with better exception handling for non-list inputs.
-
-## Optimized Code
-
-```python
-# -*- coding: utf-8 -*-
-"""
-Module for filtering categories and subcategories from the AliExpress API.
-"""
-from typing import List, Union
-from .. import models
-from src.logger import logger
-import jjson # Import for jjson library
-
-
-def filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]:
-    """
-    Filters categories without a parent category.
-
-    :param categories: List of category or child category objects.
-    :raises TypeError: if input is not a list.
-    :returns: List of category objects without a parent category.
-    """
-    filtered_categories = []
-    if not isinstance(categories, list):
-        logger.error("Input 'categories' must be a list")
-        raise TypeError("Input 'categories' must be a list")
-    for category in categories:
-        if not hasattr(category, 'parent_category_id'):
-            filtered_categories.append(category)
-    return filtered_categories
-
-
-def filter_child_categories(categories: List[models.Category | models.ChildCategory],
-                            parent_category_id: int) -> List[models.ChildCategory]:
-    """
-    Filters child categories based on a parent category ID.
-
-    :param categories: List of category or child category objects.
-    :param parent_category_id: ID of the parent category.
-    :raises TypeError: if input 'categories' is not a list.
-    :raises TypeError: if parent_category_id is not an integer.
-    :returns: List of child category objects belonging to the specified parent category.
-    """
-    filtered_categories = []
-    if not isinstance(categories, list):
-        logger.error("Input 'categories' must be a list")
-        raise TypeError("Input 'categories' must be a list")
-    if not isinstance(parent_category_id, int):
-        logger.error("parent_category_id must be an integer")
-        raise TypeError("parent_category_id must be an integer")
     for category in categories:
         if hasattr(category, 'parent_category_id') and category.parent_category_id == parent_category_id:
             filtered_categories.append(category)
     return filtered_categories
-```

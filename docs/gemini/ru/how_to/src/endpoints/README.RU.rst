@@ -3,51 +3,52 @@
 
 Описание
 -------------------------
-Модуль `endpoints` предоставляет API для взаимодействия с внешними системами (PrestaShop, рекламные платформы, Emil, Hypo69, Kazarinov).  Каждая поддиректория (`prestashop`, `advertisement`, `emil`, `hypo69`, `kazarinov`) представляет отдельный модуль для работы с конкретной системой.  Модуль обеспечивает интеграцию с различными внешними сервисами.
+Модуль `endpoints` предоставляет API для взаимодействия с различными сервисами (PrestaShop, рекламными платформами, Emil, Hypo69, Kazarinov и другими).  Каждая поддиректория (`prestashop`, `advertisement`, `emil`, `hypo69`, `kazarinov`) содержит API для взаимодействия с конкретным сервисом.
 
 Шаги выполнения
 -------------------------
-1. **Установка зависимостей**: Убедитесь, что все необходимые библиотеки установлены. Для этого выполните команду:
+1. **Установка зависимостей:** Убедитесь, что все необходимые библиотеки установлены. Для этого используйте команду:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Импорт необходимых модулей**: Импортируйте нужный модуль в свой код. Например, для работы с PrestaShop:
+2. **Импорт необходимых модулей:** Импортируйте нужный модуль в свой код.  Например, для работы с PrestaShop:
 
    ```python
    from src.endpoints.prestashop import PrestashopAPI
    ```
 
-3. **Инициализация API**: Создайте экземпляр класса API, соответствующего необходимой системе.  Используйте необходимые параметры для подключения (например, API-ключ, URL).  Пример инициализации для PrestaShop:
+3. **Инициализация API:** Создайте экземпляр класса API, соответствующего нужному сервису, передавая необходимые параметры (например, учетные данные).
 
    ```python
-   api = PrestashopAPI(api_key='YOUR_API_KEY', api_url='YOUR_API_URL')
+   # Пример инициализации API для PrestaShop
+   api = PrestashopAPI(api_key='your_api_key', secret_key='your_secret_key')
    ```
 
-4. **Вызов методов**: Используйте методы API для выполнения операций, таких как получение данных, отправка запросов или выполнение других действий.  Пример использования метода для получения списка товаров в PrestaShop:
+4. **Вызов методов API:** Используйте методы API для выполнения операций, например, создание, чтение, обновление или удаление данных.  Обратитесь к документации конкретного модуля, чтобы узнать доступные методы и их параметры.
 
    ```python
+   # Пример использования метода для получения списка товаров
    products = api.get_products()
+   print(products)
    ```
 
-5. **Обработка результатов**: Обработайте полученные данные или результаты выполнения запроса.
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-   from src.endpoints.prestashop import PrestashopAPI
+    from src.endpoints.prestashop import PrestashopAPI
 
-   # Замените на ваши ключи и URL
-   api_key = 'YOUR_API_KEY'
-   api_url = 'YOUR_API_URL'
-   api = PrestashopAPI(api_key=api_key, api_url=api_url)
+    # Замените 'your_api_key' и 'your_secret_key' на ваши значения
+    api = PrestashopAPI(api_key='your_api_key', secret_key='your_secret_key')
 
-   try:
-       # Получение списка продуктов
-       products = api.get_products()
-       for product in products:
-           print(f"ID: {product['id']}, Название: {product['name']}")
-   except Exception as e:
-       print(f"Ошибка: {e}")
+    try:
+        # Получение списка всех товаров
+        products = api.get_products()
+        for product in products:
+            print(product)
+
+    except Exception as e:
+        print(f"Ошибка: {e}")

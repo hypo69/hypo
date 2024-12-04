@@ -2,7 +2,10 @@
 
 ```python
 ## \file hypotez/src/webdriver/chrome/extentions/version.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
 .. module: src.webdriver.chrome.extentions 
 	:platform: Windows, Unix
 	:synopsis:
@@ -15,6 +18,7 @@ MODE = 'dev'
 	:synopsis:
 
 """
+
 
 """
 	:platform: Windows, Unix
@@ -36,6 +40,7 @@ MODE = 'dev'
 """ module: src.webdriver.chrome.extentions """
 
 
+
 """
 - `__version__`: This variable holds the version of the module or package.
 - `__name__`: Contains the name of the module. If the script is being run directly, the value will be `"__main__"`.
@@ -49,7 +54,6 @@ __version__="3.12.0.0.0.4"
 __doc__:str
 __details__:str="Details about version for module or class"
 __annotations__
-
 __author__='hypotez '
 ```
 
@@ -57,121 +61,99 @@ __author__='hypotez '
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
-# #! venv/bin/python/python3.12
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
-Module for Version Handling in Chrome Extensions.
-==================================================
+Module for managing Chrome extension versions.
+=========================================================================================
 
-This module defines variables for managing the extension's version and other relevant details.
+This module defines constants and variables related to Chrome extension versions.
 
 Example Usage
 --------------------
 
 .. code-block:: python
 
-    # Access the version
-    version = __version__
-
+    from src.webdriver.chrome.extentions.version import __version__
+    print(__version__)
 """
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.logger import logger  # Import logger for error handling
 
-# Development mode flag
+
 MODE = 'dev'
 
-# Version string.  Use a more descriptive name than just 'MODE'.
-VERSION = "3.12.0.0.0.4"
 
-# Detailed information about the module.
-DETAILS = "Details about version for module or class"
-
-# Module author.
-AUTHOR = 'hypotez'
+"""
+Version information for the Chrome extension.
+"""
+__version__ = "3.12.0.0.0.4"
 
 
-#  __version__ should be a string, not a string variable.
-# __version__ = "3.12.0.0.0.4"
+"""
+Detailed information about the module's version.
+"""
+__details__ = "Details about version for module or class"
 
 
-# __doc__  is a module docstring.
-# __details__ is a string.
+"""
+Author of the module.
+"""
+__author__ = 'hypotez'
 
-
-# The following variables were left empty and potentially unused.
-# __name__ = None
-# __doc__ = None
-# __details__ = None
-# __annotations__ = None
 ```
 
 ## Changes Made
 
-- Added `from src.logger import logger` import statement.
-- Added `from src.utils.jjson import j_loads, j_loads_ns` import statement.
-- Removed unnecessary docstrings and comments that were repetitive or redundant.
-- Replaced `MODE` with `VERSION` as the more descriptive variable name for holding the version.
-- Changed all variables' declarations to be more descriptive and consistent with Python best practices.
-- Added a module docstring (reStructuredText format).
-- Removed overly generic comments.
-- Replaced invalid '__name__', '__doc__', '__details__', '__annotations__', with correct types and values as needed.
-- Implemented error logging using `logger` where necessary, and replaced generic `try-except` blocks with `logger.error`.
-- Ensured the `VERSION` variable is correctly defined.
+- Added necessary imports (`j_loads`, `j_loads_ns` from `src.utils.jjson`, and `logger` from `src.logger`).
+- Removed unused variable definitions and comments.
+- Added a complete docstring for the module, explaining its purpose.
+- Replaced vague comments with specific and informative RST-format documentation.
+- Corrected the capitalization of some variable names.
+- Used correct Python naming conventions (e.g., `__version__`).
 
 ## Optimized Code
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
-# #! venv/bin/python/python3.12
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
-Module for Version Handling in Chrome Extensions.
-==================================================
+Module for managing Chrome extension versions.
+=========================================================================================
 
-This module defines variables for managing the extension's version and other relevant details.
+This module defines constants and variables related to Chrome extension versions.
 
 Example Usage
 --------------------
 
 .. code-block:: python
 
-    # Access the version
-    version = __version__
-
+    from src.webdriver.chrome.extentions.version import __version__
+    print(__version__)
 """
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
+from src.logger import logger  # Import logger for error handling
 
-# Development mode flag
+
 MODE = 'dev'
 
-# Version string.  Use a more descriptive name than just 'MODE'.
-VERSION = "3.12.0.0.0.4"
 
-# Detailed information about the module.
-DETAILS = "Details about version for module or class"
-
-# Module author.
-AUTHOR = 'hypotez'
-
-
-#  __version__ should be a string, not a string variable.
+"""
+Version information for the Chrome extension.
+"""
 __version__ = "3.12.0.0.0.4"
 
 
-# __doc__  is a module docstring.
-__doc__ = """Module for Version Handling in Chrome Extensions."""
-# __details__ is a string.
+"""
+Detailed information about the module's version.
+"""
 __details__ = "Details about version for module or class"
-# __annotations__ is an empty dictionary.
-__annotations__ = {}
 
-# __name__ is the module name
-__name__ = "version"
 
-# __author__ is the author's name
+"""
+Author of the module.
+"""
 __author__ = 'hypotez'
-
-```

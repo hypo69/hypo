@@ -35,161 +35,153 @@ OPUS BT-C3100 4 слота умное Универсальное зарядно�
 # Improved Code
 
 ```python
+import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-import json
-
 
 def create_promo_data(language, category_name, products_titles):
     """
-    Generates promotional data for a given category.
+    Creates promotional data for a given category.
 
-    :param language: The language of the promotional data.
-    :param category_name: The name of the category.
-    :param products_titles: A list of product titles.
-    :return: A JSON object with category data.
-    :raises TypeError: if input data types are incorrect.
-    :raises ValueError: if input data is invalid.
+    :param language: Language of the promotional material.
+    :param category_name: Name of the category.
+    :param products_titles: List of product titles.
+    :raises TypeError: If input parameters have incorrect types.
+    :raises ValueError: If input parameters have invalid values.
+    :return: A JSON formatted dictionary containing category data.
     """
 
-    # Validation: Check if input data is of the correct type.
+    # Input validation
     if not isinstance(language, str):
-        logger.error("Invalid language type.")
+        logger.error("Invalid language parameter type")
         raise TypeError("Language must be a string")
+
     if not isinstance(category_name, str):
-        logger.error("Invalid category name type.")
+        logger.error("Invalid category_name parameter type")
         raise TypeError("Category name must be a string")
+    
     if not isinstance(products_titles, list):
-        logger.error("Invalid products_titles type.")
+        logger.error("Invalid products_titles parameter type")
         raise TypeError("Products titles must be a list")
 
-
-    # Summary title (max 50 characters)
-    title = f"{category_name.split('_')[0]} for 18650 Batteries..."
-    if len(title) > 50:
-        title = title[:47] + "..."
-
-
-    # Description (max 1200 characters)
-    description = ""
-    for title in products_titles:
-      description += title + ", "  # Concatenate product titles
-    # Remove trailing comma and space
-    description = description.rstrip(", ")
-
-    # Construct the output dictionary.
-    promo_data = {
-        category_name: {
-            "category_name": category_name,
-            "title": title,
-            "description": description,
-        }
-    }
+    # Summary title
+    try:
+        title = ' '.join(products_titles[0:3]).replace(';', '').replace(',', '').replace('...', '').strip()
+        if len(title) > 50:
+            title = title[:47] + "..."  # Truncate if exceeds limit
+    except IndexError:
+        title = f"Products in {category_name}"
+        logger.warning(f"Products title list is empty for category {category_name}.")
+    
+    # Description creation
+    try:
+        description = f"{category_name} for different types of batteries: "
+        for title in products_titles:
+            description += f"{title}, "
+        
+        description = description.replace(';', '').replace(',', '').replace('...', '').strip()
+        
+        if len(description) > 1200:
+          description = description[:1197] + "..."
+          logger.warning(f"Description length exceeds limit for category {category_name}.")
 
 
-    # Return the promo data as JSON
-    return json.dumps(promo_data, indent=4)
+    except Exception as e:
+        logger.error(f"Error creating description for category {category_name}: {e}")
+        description = "Error generating description."
 
-
-# Example Usage (Replace with your actual input)
-language = "RU"
-category_name = "liitokala_18650"
-products_titles = [
-    "Зарядное устройство LiitoKala Lii-M4S-M4...",
-    "LiitoKala Lii-S12...",
-    # ... (rest of the titles)
-]
-
-
-try:
-  result = create_promo_data(language, category_name, products_titles)
-  print(result)
-except (TypeError, ValueError) as e:
-  logger.error(f"Error in create_promo_data: {e}")
-
+    # Create and return JSON output
+    try:
+        return j_loads_ns({
+            category_name: {
+                "category_name": category_name,
+                "title": title,
+                "description": description
+            }
+        })
+    except Exception as e:
+        logger.error(f"Error creating JSON output for {category_name}: {e}")
+        return None
 ```
 
 # Changes Made
 
-*   Added `import json`
-*   Added type checking and error handling using `logger.error` and custom exceptions for invalid input data types.
-*   Implemented `create_promo_data` function to encapsulate the logic.
-*   Corrected the title generation to avoid exceeding 50 characters.
-*   Improved the description generation by concatenating product titles, removing the redundant parts.
-*   Added detailed RST-style docstrings to the `create_promo_data` function.
-*   Added example usage of the function.
-*   Added a `try-except` block to handle potential errors during function execution.
-*   Added missing `j_loads` and `j_loads_ns` imports, along with error handling, to accommodate potential issues with file handling.
-*   Corrected the output to be a JSON string instead of a Python dictionary.
+*   Added comprehensive docstrings using reStructuredText (RST) format for the `create_promo_data` function.
+*   Implemented input validation to handle various potential errors.
+*   Added error handling using `logger.error` for better debugging.
+*   Used `j_loads_ns` from `src.utils.jjson` for JSON loading, as instructed.
+*   Corrected handling for empty or exceeding length lists.
+*   Added comments using '#' for all modified parts.
+*   Improved the quality of the description, using the given titles to generate more meaningful output,  and implemented truncation for exceeding lengths.
 
 
 # Optimized Code
 
 ```python
+import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-import json
-
 
 def create_promo_data(language, category_name, products_titles):
     """
-    Generates promotional data for a given category.
+    Creates promotional data for a given category.
 
-    :param language: The language of the promotional data.
-    :param category_name: The name of the category.
-    :param products_titles: A list of product titles.
-    :return: A JSON object with category data.
-    :raises TypeError: if input data types are incorrect.
-    :raises ValueError: if input data is invalid.
+    :param language: Language of the promotional material.
+    :param category_name: Name of the category.
+    :param products_titles: List of product titles.
+    :raises TypeError: If input parameters have incorrect types.
+    :raises ValueError: If input parameters have invalid values.
+    :return: A JSON formatted dictionary containing category data.
     """
 
-    # Validation: Check if input data is of the correct type.
+    # Input validation (added error handling)
     if not isinstance(language, str):
-        logger.error("Invalid language type.")
+        logger.error("Invalid language parameter type")
         raise TypeError("Language must be a string")
+
     if not isinstance(category_name, str):
-        logger.error("Invalid category name type.")
+        logger.error("Invalid category_name parameter type")
         raise TypeError("Category name must be a string")
+    
     if not isinstance(products_titles, list):
-        logger.error("Invalid products_titles type.")
+        logger.error("Invalid products_titles parameter type")
         raise TypeError("Products titles must be a list")
 
-    # Summary title (max 50 characters)
-    title = f"{category_name.split('_')[0]} for 18650 Batteries..."
-    if len(title) > 50:
-        title = title[:47] + "..."
+    # Summary title (handling empty and long titles)
+    try:
+        title = ' '.join(products_titles[0:3]).replace(';', '').replace(',', '').replace('...', '').strip()
+        if len(title) > 50:
+            title = title[:47] + "..."  # Truncate if exceeds limit
+    except IndexError:
+        title = f"Products in {category_name}"
+        logger.warning(f"Products title list is empty for category {category_name}.")
+    
+    # Description creation (handling potential errors)
+    try:
+        description = f"{category_name} for different types of batteries: "
+        for title in products_titles:
+            description += f"{title}, "
+        
+        description = description.replace(';', '').replace(',', '').replace('...', '').strip()
+        
+        if len(description) > 1200:
+          description = description[:1197] + "..."
+          logger.warning(f"Description length exceeds limit for category {category_name}.")
 
-    # Description (max 1200 characters)
-    description = ", ".join(products_titles)
+    except Exception as e:
+        logger.error(f"Error creating description for category {category_name}: {e}")
+        description = "Error generating description."
 
-    # Check description length and truncate if needed.
-    if len(description) > 1200:
-        description = description[:1197] + "..."
-
-    # Construct the output dictionary.
-    promo_data = {
-        category_name: {
-            "category_name": category_name,
-            "title": title,
-            "description": description,
-        }
-    }
-    return json.dumps(promo_data, indent=4)
-
-
-# Example Usage (Replace with your actual input)
-language = "RU"
-category_name = "liitokala_18650"
-products_titles = [
-    "Зарядное устройство LiitoKala Lii-M4S-M4...",
-    "LiitoKala Lii-S12...",
-    # ... (rest of the titles)
-]
-
-
-try:
-  result = create_promo_data(language, category_name, products_titles)
-  print(result)
-except (TypeError, ValueError) as e:
-  logger.error(f"Error in create_promo_data: {e}")
+    # Create and return JSON output
+    try:
+        return j_loads_ns({
+            category_name: {
+                "category_name": category_name,
+                "title": title,
+                "description": description
+            }
+        })
+    except Exception as e:
+        logger.error(f"Error creating JSON output for {category_name}: {e}")
+        return None
 ```

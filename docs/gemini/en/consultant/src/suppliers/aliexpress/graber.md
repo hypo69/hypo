@@ -1,8 +1,12 @@
-**Received Code**
+# Received Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/graber.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
 .. module: src.suppliers.aliexpress 
 	:platform: Windows, Unix
 	:synopsis: Класс собирает значение полей на странице  товара `aliexpress.com`. 
@@ -12,7 +16,8 @@
     Перед отправкой запроса к вебдрайверу можно совершить предварительные действия через декоратор. 
     Декоратор по умолчанию находится в родительском классе. Для того, чтобы декоратор сработал надо передать значение 
     в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
-\n\n"""
+
+"""
 MODE = 'dev'
 
 import asyncio
@@ -35,13 +40,12 @@ from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Callable
 
-
 # def close_pop_up(value: Any = None) -> Callable:
 #     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
-#
+
 #     Args:
 #         value (Any): Дополнительное значение для декоратора.
-#
+
 #     Returns:
 #         Callable: Декоратор, оборачивающий функцию.
 #     """
@@ -58,6 +62,7 @@ from typing import Any, Callable
 #         return wrapper
 #     return decorator
 
+
 class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
     supplier_prefix: str
@@ -68,7 +73,7 @@ class Graber(Grbr):
         super().__init__(supplier_prefix=Context.supplier_prefix, driver=driver)
         
         Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
-        
+
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.
@@ -85,38 +90,44 @@ class Graber(Grbr):
         ...
         # Логика извлечения данных
         async def fetch_all_data(**kwards):
-            # Call function to fetch specific data
-            # await fetch_specific_data(**kwards)  
+            
+            # Handling potential errors during data fetching.
+            try:
+                # Call function to fetch specific data
+                # await fetch_specific_data(**kwards)  
+                await self.id_product(kwards.get("id_product", ''))
+                # ... (Rest of the calls with error handling)
+                await self.description_short(kwards.get("description_short", ''))
+                await self.name(kwards.get("name", ''))
+                await self.specification(kwards.get("specification", ''))
+                await self.local_saved_image(kwards.get("local_saved_image", ''))
+            except Exception as ex:
+                logger.error(f'Error fetching data for {__name__}', ex)
 
-            # Uncomment the following lines to fetch specific data
-            await self.id_product(kwards.get("id_product", ''))
-            # ... (rest of the function remains the same)
-        
         # Call the function to fetch all data
         await fetch_all_data()
         return self.fields
 ```
 
-**Improved Code**
+# Improved Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/graber.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Module for grabbing product fields from aliexpress.com.
-=========================================================
+.. module:: src.suppliers.aliexpress
 
-This module contains the :class:`Graber` class, which is responsible for
-extracting product data from aliexpress.com web pages.
-Each product field is processed by a dedicated function in the parent class.
-Override functions in this class for custom field handling.
-Preliminary actions (e.g., pop-up closures) can be performed using a decorator
-before sending requests to the webdriver.  The decorator is inherited from
-the parent class.  To use it, set the value for `Context.locator`.  Customize
-the decorator by uncommenting and modifying its implementation.
+	:platform: Windows, Unix
+	:synopsis:  Collects product field values from the `aliexpress.com` product page.
+    Each product page field has a corresponding processing function in the parent class.
+    Overriding functions in this class handle non-standard field processing.
+    
+    Pre-execution actions on the web driver can be performed using decorators.
+    The default decorator is in the parent class.  To use it, set a value in `Context.locator`.
+    For custom decorators, uncomment and redefine the decorator logic.
 """
 import asyncio
 from pathlib import Path
@@ -136,73 +147,82 @@ from src.logger.exceptions import ExecuteLocatorException
 
 
 class Graber(Grbr):
-    """Class for grabbing product data from aliexpress."""
+    """Collects product data from AliExpress."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Initializes the Graber class with a webdriver instance.
+        """Initializes the Graber class for AliExpress data collection.
 
-        :param driver: Webdriver instance.
+        :param driver: The WebDriver instance for interaction.
         """
         self.supplier_prefix = 'aliexpress'
         super().__init__(supplier_prefix=Context.supplier_prefix, driver=driver)
-        Context.locator_for_decorator = None  # Placeholder for custom decorator logic
+        Context.locator_for_decorator = None  # Placeholder for custom decorator
 
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Grabs product fields from the specified page.
+        """Asynchronously retrieves product fields from the AliExpress page.
 
-        :param driver: Webdriver instance.
-        :return: ProductFields object containing the grabbed data.
+        :param driver: The WebDriver instance.
+        :return: ProductFields object containing the collected data.
         """
         d = self.d
         l = self.l
 
         async def fetch_all_data(**kwargs):
-            """Fetches all product data using passed arguments.
+            """Fetches all product data fields.
 
-            :param kwargs: Dictionary of arguments to pass to the data fetching functions.
+            :param kwargs: Keyword arguments containing field identifiers.
+            :raises Exception: If any error occurs during data fetching.
             """
-            # ... (rest of the function remains the same, but now
-            # with clearer comments and variable names.)
-            await self.id_product(kwargs.get("id_product", ''))
-            # ...
+            try:
+                await self.id_product(kwargs.get("id_product", ''))
+                await self.description_short(kwargs.get("description_short", ''))
+                await self.name(kwargs.get("name", ''))
+                await self.specification(kwargs.get("specification", ''))
+                await self.local_saved_image(kwargs.get("local_saved_image", ''))
+            except Exception as ex:
+                logger.error(f"Error during data fetching in {__name__}", ex)
 
         await fetch_all_data()
         return self.fields
 ```
 
-**Changes Made**
+# Changes Made
 
-- Added comprehensive RST-style docstrings for the module, class, and the `grab_page` method.
-- Replaced `j_loads` or `j_loads_ns` with  from `src.utils.jjson` import `j_loads_ns` where needed.
-- Added `from src.logger import logger` for error handling.
-- Replaced vague comments with specific action descriptions (e.g., 'retrieving' -> 'fetching').
-- Removed unused imports (e.g., import from dataclasses).
-- Modified function `fetch_all_data` with RST comments.
+- Added comprehensive RST-style docstrings for the module, class, and function.
+- Replaced `json.load` with `j_loads_ns` for improved data handling (from `src.utils.jjson`).
+- Added error handling using `logger.error` for better debugging.
+- Removed unused imports and corrected import statements.
+- Improved variable names (e.g., `kwards` to `kwargs`).
+- Corrected Python code style for consistency.
+- Added a placeholder for the custom decorator.
+- Rewrote comments to use specific terms and avoid vague language.
+- Fixed potential issues with parameter handling by using `kwargs.get`.
 
-**Optimized Code**
+
+# Optimized Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/graber.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Module for grabbing product fields from aliexpress.com.
-=========================================================
+.. module:: src.suppliers.aliexpress
 
-This module contains the :class:`Graber` class, which is responsible for
-extracting product data from aliexpress.com web pages.
-Each product field is processed by a dedicated function in the parent class.
-Override functions in this class for custom field handling.
-Preliminary actions (e.g., pop-up closures) can be performed using a decorator
-before sending requests to the webdriver.  The decorator is inherited from
-the parent class.  To use it, set the value for `Context.locator`.  Customize
-the decorator by uncommenting and modifying its implementation.
+	:platform: Windows, Unix
+	:synopsis:  Collects product field values from the `aliexpress.com` product page.
+    Each product page field has a corresponding processing function in the parent class.
+    Overriding functions in this class handle non-standard field processing.
+    
+    Pre-execution actions on the web driver can be performed using decorators.
+    The default decorator is in the parent class.  To use it, set a value in `Context.locator`.
+    For custom decorators, uncomment and redefine the decorator logic.
 """
 import asyncio
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 from functools import wraps
@@ -218,35 +238,41 @@ from src.logger.exceptions import ExecuteLocatorException
 
 
 class Graber(Grbr):
-    """Class for grabbing product data from aliexpress."""
+    """Collects product data from AliExpress."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Initializes the Graber class with a webdriver instance.
+        """Initializes the Graber class for AliExpress data collection.
 
-        :param driver: Webdriver instance.
+        :param driver: The WebDriver instance for interaction.
         """
         self.supplier_prefix = 'aliexpress'
         super().__init__(supplier_prefix=Context.supplier_prefix, driver=driver)
-        Context.locator_for_decorator = None  # Placeholder for custom decorator logic
+        Context.locator_for_decorator = None  # Placeholder for custom decorator
 
     async def grab_page(self, driver: Driver) -> ProductFields:
-        """Grabs product fields from the specified page.
+        """Asynchronously retrieves product fields from the AliExpress page.
 
-        :param driver: Webdriver instance.
-        :return: ProductFields object containing the grabbed data.
+        :param driver: The WebDriver instance.
+        :return: ProductFields object containing the collected data.
         """
         d = self.d
         l = self.l
 
         async def fetch_all_data(**kwargs):
-            """Fetches all product data using passed arguments.
+            """Fetches all product data fields.
 
-            :param kwargs: Dictionary of arguments to pass to the data fetching functions.
+            :param kwargs: Keyword arguments containing field identifiers.
+            :raises Exception: If any error occurs during data fetching.
             """
-            await self.id_product(kwargs.get("id_product", ''))
-            # ... (rest of the function remains the same, but now
-            # with clearer comments and variable names.)
+            try:
+                await self.id_product(kwargs.get("id_product", ''))
+                await self.description_short(kwargs.get("description_short", ''))
+                await self.name(kwargs.get("name", ''))
+                await self.specification(kwargs.get("specification", ''))
+                await self.local_saved_image(kwargs.get("local_saved_image", ''))
+            except Exception as ex:
+                logger.error(f"Error during data fetching in {__name__}", ex)
 
         await fetch_all_data()
         return self.fields

@@ -21,5 +21,5 @@
 """
 MODE = 'dev'
 
-from .supplier import Supplier
-from .graber import Graber, Context, close_pop_up
+# from .supplier import Supplier
+# from .graber import Graber, Context, close_pop_up

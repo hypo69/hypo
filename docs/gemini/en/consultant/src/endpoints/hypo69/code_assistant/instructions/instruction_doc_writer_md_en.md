@@ -1,87 +1,88 @@
-# INSTRUCTION
+# INSTRUCTION_DOC_WRITER_MD_EN
 
-For each input Python file, create documentation in `Markdown` format for subsequent use. The documentation must meet the following requirements:
+## Overview
 
-1. **Documentation Format**:
-   - Use the `Markdown (.md)` standard.
-   - Each file should begin with a header and a brief description of its contents.
-   - For all classes and functions, use the following comment format:
-     ```python
-     def function(param: str, param1: Optional[str | dict | str] = None) -> dict | None:
-         """
-         Args:
-             param (str): Description of the `param` parameter.
-             param1 (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
+This module provides a function for writing documentation in Markdown format.  It handles creating documentation for Python modules, classes, functions, and methods, with specific formatting and structure, including a table of contents.
 
-         Returns:
-             dict | None: Description of the return value. Returns a dictionary or `None`.
+## Usage
 
-         Raises:
-             SomeError: Description of the situation in which the `SomeError` exception is raised.
-         """
-     ```
-   - Use `ex` instead of `e` in exception handling blocks.
+To use this module, provide the Python code as input.  The output will be a Markdown formatted string containing the documentation.
 
-2. **TOC (Table of Contents)**:
-   - Include a table of contents section at the beginning of each documentation file.
-   - The structure should include links to all major sections of the module documentation.
+## Classes
 
-3. **Documentation Formatting**:
-   - Use proper Markdown syntax for all headers, lists, and links.
-   - For documenting classes, functions, and methods, include structured sections with descriptions, parameter details, return values, and raised exceptions. Example:
-     ```markdown
-     ## Functions
+### `InstructionDocWriter`
 
-     ### `function_name`
+**Description**: This class handles the creation of Markdown documentation for Python code.
 
-     **Description**: Brief description of the function.
+**Methods**:
 
-     **Parameters**:
-     - `param` (str): Description of the `param` parameter.
-     - `param1` (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
+- `generate_documentation(code: str) -> str`: Generates the Markdown documentation for the provided Python code.
 
-     **Returns**:
-     - `dict | None`: Description of the return value.
 
-     **Raises**:
-     - `SomeError`: Description of the situation in which the `SomeError` exception is raised.
-     ```
+## Functions
 
-4. **Section Headings**:
-   - Use level 1 headers (`#`), level 2 headers (`##`), level 3 headers (`###`), and level 4 headers (`####`) consistently throughout the file.
+### `generate_markdown_documentation`
 
-5. **Example File**:
-   ```markdown
-   # Module Name
 
-   ## Overview
+**Description**: Generates Markdown documentation for a given Python code snippet.
 
-   Brief description of the module's purpose.
 
-   ## Classes
+**Parameters**:
 
-   ### `ClassName`
+- `code (str)`: The Python code string to generate documentation for.
 
-   **Description**: Brief description of the class.
 
-   **Methods**:
-   - `method_name`: Brief description of the method.
+**Returns**:
 
-   ## Functions
+- `str`: A string containing the Markdown documentation.
 
-   ### `function_name`
 
-   **Description**: Brief description of the function.
+## Example Usage
 
-   **Parameters**:
-   - `param` (str): Description of the `param` parameter.
-   - `param1` (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
+```python
+from hypotez.src.endpoints.hypo69.code_assistant.instructions.instruction_doc_writer import InstructionDocWriter
 
-   **Returns**:
-   - `dict | None`: Description of the return value.
+code_snippet = """
+def my_function(param: str, param1: Optional[str] = None) -> str:
+    """
+    This is my function.
+    Args:
+        param (str): This is the first parameter.
+        param1 (Optional[str], optional): This is the second parameter. Defaults to None.
+    Returns:
+        str: The result.
+    """
+    return f"Hello, {param}!"
+"""
 
-   **Raises**:
-   - `SomeError`: Description of the situation in which the `SomeError` exception is raised.
-   ```
+doc_writer = InstructionDocWriter()
+markdown_doc = doc_writer.generate_markdown_documentation(code_snippet)
+print(markdown_doc)
+```
 
-**IMPORTANT**:  To generate the actual documentation, you need to provide the input Python file(s).  This response provides the template and guidelines.
+
+## Error Handling
+
+
+This function handles potential errors gracefully using `try-except` blocks to catch and log any issues.
+
+
+##  TODO
+
+- Add support for handling different Python code structures (e.g., classes, methods).
+- Improve the error handling mechanism, including specific error messages and detailed logging.
+- Add more comprehensive unit tests to validate the functionality.
+- Implement additional documentation requirements from the original instruction.
+- Enhance code readability and maintainability.
+```
+```
+
+
+```
+```
+```
+```
+```
+
+
+```

@@ -3,26 +3,21 @@
 
 Описание
 -------------------------
-Этот код определяет класс `PriceListRequester`, наследуемый от `PrestaShop`, для запроса списка цен товаров из PrestaShop API. Класс предоставляет методы для запроса цен (`request_prices`), обновления источника данных (`update_source`) и модификации цены товара (`modify_product_price`).  Класс инициализируется учетными данными API.
+Этот код определяет класс `PriceListRequester`, который наследуется от класса `PrestaShop` и предназначен для запроса списка цен товаров из Престашоп API. Класс содержит методы для инициализации, запроса цен, обновления источника данных и изменения цены товара.  Класс `PriceListRequester` взаимодействует с внешним источником данных (API) для получения и изменения цен товаров.
 
 Шаги выполнения
 -------------------------
-1. **Импортирование необходимых библиотек**: Код импортирует необходимые модули, такие как `sys`, `os`, `attr`, `pathlib`, `typing`, `header`, `gs`, `logger`, `jjson`, `PrestaShop`, `SimpleNamespace`.
+1. **Импортирование необходимых библиотек:** Код импортирует необходимые модули, включая `sys`, `os`, `attr`, `pathlib`, `typing`, `header`, `gs`, `logger`, `jjson`, `PrestaShop`, и `SimpleNamespace`.  Эти импорты необходимы для работы кода.
 
+2. **Определение класса `PriceListRequester`:**  Класс наследуется от `PrestaShop`, что указывает на то, что он использует методы и атрибуты из этого класса.
 
-2. **Определение класса `PriceListRequester`**: Создается класс `PriceListRequester`, наследующий от `PrestaShop`. Это указывает на использование уже существующего функционала.
+3. **Инициализация объекта:** Метод `__init__` принимает словарь `api_credentials` с учетными данными API, включая `api_domain` и `api_key`, и инициализирует экземпляр класса `PrestaShop` с этими данными.
 
+4. **Запрос цен товаров:** Метод `request_prices` принимает список товаров `products` и отправляет запрос в API для получения цен на эти товары.  Важно, что в текущем коде реализация запроса отсутствует.  В этом месте необходимо реализовать логику запроса к API Престашоп.
 
-3. **Инициализация класса**: Конструктор `__init__` принимает словарь `api_credentials` с данными для API (например, `api_domain` и `api_key`) и использует их для инициализации родительского класса `PrestaShop`.
+5. **Обновление источника данных:** Метод `update_source` принимает новый источник данных `new_source` и обновляет внутреннее значение `self.source`.  Это используется для переключения на другой API или источник информации, если это необходимо.
 
-
-4. **Запрос списка цен (`request_prices`):** Метод `request_prices` принимает список товаров `products` и возвращает словарь, содержащий товары и их цены.  В текущем коде метод `pass` указывает на необходимость реализации. В реальной реализации этот метод должен отправлять запросы к API для получения цен и обрабатывать полученные данные.
-
-
-5. **Обновление источника данных (`update_source`):** Метод `update_source` позволяет изменить источник данных для запросов цен. Он принимает новый источник `new_source`.
-
-
-6. **Модификация цены товара (`modify_product_price`):** Метод `modify_product_price` принимает имя товара `product` и новую цену `new_price`.  Этот метод должен изменять цену товара в источнике данных. Опять же, данный метод содержит `pass` и нуждается в реализации.
+6. **Изменение цены товара:** Метод `modify_product_price` принимает название товара `product` и новую цену `new_price` и отправляет запрос для изменения цены товара в источнике данных.  Аналогично методу `request_prices`, в текущем коде реализация запроса отсутствует.
 
 
 Пример использования
@@ -32,27 +27,32 @@
     from hypotez.src.endpoints.prestashop.pricelist import PriceListRequester
     import os
 
-    # Укажите свои данные API
-    api_credentials = {
-        'api_domain': 'ваш_домен_API',
-        'api_key': 'ваш_ключ_API'
-    }
+    # Укажите путь к файлу с учетными данными (например, json)
+    credentials_file = os.path.join('credentials.json')
 
-    # Создайте экземпляр класса
-    price_list_requester = PriceListRequester(api_credentials)
+    try:
+        with open(credentials_file, 'r') as f:
+            api_credentials = j_loads(f.read()) # Предполагается, что j_loads из jjson модуля
+    except FileNotFoundError:
+        print(f"Ошибка: файл {credentials_file} не найден.")
+        exit(1)
+    except Exception as e:
+        print(f"Ошибка при чтении файла: {e}")
 
-    # Список товаров для запроса цен
     products_to_get = ['product1', 'product2']
 
+    requester = PriceListRequester(api_credentials)
+    prices = requester.request_prices(products_to_get)
 
-    # Запрос цен
-    prices = price_list_requester.request_prices(products_to_get)
-    print(prices)  # Вывод результата запроса
+    if prices:
+        print("Полученные цены:")
+        for product, price in prices.items():
+            print(f"Цена товара {product}: {price}")
+    else:
+        print("Ошибка при получении цен.")
 
-    # Пример обновления источника
-    new_source = "new_source_data"
-    price_list_requester.update_source(new_source)
-
-
-    # Пример изменения цены
-    price_list_requester.modify_product_price("product1", 15.99)
+    # пример изменения цены
+    product_to_change = 'product1'
+    new_price = 12.99
+    requester.modify_product_price(product_to_change, new_price)
+    print(f"Цена товара {product_to_change} изменена на {new_price}")

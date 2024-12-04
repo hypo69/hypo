@@ -1,38 +1,46 @@
-Как использовать этот блок кода
-=========================================================================================
+Как использовать класс PrestaShopShop
+========================================================================================
 
 Описание
 -------------------------
-Этот код определяет класс `PrestaShopShop`, наследуемый от класса `PrestaShop`.  Он предназначен для работы с магазинами PrestaShop и инициализирует соединение с API PrestaShop.  Класс проверяет наличие необходимых параметров для подключения (api_domain, api_key) и выбрасывает исключение `ValueError`, если они отсутствуют.
+Класс `PrestaShopShop` предоставляет методы для взаимодействия с магазинами PrestaShop. Он расширяет базовый класс `PrestaShop`, добавляя специфические методы для работы с магазинами.  Класс инициализируется с параметрами доступа к API, такими как домен и ключ API.  Он проверяет наличие необходимых параметров и, при их отсутствии, генерирует ошибку.
 
 Шаги выполнения
 -------------------------
-1. Импортирует необходимые модули: `SimpleNamespace`, `Optional`, `header`, `gs`, `logger`, `j_loads`, `PrestaShop`, `PrestaShopException`, `Path`, `attr`, `sys`, `os`.
-2. Определяет класс `PrestaShopShop`, наследующийся от `PrestaShop`.
-3. Определяет конструктор `__init__` класса `PrestaShopShop`.
-4. Если `credentials` (словарь или `SimpleNamespace`) переданы, то извлекает значения `api_domain` и `api_key` из `credentials`, используя метод `get()`. Это позволяет использовать `credentials` в качестве источника параметров подключения.
-5. Проверяет, что `api_domain` и `api_key` не пусты. Если они отсутствуют, выбрасывается исключение `ValueError`.
-6. Вызывает конструктор родительского класса `PrestaShop` с полученными значениями `api_domain` и `api_key`. Это устанавливает соединение с API PrestaShop.
+1. **Импортирование необходимых модулей**:  Код импортирует необходимые модули, такие как `SimpleNamespace`, `Optional`, `PrestaShop`,  `PrestaShopException`, и другие вспомогательные модули.
+
+
+2. **Инициализация класса `PrestaShopShop`**:  Класс `PrestaShopShop` принимает параметры для инициализации:
+   - `credentials`: Словарь или объект `SimpleNamespace`, содержащий параметры доступа (`api_domain`, `api_key`).
+   - `api_domain`: Домен API.
+   - `api_key`: Ключ API.
+
+   Если параметр `credentials` передан, значения `api_domain` и `api_key` берутся из него.
+
+3. **Проверка обязательных параметров**:  Код проверяет, что оба параметра `api_domain` и `api_key` установлены. Если нет, генерируется исключение `ValueError`.
+
+4. **Вызов конструктора родительского класса**:  Если проверка пройдена, инициализируется родительский класс `PrestaShop`, передавая в него значения `api_domain` и `api_key`.
+
 
 Пример использования
 -------------------------
 .. code-block:: python
 
-    from hypotez.src.endpoints.prestashop.shop import PrestaShopShop
     from types import SimpleNamespace
+    from hypotez.src.endpoints.prestashop.shop import PrestaShopShop
     
-    # Пример использования credentials в виде SimpleNamespace
-    credentials = SimpleNamespace(api_domain="ваш_домен", api_key="ваш_ключ")
+    # Пример использования с dict
+    credentials = {'api_domain': 'your_api_domain', 'api_key': 'your_api_key'}
+    shop = PrestaShopShop(credentials=credentials)
+
+    # Пример использования с SimpleNamespace
+    credentials = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
+    shop = PrestaShopShop(credentials=credentials)
+
+    # Обратите внимание, что вы должны заменить 'your_api_domain' и 'your_api_key' на свои реальные данные.
     
     try:
-        shop_client = PrestaShopShop(credentials=credentials)
-        # Далее можно использовать shop_client для взаимодействия с API PrestaShop
-        # Например, shop_client.get_products()
+        # Теперь вы можете использовать методы класса PrestaShopShop, например, для запросов к API магазина.
+        # ... ваш код для работы с API PrestaShop ...
     except ValueError as e:
         print(f"Ошибка: {e}")
-        
-    # Пример без использования credentials, передавая параметры напрямую
-    try:
-      shop_client2 = PrestaShopShop(api_domain="ваш_домен", api_key="ваш_ключ")
-    except ValueError as e:
-      print(f"Ошибка: {e}")

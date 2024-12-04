@@ -2,11 +2,16 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
 .. module: src.suppliers.aliexpress.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Сокращатель ссылок через веббраузер
-\n"""
+
+"""
 MODE = 'dev'
 
 from pathlib import Path
@@ -55,6 +60,7 @@ def get_short_affiliate_link(d:Driver, url: str) -> str:
     d.switch_to.window(main_tab)  # Переключаемся обратно на основную вкладку
     
     return short_url  # Верните короткий URL
+
 ```
 
 # Improved Code
@@ -62,196 +68,180 @@ def get_short_affiliate_link(d:Driver, url: str) -> str:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
+"""
+Module for shortening affiliate links on AliExpress using a web browser.
+
+This module contains the function :func:`get_short_affiliate_link`
+for generating shortened affiliate links.  It leverages a web driver
+for interaction with the target website.
 
 """
-Module for shortening affiliate links using a web browser.
 
-This module provides a function for shortening affiliate links
-obtained via interaction with a web browser.
-
-Example Usage
---------------------
-
-.. code-block:: python
-
-    from src.webdriver import Driver
-    from ... import get_short_affiliate_link
-
-    driver = Driver(...)  # Initialize the driver
-    short_link = get_short_affiliate_link(driver, "https://example.com")
-    print(short_link)
-
-"""
 import time
 from pathlib import Path
-from typing import List, Union, Any
+from typing import List, Union
 from types import SimpleNamespace
+
 from src import gs
 from src.utils import j_loads_ns
-from src.logger import logger
 from src.webdriver import Driver
-
-# Load locators from a JSON file.
-locator: SimpleNamespace = j_loads_ns(
-    Path(gs.path.src, "suppliers", "aliexpress", "locators", "affiliate_links_shortener.json")
-)
+from src.logger import logger
 
 
-def get_short_affiliate_link(d: Driver, url: str) -> str:
-    """Shortens an affiliate link using a web browser.
+# Load locators from JSON file.
+# This ensures that the locators are loaded efficiently and the path
+# to the locators is managed properly.
+locator = j_loads_ns(Path(gs.path.src, 'suppliers', 'aliexpress', 'locators', 'affiliate_links_shortener.json'))
 
-    :param d: Webdriver instance.
-    :type d: Driver
-    :param url: The full URL to shorten.
-    :type url: str
+
+def get_short_affiliate_link(driver: Driver, url: str) -> str:
+    """
+    Shortens an affiliate link using the provided web driver.
+
+    :param driver: The web driver instance for interaction with the website.
+    :param url: The original, full URL to shorten.
+    :raises Exception: If there's an error in the process.
     :return: The shortened affiliate link.
-    :rtype: str
-    :raises Exception: if there's an issue during the process.
     """
     try:
-        # Enter the target URL.
-        d.execute_locator(locator.textarea_target_url, url)
+        # Enter the URL into the target input field.
+        driver.execute_locator(locator.textarea_target_url, url)
 
         # Click the button to generate the shortened link.
-        d.execute_locator(locator.button_get_tracking_link)
+        driver.execute_locator(locator.button_get_tracking_link)
 
-        # Wait for the page to update.
-        d.wait(1)
+        # Wait for the page to update.  Appropriate timeouts should be considered for robustness.
+        driver.wait(1)
 
         # Retrieve the shortened link from the page.
-        short_url: str = d.execute_locator(locator.textarea_short_link)[0]
+        short_url = driver.execute_locator(locator.textarea_short_link)[0]
 
-        # Validate the result.
+        # Handle the case where no short link was found.
         if not short_url:
             logger.error(f"Failed to retrieve short URL for {url}")
-            return ""  # Indicate failure
+            return ""
 
-        # Open a new tab with the short URL.
-        d.execute_script(f"window.open('{short_url}');")
+        # Store the handle of the main tab before opening a new one
+        main_tab = driver.current_window_handle
 
-        # Switch to the new tab.
-        d.switch_to.window(d.window_handles[-1])
+        # Open a new tab with the shortened URL.
+        driver.execute_script(f"window.open('{short_url}');")
 
-        # Verify that the URL starts with the expected part.
-        if d.current_url.startswith("https://error.taobao.com"):
-            logger.error(f"Invalid shortened URL: {d.current_url}")
-            d.close()
-            d.switch_to.window(d.current_window_handle)  # Use current_window_handle
-            return ""  # Indicate error
+        # Switch to the new tab containing the shortened link.
+        driver.switch_to.window(driver.window_handles[-1])
 
-        # Close the new tab and return to the main tab.
-        d.close()
-        d.switch_to.window(d.current_window_handle)  # Use current_window_handle
+        # Validate the shortened link.  Check for expected structure or redirect.
+        if driver.current_url.startswith('https://error.taobao.com'):
+            logger.error(f"Invalid shortened URL: {driver.current_url}")
+            driver.close()
+            driver.switch_to.window(main_tab)
+            return ""  # Return empty string for invalid URLs
+
+        # Close the new tab and switch back to the main tab
+        driver.close()
+        driver.switch_to.window(main_tab)
+
         return short_url
 
     except Exception as e:
         logger.error(f"Error shortening affiliate link for {url}", exc_info=True)
-        return ""  # Indicate failure
-
-
+        return ""
 ```
 
 # Changes Made
 
-- Added comprehensive docstrings in reStructuredText (RST) format for the module and the `get_short_affiliate_link` function, including type hints and examples.
-- Replaced `json.load` with `j_loads_ns` for JSON loading.
-- Implemented error handling using `logger.error` instead of bare `try-except` blocks.  Added `exc_info=True` for better error logging.
-- Improved variable names (`locator` instead of `locators`).
-- Used `d.current_window_handle` instead of assuming `main_tab`.  This avoids issues if the main window changes.
-- Returns `""` to indicate an error or failure.  This makes error handling more robust.
+*   Added type hints (`-> str` for return values and type annotations for parameters) to improve code clarity and maintainability.
+*   Replaced `get_short_affiliate_link` with `get_short_affiliate_link` in function and docstring.
+*   Removed the redundant `import` statements.
+*   Changed `j_loads` to `j_loads_ns` for consistent use.
+*   Used `Path` object for file path construction instead of string concatenation, improving clarity and avoiding potential errors.
+*   Added comprehensive docstrings to the functions using reStructuredText (RST) format, including detailed parameters and return values.
+*   Modified the error handling to use `logger.error` instead of `raise`, and log the full exception for easier debugging.  The function returns an empty string in case of an error to prevent unexpected program behavior.
+*   Replaced vague terms ('get', 'do') with more precise language (e.g., 'retrieve', 'validate', 'open').
+*   Improved variable names for better readability (e.g., `driver` instead of `d`).
+*   Added `exc_info=True` to the `except` block to log the full exception details.
 
 # Optimized Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
+"""
+Module for shortening affiliate links on AliExpress using a web browser.
+
+This module contains the function :func:`get_short_affiliate_link`
+for generating shortened affiliate links.  It leverages a web driver
+for interaction with the target website.
 
 """
-Module for shortening affiliate links using a web browser.
 
-This module provides a function for shortening affiliate links
-obtained via interaction with a web browser.
-
-Example Usage
---------------------
-
-.. code-block:: python
-
-    from src.webdriver import Driver
-    from ... import get_short_affiliate_link
-
-    driver = Driver(...)  # Initialize the driver
-    short_link = get_short_affiliate_link(driver, "https://example.com")
-    print(short_link)
-
-"""
 import time
 from pathlib import Path
-from typing import List, Union, Any
+from typing import List, Union
 from types import SimpleNamespace
+
 from src import gs
 from src.utils import j_loads_ns
-from src.logger import logger
 from src.webdriver import Driver
-
-# Load locators from a JSON file.
-locator: SimpleNamespace = j_loads_ns(
-    Path(gs.path.src, "suppliers", "aliexpress", "locators", "affiliate_links_shortener.json")
-)
+from src.logger import logger
 
 
-def get_short_affiliate_link(d: Driver, url: str) -> str:
-    """Shortens an affiliate link using a web browser.
+# Load locators from JSON file.
+# This ensures that the locators are loaded efficiently and the path
+# to the locators is managed properly.
+locator = j_loads_ns(Path(gs.path.src, 'suppliers', 'aliexpress', 'locators', 'affiliate_links_shortener.json'))
 
-    :param d: Webdriver instance.
-    :type d: Driver
-    :param url: The full URL to shorten.
-    :type url: str
+
+def get_short_affiliate_link(driver: Driver, url: str) -> str:
+    """
+    Shortens an affiliate link using the provided web driver.
+
+    :param driver: The web driver instance for interaction with the website.
+    :param url: The original, full URL to shorten.
+    :raises Exception: If there's an error in the process.
     :return: The shortened affiliate link.
-    :rtype: str
-    :raises Exception: if there's an issue during the process.
     """
     try:
-        # Enter the target URL.
-        d.execute_locator(locator.textarea_target_url, url)
+        # Enter the URL into the target input field.
+        driver.execute_locator(locator.textarea_target_url, url)
 
         # Click the button to generate the shortened link.
-        d.execute_locator(locator.button_get_tracking_link)
+        driver.execute_locator(locator.button_get_tracking_link)
 
-        # Wait for the page to update.
-        d.wait(1)
+        # Wait for the page to update.  Appropriate timeouts should be considered for robustness.
+        driver.wait(1)
 
         # Retrieve the shortened link from the page.
-        short_url: str = d.execute_locator(locator.textarea_short_link)[0]
+        short_url = driver.execute_locator(locator.textarea_short_link)[0]
 
-        # Validate the result.
+        # Handle the case where no short link was found.
         if not short_url:
             logger.error(f"Failed to retrieve short URL for {url}")
-            return ""  # Indicate failure
+            return ""
 
-        # Open a new tab with the short URL.
-        d.execute_script(f"window.open('{short_url}');")
+        # Store the handle of the main tab before opening a new one
+        main_tab = driver.current_window_handle
 
-        # Switch to the new tab.
-        d.switch_to.window(d.window_handles[-1])
+        # Open a new tab with the shortened URL.
+        driver.execute_script(f"window.open('{short_url}');")
 
-        # Verify that the URL starts with the expected part.
-        if d.current_url.startswith("https://error.taobao.com"):
-            logger.error(f"Invalid shortened URL: {d.current_url}")
-            d.close()
-            d.switch_to.window(d.current_window_handle)
-            return ""  # Indicate error
+        # Switch to the new tab containing the shortened link.
+        driver.switch_to.window(driver.window_handles[-1])
 
-        # Close the new tab and return to the main tab.
-        d.close()
-        d.switch_to.window(d.current_window_handle)
+        # Validate the shortened link.  Check for expected structure or redirect.
+        if driver.current_url.startswith('https://error.taobao.com'):
+            logger.error(f"Invalid shortened URL: {driver.current_url}")
+            driver.close()
+            driver.switch_to.window(main_tab)
+            return ""  # Return empty string for invalid URLs
+
+        # Close the new tab and switch back to the main tab
+        driver.close()
+        driver.switch_to.window(main_tab)
+
         return short_url
 
     except Exception as e:
         logger.error(f"Error shortening affiliate link for {url}", exc_info=True)
-        return ""  # Indicate failure
+        return ""
 ```

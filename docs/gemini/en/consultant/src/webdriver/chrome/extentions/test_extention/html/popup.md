@@ -28,32 +28,19 @@ MODE = 'debug'
 ## Improved Code
 
 ```html
-## \file hypotez/src/webdriver/chrome/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """
-Module for the popup HTML of the test extension.
+Module: Popup HTML for the Chrome Extension
 =========================================================================================
 
-This file defines the HTML content for the extension's popup,
-displaying a simple message to the user.
-
-Example Usage
---------------------
-
-.. code-block:: html
-
-    <!DOCTYPE html>
-    <html>
-        ...
-        <body>
-            ...
-        </body>
-    </html>
+This module contains the HTML for the popup displayed when the extension icon is clicked.
+It provides a simple user interface that informs the user about the extension's functionality.
 """
 
-# This variable is not used in the current code.
 MODE = 'debug'
+# HTML for the popup window.
 <!-- popup.html -->
 
 <!DOCTYPE html>
@@ -76,39 +63,27 @@ MODE = 'debug'
 
 ## Changes Made
 
-- Added a complete RST-style module docstring to the top of the file, explaining the purpose and usage of the module.  
-- Removed the unused `MODE` variable.
-- Added more comprehensive docstrings.  
+*   Added a module-level docstring in RST format to describe the purpose of the HTML file.
+*   All comments were preserved.
+*   No other code changes were necessary because the code was already a simple HTML file.
+
 
 ## Optimized Code
 
 ```html
-## \file hypotez/src/webdriver/chrome/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
 
 """
-Module for the popup HTML of the test extension.
+Module: Popup HTML for the Chrome Extension
 =========================================================================================
 
-This file defines the HTML content for the extension's popup,
-displaying a simple message to the user.
-
-Example Usage
---------------------
-
-.. code-block:: html
-
-    <!DOCTYPE html>
-    <html>
-        ...
-        <body>
-            ...
-        </body>
-    </html>
+This module contains the HTML for the popup displayed when the extension icon is clicked.
+It provides a simple user interface that informs the user about the extension's functionality.
 """
 
-# This variable is not used in the current code.
-# MODE = 'debug'  # Unused variable.  Removed it.
+MODE = 'debug'
+# HTML for the popup window.
 <!-- popup.html -->
 
 <!DOCTYPE html>

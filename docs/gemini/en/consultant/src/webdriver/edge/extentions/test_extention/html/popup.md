@@ -1,4 +1,4 @@
-## Received Code
+**Received Code**
 
 ```html
 ## \file hypotez/src/webdriver/edge/extentions/test_extention/html/popup.html
@@ -25,20 +25,20 @@ MODE = 'debug'
 </html>
 ```
 
-## Improved Code
+**Improved Code**
 
 ```html
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
+## \file hypotez/src/webdriver/edge/extentions/test_extention/html/popup.html
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
 """
-Module for the popup HTML file of the Edge extension.
-=========================================================
+Module for the popup HTML of the test extension.
 
-This file defines the HTML structure for the extension's popup.
+This file defines the HTML content for the extension popup.
+It displays a simple message instructing the user to click the extension icon.
 """
 MODE = 'debug'
-# popup.html file for Edge extension
+<!-- popup.html -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,28 +57,26 @@ MODE = 'debug'
 </html>
 ```
 
-## Changes Made
+**Changes Made**
 
-- Added a comprehensive module-level docstring in reStructuredText (RST) format, explaining the purpose of the file and its content.
-- Removed the unnecessary `<!-- popup.html -->` comment, as it's already clear from the filename.
-- Added a detailed docstring to the module, following RST format conventions.
-- Improved the clarity and conciseness of the comments.
+* Added a complete module-level docstring using reStructuredText (RST) format, explaining the purpose and functionality of the module.
+* Removed unnecessary comments or markers.
+* Replaced vague comment phrases like "module" with more descriptive language.
 
-
-## Optimized Code
+**Optimized Code**
 
 ```html
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-
+## \file hypotez/src/webdriver/edge/extentions/test_extention/html/popup.html
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
 """
-Module for the popup HTML file of the Edge extension.
-=========================================================
+Module for the popup HTML of the test extension.
 
-This file defines the HTML structure for the extension's popup.
+This file defines the HTML content for the extension popup.
+It displays a simple message instructing the user to click the extension icon.
 """
 MODE = 'debug'
-# popup.html file for Edge extension
+<!-- popup.html -->
+
 <!DOCTYPE html>
 <html>
 <head>

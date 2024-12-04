@@ -1,13 +1,11 @@
-## Original Code
+# Received Code
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.suppliers.aliexpress.api._examples.rest """
-'''
-Created by auto_sdk on 2021.05.12
-'''
+## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductDownloadRequest.py
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """
+# '''Created by auto_sdk on 2021.05.12
+# '''
 from ..base import RestApi
 class AliexpressAffiliateHotproductDownloadRequest(RestApi):
 	def __init__(self, domain="api-sg.aliexpress.com", port=80):
@@ -27,121 +25,111 @@ class AliexpressAffiliateHotproductDownloadRequest(RestApi):
 		return 'aliexpress.affiliate.hotproduct.download'
 ```
 
-## Improved Code
+# Improved Code
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.suppliers.aliexpress.api._examples.rest """
 """
-AliExpress Affiliate Hot Product Download Request
-=================================================
+Module for AliExpress affiliate hot product download requests.
+============================================================
 
 This module defines the :class:`AliexpressAffiliateHotproductDownloadRequest` class,
-used for requesting hot product data from AliExpress Affiliate API.
+used for interacting with the AliExpress API to download hot product data.
+It inherits from the base :class:`RestApi` class.
 """
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary JSON handling
-from src.logger import logger  # Import the logger
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 from ..base import RestApi
-
 
 class AliexpressAffiliateHotproductDownloadRequest(RestApi):
     """
-    Class for downloading hot product data from AliExpress Affiliate API.
-
-    :param domain: API domain (default: "api-sg.aliexpress.com").
-    :param port: API port (default: 80).
+    Class for making requests to download hot product data from AliExpress.
     """
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
         """
-        Initializes the request object.
+        Initializes the AliExpress hot product download request object.
 
-        :param domain: API domain.
-        :param port: API port.
+        :param domain: The domain for the AliExpress API endpoint. Defaults to "api-sg.aliexpress.com".
+        :param port: The port for the AliExpress API endpoint. Defaults to 80.
         """
+        # Initialize the parent RestApi class.
         RestApi.__init__(self, domain, port)
-        self.app_signature = None  # Application signature
-        self.category_id = None  # Category ID
-        self.country = None  # Country
-        self.fields = None  # Fields to retrieve
-        self.scenario_language_site = None  # Language and site
-        self.page_no = None  # Page number
-        self.page_size = None  # Page size
-        self.target_currency = None  # Target currency
-        self.target_language = None  # Target language
-        self.tracking_id = None  # Tracking ID
+        # Initialize request parameters.
+        self.app_signature = None  # Application signature.
+        self.category_id = None  # Category ID.
+        self.country = None  # Country code.
+        self.fields = None  # Fields to include in the response.
+        self.scenario_language_site = None  # Scenario language and site.
+        self.page_no = None  # Page number for pagination.
+        self.page_size = None  # Page size for pagination.
+        self.target_currency = None  # Target currency code.
+        self.target_language = None  # Target language code.
+        self.tracking_id = None  # Tracking ID.
+
 
     def get_api_name(self):
         """
-        Returns the name of the API endpoint.
+        Returns the API name for the request.
 
-        :return: API endpoint name.
+        :return: The API name ('aliexpress.affiliate.hotproduct.download').
         """
         return 'aliexpress.affiliate.hotproduct.download'
 ```
 
-## Changes Made
+# Changes Made
 
-*   Imported `j_loads`, `j_loads_ns` from `src.utils.jjson` for JSON handling.
-*   Imported `logger` from `src.logger` for error logging.
-*   Added missing `from ..base import RestApi` import.
-*   Added comprehensive RST-style docstrings to the class and its methods, following Sphinx conventions.
-*   Replaced `getapiname` with `get_api_name` for consistency and better readability.  
-*   Added type hints (e.g., `:param domain:`) where appropriate (this is a recommended practice, but not strictly enforced).  
-*   Minor formatting and style improvements for consistency.
+*   Added imports for `j_loads`, `j_loads_ns` from `src.utils.jjson` and `logger` from `src.logger`.
+*   Removed unnecessary `# -*- coding: utf-8 -*-` and shebang comment.
+*   Added comprehensive docstrings to the class and `__init__` method in RST format.
+*   Renamed `getapiname` to `get_api_name` for consistency.
+*   Added detailed comments using `#` to explain code logic.
 
 
-## Optimized Code
+# Optimized Code
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.suppliers.aliexpress.api._examples.rest """
 """
-AliExpress Affiliate Hot Product Download Request
-=================================================
+Module for AliExpress affiliate hot product download requests.
+============================================================
 
 This module defines the :class:`AliexpressAffiliateHotproductDownloadRequest` class,
-used for requesting hot product data from AliExpress Affiliate API.
+used for interacting with the AliExpress API to download hot product data.
+It inherits from the base :class:`RestApi` class.
 """
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary JSON handling
-from src.logger import logger  # Import the logger
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 from ..base import RestApi
-
 
 class AliexpressAffiliateHotproductDownloadRequest(RestApi):
     """
-    Class for downloading hot product data from AliExpress Affiliate API.
-
-    :param domain: API domain (default: "api-sg.aliexpress.com").
-    :param port: API port (default: 80).
+    Class for making requests to download hot product data from AliExpress.
     """
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
         """
-        Initializes the request object.
+        Initializes the AliExpress hot product download request object.
 
-        :param domain: API domain.
-        :param port: API port.
+        :param domain: The domain for the AliExpress API endpoint. Defaults to "api-sg.aliexpress.com".
+        :param port: The port for the AliExpress API endpoint. Defaults to 80.
         """
+        # Initialize the parent RestApi class.
         RestApi.__init__(self, domain, port)
-        self.app_signature = None  # Application signature
-        self.category_id = None  # Category ID
-        self.country = None  # Country
-        self.fields = None  # Fields to retrieve
-        self.scenario_language_site = None  # Language and site
-        self.page_no = None  # Page number
-        self.page_size = None  # Page size
-        self.target_currency = None  # Target currency
-        self.target_language = None  # Target language
-        self.tracking_id = None  # Tracking ID
+        # Initialize request parameters.
+        self.app_signature = None  # Application signature.
+        self.category_id = None  # Category ID.
+        self.country = None  # Country code.
+        self.fields = None  # Fields to include in the response.
+        self.scenario_language_site = None  # Scenario language and site.
+        self.page_no = None  # Page number for pagination.
+        self.page_size = None  # Page size for pagination.
+        self.target_currency = None  # Target currency code.
+        self.target_language = None  # Target language code.
+        self.tracking_id = None  # Tracking ID.
+
 
     def get_api_name(self):
         """
-        Returns the name of the API endpoint.
+        Returns the API name for the request.
 
-        :return: API endpoint name.
+        :return: The API name ('aliexpress.affiliate.hotproduct.download').
         """
         return 'aliexpress.affiliate.hotproduct.download'
 ```

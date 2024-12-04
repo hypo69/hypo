@@ -3,16 +3,18 @@
 
 Описание
 -------------------------
-Этот код проверяет, содержит ли строка(и) URL префикс `https://`. Если в строке присутствует только идентификатор продукта, то код создаёт полную URL-строку, добавляя префикс `https://`.  Функция `ensure_https` обрабатывает как одиночные URL-строки, так и списки таких строк.  Она вызывает вспомогательную функцию `ensure_https_single` для обработки каждой строки индивидуально. Функция `extract_prod_ids` (вероятно, из другого модуля) используется для извлечения идентификатора продукта из URL. В случае ошибки, например, если не удаётся извлечь идентификатор, логгируется сообщение об ошибке.
+Этот код проверяет, содержит ли строка(и) URL префикс "https://". Если входные данные представляют собой идентификатор продукта, то функция строит полный URL с префиксом "https://".  Функция `ensure_https` обрабатывает как одиночные строки, так и списки строк.  Внутренняя функция `ensure_https_single` обрабатывает одну строку, проверяя содержит ли она префикс, и при необходимости добавляя его. Если в строке находится идентификатор продукта, она формирует URL.
 
 Шаги выполнения
 -------------------------
 1. Функция `ensure_https` принимает на вход строку или список строк (`prod_ids`).
-2. Если вход – список, функция применяет `ensure_https_single` к каждой строке в списке и возвращает новый список обработанных строк.
-3. Если вход – строка, функция вызывает `ensure_https_single` для обработки этой строки.
-4. Функция `ensure_https_single` извлекает идентификатор продукта (`_prod_id`) из входной строки.
-5. Если идентификатор продукта найден, функция строит полную URL-строку вида `https://www.aliexpress.com/item/{_prod_id}.html` и возвращает её.
-6. В противном случае, если идентификатор продукта не найден, функция регистрирует ошибку с помощью `logger.error` и возвращает исходную строку без изменений.
+2. Если на вход подан список строк, то для каждой строки вызывается внутренняя функция `ensure_https_single`.
+3. Если на вход подана строка, то вызывается внутренняя функция `ensure_https_single`.
+4. Внутренняя функция `ensure_https_single` извлекает идентификатор продукта из входной строки с помощью функции `extract_prod_ids`.
+5. Если идентификатор продукта извлечен, функция формирует URL вида "https://www.aliexpress.com/item/{id}.html", где {id} - извлеченный идентификатор продукта.
+6. Если идентификатор продукта не найден, функция логирует ошибку и возвращает исходную строку без изменений.
+7. Функция возвращает модифицированную строку или список строк.
+
 
 Пример использования
 -------------------------
@@ -20,19 +22,17 @@
 
     from hypotez.src.suppliers.aliexpress.utils.ensure_https import ensure_https
 
-    # Пример с одной строкой:
+    # Пример с одиночной строкой (идентификатор продукта)
     url = "example_product_id"
     url_with_https = ensure_https(url)
     print(url_with_https)  # Output: https://www.aliexpress.com/item/example_product_id.html
 
-
-    # Пример со списком строк:
+    # Пример со списком строк
     urls = ["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html"]
     urls_with_https = ensure_https(urls)
     print(urls_with_https)  # Output: ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
 
-
-    # Пример с уже существующим https:
-    url_with_https = "https://www.example.com/item/example_product_id"
-    url_with_https = ensure_https(url_with_https)
-    print(url_with_https)  # Output: https://www.example.com/item/example_product_id
+    # Пример, когда на вход подаётся корректный URL
+    valid_url = "https://www.example.com/item/example_product_id"
+    valid_url_result = ensure_https(valid_url)
+    print(valid_url_result)  # Output: https://www.example.com/item/example_product_id

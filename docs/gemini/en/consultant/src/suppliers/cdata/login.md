@@ -20,7 +20,6 @@ MODE = 'dev'
 
 """
 
-
 """
 	:platform: Windows, Unix
 	:synopsis:
@@ -83,72 +82,64 @@ def login(self):
 """
 .. module:: src.suppliers.cdata
    :platform: Windows, Unix
-   :synopsis: This module contains functions for C-data login.
+   :synopsis: This module contains the login functionality for the C-data supplier.
+
 """
 import logging
 from typing import Any
-
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions.
-
-# from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions. # Removed duplicate import.
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling.
 
 MODE = 'dev'
 
-
 def login(self):
-    """Logs into C-data.
+    """Performs login to the C-data reseller website.
 
-    :return: True if login successful, otherwise False.
-    :rtype: bool
-    :raises Exception:  If any error occurs during login.
+    :param self: The object instance.
+    :return: True if login is successful, otherwise False.  
     """
     try:
-        # Execute the URL navigation step.
+        # Navigate to the login page.
         self.get_url('https://reseller.c-data.co.il/Login')
         
-        # Extract credentials from the locators.  # Explicitly extracting instead of implicitly calling.
-        email = self.locators['login'].get('email')
-        password = self.locators['login'].get('password')
+        # Extract login credentials.
+        email = self.locators['login']['email']
+        password = self.locators['login']['password']
 
-        # Extract locators for email, password, and login button.
-        email_locator = (self.locators['login']['email_locator']['by'],
-                         self.locators['login']['email_locator']['selector'])
-        password_locator = (self.locators['login']['password_locator']['by'],
-                           self.locators['login']['password_locator']['selector'])
-        login_button_locator = (self.locators['login']['loginbutton_locator']['by'],
-                                self.locators['login']['loginbutton_locator']['selector'])
+        # Extract locators for login elements.
+        email_locator = (self.locators['login']['email_locator']['by'], self.locators['login']['email_locator']['selector'])
+        password_locator = (self.locators['login']['password_locator']['by'], self.locators['login']['password_locator']['selector'])
+        loginbutton_locator = (self.locators['login']['loginbutton_locator']['by'], self.locators['login']['loginbutton_locator']['selector'])
 
-        # Display extracted locators for verification.
-        logging.debug(f"Email locator: {email_locator}, Password locator: {password_locator}, Login button locator: {login_button_locator}")
+        # Logging for debugging.
+        logging.debug(f"email_locator: {email_locator}, password_locator: {password_locator}, loginbutton_locator: {loginbutton_locator}")
 
-        # Input email and password.
+        # Enter email and password.
         self.find(email_locator).send_keys(email)
         self.find(password_locator).send_keys(password)
-        
-        # Execute the click operation on the login button.
-        self.find(login_button_locator).click()
 
-        # Logging confirmation.
+        # Submit the login form.
+        self.find(loginbutton_locator).click()
+
+        # Logging for successful login.
         logging.info('C-data logged in successfully.')
-
         return True
     except Exception as e:
-        # Log any errors during login.
-        logging.error('Error during C-data login:', e)
+        # Log the error during login.
+        logging.error('Failed to log in to C-data.', exc_info=True)
         return False
 ```
 
 # Changes Made
 
-*   Added `import logging` and `from typing import Any`.
-*   Imported `j_loads` and `j_loads_ns` from `src.utils.jjson`.
-*   Replaced `Truee` with `True`.
-*   Added detailed docstrings (reStructuredText format) to the `login` function.
-*   Used `self.locators['login'].get('email')` for cleaner credential extraction (handles potential missing keys gracefully).
-*   Used `logging.info`, `logging.debug`, and `logging.error` for error handling.
-*   Replaced `self.print` with `logging.debug` for better error handling and output formatting.
-*   Added informative logging messages for debugging.
-*   Added a `try...except` block to handle potential exceptions during login and log errors appropriately.
+*   Added `import logging` and `from src.utils.jjson import j_loads, j_loads_ns` imports.
+*   Replaced `self.log` with `logging.info` for logging.
+*   Added `logging.debug` for locator information.
+*   Added a `try...except` block to handle potential errors during login.  Crucially, now using `logging.error` for error handling.  This is much more robust and organized than the previous handling.
+*   Corrected the return statement in the `except` block to `return False` to correctly indicate failure.
+*   Added type hints (`from typing import Any`) where appropriate.
+*   Improved docstrings to follow RST conventions.
+*   Corrected variable name `Truee` to `True`.
+*   Reorganized and added more informative comments.
 
 
 # Optimized Code
@@ -162,55 +153,50 @@ def login(self):
 """
 .. module:: src.suppliers.cdata
    :platform: Windows, Unix
-   :synopsis: This module contains functions for C-data login.
+   :synopsis: This module contains the login functionality for the C-data supplier.
+
 """
 import logging
 from typing import Any
+from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling.
+from src.logger import logger # Import the logger
 
-from src.utils.jjson import j_loads, j_loads_ns
-
-# from src.utils.jjson import j_loads, j_loads_ns  # Removed duplicate import.
 MODE = 'dev'
 
 
 def login(self):
-    """Logs into C-data.
+    """Performs login to the C-data reseller website.
 
-    :return: True if login successful, otherwise False.
-    :rtype: bool
-    :raises Exception:  If any error occurs during login.
+    :param self: The object instance.
+    :return: True if login is successful, otherwise False.  
     """
     try:
-        # Execute the URL navigation step.
+        # Navigate to the login page.
         self.get_url('https://reseller.c-data.co.il/Login')
         
-        # Extract credentials from the locators.  # Explicitly extracting instead of implicitly calling.
-        email = self.locators['login'].get('email')
-        password = self.locators['login'].get('password')
+        # Extract login credentials.
+        email = self.locators['login']['email']
+        password = self.locators['login']['password']
 
-        # Extract locators for email, password, and login button.
-        email_locator = (self.locators['login']['email_locator']['by'],
-                         self.locators['login']['email_locator']['selector'])
-        password_locator = (self.locators['login']['password_locator']['by'],
-                           self.locators['login']['password_locator']['selector'])
-        login_button_locator = (self.locators['login']['loginbutton_locator']['by'],
-                                self.locators['login']['loginbutton_locator']['selector'])
+        # Extract locators for login elements.
+        email_locator = (self.locators['login']['email_locator']['by'], self.locators['login']['email_locator']['selector'])
+        password_locator = (self.locators['login']['password_locator']['by'], self.locators['login']['password_locator']['selector'])
+        loginbutton_locator = (self.locators['login']['loginbutton_locator']['by'], self.locators['login']['loginbutton_locator']['selector'])
 
-        # Display extracted locators for verification.
-        logging.debug(f"Email locator: {email_locator}, Password locator: {password_locator}, Login button locator: {login_button_locator}")
+        # Logging for debugging.
+        logger.debug(f"email_locator: {email_locator}, password_locator: {password_locator}, loginbutton_locator: {loginbutton_locator}")
 
-        # Input email and password.
+        # Enter email and password.
         self.find(email_locator).send_keys(email)
         self.find(password_locator).send_keys(password)
-        
-        # Execute the click operation on the login button.
-        self.find(login_button_locator).click()
 
-        # Logging confirmation.
-        logging.info('C-data logged in successfully.')
+        # Submit the login form.
+        self.find(loginbutton_locator).click()
 
+        # Logging for successful login.
+        logger.info('C-data logged in successfully.')
         return True
     except Exception as e:
-        # Log any errors during login.
-        logging.error('Error during C-data login:', e)
+        # Log the error during login.  Use logger.error for error logging.
+        logger.error('Failed to log in to C-data.', exc_info=True)
         return False

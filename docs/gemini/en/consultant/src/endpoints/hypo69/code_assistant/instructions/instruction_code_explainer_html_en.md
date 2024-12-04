@@ -9,69 +9,35 @@
 ## Algorithm
 
 ```
-<!-- Algorithm flowchart goes here.  Describe the code's execution steps as a flowchart.  Use text boxes to represent functions, variables, and data flow. -->
+(Describe the algorithm as a step-by-step flowchart here.  Explain how data flows between functions and classes.  Use clear and concise language.  Provide examples, if applicable.)
 ```
 
 ## Explanation
 
 ```
-<!-- Explanation goes here.  Explain the code's purpose, structure, and functionality.  Follow these sections:
+(Provide a detailed explanation of the code, including:
 
-**Imports:**  Describe each imported module and how they're used in the code.
-**Classes:**  Describe each class, its attributes, methods, and how they interact.
-**Functions:**  Describe each function, its inputs, outputs, and how they work together.
-**Variables:**  Describe each variable, its type, and how it's used.
-**Relationships with other parts of the project:** Explain how this code interacts with other modules or components.
-**Potential errors or areas for improvement:** Highlight any potential issues or ways to improve the code.
-
-
-Example:
-
-
-**Imports:**
-
-The code imports `json` from the standard library for handling JSON data.  This is a standard library import, but for consistent project structure, use `j_loads` or `j_loads_ns` from `src.utils.jjson` instead.
-
-
-**Classes:**
-
-The class `MyClass` is responsible for processing data. It has an attribute `data` to store the processed data and a method `process_data` to perform the processing.
-
-
-**Functions:**
-
-The function `process_data` reads the data from a file, processes it, and returns the processed data.  The processing logic should be described here in detail.
-
-
-**Variables:**
-
-`file_path` stores the path to the input file.  `processed_data` stores the resulting processed data.
-
-
-**Relationships with other parts of the project:**
-
-This code likely interacts with other parts of the project that depend on the processed data.   For example, it could be used in a data pipeline.
-
-
-**Potential errors or areas for improvement:**
-
-- The code currently uses the standard `json.load`, which should be replaced with `j_loads` or `j_loads_ns` from `src.utils.jjson`.
-- The code lacks clear docstrings for functions and classes, making it difficult to understand.  Missing comments suggest missing or unclear logic. -->
+* **Imports:**  Explain the purpose of each import and its relationship to other modules.
+* **Classes:** Describe the purpose, attributes, methods, and relations to other classes/components.
+* **Functions:** Explain the purpose, arguments, return values, and internal logic of each function.
+* **Variables:** Describe the types and usage of variables.
+* **Relationships with other parts of the project:** Explain how this code interacts with other parts of the application.
+* **Potential Errors or Improvements:** Identify any potential errors or areas for improvement in the code. Use specific examples to illustrate these points.
+)
 ```
 
-## Changes Made
+## Potential Improvements (TODO)
 
 ```
-<!-- List the changes made to the code. Include the line numbers and specific improvements.  Example:
+(List potential improvements in a TODO format.  Example:
 
-- Line 10: Replaced `json.load` with `j_loads` for improved data handling consistency.
-- Line 15: Added docstring to describe the function's purpose.
-- Line 20: Added error handling using `logger.error` instead of a generic `try-except` block. -->
+- TODO: Consider using a more efficient data structure for storing ...
+- TODO: Add input validation to prevent ...
+- TODO: Improve error handling by logging specific error messages and stack traces.
+- TODO: Refactor the code to improve readability and maintainability.
+)
 ```
 
-## Optimized Code
 
-```python
-# Optimized code with all improvements and comments.
-# Please provide the improved code here.  This should be the final, optimized code with docstrings and all fixes implemented.
+**NOTE:**  This is a template.  Please replace the bracketed sections with the actual content for the provided code snippet.  The specific analysis, algorithm description, and explanation will depend heavily on the content of the code.
 ```

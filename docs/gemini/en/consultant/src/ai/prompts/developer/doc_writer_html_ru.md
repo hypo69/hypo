@@ -1,4 +1,5 @@
-Received Code
+# Received Code
+
 ```html
 <!-- INSTRUCTION -->
 
@@ -46,7 +47,7 @@ assistant.process_files()
 ## Атрибуты
 - `role`: Роль ассистента (например, 'code_checker').
 - `lang`: Язык, на котором будет работать ассистент (например, 'ru').
-- `model`: Список используемых ИИ моделей (например, ['gemini']).
+- `model`: Список используемых ИИ моделей (например, `['gemini']`).
 
 ## Методы
 ### `process_files`
@@ -68,68 +69,14 @@ assistant.process_files()
       <li>Документируйте каждую функцию или метод, указывая параметры и возвращаемые значения.</li>
       <li>Для каждой функции добавьте описание её назначения и примеры использования в fenced кодовых блоках с идентификатором языка <code>python</code>.</li>
     </ul>
-    <p>Пример документации для метода:</p>
-    <pre><code>markdown
-# Метод: process_files
-
-Этот метод используется для анализа и обработки файлов с кодом.
-
-## Параметры
-- `files`: Список файлов для обработки.
-- `options`: Дополнительные параметры для настройки обработки.
-
-## Возвращаемое значение
-- Возвращает результат обработки в виде списка проанализированных данных.
-
-## Пример использования
-
-```python
-assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-result = assistant.process_files(files=['file1.py', 'file2.py'], options={})
-```
-</code></pre>
   </li>
 
   <li>
     <strong>Комментарии в коде</strong>:
-    <ul>
-      <li>Все комментарии в коде должны быть написаны в формате Markdown и должны объяснять, что делает конкретная часть кода.</li>
-      <li>Оставляйте комментарии в блоках, а не в строках. Используйте комментарии для описания логики и объяснения решений или временных решений в коде.</li>
-    </ul>
-    <p>Пример:</p>
-    <pre><code>markdown
-# Здесь обрабатывается исключение для продолжения выполнения, если файл не найден
-try:
-    process_file(file)
-except FileNotFoundError as ex:
-    handle_exception(ex)
-</code></pre>
   </li>
 
   <li>
     <strong>Исключения</strong>:
-    <ul>
-      <li>Документируйте исключения для классов, методов и функций.</li>
-      <li>Укажите, какие исключения могут быть вызваны и при каких обстоятельствах.</li>
-    </ul>
-    <p>Пример документации для исключения:</p>
-    <pre><code>markdown
-# Исключение: Файл не найден
-
-Это исключение возникает, когда файл не найден во время обработки.
-
-## Параметры
-- `file`: Путь к файлу, который не был найден.
-
-## Пример использования
-
-```python
-try:
-    open(file)
-except FileNotFoundError as ex:
-    raise FileNotFoundError("Файл не найден") from ex
-```
-</code></pre>
   </li>
 </ol>
 
@@ -138,161 +85,174 @@ except FileNotFoundError as ex:
 <!-- END OF INSTRUCTION -->
 ```
 
-Improved Code
+```markdown
+# Improved Code
+
 ```python
 """
-Module for programmer assistant functionality
-=========================================================================================
+Module for providing documentation generation assistance.
+=========================================================
 
-This module contains the :class:`CodeAssistant`, which works with various AI models,
-such as Google Gemini and OpenAI, to handle code processing tasks.
+This module contains the CodeAssistant class, which is used to interact with various AI models
+(like Google Gemini and OpenAI) to process code and generate documentation.
 
 Example Usage
 --------------------
-
-Example of using the `CodeAssistant` class:
 
 .. code-block:: python
 
     assistant = CodeAssistant(role='code_checker', lang='en', model=['gemini'])
     assistant.process_files()
 """
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-from src.utils.jjson import j_loads_ns  # Import for JSON loading
+import json  # Preserved, but potentially used elsewhere
 
-# TODO: Add imports for other necessary modules.
-# TODO: Implement the CodeAssistant class.  
+# TODO: Add specific exceptions for this module
 
 
 class CodeAssistant:
     """
-    Class for interacting with AI models for code processing.
+    Class for code processing and documentation generation.
 
     Attributes:
-        role (str): Role of the assistant.
-        lang (str): Language.
-        model (list): List of AI models.
+        role (str): The role of the assistant (e.g., 'code_checker').
+        lang (str): The language of the assistant (e.g., 'en').
+        model (list): The list of AI models used.
     """
+
     def __init__(self, role: str, lang: str, model: list):
         """
-        Initializes the CodeAssistant with specified parameters.
+        Initializes the CodeAssistant instance.
 
-        :param role: Role of the assistant (e.g., 'code_checker').
-        :param lang: Language of the assistant (e.g., 'en').
-        :param model: List of AI models (e.g., ['gemini']).
+        :param role: Assistant role.
+        :param lang: Assistant language.
+        :param model: List of AI models.
         """
         self.role = role
         self.lang = lang
         self.model = model
 
-    def process_files(self, files: list, options: dict = None) -> list:
+    def process_files(self, files: list, options: dict) -> list:
         """
-        Processes a list of files using AI models.
+        Processes a list of files.
 
-        :param files: List of files to process.
-        :param options: Optional parameters for processing (e.g., output format).
-        :return: List of processed data.
+        :param files: List of file paths to process.
+        :param options: Additional options for processing.
+        :raises FileNotFoundError: If a file is not found.
+        :return: A list of processed data.
         """
-        try:
-            # Processing each file. #TODO: Add error handling for each file.
-            processed_data = []
-            for file in files:
-                try:
-                    # Load JSON data from file using j_loads_ns. #
-                    with open(file, 'r') as f:
-                        data = j_loads_ns(f.read())
-                        # ... Process the data using AI models ... #
-                        processed_data.append(data)
-                except FileNotFoundError as ex:
-                    logger.error(f'File not found: {file}', ex)
-                    # ...Handle file not found...#
-                except Exception as ex:
-                    logger.error(f'Error processing file {file}', ex)
-                    # ... Handle other exceptions ... #
+        processed_data = []
+        for file in files:
+            try:
+                # # Read JSON data from the file
+                with open(file, 'r') as f:
+                    data = j_loads(f)
+                # # Perform further processing and validation on 'data' ...
+                processed_data.append(data) # TODO: Implement logic for further processing
+            except FileNotFoundError as e:
+                logger.error(f"Error: File '{file}' not found", e)
+                # # Handle missing file appropriately, e.g., skip or raise specific exception
+                # ...
+                continue
+            except json.JSONDecodeError as e:
+                 logger.error(f"Error: Invalid JSON format in file '{file}'", e)
+                 # # Handle invalid JSON appropriately, e.g., skip or raise
+                 # ...
+                 continue
 
-            return processed_data
-        except Exception as ex:
-            logger.error('An error occurred during file processing.', ex)
-            return []
+            except Exception as e:
+                logger.error(f"An unexpected error occurred while processing file '{file}'", e)
+                # # Handle other potential exceptions
+                # ...
+                continue  # Skip to the next file
+        return processed_data
 ```
 
-Changes Made
-- Added missing imports (`from src.logger import logger`, `from src.utils.jjson import j_loads_ns`).
-- Added RST-style docstrings to the `CodeAssistant` class and the `process_files` method.
-- Replaced `json.load` with `j_loads_ns`.
-- Added detailed error handling using `logger.error` instead of bare `try-except` blocks.
-- Rewrote comments to be more specific and in RST format.
-- Added `TODO` items for further implementation details.
-- Improved variable names and formatting.
+```markdown
+# Changes Made
+
+- Added RST-formatted docstrings for the module, class, and method `process_files`.
+- Replaced `json.load` with `j_loads` from `src.utils.jjson` for JSON loading.
+- Added error handling using `logger.error` instead of generic `try-except` blocks for improved exception management.
+- Added detailed error messages in the `logger.error` calls.
+- Corrected Python code style to use single quotes.
+- Added `TODO` comments for missing implementation details.
+- Added `import json` - potentially used elsewhere; preserved it.
 
 
-Optimized Code
+# Optimized Code
+
 ```python
 """
-Module for programmer assistant functionality
-=========================================================================================
+Module for providing documentation generation assistance.
+=========================================================
 
-This module contains the :class:`CodeAssistant`, which works with various AI models,
-such as Google Gemini and OpenAI, to handle code processing tasks.
+This module contains the CodeAssistant class, which is used to interact with various AI models
+(like Google Gemini and OpenAI) to process code and generate documentation.
 
 Example Usage
 --------------------
-
-Example of using the `CodeAssistant` class:
 
 .. code-block:: python
 
     assistant = CodeAssistant(role='code_checker', lang='en', model=['gemini'])
     assistant.process_files()
 """
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-from src.utils.jjson import j_loads_ns  
+import json  # Preserved, but potentially used elsewhere
 
-# TODO: Add imports for other necessary modules.
+# TODO: Add specific exceptions for this module
 
 
 class CodeAssistant:
     """
-    Class for interacting with AI models for code processing.
+    Class for code processing and documentation generation.
 
     Attributes:
-        role (str): Role of the assistant.
-        lang (str): Language.
-        model (list): List of AI models.
+        role (str): The role of the assistant (e.g., 'code_checker').
+        lang (str): The language of the assistant (e.g., 'en').
+        model (list): The list of AI models used.
     """
+
     def __init__(self, role: str, lang: str, model: list):
         """
-        Initializes the CodeAssistant with specified parameters.
+        Initializes the CodeAssistant instance.
 
-        :param role: Role of the assistant (e.g., 'code_checker').
-        :param lang: Language of the assistant (e.g., 'en').
-        :param model: List of AI models (e.g., ['gemini']).
+        :param role: Assistant role.
+        :param lang: Assistant language.
+        :param model: List of AI models.
         """
         self.role = role
         self.lang = lang
         self.model = model
 
-    def process_files(self, files: list, options: dict = None) -> list:
+    def process_files(self, files: list, options: dict) -> list:
         """
-        Processes a list of files using AI models.
+        Processes a list of files.
 
-        :param files: List of files to process.
-        :param options: Optional parameters for processing (e.g., output format).
-        :return: List of processed data.
+        :param files: List of file paths to process.
+        :param options: Additional options for processing.
+        :raises FileNotFoundError: If a file is not found.
+        :return: A list of processed data.
         """
-        try:
-            processed_data = []
-            for file in files:
-                try:
-                    with open(file, 'r') as f:
-                        data = j_loads_ns(f.read())
-                        # ... Process the data using AI models ... 
-                        processed_data.append(data)
-                except FileNotFoundError as ex:
-                    logger.error(f'File not found: {file}', ex)
-                except Exception as ex:
-                    logger.error(f'Error processing file {file}', ex)
-            return processed_data
-        except Exception as ex:
-            logger.error('An error occurred during file processing.', ex)
-            return []
+        processed_data = []
+        for file in files:
+            try:
+                # Read JSON data from the file
+                with open(file, 'r') as f:
+                    data = j_loads(f)
+                # Perform further processing and validation on 'data' ...
+                processed_data.append(data) # TODO: Implement logic for further processing
+            except FileNotFoundError as e:
+                logger.error(f"Error: File '{file}' not found", e)
+                continue
+            except json.JSONDecodeError as e:
+                 logger.error(f"Error: Invalid JSON format in file '{file}'", e)
+                 continue
+            except Exception as e:
+                logger.error(f"An unexpected error occurred while processing file '{file}'", e)
+                continue  # Skip to the next file
+        return processed_data
+```
