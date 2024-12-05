@@ -86,7 +86,7 @@ class XmlFileLoaderTest extends TestCase
 
             $e = $e->getPrevious();
             $this->assertInstanceOf('InvalidArgumentException', $e, '->parseFileToDOM() throws an InvalidArgumentException if the loaded file does not validate the XSD');
-            $this->assertStringStartsWith('[ERROR 1845] Element \'nonvalid\': No matching global declaration available for the validation root. (in', $e->getMessage(), '->parseFileToDOM() throws an InvalidArgumentException if the loaded file does not validate the XSD');
+            $this->assertStringStartsWith('[ERROR 1845] Element \'nonvalid\': No matching eclaration available for the validation root. (in', $e->getMessage(), '->parseFileToDOM() throws an InvalidArgumentException if the loaded file does not validate the XSD');
         }
 
         $xml = $m->invoke($loader, self::$fixturesPath.'/xml/services1.xml');

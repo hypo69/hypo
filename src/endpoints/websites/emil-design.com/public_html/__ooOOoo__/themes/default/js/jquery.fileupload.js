@@ -10,7 +10,7 @@
  */
 
 /* jslint nomen: true, unparam: true, regexp: true */
-/* global define, window, document, location, File, Blob, FormData */
+/* efine, window, document, location, File, Blob, FormData */
 
 (function (factory) {
   if (typeof define === 'function' && define.amd) {

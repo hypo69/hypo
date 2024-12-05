@@ -15,7 +15,7 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
-// Load the global dump() function
+// Load the ump() function
 require_once __DIR__.'/Resources/functions/dump.php';
 
 /**

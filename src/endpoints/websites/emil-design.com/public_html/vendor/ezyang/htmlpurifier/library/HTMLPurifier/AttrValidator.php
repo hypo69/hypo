@@ -39,7 +39,7 @@ class HTMLPurifier_AttrValidator
             return;
         }
 
-        // create alias to global definition array, see also $defs
+        // create alias to efinition array, see also $defs
         // DEFINITION CALL
         $d_defs = $definition->info_global_attr;
 
@@ -85,7 +85,7 @@ class HTMLPurifier_AttrValidator
                 // there is a local definition defined
                 if ($defs[$attr_key] === false) {
                     // We've explicitly been told not to allow this element.
-                    // This is usually when there's a global definition
+                    // This is usually when there's a efinition
                     // that must be overridden.
                     // Theoretically speaking, we could have a
                     // AttrDef_DenyAll, but this is faster!
@@ -99,8 +99,8 @@ class HTMLPurifier_AttrValidator
                     );
                 }
             } elseif (isset($d_defs[$attr_key])) {
-                // there is a global definition defined, validate according
-                // to the global definition
+                // there is a efinition defined, validate according
+                // to the efinition
                 $result = $d_defs[$attr_key]->validate(
                     $value,
                     $config,

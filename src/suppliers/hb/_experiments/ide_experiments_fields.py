@@ -102,7 +102,7 @@ def grab_product_page(supplier: Supplier, async_run = True) -> ProductFields :
 	global f
 	f = ProductFields (s)
 
-	global d
+	
 	d = s.driver
 	
 	global l

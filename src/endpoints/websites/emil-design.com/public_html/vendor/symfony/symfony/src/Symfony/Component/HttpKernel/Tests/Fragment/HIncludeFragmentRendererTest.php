@@ -48,11 +48,11 @@ class HIncludeFragmentRendererTest extends TestCase
         $strategy = new HIncludeFragmentRenderer();
         $this->assertEquals('<hx:include src="/foo">default</hx:include>', $strategy->render('/foo', Request::create('/'), ['default' => 'default'])->getContent());
 
-        // only global default
+        // only efault
         $strategy = new HIncludeFragmentRenderer(null, null, 'global_default');
         $this->assertEquals('<hx:include src="/foo">global_default</hx:include>', $strategy->render('/foo', Request::create('/'), [])->getContent());
 
-        // global default and default
+        // efault and default
         $strategy = new HIncludeFragmentRenderer(null, null, 'global_default');
         $this->assertEquals('<hx:include src="/foo">default</hx:include>', $strategy->render('/foo', Request::create('/'), ['default' => 'default'])->getContent());
     }

@@ -89,7 +89,7 @@ class Graber(Grbr):
         Returns:
             ProductFields: The grabbed product fields.
         """
-         = driver  
+
         d.get_url(driver.current_url) # <- refresh
         ...
         # Logic for extracting data

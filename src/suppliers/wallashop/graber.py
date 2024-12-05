@@ -90,7 +90,7 @@ class Graber(Grbr):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        global d
+        
          = driver  
         
         ...

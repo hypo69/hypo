@@ -34,9 +34,10 @@ MODE = 'dev'
 import os
 import sys
 import asyncio
+from __future__ import annotations
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Callable
+from typing import Callable
 from langdetect import detect
 from functools import wraps
 
@@ -45,7 +46,7 @@ from src import gs
 
 from src.product.product_fields import ProductFields
 from src.category import Category
-from src.webdriver.driver import Driver
+# from src.webdriver.driver import Driver  # не требуется импортировать здесь
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png_from_url, save_png
 from src.utils.string.normalizer import normalize_string, normalize_int, normalize_float, normalize_boolean
@@ -60,7 +61,7 @@ class Context:
     Класс для хранения глобальных настроек.
 
     :ivar driver: Объект драйвера, используется для управления браузером или другим интерфейсом.
-    :vartype driver: Driver
+    :vartype driver: 'Driver'
     :ivar locator: Пространство имен для хранения локаторов.
     :vartype locator: SimpleNamespace
     :ivar supplier_prefix: Префикс поставщика.
@@ -68,7 +69,7 @@ class Context:
     """
 
     # Атрибуты класса
-    driver: Driver = None
+    driver: 'Driver' = None
     locator_for_decorator: SimpleNamespace = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
     supplier_prefix: str = None
 
@@ -78,11 +79,11 @@ class Context:
 # Общее название декоратора `@close_pop_up` можно изменить 
 # Если декоратор не используется в поставщике - поставь 
 
-def close_pop_up(value: Any = None) -> Callable:
+def close_pop_up(value: 'Driver' = None) -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
-        value (Any): Дополнительное значение для декоратора.
+        value ('Driver'): Дополнительное значение для декоратора.
 
     Returns:
         Callable: Декоратор, оборачивающий функцию.
@@ -101,25 +102,22 @@ def close_pop_up(value: Any = None) -> Callable:
     return decorator
 
 
-
 class Graber:
     """Базовый класс сбора данных со страницы для всех поставщиков."""
     
-    def __init__(self, supplier_prefix: str, driver:Driver):
+    def __init__(self, supplier_prefix: str, driver: 'Driver'):
         """Инициализация класса Graber.
 
         Args:
             supplier_prefix (str): Префикс поставщика.
-            locator (Locator): Экземпляр класса Locator.
-            driver (Driver): Экземпляр класса Driver.
+            driver ('Driver'): Экземпляр класса Driver.
         """
         self.supplier_prefix = supplier_prefix
-        self.locator:SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
-        self.driver:Driver = driver
-        self.river
-        self.fields:ProductFields = ProductFields()
+        self.locator: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+        self.driver = driver
+        self.fields: ProductFields = ProductFields()
         Context.driver = self.driver
-        Context.supplier_prefix =  supplier_prefix
+        Context.supplier_prefix = supplier_prefix
 
     async def error(self, field: str):
         """Обработчик ошибок для полей."""
@@ -150,6 +148,7 @@ class Graber:
             return locator_result
         await self.error(field_name)
         return default
+
 
     async def grab_page(self) -> ProductFields:
         """Асинхронная функция для сбора полей продукта.

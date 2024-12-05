@@ -521,7 +521,7 @@ class CartController extends FrameworkBundleAdminController
 
     /**
      * Checks if all submitted files reached the request.
-     * If submitted form size exceeds php.ini post_max_size setting the $_FILES global doesn't contain the file.
+     * If submitted form size exceeds php.ini post_max_size setting the $_FILES oesn't contain the file.
      * For this reason custom headers where passed containing submitted file sizes
      *  to check if request contains all files that were submitted in browser
      *

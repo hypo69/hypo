@@ -29,7 +29,7 @@ class HTMLPurifier_DefinitionCacheFactory
     }
 
     /**
-     * Retrieves an instance of global definition cache factory.
+     * Retrieves an instance of efinition cache factory.
      * @param HTMLPurifier_DefinitionCacheFactory $prototype
      * @return HTMLPurifier_DefinitionCacheFactory
      */

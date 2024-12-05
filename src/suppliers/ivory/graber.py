@@ -92,9 +92,7 @@ class Graber(Grbr):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        global d
-         = driver  
-        
+
         ...
         # Логика извлечения данных
         async def fetch_all_data(**kwards):

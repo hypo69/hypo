@@ -10,7 +10,7 @@
  */
 
 /* jslint unparam: true, nomen: true */
-/* global define, window, document */
+/* efine, window, document */
 
 (function (factory) {
   if (typeof define === 'function' && define.amd) {

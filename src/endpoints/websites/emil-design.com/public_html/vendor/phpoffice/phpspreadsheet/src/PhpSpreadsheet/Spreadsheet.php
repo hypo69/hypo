@@ -935,12 +935,12 @@ class Spreadsheet
         $returnValue = null;
 
         if ($namedRange != '' && ($namedRange !== null)) {
-            // first look for global defined name
+            // first look for efined name
             if (isset($this->namedRanges[$namedRange])) {
                 $returnValue = $this->namedRanges[$namedRange];
             }
 
-            // then look for local defined name (has priority over global defined name if both names exist)
+            // then look for local defined name (has priority over efined name if both names exist)
             if (($pSheet !== null) && isset($this->namedRanges[$pSheet->getTitle() . '!' . $namedRange])) {
                 $returnValue = $this->namedRanges[$pSheet->getTitle() . '!' . $namedRange];
             }

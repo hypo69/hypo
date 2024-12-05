@@ -91,7 +91,7 @@ class Graber(Grbr):
         Returns:
             ProductFields: Извлеченные поля товара.
         """
-        global d
+        
          = driver  
         ...
         # Логика извлечения данных

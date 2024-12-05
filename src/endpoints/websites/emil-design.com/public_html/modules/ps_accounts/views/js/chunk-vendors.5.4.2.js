@@ -8262,7 +8262,7 @@ var Hs = { exports: {} };
               if (!pt(window).match(/MSIE|rv:11|trident|edge\/12|edge\/13/i))
                 throw new Error("Global messaging not needed for browser");
               if (!N(p))
-                throw new Error("Post message through global disabled between different domain windows");
+                throw new Error("Post message through isabled between different domain windows");
               if (ye(window, p) !== !1)
                 throw new Error("Can only use global to communicate between two different windows, not between frames");
               var I = pn(p);
