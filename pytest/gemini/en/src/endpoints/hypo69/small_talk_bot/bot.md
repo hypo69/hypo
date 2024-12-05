@@ -4,138 +4,115 @@ import asyncio
 from unittest.mock import patch
 from telegram import Update, Message
 from telegram.ext import CallbackContext
-
-from hypotez.src.endpoints.hypo69.small_talk_bot.bot import PsychologistTelgrambot, gs
-
+from hypotez.src.endpoints.hypo69.small_talk_bot.bot import PsychologistTelgrambot
+from hypotez.src.utils.file import read_text_file, recursively_read_text_files, save_text_file
+from hypotez.src.logger import logger
+from hypotez.src import gs
+from hypotez.src.webdriver.driver import Chrome
+from hypotez.src.ai.gemini import GoogleGenerativeAI
 
 # Mock objects for testing
 @pytest.fixture
-def mock_update(monkeypatch):
-    """Creates a mock Update object."""
-    update = Update.de_json({"message": {"text": "test message", "chat": {"id": 123}}}, bot=None)
-    monkeypatch.setattr(PsychologistTelgrambot, "application", lambda: None)
+def mock_update():
+    update = Update.de_json({}, update_id=1)
+    update.effective_user = UserMock()
+    update.message = MessageMock()
     return update
-
 
 @pytest.fixture
 def mock_context():
-    """Creates a mock CallbackContext object."""
-    return CallbackContext(None)
+    return CallbackContext()
+
+@pytest.fixture
+def mock_model():
+    return GoogleGenerativeAI(api_key="test_api_key", system_instruction="", generation_config={"response_mime_type": "text/plain"})
 
 
 @pytest.fixture
-def mock_model_ask(monkeypatch):
-    """Mocks the model.ask method."""
-    def mock_ask(q, history_file):
-        return f"Answer to '{q}'"
-    monkeypatch.setattr(PsychologistTelgrambot, 'model', lambda: mock_object)
-    class mock_object:
-      def ask(self, q, history_file):
-        return mock_ask(q, history_file)
-    return mock_ask
-
-
-@pytest.fixture
-def mock_mexiron():
-  """Mocks the mexiron object."""
-  class MockMexiron:
-    async def run_scenario(self, response, update):
-      return True
-  return MockMexiron()
-
-@pytest.fixture
-def mock_get_handler_for_url(monkeypatch):
-    def mock_handler(response):
-        if response.startswith("https://morlevi.co.il"):
-            return PsychologistTelgrambot.handle_suppliers_response
-        return None
-    monkeypatch.setattr(PsychologistTelgrambot, "get_handler_for_url", mock_handler)
-    return mock_handler
-
-
-# Tests
-def test_start_command(mock_update, mock_context):
-    """Tests the /start command."""
+def mock_bot(mock_model):
+    """Mock bot instance for testing."""
     bot = PsychologistTelgrambot()
-    bot.start(mock_update, mock_context)
+    bot.model = mock_model
+    bot.questions_list = ['Test Question 1', 'Test Question 2']
+    return bot
 
 
-def test_handle_message_valid_input(mock_update, mock_context, mock_model_ask):
-    """Tests the handle_message function with valid input."""
-    bot = PsychologistTelgrambot()
-    bot.handle_message(mock_update, mock_context)
+class UserMock:
+    id = 123
 
 
-def test_handle_message_url(mock_update, mock_context, mock_get_handler_for_url):
-    """Tests URL-based routing in handle_message."""
-    mock_update.message.text = "https://morlevi.co.il"
-    bot = PsychologistTelgrambot()
-    assert bot.get_handler_for_url(mock_update.message.text) == bot.handle_suppliers_response
-
-
-def test_handle_suppliers_response_success(mock_update, mock_context, mock_mexiron):
-    """Tests handle_suppliers_response with successful scenario."""
-    bot = PsychologistTelgrambot()
-    monkeypatch.setattr(PsychologistTelgrambot, 'mexiron', mock_mexiron)
-    bot.handle_suppliers_response(mock_update, "https://morlevi.co.il")
-
-
-def test_handle_suppliers_response_failure(mock_update, mock_context, mock_mexiron):
-    """Tests handle_suppliers_response with failed scenario."""
-    mock_mexiron = mock_mexiron
-    monkeypatch.setattr(PsychologistTelgrambot, 'mexiron', mock_mexiron)
-    with patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.asyncio') as mock_asyncio:
-      mock_asyncio.gather.return_value = False  
-      bot = PsychologistTelgrambot()
-      bot.handle_suppliers_response(mock_update, "https://morlevi.co.il")
-
-
-def test_handle_next_command(mock_update, mock_context, mock_model_ask, monkeypatch):
-    """Tests the handle_next_command function."""
-    bot = PsychologistTelgrambot()
-    bot.questions_list = ['Question 1']
+class MessageMock:
+    text = "Test Message"
+    reply_text = lambda self, text: asyncio.Future().set_result(None)
     
-    bot.handle_next_command(mock_update)
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.save_text_file', return_value=None)
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.GoogleGenerativeAI.ask', return_value="Test Answer")
+def test_handle_message(mock_ask, mock_save, mock_update, mock_context, mock_bot):
+    """Test handle_message function with valid input."""
+    mock_bot.handle_message(mock_update, mock_context)
+    mock_ask.assert_called_once_with(q="Test Message", history_file='123.txt')
+    mock_save.assert_called_once()
 
-# Mock file operations
-@pytest.fixture
-def mock_save_text_file(monkeypatch):
-    def mock_save(text, path):
-        return None
-    monkeypatch.setattr(PsychologistTelgrambot, 'save_text_file', mock_save)
+def test_handle_message_invalid_input(mock_update, mock_context, mock_bot):
+    """Test handle_message function with empty string."""
+    mock_update.message.text = ""
+    with pytest.raises(AttributeError):  # Or your expected exception
+        mock_bot.handle_message(mock_update, mock_context)
 
-def test_handle_message_save_file(mock_update, mock_context, mock_save_text_file, monkeypatch):
-  bot = PsychologistTelgrambot()
-  bot.handle_message(mock_update, mock_context)
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.random.choice', return_value='Test Question')
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.GoogleGenerativeAI.ask', return_value='Test Answer')
+def test_handle_next_command(mock_ask, mock_choice, mock_update, mock_context, mock_bot):
+    """Test handle_next_command with valid input."""
+    mock_bot.handle_next_command(mock_update)
+    mock_choice.assert_called_once()
+    mock_ask.assert_called_once()
 
 
-# ... more tests for other functions ...
+def test_handle_next_command_empty_questions(mock_update, mock_context, mock_bot):
+    """Test handle_next_command when questions_list is empty."""
+    mock_bot.questions_list = []
+    with pytest.raises(IndexError):  # Or your expected exception
+        mock_bot.handle_next_command(mock_update)
+        
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.logger')
+def test_handle_next_command_error(mock_log, mock_update, mock_context, mock_bot):
+    """Test handle_next_command when GoogleGenerativeAI.ask raises an exception."""
+    mock_bot.model.ask = lambda q, history_file: raise Exception()
+    mock_bot.handle_next_command(mock_update)
+    mock_log.debug.assert_called_once()
+
+
+
+# Add more tests for other functions, including edge cases and exception handling.
+#  e.g., test_get_handler_for_url, test_handle_suppliers_response, test_handle_onetab_response, etc.
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** Critically important for testing the `PsychologistTelgrambot` class, which relies on external services and files.  Mocks are used for `model.ask`, `mexiron.run_scenario`, `save_text_file`, and `gs.path` and `gs.credentials` to isolate the tests from dependencies.  Mocking `application` prevents attempts to interact with the Telegram bot directly.
-* **Clearer Test Names:** The test names now better reflect the conditions being tested.
-* **`pytest.raises` (Example):**  This was added to the example to demonstrate, but it's *not* used in the code itself (yet) — only where a method is expected to raise an exception.
-* **`@pytest.fixture` for Mocking:** Fixtures are now used to mock the dependencies, ensuring isolated tests.
-* **`mock_model_ask`:** A fixture to mock the `model.ask` method is included, making it easier to control the returned value.
-* **`mock_mexiron`:** A mock for the `mexiron` object used in the handlers.
-* **`mock_get_handler_for_url`:** A fixture for mocking the URL handling logic.
-* **Example `test_handle_suppliers_response_failure`:**  This shows how to test the error handling branch of the code, which was missing before. It uses `patch` to mock `asyncio.gather` to simulate a failure scenario.
-* **Robustness:**  Added more test cases, including success and failure scenarios for error handling in the `handle_suppliers_response` method.
+1. **Mocking:**  The code now heavily uses `unittest.mock` to mock external dependencies like `GoogleGenerativeAI.ask`, `save_text_file`, `random.choice`,  and `telegram` objects. This is crucial for testing internal logic without relying on external services or files.
 
-**Further Considerations for Testing:**
+2. **Mock `Update` and `Context`:**  The `mock_update` and `mock_context` fixtures provide mock objects for the `Update` and `CallbackContext`.
 
-* **Error Handling:** Add tests for various exceptions that `model.ask` or other external functions might raise.
-* **Edge Cases:** Test cases with empty strings, very long messages, special characters, and malformed inputs.
-* **`questions_list`:** Test cases where `questions_list` is empty or contains invalid data.
-* **`handle_document`:** Test cases for handling various document types and content.
+3. **Mock `UserMock` and `MessageMock`:**  Needed to have a consistent user and message object.
+
+4. **Clear Test Function Names:**  The test names clearly describe the scenario being tested.
+
+5. **Exception Handling:** Tests now include `pytest.raises` to check for exceptions in `handle_message` (e.g., when `update.message.text` is empty) and `handle_next_command` if the `questions_list` is empty or `ask` method raises an error.
+
+6. **Comprehensive Coverage:**  Example tests cover `handle_message` (with valid and invalid inputs), `handle_next_command` (with valid input and empty/error conditions),.  **You need to add tests for `get_handler_for_url`, `handle_suppliers_response`, `handle_onetab_response`, and any other function that you deem important.**
+
+7. **`@patch`:** Used decorators like `@patch` for mocking specific functions within the bot's `__init__` or other functions.
+
+8. **`asyncio.gather` mocking:**  You can't directly mock the `asyncio.gather` call. You need to mock the `reply_text` method of the `MessageMock` to avoid needing to test the async logic.
 
 
-Remember to install the necessary libraries:
+**Important Considerations:**
 
-```bash
-pip install pytest python-telegram-bot
-```
+* **`mexiron`:**  The tests currently don't interact with the `mexiron` object. Add mock objects or fixtures for it if you need to test how it interacts with other parts of the code.  `mexiron` probably needs to be mocked with `patch`.
 
-This improved test suite provides a much stronger foundation for testing the code, addressing the crucial issues of external dependencies and missing error handling cases.  Now, you can run `pytest` on the directory containing the tests. Remember to replace the placeholder comments with actual test cases for the missing methods.
+* **Error Handling:**  Improve error handling throughout the tests to check for specific types of exceptions raised in different scenarios.
+
+* **Data-driven Tests:** Consider using data-driven tests with `pytest.mark.parametrize` to test multiple scenarios with various input values for better code coverage.
+
+
+Remember to adapt these tests to match the specific logic and requirements of your code.  Extensive testing of `get_handler_for_url` is necessary, as well as considering various URL patterns and non-URL inputs to ensure robustness. Remember to replace placeholder comments with specific error messages for better debugging.

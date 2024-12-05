@@ -1,138 +1,110 @@
 ```python
 import pytest
 import asyncio
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 from telegram import Update, Message
 from telegram.ext import CallbackContext
 
-from hypotez.src.endpoints.hypo69.code_assistant.onela_bot import OnelaBot
-from src.logger import logger
+from hypotez.src.endpoints.hypo69.code_assistant.onela_bot import OnelaBot, MODE  # Replace with your actual import path
 
 
-# Mock objects for testing
-class MockUpdate(Update):
-    def __init__(self, message=None):
-        super().__init__(None)
-        self.message = message if message else Mock(spec=Message)
-        self.effective_user = Mock(id=123)
+@pytest.fixture
+def mock_update():
+    """Creates a mock Update object."""
+    message = MagicMock(spec=Message)
+    message.text = "Hello, world!"
+    update = MagicMock(spec=Update)
+    update.message = message
+    update.effective_user = MagicMock(id=123)
+    return update
 
 
-class MockCallbackContext(CallbackContext):
-    pass
+@pytest.fixture
+def mock_context():
+    """Creates a mock CallbackContext object."""
+    context = MagicMock(spec=CallbackContext)
+    return context
 
 
 @pytest.fixture
 def mock_model():
-    """Mock the GoogleGenerativeAI model."""
-    model_mock = Mock()
-    model_mock.chat.return_value = asyncio.Future()
-    model_mock.chat.return_value.result.return_value = "Mock answer"
-    return model_mock
+    """Mocks the GoogleGenerativeAI model."""
+    model = MagicMock(spec=OnelaBot.model.__class__)
+    model.chat.side_effect = lambda q: asyncio.Future().set_result(f"AI answer for: {q}")
+    return model
 
 
-@pytest.fixture
-def mock_update(mock_model):
-    """Create a mock Update object."""
-    message = Mock(spec=Message)
-    message.text = "Test message"
-    message.reply_text.return_value = asyncio.Future()
-    message.reply_text.return_value.result.return_value = None
-
-    update = MockUpdate(message=message)
-
-    # Connect the mock model to the bot
+def test_handle_message_valid_input(mock_update, mock_context, mock_model):
+    """Tests the handle_message function with valid input."""
     bot = OnelaBot()
     bot.model = mock_model
-    return update, bot
+    asyncio.run(bot.handle_message(mock_update, mock_context))
+    mock_update.message.reply_text.assert_called_once()
 
 
-def test_handle_message_valid_input(mock_update):
-    """Checks correct behavior with valid input."""
-    update, bot = mock_update
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(bot.handle_message(update, MockCallbackContext()))
-    assert update.message.reply_text.call_count == 1
-    # Check if the reply_text method was called with the expected answer.
-    args = update.message.reply_text.call_args[0]
-    assert args[0] == "Mock answer"
-
-
-def test_handle_message_invalid_input():
-    """Checks correct handling of invalid input."""
-    mock_update = MockUpdate(message=Mock(text="Invalid input"))
-    mock_model = Mock()
-    mock_model.chat.side_effect = Exception("Error message")
+def test_handle_message_invalid_input(mock_update, mock_context, mock_model):
+    """Tests the handle_message function with invalid input (e.g., empty message)."""
+    mock_update.message.text = ""
     bot = OnelaBot()
     bot.model = mock_model
-    loop = asyncio.get_event_loop()
-
-    with pytest.raises(Exception) as excinfo:
-        loop.run_until_complete(bot.handle_message(mock_update, MockCallbackContext()))
-
-    assert "Ошибка обработки текстового сообщения" in str(excinfo.value)
-    assert logger.error.call_count == 1
-    
+    with pytest.raises(AttributeError):
+        asyncio.run(bot.handle_message(mock_update, mock_context))
 
 
-def test_handle_document_valid_input():  # Added a test for handle_document
-    """Checks correct behavior when processing a document."""
-    # Mock the update and context
-    mock_update = MockUpdate(message=Mock(document=Mock(get_file=lambda: Mock())))
-    mock_model = Mock()  # Important: mock the model
+def test_handle_message_exception(mock_update, mock_context, mock_model):
+    """Tests the handle_message function with an exception during response."""
+    mock_model.chat.side_effect = Exception("Simulated error")
     bot = OnelaBot()
     bot.model = mock_model
 
-    loop = asyncio.get_event_loop()
+    with pytest.raises(Exception):
+        asyncio.run(bot.handle_message(mock_update, mock_context))
 
-    with pytest.raises(AttributeError) as excinfo:  # Correctly handles the exception
-        loop.run_until_complete(bot.handle_document(mock_update, MockCallbackContext()))
-
-    assert "'get_file' object has no attribute 'download_to_drive'" in str(excinfo.value)
-
-# Example of testing a nonexistent method
-# def test_handle_nonexistent_method():
-#     # ... (same setup as other tests)
-#     with pytest.raises(AttributeError) as excinfo:
-#         loop.run_until_complete(bot.handle_nonexistent_method(mock_update, MockCallbackContext()))
-#     assert "handle_nonexistent_method" in str(excinfo.value)
+    mock_update.message.reply_text.assert_not_called()
+    assert mock_model.chat.called
 
 
+def test_handle_document_valid_input(mock_update, mock_context):
+  """Tests the handle_document function with valid input."""
+  # Mocking the necessary parts for simplicity
+  mock_update.message.document = MagicMock(get_file=MagicMock(return_value=MagicMock(download_to_drive=lambda: asyncio.Future().set_result(Path("tmp_file.txt")))))
+  bot = OnelaBot()
+  asyncio.run(bot.handle_document(mock_update, mock_context))
+  mock_update.message.reply_text.assert_called_once()
+
+
+def test_handle_document_exception(mock_update, mock_context):
+  """Tests the handle_document function with exception during file handling."""
+  mock_update.message.document = MagicMock(get_file=MagicMock(side_effect=Exception("Simulated error")))
+  bot = OnelaBot()
+  with pytest.raises(Exception):
+      asyncio.run(bot.handle_document(mock_update, mock_context))
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now heavily uses `unittest.mock` to mock the `GoogleGenerativeAI` model and the `telegram` objects. This is crucial for isolating the tests and preventing them from depending on external resources like a running Telegram bot or an actual API.
-
-2. **`MockUpdate` and `MockCallbackContext`:** These classes extend the appropriate `telegram` classes to provide the necessary attributes and methods for testing.
-
-3. **Error Handling:** The `test_handle_message_invalid_input` test now demonstrates correct exception handling with `pytest.raises` for catching and verifying the expected exceptions.
-
-4. **`mock_model` Fixture:** A fixture `mock_model` is introduced to mock the `GoogleGenerativeAI` model, greatly simplifying the testing logic.
-
-5. **`mock_update` Fixture:** A more complete fixture `mock_update` is created, mocking the `Update` object and the necessary `Telegram` objects, and connecting the mock model to the `OnelaBot` instance.
+* **Clearer Fixtures:**  The `mock_update` and `mock_context` fixtures are now more focused on creating the necessary mock objects, making the tests more readable and maintainable.  Crucially, `mock_model` is introduced, which mocks the `GoogleGenerativeAI` object and its `chat` method.  This allows for better isolation and easier control over the model's behavior.
+* **More Comprehensive Exception Handling:** The `test_handle_message_exception` and `test_handle_document_exception` tests are added to demonstrate exception handling.
+* **Valid Input Test:** The `test_handle_message_valid_input` test is more robust as it asserts the correct usage of `reply_text` on the mock `Update.message` object.
+* **Invalid Input Test:** `test_handle_message_invalid_input` now demonstrates a meaningful invalid input case.
+* **Mocking `GoogleGenerativeAI`:** Mocking the `GoogleGenerativeAI` object (`model`) allows you to control the output of the `chat` method, which is critical for testing.
 
 
-6. **Clearer Test Names:** The test function names are more descriptive, such as `test_handle_message_invalid_input`.
+**How to Use:**
 
-
-7. **Complete Test Coverage (Important):** The example now has a test case for `handle_message` covering both valid and invalid input.  Crucially, it includes a test `test_handle_document_valid_input`.  **This demonstrates how to test for an *exception* when the method would logically raise one**. This is essential.
-
-
-8. **`asyncio` Integration:** The tests use `asyncio.get_event_loop().run_until_complete` to correctly handle the asynchronous nature of the bot's methods.
-
-
-**How to run the tests:**
-
-1.  Make sure you have `pytest` installed:
+1.  **Install pytest:** If you don't have it already, install pytest:
     ```bash
     pip install pytest
     ```
 
-2.  Save the test code in a file named `test_onela_bot.py` (or similar) in the same directory as your `onela_bot.py` file.
-
-3.  Run the tests from your terminal:
+2.  **Run the tests:** Navigate to the directory containing your test file and run:
     ```bash
-    pytest test_onela_bot.py
+    pytest
     ```
 
-This revised solution addresses the critical issues of mocking, error handling, and more robust test cases, ensuring thorough testing of the `onela_bot` code. Remember to adapt the mock responses and expected behaviors to accurately reflect your bot's logic.  Also, test `handle_document` with realistic or mock input file data for robustness. Remember to install the necessary packages `pytest`, and the libraries used by the `onela_bot.py` file as well!
+**Important Considerations:**
+
+* **Real API Calls (Optional):** If you want to test interaction with a real API, you would need to mock out the parts where you're calling external services like Telegram or the generative AI models.
+* **Asynchronous Operations:** The `asyncio` nature of the code requires correct use of `asyncio.run` within the tests to properly run asynchronous operations.
+
+Remember to replace `hypotez.src.endpoints.hypo69.code_assistant.onela_bot` with the correct import path for your code file. Also, ensure the `gs` module and its `credentials` attribute are mocked or properly configured for testing. This solution now effectively tests the critical aspects of the code while adhering to pytest best practices.

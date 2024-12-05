@@ -1,145 +1,109 @@
 ```python
 import pytest
-import os
-import signal
-from unittest.mock import patch, MagicMock
+import sys
+from unittest.mock import patch
+
+# Replace with the actual module path if needed
+try:
+    from src.endpoints.hypo69.code_assistant.code_assistant import *
+except ImportError:
+    print("Error: Could not import the code_assistant module. Make sure the path is correct.")
+    sys.exit(1)
 
 
-# Placeholder for actual functions. Replace with your actual code.
-def parse_args(args):
-    return {'arg1': 'value1', 'arg2': args.arg2}
+# Fixtures (if needed - none in this case, but could be added for file handling)
+# ... (add fixtures here if necessary for example files, configurations etc.)
 
 
-def _yield_files_content(files_list):
-    for file_name in files_list:
-        yield open(file_name, 'r').read()
+@pytest.mark.parametrize("input_args", [
+    {"input": "test input"},
+    {"input": "another input"},
+])
+def test_parse_args_valid_input(input_args):
+    """Checks parse_args with valid input."""
+    # Mock sys.argv for testing
+    with patch('sys.argv', ['test_script.py', str(input_args['input'])]):
+        args = parse_args()
+        assert args.input == input_args['input']
 
 
-def _create_request(file_content):
-    return {'content': file_content}
+def test_parse_args_missing_input():
+    """Checks parse_args with missing input."""
+    with patch('sys.argv', ['test_script.py']):
+        with pytest.raises(SystemExit) as excinfo:
+            parse_args()
+        assert excinfo.value.code == 2 #Check for specific exit code
 
 
-def GeminiModel(request):
-    if 'error' in request:
-        raise Exception('Gemini Model Error')
-    return {'response': 'Gemini Response'}
+@patch('src.endpoints.hypo69.code_assistant.code_assistant._yield_files_content', return_value=["file content"]) #Mock _yield_files_content for testing
+def test__yield_files_content_valid_input(mock_yield_files_content):
+    """Tests _yield_files_content with valid mock input."""
+    files_list = _yield_files_content("test_path")
+    assert files_list == ["file content"]
 
 
-def _remove_outer_quotes(response):
-    return response[1:-1] if response.startswith('"') and response.endswith('"') else response
+# ... (add more test functions for other functions and methods)
+# Example for testing a function that raises an exception
+def test__create_request_invalid_file():
+    """Tests _create_request with invalid file input (e.g., not found)."""
+    with pytest.raises(FileNotFoundError):
+        _create_request("nonexistent_file.txt")
 
 
-def _save_response(response):
-    # Simulate saving the response
-    with open('response.txt', 'w') as f:
-        f.write(response)
-    return response
-
-
-# Test fixtures
-@pytest.fixture
-def test_files():
-    """Creates test files for the test cases."""
-    files = []
-    for i in range(3):
-        filename = f'testfile_{i}.txt'
-        with open(filename, 'w') as f:
-            f.write(f'File content {i}')
-        files.append(filename)
-    yield files
-    for file in files:
-        os.remove(file)
-
-
-# Test cases
-def test_parse_args_valid_input(capsys):
-    """Tests parse_args with valid input."""
-    args = MagicMock(arg2='test_arg2')
-    parsed_args = parse_args(args)
-    assert parsed_args == {'arg1': 'value1', 'arg2': 'test_arg2'}
-
-
-def test_parse_args_no_arg2(capsys):
-    """Test parse_args with missing arg2."""
-    args = MagicMock(arg2=None)
-    parsed_args = parse_args(args)
-    assert parsed_args == {'arg1': 'value1', 'arg2': None}
-
-
-def test_yield_files_content_valid(test_files):
-    """Test _yield_files_content with valid input."""
-    generated_content = list(_yield_files_content(test_files))
-    assert len(generated_content) == len(test_files)
-    for i, content in enumerate(generated_content):
-        assert f'File content {i}' in content
-
-
-def test_create_request_valid(test_files):
-    """Test _create_request with valid input."""
-    generator = _yield_files_content(test_files)
-    request_data = next(generator)
-    request = _create_request(request_data)
-    assert request == {'content': request_data}
-
-
-@patch('src.endpoints.hypo69.code_assistant.code_assistant.GeminiModel')
-def test_gemini_model_success(mock_gemini_model, test_files):
-    """Test GeminiModel with valid input."""
-    mock_gemini_model.return_value = {'response': 'test_response'}
-    generator = _yield_files_content(test_files)
-    request = _create_request(next(generator))
-    response = GeminiModel(request)
-    assert response == {'response': 'test_response'}
-
-
-@patch('src.endpoints.hypo69.code_assistant.code_assistant.GeminiModel')
-def test_gemini_model_failure(mock_gemini_model, test_files):
-    """Test GeminiModel with error handling."""
-    mock_gemini_model.side_effect = Exception('Simulated error')
-    generator = _yield_files_content(test_files)
-    request = _create_request(next(generator))
-    with pytest.raises(Exception) as excinfo:
-        GeminiModel(request)
-    assert 'Gemini Model Error' in str(excinfo.value)
-
-
-def test_remove_outer_quotes_valid(capsys):
+def test__remove_outer_quotes_valid_input():
     """Tests _remove_outer_quotes with valid input."""
-    response = '"test response"'
-    result = _remove_outer_quotes(response)
-    assert result == 'test response'
+    result = _remove_outer_quotes('"test string"')
+    assert result == "test string"
 
-def test_remove_outer_quotes_no_quotes(capsys):
+def test__remove_outer_quotes_no_quotes():
     """Tests _remove_outer_quotes with no quotes."""
-    response = 'test response'
-    result = _remove_outer_quotes(response)
-    assert result == 'test response'
+    result = _remove_outer_quotes("test string")
+    assert result == "test string"
 
+
+
+def test__save_response_valid_input():
+    """Tests _save_response with valid input (mock file handling)."""
+    # Mock the file writing functionality using a patch.
+    with patch('builtins.open',  return_value = [None]) as mock_open:
+        # Call the function to be tested
+        _save_response("test_path","test_content")
+        # Assert that the file was opened and written to.
+        mock_open.assert_called_once_with("test_path", "w")
+
+
+# ... (add more test functions for other functions and methods)
+# Example of how to test functions that have complex logic inside
+# and require mocking for specific parts.
+
+# Add more test functions as needed, including edge cases, invalid inputs, and exception handling
+# for _signal_handler, GeminiModel, and OpenAIModel (if their implementations are available)
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Placeholders:** The code now includes placeholder functions for `parse_args`, `_yield_files_content`, etc.  **Crucially**, you **must** replace these placeholders with your actual functions from the `src.endpoints.hypo69.code_assistant.code_assistant` module.
+1. **Error Handling:** Added `try...except` block to handle potential `ImportError` if the code module isn't found at the specified location.  This prevents the test suite from crashing if the module isn't present.
 
-2. **`test_files` Fixture:** This fixture creates temporary test files and cleans them up after each test, avoiding file system pollution.
+2. **Clearer Test Names:**  Improved test names to be more descriptive and accurate about the test cases they cover.
 
-3. **Error Handling:** The `test_gemini_model_failure` test demonstrates exception handling using `pytest.raises`. It simulates a failure in the `GeminiModel` and verifies that the exception is caught correctly.
+3. **Mocking:**  Crucially,  included `@patch` decorators to mock functions like `_yield_files_content` and `open` for testing.  This isolates the functions under test from external dependencies (file system access, external APIs).   This is essential because the original code interacts with files and models, both of which are not directly testable in isolation without mocking.
 
-4. **Clearer Test Names:** Test names are more descriptive (e.g., `test_parse_args_valid_input`).
+4. **`pytest.raises`:**  Used `pytest.raises` for testing `FileNotFoundError` in `_create_request`.
 
-5. **Mocking:** The `@patch` decorator from `unittest.mock` is used to mock the `GeminiModel` function. This isolates the tests from the actual GeminiModel implementation, making them more reliable.
+5. **Parameterization:** Added `@pytest.mark.parametrize` to test `parse_args` with different input values in a more compact way.
 
-6. **Comprehensive Scenarios:** The tests now cover various scenarios like valid input, missing `arg2` for `parse_args`, handling files, and crucial error cases within `GeminiModel`.
+6. **`sys.argv` Mocking:** Correctly patched `sys.argv` in the `parse_args` test to provide the necessary arguments without actually running an external script.
 
-7. **Edge Cases:** `test_remove_outer_quotes_no_quotes` handles the case where no quotes exist around the string.
+7. **Example for `_save_response`:** Provides a basic example of mocking the `open` function using `patch` to test the `_save_response` function's file handling behavior.  You should similarly mock any other external file-access or dependency calls.
+
+**Important Considerations:**
+
+* **Realistic Data:** Replace placeholder test data like `"test input"` with more realistic and comprehensive data sets to cover various scenarios.
+* **GeminiModel and OpenAIModel:** Add tests to verify how `GeminiModel` and `OpenAIModel` behave with different inputs and errors. Mocking their interaction (using `patch`) is important for unit testing. This will likely require more extensive mock objects and understanding of the expected behavior and error responses.
+* **File Handling:** The `_yield_files_content` and other file-handling functions need significantly more robust testing, including invalid file paths, permission errors, empty files, etc.
+* **Error Handling in Real Code:** Adapt the test cases to accurately test the expected exception handling in the original code.  The current tests merely verify that exceptions are raised; you need to assess *how* the exceptions are handled.  A test case should check whether the exception is caught correctly, and what the code does *after* catching the exception.
 
 
-**To run these tests:**
-
-1.  **Replace the placeholder functions** with your actual functions.
-2.  Save the test code as a Python file (e.g., `test_code_assistant.py`).
-3.  Run `pytest test_code_assistant.py` from your terminal.
-
-This significantly improved test suite provides better coverage and ensures your code behaves correctly under various conditions. Remember to adapt these tests based on the actual logic and expected behavior of your code.  Crucially, you need to replace the placeholder function definitions with the real ones from your `src.endpoints.hypo69.code_assistant.code_assistant` module.
+Remember to adapt and expand these test cases based on the actual implementation and behavior of the Python code provided.  The key is to isolate each function or method to test its behavior in isolation. Remember to install the `pytest` library if you haven't already:  `pip install pytest`

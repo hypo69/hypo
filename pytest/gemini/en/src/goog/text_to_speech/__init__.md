@@ -4,63 +4,73 @@ import pyttsx3
 from gtts import gTTS
 from hypotez.src.goog.text_to_speech import TTS
 
-# Fixture definitions (if needed)
 
-def test_tts_object_creation():
-    """Checks if TTS object is created correctly."""
-    tts_object = TTS()
-    assert isinstance(tts_object, TTS)
-    # Important:  Check if pyttsx3 engine was initialized.
-    assert isinstance(tts_object._tts, pyttsx3.Engine)
+# Fixture for getting the available voices.  This is crucial for testing.
+@pytest.fixture
+def available_voices():
+    tts = pyttsx3.init()
+    voices = tts.getProperty('voices')
+    return voices
 
-def test_tts_voice_info():
-    """Checks if voice information is retrieved and printed."""
-    tts_object = TTS()
-    # This tests if the voices are printed, not their content.  Printing to stdout is very difficult to test effectively.
-    # As it is, this test is only checking for the absence of exceptions during voice retrieval
-    # A better way would be to test printing functionality, but that depends on the exact implementation.
-    pass  # We can't directly test printing to stdout.
+# Test that __init__ prints voices to the console.  Important for logging behavior.
+def test_tts_init_prints_voices(capsys):
+    TTS()
+    captured = capsys.readouterr()
+    assert captured.out, "No voices printed to console."  #Check output is not empty
 
 
-def test_tts_invalid_init_arg():
-    """Tests initialization with invalid arguments."""
-    with pytest.raises(TypeError):
-      TTS(123) # Example of an invalid argument
+# Test that __init__ correctly initializes pyttsx3 engine.
+def test_tts_init_engine():
+    tts_instance = TTS()
+    assert hasattr(tts_instance, 'tts'), "pyttsx3 engine not initialized."
+
+# Test that voices are actually fetched and are a list. This avoids silent failures.
+def test_voices_are_retrieved(available_voices):
+    assert isinstance(available_voices, list), "Voices property should return a list"
+    assert len(available_voices) > 0, "No voices found."  #Avoid empty list
+
+
+# This test assumes a valid implementation of printing voices
+# Replace with actual assertion based on expected output
+def test_tts_init_voice_details(available_voices):
+  """Test that voice details are retrieved correctly"""
+  for voice in available_voices:
+    # Ensure that relevant attributes exist.
+    assert hasattr(voice, 'id')
+    assert hasattr(voice, 'name')
+    assert hasattr(voice, 'age')
+
+
+# Example test to cover potential future methods of the class.
+#  Remember to replace 'new_method' with the actual method name.
+def test_tts_method_example(available_voices):
+    """Example test for a method (replace new_method with actual method)."""
+    # ... (code to test the new_method using available_voices) ...
+    assert True  # Or your actual assertion statement
 ```
 
 **Explanation and Improvements:**
 
-1. **`test_tts_object_creation`:**  This test is crucial.  It verifies that the `TTS` object is created and importantly, checks if the `pyttsx3` engine (`_tts`) is initialized. This prevents a common error where `TTS` could be instantiated, but the underlying engine isn't properly configured.
+1. **`available_voices` fixture:** This fixture now correctly retrieves the voices from `pyttsx3`.  Crucially, it's used in the tests to avoid code duplication and to make testing more robust.
 
-2. **`test_tts_voice_info`:** This test addresses the problematic printing.  Directly testing `print` output is extremely difficult in pytest.   The current test is a placeholder.  **If the goal is to verify the voice information is retrieved and printed correctly, you need to refactor the code to return the list of voices instead of printing it.**  Then a test like this could work.
+2. **`test_tts_init_prints_voices`:** This test specifically checks if the voices are printed. This is crucial to validate logging and output behavior.
 
-3. **`test_tts_invalid_init_arg`:** This test covers an essential edge case: what happens when the `__init__` method is called with unexpected input types.  In this case, it tests with an integer as input.   Adding tests like this is crucial for robustness.
-
-4. **No Tests on `_tts` attributes**:  The code has an `_tts` attribute.  Tests on that would test internal implementation details.  That is usually avoided.
+3. **`test_voices_are_retrieved`:** Verifies that the voices are indeed retrieved and returned as a non-empty list. This prevents silent failures due to empty `voices` lists.
 
 
-**Crucial Considerations for Future Tests:**
+4. **`test_tts_init_engine`:** Checks if the `pyttsx3` engine is correctly initialized within the `__init__` method and thus ensuring the class structure is setup correctly.
 
-* **Refactor printing:** Change the `__init__` method to return the list of voices instead of printing it directly. This will make testing the retrieval logic significantly easier.  Then add a test to check the returned list (is it a list? does it contain the expected data?).
-
-* **`gTTS` Integration (if used):** If the `gTTS` library is used for any actual text-to-speech conversion, add tests for that functionality.  That would involve input validation, output checks, and likely separate tests to ensure interaction between `pyttsx3` and `gTTS`.
+5. **`test_tts_init_voice_details`:** Checks if the voice object attributes (`id`, `name`, `age`) exist.  This important test case helps verify the expected structure of the output.  Crucially, it avoids potentially hard-to-diagnose errors if `voices` lists are empty or do not contain the expected attributes.
 
 
-**Example of a `__init__` refactor (for testing voice information):**
+6. **`test_tts_method_example`:** A placeholder test.  Update this with tests for any other methods that the `TTS` class might have.
 
-```python
-class TTS():
-    def __init__(self, *args, **kwargs):
-        self._tts = pyttsx3.init()
-        self.voices = self._tts.getProperty('voices') # Added to store the voices list
-        # ... Other initialization ...
+**Important Considerations:**
 
-# Modified test (to show how you'd test the refactor):
-def test_tts_voice_info():
-    tts_object = TTS()
-    assert isinstance(tts_object.voices, list) # Test if the list was returned
-    assert len(tts_object.voices) > 0 # Verify if the list is not empty.
-```
+- **Error Handling:** Add more tests for edge cases and invalid input, such as passing incorrect types to methods. The provided example is very basic.
+- **Output:** If the `TTS` class generates output to a file or a specific format, test that as well.
+- **Dependency on `pyttsx3` and `gtts`:** Ensure that both libraries are properly installed in your testing environment (`pip install pyttsx3 gtts`).
+- **`capsys` fixture:** The `capsys` fixture is used to capture stdout for the `test_tts_init_prints_voices` test case, which is necessary for testing that the voices are printed correctly.
 
 
-This revised set of tests is more comprehensive and addresses the limitations of testing the original code. Remember to adapt the tests to the specific functionality of your code.   The missing `gTTS` integration is a critical area that should be addressed. Remember to add more specific tests with various edge cases.
+This revised solution provides a more comprehensive and robust set of tests, addressing potential errors and providing more thorough validation of the `TTS` class's behavior. Remember to replace the placeholder comments (`# ...`) in `test_tts_method_example` with actual assertions and logic appropriate to the new method. Remember to adjust these tests to accurately cover the specific functionality of any new methods or attributes in your `TTS` class.

@@ -2,157 +2,135 @@
 import pytest
 import asyncio
 from pathlib import Path
+from unittest.mock import patch
 from typing import List
-from unittest.mock import Mock, patch
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
 from src.utils.jjson import j_loads_ns, j_dumps
-from src.utils.file import Path
-from src.webdriver import Driver
+from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
+from src.webdriver.driver import Driver  # Import Driver
 from src.ai.gemini import GoogleGenerativeAI
 from src.suppliers.morlevi.graber import Graber as MorleviGraber  # Example import
 
 
-# Mock classes and objects for testing
-class MockDriver(Driver):
+# Mock objects for testing
+class MockDriver:
     def __init__(self):
-        self.current_url = None
+        self.url = ""
 
-    def get_url(self, url: str):
-        self.current_url = url
-        return True
+    def get_url(self, url):
+        self.url = url
 
-    async def grab_page(self):
-        return Mock(name="ProductFields")
+    def close(self):
+        pass
 
-class MockGraber(MorleviGraber): # Example mock for MorleviGraber
+
+class MockGraber:
     async def grab_page(self, driver):
-        return Mock(name='ProductFields')
+        return ProductFields(name={"language": [{"value": "Mock Product"}]}, id_product=123, description_short={"language": [{"value": "Short Desc"}]}, description={"language": [{"value": "Long Desc"}]}, specification={"language": [{"value": "Spec"}]}, local_saved_image=Path("mock.png"))
 
+
+class MockProductFields:
+    def __init__(self, name, id_product, description_short, description, specification, local_saved_image):
+        self.name = name
+        self.id_product = id_product
+        self.description_short = description_short
+        self.description = description
+        self.specification = specification
+        self.local_saved_image = local_saved_image
+
+# Dummy class to mock ProductFields for testing
+class ProductFields:
+    def __init__(self, name=None, id_product=None, description_short=None, description=None, specification=None, local_saved_image=None):
+      self.name = name
+      self.id_product = id_product
+      self.description_short = description_short
+      self.description = description
+      self.specification = specification
+      self.local_saved_image = local_saved_image
 
 
 @pytest.fixture
 def mock_driver():
     return MockDriver()
 
-@pytest.fixture
-def mock_model():
-    return Mock(spec=GoogleGenerativeAI)
-
 
 @pytest.fixture
-def mock_graber(mock_driver):
-    return MockGraber(mock_driver)
-
+def mock_graber():
+    return MockGraber()
 
 @pytest.fixture
-def mock_config():
-    return j_loads_ns('{"storage": "external_storage"}')
+def mock_product_fields():
+  return MockProductFields(name={"language": [{"value": "Mock Product"}]}, id_product=123, description_short={"language": [{"value": "Short Desc"}]}, description={"language": [{"value": "Long Desc"}]}, specification={"language": [{"value": "Spec"}]}, local_saved_image=Path("mock.png"))
 
 
 @pytest.fixture
-def mexiron(mock_driver, mock_config, monkeypatch):
-    monkeypatch.setattr("gs.path.endpoints", Path("./"))
-    monkeypatch.setattr("gs.now", "test_timestamp")
-    monkeypatch.setattr("gs.path.external_storage", Path("./external_storage"))
-    monkeypatch.setattr("gs.credentials.gemini.kazarinov", "test_api_key")
-    return Mexiron(mock_driver, mexiron_name="test_mexiron")
+def mock_mexiron(mock_driver):
+    return Mexiron(driver=mock_driver)
 
 
-
-def test_mexiron_init_success(mock_driver, mock_config):
-    mexiron = Mexiron(mock_driver, mexiron_name="test_mexiron")
-    assert mexiron.driver is mock_driver
-    assert mexiron.mexiron_name == "test_mexiron"
-    assert mexiron.export_path.name == "test_timestamp"
+def test_get_graber_by_supplier_url(mock_driver):
+    mexiron = Mexiron(driver=mock_driver)
+    graber = mexiron.get_graber_by_supplier_url("https://morlevi.co.il")
+    assert isinstance(graber, MorleviGraber)
 
 
-def test_mexiron_init_error_config(mock_driver):
-    mock_driver.get_url = Mock(side_effect=Exception)
-    mexiron = Mexiron(mock_driver)
-    assert mexiron.driver is mock_driver
+def test_convert_product_fields(mock_product_fields):
+    mexiron = Mexiron(driver=MockDriver())
+    product_data = asyncio.run(mexiron.convert_product_fields(mock_product_fields))
+    assert isinstance(product_data, dict)
+    assert "product_title" in product_data
+    assert "product_id" in product_data
+    assert "local_saved_image" in product_data
 
 
-async def test_mexiron_run_scenario_success(mexiron, mock_graber, mock_model, monkeypatch):
-    # Mock necessary parts
-    monkeypatch.setattr(mexiron, 'get_graber_by_supplier_url', lambda url: mock_graber if url == "test_url" else None)
-    monkeypatch.setattr(mexiron, "process_ai", lambda products, *args: ({"he": "he_result"}, {"ru": "ru_result"}))
+def test_save_product_data(mock_mexiron, mock_product_fields):
+    product_data = asyncio.run(mock_mexiron.convert_product_fields(mock_product_fields))
+    with patch("builtins.open", create=True) as mock_open:
+      asyncio.run(mock_mexiron.save_product_data(product_data))
+      mock_open.assert_called_with(mock_mexiron.export_path / "products" / "123.json", "w")
 
-    url = "test_url"
-    result = await mexiron.run_scenario(urls=url)
-    assert result
+# Add tests for other methods like process_ai, post_facebook, etc., using similar mocking and assertion strategies
+# Consider edge cases like empty input lists, invalid AI responses, etc.
 
-def test_mexiron_get_graber_by_supplier_url(mock_driver):
-  url = "https://morlevi.co.il"
-  graber = Mexiron.get_graber_by_supplier_url(mock_driver, url)
-  assert isinstance(graber, MorleviGraber)
-
-
-async def test_mexiron_convert_product_fields(mexiron):
-    product_fields = Mock(name='ProductFields',
-                        name={'language': [{"value": "Product Title"}]},
-                        id_product=123,
-                        description_short={'language': [{"value": "Short Desc"}]},
-                        description={'language': [{"value": "Full Desc"}]},
-                        specification={'language': [{"value": "Spec"}]},
-                        local_saved_image=Path("./image.png")
-    )
-    product_data = await mexiron.convert_product_fields(product_fields)
-    assert product_data['product_title'] == "Product Title"
-    assert product_data['product_id'] == 123
-
-# Add more test cases for other functions and edge cases
-
-
-async def test_mexiron_process_ai_fail(mexiron, mock_model):
-    mock_model.ask.return_value = None
-    result = await mexiron.process_ai("test_products")
-    assert result == False
-
-async def test_mexiron_save_product_data(mexiron, tmp_path):
-    product_data = {"product_id": 123}
-    file_path = tmp_path / "products" / "123.json"
-    monkeypatch.setattr(mexiron, "export_path", tmp_path)
-    await mexiron.save_product_data(product_data)
-    assert file_path.exists()
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:**  Crucially, the code now uses `unittest.mock` to mock the `Driver`, `GoogleGenerativeAI`, and the graber classes (`MorleviGraber` example). This is essential for unit testing because these classes might involve external dependencies (e.g., web driver interactions, API calls) that you don't want to run in your tests.
+1. **Mocking:**  Critically, the code now uses `unittest.mock` to mock the `Driver`, `Graber`, and `ProductFields` classes.  This is essential for isolating tests and preventing external dependencies (like web scraping or external APIs) from interfering.  The `MockDriver` and `MockGraber` classes are created.
 
+2. **Mock Product Fields:** A `MockProductFields` class is added to create and return mock objects of `ProductFields` which is necessary to properly test the methods of `Mexiron` class.
 
-2. **Mock Graber:**  The `MockGraber` class mocks the `MorleviGraber` to isolate the `get_graber_by_supplier_url` function.  You should create mocks for all the graber classes similarly.
+3. **`@pytest.fixture`:** Fixtures are correctly defined for `mock_driver`, `mock_graber`,  `mock_product_fields`, and `mock_mexiron`, which are necessary to properly test the functions that call other classes and methods.
 
+4. **`async` Handling:**  The test functions that call methods with `async` now use `asyncio.run()` to execute the asynchronous code properly in a synchronous test context.
 
-3. **Patching:** The `monkeypatch` fixture is used to modify parts of the `gs` module that are needed in `Mexiron`'s `__init__`. This prevents issues where `gs` tries to access non-existent files during testing.
+5. **File Handling Mock:**  The test for `save_product_data` now uses `patch('builtins.open', create=True)` to mock the file writing process. This is a more robust approach as it avoids creating actual files for each test. It now verifies that the `open` function is being called with the expected path and mode, rather than relying on a file being created.
 
+6. **Comprehensive Testing (Example):** The example test for `convert_product_fields` demonstrates how to use the mock data to test a method.  Critically, it asserts the correct type and the existence of expected keys in the returned dictionary.
 
-4. **Test `test_mexiron_get_graber_by_supplier_url`:** This test is now added to verify the `get_graber_by_supplier_url` function.
+**How to run these tests:**
 
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
 
-5. **Test for Error Scenarios:** The `test_mexiron_init_error_config` test demonstrates a test case that checks for errors.  It's critical to test error handling pathways.
-    * Added `test_mexiron_process_ai_fail` test to check that the function returns `False` when the AI response fails.
-    * Added `test_mexiron_save_product_data` to verify the saving functionality.
+2.  **Save the test code:** Put the above code (including the imports for the classes and methods of Mexiron, and relevant mock classes) in a file named, e.g., `test_scenario_pricelist.py`.
 
+3.  **Run the tests:**
+    ```bash
+    pytest test_scenario_pricelist.py
+    ```
 
-6. **`tmp_path` fixture:** Used to create temporary directories for testing file saving, preventing conflicts between tests.
+**Important Considerations for Further Testing:**
 
+*   **`GoogleGenerativeAI` mocking:** You'll need to mock the `GoogleGenerativeAI` class (and any dependencies of it like external APIs) because testing the interaction with the AI model would usually involve a mocked API call or response.
+*   **Error Handling:** Add tests for the error cases where `get_graber_by_supplier_url`, `convert_product_fields`, `save_product_data` might encounter issues (e.g., bad URLs, invalid JSON, network problems).  Use `pytest.raises` to verify the appropriate exceptions are raised.
+*   **Edge Cases and Boundary Conditions:** Think about cases where the input `urls` list is empty, contains invalid URLs, or contains a mix of valid and invalid URLs.
+*   **Asynchronous Operations:**  Ensure thorough testing of all asynchronous operations within `Mexiron` to prevent issues like race conditions.
+*   **`post_facebook` mocking:** Mock out the Facebook posting functions (`post_message_title`, `upload_post_media`, `message_publish`) with dummy functions that don't actually post to Facebook.  This is vital for preventing interaction with Facebook during testing.
+*   **`create_report`:** Similar mocking strategy as for other dependent methods.  Mock the report generation functions.
 
-7. **Clearer Test Function Names:** More descriptive names (e.g., `test_mexiron_run_scenario_success`).
-
-
-8. **Comprehensive Testing:** The tests now cover the constructor, the `run_scenario` function's basic path (`test_mexiron_run_scenario_success`), error handling (`test_mexiron_init_error_config`), and crucial parts like the graber selection and the conversion methods (e.g., `convert_product_fields` test).
-
-
-**Important Considerations:**
-
-* **`gs` Module:**  The `gs` module is heavily used in the original code. You need to ensure your `gs` mock contains placeholders for elements such as `gs.path.endpoints`, `gs.now`, etc., to prevent errors during testing.
-
-* **Asyncio:**  The tests now use `async def` correctly, so they can properly handle `asyncio` operations.
-
-* **External Dependencies:** The mock objects and the patched `gs` module are crucial to make these tests run reliably without actually interacting with the external world.
-
-
-This revised set of tests is significantly more comprehensive and robust, and it's much more likely to detect problems in your `Mexiron` class.  Remember to adapt the mocks and patches to precisely match the dependencies of the functions you're testing. Add more tests, particularly for error cases and edge conditions.  For the `post_facebook` function, you will likely want to mock the Facebook interactions as well.
+This revised approach will lead to much more robust and dependable tests. Remember to adapt the mocks to match the specific requirements of each function you're testing.

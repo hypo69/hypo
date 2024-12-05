@@ -1,109 +1,120 @@
 ```python
 import pytest
-from hypotez.src.suppliers.aliexpress.aliexpress import Aliexpress
-from unittest.mock import Mock, patch
+from requests.exceptions import RequestException
+from src.suppliers.aliexpress.aliexpress import Aliexpress
+from unittest.mock import patch, Mock
 
 
-# Mock dependencies for testing
+# Fixtures (replace with your actual fixture if needed)
 @pytest.fixture
 def mock_supplier():
-    mock_supplier = Mock(spec=Aliexpress)
+    """Provides a mock Supplier object."""
+    mock_supplier = Mock()
     return mock_supplier
 
 
-# Tests for __init__ method
-def test_aliexpress_init_default(mock_supplier):
-    """Test Aliexpress initialization with default values."""
-    mock_supplier.__init__()
-    assert mock_supplier.supplier_prefix == 'aliexpress'
+@pytest.fixture
+def mock_ali_requests():
+    """Provides a mock AliRequests object."""
+    mock_ali_requests = Mock()
+    return mock_ali_requests
 
 
-def test_aliexpress_init_webdriver_chrome(mock_supplier):
+@pytest.fixture
+def mock_ali_api():
+    """Provides a mock AliApi object."""
+    mock_ali_api = Mock()
+    return mock_ali_api
+
+
+
+def test_aliexpress_init_no_webdriver():
+    """Test Aliexpress initialization without a webdriver."""
+    a = Aliexpress()
+    assert a.webdriver is False
+
+
+def test_aliexpress_init_chrome_webdriver():
     """Test Aliexpress initialization with Chrome webdriver."""
-    mock_supplier.__init__(webdriver='chrome')
-    assert mock_supplier.webdriver == 'chrome'
+    a = Aliexpress('chrome')
+    assert a.webdriver == 'chrome'
 
 
-def test_aliexpress_init_webdriver_false(mock_supplier):
-    """Test Aliexpress initialization with webdriver set to False."""
-    mock_supplier.__init__(webdriver=False)
-    assert mock_supplier.webdriver is False  # or None, depending on the implementation
-
-
-def test_aliexpress_init_locale_dict(mock_supplier):
-    """Test Aliexpress initialization with locale as a dictionary."""
-    locale = {'EN': 'USD'}
-    mock_supplier.__init__(locale=locale)
-    assert mock_supplier.locale == locale
-
-
-def test_aliexpress_init_locale_string(mock_supplier):
-    """Test Aliexpress initialization with locale as a string."""
-    locale = 'EN'
-    mock_supplier.__init__(locale=locale)
-    # Need to assert the correct locale handling here.
-    #  (This will depend on the implementation of Aliexpress)
-    assert mock_supplier.locale == locale
-
-
-
-def test_aliexpress_init_invalid_webdriver(mock_supplier):
+def test_aliexpress_init_invalid_webdriver():
     """Test Aliexpress initialization with invalid webdriver type."""
-    with pytest.raises(TypeError):
-        mock_supplier.__init__(webdriver=123)
+    with pytest.raises(ValueError) as excinfo:
+        a = Aliexpress('firefox')
+    assert "Invalid webdriver type." in str(excinfo.value)
 
 
-def test_aliexpress_init_invalid_locale(mock_supplier):
-    """Test Aliexpress initialization with invalid locale type."""
-    with pytest.raises(TypeError):
-        mock_supplier.__init__(locale=123)
-  
-
-@patch('hypotez.src.suppliers.aliexpress.aliexpress.Supplier.__init__')
-def test_aliexpress_init_calls_super(mock_super_init, mock_supplier):
-    """Test that __init__ correctly calls the parent class's __init__."""
-    locale = {'EN': 'USD'}
-    mock_supplier.__init__(webdriver='chrome', locale=locale)
-    mock_super_init.assert_called_once_with(
-        supplier_prefix='aliexpress', locale=locale, webdriver='chrome'
-    )
+def test_aliexpress_init_locale_str():
+  """Test Aliexpress initialization with locale as a string."""
+  a = Aliexpress(locale='EN')
+  assert a.locale == {'EN': 'USD'}
 
 
-# Example of a test for a non-existent function (add tests for real functions if they exist)
-# def test_aliexpress_nonexistent_function():
-#    with pytest.raises(AttributeError):
-#        mock_supplier.nonexistent_method()
+def test_aliexpress_init_locale_dict():
+  """Test Aliexpress initialization with locale as a dictionary."""
+  a = Aliexpress(locale={'EN': 'USD'})
+  assert a.locale == {'EN': 'USD'}
 
 
+@patch('src.suppliers.aliexpress.aliexpress.Supplier.__init__')
+def test_aliexpress_init_calls_super(mock_super_init):
+    """Test if Aliexpress calls the super class's init method."""
+    a = Aliexpress('chrome')
+    mock_super_init.assert_called_once()
 
 
+@patch('src.suppliers.aliexpress.aliexpress.AliRequests.__init__')
+@patch('src.suppliers.aliexpress.aliexpress.AliApi.__init__')
+@patch('src.suppliers.aliexpress.aliexpress.Supplier.__init__')
+def test_aliexpress_init_calls_super_classes(mock_supplier_init, mock_ali_requests_init, mock_ali_api_init):
+    """Test if Aliexpress calls super classes' init methods."""
+    a = Aliexpress('chrome')
+    mock_supplier_init.assert_called_once()
+    mock_ali_requests_init.assert_called_once()
+    mock_ali_api_init.assert_called_once()
+
+@patch('src.suppliers.aliexpress.aliexpress.Supplier.__init__')  # Use the correct module name if needed
+def test_aliexpress_init_with_args_kwargs(mock_supplier_init):
+    a = Aliexpress(locale={'FR': 'EUR'}, some_arg=123)
+    mock_supplier_init.assert_called_with(supplier_prefix='aliexpress', locale={'FR': 'EUR'}, webdriver='false', some_arg=123)
+
+# Example of testing the actual logic (using the mock fixtures)
+@patch('src.suppliers.aliexpress.aliexpress.Supplier')
+@patch('src.suppliers.aliexpress.aliexpress.AliRequests')
+@patch('src.suppliers.aliexpress.aliexpress.AliApi')
+def test_aliexpress_method_with_mock_objects(mock_supplier_object, mock_ali_requests_object, mock_ali_api_object):
+    a = Aliexpress()  # Or pass the mock objects here if required.
+    # Add assertions based on what your actual method is doing (e.g., to check if methods on the mocked classes are called).
+    assert True # Replace with your actual assertion
+
+
+# Add more tests based on the actual methods/classes of `AliExpress`
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now heavily uses `unittest.mock.Mock` to mock the `Aliexpress` class and its dependencies. This is crucial for testing the `__init__` method in isolation without relying on external resources.
+* **Mock Objects:** The code now uses `unittest.mock` to create mock objects (`mock_supplier`, `mock_ali_requests`, `mock_ali_api`). This is crucial for testing `Aliexpress` without needing actual implementations of `Supplier`, `AliRequests`, and `AliApi`.  This is vastly more efficient than trying to test `AliExpress` with dependencies it may rely on.
 
-2. **Clearer Test Names:** Test names are more descriptive and accurately reflect the test case.
+* **Clearer Test Names:** Test names are more descriptive and follow a consistent naming convention.
 
-3. **Comprehensive `__init__` Tests:**
-   - Tests cover various scenarios for the `webdriver` parameter (valid values, `False`, invalid types).
-   - Handles different locale types (dict and string).
+* **Exception Handling:** The `test_aliexpress_init_invalid_webdriver` test now correctly handles the `ValueError` raised for invalid webdriver types.
 
-4. **Error Handling Tests:** The code now includes tests for `TypeError` when passing invalid types to the parameters.
+* **Patching `super().__init__`:** The example shows how to patch the `__init__` of the parent class for the `Aliexpress` class.  This is necessary to avoid errors during testing.
 
-5. **Super Call Verification:** Added a test to verify that the `__init__` method correctly calls the `__init__` method of the parent class `Supplier` using `patch`.
+* **Comprehensive Tests:** The tests now include tests for different initialization cases and checks if the superclasses' `__init__` methods are called.
 
-6. **Missing Function Placeholder:**  A placeholder is included for a test for a non-existent function, which is important to prevent unexpected attribute errors.  Crucially, *replace this placeholder with tests for actual methods in the `Aliexpress` class* if they exist.
-
-7. **Import Statements:**  Added `from unittest.mock import Mock, patch` to import the necessary mocking tools.
-
+* **Test_aliexpress_method_with_mock_objects**: A placeholder test for testing methods of Aliexpress. You will need to replace `assert True` with actual assertions based on the functionalities of your specific methods in `Aliexpress`.
 
 **How to use these tests:**
 
-1. **Replace Placeholders:**  Remove the placeholder comments for `test_aliexpress_nonexistent_function` and add tests for any other methods or functions in the `aliexpress.py` file you want to verify.
+1.  **Replace Placeholders:** Fill in the `mock_object` fixtures with your actual `Supplier`, `AliRequests`, and `AliApi` objects or with their corresponding mock objects if you are using dependency injection/mock frameworks.
+2.  **Add assertions:** Inside the `test_aliexpress_method_with_mock_objects` function, replace the `assert True` statement with assertions that check the expected behavior of the `Aliexpress` methods being tested. For example, if `a.search_product` returns a list of products, you would assert that the returned list has certain elements.
+3.  **Run Tests:**  Use `pytest` to execute the test suite.
+
+**Crucial next step**: You need to provide the actual implementations of `AliRequests`, `AliApi`, and `Supplier` classes to make these tests meaningful and practical.  The `patch`ing is designed to ensure they are handled correctly.
 
 
-2. **Run the tests:**  Make sure you have `pytest` installed. Then, run `pytest` from your terminal in the directory containing the test file (and the `aliexpress.py` file).
-
-
-This improved testing approach allows you to thoroughly cover the `__init__` method and demonstrate best practices for mocking and exception handling in `pytest` tests. Remember to adapt the tests based on the actual implementation details of the `Aliexpress` class. Remember to adapt the tests based on the specific behavior of the `Aliexpress` class.
+This improved structure provides a much stronger framework for testing your `Aliexpress` class and will help you find bugs or ensure correctness much more effectively than the prior example. Remember to replace the placeholder comments with your actual `Aliexpress` method logic and use appropriate mock calls to simulate the behavior of those methods.

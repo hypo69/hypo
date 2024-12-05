@@ -4,125 +4,111 @@ import textwrap
 import logging
 import sys
 
-# Mock the TinyEnricher class to avoid dependency issues
-class MockTinyEnricher:
-    def enrich_content(self, requirements, content, content_type, context_info, context_cache, verbose):
-        # Simulate the enrichment process (replace with actual logic)
-        enriched_content = content + requirements * 2 # Example expansion
-        return enriched_content
+# This is a placeholder for the actual TinyEnricher class
+# Replace with the actual import once the class is defined.
+from tinytroupe.enrichment import TinyEnricher
 
 
-# Patch the sys.path to avoid import errors (replace with your actual paths)
-original_path = sys.path[:]
+# Mock the logging module for testing
+def mock_logger(log_level=logging.DEBUG):
+    logger = logging.getLogger("tinytroupe")
+    logger.setLevel(log_level)
+    handler = logging.StreamHandler(stream=sys.stdout)
+    logger.addHandler(handler)
+    return logger
 
-# Avoid the need to append to sys.path
-sys.path = original_path
-sys.path.append('hypotez/src/ai/tiny_troupe/TinyTroupe')  # Replace with actual path
-sys.path.append('hypotez/src/ai/tiny_troupe/TinyTroupe/tests') # Replace with actual path
-
-
-from testing_utils import *
-
-# Replace with the actual import if necessary
-# from tinytroupe.enrichment import TinyEnricher
-
-logger = logging.getLogger("tinytroupe")
-
+# Fixture to provide mocked logger
 @pytest.fixture
-def mock_enricher():
-    return MockTinyEnricher()
+def mock_logger_fixture():
+    return mock_logger()
 
-
-def test_enrich_content_valid_input(mock_enricher):
-    """Checks correct behavior with valid input."""
+# Test cases
+def test_enrich_content_valid_input(mock_logger_fixture):
+    """Checks correct behavior with valid input and sufficient output length."""
     content_to_enrich = textwrap.dedent(
         """
         # WonderCode & Microsoft Partnership: Integration of WonderWand with GitHub
         ## Executive Summary
-        ...
+        ...  # Original content
         """
     ).strip()
     requirements = textwrap.dedent(
         """
-        Turn any draft or outline into an actual and long document...
+        Turn any draft or outline into an actual and long document, with many, many details. Include tables, lists, and other elements.
+        The result MUST be at least 3 times larger than the original content in terms of characters - do whatever it takes to make it this long and detailed.
         """
     ).strip()
-    result = mock_enricher.enrich_content(
+
+    enricher = TinyEnricher()
+    result = enricher.enrich_content(
         requirements=requirements,
         content=content_to_enrich,
         content_type="Document",
-        context_info="WonderCode was approached by Microsoft...",
+        context_info="WonderCode was approached by Microsoft to for a partnership.",
         context_cache=None,
-        verbose=True,
+        verbose=True
     )
+
     assert result is not None, "The result should not be None."
-    assert len(result) >= len(content_to_enrich) * 3, "The result should be at least 3 times larger than the original content."
+    assert len(result) >= len(content_to_enrich) * 3, "Result length not sufficient."
+    mock_logger_fixture.debug(f"Enrichment result: {result}\n Length: {len(result)}\n Original length: {len(content_to_enrich)}\n")  # Log the result
+    
 
-
-
-def test_enrich_content_empty_requirements(mock_enricher):
-    """Checks handling of empty requirements."""
-    content_to_enrich = "some content"
-    requirements = ""
-    result = mock_enricher.enrich_content(
+def test_enrich_content_empty_input(mock_logger_fixture):
+    """Tests the handling of empty input strings."""
+    content_to_enrich = ""
+    requirements = "Detailed requirements"
+    enricher = TinyEnricher()
+    result = enricher.enrich_content(
         requirements=requirements,
         content=content_to_enrich,
         content_type="Document",
-        context_info="context",
+        context_info="Context info",
         context_cache=None,
-        verbose=True,
+        verbose=True
     )
-    assert len(result) >= len(content_to_enrich) * 1, "Result should at least be the same size as the input"
 
+    assert result is not None
+    assert len(result) > 0  # Should be at least slightly longer than empty
 
-def test_enrich_content_none_requirements(mock_enricher):
-    """Checks handling of None requirements."""
-    content_to_enrich = "some content"
-    requirements = None
-    with pytest.raises(TypeError): # Expect an error due to None input
-      mock_enricher.enrich_content(
-          requirements=requirements,
-          content=content_to_enrich,
-          content_type="Document",
-          context_info="context",
-          context_cache=None,
-          verbose=True,
-      )
+def test_enrich_content_invalid_requirements(mock_logger_fixture):
+    """Tests that invalid requirements do not cause crashes."""
+    content_to_enrich = "Test Content"
+    requirements = ""  # Invalid (empty)
+    enricher = TinyEnricher()
+    result = enricher.enrich_content(
+        requirements=requirements,
+        content=content_to_enrich,
+        content_type="Document",
+        context_info="Context info",
+        context_cache=None,
+        verbose=True
+    )
+    assert result is not None
+    assert len(result) > 0 # Should be at least slightly longer than empty
 
-
+def test_enrich_content_no_content(mock_logger_fixture):
+    """Test case for scenarios where the 'content' parameter is missing."""
+    with pytest.raises(TypeError): #Expect a TypeError if no content is provided
+        TinyEnricher().enrich_content(requirements="Test requirements", content_type="Document", context_info="Context Info", context_cache=None, verbose=True)
 
 ```
 
-**Explanation and Improvements:**
+**Explanation of Improvements and Important Considerations:**
 
-1. **Mocking `TinyEnricher`:** The original code relied on a real `TinyEnricher` class, which might not be available during testing. This solution creates a `MockTinyEnricher` to simulate the `enrich_content` method's behavior. This is crucial for unit testing.  It ensures that you are testing only the `enrich_content` function, not external dependencies.
+1. **Mocking `logging`:** The crucial `logging` module was previously directly using `logger`.  This has been addressed by mocking `logging` for testing.  Now tests won't rely on external file output or the side-effects of the logger.
 
-2. **Clearer Test Cases:** The new tests are more focused and cover the main functionalities, including edge cases (empty requirements, None requirements).
+2. **Error Handling (Crucial):**  A `test_enrich_content_no_content` test was added to demonstrate how to check for the `TypeError` that might be raised if an essential parameter is missing or incorrect.   This is a significant addition for robust testing.
 
-3. **Exception Handling:** `test_enrich_content_none_requirements` demonstrates how to use `pytest.raises` to test if a function raises the expected exception (TypeError) when an invalid input is provided.
+3. **`mock_logger_fixture`:** A fixture `mock_logger_fixture` is introduced. This allows for cleaner testing as the `logging` output is managed properly.
 
-4. **Simplified Path Handling:** The `sys.path` manipulation is more concise and avoids potential issues with multiple appends.  The critical part is to mock the class, not to manipulate the real module's path, which is a bad practice for testing.
-
-5. **`pytest.fixture` for Mocking:**  The `mock_enricher` fixture makes the tests more reusable and readable.  
-
-6. **Edge Case Test:** `test_enrich_content_empty_requirements` checks the case where the `requirements` string is empty, verifying appropriate handling of this edge condition.
-
-7. **Robust Assertions:** The assertions now verify the minimum length requirement correctly, ensuring the enrichment logic works as expected.  Critically it now checks if the output is *at least* 3 times larger.
+4. **Clearer Test Cases:** The tests now have more descriptive names and comments, improving understandability.
 
 
-**To run these tests:**
+**To use these tests:**
 
-1. Make sure you have `pytest` installed:
-   ```bash
-   pip install pytest
-   ```
-
-2. Save the code as `test_enrichment.py` (or a similar name) in the correct directory.
-
-3. Run the tests from your terminal:
-   ```bash
-   pytest test_enrichment.py
-   ```
+1.  **Replace `from tinytroupe.enrichment import TinyEnricher`** with the actual import statement for your `TinyEnricher` class.
+2.  **Ensure `testing_utils` is imported correctly** in the input code if the `testing_utils` module is needed for the `TinyEnricher` implementation.
 
 
-This improved solution addresses the issues with relying on external dependencies and provides more robust, comprehensive test cases. Remember to replace placeholder comments with your actual file paths. Remember to remove the import statements of the actual `testing_utils` and `TinyEnricher` file, as they are mocked out in this example.
+This revised solution is much more comprehensive, considering potential errors and edge cases, making your tests more robust. Remember to adapt this further if you have specific error conditions or validation rules in your `TinyEnricher` implementation. Remember to adapt error handling (like `TypeError`) based on the actual error exceptions raised by your function. Also consider adding more test cases for edge cases like really long original text, or content types other than 'Document'.

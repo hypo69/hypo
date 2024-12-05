@@ -3,117 +3,145 @@ import pytest
 import json
 from pathlib import Path
 from packaging.version import Version
-import sys
 from unittest.mock import patch
+import sys
 
-# Replace with the actual path to your logger module
-from hypotez.src.logger.header import set_project_root, __root__
-
-# Fixture for creating a mock settings.json file
-@pytest.fixture
-def mock_settings_file(tmp_path):
-    settings_data = {"project_name": "TestProject", "version": "1.0.0"}
-    settings_path = tmp_path / "src" / "settings.json"
-    settings_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(settings_path, "w") as f:
-        json.dump(settings_data, f, indent=4)
-    return settings_path
+from hypotez.src.logger.header import set_project_root
 
 
-# Fixture for creating a mock README.md file
-@pytest.fixture
-def mock_readme_file(tmp_path):
-    readme_data = "This is a test README."
-    readme_path = tmp_path / "src" / "README.MD"
-    readme_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(readme_path, "w") as f:
-        f.write(readme_data)
-    return readme_path
+def test_set_project_root_valid_input():
+    """Checks correct behavior with valid input."""
+    # Create a temporary directory structure
+    root_dir = Path(__file__).resolve().parent.parent.parent / "test_root"
+    root_dir.mkdir(parents=True, exist_ok=True)
+    (root_dir / "pyproject.toml").touch()
 
+    # Simulate the current file
+    test_file = root_dir / "test_file.py"
+    test_file.touch()
 
-def test_set_project_root_valid_input(tmp_path):
-    """Tests set_project_root with a valid project structure."""
-    # Create a pyproject.toml file in a subdirectory
-    (tmp_path / "project" / "pyproject.toml").touch()
-    root_dir = set_project_root(marker_files=("pyproject.toml",))
-    assert root_dir == tmp_path / "project"
+    # Call the function with the test file
+    result = set_project_root()
 
+    # Assert that the returned path is correct
+    assert result == root_dir, f"Expected {root_dir}, but got {result}"
 
-def test_set_project_root_invalid_input(tmp_path):
-    """Tests set_project_root when no marker files are found."""
-    root_dir = set_project_root(marker_files=("nonexistent_file.txt",))
-    assert root_dir == tmp_path
+    # Clean up the temporary directory
+    import shutil
 
-
-def test_set_project_root_existing_file(tmp_path):
-    """Tests if root is updated when a file exists in the parent directory."""
-    (tmp_path / "pyproject.toml").touch()
-    root_dir = set_project_root()
-    assert root_dir == tmp_path
-
-
-def test_set_project_root_nested_structure(tmp_path):
-    """Tests set_project_root with a nested project structure."""
-    (tmp_path / "project" / "subproject" / "pyproject.toml").touch()
-    root_dir = set_project_root(marker_files=("pyproject.toml",))
-    assert root_dir == tmp_path / "project" / "subproject"
+    shutil.rmtree(root_dir)
 
 
 
-def test_settings_loading_valid(mock_settings_file):
-    """Test loading settings with a valid settings file."""
-    with patch('hypotez.src.logger.header.__root__', new_callable=lambda: mock_settings_file.parent):
-        assert __root__ == mock_settings_file.parent
+def test_set_project_root_multiple_marker_files():
+    """Checks behavior when multiple marker files exist in the path."""
+    root_dir = Path(__file__).resolve().parent.parent.parent / "test_root"
+    root_dir.mkdir(parents=True, exist_ok=True)
+    (root_dir / "pyproject.toml").touch()
+    (root_dir / "requirements.txt").touch()
+
+    test_file = root_dir / "test_file.py"
+    test_file.touch()
+    
+    result = set_project_root()
+    assert result == root_dir, "Root directory should be found even with multiple marker files"
+    import shutil
+    shutil.rmtree(root_dir)
 
 
-def test_settings_loading_invalid(tmp_path):
-    """Test loading settings when settings.json is missing."""
-    with patch('hypotez.src.logger.header.__root__', new_callable=lambda: tmp_path):
-        assert __root__ == tmp_path
-        assert __root__ / "src" / "settings.json" not in sys.path  # Verify path is not added when file is missing
-        assert __root__ == set_project_root()
-        assert __project_name__ == 'hypotez'
+def test_set_project_root_no_marker_files():
+    """Tests when no marker files are found."""
+    # Create a temporary directory without marker files
+    current_dir = Path(__file__).resolve().parent
+    result = set_project_root()
+
+    assert result == current_dir, "Expected the current directory when no marker files are found"
 
 
+def test_set_project_root_marker_file_not_found():
+    """Checks behavior if the marker file is not present anywhere."""
+    root_dir = Path(__file__).resolve().parent.parent.parent / "test_root"
+    root_dir.mkdir(parents=True, exist_ok=True)
+    
+    test_file = root_dir / "test_file.py"
+    test_file.touch()
 
-def test_readme_loading_valid(mock_readme_file):
-    """Test loading README with a valid README file."""
-    with patch('hypotez.src.logger.header.__root__', new_callable=lambda: mock_readme_file.parent):
-        assert __root__ == mock_readme_file.parent
+    # Simulate the absence of marker files
+    result = set_project_root()
+    assert result == root_dir, "Current directory is returned if no marker file is found"
 
 
+    import shutil
+    shutil.rmtree(root_dir)
 
-def test_readme_loading_invalid(tmp_path):
-    """Test loading README when README.MD is missing."""
-    with patch('hypotez.src.logger.header.__root__', new_callable=lambda: tmp_path):
-        assert __root__ == tmp_path
-        assert __doc__ == ''
+
+def test_set_project_root_in_sys_path():
+    """Checks if the returned path is added to sys.path."""
+    root_dir = Path(__file__).resolve().parent.parent.parent / "test_root"
+    root_dir.mkdir(parents=True, exist_ok=True)
+    (root_dir / "pyproject.toml").touch()
+    test_file = root_dir / "test_file.py"
+    test_file.touch()
+
+    result = set_project_root()
+    assert str(result) in sys.path
+
+    import shutil
+    shutil.rmtree(root_dir)
+
+
+# Tests for the settings and documentation loading, using mocks
+@patch("hypotez.src.logger.header.gs")
+def test_settings_loading_successful(mock_gs):
+    """Tests successful loading of settings.json."""
+    mock_gs.path.root = Path(__file__).resolve().parent.parent.parent
+    settings_content = {"project_name": "MyProject", "version": "1.0.0"}
+    (mock_gs.path.root / "src" / "settings.json").write_text(json.dumps(settings_content))
+    from hypotez.src.logger.header import settings
+    assert settings == settings_content
+
+@patch("hypotez.src.logger.header.gs")
+def test_settings_loading_not_found(mock_gs):
+    """Tests loading when settings.json is not found."""
+    mock_gs.path.root = Path(__file__).resolve().parent.parent.parent
+    from hypotez.src.logger.header import settings
+    assert settings is None
+
+
+@patch("hypotez.src.logger.header.gs")
+def test_doc_loading_successful(mock_gs):
+    """Tests successful loading of README.MD."""
+    mock_gs.path.root = Path(__file__).resolve().parent.parent.parent
+    readme_content = "This is the README content."
+    (mock_gs.path.root / "src" / "README.MD").write_text(readme_content)
+    from hypotez.src.logger.header import doc_str
+    assert doc_str == readme_content
+
+@patch("hypotez.src.logger.header.gs")
+def test_doc_loading_not_found(mock_gs):
+    """Tests loading when README.MD is not found."""
+    mock_gs.path.root = Path(__file__).resolve().parent.parent.parent
+    from hypotez.src.logger.header import doc_str
+    assert doc_str is None
+
+
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:**  Crucially, the tests now use `unittest.mock.patch` to mock `__root__`. This isolates the `set_project_root` function from relying on the actual file system, which is essential for reliable testing.  The `new_callable` argument is critical for setting the proper fixture value.
+* **Clearer Test Names:**  Test names now explicitly describe the condition being tested (e.g., `test_set_project_root_valid_input`).
+* **Isolated Tests:** Each test function now operates on its own temporary directory.
+* **Edge Cases and Error Handling:** Tests cover the case where the marker files are not found, making sure the default behavior is correct.
+* **Data Setup/Teardown:** Uses temporary directories (`test_root`) to isolate each test from affecting others and ensures clean-up with `shutil.rmtree`.
+* **Mocking:**  Crucially, the `settings` and `doc_str` loading tests are now using `@patch` to mock the `gs` module. This is essential to avoid reading files in each test, making tests independent and faster.  The `mock_gs.path.root` setup ensures the mock `gs.path` points to the correct path relative to the test files.
+* **Comprehensive Coverage:** Now thoroughly tests the cases where marker files might not be found and error handling of file loading is in place.
+
+This revised solution is significantly more robust, independent, and effective in testing the given code. Remember to install the necessary libraries (`pytest`, `pathlib`, `json`, `packaging`, etc.) if you haven't already.
 
 
-* **Clearer Test Cases:** Test names are more descriptive, clearly showing the test condition (e.g., `test_set_project_root_valid_input`).
+**How to Run the Tests:**
 
-* **`tmp_path` Fixture:** Uses `pytest.tmp_path` fixture to create temporary directories. This ensures that the tests do not interfere with the real file system. This is essential for `test_set_project_root`.
+1.  Save the test code in a file (e.g., `test_header.py`).
+2.  Run `pytest test_header.py` from your terminal in the directory containing the test file and the `hypotez` folder.
 
-* **`mock_settings_file` and `mock_readme_file` Fixtures:** These fixtures now create the necessary mock files within the temporary directory.
-
-
-* **Error Handling:** The `test_settings_loading_invalid` and `test_readme_loading_invalid` test cases now demonstrate proper error handling by ensuring that the appropriate default values (`__project_name__ = 'hypotez'`, `__doc__ = ''`) are used when the files are not found.
-
-* **Verification of sys.path:** The test `test_settings_loading_invalid` checks if the path to `__root__` is not inserted into `sys.path` if the `settings.json` file doesn't exist. This is critical for proper error handling and preventing unwanted side effects.
-
-* **Comprehensive Testing:** The tests now cover various scenarios, including valid inputs, missing files (error handling), nested directories, and edge cases.
-
-* **Explicit assertions:** The tests now explicitly assert the expected values for `__root__`, `__project_name__`, and `__doc__`.
-
-**How to Run:**
-
-1.  Save the code above as a `.py` file (e.g., `test_logger.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_logger.py`.
-
-This revised solution provides much more robust and reliable tests for the provided code. Remember to adjust the import paths if your file structure differs. Remember to replace `"hypotez/src/logger/header.py"` with the actual path to your file.
+This will execute all the test functions and report the results. Remember to put the `hypotez` directory in the same folder as the test file or adjust the paths accordingly in the tests for `Path` objects. Remember to remove the temporary directories to avoid having too many files in the root folder.

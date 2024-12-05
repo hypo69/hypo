@@ -4,7 +4,7 @@ Received Code
 # ИНСТРУКЦИЯ  
 ## Основные требования:  
 ## Output Language: RU (Русский)  
-# ... (rest of the instruction file)
+# ... (rest of the instruction) ...
 ```
 
 Improved Code
@@ -16,94 +16,89 @@ Improved Code
 
 # Модуль для работы ассистента программиста
 """
-Этот модуль содержит функции для обработки инструкций.
+Этот модуль содержит функции для проверки инструкций.
 """
 import pytest
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads  # Импортируем нужную функцию
 from src.logger import logger
-import json # Добавлен импорт json
-import sys # Добавлен импорт sys
 
 
-def process_instruction(instruction_path: str) -> dict:
+# Функция проверки корректности данных
+def check_data_format(data):
     """
-    Обрабатывает файл с инструкцией.
+    Проверяет формат входных данных.
 
-    :param instruction_path: Путь к файлу с инструкцией.
-    :return: Словарь с обработанными данными.
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
+    :param data: Входные данные.
+    :type data: dict
+    :raises TypeError: Если тип данных не словарь.
+    :raises ValueError: Если отсутствуют необходимые ключи.
+    :return: Входные данные, если формат корректен.
+    :rtype: dict
     """
-    try:
-        # Чтение файла с инструкцией, используя j_loads
-        with open(instruction_path, 'r', encoding='utf-8') as f:
-            data = j_loads(f.read())  # Использование j_loads
-        return data
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: файл {instruction_path} не найден.", exc_info=True)
-        raise
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка: некорректный формат JSON в файле {instruction_path}.", exc_info=True)
-        raise
+    if not isinstance(data, dict):
+        logger.error("Входные данные не являются словарем")
+        raise TypeError("Входные данные должны быть словарем")
+
+    required_keys = ["key1", "key2"]  # Список необходимых ключей
+    for key in required_keys:
+        if key not in data:
+            logger.error(f"Отсутствует необходимый ключ: {key}")
+            raise ValueError(f"Отсутствует необходимый ключ: {key}")
+
+    return data
 
 
-# Тесты для функции process_instruction
-def test_process_instruction_valid_input(valid_instruction_path):
-    """Тестирование с корректным входным файлом."""
-    result = process_instruction(valid_instruction_path)
-    assert isinstance(result, dict), "Результат должен быть словарем"
+# Тесты для функции check_data_format
+def test_check_data_format_valid_input():
+    """Проверяет корректность работы функции с валидными данными."""
+    data = {"key1": "value1", "key2": "value2"}
+    assert check_data_format(data) == data
 
 
-def test_process_instruction_invalid_json(invalid_json_path):
-    """Тестирование с некорректным JSON."""
-    with pytest.raises(json.JSONDecodeError):
-        process_instruction(invalid_json_path)
+def test_check_data_format_missing_key():
+    """Проверяет обработку случая с отсутствующим ключом."""
+    data = {"key1": "value1"}
+    with pytest.raises(ValueError) as excinfo:
+        check_data_format(data)
+    assert "Отсутствует необходимый ключ: key2" in str(excinfo.value)
 
 
-def test_process_instruction_file_not_found(nonexistent_file_path):
-    """Тестирование с отсутствующим файлом."""
-    with pytest.raises(FileNotFoundError):
-        process_instruction(nonexistent_file_path)
+def test_check_data_format_invalid_type():
+    """Проверяет обработку некорректного типа данных."""
+    data = "not a dictionary"
+    with pytest.raises(TypeError) as excinfo:
+        check_data_format(data)
+    assert "Входные данные не являются словарем" in str(excinfo.value)
 
 
-# Фикстуры для тестов
-@pytest.fixture
-def valid_instruction_path():
-    """Возвращает путь к валидному JSON файлу."""
-    # Путь к валидному файлу, который нужно создать для тестирования
-    # или использовать уже существующий
-    return "path/to/valid/instruction.json"
+# пример использования j_loads
+def test_j_loads_valid_json():
+  json_string = '{"key": "value"}'
+  loaded_data = j_loads(json_string)
+  assert loaded_data == {"key": "value"}
 
 
-@pytest.fixture
-def invalid_json_path():
-    """Возвращает путь к файлу с некорректным JSON."""
-    # Путь к файлу с некорректным JSON
-    return "path/to/invalid/instruction.json"
-
-
-
-@pytest.fixture
-def nonexistent_file_path():
-    """Возвращает путь к несуществующему файлу."""
-    # Путь к несуществующему файлу
-    return "path/to/nonexistent/file.json"
+def test_j_loads_invalid_json():
+  json_string = '{"key": value}'  # Некорректный JSON
+  with pytest.raises(ValueError) as excinfo:
+    j_loads(json_string)
+  assert "JSONDecodeError" in str(excinfo.value)
 
 
 ```
 
 Changes Made
 
-* Added `pytest` test cases for the `process_instruction` function.
-* Created fixtures for test data, including paths to valid, invalid JSON, and non-existent files.
-* Added comprehensive test cases covering valid input, invalid JSON, and file not found scenarios.
-* Used `pytest.raises` for exception testing.
-* Improved test function names for clarity.
-* Added docstrings to the `process_instruction` function and tests.
-* Added necessary imports (`json`, `sys`).
-* Included error handling using `logger.error` for better error reporting and improved robustness.
+* Added `pytest` test cases for the `check_data_format` function.
+* Included tests for valid input, missing keys, and invalid data types.
+* Used `pytest.raises` to test exception handling.
+* Added clear docstrings using reStructuredText (RST) format to the function and tests.
+* Imported `j_loads` from `src.utils.jjson`.
+* Added test for a valid JSON string.
+* Added a test for an invalid JSON string that raises ValueError.
 
-FULL Code
+
+Full Code
 
 ```python
 # ИНСТРУКЦИЯ  
@@ -112,78 +107,74 @@ FULL Code
 
 # Модуль для работы ассистента программиста
 """
-Этот модуль содержит функции для обработки инструкций.
+Этот модуль содержит функции для проверки инструкций.
 """
 import pytest
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads  # Импортируем нужную функцию
 from src.logger import logger
-import json # Добавлен импорт json
-import sys # Добавлен импорт sys
 
 
-def process_instruction(instruction_path: str) -> dict:
+# Функция проверки корректности данных
+def check_data_format(data):
     """
-    Обрабатывает файл с инструкцией.
+    Проверяет формат входных данных.
 
-    :param instruction_path: Путь к файлу с инструкцией.
-    :return: Словарь с обработанными данными.
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если содержимое файла не является валидным JSON.
+    :param data: Входные данные.
+    :type data: dict
+    :raises TypeError: Если тип данных не словарь.
+    :raises ValueError: Если отсутствуют необходимые ключи.
+    :return: Входные данные, если формат корректен.
+    :rtype: dict
     """
-    try:
-        # Чтение файла с инструкцией, используя j_loads
-        with open(instruction_path, 'r', encoding='utf-8') as f:
-            data = j_loads(f.read())  # Использование j_loads
-        return data
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: файл {instruction_path} не найден.", exc_info=True)
-        raise
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка: некорректный формат JSON в файле {instruction_path}.", exc_info=True)
-        raise
+    if not isinstance(data, dict):
+        logger.error("Входные данные не являются словарем")
+        raise TypeError("Входные данные должны быть словарем")
+
+    required_keys = ["key1", "key2"]  # Список необходимых ключей
+    for key in required_keys:
+        if key not in data:
+            logger.error(f"Отсутствует необходимый ключ: {key}")
+            raise ValueError(f"Отсутствует необходимый ключ: {key}")
+
+    return data
 
 
-# Тесты для функции process_instruction
-def test_process_instruction_valid_input(valid_instruction_path):
-    """Тестирование с корректным входным файлом."""
-    result = process_instruction(valid_instruction_path)
-    assert isinstance(result, dict), "Результат должен быть словарем"
+# Тесты для функции check_data_format
+def test_check_data_format_valid_input():
+    """Проверяет корректность работы функции с валидными данными."""
+    data = {"key1": "value1", "key2": "value2"}
+    assert check_data_format(data) == data
 
 
-def test_process_instruction_invalid_json(invalid_json_path):
-    """Тестирование с некорректным JSON."""
-    with pytest.raises(json.JSONDecodeError):
-        process_instruction(invalid_json_path)
+def test_check_data_format_missing_key():
+    """Проверяет обработку случая с отсутствующим ключом."""
+    data = {"key1": "value1"}
+    with pytest.raises(ValueError) as excinfo:
+        check_data_format(data)
+    assert "Отсутствует необходимый ключ: key2" in str(excinfo.value)
 
 
-def test_process_instruction_file_not_found(nonexistent_file_path):
-    """Тестирование с отсутствующим файлом."""
-    with pytest.raises(FileNotFoundError):
-        process_instruction(nonexistent_file_path)
+def test_check_data_format_invalid_type():
+    """Проверяет обработку некорректного типа данных."""
+    data = "not a dictionary"
+    with pytest.raises(TypeError) as excinfo:
+        check_data_format(data)
+    assert "Входные данные не являются словарем" in str(excinfo.value)
 
 
-# Фикстуры для тестов
-@pytest.fixture
-def valid_instruction_path():
-    """Возвращает путь к валидному JSON файлу."""
-    # Путь к валидному файлу, который нужно создать для тестирования
-    # или использовать уже существующий
-    return "path/to/valid/instruction.json"
+# пример использования j_loads
+def test_j_loads_valid_json():
+  json_string = '{"key": "value"}'
+  loaded_data = j_loads(json_string)
+  assert loaded_data == {"key": "value"}
 
 
-@pytest.fixture
-def invalid_json_path():
-    """Возвращает путь к файлу с некорректным JSON."""
-    # Путь к файлу с некорректным JSON
-    return "path/to/invalid/instruction.json"
+def test_j_loads_invalid_json():
+  json_string = '{"key": value}'  # Некорректный JSON
+  with pytest.raises(ValueError) as excinfo:
+    j_loads(json_string)
+  assert "JSONDecodeError" in str(excinfo.value)
 
-
-
-@pytest.fixture
-def nonexistent_file_path():
-    """Возвращает путь к несуществующему файлу."""
-    # Путь к несуществующему файлу
-    return "path/to/nonexistent/file.json"
 
 
 ```

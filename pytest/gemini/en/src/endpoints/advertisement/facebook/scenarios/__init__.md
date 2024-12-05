@@ -16,141 +16,115 @@ from hypotez.src.endpoints.advertisement.facebook.scenarios import (
     switch_account,
 )
 
-# Example fixtures (replace with actual data sources if needed)
+
+# Fixtures (if needed) - replace with actual fixture if required
 @pytest.fixture
-def valid_credentials():
+def valid_login_credentials():
+    """Fixture for providing valid login credentials."""
     return {"username": "testuser", "password": "testpassword"}
 
+
 @pytest.fixture
-def invalid_credentials():
-    return {"username": "testuser", "password": "invalidpassword"}
+def invalid_login_credentials():
+    """Fixture for providing invalid login credentials."""
+    return {"username": "invaliduser", "password": "invalidpassword"}
 
 
 @pytest.fixture
-def valid_post_data():
-    return {"title": "Test Post", "content": "This is a test post."}
+def sample_post_data():
+    return {
+        "title": "Test Post Title",
+        "message": "This is a test message.",
+        "media_urls": ["url1.com", "url2.com"],
+        "captions": ["Caption 1", "Caption 2"],
+    }
 
 
 # Tests for login function
-def test_login_valid_credentials(valid_credentials):
+def test_login_valid_credentials(valid_login_credentials):
     """Tests login with valid credentials."""
-    result = login(valid_credentials["username"], valid_credentials["password"])
-    assert result is not None  # Check if login returns a valid response
+    result = login(valid_login_credentials["username"], valid_login_credentials["password"])
+    assert result is not None  # Or check for specific success condition
 
-def test_login_invalid_credentials(invalid_credentials):
-    """Tests login with invalid credentials."""
-    with pytest.raises(Exception) as excinfo:
-        login(invalid_credentials["username"], invalid_credentials["password"])
-    assert "Invalid credentials" in str(excinfo.value)
-
-
-# Tests for post_message functions
-def test_post_message_title_valid_input(valid_post_data):
-  """Tests post_message_title with valid input."""
-  result = post_message_title(valid_post_data["title"])
-  assert result is not None #Check if the function returns something, may need modification based on the function
-
-def test_post_message_valid_input(valid_post_data):
-  """Tests post_message with valid input."""
-  result = post_message(valid_post_data["title"], valid_post_data["content"])
-  assert result is not None #Check if the function returns something, may need modification based on the function
-
-# Add tests for other functions (post_message, upload_post_media, etc.)
-# Similar structure, cover valid/invalid inputs, edge cases, etc.
-# Example:
-def test_upload_media_valid_input():
-  """Tests upload_media with valid input."""
-  # Replace with actual valid input
-  media_data = {"image": "test_image.jpg"}
-  result = upload_post_media(media_data)
-  assert result is not None
+def test_login_invalid_credentials(invalid_login_credentials):
+    """Tests login with invalid credentials (expecting an exception)."""
+    with pytest.raises(Exception):  # Replace Exception with the actual exception type
+        login(invalid_login_credentials["username"], invalid_login_credentials["password"])
 
 
-# Tests for post_event functions
-# ... (similar structure for other functions)
+
+# Tests for post_message related functions
+def test_post_message_title_valid_input(sample_post_data):
+    """Tests post_message_title with valid input."""
+    title = post_message_title(sample_post_data["title"])
+    assert title == sample_post_data["title"] # Check for expected output
+
+
+def test_upload_post_media_valid_input(sample_post_data):
+    """Tests upload_post_media with valid input (placeholders)."""
+    # Replace with actual expected result based on the function implementation
+    result = upload_post_media(sample_post_data["media_urls"])
+    assert result is not None
+
+def test_update_post_media_captions(sample_post_data):
+    """Tests update_post_media_captions with valid input."""
+    result = update_post_media_captions(sample_post_data["captions"])
+    assert result is not None
+
+def test_message_publish_valid_input(sample_post_data):
+    """Tests message_publish with valid input."""
+    result = message_publish(sample_post_data)
+    assert result is not None
+
+
+def test_post_message_valid_input(sample_post_data):
+    """Tests post_message with valid input."""
+    result = post_message(sample_post_data)
+    assert result is not None
+
+
+# Tests for post_event related functions
+# (Similar structure to post_message tests)
 
 
 # Tests for post_ad function
 def test_post_ad_valid_input():
-    """Tests post_ad with valid input."""
-    # Replace with actual valid input
-    ad_data = {"title": "Test Ad", "description": "This is a test ad."}
-    result = post_ad(ad_data)
+    """Tests post_ad with valid input (placeholders)."""
+    # Replace with actual expected result based on the function implementation
+    result = post_ad({"ad_data": "valid_data"})
     assert result is not None
 
-#Tests for switch_account function
+# Tests for switch_account function
 def test_switch_account_valid_input():
-    """Tests switch_account with valid input."""
-    # Replace with actual valid input
-    account_data = {"account_id": 123}
-    result = switch_account(account_data)
+    """Tests switch_account with valid input (placeholders)."""
+    result = switch_account({"account_data": "valid_data"})
     assert result is not None
 
 
 
-#Example for exception handling
-def test_update_post_media_captions_invalid_input():
-  """Tests update_post_media_captions with invalid input."""
-  with pytest.raises(TypeError):
-    update_post_media_captions("invalid_input")
-
-#Tests for post_date and post_time
-def test_post_date_valid_input():
-  """Tests post_date with a valid input date."""
-  date = "2024-10-27"
-  result = post_date(date)
-  assert result is not None #Modify based on the function
-
-
-def test_post_time_valid_input():
-  """Tests post_time with a valid input time."""
-  time = "10:00"
-  result = post_time(time)
-  assert result is not None
-
-
-
-# Tests for post_event function
-def test_post_event_valid_input(valid_post_data):
-  """Tests post_event with valid inputs."""
-  event_data = {
-      "title": valid_post_data["title"],
-      "description": valid_post_data["content"],
-      "date": "2024-10-27",
-      "time": "10:00",
-  }
-  result = post_event(**event_data)
-  assert result is not None #Change based on the function
-
-
-
-# Remember to replace placeholder comments with specific assertions based on the actual return values and expected behavior of each function.
+# Add more test functions for other functions as needed,
+# considering edge cases, invalid inputs, etc.
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:**  Added `valid_credentials` and `invalid_credentials` fixtures to provide test data.  Crucially, this separates test data from the tests themselves, making them more maintainable.  You should replace the example data with appropriate data for your actual scenario.
+1. **Fixtures:**  Added `valid_login_credentials` and `invalid_login_credentials` fixtures for better test organization.  Crucially, a `sample_post_data` fixture provides data for multiple post-related tests, improving code reuse and readability.
 
-2. **Clear Test Names:** Test names clearly indicate the input and expected outcome.
+2. **Clear Test Names:** Test names now accurately reflect the purpose and input type (e.g., `test_login_valid_credentials`).
 
-3. **Exception Handling:**  The `test_login_invalid_credentials` example now uses `pytest.raises` to specifically test for the expected exception. This is a much better approach than relying on general `assert` statements.
+3. **Exception Handling:** The `test_login_invalid_credentials` demonstrates how to use `pytest.raises` to check for expected exceptions.
 
-4. **Valid/Invalid Input:** The example now shows how to test both valid and invalid inputs.
+4. **Placeholder Assertions:**  Tests for `upload_post_media`, `update_post_media_captions`, and `post_ad` are placeholders.  You need to replace the `assert result is not None` with actual assertions based on the expected return values of those functions (e.g., success codes, data validation, etc.).
 
-5. **Edge Cases (Illustrative):** Added examples of tests for functions like `post_date` and `post_time` to illustrate testing with specific edge cases.
+5. **Comprehensive Coverage:** Added initial test cases for `login`, `post_message_title`, `upload_post_media`, and `update_post_media_captions`. You need to add more tests for all the functions. The test for `post_event` and other functions are also placeholders.
 
-6. **Comments:** Tests include comments explaining the purpose of each test, which is good practice.  **Crucially**, update these comments with precise expected outcomes based on the actual function logic.  For example, what does `post_message` *return*?
-
-7. **`assert` Statements:**  The placeholder comments like `assert result is not None` are now more appropriate placeholders. Replace them with checks that match the actual function's *expected* return types and values.
-
-8. **Example for `update_post_media_captions`:** Added a `test_update_post_media_captions_invalid_input` to show a robust example of raising and catching exceptions.
-
-**Before running the tests:**
-
-- **Replace Placeholder Data:** Substitute the example data in the fixtures with the correct and relevant test data for your functions.  The data in the fixtures should ideally represent real-world (or realistic) examples.
-- **Import Statements:** Verify all the necessary modules and classes are imported.
-- **Function Definition:**  Ensure the functions/methods/classes exist and are defined correctly in your `hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py` file.
-- **Replace Placeholder Assertions:** Update the `assert` statements to correctly reflect the expected return values, types, and behavior of each function being tested.
+6. **Edge Cases and Invalid Input:** The provided example tests mostly cover basic validation.  Add more complex edge cases and invalid inputs (e.g., empty strings, incorrect data types, exceeding limits) for each function to thoroughly test them.
 
 
-By following these steps and adapting the examples to your specific code, you can create a robust set of `pytest` tests. Remember to be comprehensive and cover different input scenarios, including expected exceptions.
+**How to Run the Tests:**
+
+1. Make sure you have `pytest` installed (`pip install pytest`).
+2. Save the above code as a `.py` file (e.g., `test_facebook_scenarios.py`).
+3. Run the tests from your terminal using: `pytest test_facebook_scenarios.py`
+
+Remember to replace the placeholder assertions with specific validations based on the expected behavior of the functions in `hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py`.  The provided examples now demonstrate a much more robust test structure. Remember to adapt the assertions to the *actual* return types of the functions.  For example, if a function returns a dictionary with success/failure codes, you should check for that instead of just asserting `is not None`.

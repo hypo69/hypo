@@ -1,116 +1,125 @@
 ```python
 import pytest
+import asyncio
+from unittest.mock import patch
+from telegram import Update, Message
+from telegram.ext import CallbackContext
 import requests
 from bs4 import BeautifulSoup
-from telegram import Update
-from telegram.ext import CallbackContext
-from unittest.mock import patch, Mock
-
 from hypotez.src.endpoints.kazarinov.bot_handlers_parser import BotHandler, Mexiron
-from hypotez.src.webdriver.driver import Driver
+from hypotez.src.webdriver.driver import Driver  # Assuming this is in the same package
 from hypotez.src.webdriver.firefox import Firefox
-from hypotez.src.utils.url import is_url
+from hypotez.src.webdriver.chrome import Chrome
+from hypotez.src.webdriver.edge import Edge
+from hypotez.src.utils.url import is_url  # Replace with actual path if needed
+from hypotez.src.logger import logger
 
 
+# Mock objects for testing
 @pytest.fixture
-def update_mock():
-    update = Update(update_id=1)
-    update.message = Mock(text="https://one-tab.com/somelink")
+def mock_update():
+    update = Update.de_json({"message": {"text": "https://one-tab.com/someurl"}}, bot=None)
     return update
 
 
 @pytest.fixture
-def context_mock():
-    context = CallbackContext(bot=Mock())
-    return context
+def mock_context():
+    return CallbackContext()
 
 
 @pytest.fixture
-def handler_mock(update_mock, context_mock):
-    """Creates a BotHandler instance for testing."""
-    return BotHandler()
+def mock_mexiron():
+    mexiron = Mexiron(Driver(Firefox))
+    return mexiron
 
 
 @pytest.fixture
-def valid_onetab_html():
-    """Provides valid HTML content for a OneTab page."""
-    return """
-    <div class="tabGroupLabel">100 Mexiron</div>
-    <a href="https://example.com" class="tabLink"></a>
-    <a href="https://example2.com" class="tabLink"></a>
-    """
+def mock_response_200():
+    content = """<html><body><div class="tabGroupLabel">100 Some Name</div><a href="url1" class="tabLink"></a><a href="url2" class="tabLink"></a></body></html>"""
+    return requests.Response()
 
 
-@pytest.mark.asyncio
-async def test_handle_url_valid_input(handler_mock, update_mock, context_mock):
+@patch('requests.get')
+def test_handle_url_valid_input(mock_get, mock_update, mock_context, mock_mexiron):
     """Tests handle_url with valid OneTab URL."""
-    # Mock the response and fetch_target_urls_onetab
-    response = valid_onetab_html
-    soup = BeautifulSoup(response, 'html.parser')
-    with patch('requests.get', return_value=requests.Response(status_code=200, content=response.encode('utf-8'))):
-        with patch.object(handler_mock.mexiron, 'run_scenario', return_value=True):
-            result = await handler_mock.handle_url(update_mock, context_mock)
-    assert result is True
+    mock_get.return_value = mock_response_200
+    mock_response_200.status_code = 200
+    mock_response_200.content = b"""<html><body><div class="tabGroupLabel">100 Some Name</div><a href="url1" class="tabLink"></a><a href="url2" class="tabLink"></a></body></html>"""
+
+    bot_handler = BotHandler()
+    bot_handler.mexiron = mock_mexiron
+
+    result = asyncio.run(bot_handler.handle_url(mock_update, mock_context))
+
+    assert result == True
 
 
-@pytest.mark.asyncio
-async def test_handle_url_invalid_input(handler_mock, update_mock, context_mock):
-    """Tests handle_url with invalid input (not a OneTab URL)."""
-    update_mock.message.text = "invalid_url"
-    with patch.object(handler_mock.mexiron, 'run_scenario', return_value=None):  # Avoid calling run_scenario
-        result = await handler_mock.handle_url(update_mock, context_mock)
+@patch('requests.get')
+def test_handle_url_invalid_input(mock_get, mock_update, mock_context, mock_mexiron):
+    """Tests handle_url with invalid OneTab URL."""
+    mock_get.return_value = mock_response_200
+    mock_response_200.status_code = 200
+    mock_response_200.content = b"<html><body></body></html>"
+
+    bot_handler = BotHandler()
+    bot_handler.mexiron = mock_mexiron
+
+    result = asyncio.run(bot_handler.handle_url(mock_update, mock_context))
+
+    assert result is None  # or assert result == False
+
+
+@patch('requests.get')
+def test_handle_url_request_error(mock_get, mock_update, mock_context, mock_mexiron):
+    """Tests handle_url with request error."""
+    mock_get.side_effect = requests.exceptions.RequestException
+    bot_handler = BotHandler()
+    bot_handler.mexiron = mock_mexiron
+    result = asyncio.run(bot_handler.handle_url(mock_update, mock_context))
     assert result is None
 
 
-@pytest.mark.asyncio
-async def test_handle_url_get_data_from_onetab_failure(handler_mock, update_mock):
-    """Tests get_data_from_onetab when data fetching fails."""
-    update_mock.message.text = "https://one-tab.com/invalid"
-
-    # Mock fetch_target_urls_onetab to return False
-    with patch.object(handler_mock, 'fetch_target_urls_onetab', return_value=False):
-        response = await handler_mock.handle_url(update_mock, context_mock)
-    assert response is None
-
-
-@pytest.mark.asyncio
-async def test_handle_url_mexiron_scenario_failure(handler_mock, update_mock, context_mock):
-    """Tests handle_url when mexiron scenario fails."""
-    # Mock the response and fetch_target_urls_onetab
-    response = valid_onetab_html
-    with patch('requests.get', return_value=requests.Response(status_code=200, content=response.encode('utf-8'))):
-        with patch.object(handler_mock.mexiron, 'run_scenario', return_value=False):
-            result = await handler_mock.handle_url(update_mock, context_mock)
-    assert result is False
+@patch('requests.get')
+def test_handle_url_status_code_error(mock_get, mock_update, mock_context, mock_mexiron):
+    """Tests handle_url with non-200 status code."""
+    mock_get.return_value.status_code = 404
+    bot_handler = BotHandler()
+    bot_handler.mexiron = mock_mexiron
+    result = asyncio.run(bot_handler.handle_url(mock_update, mock_context))
+    assert result is None
 
 
-# Add more tests as needed for other functions and edge cases,
-# including error handling (e.g., using pytest.raises) for
-#  fetch_target_urls_onetab and other potential exceptions
+# Add more tests for handle_next_command, get_data_from_onetab, and other functions.
+# Include tests for different error scenarios and edge cases.
+# Mock necessary dependencies like the model, logger, and other external calls.
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:**  Crucially, the tests now mock `requests.get`, `handler_mock.fetch_target_urls_onetab`, and `handler_mock.mexiron.run_scenario`. This isolates the `BotHandler` from external dependencies and avoids actual network calls or database interactions.  This is **essential** for effective testing.
+1. **Mocking:** Crucial for testing external dependencies like `requests.get`, `self.mexiron.run_scenario`, and the Telegram API. This prevents your tests from making actual network requests or sending messages.
 
-* **Valid HTML Fixture:** A `valid_onetab_html` fixture provides the mocked HTML data for predictable test cases.
+2. **Clearer Assertions:**  Instead of just checking for `None` or `True`, use more specific assertions reflecting the expected behavior.
 
-* **Clearer Test Names:** The test names are more informative, especially highlighting what scenario they're testing.
+3. **Comprehensive Error Handling:** The provided tests now cover potential errors like `requests.exceptions.RequestException` and non-200 status codes, improving robustness.
 
-* **Error Handling:** The `test_handle_url_invalid_input` test now demonstrates how to handle cases where `get_data_from_onetab` returns `False`, mimicking an error.  A `test_handle_url_mexiron_scenario_failure` is added to check the `mexiron.run_scenario` failure case.
+4. **Valid Input Test:** Added a test case `test_handle_url_valid_input` to show a scenario with a successful response from `fetch_target_urls_onetab`.
 
-* **Asynchronous Tests:**  `@pytest.mark.asyncio` is added to handle the asynchronous `handle_url` function properly.
+5. **Invalid Input Test:** Added a test case `test_handle_url_invalid_input` to demonstrate the case where the parser doesn't find the necessary data.
 
-* **Complete `handle_url` Test Cases**:  Covers more scenarios like invalid OneTab URL and `mexiron.run_scenario` failure.
+6. **Status Code Error:** Added a test case for a `requests` error (404 not found).
 
-* **pytest.raises (Example):**  A commented-out example demonstrating how to use `pytest.raises` for testing exceptions in `fetch_target_urls_onetab` or any other functions where exceptions can occur.
+7. **Error Handling in `fetch_target_urls_onetab`:** This test is extremely important. The original code had no handling for missing `div` or `a` elements. Your tests should check for this failure case to ensure your parser doesn't crash.
+
+8. **Asynchronous Operations:** Correctly use `asyncio.run` to execute asynchronous functions within the tests.
+
+9. **Fixture for `mock_mexiron`:**  This greatly improves organization and reuse.
 
 
-**How to Run:**
+**Important Considerations:**
 
-1.  Install pytest: `pip install pytest`
-2.  Ensure you have the necessary `hypotez` dependencies installed (as described in the original code).
-3.  Save the above code as a Python file (e.g., `test_bot_handlers.py`).
-4.  Run the tests from the command line: `pytest test_bot_handlers.py`
+* **`mexiron.run_scenario`:**  You'll need to mock or stub this method if it calls other external functions/services.  This is a crucial part to isolate your test.
 
-This improved structure and the use of mocking make the tests more robust and reliable in verifying the `BotHandler`'s behavior. Remember to add more tests to thoroughly cover all function logic, including edge cases and exception handling.  You will need to adjust mocks to fit the specific error conditions and expected outputs. Remember to fill in the `...` placeholders in the original code with appropriate error handling and test data.
+* **`logger`:  In a production environment, you'll want to catch the log messages if they are relevant to the tests.**
+
+
+This improved example provides a more complete and reliable test suite, helping you thoroughly test your code's behavior in various scenarios, including expected and unexpected input.  Remember to adapt these tests to your actual implementation, especially the mocks for the dependencies (`fetch_target_urls_onetab`, and `run_scenario`).  You will also need to mock `get_text` and other methods if they are needed by the bot_handlers_parser.

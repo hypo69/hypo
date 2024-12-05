@@ -10,36 +10,3 @@
 
 """
 MODE = 'dev'
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.suppliers.aliexpress.gui """
-
-
-
-""" Разные сценарии Алиэхпресс """
-...
-from packaging.version import Version
-from .version import __version__, __doc__, __details__ 
-
-

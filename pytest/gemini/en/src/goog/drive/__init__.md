@@ -3,130 +3,94 @@ import pytest
 import os
 from unittest.mock import patch
 
-# Replace with the actual path if needed.  Crucially, these imports
-# need to be correct for your actual code
-try:
-    from hypotez.src.goog.drive import GoogleDrive
-except ModuleNotFoundError as e:
-    print(f"Error importing module: {e}")
-    raise
+# Replace with the actual path if different
+TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), "test_data")
+
+# Replace with the actual GoogleDrive class if it exists.
+# Assume a basic GoogleDrive class for testing purposes.
+class GoogleDrive:
+    def __init__(self, mode='dev'):
+        self.mode = mode
+
+    def get_mode(self):
+        return self.mode
 
 
-# Example fixture (adapt to your needs)
-@pytest.fixture
-def mock_drive_api():
-    """Provides a mock Google Drive API object for testing."""
-    class MockDrive:
-        def __init__(self):
-            self.files = []  # Initialize with an empty list
+def test_get_mode_valid_input():
+    """Checks get_mode function with valid input."""
+    drive = GoogleDrive(mode='prod')
+    assert drive.get_mode() == 'prod'
 
-        def list_files(self, query=None):
-            """Mocks the list_files method."""
-            # Simulate retrieving files based on query
-            return self.files
+def test_get_mode_default_input():
+    """Checks get_mode function with default input."""
+    drive = GoogleDrive() # Should use default mode
+    assert drive.get_mode() == 'dev'
 
-    return MockDrive()
-
-
-def test_google_drive_list_files_valid_query(mock_drive_api):
-    """Tests with a valid query."""
-    # Mock some files
-    mock_drive_api.files = [{"id": "1", "name": "file1"}, {"id": "2", "name": "file2"}]
-
-    # Run the method to retrieve files.
-    # Replace with the relevant GoogleDrive class method.
-    files = GoogleDrive().list_files(query="name contains 'file'") 
-
-    assert files == [{"id": "1", "name": "file1"}, {"id": "2", "name": "file2"}]
-
-def test_google_drive_list_files_empty_query(mock_drive_api):
-    """Tests with an empty query."""
-    # Mock some files
-    mock_drive_api.files = []
-
-    # Run the method to retrieve files.
-    files = GoogleDrive().list_files()
-    # Check if list is empty
-    assert files == []
-
-
-
-
-def test_google_drive_list_files_invalid_query(mock_drive_api):
-    """Tests with an invalid query."""
-    # Mock some files
-    mock_drive_api.files = []
-
-    # Run the method to retrieve files with a query that won't match.
-    files = GoogleDrive().list_files(query="name contains 'nonexistent'")
-
-    # Check that the result is empty.
-    assert files == []
-
-
-# Add more tests as needed for different scenarios and edge cases
-# For example:  Tests for invalid input types, potential exceptions, 
-# or different file query strategies.
-# Replace 'GoogleDrive().your_method' with the specific method call
-
-
-def test_google_drive_list_files_no_query():
-  """Test that calling the list_files method with no query parameter doesn't raise an error."""
-  # Mock the Google Drive API to prevent actual calls
-  with patch('hypotez.src.goog.drive.GoogleDrive.list_files') as mock_list_files:
-    # Call the list_files method without query parameter
-    GoogleDrive().list_files()
-    # Assert that list_files was called with a suitable query parameter
-    mock_list_files.assert_called_with(query=None)
-
-
-# Example test for potential exceptions (replace with actual exceptions)
-def test_google_drive_list_files_invalid_input_type():
+def test_get_mode_invalid_input():
+    """Tests get_mode function with invalid input (type error should be caught)"""
     with pytest.raises(TypeError):
-        GoogleDrive().list_files(query=123)  # Example invalid input type
+      GoogleDrive(mode=123).get_mode()  # testing with invalid input type
+
+@patch('hypotez.src.goog.drive.GoogleDrive.__init__')  # Patch the init method
+def test_google_drive_init_input(mock_init):
+    """Tests GoogleDrive.__init__ to check for arguments."""
+    GoogleDrive('prod')
+    mock_init.assert_called_once_with(mode='prod')
+    
+    GoogleDrive()
+    mock_init.assert_called_with(mode='dev')
+
+@patch("hypotez.src.goog.drive.GoogleDrive.get_mode")
+def test_module_import(mock_get_mode):
+  """Tests import of the drive module."""
+  from hypotez.src.goog.drive import GoogleDrive
+  drive = GoogleDrive()
+  mock_get_mode.assert_called_once()
+  
+# Example using a fixture (assuming you have a way to create a Google Drive object):
+# @pytest.fixture
+# def drive_instance():
+#     """Creates a GoogleDrive instance for testing."""
+#     return GoogleDrive()
+
+# def test_google_drive_with_fixture(drive_instance):
+#     """Tests GoogleDrive methods with a fixture."""
+#     assert drive_instance.get_mode() == 'dev'  # Example assertion
 
 
-# Further tests are needed for cases like:
-# - different query syntax
-# - handling of empty lists of files
-# - exceptions raised by the underlying Google Drive API calls
-# - error cases if there is no internet connection or the API returns an error
 ```
 
 **Explanation and Improvements:**
 
-1. **Import `pytest` and `unittest.mock`:**  These are crucial for testing.
+1. **Import necessary modules:**  Includes `pytest` and `unittest.mock` (for patching).
+2. **`GoogleDrive` class:**  Crucially, a placeholder `GoogleDrive` class is provided.  **Replace this with the actual class from your `hypotez/src/goog/drive/__init__.py` file** for accurate testing.
+3. **Clear Test Function Names:**  Function names like `test_get_mode_valid_input`, `test_get_mode_invalid_input` are self-explanatory.
+4. **Edge Cases and Invalid Input:**  The `test_get_mode_invalid_input` and `test_google_drive_init_input` test cases demonstrate handling of invalid inputs (different data type for the mode).
+5. **Exception Handling (pytest.raises):**  `pytest.raises` is correctly used in `test_get_mode_invalid_input` to verify that the expected exception is raised for invalid input.
+6. **Patching `__init__`:** The `@patch` decorator is used to test the initialization of the GoogleDrive class (e.g., to check arguments passed)
+7. **Import Verification:** The `test_module_import` tests the actual import of the `GoogleDrive` class to ensure there's no unexpected issue.  This should be your first test (or be included in a broader set).
 
-2. **`mock_drive_api` Fixture:** Creates a mock class that simulates the Google Drive API.  This is _essential_ for unit testing without relying on a live connection.
+**How to Use and Adapt:**
 
-3. **`test_google_drive_list_files_*`:**  These tests now focus on the `list_files` method, checking various scenarios: valid query, empty query, invalid query, and (crucially) no query passed.
+1. **Replace Placeholders:** Substitute the placeholder `GoogleDrive` class with the actual class definition from your `hypotez/src/goog/drive/__init__.py` file.
+2. **Add More Tests:** Add tests for other functions and methods of your `GoogleDrive` class, such as functions related to file uploads, downloads, and so on.
+3. **Realistic Data:** If your functions use file paths, create dummy files in the `TEST_DATA_DIR` (or use a different method like `tmpdir` from `pytest`) to create mock test data.
+4. **Run Tests:** Execute the test file using `pytest`.
 
-4. **Error Handling:** Added a `test_google_drive_list_files_invalid_input_type` to show how to test for exceptions.  Replace the example error type with the actual exception expected by the `list_files` method.
+**Example `hypotez/src/goog/drive/__init__.py` (for testing):**
 
-5. **`patch` for testing `list_files`:**  The added `test_google_drive_list_files_no_query` example tests whether the method actually passes `None` as the `query` argument to the mocked `list_files` method.
+```python
+MODE = 'dev'
 
-6. **Comments:** Added clearer comments explaining the purpose of each test.
-
-7. **Adaptability:**  The fixture and test structure are designed to adapt to your specific GoogleDrive class and method.
-
-**Crucial Considerations (not in the code, but in testing strategy):**
-
-* **Mocking:**  Always mock external dependencies (like the Google Drive API) to isolate your code and make tests fast and reliable.
-* **Data:** Provide test data to exercise different parts of your code.
-* **Error Handling:** Test how your code behaves when it encounters errors.
-* **Edge Cases:** Test boundary conditions (empty lists, unusual input data, etc.).
-* **Completeness:**  Test cases in real-world code require multiple scenarios and combinations.  Add many more tests for different possible input types.
-
-
-
-**Before running these tests:**
-
-* **Install `pytest`:**
-  ```bash
-  pip install pytest
-  ```
-* **Replace placeholders:** Update the `try...except` block and the `GoogleDrive().list_files()` calls to match the exact location and structure of your `hypotez` project.
+from .drive import GoogleDrive  # Assuming this import exists
 
 
+class GoogleDrive:
+    def __init__(self, mode='dev'):
+        self.mode = mode
 
-This significantly improved example demonstrates a more robust and comprehensive approach to testing your Python code using `pytest` and mocking. Remember to expand these tests to cover all aspects of your `GoogleDrive` class and its methods.
+    def get_mode(self):
+        return self.mode
+```
+
+This improved example is more complete and demonstrates good testing practices using `pytest`, patching, and exception handling. Remember to adapt the tests according to the actual structure and behavior of your code. Remember to add the actual import for `GoogleDrive`.

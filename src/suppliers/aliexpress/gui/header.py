@@ -3,6 +3,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
+
 """
 .. module: src.suppliers.aliexpress.gui 
 	:platform: Windows, Unix
@@ -11,40 +12,44 @@
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
+import sys
+import json
+from packaging.version import Version
 
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.suppliers.aliexpress.gui """
-
-
-""" Определение путей программы
-"""
-
-
-
-import sys,os
 from pathlib import Path
-__root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
-sys.path.append (__root__)   
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+    """
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
 
-  
+    Args:
+        marker_files (tuple): Filenames or directory names to identify the project root.
+    
+    Returns:
+        Path: Path to the root directory if found, otherwise the directory where the script is located.
+    """
+    __root__:Path
+    current_path:Path = Path(__file__).resolve().parent
+    __root__ = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            __root__ = parent
+            break
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
+
+
+# Get the root directory of the project
+__root__ = set_project_root()
+"""__root__ (Path): Path to the root directory of the project"""
+
+from src import gs
+
+settings:dict = None
+try:
+    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
 

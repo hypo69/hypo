@@ -2,37 +2,53 @@
 
 ## Overview
 
-This module provides instructions for creating documentation for Python files using Markdown format.  The documentation should include a table of contents, clear descriptions for classes, functions, and methods, along with detailed parameters, return values, and exception handling.
+This module provides functionality for generating documentation for Python code in Markdown format, adhering to specific formatting guidelines.  It includes methods for creating documentation headers, class descriptions, function signatures, and parameter/return/exception details.
+
+## Table of Contents
+
+* [Overview](#overview)
+* [Classes](#classes)
+* [Functions](#functions)
 
 
 ## Classes
 
-### No Classes are present in the provided example code.
 
+### `InstructionDocWriter`
+
+**Description**: This class encapsulates the logic for generating documentation in Markdown format.
+
+**Methods**:
+
+- `generate_docstring(func):`
+    - **Description**: Generates a docstring in the specified format.
+    - **Parameters**:
+        - `func` (function): The function for which to generate the docstring.
+    - **Returns**:
+        - `str`: The generated docstring.
+
+- `generate_markdown(code_text):`
+    - **Description**: Generates markdown documentation for provided code.
+    - **Parameters**:
+        - `code_text` (str): The Python code to be documented.
+    - **Returns**:
+        - `str`: The generated Markdown documentation.
 
 ## Functions
 
-### `function`
+### `generate_docstring`
 
-**Description**: This function is a placeholder to demonstrate the documentation structure.  It takes parameters and returns a value.
+**Description**: Creates a formatted docstring based on the provided function signature.
 
 **Parameters**:
 
-- `param` (str): Description of the `param` parameter.
-- `param1` (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
+- `func` (function): The Python function to extract information from.
+
 
 **Returns**:
 
-- `dict | None`: Description of the return value. Returns a dictionary or `None` if the function does not return a value.
-
+- `str`:  The formatted docstring in Markdown.
 
 **Raises**:
 
-- `ValueError`: Raised if the input parameters are invalid.
-
-
-## Table of Contents
-
-[Overview](#overview)
-[Classes](#classes)
-[Functions](#functions)
+- `TypeError`: If input `func` is not a function.

@@ -17,7 +17,6 @@ import header
 
 
 import pickle
-import requests
 import threading
 from requests.sessions import Session
 from fake_useragent import UserAgent

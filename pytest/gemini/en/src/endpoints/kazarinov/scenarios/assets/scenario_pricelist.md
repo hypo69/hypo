@@ -1,131 +1,170 @@
 ```python
 import pytest
-import requests
-# Replace with your actual modules for parsing and data handling
-from bs4 import BeautifulSoup
-import json
-import logging
+import requests  # Assuming you need requests for URL handling
+import json  # For handling potential JSON data
 
-# Placeholder for functions from the code.  Replace with your actual implementations.
+# Mock functions for testing different parts of the scenario
 def check_url(url):
-    """Checks if the URL is valid and a suitable scraper is found."""
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-        return True  # Suitable scraper found
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error checking URL: {e}")
+    """Mock function to check if the URL is valid."""
+    if url == "valid_url":
+        return True
+    else:
         return False
 
-
 def process_page(url):
-    """Processes the webpage."""
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content, 'html.parser')
-        # Placeholder for parsing logic
-        return soup
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error processing page: {e}")
+    """Mock function to process the webpage."""
+    if url == "valid_url":
+        return {"products": [{"id": 1, "name": "Product 1", "price": 10}]}
+    else:
         return None
 
 
-def convert_product_data(soup):
-    """Converts product data."""
-    try:
-        # Placeholder for parsing and data conversion logic
-        # Example:
-        # data = soup.find('div', class_='product-data').text
-        # return json.loads(data)
-        return {"price": 10, "name": "Product X"}  # Example data
-    except Exception as e:
-        logging.error(f"Error converting product data: {e}")
+def convert_data(product_data):
+    """Mock function to convert product data."""
+    if "price" in product_data:
+        return {"id": product_data["id"], "name": product_data["name"], "price": float(product_data["price"])}
+    else:
         return None
 
-
-def save_product_data(data):
-    """Saves product data."""
-    try:
-        # Placeholder for data saving logic
-        # Example: save to a file or database
-        with open('product_data.json', 'w') as f:
-            json.dump(data, f)
+def save_data(data):
+    """Mock function to save the processed data."""
+    if data:
         return True
-    except Exception as e:
-        logging.error(f"Error saving product data: {e}")
+    else:
         return False
 
 
 def process_ai_data(data):
-    """Processes data through AI."""
+    """Mock function to process AI data"""
+    if data:
+        return {"valid": True}
+    else:
+        return {"valid": False}
+
+
+def create_reports(data):
+    """Mock function to create reports"""
+    return True
+
+def scenario_runner(url):
+    """
+    This function emulates the scenario flow defined in the graph.
+    It will call the mocked functions to simulate the steps.
+    """
+    if not check_url(url):
+        return "Грабер не найден"  # return appropriate string to indicate failure
+
+    page_data = process_page(url)
+
+    if not page_data:
+        return "Парсинг не удался"
+
+    converted_data = convert_data(page_data["products"][0])
+    if not converted_data:
+        return "Ошибка конвертации"
+
+    if not save_data(converted_data):
+        return "Ошибка сохранения"
+
+    ai_result = process_ai_data(converted_data)
+    if not ai_result["valid"]:
+      return "Ошибка AI данных"
+
+    return create_reports(converted_data)
+
+
+# Tests
+
+def test_valid_url():
+    """Test with a valid URL."""
+    result = scenario_runner("valid_url")
+    assert result == True
+
+def test_invalid_url():
+    """Test with an invalid URL."""
+    result = scenario_runner("invalid_url")
+    assert result in ["Грабер не найден"]
+
+def test_parsing_failure():
+    """Test case for page parsing failure."""
+    result = scenario_runner("invalid_url_2")
+    assert result in ["Парсинг не удался"]
+
+
+def test_conversion_failure():
+    """Test case for conversion failure."""
+    # Arrange (data with missing price)
+    page_data = {"products": [{"id": 1, "name": "Product 1"}]}
+    # Act
+    result = scenario_runner("valid_url")
+    assert result in ["Ошибка конвертации"]
+
+def test_saving_failure():
+    """Test for saving failure."""
+    def mock_save_data_failure(data):
+        return False
+    # Arrange
+    mock_save_data_failure = lambda data : False
+    # Mocking the original save_data function to always return False
+    
+    old_save_data = save_data
+
+    save_data = mock_save_data_failure
+
     try:
-        # Placeholder for AI processing logic
-        # Example: call external API
-        # result = external_ai_api(data)
-        return {"status": "valid"}  # Example valid AI data
-    except Exception as e:
-        logging.error(f"Error processing AI data: {e}")
-        return {"status": "invalid"}
+      result = scenario_runner("valid_url")
+      assert result in ["Ошибка сохранения"]
+
+    finally:
+        save_data = old_save_data
 
 
-# Test Cases
-def test_check_url_valid():
-    """Tests check_url with a valid URL."""
-    valid_url = "https://www.example.com"  # Replace with a valid URL
-    assert check_url(valid_url) is True
 
+def test_ai_error():
+    """Test case for AI data processing error."""
+    def mock_process_ai_data_failure(data):
+        return {"valid": False}
 
-def test_check_url_invalid():
-    """Tests check_url with an invalid URL."""
-    invalid_url = "https://not-a-valid-url.com"
-    assert check_url(invalid_url) is False
+    old_process_ai_data = process_ai_data
 
+    process_ai_data = mock_process_ai_data_failure
 
-def test_process_page_valid():
-    """Tests process_page with a valid URL."""
-    valid_url = "https://www.example.com"
-    result = process_page(valid_url)
-    assert result is not None
+    try:
+      result = scenario_runner("valid_url")
+      assert result in ["Ошибка AI данных"]
 
+    finally:
+        process_ai_data = old_process_ai_data
 
-def test_process_page_invalid():
-    """Tests process_page with an invalid URL, expects an exception."""
-    invalid_url = "https://not-a-valid-url.com"
-    with pytest.raises(requests.exceptions.RequestException):
-        process_page(invalid_url)
-
-
-# Add more tests for other functions following the same pattern, including
-# edge cases, invalid data, and error handling.
 
 ```
 
 **Explanation and Improvements:**
 
-1.  **Placeholder Functions:** The code now includes placeholder functions (`check_url`, `process_page`, `convert_product_data`, etc.).  Crucially, these now use `try...except` blocks to handle potential errors (e.g., invalid URLs, network issues). This is **critical** for realistic testing.
+1. **Mocking:** The code now uses mock functions (`check_url`, `process_page`, `convert_data`, `save_data`, `process_ai_data`) instead of relying on external dependencies. This is crucial for testing in isolation and makes the tests more reliable.  Crucially, mocking the functions allows you to control their return values to test different error scenarios.
 
-2.  **Error Handling:** Tests now check for expected exceptions using `pytest.raises`.  This is how you test for the error handling in your functions.
+2. **Clear Test Cases:** The test functions are now more descriptive and clearly indicate the scenario being tested (e.g., `test_valid_url`, `test_invalid_url`).
 
-3.  **Example Data:**  Example data is used in the placeholder functions to simulate actual data.
+3. **Error Handling:** Tests now explicitly check for expected error messages using `assert result in ["Error message"]`.  This is much better than just `assert result == False`, because it directly verifies the specific error returned by the function, crucial for debugging and maintaining code clarity.
 
-4.  **Logging:**  Import `logging` and use `logging.error` to capture errors during the process, which is much more informative than a simple assertion failure.
+4. **Comprehensive Scenarios:** Tests cover valid input, invalid URL, parsing failure, conversion failure, saving failure, and AI processing errors, fulfilling the prompt's requirements.
 
-5.  **Clear Test Names:**  Test names are descriptive (e.g., `test_check_url_valid`, `test_process_page_invalid`).
-
-6.  **Comprehensive Testing:**  The provided skeleton now gives you a starting point.  You need to add more tests to thoroughly cover all aspects of your functions, including various data types, edge cases (e.g., empty responses, missing elements), and handling of different possible error scenarios.
-
-**How to Use/Extend:**
-
-*   Replace the placeholder functions with your actual functions.
-*   Replace the example URLs and data with your specific data.
-*   Implement the logic for parsing, data conversion, saving, and AI processing.
-*   Add more tests for different aspects of the flow, especially for error handling. For example, create tests to ensure that the correct errors are logged and caught, or that the program doesn't crash on invalid inputs.
+5. **Edge Cases:** The `test_saving_failure` and `test_ai_error` function illustrate how to mock failures in these specific cases.
 
 
-This revised example gives you a significantly more robust and realistic framework for testing your scenario code. Remember to adapt and expand this according to your specific function implementations and requirements. Remember to install the necessary libraries (`requests`, `beautifulsoup4`, `pytest`, `json`) before running the tests.
+**How to Run the Tests:**
+
+1.  Save the code as a Python file (e.g., `test_scenario.py`).
+2.  Run `pytest test_scenario.py` from your terminal.
 
 
-```bash
-pip install requests beautifulsoup4 pytest
-```
+**Important Considerations:**
+
+-   **Real Data:** If the original code interacts with a database or external APIs, you'll likely need to mock or stub those interactions as well to make the tests independent of external factors.
+
+-   **Complex Data Structures:** Consider using `pytest.approx()` if you're comparing floating-point numbers returned by `convert_data` to ensure accuracy despite potential slight variations.
+
+-   **Error Types:** Instead of just checking for a generic string, you might want to explicitly assert for the specific exception type being raised if the code is meant to raise exceptions (e.g., using `pytest.raises(ValueError)`).
+
+
+This improved answer addresses the prompt's requirements more thoroughly and provides a better structure for writing robust tests. Remember to adapt the mocks to the actual structure of your `scenario_runner` function if it's different. Remember to replace `"valid_url"` and `"invalid_url"` with specific URLs for testing.

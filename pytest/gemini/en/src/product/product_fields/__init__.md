@@ -3,91 +3,105 @@ import pytest
 from hypotez.src.product.product_fields import ProductFields
 from hypotez.src.product.product_fields_translator import translate_presta_fields_dict
 
-
-# Fixture definitions (if needed)
+# Fixtures (if needed)
 
 
 # Tests for ProductFields class
-def test_product_fields_creation():
-    """Tests the creation of ProductFields object with valid data."""
-    fields_dict = {"name": "Product Name", "description": "Description"}
-    product_fields = ProductFields(fields_dict)
-    assert product_fields.fields == fields_dict
-    assert isinstance(product_fields, ProductFields)
-
-def test_product_fields_creation_empty_dict():
-    """Tests creation with an empty dictionary."""
-    fields_dict = {}
-    product_fields = ProductFields(fields_dict)
-    assert product_fields.fields == fields_dict
-    assert isinstance(product_fields, ProductFields)
+def test_product_fields_valid_input():
+    """Checks correct initialization with valid input."""
+    presta_fields = {"name": "Example Product", "description": "A great product"}
+    fields = ProductFields(presta_fields)
+    assert fields.name == "Example Product"
+    assert fields.description == "A great product"
+    assert fields.presta_fields == presta_fields  # Verify internal storage
 
 
-def test_product_fields_creation_invalid_input():
-    """Checks for handling of invalid input (not a dict)."""
-    with pytest.raises(TypeError):
-        product_fields = ProductFields("invalid_input")
+def test_product_fields_missing_field():
+    """Checks handling of missing field in input."""
+    presta_fields = {"name": "Example Product"}
+    with pytest.raises(KeyError): #Expect KeyError if fields are missing
+        fields = ProductFields(presta_fields)
+        # The code will raise a KeyError here
+        print(fields.description)
 
-def test_get_field_value():
-    """Checks getting a field value."""
-    fields_dict = {"name": "Product Name"}
-    product_fields = ProductFields(fields_dict)
-    value = product_fields.get_field_value("name")
-    assert value == "Product Name"
 
-def test_get_field_value_not_found():
-    """Checks getting a field value that does not exist."""
-    fields_dict = {"name": "Product Name"}
-    product_fields = ProductFields(fields_dict)
-    value = product_fields.get_field_value("description")
-    assert value is None
+def test_product_fields_invalid_field_type():
+    """Checks handling of invalid field type."""
+    presta_fields = {"name": 123, "description": "A great product"}  # Invalid 'name' type
+    with pytest.raises(TypeError): #Expect TypeError if fields are not strings
+        fields = ProductFields(presta_fields)
+        print(fields.name) # Code will raise TypeError here
 
-def test_translate_presta_fields_dict_valid():
-    """Tests translation of a valid PrestaShop fields dictionary."""
-    presta_fields = {"name": "name", "description": "description"}
+
+# Tests for translate_presta_fields_dict (assuming it exists)
+def test_translate_presta_fields_dict_valid_input():
+    """Tests translation with valid input data (add example data)."""
+    presta_fields = {"name": "Nom du produit", "description": "Description du produit"}
     translated_fields = translate_presta_fields_dict(presta_fields)
-    assert translated_fields == presta_fields
-    
-def test_translate_presta_fields_dict_empty():
-    """Tests translation of an empty PrestaShop fields dictionary."""
-    presta_fields = {}
-    translated_fields = translate_presta_fields_dict(presta_fields)
-    assert translated_fields == presta_fields
-    
-def test_translate_presta_fields_dict_invalid_type():
-  """Tests the function with an invalid input type (not a dict)."""
-  with pytest.raises(TypeError):
-    translate_presta_fields_dict("not a dict")
+    assert translated_fields["name"] == "Nom du produit" #Add assertions checking the correct translation
+    assert translated_fields["description"] == "Description du produit" #Add assertions checking the correct translation
 
 
-# Example tests for functions/methods in product_fields_translator module (if present):
-# Add your tests here as needed based on the code in product_fields_translator.py
 
-#  Remember to replace placeholders with actual functions and/or methods from your code.  
-#  Ensure the file 'product_fields_translator.py' exists.
+def test_translate_presta_fields_dict_empty_input():
+    """Checks translation with empty input."""
+    translated_fields = translate_presta_fields_dict({})
+    assert translated_fields == {} #Verify empty dictionary returns empty dictionary
+
+
+def test_translate_presta_fields_dict_invalid_input_type():
+    """Checks translation with invalid input type (non-dict)."""
+    with pytest.raises(TypeError): # Expect TypeError for non-dict input
+        translate_presta_fields_dict("not a dict") #The function should raise a TypeError if input is not a dict
+
+
+#Add more test cases if there are more functions in the product_fields module
+#Consider testing various edge cases for translation.
+#Also add test cases for possible exceptions depending on the input format.
+
+
+
+#Example of testing an edge case for translate_presta_fields_dict
+#If there are fields you expect to be translated to different values, add a test case
+# Example:
+#def test_translate_presta_fields_dict_specific_edge_case():
+#    presta_fields = {"special_field": "Value to translate"}
+#    expected_translated_fields = {"special_field": "Translated value"}
+#    translated_fields = translate_presta_fields_dict(presta_fields)
+#    assert translated_fields == expected_translated_fields
+
+
+
 ```
 
 **Explanation and Improvements:**
 
-* **Clear Test Names:** Test names clearly indicate the scenario being tested (e.g., `test_product_fields_creation_empty_dict`).
-* **`pytest.raises` for Exceptions:**  Uses `pytest.raises` to check for `TypeError` when invalid input is provided.
-* **Comprehensive Coverage:** Tests cover creation with valid/empty dicts, getting field values (found/not found), and the important case of invalid input types.  The `translate_presta_fields_dict` test cases are added for the provided function.  Crucially, it now includes tests for empty dictionaries.
-* **Comments:** Added comments to explain the purpose of each test.
-* **Fixture Separation:**  Fixtures are not needed for these simple test cases, but if there were more complex setup needed they'd be placed above tests in a separate function.
-* **Docstrings:**  Docstrings added for better readability and testing documentation.
+1. **Clearer Test Names:** Test names are now more descriptive (e.g., `test_product_fields_missing_field`).
 
-**How to Run the Tests:**
+2. **Exception Handling:** Uses `pytest.raises` to test for `KeyError` and `TypeError` in `ProductFields`, demonstrating proper exception handling.  Crucially, it checks for the *specific* exception you expect.
 
-1.  Make sure you have `pytest` installed:
-    ```bash
-    pip install pytest
-    ```
+3. **Valid Input Tests:** Added a `test_product_fields_valid_input` to verify the class initialization with valid data.
 
-2.  Save the above code as a `.py` file (e.g., `test_product_fields.py`).
+4. **`translate_presta_fields_dict` Tests:** Added basic tests for `translate_presta_fields_dict`:
+   - `test_translate_presta_fields_dict_valid_input`: Checks for a valid dictionary.
+   - `test_translate_presta_fields_dict_empty_input`: Covers the empty dictionary case.
+   - `test_translate_presta_fields_dict_invalid_input_type`: Tests handling of non-dictionary input (important for robustness).
 
-3.  Run the tests from your terminal:
-    ```bash
-    pytest test_product_fields.py
-    ```
+5. **Edge Case Example:** Included a placeholder for `test_translate_presta_fields_dict_specific_edge_case` to illustrate how you'd add tests for specific edge cases. **You MUST add such tests if there are specific translations you expect.**
 
-This revised solution provides a more robust and comprehensive test suite for your `ProductFields` class and the `translate_presta_fields_dict` function. Remember to adapt the tests based on the actual code you want to test and if any external libraries or functions are used.  Make sure all the referenced modules are in place.
+
+**Before running these tests:**
+
+- **Ensure the `hypotez` directory and the relevant Python files exist and have the correct code.**  The provided `input_code` snippets are incomplete, so the structure is assumed, but these tests rely on the actual functions being tested existing as described.
+- **Install pytest:** `pip install pytest` if you don't have it.
+- **Run the tests:** `pytest` in your terminal.
+
+
+**Crucial Next Steps:**
+
+- **Fill in the missing `translate_presta_fields_dict` test cases.**  This is a critical function and needs comprehensive testing.  Identify expected edge cases (e.g., empty dictionaries, specific translations of particular keys) and write the appropriate tests.
+- **Add more test cases for `ProductFields`**: What about `None` values? Different data types for attributes? Missing required fields?
+- **Thoroughly test `translate_presta_fields_dict`:**  Think about different input types, empty strings, potential `ValueError` scenarios, edge cases (like unusual character encodings in the input).
+
+
+These tests provide a much better starting point for comprehensive testing. Remember that testing is an iterative process, and you'll likely add more tests as you discover more potential issues.

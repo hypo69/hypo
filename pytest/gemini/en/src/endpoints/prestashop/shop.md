@@ -8,76 +8,79 @@ from src.logger.exceptions import PrestaShopException
 # Fixture for providing credentials
 @pytest.fixture
 def credentials():
-    return SimpleNamespace(api_domain="test.domain", api_key="test_key")
+    return SimpleNamespace(api_domain="test_domain", api_key="test_key")
 
 
-# Valid input test
+# Valid input test cases
 def test_prestashop_shop_valid_input(credentials):
     """Tests initialization with valid credentials."""
     shop = PrestaShopShop(credentials=credentials)
-    assert shop.api_domain == "test.domain"
+    assert shop.api_domain == "test_domain"
     assert shop.api_key == "test_key"
 
 
-# Test with credentials as a dictionary
-def test_prestashop_shop_credentials_dict(credentials):
-    """Tests initialization with credentials as a dictionary."""
-    credentials_dict = {"api_domain": "test.domain", "api_key": "test_key"}
-    shop = PrestaShopShop(credentials=credentials_dict)
-    assert shop.api_domain == "test.domain"
+def test_prestashop_shop_valid_input_separate(credentials):
+    """Tests initialization with valid separate parameters."""
+    shop = PrestaShopShop(
+        api_domain=credentials.api_domain, api_key=credentials.api_key
+    )
+    assert shop.api_domain == "test_domain"
     assert shop.api_key == "test_key"
 
 
-# Test missing api_domain
-def test_prestashop_shop_missing_api_domain(credentials):
+# Invalid input (missing api_domain) test case
+def test_prestashop_shop_invalid_input_missing_api_domain():
     """Tests initialization with missing api_domain."""
-    credentials.api_domain = None
-    with pytest.raises(ValueError, match="Необходимы оба параметра: api_domain и api_key."):
+    credentials = SimpleNamespace(api_key="test_key")
+    with pytest.raises(ValueError) as excinfo:
         PrestaShopShop(credentials=credentials)
+    assert "Необходимы оба параметра: api_domain и api_key" in str(excinfo.value)
 
 
-# Test missing api_key
-def test_prestashop_shop_missing_api_key(credentials):
+# Invalid input (missing api_key) test case
+def test_prestashop_shop_invalid_input_missing_api_key():
     """Tests initialization with missing api_key."""
-    credentials.api_key = None
-    with pytest.raises(ValueError, match="Необходимы оба параметра: api_domain и api_key."):
+    credentials = SimpleNamespace(api_domain="test_domain")
+    with pytest.raises(ValueError) as excinfo:
         PrestaShopShop(credentials=credentials)
+    assert "Необходимы оба параметра: api_domain и api_key" in str(excinfo.value)
+
+
+# Invalid input (empty string for api_domain)
+def test_prestashop_shop_invalid_input_empty_api_domain():
+    """Tests initialization with empty string for api_domain."""
+    credentials = SimpleNamespace(api_domain="", api_key="test_key")
+    with pytest.raises(ValueError) as excinfo:
+        PrestaShopShop(credentials=credentials)
+    assert "Необходимы оба параметра: api_domain и api_key" in str(excinfo.value)
+
+#Invalid input (empty string for api_key)
+def test_prestashop_shop_invalid_input_empty_api_key():
+    """Tests initialization with empty string for api_key."""
+    credentials = SimpleNamespace(api_domain="test_domain", api_key="")
+    with pytest.raises(ValueError) as excinfo:
+        PrestaShopShop(credentials=credentials)
+    assert "Необходимы оба параметра: api_domain и api_key" in str(excinfo.value)
 
 
 
-# Test with both api_domain and api_key as None
-def test_prestashop_shop_both_none():
-    """Tests initialization with both api_domain and api_key as None."""
-    with pytest.raises(ValueError, match="Необходимы оба параметра: api_domain и api_key."):
+# Test with None values for api_domain and api_key to catch potential issues
+def test_prestashop_shop_none_values():
+    """Tests initialization with None values for api_domain and api_key."""
+    with pytest.raises(ValueError) as excinfo:
         PrestaShopShop(api_domain=None, api_key=None)
+    assert "Необходимы оба параметра: api_domain и api_key" in str(excinfo.value)
 
 
-# Test with only api_domain provided
-def test_prestashop_shop_api_domain_only():
-    """Tests initialization with only api_domain provided."""
-    with pytest.raises(ValueError, match="Необходимы оба параметра: api_domain и api_key."):
-        PrestaShopShop(api_domain="test.domain")
+# Test with non-string values for api_domain
+def test_prestashop_shop_invalid_domain_type():
+    """Tests initialization with non-string value for api_domain."""
+    with pytest.raises(TypeError):
+        PrestaShopShop(api_domain=123, api_key="test_key")
 
-
-# Test with only api_key provided
-def test_prestashop_shop_api_key_only():
-    """Tests initialization with only api_key provided."""
-    with pytest.raises(ValueError, match="Необходимы оба параметра: api_domain и api_key."):
-        PrestaShopShop(api_key="test_key")
-
-
-# Test with api_domain and api_key passed individually, not within credentials
-def test_prestashop_shop_individual_parameters(credentials):
-    """Tests initialization with individual api_domain and api_key."""
-    shop = PrestaShopShop(api_domain=credentials.api_domain, api_key=credentials.api_key)
-    assert shop.api_domain == "test.domain"
-    assert shop.api_key == "test_key"
-
-
-#  Test with mixed parameters including credentials
-def test_prestashop_shop_mixed_parameters(credentials):
-    """Tests initialization with mixed parameters including credentials."""
-    shop = PrestaShopShop(api_domain="another.domain", credentials=credentials, api_key = "another_key")
-    assert shop.api_domain == "another.domain"
-    assert shop.api_key == "another_key"
+# Test with non-string values for api_key
+def test_prestashop_shop_invalid_key_type():
+    """Tests initialization with non-string value for api_key."""
+    with pytest.raises(TypeError):
+        PrestaShopShop(api_domain="test_domain", api_key=123)
 ```

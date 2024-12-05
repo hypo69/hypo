@@ -1,104 +1,107 @@
 ```python
 import pytest
+import re
 
-# Since the provided code is just a link to an article,
-# we cannot write tests without the actual Python code.
-#  Therefore,  we will create example code and tests.
-# Replace this example with the actual code from the article.
-
-
-class ChatBot:
-    def __init__(self, api_key):
-        self.api_key = api_key
-
-    def generate_response(self, prompt):
-        # Example implementation (replace with actual API call)
-        if not isinstance(prompt, str):
-            raise TypeError("Prompt must be a string")
-        if not prompt:
-            raise ValueError("Prompt cannot be empty")
-        
-        # Simulate API response (replace with actual API call)
-        if prompt == "hello":
-            return "Hello there!"
-        elif prompt == "bye":
-            return "Goodbye!"
-        else:
-            return "I don't understand."
-
-    def get_api_key(self):
-        return self.api_key
+# Replace with the actual code from the provided link
+# This example provides dummy functions and data for testing purposes.
+def greet(name):
+    """Greets the user by name."""
+    if not isinstance(name, str):
+        raise TypeError("Name must be a string")
+    if not name:
+        raise ValueError("Name cannot be empty")
+    return f"Hello, {name}!"
 
 
-def test_chatbot_creation():
-    """Tests successful creation of ChatBot object."""
-    api_key = "test_api_key"
-    bot = ChatBot(api_key)
-    assert bot.api_key == api_key
+def process_message(message, keywords):
+    """Processes a message to check for keywords."""
+    if not isinstance(message, str):
+        raise TypeError("Message must be a string")
+    if not message:
+        return ""  # Or raise ValueError, depending on desired behavior
+
+    keywords_found = [keyword for keyword in keywords if re.search(keyword, message, re.IGNORECASE)]
+    if not keywords_found:
+        return "No keywords found"
+    return f"Keywords found: {', '.join(keywords_found)}"
 
 
-def test_generate_response_valid_input():
-    """Tests generate_response with valid string input."""
-    bot = ChatBot("test_api_key")
-    response = bot.generate_response("hello")
-    assert response == "Hello there!"
+# Test functions
+def test_greet_valid_input():
+    """Checks greeting with valid input."""
+    assert greet("Alice") == "Hello, Alice!"
 
 
-def test_generate_response_invalid_input_type():
-    """Tests generate_response with invalid input type."""
-    bot = ChatBot("test_api_key")
-    with pytest.raises(TypeError):
-        bot.generate_response(123)  # Testing non-string input
-
-
-def test_generate_response_invalid_input_empty():
-    """Tests generate_response with an empty string."""
-    bot = ChatBot("test_api_key")
+def test_greet_empty_name():
+    """Tests greeting with empty name (raises ValueError)."""
     with pytest.raises(ValueError):
-        bot.generate_response("")
+        greet("")
 
 
-def test_generate_response_unknown_prompt():
-    """Tests generate_response with an unknown prompt."""
-    bot = ChatBot("test_api_key")
-    response = bot.generate_response("something else")
-    assert response == "I don't understand."
+def test_greet_invalid_type():
+    """Tests greeting with invalid input type (raises TypeError)."""
+    with pytest.raises(TypeError):
+        greet(123)
 
 
-def test_get_api_key():
-    """Tests retrieving the API key."""
-    api_key = "my_secret_key"
-    bot = ChatBot(api_key)
-    assert bot.get_api_key() == api_key
+def test_process_message_valid_input():
+    """Tests message processing with valid input."""
+    message = "Hello, this is a test message containing keywords."
+    keywords = ["test", "message"]
+    result = process_message(message, keywords)
+    assert result == "Keywords found: test, message"
 
 
+def test_process_message_no_keywords():
+    """Tests message processing with no matching keywords."""
+    message = "This message contains no keywords."
+    keywords = ["error", "warning"]
+    result = process_message(message, keywords)
+    assert result == "No keywords found"
+
+
+def test_process_message_invalid_type():
+    """Tests message processing with invalid input type (raises TypeError)."""
+    with pytest.raises(TypeError):
+        process_message(123, ["keyword"])
+
+
+
+def test_process_message_empty_message():
+    """Tests message processing with empty message."""
+    message = ""
+    keywords = ["keyword"]
+    result = process_message(message, keywords)
+    assert result == ""
+
+
+# Add more tests as needed based on the actual implementation
+# For example, test cases for edge cases in regular expressions,
+# different types of keywords, error handling for large messages,
+# and various other scenarios.
 ```
 
 **Explanation and Improvements:**
 
-1. **Example `ChatBot` class:**  The provided code was just a link. This example now demonstrates a basic `ChatBot` class with methods for generating responses, handling API keys, and important error checking for various inputs (type, empty string). This is crucial for meaningful tests.
+1. **Placeholder Code:** The code now includes dummy functions (`greet`, `process_message`) with basic functionality.  **Crucially, replace these with the actual functions from the provided link.**
+
+2. **Comprehensive Test Cases:** The tests cover valid input, empty input, invalid input types, and the case where no keywords are found.
+
+3. **Error Handling:** `pytest.raises` is used to test for `TypeError` and `ValueError` exceptions, which is essential for robustness.
+
+4. **Clear Test Names:** Test function names clearly indicate the purpose of each test.
+
+5. **Docstrings:** Docstrings explain the purpose of each test.
+
+6. **Edge Cases:** The `test_process_message_empty_message` test addresses the case of an empty message, which is a potential edge case.
+
+7. **Regular Expression Considerations:** While the provided text was just a URL, if the actual code involved regular expressions (which is likely), you'd need tests to check various regex matches and non-matches, including edge cases (e.g., a case-insensitive match in the example test).
+
+**How to Use:**
+
+1. **Replace Placeholders:** Substitute the example functions with the actual functions from the linked article.
+2. **Add More Tests:**  Create more test functions to cover all aspects of your functions, including edge cases, different data types, and various scenarios.
+3. **Run Tests:**  Save the code as a Python file (e.g., `test_chat_gpt.py`) and run `pytest test_chat_gpt.py` in your terminal.
 
 
-2. **Comprehensive Test Cases:** The tests cover various scenarios:
-   - Valid input ("hello")
-   - Invalid input type (integer)
-   - Empty prompt
-   - Unknown prompt
-   - Retrieving the API key
-
-
-3. **Exception Handling:**  `pytest.raises` is used to test exceptions (`TypeError`, `ValueError`), which is critical for robust code.
-
-
-4. **Clear Test Names:**  Test names clearly describe the purpose of each test.
-
-
-5. **Structure:** The tests are organized logically within `test_chatbot.py` (or a similar file) with appropriate fixtures and functions.
-
-**To use these tests:**
-
-1. **Save:** Save the code above as a Python file (e.g., `test_chatbot.py`).
-2. **Run:** Run `pytest test_chatbot.py` in your terminal.
-
-
-**Important:**  Replace the example `ChatBot` class with the actual Python code from the linked article for these tests to be truly relevant. The placeholder code is just a model to help understand the structure and principles. Remember to adapt the tests to the specific functionalities of the real code.
+This improved solution provides a better starting point for creating comprehensive tests for the actual code from the linked article. Remember to adapt the tests to match the specific functionality and expected behavior of the code you're testing. Remember to replace the example functions with the actual functions from the provided link.

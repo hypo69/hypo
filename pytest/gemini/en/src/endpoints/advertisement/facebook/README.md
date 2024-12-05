@@ -1,101 +1,108 @@
 ```python
 import pytest
-import datetime
+
+# Placeholder for the actual code from hypotez/src/endpoints/advertisement/facebook/
+# Replace with the actual code
+def create_facebook_ad(campaign_id, ad_name, target_audience):
+    """Creates a Facebook ad."""
+    if not campaign_id:
+        raise ValueError("Campaign ID cannot be empty")
+    if not ad_name:
+        raise ValueError("Ad name cannot be empty")
+    # ... (rest of the function) ...  
+    return {"campaign_id": campaign_id, "ad_name": ad_name, "target_audience": target_audience}
 
 
-# Replace with the actual code from hypotez/src/endpoints/advertisement/facebook/
-# This is a placeholder.  Actual code is needed to write meaningful tests.
-
-class FacebookAdvertisement:
-    def create_ad_campaign(self, campaign_name, budget, start_date, end_date):
-        """Creates a Facebook ad campaign."""
-        
-        if not isinstance(campaign_name, str) or not campaign_name:
-            raise ValueError("Campaign name must be a non-empty string.")
-
-        if budget <= 0:
-            raise ValueError("Budget must be a positive value.")
-
-        try:
-            start_date_obj = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-            end_date_obj = datetime.datetime.strptime(end_date, "%Y-%m-%d")
-            
-            if end_date_obj <= start_date_obj:
-              raise ValueError("End date must be after start date.")
-        except ValueError as e:
-            raise ValueError(f"Invalid date format or dates: {e}")
-        
-        # Placeholder for actual campaign creation logic
-        print(f"Created campaign: {campaign_name} with budget: {budget}, start date: {start_date}, end date: {end_date}")
-        return {"campaign_name": campaign_name, "budget": budget, "start_date": start_date, "end_date": end_date}
+def get_facebook_ad_status(ad_id):
+  """Gets the status of a Facebook ad."""
+  if not ad_id:
+    raise ValueError("Ad ID cannot be empty")
+  # ... (rest of the function) ...
+  # Simulate fetching status from database or API
+  if ad_id == 123:
+    return "active"
+  elif ad_id == 456:
+    return "paused"
+  else:
+    return "unknown"
+  
 
 
-# Tests
-def test_create_ad_campaign_valid_input():
-    """Checks correct behavior with valid input."""
-    facebook_ad = FacebookAdvertisement()
-    campaign_data = facebook_ad.create_ad_campaign("Test Campaign", 100, "2024-01-15", "2024-01-31")
-    assert campaign_data["campaign_name"] == "Test Campaign"
-    assert campaign_data["budget"] == 100
+# Tests for create_facebook_ad
+def test_create_facebook_ad_valid_input():
+    """Tests with valid input."""
+    campaign_id = "12345"
+    ad_name = "New Facebook Ad"
+    target_audience = "USA"
+    ad = create_facebook_ad(campaign_id, ad_name, target_audience)
+    assert ad["campaign_id"] == campaign_id
+    assert ad["ad_name"] == ad_name
+    assert ad["target_audience"] == target_audience
 
-def test_create_ad_campaign_invalid_campaign_name():
-    """Tests invalid campaign name."""
-    facebook_ad = FacebookAdvertisement()
+def test_create_facebook_ad_empty_campaign_id():
+    """Tests with empty campaign ID."""
     with pytest.raises(ValueError) as excinfo:
-        facebook_ad.create_ad_campaign("", 100, "2024-01-15", "2024-01-31")
-    assert "Campaign name must be a non-empty string." in str(excinfo.value)
+        create_facebook_ad("", "Ad Name", "Target Audience")
+    assert str(excinfo.value) == "Campaign ID cannot be empty"
 
-def test_create_ad_campaign_invalid_budget():
-    """Tests invalid budget."""
-    facebook_ad = FacebookAdvertisement()
+def test_create_facebook_ad_empty_ad_name():
+    """Tests with empty ad name."""
     with pytest.raises(ValueError) as excinfo:
-        facebook_ad.create_ad_campaign("Valid Campaign", -10, "2024-01-15", "2024-01-31")
-    assert "Budget must be a positive value." in str(excinfo.value)
+        create_facebook_ad("123", "", "Target Audience")
+    assert str(excinfo.value) == "Ad name cannot be empty"
 
-def test_create_ad_campaign_invalid_date_format():
-  """Tests invalid date format."""
-  facebook_ad = FacebookAdvertisement()
-  with pytest.raises(ValueError) as excinfo:
-    facebook_ad.create_ad_campaign("Valid Campaign", 100, "2024-15-01", "2024-01-31")
-  assert "Invalid date format" in str(excinfo.value)
 
-def test_create_ad_campaign_invalid_dates():
-  """Tests invalid date order."""
-  facebook_ad = FacebookAdvertisement()
+# Tests for get_facebook_ad_status
+def test_get_facebook_ad_status_valid_id():
+    """Tests with a valid ad ID."""
+    status = get_facebook_ad_status(123)
+    assert status == "active"
+
+def test_get_facebook_ad_status_another_valid_id():
+    """Tests with another valid ad ID."""
+    status = get_facebook_ad_status(456)
+    assert status == "paused"
+
+
+def test_get_facebook_ad_status_invalid_id():
+    """Tests with an invalid ad ID."""
+    status = get_facebook_ad_status(789)
+    assert status == "unknown"
+
+def test_get_facebook_ad_status_empty_id():
+  """Tests with an empty ad ID."""
   with pytest.raises(ValueError) as excinfo:
-    facebook_ad.create_ad_campaign("Valid Campaign", 100, "2024-01-31", "2024-01-15")
-  assert "End date must be after start date." in str(excinfo.value)
+    get_facebook_ad_status("")
+  assert str(excinfo.value) == "Ad ID cannot be empty"
 
 
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Placeholder for Actual Code:** The code now includes a `FacebookAdvertisement` class with a placeholder `create_ad_campaign` method.  **Crucially**, you *must* replace this placeholder with the actual code from your `hypotez/src/endpoints/advertisement/facebook/` directory.  Without the actual code, the tests are useless.
+1. **Placeholder for Actual Code:**  The code now includes placeholders (`# ... (rest of the function) ...`) for the actual functions from your `hypotez` file.  Crucially, you **MUST** replace these placeholders with the actual code.  Without the real code, I can't create truly comprehensive tests.
 
-2. **Comprehensive Test Cases:**  The tests cover:
-   - Valid input
-   - Empty `campaign_name`
-   - Negative `budget`
-   - Incorrect `start_date` or `end_date` format
-   - `end_date` before `start_date`.  (This is *critical* for real-world applications!)
+2. **Clear Test Names:** Test function names clearly indicate the input and expected outcome.
 
-3. **`pytest.raises` for Exceptions:** The tests use `pytest.raises` to assert that the correct exceptions are raised for invalid input, which is essential for robust code.
-
-4. **Clear Error Messages:** The `ValueError` messages now include more helpful context about the cause of the error, improving debugging.
-
-5. **Meaningful Test Names:** Test names clearly describe the input and expected outcome.
-
-**How to Run the Tests:**
-
-1. **Save:** Save this code as a `.py` file (e.g., `test_facebook_ads.py`).
-2. **Run:** Open a terminal and navigate to the directory containing the file. Run `pytest test_facebook_ads.py`
+3. **Exception Handling:** `test_create_facebook_ad_empty_campaign_id` and `test_create_facebook_ad_empty_ad_name` demonstrate how to test for `ValueError` exceptions using `pytest.raises`.  This is essential for robustness.
 
 
-**Before Running:**
+4. **Edge Cases:** `test_get_facebook_ad_status_invalid_id` and the empty string test in `test_get_facebook_ad_status` cover a more general case than just a missing `id`.
 
-- **Install pytest:**  If you don't have it, run `pip install pytest`.
-- **Replace the placeholder:**  Implement the `FacebookAdvertisement` class and `create_ad_campaign` method with the actual code from your project.
+5. **Valid Input Tests:** The `test_create_facebook_ad_valid_input` tests with a real valid input.
 
 
-This improved solution provides a more thorough and practical example for writing tests, demonstrating the crucial aspects of exception handling and validating input data.  Remember to adapt the tests to the specifics of your actual code. Remember to replace the placeholder code with your actual code. Remember to run `pytest` to execute the tests.
+6. **Docstrings:** The tests include docstrings describing the purpose of each test.
+
+7. **Robustness:** The tests now catch and verify the error messages of `ValueError`. This is crucial for debugging and helps understand the specific error that is raised.
+
+
+**How to Use:**
+
+1. **Replace Placeholders:**  Put the actual code from your `hypotez` file into the placeholder sections.
+2. **Run Tests:**  Save this file as a `.py` file (e.g., `test_facebook_ads.py`) in the same directory as your `hypotez` code. Then run pytest:
+   ```bash
+   pytest test_facebook_ads.py
+   ```
+
+This improved example demonstrates how to write effective, comprehensive tests covering valid inputs, invalid inputs, and exception handling. Remember to replace the placeholders with your actual code for accurate testing. Remember to replace `test_facebook_ads.py` with a filename matching your tests.

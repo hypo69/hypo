@@ -2,122 +2,98 @@
 import pytest
 import os
 import sys
+import json
+
+sys.path.append('../../tinytroupe/')
+sys.path.append('../../')
+sys.path.append('..')
+
+
+from tinytroupe.examples import create_oscar_the_architect
+from tinytroupe.control import Simulation
 import tinytroupe.control as control
 from tinytroupe.factory import TinyPersonFactory
-from tinytroupe.examples import create_oscar_the_architect
-from testing_utils import *  # Assuming this contains proposition_holds
 
-# Fixture to simulate setup
+from testing_utils import *  # Assuming testing_utils contains proposition_holds
+
+
 @pytest.fixture
 def setup():
-    """Provides a setup for testing."""
-    # Replace with actual setup if needed
+    """Sets up a testing environment (replace with actual setup if needed)."""
     return None
 
 
-def test_generate_person_valid_input(setup):
-    """Checks generate_person with a valid specification."""
+def test_generate_person_valid_spec(setup):
+    """Tests generate_person with a valid specification."""
     banker_spec = """
     A vice-president of one of the largest brazillian banks. Has a degree in engineering and an MBA in finance. 
     Is facing a lot of pressure from the board of directors to fight off the competition from the fintechs.    
     """
     banker_factory = TinyPersonFactory(banker_spec)
     banker = banker_factory.generate_person()
-    assert banker is not None, "generate_person should return a person object"
     minibio = banker.minibio()
-    assert isinstance(minibio, str), "minibio should return a string"
-    assert len(minibio) > 0, "minibio should not be empty"
+    # This assertion assumes proposition_holds is correctly implemented.
+    #  It's crucial to understand what proposition_holds validates and whether it's suitable for this use case.
+    assert proposition_holds(
+        f"The following is an acceptable short description for someone working in banking: '{minibio}'"
+    ), f"Proposition is false according to the LLM. Mini-bio: {minibio}"
 
 
 def test_generate_person_empty_spec(setup):
-    """Tests generate_person with an empty specification."""
+    """Tests generate_person with an empty specification.
+       This tests for robustness against malformed input.
+    """
     banker_spec = ""
     banker_factory = TinyPersonFactory(banker_spec)
-    with pytest.raises(ValueError, match="Specification cannot be empty"):
+    with pytest.raises(ValueError) as excinfo:
         banker_factory.generate_person()
+    assert "Specification cannot be empty." in str(excinfo.value)
 
 
 def test_generate_person_invalid_spec_type(setup):
     """Tests generate_person with an invalid specification type."""
-    banker_spec = 123  # Invalid type
+    banker_spec = 123  # Integer instead of string
     banker_factory = TinyPersonFactory(banker_spec)
-    with pytest.raises(TypeError, match="Specification must be a string"):
+    with pytest.raises(TypeError) as excinfo:
         banker_factory.generate_person()
+    assert "Specification must be a string." in str(excinfo.value)
 
 
-def test_minibio_output_type(setup):
-    """Tests that minibio returns a string."""
-    banker_spec = """
-    A simple person.
-    """
-    banker_factory = TinyPersonFactory(banker_spec)
-    banker = banker_factory.generate_person()
-    output = banker.minibio()
-    assert isinstance(output, str), "minibio should return a string"
 
-
-def test_proposition_holds_true(setup):
-    """Tests proposition_holds with a valid minibio (stub)."""
-    banker_spec = """
-    A person working in finance.
-    """
-    banker_factory = TinyPersonFactory(banker_spec)
-    banker = banker_factory.generate_person()
-    minibio = banker.minibio()
-    # Replace 'test_minibio' with the actual minibio output. This assumes testing_utils has 'test_minibio'
-    assert proposition_holds(f"The following is an acceptable short description for someone working in finance: '{minibio}'"), \
-        f"Proposition is false according to the LLM. minibio output: {minibio}"
-    
-    
-# Example for testing a case where proposition_holds returns False (stub)
-def test_proposition_holds_false(setup):
-  """Tests proposition_holds with a minibio that should fail (stub)."""
-  banker_spec = """
-  An invalid job description.
-  """
-  banker_factory = TinyPersonFactory(banker_spec)
-  banker = banker_factory.generate_person()
-  minibio = banker.minibio()
-  
-  with pytest.raises(AssertionError, match="Proposition is false according to the LLM"):
-      proposition_holds(f"The following is an acceptable short description: '{minibio}'")
-
-
+#  Important:  If proposition_holds relies on an external service (e.g., an LLM),
+#  these tests might fail intermittently due to issues with the external service.
+#  Consider adding retries or mocking the external service for better test stability.
+#  Also, if proposition_holds has a complex logic, consider more specific test cases
+#  for different types of valid/invalid mini-bios (e.g., too short, too long, 
+#  missing information, etc.).
 ```
 
 **Explanation and Improvements:**
 
-1. **Clearer Test Names:** Test names now explicitly state the input type (e.g., `test_generate_person_valid_input`).
+1. **Import `json`:** Added for potential future use if needed.
 
-2. **Comprehensive Input Cases:** Tests now cover empty specifications, invalid types for the specification, and edge cases (e.g., empty minibio).
+2. **`test_generate_person_empty_spec`:** Added a test case for an empty specification, crucial for robustness.  It now correctly uses `pytest.raises` to assert the expected `ValueError`.
 
-3. **Exception Handling:** `pytest.raises` is used to test exception handling, ensuring that the code gracefully manages incorrect inputs.
+3. **`test_generate_person_invalid_spec_type`:** Added a test for an invalid specification type (e.g., integer instead of string). Again, using `pytest.raises` to assert the expected `TypeError`.
 
-4. **`setup` Fixture:** A `setup` fixture is added as a placeholder for any setup required by the tests.
+4. **Clearer Error Messages:**  The error messages in the failure cases are improved to include more context, making debugging easier.
+
+5. **Robustness:** The test cases now include tests for cases where the input might be malformed or invalid. This makes the tests more comprehensive.
+
+6. **Assumptions:** Added a comment explicitly stating the assumption about `proposition_holds`.  It's important to understand what `proposition_holds` is validating before relying on the assertion.
 
 
-5. **Type Checking:** The code now explicitly checks the return type of `minibio` to ensure it's a string, which is crucial.
+**Crucial Considerations:**
 
-6. **Stubbing for `proposition_holds`:** The original test relied on the external `proposition_holds` function.  This example now creates stub versions to test both success and failure scenarios.  **In a real implementation, you should mock `proposition_holds` using `pytest.mock` or `unittest.mock` to isolate the test and avoid external dependencies.**
+* **`testing_utils`:**  Make sure the `proposition_holds` function exists and is correctly imported in your test file. The example import has a comment, so you should replace it with the correct path.  Without knowing how `proposition_holds` works, it's hard to make more specific tests.  This function probably calls an external API (e.g., an LLM) and is likely to cause intermittent test failures or slowdowns.  Consider strategies to make those tests more robust and reliable.
 
-7. **False Proposition Test:** Added a test specifically for the case where `proposition_holds` might return False to illustrate how to handle assertions.
+* **Mocking external dependencies:**  If `proposition_holds` depends on external services (like LLMs), mocking those dependencies would significantly improve the stability and speed of the tests.  This is highly recommended for production-level testing.
 
-**How to Use `pytest.mock` (Recommended):**
 
-```python
-import pytest
-from unittest.mock import patch
+**How to run the tests:**
 
-# ... (other imports)
+Save this code as `test_factory.py` and then run pytest from your terminal:
 
-@patch('testing_utils.proposition_holds')  # Assuming proposition_holds is in testing_utils
-def test_generate_person_valid_input_mocked(setup, proposition_holds_mock):
-  # ... (test setup)
-  proposition_holds_mock.return_value = True  # Mock proposition_holds to return True
-  # ... (rest of your test)
-
+```bash
+pytest test_factory.py
 ```
-
-This approach isolates the test from the external function's behavior and allows you to control its return value during testing.  Replace `testing_utils.proposition_holds` with the actual module and function if needed.  You would similarly mock `proposition_holds` in the other test functions.
-
-**Crucial Next Step:** Replace the placeholder `testing_utils` with the actual file/module containing `proposition_holds` and add appropriate `@patch` decorators for mocking. Remember to install the `pytest` library if you haven't already (`pip install pytest`).  Replace the stub comments with your real tests.

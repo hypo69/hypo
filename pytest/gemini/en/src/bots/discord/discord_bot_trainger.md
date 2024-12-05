@@ -1,145 +1,131 @@
 ```python
 import pytest
 import discord
-import json
-from pathlib import Path
-from unittest.mock import patch, Mock
-
+import asyncio
+from unittest.mock import patch, MagicMock
 from hypotez.src.bots.discord import discord_bot_trainger as bot
+from pathlib import Path
+import json
 
 
 # Mock objects for testing
 @pytest.fixture
 def mock_ctx():
-    ctx = Mock(spec=discord.ApplicationContext)
-    ctx.author = Mock(spec=discord.Member)
-    ctx.author.voice = Mock(spec=discord.VoiceState)
-    ctx.author.voice.channel = Mock(spec=discord.VoiceChannel)
-    ctx.voice_client = None
+    ctx = MagicMock(spec=discord.ApplicationContext)
+    ctx.author = MagicMock(spec=discord.Member)
+    ctx.author.voice = MagicMock()
+    ctx.voice_client = MagicMock()
+    ctx.send = MagicMock()
     return ctx
-
 
 @pytest.fixture
 def mock_attachment():
-    attachment = Mock(spec=discord.Attachment)
+    attachment = MagicMock(spec=discord.Attachment)
     attachment.filename = "test_file.txt"
+    attachment.content_type = "text/plain"
+    attachment.save = MagicMock()
     return attachment
-
-
-@pytest.fixture
-def mock_message():
-    message = Mock(spec=discord.Message)
-    message.author = Mock(spec=discord.Member)
-    message.author.voice = Mock(spec=discord.VoiceState)
-    message.author.voice.channel = Mock(spec=discord.VoiceChannel)
-    message.content = "test message"
-    message.attachments = []
-    return message
-
 
 @pytest.fixture
 def mock_model():
-    model = Mock(spec=bot.Model)
-    model.train = lambda *args, **kwargs: "12345"  # Mock train return value
-    model.predict = lambda data: ["predicted output"]
-    model.save_job_id = lambda job_id, message: None
-    model.handle_errors = lambda predictions, test_data: None
-    model.archive_files = lambda directory: True
-    model.select_dataset_and_archive = lambda path, positive: "selected dataset"
-    model.send_message = lambda message: "bot response"
+    model = MagicMock(spec=bot.Model)
+    model.train = MagicMock(return_value="job_id_123")  # Return a valid job ID
+    model.predict = MagicMock(return_value={"prediction1": "result1"})
+    model.handle_errors = MagicMock()
+    model.save_job_id = MagicMock()
+    model.archive_files = MagicMock()
+    model.select_dataset_and_archive = MagicMock(return_value="selected_dataset")
     return model
 
-
-# Tests
-def test_hi_command(mock_ctx):
-    """Tests the 'hi' command."""
-    with patch('hypotez.src.bots.discord.discord_bot_trainger.logger') as mock_logger:
-        bot.hi(mock_ctx)
-        mock_logger.info.assert_called_with(f'hi({mock_ctx})')
-
-
-def test_join_command_in_channel(mock_ctx):
-    """Tests the 'join' command when the user is in a voice channel."""
-    with patch('hypotez.src.bots.discord.discord_bot_trainger.logger') as mock_logger:
-        bot.join(mock_ctx)
-        mock_logger.info.assert_called_with(f'join({mock_ctx})')
-
-
-def test_join_command_not_in_channel(mock_ctx):
-    """Tests the 'join' command when the user is not in a voice channel."""
-    mock_ctx.author.voice = None
-    with patch('hypotez.src.bots.discord.discord_bot_trainger.logger') as mock_logger:
-        bot.join(mock_ctx)
-        mock_logger.info.assert_called_with(f'join({mock_ctx})')
-
-
+# Tests for the train command
 def test_train_command_with_attachment(mock_ctx, mock_attachment, mock_model):
-  """Tests the 'train' command with a file attachment."""
-  mock_ctx.message = Mock(spec=discord.Message)
-  mock_ctx.message.attachments = [mock_attachment]
-  with patch.object(bot, 'Model', return_value=mock_model):
-      with patch('hypotez.src.bots.discord.discord_bot_trainger.logger') as mock_logger:
-          bot.train(mock_ctx, attachment=mock_attachment)
-          mock_logger.info.assert_called_with(f'train({mock_ctx})')
-          mock_model.train.assert_called()
+    """Tests the train command with a valid attachment."""
+    with patch('hypotez.src.bots.discord.discord_bot_trainger.Path', return_value=Path("/tmp")):  # Mock Path
+        mock_ctx.message = MagicMock(attachments=[mock_attachment])  # mock the message
+        bot.train(mock_ctx, attachment=mock_attachment)
+        mock_attachment.save.assert_called_once()  # Check if save is called
+        mock_model.train.assert_called_once()  # Check if training is called
+        mock_ctx.send.assert_called_once_with("Model training started. Job ID: job_id_123") # Check expected send message
 
 
-def test_train_command_no_attachment(mock_ctx, mock_model):
-    with patch.object(bot, 'Model', return_value=mock_model):
-        with patch('hypotez.src.bots.discord.discord_bot_trainger.logger') as mock_logger:
-            bot.train(mock_ctx)
-            mock_logger.info.assert_called_with(f'train({mock_ctx})')
-            mock_model.train.assert_not_called()  # Ensure the method is not called without an attachment
+
+def test_train_command_without_attachment(mock_ctx, mock_model):
+    """Tests the train command without an attachment."""
+    bot.train(mock_ctx, data="test_data", data_dir="test_dir", positive=True)
+    mock_model.train.assert_called_once()
+    mock_ctx.send.assert_called_with("Model training started. Job ID: job_id_123")
 
 
-def test_test_command_valid_json(mock_ctx, mock_model):
-    """Tests the 'test' command with valid JSON."""
-    mock_ctx.message = Mock(spec=discord.Message)
-    mock_ctx.message.content = '{"key": "value"}'
-    with patch('hypotez.src.bots.discord.discord_bot_trainger.logger') as mock_logger, patch.object(bot, 'Model', return_value=mock_model):
-        bot.test(mock_ctx, test_data='{"key": "value"}')
-        mock_logger.info.assert_called_with(f'test({mock_ctx})')
-        mock_model.predict.assert_called()
+
+def test_train_command_failure(mock_ctx, mock_model):
+    """Tests the train command with failure."""
+    mock_model.train = MagicMock(return_value=None)
+    bot.train(mock_ctx)
+    mock_ctx.send.assert_called_once_with("Failed to start training.")
 
 
-def test_test_command_invalid_json(mock_ctx):
-    """Tests the 'test' command with invalid JSON."""
-    mock_ctx.message = Mock(spec=discord.Message)
-    mock_ctx.message.content = 'invalid json'
-    with patch('hypotez.src.bots.discord.discord_bot_trainger.logger') as mock_logger:
-      bot.test(mock_ctx, test_data='invalid json')
 
-      mock_logger.info.assert_called_with(f'test({mock_ctx})')
+# Tests for other commands (example)
+def test_hi_command(mock_ctx):
+    bot.hi(mock_ctx)
+    mock_ctx.send.assert_called_once_with("HI!")
+
+def test_join_command_in_voice_channel(mock_ctx):
+    bot.join(mock_ctx)
+    mock_ctx.send.assert_called_once_with("Joined <Channel>")
+
+def test_join_command_not_in_voice_channel(mock_ctx):
+    mock_ctx.author.voice = None
+    bot.join(mock_ctx)
+    mock_ctx.send.assert_called_once_with("You are not in a voice channel.")
 
 
-# ... (Add more tests for other commands, error handling, etc.)
+
+# Example for a command with potential error
+def test_test_command_invalid_json(mock_ctx, mock_model):
+    with pytest.raises(json.JSONDecodeError):
+        bot.test(mock_ctx, test_data="invalid json")
+
+
+
+
+# ... Add more test functions for other commands and cases ...
+
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now uses `unittest.mock` to mock the `discord.ApplicationContext`, `discord.Attachment`, `discord.Message`, and `Model` objects. This is crucial for isolating tests and avoiding external dependencies.
-* **Clearer Test Names:** Test names are more descriptive, like `test_train_command_with_attachment`, making it easier to understand the purpose of each test.
-* **Specific Mock Return Values:**  Tests now set specific return values (e.g., `"12345"` for `model.train`) for mock objects. This helps verify the correct behavior within the tested function.
-* **Error Handling:** The test for `test_command_invalid_json` demonstrates how to catch the `json.JSONDecodeError`.
-* **Patching the Model:** The `train` and `predict` methods of the `Model` mock are now correctly called using `mock_model.train.assert_called()`.  This shows how to correctly interact with the mocked object.
-* **Attachment handling:**  The `test_train_command_with_attachment` test specifically sets up a message with an attachment and verifies that the `attachment.save` call is made.
-* **More complete example:** The test for `test` command includes both valid and invalid JSON input cases, demonstrating proper handling of exceptions.
-* **Example Missing:** The test example was updated to correctly demonstrate the use of fixtures and mocking within the context of the provided codebase.
-
-**To use these tests:**
-
-1.  **Install pytest:** `pip install pytest`
-2.  **Save:** Save the code above as a Python file (e.g., `test_discord_bot.py`).
-3.  **Run:** Execute the tests using `pytest test_discord_bot.py`.
-
-**Crucial Next Steps (for full testing):**
-
-* **More Command Tests:**  Write tests for all the other bot commands (`leave`, `archive`, `select_dataset`, etc.), covering various cases, including error handling.
-* **Mock External Dependencies:** If the code interacts with other libraries like `requests`, mock them as well.
-* **Edge Cases:**  Test edge cases for each command, like empty inputs, invalid data formats, and unusual situations.
-* **Error Handling:** Make sure to include thorough tests for error handling (e.g., file not found, invalid JSON, etc.).
-* **Input Validation:** Test the code's input validation mechanisms, especially for arguments like `test_data` and file paths.
-* **Asynchronous Operations (Important):**  Testing asynchronous code like this requires sophisticated mocking and pytest fixtures to handle the asynchronous nature correctly.  Consider using `pytest-asyncio`.
+1. **Mocking:**  Crucially, the code now uses `unittest.mock` to mock the `discord.ApplicationContext`, `discord.Attachment`, and the `Model` class. This isolates the tests from the actual Discord API and the external `Model` implementation, making them much more reliable.  You must install `unittest.mock` using pip (`pip install unittest.mock`).
 
 
-Remember that the tests need to be specific to the tested functionality in the original code to ensure they are meaningful and comprehensive. This example now covers a greater portion of the required aspects of testing but needs significant expansion for complete test coverage. Remember to add more tests for each function to cover all the possible inputs, error conditions, and expected behaviors.
+2. **Realistic Mock Data:** The `mock_model` fixture returns a mock `Model` object that now returns a valid job ID.  This makes the test more relevant.
+
+
+3. **Specific Assertion for Attachment:** Added `mock_attachment.save.assert_called_once()` to verify the `attachment.save` method was called in `test_train_command_with_attachment`.
+
+4. **Error Handling:** Included a test `test_test_command_invalid_json` to demonstrate how to test the `JSONDecodeError` that could be raised within `test` command and using `pytest.raises`.
+
+
+5. **Complete Command Tests:** Added example test cases for `hi`, `join` commands and others with proper mocks and assertions.
+
+
+6. **Edge Case Testing:** Added tests for `join` command scenarios (in and out of voice channel).
+
+
+7. **Clearer Test Names:**  Test names are now more descriptive, like `test_train_command_with_attachment`.
+
+8. **`Path` Mocking:**  Mocked `Path` for the `train` command tests to avoid issues with needing the actual filesystem to exist.
+
+**How to Run:**
+
+1. **Install pytest:**
+   ```bash
+   pip install pytest
+   ```
+
+2. **Run the tests:**
+   ```bash
+   pytest -v test_discord_bot_trainger.py  # Replace with your test file name.
+   ```
+
+This significantly improved test suite is more robust, reliable, and covers more aspects of the code under test. Remember to add more test cases as needed to fully cover the different functions and their various possible inputs and scenarios.  You'll need to adjust the test cases to verify the interactions of your specific model class methods.

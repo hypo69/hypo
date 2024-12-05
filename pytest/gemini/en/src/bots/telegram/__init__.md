@@ -1,71 +1,104 @@
 ```python
 import pytest
+from hypotez.src.bots.telegram import TelegramBot
 
-# Tests for the telegram module
+# Tests for the TelegramBot class (assuming it has methods)
+# Example assuming a method like 'send_message'
 
-def test_mode_value():
-    """Checks the value of the MODE constant."""
-    from hypotez.src.bots.telegram import MODE
-    assert MODE == 'dev', f"Expected MODE to be 'dev', but got '{MODE}'"
 
-def test_telegram_bot_import():
-    """Checks if the TelegramBot class can be imported."""
-    from hypotez.src.bots.telegram import TelegramBot
-    assert TelegramBot is not None, "TelegramBot class could not be imported."
-
-# Example tests for TelegramBot (assuming a TelegramBot class exists).
-# These are placeholders as the provided code doesn't contain a TelegramBot class definition.
-
-# Example fixture (replace with relevant fixture if needed)
+# Example fixture (replace with actual fixture if needed)
 @pytest.fixture
-def example_telegram_bot():
-  """Provides an instance of the TelegramBot for testing."""
-  from hypotez.src.bots.telegram import TelegramBot  #Import the bot class
-  return TelegramBot()
-
-def test_telegram_bot_initialization(example_telegram_bot):
-    """Tests initialization of the TelegramBot object.  Assumes a constructor."""
-    assert example_telegram_bot is not None, "TelegramBot instance not created correctly."
+def example_bot():
+    """Provides a TelegramBot instance for testing."""
+    return TelegramBot()
 
 
-# Example test with invalid input (replace with appropriate test if TelegramBot has methods for error handling).
-def test_telegram_bot_invalid_input(example_telegram_bot):
-    """Test handling of invalid input for the TelegramBot methods."""
-    # Add your invalid input logic here.  Example:
-    with pytest.raises(ValueError) as excinfo: # Example of expected exception
-        example_telegram_bot.invalid_method("incorrect_data")
-    assert "Invalid input" in str(excinfo.value), f"Expected error message to contain 'Invalid input', but got '{str(excinfo.value)}'"
-    
-#Important Note: To make these tests runnable, you need to have a `TelegramBot` class 
-#defined in `hypotez/src/bots/telegram/bot.py` (or a similar location) with appropriate methods. 
-#The above tests are placeholders and will fail if no `TelegramBot` class is present. You should replace
-#the placeholder comments with actual test cases and error handling for the methods in your `TelegramBot` class.
+def test_telegram_bot_creation(example_bot):
+    """Checks if TelegramBot is initialized correctly."""
+    assert isinstance(example_bot, TelegramBot)
+
+
+# Example tests assuming a send_message method in TelegramBot
+def test_send_message_valid_input(example_bot):
+    """Tests sending a message with valid input."""
+    # Replace with actual message and chat_id
+    message = "Hello, world!"
+    chat_id = 12345
+    # Example of what should be happening
+    # Example: result = example_bot.send_message(message, chat_id)
+    # assert result == True or similar assertion based on the method return
+    # In a real test you would need to verify if the method calls appropriate functions.
+    assert example_bot.send_message(message, chat_id) == True
+
+
+def test_send_message_invalid_input_no_message(example_bot):
+    """Tests sending message with no message."""
+    chat_id = 12345
+    with pytest.raises(TypeError) as excinfo:  # Check for TypeError
+        example_bot.send_message(None, chat_id)  
+    assert "message must be a string" in str(excinfo.value)
+
+def test_send_message_invalid_input_no_chatid(example_bot):
+    """Tests sending message with no chat_id."""
+    message = "Hello, world!"
+    with pytest.raises(TypeError) as excinfo: # Check for TypeError
+        example_bot.send_message(message, None)  
+    assert "chat_id must be an integer" in str(excinfo.value)
+
+
+def test_send_message_empty_message(example_bot):
+    """Tests sending message with empty message."""
+    chat_id = 12345
+    with pytest.raises(ValueError) as excinfo:  # Check for ValueError
+        example_bot.send_message("", chat_id)
+    assert "message cannot be empty" in str(excinfo.value)
+
+
+# Example tests for edge cases - replace with specific edge cases from TelegramBot implementation
+def test_send_message_long_message(example_bot):
+    """Tests sending message with a long message."""
+    message = "x" * 10001  # Example very long message
+    chat_id = 12345
+    # Replace assertion based on how long message is handled
+    # Example: assert example_bot.send_message(message, chat_id) == False or similar
+    assert example_bot.send_message(message, chat_id)
+
+
+def test_send_message_invalid_chatid_type(example_bot):
+  """Tests sending message with invalid chat_id type (e.g., string)."""
+  message = "Hello, world!"
+  chat_id = "invalid"  # Example invalid chat_id
+  with pytest.raises(TypeError) as excinfo:
+      example_bot.send_message(message, chat_id)
+  assert "chat_id must be an integer" in str(excinfo.value)
+
+
+#Add more tests for other potential methods in TelegramBot as needed
+
 
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Placeholder Tests:** The previous response lacked crucial placeholder tests. This improved version now has example tests for `TelegramBot`, assuming it exists.  Crucially, these are *example* tests, and you must replace the placeholder comments with actual tests for methods of the `TelegramBot` class.
-
-2. **`pytest.raises`:**  The code now correctly demonstrates how to use `pytest.raises` for exception handling.  Replace `"incorrect_data"` with the *specific* invalid input your `TelegramBot` method is supposed to reject.
-
-3. **Error Message Assertions:** The test now checks that the *error message* is what you expect, improving test robustness.
-
-4. **Example Fixture:** Demonstrates how to create a `pytest` fixture for the `TelegramBot` object, allowing better organization and code reuse.
-
-5. **Import Handling:** The tests now correctly handle the import of the `TelegramBot` class inside the testing functions, which is an important aspect for testing code in the project.
-
-6. **Clearer Comments:** Comments now clarify the intended purpose and expected behaviors of each test.
-
-**How to Use:**
-
-1. **Create `TelegramBot`:** Define the `TelegramBot` class in `hypotez/src/bots/telegram/bot.py` (or the correct location).
-
-2. **Add `TelegramBot` Methods:** Add methods to the `TelegramBot` class that your tests will target.
-
-3. **Update Test Cases:** Modify the placeholder tests (e.g., `test_telegram_bot_invalid_input`) with specific tests for your `TelegramBot` methods and error conditions.
-
-4. **Run Tests:** Run `pytest` from your project's root directory.  Make sure you have `pytest` installed: `pip install pytest`.
+1. **Specific Error Handling:** The tests now use `pytest.raises` to specifically check for expected exceptions (TypeError, ValueError) with informative error messages.  This is crucial for robust testing.
 
 
-This revised response provides a solid foundation for testing your Telegram bot code with `pytest`. Remember to replace the example code with your actual code, and adapt the test cases to cover the features of your `TelegramBot` class. Importantly, it's a template, and you will need to add tests to cover all the different functionalities of your `TelegramBot` class.
+2. **Clearer Assertions:** Assertions are now more specific and meaningful.  Example test `test_send_message_valid_input` uses an assertion related to the expected behavior of the `send_message` function, (replace the example comment with the actual assertion).  Testing for boolean `True` or `False` responses, or other expected return values is crucial.
+
+3. **Edge Case Examples:**  Included `test_send_message_long_message` and `test_send_message_invalid_chatid_type` as examples of edge cases. Replace these with specific edge cases relevant to your actual TelegramBot implementation.
+
+
+4. **Complete Test Coverage (Hypothetical):** The provided example code is minimal.  The crucial `send_message` function is tested for proper input, handling of empty messages, long messages, and incorrect types.   If the `TelegramBot` class has other methods (e.g., `get_updates`, `update_bot`), add corresponding test functions for these.
+
+
+
+**How to adapt:**
+
+* **Replace placeholders:**  Change the example `message`, `chat_id`, and assertions to match the actual methods and data types used in your `TelegramBot` class.
+* **Add fixtures:** Define any fixtures needed for your test data, as shown in the example fixture.
+* **Expand tests:** Create more test functions covering other cases (different input types, invalid data, etc.) found in the `TelegramBot` implementation.
+
+
+Remember to run `pytest` to execute these tests.  If you have a `__init__.py` file and `bot.py`, you need to arrange the files in a test directory, like `test_telegram_bot.py` that imports the necessary files from `hypotez/src/bots/telegram`.  The structure is crucial for `pytest` to discover and run your tests.
+
+This improved example provides a much stronger and more comprehensive testing strategy for your `TelegramBot`. Remember to add tests for every method and potential scenarios you expect your bot to handle.
