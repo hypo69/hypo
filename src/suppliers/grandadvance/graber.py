@@ -27,7 +27,7 @@ from dataclasses import dataclass, field
 from functools import wraps
 from pydantic import BaseModel
 from src import gs
-from src.suppliers import Graber as Grbr, Context, close_pop_up
+from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.product import ProductFields
 from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
