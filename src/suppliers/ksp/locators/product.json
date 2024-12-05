@@ -25,8 +25,10 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
-    "locator_description": "SKU morlevi"
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
+    "locator_description": "SKU manufacturer"
   },
   "id_supplier": {
     "attribute": "innerText",
@@ -35,7 +37,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 2,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "SKU ksp"
   },
   "id_category_default": {

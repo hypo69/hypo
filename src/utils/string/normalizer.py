@@ -4,19 +4,31 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.string.normalizer 
-    :platform: Windows, Unix
-    :synopsis: Module for normalizing product fields and handling various data types
-    :note: Если нормализатор не сработал - код вернет ответ без изменений
+Модуль для нормализации строк и числовых данных
+=========================================================================================
+
+Этот модуль предоставляет функции для нормализации строк, булевых значений, целых и чисел с плавающей точкой.
+Он также содержит вспомогательные методы для обработки текста, включая удаление HTML-тегов и специальных символов.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.utils.string.normalizer import normalize_string, normalize_boolean
+
+    normalized_str = normalize_string(" Пример строки <b>с HTML</b> ")
+    normalized_bool = normalize_boolean("yes")
 """
+
+import re
+import html
+from decimal import Decimal, InvalidOperation
+from typing import Any, List, Union
+from src.logger import logger
 
 MODE = 'dev'
 
-
-from decimal import Decimal, InvalidOperation
-from typing import Any, List, Union
-from .formatter import StringFormatter as sf
-from src.logger import logger
 
 def normalize_boolean(input_data: Any) -> bool:
     """Normalize data into a boolean.
@@ -31,27 +43,28 @@ def normalize_boolean(input_data: Any) -> bool:
         >>> normalize_boolean('yes')
         True
     """
-    original_input = input_data  # Сохраняем исходное значение
+    original_input = input_data  # Сохраняется исходное значение
     if isinstance(input_data, bool):
         return input_data
 
     try:
         input_str = str(input_data).strip().lower()
-        if input_str in ('true', '1', 'yes', 'y', 'on', True, 1):
+        if input_str in {'true', '1', 'yes', 'y', 'on', True, 1}:
             return True
-        elif input_str in ('false', '0', 'no', 'n', 'off', False, 0):
+        if input_str in {'false', '0', 'no', 'n', 'off', False, 0}:
             return False
     except Exception as ex:
-        logger.error(f"Error in normalize_boolean: ", ex)
+        logger.error('Ошибка в normalize_boolean: ', ex)
 
-    logger.debug(f"Unexpected boolean input: {input_data}")
-    return original_input  # Возвращаем исходное значение
+    logger.debug(f'Неожиданное значение для преобразования в bool: {input_data}')
+    return original_input  # Возвращается исходное значение
 
-def normalize_string(input_data: Union[str, List[str]]) -> str:
+
+def normalize_string(input_data: str | list) -> str:
     """Normalize a string or a list of strings.
 
     Args:
-        input_data (str | List[str]): Input data that can be either a string or a list of strings.
+        input_data (str | list): Input data that can be either a string or a list of strings.
 
     Returns:
         str: Cleaned and normalized string in UTF-8 encoded format.
@@ -59,20 +72,28 @@ def normalize_string(input_data: Union[str, List[str]]) -> str:
     Example:
         >>> normalize_string(['Hello', '  World!  '])
         'Hello World!'
+
+    Raises:
+        TypeError: If `input_data` is not of type `str` or `list`.
     """
-    original_input = input_data  # Сохраняем исходное значение
+    original_input = input_data  # Сохраняется исходное значение
+
+    if not isinstance(input_data, (str, list)):
+        raise TypeError('Данные должны быть строкой или списком строк.')
+
     if isinstance(input_data, list):
         input_data = ' '.join(map(str, input_data))
 
     try:
-        cleaned_str = sf.remove_htmls(input_data)
-        cleaned_str = sf.remove_line_breaks(cleaned_str)
-        cleaned_str = sf.remove_special_characters(cleaned_str)
+        cleaned_str = remove_html_tags(input_data)
+        cleaned_str = remove_line_breaks(cleaned_str)
+        cleaned_str = remove_special_characters(cleaned_str)
         normalized_str = ' '.join(cleaned_str.split())
-        return normalized_str.strip().encode('utf-8').decode('utf-8')  # Возвращаем строку в UTF-8
+
+        return normalized_str.strip().encode('utf-8').decode('utf-8')
     except Exception as ex:
-        logger.error(f"Error in normalize_string: ", ex)
-        return str(original_input).encode('utf-8').decode('utf-8')  # Возвращаем исходное значение в формате UTF-8
+        logger.error('Ошибка в normalize_string: ', ex)
+        return str(original_input).encode('utf-8').decode('utf-8')
 
 
 def normalize_int(input_data: Union[str, int, float, Decimal]) -> int:
@@ -88,14 +109,15 @@ def normalize_int(input_data: Union[str, int, float, Decimal]) -> int:
         >>> normalize_int('42')
         42
     """
-    original_input = input_data  # Сохраняем исходное значение
+    original_input = input_data  # Сохраняется исходное значение
     try:
         if isinstance(input_data, Decimal):
             return int(input_data)
         return int(float(input_data))
     except (ValueError, TypeError, InvalidOperation) as ex:
-        logger.error(f"Error in normalize_int: ", ex)
-        return original_input  # Возвращаем исходное значение
+        logger.error('Ошибка в normalize_int: ', ex)
+        return original_input  # Возвращается исходное значение
+
 
 def normalize_float(value: Any) -> float | None:
     """Safely convert input values to float or list of floats.
@@ -112,20 +134,53 @@ def normalize_float(value: Any) -> float | None:
         3.14
         >>> normalize_float([1, '2.5', 3])
         [1.0, 2.5, 3.0]
-        >>> normalize_float("abc")
-        Warning: Cannot convert 'abc' to float.
-        None
     """
-    original_value = value  # Сохраняем исходное значение
+    original_value = value  # Сохраняется исходное значение
     if not value:
         return 0
-    # Handle lists and tuples by recursively converting each element
     if isinstance(value, (list, tuple)):
         return [v for v in (normalize_float(v) for v in value) if v is not None]
-    
-    # Attempt to convert single value to float
+
     try:
         return float(value)
     except (ValueError, TypeError):
-        logger.warning(f"Warning: Cannot convert '{value}' to float.")
-        return original_value  # Возвращаем исходное значение
+        logger.warning(f"Невозможно преобразовать '{value}' в float.")
+        return original_value  # Возвращается исходное значение
+
+
+def remove_line_breaks(input_str: str) -> str:
+    """Remove line breaks from the input string.
+
+    Args:
+        input_str (str): Input string.
+
+    Returns:
+        str: String without line breaks.
+    """
+    return input_str.replace('\n', ' ').replace('\r', ' ').strip()
+
+
+def remove_html_tags(input_html: str) -> str:
+    """Remove HTML tags from the input string.
+
+    Args:
+        input_html (str): Input HTML string.
+
+    Returns:
+        str: String without HTML tags.
+    """
+    return re.sub(r'<.*?>', '', input_html).strip()
+
+
+def remove_special_characters(input_str: str | list) -> str | list:
+    """Remove special characters not allowed in specific contexts.
+
+    Args:
+        input_str (str | list): Input string or list of strings.
+
+    Returns:
+        str | list: Processed string or list with special characters removed.
+    """
+    if isinstance(input_str, list):
+        return [re.sub(r'[^a-zA-Z0-9\s]', '', s) for s in input_str]
+    return re.sub(r'[^a-zA-Z0-9\s]', '', input_str)

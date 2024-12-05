@@ -115,7 +115,6 @@ class Graber:
         """
         self.supplier_prefix = supplier_prefix
         self.locator:SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
-        self.l = self.locator
         self.driver:Driver = driver
         self.d = self.driver
         self.fields:ProductFields = ProductFields()
@@ -265,14 +264,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.additional_shipping_cost) or ''
+            value = normalize_string(value or  await self.d.execute_locator(self.locator.additional_shipping_cost) or '')
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `additional_shipping_cost`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.additional_shipping_cost}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.additional_shipping_cost}")
             ...
             return
 
@@ -290,7 +289,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.delivery_in_stock) or ''
+            value = value or  await self.d.execute_locator(self.locator.delivery_in_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `delivery_in_stock`", ex)
             ...
@@ -298,7 +297,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.delivery_in_stock}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.delivery_in_stock}")
             ...
             return
 
@@ -316,7 +315,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.active) or ''
+            value = value or  await self.d.execute_locator(self.locator.active) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `active`", ex)
             ...
@@ -324,7 +323,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.active}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.active}")
             ...
             return
 
@@ -342,7 +341,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.additional_delivery_times) or ''
+            value = value or  await self.d.execute_locator(self.locator.additional_delivery_times) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `additional_delivery_times`", ex)
             ...
@@ -350,7 +349,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.additional_delivery_times}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.additional_delivery_times}")
             ...
             return
 
@@ -368,7 +367,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.advanced_stock_management) or ''
+            value = value or  await self.d.execute_locator(self.locator.advanced_stock_management) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `advanced_stock_management`", ex)
             ...
@@ -376,7 +375,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.advanced_stock_management}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.advanced_stock_management}")
             ...
             return
 
@@ -393,7 +392,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.affiliate_short_link) or ''
+            value = value or  await self.d.execute_locator(self.locator.affiliate_short_link) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_short_link`", ex)
             ...
@@ -401,7 +400,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_short_link}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.affiliate_short_link}")
             ...
             return
 
@@ -419,7 +418,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.affiliate_summary) or ''
+            value = value or  await self.d.execute_locator(self.locator.affiliate_summary) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_summary`", ex)
             ...
@@ -427,7 +426,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_summary}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.affiliate_summary}")
             ...
             return
 
@@ -445,7 +444,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.affiliate_summary_2) or ''
+            value = value or  await self.d.execute_locator(self.locator.affiliate_summary_2) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_summary_2`", ex)
             ...
@@ -453,7 +452,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_summary_2}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.affiliate_summary_2}")
             ...
             return
 
@@ -471,7 +470,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.affiliate_text) or ''
+            value = value or  await self.d.execute_locator(self.locator.affiliate_text) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_text`", ex)
             ...
@@ -479,7 +478,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.affiliate_text}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.affiliate_text}")
             ...
             return
 
@@ -496,7 +495,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value or  await self.d.execute_locator(self.l.affiliate_image_large) or ''
+            locator_result = value or  await self.d.execute_locator(self.locator.affiliate_image_large) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_large`", ex)
             ...
@@ -522,7 +521,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value or  await self.d.execute_locator(self.l.affiliate_image_medium) or ''
+            locator_result = value or  await self.d.execute_locator(self.locator.affiliate_image_medium) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_medium`", ex)
             ...
@@ -548,7 +547,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value or  await self.d.execute_locator(self.l.affiliate_image_small) or ''
+            locator_result = value or  await self.d.execute_locator(self.locator.affiliate_image_small) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_small`", ex)
             ...
@@ -574,7 +573,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value or  await self.d.execute_locator(self.l.available_date) or ''
+            locator_result = value or  await self.d.execute_locator(self.locator.available_date) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_date`", ex)
             ...
@@ -599,7 +598,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.available_for_order) or ''
+            value = value or  await self.d.execute_locator(self.locator.available_for_order) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_for_order`", ex)
             ...
@@ -607,7 +606,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_for_order}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.available_for_order}")
             ...
             return
 
@@ -625,7 +624,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.available_later) or ''
+            value = value or  await self.d.execute_locator(self.locator.available_later) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_later`", ex)
             ...
@@ -633,7 +632,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_later}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.available_later}")
             ...
             return
 
@@ -651,7 +650,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.available_now) or ''
+            value = value or  await self.d.execute_locator(self.locator.available_now) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_now`", ex)
             ...
@@ -659,7 +658,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.available_now}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.available_now}")
             ...
             return
 
@@ -693,7 +692,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.cache_default_attribute) or ''
+            value = value or  await self.d.execute_locator(self.locator.cache_default_attribute) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_default_attribute`", ex)
             ...
@@ -701,7 +700,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_default_attribute}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.cache_default_attribute}")
             ...
             return
 
@@ -718,7 +717,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.cache_has_attachments) or ''
+            value = value or  await self.d.execute_locator(self.locator.cache_has_attachments) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_has_attachments`", ex)
             ...
@@ -726,7 +725,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_has_attachments}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.cache_has_attachments}")
             ...
             return
 
@@ -744,7 +743,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.cache_is_pack) or ''
+            value = value or  await self.d.execute_locator(self.locator.cache_is_pack) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_is_pack`", ex)
             ...
@@ -752,7 +751,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.cache_is_pack}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.cache_is_pack}")
             ...
             return
 
@@ -770,7 +769,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.condition) or ''
+            value = value or  await self.d.execute_locator(self.locator.condition) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `condition`", ex)
             ...
@@ -778,7 +777,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.condition}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.condition}")
             ...
             return
 
@@ -796,7 +795,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.customizable) or ''
+            value = value or  await self.d.execute_locator(self.locator.customizable) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `customizable`", ex)
             ...
@@ -804,7 +803,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.customizable}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.customizable}")
             ...
             return
 
@@ -821,7 +820,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.date_add) or ''
+            value = value or  await self.d.execute_locator(self.locator.date_add) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `date_add`", ex)
             ...
@@ -829,7 +828,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.date_add}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.date_add}")
             ...
             return
 
@@ -847,7 +846,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.date_upd) or ''
+            value = value or  await self.d.execute_locator(self.locator.date_upd) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `date_upd`", ex)
             ...
@@ -855,7 +854,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.date_upd}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.date_upd}")
             ...
             return
 
@@ -873,7 +872,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.delivery_out_stock) or ''
+            value = value or  await self.d.execute_locator(self.locator.delivery_out_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `delivery_out_stock`", ex)
             ...
@@ -881,7 +880,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.delivery_out_stock}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.delivery_out_stock}")
             ...
             return
 
@@ -899,7 +898,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.depth) or ''
+            value = value or  await self.d.execute_locator(self.locator.depth) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `depth`", ex)
             ...
@@ -907,7 +906,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.depth}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.depth}")
             ...
             return
 
@@ -924,7 +923,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.description) or ''
+            value = value or  await self.d.execute_locator(self.locator.description) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description`", ex)
             ...
@@ -932,7 +931,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.description}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.description}")
             ...
             return
 
@@ -955,7 +954,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value =  value or  await self.d.execute_locator(self.l.description_short) or ''
+            value =  value or  await self.d.execute_locator(self.locator.description_short) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description_short`", ex)
             ...
@@ -963,7 +962,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.description_short}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.description_short}")
             ...
             return
 
@@ -1000,7 +999,7 @@ class Graber:
             # Получаем значение через execute_locator
             value = (
                     value or 
-                    await self.d.execute_locator(self.l.id_default_combination) or 
+                    await self.d.execute_locator(self.locator.id_default_combination) or 
                     ''
                     )
         except Exception as ex:
@@ -1010,7 +1009,7 @@ class Graber:
 
         # блок для проверки валидности результата, сюда можно повесть проверку `string normiliser`,`string formatter`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_default_combination}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.id_default_combination}")
             ...
             return
 
@@ -1028,7 +1027,7 @@ class Graber:
         """
         try:
             # Получаем значение id_supplier, если оно не передано
-            self.fields.id_supplier = self.fields.id_supplier or await self.d.execute_locator(self.l.id_supplier)
+            self.fields.id_supplier = normalize_string( self.fields.id_supplier or await self.d.execute_locator(self.locator.id_supplier))
         except Exception as ex:
             logger.error(f"Ошибка значения поля `id_product`", ex)
             ...
@@ -1066,7 +1065,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.id_default_image) or ''
+            value = value or  await self.d.execute_locator(self.locator.id_default_image) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_default_image`", ex)
             ...
@@ -1074,7 +1073,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_default_image}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.id_default_image}")
             ...
             return
 
@@ -1093,7 +1092,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.ean13) or ''
+            value = value or  await self.d.execute_locator(self.locator.ean13) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ean13`", ex)
             ...
@@ -1101,7 +1100,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ean13}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.ean13}")
             ...
             return
 
@@ -1120,7 +1119,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.ecotax) or ''
+            value = value or  await self.d.execute_locator(self.locator.ecotax) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ecotax`", ex)
             ...
@@ -1128,7 +1127,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ecotax}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.ecotax}")
             ...
             return
 
@@ -1147,7 +1146,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.height) or ''
+            value = value or  await self.d.execute_locator(self.locator.height) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `height`", ex)
             ...
@@ -1155,7 +1154,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.height}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.height}")
             ...
             return
 
@@ -1172,7 +1171,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.how_to_use) or ''
+            value = value or  await self.d.execute_locator(self.locator.how_to_use) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `how_to_use`", ex)
             ...
@@ -1180,7 +1179,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.how_to_use}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.how_to_use}")
             ...
             return
 
@@ -1197,7 +1196,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.id_manufacturer) or ''
+            value = value or  await self.d.execute_locator(self.locator.id_manufacturer) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_manufacturer`", ex)
             ...
@@ -1205,7 +1204,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_manufacturer}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.id_manufacturer}")
             ...
             return
 
@@ -1222,7 +1221,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.id_supplier) or ''
+            value = value or  await self.d.execute_locator(self.locator.id_supplier) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_supplier`", ex)
             ...
@@ -1230,7 +1229,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_supplier}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.id_supplier}")
             ...
             return
 
@@ -1247,7 +1246,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.id_tax) or ''
+            value = value or  await self.d.execute_locator(self.locator.id_tax) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_tax`", ex)
             ...
@@ -1255,7 +1254,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_tax}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.id_tax}")
             ...
             return
 
@@ -1272,7 +1271,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.id_type_redirected) or ''
+            value = value or  await self.d.execute_locator(self.locator.id_type_redirected) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_type_redirected`", ex)
             ...
@@ -1280,7 +1279,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.id_type_redirected}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.id_type_redirected}")
             ...
             return
 
@@ -1297,7 +1296,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.images_urls) or ''
+            value = value or  await self.d.execute_locator(self.locator.images_urls) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `images_urls`", ex)
             ...
@@ -1305,7 +1304,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.images_urls}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.images_urls}")
             ...
             return
 
@@ -1321,14 +1320,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.indexed) or ''
+            value = value or  await self.d.execute_locator(self.locator.indexed) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `indexed`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.indexed}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.indexed}")
             ...
             return
 
@@ -1346,14 +1345,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.ingredients) or ''
+            value = value or  await self.d.execute_locator(self.locator.ingredients) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ingredients`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.ingredients}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.ingredients}")
             ...
             return
 
@@ -1371,14 +1370,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.meta_description) or ''
+            value = value or  await self.d.execute_locator(self.locator.meta_description) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_description`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_description}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.meta_description}")
             ...
             return
 
@@ -1396,14 +1395,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.meta_keywords) or ''
+            value = value or  await self.d.execute_locator(self.locator.meta_keywords) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_keywords`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_keywords}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.meta_keywords}")
             ...
             return
 
@@ -1421,14 +1420,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.meta_title) or ''
+            value = value or  await self.d.execute_locator(self.locator.meta_title) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_title`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.meta_title}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.meta_title}")
             ...
             return
 
@@ -1446,14 +1445,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.is_virtual) or ''
+            value = value or  await self.d.execute_locator(self.locator.is_virtual) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `is_virtual`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.is_virtual}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.is_virtual}")
             ...
             return
 
@@ -1470,7 +1469,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.isbn) or ''
+            value = value or  await self.d.execute_locator(self.locator.isbn) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `isbn`", ex)
             ...
@@ -1478,7 +1477,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.isbn}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.isbn}")
             ...
             return
         
@@ -1496,7 +1495,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.link_rewrite) or ''
+            value = value or  await self.d.execute_locator(self.locator.link_rewrite) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `link_rewrite`", ex)
             ...
@@ -1504,7 +1503,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.link_rewrite}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.link_rewrite}")
             ...
             return
         
@@ -1522,7 +1521,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.location) or ''
+            value = value or  await self.d.execute_locator(self.locator.location) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `location`", ex)
             ...
@@ -1530,7 +1529,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.location}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.location}")
             ...
             return
         
@@ -1548,7 +1547,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.low_stock_alert) or ''
+            value = value or  await self.d.execute_locator(self.locator.low_stock_alert) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `low_stock_alert`", ex)
             ...
@@ -1556,7 +1555,7 @@ class Graber:
         
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.low_stock_alert}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.low_stock_alert}")
             ...
             return
         
@@ -1573,14 +1572,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.low_stock_threshold) or ''
+            value = value or  await self.d.execute_locator(self.locator.low_stock_threshold) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `low_stock_threshold`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.low_stock_threshold}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.low_stock_threshold}")
             ...
             return
 
@@ -1599,14 +1598,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.minimal_quantity) or ''
+            value = value or  await self.d.execute_locator(self.locator.minimal_quantity) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `minimal_quantity`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.minimal_quantity}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.minimal_quantity}")
             ...
             return
 
@@ -1625,14 +1624,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.mpn) or ''
+            value = value or  await self.d.execute_locator(self.locator.mpn) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `mpn`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.mpn}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.mpn}")
             ...
             return
 
@@ -1651,14 +1650,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.name) or ''
+            value = value or  await self.d.execute_locator(self.locator.name) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `name`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.name}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.name}")
             ...
             return
         value = normalize_string(value)
@@ -1677,14 +1676,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.online_only) or ''
+            value = value or  await self.d.execute_locator(self.locator.online_only) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `online_only`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.online_only}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.online_only}")
             ...
             return
 
@@ -1703,14 +1702,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.on_sale) or ''
+            value = value or  await self.d.execute_locator(self.locator.on_sale) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `on_sale`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.on_sale}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.on_sale}")
             ...
             return
 
@@ -1729,14 +1728,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.out_of_stock) or ''
+            value = value or  await self.d.execute_locator(self.locator.out_of_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `out_of_stock`", ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.l.out_of_stock}")
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.out_of_stock}")
             ...
             return
 
@@ -1753,7 +1752,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.pack_stock_type) or ''
+            value = value or  await self.d.execute_locator(self.locator.pack_stock_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `pack_stock_type`', ex)
             ...
@@ -1761,7 +1760,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.pack_stock_type}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.pack_stock_type}')
             ...
             return
 
@@ -1780,7 +1779,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.price) or ''
+            value = value or  await self.d.execute_locator(self.locator.price) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `price`', ex)
             ...
@@ -1788,7 +1787,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.price}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.price}')
             ...
             return
 
@@ -1807,7 +1806,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.product_type) or ''
+            value = value or  await self.d.execute_locator(self.locator.product_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `product_type`', ex)
             ...
@@ -1815,7 +1814,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.product_type}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.product_type}')
             ...
             return
 
@@ -1834,7 +1833,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.quantity) or ''
+            value = value or  await self.d.execute_locator(self.locator.quantity) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `quantity`', ex)
             ...
@@ -1842,7 +1841,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.quantity}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.quantity}')
             ...
             return
 
@@ -1861,7 +1860,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.quantity_discount) or ''
+            value = value or  await self.d.execute_locator(self.locator.quantity_discount) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `quantity_discount`', ex)
             ...
@@ -1869,7 +1868,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.quantity_discount}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.quantity_discount}')
             ...
             return
 
@@ -1888,7 +1887,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.redirect_type) or ''
+            value = value or  await self.d.execute_locator(self.locator.redirect_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `redirect_type`', ex)
             ...
@@ -1896,7 +1895,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.redirect_type}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.redirect_type}')
             ...
             return
 
@@ -1915,7 +1914,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.reference) or ''
+            value = value or  await self.d.execute_locator(self.locator.reference) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `reference`', ex)
             ...
@@ -1923,7 +1922,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.reference}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.reference}')
             ...
             return
 
@@ -1941,14 +1940,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.show_condition) or ''
+            value = value or  await self.d.execute_locator(self.locator.show_condition) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `show_condition`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.show_condition}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.show_condition}')
             ...
             return
 
@@ -1966,14 +1965,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.show_price) or ''
+            value = value or  await self.d.execute_locator(self.locator.show_price) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `show_price`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.show_price}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.show_price}')
             ...
             return
 
@@ -1991,14 +1990,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.state) or ''
+            value = value or  await self.d.execute_locator(self.locator.state) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `state`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.state}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.state}')
             ...
             return
 
@@ -2016,14 +2015,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.text_fields) or ''
+            value = value or  await self.d.execute_locator(self.locator.text_fields) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `text_fields`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.text_fields}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.text_fields}')
             ...
             return
 
@@ -2041,14 +2040,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.unit_price_ratio) or ''
+            value = value or  await self.d.execute_locator(self.locator.unit_price_ratio) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `unit_price_ratio`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.unit_price_ratio}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.unit_price_ratio}')
             ...
             return
 
@@ -2065,14 +2064,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.unity) or ''
+            value = value or  await self.d.execute_locator(self.locator.unity) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `unity`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.unity}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.unity}')
             ...
             return
 
@@ -2090,14 +2089,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.upc) or ''
+            value = value or  await self.d.execute_locator(self.locator.upc) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `upc`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.upc}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.upc}')
             ...
             return
 
@@ -2115,14 +2114,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.uploadable_files) or ''
+            value = value or  await self.d.execute_locator(self.locator.uploadable_files) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `uploadable_files`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.uploadable_files}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.uploadable_files}')
             ...
             return
 
@@ -2140,14 +2139,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.default_image_url) or ''
+            value = value or  await self.d.execute_locator(self.locator.default_image_url) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `default_image_url`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.default_image_url}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.default_image_url}')
             ...
             return
 
@@ -2165,14 +2164,14 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.visibility) or ''
+            value = value or  await self.d.execute_locator(self.locator.visibility) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `visibility`', ex)
             ...
             return
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.visibility}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.visibility}')
             ...
             return
 
@@ -2190,7 +2189,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.weight) or ''
+            value = value or  await self.d.execute_locator(self.locator.weight) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `weight`', ex)
             ...
@@ -2198,7 +2197,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.weight}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.weight}')
             ...
             return
 
@@ -2217,7 +2216,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.wholesale_price) or ''
+            value = value or  await self.d.execute_locator(self.locator.wholesale_price) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `wholesale_price`', ex)
             ...
@@ -2225,7 +2224,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.wholesale_price}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.wholesale_price}')
             ...
             return
 
@@ -2244,7 +2243,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.width) or ''
+            value = value or  await self.d.execute_locator(self.locator.width) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `width`', ex)
             ...
@@ -2252,7 +2251,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.width}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.width}')
             ...
             return
 
@@ -2271,7 +2270,7 @@ class Graber:
         """
         try:
             # код получает значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.specification) or ''
+            value = value or  await self.d.execute_locator(self.locator.specification) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `specification`', ex)
             ...
@@ -2279,7 +2278,7 @@ class Graber:
 
         # Проверка валидности результата
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.specification}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.specification}')
             ...
             return
 
@@ -2302,7 +2301,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.link) or ''
+            value = value or  await self.d.execute_locator(self.locator.link) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `link`', ex)
             ...
@@ -2310,7 +2309,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.link}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.link}')
             ...
             return
 
@@ -2328,7 +2327,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.byer_protection) or ''
+            value = value or  await self.d.execute_locator(self.locator.byer_protection) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `byer_protection`', ex)
             ...
@@ -2336,7 +2335,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.byer_protection}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.byer_protection}')
             ...
             return
 
@@ -2354,7 +2353,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.customer_reviews) or ''
+            value = value or  await self.d.execute_locator(self.locator.customer_reviews) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `customer_reviews`', ex)
             ...
@@ -2362,7 +2361,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.customer_reviews}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.customer_reviews}')
             ...
             return
 
@@ -2380,7 +2379,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.l.link_to_video) or ''
+            value = value or  await self.d.execute_locator(self.locator.link_to_video) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `link_to_video`', ex)
             ...
@@ -2388,7 +2387,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.link_to_video}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.link_to_video}')
             ...
             return
 
@@ -2414,7 +2413,7 @@ class Graber:
             try:
                 if not self.fields.id_product:
                     self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-                img_url = await self.d.execute_locator(self.l.default_image_url) # <- получаю скриншот как `bytes` 
+                img_url = await self.d.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
                 img_tmp_path = await save_png_from_url(img_url[0] if isinstance(img_url, list) else img_url , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
                 if img_tmp_path:
                     self.fields.local_saved_image = img_tmp_path
@@ -2438,7 +2437,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator и сохраняем видео
-            value = value or  await self.d.execute_locator(self.l.local_saved_video) or ''
+            value = value or  await self.d.execute_locator(self.locator.local_saved_video) or ''
         except Exception as ex:
             logger.error(f'Ошибка сохранения видео в поле `local_saved_video`', ex)
             ...
@@ -2446,7 +2445,7 @@ class Graber:
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.local_saved_video}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.local_saved_video}')
             ...
             return
 

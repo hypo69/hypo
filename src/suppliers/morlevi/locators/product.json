@@ -742,12 +742,14 @@
   "description_short": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "(//div[contains(@class, 'description')])[2]//div",
+    "selector": "(//div[contains(@class, 'description')])[2]//div | (//div[contains(@class, 'description')])[2]//p ",
     "if_list": "all",
     "use_mouse": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "mandatory": true,
-    "locator_description": "краткое Описание товара. Оно нахосится в спанах под див"
+    "locator_description": "Morlevi - краткое Описание товара. "
   },
   "description": {
     "attribute": "innerText",

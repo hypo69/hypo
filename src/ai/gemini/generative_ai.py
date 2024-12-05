@@ -91,17 +91,17 @@ class GoogleGenerativeAI:
             generation_config (Optional[Dict], optional): Конфигурация для генерации. По умолчанию {"response_mime_type": "text/plain"}.
             system_instruction (Optional[str], optional): Инструкция для системы. По умолчанию None.
         """
-        
+        _now = gs.now
         self.api_key = api_key
         self.model_name = model_name or "gemini-1.5-flash-8b"
         self.generation_config = generation_config or {"response_mime_type": "text/plain"}
         self.system_instruction = system_instruction
 
         self.dialogue_log_path = gs.path.external_storage / 'AI' / 'log'
-        self.dialogue_txt_path = self.dialogue_log_path / f"gemini_{gs.now}.txt"
+        self.dialogue_txt_path = self.dialogue_log_path / f"gemini_{_now}.txt"
         self.history_dir = gs.path.external_storage / 'AI' / 'history'
-        self.history_txt_file = self.history_dir / f"gemini_{gs.now}.txt"
-        self.history_json_file = self.history_dir / f"gemini_{gs.now}.json"
+        self.history_txt_file = self.history_dir / f"gemini_{_now}.txt"
+        self.history_json_file = self.history_dir / f"gemini_{_now}.json"
 
         # Инициализация модели
         genai.configure(api_key=self.api_key)

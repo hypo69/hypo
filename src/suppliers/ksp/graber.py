@@ -92,9 +92,10 @@ class Graber(Grbr):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        global d
         d = self.d = driver  
-        
+        if 'ksp.co.il/mob' in d.current_url: # <- бывет, что подключается к мобильной версии сайта
+            self.locator = j_loads_ns(gs.path.src / 'suppliers' / 'ksp' / 'locators' / 'product_mobile_site.json')
+
         ...
         # Логика извлечения данных
         async def fetch_all_data(**kwards):

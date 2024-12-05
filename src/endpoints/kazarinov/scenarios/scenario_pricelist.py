@@ -142,20 +142,17 @@ class Mexiron:
         products_list = []
 
         for url in urls_list:
-            if update:
-                await update.message.reply_text(f"Старт: {url}")
+            # await update.message.reply_text(f"Старт: {url}")
             graber = self.get_graber_by_supplier_url(url)
             if not graber:
                 ...
                 continue
 
-            try:
-                self.driver.get_url(url)
-                f = await graber.grab_page(self.driver)
-            except Exception as ex:
-                logger.debug(f'Failed to open page {url}.', ex)
-                ...
+            if not self.driver.get_url(url):
+                logger.error(f"Error on url{url}")
                 continue
+
+            f = await graber.grab_page(self.driver)
 
             if not f:
                 logger.debug(f'Failed to parse product fields for URL: {url}')
@@ -163,6 +160,7 @@ class Mexiron:
                 continue
 
             product_data = await self.convert_product_fields(f)
+
             if not product_data:
                 logger.debug(f'Failed to convert product fields: {product_data}')
                 ...

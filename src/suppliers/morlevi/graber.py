@@ -204,7 +204,7 @@ class Graber(Grbr):
             try:
                 if not self.fields.id_product:
                     self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-                raw = await self.d.execute_locator(self.l.default_image_url) # <- получаю скриншот как `bytes` 
+                raw = await self.d.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
                 img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
                 if img_tmp_path:
                     self.fields.local_saved_image = img_tmp_path

@@ -433,7 +433,7 @@ class CodeAssistant:
                     f'code_explainer_md': '.md',  # для роли "code_explainer_md" будет использоваться .md
                     f'code_explainer_html': '.html',  # для роли "code_explainer_html" будет использоваться .html
                     f'pytest': '.md',  # для роли "code_explainer_html" будет использоваться .html
-                }.get(self.role, '.rst')  # Если роль не соответствует ни одной из вышеуказанных, по умолчанию используется .rst
+                }.get(self.role, '.md')  # Если роль не соответствует ни одной из вышеуказанных, по умолчанию используется .md
             )
 
             # Создаём родительскую директорию, если она ещё не существует

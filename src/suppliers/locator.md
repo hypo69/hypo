@@ -215,7 +215,6 @@ The driver will perform `click()` and then get the attribute `href` of the eleme
 
 10. **`locator_description`**:  
    A description of the locator, providing more context about what it does.
-
---- 
-
-The file now contains a full description of the newly added keys and their usage for locators with timeouts and event handlers.
+---------------
+- The page layout may vary, for example, between desktop and mobile versions. In such cases, I recommend maintaining separate locator files for each version.  
+Еxample: `product.json`, `product_mobile_site.json`.

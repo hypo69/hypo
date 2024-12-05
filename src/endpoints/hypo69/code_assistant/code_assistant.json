@@ -104,7 +104,7 @@
   ],
 
   "output_directory": {
-    "code_checker": "<model>/<lang>/consultant/src",
+    "code_checker_md": "<model>/<lang>/consultant/src",
     "code_explainer_md": "<model>/<lang>/explainer/src",
     "code_explainer_html": "<model>/<lang>explainer/html/src",
     "pytest": "../pytest/<model>/<lang>/src",
@@ -115,11 +115,11 @@
   },
   "argparse": {
     "roles": [
-      "code_checker",
+      "code_checker_md",
       "code_explainer_md",
       "doc_writer_md",
       "pytest",
-      "how_to_writer"
+      "how_to_writer_md"
     ],
     "exclude-roles": [ "code_explainer_html", "doc_writer_html", "doc_writer_rst" ],
     "languages": [ "ru", "en" ],

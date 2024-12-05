@@ -741,24 +741,26 @@
     "locator_description": "краткое Описание товара. "
   },
   "description": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": null,
+    "if_list": "all",
+    "use_mouse": false,
+    "mandatory": true,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "locator_description": "IVORY Описание товара. У IVORY нет описания. Только краткое описание и спецификация "
+  },
+  "specification": {
     "attribute": "innerText",
     "by": "XPATH",
     "selector": "//div[ contains( @class, 'contentproducttable')]//li",
     "if_list": "all",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
-    "locator_description": "Технические характеристики. "
-  },
-  "specification": {
-    "attribute": "",
-    "by": "XPATH",
-    "selector": "",
-    "if_list": "all",
-    "use_mouse": false,
-    "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
-    "locator_description": "Технические характеристики. "
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
+    "locator_description": "IVORY Технические характеристики. "
   },
   "affiliate_short_link": {
     "attribute": null,

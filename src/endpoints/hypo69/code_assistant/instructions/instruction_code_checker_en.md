@@ -95,7 +95,7 @@
          """  
          try:  
              # Code executes value retrieval using execute_locator  
-             value = value or await self.d.execute_locator(self.l.specification) or ''  
+             value = value or await self.d.execute_locator(self.locator.specification) or ''  
          except Exception as ex:  
              logger.error('Error retrieving value for the `specification` field', ex)  
              ...  
@@ -103,7 +103,7 @@
 
          # Validation of the retrieved result  
          if not value:  
-             logger.debug(f'Invalid result {value=}\nLocator {self.l.specification}')  
+             logger.debug(f'Invalid result {value=}\nLocator {self.locator.specification}')  
              ...  
              return  
 

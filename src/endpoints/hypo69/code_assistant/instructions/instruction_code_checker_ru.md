@@ -95,7 +95,7 @@
          """  
          try:  
              # код исполняет получение значения через execute_locator  
-             value = value or  await self.d.execute_locator(self.l.specification) or ''  
+             value = value or  await self.d.execute_locator(self.locator.specification) or ''  
          except Exception as ex:  
              logger.error('Ошибка получения значения в поле `specification`', ex)  
              ...  
@@ -103,7 +103,7 @@
 
          # Проверка валидности результата  
          if not value:  
-             logger.debug(f'Невалидный результат {value=}\nлокатор {self.l.specification}')  
+             logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.specification}')  
              ...  
              return  
 
