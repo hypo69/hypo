@@ -1,74 +1,3 @@
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module: src.logger 
-	:platform: Windows, Unix
-	:synopsis: Logger Module
-"""
-MODE = 'dev'
-
-"""This module provides a singleton logging utility with various logging levels and formats, including console, file, and JSON logging. It utilizes the Singleton design pattern to ensure a single instance of the logger is used throughout the application. The logger supports different log levels and output formats, and it can colorize console messages based on log severity.
-
-Classes:
-- SingletonMeta: Metaclass for Singleton pattern implementation.
-- JsonFormatter: Custom formatter for logging in JSON format.
-- Logger: Singleton logger class with methods for logging at different levels.
-
-Classes:
-    SingletonMeta
-    ----------
-    Metaclass for Singleton pattern implementation.
-    
-    JsonFormatter
-    -------------
-    Custom formatter for logging in JSON format.
-    
-    Logger
-    ------
-    Singleton logger class with methods for console, file, and JSON logging.
-
-Functions:
-- __init__: Initializes the Logger instance.
-- _configure_logger: Configures and returns a logger with the specified parameters.
-- initialize_loggers: Initializes loggers for console, file, and JSON output.
-- _format_message: Formats a message with optional color and exception information.
-- _ex_full_info: Provides detailed exception information, including the file, function, and line number where the log was called.
-- log: Logs messages at a specified level with optional color and exception information.
-- info: Logs an info message.
-- success: Logs a success message.
-- warning: Logs a warning message.
-- debug: Logs a debug message.
-- error: Logs an error message.
-- critical: Logs a critical message.
-- info_red: Logs an info message in red.
-- info_black: Logs an info message in black with a white background.
-
-Examples:
-    # Initialize the logger
-    logger: Logger = Logger()
-    logger.initialize_loggers(info_log_path='info.log', debug_log_path='debug.log', errors_log_path='errors.log', json_log_path='log.json')
-
-    # Log messages at different levels
-    logger.info('This is an info message')
-    logger.success('This is a success message')
-    logger.warning('This is a warning message',None,True)
-    logger.debug('This is a debug message',None,exc_info=True)
-    logger.error('This is an error message',ex)
-    logger.critical('This is a critical message',ex)
-"""
-
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module: src.logger
-    :platform: Windows, Unix
-    :synopsis: Logger Module
-"""
-
 import threading
 import traceback
 import logging
@@ -212,9 +141,6 @@ class Logger(metaclass=SingletonMeta):
 
     def _ex_full_info(self, ex):
         """ Returns full exception information along with the previous function, file, and line details."""
-        ...
-        # Get the previous frame in the stack to find where the log was called
-        # Adjust the stack index based on the depth of the call
         frame_info = inspect.stack()[3]  # 0 is the current frame, 1 is `_ex_full_info`, 2 is the caller of the logger method
         file_name = frame_info.filename
         function_name = frame_info.function
@@ -302,9 +228,6 @@ class Logger(metaclass=SingletonMeta):
             exc_info,
             colors if colors else (colorama.Fore.WHITE, colorama.Back.RED),
         )
-
-
-
 
 # Initialize logger
 logger: Logger = Logger()
