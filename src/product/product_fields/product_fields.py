@@ -224,7 +224,6 @@ import header
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.category import Category
-from src.utils.string import StringFormatter as sf
 from src.utils.file import read_text_file
 from src.logger import logger
 from src.logger.exceptions import ProductFieldException 

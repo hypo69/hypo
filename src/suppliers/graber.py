@@ -116,7 +116,7 @@ class Graber:
         self.supplier_prefix = supplier_prefix
         self.locator:SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
         self.driver:Driver = driver
-        self.d = self.driver
+        self.river
         self.fields:ProductFields = ProductFields()
         Context.driver = self.driver
         Context.supplier_prefix =  supplier_prefix
@@ -264,7 +264,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = normalize_string(value or  await self.d.execute_locator(self.locator.additional_shipping_cost) or '')
+            value = normalize_string(value or  await self.driver.execute_locator(self.locator.additional_shipping_cost) or '')
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `additional_shipping_cost`", ex)
             ...
@@ -289,7 +289,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.delivery_in_stock) or ''
+            value = value or  await self.driver.execute_locator(self.locator.delivery_in_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `delivery_in_stock`", ex)
             ...
@@ -315,7 +315,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.active) or ''
+            value = value or  await self.driver.execute_locator(self.locator.active) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `active`", ex)
             ...
@@ -341,7 +341,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.additional_delivery_times) or ''
+            value = value or  await self.driver.execute_locator(self.locator.additional_delivery_times) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `additional_delivery_times`", ex)
             ...
@@ -367,7 +367,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.advanced_stock_management) or ''
+            value = value or  await self.driver.execute_locator(self.locator.advanced_stock_management) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `advanced_stock_management`", ex)
             ...
@@ -392,7 +392,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.affiliate_short_link) or ''
+            value = value or  await self.driver.execute_locator(self.locator.affiliate_short_link) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_short_link`", ex)
             ...
@@ -418,7 +418,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.affiliate_summary) or ''
+            value = value or  await self.driver.execute_locator(self.locator.affiliate_summary) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_summary`", ex)
             ...
@@ -444,7 +444,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.affiliate_summary_2) or ''
+            value = value or  await self.driver.execute_locator(self.locator.affiliate_summary_2) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_summary_2`", ex)
             ...
@@ -470,7 +470,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.affiliate_text) or ''
+            value = value or  await self.driver.execute_locator(self.locator.affiliate_text) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_text`", ex)
             ...
@@ -495,7 +495,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value or  await self.d.execute_locator(self.locator.affiliate_image_large) or ''
+            locator_result = value or  await self.driver.execute_locator(self.locator.affiliate_image_large) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_large`", ex)
             ...
@@ -521,7 +521,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value or  await self.d.execute_locator(self.locator.affiliate_image_medium) or ''
+            locator_result = value or  await self.driver.execute_locator(self.locator.affiliate_image_medium) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_medium`", ex)
             ...
@@ -547,7 +547,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value or  await self.d.execute_locator(self.locator.affiliate_image_small) or ''
+            locator_result = value or  await self.driver.execute_locator(self.locator.affiliate_image_small) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `affiliate_image_small`", ex)
             ...
@@ -573,7 +573,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            locator_result = value or  await self.d.execute_locator(self.locator.available_date) or ''
+            locator_result = value or  await self.driver.execute_locator(self.locator.available_date) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_date`", ex)
             ...
@@ -598,7 +598,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.available_for_order) or ''
+            value = value or  await self.driver.execute_locator(self.locator.available_for_order) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_for_order`", ex)
             ...
@@ -624,7 +624,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.available_later) or ''
+            value = value or  await self.driver.execute_locator(self.locator.available_later) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_later`", ex)
             ...
@@ -650,7 +650,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.available_now) or ''
+            value = value or  await self.driver.execute_locator(self.locator.available_now) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `available_now`", ex)
             ...
@@ -692,7 +692,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.cache_default_attribute) or ''
+            value = value or  await self.driver.execute_locator(self.locator.cache_default_attribute) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_default_attribute`", ex)
             ...
@@ -717,7 +717,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.cache_has_attachments) or ''
+            value = value or  await self.driver.execute_locator(self.locator.cache_has_attachments) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_has_attachments`", ex)
             ...
@@ -743,7 +743,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.cache_is_pack) or ''
+            value = value or  await self.driver.execute_locator(self.locator.cache_is_pack) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `cache_is_pack`", ex)
             ...
@@ -769,7 +769,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.condition) or ''
+            value = value or  await self.driver.execute_locator(self.locator.condition) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `condition`", ex)
             ...
@@ -795,7 +795,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.customizable) or ''
+            value = value or  await self.driver.execute_locator(self.locator.customizable) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `customizable`", ex)
             ...
@@ -820,7 +820,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.date_add) or ''
+            value = value or  await self.driver.execute_locator(self.locator.date_add) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `date_add`", ex)
             ...
@@ -846,7 +846,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.date_upd) or ''
+            value = value or  await self.driver.execute_locator(self.locator.date_upd) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `date_upd`", ex)
             ...
@@ -872,7 +872,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.delivery_out_stock) or ''
+            value = value or  await self.driver.execute_locator(self.locator.delivery_out_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `delivery_out_stock`", ex)
             ...
@@ -898,7 +898,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.depth) or ''
+            value = value or  await self.driver.execute_locator(self.locator.depth) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `depth`", ex)
             ...
@@ -923,7 +923,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.description) or ''
+            value = value or  await self.driver.execute_locator(self.locator.description) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description`", ex)
             ...
@@ -954,7 +954,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value =  value or  await self.d.execute_locator(self.locator.description_short) or ''
+            value =  value or  await self.driver.execute_locator(self.locator.description_short) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description_short`", ex)
             ...
@@ -999,7 +999,7 @@ class Graber:
             # Получаем значение через execute_locator
             value = (
                     value or 
-                    await self.d.execute_locator(self.locator.id_default_combination) or 
+                    await self.driver.execute_locator(self.locator.id_default_combination) or 
                     ''
                     )
         except Exception as ex:
@@ -1027,7 +1027,7 @@ class Graber:
         """
         try:
             # Получаем значение id_supplier, если оно не передано
-            self.fields.id_supplier = normalize_string( self.fields.id_supplier or await self.d.execute_locator(self.locator.id_supplier))
+            self.fields.id_supplier = normalize_string( self.fields.id_supplier or await self.driver.execute_locator(self.locator.id_supplier))
         except Exception as ex:
             logger.error(f"Ошибка значения поля `id_product`", ex)
             ...
@@ -1065,7 +1065,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.id_default_image) or ''
+            value = value or  await self.driver.execute_locator(self.locator.id_default_image) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_default_image`", ex)
             ...
@@ -1092,7 +1092,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.ean13) or ''
+            value = value or  await self.driver.execute_locator(self.locator.ean13) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ean13`", ex)
             ...
@@ -1119,7 +1119,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.ecotax) or ''
+            value = value or  await self.driver.execute_locator(self.locator.ecotax) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ecotax`", ex)
             ...
@@ -1146,7 +1146,7 @@ class Graber:
 
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.height) or ''
+            value = value or  await self.driver.execute_locator(self.locator.height) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `height`", ex)
             ...
@@ -1171,7 +1171,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.how_to_use) or ''
+            value = value or  await self.driver.execute_locator(self.locator.how_to_use) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `how_to_use`", ex)
             ...
@@ -1196,7 +1196,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.id_manufacturer) or ''
+            value = value or  await self.driver.execute_locator(self.locator.id_manufacturer) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_manufacturer`", ex)
             ...
@@ -1221,7 +1221,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.id_supplier) or ''
+            value = value or  await self.driver.execute_locator(self.locator.id_supplier) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_supplier`", ex)
             ...
@@ -1246,7 +1246,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.id_tax) or ''
+            value = value or  await self.driver.execute_locator(self.locator.id_tax) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_tax`", ex)
             ...
@@ -1271,7 +1271,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.id_type_redirected) or ''
+            value = value or  await self.driver.execute_locator(self.locator.id_type_redirected) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_type_redirected`", ex)
             ...
@@ -1296,7 +1296,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.images_urls) or ''
+            value = value or  await self.driver.execute_locator(self.locator.images_urls) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `images_urls`", ex)
             ...
@@ -1320,7 +1320,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.indexed) or ''
+            value = value or  await self.driver.execute_locator(self.locator.indexed) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `indexed`", ex)
             ...
@@ -1345,7 +1345,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.ingredients) or ''
+            value = value or  await self.driver.execute_locator(self.locator.ingredients) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `ingredients`", ex)
             ...
@@ -1370,7 +1370,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.meta_description) or ''
+            value = value or  await self.driver.execute_locator(self.locator.meta_description) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_description`", ex)
             ...
@@ -1395,7 +1395,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.meta_keywords) or ''
+            value = value or  await self.driver.execute_locator(self.locator.meta_keywords) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_keywords`", ex)
             ...
@@ -1420,7 +1420,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.meta_title) or ''
+            value = value or  await self.driver.execute_locator(self.locator.meta_title) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `meta_title`", ex)
             ...
@@ -1445,7 +1445,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.is_virtual) or ''
+            value = value or  await self.driver.execute_locator(self.locator.is_virtual) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `is_virtual`", ex)
             ...
@@ -1469,7 +1469,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.isbn) or ''
+            value = value or  await self.driver.execute_locator(self.locator.isbn) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `isbn`", ex)
             ...
@@ -1495,7 +1495,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.link_rewrite) or ''
+            value = value or  await self.driver.execute_locator(self.locator.link_rewrite) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `link_rewrite`", ex)
             ...
@@ -1521,7 +1521,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.location) or ''
+            value = value or  await self.driver.execute_locator(self.locator.location) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `location`", ex)
             ...
@@ -1547,7 +1547,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.low_stock_alert) or ''
+            value = value or  await self.driver.execute_locator(self.locator.low_stock_alert) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `low_stock_alert`", ex)
             ...
@@ -1572,7 +1572,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.low_stock_threshold) or ''
+            value = value or  await self.driver.execute_locator(self.locator.low_stock_threshold) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `low_stock_threshold`", ex)
             ...
@@ -1598,7 +1598,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.minimal_quantity) or ''
+            value = value or  await self.driver.execute_locator(self.locator.minimal_quantity) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `minimal_quantity`", ex)
             ...
@@ -1624,7 +1624,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.mpn) or ''
+            value = value or  await self.driver.execute_locator(self.locator.mpn) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `mpn`", ex)
             ...
@@ -1650,7 +1650,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.name) or ''
+            value = value or  await self.driver.execute_locator(self.locator.name) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `name`", ex)
             ...
@@ -1676,7 +1676,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.online_only) or ''
+            value = value or  await self.driver.execute_locator(self.locator.online_only) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `online_only`", ex)
             ...
@@ -1702,7 +1702,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.on_sale) or ''
+            value = value or  await self.driver.execute_locator(self.locator.on_sale) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `on_sale`", ex)
             ...
@@ -1728,7 +1728,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.out_of_stock) or ''
+            value = value or  await self.driver.execute_locator(self.locator.out_of_stock) or ''
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `out_of_stock`", ex)
             ...
@@ -1752,7 +1752,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.pack_stock_type) or ''
+            value = value or  await self.driver.execute_locator(self.locator.pack_stock_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `pack_stock_type`', ex)
             ...
@@ -1779,7 +1779,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.price) or ''
+            value = value or  await self.driver.execute_locator(self.locator.price) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `price`', ex)
             ...
@@ -1806,7 +1806,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.product_type) or ''
+            value = value or  await self.driver.execute_locator(self.locator.product_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `product_type`', ex)
             ...
@@ -1833,7 +1833,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.quantity) or ''
+            value = value or  await self.driver.execute_locator(self.locator.quantity) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `quantity`', ex)
             ...
@@ -1860,7 +1860,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.quantity_discount) or ''
+            value = value or  await self.driver.execute_locator(self.locator.quantity_discount) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `quantity_discount`', ex)
             ...
@@ -1887,7 +1887,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.redirect_type) or ''
+            value = value or  await self.driver.execute_locator(self.locator.redirect_type) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `redirect_type`', ex)
             ...
@@ -1914,7 +1914,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.reference) or ''
+            value = value or  await self.driver.execute_locator(self.locator.reference) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `reference`', ex)
             ...
@@ -1940,7 +1940,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.show_condition) or ''
+            value = value or  await self.driver.execute_locator(self.locator.show_condition) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `show_condition`', ex)
             ...
@@ -1965,7 +1965,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.show_price) or ''
+            value = value or  await self.driver.execute_locator(self.locator.show_price) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `show_price`', ex)
             ...
@@ -1990,7 +1990,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.state) or ''
+            value = value or  await self.driver.execute_locator(self.locator.state) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `state`', ex)
             ...
@@ -2015,7 +2015,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.text_fields) or ''
+            value = value or  await self.driver.execute_locator(self.locator.text_fields) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `text_fields`', ex)
             ...
@@ -2040,7 +2040,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.unit_price_ratio) or ''
+            value = value or  await self.driver.execute_locator(self.locator.unit_price_ratio) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `unit_price_ratio`', ex)
             ...
@@ -2064,7 +2064,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.unity) or ''
+            value = value or  await self.driver.execute_locator(self.locator.unity) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `unity`', ex)
             ...
@@ -2089,7 +2089,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.upc) or ''
+            value = value or  await self.driver.execute_locator(self.locator.upc) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `upc`', ex)
             ...
@@ -2114,7 +2114,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.uploadable_files) or ''
+            value = value or  await self.driver.execute_locator(self.locator.uploadable_files) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `uploadable_files`', ex)
             ...
@@ -2139,7 +2139,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.default_image_url) or ''
+            value = value or  await self.driver.execute_locator(self.locator.default_image_url) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `default_image_url`', ex)
             ...
@@ -2164,7 +2164,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.visibility) or ''
+            value = value or  await self.driver.execute_locator(self.locator.visibility) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `visibility`', ex)
             ...
@@ -2189,7 +2189,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.weight) or ''
+            value = value or  await self.driver.execute_locator(self.locator.weight) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `weight`', ex)
             ...
@@ -2216,7 +2216,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.wholesale_price) or ''
+            value = value or  await self.driver.execute_locator(self.locator.wholesale_price) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `wholesale_price`', ex)
             ...
@@ -2243,7 +2243,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.width) or ''
+            value = value or  await self.driver.execute_locator(self.locator.width) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `width`', ex)
             ...
@@ -2269,8 +2269,8 @@ class Graber:
             Если `value` был передан, его значение подставляется в поле `ProductFields.specification`.
         """
         try:
-            # код получает значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.specification) or ''
+            
+            value = normalize_string( value or  await self.driver.execute_locator(self.locator.specification) or '')
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `specification`', ex)
             ...
@@ -2281,10 +2281,6 @@ class Graber:
             logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.specification}')
             ...
             return
-
-        # Если значение - список, код преобразовывает его в строку с разделителем `\n`
-        if isinstance(value, list):
-            value = '\n'.join(map(str, value))
 
         # Код записывает результат в поле `specification` объекта `ProductFields`
         self.fields.specification = value
@@ -2301,7 +2297,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.link) or ''
+            value = value or  await self.driver.execute_locator(self.locator.link) or ''
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `link`', ex)
             ...
@@ -2327,7 +2323,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.byer_protection) or ''
+            value = value or  await self.driver.execute_locator(self.locator.byer_protection) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `byer_protection`', ex)
             ...
@@ -2353,7 +2349,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.customer_reviews) or ''
+            value = value or  await self.driver.execute_locator(self.locator.customer_reviews) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `customer_reviews`', ex)
             ...
@@ -2379,7 +2375,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.d.execute_locator(self.locator.link_to_video) or ''
+            value = value or  await self.driver.execute_locator(self.locator.link_to_video) or ''
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `link_to_video`', ex)
             ...
@@ -2413,7 +2409,7 @@ class Graber:
             try:
                 if not self.fields.id_product:
                     self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-                img_url = await self.d.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
+                img_url = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
                 img_tmp_path = await save_png_from_url(img_url[0] if isinstance(img_url, list) else img_url , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
                 if img_tmp_path:
                     self.fields.local_saved_image = img_tmp_path
@@ -2437,7 +2433,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator и сохраняем видео
-            value = value or  await self.d.execute_locator(self.locator.local_saved_video) or ''
+            value = value or  await self.driver.execute_locator(self.locator.local_saved_video) or ''
         except Exception as ex:
             logger.error(f'Ошибка сохранения видео в поле `local_saved_video`', ex)
             ...

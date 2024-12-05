@@ -20,7 +20,7 @@ import re
 from typing import Dict
 from pathlib import Path
 from venv import logger
-from src.utils.string import StringFormatter
+
 from src.logger import logger
 from types import SimpleNamespace
 from html.parser import HTMLParser

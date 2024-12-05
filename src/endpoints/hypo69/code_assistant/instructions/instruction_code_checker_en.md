@@ -95,7 +95,7 @@
          """  
          try:  
              # Code executes value retrieval using execute_locator  
-             value = value or await self.d.execute_locator(self.locator.specification) or ''  
+             value = value or await self.driver.execute_locator(self.locator.specification) or ''  
          except Exception as ex:  
              logger.error('Error retrieving value for the `specification` field', ex)  
              ...  

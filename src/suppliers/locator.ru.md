@@ -219,9 +219,9 @@
 По умолчанию локаторы читаются из файла `product.json`. Вот как можно это изменить:
 В файле грабера страницы поставщика делается проверка на `url`
 ```python
-    async def grab_page(self, driver: Driver) -> ProductFields:
+    async def grab_page(self) -> ProductFields:
         ...
-        d = self.d = driver  
+         = driver  
         if 'ksp.co.il/mob' in d.current_url: # <- бывет, что подключается к мобильной версии сайта
             self.locator = j_loads_ns(gs.path.src / 'suppliers' / 'ksp' / 'locators' / 'product_mobile_site.json')
         ...

@@ -43,7 +43,7 @@ MODE = 'dev'
 def login(self):
     self.get_url('https://reseller.c-data.co.il/Login')
 
-    email = self.locators['login']['email']
+    emaiocators['login']['email']
     password = self.locators['login']['password']
 
     email_locator = (self.locators['login']['email_locator']['by'], 

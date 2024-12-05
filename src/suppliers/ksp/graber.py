@@ -78,12 +78,14 @@ class Graber(Grbr):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'ksp'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        # Устанавливаем глобальные настройки через Context
-        
+ 
+        if 'ksp.co.il/mob' in self.driver.current_url: # <- бывет, что подключается к мобильной версии сайта
+            self.locator = j_loads_ns(gs.path.src / 'suppliers' / 'ksp' / 'locators' / 'product_mobile_site.json')
+
         Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
 
         
-    async def grab_page(self, driver: Driver) -> ProductFields:
+    async def grab_page(self) -> ProductFields:
         """Asynchronous function to grab product fields.
 
         Args:
@@ -92,9 +94,6 @@ class Graber(Grbr):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        d = self.d = driver  
-        if 'ksp.co.il/mob' in d.current_url: # <- бывет, что подключается к мобильной версии сайта
-            self.locator = j_loads_ns(gs.path.src / 'suppliers' / 'ksp' / 'locators' / 'product_mobile_site.json')
 
         ...
         # Логика извлечения данных

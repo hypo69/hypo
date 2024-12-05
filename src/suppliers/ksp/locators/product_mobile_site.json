@@ -861,7 +861,7 @@
     "timeout_for_event": "presence_of_element_located",
     "event": null,
     "mandatory": true,
-    "locator_description": "Название товара"
+    "locator_description": "KSP mobile version - Название товара"
   },
   "description_short": {
     "attribute": "innerText",

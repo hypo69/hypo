@@ -173,7 +173,7 @@ class FacebookPromoter:
                 if not group.language.upper() == language.upper() and group.currency.upper() == currency.upper():
                    continue
 
-                self.d.get_url(get_event_url(group.group_url) if is_event else group.group_url)
+                self.driver.get_url(get_event_url(group.group_url) if is_event else group.group_url)
 
                 if not self.promote(group = group, item = item, is_event = is_event, language = language, currency = currency):
                     continue

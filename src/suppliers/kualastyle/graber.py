@@ -82,7 +82,7 @@ class Graber(Grbr):
         
         
 
-    async def grab_page(self, driver: Driver) -> ProductFields:
+    async def grab_page(self) -> ProductFields:
         """Асинхронная функция для извлечения данных о товаре.
 
         Args:
@@ -92,7 +92,7 @@ class Graber(Grbr):
             ProductFields: Извлеченные поля товара.
         """
         global d
-        d = self.d = driver  
+         = driver  
         ...
         # Логика извлечения данных
         async def fetch_all_data(**kwards):

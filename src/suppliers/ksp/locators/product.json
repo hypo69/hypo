@@ -744,6 +744,18 @@
     "locator_description": "краткое Описание товара. "
   },
   "description": {
+    "attribute": null,
+    "by": null,
+    "selector": null,
+    "if_list": "all",
+    "use_mouse": false,
+    "mandatory": true,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
+    "locator_description": "На сайте нет полного описания товара, "
+  },
+  "specification": {
     "attribute": "innerText",
     "by": "XPATH",
     "selector": "//div[@id = 'review-section']",
@@ -751,17 +763,7 @@
     "use_mouse": false,
     "mandatory": true,
     "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
-    "locator_description": "На сайте нет полного описания товара, поэтому я повторяю локатор `specification`"
-  },
-  "specification": {
-    "attribute": "",
-    "by": "XPATH",
-    "selector": "//div[@id = 'review-section']",
-    "if_list": "all",
-    "use_mouse": false,
-    "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
-    "locator_description": "Технические характеристики. "
+    "locator_description": "KSP Технические характеристики. "
   },
   "affiliate_short_link": {
     "attribute": null,

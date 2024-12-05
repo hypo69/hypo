@@ -24,7 +24,7 @@
 
    from src import gs 
    from src.utils.printer import pprint, j_loads, j_loads_ns, j_dumps, save_png
-   from src.utils.string import StringFormatter
+   
    from src.logger import logger
    from src.logger.exceptions import DefaultSettingsException, WebDriverException, ExecuteLocatorException
    ```

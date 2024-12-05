@@ -333,7 +333,7 @@ class Mexiron:
     async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
         """Функция исполняет сценарий рекламного модуля `facvebook`."""
         ...
-        self.d.get_url(r'https://www.facebook.com/profile.php?id=61566067514123')
+        self.driver.get_url(r'https://www.facebook.com/profile.php?id=61566067514123')
         currency = "ש''ח"
         title = f'{mexiron.title}\n{mexiron.description}\n{mexiron.price} {currency}'
         if not post_message_title(self.d, title):

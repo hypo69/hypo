@@ -80,7 +80,7 @@ class Graber(Grbr):
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         #Context.locator_for_decorator = self.locator.close_pop_up  # <- Вместо этого я делаю рефреш
 
-    async def grab_page(self, driver: Driver) -> ProductFields:
+    async def grab_page(self) -> ProductFields:
         """Asynchronous function to grab product fields.
 
         Args:
@@ -89,7 +89,7 @@ class Graber(Grbr):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        d = self.d = driver  
+         = driver  
         d.get_url(driver.current_url) # <- refresh
         ...
         # Logic for extracting data
@@ -204,7 +204,7 @@ class Graber(Grbr):
             try:
                 if not self.fields.id_product:
                     self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-                raw = await self.d.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
+                raw = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
                 img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
                 if img_tmp_path:
                     self.fields.local_saved_image = img_tmp_path

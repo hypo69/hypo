@@ -74,7 +74,7 @@ class Graber(Grbr):
         
         
 
-    async def grab_page(self, driver: Driver) -> ProductFields:
+    async def grab_page(self) -> ProductFields:
         """Asynchronous function to grab product fields.
 
         Args:
@@ -83,8 +83,8 @@ class Graber(Grbr):
         Returns:
             ProductFields: The grabbed product fields.
         """
-        d = self.d 
-        l = self.l
+         
+        
         
         ...
         # Логика извлечения данных

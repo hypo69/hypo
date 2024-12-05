@@ -95,7 +95,7 @@
          """  
          try:  
              # код исполняет получение значения через execute_locator  
-             value = value or  await self.d.execute_locator(self.locator.specification) or ''  
+             value = value or  await self.driver.execute_locator(self.locator.specification) or ''  
          except Exception as ex:  
              logger.error('Ошибка получения значения в поле `specification`', ex)  
              ...  
