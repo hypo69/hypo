@@ -49,7 +49,7 @@ from functools import wraps
 ...
 from src import gs
 from src.suppliers import Supplier
-from src.product import ProductFields, record
+from src.product.product_fields import ProductFields, record
 from src.category import Category
 from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
