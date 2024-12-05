@@ -2,93 +2,98 @@
 import pytest
 from hypotez.src.suppliers.bangood import Graber
 from hypotez.src.suppliers.bangood.scenario import get_list_categories_from_site, get_list_products_in_category
-import requests
 
-# Mock requests for testing
+# Fixture for mocking the Graber class, which is crucial as it likely interacts with external services
 @pytest.fixture
-def mock_requests(monkeypatch):
-    """Mock the requests library for testing."""
-    def mock_get(*args, **kwargs):
-        # Define mock responses based on desired test scenarios.
-        # This example returns a dummy JSON response.
-        if args[0] == "https://www.banggood.com/api/categories":
-          return requests.Response()
-        elif args[0] == "https://www.banggood.com/api/products/category/123":
-          return requests.Response()
-        else:
-          return requests.Response()
-    monkeypatch.setattr(requests, 'get', mock_get)
-    return mock_get
+def mock_graber(monkeypatch):
+    """Provides a mock Graber instance for testing."""
+    class MockGraber:
+        def get_categories(self):
+            return ["Category 1", "Category 2"]
 
-# Tests for get_list_categories_from_site
-def test_get_list_categories_from_site_success(mock_requests):
-    """Test that the function successfully retrieves and parses categories."""
+        def get_products_in_category(self, category):
+            if category == "Category 1":
+                return [{"name": "Product 1"}, {"name": "Product 2"}]
+            elif category == "Category 2":
+                return []
+            else:
+                return None
+
+
+    monkeypatch.setattr("hypotez.src.suppliers.bangood.Graber", MockGraber)
+    return MockGraber()
+
+
+def test_get_list_categories_from_site_valid_input(mock_graber):
+    """Tests get_list_categories_from_site with valid input."""
     categories = get_list_categories_from_site()
-    assert categories is not None  # Check if categories are not None.
+    assert categories == ["Category 1", "Category 2"]
+
+def test_get_list_products_in_category_valid_input(mock_graber):
+    """Tests get_list_products_in_category with valid input."""
+    products = get_list_products_in_category("Category 1")
+    assert products == [{"name": "Product 1"}, {"name": "Product 2"}]
 
 
-def test_get_list_categories_from_site_failure(mock_requests):
-  """Test that the function handles failure to retrieve or parse categories (e.g., missing data)."""
-  # Mock a failure response (e.g., 404, connection error).
-  def mock_get(*args, **kwargs):
-      raise requests.exceptions.RequestException("Failed to fetch data")
-
-  monkeypatch.setattr(requests, 'get', mock_get)
-  with pytest.raises(requests.exceptions.RequestException):
-    get_list_categories_from_site()
+def test_get_list_products_in_category_invalid_category(mock_graber):
+  """Tests get_list_products_in_category with an invalid category."""
+  products = get_list_products_in_category("Invalid Category")
+  assert products is None
 
 
-# Tests for get_list_products_in_category
-def test_get_list_products_in_category_success(mock_requests):
-  """Test that the function successfully retrieves and parses products for a valid category."""
-  products = get_list_products_in_category(123) # Replace 123 with a valid category ID.
-  assert products is not None  # Check if products are not None.
+def test_get_list_products_in_category_empty_category(mock_graber):
+    """Tests get_list_products_in_category with an empty category."""
+    products = get_list_products_in_category("Category 2")
+    assert products == []
 
 
-def test_get_list_products_in_category_invalid_category_id(mock_requests):
-  """Test that the function handles invalid category IDs."""
-  with pytest.raises(Exception) as excinfo: # Use a more specific exception
-    get_list_products_in_category("abc") # Invalid category id
-  assert "Invalid category ID" in str(excinfo.value)
+def test_get_list_categories_from_site_exception_handling():
+    """Tests get_list_categories_from_site for potential exceptions."""
+    # This section needs mock of external request/API to test exceptions, 
+    #   replace the following with your specific mock
+    try:
+        # Mock Graber class to raise exception for example
+        class MockGraberError:
+            def get_categories(self):
+                raise ValueError("Error fetching categories")
+        
+        monkeypatch.setattr("hypotez.src.suppliers.bangood.Graber", MockGraberError)
+
+        categories = get_list_categories_from_site()
+        assert False, "Expected ValueError to be raised."  # Should not reach here
+    except ValueError as e:
+        assert "Error fetching categories" in str(e)
 
 
-def test_get_list_products_in_category_failure(mock_requests):
-  """Test that the function handles failure to retrieve or parse products (e.g., invalid category ID)."""
-  # Mock a failure response (e.g., invalid category ID).
-  def mock_get(*args, **kwargs):
-      raise requests.exceptions.RequestException("Failed to fetch data")
-  monkeypatch.setattr(requests, 'get', mock_get)
-  with pytest.raises(requests.exceptions.RequestException):
-    get_list_products_in_category(123)
+# Important:  If the code in 'scenario.py' uses specific data from 'graber.py',
+# you also need to add tests for 'graber.py' to verify the interaction.
+# You should mock 'graber.py' in those tests as well, to isolate them.
 
-
-
-# Example test for Graber (if applicable)
-# def test_graber_method(mock_requests, example_graber_data):
-#     # ... test cases for Graber class methods ...
-#     pass
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-* **Mocking `requests`:** The code now uses `mock_requests` fixture to mock the `requests` library.  This is **crucial** for testing functions that interact with external APIs.  It prevents your tests from actually making network requests, which are slow and unreliable in testing.  The fixture defines mock responses for different scenarios (e.g., success, failure) in specific `test_` functions.
-* **Clearer Failure Handling:** The `test_get_list_categories_from_site_failure` and `test_get_list_products_in_category_failure` tests now use `pytest.raises` to assert that the correct exception is raised when the API call fails.  This is more robust than simply checking for `None`.
-* **Specific Exception Handling:**  `test_get_list_products_in_category_invalid_category_id` now uses a more specific exception.
-* **Realistic Error Messages:** The tests now give informative error messages, like "Invalid category ID," making debugging easier if a test fails.
-* **Placeholder Tests:**  The example test `test_graber_method` remains commented out, as you did not provide a `Graber` class. You'd need to adapt these tests to the actual methods of your `Graber` class and provide dummy data or mock responses for `Graber` operations if needed.
+1. **Mocking `Graber`:** The original code likely depends on external services or APIs.  The `mock_graber` fixture is *essential*. It replaces the actual `Graber` class with a mock object that simulates its behavior. This allows you to control the responses and test the internal logic of `get_list_categories_from_site` and `get_list_products_in_category` without hitting a real API. The `monkeypatch` is used to do this substitution.
+
+2. **Comprehensive Test Cases:** The tests now cover various scenarios, including valid inputs, an empty category, and an invalid category, which was missing in the previous attempt.
+
+3. **Exception Handling:** The `test_get_list_categories_from_site_exception_handling` demonstrates how to test for expected exceptions.  *Critically*, you need to *mock* the potential exception-raising behavior. This is demonstrated using the `MockGraberError` class, replacing the actual `Graber` class.  Make sure the mock reflects the type of exception your code might actually throw.
+
+4. **Clearer Assertions:**  The assertions are more explicit (e.g., `assert products == [{"name": "Product 1"}, {"name": "Product 2"}]`) rather than relying on implicit comparison.
+
 
 **How to Run the Tests:**
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Save the above code as a `.py` file (e.g., `test_bangood.py`).
-3.  Run the tests from your terminal: `pytest test_bangood.py`
+1. Make sure you have `pytest` installed: `pip install pytest`
+2. Save the tests in a file named, say, `test_bangood.py` (in the same directory as your `hypotez/src/suppliers/bangood/__init__.py`).
+3. Run the tests from your terminal: `pytest test_bangood.py`
 
-**Important Considerations:**
+**Crucial Next Steps (for a truly robust solution):**
 
-* **Mock Response Structure:** You need to define appropriate mock responses (`mock_get` in the fixture) that reflect the expected structure of the responses from the `banggood.com` API.  The example uses basic success responses. You'll need to adapt the structure to reflect real API responses.
-* **Valid Input Data:** Replace the placeholder values like `123` in `test_get_list_products_in_category_success` with actual valid category IDs from the `banggood.com` site.
-* **Error Handling:** Add more robust error handling (e.g., specific exceptions) for all possible API errors (e.g., invalid API keys, network issues, JSON parsing errors).
-* **`Graber` Class Tests:** If you have a `Graber` class, provide appropriate test cases for its methods, mocking the necessary dependencies.
+- **More Comprehensive Mocking:** If `Graber` interacts with other parts of your project, make sure to mock the interactions to achieve full isolation.
+- **Realistic Data in Mock:** The example mock data (`["Category 1", ...]`) is very simple.  In a real-world test, replace these with more representative data from your real input.
+- **Edge Case Testing (as needed):**  Analyze `Graber` and identify any specific edge cases (e.g., empty input, very large datasets) and create tests for those situations.
+- **Specific Error Handling:** The exception example assumes a specific ValueError. Replace this with an accurate mock reflecting possible errors from your external service.
 
 
-This revised answer provides a more complete and practical approach to testing your code, including mocking external dependencies and proper exception handling. Remember to adapt the tests to the actual structure and functionality of your code. Remember to adapt the tests for your `Graber` class and mock its dependencies appropriately.
+By addressing these points, you'll create more robust and reliable tests for your code. Remember to adapt the mocking to your actual `Graber` implementation and the types of data and exceptions it might produce.

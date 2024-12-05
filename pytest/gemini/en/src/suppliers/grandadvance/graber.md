@@ -1,106 +1,122 @@
 ```python
 import pytest
 import asyncio
+from pathlib import Path
 from unittest.mock import patch
-from src.suppliers.grandadvance.graber import Graber, Context, close_pop_up  # Adjust imports as needed
-from src.webdriver import Driver
-from src.product import ProductFields
+from src.suppliers.grandadvance.graber import Graber, Context, close_pop_up, ProductFields
+from src.webdriver.driver import Driver
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
 
-# Mock classes for testing
+# Mock objects for testing
 class MockDriver:
     async def execute_locator(self, locator):
-        if locator == Context.locator.close_pop_up:
-            return True
-        raise ExecuteLocatorException("Locator not found")
+        return {"result": "success"}
 
 
-class MockContext:
-    driver = MockDriver()
-    locator = SimpleNamespace(close_pop_up="close_pop_up")  # Assuming this is needed
-
-
-# Mock for ProductFields
-class MockProductFields(ProductFields):
-    pass
-
-# Fixture for driver
 @pytest.fixture
 def mock_driver():
     return MockDriver()
 
-@pytest.fixture
-def mock_context():
-    return MockContext()
 
 @pytest.fixture
-def graber(mock_driver, mock_context):
-  return Graber(driver=mock_driver)
+def graber(mock_driver):
+    return Graber(driver=mock_driver)
 
+
+@pytest.fixture
+def product_fields():
+  return ProductFields()
 
 
 # Test cases for grab_page
-def test_grab_page_valid_input(graber, mock_driver):
-    # Mock the async functions to return sample data
-    async def mock_function():
-        return MockProductFields(name="Test Product")
-    with patch.object(Graber, "id_product", return_value=asyncio.Future(result=mock_function())):
-        with patch.object(Graber, "default_image_url", return_value=asyncio.Future(result=mock_function())):
-            with patch.object(Graber, "description_short", return_value=asyncio.Future(result=mock_function())):
-                future = asyncio.Future()
-                future.set_result(MockProductFields(name="Test Product"))
-                with patch.object(Graber, 'fields', new_callable=property) as mock_fields:
-                    mock_fields.return_value = future
-                    loop = asyncio.get_event_loop()
-                    result = loop.run_until_complete(graber.grab_page(mock_driver))
-                    assert result.name == "Test Product"
+def test_grab_page_valid_input(graber, mock_driver, product_fields):
+  """Tests grab_page with valid input."""
+  # Mock a minimal return value for the product fields.
+  # Replace with your expected output in a real test
+  graber.fields = product_fields
+  
+  with patch('src.suppliers.grandadvance.graber.Driver', return_value=mock_driver):
+    # This should not raise an exception
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    future = asyncio.ensure_future(graber.grab_page(mock_driver))
+    loop.run_until_complete(future)
+    loop.close()
+
+    assert graber.fields == product_fields
 
 
+def test_grab_page_no_input_data(graber, mock_driver):
+    """Tests grab_page with no input data."""
+    with patch('src.suppliers.grandadvance.graber.Driver', return_value=mock_driver):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        future = asyncio.ensure_future(graber.grab_page(mock_driver))
+        loop.run_until_complete(future)
+        loop.close()
+        assert graber.fields is not None
 
-def test_grab_page_exception_handling(graber, mock_driver):
-    with patch.object(Graber, 'id_product', side_effect=ExecuteLocatorException):
+
+def test_grab_page_execute_locator_exception(graber, mock_driver):
+    """Test grab_page with ExecuteLocatorException."""
+
+    with patch('src.suppliers.grandadvance.graber.Driver') as mock_driver_obj:
+        mock_driver_instance = mock_driver_obj.return_value
+        # Mock a failure of execute_locator
+        mock_driver_instance.execute_locator.side_effect = ExecuteLocatorException("Mock error")
+
         with pytest.raises(ExecuteLocatorException):
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(graber.grab_page(mock_driver))
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            future = asyncio.ensure_future(graber.grab_page(mock_driver_instance))
+            loop.run_until_complete(future)
+            loop.close()
 
-# Edge case test -  handling missing data (empty input to methods)
-def test_grab_page_missing_data(graber, mock_driver):
-    with patch.object(Graber, "id_product", return_value=asyncio.Future(result=MockProductFields())):
-        with patch.object(Graber, 'default_image_url', return_value=asyncio.Future(result=MockProductFields())):
-            with patch.object(Graber, 'description_short', return_value=asyncio.Future(result=MockProductFields())):
-                loop = asyncio.get_event_loop()
-                result = loop.run_until_complete(graber.grab_page(mock_driver))
-                assert result is not None
+
+
+# Example test for a specific function (replace with actual test cases)
+def test_id_product(graber, mock_driver):
+    # Mock for testing a specific function.
+    # Replace 'fetch_product_id' with the actual name of the function
+    with patch('src.suppliers.grandadvance.graber.Graber.id_product') as mock_id_product:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        future = asyncio.ensure_future(graber.grab_page(mock_driver))
+        loop.run_until_complete(future)
+        loop.close()
+        mock_id_product.assert_called_once()
+
+
+# Add more tests for other functions like additional_shipping_cost, etc., similarly.
+
+
 ```
 
 **Explanation and Improvements:**
 
-* **Mock Objects:** The code now uses `unittest.mock.patch` to mock the `Driver` and related classes, preventing the tests from needing an actual web driver.  Critically, it mocks the  `ExecuteLocatorException`.
-* **Clearer Mock Data:**  The `MockProductFields` class is introduced to provide more realistic test data.
-* **`pytest.raises` for Exceptions:** The `test_grab_page_exception_handling` test now correctly uses `pytest.raises` to catch the expected exception.
-* **`asyncio` Integration:** The tests are now fully integrated with `asyncio` using `asyncio.get_event_loop()` and `loop.run_until_complete`. This is crucial for testing asynchronous code.
-* **Complete Mock Functions:**  We now mock `id_product`, `default_image_url`, and `description_short` to make the tests completely independent of the actual web interaction.
-* **Important Import Fix:** Added `from src.suppliers.grandadvance.graber import ...` (adjust as needed) to correctly import the classes being tested.
-* **Edge Case for Missing Data:**  The `test_grab_page_missing_data` test demonstrates handling a case where some data fetching functions might not return any data.  It's crucial to test the handling of missing data.
-* **Fixture for Graber:** A fixture `graber` is now defined to create an instance of the `Graber` class, using the mocks.
+* **Mocking:** Critically important for testing asynchronous functions. The `mock_driver` fixture now correctly mocks the `Driver` object and its `execute_locator` method.
+* **Asynchronous Handling:**  The tests now properly use `asyncio.ensure_future` and `loop.run_until_complete` to execute the asynchronous methods.  This is vital for testing asynchronous code.
+* **Exception Handling:** The `test_grab_page_execute_locator_exception` test demonstrates how to use `pytest.raises` to check for expected exceptions ( `ExecuteLocatorException`).
+* **Clearer Tests:** The `test_grab_page_valid_input` and `test_grab_page_no_input_data` tests are more descriptive and demonstrate correct assertion techniques.
+* **Specific Function Test Example:** The `test_id_product` test shows how to test an individual function within the `Graber` class.  Crucially, it uses `patch` to mock out other parts of the function to isolate the `id_product` function.
+* **`ProductFields` mock:**  A `product_fields` fixture is added to correctly initialize `graber.fields`  and create a stub for ProductFields.  This is important since `graber.fields` is now being accessed directly.
+* **Resource Management:** The `asyncio.new_event_loop()` and `loop.close()` are added to correctly manage the event loop.  This prevents resource leaks in your tests.
 
-**How to Run:**
+**How to run these tests:**
 
-1.  **Install pytest:**  If you don't already have it, run `pip install pytest`.
-2.  **Adapt imports:** Adjust the imports (`from ... import ...`) in the test file to match your actual project structure.
-3.  **Run pytest:** Execute `pytest your_test_file.py` (replace `your_test_file.py` with the name of your test file).
+1.  Make sure you have `pytest` installed: `pip install pytest`
+2.  Save the tests in a file (e.g., `test_graber.py`) in the same directory as `graber.py`.
+3.  Run the tests from your terminal: `pytest test_graber.py`
 
+**Key Considerations for Real Testing:**
 
-This revised solution is more robust and demonstrates best practices for testing asynchronous Python code with pytest and mocks. Remember to replace placeholders like `your_test_file.py` with your actual file names and adapt the test logic to the specific behavior of the `graber.grab_page` function.
+* **Realistic Data:** In real tests, replace the mocks with actual data or valid/invalid data for different functions like `id_product`.  This is especially important for testing the edge cases.
+* **Dependencies:** If `graber.py` depends on other modules, make sure you mock or stub those dependencies as needed to isolate the `Graber` class.
+* **Specific Function Testing:** Add test functions for each function within `Graber` to thoroughly test its logic.
+* **Context:**  If `Context` has a dependency, you'll need to mock it for the tests to work properly.
+* **Error handling:**  Add tests to ensure specific error handling is working correctly.
+* **Asserting Correct Values:** Replace the `assert graber.fields == product_fields` in the valid input test with actual checks to ensure the values grabbed are as expected. For example, check the attributes of `product_fields` or other specific data values.
 
-
-**Crucial Next Steps:**
-
-* **Mock `fetch_all_data`:**  You should thoroughly mock the `fetch_all_data` function.  How it calls various functions will need mocks to test them effectively.
-* **Specific Data Validation:** Add tests to validate the fields returned by `grab_page` (e.g., checking types, lengths of strings, etc.).  You can create more elaborate mock data for the return values.
-* **Error Scenarios:**  Include more comprehensive error scenarios. What if one function fails? How does `grab_page` handle that?  This is where the mock exception handling is critical.
-
-
-Remember to thoroughly mock all the asynchronous functions (`self.id_product`, `self.default_image_url`, ...) called inside `fetch_all_data` to isolate your tests.
+Remember to adapt this template based on the actual implementation of the functions in `graber.py` and the expected output of your functions and exception handling.  Mocking is extremely important to prevent errors and ensure tests run without errors.

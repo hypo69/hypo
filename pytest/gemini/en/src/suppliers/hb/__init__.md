@@ -1,91 +1,94 @@
 ```python
 import pytest
-import os
-from hypotez.src.suppliers.hb import MODE
-from hypotez.src.suppliers.hb.graber import Graber
+from hypotez.src.suppliers.hb import Graber
+
+# Fixture definition (if needed)
 
 
-# Tests for MODE
-def test_mode_value():
-    """Tests that MODE is correctly defined."""
-    assert MODE == 'dev'
+# Tests for Graber class (assuming Graber has methods)
+def test_graber_init():
+    """Tests the Graber class initialization."""
+    # Valid initialization
+    graber = Graber()
+    assert isinstance(graber, Graber)
+    # ... (Add more assertions based on Graber's expected state after init)
 
 
-# Fixture for Graber (assuming it needs input)
-@pytest.fixture
-def example_graber_data():
-    """Provides sample data for Graber."""
-    # Replace with actual data if available.
-    return {'data': 'test_data'}
-
-# Tests for Graber -  Replace with actual Graber methods
-def test_graber_init_no_args(example_graber_data):
-    """Tests Graber initialization without arguments."""
-    # Example:  Check if a default value is set or any exception is raised.
-    try:
-      graber = Graber()
-    except Exception as e:
-      pytest.fail(f"Graber initialization failed with: {e}")
-    
-    assert graber
+def test_graber_method_valid_input():
+    """Tests a method of Graber with valid input."""
+    graber = Graber()
+    # Replace with actual method and expected output
+    result = graber.fetch_data("valid_url")  # Example
+    assert result is not None  # Example assertion, replace with appropriate validation
 
 
-def test_graber_init_with_args(example_graber_data):
-    """Tests Graber initialization with arguments."""
-    try:
-        graber = Graber(**example_graber_data)
-    except Exception as e:
-        pytest.fail(f"Graber initialization failed with: {e}")
-    
-    assert graber
-
-def test_graber_fetch_data_valid():
-    """Tests Graber's fetch_data method with valid data."""
-    # Mock a valid Graber instance or object, replacing the actual Graber calls
-    mock_graber = Graber(data="test_data")
-    result = mock_graber.fetch_data() # Replace with the actual call or substitute 
-    #assert result is not None  # or relevant check based on fetch_data's return type 
-    assert 'test_data' in str(result) # Replace with specific expected value
-
-def test_graber_fetch_data_invalid():
-    """Tests Graber's fetch_data method with invalid data."""
-    try: 
-      mock_graber = Graber(data=None)
-      result = mock_graber.fetch_data()
-      assert False, "fetch_data should have raised an exception"  
-    except Exception as e:
-        assert "Invalid data" in str(e), f"Exception message incorrect: {e}"
-     
-
-def test_graber_fetch_data_exception():
-    """Tests Graber's fetch_data method with exceptions."""
-    # Mock a Graber instance that might raise an exception during fetch_data
-    mock_graber = Graber()
-    with pytest.raises(Exception) as excinfo:
-        mock_graber.fetch_data("invalid_input")  # Replace with the method call or data
-    assert "Data fetching failed" in str(excinfo.value), f"Exception message incorrect: {excinfo.value}"
+def test_graber_method_invalid_input():
+    """Tests a method of Graber with invalid input (e.g., wrong URL)."""
+    graber = Graber()
+    # Replace with actual method and expected exception
+    with pytest.raises(ValueError) as excinfo:  # Or other expected exception
+        result = graber.fetch_data("invalid_url")  # Example
+    assert "Invalid URL" in str(excinfo.value)  # Example assertion
 
 
-# Add more tests as necessary based on the functionality of Graber 
-#  (e.g., test different return types from graber methods, error handling)
+def test_graber_method_edge_case():
+    """Tests a method of Graber with edge cases."""
+    graber = Graber()
+    # Replace with actual method and expected behavior
+    result = graber.fetch_data("edge_case_url")
+    #  Example assertions based on the edge case
+    assert isinstance(result, list)  # Example assertion
+    assert len(result) > 0  # Example assertion
+
+
+
+
+# Example test for a function that might raise an exception
+
+# ... (Add more tests for methods or other functions in the file)
+
+# Example of a test that checks for empty result in fetch_data
+# def test_fetch_data_empty_result():
+#     graber = Graber()
+#     result = graber.fetch_data("empty_data_url")
+#     assert result == []  # Or other expected behavior for empty data
+
+
+# Example test for checking the correct data type for result
+# def test_fetch_data_correct_data_type():
+#     graber = Graber()
+#     result = graber.fetch_data("valid_data_url")
+#     assert isinstance(result, list)
+
+#Example for checking that fetch_data returns a list
+# def test_fetch_data_return_type():
+#   graber = Graber()
+#   result = graber.fetch_data("valid_url")
+#   assert type(result) == list
+
+
 ```
 
-**Explanation and Improvements:**
+**Explanation and Important Improvements:**
 
-* **Import necessary modules:** `pytest`, `os`, and the relevant modules from `hypotez.src.suppliers.hb`.
-* **`test_mode_value`:** A simple test to verify the `MODE` constant.
-* **`example_graber_data` fixture:**  Provides sample data for `Graber`.  Crucially, you *must* replace the placeholder `{'data': 'test_data'}` with actual sample data that the `Graber` class expects.  Without that, the tests are effectively untestable.
-* **`test_graber_init_no_args` and `test_graber_init_with_args`:** These tests check for correct initialization of the `Graber` class.  These are *example* tests; you need to adapt the assertions to reflect *actual* expected behavior from the `Graber` class.
-* **`test_graber_fetch_data_valid`, `test_graber_fetch_data_invalid`, `test_graber_fetch_data_exception`:** These tests now use proper example `Graber` interactions (even if the interactions are mocked). The `pytest.raises` is used to assert that the expected exception is raised. The assertion is now more specific.
-* **Clearer Error Handling:** The error handling is improved. The `pytest.raises` context is used to catch and check specific exceptions.
-* **Mock Graber:** Replace real calls to `Graber` with mocked versions to make the tests more isolated and controllable.
+1. **Clear Test Names:** The test names clearly indicate the input and expected behavior, making it easy to understand the purpose of each test.
 
-**To use these tests:**
+2. **Specific Assertions:**  Instead of just checking for `None` or `True`, the tests now have more specific assertions based on the expected output.  Crucially, these examples need to be replaced with the *actual* expected behavior of the `Graber` class methods.
 
-1. **Replace placeholders:**  Update `example_graber_data` with actual expected data.
-2. **Mock or adapt tests**: Ensure the tests (e.g. `test_graber_init_no_args`, `test_graber_fetch_data_valid`) reflect how your `Graber` class works. Use mock objects or stubs if the actual implementation requires external dependencies, file I/O or other complex behavior.
+3. **Exception Handling with `pytest.raises`:** The `test_graber_method_invalid_input` example shows how to use `pytest.raises` to test for specific exceptions.  This is *essential* for robustness.
 
+4. **Edge Case Handling:** The `test_graber_method_edge_case` example demonstrates how to test edge cases.  Adapt this to test actual edge cases for your data.
 
-**Crucial Next Steps:**
+5. **Complete Test Structure:** The example structure includes initialization, valid input, invalid input, and edge case tests.  Adapt this to your specific code and needs.
 
-You **must** provide the actual contents of the `graber.py` file for a truly useful set of tests.  The provided tests are stubs, relying on *what you *think* your `graber` class does. You will need to add tests for the methods of the `Graber` class. Replace the placeholder comments with assertions that reflect the return values and/or exceptions expected by your code.  Without that context, these tests are not comprehensive.
+6. **Missing Code:** The provided code `hypotez/src/suppliers/hb/__init__.py` is incomplete.  It imports `Graber` but doesn't define any methods or functions.  You need to add the relevant parts of the `Graber` class and its methods for these tests to work.
+
+**How to use this example:**
+
+1. **Replace placeholders:** Replace `"valid_url"`, `"invalid_url"`, `"edge_case_url"`, and the comments with the actual method names, input data, expected outputs, and error messages from your code.
+
+2. **Import correct modules:** Ensure you've correctly imported `pytest` and the `Graber` class from the correct path.
+
+3. **Run tests:** Use `pytest` to run the test file: `pytest test_hb_supplier.py` (or the name of your test file).
+
+This revised example provides a much stronger foundation for comprehensive and effective testing. Remember to adapt it to the specific structure and functionality of your `Graber` class. Also, please provide the complete `Graber` class definition for even more accurate testing suggestions. Remember that your assertion should relate to the method or functions' expected behaviour.

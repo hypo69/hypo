@@ -48,8 +48,7 @@ flowchart TD
 
  
 ```mermaid
-graph TD
-    subgraph AliCampaignEditor
+graph LR
         A[User Input: campaign_name, language, currency] --> B{AliCampaignEditor.__init__};
         B --> C[AliPromoCampaign.__init__];
         C --> D[Initialization: AliCampaignEditor constructor];
@@ -92,7 +91,29 @@ graph TD
         AG --> AH[Process category: Trigger category product preparation];
 
         E --> AI[Other methods];
-    end
 
-  
 ```
+
+# Prepare campaign
+```mermaid
+flowchart TD
+    A[Start] --> B{Process all campaigns?}
+    B -->|Yes| C[Process all campaigns]
+    B -->|No| D[Process specific campaign]
+    
+    C --> E{Language and Currency provided?}
+    E -->|Yes| F[Process each campaign with provided language and currency]
+    E -->|No| G[Process all locales for each campaign]
+    
+    D --> H{Categories specified?}
+    H -->|Yes| I[Process specific categories for the campaign]
+    H -->|No| J[Process entire campaign]
+    
+    F --> K[Process campaign category]
+    G --> L[Process campaign for all locales]
+    I --> K
+    J --> L
+    
+    K --> M[Return]
+    L --> M
+    ```

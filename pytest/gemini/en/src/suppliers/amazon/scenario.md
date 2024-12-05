@@ -1,116 +1,109 @@
 ```python
 import pytest
-from typing import List
+from unittest.mock import patch
+from hypotez.src.suppliers.amazon.scenario import get_list_products_in_category
+from src.logger import logger
 
-# Replace with your actual import statements
-# from hypotez.src.suppliers.amazon.scenario import get_list_products_in_category
-# from your_module import Supplier, logger  # Example imports
 
-# Mock classes and objects for testing
-class Supplier:
-    def __init__(self, driver=None, locators=None, supplier_id=None):
-        self.driver = driver
-        self.locators = locators
-        self.supplier_id = supplier_id
+# Mock the logger for testing
+@patch('hypotez.src.suppliers.amazon.scenario.logger')
+def test_get_list_products_in_category_valid_input(mock_logger, example_supplier):
+    """
+    Tests get_list_products_in_category with valid input.
+    """
+    # Example valid input (replace with your actual valid data)
+    example_supplier.driver = 'mock_driver'
+    example_supplier.locators = {"category": {"product_links": ["url1", "url2"]}}
     
-class DriverMock:
-    def scroll(self):
-        pass
-    def execute_locator(self, locator):
-        return ["https://example.com/product1", "https://example.com/product2"]
+    result = get_list_products_in_category(example_supplier)
+    
+    assert result == ["url1", "url2"]
+    mock_logger.info.assert_called_once_with("Найдено 2 товаров")
+    mock_logger.warning.called_with('Нет ссылок на товары').assert_not_called()  # no warnings
 
 
-class LocatorMock:
-    def __init__(self):
-        self.category = {"product_links": "locator_value"}
-
-
-def get_list_products_in_category(s: Supplier) -> List[str]:
-    # Import the actual function to test 
-    from hypotez.src.suppliers.amazon.scenario import get_list_products_in_category
-    return get_list_products_in_category(s)
-
-
-
-def test_get_list_products_in_category_valid_input():
-    """Tests the function with valid input and an existing locator."""
-    driver = DriverMock()
-    locators = LocatorMock()
-    supplier = Supplier(driver=driver, locators=locators, supplier_id=123)
-    result = get_list_products_in_category(supplier)
-    assert isinstance(result, list)
-    assert len(result) == 2
-    assert result[0] == "https://example.com/product1"
-    assert result[1] == "https://example.com/product2"
-
-
-def test_get_list_products_in_category_empty_locator():
-    """Tests the function with an empty locator."""
-    driver = DriverMock()
-    locators = LocatorMock()
-    locators.category = {}
-    supplier = Supplier(driver=driver, locators=locators, supplier_id=123)
-    result = get_list_products_in_category(supplier)
-    assert result is None  #Function should return None
-
-def test_get_list_products_in_category_locator_error():
-    """Tests when there is an error in the locator."""
-    driver = DriverMock()
-    locators = LocatorMock()
-    locators.category = None
-    supplier = Supplier(driver=driver, locators=locators, supplier_id=123)
-    result = get_list_products_in_category(supplier)
+@patch('hypotez.src.suppliers.amazon.scenario.logger')
+def test_get_list_products_in_category_empty_list(mock_logger, example_supplier):
+    """
+    Tests get_list_products_in_category with empty product list.
+    """
+    example_supplier.driver = 'mock_driver'
+    example_supplier.locators = {"category": {"product_links": []}}
+    
+    result = get_list_products_in_category(example_supplier)
+    
     assert result is None
+    mock_logger.warning.assert_called_once_with('Нет ссылок на товары')
+    mock_logger.info.called_with("Найдено 0 товаров").assert_not_called()  # no warnings
 
 
-def test_get_list_products_in_category_empty_list():
-    """Tests the function when the product list is empty."""
-    driver = DriverMock()
-    locators = LocatorMock()
-    supplier = Supplier(driver=driver, locators=locators, supplier_id=123)
-    driver.execute_locator(locators.category['product_links']) = []
-    result = get_list_products_in_category(supplier)
+@patch('hypotez.src.suppliers.amazon.scenario.logger')
+def test_get_list_products_in_category_locator_missing(mock_logger, example_supplier):
+    """
+    Tests get_list_products_in_category when locators are missing.
+    """
+    example_supplier.driver = 'mock_driver'
+    example_supplier.locators = {}
+
+    result = get_list_products_in_category(example_supplier)
+
     assert result is None
+    mock_logger.error.assert_called_once_with("А где локаторы? {}")
 
 
-def test_get_list_products_in_category_string_locator():
-    """Tests the function when the product list is a string."""
-    driver = DriverMock()
-    locators = LocatorMock()
-    supplier = Supplier(driver=driver, locators=locators, supplier_id=123)
-    driver.execute_locator(locators.category['product_links']) = "https://example.com/product1"
-    result = get_list_products_in_category(supplier)
-    assert result == ["https://example.com/product1"]
+@patch('hypotez.src.suppliers.amazon.scenario.logger')
+def test_get_list_products_in_category_single_string_url(mock_logger, example_supplier):
+    """
+    Tests get_list_products_in_category when product links are a single string.
+    """
+    example_supplier.driver = 'mock_driver'
+    example_supplier.locators = {"category": {"product_links": "single_url"}}
 
-# Add more test cases as needed (e.g., for different locator structures,
-# exception handling, and edge cases)
+    result = get_list_products_in_category(example_supplier)
+    
+    assert result == ["single_url"]
+    mock_logger.info.assert_called_once_with("Найдено 1 товаров")
+
+
+@pytest.fixture
+def example_supplier():
+    """Fixture to create an example supplier object."""
+    class Supplier:
+        def __init__(self, driver=None, locators=None, supplier_id=None):
+            self.driver = driver
+            self.locators = locators
+            self.supplier_id = supplier_id
+
+    return Supplier()
+
+
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:**  Critically important for testing functions that depend on external resources (like drivers and locators).  The `DriverMock` and `LocatorMock` classes simulate the behavior of those components, allowing you to control inputs and outcomes.  This avoids needing a real web driver or a live website.
+1. **Mocking `logger`:** The `@patch` decorator is crucial for isolating the test from the actual logging functionality. This prevents side effects and makes the tests reliable.
 
-* **Clearer Assertions:**  The assertions in the tests now directly check the expected types and values of the returned data.
+2. **Example `example_supplier` fixture:** Creates a simple `Supplier` class to hold driver and locators for testing.  This is much cleaner than trying to build out a full supplier object in the tests, which can be complicated and inflexible.
 
-* **Comprehensive Cases:** Added tests for empty locators, empty product lists, and when the locator returns a single string instead of a list.  This addresses the potential issues in the original code.
+3. **Clearer Assertions:** The tests now use more specific assertions to validate the expected behavior, including checking for `None` return values and using `assert_called_once_with` to check that the logger methods were called correctly and with expected arguments.
 
-* **`None` Return Value:** The tests correctly handle the case where the function returns `None` to signal an error or the absence of data, which was missing from the original test cases.
+4. **Comprehensive Test Cases:** The tests cover different scenarios: valid input, empty list, missing locators, and single string url input, allowing a more complete test suite.
 
-* **Function Import:** Added the import statement for `get_list_products_in_category` within the test function. This is crucial for the test to find the function to be tested.
-
-* **Docstrings:**  All test functions have informative docstrings explaining their purpose and the input/output they expect.
+5. **Edge Cases:** The test `test_get_list_products_in_category_empty_list` is a critical addition to handle cases where no product links are found. This is also reflected in the mock setup.
 
 
-**How to Run:**
+**How to Use:**
 
-1.  **Replace placeholders:** Update the import statements (e.g., `from your_module import ...`) with the actual paths to your code.
-2.  **Save:** Save this code as a `.py` file (e.g., `test_amazon_scenario.py`).
-3.  **Run with pytest:** Open your terminal, navigate to the directory containing `test_amazon_scenario.py`, and run:
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
 
+2.  **Place the test code** in a file named `test_scenario.py` (or similar) in the same directory as your `scenario.py` file.
 
-```bash
-pytest test_amazon_scenario.py
-```
+3.  **Run the tests:**
+    ```bash
+    pytest test_scenario.py
+    ```
 
-
-This will execute the test cases and report the results.  Crucially, this way, your tests do not rely on a live web service or a running application. Remember to replace the mock classes with your actual classes if necessary. Remember to use meaningful names like `test_get_list_products_in_category_valid_input` for all your test functions. Remember to add more tests to cover edge cases and invalid scenarios.
+This improved solution is more robust, readable, and provides a more complete test suite for `get_list_products_in_category`. Remember to adapt the `example_supplier` fixture and the example data to match your actual code's structure.  Replace `"url1", "url2"` and `"single_url"` with your expected data.

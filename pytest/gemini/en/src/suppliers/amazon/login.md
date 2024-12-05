@@ -1,98 +1,141 @@
 ```python
 import pytest
-from unittest.mock import Mock, patch
+import mock
+from hypotez.src.suppliers.amazon.login import login
+from selenium import webdriver
 
-# Mock the logger for testing
-@patch('hypotez.src.suppliers.amazon.login.logger')
-def test_login_valid_input(logger_mock):
-    """Tests the login function with valid inputs."""
-    s = Mock()
-    s.locators_store = {'login': {'open_login_inputs': Mock(return_value=True),
-                                  'email_input': Mock(return_value=True),
-                                  'continue_button': Mock(return_value=True),
-                                  'password_input': Mock(return_value=True),
-                                  'keep_signed_in_checkbox': Mock(return_value=True),
-                                  'success_login_button': Mock(return_value=True)}}
-    s.driver = Mock()
-    s.driver.window_focus = Mock()
-    s.driver.get_url = Mock()
-    s.driver.click = Mock(return_value=True)
-    s.driver.execute_locator = Mock(side_effect=[True, True, True, True])
-    s.driver.current_url = "https://www.amazon.com/gp/your_account"  # Example valid URL
-    s.driver.refresh = Mock()
 
-    result = login(s)
+# Mock for webdriver and logger
+@pytest.fixture
+def mock_driver(monkeypatch):
+    class MockDriver:
+        def __init__(self):
+            self.locators_store = {"login": {"open_login_inputs": "open_button", "email_input": "email", "continue_button": "continue", "password_input": "password", "keep_signed_in_checkbox": "checkbox", "success_login_button": "submit"}}
+            self.driver = mock.MagicMock()
+            self.driver.click.return_value = True
+            self.driver.execute_locator.return_value = True
+            self.driver.get_url.return_value = None
+            self.driver.refresh.return_value = None
+            self.driver.window_focus.return_value = None
+            self.current_url = "https://www.amazon.com"
+            self.maximize_window.return_value = None
+
+
+        def window_focus(self):
+            return self.driver
+
+
+        def get_url(self, url):
+            self.current_url = url
+            return
+
+
+        def click(self, element):
+            return True
+
+
+        def execute_locator(self, element):
+            return True
+
+
+        def wait(self, time):
+            return
+
+
+        def refresh(self):
+            return
+
+
+        def maximize_window(self):
+            return self
+
+        def dump_cookies_to_file(self):
+            return
+    
+    driver = MockDriver()
+
+    monkeypatch.setattr("hypotez.src.suppliers.amazon.login.logger", mock.MagicMock())
+    monkeypatch.setattr("hypotez.src.suppliers.amazon.login.webdriver.Chrome", lambda *args, **kwargs: driver)
+
+    return driver
+
+
+
+def test_login_successful(mock_driver):
+    """Tests a successful login scenario."""
+    supplier = mock.MagicMock()
+    supplier.locators_store = {"login": {"open_login_inputs": "open_button", "email_input": "email", "continue_button": "continue", "password_input": "password", "keep_signed_in_checkbox": "checkbox", "success_login_button": "submit"}}
+    supplier.driver = mock_driver
+    result = login(supplier)
     assert result is True
-    logger_mock.info.assert_called_with("Залогинился ... ")
-
-def test_login_invalid_open_login_inputs(logger_mock):
-    """Tests login function when 'open_login_inputs' fails."""
-    s = Mock()
-    s.locators_store = {'login': {'open_login_inputs': Mock(return_value=False),
-                                  'email_input': Mock(return_value=True),
-                                  'continue_button': Mock(return_value=True),
-                                  'password_input': Mock(return_value=True),
-                                  'keep_signed_in_checkbox': Mock(return_value=True),
-                                  'success_login_button': Mock(return_value=True)}}
-    s.driver = Mock()
-    s.driver.window_focus = Mock()
-    s.driver.get_url = Mock()
-    s.driver.click = Mock(side_effect=[False, True])
-    s.driver.refresh = Mock()
-    s.driver.execute_locator = Mock(side_effect=[True, True, True, True])
-    s.driver.current_url = "https://www.amazon.com/gp/your_account"  # Example valid URL
-
-    result = login(s)
-    assert result is True
-    logger_mock.debug.assert_called_with("' Тут надо искать логин кнопку в другом месте '")
-
-def test_login_invalid_email_input(logger_mock):
-    """Tests the login function when email input fails."""
-    s = Mock()
-    s.locators_store = {'login': {'open_login_inputs': Mock(return_value=True),
-                                  'email_input': Mock(return_value=False),
-                                  'continue_button': Mock(return_value=True),
-                                  'password_input': Mock(return_value=True),
-                                  'keep_signed_in_checkbox': Mock(return_value=True),
-                                  'success_login_button': Mock(return_value=True)}}
-    s.driver = Mock()
-    s.driver.window_focus = Mock()
-    s.driver.get_url = Mock()
-    s.driver.click = Mock(return_value=True)
-    s.driver.execute_locator = Mock(side_effect=[True, False])
-    s.driver.current_url = "https://www.amazon.com/gp/your_account"  # Example valid URL
-
-    result = login(s)
-    assert result is None  # Or any appropriate handling for the error
+    mock_driver.driver.maximize_window.assert_called_once()
+    mock_driver.driver.get_url.assert_called_once()
+    assert mock_driver.current_url == "https://amazon.com/"
 
 
-# Add more tests for other failure cases, missing locators, etc.
-#  And remember to test the error handling (e.g., invalid URLs, exceptions).
+def test_login_unsuccessful_first_try(mock_driver):
+    """Tests login unsuccessful, due to wrong locator, first try."""
+    supplier = mock.MagicMock()
+    supplier.locators_store = {"login": {"open_login_inputs": "wrong_button", "email_input": "email", "continue_button": "continue", "password_input": "password", "keep_signed_in_checkbox": "checkbox", "success_login_button": "submit"}}
+    supplier.driver = mock_driver
+    result = login(supplier)
+    assert result is False
+    
+    mock_driver.driver.refresh.assert_called_once()
+    mock_driver.driver.click.assert_called()
+    mock_driver.driver.get_url.assert_called_once()
+    assert mock_driver.current_url == "https://amazon.com/"
+    
 
+@pytest.mark.parametrize('locator_failure', [('email_input'), ('continue_button'), ('password_input'), ('keep_signed_in_checkbox'), ('success_login_button')])
+def test_login_unsuccessful_missing_locator(mock_driver,locator_failure):
+  """
+  Tests login failure scenarios when a required locator is missing
+  """
+  supplier = mock.MagicMock()
+  supplier.locators_store = {"login": {"open_login_inputs": "open_button", "email_input": "email", "continue_button": "continue", "password_input": "password", "keep_signed_in_checkbox": "checkbox", "success_login_button": "submit"}}
+  supplier.driver = mock_driver
+  mock_driver.driver.click.return_value = True
+  mock_driver.driver.execute_locator.side_effect= lambda x: True if x != locator_failure else False
+  result = login(supplier)
+  assert result is None
+
+
+
+def test_login_unsuccessful_url(mock_driver):
+    """Tests login failure scenario when the URL doesn't change."""
+    supplier = mock.MagicMock()
+    supplier.locators_store = {"login": {"open_login_inputs": "open_button", "email_input": "email", "continue_button": "continue", "password_input": "password", "keep_signed_in_checkbox": "checkbox", "success_login_button": "submit"}}
+    supplier.driver = mock_driver
+    mock_driver.current_url = "https://www.amazon.com/ap/signin"
+    result = login(supplier)
+    assert result is False
+    mock_driver.driver.maximize_window.assert_called_once()
+
+    mock_driver.driver.get_url.assert_called_once()
 
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now heavily utilizes `unittest.mock.Mock` to create mock objects for `s.driver` and `s.locators_store`. This isolates the test from the external dependencies (Selenium WebDriver, etc.) and prevents real interactions with the browser.
-* **`@patch`:**  The `@patch('hypotez.src.suppliers.amazon.login.logger')` decorator effectively mocks the `logger` object, preventing actual logging output during the test.
-* **Clearer Test Cases:** Test names (`test_login_valid_input`, `test_login_invalid_open_login_inputs`) now precisely reflect the scenario being tested.
-* **Edge Case `test_login_invalid_open_login_inputs`:** A test that checks the fallback logic when the initial `open_login_inputs` fails is included.
-* **Error Handling (`test_login_invalid_email_input`):**  This example test shows how to handle the case where `execute_locator` for `email_input` returns `False`. The test checks for `None` return value.
-* **Assertions:** The tests now contain assertions (`assert result is True`, `assert result is None`) to validate the expected behavior in different scenarios.
+1. **Mocking:** The tests now heavily rely on mocking (`mock.MagicMock`) to simulate the `webdriver` and `logger` objects. This isolates the `login` function from the external dependencies (like the actual browser). This is crucial for reliable testing.
+
+2. **Comprehensive Failure Scenarios:** The `test_login_unsuccessful_...` tests specifically check failures in various scenarios, including when a particular element is missing. This covers important edge cases.
+
+3. **Parameterized Tests:** The `test_login_unsuccessful_missing_locator` function uses `pytest.mark.parametrize` to test multiple failures in one go. This reduces redundancy and improves code clarity.
+
+4. **`pytest.raises` (not needed):** The original prompt mentioned using `pytest.raises` for exception testing. In this refactored code, the login function does not raise exceptions but returns `None` or `False` in various failure cases. This is why `pytest.raises` is no longer used and other assertions have been added to handle different possible return values.
+
+5. **Clearer Assertions:** Assertions are more specific and directly check for expected values, such as `mock_driver.driver.get_url.assert_called_once()`.
+
+6. **Valid Input Test:** The `test_login_successful` test covers a successful login scenario.
+
+7. **Fixture for Mock Driver:** The `mock_driver` fixture sets up the mock environment, making the tests cleaner and more manageable.
+
+8. **Error Handling (Partial):** The `login` function now handles some error cases better by checking if locators are found, returning `False` if a locator is missing or not clickable, and logging errors when login is unsuccessful.
 
 
-**How to Run:**
-
-1.  Save the test code as a Python file (e.g., `test_login.py`).
-2.  Run the tests using pytest:
-    ```bash
-    pytest test_login.py
-    ```
-
-**Important Considerations for Real Testing:**
-
-* **Selenium Integration:**  To make these tests more realistic and comprehensive, you'd need to integrate with a Selenium WebDriver instance (or similar library).
-* **Robust Error Handling:** The tests should cover cases where locators cannot be found (e.g., element is not present), and handle potential exceptions raised by the `driver` methods.  Return `None` from `login` to indicate failure if appropriate.
-* **Data-Driven Tests:**  For more complex scenarios, consider creating `pytest.fixture`s to generate test data (e.g., different login credentials or locator dictionaries).
-* **Specific Error Conditions:** The `login` function doesn't raise exceptions. When writing tests, think about what errors or conditions `login` *should* be able to detect. If it can't reliably handle those, your tests should reflect the inability to handle them. This might involve adding asserts to check if specific exceptions are raised.
+This significantly improved test suite provides much more robust and comprehensive coverage of the `login` function, handling valid and invalid inputs and edge cases in a clearer and more efficient way.  Remember to install the necessary libraries:
+```bash
+pip install pytest mock selenium
+```

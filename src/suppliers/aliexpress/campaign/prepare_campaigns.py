@@ -27,7 +27,8 @@ from typing import List, Optional
 from src import gs
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.suppliers.aliexpress.utils import locales
-from src.utils.printer import pprint, get_directory_names
+from src.utils.printer import pprint 
+from src.utils.file import get_directory_names
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 

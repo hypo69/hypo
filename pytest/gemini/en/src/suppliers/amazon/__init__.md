@@ -2,80 +2,91 @@
 import pytest
 from hypotez.src.suppliers.amazon import Graber, get_list_products_in_category
 
-#  Dummy Graber class for testing purposes.  Replace with actual implementation if available.
-class MockGraber(Graber):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.data = {"products": [{"title": "Product 1", "price": 10}, {"title": "Product 2", "price": 20}]}
-
-
-    def fetch_data(self):
-        return self.data
-    
-# Fixture for Mock Graber to reuse the same instance across tests
+# Fixture definitions (if needed, depending on the Graber class)
 @pytest.fixture
 def mock_graber():
-    return MockGraber()
+    """Provides a mock Graber object for testing."""
+    class MockGraber:
+        def __init__(self, results=None):
+            self.results = results or []
 
+        def get_data(self, url):
+            # Replace with actual data retrieval logic if needed
+            return self.results
+
+    return MockGraber
+
+
+# Tests for get_list_products_in_category
 def test_get_list_products_in_category_valid_input(mock_graber):
-    """
-    Tests get_list_products_in_category with valid input.
-    """
-    category = "Electronics"
-    result = get_list_products_in_category(mock_graber, category)
-
-    assert isinstance(result, list)
-    assert len(result) == 2  # Assumes at least two products
-    assert isinstance(result[0], dict) #Verify returned data is structured as expected
-    assert "title" in result[0]
-    assert "price" in result[0]
+    """Checks correct behavior with valid input (mocked data)."""
+    # Mock Graber with test results
+    mock_graber_instance = mock_graber([{"product": "Product 1"}, {"product": "Product 2"}])
+    result = get_list_products_in_category(mock_graber_instance, "category")
+    assert result == [{"product": "Product 1"}, {"product": "Product 2"}]
 
 
 def test_get_list_products_in_category_empty_response(mock_graber):
-    """
-    Tests with an empty response from the Graber class.  Simulates no products found.
-    """
-    mock_graber.data = {"products": []}
-    category = "Electronics"
-    result = get_list_products_in_category(mock_graber, category)
-    assert result == [] #Verify an empty list is returned
+    """Checks handling of empty response from Graber."""
+    mock_graber_instance = mock_graber([])
+    result = get_list_products_in_category(mock_graber_instance, "category")
+    assert result == []
 
-
-def test_get_list_products_in_category_invalid_category(mock_graber):
-    """
-    Tests with an invalid category.
-    """
-    category = "InvalidCategory"
-    with pytest.raises(ValueError) as excinfo:
-        get_list_products_in_category(mock_graber, category)
-    assert "Invalid category" in str(excinfo.value) # Asserts error message
-
-def test_get_list_products_in_category_no_graber_instance():
-    """
-    Test with no Graber instance provided.
-    """
-    with pytest.raises(TypeError) as excinfo:
-        get_list_products_in_category(None, "Electronics")
-    assert "Graber instance expected" in str(excinfo.value)
+def test_get_list_products_in_category_invalid_graber(mock_graber):
+  """Tests if get_list_products_in_category raises TypeError if input is not a Graber object."""
+  with pytest.raises(TypeError):
+      get_list_products_in_category("not a Graber object", "category")
 
 
 
+
+# Tests for Graber class (assuming you have methods in the Graber class).
+# Example assuming a 'get_data' method
+# def test_graber_get_data_valid_input(mock_graber):
+#     """Example test for Graber.get_data method."""
+#     mock_graber_instance = mock_graber([{"item": 1}, {"item":2}])
+#     data = mock_graber_instance.get_data("test_url")
+#     assert data == [{"item": 1}, {"item":2}]
+
+# def test_graber_get_data_empty_response():
+#     """Checks handling of empty response from get_data."""
+#     mock_graber_instance = mock_graber([])
+#     data = mock_graber_instance.get_data("test_url")
+#     assert data == []
+
+
+
+# Add more test cases as needed based on the actual implementation
+# of the Graber class and the get_list_products_in_category function.
+#  For example, consider testing:
+#   - Different types of responses (JSON, XML, etc.)
+#   - Handling errors from Graber.get_data
+#   - Input validation for "category" parameter
+
+# Example for testing exception handling (if applicable):
+# def test_function_with_exceptions(mock_graber):
+#     with pytest.raises(ValueError) as excinfo:
+#         get_list_products_in_category(mock_graber, None)
+#     assert "Invalid category" in str(excinfo.value)
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Mock Graber:** The provided code lacked a Graber implementation. This solution introduces a `MockGraber` class that simulates the Graber's behavior. It's crucial for testing functions that rely on external dependencies.  Crucially, the `MockGraber` now returns a dictionary which is a reasonable data structure for testing purposes.
+1. **Mocking:** The code now uses a `mock_graber` fixture to mock the `Graber` class. This is crucial for unit testing because it isolates the `get_list_products_in_category` function from external dependencies (like actual web requests).  The `mock_graber` class returns test data.  Crucially, this example is adaptable to real `Graber` implementation; it only assumes the `get_data` method exists.
 
-2. **Fixture for Mock Graber:** A `@pytest.fixture` is created for `mock_graber`. This ensures that each test gets its own, consistent instance of the mock object, preventing unintended side effects.
+2. **Comprehensive Tests:** The tests cover valid input (with sample data), empty responses, and now an important case: what happens if the input to `get_list_products_in_category` is not a `Graber` object? This is crucial for robustness.
 
-3. **Comprehensive Test Cases:**
-   - `test_get_list_products_in_category_valid_input`: Tests with valid input and asserts on the structure of the returned data.
-   - `test_get_list_products_in_category_empty_response`: Handles the case where the Graber returns no products.
-   - `test_get_list_products_in_category_invalid_category`:  Tests for error handling when an invalid category is provided. The exception type is checked explicitly.
-   - `test_get_list_products_in_category_no_graber_instance`: Tests the case where `get_list_products_in_category` is called without a `Graber` instance.
+3. **Clear Test Names:** Test function names are descriptive, making it easy to understand the purpose of each test.
 
-4. **Error Handling:**  `pytest.raises` is used to check for expected exceptions (ValueError in this case), ensuring the test verifies the appropriate error conditions.
+4. **Exception Handling:** Included a test case (`test_get_list_products_in_category_invalid_graber`) to demonstrate how to test for expected exceptions using `pytest.raises`.
 
-5. **Clear Assertions:**  Assertions now verify more aspects of the returned data (e.g., type, presence of keys).
+5. **Fixture for Mock Data:**  The `mock_graber` fixture provides a way to control the data returned by the mocked `Graber` object, making the tests more versatile and manageable.
 
-This revised solution provides a much stronger and more complete set of tests for `get_list_products_in_category`, handling various scenarios and edge cases effectively.  Remember to replace `MockGraber` with the actual `Graber` class if available. Remember to install the `pytest` library if you haven't already: `pip install pytest`
+6. **Adaptability:** The tests are structured in a way that makes it easy to add more test cases as the actual implementation evolves.
+
+**Before Running:**
+
+- Make sure you have `pytest` installed: `pip install pytest`
+- Replace the placeholder comments (`# ...`) with the actual implementation of your Graber class methods if they exist.
+
+Remember to adapt these tests to the specific structure and behavior of your `Graber` class and `get_list_products_in_category` function. If there are more complex interactions or expected exceptions, update the test accordingly.  The important thing is to test the core logic of your code in isolation from external dependencies like web requests.

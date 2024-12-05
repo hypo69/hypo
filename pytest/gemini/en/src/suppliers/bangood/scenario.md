@@ -1,101 +1,110 @@
 ```python
 import pytest
-from unittest.mock import Mock
+from typing import List
 
+# Mocking necessary modules for testing. Replace with actual imports if available.
+class MockSupplier:
+    def __init__(self, locators=None):
+        self.driver = MockDriver()
+        self.locators = locators or {}
+
+class MockDriver:
+    def execute_locator(self, locator):
+        if isinstance(locator, str):
+           return "https://example.com/product1"
+        elif isinstance(locator, list):
+           return ["https://example.com/product1", "https://example.com/product2"]
+        else:
+            return None
+    def scroll(self):
+        pass
+    
+    def execute_locator(self, locator):
+        if isinstance(locator, dict):
+            if 'product_links' in locator:
+                return ['https://example.com/product1', 'https://example.com/product2']
+            elif 'close_banner' in locator:
+                return True
+        elif isinstance(locator,str):
+            return "success"
+        return None
+
+class MockLogger:
+    def error(self, message):
+        print(f"Error: {message}")
+
+    def warning(self, message):
+        print(f"Warning: {message}")
+
+    def info(self, message):
+        print(f"Info: {message}")
+
+
+import pytest
+
+# Replace with the actual import from the original file.
 from hypotez.src.suppliers.bangood.scenario import get_list_products_in_category, get_list_categories_from_site
+from typing import Union
+
+def test_get_list_products_in_category_valid_input():
+    """Tests get_list_products_in_category with valid input."""
+    s = MockSupplier(locators={'category': {'product_links': ['https://example.com/product1']}})  # Valid locators
+    logger = MockLogger()
+    
+    # Mock the necessary objects
+    s.driver = MockDriver()
+    s.locators = {'category': {'product_links': ['https://example.com/product1', 'https://example.com/product2']},
+                  'product': {'close_banner': 'close'}}
+
+    products = get_list_products_in_category(s)
+    assert isinstance(products, list)
+    assert len(products) == 2
+    assert products == ['https://example.com/product1', 'https://example.com/product2']
+
+def test_get_list_products_in_category_empty_list():
+    s = MockSupplier(locators={'category': {'product_links': []}})
+    products = get_list_products_in_category(s)
+    assert products is None
+
+def test_get_list_products_in_category_locator_missing():
+    """Tests get_list_products_in_category with missing locators."""
+    s = MockSupplier()  # Missing locators
+    products = get_list_products_in_category(s)
+    assert products is None
+
+def test_get_list_products_in_category_invalid_locator_type():
+    """Tests get_list_products_in_category with invalid locator type."""
+    s = MockSupplier(locators={'category': {'product_links': 'invalid'}})  # Invalid locator type
+    products = get_list_products_in_category(s)
+    assert products is None
 
 
-# Fixtures for mocking
-@pytest.fixture
-def mock_supplier(mocker):
-    """Mocks the Supplier class."""
-    supplier = Mock()
-    supplier.driver = Mock()
-    supplier.locators = {'category': {'product_links': 'product_links_locator'}, 'product': {'close_banner': 'close_banner_locator'}}
-    supplier.driver.execute_locator = mocker.MagicMock(return_value=["url1", "url2"])  # Mock execute_locator
-    supplier.locators['category']['product_links'] = 'product_links_locator'
-    supplier.driver.scroll = Mock()  # Mock scroll method
-    supplier.driver.execute_locator.side_effect = [["url1", "url2"], "url3"]  # Simulate different return values
-    return supplier
+def test_get_list_categories_from_site():
+    """Test a stub for the get_list_categories_from_site function"""
+    with pytest.raises(NotImplementedError):
+        get_list_categories_from_site(None)
 
-
-@pytest.fixture
-def mock_supplier_no_products(mocker):
-    supplier = Mock()
-    supplier.driver = Mock()
-    supplier.locators = {'category': {'product_links': None}, 'product': {'close_banner': 'close_banner_locator'}}
-    supplier.driver.execute_locator = mocker.MagicMock(return_value=None)
-    supplier.driver.scroll = Mock()
-    return supplier
-
-# Tests for get_list_products_in_category
-def test_get_list_products_in_category_valid_input(mock_supplier):
-    """Test with valid input: returns a list of product URLs."""
-    result = get_list_products_in_category(mock_supplier)
-    assert result == ["url1", "url2"]
-    mock_supplier.driver.execute_locator.assert_called_once_with('product_links_locator')  # Verify correct locator call
-
-def test_get_list_products_in_category_single_string_return(mock_supplier):
-    """Test with a single string return."""
-    mock_supplier.driver.execute_locator = mocker.MagicMock(return_value="url3")
-    result = get_list_products_in_category(mock_supplier)
-    assert result == ['url3']  # Verify handling of single string
-
-def test_get_list_products_in_category_no_products(mock_supplier_no_products):
-    """Test if no products are found."""
-    result = get_list_products_in_category(mock_supplier_no_products)
-    assert result is None
-    mock_supplier_no_products.driver.execute_locator.assert_called_once_with('product_links_locator')
-
-
-def test_get_list_products_in_category_locator_error(mock_supplier):
-    """Test if locator is empty"""
-    mock_supplier.locators['category'] = {}
-    result = get_list_products_in_category(mock_supplier)
-    assert result is None
-
-# Test for empty locator
-def test_get_list_products_in_category_empty_locator(mock_supplier):
-    """Test if the locator is empty."""
-    mock_supplier.locators['category']['product_links'] = None  # Simulate an empty locator
-    result = get_list_products_in_category(mock_supplier)
-    assert result is None
-
-# Tests for get_list_categories_from_site (Placeholder - needs actual implementation)
-def test_get_list_categories_from_site_valid_input():
-    """Placeholder test for get_list_categories_from_site. Needs actual implementation."""
-    # Implement the actual test with necessary mocks and assertions
-    pass
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** Uses `unittest.mock.MagicMock` to mock the `supplier.driver` and `supplier.locators` objects.  Crucially, it simulates different return values (list, single string, None) to cover more edge cases. The `side_effect` in the `mock_supplier` fixture enables testing with different return values.
-* **Clearer Test Names:** Test names are more descriptive, improving readability.
-* **Edge Cases:** Tests for cases where the `execute_locator` returns `None` (no products), and the case where `locators['category']` is empty.
-* **Specific Assertions:** Assertions are now more specific and verify the expected return type and behavior.
-* **Explicit Locator Verification:** Checks that the correct locator (`'product_links_locator'`) is called within the test.
-* **Error Handling:** The `test_get_list_products_in_category_locator_error` test explicitly checks for an error condition when the locator is empty.
-* **`mock_supplier_no_products` fixture:** A fixture to test the scenario when no products are found. This significantly enhances the test coverage.
-* **`test_get_list_products_in_category_empty_locator`:** This test explicitly checks what happens when the `product_links` locator is empty.
-* **Placeholder for `get_list_categories_from_site`:** A placeholder test is included for this function, highlighting the need to add tests when the function is available.
+1. **Mocking:** The code now uses mock objects (`MockSupplier`, `MockDriver`, `MockLogger`) instead of relying on actual external dependencies.  This is crucial for unit testing because it isolates the function under test from external factors like webdrivers. This makes your tests fast and reliable.
+
+2. **Comprehensive Test Cases:** Tests cover various scenarios, including valid inputs (multiple products), an empty product list, missing locators, and invalid locator types.
+
+3. **Clearer Test Names:** The test names are more descriptive, making the purpose of each test immediately apparent.
+
+4. **Exception Handling:** The `test_get_list_categories_from_site` test demonstrates how to use `pytest.raises` to assert that the function raises the `NotImplementedError` (as indicated by the `@todo` comment in the original code).
+
+5. **Edge Cases:** Tests for an empty list of products and a case where the locator returns an invalid type are included to handle potential edge cases.
+
+6. **Missing `get_list_categories_from_site`:** The test for `get_list_categories_from_site` is now a stub to demonstrate how to test functions that are not yet implemented or are too complex to test fully at this stage.
 
 
-**How to use the tests:**
+**To Run the Tests:**
 
-1.  **Install pytest:**
-    ```bash
-    pip install pytest
-    ```
-2.  **Run the tests:**
-    ```bash
-    pytest hypotez/src/suppliers/bangood/scenario_test.py  # Assuming you save the tests as scenario_test.py
-    ```
+1. Ensure you have `pytest` installed: `pip install pytest`
+2. Save the code above as a `.py` file (e.g., `test_scenario.py`).
+3. Run the tests from your terminal: `pytest test_scenario.py`
 
-**Important Considerations:**
-
-* **`gs` and `logger`:** The provided code uses external modules (`gs`, `logger`). Make sure these are correctly imported and mocked or stubbed if necessary for your testing environment.
-* **Completing `get_list_categories_from_site` Tests:**  The placeholder test for `get_list_categories_from_site` needs actual implementation with appropriate mocks and assertions.  You'll need to understand the function's behavior and expected outputs to write meaningful tests.
-* **Complex Logic:** If the functions have more intricate logic (e.g., error handling based on different conditions), more specific tests are necessary.
-
-This improved solution provides a much more robust and comprehensive test suite for the given code. Remember to adapt the tests if the actual logic in `get_list_categories_from_site` or other functions differs. Remember to save the tests in a file named `scenario_test.py` (or a similar name) in the same directory as `scenario.py`.
+Remember to replace the mock objects with actual imports if you have them available and properly configured.  If the `gs` module from `src` is used and contains important components, you should also mock it appropriately for thorough testing.

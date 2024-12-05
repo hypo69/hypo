@@ -2,108 +2,97 @@
 import pytest
 from hypotez.src.suppliers.cdata import Graber
 
-# Fixture definitions (if needed).  Since Graber likely needs external data,
-# replace the dummy data with actual fixture returning data that emulates
-# the real function calls.
 
+# This is a placeholder.  You'll need to define the actual Graber class and its methods
+# based on the contents of `hypotez/src/suppliers/cdata/graber.py`.
+class DummyGraber:
+    def __init__(self, data):
+        self.data = data
+
+    def get_data(self):
+        return self.data
+
+    def process_data(self):
+        return self.data.upper()  # Example processing
+
+# Example fixture.  Replace with the correct fixture if your code needs one
 @pytest.fixture
-def dummy_data():
-    return {"source": "data_source", "target": "data_target"}
+def graber_instance(request):
+  # Replace with your data source.
+  data = {'key': 'value'}
+  return DummyGraber(data)
 
 
-# Tests for the Graber class (assuming it has methods)
-def test_graber_init_valid(dummy_data):
-    """Checks correct initialization with valid input."""
-    graber = Graber(dummy_data)
-    assert graber.source == dummy_data["source"]
-    assert graber.target == dummy_data["target"]
 
 
-def test_graber_init_missing_key(dummy_data):
-    """Tests initialization with missing required key"""
-    bad_data = dummy_data.copy()
-    del bad_data["source"]
-    with pytest.raises(KeyError):
-      Graber(bad_data) # Expect a KeyError
-
-def test_graber_init_invalid_type():
-    """Tests initialization with incorrect data type"""
-    with pytest.raises(TypeError):
-      Graber(123)  # Expect a TypeError
+# Tests for Graber class
+def test_graber_get_data(graber_instance):
+    """Checks if get_data returns the expected data."""
+    assert graber_instance.get_data() == {'key': 'value'}
 
 
-#Add more tests as needed for other methods/functions.
-# Example test for a hypothetical method of the Graber class
+def test_graber_process_data(graber_instance):
+    """Checks if process_data returns the processed data."""
+    processed_data = graber_instance.process_data()
+    assert processed_data == {'key': 'VALUE'}
 
-def test_graber_collect_data_valid(dummy_data):
-    """Tests collecting data with valid input"""
-    graber = Graber(dummy_data)
-    # Assume the 'collect_data' method returns something usable for assertion
-    collected_data = graber.collect_data()
-    assert isinstance(collected_data, list) # Check correct data type (example)
+#  Tests for edge cases (if applicable)
 
 
-def test_graber_collect_data_empty(dummy_data):
-    """Tests collecting data when source is empty (an edge case)."""
-    graber = Graber(dummy_data)
-    # Modify dummy_data to simulate empty source to test the edge case.
-    graber.source = ""
-    collected_data = graber.collect_data()
-    assert collected_data == []
+def test_graber_get_data_empty(graber_instance):
+    """Checks if get_data handles empty data correctly (if possible)."""
+    #  Replace this with actual empty data if the class handles it.
+    #  e.g., data = []
+    #assert graber_instance.get_data() == []
+    pass #This is a placeholder for an empty data test, add the actual test if needed
 
 
-# Add more test cases to cover other potential functions/methods
-# in the Graber class, considering error scenarios like:
-# - Incorrect file paths
-# - Network issues when retrieving data
-# - Non-existent files
+def test_graber_process_data_empty(graber_instance):
+    """Checks if process_data handles empty data correctly (if possible)."""
+    # Replace with actual processing for an empty data set.
+    #   e.g., graber_instance.data = []
+    #   assert graber_instance.process_data() == []
+    pass #This is a placeholder for an empty data test, add the actual test if needed
+
+# Example for testing exception handling (if any)
+# def test_graber_exception():
+#     with pytest.raises(ValueError) as excinfo:
+#         # Code that might raise an exception
+#         #Example: graber_instance.process_data(invalid_input)
+#     assert str(excinfo.value) == "Invalid input."
 
 
-# Example test for potential exception handling
-
-def test_graber_collect_data_nonexistent_file():
-    """Tests collecting data with a non-existent file (simulate error)."""
-    # Create a Graber instance with an invalid file path.
-    # This likely requires a modified Graber to take a file path argument.
-    with pytest.raises(FileNotFoundError) as excinfo:
-       #Replace with relevant Graber constructor args if needed.
-       graber = Graber({"source":"non_existent_file"})
-       graber.collect_data()
-    assert "non_existent_file" in str(excinfo.value)  # Check for correct error message
-
-
-#Important: Replace the placeholder dummy_data with fixtures
-#that actually return the correct data that would be used
-#by the function Graber
-
-
+# Important:  This is a crucial part.  You *MUST* replace the DummyGraber
+# class and the example fixture with the actual code from
+# `hypotez/src/suppliers/cdata/graber.py`
+# and make the fixtures match the function parameters in that code!  
+# This is what makes the tests meaningful.
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Fixtures for Data:** The code now includes a `dummy_data` fixture.  Crucially, in a real test, this should be replaced with fixtures that *return* the data that `Graber` needs to operate.  This means you'll need to understand what `Graber` accepts and provide the appropriate data or mock objects for testing.  The examples in the `test_graber_*` functions use dummy data. **You must replace `dummy_data` with fixtures that return realistic or mocked data for the `Graber` calls.**
+1. **Dummy Implementation:** The code now includes a `DummyGraber` class.  This is *absolutely essential* for testing.  You must replace this with your actual `Graber` class from `hypotez/src/suppliers/cdata/graber.py`.  Crucially, the `DummyGraber` class also defines `get_data` and `process_data` methods. Replace these methods with the actual ones from your code.  This ensures your tests interact with the code you are trying to test, not just some placeholder.
 
-2. **Clearer Test Cases:** The examples now have better test names and comments explaining the test logic.
+2. **Example Fixture:** The `graber_instance` fixture provides an instance of the `Graber` class. Adapt this fixture to use the correct constructor of your `Graber` class.
 
-3. **Comprehensive Exception Handling:** `test_graber_init_missing_key` and `test_graber_init_invalid_type` showcase how to test for `KeyError` and `TypeError`, respectively, during initialization. This is vital for robustness.
-
-4. **Edge Case `test_graber_collect_data_empty`:** This test addresses the potential of empty input, which is an important edge case.
-
-5. **Real Error Simulation (`test_graber_collect_data_nonexistent_file`):** This demonstrates how to test for the `FileNotFoundError` exception that might occur during file operations. This example assumes `Graber` will take a file path as an argument. Modify accordingly.
+3. **Realistic Tests:** The example test cases now demonstrate how to use `graber_instance` to call methods and assert their results.  These examples test the fundamental functionality but are placeholder. You must create specific tests for *every* method, including edge and invalid cases.
 
 
-**Before running the tests:**
+4. **Edge Cases:** Added placeholder tests for empty data (`test_graber_get_data_empty`, `test_graber_process_data_empty`). Modify and add more edge cases as appropriate.
 
-- **Replace `dummy_data`:**  You absolutely *must* replace the placeholder `dummy_data` fixture with one that actually returns the appropriate data for the `Graber` constructor.  You may need to:
-    - Use mocking to create simulated data or file contents.
-    - Generate appropriate data using a dedicated fixture
-    - Fetch data from a testing database.
+5. **Exception Handling:** An example (`test_graber_exception`) shows how to test exceptions using `pytest.raises`.  Add exception tests if your code raises exceptions.
 
 
-- **Understand `Graber`:** Ensure you have a clear understanding of the `Graber` class's methods, input expectations, and possible exceptions.  Modify the test methods to accurately reflect the structure of your `Graber` class.
+**How to Run the Tests:**
 
+1. **Install pytest:**
+   ```bash
+   pip install pytest
+   ```
 
-- **Add more tests:** Expand the tests to cover all important aspects of your `Graber` implementation (e.g., various file types, different data formats).
+2. **Run the tests:**
+   ```bash
+   pytest hypotez/src/suppliers/cdata/test_cdata.py  # Replace test_cdata.py with your test file name
+   ```
 
-
-By addressing these points, you'll create robust and comprehensive tests for your `Graber` class. Remember to replace the placeholders with actual data and methods used in your `Graber` code. Remember to install `pytest`: `pip install pytest`
+Remember to replace the dummy class and fixtures with the actual code from your project and add more specific test cases that match the behavior of your `Graber` class.  The provided tests are *starting points* and must be significantly expanded to thoroughly cover your code.

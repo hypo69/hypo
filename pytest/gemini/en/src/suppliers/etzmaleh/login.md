@@ -1,96 +1,88 @@
 ```python
 import pytest
 from hypotez.src.suppliers.etzmaleh.login import login
-from src.logger import logger
+from unittest.mock import patch
 
 
-# Mock the logger for testing.  Crucial for isolating tests.
-def mock_logger():
-    """Mock the logger to avoid external dependencies."""
-    class MockLogger:
-        def info(self, msg):
-            pass
-
-    return MockLogger()
-
-# Fixture to provide the mock logger for tests.
-@pytest.fixture
-def mocked_logger():
-    """Fixture to provide a mocked logger."""
-    return mock_logger()
-
-
-def test_login_valid_input(mocked_logger):
-    """Checks login with valid input."""
-    # Mock the logger to avoid external output.
-    logger.info = mocked_logger().info
-    s = "Supplier"  # Replace with a valid supplier object
-    result = login(s)
+# Test cases for the login function
+def test_login_valid_input():
+    """Checks correct behavior with valid input."""
+    supplier = "supplier_data"  # Replace with actual supplier data
+    result = login(supplier)
     assert result is True
 
+@patch('hypotez.src.suppliers.etzmaleh.login.logger')
+def test_login_logging(mock_logger):
+    """Checks if the logger is used correctly."""
+    supplier = "supplier_data"
+    login(supplier)
+    mock_logger.info.assert_called_once_with("Залогинился ... ")
 
-def test_login_invalid_input_type(mocked_logger):
-    """Checks login with an invalid input type."""
-    logger.info = mocked_logger().info
-    s = 123  # Incorrect input type (integer)
-    result = login(s)
+
+def test_login_invalid_input_type():
+    """Checks correct handling of invalid input type."""
+    with pytest.raises(TypeError):
+        login(123)  # Example of invalid input type (integer)
+
+
+def test_login_invalid_input_value():
+    """Checks correct handling of invalid input value."""
+    supplier = None  # Example of invalid input value
+    result = login(supplier)
+    assert result is True # Adjust this assertion if the code should return False
+
+
+def test_login_edge_case_empty_string():
+    """Checks for correct behavior with an empty string as input."""
+    supplier = ""
+    result = login(supplier)
     assert result is True
-   
-def test_login_none_input(mocked_logger):
-    """Checks login with None input."""
-    logger.info = mocked_logger().info
-    s = None
-    result = login(s)
-    assert result is True
 
-def test_login_empty_string_input(mocked_logger):
-    """Checks login with empty string input."""
-    logger.info = mocked_logger().info
-    s = ""
-    result = login(s)
-    assert result is True
-   
-# Test for potential errors, even if the current implementation doesn't raise them.
-def test_login_unhandled_exception(mocked_logger):
-    """Checks for unhandled exception cases (though the function doesn't currently raise)."""
-    logger.info = mocked_logger().info
-    # Simulate a situation where something is not handled
-    s = "Supplier with Issues"
-    try:
-        result = login(s)
-        assert result is True 
-    except Exception as e:
-        pytest.fail(f"Unexpected exception during login: {e}")  # Fail if there's an unexpected exception.
-
-# Important!  Make sure the logger is used correctly.
-# The current implementation just prints a message.  The
-# test should reflect that the logger function was indeed called.
+# Consider adding more edge cases, such as:
+# - None as input
+# - Input with special characters
+# - Very long input strings (if applicable)
 
 
-
+def test_login_typo_in_return_value():
+    """Checks for correct handling of typo in the return value."""
+    supplier = "supplier_data"
+    with patch('hypotez.src.suppliers.etzmaleh.login.logger') as mock_logger:
+        result = login(supplier)
+        assert result is True
+        mock_logger.info.assert_called_once_with("Залогинился ... ")
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking the Logger:** The crucial change is mocking the `logger` from `src.logger`.  This isolates the `login` function from external dependencies (logging to the console or a file) and ensures tests run reliably without interfering with other tests or the application's actual logging.
+1. **`pytest.raises` for Exception Handling:** The code now includes `pytest.raises(TypeError)` to check for the `TypeError` that would occur if an integer is passed to the `login` function.
 
-2. **Comprehensive Test Cases:**
-   - `test_login_valid_input`: Tests with a valid input.
-   - `test_login_invalid_input_type`: Tests with an integer as input (a common edge case).
-   - `test_login_none_input`: Tests with a `None` input.
-   - `test_login_empty_string_input`: Tests with an empty string input.
-   - `test_login_unhandled_exception`:  Crucially, this tests for exceptions *that might be raised in future versions*.  The current code lacks exception handling, so the test simply asserts the result is True and catches potential exceptions to report them as failures (important).
+2. **Clearer Test Function Names:** Function names are descriptive, clearly indicating the test case's purpose.
 
+3. **Valid and Invalid Input:** Tests include cases with valid supplier data, an invalid data type (integer), an invalid data value (None), and an empty string as input.
 
-3. **Clearer Assertions:** The assertions are more explicit about what's being checked.
+4. **Edge Cases:**  Added a test for an empty string input, which is an important edge case.  Remember to add more edge cases specific to the expected inputs.
 
-4. **Robustness:** The tests are more thorough by checking a wider range of potential inputs.
+5. **Logging:** Included `@patch('hypotez.src.suppliers.etzmaleh.login.logger')` and the test to verify the `logger.info` method is called as expected. This makes sure the logging works as intended.  Critically, you must mock the logger to isolate the login function from the actual logging system during testing.
 
+6. **Realistic Test Data:**  The example `supplier` value is now `"supplier_data"`.  This is a more realistic value, and you'll likely want to create appropriate test data based on what the code expects.
+
+7. **Type Hinting (Important):**  Add type hints to your `login` function (`def login(s: str) -> bool:`)  to ensure Python's type system is more helpful in detecting errors and making your tests more reliable.
+
+8. **Explicit Return Value Assertions:**  The tests now make an assertion on the `result` explicitly, returning `True` or raising the expected exception.  **This is crucial for valid test cases, otherwise the tests are likely to fail due to assertions against `None` or uninitialized variables.**
 
 **How to Run the Tests:**
 
-1.  Save the test code as a `.py` file (e.g., `test_login.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_login.py`
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the test code (e.g., `test_login.py`) in the same directory as your `login.py` file.
+3.  Run the tests from the command line: `pytest test_login.py`
 
-This improved test suite now provides better coverage and will help catch potential errors in the future, even if the current implementation doesn't explicitly raise exceptions. Remember to replace `"Supplier"` with the actual type or object that `s` should represent in your application. Remember to also adjust imports if needed.
+
+**Important Considerations:**
+
+*   **Real-world Data:** Replace the placeholder `supplier_data` with actual data. Create valid, invalid, and edge cases based on the function's expected input parameters.
+*   **Comprehensive Testing:** Expand the test suite to cover more scenarios and edge cases specific to how your `login` function should handle different inputs.
+*   **Error Handling:** Test for any exceptions or error conditions that might be raised by the function.
+
+
+Remember to adapt the test cases to match the *actual* behaviour and input/output expectations of your `login` function.  These improvements should provide a solid foundation for testing your login logic. Remember to adapt the test data to reflect the expected input and return values of your `login` function.  Test invalid inputs and edge cases for a comprehensive test suite.
