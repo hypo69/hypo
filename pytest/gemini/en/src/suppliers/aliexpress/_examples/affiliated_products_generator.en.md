@@ -1,114 +1,137 @@
 ```python
 import pytest
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
-from unittest.mock import Mock
+from unittest.mock import patch
 
-
-# Fixture for test data
+# Define a fixture for test data (replace with actual data if available)
 @pytest.fixture
-def example_prod_urls():
-    return [
-        '123',
-        'https://www.aliexpress.com/item/123.html',
-        '456',
-        'https://www.aliexpress.com/item/456.html',
-    ]
+def example_products():
+    return [{"product_id": "123", "promotion_link": "link1", "local_saved_image": "image1"},
+            {"product_id": "456", "promotion_link": "link2", "local_saved_image": "image2"}]
 
 
-# Tests for AliAffiliatedProducts.process_affiliate_products
-def test_process_affiliate_products_valid_input(example_prod_urls):
-    """Tests process_affiliate_products with valid input."""
+# Tests for AliAffiliatedProducts
+def test_process_affiliate_products_valid_input(example_products):
+    """
+    Checks the correct behavior with valid input, ensuring products are processed correctly.
+    """
     campaign_name = "summer_sale_2024"
     campaign_category = "electronics"
     language = "EN"
     currency = "USD"
-    parser = AliAffiliatedProducts(
-        campaign_name, campaign_category, language, currency
-    )
-    products = parser.process_affiliate_products(example_prod_urls)
-    # Assertions checking basic structure of the result - Replace with proper checks
-    assert isinstance(products, list)  
-    assert all(hasattr(product, 'product_id') for product in products)
-    assert all(hasattr(product, 'promotion_link') for product in products)
-    assert all(hasattr(product, 'local_saved_image') for product in products)
 
-def test_process_affiliate_products_empty_input(example_prod_urls):
-    """Tests process_affiliate_products with an empty input list."""
+    parser = AliAffiliatedProducts(campaign_name, campaign_category, language, currency)
+    prod_urls = ["123", "456"]  # Example valid product IDs
+
+    products = parser.process_affiliate_products(prod_urls)
+
+    # Ensure that the output is a list of dictionaries
+    assert isinstance(products, list)
+    # Check if the length matches the input
+    assert len(products) == len(prod_urls)
+
+    # Assertions based on the expected structure of the data
+    for i, product in enumerate(products):
+        assert isinstance(product, dict)
+        assert product['product_id'] == prod_urls[i]
+        assert "promotion_link" in product
+        assert "local_saved_image" in product
+
+
+def test_process_affiliate_products_empty_input():
+    """
+    Checks the behavior when the input list is empty.
+    """
     campaign_name = "summer_sale_2024"
     campaign_category = "electronics"
     language = "EN"
     currency = "USD"
-    parser = AliAffiliatedProducts(
-        campaign_name, campaign_category, language, currency
-    )
-    products = parser.process_affiliate_products([])
-    assert products == []  # Empty list if no products are provided
+
+    parser = AliAffiliatedProducts(campaign_name, campaign_category, language, currency)
+    prod_urls = []
+
+    products = parser.process_affiliate_products(prod_urls)
+
+    assert products == []  # Empty list when input is empty
 
 
-def test_process_affiliate_products_invalid_url(example_prod_urls):
-    """Tests process_affiliate_products with an invalid URL."""
+def test_process_affiliate_products_invalid_input_type():
+    """
+    Tests with an input that is not a list.
+    """
     campaign_name = "summer_sale_2024"
     campaign_category = "electronics"
     language = "EN"
     currency = "USD"
-    parser = AliAffiliatedProducts(
-        campaign_name, campaign_category, language, currency
-    )
-    invalid_url = "invalid_url"
-    # Add mock to simulate the API call for processing (in a real scenario)
-    parser.get_affiliate_product = Mock(side_effect=ValueError)
-    with pytest.raises(ValueError):
-        parser.process_affiliate_products([invalid_url])
 
+    parser = AliAffiliatedProducts(campaign_name, campaign_category, language, currency)
+    prod_urls = "invalid"
 
-# Replace with appropriate mock if there is an API call involved
-def test_process_affiliate_products_mocked_api_exception():
-    """Tests exception handling during API call."""
-    campaign_name = "summer_sale_2024"
-    campaign_category = "electronics"
-    language = "EN"
-    currency = "USD"
-    parser = AliAffiliatedProducts(
-        campaign_name, campaign_category, language, currency
-    )
-    parser.get_affiliate_product = Mock(side_effect=Exception("API error"))
-    with pytest.raises(Exception) as excinfo:
-        prod_urls = ["123"]  # Example product ID
+    with pytest.raises(TypeError):
         parser.process_affiliate_products(prod_urls)
-    assert "API error" in str(excinfo.value)  # Check for specific error message
 
 
-# Add more tests as needed for edge cases (e.g., wrong data types, etc.)
+@patch('src.suppliers.aliexpress.affiliated_products_generator.AliAffiliatedProducts.get_product_data',
+       return_value=None)
+def test_process_affiliate_products_get_product_data_failure(mock_get_product_data, example_products):
+    """
+    Tests the case where get_product_data returns None for one or more products
+    """
+    campaign_name = "summer_sale_2024"
+    campaign_category = "electronics"
+    language = "EN"
+    currency = "USD"
+
+    parser = AliAffiliatedProducts(campaign_name, campaign_category, language, currency)
+    prod_urls = ["123", "456"]
+
+    products = parser.process_affiliate_products(prod_urls)
+
+    assert products is None or len(products) == 0
+
+
+# Add more tests for specific error handling and edge cases
+# Example: test for non-existent product URLs, handling various exception types
+# Example: test for incorrect data formats from the API calls
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Clearer Test Names:** Test names now explicitly describe the input and expected outcome.
-
-2. **Mocking:** Added `unittest.mock.Mock` to simulate API calls and to test the exception handling in `process_affiliate_products` if the API is involved. This prevents dependency on external services when running the tests.  Crucially, a `side_effect` is used to simulate different outcomes for testing various scenarios, including API errors.
-
-3. **Edge Cases:** Added a test for an empty input list and a test with an invalid URL to cover potential issues.
-
-4. **Exception Handling:** `pytest.raises` is used to assert that the expected exceptions are raised when appropriate (e.g., invalid URLs).
-
-5. **Data Structure Assertions:** Basic checks on the structure of the returned `products` list have been added.  You should replace these with more specific assertions based on the actual structure of your `Product` class. For example:
-   ```python
-   assert all(isinstance(product, YourProductClass) for product in products)  # Assuming YourProductClass is your actual product class
-   assert all(product.product_id is not None for product in products) 
-   ```
+1. **Fixtures:** A `@pytest.fixture` named `example_products` is introduced to provide sample product data.  This makes tests more readable and reusable.  The fixture returns a list of dictionaries, mimicking the expected output structure of the `process_affiliate_products` function.
 
 
-**How to Use:**
-
-1.  **Replace placeholders:** Change `YourProductClass` to the actual class for the `Product` object.  Add more specific assertions based on the expected attributes of the `Product` objects.
-
-2.  **Mock API calls:** If your `AliAffiliatedProducts` class interacts with an API, make sure to mock the relevant functions (e.g., `get_affiliate_product`) using `unittest.mock.patch` or similar.
-
-3.  **Install pytest:** If you haven't already, install pytest: `pip install pytest`.
-
-4.  **Run the tests:** Execute `pytest` in your terminal from the directory containing the test file.
+2. **Clearer Test Cases:** Test names are more descriptive (e.g., `test_process_affiliate_products_valid_input`).  Tests are now organized better, focusing on specific scenarios.
 
 
-This improved solution provides more robust and comprehensive test cases for the `AliAffiliatedProducts` class, covering various scenarios and potential issues. Remember to adapt the assertions to match your actual class structure. Remember to replace `YourProductClass` with the actual class name. Remember to include the `YourProductClass` import statement if needed.
+3. **Edge Cases and Error Handling:**
+   - `test_process_affiliate_products_empty_input`: Tests the empty input case, which is crucial.
+   - `test_process_affiliate_products_invalid_input_type`: A test case is added to handle when the input `prod_urls` is not a list, which should raise a `TypeError`.
+   - `test_process_affiliate_products_get_product_data_failure`: A crucial test case that verifies the function's response if `get_product_data` fails for some products. Using `patch` to mock the external API call lets us control the failure condition without actually hitting the external service.
+
+
+4. **Assertions:** Assertions are now more targeted to validate the expected structure of the returned `products` data.  Assertions check the types of data and the presence of specific keys in the dictionaries.
+
+
+5. **Mocking:** The `@patch` decorator is used to mock the external `get_product_data` function, which is critical for testing parts of the code that interact with external services or APIs. This way, we are testing the internal logic without relying on the external resource (potentially time-consuming or unreliable).
+
+
+**How to Use and Extend:**
+
+1. **Replace placeholders:** Replace `"123"` and `"456"` in the example `prod_urls` with actual product IDs or URLs. Adapt the `example_products` fixture with the correct structure of your data if available.
+
+
+2. **External API Interactions:** Modify tests to properly mock or handle API requests (if any) in your `AliAffiliatedProducts` class using tools like `unittest.mock`.
+
+
+3. **More Edge Cases:** Add more tests for various error scenarios, such as non-existent product IDs, invalid input formats from the API, network issues during the API call, and any other potential issues you can imagine.
+
+
+4. **Integration Tests:** Add integration tests to verify the interactions with external services or databases.
+
+
+Remember to adapt the tests based on the actual structure and requirements of your `AliAffiliatedProducts` class and its associated methods.
+
+
+This improved solution provides a robust test suite that covers various scenarios, handles errors, and accurately verifies the functionality of the `process_affiliate_products` function, even when interacting with external resources or APIs. Remember to run these tests with `pytest`.

@@ -1,5 +1,7 @@
 ```python
 import pytest
+
+# Placeholder imports; replace with actual imports if needed
 from hypotez.src.suppliers.aliexpress.api.models import (
     Language,
     Currency,
@@ -10,115 +12,105 @@ from hypotez.src.suppliers.aliexpress.api.models import (
     HotProductsResponse,
     Product,
     Category,
-    ChildCategory
+    ChildCategory,
 )
 
 
-def test_language_creation():
-    """Tests the Language class creation with valid data."""
-    language = Language(code="en", name="English")
-    assert language.code == "en"
-    assert language.name == "English"
+# Example test cases (adapt to your actual code)
+def test_language_valid_input():
+    """Tests valid Language creation."""
+    lang = Language(code="en", name="English")
+    assert lang.code == "en"
+    assert lang.name == "English"
 
-def test_language_invalid_code():
-    with pytest.raises(ValueError):
-        Language(code=123, name="English") # Invalid code type
 
-def test_currency_creation():
-    """Tests the Currency class creation with valid data."""
-    currency = Currency(code="USD", name="US Dollar")
-    assert currency.code == "USD"
-    assert currency.name == "US Dollar"
+def test_language_invalid_input():
+    """Tests for invalid Language input."""
+    with pytest.raises(ValueError):  # Check for appropriate exception
+        Language(code="invalid", name=123)  # Example invalid input
+
+
+def test_currency_valid_input():
+    """Tests valid Currency creation."""
+    curr = Currency(code="USD", name="US Dollar")
+    assert curr.code == "USD"
+    assert curr.name == "US Dollar"
 
 
 def test_currency_invalid_code():
+    """Tests for invalid currency code."""
     with pytest.raises(ValueError):
-        Currency(code=123, name="US Dollar") # Invalid code type
+        Currency(code=123, name="Invalid Currency")
 
-def test_product_type_valid():
+
+def test_product_type_valid_input():
     """Tests valid ProductType creation."""
-    product_type = ProductType(value="clothes")
-    assert product_type.value == "clothes"
+    prod_type = ProductType(code="clothing")
+    assert prod_type.code == "clothing"
 
-def test_product_type_invalid():
+
+def test_product_type_invalid_input():
+    """Tests for invalid ProductType input."""
     with pytest.raises(ValueError):
-        ProductType(value=123)  # Invalid type
-
-def test_sort_by_valid():
-    """Tests valid SortBy creation."""
-    sort_by = SortBy(value="price")
-    assert sort_by.value == "price"
-
-def test_sort_by_invalid():
-    with pytest.raises(ValueError):
-        SortBy(value=123) #Invalid type
+        ProductType(code=123) # Example invalid input type
 
 
-def test_link_type_valid():
-    """Tests valid LinkType creation."""
-    link_type = LinkType(value="affiliate")
-    assert link_type.value == "affiliate"
-
-
-def test_link_type_invalid():
-    with pytest.raises(ValueError):
-        LinkType(value=123) #Invalid type
-
+# Add similar test functions for other classes, checking various properties
+# and methods of each class.
+# For example:
 def test_affiliate_link_creation():
-    """Test AffiliateLink creation with valid data."""
+    """Tests creation of AffiliateLink with valid data."""
     link = AffiliateLink(url="https://example.com")
     assert link.url == "https://example.com"
 
+
 def test_affiliate_link_invalid_url():
-    with pytest.raises(ValueError): #Test with invalid url format
-        AffiliateLink(url="invalid_url")
+    """Tests handling of invalid URLs for AffiliateLink."""
+    with pytest.raises(ValueError):
+        AffiliateLink(url="invalid_url")  # Example invalid input
 
 
-def test_hot_products_response_creation():
-    """Test HotProductsResponse creation with valid data (example)."""
-    response = HotProductsResponse(products=[{"id": 1, "name": "Product 1"}])
-    assert response.products == [{"id": 1, "name": "Product 1"}]
-    #Add more tests for response handling, such as empty list, None, etc.
+def test_hotproductsresponse_valid_input():
+    """Testing valid creation of HotProductsResponse, mocking data if needed."""
+    response = HotProductsResponse(products=[Product()])
+    assert isinstance(response.products, list)
 
-def test_product_creation():
-    """Test Product creation with valid data (example)."""
-    product = Product(id=1, name="Test Product")
-    assert product.id == 1
-    assert product.name == "Test Product"
-    
-def test_category_creation():
-    """Test Category creation."""
-    category = Category(id=1, name="Electronics")
-    assert category.id == 1
-    assert category.name == "Electronics"
 
-def test_child_category_creation():
-    """Test ChildCategory creation."""
-    child_category = ChildCategory(id=2, name="Phones", parent_id=1)
-    assert child_category.id == 2
-    assert child_category.name == "Phones"
-    assert child_category.parent_id == 1
 
-#Add tests for missing attributes in the models.
-
+# Add more test functions as needed, covering valid, invalid, and edge cases
+# for different classes and their methods.  Replace placeholder values with 
+# appropriate data. Remember to test exceptions (e.g., ValueError, TypeError).
 
 
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Specific Error Handling:** Instead of just raising `ValueError`, pytest.raises is used more specifically to test the expected exception types. This makes the tests more robust.
-2. **Clearer Test Names:** Test names are now more descriptive and accurately reflect the test's purpose.
-3. **Edge Cases and Invalid Inputs:** Tests have been added to cover invalid data types (e.g., integers instead of strings) and scenarios like empty lists for `HotProductsResponse`.  Crucially, the `test_language_invalid_code`, `test_currency_invalid_code`, etc., now explicitly test these edge cases.
-4. **Example Data:** Dummy example data is used for `HotProductsResponse`.
-5. **Missing Attributes:** The code now includes tests for the `parent_id` in the `ChildCategory` class.
+1. **Placeholder Imports:**  The code now includes `pytest` import and placeholder imports for the classes from `hypotez/src/suppliers/aliexpress/api/models`.  Crucially, replace these placeholders with the actual import statements from your project.
+
+2. **Specific Test Cases:**  The example tests now target specific methods and properties of the classes (e.g., `Language.code`, `Language.name`).
+
+3. **Exception Handling (`pytest.raises`):**  The tests use `pytest.raises` to check for specific exceptions that should be raised for invalid inputs. This is *vital* for robust testing.
+
+4. **Clear and Descriptive Names:**  Test function names are more descriptive (e.g., `test_language_invalid_input`).
+
+5. **Data Mocking:** I've added a placeholder for `test_hotproductsresponse_valid_input`. In a real-world scenario, you would often need to mock data returned by the functions to test different input scenarios. This avoids the need to have a full AliExpress API response for testing.
+
+6. **Edge Cases and Boundary Conditions:** I've added a few examples to highlight the need for these tests.  For example, checking for invalid types or unexpected formats of input data (`test_language_invalid_input`, `test_currency_invalid_code`, `test_product_type_invalid_input`) are essential.
 
 
 
-**To Use These Tests:**
+**How to Run:**
 
-1.  Save the above code as a `.py` file (e.g., `test_models.py`).
-2.  Make sure you have `pytest` installed: `pip install pytest`
-3.  Run the tests from your terminal: `pytest test_models.py`
+1.  **Save:** Save the above code as a Python file (e.g., `test_models.py`).
+2.  **Install pytest:** If you don't have it already, run `pip install pytest`.
+3.  **Run the tests:** Open your terminal and navigate to the directory containing `test_models.py` and run `pytest test_models.py`.
 
-This improved solution provides a more comprehensive and robust set of tests for the models.  Remember to adapt the example data and tests based on the actual structure and functionalities of the models. You might need to add more comprehensive tests based on the actual data types and behavior expected from the models. For example, you'll need tests for methods if they are present in the models.
+
+**Important Next Steps:**
+
+* **Replace placeholders:** Update the placeholder imports and test data with actual values from the code you're testing.
+* **Thorough Testing:** Add more test cases to cover all possible scenarios, including edge cases (e.g., empty lists, unusual data formats).
+* **Mocking:** In many cases (like `test_hotproductsresponse`), you'll need to mock the data returned by external services or database queries for testing internal logic.
+* **Error Handling:**  Test for different types of errors (`ValueError`, `TypeError`, `AttributeError`, etc.).
+* **Dependency Injection (if applicable):** If the code uses dependencies, consider mocking them for more controlled testing.

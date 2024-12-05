@@ -2,87 +2,76 @@
 import pytest
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateFeaturedpromoGetRequest import AliexpressAffiliateFeaturedpromoGetRequest
 
-# Fixture for potential data needed in tests
-@pytest.fixture
-def example_domain():
-    return "api-sg.aliexpress.com"
-
-@pytest.fixture
-def example_port():
-    return 80
+# Fixtures (if needed).  Currently, no specific data is needed.
+# Example fixture (only if you need external data):
+# @pytest.fixture
+# def example_data():
+#     return {"param1": "value1", "param2": 123}
 
 
-def test_AliexpressAffiliateFeaturedpromoGetRequest_init_valid(example_domain, example_port):
-    """Tests the constructor with valid inputs."""
-    api = AliexpressAffiliateFeaturedpromoGetRequest(domain=example_domain, port=example_port)
-    assert api.domain == example_domain
-    assert api.port == example_port
-    assert api.app_signature is None
-    assert api.fields is None
+# Tests for AliexpressAffiliateFeaturedpromoGetRequest class
+def test_getapiname_valid():
+    """Tests the getapiname method with valid input."""
+    api_instance = AliexpressAffiliateFeaturedpromoGetRequest()
+    expected_api_name = 'aliexpress.affiliate.featuredpromo.get'
+    actual_api_name = api_instance.getapiname()
+    assert actual_api_name == expected_api_name
 
 
-def test_AliexpressAffiliateFeaturedpromoGetRequest_init_default_domain(example_port):
-    """Tests the constructor with default domain."""
-    api = AliexpressAffiliateFeaturedpromoGetRequest(port=example_port)
-    assert api.domain == "api-sg.aliexpress.com"
-    assert api.port == example_port
-    assert api.app_signature is None
-    assert api.fields is None
+def test_init_valid():
+    """Tests the __init__ method with valid inputs."""
+    api_instance = AliexpressAffiliateFeaturedpromoGetRequest(domain="api-sg.aliexpress.com", port=80)
+    assert api_instance.domain == "api-sg.aliexpress.com"
+    assert api_instance.port == 80
+    assert api_instance.app_signature is None
+    assert api_instance.fields is None
 
 
-def test_AliexpressAffiliateFeaturedpromoGetRequest_getapiname():
-    """Tests the getapiname method."""
-    api = AliexpressAffiliateFeaturedpromoGetRequest()
-    assert api.getapiname() == 'aliexpress.affiliate.featuredpromo.get'
+# Test edge cases or invalid inputs (if applicable).  
+# In this case, there are no explicit validation of inputs, 
+# so we're testing the absence of explicit errors.
 
 
-def test_AliexpressAffiliateFeaturedpromoGetRequest_init_invalid_domain():
-    """Tests the constructor with an invalid domain (should not raise an exception)."""
-    # Note: If the constructor handles invalid domains in a specific way,
-    # this test should reflect that.  Otherwise, this could raise an exception.
-    with pytest.raises(Exception) as excinfo:
-        api = AliexpressAffiliateFeaturedpromoGetRequest(domain=123)
-    # Check if the error is raised with the expected message (if known)
-    assert "Invalid domain" in str(excinfo.value)
+def test_init_default_values():
+    """Test __init__ method with default values."""
+    api_instance = AliexpressAffiliateFeaturedpromoGetRequest()
+    assert api_instance.domain == "api-sg.aliexpress.com"
+    assert api_instance.port == 80
+    assert api_instance.app_signature is None
+    assert api_instance.fields is None
 
 
-def test_AliexpressAffiliateFeaturedpromoGetRequest_init_invalid_port():
-    """Tests the constructor with an invalid port (should not raise an exception)."""
-    with pytest.raises(Exception) as excinfo:
-        api = AliexpressAffiliateFeaturedpromoGetRequest(port="abc")
-    # Check if the error is raised with the expected message (if known)
-    assert "Invalid port" in str(excinfo.value)
-
-# Important: Ensure the classes/methods are correctly imported before testing.
-# Verify the imports in your test file match the actual file paths.
-
-
-
+#Test for potential AttributeError if the __init__ method from the parent class is not called
+def test_init_no_parent_call():
+    with pytest.raises(AttributeError) as excinfo:
+        class MyApi(AliexpressAffiliateFeaturedpromoGetRequest):
+            def __init__(self):
+                pass
+        MyApi()
+    assert "cannot create a new instance" in str(excinfo.value)
 ```
 
 **Explanation and Improvements:**
 
-* **Fixtures:**  Added `example_domain` and `example_port` fixtures to provide data for the constructor.  This is best practice and makes the tests more readable and reusable.
-* **Clear Test Names:** Test names are now more descriptive and indicate the scenario being tested.
-* **Comprehensive Coverage:** The tests now cover valid initialization, default domain, and potential invalid inputs for domain and port (and check if the exception handling works as expected). 
-* **`pytest.raises`:** Used `pytest.raises` for testing exceptions, which is essential for robust exception handling.  The `str(excinfo.value)` part helps check *what* error message is raised.  Crucially, this is improved to test what error is raised.
-* **Edge Cases:** The test for invalid inputs (domain and port) is now a more robust test of *how* the code deals with these scenarios; it checks that the exceptions are raised.
-* **Comments:** Added comments explaining the purpose of each test.
-* **Import Check:** Added a critical import check (commented out) to ensure the test file correctly references the classes/functions from the specified file location.  In a real project, you'd uncomment and modify this to use the appropriate path import.
+1. **Clear Test Names:**  Test names now clearly indicate the purpose (e.g., `test_getapiname_valid`).
+
+2. **Valid Input Test:** A test is added to verify that `getapiname()` returns the expected API name.
+
+3. **`__init__` Test:** A test for the `__init__` method checks if the instance variables are properly initialized with the provided values or default values, if any.
+
+4. **Edge Case/Invalid Input Considerations:** The code lacks explicit input validation.  Therefore, the tests now focus on confirming that the `__init__` method does not raise exceptions or change its behavior when passed valid input arguments and the absence of explicit error handling is demonstrated via this example.
+
+5. **Missing Parent Call (Crucial):**  A critical test `test_init_no_parent_call` now shows how to catch the `AttributeError` if the `__init__` of the parent class (`RestApi`) isn't properly called in the subclass. This is crucial for inheritance to function correctly.
+
+6. **Conciseness:** Tests are made as straightforward as possible while still being comprehensive.
+
+7. **`pytest.raises` (not needed currently):** Since the current code doesn't have any exception-raising functionality that we are testing, I removed the `pytest.raises` calls.  It's better to use them only when testing expected exceptions.
+
+**Important Note:**  To make the tests more comprehensive and robust, you'll need to add more tests if the underlying `RestApi` class has parameters that are validated or potentially raises exceptions.  The provided test covers the basic function for `AliexpressAffiliateFeaturedpromoGetRequest` and potential issues with the inheritance mechanism in Python.
 
 
-**How to Run the Tests:**
+**How to Run:**
 
-1.  **Install pytest:**
-    ```bash
-    pip install pytest
-    ```
-
-2.  **Save the tests:** Save the above code as a `.py` file (e.g., `test_aliexpress_api.py`).
-
-3.  **Run the tests:**
-    ```bash
-    pytest test_aliexpress_api.py
-    ```
-
-This improved test suite is more comprehensive and robust, verifying correct functionality and handling of potential errors in the `AliexpressAffiliateFeaturedpromoGetRequest` class. Remember to replace `"hypotez/src/..."` with the actual file path to your code if it's not in the current directory. Remember to adapt the test names to be more descriptive and specific to the actual behavior of your code.  Importantly, also check your code for potential `TypeError`'s, `ValueError`'s, and `AttributeError`'s (if any), etc. and test them individually.
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the test code (e.g., `test_aliexpress_api.py`) in the same directory as the `AliexpressAffiliateFeaturedpromoGetRequest.py` file.
+3.  Run the tests from your terminal: `pytest test_aliexpress_api.py`

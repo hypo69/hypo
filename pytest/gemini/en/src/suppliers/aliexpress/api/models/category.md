@@ -1,67 +1,59 @@
 ```python
 import pytest
-
 from hypotez.src.suppliers.aliexpress.api.models.category import Category, ChildCategory
 
 
-# Test cases for the Category class
-def test_category_valid_creation():
-    """Test creation of Category object with valid data."""
+def test_category_creation_valid():
+    """Tests creating a Category object with valid data."""
     category = Category(category_id=1, category_name="Electronics")
     assert category.category_id == 1
     assert category.category_name == "Electronics"
 
 
-def test_category_invalid_category_id():
-    """Test creation of Category object with invalid category_id (not an integer)."""
-    with pytest.raises(TypeError):
-        Category(category_id="invalid", category_name="Electronics")
-
-
-def test_category_invalid_category_name():
-    """Test creation of Category object with invalid category_name (empty string)."""
-    with pytest.raises(ValueError):
-        Category(category_id=1, category_name="")
-
-
-# Test cases for the ChildCategory class
-def test_child_category_valid_creation():
-    """Test creation of ChildCategory object with valid data."""
-    child_category = ChildCategory(category_id=2, category_name="Laptops", parent_category_id=1)
+def test_child_category_creation_valid():
+    """Tests creating a ChildCategory object with valid data."""
+    child_category = ChildCategory(category_id=2, category_name="Phones", parent_category_id=1)
     assert child_category.category_id == 2
-    assert child_category.category_name == "Laptops"
+    assert child_category.category_name == "Phones"
     assert child_category.parent_category_id == 1
 
 
-def test_child_category_missing_parent_category_id():
-    """Test creation of ChildCategory object without parent_category_id."""
+def test_category_creation_invalid_category_id():
+    """Tests creating a Category object with an invalid category_id (non-integer)."""
     with pytest.raises(TypeError):
-        ChildCategory(category_id=2, category_name="Laptops")
+        Category(category_id="abc", category_name="Electronics")
 
 
-def test_child_category_invalid_parent_category_id():
-    """Test creation of ChildCategory object with invalid parent_category_id (not an integer)."""
+def test_category_creation_invalid_category_name():
+    """Tests creating a Category object with an invalid category_name (non-string)."""
     with pytest.raises(TypeError):
-        ChildCategory(category_id=2, category_name="Laptops", parent_category_id="invalid")
+        Category(category_id=1, category_name=123)
+
+def test_child_category_creation_invalid_parent_category_id():
+    """Tests creating a ChildCategory object with an invalid parent_category_id (non-integer)."""
+    with pytest.raises(TypeError):
+        ChildCategory(category_id=2, category_name="Phones", parent_category_id="abc")
 
 
-def test_child_category_invalid_category_name():
-    """Test creation of ChildCategory object with invalid category_name (empty string)."""
-    with pytest.raises(ValueError):
-        ChildCategory(category_id=1, category_name="", parent_category_id=1)
+def test_child_category_creation_missing_parent_category_id():
+    """Tests creating a ChildCategory object without parent_category_id."""
+    with pytest.raises(TypeError) as excinfo: #Use excinfo for more detailed error catching
+        ChildCategory(category_id=2, category_name="Phones")
 
-# Additional tests for edge cases (e.g., boundary values) or complex scenarios
-
-
-def test_child_category_zero_parent_id():
-    """Test creation of ChildCategory with parent_category_id as zero."""
-    child_category = ChildCategory(category_id=2, category_name="Laptops", parent_category_id=0)
-    assert child_category.parent_category_id == 0
+    assert "missing 1 required positional argument: 'parent_category_id'" in str(excinfo.value)
 
 
-def test_child_category_negative_parent_id():
-    """Test creation of ChildCategory with negative parent_category_id."""
-    child_category = ChildCategory(category_id=2, category_name="Laptops", parent_category_id=-1)
-    assert child_category.parent_category_id == -1
+def test_category_creation_missing_category_id():
+    """Tests creating a Category object without category_id."""
+    with pytest.raises(TypeError) as excinfo:
+        Category(category_name="Electronics")
+    assert "missing 1 required positional argument: 'category_id'" in str(excinfo.value)
+
+
+def test_category_creation_missing_category_name():
+    """Tests creating a Category object without category_name."""
+    with pytest.raises(TypeError) as excinfo:
+        Category(category_id=1)
+    assert "missing 1 required positional argument: 'category_name'" in str(excinfo.value)
 
 ```

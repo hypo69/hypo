@@ -1,132 +1,99 @@
 ```python
 import pytest
 
-# Replace with the actual file content if it exists
-# from hypotez.src.suppliers.aliexpress.api.errors import * # Assuming your errors module contains functions and classes to test
+# Replace with the actual file content if available.  The provided code is incomplete,
+# so these tests are placeholder and will need significant adjustment.
+
+from hypotez.src.suppliers.aliexpress.api.errors import (
+    # Import necessary exceptions
+)
 
 
-# Example error classes (replace with actual ones from the provided file)
-class AliExpressAPIError(Exception):
+# Example placeholder exceptions, replace with your actual ones.
+class MyAPIError(Exception):
     pass
 
 
-class InvalidAPIKeyError(AliExpressAPIError):
+class MyInvalidInputError(Exception):
     pass
 
 
-class RequestTimeoutError(AliExpressAPIError):
-    pass
+def test_exception_creation():
+    """Test creation of exception objects with valid messages."""
+    # Replace with your actual exception types
+    error1 = MyAPIError("An API error occurred.")
+    error2 = MyInvalidInputError("Invalid input data.")
+    assert isinstance(error1, MyAPIError)
+    assert error1.args[0] == "An API error occurred."
+    assert isinstance(error2, MyInvalidInputError)
+    assert error2.args[0] == "Invalid input data."
 
 
-class UnexpectedResponseError(AliExpressAPIError):
-    pass
+def test_exception_creation_empty_message():
+    """Test exception creation with an empty message."""
+    error = MyAPIError("")
+    assert isinstance(error, MyAPIError)
+    assert error.args[0] == ""  # Empty message should still be stored
 
 
-
-# Example test functions (adapt these to the actual functions in your module)
-
-
-def test_raise_aliexpress_api_error():
-    """Tests raising AliExpressAPIError."""
-    try:
-        raise AliExpressAPIError("An error occurred")
-    except AliExpressAPIError as e:
-        assert str(e) == "An error occurred"
+def test_exception_creation_with_parameters():
+    """Test exception creation with extra parameters (e.g., status code)."""
+    # Replace with your actual exception types
+    error = MyAPIError("API error", status_code=404)
+    assert isinstance(error, MyAPIError)
+    assert error.args[0] == "API error"
+    # Add assertion for additional parameter, e.g.,
+    assert error.status_code == 404 # Assuming a 'status_code' attribute
 
 
-def test_raise_invalid_api_key_error():
-    """Tests raising InvalidAPIKeyError."""
-    try:
-        raise InvalidAPIKeyError("Invalid API key")
-    except InvalidAPIKeyError as e:
-        assert str(e) == "Invalid API key"
+def test_exception_message_access():
+    """Test accessing the message of the exception object."""
+    error = MyAPIError("API error")
+    assert str(error) == "API error"
 
 
-def test_raise_request_timeout_error():
-    """Tests raising RequestTimeoutError."""
-    try:
-        raise RequestTimeoutError("Request timed out")
-    except RequestTimeoutError as e:
-        assert str(e) == "Request timed out"
-
-
-def test_raise_unexpected_response_error():
-    """Tests raising UnexpectedResponseError."""
-    try:
-        raise UnexpectedResponseError("Unexpected response from API")
-    except UnexpectedResponseError as e:
-        assert str(e) == "Unexpected response from API"
-
-
-def test_invalid_api_key_exception_handling():
-    """Tests exception handling for invalid API key."""
-    # Replace with your actual error handling code
-    # Replace dummy_function with your function which throws InvalidAPIKeyError
-    try:
-
-        # Example handling for invalid API key 
-        raise InvalidAPIKeyError("Invalid API key provided")
-
-    except InvalidAPIKeyError as e:
-        assert "Invalid API key provided" in str(e)
-    except Exception as e:
-        assert False, f"Unexpected exception raised: {e}"
-
-
-
-# Example tests for possible functions/classes (replace with actual tests)
-
-# def test_get_supplier_data():
-#   """Test for retrieving supplier data"""
-
-#   #Valid inputs
-#   try:
-#     #Call your get_supplier_data function here and assert the results
-#     data = get_supplier_data()  # Replace with actual function call
-#     assert data is not None, "Data should not be None"  # Example assertion
-#   except Exception as e:
-#      assert False, f"Unexpected exception raised: {e}"
-
-
-
-
-# Example using pytest.raises for exception testing
-def test_invalid_api_key_raises_exception():
-    """Tests that an exception is raised for an invalid API key."""
-    # Replace with the actual function
-    with pytest.raises(InvalidAPIKeyError) as excinfo:
-        # Replace this with your actual function call and arguments
-        raise InvalidAPIKeyError("Invalid key provided")
-    assert str(excinfo.value) == "Invalid key provided"
-
-
-
+def test_exception_inheritance():
+    """Test if exceptions are inheriting from the base exception type."""
+    #  Replace with your actual exception class
+    error = MyAPIError("Test")
+    assert issubclass(MyAPIError, Exception)  # Basic inheritance check
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Import necessary modules:**  The example now includes the necessary `pytest` import.
+1. **Placeholder Imports:** The provided code lacked actual exception classes.  The test now imports placeholder classes (`MyAPIError`, `MyInvalidInputError`). **Crucially, replace these with your actual exception classes.**
 
-2. **Example error classes:**  Crucially, it now defines placeholder error classes (`AliExpressAPIError`, `InvalidAPIKeyError`, etc.) mimicking what your `hypotez/src/suppliers/aliexpress/api/errors/__init__.py` might contain.  **Replace these with the actual error classes from your code.**
+2. **Realistic Test Cases:** The tests now check the creation of exception objects with various messages, including empty messages, and with extra parameters (e.g., status codes) as you'd likely need in an API context.
 
-3. **Comprehensive test cases:** The examples cover raising specific exceptions and checking that the exception messages are correct.
+3. **Error Handling:**  The test assumes that if the exception class has an `__init__` method with a `message` and optional additional attributes, then you can access and assert those attributes in your tests.
 
-4. **`pytest.raises`:** The `test_invalid_api_key_raises_exception` example correctly uses `pytest.raises` to verify exception type and message.
+4. **Clear Assertions:** Tests now include `assert` statements to validate that the exceptions are created correctly and the correct attributes are set.  These are *much* more effective than just checking `isinstance`.
 
-5. **Realistic test scenarios:**  The `test_invalid_api_key_exception_handling` example shows how to test exception handling (try-except block). **Replace the dummy code in this example with your actual code.**
+5. **Error Message:** Accessing the error message using `str(error)` is the standard way to retrieve it.
 
-6. **Clear comments:**  The comments now explain the purpose of each test.
-
-
-**How to use these tests:**
-
-1. **Replace placeholders:**  Change the example error classes and test functions to match the actual classes and functions in your `hypotez/src/suppliers/aliexpress/api/errors/__init__.py` file.
-
-2. **Run tests:** Save the code as a `.py` file (e.g., `test_errors.py`) in the same directory as your `hypotez/src/suppliers/aliexpress/api/errors/__init__.py` file.  Then, run pytest from your terminal:
-
-   ```bash
-   pytest test_errors.py
-   ```
+6. **Inheritance Check (Important):**  It is essential to verify that your custom exception classes are correctly inheriting from the base `Exception` class. This crucial check is added.
 
 
-This revised example provides a much more robust and functional starting point for your test suite. Remember to adapt the examples to match the specific functions, classes, and error handling within your actual code. Remember to include any necessary imports and fixtures.
+
+**How to adapt these tests:**
+
+1. **Replace Placeholders:** Substitute the placeholder exception classes (`MyAPIError`, `MyInvalidInputError`) with the actual exception classes defined in your `hypotez/src/suppliers/aliexpress/api/errors/__init__.py` file.
+
+2. **Add Missing Attributes/Methods:** If your exception classes have attributes (e.g., `status_code`) or methods that should be tested, modify the test cases accordingly to access and check these.
+
+3. **Add More Test Cases:** Expand these tests to cover more scenarios based on the functionalities of your exceptions and the use cases in your API code. This would include testing different error conditions, such as invalid inputs leading to specific exceptions.
+
+4. **Exception Handling in Production Code:**  Make sure you're catching and handling these exceptions appropriately in your production code for robustness.
+
+
+Example of how to test error types/messages:
+
+```python
+# ... (import statements) ...
+
+def test_invalid_product_id():
+    with pytest.raises(MyInvalidInputError) as excinfo:
+        # ... code that raises exception ...
+    assert str(excinfo.value) == "Product ID is invalid."
+
+```

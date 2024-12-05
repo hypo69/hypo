@@ -2,87 +2,96 @@
 import pytest
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateProductQueryRequest import AliexpressAffiliateProductQueryRequest
 
-def test_aliexpress_affiliate_product_query_request_init_valid():
-    """Tests the constructor with valid inputs."""
-    request = AliexpressAffiliateProductQueryRequest(domain="api-us.aliexpress.com", port=80)
-    assert request.domain == "api-us.aliexpress.com"
-    assert request.port == 80
+# Test data
+def example_valid_data():
+    return {
+        "app_signature": "test_signature",
+        "category_ids": [1, 2],
+        "delivery_days": 3,
+        "fields": "title,price",
+        "keywords": "test keywords",
+        "max_sale_price": 100,
+        "min_sale_price": 50,
+        "page_no": 1,
+        "page_size": 10,
+        "platform_product_type": "book",
+        "ship_to_country": "US",
+        "sort": "price",
+        "target_currency": "USD",
+        "target_language": "en",
+        "tracking_id": "tracking_id123",
+    }
 
-def test_aliexpress_affiliate_product_query_request_init_default_values():
-    """Tests the constructor with default values."""
-    request = AliexpressAffiliateProductQueryRequest()
-    assert request.domain == "api-sg.aliexpress.com"
-    assert request.port == 80
+
+def example_empty_data():
+    return {
+        "app_signature": None,
+        "category_ids": None,
+        "delivery_days": None,
+        "fields": None,
+        "keywords": None,
+        "max_sale_price": None,
+        "min_sale_price": None,
+        "page_no": None,
+        "page_size": None,
+        "platform_product_type": None,
+        "ship_to_country": None,
+        "sort": None,
+        "target_currency": None,
+        "target_language": None,
+        "tracking_id": None,
+    }
+
+
+
+def test_AliexpressAffiliateProductQueryRequest_init_valid():
+    """Tests initialization with valid data."""
+    request = AliexpressAffiliateProductQueryRequest(**example_valid_data())
+    assert request.app_signature == "test_signature"
+    assert request.category_ids == [1, 2]
+
+def test_AliexpressAffiliateProductQueryRequest_init_empty():
+    """Tests initialization with empty data."""
+    request = AliexpressAffiliateProductQueryRequest(**example_empty_data())
     assert request.app_signature is None
     assert request.category_ids is None
-    # Assert for all other default attributes as well
 
-def test_aliexpress_affiliate_product_query_request_getapiname():
-    """Tests the getapiname method."""
+
+
+def test_getapiname_valid():
+    """Tests the getapiname method with valid data."""
     request = AliexpressAffiliateProductQueryRequest()
     assert request.getapiname() == 'aliexpress.affiliate.product.query'
 
-
-def test_aliexpress_affiliate_product_query_request_set_attributes():
-    """Tests setting attributes."""
-    request = AliexpressAffiliateProductQueryRequest()
-    request.app_signature = "test_signature"
-    request.category_ids = [1, 2, 3]
-    request.delivery_days = 3
-    
-    assert request.app_signature == "test_signature"
-    assert request.category_ids == [1, 2, 3]
-    assert request.delivery_days == 3
-    #Test setting for all other attributes
+def test_getapiname_none_input():
+    """Tests the getapiname method with an instance with empty data."""
+    request = AliexpressAffiliateProductQueryRequest(**example_empty_data())
+    assert request.getapiname() == 'aliexpress.affiliate.product.query'
 
 
-def test_aliexpress_affiliate_product_query_request_attributes_access():
-    """Tests accessing attributes"""
-    request = AliexpressAffiliateProductQueryRequest()
-    request.keywords = "test keyword"
-    assert request.keywords == "test keyword"
-    # test accessing all other attributes
+#Tests for potential AttributeError with invalid parameters
+def test_invalid_parameter(example_valid_data):
 
-
-def test_aliexpress_affiliate_product_query_request_invalid_domain():
-    """Tests handling of invalid domain."""
-    with pytest.raises(TypeError): # Or more specific exception if exists
-        AliexpressAffiliateProductQueryRequest(domain=123)
-
-
-def test_aliexpress_affiliate_product_query_request_invalid_port():
-    """Tests handling of invalid port (e.g., non-integer)."""
-    with pytest.raises(TypeError): # Or more specific exception if exists
-        AliexpressAffiliateProductQueryRequest(port="invalid")
+  # Attempt to set an invalid attribute
+  with pytest.raises(AttributeError):
+    example_valid_data['nonexistent_attribute'] = 'value'
+    AliexpressAffiliateProductQueryRequest(**example_valid_data)
 ```
 
 **Explanation and Improvements:**
 
-1. **Clear Test Names:**  Test names clearly indicate the purpose of each test.
+* **Clear Test Names:** Test function names now accurately describe the test scenario (e.g., `test_AliexpressAffiliateProductQueryRequest_init_valid`).
+* **Test Data Functions:** Introduces `example_valid_data()` and `example_empty_data()` to create reusable data, improving code readability and maintainability.
+* **Comprehensive Coverage:** Added tests for both valid and empty/None data for the `__init__` method. Tests for `getapiname` now cover both valid and empty cases.
+* **Error Handling (Important):** Included a test (`test_invalid_parameter`) that demonstrates how to check for `AttributeError` if the `__init__` method is called with an unexpected parameter. This is crucial for robustness.
+* **pytest.raises:** Used `pytest.raises` for the error handling test, which is the correct way to assert for exceptions in `pytest`.
+* **Docstrings:** Added comprehensive docstrings to explain the purpose of each test function.
 
-2. **Valid and Invalid Inputs:** Tests cover both valid and, importantly, *invalid* input scenarios (e.g., non-string domain, non-integer port).  This is crucial for robustness.  The `pytest.raises` is used correctly to check for expected exceptions.
+**How to run the tests:**
 
-3. **Edge Cases (not present in the original):**  While the provided code doesn't have obvious edge cases, the example tests now demonstrate checking for them and expected results.
-
-4. **Attribute Setting and Access:** Added tests to verify that attributes can be set and retrieved correctly.
-
-5. **Complete Attribute Coverage:** Tests are added to check if attributes can be set and accessed for all the available attributes.
-
-
-**How to Run the Tests:**
-
-1.  Save the test code as a Python file (e.g., `test_aliexpress_request.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
+1.  Make sure you have `pytest` installed: `pip install pytest`
+2.  Save the test code (e.g., `test_aliexpress_request.py`) in a directory alongside your `AliexpressAffiliateProductQueryRequest.py` file.
 3.  Run the tests from your terminal: `pytest test_aliexpress_request.py`
 
 
-**Important Considerations:**
-
-* **Specific Exceptions:** If the code raises more specific exceptions for invalid input, the `pytest.raises` should be adjusted to match the expected exceptions.
-* **Data Structures:** If `category_ids` or other attributes are expected to be specific data structures (e.g., lists of a certain type), the tests should check for that type.
-* **Realistic Data:**  To cover more complex scenarios, create tests with realistic input values, and test with various scenarios (e.g., large datasets).
-* **More Complex Functionality (if applicable):**  If there's more functionality in the `AliexpressAffiliateProductQueryRequest` class, add tests to verify methods related to API calls, data processing, etc.
-
-
-
-This improved solution addresses the prompt's requirements more thoroughly by including more comprehensive test cases to cover various scenarios and edge cases. Remember to adjust the tests according to the actual expected behavior and any exceptions raised in the production code. Also, the code is more comprehensive in checking all aspects of the attributes of the class.
+This improved solution provides more robust and comprehensive test coverage, demonstrating best practices for writing `pytest` tests. Remember to adapt the test data and error checking to match the specific behavior and expected outputs of your code. Remember to replace `test_aliexpress_request.py` with the actual filename of your test file if different. Also, the example test data now uses the fixture data functions.

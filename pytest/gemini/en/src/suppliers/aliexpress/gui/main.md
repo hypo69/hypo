@@ -2,140 +2,134 @@
 import pytest
 import sys
 from PyQt6 import QtWidgets, QtGui
-from unittest.mock import Mock
+from pathlib import Path
+from unittest.mock import patch
 from hypotez.src.suppliers.aliexpress.gui.main import MainApp
+from src.utils.jjson import j_loads_ns  # Assuming this exists
 
-
-# Mock for QFileDialog
-class MockQFileDialog:
-    def __init__(self):
-        self.openFileName_return_value = ""
-
-    def getOpenFileName(self, *args, **kwargs):
-        return self.openFileName_return_value, ""
-
-# Mock for QMessageBox
-class MockQMessageBox:
-    def __init__(self):
-        self.critical_called = False
-        self.warning_called = False
-
-    def critical(self, *args, **kwargs):
-        self.critical_called = True
-
-    def warning(self, *args, **kwargs):
-        self.warning_called = True
-
-# Fixture for mocking UI elements
+# Mock QFileDialog for testing open_file
 @pytest.fixture
-def mock_ui():
-    """Provides a mock UI for testing."""
-    mock_qfiledialog = MockQFileDialog()
-    mock_qmessagebox = MockQMessageBox()
-    QtWidgets.QFileDialog = mock_qfiledialog
-    QtWidgets.QMessageBox = mock_qmessagebox
-    return mock_qfiledialog, mock_qmessagebox
+def mock_qfiledialog():
+    class MockQFileDialog:
+        def __init__(self):
+            self.openFileName_called = False
+            self.file_path = None
+
+        def getOpenFileName(self, *args):
+            self.openFileName_called = True
+            self.file_path = "test_file.json"
+            return self.file_path, ""
+
+    return MockQFileDialog()
 
 
-def test_open_file_valid_input(mock_ui):
-    """Tests opening a valid JSON file."""
-    mock_ui[0].openFileName_return_value = "valid_file.json"
+@pytest.mark.usefixtures("mock_qfiledialog")
+def test_open_file_valid_file(mock_qfiledialog, monkeypatch):
+    """Test opening a valid JSON file."""
+    # Patch QFileDialog
+    monkeypatch.setattr(QtWidgets, 'QFileDialog', mock_qfiledialog)
+
     app = QtWidgets.QApplication(sys.argv)
     main_app = MainApp()
     main_app.show()
+
+    # Trigger the open file action
     main_app.open_file()
-    assert mock_ui[0].openFileName_return_value == "valid_file.json" # Verifying the openFileName call
+
+    # Assertions
+    assert mock_qfiledialog.openFileName_called
+    assert main_app.promotion_app.load_file.called_with("test_file.json")
 
 
-def test_open_file_invalid_input(mock_ui):
-    """Tests opening an invalid or non-existent file."""
-    mock_ui[0].openFileName_return_value = ""
+@pytest.mark.usefixtures("mock_qfiledialog")
+def test_open_file_no_file(mock_qfiledialog, monkeypatch):
+    """Test opening a file when the user cancels."""
+    # Patch QFileDialog to return empty path
+    class MockQFileDialog:
+      def __init__(self):
+        self.openFileName_called = False
+        self.file_path = None
+      def getOpenFileName(self, *args):
+        self.openFileName_called = True
+        return "", ""
+    monkeypatch.setattr(QtWidgets, 'QFileDialog', MockQFileDialog())
+
+
     app = QtWidgets.QApplication(sys.argv)
     main_app = MainApp()
     main_app.show()
+
+    # Trigger the open file action
     main_app.open_file()
-    assert mock_ui[0].openFileName_return_value == "" # Check no file path was returned
+
+    # Assertions
+    assert mock_qfiledialog.openFileName_called
+    # assert mock_qfiledialog.file_path is None # Check for no file selected
+    assert not main_app.promotion_app.load_file.called
 
 
-def test_open_file_invalid_file_type(mock_ui):
-    """Tests opening a file that is not a JSON file."""
-    mock_ui[0].openFileName_return_value = "invalid_file.txt"  # Not a JSON file
+@pytest.mark.usefixtures("mock_qfiledialog")
+def test_open_file_invalid_file(mock_qfiledialog, monkeypatch):
+    """Test opening a file that is not a JSON file."""
+    # Mock QFileDialog to return a non-JSON file path
+    class MockQFileDialog:
+        def __init__(self):
+            self.openFileName_called = False
+            self.file_path = None
+
+        def getOpenFileName(self, *args):
+            self.openFileName_called = True
+            self.file_path = "test_file.txt"
+            return self.file_path, ""
+
+    monkeypatch.setattr(QtWidgets, 'QFileDialog', MockQFileDialog())
     app = QtWidgets.QApplication(sys.argv)
     main_app = MainApp()
     main_app.show()
-    main_app.open_file()
-    assert mock_ui[1].critical_called == False  # No error message
+    
+    with patch.object(QtWidgets.QMessageBox, 'critical') as mock_critical:
+        main_app.open_file()
+    
+    # Check if critical message box was shown for an error
+    mock_critical.assert_called()
+    
 
+    # Check for load file not called
+    assert not main_app.promotion_app.load_file.called
 
-def test_save_file_valid_input(mock_ui):
-    app = QtWidgets.QApplication(sys.argv)
-    main_app = MainApp()
-    main_app.show()
-    main_app.tab_widget.setCurrentIndex(0)
-    main_app.save_file()
-    assert mock_ui[1].critical_called == False # no error expected
+# ... (other test functions for save_file, copy, paste, and exit_application)
 
-def test_save_file_invalid_tab(mock_ui):
-    """Test save_file on an invalid tab."""
-    app = QtWidgets.QApplication(sys.argv)
-    main_app = MainApp()
-    main_app.show()
-    main_app.tab_widget.setCurrentIndex(1) # Set to non-JSON editor tab
-    main_app.save_file()
-    assert mock_ui[1].critical_called == False  # No error message on incorrect tab
-
-
-def test_copy_paste_no_widget(mock_ui):
-    """Tests copy/paste with no widget in focus."""
-    app = QtWidgets.QApplication(sys.argv)
-    main_app = MainApp()
-    main_app.show()
-    main_app.copy()
-    assert mock_ui[1].warning_called
-    main_app.paste()
-    assert mock_ui[1].warning_called
-
-
-def test_exit_application():
-    app = QtWidgets.QApplication(sys.argv)
-    main_app = MainApp()
-    main_app.show()
-    main_app.exit_application()
-    assert main_app.isHidden()
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock` to mock `QtWidgets.QFileDialog` and `QtWidgets.QMessageBox`.  This is crucial for isolating the tests and preventing them from relying on the actual GUI.
+1. **Mocking `QFileDialog`:** The `test_open_file_valid_file` test now correctly mocks `QFileDialog`.  Crucially, it patches the `QtWidgets.QFileDialog` class itself to return a mocked object, avoiding issues with interactions with PyQt.
 
-2. **MockQFileDialog:** A class `MockQFileDialog` is created to mock the `QFileDialog` behavior.  It stores the return value of `getOpenFileName`.
+2. **Handling Cancelled File Selection:** The `test_open_file_no_file` test now verifies that the code doesn't crash if the user cancels the file selection dialog.  This is a key edge case.
 
-3. **MockQMessageBox:** A class `MockQMessageBox` is used to mock `QMessageBox`.  Crucially, it tracks whether `critical` or `warning` methods were called.
-
-4. **`mock_ui` Fixture:** This fixture now handles creating the mocks and making them accessible across tests.
-
-5. **Clear Test Cases:**  Tests are written with specific names reflecting what they test (e.g., `test_open_file_valid_input`).
-
-6. **Edge Case and Invalid Input Tests:** Tests now cover scenarios like opening a non-existent file, a file with an incorrect extension, and cases where no widget has focus for copy/paste.
-
-7. **Assertion Improvements:** Assertions are made to check for expected behavior (e.g., whether the correct file name was returned in the open file dialog, if warnings/errors were shown).
-
-8. **Tab Index Checking:** Tests for `save_file` now correctly check the current tab index to handle cases where the action is called with the wrong tab selected.
+3. **Invalid File Handling:** `test_open_file_invalid_file` tests the scenario where the user selects a file that is not a JSON file.   The test now uses a mock to simulate the issue and checks if the error message box is displayed.
 
 
-**How to Run the Tests:**
+4. **Complete Test Cases:**  This solution needs further test cases. You should add tests for `save_file`, `copy`, `paste`, `exit_application`, and any other relevant methods. These should follow the same pattern of mocking appropriate objects and testing for expected behavior in various scenarios (valid input, invalid input, empty input, etc.)
 
-1. Make sure you have `pytest` installed:
-   ```bash
-   pip install pytest
-   ```
 
-2. Save the test code (e.g., `test_main.py`) in the same directory as your `main.py` file.
+5. **Clearer Assertions:** Assertions are improved to be more specific about the expected outcomes.
 
-3. Run the tests from your terminal:
-   ```bash
-   pytest test_main.py
-   ```
 
-This revised solution provides a more robust and comprehensive test suite for the `MainApp` class, handling various inputs and edge cases effectively. Remember to adapt the mock return values and assertions to precisely match your `MainApp` implementation in the `hypotez` package.
+**How to run the tests:**
+
+1. Make sure you have `pytest` installed.
+2. Save the test code as a `.py` file (e.g., `test_main.py`).
+3. Run `pytest test_main.py` from your terminal to execute the tests.
+
+
+**Important Considerations:**
+
+* **Mock `j_loads_ns`:** Add mocking for the `j_loads_ns` function.  If this function makes external calls to a file or network resource, mocking will be crucial to preventing errors during testing.
+* **Mock UI Interactions:** PyQt's UI elements often require careful mocking.  Using the appropriate mocking tools is vital to ensure that tests only focus on the logic being tested without relying on PyQt's event handling.
+* **Error Handling:** Tests for error handling (e.g., invalid JSON format) should ensure proper error messages or exceptions are raised as expected when `j_loads_ns` fails or file operations fail.
+* **Additional Tests:** Create tests for all significant functions and edge cases in the `MainApp` class.
+
+
+Remember to adapt the mocks to the specific methods and functionalities of your code. The provided examples are starting points and need to be tailored to your `main.py` file.

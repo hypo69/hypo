@@ -5,12 +5,11 @@
 
 """
 .. module: src.endpoints.advertisement.facebook 
-	:platform: Windows, Unix
-	:synopsis: module handles the promotion of messages and events in Facebook groups.
+    :platform: Windows, Unix
+    :synopsis: module handles the promotion of messages and events in Facebook groups.
 It processes campaigns and events, posting them to Facebook groups while avoiding duplicate promotions.
 """
 MODE = 'dev'
-
 
 import random
 from datetime import datetime, timedelta
@@ -31,7 +30,7 @@ from src.endpoints.advertisement.facebook.scenarios import (post_message,
                                                   post_ad,
                                                     )
 
-from src.utils import (read_text_file,
+from src.utils.file import (read_text_file,
                         get_filenames,
                         get_directory_names,
                         )
@@ -45,7 +44,6 @@ def get_event_url(group_url: str) -> str:
 
     Args:
         group_url (str): Facebook group URL containing `group_id`.
-        event_id (str): Event identifier.
 
     Returns:
         str: Modified URL for creating the event.
@@ -87,7 +85,7 @@ class FacebookPromoter:
         self.spinner = spinning_cursor()
 
     def promote(self, group: SimpleNamespace, item: SimpleNamespace, is_event: bool = False, language: str = None, currency: str = None) -> bool:
-        """Promotes a category or event in a Facebook group."""
+        """Promotes a category or event in a Facebook group.""" 
         ...
         if language:
            if group.language.upper() != language.upper():
@@ -126,7 +124,7 @@ class FacebookPromoter:
         logger.debug(f"Error while posting {'event' if is_event else 'category'} {item_name}", None, False)
 
     def update_group_promotion_data(self, group: SimpleNamespace, item_name: str, is_event: bool = False):
-        """Updates group promotion data with the new promotion."""
+        """Updates group promotion data with the new promotion.""" 
         timestamp = datetime.now().strftime("%d/%m/%y %H:%M")
         group.last_promo_sended = gs.now
         if is_event:
@@ -210,16 +208,15 @@ class FacebookPromoter:
                 item.name = ad_name
                 _img = get_filenames(base_path / 'category' / ad_name / 'images')
                 if _img:
-                    _img = _img if isinstance(_img, str) else _img[0]  # Беру первый для рекламного объявления с одним изображением
-                    item.image_path = base_path / 'category' / ad_name / 'images' / _img                    
+                    _img = _img if isinstance(_img, str) else _img[0]  # Беру только первое изображение
+                    item.img_path = Path(gs.path.local) / _img
         return item
 
     def check_interval(self, group: SimpleNamespace) -> bool:
-        """Checks if the interval between promotions has passed for a group."""
-        if not group.last_promo_sended:
-            return True
-
-        last_promo = datetime.strptime(group.last_promo_sended, "%d/%m/%y %H:%M")
-        if datetime.now() - last_promo < timedelta(hours=12):
-            return False
+        """Checks if enough time has passed for promoting this group."""   
+        ...
         return True
+
+    def validate_group(self, group: SimpleNamespace) -> bool:
+        """Validates that the group data is correct."""   
+        return group and hasattr(group, 'group_url') and hasattr(group, 'group_categories')

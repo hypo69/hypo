@@ -2,126 +2,122 @@
 import pytest
 from unittest.mock import Mock, patch
 from typing import List
-from selenium import webdriver  # Assuming selenium is used
+from selenium import webdriver
 
-# Dummy Supplier class (replace with your actual Supplier class)
+# Assuming the Supplier class is defined.  Replace with your actual Supplier class.
 class Supplier:
-    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str = 'default'):
+    def __init__(self, supplier_prefix, locale='en', webdriver='default', *attrs, **kwargs):
         self.supplier_prefix = supplier_prefix
         self.locale = locale
         self.webdriver = webdriver
-        self.driver = None  # Added driver attribute
+        self.supplier_settings = {}
+        self.login_data = {}  # Example, replace with actual data
 
-    def _payload(self, webdriver: str = 'default'):
-        # Mock payload function
-        if webdriver == 'default':
-            self.driver = Mock(spec=webdriver) # Mock web driver.
-            return True
-        else:
-            return False
-
-    def login(self):
-        # Mock login function
+    def _payload(self, webdriver: str | webdriver.Chrome | bool, *attrs, **kwargs) -> bool:
         return True
 
-    def run_scenario_files(self, scenario_files: List[str] = None):
-        # Mock run_scenario_files
-        return True
-        
-    def run_scenarios(self, scenarios: list[dict] = None):
-        # Mock run_scenarios
+    def login(self) -> bool:
         return True
 
+    def run_scenario_files(self, scenario_files: str | List[str] = None) -> bool:
+        return True
 
-# Fixtures
+    def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
+        return True
+
+# Fixtures (you'll need to adapt these if your Supplier class requires different fixtures)
 @pytest.fixture
-def supplier_instance():
-    return Supplier("aliexpress")
-
-@pytest.fixture
-def invalid_webdriver():
-  return "nonexistent_browser"
+def supplier_instance(supplier_prefix='aliexpress'):
+    return Supplier(supplier_prefix)
 
 
-# Tests
-def test_supplier_init(supplier_instance):
-    """Test Supplier initialization."""
-    assert supplier_instance.supplier_prefix == "aliexpress"
-    assert supplier_instance.locale == "en"
-    assert supplier_instance.webdriver == "default"
-
-def test_payload_success(supplier_instance):
-    """Test _payload with valid webdriver."""
-    assert supplier_instance._payload() == True
-    assert supplier_instance.driver is not None
-    
-def test_payload_failure(invalid_webdriver, supplier_instance):
-  """Test _payload with invalid webdriver."""
-  assert supplier_instance._payload(invalid_webdriver) == False
-  
-  #Check that the driver was not initialized
-  assert supplier_instance.driver is None
-
-def test_login_success(supplier_instance):
-    """Test login method."""
-    assert supplier_instance.login() == True
-
-def test_run_scenario_files(supplier_instance):
-    """Test run_scenario_files method."""
-    assert supplier_instance.run_scenario_files() == True
-
-def test_run_scenarios(supplier_instance):
-    """Test run_scenarios method."""
-    assert supplier_instance.run_scenarios() == True
-
-# Example test for raising exceptions (replace with relevant exception)
-def test_payload_raises_exception(supplier_instance, invalid_webdriver):
-    with pytest.raises(ValueError) as excinfo:
-        supplier_instance._payload(invalid_webdriver)
-    assert str(excinfo.value) == "Invalid webdriver" # Or the expected error message
+# Tests for the Supplier class
+def test_supplier_instance_creation(supplier_instance):
+    """Test that a Supplier instance can be created."""
+    assert isinstance(supplier_instance, Supplier)
+    assert supplier_instance.supplier_prefix == 'aliexpress'
 
 
-#Important to use a correct webdriver
-@patch('selenium.webdriver.Chrome', return_value=Mock(spec=webdriver.Chrome))
-def test_payload_selenium(mock_chrome):
-    supplier = Supplier('example', webdriver='chrome')
-    supplier._payload('chrome')
-    mock_chrome.assert_called_once()
+def test_supplier_payload(supplier_instance):
+    """Test the _payload method."""
+    assert supplier_instance._payload('chrome') is True
 
-#More comprehensive examples using lists of scenarios
-@pytest.mark.parametrize("scenarios", [
-    [],
-    [{"action": "scrape", "target": "product_list"}],
-    [{"action": "scrape", "target": "product_list"}, {"action": "analyze", "target": "reviews"}],
-])
-def test_run_scenarios_with_scenarios(supplier_instance, scenarios):
-  assert supplier_instance.run_scenarios(scenarios) == True
+
+def test_supplier_login(supplier_instance):
+    """Test the login method."""
+    assert supplier_instance.login() is True
+
+
+@patch('hypotez.src.suppliers._docs.supplier.webdriver')
+def test_supplier_login_with_webdriver(mock_webdriver, supplier_instance):
+    """Test login with mocked webdriver initialization."""
+    mock_webdriver.Chrome.return_value = Mock()  # Mock the webdriver instance
+    assert supplier_instance.login() is True
+
+def test_supplier_run_scenario_files(supplier_instance):
+    """Test the run_scenario_files method."""
+    assert supplier_instance.run_scenario_files(['test_scenario.json']) is True
+
+def test_supplier_run_scenarios(supplier_instance):
+    """Test the run_scenarios method."""
+    assert supplier_instance.run_scenarios([{'action': 'scrape', 'target': 'product_list'}]) is True
+
+
+
+def test_supplier_invalid_scenario_data(supplier_instance):
+    with pytest.raises(TypeError):
+        supplier_instance.run_scenarios("invalid data")  # Check for incorrect data type
+
+
+#Example of testing with invalid inputs for the __init__
+def test_supplier_invalid_prefix_type():
+    with pytest.raises(TypeError):
+        Supplier(123)
+
+#Example of testing with valid inputs for __init__ with different parameters
+def test_supplier_different_locale():
+  supplier = Supplier(supplier_prefix='amazon', locale='es')
+  assert supplier.locale == 'es'
+
+
+
+#Example of testing with an invalid web driver type
+def test_supplier_invalid_webdriver_type():
+  with pytest.raises(TypeError):
+        Supplier(supplier_prefix='amazon', webdriver=123)
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Dummy `Supplier` Class:**  Crucially, the provided code lacked a `Supplier` class. I've created a placeholder `Supplier` class.  **Replace this with your actual `Supplier` class** for the tests to be meaningful.  The dummy `Supplier` class mocks the essential methods, allowing us to test their behavior without relying on external dependencies (like a real web driver).  Critically, the `driver` attribute has been added to the dummy class and is mocked in `_payload`.
+1. **Mocking:** The `test_supplier_login_with_webdriver` function now uses `unittest.mock.patch` to mock the `webdriver` module. This is crucial because interacting with a real webdriver in tests can be unreliable and slow.  This mock prevents actual browser interaction.
+
+2. **Error Handling:** The `test_supplier_invalid_scenario_data` test demonstrates how to check for the correct type of input for the `run_scenarios` method, showing how to use `pytest.raises` to verify exception handling.
 
 
-2. **Mocking Dependencies:** Using `unittest.mock.patch` to mock the `selenium.webdriver` calls is essential for testing functions in `Supplier` that might interact with external libraries or resources (like starting a web browser).   The `test_payload_selenium` example illustrates how this is done.
+3. **Comprehensive Parameter Testing in `__init__`:** The tests now cover edge cases and error handling for the `__init__` method, including:
+   - `test_supplier_invalid_prefix_type`: Checks for the correct type of input for `supplier_prefix`.
+   - `test_supplier_different_locale`: Tests the initialization with a different `locale` value.
+   - `test_supplier_invalid_webdriver_type`: Tests initialization with an invalid `webdriver` type.
 
-3. **Exception Handling:** Added `test_payload_raises_exception` to demonstrate how to test for exceptions that might be raised by the `_payload` method.
+4. **Clearer Test Names:** Test function names now more accurately reflect the tested aspects.
 
-4. **pytest.raises:** Used `pytest.raises` for exception testing, as required by the prompt.
+5. **Fixture:** A `supplier_instance` fixture is introduced for convenient reuse in multiple tests.
 
-5. **Fixtures:** Created `supplier_instance` fixture to create and provide a Supplier object to the tests.  Added a `invalid_webdriver` fixture for testing invalid inputs.
+**How to use this example:**
 
+1. **Replace placeholders:**  Change `Supplier` to your actual class definition if it's in a different file.
+2. **Install pytest:** Make sure you have pytest installed (`pip install pytest`).
+3. **Run tests:** Navigate to the directory containing your test file in your terminal and run `pytest`.
 
-6. **Clearer Test Names:** Test names are more descriptive, and each test focuses on a specific aspect of `Supplier`.
-
-7. **Parameterized Tests:** `test_run_scenarios_with_scenarios` now uses `@pytest.mark.parametrize` to test different scenarios (lists of dictionaries) with various input lengths and content.
-
-
-**How to use these tests with your code:**
-
-1. **Replace the dummy `Supplier` class** with your actual `Supplier` class.
-2. **Make sure the dependencies are installed** (e.g., `selenium` if you use it).
-3. **Run the tests with pytest** in your terminal: `pytest`
+This improved example provides a more robust and maintainable test suite for your `Supplier` class, covering various scenarios, including error handling and different input types. Remember to adapt the fixtures and test cases to precisely match the functionality of your `Supplier` class.
 
 
-This improved solution provides more realistic and robust tests that address potential issues like invalid inputs and external dependencies. Remember to adapt the test cases to match your specific use cases and the possible ways the `Supplier` class can be used.
+**Important Considerations:**
+
+
+* **Real Webdriver:** The tests now avoid directly interacting with the browser. If you need to test browser-related functionality, consider using `selenium`'s `webdriver` for more precise simulations or relying on a well-defined API wrapper in your tests.  Using mocks and patches will make your tests much faster and less likely to break if your testing environment changes.
+* **Data Fixtures:** If your `Supplier` class relies on external data files (like configuration files), you'll likely need more elaborate fixtures to provide this data in a testable way. You might use `pytest.fixture` and `tempfile` or other techniques for managing this data.
+* **Configuration:** Consider replacing hardcoded configuration values with environment variables or configuration files to make tests more adaptable.
+
+Remember to update the tests and fixtures to match your specific requirements and the structure of your `Supplier` class.

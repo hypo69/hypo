@@ -4,77 +4,69 @@ import re
 from hypotez.src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids, extract_id
 
 def test_extract_prod_ids_valid_url():
-    """Checks correct extraction from a valid URL."""
+    """Tests extract_prod_ids with a valid URL."""
     url = "https://www.aliexpress.com/item/123456.html"
     expected_id = "123456"
-    assert extract_prod_ids(url) == expected_id
+    actual_id = extract_prod_ids(url)
+    assert actual_id == expected_id
 
 def test_extract_prod_ids_valid_urls_list():
-    """Checks correct extraction from a list of valid URLs."""
+    """Tests extract_prod_ids with a list of valid URLs."""
     urls = ["https://www.aliexpress.com/item/123456.html", "https://www.aliexpress.com/item/7891011.html"]
     expected_ids = ["123456", "7891011"]
-    assert extract_prod_ids(urls) == expected_ids
+    actual_ids = extract_prod_ids(urls)
+    assert actual_ids == expected_ids
 
-def test_extract_prod_ids_valid_prod_id():
-    """Checks correct handling of a valid product ID."""
-    prod_id = "7891011"
-    expected_id = "7891011"
-    assert extract_prod_ids(prod_id) == expected_id
-
-def test_extract_prod_ids_invalid_url():
-    """Checks handling of an invalid URL."""
-    url = "https://www.example.com/item/abcdef.html"
-    assert extract_prod_ids(url) is None
-
-
-def test_extract_prod_ids_mixed_urls():
-    """Checks handling of a mix of valid and invalid URLs."""
+def test_extract_prod_ids_mixed_urls_list():
+    """Tests extract_prod_ids with a list containing both valid and invalid URLs."""
     urls = ["https://www.aliexpress.com/item/123456.html", "https://www.example.com/item/abcdef.html", "7891011"]
     expected_ids = ["123456", "7891011"]
-    assert extract_prod_ids(urls) == expected_ids
+    actual_ids = extract_prod_ids(urls)
+    assert actual_ids == expected_ids
 
+
+def test_extract_prod_ids_valid_id_string():
+    """Tests extract_prod_ids with a valid product ID string."""
+    product_id = "123456"
+    expected_id = "123456"
+    actual_id = extract_prod_ids(product_id)
+    assert actual_id == expected_id
+
+def test_extract_prod_ids_invalid_url():
+    """Tests extract_prod_ids with an invalid URL."""
+    url = "https://www.example.com/item/abcdef.html"
+    actual_id = extract_prod_ids(url)
+    assert actual_id is None
 
 def test_extract_prod_ids_empty_list():
-    """Tests with an empty list."""
+    """Tests extract_prod_ids with an empty list of URLs."""
     urls = []
-    assert extract_prod_ids(urls) is None
-
+    actual_ids = extract_prod_ids(urls)
+    assert actual_ids is None
 
 def test_extract_id_valid_url():
-    """Checks valid URL extraction."""
+    """Tests extract_id with a valid URL."""
     url = "https://www.aliexpress.com/item/123456.html"
     expected_id = "123456"
-    assert extract_id(url) == expected_id
+    actual_id = extract_id(url)
+    assert actual_id == expected_id
 
-
-def test_extract_id_valid_prod_id():
-  """Checks valid product ID input."""
-  prod_id = "123456"
-  assert extract_id(prod_id) == prod_id
-
+def test_extract_id_valid_id():
+    """Tests extract_id with a valid product ID."""
+    product_id = "7891011"
+    expected_id = "7891011"
+    actual_id = extract_id(product_id)
+    assert actual_id == expected_id
+    
 def test_extract_id_invalid_url():
-    """Checks invalid URL handling."""
+    """Tests extract_id with an invalid URL."""
     url = "https://www.example.com/item/abcdef.html"
-    assert extract_id(url) is None
-
+    actual_id = extract_id(url)
+    assert actual_id is None
 
 def test_extract_id_no_match():
-    """Checks handling of URLs with no match."""
-    url = "https://www.example.com/somethingelse.html"
-    assert extract_id(url) is None
-
-def test_extract_id_with_item_prefix():
-    """Tests URL with optional 'item/' prefix"""
-    url = "https://www.aliexpress.com/item/123456.html"
-    expected = "123456"
-    assert extract_id(url) == expected
-
-    url2 = "https://www.aliexpress.com/123456.html"
-    expected2 = "123456"
-    assert extract_id(url2) == expected2
-
-def test_extract_id_non_string_input():
-    """Tests non-string input."""
-    with pytest.raises(TypeError):
-        extract_id(123)
+    """Tests extract_id with a URL with no match."""
+    url = "https://www.example.com/something.html"
+    actual_id = extract_id(url)
+    assert actual_id is None
 ```

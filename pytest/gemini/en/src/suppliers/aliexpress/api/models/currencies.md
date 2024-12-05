@@ -4,9 +4,8 @@ import pytest
 from hypotez.src.suppliers.aliexpress.api.models.currencies import Currency
 
 
-# Test cases for the Currency class
 def test_currency_constants():
-    """Tests if the currency constants are defined correctly."""
+    """Tests the predefined currency constants."""
     assert Currency.USD == 'USD'
     assert Currency.GBP == 'GBP'
     assert Currency.CAD == 'CAD'
@@ -24,6 +23,6 @@ def test_currency_constants():
     assert Currency.KRW == 'KRW'
     assert Currency.ILS == 'ILS'
 
-# Test for the lack of methods or functions that would require additional testing
-# Since the class only defines constants, no further test cases are needed
+# No methods or functions to test, so no more tests needed. 
+# The class only defines constants. No further tests are required.
 ```

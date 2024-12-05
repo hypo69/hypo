@@ -4,57 +4,59 @@ import pytest
 from hypotez.src.suppliers.aliexpress.api.models.request_parameters import (
     ProductType,
     SortBy,
-    LinkType,
+    LinkType
 )
 
-
+# Tests for ProductType
 def test_product_type_valid_values():
-    """Test valid ProductType values."""
-    assert ProductType.ALL == "ALL"
-    assert ProductType.PLAZA == "PLAZA"
-    assert ProductType.TMALL == "TMALL"
-
+    """Tests valid ProductType values."""
+    assert ProductType.ALL == 'ALL'
+    assert ProductType.PLAZA == 'PLAZA'
+    assert ProductType.TMALL == 'TMALL'
 
 def test_product_type_invalid_value():
-    """Test invalid ProductType value."""
+    """Tests for invalid ProductType value."""
     with pytest.raises(AttributeError):
-        ProductType.INVALID
+        ProductType.INVALID_VALUE
 
-
+# Tests for SortBy
 def test_sort_by_valid_values():
-    """Test valid SortBy values."""
-    assert SortBy.SALE_PRICE_ASC == "SALE_PRICE_ASC"
-    assert SortBy.SALE_PRICE_DESC == "SALE_PRICE_DESC"
-    assert SortBy.LAST_VOLUME_ASC == "LAST_VOLUME_ASC"
-    assert SortBy.LAST_VOLUME_DESC == "LAST_VOLUME_DESC"
-
+    """Tests valid SortBy values."""
+    assert SortBy.SALE_PRICE_ASC == 'SALE_PRICE_ASC'
+    assert SortBy.SALE_PRICE_DESC == 'SALE_PRICE_DESC'
+    assert SortBy.LAST_VOLUME_ASC == 'LAST_VOLUME_ASC'
+    assert SortBy.LAST_VOLUME_DESC == 'LAST_VOLUME_DESC'
 
 def test_sort_by_invalid_value():
-    """Test invalid SortBy value."""
+    """Tests for invalid SortBy value."""
     with pytest.raises(AttributeError):
-        SortBy.INVALID
+        SortBy.INVALID_VALUE
 
-
+# Tests for LinkType
 def test_link_type_valid_values():
-    """Test valid LinkType values."""
+    """Tests valid LinkType values."""
     assert LinkType.NORMAL == 0
     assert LinkType.HOTLINK == 2
 
-
 def test_link_type_invalid_value():
-    """Test invalid LinkType value."""
+    """Tests for invalid LinkType value."""
     with pytest.raises(AttributeError):
-        LinkType.INVALID
+        LinkType.INVALID_VALUE
+
+def test_linktype_wrong_type():
+    """Tests for a wrong type input for LinkType."""
+    with pytest.raises(AttributeError):
+        LinkType("not an int")
+    
+def test_product_type_wrong_type():
+    """Tests for a wrong type input for ProductType."""
+    with pytest.raises(AttributeError):
+        ProductType("not a string")
+
+def test_sortby_wrong_type():
+    """Tests for a wrong type input for SortBy."""
+    with pytest.raises(AttributeError):
+        SortBy("not a string")
 
 
-def test_link_type_out_of_range():
-    """Test out-of-range LinkType value."""
-    with pytest.raises(ValueError):
-        LinkType(1) #1 is not a valid LinkType value
-
-
-def test_link_type_non_integer():
-    """Test non-integer value for LinkType."""
-    with pytest.raises(TypeError):
-        LinkType("invalid")
 ```

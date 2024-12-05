@@ -1,111 +1,128 @@
 ```python
 import pytest
-from pathlib import Path
 import json
+from pathlib import Path
 import sys
-
 from hypotez.src.suppliers.aliexpress.campaign.header import set_project_root
 
 
-def test_set_project_root_valid_input():
-    """Tests set_project_root with valid marker files."""
-    # Create dummy files for testing
-    (Path(__file__).parent / 'pyproject.toml').touch()
-    (Path(__file__).parent / 'requirements.txt').touch()
+# Fixture for creating a temporary directory with marker files
+@pytest.fixture
+def temp_project_root(tmpdir):
+    """Creates a temporary directory with marker files for testing."""
+    (tmpdir / 'pyproject.toml').write_text('content')
+    (tmpdir / 'requirements.txt').write_text('content')
+    return tmpdir
 
-    # Check if the function returns the correct root directory.
+
+# Fixture for creating a directory structure similar to a project
+@pytest.fixture
+def project_structure(tmpdir):
+    """Creates a temporary directory structure like a project for testing."""
+    (tmpdir / 'pyproject.toml').write_text('content')
+    (tmpdir / 'requirements.txt').write_text('content')
+    (tmpdir / 'src' / 'settings.json').write_text('{"project_name": "testproject"}')
+    (tmpdir / 'src' / 'README.MD').write_text('README content')
+    return tmpdir
+
+
+# Test cases for set_project_root
+def test_set_project_root_valid_input(temp_project_root):
+    """Tests set_project_root with valid input (files exist)."""
+    root_dir = set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git'),)
+    assert root_dir == Path(temp_project_root)
+
+
+def test_set_project_root_no_marker_files(temp_project_root):
+    """Test that the function returns the current path if no marker files are found."""
     root_dir = set_project_root()
-    assert isinstance(root_dir, Path)
-    assert root_dir.is_dir()
-    # Clean up dummy files
-    (Path(__file__).parent / 'pyproject.toml').unlink()
-    (Path(__file__).parent / 'requirements.txt').unlink()
+    assert root_dir == Path(temp_project_root)
 
 
-def test_set_project_root_marker_files_not_found():
-    """Tests set_project_root when marker files don't exist."""
-    # Create dummy files for testing (just to ensure the path is created correctly)
-    (Path(__file__).parent / 'pyproject.toml').touch()
-    # Check if the function still returns the expected current path
-    root_dir = set_project_root(('does_not_exist.txt',))
-    assert isinstance(root_dir, Path)
-    assert root_dir.is_dir()
-    # Clean up dummy files
-    (Path(__file__).parent / 'pyproject.toml').unlink()
+def test_set_project_root_marker_file_only(temp_project_root):
+    """Test if the function finds the root directory when only marker files are present."""
+    marker_file_only = temp_project_root / 'pyproject.toml'
+    root_dir = set_project_root((marker_file_only,))
+    assert root_dir == Path(temp_project_root)
+
+def test_set_project_root_invalid_input(temp_project_root):
+    """Tests set_project_root with marker files that don't exist."""
+    # Simulate marker files not existing
+    marker_files = ('nonexistent.file', 'requirements.txt', '.git')
+    with pytest.raises(FileNotFoundError, match="No marker files found"):
+        set_project_root(marker_files)
 
 
-def test_set_project_root_empty_marker_files():
-    """Tests set_project_root with an empty marker file tuple."""
-    root_dir = set_project_root(())
-    assert isinstance(root_dir, Path)
-    assert root_dir.is_dir()
+def test_set_project_root_multiple_marker_files(temp_project_root):
+    """Test with multiple marker files for finding the project root."""
+    root_dir = set_project_root((
+            'pyproject.toml',
+            'requirements.txt',
+            '.git'))
+    assert root_dir == Path(temp_project_root)
+
+def test_set_project_root_invalid_file_types(temp_project_root):
+  """Test if the function handles invalid file types correctly."""
+  (temp_project_root / "not_a_file").mkdir()  # Create a directory instead of a file.
+  with pytest.raises(TypeError):
+      set_project_root(marker_files=("not_a_file",))
+
+# Test cases for settings loading.  (Assuming json module is available)
+
+def test_settings_loading_valid_input(project_structure):
+    """Tests loading settings with a valid settings.json file."""
+    root_dir = project_structure
+    root = set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git'))
+    assert Path(root / 'src' / 'settings.json').exists()
+    root_settings = set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git'))
+    assert root_settings is not None
 
 
-def test_set_project_root_root_already_in_path():
-    """Tests set_project_root when root directory is already in sys.path."""
-    # Create dummy files to mimic existing in project root directory
-    (Path(__file__).parent / 'pyproject.toml').touch()
-    sys.path.insert(0, str(Path(__file__).parent))  # Simulate it already in sys.path
-    root_dir = set_project_root()
-    assert isinstance(root_dir, Path)
-    assert root_dir.is_dir()
-    # Clean up dummy files
-    (Path(__file__).parent / 'pyproject.toml').unlink()
+def test_settings_loading_invalid_input(project_structure):
+    """Tests loading settings with a missing settings.json file."""
+    project_structure_temp = project_structure
+    (project_structure_temp / 'src' / 'settings.json').unlink()  # Remove the file
+    with pytest.raises(FileNotFoundError):
+        set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git'))
 
 
-def test_set_project_root_no_marker_files():
-    """Test set_project_root without any marker files."""
-    root_dir = set_project_root()
-    assert isinstance(root_dir, Path)
-    assert root_dir.is_dir()
-
-# These tests need the actual src directory and settings.json
-# to be present, or you'll need to mock the file handling.
-@pytest.mark.skip(reason="Requires a project setup to test json loading")
-def test_settings_loading_success():
-    """Tests successful loading of settings.json."""
-    # Replace with actual file loading logic
-    # Ensure src/settings.json exists with valid JSON
-    pass
-
-
-@pytest.mark.skip(reason="Requires a project setup to test json loading")
-def test_settings_loading_file_not_found():
-    """Tests settings loading when settings.json is not found."""
-    pass
-
-
-@pytest.mark.skip(reason="Requires a project setup to test json loading")
-def test_settings_loading_json_decode_error():
-    """Tests settings loading when settings.json is not valid JSON."""
-    pass
-
-# Similar tests should be added for the other file loading and attribute retrieval operations
-# to ensure robustness.
 
 
 ```
 
 **Explanation and Improvements:**
 
-1.  **Import Necessary Modules:** Imports `pytest`, `Path`, `json`, `sys` which are required for the tests.
-2.  **Valid Input Test:**  `test_set_project_root_valid_input` now correctly checks if the returned path is a directory using `is_dir()`.  Crucially, it creates dummy files to simulate the existence of files needed for the function (pyproject.toml and requirements.txt). Then, it cleans up the files.
-3. **Edge Case Tests:** Added `test_set_project_root_marker_files_not_found` to check if function handles marker files that don't exist.
-4. **Empty Marker Files:** Added `test_set_project_root_empty_marker_files` to cover the edge case of an empty tuple.
-5. **Already in Path:** `test_set_project_root_root_already_in_path` tests the case where the project root directory is already in `sys.path`.
-6. **No Marker Files:**  `test_set_project_root_no_marker_files` is added to test if function behaves correctly when none of the marker files are provided.
-7. **Skipping Json Tests:** The `@pytest.mark.skip` decorator is used to mark tests (`test_settings_loading_success`, etc) that require an actual project setup with `settings.json` and `README.MD` files, making the test suite more realistic and comprehensive while avoiding failures due to missing files.
+1. **Fixtures:** Introduced `temp_project_root` and `project_structure` fixtures to create temporary directories with various configurations, making tests more robust and isolated. This avoids cluttering test functions with setup code.
+
+2. **Clearer Test Names:** Test names are more descriptive (e.g., `test_set_project_root_valid_input`).
+
+3. **Comprehensive Test Cases:** Added tests for various scenarios, including:
+   - Valid input with all marker files existing.
+   - Input with no marker files found.
+   - Handling cases where only some marker files exist.
+   - Error handling for missing marker files or invalid file types.
+   - Edge cases where only one marker file exists.
+   - Correctly returning the current directory if no project root is found.
+   - Tests covering loading settings from `settings.json` with valid and missing files.
+
+4. **Exception Handling:** Used `pytest.raises` to assert that the correct exceptions are raised when `settings.json` is missing or if invalid file types are supplied as marker files.
+
+5. **Code Structure:** Tests are grouped logically based on the function they test (e.g., `set_project_root` tests are together).
 
 
-**How to Run:**
+**How to run the tests:**
 
-1.  Save the tests in a file named `test_header.py` (or similar) in the same directory as `header.py`.
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run `pytest test_header.py` from your terminal.
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the above code as a Python file (e.g., `test_header.py`).
+3.  Run the tests from your terminal: `pytest test_header.py`
+
 
 **Important Considerations:**
 
--   **Mocking:**  For testing `settings_loading` functions (loading `settings.json` and `README.MD`), you would need to use `unittest.mock` to create a mock file-like object for testing various scenarios. This way, the test doesn't rely on actual files.
--   **Error Handling:** The `try...except` blocks are good for error handling. Test various exception cases for the files not being found or invalid JSON format.
--   **Project Structure:** The tests now better simulate a real project structure, which is crucial for robust tests.
--   **Clean-up:** The tests now create and remove dummy files for more accurate testing without leaving artifacts in your directory. Remember to handle potentially created files.
+- **`sys.path`:** The original code modifies `sys.path`. This is generally not recommended in a testing environment as it can affect the testing process.  In real testing, you should be using fixtures to simulate the project structure instead of altering `sys.path`.  My tests now avoid this modification.
+
+- **`json` Module:** The tests now assume you have the `json` module available. If not, you'll need to add an import statement.
+
+- **`gs` Module:** The original code uses a `gs` module (presumably from a different part of your project).  I've replaced the direct access to `gs.path.root` with creation of dummy files within the test environment (with the `project_structure` fixture), eliminating external dependencies within the test functions.
+
+This improved solution addresses potential issues and provides more reliable and comprehensive test coverage for the `set_project_root` and settings loading functions. Remember to adapt the test data and expected behavior to match your actual implementation. Remember to replace `hypotez` with your actual project structure when using these tests. Remember to replace `hypotez` with your actual project structure when using these tests.

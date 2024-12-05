@@ -1,112 +1,117 @@
 ```python
 import pytest
 import asyncio
-from unittest.mock import MagicMock
-from src.suppliers.wallmart.graber import Graber, Context, Driver, ProductFields
-from src import gs
+from unittest.mock import patch
+from dataclasses import dataclass
+from types import SimpleNamespace
 
-
-# Mock for Driver and Context
-@pytest.fixture
-def driver_mock():
-    driver = MagicMock(spec=Driver)
-    driver.execute_locator.return_value = asyncio.Future()  # Mock execute_locator
-    driver.execute_locator.return_value.set_result(None)
-    return driver
+from src.suppliers.wallmart.graber import Graber, Context, Driver, ProductFields, logger
+# Replace with actual import paths if needed.
 
 
 @pytest.fixture
-def context_mock():
-    context = MagicMock(spec=Context)
-    context.driver = MagicMock(spec=Driver)
-    context.locator = MagicMock()
-    return context
+def mock_driver():
+    """Mock the driver for testing."""
+    class MockDriver:
+        async def execute_locator(self, locator):
+            # Mock the execute_locator for different scenarios
+            if locator == "close_pop_up":
+                return  # Successful pop-up close
+            # Implement other locators
+            raise NotImplementedError
+    return MockDriver()
 
 
 @pytest.fixture
-def graber(driver_mock, context_mock):
-    return Graber(driver=driver_mock)
+def graber(mock_driver):
+    """Fixture to create a Graber instance with the mocked driver."""
+    return Graber(driver=mock_driver)
 
 
-# Test cases for grab_page
-def test_grab_page_valid_input(graber, driver_mock):
-    """Tests grab_page with valid input (mocked)."""
-    
-    # Mock the necessary data for fetch_all_data to run.
-    graber.d = driver_mock
-    graber.fields = ProductFields()  # Initialize fields
-    
-    # We need to make sure fetch_all_data is called and handled.
-    fetch_all_data = lambda: asyncio.ensure_future(graber.grab_page(driver_mock))  
-    
-    # Simulate fetch_all_data completion
-    asyncio.run(fetch_all_data())
-    
-    assert graber.fields is not None  # Check if fields are populated.
-    
-    # Verify the call to each of the internal functions (optional but crucial)
-    assert graber.id_product.called
-    assert graber.description_short.called
-    assert graber.name.called
-    # Add more assertions for other functions called.
+@pytest.fixture
+def product_fields_example():
+    """Fixture to create a sample ProductFields object."""
+    return ProductFields(name="Test Product", price=19.99)
 
 
-def test_grab_page_missing_id_product(graber, driver_mock):
-    """Tests grab_page with missing id_product (mocked)."""
-    graber.d = driver_mock
-    graber.fields = ProductFields()
-    
-    with pytest.raises(AttributeError, match="object has no attribute 'id_product'"):
-        asyncio.run(graber.grab_page(driver_mock))
+@pytest.mark.asyncio
+async def test_grab_page_valid_input(graber, mock_driver):
+    """Test grab_page with valid input (mock)."""
+    # Mock necessary data for the function's execution
+    fields = ProductFields(name="Test Product", price=19.99)
+    # Mock the data
+    with patch.object(graber, 'id_product', return_value=asyncio.sleep(0)) as mock_id_product:
+        with patch.object(graber, 'name', return_value=asyncio.sleep(0)) as mock_name:
+            with patch.object(graber, 'specification', return_value=asyncio.sleep(0)) as mock_specification:
+                with patch.object(graber, 'local_saved_image', return_value=asyncio.sleep(0)) as mock_local_saved_image:
+                    # Assert fields are set correctly
+                    result = await graber.grab_page(mock_driver)
+                    assert result == fields
 
 
-# Test setup for more complex exception handling. 
-# Make sure you appropriately mock the functions in the class
-def test_grab_page_internal_exception(graber, driver_mock):
-    """Tests handling exceptions raised within fetch_all_data (mocked)."""
+@pytest.mark.asyncio
+async def test_grab_page_missing_data(graber, mock_driver):
+    """Test if missing data is handled gracefully."""
+    # Mock missing data calls
+    with patch.object(graber, 'id_product', side_effect=ValueError("Error fetching id_product")) as mock_id_product:
+        with pytest.raises(ValueError, match="Error fetching id_product"):
+            await graber.grab_page(mock_driver)  
+            assert mock_id_product.call_count == 1
 
-    graber.d = driver_mock
-    graber.fields = ProductFields()
-    
-    # Mock the problematic function to raise an exception
-    graber.name = MagicMock(side_effect=Exception("Simulated error"))
 
-    with pytest.raises(Exception, match="Simulated error"):
-        asyncio.run(graber.grab_page(driver_mock))
+
+#Example of testing a specific method (e.g., id_product)
+@pytest.mark.asyncio
+async def test_id_product_valid_input(graber):
+  """Test id_product with valid input (mock)."""
+  # Mock any necessary external interactions
+  with patch.object(graber, 'd') as mock_driver:
+    #Call the method and check result. Use assert to validate the result.  If the return value is complex, create an example ProductFields.
+    await graber.id_product("123")
+    assert graber.fields == "data" #replace with actual expected output
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:**  Crucially, the code now uses `unittest.mock.MagicMock` to mock `Driver` and `Context`. This is vital for testing the `Graber` class without needing a real webdriver or complex setup.
+1. **Mocking:** The code now uses `unittest.mock.patch` to mock the `Driver` object and the individual functions within the `Graber` class. This isolates the tests and prevents them from interacting with the real WebDriver. This is *crucial* for unit tests.
 
-2. **`asyncio.run()`:** The `asyncio.run()` is now used correctly to execute the `grab_page` coroutine, which is essential for asynchronous code testing.
+2. **`pytest.raises`:** Added `pytest.raises` for testing exception handling (e.g., `test_grab_page_missing_data`).
 
-3. **`fetch_all_data` Mocking:**  This is a *critical* addition. The original test didn't handle the fact that `fetch_all_data` calls other functions within the `Graber` class.   Instead of mocking every single function call, the `fetch_all_data` fixture now *stubs* the internal `fetch_all_data` to prevent errors during testing.
-
-4. **`ProductFields` Initialization:**  It initializes `graber.fields` to `ProductFields()` to prevent errors related to it not being defined.
-
-5. **Specific Exception Handling:** The `test_grab_page_missing_id_product` test now demonstrates how to check for a specific type of exception (e.g., `AttributeError`). A more robust exception test in `test_grab_page_internal_exception` is included showing proper exception handling. The simulated error is specific to the `name` method, showcasing how to handle internal exceptions.
+3. **Fixtures:** Added `mock_driver`, `graber`, `product_fields_example` fixtures for better organization and reuse. This creates reusable test data, and isolates tests from each other.
 
 
+4. **Clearer Test Cases:** Test names (`test_grab_page_valid_input`, `test_grab_page_missing_data`) are more descriptive.
 
-**How to Use:**
+5. **Example of a Test for a Specific Method:**  `test_id_product_valid_input` demonstrates how to test a specific method within the `Graber` class.  The example assumes `id_product` returns a value or modifies `graber.fields` and asserts this value.
 
-1.  Install `pytest` and `pytest-asyncio`:
-    ```bash
-    pip install pytest pytest-asyncio
-    ```
-2.  Save the above code as a `.py` file (e.g., `test_graber.py`).
-3.  Run the tests from your terminal:
-    ```bash
-    pytest test_graber.py
-    ```
+**Important Considerations for Real Testing:**
 
-**Important Considerations:**
+* **Real Driver:**  The `mock_driver` is a *mock* which makes tests fast. For *real* integration testing, use a proper WebDriver instance (e.g., `selenium.webdriver`).
+* **Asynchronous Operations:** `await` correctly within the test cases.
+* **Expected Data:**  Ensure the assertions (`assert result == fields`) actually reflect what you expect the method should produce from the mocked/real input.
+* **Error Handling:** Add tests for various scenarios where exceptions might be raised.
+* **Complex Data:** If your `ProductFields` object or the methods return complex data structures, use more refined assertions for comparisons.
 
-* **Real WebDriver Interaction (if needed):** The provided tests use mocking. If you *need* real WebDriver interaction for specific tests, you would remove the mocking and use a real `Driver` instance and proper setup. 
-* **`ProductFields` handling:** The tests now assume `ProductFields` is a class that you've defined. If not, you need to define it as a class.
-* **Context:** The mocking is generalized to `context_mock`, which should contain all the values of the `Context`. If necessary, include all necessary mocks for the `Context`.
-* **Assertions:** The test for `test_grab_page_valid_input` now checks if `graber.fields` is set after the run of the `fetch_all_data`. Consider adding more specific assertions to ensure correct data gathering. You should examine each of the methods called inside `fetch_all_data` (e.g., `graber.id_product`) and verify that they are called as expected.
+**Example `ProductFields` (replace with your actual class):**
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class ProductFields:
+    name: str
+    price: float = 0.0
+    # Add other fields
+```
+
+**To run the tests:**
+
+1. Ensure you have `pytest` installed: `pip install pytest`
+2. Save the tests in a file (e.g., `test_graber.py`).
+3. Run pytest: `pytest test_graber.py`
 
 
-This improved solution provides a more realistic and robust way to test asynchronous code using `pytest` and `asyncio`, covering various scenarios, including valid input, missing data, and exceptions. Remember to replace the placeholder comments with appropriate assertions to check the exact values returned by the functions.
+Remember to replace the placeholder comments and mocked values with actual code and expected outputs based on your implementation in `hypotez/src/suppliers/wallmart/graber.py`.
+
+
+This improved solution provides a more robust and practical approach to testing the `Graber` class using `pytest`. Remember to adapt the assertions and mocked outputs to your specific requirements.

@@ -1,101 +1,81 @@
 ```python
 import pytest
-from src.suppliers.aliexpress._examples.affiliated_products_generator import AliAffiliatedProducts
-from unittest.mock import Mock
+from hypotez.src.suppliers.aliexpress._examples.affiliated_products_generator import AliAffiliatedProducts
 
-
-# Mock for the process_affiliate_products function's behavior.  This is crucial
-# as the real implementation is likely more complex than what's shown and
-# might depend on external libraries or services.
-class MockAliAffiliatedProducts:
-    def __init__(self, campaign_name, campaign_category, language, currency):
-        self.campaign_name = campaign_name
-        self.campaign_category = campaign_category
-        self.language = language
-        self.currency = currency
-
-    def process_affiliate_products(self, prod_urls):
-        # Mock return value.  Adapt this to your actual function.
-        if not prod_urls:
-            return []
-        results = []
-        for url in prod_urls:
-            # Simulate parsing URLs and generating data.
-            product = Mock()
-            product.product_id = url[:3]  # Example; extract ID
-            product.promotion_link = f"https://affiliated_link_{url}"
-            product.local_saved_image = f"image_{url}.jpg"
-            product.local_saved_video = None  # Example video handling
-
-            results.append(product)
-        return results
-
-
+# Define a fixture to provide test data
 @pytest.fixture
-def mock_parser():
-    return MockAliAffiliatedProducts("summer_sale_2024", "electronics", "EN", "USD")
-
-
-def test_process_affiliate_products_valid_input(mock_parser):
-    """Tests with valid input URLs."""
-    prod_urls = [
-        '123',
-        'https://www.aliexpress.com/item/123.html',
-        '456',
-        'https://www.aliexpress.com/item/456.html',
+def example_products():
+    return [
+        {'product_id': '123', 'promotion_link': 'affiliate_link_123', 'local_saved_image': 'image123.jpg'},
+        {'product_id': '456', 'promotion_link': 'affiliate_link_456', 'local_saved_image': 'image456.jpg', 'local_saved_video': 'video456.mp4'}
     ]
-    products = mock_parser.process_affiliate_products(prod_urls)
-    assert len(products) == len(prod_urls)
-    for product in products:
-        assert hasattr(product, 'product_id')
-        assert hasattr(product, 'promotion_link')
-        assert hasattr(product, 'local_saved_image')
+
+# Test cases for the AliAffiliatedProducts class
+def test_process_affiliate_products_valid_input(example_products):
+    """Test with valid input, ensuring that the output is a list of dictionaries."""
+    parser = AliAffiliatedProducts("summer_sale_2024", "electronics", "EN", "USD")
+    prod_urls = ['123', 'https://www.aliexpress.com/item/456.html']
+    products = parser.process_affiliate_products(prod_urls)
+    assert isinstance(products, list)
+    assert all(isinstance(product, dict) for product in products)
+    # checking if the output is the same as the expected output
+    assert products == example_products
 
 
-def test_process_affiliate_products_empty_input(mock_parser):
-    """Tests with an empty list of URLs."""
+def test_process_affiliate_products_empty_input():
+    """Test with an empty input list."""
+    parser = AliAffiliatedProducts("summer_sale_2024", "electronics", "EN", "USD")
     prod_urls = []
-    products = mock_parser.process_affiliate_products(prod_urls)
+    products = parser.process_affiliate_products(prod_urls)
     assert products == []
 
 
-def test_process_affiliate_products_invalid_input(mock_parser):
-    """Tests with non-string input."""
-    prod_urls = [123, 456]  # Example of invalid input
-    with pytest.raises(TypeError):  # Expect TypeError for non-string
-        mock_parser.process_affiliate_products(prod_urls)
+def test_process_affiliate_products_invalid_input_type():
+    """Test with invalid input type."""
+    parser = AliAffiliatedProducts("summer_sale_2024", "electronics", "EN", "USD")
+    prod_urls = 123  # Invalid input type
+    with pytest.raises(TypeError) as excinfo:
+        parser.process_affiliate_products(prod_urls)
+    assert "Input 'prod_urls' must be a list" in str(excinfo.value)
+
+
+def test_process_affiliate_products_invalid_url_format():
+    """Test with an invalid URL format."""
+    parser = AliAffiliatedProducts("summer_sale_2024", "electronics", "EN", "USD")
+    prod_urls = ['invalid_url']
+    with pytest.raises(ValueError) as excinfo:
+        parser.process_affiliate_products(prod_urls)
+    assert "Invalid URL format" in str(excinfo.value)
 
 
 
-# Example usage (adapt this to your actual AliAffiliatedProducts class)
+# Example usage (in a separate file) - demonstrating that main() doesn't rely on AliAffiliatedProducts
+#  or that its internal structure would be tested through integration tests
 # def test_main():
-#     products = AliAffiliatedProducts("summer_sale_2024", "electronics", "EN", "USD").process_affiliate_products([
-#         '123',
-#         'https://www.aliexpress.com/item/123.html',
-#     ])
-#     assert len(products) == 2
-
-
-
-
+#    import io
+#    from unittest.mock import patch
+#    # ... (your mocking and assertion logic) ...
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The solution now uses `unittest.mock.Mock` to simulate the `AliAffiliatedProducts` class's `process_affiliate_products` method. This is crucial because the original code likely interacts with external APIs or data sources, which we can't directly test.  The `MockAliAffiliatedProducts` class is a mock class providing a way to control the return values for testing.
+* **Clearer Test Names:** Test names now explicitly describe the input and expected outcome.
+* **Data Fixtures:** A `example_products` fixture is introduced to provide sample data for testing. This promotes reusability.
+* **Comprehensive Error Handling:** `pytest.raises` is used to test for `TypeError` and `ValueError` exceptions for invalid input. This demonstrates a more robust test suite.
+* **Empty Input Test:** A test is added to handle the case where the input `prod_urls` is empty.
+* **Edge Case Test:** Test cases are added to handle various edge cases such as invalid input type and invalid URLs.
 
-2. **`pytest.raises` for Errors:** The `test_process_affiliate_products_invalid_input` demonstrates how to use `pytest.raises` to assert that a specific exception (in this case, `TypeError`) is raised when an invalid input is provided.
+**How to Run the Tests:**
 
-3. **Clearer Test Cases:** Test names are more explicit, like `test_process_affiliate_products_valid_input` and `test_process_affiliate_products_empty_input`.
+1.  Save the code above as a Python file (e.g., `test_affiliated_products.py`).
+2.  Make sure you have `pytest` installed (`pip install pytest`).
+3.  Run the tests from your terminal: `pytest test_affiliated_products.py`.
 
-4. **Comprehensive Coverage:** The tests now cover valid input, an empty input list, and an example of invalid input (non-string URLs) to provide better test coverage.
 
-5. **Fixture for Mock:** The `mock_parser` fixture now creates a `MockAliAffiliatedProducts` instance, making the tests more organized.
+**Crucial Considerations:**
 
-**Crucial Considerations for Real-World Testing:**
+* **Mocking:** If your `AliAffiliatedProducts` class interacts with external services (like APIs), you'll need to mock those interactions to isolate the tests. This is vital for ensuring that your tests focus solely on the internal logic of the class.
+* **Integration Tests:**  Consider integration tests to verify that `main()` functions correctly in conjunction with `AliAffiliatedProducts`. The example comments in the code explain this.
 
-* **External Dependencies:** If your `AliAffiliatedProducts` class interacts with an external service (e.g., an API), you'll likely need to mock those dependencies in your tests.
-* **Data Validation:** The provided code doesn't appear to do any input validation on the `prod_urls` data.  Add tests (like `test_process_affiliate_products_invalid_input`) to check for inappropriate input.
-* **Robust Mock:** In a real application, a more detailed mock would likely be required to handle edge cases from the external service.  For example, the mock might simulate different HTTP status codes or errors.
 
-Remember to adapt the mock return values to closely match the behavior of your actual `process_affiliate_products` function. This example provides a strong base to build upon as you expand your tests.  Crucially, the example shows how to use `pytest` in combination with `mock` objects to validate that the code you're writing operates as you expect, without relying on real external dependencies.
+This improved test suite is more comprehensive and robust, providing better coverage of the `AliAffiliatedProducts` class, including crucial error handling for real-world use cases. Remember to adapt the `example_products` fixture and test cases based on the actual structure and functionality of your class. Remember to replace placeholders with the actual data and error messages.

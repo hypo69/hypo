@@ -1,119 +1,120 @@
 ```python
 import pytest
+
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateFeaturedpromoProductsGetRequest import AliexpressAffiliateFeaturedpromoProductsGetRequest
 
 
-# Fixture for providing test data
-@pytest.fixture
-def api_instance():
-    return AliexpressAffiliateFeaturedpromoProductsGetRequest()
+# Fixture definitions (if needed, but not in this case as the class has no dependencies)
+# @pytest.fixture
+# def example_data():
+#     return {"key": "value"}
 
-
-# Test cases for the AliexpressAffiliateFeaturedpromoProductsGetRequest class
-def test_getapiname(api_instance):
-    """Tests the getapiname method."""
-    # Valid input case
-    expected_api_name = 'aliexpress.affiliate.featuredpromo.products.get'
+# Tests for AliexpressAffiliateFeaturedpromoProductsGetRequest class
+def test_getapiname_valid_input():
+    """Checks if getapiname returns the expected API name."""
+    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
+    expected_api_name = "aliexpress.affiliate.featuredpromo.products.get"
     assert api_instance.getapiname() == expected_api_name
 
 
-def test_init_valid_inputs(api_instance):
-  """Test the __init__ method with valid inputs."""
-  domain = "example.com"
-  port = 8080
-  api = AliexpressAffiliateFeaturedpromoProductsGetRequest(domain, port)
-  assert api.domain == domain
-  assert api.port == port
+def test_init_sets_attributes_to_none():
+    """Checks if the __init__ method initializes attributes correctly."""
+    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
+    assert api_instance.app_signature is None
+    assert api_instance.category_id is None
+    assert api_instance.country is None
+    assert api_instance.fields is None
+    assert api_instance.page_no is None
+    assert api_instance.page_size is None
+    assert api_instance.promotion_end_time is None
+    assert api_instance.promotion_name is None
+    assert api_instance.promotion_start_time is None
+    assert api_instance.sort is None
+    assert api_instance.target_currency is None
+    assert api_instance.target_language is None
+    assert api_instance.tracking_id is None
 
 
-def test_init_default_values(api_instance):
-  """Test the __init__ method with default values."""
-  api = AliexpressAffiliateFeaturedpromoProductsGetRequest()
-  assert api.app_signature is None
-  assert api.category_id is None
-  assert api.country is None
-  assert api.fields is None
-  assert api.page_no is None
-  assert api.page_size is None
-  assert api.promotion_end_time is None
-  assert api.promotion_name is None
-  assert api.promotion_start_time is None
-  assert api.sort is None
-  assert api.target_currency is None
-  assert api.target_language is None
-  assert api.tracking_id is None
+def test_init_sets_domain_and_port():
+    """Checks if the __init__ method sets domain and port."""
+    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest(domain="custom-domain.com", port=8080)
+    assert api_instance.domain == "custom-domain.com"
+    assert api_instance.port == 8080
+
+# Note: Further testing could be added to check the behavior
+# of methods if there were any other methods in the class,
+# particularly the RestApi inherited methods related to making API calls.
+
+# Example of testing RestApi inherited methods, if applicable:
+#  If AliexpressAffiliateFeaturedpromoProductsGetRequest uses methods from RestApi
+# to make API requests, you'd test the setup, requests made,
+# and responses returned.
 
 
-# Test cases for potential errors (though no explicit error handling is present in the code)
-# Ideally, we would expect exceptions for invalid or missing parameters
-# in the real implementation
+# Example of testing exception handling (if any). This section is empty as there is no exception handling in this class
+# def test_invalid_input_raises_exception():
+#     """Checks if the class raises an exception for invalid input."""
+#     with pytest.raises(ValueError) as excinfo:
+#         api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest(domain=123)  # Example of invalid domain
+#     assert "Invalid domain type" in str(excinfo.value)
 
 
-# Example testing various attributes
-def test_set_attributes(api_instance):
-    """Test setting attributes."""
-    api_instance.app_signature = "test_signature"
-    api_instance.category_id = 123
-    assert api_instance.app_signature == "test_signature"
-    assert api_instance.category_id == 123
+# Further Testing:
+# - Modify the example testing to reflect the functions
+#   from the RestApi class inherited by the current class.
+# - Add tests with valid and different kinds of inputs
+#   for the parameters of the class.
+# - Thoroughly test the usage of parameters and their impact
+#   on the API calls that the class might execute.
 
-# Example tests with edge/boundary cases.  Add more as needed.
-def test_getapiname_edge_case_1(api_instance):
-    # Testing with no modification of internal attributes.  No edge cases relevant to the current code
-    assert api_instance.getapiname() == 'aliexpress.affiliate.featuredpromo.products.get'
-
-
-def test_getapiname_edge_case_2(api_instance):
-    # Testing with no modification of internal attributes.  No edge cases relevant to the current code
-    api_instance.category_id = "invalid_string"
-    assert api_instance.getapiname() == 'aliexpress.affiliate.featuredpromo.products.get'
-
-
-def test_init_invalid_domain(api_instance):
-    with pytest.raises(TypeError):
-      AliexpressAffiliateFeaturedpromoProductsGetRequest("not_a_string", 80)
-
-
-def test_init_invalid_port(api_instance):
-    with pytest.raises(TypeError):
-        AliexpressAffiliateFeaturedpromoProductsGetRequest("example.com", "not_an_int")
 
 ```
 
 **Explanation and Improvements:**
 
-1.  **Clearer Test Names:**  Test names now explicitly state the tested aspect (e.g., `test_getapiname`, `test_set_attributes`).
+1. **Clear Test Names:** Test function names now clearly indicate their purpose (e.g., `test_getapiname_valid_input`).
 
-2.  **Fixtures:** A `api_instance` fixture is introduced to create an instance of the class for each test, promoting code reuse and keeping tests isolated.
+2. **`@pytest.fixture` (Example):** A commented-out example shows how to define a fixture for test data if needed.
 
-3.  **Edge Case and Boundary Tests (Important):**  The code was missing crucial tests for handling cases with missing parameters and various edge cases (for example, potentially invalid data types). The examples now add a basic test to show the expected behavior (e.g., invalid string for category_id).
-
-4. **Error Handling:**  Placeholder `pytest.raises` examples are added to show how to test for potential errors (`TypeError` or `ValueError` depending on your API implementation).
+3. **Comprehensive Attribute Tests:** `test_init_sets_attributes_to_none` ensures that all attributes are properly initialized to `None` on object creation, a crucial aspect of the class's behavior.
 
 
-5. **Comprehensive attribute testing:** Tests are added to set attributes within the class, verifying that these attributes are properly assigned.
+4. **Domain and Port Tests:** `test_init_sets_domain_and_port` checks if the `__init__` correctly handles custom domain and port values.
+
+5. **No Exception Handling Test (Placeholder):**  A placeholder is included for exception handling, demonstrating how to use `pytest.raises` if the class would raise exceptions for invalid parameters.
 
 
-6. **Explicit Assertions:** Assertions directly verify the results, rather than just printing outputs.
+**Crucial Missing Context:**
 
-7. **Invalid Input Test:** Added tests to showcase how `pytest.raises` can be used to validate that exceptions are raised for invalid input to the `__init__` method, which was missing previously.
+This class inherits from `RestApi`.  To write truly effective tests, you **must** know the methods within the `RestApi` class (or access its source code).  These methods are likely how this class makes API calls to retrieve data.  Testing would need to include:
 
-
-**How to run these tests:**
-
-1.  Save the code as a Python file (e.g., `test_aliexpress_api.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run `pytest test_aliexpress_api.py` from your terminal.
+* **Mocking:** To mock the API calls and responses. You need to mock the `RestApi` methods or any other external interactions to isolate the class under test. `pytest-mock` would be invaluable for this.
+* **Valid/Invalid Responses:** Test cases should cover scenarios where the API returns valid data, error codes, or different status codes.
+* **Data Validation:** Testing if the received data is properly formatted and parsed.
+* **Error Handling:** What if the API call fails? You'd need tests to make sure the class handles errors gracefully.
 
 
-**Further Considerations:**
+**Example with a very basic mock (using `pytest-mock`):**
 
-*   **More Robust Error Handling:** Add more `pytest.raises` blocks for different possible exception scenarios (e.g., missing required parameters, invalid data types, incorrect API responses).
-*   **Mocking:** If the `RestApi` class has external dependencies, consider using `unittest.mock` or `pytest-mock` to mock those dependencies to make the tests more isolated.
-*   **Data-Driven Tests:** If multiple sets of input data are required for comprehensive testing, consider using `pytest.mark.parametrize`.
-*   **Testing of the actual API calls:** You would normally not test the `RestApi` class, but the API call logic would have to be mocked or tested via unit test for the response (or failure) types.
-
-
+```python
+import pytest
+from unittest.mock import Mock
+# ... other imports ...
 
 
-This improved set of tests provides a more complete and robust test suite for the given code. Remember to adjust the tests based on the expected behavior of your actual API implementation.
+def test_api_call_success(mock_rest_api_get):
+    mock_response = {"data": "success"}
+    mock_rest_api_get.return_value = mock_response
+    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
+    result = api_instance.api_call_method() # Replace with the actual method
+    assert result == mock_response['data']
+
+
+@pytest.fixture
+def mock_rest_api_get(mocker):
+    """Creates a mock for RestApi.get."""
+    mock_object = mocker.patch('hypotez.src.suppliers.aliexpress.api._examples.rest.RestApi.get')
+    return mock_object
+```
+
+This example shows a minimal setup for a mock. You'd replace `api_instance.api_call_method()` with the actual method of the `AliexpressAffiliateFeaturedpromoProductsGetRequest` that makes the API call.  The critical part is mocking the `RestApi.get` method (or whatever the method is). Without knowledge of the internals, extensive tests for the functionality that depends on making API calls are impossible.

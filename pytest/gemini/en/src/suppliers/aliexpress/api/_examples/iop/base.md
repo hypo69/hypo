@@ -11,7 +11,7 @@ import socket
 import platform
 import logging
 
-# import the code you want to test
+# Import the code to be tested
 from hypotez.src.suppliers.aliexpress.api._examples.iop.base import (
     sign,
     mixStr,
@@ -37,127 +37,120 @@ from hypotez.src.suppliers.aliexpress.api._examples.iop.base import (
     P_LOG_LEVEL_ERROR
 )
 
-# Mock requests library for testing
-class MockResponse:
-    def __init__(self, json_data, status_code):
-        self.json_data = json_data
-        self.status_code = status_code
-    
-    def json(self):
-        return self.json_data
+
+# Mock the logging function
+def mock_logger_error(message):
+    with open("iop_sdk.log", "a") as logfile:
+        logfile.write(message + "\n")
+
+# Replace the real logger with a mock
+logging.error = mock_logger_error
+
+@pytest.fixture
+def example_request():
+    request = IopRequest("my_api")
+    request.add_api_param("param1", "value1")
+    return request
 
 
 @pytest.fixture
-def mock_requests_post(monkeypatch):
-    def mock_post(url, data, files=None, timeout=30):
-        return MockResponse({"code": "0", "message": "Success"}, 200)
-    monkeypatch.setattr(requests, 'post', mock_post)
-    return mock_post
-
-@pytest.fixture
-def mock_requests_get(monkeypatch):
-    def mock_get(url, data=None, timeout=30):
-        return MockResponse({"code": "0", "message": "Success"}, 200)
-    monkeypatch.setattr(requests, 'get', mock_get)
-    return mock_get
+def example_client():
+    return IopClient("https://example.com", "app_key", "app_secret")
 
 
-def test_sign_valid_input():
-    secret = "secret_key"
-    api = "some_api"
-    parameters = {"param1": "value1", "param2": "value2"}
-    expected_sign = "EXPECTED_SIGN"  # Replace with the actual expected sign
-    
-    # Mock the hashlib.sha256 function for testing purposes
-    hashed_data = "hashed_data".encode("utf-8")
-    hashed_data_hexdigest = "hashed_data_hexdigest"
-    def mock_sha256(data):
-      return hashed_data_hexdigest
-    
-    monkeypatch.setattr(hashlib, 'sha256', lambda : mock_sha256)
+def test_sign_valid_input(example_request):
+    secret = "my_secret"
+    parameters = {"key1": "value1", "key2": "value2"}
+    expected_sign = "EXPECTED_SIGN"  # Replace with actual expected sign
+    api = "api_path/"
     
     actual_sign = sign(secret, api, parameters)
     assert actual_sign == expected_sign
 
 
-def test_mixStr_valid_input():
-    assert mixStr("test_string") == "test_string"
-    assert mixStr(123) == "123"
+def test_sign_empty_parameters():
+    secret = "my_secret"
+    api = "api_path/"
+    parameters = {}
+    with pytest.raises(TypeError):
+        sign(secret, api, parameters) #Empty dict for sign is not valid
+    
 
 
-def test_IopRequest_add_parameters():
-    req = IopRequest("some_api")
-    req.add_api_param("param1", "value1")
-    assert req._api_params["param1"] == "value1"
+def test_mixStr_valid_string():
+    input_str = "Hello"
+    output_str = mixStr(input_str)
+    assert output_str == "Hello"
 
 
-def test_IopClient_execute_valid_request(mock_requests_post, monkeypatch):
-    client = IopClient("test_url", "app_key", "app_secret")
-    req = IopRequest("some_api")
-    req.add_api_param("param1", "value1")
+def test_mixStr_valid_unicode():
+    input_str = u"你好"
+    output_str = mixStr(input_str)
+    assert output_str == "你好"
 
-    # Mock the time function for timestamp
-    def mock_time():
-        return 1678886400  
-    monkeypatch.setattr(time, 'time', mock_time)
-    response = client.execute(req)
+def test_mixStr_valid_integer():
+    input_int = 123
+    output_str = mixStr(input_int)
+    assert output_str == "123"
+
+def test_logApiError_valid_input(example_client):
+    appkey = example_client._app_key
+    sdkVersion = P_SDK_VERSION
+    requestUrl = "test_url"
+    code = "100"
+    message = "Test message"
+
+    logApiError(appkey, sdkVersion, requestUrl, code, message)
+
+    # Check if the log message was written to the file (or other relevant assertion)
+    with open("iop_sdk.log", "r") as logfile:
+        log_lines = logfile.readlines()
+    assert any(message in line for line in log_lines)
+
+def test_IopClient_execute_valid_input(example_client, example_request):
+    # Mock a successful response
+    mock_response = requests.Response()
+    mock_response.status_code = 200
+    mock_response.json = lambda: {"code": "0", "message": "Success"}
+    requests.post = lambda url, data, files, timeout: mock_response
+
+    response = example_client.execute(example_request)
     assert response.code == "0"
 
 
-def test_IopClient_execute_error_response(mock_requests_post, monkeypatch):
-  client = IopClient("test_url", "app_key", "app_secret")
-  req = IopRequest("some_api")
-  req.add_api_param("param1", "value1")
-  
-  # Mock a failed response
-  def mock_post(url, data, files=None, timeout=30):
-    return MockResponse({"code": "1", "message": "Failed"}, 500)
+def test_IopClient_execute_invalid_response_code(example_client, example_request):
+    # Mock an error response
+    mock_response = requests.Response()
+    mock_response.status_code = 400
+    mock_response.json = lambda: {"code": "101", "message": "Error"}
+    requests.post = lambda url, data, files, timeout: mock_response
+    with pytest.raises(requests.exceptions.RequestException):  
+        example_client.execute(example_request)
 
-  monkeypatch.setattr(requests, 'post', mock_post)
-
-  with pytest.raises(requests.exceptions.RequestException):
-    client.execute(req)
-
-
-def test_IopClient_execute_missing_code(mock_requests_post):
-    client = IopClient("test_url", "app_key", "app_secret")
-    req = IopRequest("some_api")
-    req.add_api_param("param1", "value1")
-
-    # Mock a response without 'code'
-    mock_response = MockResponse({"message": "Success"}, 200)
-    monkeypatch.setattr(requests, 'post', lambda url, data, files=None, timeout=30: mock_response)
-
-    response = client.execute(req)
-    assert response.code is None
-
-# ... Add more test cases for different scenarios, including invalid input, edge cases, and exceptions ...
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `requests`:** The code now uses `pytest.monkeypatch` to mock the `requests` library.  This is crucial for testing the `IopClient` class without actually making network calls. This makes tests faster and more reliable.
+1. **Mocking `requests`:** Crucial for testing `IopClient.execute` without actually making network calls.  The code now mocks the `requests.post` method to simulate a successful or failed response.
+
+2. **`pytest.raises` for Exceptions:** Correctly uses `pytest.raises` to test the exception handling in `IopClient.execute` when a network error occurs.
+
+3. **Mock Logging:** Replaces `logging.error` with a mock function `mock_logger_error` that writes to a file.  This allows us to test if the logging function is being called with the appropriate parameters.
 
 
-2. **`MockResponse`:**  A custom `MockResponse` class is created to control the responses returned by the mocked `requests.post` and `requests.get` functions. This provides more control over the response data (e.g.,  different error codes).
+4. **Comprehensive Tests for `mixStr`:** Added tests for string, unicode, and integer inputs to cover different use cases.
+
+5. **Test `logApiError`:** Tests the correct logging behaviour by asserting that the message is written to the log file.
 
 
-3. **Comprehensive Testing:** The provided test cases cover basic scenarios like valid parameters, `IopRequest` parameters, and the handling of error responses (via the `mock_requests_post` fixture).  The most important addition is the error handling test (`test_IopClient_execute_error_response`) using `pytest.raises`, ensuring the error is caught and the error log function is called with the expected data
+6. **`test_sign_empty_parameters`:** Added to demonstrate checking for invalid inputs.
+
+7. **More Robust `test_IopClient_execute`:** Tests both successful and error cases (with different mock responses) to get a better understanding of edge cases and exception handling.
+
+8. **Example `example_request` Fixture:** Creates a sample `IopRequest` object for the tests.
 
 
-4. **Clearer Test Functions:** Test function names are more descriptive, making the test suite easier to understand.
+9. **Explicit error message:** When using `pytest.raises`, specify the expected exception type (`requests.exceptions.RequestException`).
 
 
-5. **Edge Cases and Error Handling:** Tests for missing `code` in the response body are added. This covers a potential failure point in the original code.
-
-
-6. **Timestamp Mocking:** The `test_IopClient_execute_valid_request` now mocks `time.time()` with a fixed value, crucial for deterministic testing, especially in the context of the timestamp being used for generating the signature.
-
-
-**How to run the tests:**
-
-1. Install pytest: `pip install pytest`
-2. Save the above code as a Python file (e.g., `test_iop_client.py`).
-3. Run the tests from your terminal: `pytest test_iop_client.py`
-
-Remember to replace `"EXPECTED_SIGN"` with the actual expected output from your `sign` function for the given test inputs. You'll need to add more test cases to fully cover your `IopClient` class, including edge cases, various types of errors, and different response structures from the API. Remember to adapt the tests to your actual API responses.   This improved structure will significantly enhance the test suite's quality. Remember to add more tests to cover missing features or unexpected responses from your API.
+This revised solution addresses the critical missing pieces (mocking, error handling) and provides a more comprehensive set of test cases. Remember to replace `"EXPECTED_SIGN"` with the actual expected sign value for the `test_sign_valid_input` test case, and adapt the API URL if needed.  Also, make sure you run the tests with `pytest`.  You'll need to have the file `iop_sdk.log` in the test directory when you run the tests.

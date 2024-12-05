@@ -475,7 +475,7 @@ class CodeAssistant:
 
         # Удаляем маркер для известных форматов, если строка обрамлена в '```'
         config = j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json')
-        for prefix in config.known_prefixes:
+        for prefix in config.remove_prefixes:
             # Сравниваем с префиксом без учёта регистра
             if response.lower().startswith(prefix.lower()):
                 return response.removeprefix(prefix).removesuffix("```").strip()

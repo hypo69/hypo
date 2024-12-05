@@ -2,92 +2,103 @@
 import pytest
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateHotproductQueryRequest import AliexpressAffiliateHotproductQueryRequest
 
-# Fixture for providing test data
-@pytest.fixture
-def example_request():
-    return AliexpressAffiliateHotproductQueryRequest()
+def test_init_valid_input():
+    """Tests the __init__ method with valid input."""
+    req = AliexpressAffiliateHotproductQueryRequest()
+    assert req.domain == "api-sg.aliexpress.com"
+    assert req.port == 80
+    assert req.app_signature is None
+    assert req.category_ids is None
 
-# Test cases for the AliexpressAffiliateHotproductQueryRequest class
-def test_init(example_request):
-    """Tests the __init__ method for valid input."""
-    assert example_request.domain == "api-sg.aliexpress.com"
-    assert example_request.port == 80
+def test_init_custom_domain():
+    """Tests __init__ with a custom domain."""
+    req = AliexpressAffiliateHotproductQueryRequest(domain="custom-domain.com")
+    assert req.domain == "custom-domain.com"
 
-def test_getapiname(example_request):
+def test_init_custom_port():
+    """Tests __init__ with a custom port."""
+    req = AliexpressAffiliateHotproductQueryRequest(port=8080)
+    assert req.port == 8080
+
+def test_getapiname():
     """Tests the getapiname method."""
-    assert example_request.getapiname() == 'aliexpress.affiliate.hotproduct.query'
-    
-def test_init_custom_domain(example_request):
-    """Tests the __init__ method with custom domain."""
-    request = AliexpressAffiliateHotproductQueryRequest(domain="custom-domain.com")
-    assert request.domain == "custom-domain.com"
+    req = AliexpressAffiliateHotproductQueryRequest()
+    assert req.getapiname() == 'aliexpress.affiliate.hotproduct.query'
 
-def test_init_custom_port(example_request):
-    """Tests the __init__ method with custom port."""
-    request = AliexpressAffiliateHotproductQueryRequest(port=8080)
-    assert request.port == 8080
-
-def test_init_with_invalid_domain(example_request):
-    with pytest.raises(TypeError) as excinfo:
-      AliexpressAffiliateHotproductQueryRequest(domain=123)
-    assert "domain must be str" in str(excinfo.value)
-
-def test_init_with_invalid_port(example_request):
-    with pytest.raises(TypeError) as excinfo:
-      AliexpressAffiliateHotproductQueryRequest(port="abc")
-    assert "port must be int" in str(excinfo.value)
-    
+# Example testing setting specific attributes (replace with actual attribute values from your usage)
+def test_set_attributes():
+    """Tests setting various attributes."""
+    req = AliexpressAffiliateHotproductQueryRequest()
+    req.app_signature = "test_signature"
+    req.category_ids = [1,2,3]
+    assert req.app_signature == "test_signature"
+    assert req.category_ids == [1,2,3]
 
 
-# Test setting and retrieving attributes (example)
-def test_setting_attributes(example_request):
-    """Tests setting attribute values."""
-    example_request.app_signature = "test_signature"
-    example_request.keywords = "test_keywords"
-    assert example_request.app_signature == "test_signature"
-    assert example_request.keywords == "test_keywords"
+def test_init_with_none_values():
+    """Tests initialization with various None values as arguments."""
+    req = AliexpressAffiliateHotproductQueryRequest(
+        domain=None,
+        port=None
+    )
+    assert req.domain is None
+    assert req.port is None
 
+#These tests show how to test the setting/getting of individual attributes and cover
+#the case where they are not set/None.
+def test_attribute_setting_and_getting():
+    req = AliexpressAffiliateHotproductQueryRequest()
+    attributes_to_set = [
+        ("app_signature", "test_signature"),
+        ("category_ids", [1, 2]),
+        ("delivery_days", 2),
+        ("fields", "name,price"),
+        ("keywords", "test keywords"),
+        ("max_sale_price", 100),
+        ("min_sale_price", 50),
+        ("page_no", 1),
+        ("page_size", 20),
+        ("platform_product_type", "test type"),
+        ("ship_to_country", "US"),
+        ("sort", "price"),
+        ("target_currency", "USD"),
+        ("target_language", "en"),
+        ("tracking_id", "testID"),
+    ]
 
-def test_attribute_types(example_request):
-    """Checks that attributes accept expected types."""
-    example_request.app_signature = "1234"
-    example_request.page_no = 1
-
-    # Should not raise an error, demonstrating types are set correctly
-    assert example_request.app_signature == "1234" 
-    assert example_request.page_no == 1
-    
-    # Examples of potential invalid types (add more if necessary)
-    with pytest.raises(TypeError):  # example: wrong type for app_signature
-        example_request.app_signature = 123
-    with pytest.raises(TypeError):  # example: wrong type for page_no
-        example_request.page_no = "abc"
-
-
-# Thoroughly testing each parameter in __init__
-#  and handling cases where parameters are not set, etc.
-# (more tests needed for each field)
-def test_uninitialized_attributes(example_request):
-  assert example_request.app_signature is None
-  assert example_request.category_ids is None
-  # ... and so on for all the other parameters
+    for attr, value in attributes_to_set:
+        setattr(req, attr, value)
+        assert getattr(req, attr) == value
 ```
 
 **Explanation and Improvements:**
 
-* **Clear Test Names:** Test names now clearly indicate the purpose, e.g., `test_init_custom_domain`.
-* **Fixture for Request Object:** A `example_request` fixture is created to instantiate the class once for each test, reducing object creation overhead.
-* **Comprehensive `init` Testing:** Tests now cover the case of valid and invalid domain/port types during initialization.
-* **Testing Attribute Types and Values:** The `test_attribute_types` function now includes example tests for various attribute types (int, str) and demonstrates how to catch unexpected input types using `pytest.raises`.
-* **Uninitialized Attributes:** `test_uninitialized_attributes` checks if attributes are initialized to their default values (None in this case). This is crucial because missing initialization can lead to unexpected behavior.
-* **Edge Case Consideration:** The addition of  `test_init_with_invalid_domain` and `test_init_with_invalid_port`  demonstrates how to test for exceptions when passing the wrong type to the parameters.
+1. **Clear Test Names:**  Test names now clearly indicate the purpose (e.g., `test_init_valid_input`, `test_getapiname`).
+
+2. **Comprehensive Coverage:**  Tests cover the `__init__` method with valid and custom input, `getapiname` function, and the setting and retrieval of various attributes. This is crucial because many functions in the code do not have extensive validation (e.g.,  type checking).
+
+3. **Edge Case Testing:** Includes `test_init_with_none_values` to check what happens when `None` values are provided for attributes.
+
+4. **Attribute Testing:**  `test_attribute_setting_and_getting` demonstrates how to test setting and getting individual attributes, essential for verifying that data is stored and retrieved correctly.
+
+5. **No Unnecessary Fixtures:**  No fixtures are needed as the class itself is being tested, not an external dependency.
+
+6. **Explicit Assertions:** The code explicitly asserts the expected values for various attributes after setting them, providing more comprehensive coverage and allowing better error messages in case of failures.
+
+7. **Docstrings:** Tests are well-documented with docstrings that describe the purpose of each test.
+
+**How to Run:**
+
+Save this code as a `.py` file (e.g., `test_aliexpress_request.py`) in the same directory as your `AliexpressAffiliateHotproductQueryRequest.py` file. Then, run `pytest test_aliexpress_request.py` from your terminal.
+
 
 **Important Considerations:**
 
-* **Missing Attribute Tests:**  The provided code defines many attributes; add thorough tests covering each one (valid input, invalid input, boundary cases, empty values). For instance, `page_size` should have tests for potential `0` or `-1` values.  `None` values for attributes should also be thoroughly tested.
-* **More Exception Handling:** Consider cases where the attributes might raise exceptions due to incorrect input format (e.g., non-numeric values for price).
-* **Realistic Data:** Replace placeholder values with more realistic test data for attributes. This way, your test suite covers different data scenarios (e.g., various page sizes, valid/invalid price ranges).
-* **Parameter Combinations:** Create tests that exercise different combinations of input parameters.  For example, testing for `keywords` along with other filter parameters.
+- **Real Data:**  The example tests use dummy values. You need to replace these with actual (or realistic mocked) values to test with data that will be used in your application.
+
+- **Error Handling:** You should ideally add tests for error conditions, like invalid data types or missing required arguments, and to verify that the exceptions you expect are raised. This is important but not tested in this initial set of tests.
+
+- **Dependency Injection:** Your test suite should strive to avoid coupling tests to a specific implementation.  If there's logic in other parts of the system that is used to validate inputs or perform calculations, mock those out or create more targeted fixtures if necessary.
 
 
-By incorporating these improvements, the test suite will be much more robust and comprehensive in covering the various scenarios and potential problems within the `AliexpressAffiliateHotproductQueryRequest` class. Remember to adapt these tests to any further specifications or expected behavior of the application. Remember to adapt these tests to any further specifications or expected behavior of the application. Remember to adapt these tests to any further specifications or expected behavior of the application.
+This improved solution significantly enhances the test coverage and robustness of your tests compared to the earlier example. Remember to adapt it further to match the actual use case of your code. Remember to add test cases for exceptions if the class raises them!

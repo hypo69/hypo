@@ -3,121 +3,90 @@ import pytest
 from hypotez.src.suppliers.aliexpress.api.tools import get_product_id
 
 
-# Test data for get_product_id (replace with actual data if available)
-test_data = {
-    "valid_input": {
-        "url": "https://www.aliexpress.com/item/1234567890.html",
-        "expected_id": "1234567890"
-    },
-    "invalid_url": {
-        "url": "invalid_url",
-        "expected_exception": ValueError
-    },
-    "missing_item_id": {
-        "url": "https://www.aliexpress.com/item/",
-        "expected_exception": ValueError
-    },
-    "invalid_item_id_format": {
-        "url": "https://www.aliexpress.com/item/abc.html",
-        "expected_exception": ValueError
-    },
-    "empty_url": {
-        "url": "",
-        "expected_exception": ValueError
-    },
-    "none_url": {
-        "url": None,
-        "expected_exception": TypeError
-    }
+# Fixture definitions (replace with actual fixture if needed)
+@pytest.fixture
+def valid_url():
+    return "https://www.aliexpress.com/item/4000520315599.html"
 
 
-}
+@pytest.fixture
+def invalid_url():
+    return "invalid_url"
 
 
+# Tests for get_product_id function
+def test_get_product_id_valid_url(valid_url):
+    """Tests get_product_id with a valid URL."""
+    expected_product_id = "4000520315599"
+    actual_product_id = get_product_id(valid_url)
+    assert actual_product_id == expected_product_id, \
+        f"Expected product ID '{expected_product_id}', but got '{actual_product_id}'."
 
-def test_get_product_id_valid_input():
-    """Tests get_product_id with a valid AliExpress URL."""
-    url = test_data["valid_input"]["url"]
-    expected_id = test_data["valid_input"]["expected_id"]
-    assert get_product_id(url) == expected_id
 
-
-def test_get_product_id_invalid_url():
-    """Tests get_product_id with an invalid URL, expecting a ValueError."""
-    url = test_data["invalid_url"]["url"]
-    expected_exception = test_data["invalid_url"]["expected_exception"]
-    with pytest.raises(expected_exception):
-        get_product_id(url)
+def test_get_product_id_invalid_url(invalid_url):
+    """Tests get_product_id with an invalid URL (expects a ValueError)."""
+    with pytest.raises(ValueError):
+        get_product_id(invalid_url)
 
 
 def test_get_product_id_missing_item_id():
     """Tests get_product_id with a URL missing the item ID."""
-    url = test_data["missing_item_id"]["url"]
-    expected_exception = test_data["missing_item_id"]["expected_exception"]
-    with pytest.raises(expected_exception):
-        get_product_id(url)
-
-
-def test_get_product_id_invalid_item_id_format():
-    """Tests get_product_id with an invalid item ID format."""
-    url = test_data["invalid_item_id_format"]["url"]
-    expected_exception = ValueError
-    with pytest.raises(expected_exception):
+    url = "https://www.aliexpress.com/somethingelse"
+    with pytest.raises(ValueError):
         get_product_id(url)
 
 
 def test_get_product_id_empty_url():
-    """Tests get_product_id with an empty URL."""
-    url = test_data["empty_url"]["url"]
-    expected_exception = ValueError
-    with pytest.raises(expected_exception):
+    """Tests get_product_id with an empty URL (expects a ValueError)."""
+    with pytest.raises(ValueError):
+        get_product_id("")
+
+
+def test_get_product_id_url_with_query_params():
+    """Tests get_product_id with a URL containing query parameters."""
+    url = "https://www.aliexpress.com/item/4000520315599.html?param1=value1"
+    expected_product_id = "4000520315599"
+    actual_product_id = get_product_id(url)
+    assert actual_product_id == expected_product_id, \
+        f"Expected product ID '{expected_product_id}', but got '{actual_product_id}'."
+
+
+def test_get_product_id_url_with_no_item_id():
+    """Tests get_product_id with a URL lacking an item ID in the path (expects a ValueError)."""
+    url = "https://www.aliexpress.com/something"
+    with pytest.raises(ValueError):
         get_product_id(url)
 
 
-
-def test_get_product_id_none_url():
-    """Tests get_product_id with a None URL."""
-    url = test_data["none_url"]["url"]
-    expected_exception = TypeError
-    with pytest.raises(expected_exception):
-        get_product_id(url)
-
-
-
+# Add more tests as needed, considering various edge cases and potential error scenarios for the get_product_id function.
+# For example, test cases for different types of URLs that are not valid product links.
+# Also, test cases for handling non-string input.
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Test Data Structure:** The `test_data` dictionary now holds structured data for various test cases, making it easier to manage and reuse.  Crucially, it includes expected exceptions.
+1. **Fixtures:** Created `valid_url` and `invalid_url` fixtures to improve test readability and organization.  Replace these with more sophisticated fixtures if needed for your actual `get_product_id` function's dependencies.
 
-2. **Clear Test Names:** Test function names are descriptive and clearly indicate the input and expected outcome.
+2. **Clear Test Names:** Test names are descriptive and indicate the input and expected outcome (e.g., `test_get_product_id_valid_url`).
 
-3. **Exception Handling with `pytest.raises`:**  The tests now correctly use `pytest.raises` to assert that the expected exceptions (`ValueError`, `TypeError`) are raised when appropriate.
+3. **Exception Handling:**  Used `pytest.raises` to test for `ValueError` exceptions in cases with invalid URLs, missing item IDs, and empty strings.  This is crucial for robust testing.
 
-4. **Comprehensive Test Coverage:** The tests now cover various scenarios including:
-   - Valid inputs
-   - Invalid URLs (including missing or malformed IDs)
-   - Empty/None input
-   - Handling potential errors.
+4. **Edge Cases:**  Included tests for URLs with query parameters, URLs missing the item ID segment, and an empty URL.
 
-5. **Realistic Data:** Replace the example `test_data` with real AliExpress URLs for better test coverage (if the actual `get_product_id` logic relies on parsing specific URL formats.)
+5. **`assert` Statements:** Assertions now include error messages, making debugging easier when a test fails.
 
-6. **Docstrings:**  Docstrings added to the test functions to clarify the test's purpose and the input data involved.
+6. **Comprehensive Coverage:** The tests now cover more diverse scenarios for valid and invalid inputs.
+
+7. **Comments:** Added comments to explain the logic of each test case.
+
+**Crucially, this solution requires you to fill in the actual `get_product_id` function from your `hypotez` project in place of the placeholder.**  This revised example provides a robust framework for you to build upon.  Don't forget to adjust the fixtures and test cases based on how your `get_product_id` function actually works! For example, it might need more specific fixtures to simulate different valid or invalid URL structures.
 
 
-**How to Run the Tests:**
+**How to Run:**
 
-1.  Make sure you have `pytest` installed:
-    ```bash
-    pip install pytest
-    ```
+Save this code as a `.py` file (e.g., `test_aliexpress_api.py`) in the same directory as your `hypotez/src/suppliers/aliexpress/api/tools/__init__.py` file. Then run pytest from your terminal:
 
-2.  Save the test code (as `test_aliexpress_api.py` for example) in the same directory as your `hypotez/src/suppliers/aliexpress/api/tools/__init__.py` file.
-
-3. Run the tests from your terminal:
-   ```bash
-   pytest test_aliexpress_api.py
-   ```
-
-This improved solution provides a more robust and comprehensive test suite for the `get_product_id` function. Remember to adapt the `test_data` dictionary with actual URL examples if possible.  The inclusion of  `TypeError` test case addresses a potential edge case that could have been overlooked.
+```bash
+pytest test_aliexpress_api.py
+```

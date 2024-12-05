@@ -72,10 +72,24 @@
     "CODE_OF_CONDUCT*",
     "conf.py"
   ],
-  "known_prefixes": [
+  "remove_prefixes": [
     "```md",
     "```md\n",
     "```markdown",
+    "```markdown\n",
+    "```",
+    "```\n"
+  ],
+  "known_prefixes": [
+    " --------------------------- DEPRECTAED KEY --------------",
+    "```md",
+    "```md\n",
+    "```markdown",
+    "```markdown\n",
+    "```",
+    "```\n"
+  ],
+  "other_prefixes": [
     "```rst",
     "```rst\n",
     "```plaintext",
@@ -86,8 +100,7 @@
     "```MARKDOWN\n",
     "```RST",
     "```PALINTEXT",
-    "```HTML",
-    "```\n"
+    "```HTML"
   ],
 
   "output_directory": {
