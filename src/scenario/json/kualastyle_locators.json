@@ -7,7 +7,7 @@
     "by": "XPATH",
     "selector": "//div[contains(@style, 'z-index: 9000')]//button[contains(@style, 'z-index: 6')]",
     "selector tmp": "//div[contains(@class,'needsclick')]//button[contains(@class,'needsClick')]",
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "if_list":"first","use_mouse": false
   },
   "main menu": {
@@ -18,7 +18,7 @@
 
       "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//details//summary",
       "if_list":"first","use_mouse": false, "mandatory": true,
-      "event": "loop",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "loop",
       
       "variables in selector": "x",
       "formula for locator": "range(1,6)"
@@ -31,7 +31,7 @@
       "by": "XPATH",
       "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//div[contains(@class,'navmenu-submenu')]//li//a",
       "if_list":"first","use_mouse": false, "mandatory": true,
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "logic for action[AND|OR|XOR|VALUE|null]": null
 
     },
@@ -40,7 +40,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//ul[@class='pagination']//a[@class='page-link']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false
     }
   },
@@ -55,7 +55,7 @@
       "by": "XPATH",
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
     "store categories dept-2": {
@@ -67,7 +67,7 @@
       "by": "XPATH",
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li//ul[contains(@class,'navmenu-depth-2')]/li",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
     "store categories dept-3": {
@@ -79,7 +79,7 @@
       "by": "XPATH",
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li//ul[contains(@class,'navmenu-depth-2')]/li//ul[contains(@class,'navmenu-depth-3')]/li",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     }
   },
@@ -91,7 +91,7 @@
       "by": "XPATH",
       "selector": "//div[@class = 'product-thumb']/a",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
     "stock available": {
@@ -100,7 +100,7 @@
       "by": "XPATH",
       "selector": "//div[conatins(@class , 'stockMsg')]",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
 
@@ -110,7 +110,7 @@
       "by": "css selector",
       "selector": "h1.d-inline-block",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
     "summary_locator": {
@@ -119,7 +119,7 @@
       "by": "css selector",
       "selector": "h1.d-inline-block",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
     "description_locator": {
@@ -128,7 +128,7 @@
       "by": "css selector",
       "selector": ".row.product-params.pt-2.pb-2.pt-sm-5.pb-sm-5",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
 
@@ -138,7 +138,7 @@
       "by": "ID",
       "selector": "basicPrice",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
 
@@ -148,7 +148,7 @@
       "by": "css selector",
       "selector": "text*='éöøï'",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
 
@@ -158,7 +158,7 @@
       "by": "XPATH",
       "selector": "//div[contains(@class,'main-details')]//span[contains(@class,'sku-copy')]",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
     "brand_sku_locator": {
@@ -167,7 +167,7 @@
       "by": "css selector",
       "selector": "span.sku-copy",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
 
@@ -177,7 +177,7 @@
       "by": "ID",
       "selector": "mainpic",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     },
 
@@ -187,7 +187,7 @@
       "by": "tag name",
       "selector": "li",
       
-      "event": null,
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
     }
   },

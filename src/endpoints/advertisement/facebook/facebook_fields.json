@@ -8,7 +8,7 @@
 		"category": "",
 		"products" : []
 	},
-	"event": {
+	"timeout":0,"timeout_for_event":"presence_of_element_located","event": {
 		"title": "",
 		"description": "",
 		"language": "",

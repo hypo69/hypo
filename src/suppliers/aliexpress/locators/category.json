@@ -4,7 +4,7 @@
     "by": "XPATH",
     "selector": "//div[contains(@style, 'grid-template-columns')]//a",
     "if_list":"first","use_mouse": false, 
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "mandatory": true,
     "locator_description": "ссылки на страницы товаров"
   },
@@ -15,7 +15,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//ul[@class='pagination']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "mandatory":  false,
       "locator_description": "если некуда двигаться - драйвер вернет False"
     },
@@ -23,7 +23,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//*[@class = 'ui-pagination-navi util-left']/a[@class='ui-pagination-next']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false, 
       "mandatory": true,
       "locator_description": ""

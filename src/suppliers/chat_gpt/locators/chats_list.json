@@ -3,7 +3,7 @@
     "attribute": "href",
     "by": "XPATH",
     "selector": "//a[@data-discover = 'true']",
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "if_list": "all",
     "use_mouse": false,
     "mandatory": true,

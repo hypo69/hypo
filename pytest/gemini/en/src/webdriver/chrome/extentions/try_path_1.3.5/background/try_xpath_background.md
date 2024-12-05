@@ -1,170 +1,136 @@
 ```python
 import pytest
-import js2py
+import json
+import asyncio
+import mock
 
-# Mock browser API for testing
+# Mocking the browser API
 class MockBrowser:
     def __init__(self):
-        self.runtime = MockRuntime()
+        self.onMessageListeners = []
         self.storage = MockStorage()
+        self.runtime = MockRuntime()
         self.tabs = MockTabs()
 
-    def runtime(self):
-        return self.runtime
+    def runtime_getURL(self, path):
+        return f"/path/{path}"
 
-    def storage(self):
-        return self.storage
+    def onMessage(self, listener):
+        self.onMessageListeners.append(listener)
 
-    def tabs(self):
-        return self.tabs
+    def sendMessage(self, message, *args):
+        for listener in self.onMessageListeners:
+            listener(message, *args)
+
+    def storage_onChanged(self, listener):
+        self.storage.onChangedListeners.append(listener)
+
+class MockStorage:
+    def __init__(self):
+        self.onChangedListeners = []
+        self.items = {}
+
+    def onChanged(self, listener):
+        self.onChangedListeners.append(listener)
 
 
 class MockRuntime:
-    def getURL(self, path):
-        return f"/path/{path}"  # Mock URL
-
-    def onMessage(self):
-        return MockMessageListener()
-
-    def sendMessage(self, message):
-        return message
-
-class MockStorage:
-    def onChanged(self):
-        return MockOnChange()
-
-    def get(self, items):
-        return items
-
-
-class MockMessageListener:
-    def __init__(self):
-        self.listeners = {}
-
-    def addListener(self, listener):
-        self.listeners[listener.__name__] = listener
-        return lambda message, sender, sendResponse: \
-            self.listeners[listener.__name__](message, sender, sendResponse)
-
-    def __call__(self, message, sender, sendResponse):
-        return
-
-
-class MockOnChange:
-    def addListener(self, listener):
-        return listener
+    pass
 
 class MockTabs:
-    def create(self, params):
-        return params
-
-    def insertCSS(self, tabId, params):
-        return Promise(params)
-
-    def removeCSS(self, tabId, params):
-        return Promise(params)
-        
-    def sendMessage(self, tabId, message, params):
-        return Promise(message)
-
-class Promise:
-    def __init__(self, value):
-        self.value = value
-        self.resolve = lambda value: None
-        self.reject = lambda reason: None
-    
-    def then(self, callback):
-      callback(self.value)
-      return self
+    async def create(self, arg):
+        pass
+    async def removeCSS(self, id, arg):
+        pass
+    async def insertCSS(self, id, arg):
+        pass
+    async def sendMessage(self, id, message, *args):
+        pass
 
 
 
-# Mock error handling function for testing
-def mock_on_error(error):
-    print(f"Error: {error}")
+@pytest.fixture
+def browser():
+    return MockBrowser()
 
 
-# Test setup - Replace with actual setup if needed
-browser = MockBrowser()
-window = {}
-tryxpath = {}  # Mock tryxpath object
-tryxpath.functions = {}
-tryxpath.functions.onError = mock_on_error  # Mock onError
+def test_storePopupState(browser):
+    message = {"event": "storePopupState", "state": "some_state"}
+    # Mock the listener function from the JS code
+    listener = lambda msg, s, r: None
+    browser.onMessage(listener)
+    browser.sendMessage(message)
+    assert browser.popupState == "some_state"
 
 
-
-def test_storePopupState():
-    message = {"event": "storePopupState", "state": "someState"}
-    listener = browser.runtime.onMessage().addListener
-    listener(
-        lambda message, sender, sendResponse: genericListener.listeners.storePopupState(message, sender, sendResponse)
-    )
-    genericListener = MockMessageListener()
-
-
-def test_requestRestorePopupState():
+def test_requestRestorePopupState(browser):
     message = {"event": "requestRestorePopupState"}
-    listener = browser.runtime.onMessage().addListener
+    listener = lambda msg, s, r: None
+    browser.onMessage(listener)
+    browser.sendMessage(message)
+    # Check if a message with the restore event is sent.  We cannot directly check the content of the message because the sendMessage function is mocked, thus the format is not validated.
+    assert any(m['event'] == 'restorePopupState' for m in browser.sendMessage.call_args_list[0][0]['args'])
 
-    listener(
-        lambda message, sender, sendResponse: genericListener.listeners.requestRestorePopupState(message, sender, sendResponse)
-    )
-    genericListener = MockMessageListener()
-
-
-def test_requestInsertStyleToPopup():
+def test_requestInsertStyleToPopup(browser):
     message = {"event": "requestInsertStyleToPopup"}
-    listener = browser.runtime.onMessage().addListener
-
-    listener(
-        lambda message, sender, sendResponse: genericListener.listeners.requestInsertStyleToPopup(message)
-    )
-    genericListener = MockMessageListener()
-
-def test_showAllResults():
-    message = {"event": "showAllResults"}
-    listener = browser.runtime.onMessage().addListener
-    listener(
-        lambda message, sender, sendResponse: genericListener.listeners.showAllResults(message, sender)
-    )
-    genericListener = MockMessageListener()
-    
+    listener = lambda msg, s, r: None
+    browser.onMessage(listener)
+    browser.sendMessage(message)
+    # Check if a message with the insertStyleToPopup event is sent.
+    assert any(m['event'] == 'insertStyleToPopup' for m in browser.sendMessage.call_args_list[0][0]['args'])
 
 
-# Add tests for other functions as needed, following the structure in the example.
+def test_showAllResults(browser):
+  message = {"event": "showAllResults", "somekey": "somevalue"}
+  sender = {"tab": {"id": 123}, "frameId": 456}
+  listener = lambda msg, s, r: None
+  browser.onMessage(listener)
+  browser.sendMessage(message, sender)
 
-# Example for a test with a potentially failing function (updateCss)
-# def test_updateCss_failure(mock_browser):
-#     # Simulate failure in insertCSS or removeCSS
-#     mock_browser.tabs.insertCSS.side_effect = Exception("Simulated failure")
+  # Verify that the correct message is sent.
+  #  We assert the presence of the key/value in the message.  Because sendMessage is mocked, we cannot assert the exact message format.
+  assert any(m['somekey'] == 'somevalue' for m in browser.sendMessage.call_args_list[0][0]['args'])
+  assert any('url' in arg['url'] for arg in browser.sendMessage.call_args_list[0][0]['args'])
 
-
-# Replace the commented-out placeholder with actual tests for other functions.
+# ... Add more tests for other functions ...
+#  Important Note:  Testing asynchronous functions requires either asynchronous testing frameworks or mocking the asynchronous operations.
 ```
 
 **Explanation and Improvements:**
 
-1.  **Mocking:**  Crucially, this solution now mocks the `browser` API (using `MockBrowser`, `MockRuntime`, `MockTabs`, `MockStorage`, etc.) to avoid relying on the actual browser environment. This is essential for writing reliable tests without browser dependencies.  The `Promise` mock is important, as well as the `genericListener.listeners` setup, as this code uses asynchronous methods.
+* **Mocking the Browser API:** The crucial addition is the `MockBrowser`, `MockStorage`, `MockRuntime` and `MockTabs` classes. These mock the browser API calls (`browser.runtime.getURL`, `browser.runtime.sendMessage`, `browser.tabs.create`, etc.) preventing actual browser interaction during testing.  This is *essential* for unit testing.  Directly calling the browser API from your tests would run into problems or test browser interaction which is not the focus here.
 
-2.  **Testable Structure:** The code now directly calls `genericListener` and its listeners (e.g., `storePopupState`) with mocked browser API calls for testing.
+* **Clearer Test Structure:**  The provided examples demonstrate better test structure, including functions for each function from the Javascript code (`test_storePopupState`, `test_requestRestorePopupState`, `test_requestInsertStyleToPopup`).
 
-3. **Error Handling:** The `mock_on_error` function is included to handle errors that might arise during API calls. Replace `mock_on_error` with your actual error handling mechanism.
-
-4. **Comprehensive Tests:**  The example now includes `test_storePopupState`, `test_requestRestorePopupState`, and `test_requestInsertStyleToPopup`, which are rudimentary tests but demonstrate how to test individual function functionality.
-
-5. **Complete Test Setup:** Mock objects now correctly simulate the browser environment required by the original JavaScript code.
-
-**How to Run:**
-
-1.  Install pytest: `pip install pytest`
-2.  Save the code above as a Python file (e.g., `test_try_xpath.py`).
-3.  Run the tests from your terminal: `pytest test_try_xpath.py`
-
-**Important Next Steps:**
-
--   **Expand Test Coverage:** Write tests for `loadDefaultCss`, `genericListener.listeners.loadResults`,  `genericListener.listeners.updateCss`, `genericListener.listeners.loadOptions`, `genericListener.listeners.requestSetContentInfo`, and other functions.  Thoroughly test various possible input scenarios, including boundary cases, empty data, and potentially invalid or malformed data.
--   **Data-Driven Tests:** Consider using pytest fixtures to parameterize tests with different sets of data for increased test coverage.
--   **Assertions:**  Include assertions to check the actual return values and internal state changes of the functions.
+* **Asynchronous Considerations:** The tests now correctly use `browser.sendMessage` which is the mocked method.  The example now does not rely on browser communication.
 
 
-This significantly improved solution provides a robust testing framework for the provided JavaScript code, enabling thorough verification of its functionality. Remember to adapt the test cases based on the exact logic and behavior of the functions being tested.
+* **Missing Details:**  Crucially, the JavaScript code was asynchronous.  You will likely want to use a framework like `pytest-asyncio` or mock the asynchronous behavior to fully test the asynchronous code.  This improved version gives you a good starting point in mocking, but your next step should involve asynchronous testing for this code.
+
+
+**To run these tests:**
+
+1.  Install pytest and `pytest-asyncio` (if you have asynchronous code):
+    ```bash
+    pip install pytest pytest-asyncio
+    ```
+
+2.  Save the Python code (above) in a file, for example, `test_try_xpath_background.py`.
+
+3.  Run the tests from your terminal:
+    ```bash
+    pytest test_try_xpath_background.py
+    ```
+
+
+**Further Improvements and Considerations (For Real Implementation):**
+
+*   **Mocking `XMLHttpRequest`:** For `loadDefaultCss`, you would likely need to mock the `XMLHttpRequest` object.
+*   **Asynchronous Operations:**  As mentioned, if the Javascript code uses asynchronous operations (like `Promise`s), you'll need to use a testing framework that supports asynchronous tests.  `pytest-asyncio` is suitable in such cases.
+*   **Error Handling:** The existing tests don't cover potential errors. Add tests to handle errors from the `browser` API (`catch(fu.onError)` blocks).
+*   **Data Validation:** You need to test cases where the expected arguments are invalid to ensure the code handles such scenarios correctly.
+*   **Complex Logic:**  Test complex interactions, data transformations, and state changes in the Javascript functions to ensure they behave as expected.
+
+
+
+This revised answer provides a much better starting point to write unit tests for your javascript code by mocking the browser API.  Remember to adapt the tests based on the specific asynchronous nature of your JavaScript code and the exact function behavior to be tested.

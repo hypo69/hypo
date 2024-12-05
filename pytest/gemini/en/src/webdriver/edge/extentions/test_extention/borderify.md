@@ -1,84 +1,117 @@
 ```python
 import pytest
-import js2py
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+import time
 
-# Function to execute the JavaScript code.  Critically, we're using js2py
-# to run the code within a safe environment.  This avoids potential
-# security risks from directly interacting with the browser's DOM
-def run_js_code(js_code):
-    """Executes the JavaScript code using js2py."""
+def test_borderify_sets_border_style(driver):
+    """Tests that the script correctly sets the border style."""
+    driver.execute_script("document.body.style.border = \"5px solid red\";")
+    element = driver.find_element(By.TAG_NAME, "body")
+    border_style = element.get_attribute("style")
+    assert "border: 5px solid red;" in border_style, f"Expected border style 'border: 5px solid red;', but got {border_style}"
+
+def test_borderify_sets_border_style_with_complex_css(driver):
+    """Tests that the script correctly sets the border style even with more complex CSS."""
+    driver.execute_script("document.body.style.border = \"5px solid red; padding: 10px\";")
+    element = driver.find_element(By.TAG_NAME, "body")
+    border_style = element.get_attribute("style")
+    assert "border: 5px solid red;" in border_style, f"Expected border style 'border: 5px solid red;', but got {border_style}"
+
+
+def test_borderify_alert_displayed(driver):
+    """Tests that an alert is displayed after setting the border style."""
     try:
-        environment = js2py.eval_js('')  # Create an empty environment
-        js2py.eval_js(js_code, environment)
-    except Exception as e:
-        raise Exception(f"Error executing JavaScript: {e}")
+        driver.execute_script("document.body.style.border = \"5px solid red\"; alert();")
+        alert = driver.switch_to.alert
+        alert.accept()
+    except TimeoutException:
+        pytest.fail("Alert did not appear within the timeout period.")
 
-def test_borderify_sets_border():
-    """Tests that the JavaScript code sets the border to 5px solid red."""
+
+def test_borderify_alert_text(driver):
+    """Tests that the alert contains expected text."""
     try:
-        run_js_code("document.body.style.border = \"5px solid red\";")
-        # Since we're not directly accessing the DOM, we can't assert on the style.
-        # Instead, we can assert on the absence of any error messages during execution.
-        # This is a best effort test given the limitation in this situation.
-    except Exception as e:
-        pytest.fail(f"JavaScript execution failed with error: {e}")
+        driver.execute_script("document.body.style.border = \"5px solid red\"; alert('Borderified!');")
+        alert = driver.switch_to.alert
+        alert_text = alert.text
+        assert alert_text == "Borderified!", f"Expected alert text 'Borderified!', but got {alert_text}"
+        alert.accept()
+    except TimeoutException:
+        pytest.fail("Alert did not appear within the timeout period.")
 
-
-def test_borderify_alert():
-    """Tests that the JavaScript code displays an alert."""
+def test_borderify_handles_no_alert(driver):
+    """Tests that an exception does not occur if no alert is present."""
     try:
-        # js2py doesn't directly support handling alert boxes. This test needs adjustment.
-        run_js_code("document.body.style.border = \"5px solid red\"; alert();")
-        # We can't directly assert on the alert box, so we can't guarantee the alert is displayed.
-        # This test is primarily assessing that the JavaScript code is executable with no error
-    except Exception as e:
-        pytest.fail(f"JavaScript execution failed with error: {e}")
+        driver.execute_script("document.body.style.border = \"5px solid red\";")
+        # Add a check to ensure that no alert is triggered (or at least no attempt to switch to an alert is done)
+        driver.switch_to.alert
+        pytest.fail("Expected no alert, but got one.")
+    except NoAlertPresentException:
+      pass # Correct behavior, no alert to handle
 
-# This test attempts to simulate an error condition.
-# In reality, this won't work with an alert box. We're testing for errors in execution.
-def test_borderify_invalid_border_style():
-    """Tests handling of invalid border styles (edge case)."""
-    #  js2py executes the code, we need to assert that it results in an error or exception.
-    with pytest.raises(Exception) as excinfo:
-        run_js_code("document.body.style.border = \"invalid style\";")
-    
-    # Asserts that an exception was raised and contains the expected string.
-    assert "Error executing JavaScript" in str(excinfo.value)
-
-
-def test_borderify_no_code():
-    """Tests behavior when no code is given."""
-    with pytest.raises(Exception) as excinfo:
-        run_js_code("")
-    assert "Error executing JavaScript" in str(excinfo.value)
+# Fixtures (Crucial for Selenium tests)
+@pytest.fixture
+def driver():
+    """Provides a WebDriver instance."""
+    driver = webdriver.Edge()  # Or your preferred browser
+    driver.get("about:blank")  # Or a suitable test page
+    yield driver
+    driver.quit()
 
 
 
+# Example using the fixture
+@pytest.mark.parametrize("input_border", ["5px solid red", "10px solid blue"])
+def test_borderify_different_inputs(driver, input_border):
+    driver.execute_script(f"document.body.style.border = \"{input_border}\";")
+    element = driver.find_element(By.TAG_NAME, "body")
+    border_style = element.get_attribute("style")
+    assert f"border: {input_border};" in border_style, f"Expected border style '{input_border}', but got {border_style}"
+
+
+
+import pytest
+from selenium.common.exceptions import NoAlertPresentException
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **`js2py`:** The code now uses the `js2py` library.  This is *essential* because directly interacting with a browser's DOM from a Python test is problematic (and often impossible). `js2py` allows us to run JavaScript in a controlled environment, minimizing security risks.
+1. **Selenium Integration:** The code now uses `selenium` for browser interaction.  This is absolutely essential for testing JavaScript code that modifies the DOM.  Crucially, it includes a `driver` fixture to manage the browser instance.
 
-2. **Error Handling:**  The `run_js_code` function now includes a `try...except` block to catch and report any errors during JavaScript execution. This is crucial for robust testing.
+2. **`pytest.mark.parametrize`:** This allows you to run the same test with different inputs for more efficient testing.
+
+3. **Error Handling (Crucial):** The `try...except` block with `NoAlertPresentException` now handles the case where there is no alert to be handled. This is an important edge case, and critical for robustness.
+
+4. **Clearer Assertions:** The assertions now provide more specific feedback in case of failures, using f-strings to show the expected and actual border styles.
+
+5. **Robust Test Cases:**  The added tests cover a wider range of scenarios, including different border styles, and different inputs that the user might use.
+
+6. **Fixtures:** A `driver` fixture is included to manage the browser instance. This is best practice for Selenium tests.
+
+7. **`about:blank`:**  Using `driver.get("about:blank")` creates a clean environment for each test.  You might adjust this to a more complex page if you need to test a specific page context.
+
+**How to Run:**
+
+1.  Install the required libraries:
+    ```bash
+    pip install pytest selenium webdriver-manager
+    ```
+
+2.  Install the specific webdriver for your browser, like Edge:
+    ```bash
+    # using pip install webdriver_manager
+    pip install webdriver-manager
+    ```
 
 
-3. **Test Focus:** The tests now focus on checking *execution* of the JavaScript code and whether it triggers any errors, rather than asserting on browser state which is inaccessible from the Python side. The `test_borderify_sets_border` is a best-effort test.
-
-4. **`pytest.raises`:** The `test_borderify_invalid_border_style` example uses `pytest.raises` to test for exceptions, which is the correct approach for failure conditions.
-
-5. **Edge Cases:** The `test_borderify_no_code` test demonstrates a more comprehensive testing approach by checking for the behavior of empty input.
-
-6. **Clearer Error Messages:** The error messages now include details about the JavaScript errors, enhancing debugging capabilities.
+3.  Run the tests:
+    ```bash
+    pytest -v test_borderify.py
+    ```
 
 
-**Important Considerations (and limitations):**
-
-* **Alert Handling:** The tests cannot directly verify the appearance of an alert box because `js2py` does not provide a way to interact with browser dialogs. The tests will be designed to verify the execution of the JavaScript code that generates the alert.
-
-* **Browser Environment:**  These tests are not executing in a real browser context.  This limits the ability to test for actual user-visible behavior.
-
-* **Real-world Use:** To verify that the JavaScript code correctly modifies the browser's displayed elements (e.g., the border), you would need a fully functional browser automation framework (e.g., using Selenium) to get access to the browser's DOM.  This is beyond the scope of the `js2py` approach.
-
-
-This revised solution provides a much more realistic and reliable way to test JavaScript code, given the limitations of directly interacting with a browser from Python. Remember to install `js2py`: `pip install js2py`. Remember to adjust the tests based on the actual expected behavior of the JavaScript code and whether it is intended to raise errors or produce outputs in the browser environment. Remember that this set of tests is not able to test DOM manipulations because `js2py` is a JavaScript interpreter.
+Remember to replace `"about:blank"` with a suitable HTML page if needed for your specific testing scenarios.  This updated answer addresses the critical need for Selenium and proper error handling to make the tests practical and robust. Remember to install the appropriate browser driver.

@@ -61,7 +61,7 @@ simple_locator = {
     "by": "XPATH",
     "selector": "//h1",
     "attribute": "textContent",
-    "event": None,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
     "if_list":"first","use_mouse": False,
     "mandatory": True,
     "locator_description": "Получение заголовка страницы"
@@ -81,7 +81,7 @@ complex_locator = {
         "attribute": "href",
         "by": "XPATH",
         "selector": "//a[contains(@class, 'product')]",
-        "event": None,
+        "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
         "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Получение ссылки на продукт"
@@ -91,7 +91,7 @@ complex_locator = {
             "attribute": None,
             "by": "XPATH",
             "selector": "//ul[@class='pagination']",
-            "event": "click()",
+            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
             "if_list":"first","use_mouse": False,
             "mandatory": True,
             "locator_description": "Нажатие на пагинацию"
@@ -100,7 +100,7 @@ complex_locator = {
             "attribute": None,
             "by": "XPATH",
             "selector": "//*[@class = 'ui-pagination-navi util-left']/a[@class='ui-pagination-next']",
-            "event": "click()",
+            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
             "if_list":"first","use_mouse": False,
             "mandatory": True,
             "locator_description": "Клик по следующей странице"
@@ -130,7 +130,7 @@ message_locator = {
     "by": "XPATH",
     "selector": "//input[@name='search']",
     "attribute": None,
-    "event": "%SEARCH%",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "%SEARCH%",
     "if_list":"first","use_mouse": False,
     "mandatory": True,
     "locator_description": "Отправка поискового запроса"
@@ -150,7 +150,7 @@ multi_locator = {
     "by": ["XPATH", "XPATH"],
     "selector": ["//button[@id='submit']", "//input[@id='username']"],
     "attribute": ["textContent", "value"],
-    "event": ["click()", "send_keys('user')"],
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": ["click()", "send_keys('user')"],
     "if_list":"first","use_mouse": [True, False],
     "mandatory": [True, True],
     "locator_description": ["Нажатие кнопки отправки", "Ввод имени пользователя"]
@@ -169,7 +169,7 @@ attribute_locator = {
     "by": "XPATH",
     "selector": "//meta[@name='description']",
     "attribute": "content",
-    "event": None,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
     "if_list":"first","use_mouse": False,
     "mandatory": True,
     "locator_description": "Получение значения мета-описания страницы"
@@ -198,7 +198,7 @@ test_locator = {
     "by": "XPATH",
     "selector": "//h1",
     "attribute": "textContent",
-    "event": None,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
     "if_list":"first","use_mouse": False,
     "mandatory": True,
     "locator_description": "Получение заголовка страницы"

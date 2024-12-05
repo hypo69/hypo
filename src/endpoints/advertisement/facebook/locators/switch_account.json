@@ -4,7 +4,7 @@
     "by": "XPATH",
     "selector": "//div[@aria-label = 'Переключить']",
     "if_list":"first","use_mouse": false,
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "Переключение на аккаунт, если надо. Если есть кнопка - нажимаю"
   }

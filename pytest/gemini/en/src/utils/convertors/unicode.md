@@ -4,7 +4,14 @@ import re
 from typing import Dict, Any
 
 def decode_unicode_escape(input_data: Dict[str, Any] | list | str) -> Dict[str, Any] | list | str:
-    """Функция декодирует значения в словаре, списке или строке, содержащие юникодные escape-последовательности, в читаемый текст."""
+    """Функция декодирует значения в словаре, списке или строке, содержащие юникодные escape-последовательности, в читаемый текст.
+
+    Args:
+        input_data (dict | list | str): Входные данные - словарь, список или строка, которые могут содержать юникодные escape-последовательности.
+
+    Returns:
+        dict | list | str: Преобразованные данные. В случае строки применяется декодирование escape-последовательностей. В случае словаря или списка рекурсивно обрабатываются все значения.
+    """
     if isinstance(input_data, dict):
         return {key: decode_unicode_escape(value) for key, value in input_data.items()}
     elif isinstance(input_data, list):
@@ -14,7 +21,6 @@ def decode_unicode_escape(input_data: Dict[str, Any] | list | str) -> Dict[str, 
             decoded_string = input_data.encode('utf-8').decode('unicode_escape')
         except UnicodeDecodeError:
             decoded_string = input_data
-        
         unicode_escape_pattern = r'\\u[0-9a-fA-F]{4}'
         decoded_string = re.sub(unicode_escape_pattern, lambda match: match.group(0).encode('utf-8').decode('unicode_escape'), decoded_string)
         return decoded_string
@@ -22,50 +28,47 @@ def decode_unicode_escape(input_data: Dict[str, Any] | list | str) -> Dict[str, 
         return input_data
 
 
-def test_decode_unicode_escape_valid_dict():
-    """Проверяет корректную работу функции с valid словарем."""
+def test_decode_unicode_escape_dict():
+    """Тест для словаря с юникодными escape-последовательностями."""
     input_dict = {
-        'product_name': r'\u05de\u05e7"\\u05d8 \u05d9\u05e6\u05e8\u05df\nH510M K V2',
+        'product_name': r'\u05de\u05e7"\u05d8 \u05d9\u05e6\u05e8\u05df\nH510M K V2',
         'category': r'\u05e2\u05e8\u05db\u05ea \u05e9\u05d1\u05d1\u05d9\u05dd',
         'price': 123.45
     }
-    expected_dict = {
-        'product_name': 'אב\"ד הויא\nH510M K V2',
-        'category': 'עברית תקנית',
+    expected_output = {
+        'product_name': 'אב\"ד הווין\nH510M K V2',
+        'category': 'עברית',
         'price': 123.45
     }
-    assert decode_unicode_escape(input_dict) == expected_dict
+    assert decode_unicode_escape(input_dict) == expected_output
+
+def test_decode_unicode_escape_list():
+  """Тест для списка с юникодными escape-последовательностями."""
+  input_list = [r'\u05e2\u05e8\u05db\u05ea \u05e9\u05d1\u05d1\u05d9\u05dd', r'H510M K V2']
+  expected_output = ['עברית', 'H510M K V2']
+  assert decode_unicode_escape(input_list) == expected_output
 
 
-def test_decode_unicode_escape_valid_list():
-    """Проверяет корректную работу функции с valid списком."""
-    input_list = [r'\u05e2\u05e8\u05db\u05ea \u05e9\u05d1\u05d1\u05d9\u05dd', r'H510M K V2']
-    expected_list = ['עברית תקנית', 'H510M K V2']
-    assert decode_unicode_escape(input_list) == expected_list
-
-def test_decode_unicode_escape_valid_string():
-    """Проверяет корректную работу функции с valid строкой."""
-    input_string = r'\u05de\u05e7"\\u05d8 \u05d9\u05e6\u05e8\u05df\nH510M K V2'
-    expected_string = 'אב\"ד הויא\nH510M K V2'
-    assert decode_unicode_escape(input_string) == expected_string
-
-
-def test_decode_unicode_escape_no_unicode():
-    """Проверяет работу функции с строкой, не содержащей юникод escape последовательности."""
-    input_string = "This is a regular string."
-    expected_string = "This is a regular string."
-    assert decode_unicode_escape(input_string) == expected_string
-
+def test_decode_unicode_escape_string():
+  """Тест для строки с юникодными escape-последовательностями."""
+  input_string = r'\u05de\u05e7"\u05d8 \u05d9\u05e6\u05e8\u05df\nH510M K V2'
+  expected_output = 'אב\"ד הווין\nH510M K V2'
+  assert decode_unicode_escape(input_string) == expected_output
 
 def test_decode_unicode_escape_invalid_input():
-    """Проверяет работу функции с не поддерживаемым типом данных."""
-    input_data = 123
-    assert decode_unicode_escape(input_data) == 123
+  """Тест для некорректного ввода."""
+  input_data = 123
+  assert decode_unicode_escape(input_data) == 123
 
+def test_decode_unicode_escape_no_escape():
+  """Тест для строки без юникод escape."""
+  input_string = "This is a normal string"
+  expected_output = "This is a normal string"
+  assert decode_unicode_escape(input_string) == expected_output
 
-def test_decode_unicode_escape_unicode_decode_error():
-    """Проверяет обработку ошибки UnicodeDecodeError."""
-    input_string = "This string has an invalid escape sequence \\u12345"
-    expected_string = "This string has an invalid escape sequence \\u12345"
-    assert decode_unicode_escape(input_string) == expected_string
+def test_decode_unicode_escape_invalid_unicode():
+  """Тест для некорректного юникода."""
+  input_string = "\\u12345"  # Invalid Unicode sequence
+  assert decode_unicode_escape(input_string) == "\\u12345"
+
 ```

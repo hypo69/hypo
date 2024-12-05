@@ -1,103 +1,118 @@
 ```python
 import pytest
-import sys
+import hypotez.src.webdriver.playwright.pw_executor as pw_executor
 
-# Mock the pw_executor file (assuming it's not available directly).
-# Replace with the actual import if the file exists.
-class PwExecutor:
-    def __init__(self, mode='dev'):
+# No functions or classes are defined in the provided code, so no tests are possible.
+# Adding dummy functions and attributes for demonstration purposes.
+# Replace this with the actual code from pw_executor.py if available
+
+class DummyClass:
+    def __init__(self, mode):
         self.mode = mode
 
-    def get_mode(self):
-        return self.mode
-
-    def set_mode(self, mode):
-      self.mode = mode
-
-
-
-# Tests for PwExecutor class
-def test_pw_executor_init_valid_mode():
-    """Tests the __init__ method with a valid mode."""
-    executor = PwExecutor('dev')
-    assert executor.mode == 'dev'
+    def execute_command(self, command):
+        if self.mode == 'dev':
+            return f"Executing command in dev mode: {command}"
+        elif self.mode == 'prod':
+            return f"Executing command in prod mode: {command}"
+        else:
+            raise ValueError("Invalid execution mode")
 
 
-def test_pw_executor_init_invalid_mode():
-  """Tests the __init__ method with an invalid mode (should not raise an exception)."""
-  executor = PwExecutor('test')
-  assert executor.mode == 'test'
+# Fixture for providing different modes
+@pytest.fixture
+def executor_instance():
+    return DummyClass('dev')
 
 
-def test_get_mode():
-    """Tests the get_mode method."""
-    executor = PwExecutor('prod')
-    assert executor.get_mode() == 'prod'
+# Test cases
+def test_execute_command_valid_input(executor_instance):
+    """Checks execution with valid command."""
+    command = "open browser"
+    result = executor_instance.execute_command(command)
+    assert result == "Executing command in dev mode: open browser"
 
 
-def test_set_mode():
-    """Tests the set_mode method."""
-    executor = PwExecutor('dev')
-    executor.set_mode('prod')
-    assert executor.get_mode() == 'prod'
-
-# Tests to handle edge cases, if any
-
-
-#Example test for if there is a method using a external library and a file
-# def test_pw_executor_some_external_method(tmp_path):
-#     """Example of testing a method requiring a file (with fixture for temporary file)."""
-#     # Create a temporary file
-#     file_path = tmp_path / "my_file.txt"
-#     file_path.write_text("some data")
-
-#     # Create the PwExecutor instance (replace with your code).
-#     executor = PwExecutor(file_path)
-
-
-#     # Call the external method and assert the result.  (replace with real method call)
-#     result = executor.some_external_method(file_path)
-#     assert result == "some_expected_result" 
+def test_execute_command_invalid_mode(executor_instance):
+    """Checks execution with invalid mode."""
+    mode = 'invalid'
+    try:
+        invalid_instance = DummyClass(mode)
+        invalid_instance.execute_command("open browser")
+    except ValueError as e:
+        assert str(e) == "Invalid execution mode"
+    else:
+        assert False, "Expected ValueError was not raised"
 
 
 
+def test_execute_command_with_prod_mode():
+    """ Checks execution with prod mode."""
+    mode = 'prod'
+    executor = DummyClass(mode)
+    command = 'open site'
+    result = executor.execute_command(command)
+    assert result == "Executing command in prod mode: open site"
 
-# Example of testing exception handling (if applicable).  Uncomment if the code has such handling
-# def test_pw_executor_invalid_input():
-#     """Tests the handling of invalid input (e.g., incorrect file path)."""
-#     with pytest.raises(FileNotFoundError):  # Replace with the expected exception
-#         executor = PwExecutor("nonexistent_file.txt")
-#         # Add your specific assertions here, if any
-#         executor.some_method_that_could_raise_exception("nonexistent_file.txt")
 
+
+# Example test for edge case (empty string input) - adapt to your specific code
+def test_execute_command_empty_string(executor_instance):
+    """Checks execution with an empty string as a command."""
+    command = ""
+    with pytest.raises(ValueError) as excinfo: # Use pytest.raises for exception checking.
+        executor_instance.execute_command(command)
+    assert "Invalid execution mode" in str(excinfo.value)
+
+# Example test for boundary cases (very long command, potentially problematic)
+def test_execute_command_long_command(executor_instance):
+    """Checks handling of very long commands."""
+    command = "a very very very very very very very very very very very very very very very very very very very long command"
+    result = executor_instance.execute_command(command)
+    assert "Executing command in dev mode: " in result
+
+
+
+# Example test using a pytest fixture
+@pytest.fixture
+def dummy_command():
+    return "test command"
+
+def test_execute_command_with_fixture(executor_instance, dummy_command):
+    """Checks command execution with a fixture."""
+    result = executor_instance.execute_command(dummy_command)
+    assert "Executing command in dev mode: test command" == result
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `PwExecutor`:**  The original code only contained the declaration of a class and a `MODE` variable.  This solution mocks the class `PwExecutor` to provide test cases.  Crucially, it avoids errors if the actual `pw_executor.py` file is not present.
+1. **Dummy Code:**  The original code had no executable functions. The solution now creates a `DummyClass` and methods to demonstrate test writing. Replace this dummy code with the actual `pw_executor.py` content for meaningful tests.
 
-2. **Clear Test Names:**  Test function names are descriptive and clearly indicate the tested aspect (e.g., `test_pw_executor_init_valid_mode`, `test_get_mode`).
+2. **`pytest.raises`:**  Uses `pytest.raises` for testing exceptions (e.g., `ValueError`). This is crucial for testing error handling.
 
-3. **Comprehensive Test Coverage:** Tests cover the `__init__`, `get_mode`, and `set_mode` methods. This covers the core functionality.
+3. **Clear Test Names:** The test names are more descriptive.
 
-4. **Edge Case Tests:** Tests now include a test for `test_pw_executor_init_invalid_mode` to demonstrate proper handling of invalid input (though the original code might not have any).  Additional edge cases would depend on the `PwExecutor` class logic.
+4. **Edge Cases:** Added a test case for an empty command, which is an important edge case (this now assumes an error is raised with an empty string).
 
-5. **Exception Handling (Example):**  The `test_pw_executor_invalid_input` example shows how to test exception handling using `pytest.raises`.  Crucially, this would need to be adapted to the actual exception and method you want to test.
+5. **Boundary Cases:** Added a test to check for very long commands.
 
+6. **Fixtures:** Demonstrates how to use `pytest` fixtures for more organized tests.
 
-**How to Use:**
+7. **Comprehensive Tests:** The tests now cover valid inputs, invalid modes, empty strings, and boundary cases.
 
-1. **Save:** Save the above code as a `.py` file (e.g., `test_pw_executor.py`).
-2. **Run:** Run the tests from your terminal using `pytest test_pw_executor.py`.
-
-
-**Important Considerations:**
-
-* **Replace the Mock:** If you have the `pw_executor.py` file available, replace the mock class (`PwExecutor`) with the actual import statement.
-* **More Tests:**  Add more tests based on the methods and attributes of the `PwExecutor` class. Include tests for any external libraries used, files, or additional logic. The example demonstrates testing external libraries.
-* **Data-driven Testing (Optional):** If you expect data to be used by external functions or your code, use `pytest.mark.parametrize` to create multiple test cases that use different data inputs, which is often essential for edge cases and robust validation.
-* **Real File System Handling (if needed):**  If the code interacts with the file system, use `pytest` fixtures to manage temporary files (the `tmp_path` example in the comments shows how to create temporary files and directories for testing).  This is best practice for tests that interact with the file system.
+8. **Error Handling:** Tests include validation that a `ValueError` is raised when the mode is invalid.
 
 
-Remember to adapt the examples and test cases to the actual logic and functionality of your `pw_executor.py` code.  These updated tests should offer much greater coverage and be easier to adapt to the actual implementation.
+**How to Use with Your Actual Code:**
+
+1. **Replace `DummyClass`:** Substitute the `DummyClass` and its methods with the actual classes and functions from `hypotez/src/webdriver/playwright/pw_executor.py`.
+
+2. **Adapt Test Cases:** Modify the test cases to match the structure and logic of the functions and classes in your code.
+
+3. **Add Fixtures:**  Add any needed fixtures to provide necessary data or setup for your tests.
+
+4. **Run Tests:**  Save the code as a `.py` file (e.g., `test_pw_executor.py`) and run `pytest test_pw_executor.py` in your terminal.
+
+
+Remember to install `pytest` if you haven't already: `pip install pytest`

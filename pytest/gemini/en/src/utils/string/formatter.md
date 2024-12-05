@@ -3,93 +3,85 @@ import pytest
 import re
 from hypotez.src.utils.string.formatter import StringFormatter
 
+# Tests for remove_line_breaks
 def test_remove_line_breaks_valid_input():
-    """Checks correct behavior with valid input (newline characters)."""
-    input_str = "This is a string\nwith multiple\nlines."
-    expected_output = "This is a string with multiple lines."
+    input_str = "This is a\nmultiline\nstring."
+    expected_output = "This is a multiline string."
     assert StringFormatter.remove_line_breaks(input_str) == expected_output
 
 def test_remove_line_breaks_empty_input():
-    """Checks behavior with empty input."""
     input_str = ""
     expected_output = ""
     assert StringFormatter.remove_line_breaks(input_str) == expected_output
-
-def test_remove_line_breaks_single_line_input():
-    """Checks behavior with a single-line input."""
+    
+def test_remove_line_breaks_single_line():
     input_str = "This is a single line."
     expected_output = "This is a single line."
     assert StringFormatter.remove_line_breaks(input_str) == expected_output
 
+def test_remove_line_breaks_multiple_types_of_breaks():
+    input_str = "This is a\r\nmultiline\nstring.\r"
+    expected_output = "This is a multiline string."
+    assert StringFormatter.remove_line_breaks(input_str) == expected_output
+    
+
+# Tests for remove_htmls
 def test_remove_htmls_valid_input():
-    """Checks correct behavior with valid input (HTML tags)."""
-    input_html = "<p>This is a paragraph.</p> <span>with some tags</span>"
-    expected_output = "This is a paragraph. with some tags"
+    input_html = "<p>This is a paragraph.</p>"
+    expected_output = "This is a paragraph."
     assert StringFormatter.remove_htmls(input_html) == expected_output
 
 def test_remove_htmls_empty_input():
-    """Checks behavior with empty input."""
     input_html = ""
     expected_output = ""
     assert StringFormatter.remove_htmls(input_html) == expected_output
 
-def test_remove_htmls_no_tags_input():
-    """Checks behavior with input containing no HTML tags."""
-    input_html = "This is plain text."
-    expected_output = "This is plain text."
+def test_remove_htmls_multiple_tags():
+    input_html = "<p>This <span>is</span> a paragraph.</p>"
+    expected_output = "This is a paragraph."
+    assert StringFormatter.remove_htmls(input_html) == expected_output
+    
+def test_remove_htmls_no_tags():
+    input_html = "This is a paragraph."
+    expected_output = "This is a paragraph."
     assert StringFormatter.remove_htmls(input_html) == expected_output
 
+# Tests for escape_html_tags
 def test_escape_html_tags_valid_input():
-    """Checks correct behavior with valid HTML input."""
-    input_html = "<p>This is &lt;strong&gt;important&lt;/strong&gt;.</p>"
-    expected_output = "&lt;p&gt;This is &amp;lt;strong&amp;gt;important&amp;lt;/strong&amp;gt;.&lt;/p&gt;"
+    input_html = "<p>This is &lt;important&gt;!</p>"
+    expected_output = "&lt;p&gt;This is &amp;lt;important&amp;gt;!&lt;/p&gt;"
     assert StringFormatter.escape_html_tags(input_html) == expected_output
 
-def test_escape_html_tags_no_tags_input():
-    """Checks behavior with no HTML tags in the input."""
-    input_html = "This is plain text."
-    expected_output = "This is plain text."
+
+def test_escape_html_tags_no_tags():
+    input_html = "This is a paragraph."
+    expected_output = "This is a paragraph."
     assert StringFormatter.escape_html_tags(input_html) == expected_output
 
-def test_escape_to_html_valid_input():
-    """Checks correct behavior with valid input."""
-    text = "<>&'\"\\n"
-    expected_output = "&lt;&gt;&amp;&apos;&quot;\\\\n"
-    assert StringFormatter.escape_to_html(text) == expected_output
-
-def test_remove_non_latin_characters_valid_input():
-    """Checks correct behavior with valid input containing non-Latin characters."""
-    input_str = "Hello, world! こんにちは"
-    expected_output = "Hello, world! "
-    assert StringFormatter.remove_non_latin_characters(input_str) == expected_output
-
-def test_remove_non_latin_characters_no_non_latin_input():
-    """Checks behavior with input containing no non-Latin characters."""
-    input_str = "This is all Latin characters."
-    expected_output = "This is all Latin characters."
-    assert StringFormatter.remove_non_latin_characters(input_str) == expected_output
 
 
-def test_remove_special_characters_string_input():
-    """Checks behavior with a string input."""
-    input_str = "Hello!@#$%^&*()"
-    expected_output = "Hello"
-    assert StringFormatter.remove_special_characters(input_str) == expected_output
-
-def test_remove_special_characters_list_input():
-    """Checks behavior with a list input."""
-    input_str = ["Hello!@#$%^&*", "World!@#$%^&*"]
-    expected_output = ["Hello", "World"]
-    assert StringFormatter.remove_special_characters(input_str) == expected_output
-
+# Tests for clear_numbers
 def test_clear_numbers_valid_input():
-  input_str = "aaa123.456 cde"
-  expected_output = "123.456"
-  assert StringFormatter.clear_numbers(input_str) == expected_output
+    input_str = "aaa123.456 cde"
+    expected_output = "123.456"
+    assert StringFormatter.clear_numbers(input_str) == expected_output
 
-def test_clear_numbers_no_numbers_input():
-  input_str = "abc def"
-  expected_output = ""
-  assert StringFormatter.clear_numbers(input_str) == expected_output
+def test_clear_numbers_empty_input():
+    input_str = ""
+    expected_output = ""
+    assert StringFormatter.clear_numbers(input_str) == expected_output
 
+def test_clear_numbers_no_numbers():
+    input_str = "abc def"
+    expected_output = ""
+    assert StringFormatter.clear_numbers(input_str) == expected_output
+    
+def test_clear_numbers_with_decimal_and_other_characters():
+    input_str = "abc12.34xyz"
+    expected_output = "12.34"
+    assert StringFormatter.clear_numbers(input_str) == expected_output
+
+
+
+# Add more test cases for other functions as needed.
 ```

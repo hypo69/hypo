@@ -4,19 +4,19 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "sendKeys(Keys.RETURN)",
       "by": "XPATH",
       "selector": "//li[@data-value='he']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "en": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//li[@data-value='en']",
-      "event": "sendKeys(Keys.RETURN)"
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "sendKeys(Keys.RETURN)"
     },
     "ru": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//li[@data-value='ru']",
-      "event": "sendKeys(Keys.RETURN)"
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "sendKeys(Keys.RETURN)"
     }
   },
   "infinity_scroll": true,
@@ -26,7 +26,7 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "infinity_scroll",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     }
   },
 
@@ -34,7 +34,7 @@
     "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": {"src" : null},
     "by": "XPATH",
     "selector": "//ul[contains(@class , 'slider animated')]//img",
-    "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+    "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
   },
 
   "product": {
@@ -43,20 +43,20 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "href",
       "by": "XPATH",
       "selector": "//a[contains(@class,'MuiTypography') and contains(@href , 'web/item')]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
 
     "product_block_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "XPATH",
       "selector": "//*[@id='product-page-root']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "sku_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerText",
       "by": "XPATH",
       "selector": "//*[contains(@data-id, 'product-')]/span",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
 
     "product_name_locator": {
@@ -64,33 +64,33 @@
       "by": "XPATH",
       "replaced by driver.title": null,
       "selector": "//*[@id='product-page-root']//h1//span",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "price_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerText",
       "by": "XPATH",
       "selector": "//*[@id='product-page-root']//div[@aria-label]//div[text()]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "product_delivery_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//h2[contains(@aria-label ,'אפשרויות איסוף ומשלו')]//following::ul//li[contains(@aria-label ,'משלוח')]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
 
     "main_image_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//li[contains(@class ,'slide selected')]//div//img",
-      "event": "screenshot()"
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "screenshot()"
     },
 
     "summary_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "XPATH",
       "selector": "//p[contains(text(),'תיאור קצר')]//following-sibling::p[1]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
 
 
@@ -98,39 +98,39 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerText",
       "by": "XPATH",
       "selector": "//div[contains(@id , 'review-section')]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
 
     "specification_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//div[contains(@id , 'review-section')]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "customer_reviews_locator": null,
     "product_attributes_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "XPATH",
       "selector": "//*[@id='product-page-root']//div[@aria-label]//following-sibling::div/p[1]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null,
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "product attribute": {
         "color": {
           "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
           "by": "XPATH",
           "selector": "//h3[contains(@aria-label , 'בחירת צבע')]/following-sibling::*",
-          "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+          "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
         },
         "phone memory": {
           "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
           "by": "XPATH",
           "selector": "//h3[contains(@aria-label , 'בחירת נפח')]/following-sibling::*",
-          "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+          "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
         },
         "delivery": {
           "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
           "by": "XPATH",
           "selector": "//h3[contains(@aria-label , 'אפשרויות איסוף ומשלוח')]/following-sibling::*",
-          "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+          "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
         }
       }
     }

@@ -95,7 +95,7 @@ def main():
         "by": "XPATH",
         "selector": "//h1",
         "attribute": "textContent",
-        "event": None,
+        "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
         "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Getting the page title"
@@ -114,7 +114,7 @@ def main():
             "attribute": "href",
             "by": "XPATH",
             "selector": "//a[contains(@class, 'product')]",
-            "event": None,
+            "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
             "if_list":"first","use_mouse": False,
             "mandatory": True,
             "locator_description": "Getting the product link"
@@ -124,7 +124,7 @@ def main():
                 "attribute": None,
                 "by": "XPATH",
                 "selector": "//ul[@class='pagination']",
-                "event": "click()",
+                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
                 "if_list":"first","use_mouse": False,
                 "mandatory": True,
                 "locator_description": "Click on pagination"
@@ -133,7 +133,7 @@ def main():
                 "attribute": None,
                 "by": "XPATH",
                 "selector": "//*[@class = 'ui-pagination-navi util-left']/a[@class='ui-pagination-next']",
-                "event": "click()",
+                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
                 "if_list":"first","use_mouse": False,
                 "mandatory": True,
                 "locator_description": "Click on the next page"
@@ -161,7 +161,7 @@ def main():
         "by": "XPATH",
         "selector": "//input[@name='search']",
         "attribute": None,
-        "event": "%SEARCH%",
+        "timeout":0,"timeout_for_event":"presence_of_element_located","event": "%SEARCH%",
         "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Sending a search query"
@@ -180,7 +180,7 @@ def main():
         "by": ["XPATH", "XPATH"],
         "selector": ["//button[@id='submit']", "//input[@id='username']"],
         "attribute": ["textContent", "value"],
-        "event": ["click()", "send_keys('user')"],
+        "timeout":0,"timeout_for_event":"presence_of_element_located","event": ["click()", "send_keys('user')"],
         "if_list":"first","use_mouse": [True, False],
         "mandatory": [True, True],
         "locator_description": ["Click the submit button", "Enter username"]
@@ -198,7 +198,7 @@ def main():
         "by": "XPATH",
         "selector": "//meta[@name='description']",
         "attribute": "content",
-        "event": None,
+        "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
         "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Getting the page meta-description"
@@ -225,7 +225,7 @@ def main():
         "by": "XPATH",
         "selector": "//h1",
         "attribute": "textContent",
-        "event": None,
+        "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
         "if_list":"first","use_mouse": False,
         "mandatory": True,
         "locator_description": "Getting the page title"

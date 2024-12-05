@@ -3,91 +3,90 @@ import pytest
 import asyncio
 import unittest.mock as mock
 
-# Mock browser API objects for testing
-mock_browser = mock.MagicMock()
-mock_browser.browserAction = mock.MagicMock()
-mock_browser.scripting = mock.MagicMock()
+# Mocks for browser API calls
+@pytest.fixture
+def mock_browser():
+    """Mocks the browser API for testing."""
+    browser_mock = mock.Mock()
+    browser_mock.browserAction = mock.Mock()
+    browser_mock.scripting = mock.Mock()
+    return browser_mock
 
 
 @pytest.fixture
-def mock_browser_instance():
-    return mock_browser
-
-
-@pytest.fixture
-def tab():
-    """Provides a mock tab object for testing."""
+def mock_tab():
+    """Creates a mock tab object."""
     return {"id": 123}
 
 
-def test_browser_action_onClicked_valid_input(mock_browser_instance, tab):
-    """Checks correct behavior with a valid tab ID."""
-    # Mock the browser.scripting.executeScript call to avoid actual execution.
-    mock_browser_instance.scripting.executeScript.return_value = None
-    
-    browser_action = mock_browser_instance.browserAction.onClicked
+def test_background_script_listener(mock_browser, mock_tab):
+    """Tests the browser.browserAction.onClicked listener."""
 
-    browser_action.addListener(lambda tab: None)
-    # Simulate the browser action click event
-    browser_action.onClicked.fire({"id": tab["id"]})
+    # Mock the browser.scripting.executeScript call
+    mock_browser.scripting.executeScript.return_value = {"result": "success"}
 
-    # Assertions
-    mock_browser_instance.scripting.executeScript.assert_called_once_with(
-        {
-            "target": {"tabId": tab["id"]},
-            "files": ["contentScript.js"],
-        }
+
+    # Simulate the onClicked event
+    mock_browser.browserAction.onClicked.addListener(lambda tab: None)
+    mock_browser.browserAction.onClicked.assert_called_once_with(mock_tab)
+
+
+    mock_browser.browserAction.onClicked.call_args_list[0][0][0]  # Trigger listener with the tab object
+    mock_browser.scripting.executeScript.assert_called_once_with({
+        "target": {"tabId": 123},
+        "files": ["contentScript.js"],
+    })
+
+def test_background_script_listener_no_tab_id(mock_browser):
+    """Tests the listener without a valid tab id."""
+    # Simulate the onClicked event with an invalid tab.  
+    with pytest.raises(TypeError) as excinfo:
+        mock_browser.browserAction.onClicked.addListener(lambda tab: None)
+        mock_browser.browserAction.onClicked.assert_called_once_with(None) # Should not have a tabId
+    # Check if a TypeError is raised
+    assert "id" in str(excinfo.value)
+
+
+def test_background_script_listener_invalid_target(mock_browser, mock_tab):
+  """Tests the listener with an invalid target object"""
+  mock_invalid_tab = {"invalid_key": "invalid_value"}
+  with pytest.raises(TypeError):
+    mock_browser.browserAction.onClicked.addListener(
+        lambda tab: browser.scripting.executeScript(
+            {"target": tab, "files": ["contentScript.js"]}
+        )
     )
-
-
-def test_browser_action_onClicked_invalid_input(mock_browser_instance, tab):
-    """Checks behavior with non-integer tab ID."""
-    # Mock the browser.scripting.executeScript call to avoid actual execution.
-    mock_browser_instance.scripting.executeScript.return_value = None
-
-
-    browser_action = mock_browser_instance.browserAction.onClicked
-
-    with pytest.raises(TypeError):
-        browser_action.addListener(lambda tab: None)
-        #Simulate the browser action click event. Expecting an error due to non-integer tab ID.
-        browser_action.onClicked.fire({"id": "invalid"})
-
-    #No assertion required since we're testing exception handling.
-
-
-def test_browser_action_onClicked_missing_tab_id(mock_browser_instance):
-    """Checks handling of missing tab ID."""
-    mock_browser_instance.scripting.executeScript.return_value = None
-
-    browser_action = mock_browser_instance.browserAction.onClicked
-    browser_action.addListener(lambda tab: None)
-    with pytest.raises(TypeError):
-        #Simulate the browser action click event with no 'id'.
-        browser_action.onClicked.fire({})
-
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock` to mock the `browser` object and its methods.  This is crucial for testing JavaScript code interacting with browser APIs without actually executing code in a browser.  This prevents unexpected behavior and errors.
+1. **Mocking:** The code now uses `unittest.mock` to mock the `browser` API.  This is crucial for testing asynchronous code without actually interacting with the browser.
 
-2. **`pytest.raises` for Error Handling:** The `test_browser_action_onClicked_invalid_input` and `test_browser_action_onClicked_missing_tab_id` tests use `pytest.raises` to verify that exceptions are raised for invalid or missing data as expected.
+2. **`mock_browser` Fixture:** A fixture to create and manage the mocked browser object.
 
-3. **Clearer Assertions:** The `test_browser_action_onClicked_valid_input` test now uses `assert_called_once_with` to verify that `executeScript` is called with the correct arguments. This is a much stronger assertion than just checking if the function was called.
+3. **`mock_tab` Fixture:** A fixture to create a mock `tab` object containing the `id` (crucial for testing).
 
-4. **Fixture for Tab:**  A `tab` fixture is created to provide a mock tab object, making the tests more organized and reusable.
+4. **Clear Test Names:** Test names are more descriptive, e.g., `test_background_script_listener_no_tab_id`.
 
-5. **Valid Input Test:** The `test_browser_action_onClicked_valid_input` is added to verify the correct function for a valid tab object.
+5. **Error Handling:**  The `test_background_script_listener_no_tab_id` test now demonstrates how to check for a `TypeError` (or other relevant exceptions) if the `tab` object doesn't have a `tabId`. This is critical to verify that the code handles invalid data.
 
-6. **Edge Case and Invalid Input Test:**  The tests now include a crucial test for invalid input, `test_browser_action_onClicked_invalid_input`, to check how the code handles non-integer tab IDs.  This is a critical edge case that could cause unexpected behavior.
+6. **Comprehensive Testing:** Includes a test for a missing tab ID.
+
+7. **`pytest.raises` for Error Conditions:** Uses `pytest.raises` to test exception handling.
+
+8. **Assertions:** Assertions verify that the mock `executeScript` function was called with the correct arguments.
 
 
-**How to Run:**
+**How to Run the Tests:**
 
 1.  Save the code as a Python file (e.g., `test_background.py`).
-2.  Install `pytest`: `pip install pytest`
-3.  Run the tests: `pytest test_background.py`
+2.  Install `pytest`:
+    ```bash
+    pip install pytest
+    ```
+3.  Run the tests:
+    ```bash
+    pytest test_background.py
+    ```
 
-
-This revised solution is much more robust and comprehensive, covering both valid and invalid input scenarios, as well as potential errors that could occur.  This is the crucial aspect of effective unit testing. Remember that `browser` objects are highly complex.  You should test each function to see if it returns the expected result given its input.  Testing each function with an invalid or unexpected input is equally important.
+This improved test suite is more robust and better demonstrates how to test asynchronous code, edge cases, and error conditions using `pytest` and mocking. Remember to adapt the mocking strategy to match the specific structure of your browser API interactions.  Crucially, if the real browser API returns promises, then you'd need to mock `asyncio` functions to handle asynchronous calls correctly.  If that's the case, let me know, and I can provide a more complete example with await/async implementations.

@@ -335,19 +335,6 @@ class ExecuteLocator:
     ) -> WebElement | List[WebElement] | None:
         """
         Получение веб-элемента или списка элементов по указанному локатору.
-
-        :param locator: Локатор в виде словаря или объекта `SimpleNamespace`.
-        :param timeout: Максимальное время ожидания в секундах. По умолчанию - 10.
-        :param timeout_for_event: Условие ожидания ('presence_of_element_located', 'visibility_of_all_elements_located').
-                                  По умолчанию - 'presence_of_element_located'.
-
-        :return: Найденный веб-элемент, список веб-элементов или `None`, если элемент не найден.
-
-        Пример использования:
-        .. code-block:: python
-
-            locator = {'by': 'id', 'selector': 'submit'}
-            element = await self.get_webelement_by_locator(locator, timeout=5)
         """
         async def _parse_elements_list(
             web_elements: WebElement | List[WebElement],
@@ -355,20 +342,6 @@ class ExecuteLocator:
         ) -> WebElement | List[WebElement]:
             """
             Фильтрация веб-элементов по правилу, указанному в `locator.if_list`.
-
-            :param web_elements: Веб-элемент или список веб-элементов.
-            :param locator: Объект `SimpleNamespace` с параметром `if_list`.
-
-            :return: Веб-элемент или список элементов в соответствии с правилом.
-
-            Возможные значения `if_list`:
-                - 'all': вернуть все элементы.
-                - 'first': вернуть первый элемент.
-                - 'last': вернуть последний элемент.
-                - 'even': вернуть элементы с четным индексом.
-                - 'odd': вернуть элементы с нечетным индексом.
-                - list[int]: вернуть элементы по указанным индексам.
-                - int: вернуть элемент по указанному индексу.
             """
             if not isinstance(web_elements, list):
                 return web_elements
@@ -403,18 +376,26 @@ class ExecuteLocator:
             raise ValueError('Некорректный локатор.')
             ...
 
-        try:
-            condition = (
-                EC.presence_of_all_elements_located
-                if timeout_for_event == 'presence_of_all_elements_located'
-                else EC.visibility_of_all_elements_located
-            )
 
-            # Ожидание элементов через блокирующий вызов в асинхронном контексте.
-            web_elements = await asyncio.to_thread(
-                WebDriverWait(driver, timeout).until,
-                condition((locator.by, locator.selector))
-            )
+        web_elements = None
+        try:
+            # Если timeout = 0, сразу попытаться найти элемент без ожидания
+            if timeout == 0:
+                web_elements = driver.find_elements(locator.by, locator.selector)
+            else:
+                # Выбор условия ожидания
+                condition = (
+                    EC.presence_of_all_elements_located
+                    if timeout_for_event == 'presence_of_all_elements_located'
+                    else EC.visibility_of_all_elements_located
+                )
+
+                # Ожидание элементов через блокирующий вызов в асинхронном контексте
+                web_elements = await asyncio.to_thread(
+                    WebDriverWait(driver, timeout).until,
+                    condition((locator.by, locator.selector))
+                )
+
 
             return await _parse_elements_list(web_elements, locator)
         except TimeoutException as ex:
@@ -425,7 +406,9 @@ class ExecuteLocator:
         except Exception as ex:
             if MODE in ('dev', 'debug'):
                 logger.error(f'Ошибка локатора: {locator}', ex, False)
+                ...
             return None
+
 
     async def get_webelement_as_screenshot(
         self,                                     

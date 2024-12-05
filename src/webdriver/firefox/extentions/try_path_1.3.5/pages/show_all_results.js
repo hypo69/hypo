@@ -181,7 +181,7 @@ ${main.itemDetails.map((detail, ind) => {
             var target = event.target;
             if (target.tagName.toLowerCase() === "button") {
                 browser.tabs.sendMessage(relatedTabId, {
-                    "event": "focusContextItem",
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
                     "executionId": executionId
                 }, {
                     "frameId": relatedFrameId
@@ -195,7 +195,7 @@ ${main.itemDetails.map((detail, ind) => {
             if (target.tagName.toLowerCase() === "button") {
                 let ind = parseInt(target.getAttribute("data-index"), 10);
                 browser.tabs.sendMessage(relatedTabId, {
-                    "event": "focusItem",
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
                     "executionId": executionId,
                     "index": ind
                 }, {

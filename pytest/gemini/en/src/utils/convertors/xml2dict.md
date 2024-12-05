@@ -3,90 +3,70 @@ import pytest
 import xml.etree.ElementTree as ET
 from hypotez.src.utils.convertors.xml2dict import xml2dict, ET2dict, _parse_node, _make_dict
 
-# Fixture definitions
-@pytest.fixture
-def simple_xml():
-    """Provides simple XML string for testing."""
-    return "<root><child attr1='value1' attr2='value2'>text</child></root>"
+# Test data
+valid_xml_string = """<root attr1=\"value1\" attr2=\"value2\">\n  <child>text</child>\n</root>"""
+valid_xml_string_with_children = """<root>\n  <child1>value1</child1>\n  <child2>value2</child2>\n</root>"""
+valid_xml_string_nested = """<root>\n  <child attr3=\"value3\">\n    <grandchild>grandchild text</grandchild>\n  </child>\n</root>"""
+invalid_xml_string = "<root attr1=\"value1 attr2=\"value2\"/>"
+invalid_xml_string_bad_format = "<root attr1=\"value1\" attr2 value2\"/>"
+xml_with_href = '<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/TR/html4/strict.dtd" href="somelink"></root>'
 
-@pytest.fixture
-def complex_xml():
-    """Provides complex XML string for testing."""
-    return """
-    <root xmlns="http://example.com">
-        <child attr1="value1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="type1">text1</child>
-        <child attr2="value2">text2</child>
-        <child>text3</child>
-    </root>
-    """
+def test_xml2dict_valid_input():
+    """Tests xml2dict with a valid XML string."""
+    expected_output = {'root': {'attrs': {'attr1': 'value1', 'attr2': 'value2'}, 'child': {'value': 'text'}}}
+    assert xml2dict(valid_xml_string) == expected_output
 
-@pytest.fixture
-def empty_xml():
-    """Provides empty XML string for testing."""
-    return "<root></root>"
+def test_xml2dict_multiple_children():
+    """Tests xml2dict with XML containing multiple children."""
+    expected_output = {'root': {'child1': {'value': 'value1'}, 'child2': {'value': 'value2'}}}
+    assert xml2dict(valid_xml_string_with_children) == expected_output
 
-@pytest.fixture
-def element_tree_fixture(complex_xml):
-    """Creates an XML element tree."""
-    return ET.fromstring(complex_xml)
-
-# Tests for _parse_node
-def test__parse_node_valid_input(simple_xml, complex_xml):
-    """Checks correct behavior of _parse_node with valid input."""
-    root = ET.fromstring(simple_xml)
-    result = _parse_node(root)
-    assert result == {"child": {"attrs": {"attr1": "value1", "attr2": "value2"}, "value": "text"}}
-    result_2 = _parse_node(ET.fromstring(complex_xml))
-    assert isinstance(result_2, dict)
-
-def test__parse_node_empty_text(empty_xml):
-    """Checks _parse_node handling of empty text nodes."""
-    root = ET.fromstring(empty_xml)
-    result = _parse_node(root)
-    assert result == {"value": ""}
-
-def test__parse_node_with_namespace(complex_xml):
-    """Tests _parse_node with XML namespaces."""
-    root = ET.fromstring(complex_xml)
-    result = _parse_node(root.find('child'))
-    assert 'xmlns' in result['child']['attrs']
-
-# Tests for xml2dict
-def test_xml2dict_valid_input(simple_xml):
-    """Checks correct behavior of xml2dict with valid input."""
-    result = xml2dict(simple_xml)
-    assert result == {"root": {"child": {"attrs": {"attr1": "value1", "attr2": "value2"}, "value": "text"}}}
-
-def test_xml2dict_complex_input(complex_xml):
-    """Checks xml2dict with more complex XML structure."""
-    result = xml2dict(complex_xml)
-    assert isinstance(result, dict)
-    assert len(result['root']['child']) > 0
-
-def test_xml2dict_empty_input():
-    """Checks xml2dict with an empty XML string."""
-    with pytest.raises(Exception) as excinfo:
-        xml2dict("")
-
-# Tests for ET2dict
-def test_ET2dict(element_tree_fixture):
-    """Checks ET2dict function with provided xml."""
-    result = ET2dict(element_tree_fixture)
-    assert isinstance(result, dict)
-    assert 'root' in result
+def test_xml2dict_nested_elements():
+    """Tests xml2dict with nested XML elements."""
+    expected_output = {'root': {'child': {'attrs': {'attr3': 'value3'}, 'grandchild': {'value': 'grandchild text'}}}}
+    assert xml2dict(valid_xml_string_nested) == expected_output
 
 
-# Test handling of empty XML
-def test_xml2dict_empty_xml(empty_xml):
-    """Test xml2dict on empty XML."""
-    result = xml2dict(empty_xml)
-    assert result == {"root": {}}
+def test_xml2dict_invalid_xml():
+    """Tests xml2dict with invalid XML string."""
+    with pytest.raises(ET.ParseError):
+        xml2dict(invalid_xml_string)
 
-#Test _make_dict with namespaces
-def test__make_dict_with_namespace():
-    tag = '{http://example.com}child'
-    value = 'value'
-    result = _make_dict(tag, value)
-    assert result == {tag: {'value': value, 'xmlns': 'http://example.com'}}
+def test_xml2dict_invalid_format():
+    with pytest.raises(ET.ParseError):
+        xml2dict(invalid_xml_string_bad_format)
+
+def test_ET2dict_valid_input():
+  """Tests ET2dict with a valid ElementTree object."""
+  root = ET.fromstring(valid_xml_string)
+  expected_output = {'root': {'attrs': {'attr1': 'value1', 'attr2': 'value2'}, 'child': {'value': 'text'}}}
+  assert ET2dict(root) == expected_output
+
+def test_parse_node_no_attributes_or_children():
+  """Tests _parse_node with an element having no attributes or children."""
+  element = ET.Element('element')
+  assert _parse_node(element) == " "
+
+
+def test_parse_node_with_href_attribute():
+  """Tests _parse_node with an element having href attribute."""
+  element_with_href = ET.Element('element', {'{http://www.w3.org/1999/xlink}href': 'somelink'})
+  assert _parse_node(element_with_href) == {}  # The href attribute should be skipped
+
+
+def test_parse_node_with_multiple_children():
+  """Tests _parse_node with an element having multiple children."""
+  element = ET.fromstring("<root><child>value1</child><child>value2</child></root>")
+  assert _parse_node(element)['child'] == [{'value': 'value1'}, {'value': 'value2'}]
+  
+
+
+def test_xml_with_href():
+  """Tests _parse_node with href attribute."""
+  element = ET.fromstring(xml_with_href)
+  result = _parse_node(element)
+  assert result == {}
+
+
 
 ```

@@ -4,7 +4,7 @@
     "by": "XPATH",
     "selector": "//textarea[@id = 'targetUrl']",
     "if_list":"first","use_mouse": false,
-    "event": "clear();%EXTERNAL_MESSAGE%",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "clear();%EXTERNAL_MESSAGE%",
     "mandatory": true,
     "locator_description": "Full link input box"
   },
@@ -13,7 +13,7 @@
     "by": "XPATH",
     "selector": "//button[contains(@class, 'link-form-submit')]",
     "if_list":"first","use_mouse": false,
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "Send form button"
   },
@@ -23,7 +23,7 @@
     "by": "XPATH",
     "selector": "//form[contains(@class, 'link-form-text')]//textarea",
     "if_list":"first","use_mouse": false,
-    "event": false,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": false,
     "mandatory": true,
     "locator_description": "Send form button"
   }

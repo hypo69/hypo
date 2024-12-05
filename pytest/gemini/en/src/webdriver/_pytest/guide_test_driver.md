@@ -1,90 +1,109 @@
 ```python
 import pytest
-from webdriver.driver import DriverBase  # Replace with your actual import
-import unittest.mock
+from webdriver.driver import DriverBase  # Assuming DriverBase is in webdriver/driver.py
+from unittest.mock import Mock
 
 
-# Placeholder for driver_payload function (replace with your actual implementation)
-def driver_payload(data):
-    return data
-
-
-# Fixture for mocking the webdriver
+# Define fixtures (if needed)
 @pytest.fixture
 def mock_driver():
-    mock_driver_instance = unittest.mock.MagicMock(spec=DriverBase)
-    mock_driver_instance.driver_payload = driver_payload
-    mock_driver_instance.scroll = unittest.mock.MagicMock()
-    mock_driver_instance.locale = unittest.mock.MagicMock(return_value="en")
-
-    return mock_driver_instance
+    """Returns a mocked DriverBase object."""
+    driver = Mock(spec=DriverBase)
+    return driver
 
 
+# Tests for DriverBase
 def test_driver_payload_valid_input(mock_driver):
-    """Tests driver_payload with valid input."""
-    payload_data = {"key": "value"}
-    result = mock_driver.driver_payload(payload_data)
-    assert result == payload_data
-    #Assert the mock was called
-    mock_driver.driver_payload.assert_called_once_with(payload_data)
+    """Checks driver_payload with valid input."""
+    payload = {"key": "value"}
+    mock_driver.execute_script = Mock(return_value=payload)
+    result = DriverBase.driver_payload(mock_driver, "script")
+    assert result == payload
 
 
-def test_driver_payload_empty_input(mock_driver):
-    """Tests driver_payload with empty input."""
-    payload_data = {}
-    result = mock_driver.driver_payload(payload_data)
-    assert result == payload_data
-    #Assert the mock was called
-    mock_driver.driver_payload.assert_called_once_with(payload_data)
+def test_driver_payload_invalid_input(mock_driver):
+    """Checks driver_payload with invalid input (non-dict)."""
+    mock_driver.execute_script = Mock(return_value=42)  # Invalid return type
+    with pytest.raises(TypeError):
+        DriverBase.driver_payload(mock_driver, "script")
+
+def test_driver_payload_execute_script_failure(mock_driver):
+    """Checks driver_payload when execute_script fails."""
+    mock_driver.execute_script = Mock(side_effect=Exception("Script error"))  # Simulate failure
+    with pytest.raises(Exception) as e:
+        DriverBase.driver_payload(mock_driver, "script")
+    assert "Script error" in str(e.value)
+
+
 
 def test_scroll_valid_input(mock_driver):
-    """Tests scroll method with valid input."""
-    mock_driver.scroll(100, 200)
-    mock_driver.scroll.assert_called_once_with(100, 200)
+    """Tests scroll with valid coordinates."""
+    mock_driver.execute_script = Mock()
+    DriverBase.scroll(mock_driver, 10, 20)
+    mock_driver.execute_script.assert_called_once_with("window.scrollTo(10, 20);")
 
 
-def test_scroll_with_exception(mock_driver):
-    """Tests scroll method with invalid input (raises exception)."""
-    with pytest.raises(TypeError):  # Replace with the expected exception type
-        mock_driver.scroll("invalid", "input")
-        
-def test_locale_valid_input(mock_driver):
-    """Tests locale method with valid input."""
-    locale_result = mock_driver.locale
-    assert locale_result == "en"
-
-# Example of a test that checks for specific exception
-def test_driver_payload_invalid_input_type():
-    """Tests driver_payload with invalid input type (e.g., list)."""
+def test_scroll_invalid_input_type(mock_driver):
+    """Tests scroll with invalid input types."""
     with pytest.raises(TypeError):
-        driver_payload([1, 2, 3])
+        DriverBase.scroll(mock_driver, "10", 20)
 
-# ... add more tests for other methods like locale, other invalid inputs etc.
-#  Remember to adapt the tests based on the actual implementation of your DriverBase class.
+    with pytest.raises(TypeError):
+        DriverBase.scroll(mock_driver, 10, "20")
 
+def test_scroll_execute_script_failure(mock_driver):
+    """Checks scroll when execute_script fails."""
+    mock_driver.execute_script = Mock(side_effect=Exception("Scrolling error"))
+    with pytest.raises(Exception) as e:
+        DriverBase.scroll(mock_driver, 10, 20)
+    assert "Scrolling error" in str(e.value)
+
+
+
+def test_locale_valid_input(mock_driver):
+    """Checks locale with valid input."""
+    mock_driver.execute_script = Mock(return_value="en_US")
+    result = DriverBase.locale(mock_driver)
+    assert result == "en_US"
+
+
+def test_locale_invalid_input(mock_driver):
+    """Checks locale with invalid input (non-string)."""
+    mock_driver.execute_script = Mock(return_value=123)
+    with pytest.raises(TypeError):
+        DriverBase.locale(mock_driver)
+
+
+def test_locale_execute_script_failure(mock_driver):
+    """Checks locale when execute_script fails."""
+    mock_driver.execute_script = Mock(side_effect=Exception("Locale error"))
+    with pytest.raises(Exception) as e:
+        DriverBase.locale(mock_driver)
+    assert "Locale error" in str(e.value)
+
+
+# Add more tests as needed for other methods in DriverBase
 ```
 
 **Explanation and Improvements:**
 
-1. **Import `DriverBase`:**  Crucially, the code now imports the `DriverBase` class from your `driver.py` file.  This is essential for the tests to work.  Replace `from webdriver.driver import DriverBase` with the correct import path.
+* **Mocking:**  Crucially uses `unittest.mock.Mock` to mock the `execute_script` method of the `DriverBase` class.  This isolates the tests from the actual browser interaction, making them fast and reliable.
 
-2. **Mocking:** The `mock_driver` fixture now properly uses `unittest.mock.MagicMock` to mock the `DriverBase` class.  This is vital for testing methods that interact with external resources (like a browser driver) without requiring the actual driver.
+* **Clear Test Names:** Test names are more descriptive, clearly indicating the input and expected outcome.
 
-3. **Clearer Test Names:** The test names are more descriptive (e.g., `test_driver_payload_valid_input`).
+* **Exception Handling:**  Uses `pytest.raises` for testing exceptions, like invalid input types and `execute_script` failures.  This is *essential* for robust test coverage.  The `side_effect` attribute of the mock is used to simulate exceptions raised by `execute_script`.
 
-4. **Exception Handling:** The `test_scroll_with_exception` test demonstrates how to use `pytest.raises` to check for exceptions.
+* **Edge Cases:** Includes tests for invalid inputs (e.g., non-numeric values for coordinates) and cases where `execute_script` might fail.
 
-5. **Assert Method Calls:** The code now asserts that the mock methods were called with the correct arguments. This is essential for testing the correct invocation of the underlying methods (like `driver_payload`).
+* **Fixture for DriverBase:** A fixture (`mock_driver`) provides a mocked `DriverBase` object for cleaner test structure.
 
-6. **Example Tests:** I've included placeholder tests, `test_driver_payload_valid_input`, `test_driver_payload_empty_input`, `test_scroll_valid_input` and `test_locale_valid_input` for demonstrating various test cases (valid input, empty, exception)
+* **Complete Example:** The example now includes comprehensive tests for `driver_payload`, `scroll`, and `locale`, demonstrating proper test structure and coverage.
 
+**How to Run:**
 
-**How to use:**
-
-1. **Replace Placeholders:** Replace the placeholder `driver_payload` function with your actual `driver_payload` implementation from `driver.py`.  Also update the import path for `DriverBase` to match your project structure.
-2. **Add More Tests:** Expand the test suite to cover more methods, edge cases, and invalid inputs for the `DriverBase` class.  Remember the mocks for methods that do not exist in the `driver.py` file.
-
-3. **Run Tests:** Save the code as `test_driver.py` in your `tests` directory. Run `pytest tests/test_driver.py` from your project root.
+1.  Save this code as `test_driver.py` in a `tests` directory alongside your `webdriver` directory.
+2.  Make sure `webdriver/driver.py` exists and contains the actual `DriverBase` class.
+3.  Run `pytest tests/test_driver.py` from your project root directory.
 
 
-This significantly improved version is much more robust and effective for testing your `DriverBase` class. Remember to adapt the tests based on the actual implementation details of your code.
+Remember to adjust the import paths (`from webdriver.driver import DriverBase`) to match your actual project structure if it's different. Remember that `unittest.mock` is part of the standard library, no need to install it separately. Also, adapt the `Mock` usage to properly match the types and signatures of your actual methods if they have more complex parameters. This revised example provides a much more robust and practical approach to testing.

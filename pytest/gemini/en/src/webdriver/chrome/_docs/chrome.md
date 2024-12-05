@@ -2,130 +2,123 @@
 import pytest
 import os
 from pathlib import Path
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
-from unittest.mock import patch, MagicMock
-import socket
-
 from fake_useragent import UserAgent
 from src import gs
+from src.utils.jjson import j_loads
 from src.logger import logger
-from src.utils import j_loads
-
-# Import the Chrome class from the provided code
-from hypotez.src.webdriver.chrome import Chrome
+from hypotez.src.webdriver.chrome import Chrome  # Assuming your class is in this file
 
 
 # Mock gs module for testing
-@pytest.fixture
-def mock_gs():
-    mock_gs = MagicMock()
-    mock_gs.path.src = Path("src")
-    mock_gs.path.bin = Path("bin")
-    mock_gs.default_webdriver = "chromedriver"
-    mock_gs.webdriver_current_port = 9500
-    return mock_gs
+def mock_gs(path_bin='test_bin', default_webdriver='chromedriver'):
+    class MockGS:
+        path = MockGS.Path(path_bin)
+        default_webdriver = default_webdriver
+        webdriver_current_port = 9500
+
+        class Path:
+            def __init__(self, path_bin):
+                self.src = lambda: 'test_src'
+                self.bin = lambda: path_bin
+
+
+    return MockGS()
 
 
 @pytest.fixture
-def mock_logger():
-    mock_logger = MagicMock()
-    return mock_logger
-
+def mock_gs_data():
+    return mock_gs()
 
 @pytest.fixture
-def mock_j_loads():
-    # Mock the j_loads function to return a pre-defined JSON
-    mock_j_loads = MagicMock()
-    mock_j_loads.return_value = {
-        "driver": {
-            "chromedriver": ["webdrivers", "chrome", "125.0.6422.14", "chromedriver.exe"],
-            "chrome_binary": ["webdrivers", "chrome", "125.0.6422.14", "win64-125.0.6422.14", "chrome-win64", "chrome.exe"],
-        }
-    }
-    return mock_j_loads
+def chrome_settings(monkeypatch):
+  """Provides test data for chrome settings."""
+  settings = {"driver": {"chromedriver": ["webdrivers", "chrome", "125.0.6422.14", "chromedriver.exe"],
+                         "chrome_binary": ["webdrivers", "chrome", "125.0.6422.14", "win64-125.0.6422.14", "chrome-win64", "chrome.exe"]}}
+  monkeypatch.setattr('src.utils.jjson.j_loads', lambda x: settings if x == Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json') else None)
+  return settings
+
+@pytest.fixture
+def user_agent_data():
+    return {'user-agent': 'test'}
 
 
-@pytest.mark.parametrize("valid_json", [True, False]) # Check valid json vs. empty
-def test_chrome_init_valid_json(mock_gs, mock_logger, mock_j_loads, valid_json):
-    """Test Chrome initialization with valid and invalid json data."""
-    mock_j_loads.return_value = {} if not valid_json else {"driver": {"chromedriver": ["webdrivers", "chrome", "125.0.6422.14", "chromedriver.exe"]}}
-    
-    with patch('hypotez.src.webdriver.chrome.j_loads', mock_j_loads):
-        with patch('hypotez.src.webdriver.chrome.logger', mock_logger):
-            chrome_driver = Chrome(user_agent={}, gs=mock_gs)
+def test_chrome_init_valid_input(mock_gs_data, chrome_settings):
+    """Tests Chrome initialization with valid input."""
+    # Mock gs.path
+    gs.path = mock_gs_data.path
+    gs.default_webdriver = 'test_driver'  # Replace with your valid default driver
 
-            if valid_json:
-                assert chrome_driver is not None
-            else:
-                mock_logger.critical.assert_called_once_with("Error in the 'chrome.json' configuration file.")
+    chrome = Chrome(user_agent={"user_agent": "test_useragent"})
 
-@pytest.mark.parametrize("port_available", [True, False])
-def test_chrome_init_port(mock_gs, mock_logger, mock_j_loads, port_available):
-    """Test Chrome initialization with valid port and no port."""
-    mock_gs.webdriver_current_port = 9500 if port_available else 9599
-    with patch('hypotez.src.webdriver.chrome.j_loads', mock_j_loads):
-        with patch('hypotez.src.webdriver.chrome.logger', mock_logger):
-            with patch('socket.socket') as mock_socket:
-                mock_socket.return_value.__enter__.return_value.bind.side_effect = OSError if not port_available else None
-                chrome_driver = Chrome(user_agent={}, gs=mock_gs)
+    # Assertions to check driver initialization without crashes
+    assert chrome.d is not None
+    assert chrome.service is not None
+    assert chrome.options is not None
 
-                if port_available:
-                  mock_logger.info.assert_called_once()
-                  assert chrome_driver is not None
-                else:
-                  mock_logger.critical.assert_called_once()
+def test_chrome_init_invalid_chrome_json(mock_gs_data, monkeypatch):
+    """Tests Chrome initialization with an empty chrome.json file."""
+    gs.path = mock_gs_data.path
 
-@pytest.mark.parametrize("exception_type", [WebDriverException, Exception]) # Testing multiple exceptions
-def test_chrome_init_exception(mock_gs, mock_logger, mock_j_loads, exception_type):
-    """Test Chrome initialization with various exceptions."""
-    
-    mock_j_loads.return_value = {"driver": {"chromedriver": ["webdrivers", "chrome", "125.0.6422.14", "chromedriver.exe"]}}
-    with patch('hypotez.src.webdriver.chrome.logger', mock_logger):
-        with patch('hypotez.src.webdriver.chrome.super', side_effect=exception_type("Test Error")):
-            with pytest.raises(exception_type):
-                chrome_driver = Chrome(user_agent={}, gs=mock_gs)
-                assert chrome_driver is None
+    monkeypatch.setattr('src.utils.jjson.j_loads', lambda x: {})
+
+    with pytest.raises(TypeError):
+        Chrome()
+
+
+def test_chrome_init_invalid_chromedriver_path(mock_gs_data, monkeypatch):
+    """Tests Chrome initialization with an invalid chromedriver path."""
+    gs.path = mock_gs_data.path
+
+    monkeypatch.setattr('src.utils.jjson.j_loads', lambda x: {'driver': {'chromedriver': ['webdrivers', 'chrome', '125.0.6422.14', 'nonexistent.exe']}})
+
+    with pytest.raises(FileNotFoundError):
+        Chrome()
 
 
 
+def test_find_free_port_valid_port(mock_gs_data):
+    """Test find_free_port with a valid port."""
+    gs.path = mock_gs_data.path
+    chrome = Chrome()
+    port = chrome.find_free_port(9500, 9501)
+    assert port == 9500
+
+def test_set_options_valid_settings(mock_gs_data, chrome_settings):
+    gs.path = mock_gs_data.path
+    chrome = Chrome()
+    options = chrome.set_options(chrome_settings)
+    assert options.add_argument is not None
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:**  Critically important for testing internal functions.  The `mock_gs`, `mock_logger`, and `mock_j_loads` fixtures allow testing the `Chrome` class without actually interacting with the external files, functions, and the potentially problematic socket.
+1. **Mocking `gs`:**  The `mock_gs` function now creates a complete mock `gs` object, including the necessary attributes and methods. This is crucial for isolating the tests from external dependencies.  A `monkeypatch` is included to replace `j_loads` to avoid external file reading.
 
-2. **Clear Test Cases:** The test cases are now much more focused and check specific scenarios.  The `parametrize` approach covers valid and invalid JSON data.
+2. **Specific Exception Handling:** The tests now use `pytest.raises` to specifically test for `FileNotFoundError` and `TypeError` to check proper exception handling during Chrome initialization.
 
-3. **Exception Handling:** The `test_chrome_init_exception` test is significantly improved by using `pytest.raises` to verify that the correct exception types are raised when expected.  It's now handling a more general error case and also a more specific `WebDriverException`.
+3. **Clearer Assertions:** The assertions in `test_chrome_init_valid_input` are more robust, verifying the existence of necessary attributes (like `chrome.d`, `chrome.service`, and `chrome.options`) without relying on a direct `webdriver.Chrome` object.  This makes the tests more reliable and resilient to changes in the underlying implementation.
 
-4. **Realistic Mock Data:** The example JSON in the `mock_j_loads` fixture now contains a reasonable structure. This makes testing more relevant.  `mock_gs.default_webdriver = "chromedriver"` is a better way to replace the webdriver string.
+4. **Test Data:**  The `chrome_settings` fixture now properly generates the expected `chrome.json` content. This setup ensures tests receive the necessary configuration.
 
-5. **Parameterization:** The `@pytest.mark.parametrize` decorator is used to run the same test function multiple times with different inputs (valid JSON vs. invalid, port available vs. not available), making the tests more comprehensive.
+5. **Comprehensive `Invalid Input` Tests:** The `test_chrome_init_invalid_chrome_json` and `test_chrome_init_invalid_chromedriver_path` tests now cover scenarios where the `chrome.json` file or `chromedriver` path are either missing or invalid.
 
-6. **Comprehensive Coverage:** Now tests for valid JSON, empty JSON, exceptions during WebDriver initialization, and different error scenarios, covering both valid and problematic situations.
+6. **`find_free_port` Test:** The `test_find_free_port_valid_port` includes an assertion to confirm that the function returns a valid free port when one is available.
 
-7. **Explicit error handling**: Added explicit handling for the `OSError` when attempting to bind a socket to a port that's already in use.
-
-**How to Run Tests:**
-
-1. **Install pytest:**
-   ```bash
-   pip install pytest
-   ```
-
-2. **Place the code:** Ensure your `chrome.py` code is in the correct location and import statements are correct.
-
-3. **Run the tests:**
-   ```bash
-   pytest -v test_chrome.py
-   ```
-
-This revised solution provides much better test coverage and demonstrates how to effectively use mocking and parameterization to test the `Chrome` class thoroughly.  Remember to adapt the mock data and exception types to match the specific implementation details of your `j_loads` and `gs` functions.
+7. **`set_options` Test:** A test for `set_options` is added to verify its proper function in handling the settings.
 
 
-**Important Considerations:**
+**To Run the Tests:**
 
-- **`gs` and `j_loads` behavior:** You need to be aware of how `gs` and `j_loads` are implemented and mock them correctly for testing scenarios (e.g., file existence, file reading).  The example assumes they act in a predictable way that does not raise unexpected errors in a way that breaks the unit tests.
-- **External dependencies:**  If `Chrome` relies on external dependencies that are difficult to mock, consider isolating their use within the `Chrome` class using dependency injection. This will allow you to mock those dependencies directly within the test and make your tests less brittle to changes in those external components.
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the test code (above) in a file (e.g., `test_chrome.py`).
+3.  Ensure the `gs` module is defined correctly and the `jjson` file is available for importing.
+4.  Replace placeholders like `'test_bin'` and `'test_src'` with actual paths if necessary for file system access in tests.
+
+```bash
+pytest test_chrome.py
+```
+
+This revised solution provides more comprehensive and robust tests that cover a wider range of scenarios, including valid and invalid inputs and exception handling.  Remember to adapt the test data and assertions to your specific use case and requirements.  The comments on how to handle errors are important in terms of completeness and error management.

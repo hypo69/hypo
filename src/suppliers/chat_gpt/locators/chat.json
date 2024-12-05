@@ -4,7 +4,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[@data-message-author-role='assistant']",
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "if_list":"first","use_mouse": false,
     "mandatory": true,
     "locator_description": "Я получаю весь контейнер и в коде вытескиваю .text"
@@ -13,7 +13,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[@data-message-author-role='user']",
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "if_list":"first","use_mouse": false,
     "mandatory": true,
     "locator_description": "Я получаю весь контейнер и в коде вытескиваю .text"

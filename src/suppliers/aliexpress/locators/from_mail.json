@@ -5,7 +5,7 @@
     "selector": "//td[div[contains(@class, '-item-card') and not(contains(@class, 'item-card-text'))]]",
     "if_list":"first","use_mouse": false,
     "mandatory": false,
-    "event": "",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "",
     "locator_description": "Товары со страницы deals, котору я делаю из почтовой рассылки. "
   }
 }

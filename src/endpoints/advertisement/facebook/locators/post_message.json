@@ -5,7 +5,7 @@
     "selector": "//span[contains(text(), 'Что у вас нового') or contains(text(), 'Напишите что-нибудь...')]",
     "if_list": "first",
     "use_mouse": false,
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "открытие окна для ввода сообщения, пауза, отправка сообщения"
   },
@@ -15,7 +15,7 @@
     "selector": "(//div[@role='textbox'])[last()]",
     "if_list": "first",
     "use_mouse": "None",
-    "event": "pause(1);%EXTERNAL_MESSAGE%",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "pause(1);%EXTERNAL_MESSAGE%",
     "mandatory": "True",
     "locator_description": "через `execute_locator()` будет передан текст",
     "deprecated": "используется `open_add_post_box`"
@@ -28,7 +28,7 @@
     "selector": "//div[@aria-label='Фото/видео']",
     "if_list": "first",
     "use_mouse": true,
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "Нажать для меню загрузки видео"
   },
@@ -41,7 +41,7 @@
     "##selector": "//div[@role='presentation']/following-sibling::div",
     "###selector": "(//input[@type='file'])[1]",
     "selector": "//div[@role='dialog']//input[@type = 'file']",
-    "event": "upload_media()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "upload_media()",
     "mandatory": true,
     "locator_description": "Загрузка медиа, Путь к файлу передается через код сценария "
   },
@@ -50,7 +50,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[@role='button' and contains(@aria-label,'Редактировать всё')]",
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "Открывает поля описаний для загруженных медиафайлов"
   },
@@ -58,7 +58,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[@aria-label='Фото/видео']",
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "mandatory": true,
     "locator_description": "Попап с открытыми медиа для редакции"
   },
@@ -66,7 +66,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//textarea",
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "mandatory": true,
     "locator_description": "Текстовые поля для описания к медиафайлу"
   },
@@ -74,7 +74,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//span[contains(text(),'Готово')]",
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "Закрытие окна загрузки фото и описаний"
   },
@@ -82,7 +82,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[@aria-label='Опубликовать' or @aria-label='Отправить' or @aria-label='Далее']",
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "Закрытие окна загрузки фото и описаний"
   },
@@ -90,7 +90,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "(//span[contains(text(),'Отправить')])[last()]",
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "Если было одно изображение - будет эта кнопка"
   },
@@ -98,7 +98,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//span[contains(text(),'Не сейчас')]",
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true
 
   },
@@ -106,7 +106,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//div[@aria-label = 'Закрыть']",
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true
 
   },
@@ -114,7 +114,7 @@
     "attribute": null,
     "by": "XPATH",
     "selector": "//span[@text = 'Управление публикациями']",
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true
 
   }

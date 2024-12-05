@@ -8,7 +8,7 @@
       "attribute": "text",
       "by": "XPATH",
       "selector": "//div[contains(text(), 'אפשר')]",
-      "event": "send_keys(Key.RETURN)",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "send_keys(Key.RETURN)",
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -18,7 +18,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//div[@class = 'account-main']//span[. = 'Sign in'] | //div[@class = 'account-main']//span[. = 'Se connecter'] | //div[@class = 'account-main']//span[. = 'כניסה'] ",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -29,7 +29,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//input[@id='fm-login-id']",
-      "event": "send_keys('one.last.bit@gmail.com')",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "send_keys('one.last.bit@gmail.com')",
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -39,7 +39,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//input[@id='fm-login-password']",
-      "event": "send_keys('7p3ato9kijsosw7')",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "send_keys('7p3ato9kijsosw7')",
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -49,7 +49,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//button[@type='submit']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -59,7 +59,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//button[contains(@data-role,'gdpr-accept')]",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     }
@@ -72,7 +72,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//div[@data-role = 'region-pannel']/a",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -86,7 +86,7 @@
         "//div[@class = 'filter-list-container']",
         "//li[contains(@data-code,'il')]"
       ],
-      "event": [ "click()", "click()", "click()" ],
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": [ "click()", "click()", "click()" ],
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -99,7 +99,7 @@
         "//input[contains(@data-role,'language-search')]",
         "//a[contains(@data-locale,'en-US')]"
       ],
-      "event": [ "click()", "click()", "click()" ],
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": [ "click()", "click()", "click()" ],
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -112,7 +112,7 @@
         "//span[contains(@class , 'select-item')]",
         "//a[contains(@data-currency , 'ILS')]"
       ],
-      "event": [ "click()", "click()", "click()" ],
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": [ "click()", "click()", "click()" ],
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     },
@@ -121,7 +121,7 @@
       "attribute": null,
       "by": "XPATH",
       "selector": "//div[contains(@class , 'switcher-btn')]",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false, "mandatory": true,
       "locator_description": ""
     }

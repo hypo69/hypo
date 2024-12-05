@@ -1,9 +1,14 @@
 ```python
 import pytest
 import js2py
+import json
 
-# Define the JavaScript code
+# Load the JavaScript code
 js_code = """
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 (function (window, undefined) {
     "use strict";
 
@@ -53,110 +58,90 @@ js_code = """
         return /^auto$|^[1-9]\\d*px$/.test(len);
     };
 
-
     // ... (rest of the JavaScript code)
-});
+} (window));
 """
 
-# Convert JavaScript to Python using js2py
-js_func = js2py.eval_js(js_code)
+
+js_code_obj = js2py.eval_js(js_code)  # Evaluate the js code
 
 
 def test_isValidAttrName_valid():
     """Tests isValidAttrName with a valid attribute name."""
-    js_func.testElement = js2py.eval_js("document.createElement('div')")
-    assert js_func.isValidAttrName("data-test") == True
+    js_code_obj.testElement = js2py.eval_js("document.createElement('div')")
+    assert js_code_obj.isValidAttrName("id") == True
 
 
 def test_isValidAttrName_invalid():
-    """Tests isValidAttrName with an invalid attribute name (e.g., containing special characters)."""
-    js_func.testElement = js2py.eval_js("document.createElement('div')")
-    assert js_func.isValidAttrName("data-test!") == False
+    """Tests isValidAttrName with an invalid attribute name."""
+    js_code_obj.testElement = js2py.eval_js("document.createElement('div')")
+    assert js_code_obj.isValidAttrName("invalid-attribute") == False
 
 
 def test_isValidAttrNames_valid():
-  """Tests isValidAttrNames with a dictionary of valid attribute names."""
-  js_func.testElement = js2py.eval_js("document.createElement('div')")
-  valid_attrs = {"element": "data-test", "context": "data-another"}
-  assert js_func.isValidAttrNames(valid_attrs) == True
-
+    """Tests isValidAttrNames with valid attribute names."""
+    js_code_obj.testElement = js2py.eval_js("document.createElement('div')")
+    names = {"id": "test", "class": "test"}
+    assert js_code_obj.isValidAttrNames(names) == True
 
 
 def test_isValidAttrNames_invalid():
-  """Tests isValidAttrNames with a dictionary containing an invalid attribute name."""
-  js_func.testElement = js2py.eval_js("document.createElement('div')")
-  invalid_attrs = {"element": "data-test", "context": "data-another!", "frame": "data-invalid-attr"}
-  assert js_func.isValidAttrNames(invalid_attrs) == False
+    """Tests isValidAttrNames with invalid attribute names."""
+    js_code_obj.testElement = js2py.eval_js("document.createElement('div')")
+    names = {"id": "test", "invalid-attribute": "test"}
+    assert js_code_obj.isValidAttrNames(names) == False
 
 
 def test_isValidStyleLength_valid():
-    """Tests isValidStyleLength with valid style lengths."""
-    assert js_func.isValidStyleLength("367px") == True
-    assert js_func.isValidStyleLength("auto") == True
+    """Tests isValidStyleLength with a valid style length."""
+    assert js_code_obj.isValidStyleLength("367px") == True
 
 
 def test_isValidStyleLength_invalid():
-    """Tests isValidStyleLength with invalid style lengths."""
-    assert js_func.isValidStyleLength("367") == False
-    assert js_func.isValidStyleLength("invalid") == False
+    """Tests isValidStyleLength with an invalid style length."""
+    assert js_code_obj.isValidStyleLength("invalid") == False
 
 
 
-
-# Add more tests for other functions as needed
-
-
-# Example of how to test a function that returns a promise
-# def test_loadDefaultCss_success():
-#    mock_xhr = Mock()  # Replace with appropriate mocking
-#    mock_xhr.readyState = XMLHttpRequest.DONE
-#    mock_xhr.responseText = "some css"
-#    mock_xhr.open = lambda *args: None
-#    mock_xhr.send = lambda: None
-#    js_func.XMLHttpRequest = lambda : mock_xhr
-#    result = js_func.loadDefaultCss()
-#    assert result == "some css"
+# ... (Add more test cases for other functions as needed)
 
 
-# ... (Add more test functions as needed for other JavaScript functions)
+
+# Example test for loadDefaultCss (assuming it returns a Promise)
+# ...
+
+
 ```
 
 **Explanation and Improvements:**
 
-1. **js2py:** The code now uses `js2py` to convert the JavaScript into Python, enabling the testing of JavaScript functions.  This is crucial as you cannot directly test the JavaScript from Python.
+1. **`js2py` Import:** The code now imports `js2py` to execute the JavaScript code within the Python tests. This is crucial to interact with the JavaScript functions.
+
+2. **`js_code_obj`:** The JavaScript code is evaluated once using `js2py.eval_js`, and the result is stored in `js_code_obj`. This avoids repeatedly evaluating the JavaScript code for each test function.
+
+3. **Initialization:**  Crucially, the `testElement` variable from the JavaScript needs to be properly initialized in the test functions using `js2py.eval_js("document.createElement('div')")`.  This allows the attribute-checking functions to work properly.
+
+4. **Example Test Cases:**  The provided code now includes placeholder tests for `isValidAttrName`, `isValidAttrNames`, `isValidStyleLength`, showing how to call and test the functions.
 
 
-2. **Mocking:**  Crucially, the JavaScript code likely uses `XMLHttpRequest` for fetching CSS.  **Mocking** is necessary here because you can't directly simulate a network request. The example shows how you would mock the XMLHttpRequest object so that the tests run successfully without needing a network connection.  *Replace the placeholder mocking with proper mocking libraries (e.g., `unittest.mock` or `pytest-mock`) for production tests.*
+**How to run the tests:**
 
-3. **Complete Test Cases:** The provided example tests `isValidAttrName`, `isValidAttrNames`, and `isValidStyleLength`.  These were chosen as representative examples, but *you must add tests for all other relevant functions within the JavaScript code (e.g., `loadDefaultCss`, `extractBodyStyles`, etc.)*.
+1.  Save the JavaScript code into a file (e.g., `options.js`).
+2.  Save the Python code as a `.py` file (e.g., `test_options.py`).
+3.  Install necessary libraries:
+    ```bash
+    pip install js2py pytest
+    ```
+4.  Run the tests:
+    ```bash
+    pytest test_options.py
+    ```
 
-4. **Clearer Test Descriptions:**  Test names are made more descriptive.
+**Important Considerations:**
 
-5. **Edge Cases:** The test cases now incorporate tests for both valid and invalid inputs, as required by the prompt.
-
-
-**How to Run the Tests:**
-
-1. **Install `js2py` and `pytest`:**
-   ```bash
-   pip install js2py pytest
-   ```
-
-2. **Save the code:** Save the JavaScript code as `options.js` and the Python code (with the updated test functions) in a file, for example `test_options.py`.
-
-3. **Run the tests:**
-   ```bash
-   pytest test_options.py
-   ```
-
-Remember to adapt the mocking section to use a real `XMLHttpRequest` if you have a way to set up the tests in a suitable environment. If the JavaScript code relies on external resources, you'll need to properly mock them.
+* **Error Handling:** The JavaScript code includes some error handling (`try...catch`). The Python tests should handle potential exceptions raised from the JavaScript code (e.g., `AttributeError` if the test element is not found).
+* **Promises:** The `loadDefaultCss` function likely returns a Promise. You'll need to adapt the test cases to handle promises (e.g., using `asyncio` or by checking the result after the promise resolves).
+* **`browser` object:** The JavaScript code uses `browser` (likely for Chrome extensions).  You need to figure out how to mock or simulate `browser.runtime.getURL` and `browser.storage.sync.set` within the pytest environment. You will likely need `pytest-mock` for this.
 
 
-**Further Considerations:**
-
-- **Error Handling:** Add tests to check how the code handles potential errors (e.g., incorrect attribute values or network issues).
-- **Complex Logic:** For more complex JavaScript functions, consider creating more focused test cases that cover different branches and paths.
-- **External Dependencies:** Understand which external dependencies your JavaScript code uses and how you can mock them for testing purposes.  Don't rely on the browser's environment in your Python tests.
-
-
-This significantly improved solution addresses the crucial requirement of mocking external dependencies and provides a solid framework for writing comprehensive tests for the JavaScript code. Remember to add tests for all the significant functions in the JavaScript file. Remember to replace the placeholder mocking with a proper mocking library for production-level tests.
+Add more test functions for the other JavaScript functions in a similar fashion, with appropriate setup and assertions. Remember to mock/stub out any external dependencies (like `browser.runtime` and `browser.storage.sync`) appropriately for your testing environment. Remember to replace `...` placeholders with the actual implementation.  This revised answer provides a better framework for writing comprehensive tests. Remember to adapt it to the specifics of the JavaScript code you are testing.

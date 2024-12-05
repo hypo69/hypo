@@ -146,7 +146,7 @@ The file also includes examples of various locators that can be used for testing
     "selector 2": "//span[@data-component-type='s-product-image']//a",
     "if_list":"first","use_mouse": false, 
     "mandatory": true,
-    "event": null
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
   },
   ...
 }
@@ -163,7 +163,7 @@ The file also includes examples of various locators that can be used for testing
     "selector 2": "//span[@data-component-type='s-product-image']//a",
     "if_list":"first","use_mouse": false, 
     "mandatory": true,
-    "event": null
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
   },
 
   "pagination": {
@@ -171,13 +171,13 @@ The file also includes examples of various locators that can be used for testing
       "attribute": null,
       "by": "xpath",
       "selector": "//ul[@class='pagination']",
-      "event": "click()"
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()"
     },
     "->": {
       "attribute": null,
       "by": "xpath",
       "selector": "//*[@class = 'ui-pagination-navi util-left']/a[@class='ui-pagination-next']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false
     }
   }
@@ -196,7 +196,7 @@ The file also includes examples of various locators that can be used for testing
     "//a[contains(@href, '#tab-description')]",
     "//div[@id = 'tab-description']//p"
   ],
-  "event": [
+  "timeout":0,"timeout_for_event":"presence_of_element_located","event": [
     "click()",
     null
   ],

@@ -128,7 +128,7 @@
     function updateCss() {
         if ((currentCss === null) || (Object.keys(expiredCssSet).length > 0)){
             browser.runtime.sendMessage({
-                "event": "updateCss",
+                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "updateCss",
                 "expiredCssSet": expiredCssSet
             });
         }
@@ -318,7 +318,7 @@
 
     function createResultMessage() {
         return {
-            "event": "showResultsInPopup",
+            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "showResultsInPopup",
             "executionId": invalidExecutionId,
             "href": "",
             "title": "",
@@ -615,6 +615,6 @@
     prevMsg = createResultMessage();
     setFocusFrameListener(window, false);
 
-    browser.runtime.sendMessage({ "event": "requestSetContentInfo" });
+    browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestSetContentInfo" });
 
 })(window);

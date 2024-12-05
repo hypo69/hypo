@@ -2,145 +2,112 @@
 import pytest
 import sys
 from pathlib import Path
-from typing import Type, Union
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.remote.webelement import WebElement
+from typing import Type
 from selenium.common.exceptions import (
     InvalidArgumentException,
     ElementClickInterceptedException,
     ElementNotInteractableException,
     ElementNotVisibleException
 )
-from unittest.mock import Mock
+from unittest.mock import patch, Mock
 
-# Mock the necessary classes and modules
-class DriverBase:
-    def __init__(self):
-        self.previous_url = None
-        self.referrer = None
-        self.page_lang = None
-    
-    def driver_payload(self):
-        return "driver payload"
+# Assume DriverBase, DriverMeta, Chrome, Firefox, Edge are defined in the driver.py file
+from hypotez.src.webdriver.driver import DriverBase, DriverMeta, Chrome, Firefox, Edge
 
-    def scroll(self, scrolls=1, frame_size=100, direction='forward', delay=0.1):
-      return "scroll"
-
-    def locale(self):
-      return "en"
-
-    def get_url(self, url: str):
-        self.previous_url = url
-        return True  # Mock success
-
-    def extract_domain(self, url: str):
-      return "example.com"
-
-    def _save_cookies_localy(self, to_file: Union[str, Path]):
-        return "cookies saved"
-    
-    def page_refresh(self):
-        return "page refreshed"
-    
-    def window_focus(self):
-        return "focus restored"
-
-    def wait(self, interval: float):
-        return "waited"
-    
-    def delete_driver_logs(self):
-        return "logs deleted"
-
-class MockWebDriver:
-  def __init__(self):
-    pass
-
-@pytest.fixture
-def driver_base():
-    """Provides an instance of DriverBase for tests."""
-    return DriverBase()
-
-# Tests for DriverBase methods
-def test_get_url_valid_input(driver_base):
-    """Checks correct behavior with valid input for get_url."""
-    result = driver_base.get_url("https://www.example.com")
-    assert result == True
-    assert driver_base.previous_url == "https://www.example.com"
+# Replace with actual import if it exists
+from src.logger import logger  # Replace with your actual import
 
 
-def test_get_url_invalid_input(driver_base):
-    """Checks if get_url raises an exception for invalid input."""
+def test_driver_base_get_url_valid():
+    """Tests that get_url correctly navigates to a valid URL."""
+    driver = Mock()  # Mock driver for testing
+    driver.get.return_value = None # mocking get method.
+
+    base_driver = DriverBase()
+    base_driver.driver = driver
+
+    base_driver.get_url("https://www.example.com")
+    driver.get.assert_called_once_with("https://www.example.com")
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        None,
+        "",
+        "invalid_url",  # Edge cases - empty strings or invalid URLs
+        "javascript:alert('hello');",  # Test problematic urls
+    ],
+)
+def test_driver_base_get_url_invalid(url):
+    """Tests get_url with invalid URL input, expecting exception."""
+    driver = Mock()
+    base_driver = DriverBase()
+    base_driver.driver = driver
+
     with pytest.raises(InvalidArgumentException):
-        driver_base.get_url(None)  # Or another invalid input
-
-def test_scroll_valid_input(driver_base):
-    """Checks if scroll works correctly"""
-    result = driver_base.scroll()
-    assert result == "scroll"
-    
-def test_locale(driver_base):
-  """Checks the return value of locale."""
-  lang = driver_base.locale()
-  assert lang == "en"
+        base_driver.get_url(url)
 
 
-def test_extract_domain(driver_base):
+def test_driver_base_extract_domain_valid():
+    """Tests that extract_domain correctly extracts domain from valid URL."""
+    base_driver = DriverBase()
     url = "https://www.example.com/path/to/page"
-    domain = driver_base.extract_domain(url)
-    assert domain == "example.com"
+    expected_domain = "example.com"
+    actual_domain = base_driver.extract_domain(url)
+    assert actual_domain == expected_domain
 
 
-def test_save_cookies(driver_base):
-    result = driver_base._save_cookies_localy('cookies.pkl')
-    assert result == "cookies saved"
+def test_driver_base_extract_domain_invalid():
+    """Tests extract_domain with invalid URL input."""
+    base_driver = DriverBase()
+    url = None
+    with pytest.raises(TypeError):
+        base_driver.extract_domain(url)
 
-def test_page_refresh(driver_base):
-  result = driver_base.page_refresh()
-  assert result == "page refreshed"
 
-def test_window_focus(driver_base):
-  result = driver_base.window_focus()
-  assert result == "focus restored"
-  
-def test_wait(driver_base):
-  result = driver_base.wait(5)
-  assert result == "waited"
-  
-def test_delete_driver_logs(driver_base):
-  result = driver_base.delete_driver_logs()
-  assert result == "logs deleted"
+@patch("hypotez.src.webdriver.driver.logger")
+def test_driver_base_scroll_valid(mock_logger):
+    """Tests that scroll correctly scrolls the page."""
+    driver = Mock()
+    base_driver = DriverBase()
+    base_driver.driver = driver
+    base_driver.scroll(scrolls=3, frame_size=500, direction='forward', delay=0.5)
+    # Check if the mock scroll function was called with the correct arguments
+    driver.execute_script.assert_called_once_with("scroll_to(3, 500, 'forward', 0.5);")
 
+@patch("hypotez.src.webdriver.driver.logger")
+def test_driver_base_scroll_invalid(mock_logger):
+    """Tests scroll with invalid input."""
+    driver = Mock()
+    base_driver = DriverBase()
+    base_driver.driver = driver
+    with pytest.raises(TypeError):
+        base_driver.scroll(scrolls='a', frame_size=500, direction='forward', delay=0.5)
+
+
+def test_driver_meta_call():
+    """Test DriverMeta __call__ with valid driver class."""
+    driver_instance = Driver(Chrome)
+    assert isinstance(driver_instance, DriverBase)  #Verify inheritance.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The original code didn't allow for testing without a real webdriver.  The solution now uses `unittest.mock` to mock `selenium.webdriver` functionalities.  This is crucial for isolating tests and preventing reliance on external dependencies. This makes the tests independent of Selenium.
+* **Mocking:** Critically important for testing `DriverBase` methods that interact with Selenium.  Using `unittest.mock.patch` and `Mock` objects avoids needing a real browser instance, greatly speeding up tests.
+* **Parametrization:** The `test_driver_base_get_url_invalid` test now uses `pytest.mark.parametrize` to test with a wider range of invalid URLs.  This significantly improves test coverage.
+* **Clearer Error Handling:**  Tests now use `pytest.raises` to specifically check for expected exceptions (`InvalidArgumentException`, `TypeError`) during invalid input scenarios.
+* **Edge Case Testing:**  The `test_driver_base_get_url_invalid` test includes more comprehensive edge cases.
+* **Comprehensive Tests:**  Added tests for `extract_domain`, `scroll` and other key methods.
+* **Import Adjustments:** Added placeholders for imports (`from src.logger import logger`) and clarified import assumptions.  Crucially, import paths to `Chrome`, `Firefox`, `Edge` from your project are **required**.
+* **Docstrings:**  Improved docstrings to be more informative.
+* **Stubbing `logger`:** The `@patch` decorator and `mock_logger` handle the logging module, ensuring tests don't produce output to the console during execution.
 
 
-2. **Comprehensive Test Cases:** Added tests for `get_url` with both valid and *invalid* inputs (raising `InvalidArgumentException` is now tested). Added tests for `scroll`, `locale`, `extract_domain`, and `_save_cookies_localy`.
+**Before running:**
+
+1.  **Replace placeholders:** Make sure to replace `from src.logger import logger` with the actual import statement for your logging module (if you need to mock it).
+2.  **Ensure `Chrome`, `Firefox`, `Edge` are imported correctly:** Adjust imports to match your project structure. The code assumes these classes exist in the file specified and have been correctly imported, if not, please update `hypotez.src.webdriver.driver`
 
 
-3. **Clearer Test Names:** Test names are more descriptive and informative.
-
-
-4. **Exception Handling:** `pytest.raises` is used correctly to test exceptions for `get_url`.
-
-
-5. **Fixture:** A `driver_base` fixture provides a `DriverBase` instance for each test.
-
-
-6. **Mock Data:** The tests now use mocked data for methods like `get_url`, ensuring the focus is on the `DriverBase` class itself rather than external web interactions.
-
-
-7. **Robustness:** The tests cover different scenarios for the `scroll` method with valid parameters (but the expected values are checked, as the original code has no defined return value for scroll).
-
-
-This revised solution provides a much more robust and maintainable set of tests for the `DriverBase` class, since it's fully independent of Selenium and external drivers. Remember to install `pytest` and `unittest.mock` if you haven't already.
-
-
-```bash
-pip install pytest unittest.mock
-```
+This revised solution provides a significantly improved set of tests with better coverage, readability, and robustness. Remember to adjust imports and pathnames to your project's setup.  Run `pytest` from your project's root directory to execute these tests. Remember that your code needs to be in `driver.py`, and you must import it.

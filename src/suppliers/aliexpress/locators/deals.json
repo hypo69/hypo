@@ -5,7 +5,7 @@
     "selector": "//a[contains( @class ,'productContainer')]",
     "if_list":"first","use_mouse": false,
     "mandatory": false,
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "locator_description": "Товары со страницы deals"
   }
 }

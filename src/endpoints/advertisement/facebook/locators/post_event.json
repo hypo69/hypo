@@ -4,7 +4,7 @@
     "by": "XPATH",
     "selector": "//label[@aria-label = 'Название мероприятия']//input",
     "if_list":"first","use_mouse": false,
-    "event": "click();%EXTERNAL_MESSAGE%",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click();%EXTERNAL_MESSAGE%",
     "mandatory": true,
     "locator_description": "поле ввода названия сообщения. При переходе по специально сконструированной ссылке откроется сразу. См код сценария"
 
@@ -14,7 +14,7 @@
     "by": "XPATH",
     "selector": "//label[@aria-label = 'Дата начала']//input",
     "if_list":"first","use_mouse": false,
-    "event": "click();backspace(10);%EXTERNAL_MESSAGE%",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click();backspace(10);%EXTERNAL_MESSAGE%",
     "mandatory": true,
     "locator_description": "поле ввода даты начала мероприятия"
 
@@ -24,7 +24,7 @@
     "by": "XPATH",
     "selector": "//label[@aria-label = 'Время начала']//input",
     "if_list":"first","use_mouse": false,
-    "event": "click();backspace();%EXTERNAL_MESSAGE%",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click();backspace();%EXTERNAL_MESSAGE%",
     "mandatory": true,
     "locator_description": "поле ввода даты начала мероприятия"
   },
@@ -34,7 +34,7 @@
     "by": "XPATH",
     "selector": "//label[@aria-label = 'Расскажите подробнее о мероприятии.']//textarea",
     "if_list":"first","use_mouse": false,
-    "event": "click();%EXTERNAL_MESSAGE%",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click();%EXTERNAL_MESSAGE%",
     "mandatory": true,
     "locator_description": "поле ввода даты начала мероприятия"
   },
@@ -45,7 +45,7 @@
     "by": "XPATH",
     "selector": "//div[@aria-label = 'Создать мероприятие']",
     "if_list":"first","use_mouse": false,
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "mandatory": true,
     "locator_description": "Кнопка отправки"
 

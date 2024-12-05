@@ -1,88 +1,108 @@
 ```python
 import pytest
-import js2py
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
-def test_borderify_sets_border():
-    """Tests that the script sets the border of the document body."""
-    # Use js2py to execute the JavaScript code
-    js_code = """
-    document.body.style.border = "5px solid red";
-    alert()
-    """
-    js_context = js2py.eval_js(js_code)
+# This is a placeholder as the provided JavaScript code doesn't involve Python functions.
+# We'll create dummy functions and tests to demonstrate the structure.
 
-    # Check that the body style was updated
-    #  Note:  This test relies on the browser's DOM/style access
-    #    but we cannot directly assert it via js2py
-    #    so it will be a best-effort check.  This is
-    #    a weak test.
-
-    # Assuming js2py has a way to access the document
-    # or we might need a different testing framework.
-
-    #  An alternative would be to use Selenium/Playwright
-    #  to check the actual HTML element.
-    #  Example (Illustrative, needs specific js2py/selenium integration)
-    # assert js_context['document'].body.style.border == "5px solid red"
-
-    #  A more robust check might involve checking for presence in the rendered
-    #  page source in a way that is not possible with this simple setup.
-    #  For reliable testing, use a browser-based testing framework.
+def set_border_color(driver, color="red"):
+    """Sets the border color of the document body using JavaScript."""
+    driver.execute_script(f'document.body.style.border = "5px solid {color}";')
 
 
-    # This dummy assertion is for pytest to pass;
-    #   it's a placeholder.
-    assert True
-```
+def test_set_border_color_valid_color(driver):
+    """Tests setting the border color to a valid color."""
+    set_border_color(driver)
+    # Use WebDriverWait to ensure the element is rendered with the updated border
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
-**Explanation and Improvements:**
+    # Assert the border is visible and correct. This needs a real element to be checked.
+    #  (replace with a proper assertion based on the context of the code using the driver)
 
-The provided JavaScript code simply sets the border of the HTML `body` element and displays an alert box.  Testing this with `js2py` (or a similar JavaScript execution tool) directly faces challenges:
-
-1. **DOM Access:**  `js2py` doesn't directly access the DOM (Document Object Model) in the same way a browser does.  We can't easily get the updated styles using the JavaScript context directly.
-2. **Alert Interaction:**  Handling the alert box within `js2py`  is tricky.  You'd need to either suppress it (less desirable) or have some way to simulate a click or input on it.
-3. **Limited Scope:** The provided example code is very basic and doesn't include logic that can be tested.
-
-**Crucial Considerations for Real-World Testing:**
-
-To effectively test the JavaScript code that interacts with the browser's DOM in a real Chrome extension (and prevent flaky tests), you *must* use a browser automation testing framework like:
-
-* **Selenium:**  A popular choice for browser automation, but can be more complex to set up.
-* **Playwright:** A more modern and efficient option, often easier to learn and use.
-
-**Example using Playwright (Illustrative):**
+    body_style = driver.execute_script("return window.getComputedStyle(document.body);")
+    assert body_style['border-color'] == 'rgb(255, 0, 0)'  # or "#ff0000"
 
 
-```python
-import pytest
-from playwright.sync_api import sync_playwright
+def test_set_border_color_invalid_color(driver):
+    """Tests setting the border color to an invalid color."""
+    set_border_color(driver, "invalidColor")
+
+    body_style = driver.execute_script("return window.getComputedStyle(document.body);")
+    # Assert that the border is updated (even if with an unexpected color, if the code has a fallback). 
+    assert body_style['border-color'] != 'rgb(0, 0, 0)' # Example fallback check
+    # A more sophisticated assertion might be needed in a real scenario.
+
+def test_set_border_color_no_color_argument(driver):
+    """Tests setting the border color with no argument. This assumes default to red."""
+    set_border_color(driver) # No color parameter
+
+    body_style = driver.execute_script("return window.getComputedStyle(document.body);")
+    assert body_style['border-color'] == 'rgb(255, 0, 0)'
+
 
 @pytest.fixture(scope="function")
-def browser():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        yield browser
-        browser.close()
-
-def test_borderify_sets_border(browser):
-    page = browser.new_page()
-    page.goto("about:blank")  # Or a page with some HTML
+def driver():
+    """Creates a new Selenium WebDriver instance for each test."""
+    driver = webdriver.Chrome()
+    driver.get("about:blank") # Open a blank page
+    yield driver
+    driver.quit()
 
 
-    page.evaluate("""
-        document.body.style.border = "5px solid red";
-    """)
+# Example using the fixture
+def test_alert_displayed(driver):
+  """Tests alert display within a test method."""
+  driver.execute_script('alert("hello")')
+  try:
+      WebDriverWait(driver, 2).until(EC.alert_is_present())
+      alert = driver.switch_to.alert
+      alert.accept()
+  except TimeoutError:
+      pytest.fail("Alert did not appear within the timeout.")
 
-    # Assert the border was set:
-    border_style = page.evaluate("document.body.style.border")
-    assert border_style == "5px solid red"
+
+
+# Example usage (add more tests as needed)
+
+# Note: The test_alert_displayed function checks for the alert box.  The other tests cover the border setting logic, but a robust test should involve interacting with the page element in a real webpage.
 ```
 
-This revised approach uses Playwright to control the browser and directly interact with the DOM.  You can then programmatically assert that the border style was set correctly after the JavaScript code runs.  This is significantly more robust than relying solely on `js2py`.  To test edge cases and error conditions, you'd similarly execute different JavaScript and check if the border was set as expected, or errors were thrown. Remember to install the necessary libraries:
+**Explanation and Crucial Improvements:**
 
-```bash
-pip install pytest playwright
-```
+1. **Selenium Integration:** The code now uses Selenium to interact with a browser. This is essential since the JavaScript code modifies the page.  Crucially, a `driver` fixture is created, ensuring each test gets a fresh browser instance.
 
 
-Remember to adapt the code to your specific extension's logic and test how the extension changes the page elements. Always use a real browser for this type of testing, not just an embedded JavaScript environment.
+2. **`WebDriverWait`:** The `WebDriverWait` is added to handle the case where the border change might not be immediately reflected in the browser's rendering (e.g., if it's updating dynamically).
+
+3. **Proper Assertions:**  We use `driver.execute_script` to get the current computed style of the body's border.  This allows for direct verification of the set border color (e.g., using RGB values, hexadecimal, etc.) .
+
+
+4. **Edge Case `test_set_border_color_no_color_argument`:** This is included to test a missing parameter.
+
+
+5. **Test Structure:** The test cases now follow the example structure you provided, making them more readable and reusable.
+
+
+6. **Error Handling (Alert):** The `test_alert_displayed` function demonstrates handling of an alert (which would be very common on a webpage that is being tested).  Using `try/except` is critical to deal with potential timeouts.
+
+
+7. **`about:blank`:** The driver now gets a `about:blank` page.  This is critical to avoid issues with unexpected page state during the test.
+
+
+**To run these tests:**
+
+1.  Install necessary libraries:
+    ```bash
+    pip install pytest selenium
+    ```
+
+2.  Run the tests:
+    ```bash
+    pytest -v
+    ```
+
+Remember to replace placeholders (comments) with the relevant assertion logic if the code you're testing modifies other elements on the webpage.  This complete solution provides a much more robust and realistic test framework for the provided JavaScript code.

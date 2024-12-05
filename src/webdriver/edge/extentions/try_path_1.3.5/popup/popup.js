@@ -59,7 +59,7 @@
             }
             return execContentScript();
         }).then(() => {
-            return sendToActiveTab({ "event": "initializeBlankWindows" });
+            return sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "initializeBlankWindows" });
         }).then(() => {
             return sendToActiveTab(msg, { "frameId": frameId });
         }).catch(e => {
@@ -298,7 +298,7 @@
         changeFrameDesignationVisible();
         changeFrameIdVisible();
 
-        sendToSpecifiedFrame({ "event": "requestShowResultsInPopup" });
+        sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowResultsInPopup" });
     };
 
     genericListener.listeners.insertStyleToPopup = function(message) {
@@ -375,7 +375,7 @@
         document.getElementById("focus-designated-frame").addEventListener(
             "click", () => {
                 sendToSpecifiedFrame({
-                    "event": "focusFrame",
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusFrame",
                     "frameDesignation": frameDesignationExpression.value
                 });
             });
@@ -403,17 +403,17 @@
 
         document.getElementById("show-previous-results").addEventListener(
             "click", () => {
-                sendToSpecifiedFrame({ "event": "requestShowResultsInPopup"});
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowResultsInPopup"});
             });
 
         document.getElementById("focus-frame").addEventListener(
             "click", () => {
-                sendToSpecifiedFrame({ "event": "focusFrame"});
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusFrame"});
             });
 
         document.getElementById("show-all-results").addEventListener(
             "click", () => {
-                sendToSpecifiedFrame({ "event": "requestShowAllResults" });
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowAllResults" });
             });
 
         document.getElementById("open-options").addEventListener(
@@ -422,28 +422,28 @@
             });
 
         document.getElementById("set-style").addEventListener("click", () => {
-            sendToSpecifiedFrame({ "event": "setStyle" });
+            sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "setStyle" });
         });
 
         document.getElementById("reset-style").addEventListener("click",()=> {
-            sendToSpecifiedFrame({ "event": "resetStyle" });
+            sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "resetStyle" });
         });
 
         document.getElementById("set-all-style").addEventListener(
             "click", () => {
-                sendToActiveTab({ "event": "setStyle" });
+                sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "setStyle" });
             });
 
         document.getElementById("reset-all-style").addEventListener(
             "click",()=> {
-                sendToActiveTab({ "event": "resetStyle" });
+                sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "resetStyle" });
             });
 
 
         contextTbody.addEventListener("click", event => {
             if (event.target.tagName.toLowerCase() === "button") {
                 browser.tabs.sendMessage(relatedTabId, {
-                    "event": "focusContextItem",
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
                     "executionId": executionId,
                 }, {
                     "frameId": relatedFrameId
@@ -470,7 +470,7 @@
             if (target.tagName.toLowerCase() === "button") {
                 let ind = parseInt(target.getAttribute("data-index"), 10);
                 browser.tabs.sendMessage(relatedTabId, {
-                    "event": "focusItem",
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
                     "executionId": executionId,
                     "index": ind
                 }, {
@@ -482,7 +482,7 @@
         window.addEventListener("unload", () => {
             var state = collectPopupState();
             browser.runtime.sendMessage({
-                "event": "storePopupState",
+                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "storePopupState",
                 "state": state
             });
         });
@@ -490,8 +490,8 @@
         resultsTbody.appendChild(fu.createDetailTableHeader());
         contextTbody.appendChild(fu.createDetailTableHeader());
 
-        browser.runtime.sendMessage({ "event": "requestInsertStyleToPopup"});
-        browser.runtime.sendMessage({ "event": "requestRestorePopupState" });
+        browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestInsertStyleToPopup"});
+        browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestRestorePopupState" });
     });
 
 

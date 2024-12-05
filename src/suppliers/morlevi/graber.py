@@ -78,7 +78,7 @@ class Graber(Grbr):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'morlevi'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.locator_for_decorator = self.locator.close_pop_up
+        #Context.locator_for_decorator = self.locator.close_pop_up  # <- Вместо этого я делаю рефреш
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         """Asynchronous function to grab product fields.

@@ -7,7 +7,7 @@
 
     "if_list":"first","use_mouse": false,
     "mandatory": true,
-    "event": false,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": false,
     "locator_description": "Список ссылок на товары со страницы категории"
   },
   "pagination": {
@@ -16,7 +16,7 @@
       "attribute": false,
       "by": "XPATH",
       "selector": "//ul[@class='pagination']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "mandatory": false,
       "locator_description": ""
     }
@@ -26,7 +26,7 @@
     "attribute": { "text": "href" },
     "by": "XPATH",
     "selector": "//a[contains(@class, 'menu-item')]",
-    "event": false,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": false,
     "mandatory": false,
     "locator_description": ""
   }

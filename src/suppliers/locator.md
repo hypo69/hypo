@@ -9,7 +9,7 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "locator_description": "Closes the pop-up window. If it doesn’t appear, it’s not critical (`mandatory`:`false`)."
   },
   "additional_images_urls": {
@@ -19,7 +19,7 @@
     "if_list": "all",
     "use_mouse": false,
     "mandatory": false,
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "locator_description": "Retrieves a list of `URL`s for additional images."
   },
   "id_supplier": {
@@ -29,7 +29,7 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "locator_description": "SKU for Morlevi."
   },
   "default_image_url": {
@@ -38,7 +38,7 @@
     "selector": "//a[@id = 'mainpic']//img",
     "if_list": "first",
     "use_mouse": false,
-    "event": "screenshot()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "screenshot()",
     "mandatory": true,
     "locator_description": "Attention! In Morlevi, the image is captured via a screenshot and returned as a PNG (`bytes`)."
   }
@@ -85,7 +85,7 @@ The dictionary name corresponds to a field name in the `ProductFields` class ([m
   ```json
   {"attribute": "href",
   ...
-  "event": "click()"
+  "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()"
   }
   ```
   Here, the driver first executes the `click()` command on the web element, then retrieves its `href` attribute.  
@@ -116,7 +116,7 @@ Keys in a locator can contain lists/tuples or dictionaries.
       "//a[contains(@href, '#tab-description')]",
       "//div[@id = 'tab-description']//p"
     ],
-    "event": [
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": [
       "click()",
       null
     ],

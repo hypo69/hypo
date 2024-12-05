@@ -6,125 +6,116 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import os
 
-# Fixture definition for creating a Firefox profile
+# Define a fixture for creating a Firefox profile
 @pytest.fixture
 def firefox_profile():
     """Creates a new Firefox profile for testing."""
-    firefox_options = Options()
     profile = webdriver.FirefoxProfile()
-    # IMPORTANT: Replace "profileToolsQA" with the actual name you used in the documentation.
+    # Important:  Set path to the profile directory, if it doesn't exist, create it.
+    profile_path = os.path.join(os.path.expanduser("~"), ".mozilla", "firefox")
+    if not os.path.exists(profile_path):
+        os.makedirs(profile_path)
+
+    profile_name = "profileToolsQA"
+    profile_directory = os.path.join(profile_path, profile_name)
+    if not os.path.exists(profile_directory):
+        os.makedirs(profile_directory)
     profile.set_preference("browser.startup.homepage", "about:blank")
-    profile.set_preference("browser.privatebrowsing.autostart", False) # Crucial for reliable testing
-    profile.set_preference("browser.download.folderList", 2) #Allows downloads
-    profile.set_preference("browser.download.manager.showWhenStarting", False)
-    profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream")  # or other relevant MIME types
-    firefox_options.profile = profile
-    driver = webdriver.Firefox(options=firefox_options)
-    return driver, profile
+    
+    # Add any other desired customizations here.
+    return profile
 
-# Tests for Firefox Profile configuration
+
 def test_firefox_profile_creation(firefox_profile):
-    """Tests the creation of a new Firefox profile."""
-    driver, profile = firefox_profile
-    assert driver is not None, "Driver instance should not be None"
-    #Verify the preferences
-    assert profile.get_preference("browser.startup.homepage") == "about:blank"
-    assert profile.get_preference("browser.privatebrowsing.autostart") == False #Check private browsing off
-    print(f"Profile path: {profile.path}")
-
-    # Example of using the driver to perform actions (e.g., navigating to a page)
-    driver.get("about:blank")  # Navigate to a page
-    time.sleep(2)  # Pause to allow the page to load (important in automated tests!)
-    driver.quit()
+    """Creates a new Firefox profile and verifies its creation."""
+    assert firefox_profile is not None
+    
+    # Assert that the profile directory exists
+    profile_path = os.path.join(os.path.expanduser("~"), ".mozilla", "firefox", "profileToolsQA")
+    assert os.path.exists(profile_path), f"Profile directory {profile_path} does not exist."
+    # Add an assertion to check specific profile preferences, if available
+    # Example: assert firefox_profile.get_preference("browser.startup.homepage") == "about:blank"
 
 
-# Test for handling potential exceptions during profile usage (add more as needed)
-def test_firefox_profile_exception(firefox_profile):
-    """Tests for potential exceptions when using the profile."""
-    driver, profile = firefox_profile
 
-    try:
-      # Replace with the relevant code that might raise an exception
-      invalid_profile_name = "profileNotExisting"
-      profile.get_preference(invalid_profile_name)  # Simulate invalid preference
-    except Exception as e:
-        # Check for expected exception
-      assert "NoSuchProfile" in str(e), f"Expected NoSuchProfile, got {e}"
-    finally:
-      driver.quit()
+def test_firefox_driver_instantiation(firefox_profile):
+    """Instantiates a Firefox driver using the provided profile."""
+    options = Options()
+    options.profile = firefox_profile  # Apply the profile
+    driver = webdriver.Firefox(options=options, executable_path='<path_to_geckodriver>') # Replace with your path
+    assert driver is not None
 
-def test_firefox_profile_invalid_input(firefox_profile):
-    """Tests handling of invalid profile name"""
-    driver, profile = firefox_profile
-
-    with pytest.raises(Exception) as excinfo:  # This will catch any exception raised in the try block
-        # Replace with the relevant code that might raise an exception
-        driver.get("invalid_url")  # Or other bad input
-
-    assert "invalid URL" in str(excinfo.value), f"Expected 'invalid URL' , got {excinfo.value}"
-    driver.quit()
-
-
-#Example of navigating and interacting to confirm profile is working.
-def test_firefox_profile_usage(firefox_profile):
-    driver, profile = firefox_profile
-    driver.get("https://www.google.com")
-
-    #Example using implicit wait for an element with an id
+    # Add a simple test action (replace with your actual test)
+    driver.get("https://www.toolsqa.com")
     try:
         element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "lst-ib"))
+            EC.presence_of_element_located((By.TAG_NAME, "h1"))
         )
-        element.send_keys("test")
-        assert "test" in element.get_attribute("value")
-        print("test passed")
+        assert "ToolsQA" in element.text, "Homepage title not found"
     except Exception as e:
-        print(f"Error: {e}")
-        assert False, "Element not found within the timeout."
-
+        pytest.fail(f"Failed to find homepage title: {e}")
+    
     driver.quit()
 
 
+def test_invalid_profile_name():
+    """Tests handling of an invalid profile name (example)."""
+    profile_name = "invalidProfileName"
+    # ... (code to create a profile using profile_name)
+
+    with pytest.raises(FileNotFoundError) as error_info:
+        # ... (code to instantiate a driver using the profile)
+        pytest.fail("Expected FileNotFoundError was not raised")
+    
+    # Check details for failure
+    assert "The profileToolsQA does not exist" in str(error_info.value)
 
 
+# Example of a test that checks specific profile settings
+#def test_profile_settings(firefox_profile):
+ #   profile_homepage = firefox_profile.get_preference("browser.startup.homepage")
+  #  assert profile_homepage == "about:blank"  # Check specific setting
+
+
+
+#IMPORTANT! Remember to install the necessary libraries:
+# pip install pytest selenium webdriver-manager
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **`firefox_profile` Fixture:**  This fixture now correctly creates a *new* Firefox profile for each test, preventing conflicts and making tests independent. It also sets essential preferences, especially crucial for reliable testing:
-   - `browser.startup.homepage = "about:blank"`: This is **very important**.  A blank homepage is critical for testing.  Avoid using `https://www.toolsqa.com/` or other URLs in your tests.  Your tests should not rely on the profile having a specific page open on start.
-   - `browser.privatebrowsing.autostart = False`:  Your tests should use the profile in standard mode.  Private browsing mode interferes with test reliability.
-   -  Crucially, now includes download handling. These preferences must be set to support file downloads.
-2. **Error Handling (`pytest.raises`):** Added `pytest.raises` to test for exceptions for invalid inputs, demonstrating exception handling with clear assertions. 
-3. **Driver Quitting:** The `driver.quit()` statement is now placed in `finally` blocks to ensure the driver is properly closed, even if an exception occurs, preventing resource leaks.
-4. **Clear Test Names:**  Test names are clear and descriptive.
-5. **Realistic Example Interaction:**  Added a sample interaction to verify the driver is working with the profile.  Important: Use `WebDriverWait` to handle the situation where the element is not yet available. This is *critical* to prevent WebDriver errors.
+1. **Profile Management:** The code now correctly creates a profile directory if it doesn't exist. This is extremely important for running tests reliably.  Crucially, it creates a new folder *inside* the user's `.mozilla/firefox` directory for the profile, preventing conflicts.
+
+2. **Error Handling (`pytest.raises`):** The `test_invalid_profile_name` function demonstrates how to use `pytest.raises` to test for a `FileNotFoundError` (or other exceptions) when the profile doesn't exist.  This is critical for robustness.
+
+3. **Clearer Tests:** Test functions now have better names, and the logic is more apparent.
+
+4. **Explicit Driver Quit:**  The `driver.quit()` method is used within the `test_firefox_driver_instantiation` function to properly close the browser after each test run. This is vital for preventing resource leaks.
+
+5. **Placeholder for GeckoDriver:** Replace `<path_to_geckodriver>` with the actual path to your GeckoDriver executable.  Using `webdriver-manager` is highly recommended for automating this.
+
+6. **WebDriverManager (Recommended):** Install `webdriver-manager` and use it to manage your WebDriver downloads and ensure the correct path to `geckodriver`.
 
 
-**How to Run:**
+**How to Run the Tests:**
 
-1.  **Install pytest and selenium:**
-    ```bash
-    pip install pytest selenium geckodriver
-    ```
-2.  **Download GeckoDriver:**  Download the correct GeckoDriver for your Firefox version and place it in a location accessible to your Python script.  (e.g., `./geckodriver`).
-3.  **Configure Environment Variable (Windows):**
-    ```bash
-    set PATH=%PATH%;C:\path\to\geckodriver # Update this path
-    ```
+1. **Install required libraries:**
+   ```bash
+   pip install pytest selenium webdriver-manager
+   ```
 
-4.  **Run the tests:**
-    ```bash
-    pytest your_test_file.py
-    ```
+2. **Ensure GeckoDriver is in your PATH or specify the correct path:**
+   ```python
+   # ... (in test_firefox_driver_instantiation function)
+   driver = webdriver.Firefox(options=options, executable_path=webdriver_manager.driver.get('firefox'))  # Example for webdriver-manager
+   # ... 
+   ```
 
-**Important Considerations:**
+3. **Run the tests:**
+   ```bash
+   pytest your_test_file.py  # Replace your_test_file.py with the name of your test file
+   ```
 
-- **Profile Name:**  Verify that `"profileToolsQA"` in the code matches the actual name you gave your profile.  If the profile name is incorrect, the tests will likely fail.
-- **Download Handling:** The download-related preferences are *crucial* to handle files. Modify the `saveToDisk` preference as needed for the types of files that your tests will download.
-- **Robust Element Locators:** Replace the placeholder `driver.get("about:blank")` with actual interactions. Use robust and reliable element locators to ensure your tests do not fail if a page is loading slowly or has slight differences.
-- **Timeouts:** Implement `WebDriverWait` with appropriate timeouts in all the interaction sections to prevent your tests from hanging indefinitely. This is essential for real-world scenarios.
-
-
-This revised solution is significantly more robust and demonstrates best practices for writing pytest tests for Firefox webdriver interactions. Remember to adapt the specific website interactions to match the actual web application you are testing. Remember also that if you are accessing external resources (like websites), you should be mindful of rate limits and not make calls too frequently.
+Remember to adapt the assertions and test steps to match the specific functionality you're testing in your application.  If you're testing specific webpage elements, replace the example assertions with the actual locators and expected results.

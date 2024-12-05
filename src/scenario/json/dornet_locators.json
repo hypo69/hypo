@@ -4,7 +4,7 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "href",
       "by": "css selector",
       "selector": "li.next-page a",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     }
   },
   "product": {
@@ -12,13 +12,13 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div.boxItem-wrap",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "link_to_product_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "href",
       "by": "XPATH",
       "selector": "//a[@class='str-item-card__property-title']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     }
   },
   "product_fields_locators": {
@@ -26,57 +26,57 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=product-name] h1[itemprop='name']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "brand_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": ".brands",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
 
     "sku_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=sku] span[itemprop='sku']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "brand_sku_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=sku] span[itemprop='sku']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "summary_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=product-name] h1[itemprop='name']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "description_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": ".data-table[role='presentation']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "images_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "src",
       "by": "css selector",
       "selector": ".cloudzoom",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "price_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div span[itemprop='price']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     }
   },
   "stock_locator": {
     "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
     "by": "css selector",
     "selector": ".value.stock_staus",
-    "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+    "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
   },
   "not in stock": [
     "color:red",

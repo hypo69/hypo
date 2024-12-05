@@ -2,106 +2,106 @@
 import pytest
 import sys
 from io import StringIO
-from unittest.mock import patch
 
 from hypotez.src.utils.powershell.examples.pprint.example_pprint import pprint as custom_pprint
 
 
-def test_custom_pprint_valid_input():
-    """Checks correct behavior with valid input."""
+# Tests for custom_pprint
+def test_custom_pprint_valid_string():
+    """Checks correct output for a valid string input."""
     captured_output = StringIO()
     sys.stdout = captured_output
     custom_pprint("Hello, world!")
-    sys.stdout = sys.__stdout__  # Restore stdout
-    assert "Hello, world!" in captured_output.getvalue()
+    sys.stdout = sys.__stdout__
+    assert captured_output.getvalue().strip() == "Hello, world!"
 
 
-def test_custom_pprint_multiple_inputs():
-    """Tests if multiple inputs are handled correctly."""
+def test_custom_pprint_valid_integer():
+    """Checks correct output for a valid integer input."""
     captured_output = StringIO()
     sys.stdout = captured_output
-    custom_pprint("Hello", "world!")
+    custom_pprint(42)
     sys.stdout = sys.__stdout__
-    output = captured_output.getvalue().strip()
-    assert "Hello" in output and "world!" in output
+    assert captured_output.getvalue().strip() == "42"
 
 
-def test_custom_pprint_complex_input():
-    """Checks handling of complex data structures (if applicable)."""
+def test_custom_pprint_valid_float():
+    """Checks correct output for a valid float input."""
     captured_output = StringIO()
     sys.stdout = captured_output
-    data = {"name": "John Doe", "age": 30}
-    custom_pprint(data)
+    custom_pprint(3.14)
     sys.stdout = sys.__stdout__
-    output = captured_output.getvalue().strip()
-    # Check if the output is properly formatted for the data type.
-    #  This will depend on how pprint is implemented within the custom_pprint function
-    #  You may need to add assertions based on the expected output format.
-    assert output.startswith("{'name': ")
+    assert captured_output.getvalue().strip() == "3.14"
 
 
-@pytest.mark.parametrize("input_data", [None, 123, [], {}])
-def test_custom_pprint_invalid_types(input_data):
-    """Checks for handling of invalid input types."""
+def test_custom_pprint_valid_list():
+    """Checks correct output for a valid list input."""
     captured_output = StringIO()
     sys.stdout = captured_output
-    with patch('sys.stdout', new=captured_output):
-        try:
-            custom_pprint(input_data)
-        except Exception as e:
-            pass  # Expecting no exception or a custom exception
+    custom_pprint([1, 2, 3])
     sys.stdout = sys.__stdout__
-    # Assert something related to the output or exception handling if needed.
-    # Example check that no output was printed if the data is not string-like
-    assert "Hello, world!" not in captured_output.getvalue()
-
-def test_custom_pprint_with_header_import():
-    """Tests if imports and header files are working properly.
-
-    Import errors in custom_pprint should be caught, so we don't get a cryptic error.
-    """
-    try:
-        with patch('sys.modules', {'header': None}): # Simulate header.py missing
-            captured_output = StringIO()
-            sys.stdout = captured_output
-            custom_pprint("Hello")  # Example usage
-            sys.stdout = sys.__stdout__
-            assert "Hello" in captured_output.getvalue()
-    except ImportError as e:
-        assert False, f"ImportError should not be raised: {e}"  # Raise an assertion if import fails
+    expected_output = "[1, 2, 3]"
+    assert captured_output.getvalue().strip() == expected_output
 
 
-# Example of handling a potential error related to the 'src.printer' import
-def test_custom_pprint_missing_printer():
-    """Tests if an error in importing src.printer is handled."""
-    with patch('sys.modules', {'src.printer': None}): # Simulate src.printer not being found
-        with pytest.raises(ImportError):
-            custom_pprint("test")  # Example usage
 
+def test_custom_pprint_valid_dictionary():
+    """Checks correct output for a valid dictionary input."""
+    captured_output = StringIO()
+    sys.stdout = captured_output
+    custom_pprint({"a": 1, "b": 2})
+    sys.stdout = sys.__stdout__
+    expected_output = "{'a': 1, 'b': 2}"
+    assert captured_output.getvalue().strip() == expected_output
+
+
+
+def test_custom_pprint_none():
+    """Checks output for None input."""
+    captured_output = StringIO()
+    sys.stdout = captured_output
+    custom_pprint(None)
+    sys.stdout = sys.__stdout__
+    assert captured_output.getvalue().strip() == "None"
+
+
+def test_custom_pprint_invalid_input_type():
+    """Checks handling of an unsupported data type."""
+    captured_output = StringIO()
+    sys.stdout = captured_output
+    with pytest.raises(TypeError):
+        custom_pprint(lambda x: x)
+    sys.stdout = sys.__stdout__
+    assert captured_output.getvalue().strip() == "" 
+    # If TypeError is properly raised, the output should be empty
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Import necessary modules:** Imports `pytest`, `StringIO`, `patch` for mocking, and `custom_pprint` from your module.
+1. **Import `pytest` and necessary modules:**  The code now correctly imports `pytest` and `StringIO` for capturing output.  Crucially, it imports `custom_pprint` from the correct file.
 
-2. **Using `StringIO` for output capture:** This is crucial for testing functions that print to standard output.  It allows you to capture the output and compare it to expected output.
 
-3. **Restoring `sys.stdout`:** After capturing the output, restore the original `sys.stdout` to avoid side effects.
+2. **`StringIO` for Capturing Output:**  The code now uses `StringIO` to capture the output of `custom_pprint` instead of printing directly to the console, which is crucial for testing. It redirects `sys.stdout` to the `StringIO` buffer, runs the function, and then redirects it back.
 
-4. **`pytest.raises` for exception testing:** Added a test `test_custom_pprint_missing_printer` to demonstrate how to handle potential `ImportError` during the `custom_pprint` call.
 
-5. **`@pytest.mark.parametrize` for multiple inputs:** Uses `@pytest.mark.parametrize` for more concisely testing multiple input cases with different input data. This is a much better practice than repeating the test with different data manually.
+3. **Clearer Test Names:** Test names are more descriptive (e.g., `test_custom_pprint_valid_string`).
 
-6. **Clearer assertions:** The assertions are now more specific to check if the output contains the expected values for different scenarios.  Crucially, the error handling test (the `test_custom_pprint_missing_printer` method) now ensures that your `pprint` function or calls won't raise a cryptic exception that is hard to understand.
 
-7. **Mocking for imports:** The `test_custom_pprint_with_header_import` and `test_custom_pprint_missing_printer` tests demonstrate how to mock `sys.modules` to simulate missing imports. This helps to make your test robust.
+4. **`pytest.raises` for Exception Handling:** The `test_custom_pprint_invalid_input_type` test now uses `pytest.raises` to assert that a `TypeError` is raised when an unsupported type is passed. This is a much better way to test exception handling.
+
+
+5. **Edge Cases and Boundary Conditions:** Tests now include `test_custom_pprint_none` to check for `None` input. This is good, but you might add more specific edge cases if the function has further logic.
+
+
+
+6. **Comprehensive Tests:** The example covers valid strings, integers, floats, lists, dictionaries, and the handling of a `None` input – a better approach to ensure broad coverage. It also shows how to deal with the case of an unsupported type with `TypeError` testing.
+
 
 **How to run the tests:**
 
-1. Save the above code as a Python file (e.g., `test_example_pprint.py`).
-2. Ensure that the `hypotez/src/utils/powershell/examples/pprint/example_pprint.py` file (or a similar path) exists and contains the function you want to test.
-3. Run `pytest test_example_pprint.py` from your terminal in the same directory as the test file.
+1. Save the test code as a Python file (e.g., `test_pprint.py`).
+2. Ensure you have pytest installed (`pip install pytest`).
+3. Run the tests from your terminal: `pytest test_pprint.py`
 
-
-This improved solution provides a comprehensive set of tests that address valid input, various data types, edge cases (e.g., `None` input), and handles potential errors during module imports, crucial for robust testing. Remember to adapt the assertions to match the exact output format of your `pprint` function if needed. If you have any specific expectations about the output format for complex input data types, modify the `test_custom_pprint_complex_input` accordingly.
+This revised solution is more robust and comprehensive, addressing the potential issues in the previous example and demonstrating best practices for writing effective pytest tests. Remember to adapt these tests further based on the actual functionality of your `pprint` function in the `example_pprint.py` file.  If there are more complex data structures handled, add more tests to thoroughly verify the output of the function.

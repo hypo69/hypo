@@ -2,93 +2,86 @@
 import pytest
 from pathlib import Path
 from types import SimpleNamespace
-from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
+from crawlee.playwright_crawler import PlaywrightCrawler
 from src import gs
-from src.utils import j_loads_ns
-from src.logger import logger
+from src.utils.jjson import j_loads_ns
 from hypotez.src.webdriver.playwright import playwrid  # Import the class directly
 
-# Create a dummy gs.path object for testing.  Crucial for testing!
-class DummyGS:
-    path = SimpleNamespace(src=Path("./"))
 
-gs = DummyGS()
-
-
-# Fixture to provide settings data
+# Fixture definitions
 @pytest.fixture
-def settings_data():
-    return SimpleNamespace(headless=True, options=["--disable-gpu"], browser_type="chromium", user_agent="test_user_agent")
+def example_settings():
+    """Provides example settings for Playwrid."""
+    settings_path = Path(gs.path.src / 'webdriver' / 'playwright' / 'playwrid.json')
+    return j_loads_ns(settings_path)
 
 
 @pytest.fixture
-def playwrid_instance(settings_data):
-    return playwrid.Playwrid(settings_name=None, settings_data)
+def example_settings_custom(example_settings):
+    """Creates custom settings for testing different scenarios"""
+    custom_settings_path = settings_path.parent / 'custom_settings.json'
+    
+    with open(custom_settings_path, 'w') as f:
+        f.write('{\n\t"headless": false,\n\t"options": [\"--disable-gpu\"]\n}')
+
+    return j_loads_ns(custom_settings_path)
+
+
+def test_playwrid_valid_settings(example_settings):
+    """Test with valid settings loaded from default file."""
+    browser = playwrid.Playwrid(settings_name=None)
+    assert browser.playwright_launch_options['headless'] is True
+    assert browser.playwright_launch_options['args'] == []
+
+
+def test_playwrid_custom_settings(example_settings_custom):
+    """Test using custom settings."""
+    browser = playwrid.Playwrid(settings_name="custom_settings")
+    assert browser.playwright_launch_options['headless'] is False
+    assert browser.playwright_launch_options['args'] == ['--disable-gpu']
 
 
 
-# Tests for _load_settings
-def test_load_settings_default(settings_data):
-    """Tests loading settings from default file."""
-    instance = playwrid.Playwrid(settings_name=None) # Pass settings_data
-
-    settings = instance._load_settings()
-    assert settings.headless is True
-    assert settings.options == []  # Default value
-    assert settings.user_agent is None
-
-def test_load_settings_custom(settings_data):
-    """Tests loading settings from a custom file."""
-
-    instance = playwrid.Playwrid(settings_name="custom_settings")
-
-    settings = instance._load_settings()
-    assert settings.headless == True
-    assert settings.options == ["--disable-gpu"]  # Custom Value
-    assert settings.user_agent == "test_user_agent"  # Custom Value
+def test_playwrid_missing_settings_file():
+    """Test with a missing settings file, using default."""
+    with pytest.raises(FileNotFoundError):
+      playwrid.Playwrid(settings_name="nonexistent_settings")
 
 
-# Tests for _set_launch_options
-def test_set_launch_options(settings_data, playwrid_instance):
-    """Tests setting launch options correctly."""
-    options = playwrid_instance._set_launch_options(settings_data)
-    assert options["headless"] is True
-    assert options["args"] == ["--disable-gpu"]
-
-    # Check default values
-    settings_no_user_agent = SimpleNamespace(headless=False, options=[])
-    options = playwrid_instance._set_launch_options(settings_no_user_agent)
-    assert options["headless"] is False
-    assert options["args"] == []
+def test_playwrid_invalid_settings_file_format():
+    """Test with invalid JSON format in custom settings file."""
+    # Create a dummy invalid file
+    invalid_settings_path = Path(gs.path.src / 'webdriver' / 'playwright' / 'invalid_settings.json')
+    with open(invalid_settings_path, 'w') as f:
+        f.write("invalid json")
 
 
-def test_start_valid_url(playwrid_instance, monkeypatch):
-    """Tests starting the crawler with a valid URL."""
+    with pytest.raises(ValueError):
+      playwrid.Playwrid(settings_name="invalid_settings")
 
-    # Mock logger.info and logger.critical for testing
-    mock_logger = {"info": lambda x: None, "critical": lambda x, y: None}
-    monkeypatch.setattr('src.logger', mock_logger)
+def test_playwrid_start_valid_url():
+    """Test starting Playwright with a valid URL."""
+    browser = playwrid.Playwrid()
+    # Use a dummy URL for testing
+    browser.start("https://www.example.com")
+    
+def test_playwrid_start_invalid_url():
+    """Test starting Playwright with a bad URL."""
+    #Use a mock logger to prevent actual output
+    # Import needed components
+    from unittest.mock import patch
+    import logging
+    
+    with patch('hypotez.src.webdriver.playwright.playwrid.logger') as mock_logger:
+        browser = playwrid.Playwrid()
+        # Pass an invalid URL
+        with pytest.raises(Exception) as e:
+            browser.start("invalid_url")
+        # Assert that the proper error is raised and logged
+        assert "Start Playwright Crawler for invalid_url" in mock_logger.info.call_args[0][0]
+        assert 'Playwrid Crawler failed with an error:' in mock_logger.critical.call_args[0][0]
 
-    # Call the start method, mocking the super().run()
-    mock_run = lambda : None
-    monkeypatch.setattr(playwrid.PlaywrightCrawler, 'run', mock_run)
 
-    playwrid_instance.start("https://www.example.com")
-
-def test_start_invalid_url(playwrid_instance, monkeypatch):
-    """Tests if the crawler handles exceptions properly."""
-
-    # Mock logger.info and logger.critical for testing
-    mock_logger = {"info": lambda x: None, "critical": lambda x, y: None}
-    monkeypatch.setattr('src.logger', mock_logger)
-
-    # Mocks exception in run to test exception handling
-    def run_with_exception(*args, **kwargs):
-        raise ValueError("Test exception")
-    monkeypatch.setattr(playwrid.PlaywrightCrawler, 'run', run_with_exception)
-
-    with pytest.raises(ValueError):  # Asserting the exception is raised
-        playwrid_instance.start("invalid_url")
 
 
 
@@ -96,28 +89,20 @@ def test_start_invalid_url(playwrid_instance, monkeypatch):
 
 **Explanation and Improvements:**
 
-1. **Mocking `gs.path`:** The crucial addition is creating a `DummyGS` class and `gs` object for mocking the `gs.path` object.  This isolates the test from the actual file system and avoids errors related to the `gs.path` not being defined in the test environment.
+* **Import `playwrid`:** Imports the class directly to avoid any issues with relative paths.
+* **Fixtures for Settings:** Creates `example_settings` and `example_settings_custom` fixtures to load example settings. This makes the tests more readable and reusable.
+* **Clearer Test Cases:**  Test names are more descriptive, indicating the type of input or scenario being tested.
+* **Exception Handling (Crucial):** Added tests for `FileNotFoundError` and `ValueError` to ensure the code handles errors gracefully when the settings file is missing or has a bad format.
+* **`pytest.raises`:** Correctly uses `pytest.raises` to catch exceptions.
+* **Example Usage:**  Added `test_playwrid_start_valid_url` and `test_playwrid_start_invalid_url` tests to check the functionality.  The invalid URL test now uses `pytest.raises` correctly to assert the expected exception.
+* **Mocking `logger` (important):**  The `test_playwrid_start_invalid_url`  now uses `unittest.mock.patch` to mock the logger. This is crucial, as otherwise the tests might fail due to interactions with the real logging system.  The logger is now properly mocked to prevent actual output to the console during the test.
 
-2. **`playwrid_instance` Fixture:** This fixture now properly creates an instance of `Playwrid` using the `settings_data` fixture, ensuring consistent test setup.
-
-3. **Comprehensive `settings_data` Fixture:**  The `settings_data` fixture now constructs a complete `SimpleNamespace` object, accurately representing the expected settings, including `user_agent`. This is vital for accurate test scenarios.
-
-4. **`test_load_settings_custom`:**  The test is significantly improved by correctly passing the `settings_data` fixture to the `Playwrid` constructor.
-
-5. **Mocking `logger`:** The `test_start_*` functions now use `monkeypatch` to mock the `logger` object.  This allows the tests to run successfully without actual logging output, making them more reliable and faster.
-
-
-6. **`test_start_invalid_url`:** A crucial test added to check how the `start` method handles exceptions. Uses `pytest.raises` to verify that a `ValueError` is correctly caught and handled, which is crucial for robust code.
 
 
 **How to Run the Tests:**
 
-1.  Make sure you have `pytest` installed (`pip install pytest`).
-2.  Save the above code as a `.py` file (e.g., `test_playwrid.py`).
-3.  Place a dummy `playwrid.json` file (or `custom_settings.json`) in the `hypotez/src/webdriver/playwright/` directory with your desired test data.  For example, just create a file named `playwrid.json` with dummy content like `{"headless": true}` in the correct path.
+1.  Make sure you have `pytest` installed: `pip install pytest`
+2.  Save the test code as a Python file (e.g., `test_playwrid.py`).
+3.  Run the tests from your terminal: `pytest test_playwrid.py`
 
-
-4.  Run the tests from your terminal: `pytest test_playwrid.py`
-
-
-This revised solution is significantly more robust and comprehensive, addressing critical aspects of testing including mocking dependencies and handling exception cases, making your tests more effective and reliable. Remember to adapt the dummy JSON file to match your actual settings data. Remember to adjust the import paths to match your actual project structure if needed. Remember that `src` and `crawlee` paths should be correctly defined in your actual project structure.
+This improved solution is more robust and comprehensive, covering various scenarios and potential issues in the `Playwrid` class. Remember to replace `gs.path.src` with the actual path to your `src` directory if it's different. Also, adjust the dummy JSON path for the 'custom_settings.json' file to your project structure.  If you're using a real logging configuration, adjust the test to match the expected logging behavior.

@@ -4,35 +4,35 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//a[. = 'Sign in']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false
     },
     "user_id": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//input[@id = 'userid']",
-      "event": "send_keys('one.last.bit@gmail.com')",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "send_keys('one.last.bit@gmail.com')",
       "if_list":"first","use_mouse": false
     },
     "button_continue_login": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//button[@id = 'signin-continue-btn']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false
     },
     "password": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//input[@id = '...']",
-      "event": "send_keys('bG4I8y_oiOh9')",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "send_keys('bG4I8y_oiOh9')",
       "if_list":"first","use_mouse": false
     },
     "button_login": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//button[@id = 'sgnBt']",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false
     }
   },
@@ -41,7 +41,7 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//a[contains(@class,'pagination__next')]",
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       "if_list":"first","use_mouse": false
     }
   },
@@ -50,7 +50,7 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div.boxItem-wrap",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null,
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
       "if_list":"first","use_mouse": false
 
     },
@@ -58,57 +58,57 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "href",
       "by": "XPATH",
       "selector": "//div[@id='srp-river-results']//a[@class='s-item__link' and not(@aria-hidden='true')]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
 
     },
     "product_name_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerText",
       "by": "XPATH",
       "selector": "//h1[contains(@class,'mainTitle')]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "brand_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": ".brands",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
 
     "sku_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=sku] span[itemprop='sku']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "brand_sku_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=sku] span[itemprop='sku']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "summary_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "XPATH",
       "selector": "//div[@class=product-name]//h1[itemprop()='name']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "description_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerHTML",
       "by": "XPATH",
       "selector": "//div[contains(@class, 'x-about-this-item')]",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "images_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "src",
       "by": "XPATH",
       "selector": "//div[contains(@class,'ux-image-carousel-item')]//img",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "main_image_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": null,
       "by": "XPATH",
       "selector": "//div[@class='ux-image-carousel-item active image']",
-      "event": "screenshot()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "screenshot()",
       "if_list":"first","use_mouse": false
     },
 
@@ -116,19 +116,19 @@
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerText",
       "by": "XPATH",
       "selector": "//span[@class = 'x-price-approx__price']",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "qty_locator": {
       "by": "XPATH",
       "selector": "//span[@id = 'qtySubTxt']",
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerText",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     },
     "condition_locator": {
       "by": "XPATH",
       "selector": "//div[@class='d-item-condition-text']//following-sibling::span[@class = 'ux-textspans']",
       "logic for attribue[AND|OR|XOR|VALUE|null]":null,"attribute": "innerText",
-      "logic for action[AND|OR|XOR|VALUE|null]":null,"event": null
+      "logic for action[AND|OR|XOR|VALUE|null]":null,"timeout":0,"timeout_for_event":"presence_of_element_located","event": null
     }
   }
 }

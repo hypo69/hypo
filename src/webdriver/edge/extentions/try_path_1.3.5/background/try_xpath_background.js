@@ -53,14 +53,14 @@
 
     genericListener.listeners.requestRestorePopupState = function (message) {
         browser.runtime.sendMessage({
-            "event": "restorePopupState",
+            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "restorePopupState",
             "state": popupState
         });
     };
 
     genericListener.listeners.requestInsertStyleToPopup = function () {
         browser.runtime.sendMessage({
-            "event": "insertStyleToPopup",
+            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "insertStyleToPopup",
             "css": popupCss
         });
     };
@@ -90,7 +90,7 @@
                 "frameId": frameId
             }).then(() => {
                 return browser.tabs.sendMessage(id, {
-                    "event": "finishRemoveCss",
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "finishRemoveCss",
                     "css": removeCss
                 }, {
                     "frameId": frameId
@@ -105,7 +105,7 @@
             "frameId": frameId
         }).then(() => {
             return browser.tabs.sendMessage(id, {
-                "event": "finishInsertCss",
+                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "finishInsertCss",
                 "css": css
             }, {
                 "frameId": frameId
@@ -126,7 +126,7 @@
     genericListener.listeners.requestSetContentInfo = function (message,
                                                                 sender) {
         browser.tabs.sendMessage(sender.tab.id, {
-            "event": "setContentInfo",
+            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "setContentInfo",
             "attributes": attributes
         }, {
             "frameId": sender.frameId

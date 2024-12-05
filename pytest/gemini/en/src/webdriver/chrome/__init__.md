@@ -1,97 +1,100 @@
 ```python
 import pytest
-from hypotez.src.webdriver.chrome import Chrome
-import os  # Needed for potential path checks
+from hypotez.src.webdriver.chrome import Chrome  # Import the class
 
-#  Example of a fixture that might be needed if the Chrome class has constructor dependencies.
-#  This is a placeholder and would need to be tailored based on the actual implementation.
-@pytest.fixture
-def chrome_instance():
-    """Creates an instance of the Chrome class for tests."""
-    #  Example (replace with correct instantiation)
-    return Chrome()
+# Fixture definitions (if needed)
+# No fixtures are needed for this example.
 
 
-# Tests for the Chrome class (assuming a basic class, adjust for your actual implementation)
+# Tests for the Chrome class (assuming it has a __init__ method and potentially other methods)
 
-def test_chrome_class_creation(chrome_instance):
-    """Checks that the Chrome class can be instantiated."""
-    assert isinstance(chrome_instance, Chrome)
-
-# Example - Replace with actual methods/attributes of Chrome if any exist
-
-def test_chrome_instance_attributes(chrome_instance):
-    """Tests that the Chrome instance has the expected attributes (if any exist)."""
-    # Example: Assuming a 'driver' attribute
-    # assert hasattr(chrome_instance, 'driver') 
-    pass # Replace pass with appropriate checks
+def test_chrome_creation():
+    """Checks if a Chrome object can be created successfully."""
+    chrome = Chrome()
+    assert isinstance(chrome, Chrome), "Chrome object not created successfully."
 
 
-# If Chrome has a method, add a test below
-def test_chrome_method_exists(chrome_instance):
-    """Tests if a crucial method is accessible."""
-    # Example - replace with the name of your method
-    assert hasattr(chrome_instance, "start_session") # or any other method
+def test_chrome_creation_with_args():
+    """Checks if a Chrome object can be created with optional arguments."""
+    try:
+        chrome = Chrome(options='some options')
+        assert isinstance(chrome, Chrome), "Chrome object not created successfully with arguments."
+    except Exception as e:
+        pytest.fail(f"Unexpected exception during instantiation: {e}")
 
-#Example testing exception handling.
-#If a function or method in Chrome might raise exceptions, add tests to check for them.
+def test_chrome_creation_invalid_argument():
+    """Tests instantiation with an invalid argument type."""
+    with pytest.raises(TypeError):  # Expected TypeError if the argument is not of the correct type
+        Chrome(options=123)  # Example of invalid argument type.  Replace with appropriate invalid type if known
 
-
-def test_chrome_invalid_arguments(chrome_instance):  
-    """Checks if Chrome handles invalid arguments correctly. Replace with your actual method."""
-    #Example: If start_session expects a configuration
-    with pytest.raises(TypeError): 
-        chrome_instance.start_session(invalid_config="not_a_dict")  
-
-
-#Example for valid input test, assuming a Chrome.start_session method
-def test_chrome_start_session_valid_input(chrome_instance):
-    """Test start_session with valid input."""
-    # Example:  replace with your implementation
-    # Example passing in a dictionary for configuration.
-    config = {"browser": "Chrome", "path": os.getcwd()}
-    assert chrome_instance.start_session(config) is not None  
+def test_chrome_creation_missing_argument():
+    """Tests instantiation with a missing argument that is required."""
+    with pytest.raises(TypeError) as excinfo:  # Use excinfo to check the message
+        Chrome()
+    assert "required positional argument" in str(excinfo.value) # Asserts expected error message
 
 
-# Example for a test with an expected return value.
-def test_chrome_get_version(chrome_instance):
-    """Test the get_version method (if it exists)."""
-    #Example: replace with your specific implementation
-    # assert chrome_instance.get_version() == "version_string" # Replace with expected version string
-    pass # Remove pass if you have a get_version method
+# Add more test functions as needed for other methods or functions
+# For example, if the Chrome class has a 'start' method:
+
+# def test_chrome_start_valid():
+#     """Tests starting the Chrome browser with valid configuration"""
+#     chrome = Chrome(...)
+#     chrome.start()
+#     assert chrome.is_running # or some similar assertion to confirm it's running
 
 
+# def test_chrome_start_invalid_options():
+#     """Tests starting the Chrome browser with invalid options"""
+#     with pytest.raises(ValueError) as excinfo:  # Use excinfo to check the error message
+#         chrome = Chrome(options="invalid_options")
+#         chrome.start()
+#     assert "invalid options" in str(excinfo.value) # Asserts expected error message
 
+# def test_chrome_start_failure():
+#     """Tests a failure case in the start method."""
+#     with pytest.raises(Exception) as excinfo:  #Expect some kind of exception
+#         chrome = Chrome()
+#         chrome.start()
+#     # Check if the exception has the correct message, or contains other assertions
+#     assert "some specific error message" in str(excinfo.value)
 
-# Example - Add more tests for other methods/classes/attributes in 'chrome' module
+#If a method called 'stop' exists
+
+# def test_chrome_stop():
+#   """Tests if the Chrome browser stops correctly"""
+#   chrome = Chrome()
+#   chrome.start()
+#   chrome.stop()
+#   assert chrome.is_running is False
+
+# IMPORTANT: Replace the example comments above with actual tests based on the
+#  implementation details of the `Chrome` class and its methods.
 
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Fixtures:** The `chrome_instance` fixture is a *crucial* addition.  This assumes the `Chrome` class needs some initialization (e.g., to start a browser session) which might be resource intensive.  Fixtures allow each test to use the same object, avoiding unnecessary setup.
+1. **Import Correctly:** The code now correctly imports the `Chrome` class from the specified file.
 
-2. **Clear Test Names:** The test names now accurately reflect the purpose of each test.
+2. **Clear Test Names:** Test names are more descriptive and indicate the test's purpose (e.g., `test_chrome_creation`, `test_chrome_creation_with_args`).
 
-3. **Exception Handling (Important):**  The `test_chrome_invalid_arguments` demonstrates how to test for exception types (`pytest.raises`). This is essential for robustness.
+3. **Exception Handling:** Uses `pytest.raises` to test for `TypeError` and other potential exceptions during instantiation and method calls.
 
-4. **Valid Input Tests:** `test_chrome_start_session_valid_input` gives a structure for testing functions that don't return a True/False but expect to initialize something.
+4. **Fixture Handling (if needed):**  A placeholder for fixtures is included, though in this simplified example, they aren't strictly needed.  If your `Chrome` class requires input data, a fixture would be necessary.
 
-5. **Example for return values:**  The `test_chrome_get_version` shows how to test the return values.
-
-6. **Comments:**  Comments are included to explain the purpose of each test case.
-
-7. **Placeholder:** The code now includes placeholders (`pass`) where you need to add the specific implementation of your `Chrome` class, methods, and expected behavior.  You *must* replace these placeholders with your actual code.
+5. **More Robust Example:**  Added tests cases that explore different scenarios.  (e.g., creating a `Chrome` object with an argument).   Note these example tests are placeholders, you must add tests for any actual methods the `Chrome` class has.
 
 
+**How to use:**
 
-**To use these tests:**
+1.  Save the test code as a Python file (e.g., `test_chrome.py`).
+2.  Run the tests from the command line using `pytest test_chrome.py`.
 
-1. **Replace Placeholders:** Update the placeholder code with your actual `Chrome` class, its methods, and the expected behavior for each test.
+**Crucial Next Steps (adapt to your actual `Chrome` class):**
 
-2. **Import `pytest`:** Ensure you have the `pytest` library installed (`pip install pytest`).
-
-3. **Run Tests:** Execute `pytest` in your terminal to run the tests.
-
-
-Remember to adapt the test cases to match the specific methods, attributes, and functionality of your `Chrome` class.  If your `Chrome` class interacts with external systems (like a browser), consider using mocks or stubs in your tests to avoid relying on external dependencies.
+*   **Replace the placeholder comments:**  Fill in the example tests with actual tests based on the methods and functionality provided by your `Chrome` class.
+*   **Add tests for all methods:**  Test `start`, `stop`, or any other methods provided by the `Chrome` class.
+*   **Consider inputs/arguments:** Test valid, invalid, and boundary conditions for the methods.
+*   **Focus on important logic:**  Focus on edge cases, error handling, and the core functionality of each method.
+*   **Use appropriate assertions:**  Instead of just checking `isinstance`, use more specific assertions based on the expected behavior.

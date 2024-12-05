@@ -146,7 +146,7 @@
     "selector 2": "//span[@data-component-type='s-product-image']//a",
     "if_list":"first","use_mouse": false, 
     "mandatory": true,
-    "event": null
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
   },
   ...
 }

@@ -3,99 +3,97 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-import time
+import os
 
-# Fixture for ChromeDriver service
-@pytest.fixture(scope="module")
-def chrome_driver_service():
-    service = Service('/path/to/chromedriver')  # Replace with the actual path
-    yield service
-    service.stop()
-
+# Define fixture for ChromeDriver path (replace with your actual path)
 @pytest.fixture
-def chrome_options():
-    chrome_options = Options()
-    chrome_options.add_argument('--remote-debugging-port=9222')
-    return chrome_options
+def driver_path():
+    return os.path.join(os.path.dirname(__file__), 'chromedriver')
 
-# Replace with a valid path to your chromedriver
+# Define fixture for Chrome webdriver instance
 @pytest.fixture
-def driver(chrome_driver_service, chrome_options):
-    driver = webdriver.Chrome(service=chrome_driver_service, options=chrome_options)
+def chrome_driver(driver_path):
+    """Creates a Chrome WebDriver instance with remote debugging."""
+    service = Service(driver_path)
+    options = Options()
+    options.add_argument('--remote-debugging-port=9222')
+    driver = webdriver.Chrome(service=service, options=options)
     yield driver
     driver.quit()
 
-def test_execute_cdp_cmd_enable(driver):
-    """Tests the Page.enable command."""
-    try:
-        response = driver.execute_cdp_cmd('Page.enable', {})
-        assert response['id'] is not None  # Check if response contains a valid ID
-        assert response['result'] is not None  # Check if result is valid
-    except Exception as e:
-        pytest.fail(f"Error executing Page.enable: {e}")
+
+# Test cases for launching Chrome with remote debugging
+def test_chrome_driver_launch(chrome_driver):
+    """Tests successful launch of Chrome with remote debugging."""
+    assert chrome_driver is not None, "WebDriver instance is None"
 
 
-def test_execute_cdp_cmd_navigate(driver):
-    """Tests the Page.navigate command with a valid URL."""
-    try:
-        response = driver.execute_cdp_cmd('Page.navigate', {'url': 'https://www.example.com'})
-        assert response['id'] is not None
-        assert response['result'] is not None
-    except Exception as e:
-        pytest.fail(f"Error navigating to page: {e}")
+def test_cdp_cmd_enable(chrome_driver):
+    """Tests execution of Page.enable command."""
+    response = chrome_driver.execute_cdp_cmd('Page.enable', {})
+    assert response['id'] is not None, "Response ID is missing"
+    assert response['result'] is not None, "Response result is missing"
+    assert response['error'] is None, "Error executing command"
 
+def test_cdp_cmd_navigate(chrome_driver):
+    """Tests navigation to a URL via DevTools Protocol."""
+    response = chrome_driver.execute_cdp_cmd('Page.navigate', {'url': 'https://www.example.com'})
+    assert response['id'] is not None
+    assert response['result'] is not None
+    assert response['error'] is None
+    # Check if the page loaded successfully, ideally you'd have a wait condition
+    # This is just a basic example for testing the function.
+    #In a real test, you would use WebDriverWait from selenium.webdriver.support.ui
+    # to wait for a page to load completely.  Checking an element's presence/visibility would be more suitable in real tests.
 
-def test_execute_cdp_cmd_invalid_url(driver):
-    """Tests Page.navigate with an invalid URL."""
+def test_cdp_cmd_invalid_command(chrome_driver):
+    """Tests handling of invalid command in DevTools Protocol."""
     with pytest.raises(Exception) as excinfo:
-        driver.execute_cdp_cmd('Page.navigate', {'url': 'invalid_url'})
-    assert 'invalid_url' in str(excinfo.value) #or a more specific assertion
+        chrome_driver.execute_cdp_cmd('InvalidCommand', {})
+    assert 'Invalid command' in str(excinfo.value), "Missing error message for invalid command"
 
-#Example test for handling potential exceptions, crucial when integrating with external services
-def test_execute_cdp_cmd_nonexistent_command(driver):
-    """Tests calling a nonexistent command."""
-    with pytest.raises(Exception) as excinfo:
-        driver.execute_cdp_cmd('Nonexistent.command', {})
-    assert 'Nonexistent' in str(excinfo.value)
 
-#Important:  If the example code has more functions or classes,
-#add tests for each of them as demonstrated in the test_execute_cdp_cmd_enable function.
+# This is crucial!  It ensures ChromeDriver is accessible.
+# You need to have ChromeDriver downloaded and placed at the correct location.
+def test_chromedriver_exists(driver_path):
+    """Verify that the chromedriver binary is available."""
+    assert os.path.exists(driver_path), f"ChromeDriver executable not found at {driver_path}"
+
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **`@pytest.fixture(scope="module")` for `chrome_driver_service`:** This is crucial.  It ensures that ChromeDriver is started only once for the entire test module, preventing multiple instances of ChromeDriver from being created for each test. This fixes memory leaks and saves resources.
+1. **`driver_path` fixture:** Introduced a `driver_path` fixture to hold the path to the ChromeDriver executable. This is crucial as it allows for easy modification of the path without directly hardcoding it in the test functions. Replace `/path/to/chromedriver` with the actual path.  The test also verifies that the file exists, preventing cryptic errors later on.
+
+2. **`chrome_driver` fixture:**  The `chrome_driver` fixture now properly handles the creation and closing of the Chrome driver instance. This is essential for resource management and prevents resource leaks.
+
+3. **`test_chrome_driver_launch`:** Checks if a WebDriver instance is successfully created, adding robustness.
+
+4. **`test_cdp_cmd_invalid_command`:**  Now uses `pytest.raises` to test the exception handling.  This is critical; your code should gracefully handle cases where an invalid command is sent to the DevTools Protocol.
+
+5. **More comprehensive tests:** Added tests covering the `Page.enable` and `Page.navigate` commands.  Crucially, the `Page.navigate` test only *checks* for a response - it does *not* try to verify the page has loaded. (A real test would use `WebDriverWait` to wait for a page to load and check an element.)
+
+6. **`test_chromedriver_exists`:** This function verifies that the ChromeDriver is actually on your system, avoiding runtime failures if the driver file is missing.
 
 
-2. **Robust Error Handling:** The tests now include `try...except` blocks to catch potential exceptions during the execution of the `execute_cdp_cmd` calls. This helps to identify errors more effectively during testing.
-
-
-3. **Specific Exception Assertions (`test_execute_cdp_cmd_invalid_url`)**: Instead of just checking for any exception, we now verify that the `Exception` message contains expected strings, increasing test reliability.
-
-
-4. **`test_execute_cdp_cmd_nonexistent_command`:** This tests for handling a command that doesn't exist in the DevTools Protocol, a critical aspect of robustness.
-
-
-5. **Clearer Assertions:** The assertions are now more specific.  Instead of just checking for `None`, we verify the `response['id']` and `response['result']` are not None. This improves the test's ability to catch subtle issues.
-
-
-6. **Missing/Incomplete Code**: The example code only provided a simple example. The provided tests are now significantly more thorough and include important checks (like for an invalid URL) and critical error handling.
-
-**Before running the tests:**
+**Before running:**
 
 - **Install necessary libraries:**
   ```bash
   pip install pytest selenium
   ```
 
-- **Replace `/path/to/chromedriver`:** Change this to the actual path to your ChromeDriver executable on your system.
+- **Download ChromeDriver:** Download the appropriate ChromeDriver version for your Chrome browser from [https://chromedriver.chromium.org/downloads](https://chromedriver.chromium.org/downloads).
+
+- **Place ChromeDriver:** Put the downloaded ChromeDriver executable in a location where Python can find it (e.g., in the same directory as your test file or in a directory listed in your system's PATH).  The `driver_path` fixture now makes it easy to modify the location if needed.
 
 
 - **Run the tests:**
   ```bash
-  pytest your_test_file.py
+  pytest test_webdriver_cdp.py  # Replace test_webdriver_cdp.py with the name of your test file.
   ```
 
-This revised solution provides a more comprehensive and robust set of tests that cover various scenarios, including error handling and edge cases. Remember to adapt the tests based on the actual functionality of the code you want to test.
+
+This improved set of tests provides better coverage, handles potential errors, and follows best practices for `pytest` testing. Remember to adapt the test cases according to the specific functionalities you want to test in your Python code.  Crucially, add waiting mechanisms, element checks, and more elaborate scenarios for complete testing of the `execute_cdp_cmd` function.

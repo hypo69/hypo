@@ -101,7 +101,7 @@
 
         message = document.getElementById("message");
 
-        browser.runtime.sendMessage({ "event": "loadOptions" }).then(res => {
+        browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "loadOptions" }).then(res => {
             elementAttr.value = res.attributes.element;
             contextAttr.value = res.attributes.context;
             focusedAttr.value = res.attributes.focused;

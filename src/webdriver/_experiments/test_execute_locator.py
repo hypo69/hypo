@@ -102,7 +102,7 @@ class TestGetAttributeStringFormatterromWebElementsByLocator(unittest.TestCase):
     def test_no_attribute_provided(self, mock_get_webelments):
         driver = MagicMock()
         locator = {"by": "id", "selector": "some_id",
-                   "event": None, "attribute": None}
+                   "timeout":0,"timeout_for_event":"presence_of_element_located","event": None, "attribute": None}
 
         result = get_attributes_from_webelements(driver, locator)
 
@@ -112,7 +112,7 @@ class TestGetAttributeStringFormatterromWebElementsByLocator(unittest.TestCase):
     def test_attribute_is_dict(self):
         driver = MagicMock()
         driver.get_attribute = MagicMock(return_value='foo')
-        locator = {"by": "id", "selector": "some_id", "event": None,
+        locator = {"by": "id", "selector": "some_id", "timeout":0,"timeout_for_event":"presence_of_element_located","event": None,
                    "attribute": {"key1": "value1", "key2": "value2"}}
 
         result = get_attributes_from_webelements(driver, locator)
@@ -125,7 +125,7 @@ class TestGetAttributeStringFormatterromWebElementsByLocator(unittest.TestCase):
         driver = MagicMock()
         driver.get_attribute = MagicMock(return_value='foo')
         locator = {"by": "id", "selector": "some_id",
-                   "event": None, "attribute": ["attr1", "attr2"]}
+                   "timeout":0,"timeout_for_event":"presence_of_element_located","event": None, "attribute": ["attr1", "attr2"]}
 
         result = get_attributes_from_webelements(driver, locator)
 
@@ -137,7 +137,7 @@ class TestGetAttributeStringFormatterromWebElementsByLocator(unittest.TestCase):
         driver = MagicMock()
         driver.get_attribute = MagicMock(return_value='foo')
         locator = {"by": "id", "selector": "some_id",
-                   "event": None, "attribute": "attr"}
+                   "timeout":0,"timeout_for_event":"presence_of_element_located","event": None, "attribute": "attr"}
 
         result = get_attributes_from_webelements(driver, locator)
 

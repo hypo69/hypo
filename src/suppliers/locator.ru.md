@@ -10,7 +10,7 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "event": "click()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
     "locator_description": "Закрываю pop-up окно. Если оно не появилось — не страшно (`mandatory`: `false`)."
   },
   "additional_images_urls": {
@@ -20,7 +20,7 @@
     "if_list": "all",
     "use_mouse": false,
     "mandatory": false,
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "locator_description": "Получает список `url` дополнительных изображений."
   },
   "id_supplier": {
@@ -30,7 +30,7 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "event": null,
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
     "locator_description": "SKU Morlevi."
   },
   "default_image_url": {
@@ -39,7 +39,7 @@
     "selector": "//a[@id = 'mainpic']//img",
     "if_list": "first",
     "use_mouse": false,
-    "event": "screenshot()",
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "screenshot()",
     "mandatory": true,
     "locator_description": "Внимание! В Morlevi картинка получается через screenshot и возвращается как PNG (`bytes`)."
   }
@@ -87,7 +87,7 @@
       ...
       "attribute": "href",
       ...
-      "event": "click()",
+      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
       ...
   }
   ```
@@ -97,7 +97,7 @@
    - `screenshot()` возвращает вебэлемент как снимок экрана. Удобно, когда `CDN` сервер не возвращает изображение через `URL`.
    - `send_message()` - отправляет сообщение вебэлементу.  
      Я рекомендую отправлять сообщение через переменную `%EXTERNAL_MESSAGE%`, как показано ниже:  
-     - `{"event": "click();backspace(10);%EXTERNAL_MESSAGE%"}`  
+     - `{"timeout":0,"timeout_for_event":"presence_of_element_located","event": "click();backspace(10);%EXTERNAL_MESSAGE%"}`  
        исполняет последовательность:  
        <ol type="1">
          <li><code>click()</code> - нажимает на вебэлемент (переводит фокус в поле ввода) <code>&lt;textbox&gt;</code>.</li>
@@ -130,7 +130,7 @@
       "//a[contains(@href, '#tab-description')]",
       "//div[@id = 'tab-description']//p"
     ],
-    "event": [
+    "timeout":0,"timeout_for_event":"presence_of_element_located","event": [
       "click()",
       null
     ],
