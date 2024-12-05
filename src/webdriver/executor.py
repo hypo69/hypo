@@ -334,8 +334,12 @@ class ExecuteLocator:
         timeout_for_event: Optional[str] = 'presence_of_element_located'
     ) -> WebElement | List[WebElement] | None:
         """
-        Получение веб-элемента или списка элементов по указанному локатору.
+        Функция извлекает веб-элемент или список элементов по указанному локатору.
+        .. :todo:
+            Продумать как передать `timeout_for_event`
         """
+        timeout = timeout if timeout > 0 else locator.timeout
+
         async def _parse_elements_list(
             web_elements: WebElement | List[WebElement],
             locator: SimpleNamespace
