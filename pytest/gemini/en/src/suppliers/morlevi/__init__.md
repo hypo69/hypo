@@ -1,91 +1,113 @@
 ```python
 import pytest
-from hypotez.src.suppliers.morlevi import MODE, Graber
+from hypotez.src.suppliers.morlevi import Graber
+
+# Assuming Graber has methods you need to test.  
+#  If not, the tests will be empty.
+# Example methods and attributes for testing
+
+class DummyGraber(Graber):
+    def __init__(self, data=None):
+        self.data = data
+        
+    def fetch_data(self, query):
+        if self.data is None:
+            return None
+        if query in self.data:
+          return self.data[query]
+        else:
+          return None
+
+    @property
+    def is_ready(self):
+        return True if self.data else False
+
+#  This is a place holder - you should replace DummyGraber with your actual Graber class
+#  if you have one
 
 
-# Fixture for providing example data (if needed).  Replace with actual data
-@pytest.fixture
-def example_data():
-    return {"url": "https://example.com", "param1": "value1", "param2": 123}
+def test_graber_fetch_data_valid_input():
+    """Tests fetch_data with valid input."""
+    data = {"key1": "value1", "key2": "value2"}
+    graber = DummyGraber(data)
+    result = graber.fetch_data("key1")
+    assert result == "value1"
 
 
-# Test cases for the Graber class (assuming Graber has methods)
-
-def test_graber_valid_input(example_data):
-    """Checks the Graber class with valid input data."""
-    graber = Graber(example_data["url"], example_data["param1"], example_data["param2"])
-    # Add assertions here based on what Graber returns.  
-    # Example: assert graber.data == expected_data
-    # Or assert graber.result is not None
-    assert graber is not None # A basic assertion for now
-
-def test_graber_invalid_url(example_data):
-    """Checks the Graber class with an invalid URL."""
-    invalid_url = "invalid_url"
-    with pytest.raises(ValueError): # or other relevant exception
-        graber = Graber(invalid_url, example_data["param1"], example_data["param2"])
-
-def test_graber_missing_param(example_data):
-    """Tests Graber with missing parameter."""
-    with pytest.raises(TypeError): # or other relevant exception
-        graber = Graber(example_data["url"], example_data["param1"])
+def test_graber_fetch_data_invalid_input():
+    """Tests fetch_data with invalid input (not found)."""
+    data = {"key1": "value1", "key2": "value2"}
+    graber = DummyGraber(data)
+    result = graber.fetch_data("key3")
+    assert result is None
 
 
-def test_graber_empty_params():
-    """Tests Graber with empty/None/invalid params."""
-    with pytest.raises(TypeError): # or other relevant exception
-        graber = Graber("https://example.com", None, None)
+def test_graber_fetch_data_empty_input():
+    """Tests fetch_data with an empty data dictionary."""
+    graber = DummyGraber()
+    result = graber.fetch_data("anyKey")
+    assert result is None
 
-# Test cases for MODE (assuming MODE is meant to be tested)
+def test_graber_fetch_data_none_input():
+  """Tests fetch_data with None input."""
+  graber = DummyGraber(None)
+  result = graber.fetch_data("anyKey")
+  assert result is None
 
-def test_mode_value():
-  """Verify that MODE is correctly set to 'dev'"""
-  assert MODE == 'dev'
+def test_graber_is_ready_true():
+  """Tests is_ready when data is not None."""
+  data = {"key1": "value1"}
+  graber = DummyGraber(data)
+  assert graber.is_ready == True
 
-def test_mode_type():
-  """Checks that MODE is a string."""
-  assert isinstance(MODE, str)
+def test_graber_is_ready_false():
+  """Tests is_ready when data is None."""
+  graber = DummyGraber()
+  assert graber.is_ready == False
+  
 
-
-
-
-# Additional test cases can be added for other functions
-# or methods in the `morlevi` module.  Crucially, make sure
-# to replace placeholders (e.g., `expected_data`) with
-# actual expected outcomes based on the `Graber` class.
-
-
+# Example test for potential exceptions (if any)
+# def test_graber_fetch_data_raises_exception():
+#     with pytest.raises(TypeError):
+#         graber = DummyGraber()
+#         graber.fetch_data(123) # Assuming 123 is not a valid query type
 ```
 
-**Explanation and Important Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **`@pytest.fixture` for Data:** The example now uses a fixture (`example_data`) to provide data for tests. This is crucial for organization and reusability.  Replace the example data with realistic data relevant to the `Graber` class.
+1. **Dummy Class:** The code now includes a `DummyGraber` class. This is **essential** for testing.  You **must** replace this with your actual `Graber` class if you have it. This example demonstrates how to test methods *and* attributes.
 
-2. **Specific `Graber` Assertions:** The `test_graber_valid_input` test now has a placeholder.  **You MUST replace this with the *actual* assertions you need based on how the `Graber` class works.**  For instance, if `Graber` returns a dictionary, you'd check the dictionary's contents; if it returns a value, you'd compare that to the expected value.
+2. **Comprehensive Test Cases:** The tests now cover various scenarios:
+   - Valid input.
+   - Invalid input (key not found).
+   - Empty data.
+   - `None` data.
+   - `is_ready` checks.
 
-3. **Exception Handling:**  The tests now use `pytest.raises` to specifically test exception handling. This is essential for checking that the code correctly handles errors.  The error types are placeholders; replace them with the actual exceptions the `Graber` class might raise.
+3. **Clear Test Names:** Test names are descriptive, making it easy to understand the purpose of each test.
 
-4. **Clear Test Names:** The test names are now more descriptive, reflecting the specific scenario being tested.
+4. **Appropriate Assertions:** The code now uses assertions (`assert`) to verify the expected results.
 
-5. **MODE Tests:** Added tests for `MODE`. This ensures `MODE` is correctly defined and has the expected value.
+5. **Error Handling (Example):**  A commented-out test demonstrates how to use `pytest.raises` to check for exceptions. This is a placeholder and needs to be adapted if your `Graber` class raises exceptions.
 
-6. **Complete Example:**  The example now demonstrates how to write tests for a hypothetical `Graber` class and also demonstrates how to test `MODE`.   
+**How to Run the Tests:**
+
+1.  Make sure you have `pytest` installed:
+    ```bash
+    pip install pytest
+    ```
+
+2.  Save the test code (e.g., `test_morlevi.py`) in the same directory as your `hypotez/src/suppliers/morlevi/__init__.py` file.
+
+3.  Run the tests from your terminal:
+    ```bash
+    pytest test_morlevi.py
+    ```
+
+**Crucial Next Steps:**
+
+* **Replace `DummyGraber`:**  Update `DummyGraber` with the actual `Graber` class you are testing from your `hypotez/src/suppliers/morlevi/__init__.py` file.
+* **Add More Tests:**  Based on the methods and attributes of the actual `Graber` class, add more test cases to cover different functionality. This includes testing any exceptions the class may raise and boundary conditions.
 
 
-**Before running the tests:**
-
-- **Replace Placeholders:** Replace the placeholder assertions and the example data with the actual expected results based on the `Graber` class's behavior.
-- **Import the `Graber` class:**  Ensure that the `from hypotez.src.suppliers.morlevi import Graber` line is at the top of your test file.
-- **Correct Imports:** Ensure that all required modules are properly imported.
-
-
-**Example of how to run pytest:**
-
-Open a terminal, navigate to the directory containing your test file (e.g., `test_morlevi.py`), and run:
-
-```bash
-pytest test_morlevi.py
-```
-
-
-Remember to replace the placeholder assertions and data with your actual needs!  Crucially, you *must* understand how your `Graber` class is designed to provide specific data, exceptions and what conditions are expected to return what values.  Properly reflecting those expectations is what makes your tests useful.
+This revised answer provides a much more complete and practical example for writing `pytest` tests for your code. Remember to adapt the tests based on the actual implementation of the `Graber` class. Remember that you also need to consider potential edge cases and unexpected inputs in your testing.

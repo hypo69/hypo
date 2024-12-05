@@ -1,96 +1,97 @@
 ```python
 import pytest
 from hypotez.src.suppliers.kualastyle.login import login, close_pop_up
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 import logging
 
-# Mock the logger for testing
-@pytest.fixture
-def mock_logger():
-    logger_mock = Mock(spec=logging.Logger)
-    logger_mock.warning = lambda msg: None  # Dummy warning function
-    return logger_mock
-
-# Fixture to create a mock supplier object for testing
-@pytest.fixture
-def mock_supplier(mock_logger):
-    class Supplier:
-        def __init__(self, driver, locators):
-            self.driver = driver
-            self.locators = locators
-        
-    class MockDriver:
-        def __init__(self):
-            self.url = ''
-
-        def get_url(self, url):
-            self.url = url
-
-        def window_focus(self, d):
-            pass
-
-        def wait(self, time):
-            pass
-
-        def execute_locator(self, locator):
-            pass
-            
-    # Example locator for testing
-    locators = {'close_pop_up_locator': Mock()} 
-    return Supplier(MockDriver(), locators), mock_logger
-
-
-
-# Test cases for login function
-def test_login_valid_input(mock_supplier):
-    """Checks correct behavior of login with valid input."""
-    s, mock_logger = mock_supplier
-    result = login(s)
+# Patch the logger for testing
+@patch('hypotez.src.suppliers.kualastyle.login.logger', new_callable=Mock)
+def test_login_valid_input(mock_logger):
+    """Tests the login function with valid input."""
+    supplier = Mock()
+    supplier.driver = Mock()
+    supplier.locators = {'close_pop_up_locator': Mock()}  # Mock locator
+    result = login(supplier)
     assert result is True
+    mock_logger.warning.assert_not_called()  # Verify no warning was logged
 
-def test_login_invalid_input(mock_supplier):
-    """Checks correct behavior of login with invalid input."""
-    # In this case, invalid input may mean the supplier object is not usable
-    with pytest.raises(TypeError):
-        login(None)
-
-# Test cases for close_pop_up function
-def test_close_pop_up_valid_input(mock_supplier):
-    """Tests pop-up closing with valid supplier input."""
-    s, mock_logger = mock_supplier
-    result = close_pop_up(s)
+@patch('hypotez.src.suppliers.kualastyle.login.logger', new_callable=Mock)
+def test_close_pop_up_valid_input(mock_logger):
+    """Tests the close_pop_up function with valid input."""
+    supplier = Mock()
+    supplier.driver = Mock()
+    supplier.locators = {'close_pop_up_locator': Mock()}  # Mock locator
+    supplier.driver.get_url = Mock(return_value=None)
+    supplier.driver.window_focus = Mock(return_value=None)
+    supplier.driver.wait = Mock(return_value=None)
+    supplier.driver.execute_locator = Mock(return_value=None)
+    result = close_pop_up(supplier)
     assert result is True
-    assert s.driver.url == 'https://www.kualastyle.com'
+    mock_logger.warning.assert_not_called()  # Verify no warning was logged
 
-def test_close_pop_up_exception(mock_supplier, caplog):
-    """Test for exception handling during pop-up closing."""
-    s, mock_logger = mock_supplier
-    with patch('hypotez.src.suppliers.kualastyle.login.logger', new=mock_logger) as mock_logger:
-        with pytest.raises(AttributeError):  # Mock an AttributeError to test the try-except block
-             s.driver.execute_locator = None
-             close_pop_up(s)
 
-        # check warning message is logged correctly
-        assert 'Не закрыл попап' in caplog.text
-        
-# Test edge case: What happens if the driver is unavailable?
-def test_close_pop_up_no_driver(mock_logger):
-    with patch('hypotez.src.suppliers.kualastyle.login.logger', new=mock_logger):
-        # Test where driver is None (or otherwise unavailable)
-        s = None
-        with pytest.raises(AttributeError):  # Expect AttributeError due to NoneType object
-             close_pop_up(s)
+@patch('hypotez.src.suppliers.kualastyle.login.logger', new_callable=Mock)
+def test_close_pop_up_exception(mock_logger, caplog):
+    """Tests the close_pop_up function with exception."""
+    supplier = Mock()
+    supplier.driver = Mock()
+    supplier.locators = {'close_pop_up_locator': Mock()}  # Mock locator
+    supplier.driver.get_url = Mock(return_value=None)
+    supplier.driver.window_focus = Mock(return_value=None)
+    supplier.driver.wait = Mock(return_value=None)
+    supplier.driver.execute_locator = Mock(side_effect=Exception("Some error"))
+    result = close_pop_up(supplier)
+    assert result is True
+    mock_logger.warning.assert_called_once_with(
+        "Не закрыл попап"
+    )  # Verify warning was logged
+
+
+@patch('hypotez.src.suppliers.kualastyle.login.logger', new_callable=Mock)
+def test_close_pop_up_missing_locator(mock_logger):
+    """Tests close_pop_up with missing locator."""
+    supplier = Mock()
+    supplier.driver = Mock()
+    supplier.locators = {}  # Empty locators
+    with pytest.raises(KeyError):  # Expected KeyError
+        close_pop_up(supplier)
+
+
+@patch('hypotez.src.suppliers.kualastyle.login.logger', new_callable=Mock)
+def test_login_missing_supplier_data(mock_logger):
+    """Tests login with missing supplier data."""
+    with pytest.raises(AttributeError):
+        login(None)  # Missing supplier object
+
+
+# Add tests for other potential issues like invalid URLs, missing methods, etc., 
+# based on the actual implementation details.
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** Crucial for testing functions that interact with external services (like the browser).  The `mock_supplier` fixture now creates a mock `Supplier` and `Driver` object. This isolates the tests from the actual browser and dependencies.
-* **Mock Logger:** A mock logger is used to prevent any actual logging during the tests.  This makes the tests cleaner and faster.
-* **Comprehensive Edge Cases:** The tests now include scenarios where the input supplier object is `None` or does not have the necessary methods.  This covers potential errors.
-* **Explicit Exception Handling:** The `test_close_pop_up_exception` tests for and expects the `Exception` to be handled within the `try-except` block. It also tests that a warning message is correctly logged.
-* **`caplog`:** Included to capture the warning messages printed by the logger.
-* **Clearer Assertions:**  Improved assertions to more clearly reflect what is being tested.
-* **Example Locator:** A dummy locator is defined in the mock_supplier fixture to make the tests compile without having to define a full locator structure in the supplier object.
+* **Mocking:** The tests now effectively mock the `driver` and `locators` objects, avoiding actual interactions with the web browser.  Critically, they mock the `execute_locator` method to simulate different outcomes, including exceptions.
+* **`@patch` Decorator:** Correctly uses `@patch` to mock the logger in a way that doesn't interfere with other tests.
+* **Exception Handling:** `test_close_pop_up_exception` demonstrates how to test exception handling, capturing the warning message.
+* **Missing Locator Test:** `test_close_pop_up_missing_locator` checks for a crucial edge case: what happens if the locator is missing from the locators dictionary. This is a more robust test.
+* **Missing Supplier Data Test:** `test_login_missing_supplier_data` now correctly handles the case where the supplier object is missing or invalid.
+* **Clearer Assertions:** Assertions are more specific and descriptive, making the test failures easier to interpret.
+* **`caplog` (optional but recommended):** While not strictly necessary for this example, using `caplog` could be added to capture the specific warning messages if you needed precise assertion control beyond simply confirming `warning` was called.
+* **Comprehensive Testing:**  The tests now cover more scenarios: valid input, an exception, and the crucial missing `locator`. You should add more tests based on the actual implementation and expected behaviors.
 
 
-This improved test suite is much more robust in terms of handling various potential issues and edge cases, and the use of mocks ensures that the tests run quickly and independently. Remember to replace the placeholder `'close_pop_up_locator'` in the `mock_supplier` fixture with the actual locator from your `Supplier` object. Remember to import `pytest` and `patch` from `unittest.mock`.
+**How to Run the Tests:**
+
+Make sure you have `pytest` installed:
+
+```bash
+pip install pytest
+```
+
+Then, save the test code (as `test_login.py` for example) in the same directory as your `login.py` file and run:
+
+```bash
+pytest test_login.py
+```
+
+This will execute the test cases and report any failures.  Remember to adapt the test code to the specific functions and methods in your actual `login.py` file. Remember to replace placeholders (like `Mock()`) with actual expected behavior.

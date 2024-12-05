@@ -1,88 +1,93 @@
 ```python
 import pytest
+from unittest.mock import MagicMock
 from typing import List, Union
-from unittest.mock import Mock
 
-# Replace with the actual path if needed
+# Replace with your actual module import
 from hypotez.src.suppliers.kualastyle.via_webdriver import get_list_products_in_category
 
 
 @pytest.fixture
 def mock_supplier(mocker):
     """Provides a mocked supplier object."""
-    driver_mock = Mock()
-    locators_mock = Mock()
-    locators_mock.get = lambda x: {'product_links': ['url1', 'url2']}  # Example locators
-    supplier_mock = mocker.MagicMock(spec=['driver', 'locators'])
-    supplier_mock.driver = driver_mock
-    supplier_mock.locators = locators_mock
-    return supplier_mock
-
+    supplier = MagicMock()
+    supplier.driver = MagicMock()
+    supplier.locators = MagicMock()
+    supplier.locators.get = MagicMock(return_value={"product_links": ["url1", "url2"]})
+    return supplier
 
 def test_get_list_products_in_category_valid_input(mock_supplier):
-    """Tests with valid input, ensuring a list is returned."""
+    """Checks the function with valid input."""
+    
+    # Mock scroll and execute_locator to avoid webdriver interaction
+    mock_supplier.driver.scroll = MagicMock()
+    mock_supplier.driver.execute_locator = MagicMock(return_value=["url1", "url2"])
     result = get_list_products_in_category(mock_supplier)
-    assert isinstance(result, list)
-    assert result == ['url1', 'url2']
-
-
-def test_get_list_products_in_category_scroll_action(mock_supplier):
-    """Tests if the scroll function is executed."""
-    mock_supplier.driver.scroll = Mock(return_value=None)
-    get_list_products_in_category(mock_supplier)
-
-    # Assert that the scroll method was called
-    mock_supplier.driver.scroll.assert_called_once_with(scroll_count=10, direction='forward')
-
-
-def test_get_list_products_in_category_execute_locator(mock_supplier, mocker):
-    """Tests if the execute_locator function is called and returns a list."""
-    mock_execute_locator = mocker.patch.object(mock_supplier.driver, 'execute_locator')
-
-    get_list_products_in_category(mock_supplier)
-    mock_execute_locator.assert_called_once()
-
-
-def test_get_list_products_in_category_no_locators(mock_supplier, mocker):
-    """Tests if an exception is raised when no locators are found."""
-    mock_supplier.locators.get = lambda x: None
-
-    with pytest.raises(AttributeError):
-        get_list_products_in_category(mock_supplier)
-
+    assert result == ["url1", "url2"]
 
 def test_get_list_products_in_category_empty_locator(mock_supplier):
-    """Tests if the function returns an empty list if locators are found but empty."""
-    mock_supplier.locators.get = lambda x: {'product_links': []}
+    """Handles the case where the locator returns an empty list."""
+    mock_supplier.locators.get = MagicMock(return_value={"product_links": []})
     result = get_list_products_in_category(mock_supplier)
     assert result == []
 
+def test_get_list_products_in_category_no_locator(mock_supplier):
+  """Tests the function when the 'category' locator is not found."""
+  mock_supplier.locators.get = MagicMock(side_effect=KeyError("Key 'category' not found"))  
+  with pytest.raises(KeyError, match="Key 'category' not found"):
+      get_list_products_in_category(mock_supplier)
 
-def test_get_list_products_in_category_incorrect_return_type(mock_supplier, mocker):
-    """Tests if the function returns an empty list if locators are found but empty."""
-    mock_execute_locator = mocker.patch.object(mock_supplier.driver, 'execute_locator')
-    mock_execute_locator.return_value = "not a list"
-
+def test_get_list_products_in_category_invalid_locator_data_type():
+    """Handles the case where the locator data is not a dictionary."""
+    
+    # Mock the supplier object
+    mock_supplier = MagicMock()
+    mock_supplier.driver = MagicMock()
+    mock_supplier.locators = MagicMock()
+    mock_supplier.locators.get = MagicMock(return_value="invalid_data")
+    
     with pytest.raises(TypeError):
         get_list_products_in_category(mock_supplier)
+
+
+
+def test_get_list_products_in_category_invalid_locator_type():
+    """Handles the case where the 'product_links' value is not a list."""
+    mock_supplier = MagicMock()
+    mock_supplier.driver = MagicMock()
+    mock_supplier.locators = MagicMock()
+    mock_supplier.locators.get = MagicMock(return_value={'product_links': "not a list"})
+    with pytest.raises(TypeError):
+        get_list_products_in_category(mock_supplier)
+    
+
+
+# Add more tests as needed for different scenarios
+# (e.g., different types of exceptions, boundary cases for scroll_count)
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:**  Crucially, the code now uses `pytest.fixture` and `mocker` (from `unittest.mock`) to create a mocked `supplier` object.  This is vital for isolating tests from the external dependencies (like a webdriver). Mocking `driver` and `locators` prevents actual interaction with a browser, which would be slow and unreliable in tests.
-* **Clearer Test Names:** Test names are more descriptive (e.g., `test_get_list_products_in_category_valid_input`).
-* **Edge Cases:**  Tests are added for:
-    * Empty locator results (`test_get_list_products_in_category_empty_locator`).
-    * Incorrect locator return types (`test_get_list_products_in_category_incorrect_return_type`).
-    * Missing locators (`test_get_list_products_in_category_no_locators`).  This is critical:  handling potential errors in real code is a must in testing.
-* **Error Handling (with `pytest.raises`):**  The `test_get_list_products_in_category_no_locators` test now correctly demonstrates how to use `pytest.raises` to check for the expected exception.
-* **`scroll` verification:** The `test_get_list_products_in_category_scroll_action` verifies that the `scroll` method is correctly called with the expected arguments.
-* **`execute_locator` verification:** The `test_get_list_products_in_category_execute_locator` test verifies that the `execute_locator` method is being called.
+1. **Mocking:** The code now uses `unittest.mock.MagicMock` to mock the `supplier`, `driver`, and `locators` objects.  This is crucial for testing functions that interact with external resources (like webdrivers).  We avoid actual webdriver interaction in tests, which is faster and more reliable.
 
-**How to Run:**
+2. **Clearer Test Names:** The test names are more descriptive, making the purpose of each test immediately obvious.
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Place the test code (above) in a file named `test_via_webdriver.py` (or a similar name) in the same directory as your `via_webdriver.py` file.
-3.  Run pytest from your terminal: `pytest test_via_webdriver.py`
+3. **Edge Case Handling:** Tests now include cases where the locator might return an empty list or if the `category` key is not found in the locators, handling potential `TypeError` and `KeyError`.
 
-This revised solution provides significantly more robust and comprehensive test coverage for the `get_list_products_in_category` function. Remember to adapt the mocks and test cases to the actual functionality of your `via_webdriver.py` file.  Pay particular attention to the `locators` structure to make sure your tests cover different potential situations.
+4. **pytest.raises:** Correctly used `pytest.raises` to test exceptions.
+
+5. **Fixture for Supplier:** A `mock_supplier` fixture is created to manage the mocked objects. This allows the tests to easily access the mocked supplier instance.
+
+6. **Comprehensive Tests:** The tests now include checking for various potential errors or unexpected data types.
+
+
+**How to Run the Tests:**
+
+1.  Save the test code (e.g., `test_via_webdriver.py`) in the same directory as your `via_webdriver.py` file.
+2.  Run `pytest test_via_webdriver.py` from your terminal.
+
+
+Remember to replace `"url1", "url2"` with the actual expected output based on your implementation if needed. Also, install the `pytest` library if you haven't already:
+```bash
+pip install pytest
+```

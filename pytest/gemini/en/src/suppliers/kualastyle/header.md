@@ -4,117 +4,97 @@ from pathlib import Path
 import sys
 from packaging.version import Version
 import json
-from unittest.mock import patch
-
 from hypotez.src.suppliers.kualastyle.header import set_project_root
 
+# Fixtures
+@pytest.fixture
+def example_project_root():
+    """Creates a temporary directory with project files for testing."""
+    temp_dir = Path("tmp_project_root")
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    (temp_dir / "pyproject.toml").touch()
+    (temp_dir / "requirements.txt").touch()
+    (temp_dir / "src" / "settings.json").write_text(json.dumps({"project_name": "TestProject", "version": "1.0.0"}))
+    (temp_dir / "src" / "README.MD").write_text("Test README")
+    sys.path.insert(0, str(temp_dir))
+    return temp_dir
 
-def test_set_project_root_valid_input():
-    """Checks correct behavior with valid input (files exist)."""
-    # Create dummy files for testing
-    test_file_1 = Path("./pyproject.toml")
-    test_file_1.touch()
-    test_file_2 = Path("./requirements.txt")
-    test_file_2.touch()
-
-    root_dir = set_project_root()
-    assert root_dir.is_dir(), f"Expected a directory, got {root_dir}"
-    
-    test_file_1.unlink()
-    test_file_2.unlink()
-    
-
-def test_set_project_root_files_not_found():
-    """Checks the handling of cases where marker files don't exist."""
-    root_dir = set_project_root()
-    assert root_dir.is_dir(), f"Expected a directory, got {root_dir}"
-
-
-def test_set_project_root_no_marker_files():
-    """Checks the behavior when no marker files are given."""
-    root_dir = set_project_root()
-    assert root_dir.is_dir(), f"Expected a directory, got {root_dir}"
-
-
-def test_set_project_root_root_already_in_path():
-    """Tests that adding to sys.path is handled correctly when the root is already in sys.path."""
-    # Mock sys.path to simulate the root being in the path
-    mock_path = ['.']
-    with patch('sys.path', mock_path):
-        root_dir = set_project_root()
-        assert root_dir.is_dir(), f"Expected a directory, got {root_dir}"
+@pytest.fixture
+def invalid_project_root():
+    """Creates a temporary directory without project files for testing."""
+    temp_dir = Path("tmp_invalid_project_root")
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    return temp_dir
 
 
 
-@pytest.mark.parametrize("marker_files", [
-    ("invalid_file.txt"),
-    (tuple()),
-    (None),
-])
-def test_set_project_root_invalid_marker_files(marker_files):
-    """Checks handling of invalid or empty marker_files."""
-    with pytest.raises(TypeError):
-        set_project_root(marker_files)
+# Tests for set_project_root
+def test_set_project_root_valid_input(example_project_root):
+    """Checks correct behavior with valid project structure."""
+    root_path = set_project_root()
+    assert root_path == example_project_root
+    assert str(root_path) in sys.path
 
 
+def test_set_project_root_invalid_input(invalid_project_root):
+    """Checks behavior with no marker files in path."""
+    root_path = set_project_root()
+    assert root_path == Path(__file__).resolve().parent  # Expected behavior when files not found
 
 
-def test_set_project_root_parent_dirs():
-    """Tests searching up multiple parent directories."""
-    # Create dummy files in a subdirectory.  This test needs a suitable directory structure.
-    test_dir = Path('./test_dir')
-    test_dir.mkdir(parents=True, exist_ok=True)
-    (test_dir / 'pyproject.toml').touch()
-    root_dir = set_project_root(marker_files=('pyproject.toml',))
-    assert root_dir.is_dir()
-    test_dir.rmdir()
+def test_set_project_root_edge_case(example_project_root):
+    """Checks behavior when the marker file is in a subdirectory."""
+    # Create a subdirectory with the marker file
+    (example_project_root / "subdir" / "pyproject.toml").touch()
+    root_path = set_project_root()
+    assert root_path == example_project_root
 
+def test_set_project_root_already_in_path(example_project_root):
+    """Checks behaviour if the root path is already present in sys.path."""
+    root_path = set_project_root()
+    assert root_path == example_project_root
+    sys.path.remove(str(root_path))
+    root_path_again = set_project_root()
+    assert root_path_again == example_project_root
 
-def test_set_project_root_current_dir():
-    """Checks that the current directory is returned if no marker files are found."""
-    # Create dummy files for testing (optional)
-    test_file = Path("./current_file.txt")
-    test_file.touch()
-    current_dir = Path(".").resolve()
-    root_dir = set_project_root()
-    assert root_dir == current_dir, f"Expected {current_dir}, got {root_dir}"
-    test_file.unlink()
+def teardown_module(module):
+    """Cleans up temporary directory after testing."""
+    try:
+        import shutil
+        shutil.rmtree("tmp_project_root")
+        shutil.rmtree("tmp_invalid_project_root")
+    except FileNotFoundError:
+        pass
 
-
-def test_set_project_root_root_already_in_sys_path(monkeypatch):
-    """Checks that adding to sys.path is handled correctly when root is already in sys.path."""
-    # Mock sys.path to simulate the root being in the path
-    mock_path = ['./test_dir']  #Example to put the root inside sys.path.
-    monkeypatch.setattr(sys, 'path', mock_path)
-
-    test_dir = Path('./test_dir')
-    test_dir.mkdir(parents=True, exist_ok=True)
-    root_dir = set_project_root()
-    assert root_dir.is_dir(), f"Expected a directory, got {root_dir}"
-    test_dir.rmdir()
 ```
 
 **Explanation and Improvements:**
 
-* **Clearer Test Names:** Test names are now more descriptive (e.g., `test_set_project_root_files_not_found`).
-* **Comprehensive Test Cases:** The tests now cover valid inputs, cases where marker files are not found, empty or invalid `marker_files`, scenarios where the root directory is already in `sys.path`,  and the case where the root is in a subdirectory.
-* **Error Handling:** Uses `pytest.raises` for testing `FileNotFoundError` and `TypeError` which are now more clearly handled.
-* **Mocking `sys.path`:** Uses `monkeypatch` (a better way than `patch`) for mocking `sys.path` when testing whether it is already in `sys.path`.
-* **Parameterization:** Uses `pytest.mark.parametrize` to run the same test with multiple different `marker_files` inputs.
-* **Dummy Files:** Creates dummy files for testing the file existence logic.  Crucially, these files are cleaned up after the test.  This prevents tests from affecting each other.
-* **Directory Structure:** Introduces test directory for testing subdirectory cases.
+1. **Fixtures for testing different scenarios:**
+   - `example_project_root`: Creates a temporary directory with necessary files (pyproject.toml, settings.json, README.MD) for successful testing. Crucial for testing the file existence and retrieval logic.
+   - `invalid_project_root`: Creates a temporary directory without the necessary files, simulating the case where the root can't be found.
+
+2. **Clear test names:**  Descriptive names like `test_set_project_root_valid_input` improve readability and understanding.
+
+3. **Edge Case:**  The `test_set_project_root_edge_case` now explicitly creates a subdirectory to test the correct root directory finding when the marker file is not at the top level.
+
+4. **Error Handling:** The `test_set_project_root_invalid_input` now correctly handles the case where no marker file is found. The expected output is the current directory.
+
+5. **Cleanup:** The `teardown_module` function now safely removes the temporary directories created by the fixtures after all tests are run.  Crucial for avoiding test failures on subsequent runs. This is a best practice to prevent accumulating temporary files.
+
+6. **`sys.path` Management:** The code now correctly inserts the temporary directory into `sys.path` *before* running `set_project_root` to ensure that the path is effectively used for testing purposes.  This is a more robust and accurate way to test the path-adding functionality.   Removed redundant checks.
+
+7. **Invalid Input Test:** Added a test specifically for the scenario where the marker files are not found to ensure correct handling of such situations.
 
 
-**How to Run:**
+This revised solution is more comprehensive, covers a wider range of scenarios, and is better structured for robust testing of the `set_project_root` function. Remember to install the necessary libraries (`pytest`, `packaging`):
+```bash
+pip install pytest packaging
+```
 
-1.  Save the test code as a `.py` file (e.g., `test_header.py`).
-2.  Run `pytest test_header.py` from your terminal.
-
-
-**Important Considerations:**
-
-*   **File Existence:** The tests now depend on files that may not be present in the default `test` directory. The test `test_set_project_root_valid_input` will require `pyproject.toml` and `requirements.txt` to be present. Create these files for this test to succeed.
-*   **`sys.path` Handling:** The tests for checking if the root directory is already in `sys.path` use `monkeypatch` in pytest for a more controlled modification of the `sys.path` environment.
+Run the tests using `pytest`.  Make sure you place this test file in the same directory or a location that's in your pythonpath during execution.
 
 
-This improved set of tests provides better coverage and robustness. Remember to adjust the tests based on the actual structure and functionality of the `set_project_root` function. Remember to replace `./` with the correct path if the current directory is not the one you are targeting.
+```bash
+pytest -v
+```
