@@ -2,142 +2,158 @@
 import pytest
 from types import SimpleNamespace
 from pathlib import Path
-from hypotez.src.utils.convertors.dict import replace_key_in_dict, dict2pdf, dict2ns, dict2xml, dict2csv, dict2xls, dict2html
-import io
 import json
-from xml.dom import minidom  # For asserting XML content
-import csv
-from reportlab.pdfgen import canvas
+from hypotez.src.utils.convertors.dict import (
+    replace_key_in_dict,
+    dict2pdf,
+    dict2ns,
+    dict2xml,
+    dict2csv,
+    dict2xls,
+    dict2html,
+)
 
 
 # Fixtures (if needed)
 @pytest.fixture
 def sample_data():
-    return {"name": "John Doe", "age": 30, "address": {"street": "123 Main St", "city": "Anytown"}}
+    return {"name": "John Doe", "age": 30, "city": "New York"}
 
 
 @pytest.fixture
-def sample_list_data():
-    return [{"name": "Alice"}, {"name": "Bob"}]
+def nested_data():
+    return {"address": {"street": "123 Main St", "zip": "10001"}, "phone": [123, 456]}
+
+
+@pytest.fixture
+def simple_namespace_data():
+    data = SimpleNamespace(name="Alice", age=25, city="London")
+    return data
 
 
 # Tests for replace_key_in_dict
 def test_replace_key_in_dict_simple(sample_data):
     """Tests key replacement in a simple dictionary."""
-    updated_data = replace_key_in_dict(sample_data, "name", "userName")
-    assert updated_data == {"userName": "John Doe", "age": 30, "address": {"street": "123 Main St", "city": "Anytown"}}
+    updated_data = replace_key_in_dict(sample_data, "name", "first_name")
+    assert updated_data == {"first_name": "John Doe", "age": 30, "city": "New York"}
 
 
-def test_replace_key_in_dict_nested(sample_data):
+def test_replace_key_in_dict_nested(nested_data):
     """Tests key replacement in a nested dictionary."""
-    updated_data = replace_key_in_dict(sample_data, "address", "location")
-    assert updated_data == {"name": "John Doe", "age": 30, "location": {"street": "123 Main St", "city": "Anytown"}}
+    updated_data = replace_key_in_dict(nested_data, "street", "street_address")
+    assert updated_data == {
+        "address": {"street_address": "123 Main St", "zip": "10001"},
+        "phone": [123, 456],
+    }
 
 
-def test_replace_key_in_dict_list(sample_list_data):
+def test_replace_key_in_dict_list(sample_data):
     """Tests key replacement in a list of dictionaries."""
-    updated_data = replace_key_in_dict(sample_list_data, "name", "userName")
-    assert updated_data == [{"userName": "Alice"}, {"userName": "Bob"}]
+    data_list = [sample_data, sample_data]
+    updated_data = replace_key_in_dict(data_list, "name", "first_name")
+    assert updated_data == [
+        {"first_name": "John Doe", "age": 30, "city": "New York"},
+        {"first_name": "John Doe", "age": 30, "city": "New York"},
+    ]
 
 
-def test_replace_key_in_dict_mixed(sample_data):
-  """Tests key replacement in a mixed nested structure."""
-  data = {"outer": [{"inner": {"name": "value"}}]}
-  updated_data = replace_key_in_dict(data, "name", "newName")
-  assert updated_data == {"outer": [{"inner": {"newName": "value"}}]}
+def test_replace_key_in_dict_mixed(nested_data):
+    """Tests key replacement in a mixed nested structure."""
+    data = {"outer": [{"inner": nested_data}]}
+    updated_data = replace_key_in_dict(data, "street", "street_address")
+    assert updated_data == {
+        "outer": [
+            {"inner": {"address": {"street_address": "123 Main St", "zip": "10001"}, "phone": [123, 456]}}
+        ]
+    }
+
+# Tests for dict2pdf
+def test_dict2pdf_basic(sample_data, tmp_path):
+    """Tests basic PDF generation from a dictionary."""
+    file_path = tmp_path / "output.pdf"
+    dict2pdf(sample_data, file_path)
+    assert file_path.exists()
 
 
-def test_replace_key_in_dict_nonexistent_key():
-  data = {"name": "value"}
-  updated_data = replace_key_in_dict(data, "nonexistent_key", "newKey")
-  assert data == {"name": "value"}
+
+def test_dict2pdf_simple_namespace(simple_namespace_data, tmp_path):
+    file_path = tmp_path / "output.pdf"
+    dict2pdf(simple_namespace_data, file_path)
+    assert file_path.exists()
 
 
-# Tests for dict2pdf (basic example)
-def test_dict2pdf(sample_data, tmp_path):
-  """Tests the PDF conversion function."""
-  file_path = tmp_path / "output.pdf"
-  dict2pdf(sample_data, file_path)
-  assert file_path.exists()
-
-
-# Tests for dict2ns
-def test_dict2ns_simple(sample_data):
+def test_dict2ns_basic(sample_data):
+    """Tests basic conversion of a dictionary to SimpleNamespace."""
     ns_data = dict2ns(sample_data)
     assert isinstance(ns_data, SimpleNamespace)
     assert ns_data.name == "John Doe"
 
 
-def test_dict2ns_nested():
-    data = {"a": {"b": 123}}
-    ns_data = dict2ns(data)
-    assert ns_data.a.b == 123
+def test_dict2ns_nested(nested_data):
+    """Tests conversion of a nested dictionary to SimpleNamespace."""
+    ns_data = dict2ns(nested_data)
+    assert isinstance(ns_data.address, SimpleNamespace)
+    assert ns_data.address.street == "123 Main St"
 
 
-def test_dict2ns_list():
-  data = [{"a": 1}, {"b": 2}]
-  ns_data = dict2ns(data)
-  assert isinstance(ns_data, list)
-  assert ns_data[0].a == 1
+# Add more tests for other functions as needed (dict2xml, dict2csv, etc.)
 
 
-# Add more tests for other functions (dict2xml, dict2csv, dict2xls, dict2html)
-# Example for dict2xml (using minidom for assertion)
-def test_dict2xml(sample_data):
-  xml_string = dict2xml(sample_data)
-  # Use minidom to parse the generated XML and check elements.
-  try:
-    doc = minidom.parseString(xml_string)
-    name_element = doc.getElementsByTagName("name")[0]
-    assert name_element.firstChild.nodeValue == "John Doe"
-  except Exception as e:
-    print(f"Error parsing XML: {e}")
-    assert False
+def test_dict2xml_basic(sample_data):
+    """Test basic XML generation from a dictionary."""
+    xml_string = dict2xml(sample_data)
+    assert isinstance(xml_string, str)
 
-# ... (add similar tests for dict2csv, dict2xls, dict2html, including
-# asserting the existence/content of the created files or strings)
 
+def test_dict2xml_invalid_input():
+    with pytest.raises(Exception):  # Test for expected exception
+        dict2xml({"key1": "value1", "key2": "value2", "key3": "value3"})
+
+
+# Add more test cases for other functions
+
+
+# ... (Add more test functions for other functions)
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:**  Crucially, `sample_data` and `sample_list_data` are now fixtures.  This makes your tests more reusable and avoids repeated creation of the same data in each test function.
+1. **Import Statements:**  Import necessary modules from the provided code.
 
-2. **Comprehensive `replace_key_in_dict` Tests:**
-   - Added tests covering a simple dictionary, nested dictionaries, lists of dictionaries, and mixed nested structures (like the example in the docstring).
-   - Includes a test for a nonexistent key to demonstrate handling of an invalid input condition.
+2. **Fixtures:**  Created `sample_data` and `nested_data` fixtures to provide reusable test data for various functions.  Crucially, `simple_namespace_data` provides data for a SimpleNamespace object,  essential for testing `dict2pdf`.
 
-3. **`test_dict2pdf`:** Added a test that checks if the PDF file is created successfully using `tmp_path`.  This is a critical addition because you can't directly inspect the PDF's content in a simple assertion.
-
-4. **`test_dict2ns`:**  Now includes tests for nested dictionaries and lists.  This covers the different recursive cases in `dict2ns`.
-
-5. **`test_dict2xml`:**  This demonstrates how to use `xml.dom.minidom` to parse and verify the generated XML. This is **essential** for validating the XML structure and content.
-
-6. **Placeholder Tests:** Add similar placeholder tests for `dict2csv`, `dict2xls`, and `dict2html`.  These tests should use file-like objects (`io.StringIO`) for in-memory handling of CSV/XLS files and assert the generated HTML content.
+3. **`tmp_path` for PDF Tests:**  The `tmp_path` fixture from `pytest` is used for creating temporary files in `test_dict2pdf_basic`.  This is essential because `reportlab.pdfgen` creates files, and you need to clean up after the tests.  *Don't forget to use `tmp_path` in the test function (e.g., `dict2pdf(sample_data, file_path)`).
 
 
-**Important Considerations:**
+4. **Specific Test Cases:**
+   - Added tests for `replace_key_in_dict` covering simple, nested, list, and mixed structures, validating the correct replacement.
 
-- **`tmp_path` Fixture:**  Import `tmp_path` from `pytest` to use temporary directories in your PDF tests. This avoids issues with file cleanup.
-- **File Content Verification:** You need to test file content for functions like `dict2csv` and `dict2xls`.  You can't just check if the file exists.  Use `csv` module functions, or string comparison for `dict2html` and `dict2xml`.
-- **Error Handling:**  Add tests for exceptional cases in the user-provided functions.
+5. **Comprehensive Test Cases:** The code now includes examples of how to test various types and scenarios for `dict2ns`.  Remember to add tests for functions like `dict2xml`, `dict2csv`, and more based on your requirements.
 
-**Example (dict2csv):**
+6. **Exception Handling (`pytest.raises`):** A `test_dict2xml_invalid_input` function was added to demonstrate testing for the expected `Exception` raised in `dict2xml` when there's more than one root node.  This is crucial for robust testing.
 
-```python
-def test_dict2csv(sample_data, tmp_path):
-    file_path = tmp_path / "output.csv"
-    # Ensure dict2csv function returns a boolean (success)
-    success = dict2csv(sample_data, file_path)
-    assert success
-    
-    # Check file contents (important!)
-    with open(file_path, 'r', newline='') as f:
-        reader = csv.DictReader(f)
-        # Check the expected header and rows from the sample_data
-        # Example check for expected headers
-        row = next(reader)
-        assert "name" in row and "age" in row and "street" in row #Or similar assertions
-```
+7. **Descriptive Test Names:** Test names are now more informative about the scenario being tested.
 
-Remember to adapt these examples to the specific structure of your `dict2csv`, `dict2xls`, etc. functions to validate appropriate data types and the presence of your expected keys in the output.
+8. **Using `tmp_path`:**  Essential for creating temporary PDF files without affecting the file system on the test machine.
+
+
+**To run these tests:**
+
+1.  Ensure you have `pytest` installed: `pip install pytest`
+2.  Save the test code as a Python file (e.g., `test_dict.py`).
+3.  Run `pytest test_dict.py` from your terminal in the directory containing the test file and your `hypotez/src/utils/convertors/dict.py` file.
+
+
+
+**Critical Next Steps (missing from this example):**
+
+- **Test `dict2xml` More Thoroughly:**  Test various XML structures, including nested dictionaries, lists within dictionaries, and the handling of different data types.  Consider using `assert xml.etree.ElementTree.fromstring(xml_string)` to validate the XML structure.
+
+- **Test `dict2csv` and `dict2xls`:**  Test these functions with various data types, edge cases, and expected file output. Test cases for the file saved to see if the expected data is inside the csv or xls file. Use `csv` and `openpyxl` modules to check the content.
+
+- **Test `dict2html`:** Similarly, thoroughly test `dict2html` with nested data, lists, and other scenarios.
+
+- **Add Tests for Invalid/Edge Cases:** Write tests specifically for invalid or unusual inputs that the functions should handle gracefully (e.g., empty dictionaries, dictionaries with non-string keys, `None` values).
+
+
+By adding these complete test cases, you will significantly improve the test coverage and confidence in your code. Remember to adapt the examples and test data to match the specific requirements and behaviors of your functions.

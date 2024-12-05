@@ -2,113 +2,111 @@
 import pytest
 import csv
 from pathlib import Path
-from typing import List, Dict
+from io import StringIO
+from src.utils.convertors.csv import csv2dict, csv2ns, csv_to_json
 from types import SimpleNamespace
 import json
-from io import StringIO  # For testing with string input
 
 
-# Mock the src.logger for testing
-import logging
-logging.basicConfig(level=logging.INFO)  # or logging.DEBUG
-from src.logger import logger
-
-
-def fake_read_csv_as_dict(csv_file, *args, **kwargs):
-    """Mock function for read_csv_as_dict."""
-    if isinstance(csv_file, str):
-      csv_file = Path(csv_file)
-    if csv_file == Path('test.csv'):
-        return [{'col1': 'val1', 'col2': 'val2'}]
-    else:
-      return None
-def fake_read_csv_as_ns(csv_file, *args, **kwargs):
-    """Mock function for read_csv_as_ns."""
-    if isinstance(csv_file, str):
-      csv_file = Path(csv_file)
-    if csv_file == Path('test.csv'):
-        return SimpleNamespace(col1='val1', col2='val2')
-    else:
-      return None
-def fake_read_csv_file(csv_file, *args, **kwargs):
-    """Mock function for read_csv_file."""
-    if isinstance(csv_file, str):
-      csv_file = Path(csv_file)
-    if csv_file == Path('dialogue_log.csv'):
-      return [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
-    else:
-      return None
-    
-
-def fake_save_csv_file(csv_file, data, *args, **kwargs):
-    """Mock function for save_csv_file."""
-    return None
-    
-# Replace actual functions with mock functions for testing
-def read_csv_as_dict(*args, **kwargs):
-    return fake_read_csv_as_dict(*args, **kwargs)
-
-def read_csv_as_ns(*args, **kwargs):
-    return fake_read_csv_as_ns(*args, **kwargs)
-
-def read_csv_file(*args, **kwargs):
-    return fake_read_csv_file(*args, **kwargs)
-
+# Create a temporary CSV file for testing purposes
+def create_temp_csv(data):
+    temp_csv = Path("temp_data.csv")
+    with open(temp_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["col1", "col2"])
+        writer.writerow(["val1", "val2"])
+        writer.writerow(["val3", "val4"])
+    return temp_csv, data  # Return both the file path and the data
 
 
 def test_csv2dict_valid_input():
-    """Checks correct behavior with valid input."""
-    csv_file = 'test.csv'
-    data = csv2dict(csv_file)
-    assert data == [{'col1': 'val1', 'col2': 'val2'}]
+    """Checks correct behavior with valid CSV input."""
+    temp_csv, data = create_temp_csv(None)
+    result = csv2dict(temp_csv)
+    expected_result = [{"col1": "val1", "col2": "val2"}, {"col1": "val3", "col2": "val4"}]
+    assert result == expected_result
+    temp_csv.unlink()
 
-def test_csv2dict_invalid_input():
-    """Checks correct handling of invalid input (non-existent file)."""
-    csv_file = 'nonexistent_file.csv'
-    data = csv2dict(csv_file)
-    assert data is None
+
+def test_csv2dict_empty_file():
+    """Checks handling of empty CSV file."""
+    temp_csv = Path("empty_data.csv")
+    with open(temp_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["col1", "col2"])
+    result = csv2dict(temp_csv)
+    assert result == []  # Empty list for an empty file
+    temp_csv.unlink()
+
+
+def test_csv2dict_nonexistent_file():
+    """Checks handling of nonexistent CSV file."""
+    with pytest.raises(FileNotFoundError):
+        csv2dict("nonexistent_file.csv")
 
 
 def test_csv2ns_valid_input():
-    """Checks correct behavior with valid input."""
-    csv_file = 'test.csv'
-    data = csv2ns(csv_file)
-    assert isinstance(data, SimpleNamespace)
-    assert data.col1 == 'val1'
-    assert data.col2 == 'val2'
+    """Checks correct behavior with valid CSV input for SimpleNamespace."""
+    temp_csv, data = create_temp_csv(None)
+    result = csv2ns(temp_csv)
+    assert isinstance(result, list)
+    assert isinstance(result[0], SimpleNamespace)
+    temp_csv.unlink()
 
-def test_csv2ns_invalid_input():
-    """Checks correct handling of invalid input (non-existent file)."""
-    csv_file = 'nonexistent_file.csv'
-    data = csv2ns(csv_file)
-    assert data is None
+
+def test_csv2ns_empty_file():
+    """Checks handling of empty CSV file for SimpleNamespace."""
+    temp_csv = Path("empty_data.csv")
+    with open(temp_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["col1", "col2"])
+    result = csv2ns(temp_csv)
+    assert result == []  # Empty list for an empty file
+    temp_csv.unlink()
 
 def test_csv_to_json_valid_input():
-    """Tests successful CSV to JSON conversion and saving."""
-    csv_file = 'dialogue_log.csv'
-    json_file = 'dialogue_log.json'
-    expected_output = [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
-
-    result = csv_to_json(csv_file, json_file)
-    assert result == expected_output
-
-
-def test_csv_to_json_invalid_input():
-    """Tests handling of a non-existent CSV file."""
-    csv_file = 'nonexistent_csv.csv'
-    json_file = 'output.json'
-
-    result = csv_to_json(csv_file, json_file)
-    assert result is None
+    """Tests valid conversion from CSV to JSON."""
+    temp_csv, data = create_temp_csv(None)
+    temp_json = Path("temp_data.json")
+    csv_to_json(temp_csv, temp_json)
+    with open(temp_json, "r", encoding="utf-8") as f:
+        loaded_data = json.load(f)
+    assert loaded_data == [{"col1": "val1", "col2": "val2"}, {"col1": "val3", "col2": "val4"}]
+    temp_csv.unlink()
+    temp_json.unlink()
 
 
-#Test for edge cases
-def test_csv_to_json_empty_file():
-    """Tests handling of an empty CSV file."""
-    csv_file = 'empty.csv'  # Create an empty csv file for testing
-    json_file = 'output.json'
-    result = csv_to_json(csv_file, json_file)
-    assert result is None
-
+def test_csv_to_json_nonexistent_file():
+    """Tests handling of nonexistent CSV file for conversion to JSON."""
+    with pytest.raises(FileNotFoundError, match="No such file or directory"):
+        csv_to_json("nonexistent_file.csv", "output.json")
 
 ```
+
+**Explanation and Improvements:**
+
+1. **`create_temp_csv` function:** Creates a temporary CSV file with sample data. This is crucial for isolating tests and avoiding file system issues.  Critically, it returns the file path *and* the data, which allows tests to clean up later.
+
+2. **Clearer Test Names:** Test names are more descriptive, making the purpose of each test obvious.
+
+3. **Error Handling:** Added tests for `FileNotFoundError` to cover scenarios where the input file doesn't exist.
+
+4. **Empty File Handling:** Included tests to handle empty CSV files, ensuring the functions return an appropriate value (e.g., an empty list for `csv2dict`).
+
+5. **`test_csv2ns_valid_input` and `test_csv2ns_empty_file`:**  Added tests for the `csv2ns` function, ensuring it handles valid input and empty files correctly. Importantly, it checks the type is `SimpleNamespace` and the output is a list of them.
+
+6. **`test_csv_to_json_valid_input`:** A test specifically for the `csv_to_json` function, which creates a temporary CSV, converts it to JSON, loads the JSON, and verifies that the loaded data matches the expected output.  This comprehensively tests the conversion logic.
+
+7. **`test_csv_to_json_nonexistent_file`:** An essential test for handling the `FileNotFoundError` that can arise if the input CSV file does not exist.
+
+8. **Cleanup:** The `temp_csv` file is removed after each test using `temp_csv.unlink()`. This prevents file system issues and keeps tests isolated.  The `temp_json` file is also cleaned up.
+
+
+**How to run the tests:**
+
+1.  Save the test code as a Python file (e.g., `test_csv.py`).
+2.  Make sure you have pytest installed (`pip install pytest`).
+3.  Run the tests from your terminal: `pytest test_csv.py`.
+
+
+This significantly improved test suite provides comprehensive coverage, addresses potential issues, and ensures that the `csv` functions are robust and reliable. Remember to adapt the `create_temp_csv` function if your `read_csv_file` function has different input requirements. Remember to replace `"src.utils.convertors.csv"` with the actual path to the module if necessary.

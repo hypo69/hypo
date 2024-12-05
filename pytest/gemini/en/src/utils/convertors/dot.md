@@ -4,98 +4,81 @@ import os
 from graphviz import Source
 from hypotez.src.utils.convertors.dot import dot2png
 
-# Create a temporary DOT file for testing
-def create_temp_dot_file(content):
-    temp_dot_file = "temp_dot.dot"
-    with open(temp_dot_file, "w") as f:
+# Create a temporary directory for test files
+TEST_DIR = 'test_dot_conversion'
+os.makedirs(TEST_DIR, exist_ok=True)
+
+
+def create_dot_file(filename, content):
+    """Creates a temporary DOT file."""
+    filepath = os.path.join(TEST_DIR, filename)
+    with open(filepath, 'w') as f:
         f.write(content)
-    return temp_dot_file
-
-# Create a temporary PNG file for testing
-def create_temp_png_file(filename):
-  return filename
-
-# Fixture for valid DOT content
-@pytest.fixture
-def valid_dot_content():
-    return "digraph G { A -> B; B -> C; C -> A; }"
-
-# Fixture for an invalid DOT file (empty string)
-@pytest.fixture
-def invalid_dot_content():
-    return ""
-
-# Fixture for a non-existent DOT file
-@pytest.fixture
-def non_existent_dot_file():
-    return "nonexistent_file.dot"
-
-# Fixture for a valid output file
-@pytest.fixture
-def output_png_file():
-  return "output.png"
+    return filepath
 
 
-def test_dot2png_valid_input(valid_dot_content, output_png_file):
-    """Tests dot2png with valid input."""
-    temp_dot_file = create_temp_dot_file(valid_dot_content)
-    dot2png(temp_dot_file, output_png_file)
-    assert os.path.exists(output_png_file)
-    os.remove(temp_dot_file)
-    os.remove(output_png_file)
+def remove_test_files():
+    """Removes temporary test files."""
+    import shutil
+    try:
+        shutil.rmtree(TEST_DIR)
+    except FileNotFoundError:
+        pass
 
 
-def test_dot2png_invalid_input(invalid_dot_content, output_png_file):
-    """Tests dot2png with invalid DOT content (empty string)."""
-    temp_dot_file = create_temp_dot_file(invalid_dot_content)
-    with pytest.raises(Exception) as excinfo:
-        dot2png(temp_dot_file, output_png_file)
-    assert "An error occurred during the conversion" in str(excinfo.value)
-    os.remove(temp_dot_file)
+@pytest.fixture(scope='module', autouse=True)
+def setup_teardown():
+    """Setup and teardown for tests."""
+    yield
+    remove_test_files()
+
+def test_dot2png_valid_input():
+    """Tests with valid input file and output file."""
+    dot_file = create_dot_file('valid.dot', 'digraph G { A -> B; }')
+    png_file = os.path.join(TEST_DIR, 'valid.png')
+    dot2png(dot_file, png_file)
+    assert os.path.exists(png_file)
+    # Clean up: delete the generated png file
+    os.remove(png_file)
 
 
-def test_dot2png_nonexistent_file(non_existent_dot_file, output_png_file):
-    """Tests dot2png with a non-existent DOT file."""
+def test_dot2png_invalid_dot_file():
+    """Tests with invalid input file (nonexistent)."""
+    dot_file = os.path.join(TEST_DIR, 'invalid.dot')
+    png_file = os.path.join(TEST_DIR, 'invalid.png')
     with pytest.raises(FileNotFoundError) as excinfo:
-        dot2png(non_existent_dot_file, output_png_file)
-    assert f"Error: The file '{non_existent_dot_file}' was not found." in str(excinfo.value)
+        dot2png(dot_file, png_file)
+    assert str(excinfo.value).startswith("Error: The file")
+    #assert excinfo.match("Error: The file 'invalid.dot' was not found.")
 
 
-def test_dot2png_exception_during_conversion():
-  """Tests dot2png with an exception raised during conversion."""
 
-  # Simulate an error in Source creation
-  invalid_dot_content = "invalid_dot_content"
-  temp_dot_file = create_temp_dot_file(invalid_dot_content)
-  output_png_file = "output.png"
+def test_dot2png_conversion_error():
+    """Tests with invalid DOT content (syntax error)."""
+    dot_file = create_dot_file('invalid_content.dot', 'digraph G { A -> B; X')  # Missing semicolon
+    png_file = os.path.join(TEST_DIR, 'invalid_content.png')
 
-  with pytest.raises(Exception) as excinfo:
-      dot2png(temp_dot_file, output_png_file)
-  assert "An error occurred during the conversion" in str(excinfo.value)
-  os.remove(temp_dot_file)
+    with pytest.raises(Exception) as excinfo:
+        dot2png(dot_file, png_file)
+    assert "An error occurred during the conversion" in str(excinfo.value)
 
-```
 
-**Explanation of Improvements and Key Changes:**
+def test_dot2png_different_file_extension():
+    """Tests with invalid output file extension (not png)."""
+    dot_file = create_dot_file('valid.dot', 'digraph G { A -> B; }')
+    png_file = os.path.join(TEST_DIR, 'valid.txt')  # Wrong file extension
 
-* **Error Handling:** Comprehensive exception handling now covers `FileNotFoundError` and other potential exceptions during the conversion process. The `test_dot2png_exception_during_conversion` specifically addresses exceptions during graphviz processing, which is crucial.
+    with pytest.raises(Exception) as excinfo:
+        dot2png(dot_file, png_file)
+    assert "An error occurred during the conversion" in str(excinfo.value)
 
-* **Cleanup:** Added `os.remove` statements to clean up the temporary files created during the tests.  This is critical for preventing test failures from accumulating stale files.
+def test_dot2png_missing_argument():
+    """Tests with insufficient number of command-line arguments."""
+    with pytest.raises(SystemExit) as excinfo:
+          dot2png('no-file.dot', 'no-file.png')
 
-* **Isolated Tests:** Each test function is entirely independent, ensuring that one test failure doesn't affect others.
+    assert excinfo.value.code == 1
+    
 
-* **Clearer Test Names:** Test names are more descriptive, explicitly indicating the input conditions.
 
-* **Fixtures:** Used fixtures (`valid_dot_content`, `invalid_dot_content`, `non_existent_dot_file`) to encapsulate the creation of test data. This improves code organization and readability.
-
-* **Edge Case (Invalid Input):** An additional test (`test_dot2png_invalid_input`) validates how the function handles invalid DOT content (in this case, an empty string).
-
-* **Example Usage in Tests:**  The provided `valid_dot_content` fixture serves as a concise example of a valid DOT string.
-
-* **`pytest.raises`:** Correctly utilized `pytest.raises` to assert that the expected exception type is raised when a file is not found.
-
-This revised solution addresses all the requirements and provides much more robust test coverage for the `dot2png` function.  Remember to install `pytest` and `graphviz`:
-
-```bash
-pip install pytest graphviz
 ```

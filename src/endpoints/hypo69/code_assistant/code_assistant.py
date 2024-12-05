@@ -207,7 +207,7 @@ class CodeAssistant:
         """
 
 
-        def send_file(file_path: Path, file_name: Optional[str] = None) -> bool:
+        def send_file(file_path: Path) -> bool:
             """
             Отправка файла в модель.
 
@@ -220,7 +220,7 @@ class CodeAssistant:
             """
             try:
                 # Пропуск файлов с именем __init__.py
-                if file_path.name == '__init__.py':
+                if file_path.name in  ('__init__.py','header.py'):
                     logger.info(f'Пропущен файл: {file_path}')
                     return False
 
@@ -236,10 +236,11 @@ class CodeAssistant:
                         # Если 'src' нет, используется имя файла без изменений
                         file_name = file_path.stem
 
-                file_name: str = file_name.replace('_', '-')
+                
 
                 # Отправка файла в модель
-                response = self.gemini_model.upload_file(file_path, file_name)
+                # response = self.gemini_model.upload_file(file_path)
+
                 if response:
                     pprint(response, text_color='light_gray')
                     if hasattr(response, 'url'):

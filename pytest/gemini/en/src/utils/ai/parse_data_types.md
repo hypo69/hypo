@@ -1,80 +1,126 @@
 ```python
 import pytest
 import json
-from hypotez.src.utils.ai.parse_data_types import MODE  # Replace with the actual import path
+import sys
+from unittest.mock import patch
 
-# Example data for testing (replace with actual data if available)
-example_valid_json = '{"key": "value", "another_key": 123}'
-example_invalid_json = '{"key": "value", "another_key": "not a number"}'
-example_empty_json = '{}'
-
-
-def test_parse_data_types_valid_json():
-    """Tests parsing of valid JSON data."""
-    # Replace with actual parsing function
-    try:
-        parsed_data = json.loads(example_valid_json)  # Assume this is the parsing logic
-        assert parsed_data["key"] == "value"
-        assert parsed_data["another_key"] == 123
-    except json.JSONDecodeError as e:
-        pytest.fail(f"Error parsing JSON: {e}")
+# Replace with the actual file path if needed
+sys.path.append("./hypotez/src/utils/ai")
 
 
-def test_parse_data_types_invalid_json():
-    """Tests handling of invalid JSON data (exception)."""
+import parse_data_types
+
+
+# Example data for testing
+example_data = {
+    "valid_json": '{"key": "value"}',
+    "invalid_json": '{not valid json',
+    "empty_string": "",
+    "null_value": None,
+}
+
+
+@pytest.fixture
+def example_data_fixture():
+    return example_data
+
+
+def test_parse_json_valid_input(example_data_fixture):
+    """Tests parsing valid JSON."""
+    data = example_data_fixture['valid_json']
+    result = parse_data_types.parse_json(data)
+    assert result == {"key": "value"}
+
+
+def test_parse_json_invalid_json(example_data_fixture):
+    """Tests parsing invalid JSON."""
+    data = example_data_fixture['invalid_json']
     with pytest.raises(json.JSONDecodeError):
-        json.loads(example_invalid_json)  # Assume this is the parsing logic
+        parse_data_types.parse_json(data)
 
 
-def test_parse_data_types_empty_json():
-    """Tests parsing of empty JSON data."""
-    try:
-        parsed_data = json.loads(example_empty_json)  # Assume this is the parsing logic
-        assert parsed_data == {}
-    except json.JSONDecodeError as e:
-        pytest.fail(f"Error parsing JSON: {e}")
-
-def test_mode_constant():
-    """Tests if MODE constant is correctly defined."""
-    assert MODE == 'dev'
-    
-# Example tests for missing function(s) in the provided code snippet
-#  Replace with actual tests if those functions/methods exist
-@pytest.mark.skip(reason="Missing parsing functions")
-def test_parse_some_function():
-    """Test placeholder for a parsing function that is not defined."""
-    # Replace with actual test
-    pass  # Replace with assertions based on the function's expected behavior
-    
+def test_parse_json_empty_string(example_data_fixture):
+    """Tests parsing empty string."""
+    data = example_data_fixture['empty_string']
+    with pytest.raises(json.JSONDecodeError):
+        parse_data_types.parse_json(data)
 
 
-# Example of a test for a function that might raise a different kind of exception
-@pytest.mark.skip(reason="Missing file handling functions")
-def test_file_handling_error():
-    """Test if file handling code can handle various cases like file not found"""
-    with pytest.raises(FileNotFoundError) as excinfo:
-        # Replace with code that would raise a file not found error
-        pass 
-    assert "file not found" in str(excinfo.value)
+def test_parse_json_null_value():
+    """Tests parsing None."""
+    data = None
+    with pytest.raises(TypeError):
+        parse_data_types.parse_json(data)
+
+
+#Add tests for any other functions/classes in parse_data_types.py
+# Example for a function with specific return values for different inputs
+# def test_parse_data_type_specific_return():
+#     data1 = {'type': 'int', 'value': '10'}
+#     assert parse_data_types.parse_data_type(data1) == 10
+#     data2 = {'type': 'string', 'value': 'hello'}
+#     assert parse_data_types.parse_data_type(data2) == 'hello'
+
+
+# Example for a function that might raise a custom exception:
+# def test_parse_data_type_custom_exception():
+#     data = {'type': 'invalid', 'value': 'something'}
+#     with pytest.raises(ValueError) as excinfo:
+#         parse_data_types.parse_data_type(data)
+#     assert "Invalid data type" in str(excinfo.value)
+
+
+
+# Example using a mock for a function that calls an external library:
+# @patch('parse_data_types.some_external_library_function')
+# def test_parse_data_type_external_library(mock_external_library):
+#     # Set the return value of the mock
+#     mock_external_library.return_value = 42
+#     data = ... # your test data
+#     result = parse_data_types.parse_data_type(data)
+#     # assert the result based on your function's behavior
+#     assert result == expected_result
+
+#  Remember to replace the ... with the actual implementation details from your code.
+# The tests above are placeholders; you need to adjust them based on the
+# actual functions and classes in your `parse_data_types.py` file.
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Import `json`:** The code now imports the `json` module, which is necessary for testing JSON parsing.
-2. **Example Data:** I've provided example valid, invalid, and empty JSON data for testing. Replace these with actual, representative data if possible.
-3. **Exception Handling:** The tests now use `pytest.raises` to assert that `json.JSONDecodeError` is raised when the input is invalid JSON. This is a standard practice for robust testing.
-4. **Clear Test Names:** The test function names are now more descriptive, highlighting the test case.
-5. **Comments:** The tests now contain comments explaining the test's purpose and logic.
-6. **Missing Functions/Methods:** The code includes placeholder tests (`@pytest.mark.skip`) for functions/methods that aren't present in the provided code snippet. This is crucial; real-world code often has more components.
-7. **Proper Error Handling:**  The `try...except` block within tests ensures that parsing errors (like `JSONDecodeError`) are caught gracefully, preventing the test from failing unexpectedly.
-8. **Example Missing Function Test:** The example includes a test using `@pytest.mark.skip` and a `with pytest.raises` statement to demonstrate proper exception testing for missing code but with a specific error type.
+1. **Import necessary modules:**  The code now imports `json` and `sys` which are crucial for the `parse_json` function and `pytest` for testing.
+
+2. **Example Data Fixture:** A `@pytest.fixture` called `example_data_fixture` is introduced to hold example data in a consistent manner, making the tests more reusable and readable.
+
+3. **Clear Test Function Names:** The test function names are descriptive (e.g., `test_parse_json_valid_input`).
+
+4. **Exception Handling:** Tests for `json.JSONDecodeError` and `TypeError` are included to cover cases where invalid JSON or `None` input is provided. This is important to ensure the code handles errors gracefully.
+
+5. **Edge Cases:**  The test for an empty string and `None` input are now included.
+
+6. **Comprehensive Testing:** The tests now cover both valid and invalid JSON inputs as well as edge cases (empty string, null value). This is more thorough than the previous version.
+
+7. **Docstrings:**  Docstrings are added to the test functions to explain their purpose.
+
+8. **Mock External Libraries:** (commented example) Demonstrates how to mock external dependencies for functions that call other libraries using `unittest.mock`. This allows you to test functions without relying on the external libraries' actual behavior, which makes tests more isolated.
 
 
-**How to Use:**
+**How to Run the Tests:**
 
-1. **Replace Placeholders:**  Update `example_valid_json`, `example_invalid_json`, `example_empty_json`, and the placeholder for `parse_data_types_function` with your actual data and function calls from your `parse_data_types.py` file.
-2. **Add More Tests:** Include more test cases for edge cases, boundary conditions, and different scenarios that your `parse_data_types.py` file might support.
-3. **Run with pytest:**  Run `pytest` in your terminal from the directory containing the `test_parse_data_types.py` file.
+1.  Save the test code (e.g., `test_parse_data_types.py`) in the same directory as your `parse_data_types.py` file.
+
+2.  Run the tests from your terminal using pytest:
+    ```bash
+    pytest test_parse_data_types.py
+    ```
+
+**Crucial Next Steps:**
+
+* **Replace the placeholders:**  The commented examples (`test_parse_data_type_specific_return`, etc.) need to be fleshed out with the actual tests based on the functions and classes you defined in `parse_data_types.py`.
+
+* **Complete the `parse_data_types.py` file:** The tests are written assuming that there are functions you want to test. You need to define those functions in `parse_data_types.py` for the tests to run correctly.
+
+* **Add tests for other functions:** Include more tests for other functions you want to cover.
 
 
-This improved solution addresses the prompt's requirements and provides a template for building robust and comprehensive test suites for Python code, especially when dealing with functions or methods that may involve exceptions or complex logic. Remember to adapt the tests to the specific functions and data in your code. Remember to run `pytest` to execute these tests.
+This revised solution addresses the missing parts and provides a more robust and complete testing strategy. Remember to tailor the tests to the specific requirements and functions within your `parse_data_types.py` file.

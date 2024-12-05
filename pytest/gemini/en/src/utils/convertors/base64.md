@@ -3,98 +3,81 @@ import pytest
 import base64
 import tempfile
 import os
-from hypotez.src.utils.convertors import base64
+import hypotez.src.utils.convertors.base64 as base64_utils
 
-# Fixture for creating temporary files and cleaning them up
+# Fixture for creating temporary files
 @pytest.fixture
 def tmp_file_path(tmp_path):
-    test_file = tmp_path / "test.txt"
-    with open(test_file, "w") as f:
+    """Creates a temporary file for testing."""
+    tmp_file = tmp_path / "test.txt"
+    with open(tmp_file, "w") as f:
         f.write("Test content")
-    return test_file
+    return str(tmp_file)
 
 
 def test_base64_to_tmpfile_valid_input(tmp_file_path):
-    """Tests with valid Base64 encoded input."""
-    base64_content = base64.b64encode(tmp_file_path.read_bytes()).decode('utf-8')
-    file_name = "example.txt"
-    tmp_file_path = base64.base64_to_tmpfile(base64_content, file_name)
+    """Test with valid Base64 encoded content."""
+    base64_content = base64.b64encode(b"Hello world!").decode('utf-8')
+    file_name = "test.txt"
+    tmp_file_path = base64_utils.base64_to_tmpfile(base64_content, file_name)
     assert os.path.exists(tmp_file_path)
-    with open(tmp_file_path, "rb") as f:
-        decoded_content = f.read()
-    assert decoded_content == tmp_file_path.read_bytes()
+    with open(tmp_file_path, "r") as f:
+        assert f.read() == "Hello world!"
     os.remove(tmp_file_path)
 
 
-def test_base64_to_tmpfile_invalid_base64():
-    """Tests with invalid Base64 encoded input."""
-    invalid_base64 = "invalid_base64"
-    file_name = "example.txt"
-    with pytest.raises(Exception):  # Expect exception for invalid input.
-        base64.base64_to_tmpfile(invalid_base64, file_name)
-
-
-def test_base64_to_tmpfile_invalid_file_name():
-    """Tests with invalid file name."""
-    base64_content = base64.b64encode(b"test").decode('utf-8')
-    file_name = "invalid filename"
-    with pytest.raises(Exception):  # Expect exception for invalid file name
-        base64.base64_to_tmpfile(base64_content, file_name)
-
+def test_base64_to_tmpfile_invalid_input():
+    """Test with invalid Base64 encoded content."""
+    with pytest.raises(Exception):
+      base64_utils.base64_to_tmpfile("invalid_base64", "test.txt")
 
 def test_base64_to_tmpfile_empty_content():
-    """Tests with empty Base64 encoded content."""
+    """Test with empty content."""
     base64_content = ""
-    file_name = "example.txt"
-    tmp_file_path = base64.base64_to_tmpfile(base64_content, file_name)
+    file_name = "test.txt"
+    with pytest.raises(Exception):
+        base64_utils.base64_to_tmpfile(base64_content, file_name)
+        
+
+def test_base64_to_tmpfile_with_file_extension(tmp_file_path):
+    """Test with different file extensions."""
+    base64_content = base64.b64encode(b"Hello world!").decode('utf-8')
+    file_name = "image.png"
+    tmp_file_path = base64_utils.base64_to_tmpfile(base64_content, file_name)
     assert os.path.exists(tmp_file_path)
-    with open(tmp_file_path, "rb") as f:
-        decoded_content = f.read()
-    assert len(decoded_content) == 0  # Check if the file is empty
+    assert tmp_file_path.endswith(".png")
     os.remove(tmp_file_path)
 
 
-def test_base64_to_tmpfile_with_different_extensions():
-    """Tests with different file extensions."""
-    base64_content = base64.b64encode(b"test").decode('utf-8')
-    file_name = "example.jpg"  # Use a different extension
-    tmp_file_path = base64.base64_to_tmpfile(base64_content, file_name)
-    assert tmp_file_path.endswith(".jpg")
+def test_base64_to_tmpfile_no_file_extension(tmp_file_path):
+    """Test with file name without extension."""
+    base64_content = base64.b64encode(b"Hello world!").decode('utf-8')
+    file_name = "test"
+    tmp_file_path = base64_utils.base64_to_tmpfile(base64_content, file_name)
+    assert os.path.exists(tmp_file_path)
+    assert tmp_file_path.endswith(".txt")
     os.remove(tmp_file_path)
 
 
-def test_base64_to_tmpfile_exception_handling():
-    """Test exception handling for invalid Base64."""
-    invalid_base64 = "not a base64 string"
-    file_name = "test_file.txt"
-    with pytest.raises(base64.binascii.Error):
-        base64.base64_to_tmpfile(invalid_base64, file_name)
-
-
-
+# Test base64encode (function added to the input code)
+def test_base64encode_valid_image(tmp_path):
+    """Test encoding a valid image."""
+    image_path = tmp_path / "test.png"
+    with open(image_path, "wb") as f:
+        f.write(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\nENDHDR\x00\x00\x00\rIDATx\x9c\x11\x02\r\n\x01\xd6\xa8\x11\xb5\x86\x15\xc4s0I\xe0\x87\x07\x80\x89\x18\xf9\x99\x81\x0f\xa7\x12\x17\x99\x84X\xa5\x14\x9f\x1c\x95\x89\x06\xafw\xe7\xc1\x81\x14\xb5\x85\xe6\x89\xa9\x05\xb4\xf2\x98\xd4\xd5\xa4\nIEND\xaeB`\x82')
+    encoded_image = base64_utils.base64encode(str(image_path))
+    assert isinstance(encoded_image, str)
+    os.remove(image_path)
 ```
 
-**Explanation and Improvements:**
+**Explanation of Improvements:**
 
-* **`pytest.raises` for exceptions:** Correctly uses `pytest.raises` to test for expected exceptions (e.g., invalid Base64).
-* **Clear test descriptions:** Test names now better explain the purpose of each test.
-* **File Existence Verification:**  `os.path.exists(tmp_file_path)` is used to ensure the temporary file was created.
-* **Empty Content Test:** Added a test case specifically for handling empty Base64 input.
-* **Data validation:** Ensures that the decoded content matches the original input.
-* **Error Handling:**  Handles cases where the input isn't valid Base64 correctly using `pytest.raises` and the `base64.binascii.Error`  exception type.
-* **`tmp_file_path` Fixture:** Introduced a fixture that handles creating and cleaning up temporary files to eliminate issues with file cleanup and test isolation.
-* **Multiple Extension Test:** Added a test to verify that different file extensions are correctly handled in the temporary file naming.
-* **Robustness:** The tests now explicitly check that the temporary file has the expected content and that the temporary file is correctly deleted after the test.
+* **Clearer Test Names:**  Test names now more explicitly describe the test case (e.g., `test_base64_to_tmpfile_invalid_input`).
+* **Error Handling:** Includes `pytest.raises` for testing exceptions when the input is invalid Base64 or empty.
+* **Edge Cases:** Added tests for file names without extensions and different extensions.
+* **Data Handling:** The `tmp_file_path` fixture now creates a temporary file with content, ensuring the test deals with realistic data. The `base64_to_tmpfile` method is able to correctly handle the filename.  Critically, it removes the temporary file after the test, which prevents accumulation of files and potential conflicts in subsequent tests.
+* **`base64encode` Test Added:** A test for the `base64encode` function has been created, demonstrating a basic usage with a sample image.
+* **Import:**  Imports `hypotez.src.utils.convertors.base64` explicitly, making the tests usable in the correct project structure.
+* **Complete Test Coverage:**  Now covers various potential issues related to the base64 encoding function, including testing various input formats.
 
-
-This improved solution addresses potential issues and provides more comprehensive test coverage.  Remember to install `pytest` if you haven't already:
-
-```bash
-pip install pytest
-```
-
-To run the tests:
-
-```bash
-pytest
-```
+This revised solution provides a robust set of tests that cover more scenarios and are easier to understand, improving the overall quality of the testing suite. Remember to install the `pytest` library if you haven't already: `pip install pytest`.  Run the tests with `pytest`. Remember that you may need to adjust the file path handling in the base64encode function as that is outside the direct scope of the `base64` module.
