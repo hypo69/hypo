@@ -1,7 +1,7 @@
-
 # Локаторы полей на `HTML`-странице
 
 ### Пример локатора:
+
 ```json
 "close_banner": {
     "attribute": null, 
@@ -10,7 +10,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": "click()",
     "locator_description": "Закрываю pop-up окно. Если оно не появилось — не страшно (`mandatory`: `false`)."
   },
   "additional_images_urls": {
@@ -20,7 +22,9 @@
     "if_list": "all",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "Получает список `url` дополнительных изображений."
   },
   "id_supplier": {
@@ -30,7 +34,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "SKU Morlevi."
   },
   "default_image_url": {
@@ -39,13 +45,16 @@
     "selector": "//a[@id = 'mainpic']//img",
     "if_list": "first",
     "use_mouse": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "screenshot()",
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": "screenshot()",
     "mandatory": true,
     "locator_description": "Внимание! В Morlevi картинка получается через screenshot и возвращается как PNG (`bytes`)."
   }
 ```
 
 ### Детали:
+
 Имя словаря соответствует имени поля класса `ProductFields` ([подробнее о `ProductFields`](../product/product_fields)).
 
 - **`attribute`**: Атрибут, который нужно получить от веб-элемента. Например: `innerText`, `src`, `id`, `href` и т.д.  
@@ -87,17 +96,19 @@
       ...
       "attribute": "href",
       ...
-      "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
+      "timeout": 0,
+      "timeout_for_event": "presence_of_element_located",
+      "event": "click()",
       ...
   }
-  ```
+  ```  
   В этом случае сначала драйвер выполнит `click()` на веб-элементе, а затем получит его атрибут `href`.  
   Принцип работы: **действие -> атрибут**.  
   Еще примеры эвентов:
    - `screenshot()` возвращает вебэлемент как снимок экрана. Удобно, когда `CDN` сервер не возвращает изображение через `URL`.
    - `send_message()` - отправляет сообщение вебэлементу.  
      Я рекомендую отправлять сообщение через переменную `%EXTERNAL_MESSAGE%`, как показано ниже:  
-     - `{"timeout":0,"timeout_for_event":"presence_of_element_located","event": "click();backspace(10);%EXTERNAL_MESSAGE%"}`  
+     - `{"timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "click();backspace(10);%EXTERNAL_MESSAGE%"}`  
        исполняет последовательность:  
        <ol type="1">
          <li><code>click()</code> - нажимает на вебэлемент (переводит фокус в поле ввода) <code>&lt;textbox&gt;</code>.</li>
@@ -113,9 +124,11 @@
 ---
 
 ### Сложные локаторы:
+
 В ключи локатора можно передавать списки, кортежи или словари.
 
 #### Пример локатора со списками:
+
 ```json
 "sample_locator": {
     "attribute": [
@@ -130,7 +143,9 @@
       "//a[contains(@href, '#tab-description')]",
       "//div[@id = 'tab-description']//p"
     ],
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": [
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": [
       "click()",
       null
     ],
@@ -153,9 +168,46 @@
 Драйвер выполнит команду `click()`, затем получит значение атрибута `href` элемента `//a[contains(@href, '#tab-description')]`.
 
 #### Пример локатора со словарём:
+
 ```json
 "sample_locator": {
   "attribute": {"href": "name"},
   ...
 }
 ```
+
+---
+
+### Описание ключей локатора:
+
+1. **`attribute`**:  
+   Этот ключ указывает на атрибут, который будет использован для поиска элемента. В данном случае значение `null`, что означает, что атрибут не используется для поиска.
+
+2. **`by`**:  
+   Указывает на метод поиска элемента на странице. В данном случае это `'XPATH'`, что означает использование XPath для нахождения элемента.
+
+3. **`selector`**:  
+   Это строка, представляющая локатор, который будет использоваться для нахождения элемента. В данном случае это XPath выражение `"//a[@id = 'mainpic']//img"`, что означает поиск изображения внутри тега `a` с `id='mainpic'`.
+
+4. **`if_list`**:  
+   Указывает правило обработки списка элементов. В данном случае указано `'first'`, что означает, что если элементов несколько, то будет возвращен первый элемент из найденного списка.
+
+5. **`use_mouse`**:  
+   Булевое значение, которое указывает, нужно ли использовать мышь для взаимодействия с элементом. В данном случае установлено `false`, что значит, что мышь не используется.
+
+6. **`timeout`**:  
+   Время ожидания (в секундах) для нахождения элемента. В данном случае установлено значение `0`, что означает, что поиск элемента будет выполнен немедленно без ожид
+
+ания.
+
+7. **`timeout_for_event`**:  
+   Время ожидания (в секундах) для события. В данном случае указано `"presence_of_element_located"`, что означает, что WebDriver будет ожидать появления элемента перед выполнением события.
+
+8. **`event`**:  
+   Указывает, какое событие должно быть выполнено с найденным элементом. Например, это может быть `click()`, чтобы кликнуть на элемент, или `screenshot()`, чтобы сделать скриншот элемента.
+
+9. **`mandatory`**:  
+   Указывает, является ли локатор обязательным. Если установлено значение `true`, то если элемент не будет найден или не удастся с ним взаимодействовать, будет вызвана ошибка.
+
+10. **`locator_description`**:  
+   Описание того, что делает локатор, чтобы помочь в понимании его цели.
