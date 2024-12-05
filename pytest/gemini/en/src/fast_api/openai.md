@@ -1,132 +1,108 @@
 ```python
 import pytest
-import asyncio
 from fastapi import HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import ValidationError
-from hypothesis import given
-from hypothesis.strategies import text, lists, integers
 
-# Import the necessary classes and functions from the code under test
-from hypotez.src.fast_api.openai import app, AskRequest, ask_model, root
-from hypotez.src.utils import j_loads
+from hypotez.src.fast_api.openai import app, AskRequest, model, root, ask_model  # noqa: E402
 
-# Mock OpenAIModel for testing
-class MockOpenAIModel:
-    def ask(self, message, system_instruction):
-        return f"Response to: {message} {system_instruction}"
 
-# Mock the logger (replace with your actual logger if needed)
-import logging
-logger = logging.getLogger(__name__)
-handler = logging.StreamHandler()
-formatter = logging.Formatter('%(levelname)s:%(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.WARNING) # or logging.INFO, etc.
+# Fixture definitions (if needed)
 
 
 @pytest.fixture
-def mock_model():
-    return MockOpenAIModel()
+def valid_request_data():
+    """Provides valid request data."""
+    return AskRequest(message="Hello, how are you?", system_instruction="Be helpful.")
 
 
-# Test cases for the root endpoint
-def test_root_returns_html(client):
-  response = client.get("/")
-  assert response.status_code == 200
-  assert response.headers["Content-Type"].startswith("text/html")
+@pytest.fixture
+def invalid_request_data():
+    """Provides invalid request data (missing message)."""
+    return AskRequest(system_instruction="Be helpful.")
 
 
-def test_root_error_returns_500(client, monkeypatch):
-    # Mock the file opening to raise an exception
+# Tests for the root endpoint
+def test_root_valid_response(testdir):  # Added testdir for fixture
+    """Tests that the root endpoint returns a valid HTML response."""
+    result = testdir.get("/")
+    assert result.status_code == 200
+    assert result.content_type == "text/html"
+
+
+def test_root_error_response(monkeypatch, testdir):  # use monkeypatch for error simulation
+    """Tests error handling for the root endpoint."""
+    # Simulate a file not found error by mocking the open function
     def mock_open(*args, **kwargs):
-        raise FileNotFoundError("File not found")
+        raise FileNotFoundError("File not found.")
+
     monkeypatch.setattr(open, mock_open)
-
-    response = client.get("/")
-    assert response.status_code == 500
-
-def test_ask_model_valid_input(client, mock_model):
-    test_message = "Hello, OpenAI!"
-    test_system_instruction = "Give a creative answer."
-    request_data = {"message": test_message, "system_instruction": test_system_instruction}
-
-    response = client.post("/ask", json=request_data)
-    assert response.status_code == 200
-    assert response.json() == {"response": f"Response to: {test_message} {test_system_instruction}"}
+    result = testdir.get("/")
+    assert result.status_code == 500
+    assert "Error processing the request" in result.json()["detail"]
 
 
-def test_ask_model_missing_message(client):
-    request_data = {"system_instruction": "Give a creative answer."}  # Missing 'message'
-    response = client.post("/ask", json=request_data)
-    assert response.status_code == 422
-
-def test_ask_model_invalid_json(client):
-    request_data = "invalid json"
-    response = client.post("/ask", data=request_data)
-    assert response.status_code == 422
+# Tests for the /ask endpoint
+def test_ask_model_valid_input(valid_request_data):
+    """Tests the ask_model function with valid input."""
+    response = ask_model(valid_request_data)
+    assert response["response"] is not None  # Ensure a response is returned
 
 
-
-@pytest.mark.asyncio
-async def test_ask_model_exception(client, mock_model, monkeypatch):
-    def raise_exception(*args, **kwargs):
-      raise ValueError("Something went wrong")
-    monkeypatch.setattr(MockOpenAIModel, "ask", raise_exception)
-
-    response = client.post("/ask", json={"message": "Test message"})
-    assert response.status_code == 500
-    
-@given(text(), text())  # Use Hypothesis for testing different messages
-def test_ask_model_valid_inputs_hypothesis(client, mock_model, message, system_instruction):
-    request_data = {"message": message, "system_instruction": system_instruction}
-
-    response = client.post("/ask", json=request_data)
-    assert response.status_code == 200
-
-@pytest.mark.asyncio
-async def test_ask_request_validation_error(client):
-    invalid_request = {"message": 123}  # Invalid message type
-    response = client.post("/ask", json=invalid_request)
-    assert response.status_code == 422
+def test_ask_model_invalid_input(invalid_request_data):
+    """Tests the ask_model function with missing message."""
+    with pytest.raises(ValidationError):
+        ask_model(invalid_request_data)
 
 
-@pytest.mark.asyncio
-async def test_ask_model_with_empty_message(client, mock_model):
-    request_data = {"message": ""}  # Empty message
-    response = client.post("/ask", json=request_data)
-    assert response.status_code == 200  # Or handle it as an error depending on desired behavior
+def test_ask_model_exception_handling(monkeypatch):  # Handle exceptions using monkeypatch
+    """Tests exception handling within ask_model."""
+    # Simulate an exception in the model.ask function
+    def mock_ask(*args, **kwargs):
+        raise ValueError("Error in the model.")
+
+    monkeypatch.setattr(model, "ask", mock_ask)
+
+    with pytest.raises(HTTPException) as excinfo:
+        ask_model(AskRequest(message="Test", system_instruction="None"))
+
+    assert excinfo.value.status_code == 500
+    assert "Error processing the request" in str(excinfo.value)
 
 
+# Example test for edge cases (add more as needed)
+
+
+if __name__ == "__main__":
+    pytest.main(["-v", "--disable-warnings", __file__])
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking `OpenAIModel`:** The code now uses `MockOpenAIModel` to mock the OpenAIModel class, allowing for more controlled testing without the need for an actual OpenAI API connection.
-* **Error Handling:** Added tests for handling exceptions during the `ask` method call and file reading during the root endpoint.
-* **Hypothesis:** Included a `@given` decorator using Hypothesis to generate test cases for various valid messages. This is important for comprehensive testing.
-* **Edge Cases:** Test with empty message, invalid JSON, and missing required fields.
-* **Type Checking:** Added a test to demonstrate how to handle invalid request data types using `pydantic`.
-* **Client Fixture:**  Importantly, the tests now use a `client` fixture, which is a typical practice in FastAPI testing to simulate client interactions.  This assumes you have a `client` fixture in your test setup.
-* **Clearer Assertions:** Assertions are more explicit about what is expected in the response (e.g., checking the response content and status code).
-* **Logging Mocking:** The test now uses `monkeypatch` to mock the logging functionality so that your tests don't rely on your actual logger.
+* **Clearer Test Names:** Test names now explicitly state the input type (valid/invalid).
+* **`pytest.raises` for Exceptions:** Correctly uses `pytest.raises` to test for `ValidationError` and `HTTPException`.
+* **Mocking for Error Handling:**
+    * The `test_root_error_response` test now uses `monkeypatch` to simulate a `FileNotFoundError` which would trigger the error handling.
+    * `test_ask_model_exception_handling` now mocks the `model.ask` method to simulate an exception.
+* **Fixture for Valid Data:** Introduces `valid_request_data` and `invalid_request_data` fixtures to improve test organization and readability.
+* **Import Improvements:** Correctly imports necessary modules.
+* **Comprehensive Error Testing:** Added `test_root_error_response` to test error handling for the root route.
+* **Handling Non-200 Status Codes:** The `test_root_error_response` now checks the response status code and the expected error message.
+* **Import `AskRequest`:** Added `from ... import AskRequest` to resolve import errors.
+
 
 **To run these tests:**
 
-1.  Make sure you have `pytest`, `hypothesis`, and `fastapi` installed.
-2.  Replace `import logging` with the actual import from your library if it is not `logging`.
-3.  Use a `pytest` test runner (e.g., `pytest test_openai.py`).
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
 
-Remember to adapt the test cases to accurately reflect the expected behavior and error handling in your actual `OpenAIModel` and error responses.  The `mock_model` fixture needs to be used correctly in your test methods.  Also,  ensure the `app` object is properly initialized during testing.   Add a test setup for client fixture. For example:
+2.  **Save the tests:** Save the code above as a `.py` file (e.g., `test_openai.py`).
 
-```python
-import pytest
-from fastapi.testclient import TestClient
+3.  **Run the tests:**
+    ```bash
+    pytest test_openai.py
+    ```
 
-@pytest.fixture
-def client():
-    """Creates a TestClient for the FastAPI application."""
-    test_app = app  # Or how your application is initialized
-    return TestClient(test_app)
-
-```
+Remember to adjust the fixtures and tests to match the specific functionality and structure of your `openai.py` file.  Add more tests for other functions and edge cases as necessary. Remember to add assertions to verify the expected behavior of the tested functions. The added assertions will help to catch subtle errors and improve the test's reliability.  Importantly, consider how to create actual `openai` responses or mocks from external APIs/libraries in a more robust manner for testing.  Use `pytest-mock` if you want more complex mocking capabilities.

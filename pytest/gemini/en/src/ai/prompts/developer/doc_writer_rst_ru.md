@@ -1,74 +1,104 @@
 ```python
 import pytest
-
+import io
+import os
 
 class CodeAssistant:
     """
-    Класс для работы с ассистентом программиста, использующим модели ИИ.
+    Класс для работы с ассистентом программиста.
+    Используется для взаимодействия с различными моделями ИИ, такими как Google Gemini,
+    и предоставляет методы для анализа и создания документации для кода.
 
-    :param role: Роль ассистента (например, 'code_checker').
-    :type role: str
-    :param lang: Язык, на котором будет работать ассистент (например, 'ru').
-    :type lang: str
-    :param model: Список используемых моделей ИИ (например, ['gemini']).
-    :type model: list
+    Атрибуты:
+    ----------
+    role: str
+        Роль ассистента (например, 'code_checker').
+    lang: str
+        Язык, на котором будет работать ассистент (например, 'ru').
+    model: list
+        Список используемых моделей ИИ (например, ['gemini']).
     """
-
     def __init__(self, role, lang, model):
         """
-        Инициализация ассистента с указанием роли, языка и моделей ИИ.
+        Конструктор класса CodeAssistant.
+
+        :param role: str
+        :param lang: str
+        :param model: list
+        :raises TypeError: если типы параметров не соответствуют
         """
+        if not isinstance(role, str):
+            raise TypeError("role must be a string")
+        if not isinstance(lang, str):
+            raise TypeError("lang must be a string")
+        if not isinstance(model, list):
+            raise TypeError("model must be a list")
         self.role = role
         self.lang = lang
         self.model = model
 
-    def process_files(self, files, options=None):
+
+    def process_files(self, files=None, options=None):
         """
         Метод для обработки файлов с кодом.
 
-        :param files: Список путей к файлам для обработки.
-        :type files: list
-        :param options: Словарь с дополнительными параметрами.
-        :type options: dict
-        :raises FileNotFoundError: Если файл не найден.
-        :return: Список результатов обработки файлов. Возвращает пустой список, если входные данные пустые или некорректные.
-        :rtype: list
+        :param files: list, список файлов для обработки
+        :param options: dict, дополнительные параметры, которые могут быть использованы для настройки обработки.
+        :return: list, результат обработки
+        :raises TypeError: если типы параметров не соответствуют
+        :raises FileNotFoundError: если файла не существует
         """
-        if not files:
-            return []
+        if files is None:
+            files = []
+        if not isinstance(files, list):
+            raise TypeError("files must be a list")
+        if options is not None and not isinstance(options, dict):
+            raise TypeError("options must be a dictionary")
+            
+
         results = []
         for file in files:
             try:
-                # Пример симуляции обработки файла.  В реальном коде здесь должен быть вызов API или другой механизм обработки.
-                result = f"Обработка файла {file} завершена."
-                results.append(result)
+                # Заглушка для обработки файла
+                with open(file, 'r') as f:
+                    contents = f.read()
+                    results.append(f"Processed {file}: {contents[:20]}...")
             except FileNotFoundError as e:
-                raise FileNotFoundError(f"Файл {file} не найден.") from e
+                raise FileNotFoundError(f"Файл {file} не найден") from e
         return results
 
+# Fixtures (if needed)
+@pytest.fixture
+def test_files():
+    """Provides test files for the function."""
+    test_file1 = io.StringIO("File content 1")
+    test_file2 = io.StringIO("File content 2")
 
-# Тестовые функции для класса CodeAssistant
-def test_process_files_valid_input():
-    """Проверяет корректную обработку списка файлов."""
-    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-    files = ['file1.py', 'file2.py']
-    results = assistant.process_files(files)
-    assert len(results) == 2
-    for result in results:
-        assert isinstance(result, str)
-  
-def test_process_files_empty_input():
-    """Проверяет работу с пустым списком файлов."""
-    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-    files = []
-    results = assistant.process_files(files)
-    assert results == []
+    return [test_file1, test_file2]
 
+# Tests for process_files
+def test_process_files_valid_input(test_files):
+    """Checks correct behavior with valid input (in-memory files)."""
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    results = assistant.process_files(files=test_files)
+    assert len(results) == 2, "Incorrect number of results"
+    
+
+def test_process_files_empty_files():
+    """Checks correct behavior with empty files list."""
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    results = assistant.process_files(files=[])
+    assert results == [], "Expected empty list"
+
+def test_process_files_invalid_file_type():
+    """Checks exception handling for invalid file type."""
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    with pytest.raises(TypeError):
+        assistant.process_files(files="not a list")
 
 def test_process_files_file_not_found():
-    """Проверяет обработку случая, когда файл не найден."""
+    """Checks exception handling for file not found."""
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-    files = ['nonexistent_file.py']
-    with pytest.raises(FileNotFoundError, match="Файл nonexistent_file.py не найден."):
-        assistant.process_files(files)
+    with pytest.raises(FileNotFoundError, match="Файл non-existent.txt не найден"):
+        assistant.process_files(files=['non-existent.txt'])
 ```

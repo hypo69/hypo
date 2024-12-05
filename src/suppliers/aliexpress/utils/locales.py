@@ -26,8 +26,7 @@ MODE = 'dev'
 from pathlib import Path
 
 from src import gs
-from src.utils import j_loads
-from src.utils.jjson import j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns
 
 def get_locales(locales_path: Path | str) -> list[dict[str, str]] | None:
     """Load locales data from a JSON file.

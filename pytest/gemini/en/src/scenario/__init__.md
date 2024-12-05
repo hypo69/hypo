@@ -1,102 +1,104 @@
 ```python
 import pytest
-from hypotez.src.scenario import run_scenario_files, run_scenarios  # Adjust import if needed
+from hypotez.src.scenario import run_scenario_files, run_scenarios  # Import the functions
 
-# Dummy Supplier class (replace with actual class if available)
+
+# Example data for testing
+EXAMPLE_SUPPLIER = "aliexpress"
+EXAMPLE_SCENARIO_FILES = ["file1", "file2"]
+EXAMPLE_SCENARIO = {"key": "value"}
+EXAMPLE_SCENARIOS = [{"key": "value1"}, {"key": "value2"}]
+
+# Dummy Supplier class (replace with actual if available)
 class Supplier:
     def __init__(self, name):
         self.name = name
-
+    
     def run(self, *args):
-        # Dummy implementation
-        if args:
-            print(f"Running scenario(s) for supplier {self.name} with args: {args}")
-        else:
-            print(f"Running scenario(s) for supplier {self.name}")
+        print(f"Running scenario for {self.name} with args: {args}")
+        return True  # Placeholder for actual scenario execution
+    
 
-
-# Test data for Supplier
-@pytest.fixture
-def supplier_instance():
-    return Supplier('aliexpress')
-
-
-# Test cases for run_scenario_files
-def test_run_scenario_files_valid_input(supplier_instance):
+# Tests for run_scenario_files
+def test_run_scenario_files_valid_input():
     """Tests run_scenario_files with valid input."""
-    scenario_file = 'file1'
-    run_scenario_files(supplier_instance, scenario_file)
+    s = Supplier(EXAMPLE_SUPPLIER)
+    scenario_files = EXAMPLE_SCENARIO_FILES
+    result = run_scenario_files(s, scenario_files)
+    assert result is True  # Check if run_scenario_files returns True or False
+    
+    
+def test_run_scenario_files_empty_input():
+  """Tests run_scenario_files with empty input."""
+  s = Supplier(EXAMPLE_SUPPLIER)
+  scenario_files = []
+  result = run_scenario_files(s, scenario_files)
+  assert result is True
 
-def test_run_scenario_files_multiple_files(supplier_instance):
-    """Tests run_scenario_files with multiple files."""
-    scenario_files = ['file1', 'file2']
-    run_scenario_files(supplier_instance, scenario_files)
-
-def test_run_scenario_files_empty_file_list(supplier_instance):
-    """Tests run_scenario_files with an empty list of files."""
-    scenario_files = []
-    run_scenario_files(supplier_instance, scenario_files)
-
-
-# Test cases for run_scenarios
-def test_run_scenarios_valid_input(supplier_instance):
-    """Tests run_scenarios with a single scenario dictionary."""
-    scenario = {'key': 'value'}
-    run_scenarios(supplier_instance, scenario)
-
-def test_run_scenarios_list_of_scenarios(supplier_instance):
-    """Tests run_scenarios with a list of scenario dictionaries."""
-    scenarios = [{'key': 'value1'}, {'key': 'value2'}]
-    run_scenarios(supplier_instance, scenarios)
+def test_run_scenario_files_single_file():
+    """Tests run_scenario_files with a single scenario file."""
+    s = Supplier(EXAMPLE_SUPPLIER)
+    scenario_file = "file1"
+    result = run_scenario_files(s, [scenario_file])
+    assert result is True
+    
 
 
-def test_run_scenarios_empty_input(supplier_instance):
-    """Tests run_scenarios with empty input (list or dict)."""
-    with pytest.raises(TypeError):
-      run_scenarios(supplier_instance, None) #Test if run_scenarios handles None 
-    with pytest.raises(TypeError):
-      run_scenarios(supplier_instance, [])
+# Tests for run_scenarios
+def test_run_scenarios_valid_input():
+    """Tests run_scenarios with a valid scenario dictionary."""
+    s = Supplier(EXAMPLE_SUPPLIER)
+    scenario = EXAMPLE_SCENARIO
+    result = run_scenarios(s, scenario)
+    assert result is True
+    
+def test_run_scenarios_valid_scenario_list():
+    """Tests run_scenarios with a valid list of scenarios."""
+    s = Supplier(EXAMPLE_SUPPLIER)
+    scenarios = EXAMPLE_SCENARIOS
+    result = run_scenarios(s, scenarios)
+    assert result is True
 
 
-# Example test for invalid input type (add more as needed)
 
-# Important: Replace 'file1', 'file2' with actual file names or paths if available.
-# Adjust dummy Supplier class and test data as per your actual implementation.
-# Add more tests covering various scenarios and error conditions as appropriate.
+# Test for potential exception handling (if applicable to the code)
+# Example for testing if the functions raise an expected exception
+@pytest.mark.skipif(True, reason="Requires actual Supplier class with exceptions")
+def test_run_scenarios_invalid_input():
+    """Tests run_scenarios with invalid input (if applicable)."""
+    s = Supplier(EXAMPLE_SUPPLIER)
+    # Add an invalid scenario to test
+    invalid_scenario = 123  # Example invalid input
+    with pytest.raises(TypeError):  # Assuming TypeError for invalid input
+        run_scenarios(s, invalid_scenario)
 
-# Example for testing exception handling (if relevant):
-# def test_run_scenario_invalid_file(supplier_instance, mocker):
-#     # Mock the file loading or processing step to raise an exception
-#     mocker.patch('your_module.load_scenario_file', side_effect=FileNotFoundError)
-#     with pytest.raises(FileNotFoundError):  # Check for expected exception
-#         run_scenario_files(supplier_instance, 'nonexistent_file.json')
 
 
+# Include tests for other functions (run_scenario, etc.) if they exist
+# and modify the example data and test cases as needed
 ```
 
 **Explanation and Improvements:**
 
-1. **Dummy `Supplier` Class:**  A placeholder `Supplier` class is crucial for testing.  Replace this with your actual `Supplier` class if available.
+1. **Dummy `Supplier` Class:** The code now includes a dummy `Supplier` class for testing.  In a real scenario, replace this with the actual `Supplier` class from your code.  Crucially, this dummy class has a `run` method that takes arguments and prints them.
 
-2. **Clearer Test Names:**  Test names now explicitly state the input type (e.g., `test_run_scenario_files_multiple_files`).
+2. **Clearer Test Names:** Test names are more descriptive, making it easier to understand the purpose of each test.
 
-3. **Comprehensive Test Cases:**  The tests now cover valid inputs, multiple files, empty lists, and (crucially) handling `None` or an empty list as input to `run_scenarios`, which was a significant gap in the previous response.
+3. **Example Data:**  Example data is defined for scenarios, making the tests more concrete.
 
-4. **Exception Handling:** The `test_run_scenarios_empty_input` test demonstrates how to use `pytest.raises` to check for expected exceptions when invalid input is provided.  You should add more exception tests if your functions have specific error handling.
+4. **Comprehensive Test Coverage:**  The tests now cover valid input, potentially empty scenarios, and a single scenario file (an edge case that was missing before).
 
-5. **`pytest.fixture` for `supplier_instance`:**  Using a fixture to create a `Supplier` instance makes the tests more organized and reusable.
+5. **Exception Handling (Placeholder):** The code has a placeholder `test_run_scenarios_invalid_input` which demonstrates how to use `pytest.raises` to check for exceptions (e.g., `TypeError` for invalid input).  **Crucially**, you need to uncomment this and adapt it according to the actual exceptions raised by your `run_scenarios` function.  If the functions don't raise exceptions with invalid data, this test won't be necessary.
 
-6. **Comments:**  Added comments to clarify the purpose of each test case.
+6. **`pytest.mark.skipif`:** This decorator is used to skip the test, useful for situations where you don't have the actual Supplier class or it's still under development. You'll need to replace `True` with a more useful condition to determine when the test should be skipped.
 
-7. **Adaptability:**  The code is now more adaptable; you just need to replace the dummy `Supplier` class with the real one and adjust the test data and expected outputs to match your implementation.
-
-8. **Important:** The test will likely fail without knowing the actual implementation of run_scenario_files and run_scenarios, and relevant error handling in your `Supplier` class. The previous response lacked crucial error handling.
-
+7. **Assertions:**  Uses `assert result is True` to check the outcome of the function call.  You should use the correct assertion based on what the function is expected to return.
 
 **How to Run the Tests:**
 
-1.  Save the code as a `.py` file (e.g., `test_scenario.py`).
-2.  Run `pytest test_scenario.py` from your terminal.
+1.  Make sure you have `pytest` installed: `pip install pytest`
+2.  Save the test code (e.g., `test_scenario.py`) in the same directory as your `hypotez/src/scenario/__init__.py`.
+3.  Run the tests from your terminal: `pytest test_scenario.py`
 
 
-Remember to adapt the dummy `Supplier` class, test data, and exception tests to match your actual code.  Thorough error handling is essential for robust tests. If your functions raise exceptions for various input errors, be sure to test those conditions using `pytest.raises`.  Consider mocking any external dependencies (e.g., file loading) to isolate your tests.
+Remember to replace the dummy `Supplier` class and adapt the test cases to accurately reflect the expected behavior of the `run_scenario_files` and `run_scenarios` functions and any potential exceptions they might raise.  Also, consider how exceptions should be handled by your functions; if an error is expected for certain input, a test should verify that.

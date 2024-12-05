@@ -1,107 +1,105 @@
 ```python
 import pytest
-import requests
-
-# Mock responses for testing.  Replace with actual API calls in production code.
-def mock_prestashop_api(method, url, **kwargs):
-    """Mock Prestashop API response."""
-    if method == 'GET' and url == '/products':
-        return {'products': [{'id': 1, 'name': 'Product 1'}]}
-    elif method == 'POST' and url == '/orders':
-        return {'order_id': 123}
-    else:
-        return {'error': 'Method or URL not supported'}
-
-def mock_advertisement_api(method, url, **kwargs):
-    """Mock Advertisement API response."""
-    if method == 'POST' and url == '/campaigns':
-        return {'campaign_id': 456}
-    else:
-        return {'error': 'Method or URL not supported'}
-
-
-# Mock classes for testing.
+# Placeholder for the actual code. Replace with the actual code from 'endpoints' module
+#  Import any necessary modules here, e.g.,  from src.endpoints.prestashop import PrestashopAPI
+#  Replace the following with your actual endpoints class/function
 class PrestashopAPI:
-    def get_products(self):
-        response = mock_prestashop_api('GET', '/products')
-        return response['products']
+    def create_product(self, product_data):
+        if not isinstance(product_data, dict):
+            raise TypeError("Product data must be a dictionary")
+        # Simulate API call
+        return {"id": 123, "name": product_data.get("name")}
 
-    def create_order(self, data):
-        response = mock_prestashop_api('POST', '/orders', json=data)
-        return response
+    def manage_orders(self, order_data):
+      return "Orders managed"
 
-class AdvertisementAPI:
-    def create_campaign(self, data):
-        response = mock_advertisement_api('POST', '/campaigns', json=data)
-        return response
+    def manage_users(self, user_data):
+      return "Users managed"
 
+
+# Fixture definitions (replace with actual fixture if needed)
+# @pytest.fixture
+# def prestashop_api():
+#     return PrestashopAPI()
 
 # Tests for PrestashopAPI
-def test_prestashop_get_products():
-    """Tests retrieving product data from Prestashop."""
-    api = PrestashopAPI()
-    products = api.get_products()
-    assert products[0]['name'] == 'Product 1'
+def test_create_product_valid_input(prestashop_api):
+    """Tests creating a product with valid input."""
+    product_data = {"name": "Test Product"}
+    result = prestashop_api.create_product(product_data)
+    assert isinstance(result, dict)
+    assert "id" in result
+    assert "name" in result
 
-def test_prestashop_create_order():
-    """Tests creating an order in Prestashop."""
-    api = PrestashopAPI()
-    order_data = {'customer_id': 1, 'items': [{'product_id': 1, 'quantity': 1}]}
-    response = api.create_order(order_data)
-    assert 'order_id' in response
-    assert response['order_id'] == 123
+def test_create_product_invalid_input(prestashop_api):
+    """Tests creating a product with invalid input (not a dictionary)."""
+    with pytest.raises(TypeError):
+        prestashop_api.create_product("invalid data")
 
+def test_manage_orders_valid_input(prestashop_api):
+    """Tests managing orders with valid input."""
+    order_data = {}
+    result = prestashop_api.manage_orders(order_data)
+    assert result == "Orders managed"
 
-# Tests for AdvertisementAPI
-def test_advertisement_create_campaign():
-  """Tests creating an advertisement campaign."""
-  api = AdvertisementAPI()
-  campaign_data = {'name': 'Test Campaign', 'budget': 100}
-  response = api.create_campaign(campaign_data)
-  assert 'campaign_id' in response
-
-
-def test_advertisement_create_campaign_invalid_data():
-    """Tests creating campaign with invalid data."""
-    api = AdvertisementAPI()
-    campaign_data = {'name': 123}  # Invalid data type for 'name'
-    with pytest.raises(Exception) as excinfo:
-        api.create_campaign(campaign_data)
-    assert 'error' in str(excinfo.value)
+def test_manage_users_valid_input(prestashop_api):
+    """Tests managing users with valid input."""
+    user_data = {}
+    result = prestashop_api.manage_users(user_data)
+    assert result == "Users managed"
 
 
-# Example testing invalid input (for potential methods).
-def test_prestashop_create_order_invalid_data():
-  """Tests creating an order with invalid data."""
-  api = PrestashopAPI()
-  order_data = {'customer_id': 'abc'}  # Invalid data type
-  with pytest.raises(Exception) as excinfo:
-      api.create_order(order_data)
-  assert 'error' in str(excinfo.value)
+# Example of how to add tests for other endpoints (replace with your actual classes/functions)
+
+# ... other tests for advertisement, emil, hypo69, and kazarinov endpoints
+
+
+
+# Example Usage (assuming you have a prestashop_api fixture)
+# def test_create_product_with_fixture(prestashop_api):
+#     # ... your test logic using prestashop_api
+#     product_data = {"name": "Test Product 2"}
+#     result = prestashop_api.create_product(product_data)
+#     assert result["name"] == "Test Product 2"
+
+
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now mocks the API responses using `mock_prestashop_api` and `mock_advertisement_api`.  Crucially, this isolates the tests from actual network calls, making them much faster and more reliable.  Replace these mock functions with actual API calls (using `requests` or similar libraries) in a production environment.
+1. **Placeholder for Actual Code:** The code now includes a placeholder class `PrestashopAPI` and sample methods.  Crucially, you need to replace this placeholder with the actual classes and functions from your `endpoints` module.
 
-2. **Clearer Test Names:** Test names are more descriptive (e.g., `test_prestashop_get_products`).
+2. **Clear Test Names:** Test function names are descriptive (e.g., `test_create_product_valid_input`).
 
-3. **Exception Handling:** `test_advertisement_create_campaign_invalid_data` and `test_prestashop_create_order_invalid_data` demonstrate testing invalid data scenarios.  They use `pytest.raises` to verify that the expected exception is raised when invalid data is passed.
+3. **Type Checking:** Added a `TypeError` check in `test_create_product_invalid_input` to demonstrate how to test exception handling with `pytest.raises`.
 
-4. **Comprehensive Examples:** The tests now include:
-   - Valid input for `get_products` and `create_order`.
-   - An example of testing invalid data (e.g., wrong data type) to show robust input handling.
+4. **Valid and Invalid Inputs:** The tests now cover valid input (e.g., `test_create_product_valid_input`) and invalid input (`test_create_product_invalid_input`).
 
-5. **Class Structure:** The tests are organized within the test functions.  This improves readability and maintainability.
+5. **Edge Cases:**  While the example code doesn't have readily apparent edge cases,  you'll need to identify and test those for real-world code.
 
-6. **Missing Functionality:** The code assumes there's some way to generate or access `data` for the `create_order` method.  This is a critical gap in the test coverage because the functionality to get `order_data` (or other needed data) isn't in the provided code.
+6. **pytest.raises:** The test `test_create_product_invalid_input` demonstrates using `pytest.raises` to check for `TypeError`.
+
+
+7. **Fixture (Example):** A placeholder `@pytest.fixture` for `prestashop_api` is included. **Crucially**, you should use fixtures to properly isolate your test cases and avoid creating new instances of classes (PrestashopAPI in this case) repeatedly.
 
 
 **How to Run the Tests:**
 
-1.  Save the code above as a Python file (e.g., `test_endpoints.py`).
-2.  Run `pytest test_endpoints.py` from your terminal in the same directory.
+1. **Replace Placeholders:**  Import the actual `PrestashopAPI` or similar class from the relevant file in your `endpoints` module.
+2. **Run pytest:** Save this code as a `.py` file (e.g., `test_endpoints.py`) in the same directory as your `endpoints` modules, and run pytest:
 
-Remember to replace the mock functions with real API calls when integrating with actual services.  Also, add tests for any additional functions or features that the real API or service provides.   The provided `README` doesn't describe sufficient data structures to effectively test every method; this updated example fills in critical test holes.
+   ```bash
+   pytest test_endpoints.py
+   ```
+
+
+**Critical Next Steps:**
+
+* **Complete the Placeholder:** Replace `PrestashopAPI` and its methods with the actual classes and functions you want to test.
+* **Add More Tests:** Create tests for all your endpoints (`advertisement`, `emil`, `hypo69`, and `kazarinov`) and for various scenarios (edge cases, invalid inputs, etc.).
+* **Use Fixtures:**  If your functions have dependencies (e.g., database connections), create appropriate fixtures to manage them.
+
+
+This revised example provides a much more realistic and functional starting point for writing comprehensive `pytest` tests for your endpoints. Remember to replace the placeholder code with your actual implementation. Remember to  create tests covering various input scenarios, including edge cases and error handling.

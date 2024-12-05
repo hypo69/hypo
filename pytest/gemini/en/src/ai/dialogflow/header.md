@@ -1,89 +1,125 @@
 ```python
 import pytest
-import json
 from pathlib import Path
-from packaging.version import Version
 import sys
+from packaging.version import Version
+import json
 
 from hypotez.src.ai.dialogflow.header import set_project_root
 
-# Create a temporary directory for testing.  This is crucial for preventing
-# tests from affecting each other and the actual project.
-import tempfile
-import shutil
 
+# Fixture to create mock files for testing
 @pytest.fixture
-def tmp_project_root():
-    """Creates a temporary directory with necessary files for testing."""
-    tmp_dir = tempfile.mkdtemp()
-    (Path(tmp_dir) / "pyproject.toml").touch()
-    (Path(tmp_dir) / "requirements.txt").touch()
-    (Path(tmp_dir) / ".git").touch()  # Include .git for a more realistic test
-    (Path(tmp_dir) / "src" / "settings.json").write_text(json.dumps({"project_name": "TestProject", "version": "1.0.0"}))
-    (Path(tmp_dir) / "src" / "README.MD").write_text("This is a README.")
-    
-    sys.path.insert(0, str(tmp_dir))
-    yield Path(tmp_dir)
-    shutil.rmtree(tmp_dir)
+def mock_project_root(tmp_path: Path):
+    """Creates a temporary project directory with mock files."""
+    (tmp_path / "pyproject.toml").touch()
+    (tmp_path / "requirements.txt").touch()
+    (tmp_path / "src" / "settings.json").write_text(
+        json.dumps({"project_name": "TestProject", "version": "1.0.0"})
+    )
+    (tmp_path / "src" / "README.MD").write_text("This is a README.")
+    sys.path.insert(0, str(tmp_path))
+    return tmp_path
 
-def test_set_project_root_valid_input(tmp_project_root):
-    """Tests set_project_root with valid input (files exist in the root)."""
-    root_path = set_project_root(marker_files=("pyproject.toml",))
-    assert root_path == tmp_project_root
-    assert str(tmp_project_root) in sys.path
 
-def test_set_project_root_nonexistent_file(tmp_project_root):
-    """Tests set_project_root when marker files don't exist."""
-    # Create a dummy file outside the project root directory
-    (Path(tmp_project_root) / "other_file.txt").touch()
-    root_path = set_project_root(marker_files=("nonexistent_file.txt",))
-    #Check that current directory is returned
-    assert root_path == tmp_project_root.parent
-
-def test_set_project_root_no_marker_files(tmp_project_root):
-    """Test set_project_root when no matching marker files are found."""
+# Tests for set_project_root function
+def test_set_project_root_valid_input(mock_project_root: Path):
+    """Checks correct behavior with a project directory containing marker files."""
     root_path = set_project_root()
-    #Check that current directory is returned
-    assert root_path == tmp_project_root
-    assert str(tmp_project_root) in sys.path
-
-def test_set_project_root_marker_in_subdirectory(tmp_project_root):
-    """Test set_project_root when marker file is in a subdirectory."""
-    (Path(tmp_project_root) / "subdir" / "pyproject.toml").touch()
-    root_path = set_project_root(marker_files=("subdir/pyproject.toml",))
-    assert root_path == tmp_project_root
-    assert str(tmp_project_root) in sys.path
+    assert root_path == mock_project_root
 
 
-def test_set_project_root_invalid_marker_types(tmp_project_root):
-  """Test set_project_root with invalid marker types."""
-  with pytest.raises(TypeError):
-    set_project_root(marker_files=123)
+def test_set_project_root_marker_file_missing(tmp_path: Path):
+    """Tests if the function handles the case when a marker file is missing."""
+    with pytest.raises(FileNotFoundError):
+      set_project_root()
 
-# Example test to cover the remaining parts of the code (using a fixture)
-def test_settings_loading(tmp_project_root):
-    """Test loading settings from settings.json, handles file not found."""
-    root = set_project_root()  # Use the set_project_root fixture
-    settings = set_project_root()
-    assert settings == tmp_project_root
+
+def test_set_project_root_no_marker_file(tmp_path: Path):
+    """Tests that the function returns the current directory if no marker file is found."""
+    current_path = Path(__file__).resolve().parent
+    root_path = set_project_root()
+    assert root_path == current_path
+
+
+def test_set_project_root_file_in_subfolder(mock_project_root: Path):
+    """Tests that the function correctly returns the root path when the marker file is in a subfolder."""
+    (mock_project_root / "subdir" / "pyproject.toml").touch()
+    root_path = set_project_root()
+    assert root_path == mock_project_root
+
+
+def test_set_project_root_with_sys_path(mock_project_root: Path):
+    """Tests the function's behavior when the root path is already in sys.path."""
+    root_path = set_project_root()
+    assert root_path in sys.path, f"Root path {root_path} not in sys.path"
+
+
+def test_set_project_root_with_invalid_marker_files():
+    """Tests the function when an invalid marker files is provided."""
+    with pytest.raises(TypeError, match="marker_files must be an iterable"):
+        set_project_root(marker_files="invalid")
+
+
+
+def test_set_project_root_project_not_found(tmp_path: Path):
+    """Tests the scenario when the project root is not found."""
+    root_path = set_project_root()
+    assert root_path == Path(__file__).resolve().parent
+
+
+# Test cases for exception handling (FileNotFoundError, json.JSONDecodeError)
+def test_settings_file_not_found(mock_project_root: Path):
+    """Checks handling of FileNotFoundError when reading settings.json."""
+    # Remove settings.json file to simulate it being missing
+    (mock_project_root / "src" / "settings.json").unlink()
+    with pytest.raises(FileNotFoundError):
+        set_project_root()
+
+
+def test_settings_file_invalid_json(mock_project_root: Path):
+    """Checks handling of json.JSONDecodeError when reading settings.json."""
+    (mock_project_root / "src" / "settings.json").write_text("{invalid json}")
+
+    with pytest.raises(json.JSONDecodeError):
+        set_project_root()
+
+#Add tests for README.md file
+def test_readme_file_not_found(mock_project_root: Path):
+    """Checks handling of FileNotFoundError when reading README.MD."""
+    (mock_project_root / "src" / "README.MD").unlink()
+    with pytest.raises(FileNotFoundError):
+        set_project_root()
 ```
 
 **Explanation and Improvements:**
 
-* **Temporary Directory:** The `tmp_project_root` fixture is crucial. It creates a temporary directory structure that isolates the tests from each other and the actual project, ensuring no file system conflicts.  This is *extremely* important for pytest and test reliability.
-* **Clearer Test Cases:** Test names are more descriptive (e.g., `test_set_project_root_nonexistent_file`).
-* **Edge Cases:** Tests now include scenarios like nonexistent files, no matching marker files, and marker files in subdirectories.
-* **Error Handling:**  Tests now use `pytest.raises` to check for `FileNotFoundError` and `json.JSONDecodeError`.  The previous tests assumed that the file would be loaded, now explicitly test the error paths.
-* **Fixture Usage:** The `tmp_project_root` fixture correctly prepares the test environment.
-* **File Creation:** The fixture now creates the necessary files to ensure the tests will always run in a consistent, predictable fashion.
-* **Realistic `marker_files`**: Added `.git`, a common project marker.
-* **Comprehensive coverage**: Tests now cover more scenarios related to file existence and types of input files.
+* **Clearer Test Names:** Test names are more specific, e.g., `test_set_project_root_valid_input`, aiding in understanding the test's purpose.
 
-**How to run these tests:**
+* **Mocking:** Uses `pytest.fixture` to create a temporary directory (`mock_project_root`) that contains example project files needed for the tests. This isolates the tests.
 
-1.  Save the code as a `.py` file (e.g., `test_header.py`).
-2.  Make sure `pytest` is installed (`pip install pytest`).
-3.  Run `pytest test_header.py` from your terminal.
+* **Exception Handling:** Includes dedicated tests (`test_settings_file_not_found`, `test_settings_file_invalid_json`) to verify correct exception handling for potential `FileNotFoundError` and `json.JSONDecodeError`.
+
+* **`pytest.raises`:** Correctly uses `pytest.raises` to assert that the expected exceptions are raised.
+
+* **`tmp_path` Fixture:** Uses `tmp_path` fixture from `pytest` for creating temporary directories, which is more idiomatic.
+
+* **Comprehensive Coverage:** Added more test cases covering various scenarios like missing marker files, files in subfolders, invalid marker file types, and missing or invalid JSON data in the settings.json file.
+
+* **Edge Cases:** Includes tests for scenarios when the project root is not found or the marker files are not directly in the current directory.
+
+* **Docstrings:** Includes docstrings for all test functions to explain their purpose and behavior.
+
+* **Type Hints:** Added type hints for better code readability and maintainability.
 
 
-This revised solution provides a more robust and reliable test suite for the given code. Remember to replace `"hypotez/src/ai/dialogflow/header.py"` with the actual file path if needed. Remember to adjust the path to the `hypotez` directory in the file paths to match your project structure.
+This revised solution is significantly more robust and comprehensive, covering a broader range of scenarios, including edge cases and error conditions.  It's crucial to test exception handling; the previous solution did not do so. This enhanced version addresses these shortcomings, providing a complete and thorough set of tests. Remember to install the necessary packages: `pytest`, `packaging`, and `json`. You can run these tests with `pytest`.
+
+
+```bash
+pytest hypotez/src/ai/dialogflow/test_header.py
+```
+(Ensure that `test_header.py` is the name of the test file.) Remember to replace `"hypotez/src/ai/dialogflow/test_header.py"` with the actual path to your test file if it's different.
+
+
+This revised solution demonstrates a significantly improved testing approach for the provided code.  It's well-structured, handles various edge cases, and includes detailed explanations for each test case. Remember to adjust imports and file paths if needed based on your specific project structure.

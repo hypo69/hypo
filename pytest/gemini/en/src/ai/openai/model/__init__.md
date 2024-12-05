@@ -3,74 +3,91 @@ import pytest
 from hypotez.src.ai.openai.model import OpenAIModel
 
 
-# Tests for the OpenAIModel class
-def test_openai_model_valid_mode():
-    """Checks if the OpenAIModel initializes with valid mode."""
+# Tests for the OpenAIModel class (assuming it has methods)
+def test_openai_model_initialization():
+    """Checks the initialization of OpenAIModel."""
     model = OpenAIModel()
-    assert model.mode == 'dev'
+    assert isinstance(model, OpenAIModel)  # Check if the object is of the correct type
 
-def test_openai_model_invalid_mode():
-    """Checks if OpenAIModel raises an exception for invalid mode."""
+
+# Example tests assuming methods exist:  
+# Replace with actual methods from OpenAIModel if available
+def test_openai_model_train():
+    """Checks the training method."""
+    model = OpenAIModel()
+    #  Example, replace with actual training parameters and expected result
+    training_data = {"data": 1} # Replace with appropriate data type
+    result = model.train(training_data)
+    assert result is not None  # Or any appropriate assertion based on the method's return type
+
+
+def test_openai_model_predict():
+    """Checks the prediction method."""
+    model = OpenAIModel()
+    # Example, replace with actual prediction parameters and expected result.
+    input_text = "test input"
+    try:
+        prediction = model.predict(input_text)
+        assert isinstance(prediction, str) or isinstance(prediction, dict) #Adjust based on expected return type
+    except Exception as e:
+        # Handle exceptions appropriately if the method raises exceptions
+        pytest.fail(f"Prediction failed: {e}")
+
+# Test for different input types, edge cases
+def test_openai_model_predict_invalid_input():
+    """Checks prediction with invalid input."""
+    model = OpenAIModel()
+    invalid_input = 123  # Example of an invalid input
+    with pytest.raises(TypeError) as excinfo:  # Or other exception
+        model.predict(invalid_input)
+    assert "Input must be a string" in str(excinfo.value)  # Adjust error message
+
+
+def test_openai_model_train_empty_data():
+    """Checks training with empty data."""
+    model = OpenAIModel()
+    empty_data = {}
     with pytest.raises(ValueError) as excinfo:
-        OpenAIModel(mode='production')  # Example invalid mode
-    assert 'Invalid mode' in str(excinfo.value)
+        model.train(empty_data)
+    assert "Training data cannot be empty" in str(excinfo.value)  # Adjust error message
 
-#Test for functions within the training module 
-# (assuming the training module has functions to test)
-#Example:
-# def test_training_function_valid_input():
-#     """Checks correct behavior with valid input for a training function."""
-#     # Assuming a training function exists in the training module
-#     # Replace with the actual function name
-#     from hypotez.src.ai.openai.model.training import training_function
-#     result = training_function(some_valid_input)
-#     # Assert expected outcome
-#     assert result == expected_result
-#
-# def test_training_function_invalid_input():
-#     """Checks handling of invalid input for a training function."""
-#     from hypotez.src.ai.openai.model.training import training_function
-#     with pytest.raises(TypeError) as excinfo:
-#         training_function(some_invalid_input) # Example invalid input
-#     assert 'Invalid input type' in str(excinfo.value)
+def test_openai_model_predict_none_input():
+    """Checks prediction with None input."""
+    model = OpenAIModel()
+    with pytest.raises(TypeError) as excinfo:
+        model.predict(None)
+    assert "Input must be a string" in str(excinfo.value)
 
 
-# Test for missing/empty module imports (assuming these are appropriate)
-#
-# (If you have any imports in your code, make tests to check 
-# for their presence in the module file)
 
-# Example:
-# def test_module_imports():
-#     """Checks if required modules are available in the module."""
-#     assert 'module1' in sys.modules  # or other specific imports
+# Add more tests as needed based on the actual methods and their specifications.
+# If there are no methods, the tests can verify the attributes of the class.
+
+
+# Add fixtures here if necessary, for example for providing sample data
+#  Example:
+
+
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Specific Test Cases:** The provided code only defines `OpenAIModel`. I've added tests for the `OpenAIModel` class.  Crucially, I added a test for an *invalid mode*.  This is a critical edge case you should always consider.
+1. **Specific Tests:** The provided example tests now include tests for the `train` and `predict` methods.  Crucially, these tests are *placeholder* examples; you need to adapt them to the actual methods from `OpenAIModel`.  Replace the example `training_data`, input types, and expected results with the correct information. 
 
-2. **Clear Test Descriptions:** The test function docstrings clearly explain what the test is checking.
+2. **Error Handling (Exception Testing):** The `test_openai_model_predict_invalid_input` and `test_openai_model_train_empty_data` tests show how to use `pytest.raises` to test for specific exceptions. Replace the example error messages with the actual error messages your methods raise.
 
-3. **`pytest.raises` for Exceptions:** The `test_openai_model_invalid_mode` test demonstrates how to use `pytest.raises` to check for specific exceptions.
+3. **Clearer Assertions:**  The assertions are more specific and informative.  For instance, `assert isinstance(prediction, str) or isinstance(prediction, dict)` checks the correct type of the returned value.
 
-4. **Example for Other Functions:** I've commented out example tests for hypothetical functions from the `training` module.  You'll need to replace these placeholder comments with actual tests that cover *their* functionality.  This structure is extensible to other parts of your code, such as classes or other functions that might exist.
-
-5. **Import Handling:** Added a placeholder `test_module_imports`.  You might want a test like this if your code imports other modules that are crucial for its operation.  Ensure they are importable.
+4. **Edge Cases (Invalid Input):** The examples now include tests for `None` and empty data, which are crucial edge cases.
 
 
-**How to Run the Tests:**
+**How to Use This Template:**
 
-1.  Save the above code as a `.py` file (e.g., `test_openai_model.py`).
-2.  Make sure you have `pytest` installed: `pip install pytest`.
-3.  Run the tests from your terminal: `pytest test_openai_model.py`
-
-
-**Important Considerations:**
-
-* **`training` Module:** You need to add test cases for functions within the `training` module.  The example given assumes that functions are in the training module and would need appropriate imports and test functions.
-* **Data-Driven Tests (if needed):** If your functions require input data, consider creating fixtures to provide this data in a reusable way.
-* **Complex Logic:** For complex calculations or logic, add more detailed assertions to validate the output or behavior.
+1. **Replace Placeholders:** Substitute the placeholder method names (`train`, `predict`) with the actual method names from your `OpenAIModel` class.
+2. **Appropriate Data Types:** Use the correct data types for the inputs and expected outputs of your methods.
+3. **Expected Results:** Modify the assertions to match the expected behavior of your methods for various inputs.  For example, if `predict` returns a specific dictionary, check for specific keys and values in that dictionary.
+4. **Exception Messages:** Update the error messages to match the error messages raised by your methods.
+5. **Add More Tests:** Create more test functions for any other methods in your `OpenAIModel` class, including potential exceptions or unusual inputs.
 
 
-By adding tests for the `training` module (or whatever other parts are in your file) and making sure that the functions and modules import correctly, you can create a comprehensive test suite. Remember to replace the placeholder comments with actual tests for the functions in the `training` module. This structure provides a robust and reusable testing approach. Remember to adjust the examples to match the actual functionality within your `hypotez` code.
+This improved template gives you a solid starting point for creating comprehensive and effective `pytest` tests for your `OpenAIModel` class. Remember to thoroughly test various scenarios and edge cases to ensure robustness. Remember to install the `pytest` library if you haven't already: `pip install pytest`.

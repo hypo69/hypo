@@ -62,7 +62,7 @@ from src.logger import logger
 
 from src.utils.file import get_filenames, read_text_file, get_directory_names
 from src.utils.jjson import j_dumps, j_loads_ns, j_loads
-from src.utils.convertors import csv2dict
+from src.utils.convertors.csv import csv2dict
 from src.utils.file import save_text_file
 from src.utils.printer import pprint
 

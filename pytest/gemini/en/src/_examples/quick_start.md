@@ -2,12 +2,12 @@
 import pytest
 import hypotez.src._examples.quick_start as qs
 
-# Tests for the MODE constant
+# No fixtures needed for this example.  The code doesn't use any.
+
 def test_mode_value():
-    """Checks if the MODE constant is correctly defined."""
+    """Checks the value of the MODE constant."""
     assert qs.MODE == 'dev'
 
-# No other functions or classes are present in the provided code.
-# Therefore, no further test cases are needed.  If more functions
-# were present, test cases would be written here.
+# No other functions or classes to test in the provided code.
+# Add tests for any additional functions/classes if present.
 ```

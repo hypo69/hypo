@@ -15,7 +15,7 @@ from types import SimpleNamespace
 from requests import get, post
 ...
 from src import gs
-from src.utils import jjson, j_loads, j_dumps,  pprint
+from src.utils.jjson import j_loads_ns, j_loads, j_dumps,  pprint
 from src.utils.convertor.xls2dict import xls2dict
 from src.utils.convertor.json2csv_dict2csv import json2csv
 from src.logger import logger

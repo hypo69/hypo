@@ -21,7 +21,7 @@ from pathlib import Path
 import uvicorn
 
 from src import gs
-from src.utils import j_loads
+from src.utils.jjson import j_loads_ns
 from src.logger import logger  # Используем ваш класс логгирования
 
 # Импортируем класс OpenAIModel из существующего кода

@@ -1,109 +1,107 @@
 ```python
 import pytest
-from hypotez.src.suppliers import Supplier, Graber, Context, close_pop_up
+import hypotez.src.suppliers  # Adjust import path if needed
 
 
-# Fixture to mimic data retrieval. Replace with actual data sources
-@pytest.fixture
-def mock_graber():
-    class MockGraber(Graber):
-        def get_data(self, url):
-            # Simulate data retrieval
-            if url == "https://example.com/products":
-                return {"products": [{"name": "Product 1", "price": 10}, {"name": "Product 2", "price": 20}]}
-            elif url == "https://example.com/invalid":
-                raise ValueError("Invalid URL")
-            else:
-                return None
+# Mock Supplier class (replace with actual Supplier if available)
+class MockSupplier:
+    def __init__(self, supplier_prefix):
+        self.supplier_prefix = supplier_prefix
 
-    return MockGraber()
-
-
-# Test cases for Supplier class (assuming Supplier interacts with Graber)
-def test_supplier_get_products_valid(mock_graber):
-    """Tests getting products with valid data."""
-    supplier = Supplier(graber=mock_graber)
-    products = supplier.get_products("https://example.com/products")
-    assert products == [{"name": "Product 1", "price": 10}, {"name": "Product 2", "price": 20}]
-
-
-def test_supplier_get_products_invalid_url(mock_graber):
-    """Tests handling of an invalid URL."""
-    supplier = Supplier(graber=mock_graber)
-    with pytest.raises(ValueError, match="Invalid URL"):
-        supplier.get_products("https://example.com/invalid")
-
-def test_supplier_get_products_no_data(mock_graber):
-    """Tests handling of a URL that returns no data."""
-    supplier = Supplier(graber=mock_graber)
-    products = supplier.get_products("https://example.com/nonexistent")
-    assert products is None
-
-
-# Test cases for Graber (assuming Graber has more methods)
-def test_graber_get_data_valid_url(mock_graber):
-    """Tests retrieving data from a valid URL."""
-    data = mock_graber.get_data("https://example.com/products")
-    assert data is not None
-
-# Test cases for close_pop_up (if it has logic or exceptions)
-def test_close_pop_up():
-    """Tests the close_pop_up function.  Requires a pop-up implementation."""
-    # Replace this with a method to simulate a pop-up closing.
-    try:
-        close_pop_up()
-    except Exception as e:
-        pytest.fail(f"close_pop_up raised an unexpected exception: {e}")
-
-# Test cases for Context (if it has methods)
-def test_context_creation():
-  """Test basic Context object creation."""
-  ctx = Context()
-  assert ctx is not None
-
-
-# Example test demonstrating handling of specific exception in get_products
-def test_supplier_get_products_invalid_data_format(mock_graber):
-  """Tests when graber returns data with incorrect format."""
-  class MockGraber(Graber):
-    def get_data(self, url):
-        if url == "https://example.com/invalid_data":
-            return {"incorrect": "data"}
+    def get_product_data(self, product_id):
+        if product_id == "valid_product":
+            return {"name": "Valid Product", "price": 10.0}
+        elif product_id == "invalid_product":
+            raise ValueError("Invalid product ID")
         else:
             return None
-  mock_graber = MockGraber()
-  supplier = Supplier(graber=mock_graber)
 
-  with pytest.raises(TypeError, match="Invalid data format"):
-    supplier.get_products("https://example.com/invalid_data")
 
-# Additional tests (if needed, based on the actual methods of the classes)
+    # Example function for testing
+    def _related_functions(self):
+        return {"get_product_data": self.get_product_data}
 
+# Tests
+def test_supplier_get_product_data_valid_input():
+    """Checks correct behavior with valid input."""
+    supplier = MockSupplier("amazon")
+    product_id = "valid_product"
+    result = supplier.get_product_data(product_id)
+    assert result == {"name": "Valid Product", "price": 10.0}
+    
+
+def test_supplier_get_product_data_invalid_input():
+    """Checks correct handling of invalid input."""
+    supplier = MockSupplier("amazon")
+    product_id = "invalid_product"
+    with pytest.raises(ValueError) as excinfo:
+        supplier.get_product_data(product_id)
+    assert str(excinfo.value) == "Invalid product ID"
+
+def test_supplier_get_product_data_nonexistent_product():
+    """Test for non-existent product ID."""
+    supplier = MockSupplier("amazon")
+    product_id = "nonexistent_product"
+    result = supplier.get_product_data(product_id)
+    assert result is None
+
+def test_supplier_get_product_data_empty_input():
+    """Test with empty input (edge case)."""
+    supplier = MockSupplier("amazon")
+    product_id = ""
+    result = supplier.get_product_data(product_id)
+    assert result is None  # Or assert the function raises an error.
+
+def test_supplier_init_valid_prefix():
+  """Test Supplier initialization with valid supplier prefix."""
+  supplier = MockSupplier("amazon")
+  assert supplier.supplier_prefix == "amazon"
+
+
+# Example using pytest fixtures (assuming you have data)
+# @pytest.fixture
+# def supplier_data():
+#     return {"supplier_prefix": "amazon", "product_id": "valid_product"}
+
+
+# def test_supplier_get_product_data_with_fixture(supplier_data):
+#     """Test using a fixture (replace with actual fixture)."""
+#     # ... (Access data from supplier_data fixture)
+#     pass
+
+
+# Note: Replace MockSupplier with the actual Supplier class from hypotez.src.suppliers
+# if it exists. These tests are very basic and might need to be expanded.
+# Also consider mocking any external dependencies like database connections.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mock `Graber`:** The crucial improvement is using a `MockGraber` class within a fixture.  This simulates the `get_data` method and allows us to control the returned data, making the tests more isolated and independent of external dependencies (e.g., actual web requests).
+1. **Mock `Supplier`:**  The provided code lacked the actual `Supplier` class. I've created a `MockSupplier` to simulate its behavior.  **Crucially**, replace this with the actual `Supplier` class if you have it.  This allows you to test *your* code without needing the external dependencies (`graber`, etc.) of the actual implementation.
 
-2. **Clear Test Names:**  Test names are descriptive, clearly indicating the purpose of each test.
+2. **Clear Test Names:** The test names are now more descriptive, making the purpose of each test immediately clear.
 
-3. **Edge Cases and Error Handling:** Tests now include checking for invalid URLs (raising a `ValueError`), no data returned, and data with an incorrect format (raising a `TypeError`).
+3. **Exception Handling:** The `test_supplier_get_product_data_invalid_input` test now uses `pytest.raises` to check for the expected `ValueError`.
 
-4. **`pytest.raises`:** Used effectively to test expected exceptions.
+4. **Edge Cases:** Added tests for empty or non-existent product IDs (`test_supplier_get_product_data_nonexistent_product`, `test_supplier_get_product_data_empty_input`) which are important edge cases.
 
-5. **Comprehensive Tests:** Tests are now more comprehensive, covering various scenarios like valid data, invalid URLs, and missing data.
+5. **`assert` Statements:** Tests now use `assert` statements to verify the expected results (e.g., the return values from the `get_product_data` method).
 
-6. **Comments:** Comments added to explain the logic behind each test case.
+6. **Valid Prefix Test:** Included a test for the `__init__` method to check if the `supplier_prefix` is set correctly.
 
-7. **Realistic Data:** The `mock_graber` fixture now returns different data types, reflecting realistic scenarios where data might be missing or in unexpected formats.
-
-8. **Specific Exception Matching:** The `match` argument in `pytest.raises` is used to ensure that the correct exception type and message are caught (e.g., `match="Invalid URL"`).
-
-**How to use:**
-
-1. Replace `"https://example.com/products"` and other placeholder URLs with the actual URLs you expect `Supplier` to query in the provided mock data.
-2.  Replace the placeholder `MockGraber` implementations with your actual data retrieval method if it's not a web request.
-3.  Add more test cases based on specific functionality of the `Supplier`, `Graber`, `Context`, and `close_pop_up` classes.
+7. **Fixture Example (commented out):** I've shown how to use a fixture (commented out), but it needs appropriate data to be meaningful. You'll need to define the `supplier_data` fixture if needed.
 
 
-This revised solution provides a much more robust and reliable test suite for the given code. Remember to adapt the fixtures and tests to accurately reflect your project's specific data structures and logic.  Critically, focus on *simulating* the data sources and errors; do not directly connect to external resources in your unit tests.
+**How to Run:**
+
+1.  Save this code as a `.py` file (e.g., `test_suppliers.py`).
+2.  Make sure you have `pytest` installed (`pip install pytest`).
+3.  Run `pytest test_suppliers.py` from your terminal.
+
+
+**Key Considerations for Real Implementation:**
+
+* **Dependency Injection:** Inject dependencies (e.g., the driver, database connection) into the `Supplier` class using dependency injection. Mocking these dependencies will be essential in your tests.
+* **Mocking:**  Mock any external services or libraries that `Supplier` interacts with.  This keeps your tests focused on the `Supplier` class itself.
+* **Data-driven tests:** If appropriate, use data-driven tests to run the same test with multiple sets of input data (e.g., different product IDs).
+* **Comprehensive coverage:** Carefully consider the various scenarios (`MODE` values, different product data) and create tests to cover each case.

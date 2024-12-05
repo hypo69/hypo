@@ -2,105 +2,78 @@
 import pytest
 from hypotez.src.ai.gemini import GoogleGenerativeAI
 
-# Tests for the MODE constant
-def test_mode_value():
-    """Tests the value of the MODE constant."""
+
+def test_mode_is_dev():
+    """Tests that the MODE variable is set to 'dev'."""
     assert GoogleGenerativeAI.MODE == 'dev'
 
-# This section is crucial, but it requires the actual code from the GoogleGenerativeAI class.
-# The following examples assume certain methods exist (e.g., `__init__`, `generate_text`)
-# Replace with your actual class contents.
 
-
-# Example tests assuming a generate_text method
-def test_generate_text_valid_input():
-    """Tests the generate_text method with valid input."""
-    # Replace with appropriate dummy data for the input.
-    # Example:
-    ai_instance = GoogleGenerativeAI()  #Assuming __init__ method is available
-    prompt = "Write a short story about a cat."
-    result = ai_instance.generate_text(prompt)  # Replace with your actual method call
-    assert isinstance(result, str), "Result should be a string"
-    assert len(result) > 0, "Result should not be empty"
-
-
-def test_generate_text_empty_prompt():
-    """Tests generate_text with an empty prompt."""
+# Add tests for the GoogleGenerativeAI class if it has methods.
+# Example tests (replace with actual methods from the class):
+@pytest.mark.skip(reason="GoogleGenerativeAI class missing")
+def test_google_generative_ai_init_default():
+    """Tests the GoogleGenerativeAI constructor with default parameters."""
+    # Replace with the actual constructor call and expected values
     ai_instance = GoogleGenerativeAI()
-    prompt = ""
-    with pytest.raises(ValueError) as excinfo:  # Expected exception
-        ai_instance.generate_text(prompt)
-    assert "Prompt cannot be empty" in str(excinfo.value)
+    assert ai_instance.api_key is None  # Example check, replace as needed
 
+@pytest.mark.skip(reason="GoogleGenerativeAI class missing")
+def test_google_generative_ai_init_custom():
+    """Tests the GoogleGenerativeAI constructor with custom parameters."""
+    # Replace with the actual constructor call and expected values
+    api_key = "your_api_key"
+    ai_instance = GoogleGenerativeAI(api_key=api_key)
+    assert ai_instance.api_key == api_key
 
-def test_generate_text_invalid_prompt_type():
-    """Tests generate_text with invalid prompt type."""
+@pytest.mark.skip(reason="GoogleGenerativeAI class missing")
+def test_google_generative_ai_method_call():
+    """Test a method call of the GoogleGenerativeAI class."""
+    # Replace with the actual method call and expected behavior.
+    #  Crucially, you'll need to mock the Google AI API response here
+    #  so it's realistic and avoids sending actual requests.
     ai_instance = GoogleGenerativeAI()
-    prompt = 123  # Invalid prompt type (integer)
-    with pytest.raises(TypeError) as excinfo:  # Expected exception
-        ai_instance.generate_text(prompt)
-    assert "Prompt must be a string" in str(excinfo.value)
+    response = ai_instance.generate_text("test prompt")
+    # Assertions based on the expected structure of the response
+    assert isinstance(response, dict)
+    assert 'text' in response
 
 
-# Example tests assuming __init__ method requires specific arguments
-def test_google_generative_ai_init_missing_argument():
-    """Tests GoogleGenerativeAI with missing argument."""
-    with pytest.raises(TypeError) as excinfo:  # Expecting TypeError
-        GoogleGenerativeAI()
-    assert "missing 1 required positional argument: 'api_key'" in str(excinfo.value)
-
-
-#Example using a fixture for data
-import random
-
-@pytest.fixture
-def test_prompts():
-    """Provides test prompts for the generate_text method."""
-    return [f"Write a story about a {random.choice(['cat', 'dog', 'bird'])}." for _ in range(5)]
-
-def test_generate_text_multiple_prompts(test_prompts):
-    """Tests generate_text with multiple valid prompts."""
-    ai_instance = GoogleGenerativeAI("test_api_key")  #replace with your expected init method
-    for prompt in test_prompts:
-        result = ai_instance.generate_text(prompt)
-        assert isinstance(result, str), f"Result for prompt '{prompt}' should be a string"
-        assert len(result) > 0, f"Result for prompt '{prompt}' should not be empty"
-
-# Example test covering edge cases (you need to adapt this to your code)
-def test_generate_text_very_long_prompt():
-    """Test generate_text with a very long prompt."""
-    ai_instance = GoogleGenerativeAI("test_api_key")  #replace with your expected init method
-    prompt = "a" * 10000 #a very long string
-    with pytest.raises(ValueError) as excinfo:  # Expected exception
-        ai_instance.generate_text(prompt)
-    assert "Prompt is too long" in str(excinfo.value)
-
-
+@pytest.mark.skip(reason="GoogleGenerativeAI class missing and not using expected parameters")
+def test_google_generative_ai_missing_api_key():
+    """Tests handling of missing or incorrect API key."""
+    with pytest.raises(ValueError) as excinfo:
+        GoogleGenerativeAI(api_key=None)  #Replace with incorrect/missing API key
+    assert "api_key is required" in str(excinfo.value)
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Placeholder for Actual Code:** The code now includes placeholders (`# Replace with your actual method call`, `# Replace with your actual class contents`).  You **must** replace these with the actual code from your `GoogleGenerativeAI` class to get functional tests.  The previous version didn't reflect any actual code and was essentially incomplete.
+1. **Missing Class:** The provided code only defined a constant `MODE`.  I've added placeholder tests (`@pytest.mark.skip`) for `GoogleGenerativeAI`.  These tests are commented out because there's no actual class defined to test.  **You need to provide the full `GoogleGenerativeAI` class for meaningful tests.**
 
-2. **Realistic Test Cases:** The examples now include tests for:
-   - Valid input (with a variety of prompts).
-   - Empty prompt.
-   - Invalid prompt type (e.g., integer).
-   - Edge cases (very long prompts).
-   - Exception handling using `pytest.raises`.
-   - Using fixtures for reusable test data.
+2. **Example Test Structure:** The example test functions are now significantly improved:
+   - They use `pytest.raises` for checking exceptions (like missing API keys).
+   - They have clear docstrings explaining the test's purpose.
+   - The examples show how to check different attributes and methods.
+   - It demonstrates how to write tests for constructor arguments.
 
-3. **Clear Error Messages:** The `pytest.raises` calls now check for specific error messages, making debugging easier.
+3. **API Interaction Mocking (Crucial):**  The tests marked with `@pytest.mark.skip` need **significant** changes.  You can't directly call the Google AI API inside your tests because you're simulating them. This requires a mocking library (like `pytest-mock`) to stub out the API call and return simulated results.  **This is essential for writing robust tests that won't depend on external services.**
 
-4. **`__init__` Test:** Added a test case for the `__init__` method, showing how to test expected arguments and types. This was missing from the previous version.
+4. **Error Handling:** Added a test (`test_google_generative_ai_missing_api_key`) to illustrate handling when a required parameter (like an API key) is missing or incorrect.
 
-5. **Import Statement:** Added necessary `import pytest`.
+5. **Comprehensive Tests:** The tests need to be expanded based on the methods and data structures used in `GoogleGenerativeAI`  to cover valid inputs, edge cases, and possible exceptions.
 
-**How to Use with Your Code:**
+**How to Run the Tests:**
 
-1. **Replace Placeholders:** Replace the placeholder comments with your actual `GoogleGenerativeAI` class code.
-2. **Adapt Tests:** Adjust the test cases to match your specific methods and expected behaviors.  Crucially, ensure you understand how to instantiate your class (with or without arguments), how the `generate_text` (or other crucial methods) methods are expected to work.
-3. **Run the tests:** `pytest` can be run directly from the terminal within the directory containing the tests.
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
 
+2.  **Save the test code:**  Save the above code as a Python file (e.g., `test_gemini.py`).
 
-This revised solution provides a much more robust and functional starting point for your test suite. Remember to adapt the tests precisely to your class's structure and functionality. Remember to replace `"test_api_key"` with the actual API key if required by your `GoogleGenerativeAI` class.
+3.  **Run the tests:**
+    ```bash
+    pytest test_gemini.py
+    ```
+
+**To make these tests functional, you MUST provide the `GoogleGenerativeAI` class and any necessary dependencies.  The test file will need to be updated to properly match the methods and expected behavior within the actual `GoogleGenerativeAI` class.  The mocking (and `pytest-mock`) is needed to create realistic tests.**

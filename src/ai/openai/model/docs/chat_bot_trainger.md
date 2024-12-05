@@ -15,7 +15,7 @@
 import discord
 from discord.ext import commands
 from src.ai.model.training import Model
-from src.utils import j_loads, j_dumps
+from src.utils.jjson import j_loads_ns, j_dumps
 import logging
 
 # Ваш API ключ OpenAI
@@ -109,7 +109,7 @@ bot.run('your-discord-bot-token')
 import discord
 from discord.ext import commands
 from src.ai.model.training import Model
-from src.utils import j_loads, j_dumps
+from src.utils.jjson import j_loads_ns, j_dumps
 import logging
 
 # Ваш API ключ OpenAI

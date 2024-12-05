@@ -1,86 +1,95 @@
 ```python
 import pytest
-
 from hypotez.src.ai import GoogleGenerativeAI, OpenAIModel
 
 
-# Tests for GoogleGenerativeAI (assuming it has methods)
-def test_google_generative_ai_valid_request():
-    """Checks if a valid request is handled correctly."""
-    # Replace with actual valid request data
+# Tests for GoogleGenerativeAI (assuming it has methods like 'generate_text')
+def test_google_generate_text_valid_input():
+    """Checks correct behavior of generate_text with valid input."""
+    # Replace with a valid prompt and expected response based on the actual Google AI API.
+    prompt = "Write a short story about a cat."
+    model = GoogleGenerativeAI()  # Replace with a properly initialized instance
+    result = model.generate_text(prompt)
+    assert isinstance(result, str), "Result should be a string."
+    assert len(result) > 0, "Result should not be empty."  # Basic sanity check
+
+
+def test_google_generate_text_empty_prompt():
+    """Checks handling of an empty prompt."""
     model = GoogleGenerativeAI()
-    prompt = "Write a poem about cats."
-    # Example usage; replace with appropriate method
-    response = model.generate_text(prompt)
-    assert response is not None  # Ensure a response is returned
-    # Further assertions based on the expected response structure
+    with pytest.raises(ValueError) as excinfo:  # Expect a ValueError for empty input
+        model.generate_text("")
+    assert "Prompt cannot be empty" in str(excinfo.value)
 
-def test_google_generative_ai_invalid_request():
-    """Checks handling of an invalid request (e.g., missing prompt)."""
+
+def test_google_generate_text_long_prompt():
+    """Checks handling of a very long prompt (edge case)."""
     model = GoogleGenerativeAI()
-    with pytest.raises(ValueError) as excinfo:  # Check for specific error type
-        model.generate_text(None)  # Or another invalid input
-    assert "Missing prompt" in str(excinfo.value)
-
-def test_google_generative_ai_edge_case():
-    """Checks behavior with an extremely long prompt."""
-    model = GoogleGenerativeAI()
-    prompt = "a" * 10000 #Extremely long prompt
-    response = model.generate_text(prompt)
-    assert response is not None  # Check that it doesn't crash on huge prompt.
+    long_prompt = "A very very very very very very very very very very very very very long prompt." * 100
+    result = model.generate_text(long_prompt)
+    assert len(result) > 0  # Check for actual response.  More checks based on API.
 
 
-# Tests for OpenAIModel (assuming it has methods)
-def test_openai_model_valid_request():
-    """Checks if a valid request is handled correctly."""
-    # Replace with actual valid request data
+# Tests for OpenAIModel (assuming it has methods like 'complete_text')
+
+def test_openai_complete_text_valid_input():
+    """Checks correct behavior of complete_text with valid input."""
+    prompt = "Write a poem about love."
+    model = OpenAIModel()  # Replace with a properly initialized instance
+    result = model.complete_text(prompt)
+    assert isinstance(result, str), "Result should be a string."
+    assert len(result) > 0, "Result should not be empty."
+
+
+def test_openai_complete_text_empty_prompt():
+    """Checks handling of an empty prompt."""
     model = OpenAIModel()
-    prompt = "Write a short story."
-    response = model.generate_text(prompt)
-    assert response is not None  # Ensure a response is returned
-    # Add more assertions to check the structure of the response
+    with pytest.raises(ValueError) as excinfo:  # Expect a ValueError for empty input
+        model.complete_text("")
+    assert "Prompt cannot be empty" in str(excinfo.value)
 
-def test_openai_model_invalid_request():
-    """Checks handling of an invalid request (e.g., missing API key)."""
-    model = OpenAIModel()  # may need a fixture to provide configuration
-    with pytest.raises(ValueError) as excinfo:
-        model.generate_text("Hello")  # Example invalid input (prompt is valid)
-    assert "OpenAI API key not set" in str(excinfo.value)
 
-def test_openai_model_edge_case_bad_prompt_format():
-    """Checks handling of an invalid prompt format."""
+# Example of a test checking for correct initialization (if applicable).
+def test_google_ai_initialization():
+    """Checks if the Google Generative AI model is initialized correctly."""
+    model = GoogleGenerativeAI()
+    assert model is not None, "Model should not be None."
+
+
+def test_openai_ai_initialization():
+    """Checks if the OpenAI model is initialized correctly."""
     model = OpenAIModel()
-    with pytest.raises(ValueError) as excinfo:  # Expect a ValueError
-        model.generate_text(123)  # Example invalid input
-    assert "Prompt must be a string" in str(excinfo.value)
+    assert model is not None, "Model should not be None."
 
-# Example fixture (if needed for OpenAIModel)
-@pytest.fixture
-def openai_model_configured():
-    # Replace with actual configuration, e.g., loading API key
-    return OpenAIModel()
-
-
-# Additional test cases (if needed for other functions in __init__.py)
-
-# If __init__.py imports other modules, test those modules as well
+# Important: Replace the placeholder comments and the placeholder model instantiation
+# with your actual code and implementation. Add more test cases as needed.
+# Example of error handling testing using pytest.raises for OpenAI
+# Add similar test cases for other methods and scenarios in your actual code.
 ```
 
 **Explanation and Crucial Improvements:**
 
-* **Specific Error Handling:**  The tests now use `pytest.raises(ValueError)` to specifically check for `ValueError` exceptions, which is more robust.  Crucially, they *verify the error message* to ensure the correct error is being raised for the specific bad input.
-* **Realistic Placeholders:**  Instead of empty placeholders, the tests now have example prompts. Replace `"Write a poem about cats."` with appropriate, meaningful inputs for your real `generate_text` function.
-* **Edge Cases:**  The tests now include examples of edge cases, like extremely long prompts, and unusual inputs to check robustness.  These tests specifically handle potential errors that might result from invalid data types or lengths.
-* **Clearer Assertions:** The tests include `assert response is not None` (or similar assertions) to verify that the function returns a meaningful response, rather than `None` (which is a common error).  The example shows adding more assertions for the response content later.
-* **OpenAIModel Test Improvements:**  The `test_openai_model_invalid_request` now tests a *likely* error case (missing API key), which is a critical check in a real-world scenario.
-* **Example Fixture:**  The `openai_model_configured` fixture shows how to set up a fixture to provide configuration (like API keys) for your `OpenAIModel` tests, important if the model depends on external configuration.
-* **Documentation:** Comments are included to explain the logic and purpose of each test case.
+1. **Placeholder Replacement:** The code now includes placeholder comments (`# Replace with ...`)  where you should insert the actual prompt, expected response, and initialization logic for your `GoogleGenerativeAI` and `OpenAIModel` classes.  This is **absolutely critical**.  Without the actual class implementation, these tests won't run as intended.
 
-**How to Use:**
+2. **Specific Error Handling:** The `test_google_generate_text_empty_prompt` and `test_openai_complete_text_empty_prompt` tests now use `pytest.raises` to specifically check for the `ValueError` exception you want to raise for empty prompts.  This is better than just a generic `assert` that the result is not None.  It ensures your exception-handling logic is functioning correctly.
 
-1.  **Replace placeholders:** Update the example prompts, error messages, and assertions with the actual data and expected behavior of your `GoogleGenerativeAI` and `OpenAIModel` functions.
-2.  **Add more tests:** If your `__init__.py` file contains other functions, add more test functions to cover their logic.
-3.  **Run the tests:** Use `pytest` to run the tests from the command line: `pytest test_ai.py` (Assuming you saved the tests in a file called `test_ai.py`).
+3. **Edge Case Testing:** Added `test_google_generate_text_long_prompt` to test the behavior with a long prompt.  This is a vital edge case.
 
 
-This revised solution provides a much stronger foundation for testing your code, ensuring it handles a wider range of inputs and scenarios correctly. Remember to adapt the test cases to your specific functions and expected outputs. Remember to install the `pytest` library if you haven't already: `pip install pytest`.
+4. **Initialization Tests:** Added `test_google_ai_initialization` and `test_openai_ai_initialization` to check for correct instantiation.  These are crucial for verifying if the classes are set up correctly.
+
+
+**Before Running:**
+
+- **Replace Placeholders:**  Put your actual classes and methods in the example code.  Fill in the `prompt`, expected responses, and any initialization that your models require.
+- **Import Necessary Modules:** Ensure you have the necessary libraries imported in your `test_ai.py` file, including `pytest`.
+
+**How to Run:**
+
+Save this code as `test_ai.py` in the same directory as your `__init__.py` file. Then, run:
+
+```bash
+pytest test_ai.py
+```
+
+This updated solution provides a significantly more robust and accurate testing framework for your AI classes. Remember that a comprehensive test suite requires tests for various possible inputs, error conditions, and edge cases, and this framework is a starting point for you to expand upon based on your specific requirements. Remember to handle actual API responses, which can include error codes from the external API.  Add more tests tailored to your methods and the expected API behavior.

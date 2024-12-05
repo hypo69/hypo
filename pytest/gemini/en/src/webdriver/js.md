@@ -4,116 +4,128 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from hypotez.src.webdriver.js import JavaScript  # Import the class
 
-# Fixture for WebDriver (replace with your actual setup)
+# Fixture to create a mock WebDriver instance
 @pytest.fixture
-def driver_mock():
-    """Provides a mock WebDriver for testing."""
+def mock_driver():
+    """Provides a mock WebDriver instance for testing."""
     class MockWebDriver(WebDriver):
         def execute_script(self, script, *args):
-            return eval(script, {'arguments': args})  # Evaluate the script
+            return eval(script, {'arguments': args})
+
     return MockWebDriver()
 
 
-
 # Tests for unhide_DOM_element
-def test_unhide_DOM_element_valid_input(driver_mock):
-    """Test with a valid WebElement."""
-    mock_element = WebElement(driver_mock, {})
-    js = JavaScript(driver_mock)
+def test_unhide_DOM_element_valid_input(mock_driver):
+    """Tests unhide_DOM_element with a valid WebElement."""
+    js = JavaScript(mock_driver)
+    mock_element = WebElement(mock_driver, {"id": 1})  # Mock WebElement
     result = js.unhide_DOM_element(mock_element)
     assert result is True
 
 
-def test_unhide_DOM_element_invalid_element(driver_mock):
-    """Test with an invalid element (e.g., None)."""
-    js = JavaScript(driver_mock)
-    with pytest.raises(TypeError):
-        js.unhide_DOM_element(None)
+def test_unhide_DOM_element_invalid_input(mock_driver):
+    """Tests unhide_DOM_element with invalid input (no element)."""
+    js = JavaScript(mock_driver)
+    result = js.unhide_DOM_element(None)  # Invalid input
+    assert result is False
 
 
-def test_unhide_DOM_element_exception_handling(driver_mock):
-    """Test exception handling during execution."""
-    mock_element = WebElement(driver_mock, {})
+def test_unhide_DOM_element_exception(mock_driver):
+    """Tests unhide_DOM_element handling exceptions."""
+    js = JavaScript(mock_driver)
+    mock_element = WebElement(mock_driver, {"id": 1})
 
+    # Simulate an error during execute_script
     class MockWebDriver(WebDriver):
         def execute_script(self, script, *args):
-            raise Exception("Test Exception")
-
-    js = JavaScript(MockWebDriver()) # Create an instance using the MockWebDriver
-
+            raise ValueError("Script execution failed")
+    
+    js.driver = MockWebDriver()  # set driver to mock driver
     result = js.unhide_DOM_element(mock_element)
     assert result is False
 
+
 # Tests for ready_state
-def test_ready_state_valid_input(driver_mock):
-    """Test with a valid input, simulates the document is loaded"""
-    driver_mock.execute_script = lambda s: "complete"
-    js = JavaScript(driver_mock)
-    assert js.ready_state == "complete"
+def test_ready_state_valid(mock_driver):
+    """Tests ready_state with valid input."""
+    js = JavaScript(mock_driver)
+    # Mock the execute_script return value
+    mock_driver.execute_script = lambda script: "complete"
+    result = js.ready_state
+    assert result == "complete"
 
+def test_ready_state_exception(mock_driver):
+    """Tests ready_state handling exceptions."""
+    js = JavaScript(mock_driver)
+    
+    # Simulate an error during execute_script
+    class MockWebDriver(WebDriver):
+        def execute_script(self, script, *args):
+            raise ValueError("Error getting ready state")
+    
+    js.driver = MockWebDriver()  # set driver to mock driver
+    result = js.ready_state
+    assert result == ""
+    
 
-def test_ready_state_exception_handling(driver_mock):
-    """Test exception handling during script execution."""
-    driver_mock.execute_script = lambda s: raise Exception("Test Exception")
-    js = JavaScript(driver_mock)
-    assert js.ready_state == ""
-
-# Tests for window_focus
-def test_window_focus_valid_input(driver_mock):
-    """Test with valid input."""
-    js = JavaScript(driver_mock)
+# Tests for window_focus, get_referrer, get_page_lang (similar structure)
+def test_window_focus_success(mock_driver):
+    """Test window_focus with mock success."""
+    js = JavaScript(mock_driver)
+    # mock the execute_script
+    js.driver.execute_script = lambda script: None
     js.window_focus()
+    pass  # Nothing to assert for success case
 
-
-def test_window_focus_exception_handling(driver_mock):
-    """Test exception handling during script execution."""
-    driver_mock.execute_script = lambda s: raise Exception("Test Exception")
-    js = JavaScript(driver_mock)
+def test_window_focus_failure(mock_driver):
+    """Test window_focus with a mocked exception."""
+    js = JavaScript(mock_driver)
+    
+    # Simulate an error during execute_script
+    class MockWebDriver(WebDriver):
+        def execute_script(self, script, *args):
+            raise ValueError("Failed to execute script")
+    
+    js.driver = MockWebDriver()  # set driver to mock driver
     js.window_focus()
+    # Nothing to assert for failure, except the error handling should be tested
+    pass  # Nothing to assert for failure case
 
-# Tests for other methods (get_referrer, get_page_lang):  Similar structure
+#Add similar tests for get_referrer and get_page_lang
 
 
-def test_get_referrer_valid_input(driver_mock):
-    """Test with valid input."""
-    driver_mock.execute_script = lambda s: "https://example.com"
-    js = JavaScript(driver_mock)
-    assert js.get_referrer() == "https://example.com"
+#Example for get_referrer
+def test_get_referrer_success(mock_driver):
+    js = JavaScript(mock_driver)
+    mock_driver.execute_script = lambda script: "https://example.com"
+    result = js.get_referrer()
+    assert result == "https://example.com"
 
-def test_get_referrer_empty_string(driver_mock):
-    """Test with empty string as input"""
-    driver_mock.execute_script = lambda s: ""
-    js = JavaScript(driver_mock)
-    assert js.get_referrer() == ""
+def test_get_referrer_failure(mock_driver):
+    js = JavaScript(mock_driver)
+    class MockWebDriver(WebDriver):
+        def execute_script(self, script, *args):
+            raise ValueError("Failed to execute script")
+    js.driver = MockWebDriver()
+    result = js.get_referrer()
+    assert result == ""
 
-def test_get_referrer_exception_handling(driver_mock):
-    """Test exception handling during script execution."""
-    driver_mock.execute_script = lambda s: raise Exception("Test Exception")
-    js = JavaScript(driver_mock)
-    assert js.get_referrer() == ""
-
-# Similar test cases for get_page_lang()
+# Add similar test for get_page_lang using mocking
 ```
 
 **Explanation and Improvements:**
 
-* **Mock WebDriver:**  Crucially, the code now uses a `MockWebDriver` fixture. This is vital for testing without relying on a real browser.  The `eval` inside the mock makes testing the `execute_script` function logic much easier.
-* **Clearer Test Names:** Test names now explicitly indicate the scenario being tested.
-* **Exception Handling:** Added tests specifically checking for exception handling in the `try...except` blocks of the original code.  This is incredibly important for robustness.
-* **Invalid Input Tests:** Included tests for invalid or unexpected inputs, such as passing `None` to `unhide_DOM_element`.
-* **Edge Cases:** Added tests to cover potential edge cases (e.g., empty strings for `document.referrer`).
-* **`pytest.raises`:** Used `pytest.raises` for testing expected exceptions.
-* **Complete Test Coverage:** Tested all the methods (not just `unhide_DOM_element`).
-* **Mock WebDriver:** Now properly creates and uses a mock WebDriver, which is essential for isolating tests and avoiding the need for a real browser.
-* **More Realistic Test Scenarios:** Included tests with both expected return values and cases where exceptions might occur.
-* **Example Usage:** Provided an example test for valid input and one that uses empty string return in the `get_referrer` method
+* **Mocking:** The code now uses `pytest.fixture` to create a `MockWebDriver` to avoid the need for a real WebDriver. This is *crucial* for unit testing.
+* **Clearer Test Cases:** Test names are more descriptive, making the purpose of each test obvious.
+* **Exception Handling Tests:** Added tests specifically for exception handling.  Critically, these tests now show *how* to mock errors so they can be tested.
+* **Edge Case Handling:**  Tested cases where `None` is passed (invalid input) for `unhide_DOM_element`.
+* **Complete Example:** Added a test case for `get_referrer`, showing a successful case and a failure case (error mocking).  You need to similarly add tests for `get_page_lang`.
+* **`pass` statements:**  Placeholders (`pass`) for the success and failure cases for `window_focus` as you don't have meaningful assertions (success only has a no-op return from the mock)
 
+**How to Run the Tests:**
 
-**To Run the Tests:**
+1.  Save the test code (e.g., `test_js.py`) in the same directory as your `js.py` file.
+2.  Run `pytest test_js.py` from your terminal.
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Save the test code as a Python file (e.g., `test_js.py`).
-3.  Run the tests from your terminal: `pytest test_js.py`
-
-
-Remember to replace the placeholder `driver_mock` with your actual setup to run these tests with a real browser if needed. The mock setup provides a robust way to run the tests and ensure the JavaScript interactions work as intended without relying on an external Selenium server.
+This revised solution is significantly more robust and demonstrates the proper use of `pytest` fixtures and mocks for testing Selenium/JavaScript interactions. Remember to adapt the mock return values to reflect the actual behavior of `execute_script` for `get_referrer` and `get_page_lang`.  The added failure mocking (via `MockWebDriver`) is crucial to correctly test exception handling. Also, remember to add tests for `get_page_lang`.

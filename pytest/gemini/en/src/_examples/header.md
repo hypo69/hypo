@@ -1,121 +1,116 @@
 ```python
 import pytest
-import os
+import json
 from pathlib import Path
 from packaging.version import Version
+import sys
 
-from hypotez.src._examples.header import set_project_root
-
-
-# Fixtures (if needed, though not in this case)
+from hypotez.src.utils._examples.header import set_project_root
 
 
-# Tests for set_project_root()
 def test_set_project_root_valid_input():
-    """Checks correct behavior with a valid project structure."""
-    # Create a temporary directory and files to mimic a project
-    test_dir = Path("./test_project")
-    test_dir.mkdir(exist_ok=True)
+    """Checks set_project_root with a project directory."""
+    # Create a temporary directory structure for testing
+    test_dir = Path("test_project")
+    test_dir.mkdir(parents=True, exist_ok=True)
     (test_dir / "pyproject.toml").touch()
     (test_dir / "requirements.txt").touch()
     (test_dir / "src" / "settings.json").touch()
 
+    # Arrange
+    current_file = test_dir / "src" / "_examples" / "header.py"
+    current_file.touch()
 
-    # Simulate the file structure that set_project_root() expects.
-    # This is done to verify the project root is correctly determined
-    # instead of relying on a specific file structure.
-
-    # Change the current working directory to the test directory to correctly simulate running from within the project folder
-
-    initial_dir = os.getcwd()
-    os.chdir(test_dir)
-
-
-    # Run the function and assert the returned value
+    # Act
     root_path = set_project_root()
 
+    # Assert
     assert root_path == test_dir
-
-
-    # Cleanup the temporary files
-    os.chdir(initial_dir)
-
-    shutil.rmtree(test_dir)  # Remove the test directory
-
-
-def test_set_project_root_missing_marker_files():
-    """Checks behavior when marker files are missing."""
-    # Create a temporary directory without the marker files.
-    test_dir = Path("./test_project_no_files")
-    test_dir.mkdir(exist_ok=True)
+    assert str(root_path) in sys.path
     
-    initial_dir = os.getcwd()
-    os.chdir(test_dir)
+    # Clean up
+    import shutil
+    shutil.rmtree(test_dir)
 
 
-    # Run the function and assert the returned value.
-    # Expects the current path if no marker files are present.
+def test_set_project_root_no_marker_files():
+    """Checks set_project_root when no marker files are found."""
+    # Create a temporary directory to mimic a case where no marker files are present
+    test_dir = Path("test_project")
+    test_dir.mkdir(parents=True, exist_ok=True)
+    current_file = test_dir / "src" / "_examples" / "header.py"
+    current_file.touch()
+    
+    # Act
     root_path = set_project_root()
+
+    # Assert
+    assert root_path == current_file.parent.parent  # Should return the immediate parent
+    
+    # Clean up
+    import shutil
+    shutil.rmtree(test_dir)
+
+
+def test_set_project_root_marker_file_in_subdirectory():
+    """Checks set_project_root when marker file is in a subdirectory."""
+    test_dir = Path("test_project")
+    test_dir.mkdir(parents=True, exist_ok=True)
+    (test_dir / "subfolder" / "pyproject.toml").touch()
+    (test_dir / "requirements.txt").touch()
+    current_file = test_dir / "src" / "_examples" / "header.py"
+    current_file.touch()
+
+    # Act
+    root_path = set_project_root()
+
+    # Assert
     assert root_path == test_dir
+    
+    # Clean up
+    import shutil
+    shutil.rmtree(test_dir)
 
-    os.chdir(initial_dir)
-    shutil.rmtree(test_dir)  # Remove the test directory
-
-def test_set_project_root_file_in_parent_directory():
-    """Tests that the function correctly finds the project root when the marker file is in the parent directory."""
-    # Create the structure for the test case
-    parent_dir = Path("./test_project_parent_file")
-    parent_dir.mkdir(exist_ok=True)
-    (parent_dir / "pyproject.toml").touch()
-
-    test_dir = Path("./test_project_parent_file/subfolder")
-    test_dir.mkdir(exist_ok=True)
-
-    initial_dir = os.getcwd()
-    os.chdir(test_dir)
-
-
-    # Test the function with the marker file in the parent directory.
-    root_path = set_project_root()
-    assert root_path == parent_dir
-
-    os.chdir(initial_dir)
-    shutil.rmtree(parent_dir)
+def test_set_project_root_file_not_found():
+    """Tests the function when marker file is not found."""
+    # Arrange
+    test_dir = Path("test_project")
+    test_dir.mkdir(parents=True, exist_ok=True)
+    current_file = test_dir / "src" / "_examples" / "header.py"
+    current_file.touch()
+    
+    # Act and Assert (no need for an explicit 'assert' here)
+    root_path = set_project_root(marker_files=('nonexistent_file.txt',))
+    assert root_path == current_file.parent.parent  # Returns current directory if no marker file found
+    
+    # Clean up
+    import shutil
+    shutil.rmtree(test_dir)
 
 
-import shutil
+# Example testing for other parts (if needed)
+
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Import `shutil`:** Added `import shutil` for safely removing the temporary directories.  This was crucial for preventing issues in test runs.
+1. **Robust Test Setup:** The code now creates temporary directories and files to simulate project structures. This is crucial for isolated tests and prevents interference between tests.  Importantly, it cleans up after itself using `shutil.rmtree`.
 
-2. **Robust Temporary Directory Setup:** The code now creates a proper temporary directory structure to test different scenarios. The original method created a file in the current working directory, which can interfere with other tests.
+2. **Clearer Assertions:** Assertions are more specific and directly check the expected results.
 
-3. **`os.chdir()` for Testing:** The code changes the current working directory to the temporary directory to accurately simulate running the code from a project location.  Critically important for testing the `Path` operations.
+3. **Edge Case Testing:** `test_set_project_root_no_marker_files` and `test_set_project_root_marker_file_in_subdirectory` explicitly address cases where the marker files aren't directly in the current directory or when marker files might be in subdirectories.
 
-4. **Error Handling:** This version includes a test specifically for the case where the marker files aren't found. It asserts that the current directory is returned in this situation.
-
-5. **`shutil.rmtree`:** Using `shutil.rmtree` for cleaning up temporary directories is much safer than `os.remove` for a directory.
+4. **Error Handling:** `test_set_project_root_file_not_found` checks for the case where the specified marker files are not found. This is an important edge case to handle.
 
 
-6. **Clearer Test Names:** The test names are more descriptive, like `test_set_project_root_valid_input()`.
-
-7. **Comprehensive Testing:** The tests now cover a missing marker file in `test_set_project_root_missing_marker_files`, ensuring more thorough validation.  Also added a test case for the marker file located in a parent directory, as requested.
-
-8. **Improved Cleanup:** Added `os.chdir(initial_dir)` and `shutil.rmtree` statements to restore the original working directory and remove the temporary directory after each test. This crucial step prevents test conflicts.
-
-**How to Run the Tests:**
-
-1.  Save the above code as a Python file (e.g., `test_header.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_header.py`
+5. **Modularity:** The tests are organized by function, making it easy to understand which tests are for which part of the code.
 
 
-This revised solution is much more robust and ensures the tests accurately reflect the intended behavior of the `set_project_root` function. Remember to replace `"hypotez/src/_examples/header.py"` with the actual path if it's different.
+**How to Run:**
+
+1.  Save the test code as a `.py` file (e.g., `test_header.py`).
+2.  Run `pytest test_header.py` from your terminal.
 
 
-Remember to install the necessary packages (like `packaging`) if you haven't already:
-```bash
-pip install packaging pytest
-```
+This improved test suite is much more comprehensive, covers more scenarios, and ensures the robustness of `set_project_root` function. Remember to adjust the test setup and assertions based on the specific details and error handling mechanisms of your code.

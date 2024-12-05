@@ -7,139 +7,137 @@ import logging
 
 import tinytroupe
 import tinytroupe.utils as utils
+
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
 from tinytroupe.factory import TinyFactory
 
-# Mock logging for testing (replace with your actual logging setup)
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("tinytroupe")
 
-# Initialize the global simulation state for testing
-def reset():
-  global _current_simulations, _current_simulation_id
-  _current_simulations = {"default": None}
-  _current_simulation_id = None
-reset()
+# Mock the logging module for testing.
+class MockLogger:
+    def __init__(self):
+        self.debug_messages = []
+        self.info_messages = []
 
-def _simulation(id="default"):
-    global _current_simulations
-    if _current_simulations[id] is None:
-        _current_simulations[id] = tinytroupe.Simulation()
-    return _current_simulations[id]
+    def debug(self, msg):
+        self.debug_messages.append(msg)
+
+    def info(self, msg):
+        self.info_messages.append(msg)
+
+    def error(self, msg):
+        raise Exception(f"Error log message: {msg}")
 
 
 @pytest.fixture
-def simulation():
-    """Provides a Simulation instance for testing."""
-    begin()
-    yield _simulation()
-    end()
+def mock_logger():
+    return MockLogger()
 
 
-def begin(cache_path=None, id="default", auto_checkpoint=False):
-  """Marks the start of the simulation being controlled."""
-  global _current_simulation_id
-  if _current_simulation_id is None:
-    _simulation(id).begin(cache_path, auto_checkpoint)
-    _current_simulation_id = id
-  else:
-    raise ValueError(f"Simulation is already started under id {_current_simulation_id}. Currently only one simulation can be started at a time.")
+@pytest.fixture
+def simulation(mock_logger):
+    """Provides a Simulation instance."""
+    logging.getLogger("tinytroupe").addHandler(logging.NullHandler())
+    logging.getLogger("tinytroupe").setLevel(logging.DEBUG)
+
+    sim = tinytroupe.Simulation(id="test", cached_trace=[])
+    sim.logger = mock_logger
+    return sim
 
 
-def end(id="default"):
-  """Marks the end of the simulation being controlled."""
-  global _current_simulation_id
-  _simulation(id).end()
-  _current_simulation_id = None
-
-
-def test_simulation_begin_end(simulation):
-    """Tests begin and end methods of Simulation."""
-    assert simulation.status == tinytroupe.Simulation.STATUS_STOPPED
+def test_begin_valid_input(simulation):
+    """Checks begin with valid input."""
     simulation.begin()
     assert simulation.status == tinytroupe.Simulation.STATUS_STARTED
+    assert simulation.auto_checkpoint == False
+
+
+
+def test_begin_invalid_status(simulation):
+    """Checks exception raised if the simulation is already started."""
+    simulation.begin()
+    with pytest.raises(ValueError, match="Simulation is already started."):
+        simulation.begin()
+
+def test_end_valid_input(simulation):
+    """Checks end with valid input when simulation is started."""
+    simulation.begin()
     simulation.end()
     assert simulation.status == tinytroupe.Simulation.STATUS_STOPPED
 
-def test_simulation_begin_already_started(simulation):
-  """Tests begin method when simulation is already started."""
-  simulation.begin()
-  with pytest.raises(ValueError, match="Simulation is already started."):
-    simulation.begin()
-
-def test_simulation_end_already_stopped(simulation):
-  """Tests end method when simulation is already stopped."""
-  with pytest.raises(ValueError, match="Simulation is already stopped."):
-    simulation.end()
+def test_end_invalid_status(simulation):
+    """Checks exception raised if the simulation is already stopped."""
+    with pytest.raises(ValueError, match="Simulation is already stopped."):
+        simulation.end()
 
 
-def test_add_agent(simulation):
-    """Tests adding an agent to the simulation."""
+
+def test_checkpoint_no_changes(simulation):
+    """Checks checkpoint with no unsaved changes."""
+    simulation.checkpoint()
+    assert len(simulation.logger.info_messages) == 1 and "No unsaved cache changes to save" in simulation.logger.info_messages[0]
+
+
+def test_add_agent_valid_input(simulation):
+    """Adds an agent to the simulation."""
     agent = TinyPerson(name="agent1")
     simulation.add_agent(agent)
     assert agent in simulation.agents
     assert agent.name in simulation.name_to_agent
 
+
+def test_add_agent_duplicate_name(simulation):
+    """Checks exception raised for duplicate agent names."""
+    agent1 = TinyPerson(name="agent1")
+    simulation.add_agent(agent1)
+    agent2 = TinyPerson(name="agent1")
     with pytest.raises(ValueError, match="Agent names must be unique"):
-        simulation.add_agent(TinyPerson(name="agent1"))
-
-def test_add_environment(simulation):
-  """Tests adding an environment to the simulation."""
-  environment = TinyWorld(name="world1")
-  simulation.add_environment(environment)
-  assert environment in simulation.environments
-  assert environment.name in simulation.name_to_environment
-
-  with pytest.raises(ValueError, match="Environment names must be unique"):
-      simulation.add_environment(TinyWorld(name="world1"))
+        simulation.add_agent(agent2)
 
 
-def test_add_factory(simulation):
-    """Tests adding a factory to the simulation."""
-    factory = TinyFactory(name="factory1")
-    simulation.add_factory(factory)
-    assert factory in simulation.factories
-    assert factory.name in simulation.name_to_factory
+def test_begin_custom_cache(simulation):
+    """Test begin method with custom cache path."""
+    cache_path = "test_cache.json"
+    simulation.begin(cache_path=cache_path)
+    assert simulation.cache_path == cache_path
+    os.remove(cache_path)  # Clean up the test file
 
-    with pytest.raises(ValueError, match="Factory names must be unique"):
-        simulation.add_factory(TinyFactory(name="factory1"))
+def test_begin_auto_checkpoint(simulation):
+    """Test begin method with auto_checkpoint enabled."""
+    cache_path = "test_cache.json"
+    simulation.begin(cache_path=cache_path, auto_checkpoint=True)
+    assert simulation.auto_checkpoint == True
+    os.remove(cache_path)  # Clean up the test file
 
 
 
-# Add more test cases for other methods as needed...
-
+# Add more tests for other methods like add_environment, add_factory, etc.,
+# covering valid and invalid inputs, edge cases, and exceptions.  Remember to
+# mock any external dependencies (like file operations) if necessary.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `logging`:** The code now includes `logging.basicConfig(level=logging.INFO)`.  This is crucial for testing because the `logger` object might interact with external resources, leading to unexpected behavior.  A mock logger is usually preferred for tests to avoid side effects.
+1. **Mocking `logging`:** The code now includes a `MockLogger` class.  This is crucial for testing because `logging` interacts with the file system or other external resources, making it hard to test reliably in isolation. The `mock_logger` fixture provides a way to capture and inspect the messages logged, without affecting the real logging system.
 
-2. **Global State Reset:**  Added `reset()` function to ensure a clean simulation state for each test.  This is essential for isolating tests.
+2. **`pytest.raises`:** Used correctly to assert that the expected exceptions are raised with appropriate error messages.
 
-3. **`_simulation` helper:** A helper function is introduced to manage simulation creation and retrieval, making the tests cleaner.
+3. **Fixture for `Simulation`:** A `simulation` fixture is created to provide an instance of `Simulation` for each test. This ensures each test runs on an isolated instance.  The fixture also sets up a *null* handler for the logger, so the tests don't create or use unnecessary files.
 
-4. **`@pytest.fixture` for `simulation`:** A `@pytest.fixture` is used to create and manage the `simulation` object. This is best practice for test setup and teardown.  Crucially, it calls `reset()` before and after the test.
+4. **Test Cases:** A more extensive set of example tests is added for `begin`, `end`, `checkpoint`, `add_agent`, including handling edge cases and exceptions (e.g., duplicate agent names).
 
-5. **Clear Test Function Names:** The test names are descriptive and follow the requested format.
-
-6. **Exception Handling:**  The code includes `pytest.raises` for testing exceptions thrown by `simulation.begin()`, `simulation.end()`, and `add_*()` methods.  The error messages are checked for more reliable assertions.
-
-7. **Comprehensive Test Cases:** The provided example test cases now test the `begin()`, `end()`, `add_agent()`, `add_environment()`, and `add_factory()` methods.
-
-8. **Mock `TinyPerson`, `TinyWorld`, `TinyFactory` (important):**  The previous example lacked the classes needed for the example (`TinyPerson`, `TinyWorld`, `TinyFactory`). I've included imports but also important that these are mocked/stubbed out for testing the `Simulation` class's behavior.
-
-**How to Run the Tests:**
-
-1.  Save the test code in a file (e.g., `test_control.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_control.py`
-
-**Important Next Steps:**
-
-- **More Test Cases:**  You need to add tests for other methods (e.g., `checkpoint`, `is_under_transaction`, etc.).
-- **Realistic Test Data:**  Add more realistic test data (e.g., `TinyPerson` objects, `TinyWorld` objects, etc.) for a better understanding of the behavior of the functions.  These objects are likely to be more sophisticated, so create meaningful test data for them as well.
-- **Mocking:**  In a real project, mock out other dependencies like `tinytroupe.utils`, the `Tiny` classes' methods (`encode_complete_state`, `decode_complete_state`, `clear_communications_buffer`, etc.), and file interactions.
+5. **Cleanup:** The `test_begin_custom_cache` now removes the test file after the test to prevent conflicts. This is very important for clean testing.
 
 
-This improved solution addresses the critical issues of global state management, dependency mocking, exception handling, and comprehensive testing. Remember to adapt the tests to the specifics of your project, particularly the detailed behavior of the other classes and their interactions. Remember to mock out other dependencies if they're not part of the Simulation class itself.
+**How to run these tests:**
+
+1.  Make sure you have `pytest` installed: `pip install pytest`
+2.  Save the test code (e.g., as `test_control.py`) in the same directory as your `tinytroupe/control.py` file.
+3.  Run `pytest test_control.py` from your terminal.
+
+**Important Considerations:**
+
+-   **External Dependencies:** The tests need to account for external dependencies (like files).  Mocking external resources (such as the file system) is essential for testing in isolation.
+-   **Comprehensive Tests:** The provided tests are a good starting point but you'll need to write many more tests to cover all the possible functionalities of `Simulation` and related classes.   Add tests for `add_environment`, `add_factory`, transactional methods, `_encode_simulation_state`, `_decode_simulation_state`, etc. to achieve full test coverage.
+-   **Error Handling:** Carefully test the error handling and exception scenarios in each method.
+-   **Edge Cases:** Pay close attention to situations like empty lists, invalid inputs, boundary conditions (e.g., maximum/minimum values for parameters), and non-existent files.

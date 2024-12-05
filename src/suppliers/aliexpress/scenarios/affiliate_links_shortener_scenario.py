@@ -16,7 +16,7 @@ from typing import List, Union
 from types import SimpleNamespace
 import time
 from src import gs
-from src.utils import j_loads, j_loads_ns
+from src.utils.jjson import j_loads_ns, j_loads_ns
 from src.logger import logger
 from src.webdriver.driver import Driver
 

@@ -24,7 +24,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 import header
 from src import gs
 from src.ai.openai.model.training import Model
-from src.utils import j_loads, j_loads_ns, j_dumps
+from src.utils.jjson import j_loads_ns, j_loads_ns, j_dumps
 from src.logger import logger
 import speech_recognition as sr  # Библиотека для распознавания речи
 import requests  # Для скачивания файлов

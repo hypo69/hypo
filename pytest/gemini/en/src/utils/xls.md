@@ -3,92 +3,73 @@ import pytest
 import pandas as pd
 import json
 from pathlib import Path
-from io import StringIO
-from typing import Dict, List
-
-# Import the function to be tested
+import logging
 from hypotez.src.utils.xls import read_xls_as_dict, save_xls_file
 
 
-# Fixtures
+# Fixtures for creating test data and files
 @pytest.fixture
-def sample_xls_data():
-    """Creates a sample xls file for testing."""
-    data = {'Sheet1': [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}]}
-    df = pd.DataFrame(data['Sheet1'])
-    buffer = StringIO()
-    df.to_excel(buffer, index=False, sheet_name='Sheet1')
-    return buffer
+def example_xls_file(tmp_path):
+    """Creates a temporary xlsx file with some data."""
+    df1 = pd.DataFrame({'col1': [1, 2, 3], 'col2': ['a', 'b', 'c']})
+    df2 = pd.DataFrame({'col3': [4, 5, 6], 'col4': ['d', 'e', 'f']})
+
+    with pd.ExcelWriter(tmp_path / 'test.xlsx', engine='xlsxwriter') as writer:
+        df1.to_excel(writer, sheet_name='Sheet1', index=False)
+        df2.to_excel(writer, sheet_name='Sheet2', index=False)
+    return tmp_path / 'test.xlsx'
+
 
 @pytest.fixture
-def sample_json_data():
-    """Sample data for testing saving to Excel."""
-    return {'Sheet1': [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}]}
-
-# Test cases for read_xls_as_dict
-def test_read_xls_as_dict_valid_input(sample_xls_data):
-    """Tests reading a valid Excel file."""
-    result = read_xls_as_dict(sample_xls_data, json_file=None, sheet_name='Sheet1')
-    assert result == [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}]
-
-def test_read_xls_as_dict_multiple_sheets(sample_xls_data):
-    """Test reading multiple sheets."""
-    result = read_xls_as_dict(sample_xls_data, json_file=None)
-    assert 'Sheet1' in result
-    assert result['Sheet1'] == [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}]
+def example_data():
+    """Provides example data for saving to an xlsx file."""
+    return {'Sheet1': [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}],
+            'Sheet2': [{'col3': 4, 'col4': 'd'}]}
 
 
-def test_read_xls_as_dict_invalid_file(tmp_path):
-    """Tests handling a file that doesn't exist."""
-    invalid_file = tmp_path / "invalid.xlsx"
-    result = read_xls_as_dict(str(invalid_file))
+def test_read_xls_as_dict_valid_input(example_xls_file):
+    """Tests reading a valid xlsx file."""
+    data = read_xls_as_dict(str(example_xls_file), json_file=None)
+    assert data == {'Sheet1': [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}, {'col1': 3, 'col2': 'c'}],
+                     'Sheet2': [{'col3': 4, 'col4': 'd'}, {'col3': 5, 'col4': 'e'}, {'col3': 6, 'col4': 'f'}]}
+
+
+def test_read_xls_as_dict_specific_sheet(example_xls_file):
+    """Tests reading a specific sheet from a valid xlsx file."""
+    data = read_xls_as_dict(str(example_xls_file), sheet_name='Sheet1')
+    assert data == [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}, {'col1': 3, 'col2': 'c'}]
+
+
+def test_read_xls_as_dict_json_output(example_xls_file, tmp_path):
+    """Tests reading and saving to a JSON file."""
+    json_file = tmp_path / 'output.json'
+    data = read_xls_as_dict(str(example_xls_file), json_file=str(json_file))
+    assert data == {'Sheet1': [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}, {'col1': 3, 'col2': 'c'}],
+                     'Sheet2': [{'col3': 4, 'col4': 'd'}, {'col3': 5, 'col4': 'e'}, {'col3': 6, 'col4': 'f'}]}
+    with open(json_file, 'r') as f:
+        loaded_data = json.load(f)
+        assert loaded_data == {'Sheet1': [{'col1': 1, 'col2': 'a'}, {'col1': 2, 'col2': 'b'}, {'col1': 3, 'col2': 'c'}],
+                               'Sheet2': [{'col3': 4, 'col4': 'd'}, {'col3': 5, 'col4': 'e'}, {'col3': 6, 'col4': 'f'}]}
+
+
+def test_read_xls_as_dict_file_not_found(tmp_path):
+    """Tests handling a file not found error."""
+    nonexistent_file = tmp_path / 'nonexistent.xlsx'
+    result = read_xls_as_dict(str(nonexistent_file))
     assert result is False
 
 
-def test_read_xls_as_dict_invalid_sheet(sample_xls_data):
-    """Tests handling a non-existent sheet."""
-    result = read_xls_as_dict(sample_xls_data, json_file=None, sheet_name="NonExistentSheet")
-    assert result is False
+def test_save_xls_file(example_data, tmp_path):
+    """Tests saving data to an xlsx file."""
+    file_path = tmp_path / 'output.xlsx'
+    success = save_xls_file(example_data, str(file_path))
+    assert success is True
 
-
-# Test cases for save_xls_file
-def test_save_xls_file_valid_input(sample_json_data, tmp_path):
-    """Tests saving JSON data to a valid Excel file."""
-    output_file = tmp_path / "output.xlsx"
-    result = save_xls_file(sample_json_data, str(output_file))
-    assert result is True
 
 def test_save_xls_file_invalid_data(tmp_path):
-    """Tests saving with invalid data (not a dictionary)."""
-    output_file = tmp_path / "output.xlsx"
-    invalid_data = "not a dictionary"
-    result = save_xls_file(invalid_data, str(output_file))
-    assert result is False
-
-
-# Add more tests for edge cases, empty data, incorrect data types, etc.
-# Example for an empty sheet:
-# def test_read_xls_as_dict_empty_sheet(sample_xls_data):
-#   ...
-```
-
-**Explanation and Improvements:**
-
-* **Fixtures:**  Crucially, I've added `sample_xls_data` and `sample_json_data` fixtures to create sample Excel and JSON data, making tests more maintainable and avoiding hardcoding file paths. This is a best practice in `pytest`.
-* **Clearer Test Names:** Test names are more descriptive (e.g., `test_read_xls_as_dict_multiple_sheets`).
-* **Error Handling:** Tests now check for `False` return values from `read_xls_as_dict` to verify error handling, crucial for robust tests.  Tests for `FileNotFoundError` (and any other potential exceptions) are essential.
-* **`tmp_path`:** Uses `pytest.tmpdir` to create temporary files for testing saving, which is far superior to using hardcoded file paths.
-* **`StringIO`:** To create an in-memory file-like object (useful for testing reading from the file-like object).
-* **Specific Assertions:** Tests now directly assert on the expected output data structure and content.
-* **Comprehensive Edge Cases:**  The tests now cover cases like an invalid file path, a non-existent sheet, and invalid JSON data during saving, to demonstrate a complete test suite.
-
-
-**How to Run the Tests:**
-
-1.  Save the code as a `.py` file (e.g., `test_xls.py`).
-2.  Run `pytest test_xls.py` in your terminal.
-
-This improved test suite is more robust and covers a wider range of scenarios, making the tests more valuable for ensuring the correctness of your `xls` utility functions. Remember to adapt the test cases to the specific functionalities and error conditions of your `xls` functions. Remember to install `pandas` and `pytest`:
-```bash
-pip install pandas pytest
+    """Tests with invalid data."""
+    file_path = tmp_path / 'output.xlsx'
+    invalid_data = {'Sheet1': 'invalid'}
+    success = save_xls_file(invalid_data, str(file_path))
+    assert success is False
 ```

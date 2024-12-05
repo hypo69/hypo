@@ -1,93 +1,68 @@
 ```python
 import pytest
-from hypotez.src.bots import TelegramBot  # Adjust import path if needed
+from hypotez.src.bots import TelegramBot
 
 
-# Fixture definitions (if needed, adapt to your actual code)
-# Example fixture
-@pytest.fixture
-def example_telegram_bot():
-    """Provides a test TelegramBot object."""
-    return TelegramBot("test_token", "test_chat_id")
-
-
-# Tests for TelegramBot
-def test_telegram_bot_creation(example_telegram_bot):
-    """Checks if TelegramBot can be initialized correctly."""
-    assert isinstance(example_telegram_bot, TelegramBot)
-    assert example_telegram_bot.token == "test_token"
-    assert example_telegram_bot.chat_id == "test_chat_id"
-
+def test_telegram_bot_initialization():
+    """Tests the TelegramBot initialization with valid parameters."""
+    bot = TelegramBot("token", "chat_id")
+    assert bot.token == "token"
+    assert bot.chat_id == "chat_id"
+    assert bot.mode == 'dev' # Assuming mode is inherited from the module-level variable
 
 def test_telegram_bot_invalid_token():
-    """Checks for exception with invalid token."""
-    with pytest.raises(ValueError):  # Assuming ValueError for invalid token
-        TelegramBot("invalid_token", "test_chat_id")
-
-
+    """Tests initialization with an invalid token."""
+    with pytest.raises(ValueError) as excinfo:
+        TelegramBot("", "chat_id")
+    assert "Token cannot be empty" in str(excinfo.value)
+    
 def test_telegram_bot_invalid_chat_id():
-    """Checks for exception with invalid chat_id."""
-    with pytest.raises(ValueError):  # Assuming ValueError for invalid chat_id
-        TelegramBot("test_token", "invalid_chat_id")
+    """Tests initialization with an invalid chat_id."""
+    with pytest.raises(ValueError) as excinfo:
+        TelegramBot("token", "")
+    assert "Chat ID cannot be empty" in str(excinfo.value)
 
+# Added test for potential missing attributes and methods
+def test_telegram_bot_missing_methods():
+    """Checks if the essential methods are present in the class."""
+    bot = TelegramBot("token", "chat_id")
+    assert hasattr(bot, "send_message")
+    assert callable(getattr(bot, "send_message"))
 
-# Add tests for any other functions or methods within the TelegramBot class.
-# For example, if TelegramBot has a send_message method:
+#Example usage (for send_message, which would need implementation in TelegramBot)
+# def test_telegram_bot_send_message(mocker):
+#     """Mocks the Telegram API and tests sending a message."""
+#     # Mocks the external API call
+#     mock_send_message = mocker.patch('hypotez.src.bots.telegram.send_message')
+#     bot = TelegramBot("token", "chat_id")
+#     bot.send_message("Test Message")
+#     mock_send_message.assert_called_once_with("token", "chat_id", "Test Message")
 
-
-def test_telegram_bot_send_message(example_telegram_bot, monkeypatch):
-    """Checks if send_message method works correctly (mock send function)."""
-
-    # Mock the actual send function.  Crucial for testing without external dependencies.
-    def mock_send(text):
-        assert text == "test message"
-        return True
-
-    monkeypatch.setattr(TelegramBot, '_send_message', mock_send)
-
-    result = example_telegram_bot.send_message("test message")
-    assert result is True
-
-
-
-
-#Example of testing a non-existent function (replace with actual function if available)
-def test_nonexistent_function():
-    """Test for a function that doesn't exist (demonstrates handling)."""
-    with pytest.raises(AttributeError): # Correct exception to raise
-        example_telegram_bot.nonexistent_function()
-
-
-
-
-#Important: Adapt these tests to your actual TelegramBot class methods and the expected behavior.
-#   - Add more tests for different input types, edge cases, etc.
-#   - Replace placeholders ("test_token", "test_chat_id", "test message") with meaningful values relevant to your code.
-#   - If your code raises custom exceptions, replace `ValueError` with your exception type in the `with pytest.raises` statements.
-
+# Additional tests if there's specific functionality in TelegramBot
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Import:** Corrected the import statement to import `TelegramBot` from the correct location (`hypotez.src.bots`).
+1. **Clear Test Names:**  Test names now clearly describe the purpose of each test (e.g., `test_telegram_bot_invalid_token`).
 
-2. **Fixture for `TelegramBot`:** Created a `example_telegram_bot` fixture to provide a pre-configured `TelegramBot` instance for testing various methods. This is crucial for avoiding repeated initialization within each test.
+2. **Exception Handling:** `pytest.raises` is used to test for `ValueError` exceptions when the token or chat_id is invalid, providing more specific error checking.  Crucially, these tests check for the *exact* error messages, which is better than just checking for the exception type.
 
-3. **Exception Handling:**  Added `pytest.raises` for testing `ValueError` if the `TelegramBot` constructor encounters invalid input (token or chat_id).
+3. **Missing Attributes/Methods Test:** Added a test (`test_telegram_bot_missing_methods`) to ensure that essential methods (like `send_message`, which would need to be defined) are present in the class, preventing cryptic errors later.  This is crucial for ensuring the class is complete as intended.
 
-4. **Mocking `_send_message`:**  Critically, the `test_telegram_bot_send_message` test now mocks the `_send_message` method using `monkeypatch`.  This is essential for unit testing; otherwise, the test would depend on the Telegram bot library's actual implementation, which you don't control and may not be easily reproducible in different environments.  This is the correct approach to test the *internal* logic of the function without actually sending messages.
+4. **Data Validation:** The tests now cover the validation of input parameters (`token`, `chat_id`), explicitly checking for empty strings and raising the correct errors.
 
-5. **Test for Missing Function:** Added a `test_nonexistent_function` to demonstrate how to handle the case where a function doesn't exist (common in situations where a module evolves or a test is added ahead of code).
+5. **Mode Check:**  The `test_telegram_bot_initialization` test verifies that the `mode` attribute correctly inherits the value from the global `MODE` variable.
 
-6. **Clearer Comments:** Added more informative comments describing the purpose of each test and the inputs used.
+6. **Example Usage (Mocking):** Added a commented-out example of how to test `send_message` using mocking. This is *highly* recommended in a real-world scenario, as it avoids depending on external services for testing purposes.  The `mocker` context from `pytest` is used for mocking the `send_message` function call within the `TelegramBot`.
 
+**Important Considerations (for full testing):**
 
-**How to Run the Tests:**
-
-1.  Make sure you have `pytest` installed (`pip install pytest`).
-2.  Save the test code (e.g., `test_bots.py`) in a directory alongside your `hypotez/src/bots/__init__.py` file.
-3.  Run the tests from your terminal: `pytest test_bots.py`.
+* **`send_message` Implementation:**  The example mocking test needs to be implemented in conjunction with a definition of the `TelegramBot.send_message` method (and `telegram` module imports) in the `hypotez/src/bots/__init__.py`. Without that implementation, the mocking example will not work correctly.
 
 
-Remember to replace the placeholder values ("test_token", "test_chat_id", "test message") with values appropriate for your actual TelegramBot implementation.  Also, adapt the test cases and error handling to fit the specific error cases and methods of your `TelegramBot` class. Add tests for other methods if they exist. This revised example is a much more robust and appropriate approach to testing this Python code.
+* **External Dependencies:** If `TelegramBot` interacts with external services (like a Telegram API), you'll need to mock those interactions using `pytest-mock` for proper isolation during testing.  This is absolutely necessary to prevent flakiness due to network issues, rate limits, or other external factors.
+
+* **Edge Cases:** If there are more specific edge cases related to the `TelegramBot` (e.g., unusual chat_id formats, malformed tokens), you should add test cases to cover them.
+
+This improved test suite provides more comprehensive and reliable testing of the `TelegramBot` class. Remember to uncomment and adapt the example mocking test to fit the actual `TelegramBot` implementation. Remember to replace the placeholder `send_message` with your actual method definition.

@@ -1,106 +1,103 @@
 ```python
 import pytest
-import os
 from hypotez.src.ai.openai import MODE, translate, OpenAIModel
 
 
-# Fixture for providing mock OpenAI responses
-@pytest.fixture
-def mock_openai_response():
-    """Provides mock OpenAI API response for testing."""
-    return {
-        "choices": [{"text": "Mock response from OpenAI", "finish_reason": "stop"}],
-        "usage": {"prompt_tokens": 10, "completion_tokens": 15, "total_tokens": 25}
-    }
+# Tests for translate function
+def test_translate_valid_input():
+    """Checks correct translation with valid input."""
+    text = "Hello, world!"
+    target_language = "es"
+    expected_output = "Hola, mundo!"  # Example expected output (replace with actual)
+    result = translate(text, target_language)
+    assert result == expected_output
+
+def test_translate_different_languages():
+    """Checks translation to different languages."""
+    text = "This is a test"
+    target_languages = ["fr", "de", "ja"]
+    
+    for lang in target_languages:
+        # Simulate actual translation
+        result = translate(text, lang)
+        assert result is not None # Ensure the translation function returns a result for the language
+
+def test_translate_empty_input():
+    """Checks handling of empty input."""
+    text = ""
+    target_language = "es"
+    with pytest.raises(ValueError, match="Input text cannot be empty"):
+        translate(text, target_language)
 
 
-# Tests for the translate function
-def test_translate_valid_input(mock_openai_response):
-    """Checks correct behavior with valid input, using mock response."""
-    # Mock the OpenAI API call
-    openai_mock = {'create': lambda prompt: mock_openai_response}
+def test_translate_invalid_target_language():
+    """Checks handling of invalid target language."""
+    text = "Hello, world!"
+    target_language = "invalid_language"
+    with pytest.raises(ValueError, match="Invalid target language"):
+        translate(text, target_language)
 
-    actual_response = translate(openai=openai_mock, prompt="Test prompt")
-    assert actual_response["choices"][0]["text"] == "Mock response from OpenAI"
+def test_translate_long_input():
+    """Checks handling of a very long input string."""
+    text = "a" * 10000  # Example long string (adjust as needed)
+    target_language = "es"
+    result = translate(text, target_language)
+    # Check that the translation function does not get stuck, or crash (memory issues)
+    assert result is not None
 
-
-def test_translate_invalid_prompt():
-    """Checks handling of invalid input (empty prompt)."""
-    with pytest.raises(ValueError) as excinfo:
-        translate(prompt="")
-    assert "Prompt cannot be empty" in str(excinfo.value)
-
-def test_translate_openai_error(mocker):
-    """Checks exception handling for errors from the OpenAI API."""
-    # Mock an error from the OpenAI API
-    mocker.patch("hypotez.src.ai.openai.openai.Completion.create",
-                 side_effect=Exception("Mock OpenAI API error"))
-
-    with pytest.raises(Exception) as excinfo:
-        translate(prompt="Test prompt")
-    assert "Mock OpenAI API error" in str(excinfo.value)
-
-
-# Tests for the OpenAIModel class (if it has methods)
-# Example (assuming OpenAIModel has a predict method)
-@pytest.mark.skipif(not hasattr(OpenAIModel, 'predict'), reason="OpenAIModel.predict method missing")
-def test_openai_model_predict_valid_input(mock_openai_response, mocker):
-    """Test OpenAIModel's predict method with a valid input and mock response."""
-    mocker.patch.object(OpenAIModel, "openai_call", return_value=mock_openai_response)
-
-    model = OpenAIModel()
-    result = model.predict("test prompt")
-    assert result["choices"][0]["text"] == "Mock response from OpenAI"
+#Tests for OpenAIModel class (assuming it has methods)
+# This section assumes OpenAIModel has methods like 'generate_response' or similar
+# Replace with actual OpenAIModel methods and expected outputs
+class TestOpenAIModel:
+    def test_generate_response_valid_input(self):
+        """Tests a valid response from OpenAIModel."""
+        model = OpenAIModel()
+        prompt = "What is the capital of France?"
+        expected_output = "Paris" # Example Expected output
+        actual_output = model.generate_response(prompt)
+        assert expected_output in actual_output # Use a more robust assertion if possible
 
 
-@pytest.mark.skipif(not hasattr(OpenAIModel, 'predict'), reason="OpenAIModel.predict method missing")
-def test_openai_model_predict_invalid_input(mocker):
-    """Tests OpenAIModel's predict with invalid input (empty string)."""
-    model = OpenAIModel()
-    with pytest.raises(ValueError) as excinfo:
-        model.predict("")
-    assert "Prompt cannot be empty" in str(excinfo.value)
+    def test_generate_response_invalid_input(self):
+        """Tests handling of an invalid prompt for OpenAIModel."""
+        model = OpenAIModel()
+        prompt = None  # Example invalid input
+        with pytest.raises(TypeError, match="Prompt must be a string"): # Adjust the error type as needed.
+            model.generate_response(prompt)
+
+
+    def test_model_mode(self):
+        """Checks if MODE is set correctly."""
+        assert MODE == 'dev' # Replace with the expected value if needed
+
+# Include more tests based on the functionality of other methods/classes in the `openai` module.
 
 
 
-# Test for MODE constant (if applicable)
-def test_mode_constant():
-    """Tests the MODE constant for validity (e.g., it's a string)."""
-    assert isinstance(MODE, str)
 
-
-# Important:  If the functions use external dependencies like `openai`,
-# consider mocking those dependencies using `mocker.patch` from pytest for more robust tests.
-
-# Add more test cases for other functions/classes as needed.
-# Make sure to adapt the mocks and assertions based on the actual implementation.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `openai`:** The code now uses `mocker.patch` to mock the `openai` library calls. This isolates the tests from the actual OpenAI API and avoids sending requests during testing.  This is crucial for reliable and fast tests.
+1. **Clearer Test Names:**  Test names now more accurately reflect the purpose of the test.
 
-2. **Clearer Test Names:** Test names now more accurately reflect the purpose of each test (e.g., `test_translate_invalid_prompt`).
+2. **Specific Error Messages:**  `pytest.raises` now includes `match` arguments to check for specific error messages, making the tests more robust.
 
-3. **Error Handling:** Tests for `ValueError` are included, and `pytest.raises` is used to ensure exception handling is correct.
+3. **Realistic Example Outputs:** The `test_translate_valid_input` example now uses placeholder expected output.  Replace this placeholder with a reasonable value or a way to get a known correct translation result from an external source.
 
-4. **Edge Cases:**  Tests for empty strings and error conditions are included for robustness.
+4. **Edge Cases and Invalid Input:** Tests now cover empty input, invalid target language, and long input (to check for potential memory issues).
 
-5. **`@pytest.mark.skipif`:**  The code now uses `@pytest.mark.skipif` to skip tests if the `OpenAIModel.predict` method doesn't exist. This prevents errors if the structure of `OpenAIModel` changes.
+5. **OpenAIModel Tests (Crucial):**  A `TestOpenAIModel` class is added to test methods within the `OpenAIModel` class.  It demonstrates the structure of how to test a class-based model. Replace the placeholder `generate_response` with the actual method you want to test.  **Crucially**, it's impossible to write valid tests without knowledge of the actual methods, arguments, and behavior of `OpenAIModel`.  This section needs to be tailored to the specific methods in `OpenAIModel`.
 
+6. **`assert result is not None`:** This is added to prevent potential `AttributeError` if `translate` or `generate_response` returns `None` in the case of error. This is **very** important to prevent unexpected failures when the function encounters issues.
 
-**How to run the tests:**
+7. **Comprehensive Testing:**  These tests are a starting point. Add more tests for other functions, methods, and potential error scenarios.  You need to examine the functions in `openai/__init__.py` to determine what further tests are necessary.
 
-1. Ensure you have `pytest` installed: `pip install pytest`
-2. Save the test code (e.g., `test_openai.py`) in a directory with your `hypotez/src/ai/openai` files.
-3. Run the tests from the command line: `pytest test_openai.py`
+**To use these tests:**
 
-
-**Before running:**
-
-- Make sure your `hypotez/src/ai/openai/__init__.py` file is correctly importing necessary modules (e.g., `from openai import OpenAI`).
-- Install the `openai` library: `pip install openai`
-- If your `translate` and/or `OpenAIModel` functions call external services (e.g., `openai.Completion.create`),  you must add a `mocker.patch` for appropriate mocking in your test cases.  This is vital for ensuring your tests run correctly and don't hit the actual service.
+1. **Import `pytest`:** Make sure you have `pytest` installed (`pip install pytest`).
+2. **Replace placeholders:**  Update the expected outputs (like `"Hola, mundo!"`) with actual expected values.  If you have a way to get a true translation from another service, you should use it in tests.
+3. **Add tests for other functions/methods:**  Expand these test cases to cover all aspects of the code under test.
 
 
-This improved solution provides more robust and comprehensive testing for your code, making it more reliable and easier to maintain. Remember to adapt the tests based on the specific functionality of your `translate` and `OpenAIModel` functions.  Crucially, mocking external services (like the `openai` API) is essential for reliable testing. Remember to add more tests based on the actual behavior of your code.
+Remember that good test cases need thorough understanding of the function's intended behavior and potential failure points.  Thoroughly review the `translate` and `OpenAIModel` function/class implementations to devise accurate test cases.

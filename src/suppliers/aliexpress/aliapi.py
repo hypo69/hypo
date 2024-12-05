@@ -12,7 +12,7 @@
 MODE = 'dev'
 
 
-...
+
 import re
 import json
 import asyncio
@@ -22,8 +22,9 @@ from types import SimpleNamespace
 from requests import get, post
 
 from src import gs
-from src.utils import jjson, j_loads, j_dumps, pprint
-from src.utils.convertors import json2csv
+from src.utils.jjson import j_loads_ns, j_loads, j_dumps
+from src.utils.printer import pprint
+from src.utils.convertors.json import json2csv
 from src.logger import logger
 from .api import AliexpressApi
 
@@ -41,8 +42,10 @@ class AliApi(AliexpressApi):
        
     def __init__(self, language: str = 'en', currency: str = 'usd', *args, **kwargs):
         """ Initializes an instance of the AliApi class.
-        @param language: The language to use for API requests. Defaults to 'en'.
-        @param currency: The currency to use for API requests. Defaults to 'usd'.
+        
+        Args:
+            language (str): The language to use for API requests. Defaults to 'en'.
+            currency (str): The currency to use for API requests. Defaults to 'usd'.
         """
         credentials = gs.credentials.aliexpress
         api_key = credentials.api_key
@@ -55,30 +58,34 @@ class AliApi(AliexpressApi):
         ...
 
     # def collect_deals_from_url():
-    #     """ Given a URL, I retrieve deals, coupons, and other offers received from AliExpress"""
+    #     """ Given a URL, retrieve deals, coupons, and other offers received from AliExpress"""
     #     ...
 
     def retrieve_product_details_as_dict(self, product_ids: list) -> dict | dict | None:
         """ Sends a list of product IDs to AliExpress and receives a list of SimpleNamespace objects with product descriptions.
-        @param product_ids: List of product IDs.
-        @returns: List of product data as dictionaries.
-        @code
-        # Convert from SimpleNamespace format to dict
+        
+        Args:
+            product_ids (list): List of product IDs.
+        
+        Returns:
+            dict | None: List of product data as dictionaries.
+        
+        Example:
+            # Convert from SimpleNamespace format to dict
             namespace_list = [
-            SimpleNamespace(a=1, b=2, c=3),
-            SimpleNamespace(d=4, e=5, f=6),
-            SimpleNamespace(g=7, h=8, i=9)
+                SimpleNamespace(a=1, b=2, c=3),
+                SimpleNamespace(d=4, e=5, f=6),
+                SimpleNamespace(g=7, h=8, i=9)
             ]
-
+            
             # Convert each SimpleNamespace object to a dictionary
             dict_list = [vars(ns) for ns in namespace_list]
             
-            # Alternatively, you can use the __dict__ method:
+            # Alternatively, use the __dict__ method:
             dict_list = [ns.__dict__ for ns in namespace_list]
             
             # Print the list of dictionaries
             print(dict_list)
-        @endcode
         """
         prod_details_ns = self.retrieve_product_details(product_ids)
         prod_details_dict = [vars(ns) for ns in prod_details_ns]
@@ -87,9 +94,12 @@ class AliApi(AliexpressApi):
     def get_affiliate_links(self, links: str | list, link_type: int = 0, **kwargs) -> List[SimpleNamespace]:
         """ 
         Retrieves affiliate links for the specified products.
-        @param links: The product links to be processed.
-        @param link_type: The type of affiliate link to be generated.
-        @returns: A list of SimpleNamespace objects containing affiliate links.
+        
+        Args:
+            links (str | list): The product links to be processed.
+            link_type (int, optional): The type of affiliate link to be generated. Defaults to 0.
+        
+        Returns:
+            List[SimpleNamespace]: A list of SimpleNamespace objects containing affiliate links.
         """
         return super().get_affiliate_links(links, link_type, **kwargs)
-

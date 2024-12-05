@@ -2,139 +2,158 @@
 import pytest
 import os
 import copy
-import json
-from tinytroupe.agent import TinyPerson, default, RecallFaculty, FilesAndWebGroundingFaculty, TinyToolUse
-from llama_index.readers.web import SimpleWebPageReader
+from tinytroupe.agent import TinyPerson, default, RecallFaculty, FilesAndWebGroundingFaculty, TinyToolUse, EpisodicMemory, SemanticMemory
+from rich.console import Console
 
-# Mock OpenAI client (replace with actual OpenAI client if needed)
-class MockOpenAIClient:
-    def send_message(self, messages):
-        return {"role": "assistant", "content": '{"action": {"type": "TALK", "content": "Hello!"}, "cognitive_state": {"goals": [], "attention": [], "emotions": "Calm"}}'}
-
-# Mock EpisodicMemory and SemanticMemory (replace with actual implementations if needed)
-class MockEpisodicMemory:
-    def __init__(self):
-        self.memory = []
-
-    def store(self, value):
-        self.memory.append(value)
-
-    def retrieve(self, first_n=None, last_n=None, include_omission_info=True):
-        return self.memory
-
-    def retrieve_recent(self):
-        return self.memory
+# Initialize Rich console for output display
+console = Console()
 
 
-class MockSemanticMemory:
-    def __init__(self, documents=None):
-        self.documents = documents or []
-        self.filename_to_document = {}
-        self.index = None
-
-    def retrieve_relevant(self, relevance_target, top_k=5):
-        return []
-    
-    def retrieve_document_content_by_name(self, document_name):
-        return self.filename_to_document.get(document_name, None).text if self.filename_to_document.get(document_name) else None
-
-    def list_documents_names(self):
-        return list(self.filename_to_document.keys())
-
-    def add_documents_path(self, path):
-        pass
-
-    def add_web_urls(self, urls):
-        pass
-
-    def to_json(self):
-        return {"documents": self.documents}  # Mock serialization
-
-    def from_json(self, json_data):
-        self.documents = json_data["documents"]
-        return self
-
-
-
+# Fixture for creating a TinyPerson instance
 @pytest.fixture
-def mock_openai_client():
-    return MockOpenAIClient()
-
-@pytest.fixture
-def mock_episodic_memory():
-    return MockEpisodicMemory()
-
-@pytest.fixture
-def mock_semantic_memory():
-    return MockSemanticMemory()
-
-def test_tiny_person_creation(mock_episodic_memory, mock_semantic_memory):
-    """Tests TinyPerson creation with valid inputs."""
-    agent = TinyPerson(name="TestAgent", episodic_memory=mock_episodic_memory, semantic_memory=mock_semantic_memory)
-    assert agent.name == "TestAgent"
-    assert agent.episodic_memory == mock_episodic_memory
-    assert agent.semantic_memory == mock_semantic_memory
-
-def test_tiny_person_creation_with_default_memory(mock_openai_client):
-    """Tests TinyPerson creation with default memory."""
-    agent = TinyPerson(name="DefaultAgent")
-    assert agent.episodic_memory is not None
-    assert agent.semantic_memory is not None
-    assert agent.name == "DefaultAgent"
-
-def test_tiny_person_define(mock_episodic_memory, mock_semantic_memory):
-    """Tests TinyPerson define method."""
-    agent = TinyPerson(name="TestAgent", episodic_memory=mock_episodic_memory, semantic_memory=mock_semantic_memory)
-    agent.define("age", 30)
-    assert agent._configuration["age"] == 30
+def tiny_person():
+    return TinyPerson(name="TestAgent")
 
 
-def test_tiny_person_define_several(mock_episodic_memory, mock_semantic_memory):
-    """Tests TinyPerson define_several method."""
-    agent = TinyPerson(name="TestAgent", episodic_memory=mock_episodic_memory, semantic_memory=mock_semantic_memory)
-    records = [{"occupation": "Engineer"}, {"nationality": "American"}]
-    agent.define_several("details", records)
-    assert agent._configuration["details"] == records
+# Test cases for the define method
+def test_define_valid_input(tiny_person):
+    """Tests defining a valid key-value pair."""
+    tiny_person.define("name", "NewAgentName")
+    assert tiny_person._configuration["name"] == "NewAgentName"
 
 
-def test_tiny_person_act(mock_openai_client, mock_episodic_memory, mock_semantic_memory):
-    agent = TinyPerson(name="TestAgent", episodic_memory=mock_episodic_memory, semantic_memory=mock_semantic_memory)
-    agent.act() # should not raise error
-    assert len(agent._actions_buffer) > 0
+def test_define_invalid_input(tiny_person):
+    """Tests defining with an invalid key."""
+    with pytest.raises(TypeError):
+        tiny_person.define(123, "InvalidValue")
 
-def test_tiny_person_listen(mock_openai_client, mock_episodic_memory, mock_semantic_memory):
-    agent = TinyPerson(name="TestAgent", episodic_memory=mock_episodic_memory, semantic_memory=mock_semantic_memory)
-    agent.listen("Hello, how are you?")
-    assert len(agent.episodic_memory.memory) > 0
+
+def test_define_string_input(tiny_person):
+    """Tests defining with a string value and dedenting."""
+    value = """
+        This is a string
+        with leading and trailing whitespace.
+    """
+    tiny_person.define("description", value)
+    assert tiny_person._configuration['description'] == "This is a string\nwith leading and trailing whitespace."
+
+
+
+def test_define_group_input(tiny_person):
+    """Tests defining a key-value pair in a group."""
+    tiny_person.define("key_1", "value_1", group="group_1")
+    assert tiny_person._configuration.get("group_1", []) == [{"key_1": "value_1"}]
+
+
+def test_define_several(tiny_person):
+    """Tests defining several values in the same group."""
+    records = ["record_1", "record_2", "record_3"]
+    tiny_person.define_several(group="records", records=records)
+    assert tiny_person._configuration.get("records", []) == records
+
+# Test cases for the define_relationships method
+def test_define_relationships_valid_input(tiny_person):
+    """Tests defining valid relationships."""
+    related_agent = TinyPerson(name="RelatedAgent")
+    tiny_person.define_relationships([{'Name': related_agent.name, 'Description': 'Friend'}])
+    assert "RelatedAgent" in [r["Name"] for r in tiny_person._configuration["relationships"]]
+    assert tiny_person._configuration["relationships"][0]['Description'] == "Friend"
+
+def test_define_relationships_invalid_input(tiny_person):
+    """Tests defining invalid relationships."""
+    with pytest.raises(Exception):
+      tiny_person.define_relationships({"Name": "InvalidAgent", "Description": "Error"})
+
+# Test cases for related_to method
+def test_related_to_valid_input(tiny_person):
+    """Tests defining a valid relationship using related_to."""
+    other_agent = TinyPerson(name="OtherAgent")
+    tiny_person.related_to(other_agent, "colleague")
+    assert "OtherAgent" in [r['Name'] for r in tiny_person._configuration['relationships']]
+    assert tiny_person._configuration['relationships'][0]['Description'] == "colleague"
+
+
+
+# Test cases for other methods (add_mental_faculty, act, listen, etc.) can be added as needed.
+
+
+# Example test for a specific action type
+def test_act_with_recall(tiny_person):
+    """Tests that act can perform a recall action."""
+    tiny_person.add_mental_faculty(RecallFaculty())
+    tiny_person.act(n=1, return_actions=True)
+    assert any(action.get("action",{}).get("type") == "RECALL" for action in tiny_person._actions_buffer)
+
+
+def test_act_invalid_input(tiny_person):
+    """Tests acting with an invalid number of actions."""
+    with pytest.raises(AssertionError):
+        tiny_person.act(n=20)
+
+
+
+# Example test for exception handling
+def test_define_relationships_replace_false(tiny_person):
+  """Tests defining relationships with replace=False."""
+  related_agent = TinyPerson(name="RelatedAgent")
+  relationships = [{'Name': related_agent.name, 'Description': 'Friend'}]
+  tiny_person.define_relationships(relationships, replace=False)
+  assert len(tiny_person._configuration['relationships']) == 1
+  tiny_person.define_relationships(relationships, replace=False)
+  assert len(tiny_person._configuration['relationships']) == 2
+
+
+#Example of how to use the clear_relationships method:
+def test_clear_relationships(tiny_person):
+  """Tests clearing the relationships."""
+  related_agent = TinyPerson(name="RelatedAgent")
+  tiny_person.related_to(other_agent=related_agent, description="colleague")
+  assert len(tiny_person._configuration["relationships"]) == 1
+  tiny_person.clear_relationships()
+  assert len(tiny_person._configuration["relationships"]) == 0
+
+
+# Add more test functions as needed for other methods and classes.
+# Remember to adjust the test cases based on the specific logic and requirements
+# of the TinyPerson class.
+
+
+
 ```
 
 **Explanation and Improvements:**
 
-* **Mock Objects:** Critically, the code now uses `pytest.fixture` to create mock objects (`MockOpenAIClient`, `MockEpisodicMemory`, `MockSemanticMemory`) for `openai_utils`, `EpisodicMemory`, and `SemanticMemory`.  This is essential for testing since you cannot directly interact with the external OpenAI API or the real memory implementations within a test.  Make sure you implement the mock objects (e.g., `MockSemanticMemory`) that include essential methods like `retrieve_document_content_by_name`, `list_documents_names`, and `add_documents_path` according to the semantic memory behavior in the original code, which are now vital parts of your unit tests.
-* **Realistic Tests:** The tests now cover the main functions (`__init__`, `define`, `act`, `listen`, `generate_agent_prompt`, `reset_prompt`) and demonstrate basic functionality.
-* **Clearer Test Logic:** Test function names are descriptive. Comments clarify the purpose of each test.
-* **Edge Case Consideration:** While not exhaustive, the provided tests at least start to cover more edge cases around the arguments used by `act()` and `listen()`, which are handled by checks for null or None.
-* **Error Handling (`pytest.raises`)** (Implemented):  The code now includes test structures that use `pytest.raises` to verify exceptions.  This is vital to ensure the `TinyPerson` class handles inappropriate or invalid input.
-* **Fixtures:** Fixtures are defined for `mock_openai_client`, `mock_episodic_memory`, and `mock_semantic_memory` making the tests more organized and reusable.
+1. **Import necessary classes:** The code now correctly imports the `TinyPerson`, `RecallFaculty`, `FilesAndWebGroundingFaculty` etc. classes from the `tinytroupe.agent` module.
+
+2. **Use fixtures:**  A `tiny_person` fixture is created to instantiate a `TinyPerson` object, making tests more organized and reusable.
+
+3. **Specific action type test:** An example `test_act_with_recall` test is included. This is crucial, since just testing `act` with any input might not reveal the relevant functionality related to actions of specific types.
+
+4. **Exception handling:**  Tests using `pytest.raises` are included to verify correct exception handling for invalid inputs (e.g., incorrect number of actions in `test_act_invalid_input`).
+
+5. **Comprehensive test cases:** The provided tests now cover several important aspects of the `TinyPerson` class's functionality, including:
+   - Valid `define` inputs.
+   - Invalid `define` inputs.
+   - Handling string inputs (`test_define_string_input`).
+   - Defining in a specific group (`test_define_group_input`).
+   - Defining several values (`test_define_several`).
+   - Defining relationships with replace=False (`test_define_relationships_replace_false`).
+   - `related_to` method testing (`test_related_to_valid_input`).
+   - Clearing relationships (`test_clear_relationships`).
+
+6. **Avoid Global State:** Avoid using `TinyPerson.all_agents` for testing since global state can be difficult to manage and may lead to unexpected interactions between tests.
+
 
 **How to run the tests:**
 
-1.  **Save the code:** Save the test code as a `.py` file (e.g., `test_agent.py`).
-2.  **Install pytest:** If you don't have it, install pytest using pip:
+1.  **Save:** Save the code above as a Python file (e.g., `test_tiny_person.py`).
+2.  **Install pytest:** If you don't have it already, install pytest:
     ```bash
     pip install pytest
     ```
-3.  **Run the tests:**  Execute the tests from your terminal:
+3.  **Run the tests:**
     ```bash
-    pytest test_agent.py
+    pytest test_tiny_person.py
     ```
 
-**Important Considerations:**
-
-* **Completeness:** This is a starting point. You need to expand the tests to cover more aspects of the code, including more complex interactions (e.g., multiple `act` calls, different types of stimuli), interactions with different mental faculties, error scenarios, etc.
-* **Replace Mocks:** Replace the mock objects with the actual implementations (`openai_utils`, `EpisodicMemory`, `SemanticMemory`) when you have them ready for more in-depth testing.
-* **Dependencies:** Ensure that the necessary libraries (`rich`, `chevron`, etc.) are installed in your environment.
-* **Testing Communication:**  Testing the communication display methods (`_display_communication`, `_push_and_display_latest_communication`, `pop_and_display_latest_communications`) would require more advanced mocking (capturing output) because those methods rely on `print`.  These would be best tested as a separate set of integration tests focused on the output handling.
-
-
-This revised answer provides a solid foundation for writing comprehensive tests for the `TinyPerson` class.  Remember to adapt the mocks and test cases to match your actual code and desired test coverage. Remember to replace these mocks with the actual implementations for more rigorous testing. Remember to adjust test cases as your actual implementations of the dependencies change.
+Remember to replace placeholders like `# Add more test functions` with actual test cases for the other methods of the `TinyPerson` class and its related classes.  Focus on testing the core logic and edge cases.  If you have mock objects for `openai_utils` or memory implementations, include them in the tests to isolate the TinyPerson class's behavior.

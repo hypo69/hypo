@@ -2,126 +2,106 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.remote.webelement import WebElement
-from src.webdriver import Driver, Chrome
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from src.webdriver.driver import Driver, Chrome  # Adjust import path as needed
 import time
+import os
 
 
-# Fixture for creating a Chrome driver
+# Fixture for creating a Chrome driver instance
 @pytest.fixture
-def chrome_driver_instance():
+def chrome_driver_fixture():
     driver = Driver(Chrome)
     yield driver
     driver.quit()
 
 
-# Test cases for Driver class
-def test_get_url(chrome_driver_instance):
-    """Tests successful navigation to a valid URL."""
+# Test for valid URL navigation
+def test_get_url_valid(chrome_driver_fixture):
+    """Tests navigation to a valid URL."""
     url = "https://www.example.com"
-    success = chrome_driver_instance.get_url(url)
-    assert success, f"Failed to navigate to {url}"
-    
-    # Check if the current URL is the expected one
-    assert chrome_driver_instance.current_url == url
+    result = chrome_driver_fixture.get_url(url)
+    assert result is True, "Failed to navigate to the URL."
+    # Add assertion for actual URL match
+    current_url = chrome_driver_fixture.current_url
+    assert current_url == url, f"Expected URL: {url}, Actual URL: {current_url}"
 
+# Test for invalid URL
+def test_get_url_invalid(chrome_driver_fixture):
+    """Tests navigation to an invalid URL (should not throw exception)."""
+    url = "invalid_url"
+    result = chrome_driver_fixture.get_url(url)
+    assert result is False, "Expected False for invalid URL"
 
-def test_get_url_invalid_url(chrome_driver_instance):
-    """Tests handling of an invalid URL."""
-    url = "invalid-url"
-    success = chrome_driver_instance.get_url(url)
-    assert not success, f"Successfully navigated to {url}, which should fail"
-
-
-def test_extract_domain(chrome_driver_instance):
-    """Tests extracting the domain from a URL."""
-    url = "https://www.example.com/path/to/page"
-    domain = chrome_driver_instance.extract_domain(url)
-    assert domain == "example.com", f"Incorrect domain extracted from {url}"
-
-
-def test_find_element(chrome_driver_instance):
+# Test for finding an element by CSS selector (valid element)
+def test_find_element_valid(chrome_driver_fixture):
     """Tests finding an element by CSS selector."""
     url = "https://www.example.com"
-    chrome_driver_instance.get_url(url)
-    element = chrome_driver_instance.find_element(By.CSS_SELECTOR, "h1")
-    assert element is not None, "Element not found"
+    chrome_driver_fixture.get_url(url)
+    try:
+        element = chrome_driver_fixture.find_element(By.CSS_SELECTOR, 'h1')
+        assert element is not None, "Element not found."
+    except (TimeoutException, NoSuchElementException) as e:
+        pytest.fail(f"Element not found. Exception: {e}")
 
-
-@pytest.mark.parametrize("method, url, expected", [
-    ("get_url", "https://www.example.com", True),
-    ("get_url", "invalid-url", False),
-])
-def test_driver_methods_with_valid_invalid_urls(chrome_driver_instance, method, url, expected):
-    """Tests various Driver methods with valid and invalid urls.
-
-    This is a more robust way to test multiple methods with the same logic, ensuring the method behaves as expected in different contexts.
-    """
-
-    if method == "get_url":
-        result = getattr(chrome_driver_instance, method)(url)
-        assert result == expected
-    else:
-        pytest.skip("No other methods tested in this example")
-
-
-
-def test_page_refresh(chrome_driver_instance):
-    """Tests refreshing the page."""
+# Test for finding an element by CSS selector (element not found)
+def test_find_element_invalid(chrome_driver_fixture):
+    """Tests finding an element by CSS selector (invalid selector)."""
     url = "https://www.example.com"
-    chrome_driver_instance.get_url(url)
-    success = chrome_driver_instance.page_refresh()
-    assert success, "Failed to refresh the page"
+    chrome_driver_fixture.get_url(url)
+    element = chrome_driver_fixture.find_element(By.CSS_SELECTOR, 'nonexistent_selector')
+    assert element is None, "Element should not be found."
 
-
-# Example of a test covering a specific method, 
-#  demonstrating error handling using pytest.raises
-def test_scroll_raises_exception(chrome_driver_instance):
-    """Tests if the scroll function raises an exception for invalid inputs.
-    (This test requires you have implemented checks for invalid inputs.)
-    """
-    with pytest.raises(ValueError):
-        # Replace with the appropriate call to driver.scroll with invalid input
-        chrome_driver_instance.scroll(scrolls="abc", direction="forward")
-    
+# Test for scrolling
+def test_scroll(chrome_driver_fixture):
+    """Tests successful scrolling."""
+    url = "https://www.example.com"
+    chrome_driver_fixture.get_url(url)
+    result = chrome_driver_fixture.scroll(scrolls=3, direction='forward', frame_size=1000, delay=1)
+    assert result is True, "Failed to scroll the page."
     
 
 
-# ... more test cases ...
+# Test for exception handling (using pytest.raises)
+def test_get_attribute_by_locator_no_element(chrome_driver_fixture):
+    """Tests that a proper exception is raised when element is not found"""
+    url = "https://www.example.com"
+    chrome_driver_fixture.get_url(url)
+    locator = {"by": "xpath", "selector": "//nonexistent_element"}
+    with pytest.raises(NoSuchElementException):
+        chrome_driver_fixture.get_attribute_by_locator(locator)
 
 
-#Important: Replace "https://www.example.com" with a stable, publicly available URL
-# that contains the expected elements.  Avoid using dynamically generated URLs 
-# or local files in your tests unless absolutely necessary.  Testing against
-# a live website isn't ideal for continuous integration or automated tests.
+# Add more tests as needed for other methods like `extract_domain`, `_save_cookies_localy`, etc.
+# Remember to replace 'example.com' with a real URL if you need to test with a real site.
+# Consider more complex scenarios and edge cases based on your actual code
+# Also, replace 'h1' with an appropriate selector for a website.
 ```
 
 **Explanation and Improvements:**
 
-* **Fixtures:**  Uses `@pytest.fixture` to create and manage the Chrome driver instance. This is crucial for test isolation, ensuring each test starts with a clean browser state.  Crucially, the `quit()` method is called within the fixture, ensuring the browser is closed after each test.
-* **Test Structure:** The tests are now organized by the tested method. This enhances readability and maintainability.
-* **Clearer Assertions:**  Instead of just checking for `True`, assertions now include informative messages that help debug failures.
-* **Exception Handling:** Includes a `test_scroll_raises_exception`  demonstrating how to use `pytest.raises` to test for exceptions.  Crucially, you need to add error handling within your original code to raise the `ValueError` in the `scroll` method for various invalid inputs.
-* **`parametrize` for Robustness:** The `test_driver_methods_with_valid_invalid_urls` function uses `@pytest.mark.parametrize` to test `get_url` with different inputs (valid and invalid URLs).  This improves test coverage and reduces redundancy.
-* **Parameterization:** Uses `pytest.mark.parametrize` for improved test coverage by testing multiple inputs.
+* **Fixtures:** Uses `@pytest.fixture` to create and manage the WebDriver instance, ensuring proper setup and teardown for each test.  Crucially, it quits the driver after each test.  This is vital for preventing resource conflicts.
+* **Error Handling:** Includes `try...except` blocks to handle potential `TimeoutException` and `NoSuchElementException` exceptions when interacting with web elements. Uses `pytest.raises` to test for expected exceptions.
+* **Clearer Assertions:** More descriptive assertions (e.g., checking the actual URL after navigation) for improved test accuracy.
+* **Valid/Invalid Tests:** Added tests for both valid and invalid URLs, which is crucial to cover how the code handles different inputs.
+* **Realistic Examples:**  Uses `https://www.example.com` which is a safe, public URL for testing.  Replacing placeholders (like `'h1'`) is essential for testing real-world scenarios.
+* **Complete Method Coverage:**  The test now has a basic test for `get_url`, `find_element` and `scroll` to cover multiple methods and possible errors.
+* **Import Adjustments:**  The `from src.webdriver.driver import Driver, Chrome` line is essential and needs to match your project's import structure.
 
 
-**How to Run:**
+**How to Run the Tests:**
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Save the code as a Python file (e.g., `test_driver.py`).
-3.  Run the tests: `pytest test_driver.py`
+1.  Save the code as a `.py` file (e.g., `test_driver.py`).
+2.  Run `pytest test_driver.py` from your terminal.
 
+**Important Considerations:**
 
-**Key Considerations:**
+* **Real URLs:** Replace `"https://www.example.com"` with actual URLs you want to test, if applicable.
+* **Element Selectors:** Update the `By.CSS_SELECTOR` values (e.g., `'h1'`) with accurate selectors from the website you're testing.  Use tools like the browser's developer console to inspect the target elements.
+* **WebDriver Initialization:** Make sure your WebDriver initialization (e.g., `Driver(Chrome)`) is correctly configured according to your setup instructions.
+* **Import Errors:** Ensure all necessary imports are working correctly.
+* **Timeout:**  If you are using `WebDriverWait`, you probably need a higher `timeout` value than the default.  Consider using `chrome_driver_fixture.wait(10)` or equivalent before each test to avoid failing due to timing issues.
 
-* **Real URLs:** Avoid testing against local files or dynamic URLs. Test against stable, publicly accessible websites.
-* **Stable Elements:**  Using publicly accessible, unchanging elements within your test websites is essential.
-* **Error Handling:**  The tests now reflect the need for robust error handling in the original code.  You need to add the appropriate exception raising (e.g., `ValueError`, `TypeError`) inside the `Driver` or `ExecuteLocator` methods for handling bad input.
-
-
-This improved structure provides a more robust and maintainable set of tests that better cover the various aspects of the `Driver` class. Remember to adapt these tests to the specific functionality of your `Driver` implementation.  The original code lacks important parts, like the actual implementation of the methods, which is necessary for complete test coverage.
+This significantly improved example provides a more robust and accurate test suite for your `Driver` class. Remember to add more tests for other methods and edge cases in your actual code.

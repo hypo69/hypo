@@ -1,126 +1,107 @@
-# Модуль: Ассистент программиста
+# Модуль: `doc_writer`
 
-Этот модуль содержит класс `CodeAssistant`, который используется для взаимодействия с различными AI-моделями (такими как Google Gemini и OpenAI) для выполнения задач по обработке кода.  Модуль предназначен для документирования кода в формате RST и обеспечивает поддержку различных языков.
+Этот модуль содержит класс `DocWriter`, который используется для генерации Markdown документации для кода.  Этот класс ориентирован на создание документации Python-кода, но может быть расширен и для других языков.
 
 ## Пример использования
 
 ```python
-assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-result = assistant.process_files(files=['file1.py', 'file2.py'], options={})
-print(result)
+import doc_writer
+
+# Предполагаем, что у вас есть модуль или файл Python, который нужно документировать
+# (например, 'my_module.py')
+
+documenter = doc_writer.DocWriter('my_module.py')  # инициализируем с путем к файлу
+markdown_documentation = documenter.generate_markdown()
+
+print(markdown_documentation)
+
 ```
 
-## Поддерживаемые платформы
-- Python 3.9+
+## Платформы
+
+- Linux
+- macOS
+- Windows
+
+## Краткое описание
+
+Этот модуль обеспечивает инструменты для автоматического создания документации в формате Markdown из Python-кода.  Класс `DocWriter` позволяет структурировать и описывать код, используя аннотации в формате docstrings, а также строит иерархию документации в виде дерева (модули, классы, функции).
 
 
-# Класс: CodeAssistant
+# Класс: `DocWriter`
 
-Класс `CodeAssistant` используется для взаимодействия с различными AI-моделями и предоставляет методы для анализа и генерации документации для кода.
+Класс `DocWriter` используется для анализа кода Python и генерации Markdown-документации.
+
 
 ## Атрибуты
 
-- `role`: Роль ассистента (например, 'code_checker').
-- `lang`: Язык, который будет использовать ассистент (например, 'ru').
-- `model`: Список используемых AI-моделей (например, ['gemini']).
+- `file_path`: Путь к файлу Python-кода для обработки.
+
 
 ## Методы
 
-### `process_files`
+### `generate_markdown`
 
-Метод для обработки списка файлов кода.
+Метод для генерации Markdown-документации из заданного файла.
 
 #### Параметры
 
-- `files`: Список путей к файлам для обработки.  Ожидается список строк.
-- `options`: Словарь с дополнительными параметрами для настройки обработки.  По умолчанию пустое значение.
+- Нет.
+
 
 #### Возвращаемое значение
 
-- Возвращает список словарей, где каждый словарь содержит информацию об обработанном файле. Возвращает `None`, если произошла ошибка или файлы не были найдены.
+- `markdown_documentation`: Строка Markdown-документации, созданная из входного файла Python.  Возвращает пустую строку, если файл не найден или при других ошибках.
+
 
 #### Пример использования
 
 ```python
-assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-result = assistant.process_files(files=['file1.py', 'file2.py'], options={})
-if result:
-    for file_data in result:
-        print(f"Обработанный файл: {file_data['filename']}, результат: {file_data['result']}")
+import doc_writer
+
+documenter = doc_writer.DocWriter('my_module.py')
+markdown_output = documenter.generate_markdown()
+
+if markdown_output:
+    print(markdown_output)
 else:
-    print("Ошибка при обработке файлов.")
+    print("Ошибка при генерации документации.")
 ```
 
 #### Возможные исключения
+- `FileNotFoundError`: Если передан некорректный путь к файлу Python.
+- `Exception`: Если произошла ошибка при анализе кода.
 
-- `FileNotFoundError`: Если один или несколько файлов из списка `files` не найдены.
-- `TypeError`: Если в качестве входных данных передан неверный тип данных.
-- `ValueError`: Если параметры options содержат неверные значения.
-- `Exception`:  Для других необработанных ошибок.
-
-```
-```
 
 ```python
-#Пример реализации (заглушка)
-import os
-class CodeAssistant:
-    def __init__(self, role, lang, model):
-        self.role = role
-        self.lang = lang
-        self.model = model
+# Предполагаемый код для doc_writer.py (фрагмент)
+import ast
+import inspect
 
-    def process_files(self, files, options=None):
-        if options is None:
-            options = {}
-        results = []
-        for file in files:
-            try:
-                with open(file, 'r') as f:
-                    code = f.read()
-                    # Симулируем обработку с помощью AI модели
-                    processed_data = {"filename": file, "result": f"Обработан файл {file}"}
-                    results.append(processed_data)
-            except FileNotFoundError:
-                print(f"Файл {file} не найден.")
-                return None
-            except Exception as e:
-                print(f"Ошибка при обработке файла {file}: {e}")
-                return None
-        return results
-```
-```
-```
-```python
-# Пример pytest теста для функции process_files
-import pytest
+class DocWriter:
+    def __init__(self, file_path):
+        self.file_path = file_path
 
-# Файлы в тестовой папке (для имитации)
-test_file_1 = "test_file1.txt"
-test_file_2 = "test_file2.txt"
+    def generate_markdown(self):
+        try:
+          with open(self.file_path, 'r') as file:
+            source_code = file.read()
+            tree = ast.parse(source_code)
+            # ... (Реализация логики генерации markdown из ast.parse(source_code))
+            markdown_output = generate_markdown_from_ast(tree)
+            return markdown_output
+        except FileNotFoundError:
+            print(f"Ошибка: Файл {self.file_path} не найден.")
+            return ""
+        except Exception as e:
+          print(f"Ошибка при генерации документации: {e}")
+          return ""
 
-def create_test_file(filename, content):
-    with open(filename, "w") as f:
-        f.write(content)
-
-@pytest.fixture
-def assistant_instance():
-    return CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-
-def test_process_files_valid_input(assistant_instance):
-    create_test_file(test_file_1, "test content")
-    create_test_file(test_file_2, "test content 2")
-    result = assistant_instance.process_files([test_file_1, test_file_2])
-    assert result is not None
-    assert len(result) == 2
-
-def test_process_files_file_not_found(assistant_instance):
-    result = assistant_instance.process_files([test_file_1])
-    assert result is None
-
+def generate_markdown_from_ast(tree):
+    # ... (Логика извлечения информации из ast.Node и построения markdown)
+    return "" # Возвращает пустую строку в простом случае
 
 ```
-```
-```
 
-```
+
+**Примечание:**  Полная реализация класса `DocWriter` требует более сложной обработки синтаксического дерева AST и функций для извлечения информации из docstrings и структур кода.  Этот фрагмент предоставляет скелет и основные методы, необходимые для задачи.

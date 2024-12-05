@@ -1,128 +1,132 @@
 ```python
 import pytest
 import configparser
-import os
+from tiny_troupe.examples import config
 
-def test_config_parsing_valid_input():
-    """Checks config parsing with valid INI content."""
-    config_ini = """
+def test_config_parsing():
+    """Tests the config parsing functionality."""
+    config_data = """
     [OpenAI]
     API_TYPE=openai
     AZURE_API_VERSION=2023-05-15
+    
     [Simulation]
     RAI_HARMFUL_CONTENT_PREVENTION=True
     """
-    config = configparser.ConfigParser()
-    config.read_string(config_ini)
-    assert config['OpenAI']['API_TYPE'] == 'openai'
-    assert config['Simulation']['RAI_HARMFUL_CONTENT_PREVENTION'] == 'True'
+    
+    # Test parsing a valid config string
+    config_parser = configparser.ConfigParser()
+    config_parser.read_string(config_data)
+    
+    assert config_parser['OpenAI']['API_TYPE'] == 'openai'
+    assert config_parser['Simulation']['RAI_HARMFUL_CONTENT_PREVENTION'] == 'True'
+
 
 def test_config_parsing_missing_section():
-    """Tests config parsing with a missing section."""
-    config_ini = """
+    """Test parsing a config string with a missing section."""
+    config_data = """
     [OpenAI]
     API_TYPE=openai
     """
-    config = configparser.ConfigParser()
+    
+    config_parser = configparser.ConfigParser()
     with pytest.raises(configparser.NoSectionError):
-        config.read_string(config_ini)
-        config['MissingSection']['key']  # Should raise exception
+      config_parser.read_string(config_data)
 
 
-def test_config_parsing_missing_option():
-    """Tests config parsing with a missing option."""
-    config_ini = """
+def test_config_parsing_missing_key():
+    """Test parsing a config string with a missing key."""
+    config_data = """
     [OpenAI]
     API_TYPE=openai
     """
-    config = configparser.ConfigParser()
-    config.read_string(config_ini)
+    
+    config_parser = configparser.ConfigParser()
+    config_parser.read_string(config_data)
     with pytest.raises(KeyError):
-        assert config['OpenAI']['MISSING_OPTION']
+      value = config_parser['OpenAI']['MISSING_KEY']
 
-def test_config_parsing_invalid_boolean():
-  """Tests config parsing with an invalid boolean value."""
-  config_ini = """
-  [OpenAI]
-  API_TYPE=openai
-  RAI_HARMFUL_CONTENT_PREVENTION=invalid
-  """
-  config = configparser.ConfigParser()
-  with pytest.raises(ValueError):
-    config.read_string(config_ini)
 
-def test_config_parsing_empty_file():
-    """Test config parsing with empty INI file."""
-    config_ini = ""
-    config = configparser.ConfigParser()
-    with pytest.raises(configparser.NoSectionError):
-        config.read_string(config_ini)  # Should raise an error
-
-def test_config_parsing_mixed_case_values():
-    """Checks config parsing with mixed case values for keys."""
-    config_ini = """
+def test_config_parsing_invalid_value():
+    """Test parsing a config string with an invalid value."""
+    config_data = """
     [OpenAI]
-    Api_Type=openai
+    API_TYPE=invalid
     """
-    config = configparser.ConfigParser()
-    config.read_string(config_ini)
-    assert config['OpenAI']['Api_Type'] == 'openai'  # Ensure case-insensitive reading
+    
+    config_parser = configparser.ConfigParser()
+    with pytest.raises(ValueError):
+        config_parser.read_string(config_data)
 
-def test_config_parsing_int_values():
-  """Tests config parsing with integer values."""
-  config_ini = """
+
+def test_config_get_api_type():
+    """Tests getting the API type from the config."""
+    config.config = configparser.ConfigParser()
+    config_data = """
+    [OpenAI]
+    API_TYPE=openai
+    """
+    config.config.read_string(config_data)
+    assert config.get_api_type() == 'openai'
+
+def test_config_get_api_type_missing():
+    """Tests getting API type when the section is missing."""
+    config.config = configparser.ConfigParser()
+    assert config.get_api_type() is None
+
+
+def test_config_get_api_type_no_config():
+  """Tests getting API type when config is not initialized."""
+  with pytest.raises(AttributeError) as excinfo:
+    config.get_api_type()
+  assert "config" in str(excinfo.value)
+
+def test_config_get_max_tokens():
+  """Tests getting MAX_TOKENS from the config."""
+  config.config = configparser.ConfigParser()
+  config_data = """
   [OpenAI]
-  MAX_ATTEMPTS=5
+  MAX_TOKENS=4000
   """
-  config = configparser.ConfigParser()
-  config.read_string(config_ini)
-  assert config['OpenAI']['MAX_ATTEMPTS'] == '5'  # Expect string representation
+  config.config.read_string(config_data)
+  assert config.get_max_tokens() == 4000
 
-# Test with the provided input code:
-def test_config_parsing_complete_ini():
-    """Test parsing with the complete input INI file."""
-    config_ini = """
-# The user-provided code goes here
-# ...
-[OpenAI]
-API_TYPE=openai
-AZURE_API_VERSION=2023-05-15
-MODEL=gpt-4o
-...
-[Logging]
-LOGLEVEL=ERROR
-"""
-    config = configparser.ConfigParser()
-    try:
-        config.read_string(config_ini)
-        # Assertions to check specific values.  Crucially, these should
-        # be specific to the expected data.  The file has a lot of parameters.
-        assert config['OpenAI']['API_TYPE'] == 'openai'
-        assert config['Logging']['LOGLEVEL'] == 'ERROR'
-    except Exception as e:
-      pytest.fail(f"Error parsing config: {e}")
+
+def test_config_get_max_tokens_missing():
+  """Tests getting MAX_TOKENS when the key is missing."""
+  config.config = configparser.ConfigParser()
+  assert config.get_max_tokens() is None
+
+
+#Add tests for other config parameters (e.g., get_temperature, get_timeout, etc.) following the same pattern.  Remember to include appropriate test cases for missing or invalid values.
 ```
 
 **Explanation and Improvements:**
 
-1. **Comprehensive Test Coverage:** The tests now cover various scenarios, including missing sections, missing options, invalid boolean values, empty files, and mixed-case keys. This ensures robustness.
+1. **Comprehensive Test Coverage:** The provided tests now cover various scenarios including missing sections, missing keys, invalid values, and cases where the config file might not be properly initialized.
 
-2. **Clear Test Names:** Test function names are more descriptive, improving readability and understanding.
+2. **Clear Test Names:** The test function names are descriptive (e.g., `test_config_parsing_missing_section`), indicating the specific scenario being tested.
 
-3. **pytest.raises:** Used effectively to test expected exceptions, ensuring appropriate handling of invalid input.
+3. **Error Handling with `pytest.raises`:** The tests now use `pytest.raises` to assert that the code correctly handles exceptions when encountering invalid input, such as missing sections or keys.
 
-4. **Specific Assertions:**  The `test_config_parsing_complete_ini` test is now more robust by including specific assertions for different values, ensuring the parser correctly identifies and extracts the parameters. The initial test was very rudimentary.
+4. **Data-driven tests (if needed):** For more complex configurations or validation scenarios, consider using `pytest.mark.parametrize` to generate tests based on different input values, especially for handling diverse user-provided configurations.
 
-5. **Error Handling:** A `try...except` block is now included in `test_config_parsing_complete_ini` to catch and report parsing errors. This prevents pytest from failing silently if the parsing fails.
+5. **`configparser` specific tests:** Added tests to verify that configparser handles missing sections and keys correctly in isolation.
 
-6. **File Handling (Important):** The tests now use `config.read_string()` instead of `config.read()`.  This allows you to read the config content from a string literal directly within the test without relying on an external `config.ini` file. This is critical for making the tests self-contained and avoid any external file dependencies.
+6. **Testing `get_` methods:**  Tests now focus on verifying the actual getter methods like `get_api_type`, `get_max_tokens`.  These are crucial for checking the code's ability to extract and utilize the configuration values.
 
-7. **Complete Example:**  The `test_config_parsing_complete_ini` now includes some of the data from the provided example, giving a working example of how to test specific parameter values.
 
-**How to run the tests:**
+**How to Run the Tests:**
 
-1. Save the tests as a Python file (e.g., `test_config.py`).
-2. Install pytest: `pip install pytest`
-3. Run the tests from your terminal: `pytest test_config.py`
+1. Save the test code as a Python file (e.g., `test_config.py`).
+2. Ensure the `tiny_troupe.examples` module (or whatever the module containing the `config` object is) is importable.
+3. Run `pytest test_config.py` from your terminal.  This will execute the test suite.
 
-This improved solution provides a much more comprehensive and reliable set of tests for the config parsing. Remember to adapt the specific assertions in the `test_config_parsing_complete_ini` test to the actual data you expect to parse. This is essential for a thorough test suite.
+
+**Important Considerations for the `config.py` File (where the `config` class is):**
+
+- **Initialization:** The tests now expect that `config.config` is initialized properly (either by reading a config file or string).  Make sure your `config.py` file does this setup correctly.  The example assumes you're reading from a string for testing.  If you're using a file, you'll need to adapt the test setup accordingly.
+- **Error Handling in `config.py`:** Your `config.py` should handle cases where the configuration file is missing or contains invalid data.  The tests should confirm that this is the case.  The tests above assume this error handling exists and tests its correctness.
+
+
+By following these improvements, your test suite is more comprehensive, robust, and easier to maintain. Remember to add similar tests for other configuration parameters in the `tiny_troupe.examples.config` module.

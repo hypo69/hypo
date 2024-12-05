@@ -8,23 +8,20 @@
 	:platform: Windows, Unix
 	:synopsis: module handles the promotion of messages and events in Facebook groups.
 It processes campaigns and events, posting them to Facebook groups while avoiding duplicate promotions.
-
 """
 MODE = 'dev'
 
-...
-import time
+
 import random
 from datetime import datetime, timedelta
 from pathlib import Path
-import re
 from urllib.parse import urlencode
 from types import SimpleNamespace
 from typing import Optional
 
 from src import gs
 from src.endpoints.advertisement import facebook
-from src.webdriver.driver import Driver, Chrome
+from src.webdriver.driver import Driver
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.endpoints.advertisement.facebook.scenarios import (post_message, 
                                                   post_event, 
@@ -70,10 +67,10 @@ class FacebookPromoter:
     This class automates the posting of promotions to Facebook groups using a WebDriver instance,
     ensuring that categories and events are promoted while avoiding duplicates.
     """
-    d:Driver = None
+    d: Driver = None
     group_file_paths: str | Path = None
-    no_video:bool = False
-    promoter:str
+    no_video: bool = False
+    promoter: str
 
     def __init__(self, d: Driver, promoter: str, group_file_paths: Optional[list[str | Path] | str | Path] = None, no_video: bool = False):
         """ Initializes the promoter for Facebook groups.
@@ -88,8 +85,6 @@ class FacebookPromoter:
         self.group_file_paths = group_file_paths if group_file_paths else get_filenames(gs.path.google_drive / 'facebook' / 'groups')
         self.no_video = no_video
         self.spinner = spinning_cursor()
-
-
 
     def promote(self, group: SimpleNamespace, item: SimpleNamespace, is_event: bool = False, language: str = None, currency: str = None) -> bool:
         """Promotes a category or event in a Facebook group."""
@@ -126,7 +121,6 @@ class FacebookPromoter:
         self.update_group_promotion_data(group, ev_or_msg.name)
         return True
 
-
     def log_promotion_error(self, is_event: bool, item_name: str):
         """Logs promotion error for category or event."""
         logger.debug(f"Error while posting {'event' if is_event else 'category'} {item_name}", None, False)
@@ -136,16 +130,15 @@ class FacebookPromoter:
         timestamp = datetime.now().strftime("%d/%m/%y %H:%M")
         group.last_promo_sended = gs.now
         if is_event:
-            group.promoted_events = group.promoted_events if isinstance(group.promoted_events,list) else [group.promoted_events]
+            group.promoted_events = group.promoted_events if isinstance(group.promoted_events, list) else [group.promoted_events]
             group.promoted_events.append(item_name)
         else:
-            group.promoted_categories = group.promoted_categories if isinstance(group.promoted_categories,list) else [group.promoted_categories]
+            group.promoted_categories = group.promoted_categories if isinstance(group.promoted_categories, list) else [group.promoted_categories]
             group.promoted_categories.append(item_name)
         group.last_promo_sended = timestamp
 
     def process_groups(self, campaign_name: str = None, events: list[SimpleNamespace] = None, is_event: bool = False, group_file_paths: list[str] = None, group_categories_to_adv: list[str] = ['sales'], language: str = None, currency: str = None):
-        """Processes all groups for the current campaign or event promotion."""
-    
+        """Processes all groups for the current campaign or event promotion."""    
         if not campaign_name and not events:
             logger.debug("Nothing to promote!")
             return
@@ -165,7 +158,7 @@ class FacebookPromoter:
                     logger.debug(f"{campaign_name=}\n Interval in group: {group.group_url}", None, False)
                     continue
 
-                if not set(group_categories_to_adv).intersection(group.group_categories if isinstance(group.group_categories,list) else [group.group_categories]) or not 'active' in group.status:
+                if not set(group_categories_to_adv).intersection(group.group_categories if isinstance(group.group_categories, list) else [group.group_categories]) or not 'active' in group.status:
                     continue
 
                 if not is_event:
@@ -191,11 +184,9 @@ class FacebookPromoter:
                 t = random.randint(30, 420)
                 print(f"sleeping {t} sec")
                 time.sleep(t)
-                
 
     def get_category_item(self, campaign_name: str, group: SimpleNamespace, language: str, currency: str) -> SimpleNamespace:
-        """Fetches the category item for promotion based on the campaign and promoter."""
-    
+        """Fetches the category item for promotion based on the campaign and promoter."""    
         if self.promoter == 'aliexpress':
             ce = AliCampaignEditor(campaign_name=campaign_name, language=group.language, currency=group.currency)
             list_categories = ce.list_categories
@@ -224,117 +215,11 @@ class FacebookPromoter:
         return item
 
     def check_interval(self, group: SimpleNamespace) -> bool:
-        """ Checks if the required interval has passed for the next promotion.
+        """Checks if the interval between promotions has passed for a group."""
+        if not group.last_promo_sended:
+            return True
 
-        Args:
-            group (SimpleNamespace): Group to check.
-
-        Returns:
-            bool: True if the interval has passed, otherwise False.
-
-        Raises:
-            ValueError: If the interval format is invalid.
-
-        Example:
-            >>> group = SimpleNamespace(interval="1H", last_promo_sended="01/01/23 10:00")
-            >>> result = check_interval(group)
-            >>> print(result)
-            True
-        """
-        try:
-            interval_timedelta = self.parse_interval(group.interval) if hasattr(group, 'interval') else timedelta()
-            last_promo_time = datetime.strptime(group.last_promo_sended, "%d/%m/%y %H:%M") if hasattr(group, 'last_promo_sended') else None
-            return not last_promo_time or datetime.now() - last_promo_time >= interval_timedelta
-        except ValueError as e:
-            logger.error(f"Error parsing interval for group {group.group_url}: {e}")
+        last_promo = datetime.strptime(group.last_promo_sended, "%d/%m/%y %H:%M")
+        if datetime.now() - last_promo < timedelta(hours=12):
             return False
-
-    def parse_interval(self, interval: str) -> timedelta:
-        """ Converts a string interval to a timedelta object.
-
-        Args:
-            interval (str): Interval in string format (e.g., '1H', '6M').
-
-        Returns:
-            timedelta: Corresponding timedelta object.
-
-        Raises:
-            ValueError: If the interval format is invalid.
-
-        Example:
-            >>> result = parse_interval('1H')
-            >>> print(result)
-            1:00:00
-        """
-        match = re.match(r"(\d+)([HM])", interval)
-        if not match:
-            raise ValueError(f"Invalid interval format: {interval}")
-        value, unit = match.groups()
-        return timedelta(hours=int(value)) if unit == "H" else timedelta(minutes=int(value))
-
-    def run_campaigns(self, campaigns: list[str], group_file_paths: list[str] = None, group_categories_to_adv: list[str] = ['sales'], language:str = None, currency:str = None, no_video:bool = False):
-        """ Runs the campaign promotion cycle for all groups and categories sequentially.
-
-        Args:
-            campaigns (list[str]): List of campaign names to promote.
-            group_file_paths (list[str]): List of file paths containing group data.
-
-        Example:
-            >>> promoter.run_campaigns(campaigns=["Campaign1", "Campaign2"], group_file_paths=["group1.json", "group2.json"])
-        """
-        self.no_video = no_video 
-
-        while campaigns:  # Продолжаем, пока есть кампании
-            if isinstance(campaigns,list):
-                random.shuffle(campaigns)  
-                campaign_name = campaigns.pop()  
-            else:
-                campaign_name = campaigns
-
-            if self.process_groups(group_file_paths = group_file_paths if group_file_paths else self.group_file_paths, 
-                                group_categories_to_adv = group_categories_to_adv, 
-                                campaign_name = campaign_name,  
-                                language = language, 
-                                currency = currency):
-
-                logger.debug(f"Закончил {campaign_name=}")
-                return True
-            else:                
-                logger.error(f"Не Закончил {campaign_name=}", None, True)
-                return 
-
-    def run_events(self, events_names: list[str], group_file_paths: list[str]):
-        """ Runs event promotion in all groups sequentially.
-
-        Args:
-            events (list[SimpleNamespace]): List of events to promote.
-            group_file_paths (list[str]): List of file paths containing group data.
-
-        Example:
-            >>> event = SimpleNamespace(event_name="Special Event")
-            >>> promoter.run_events(events=[event], group_file_paths=["group1.json", "group2.json"])
-        """
-        for event in  events_names:
-            event_ns = j_loads_ns(gs.path.google_drive / 'aliexpress' / 'events' / event / f"{event}.json")
-            self.process_groups(group_file_paths=group_file_paths, campaign_name="", is_event=True, events=event_ns)
-
-
-
-    def stop(self):
-        """ Stops the promotion process by quitting the WebDriver instance.
-
-        Example:
-            >>> promoter.stop()
-        """
-        self.d.quit()
-
-# Example usage:
-if __name__ == "__main__":
-    group_files = ["ru_usd.json", "usa.json", "ger_en_eur.json", "he_il.json", "ru_il.json"]
-    promoter = FacebookPromoter(d=Driver(Chrome), group_file_paths=group_files, no_video=True)
-
-    try:
-        promoter.run_campaigns(campaigns=["campaign1", "campaign2"], group_file_paths=group_files)
-        # promoter.run_events(events=[event1, event2], group_file_paths=group_files)
-    except KeyboardInterrupt:
-        print("Campaign promotion interrupted.")
+        return True

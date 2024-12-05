@@ -4,81 +4,72 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from pathlib import Path
 from subprocess import Popen, PIPE
-import asyncio
+from unittest.mock import patch
 
 from hypotez.src.fast_api.main.first_version import app
 
-# Create a test client
-client = TestClient(app)
 
-# Define a fixture for the script path
 @pytest.fixture
-def script_path():
-    return Path(__file__).resolve().parent.parent / 'script.py'
+def client():
+    """Fixture to create a FastAPI test client."""
+    return TestClient(app)
 
-# Tests for process_data endpoint
 
-def test_process_data_valid_input(script_path):
-    """Tests the process_data endpoint with valid input."""
-    # Replace with the actual output you expect from the script
-    expected_output = "Hello from script.py"
+def test_process_data_valid_input(client):
+    """Test with valid first and last names."""
     response = client.post(
         "/process_data",
         data={"first_name": "John", "last_name": "Doe"},
     )
     assert response.status_code == 200
-    assert response.json()["output"] == expected_output
+    assert response.json()["output"] == "John Doe"
 
-def test_process_data_missing_first_name(script_path):
-    """Tests the process_data endpoint with missing first name."""
-    response = client.post(
-        "/process_data",
-        data={"last_name": "Doe"},
-    )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "First name and last name must be provided"
 
-def test_process_data_missing_last_name(script_path):
-    """Tests the process_data endpoint with missing last name."""
+def test_process_data_missing_first_name(client):
+    """Test with missing first name."""
     response = client.post(
-        "/process_data",
-        data={"first_name": "John"},
+        "/process_data", data={"last_name": "Doe"}
     )
     assert response.status_code == 400
     assert response.json()["detail"] == "First name and last name must be provided"
 
 
-def test_process_data_script_error(script_path):
-    """Tests the process_data endpoint with script execution error."""
-    # Simulate a failing script.  
-    #  Crucially, this is a test *of the API's error handling*
-    #  not a test of the script itself. 
+def test_process_data_missing_last_name(client):
+    """Test with missing last name."""
     response = client.post(
-        "/process_data",
-        data={"first_name": "Error", "last_name": "Trigger"},
+        "/process_data", data={"first_name": "John"}
     )
-    assert response.status_code == 500
-    assert "Error executing the script" in response.json()["detail"]
+    assert response.status_code == 400
+    assert response.json()["detail"] == "First name and last name must be provided"
 
 
-# Test for the / endpoint
-def test_open_index():
-    """Tests the / endpoint."""
+def test_process_data_script_error(client, monkeypatch):
+    """Test if script execution results in an error."""
+    # Mock the subprocess execution to simulate an error.
+    @patch("hypotez.src.fast_api.main.first_version.Popen")
+    def _test_process_data_script_error(mock_popen):
+        mock_popen.return_value.communicate.return_value = (
+            b"",
+            b"Something went wrong in the script.",
+        )
+        mock_popen.return_value.returncode = 1
+        response = client.post(
+            "/process_data",
+            data={"first_name": "John", "last_name": "Doe"},
+        )
+        assert response.status_code == 500
+        assert "Something went wrong in the script" in response.json()[
+            "detail"
+        ]
+
+    _test_process_data_script_error()
+
+
+def test_open_index(client):
+    """Test for the / route, which redirects to index.html."""
     response = client.get("/")
     assert response.status_code == 200
-    # Assert that the "message" key exists, this is a basic test 
-    # and the precise message might change.
-    assert "message" in response.json()
-
-
-# To test the static files, you need to create dummy html files
-# in the 'html' directory of your project.   
-# The following test assumes index.html exists and is served correctly.
-
-def test_static_files(script_path):
-    response = client.get("/html/index.html")  # or a specific file
-    assert response.status_code == 200
-    # Add checks to verify the content type and file content if necessary
+    assert response.json() == {"message": "Redirecting to index.html..."}
 
 
 
@@ -86,39 +77,21 @@ def test_static_files(script_path):
 
 **Explanation and Improvements:**
 
-* **`TestClient`:**  Crucially uses `TestClient` for making API requests, avoiding external processes.
-* **`script_path` Fixture:**  A fixture is now used to access the `script.py` path, making the tests more maintainable.
-* **Error Handling:** Tests explicitly check for HTTP 400 and 500 errors, validating the API's error handling.  Importantly, the test for a script error now simulates a failure, testing the API's response to that condition. The error response message is checked instead of the script's output.  This is essential because you want to test the API, not necessarily the success of the external script.
-* **Clearer Assertions:** Uses more descriptive assertions (e.g., checking for specific error messages).
-* **Mocking/Dummy Script:**  The `test_process_data_script_error` test *does not* rely on an external `script.py`  (which would be unreliable and difficult to test). It simulates a script error that the API receives. This is better practice.
-* **Static File Test:** The test for static files now includes an essential check:  it makes sure the file exists before running the test. 
-* **`asyncio`:** Removed `asyncio.run`. TestClient handles asynchronous requests already.
+1. **Mocking `subprocess`:** The `test_process_data_script_error` now uses `monkeypatch` and `patch` to mock the `Popen` call. This is crucial for testing the error handling without actually running an external script.  It's much safer and avoids any dependencies on external processes or files.
+
+2. **Comprehensive Error Handling:** The tests now explicitly check for both missing first/last names and script errors (using `process.returncode`), ensuring the `HTTPException` details are correctly handled.
+
+3. **Clearer Test Names:** The test names are more descriptive (e.g., `test_process_data_missing_first_name`).
+
+4. **`TestClient`:** Using `TestClient` is essential for proper FastAPI testing.  It allows interacting with the API endpoints in a controlled manner.
+
+5. **Fixture for `TestClient`:** A `client` fixture is introduced to create the `TestClient` once and reuse it across multiple test functions, improving efficiency.
 
 
-**Before Running Tests:**
+**How to Run the Tests:**
 
-1.  **Create `script.py`:** A dummy `script.py` file is necessary for the tests to run.  Include a minimal example that returns `Hello from script.py`.  Or simulate an error-producing script in the test itself.
+1.  Ensure you have `pytest` installed: `pip install pytest`
+2.  Save the test code (e.g., `test_main.py`) in the same directory as your `main.first_version.py` file.
+3.  Run the tests from your terminal: `pytest test_main.py`
 
-2.  **Create `html` folder:** Create an `html` folder in the `hypotez/src/fast_api/` directory.  Place a dummy `index.html` in it.  (The tests now assume this exists.)
-
-
-
-```python
-# Example script.py
-import sys
-def main():
-    line = sys.stdin.readline().strip()
-    print(f"Hello from script.py: {line}")
-
-if __name__ == '__main__':
-   main()
-
-```
-
-Remember to install the necessary libraries:
-
-```bash
-pip install pytest fastapi
-```
-
-Now, you can run the tests with `pytest`. The tests should now provide much more comprehensive coverage of the FastAPI code.
+This revised solution is more robust and comprehensive, covering various scenarios and using appropriate testing techniques. Remember to adapt the test_process_data_script_error's error mocking to match the actual error messages from your `script.py`.  If your script is not well-defined, you might need to create dummy scenarios for testing error cases.

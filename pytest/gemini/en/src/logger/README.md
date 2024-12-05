@@ -2,131 +2,125 @@
 import pytest
 import logging
 import os
-import sys
 import colorama
+from unittest.mock import patch
 
-# Replace with your actual logger module if it's in a different location
-# Example: from hypotez.src.logger import Logger, SingletonMeta, JsonFormatter  # Adjust if needed
-from logger import Logger, SingletonMeta, JsonFormatter
+# Replace 'hypotez/src/logger' with the actual path if needed
+from hypotez.src.logger import Logger, SingletonMeta, JsonFormatter
+
+# Mock colorama for testing
+@patch('hypotez.src.logger.colorama')
+def test_logger_initialization(mock_colorama):
+    """Tests logger initialization with valid config."""
+    config = {
+        'info_log_path': 'logs/info.log',
+        'debug_log_path': 'logs/debug.log',
+        'errors_log_path': 'logs/errors.log',
+        'json_log_path': 'logs/log.json'
+    }
+    logger = Logger()
+    logger.initialize_loggers(**config)
+    
+    # Assert that the initialize_loggers method was called correctly.
+    # This is important to check that the logger was configured.
+    assert logger._loggers['info'].getEffectiveLevel() == logging.INFO
+    assert logger._loggers['debug'].getEffectiveLevel() == logging.DEBUG
+    assert logger._loggers['errors'].getEffectiveLevel() == logging.ERROR
+    assert logger._loggers['json'].getEffectiveLevel() == logging.DEBUG  # Verify JSON logger level
 
 
-# Fixtures (replace with your actual fixture if needed)
-@pytest.fixture
-def logger_instance():
-    """Creates a Logger instance for testing."""
+@patch('hypotez.src.logger.colorama')
+def test_logger_initialization_no_paths(mock_colorama):
+    """Tests logger initialization with no paths."""
+    logger = Logger()
+    logger.initialize_loggers()
+    
+    # Assert that the logger was initialized without errors (no paths specified)
+    assert logger._loggers
+
+def test_logger_log(capsys):
+    """Tests logging of messages at various levels."""
     logger = Logger()
     config = {
-        'info_log_path': 'test_logs/info.log',
-        'debug_log_path': 'test_logs/debug.log',
-        'errors_log_path': 'test_logs/errors.log',
-        'json_log_path': 'test_logs/log.json'
+        'info_log_path': 'logs/info.log',
     }
     logger.initialize_loggers(**config)
-    return logger
 
+    logger.info('This is an info message')
+    logger.error('This is an error message')
+    logger.debug('This is a debug message')
+    
+    out, err = capsys.readouterr()
+    assert 'This is an info message' in out
+    assert 'This is an error message' in out
+    assert 'This is a debug message' in out
 
-# Create a temporary directory if it doesn't exist
-test_log_dir = "test_logs"
-os.makedirs(test_log_dir, exist_ok=True)
-
-
-def test_initialize_loggers(logger_instance):
-    """Tests the initialize_loggers method."""
-    assert hasattr(logger_instance, '_info_logger')
-    assert hasattr(logger_instance, '_debug_logger')
-    assert hasattr(logger_instance, '_error_logger')
-    assert hasattr(logger_instance, '_json_logger')
-    assert isinstance(logger_instance._info_logger, logging.Logger)
-
-
-
-def test_log_info(logger_instance):
-    """Tests logging an info message."""
-    logger_instance.info("This is an info message")
-    assert os.path.exists('test_logs/info.log') #check log file exists
-
-def test_log_error(logger_instance):
-    """Tests logging an error message."""
-    logger_instance.error("This is an error message")
-    assert os.path.exists('test_logs/errors.log')
-
-def test_log_debug(logger_instance):
-    """Tests logging a debug message."""
-    logger_instance.debug("This is a debug message")
-    assert os.path.exists('test_logs/debug.log')
-
-
-def test_log_with_exception(logger_instance):
-    """Tests logging a message with an exception."""
+@patch('hypotez.src.logger.colorama')
+def test_logger_log_with_exception(capsys, mock_colorama):
+    """Tests logging of messages with exceptions."""
+    logger = Logger()
+    config = {
+        'info_log_path': 'logs/info.log',
+    }
+    logger.initialize_loggers(**config)
     try:
-        raise ValueError("Example exception")
-    except ValueError as e:
-        logger_instance.error("An error occurred", ex=e)
-    assert os.path.exists('test_logs/errors.log')
+        1 / 0
+    except ZeroDivisionError as e:
+        logger.error("Division by zero", ex=e)
+    
+    out, err = capsys.readouterr()
+    assert "ZeroDivisionError" in out
 
+# Cleanup function to remove any created log files
+def cleanup_log_files():
+    files_to_remove = ['logs/info.log', 'logs/debug.log', 'logs/errors.log', 'logs/log.json']
+    for file in files_to_remove:
+        if os.path.exists(file):
+            os.remove(file)
+            
+# Add this cleanup function call after all test cases.
+@pytest.fixture(scope="session", autouse=True)
+def cleanup():
+    yield
+    cleanup_log_files()
 
-def test_log_with_colors(logger_instance):
-    """Tests logging with custom colors (if colorama is used)."""
-    try:
-        # Example using colorama.  Import needed.
-        logger_instance.info("Colored message", colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
-    except NameError:
-        pytest.skip("colorama not available, skipping color test")
+# Example test to handle invalid input path (optional)
+def test_initialize_loggers_invalid_path():
+    with pytest.raises(FileNotFoundError) as excinfo:
+        logger = Logger()
+        config = {'info_log_path': '/this/path/does/not/exist'}
+        logger.initialize_loggers(**config)
+        assert str(excinfo.value).startswith("No such file or directory")  # Example assertion
 
-
-def test_log_with_no_path(logger_instance):
-    """Tests log with no path.
-    This test is important to verify that if log paths are not provided,
-    the logger still functions correctly and doesn't raise errors.
-    """
-    logger_instance.initialize_loggers()  # Call without paths.
-    logger_instance.info("Log message without path")
-    assert os.path.exists('test_logs/info.log')  # Assert that default log file is created
-
-# Cleanup temporary files after testing
-def teardown_module(module):
-    """Cleans up temporary log files after testing."""
-    try:
-        import shutil
-        if os.path.exists(test_log_dir):
-            shutil.rmtree(test_log_dir)
-    except Exception as e:
-        print(f"Error during cleanup: {e}")
-        pass
-
+# Test for specific log levels and color customization (if applicable)
+# ...
 ```
 
 **Explanation and Improvements:**
 
-1. **Import Statements:** Added necessary imports, including `os` for file operations and `shutil` for cleanup.  Crucially, the `colorama` import is included, but a `try...except` block (a `pytest.skip` is more Pythonic) is added to handle cases where colorama isn't installed.
+1. **Import necessary modules:** The code now imports the necessary modules (`logging`, `os`, `colorama`, and the custom `Logger` class).
 
-2. **Fixture for `logger_instance`:** Creates a `logger_instance` fixture to avoid redundant logger creation in each test.  This is a very important best practice!
+2. **Mocking `colorama`:** Uses `@patch` to mock `colorama` for testing, preventing issues with console colors that might interfere with automated tests.
 
-3. **Cleanup:** The `teardown_module` function is added to remove the temporary log directory and files created during testing. This is *critical* to prevent test failures caused by leftover files.
+3. **Cleanup function:** A `cleanup_log_files` function is added to remove any generated log files after tests are run. This is crucial to avoid test failures from leftover files.
 
-4. **Test Cases:** Added tests for `info`, `error`, `debug`, handling exceptions, and demonstrating the logger with optional color parameters.  A test case demonstrating the log with no paths is included for completeness.
+4. **`@pytest.fixture(scope="session", autouse=True)`:**  This crucial fixture ensures that the `cleanup_log_files` function runs *after* all tests in the session, regardless of whether any of them failed or succeeded.
 
-5. **Error Handling:** The `try...except` block in `test_log_with_colors` gracefully handles cases where colorama isn't available without stopping the entire test run.
+5. **Clearer Test Names:** Test names are more descriptive (e.g., `test_logger_initialization`).
 
-6. **Clearer Assertions:** The assertion now directly checks for the existence of the log files to verify they were created.
+6. **Exception Handling:** Added a test `test_logger_initialization_invalid_path` to demonstrate how to test for exception handling when passing an invalid log path.
 
-7. **Directory Creation:** Code now creates the `test_logs` directory if it doesn't exist to avoid `FileNotFoundError`.
+7. **Mocking `colorama`:**  Mocking `colorama` is essential to make the tests reliable.  If the tests were to depend on the console output colors, they would be unpredictable.
 
-8. **Error Handling During Cleanup:** A `try...except` block is included in the cleanup to prevent the entire test suite from failing if there's an issue during cleanup (e.g., permission problems).  Printing an informative error message is helpful.
+8. **Example Assertion:** Demonstrates how to assert that the exception message is as expected.
 
-9. **pytest.skip:** The more correct way to handle unavailable libraries in a test is to use `pytest.skip`.
+9. **Comprehensive Tests:** Added tests to cover different logging levels, basic functionality.
 
+**How to Run:**
 
-**Before Running:**
+1. Make sure you have `pytest` installed: `pip install pytest`
+2. Save the code (including the mock patch) in a suitable Python file (e.g., `test_logger.py`).
+3. Ensure the `hypotez/src/logger` module is in the correct location or update the import path in the tests if needed.
+4. Run the tests: `pytest test_logger.py`
 
-* **Install Dependencies:** Make sure you have the required libraries installed, especially `colorama` if you want to test the color functionality:
-
-```bash
-pip install colorama pytest
-```
-
-* **Replace Placeholder:** If your logger module is in a different path (e.g., `hypotez.src.logger`), adjust the import statement in the tests accordingly.
-
-
-
-This improved solution is more robust, complete, and follows best practices for writing Python tests using pytest. Remember to replace `"logger"` with the actual path to your logger module if it's located elsewhere. Remember to run `pytest` from the directory containing your tests.
+Remember to replace `'hypotez/src/logger'` with the correct path to your `logger` module if needed. This improved version provides a more robust and reliable test suite for your `Logger` class, covering various scenarios and potential errors. Remember to adapt the paths to the actual files used by your code.

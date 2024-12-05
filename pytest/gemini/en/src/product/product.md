@@ -1,105 +1,83 @@
 ```python
 import pytest
-from hypotez.src.product.product import Product
-from hypotez.src.category import Category
-import datetime
-
-# Mock Category class for testing
-class MockCategory:
-    @staticmethod
-    def get_parents(id_category: int, dept: int = 0) -> list:
-        # Example return values for testing
-        if id_category == 1:
-            return [{"id": 1, "name": "Parent 1"}]
-        elif id_category == 2:
-            return [{"id": 2, "name": "Parent 2"}, {"id": 1, "name": "Parent 1"}]
-        elif id_category == 3:
-          return []
-        else:
-          return None
+import hypotez.src.product.product as product
+from hypotez.src.category import Category  # Import necessary modules
 
 
-# Replace the actual Category class with the MockCategory for testing
-Product.category_class = MockCategory
+# Fixtures (if needed, but likely not for these tests)
 
 
+# Tests for Product.get_parent_categories
 def test_get_parent_categories_valid_input():
-    """Tests get_parent_categories with valid integer input."""
-    categories = Product.get_parent_categories(1)
-    assert categories == [{"id": 1, "name": "Parent 1"}]
-
-
-def test_get_parent_categories_valid_input2():
-  """Tests get_parent_categories with valid integer input."""
-  categories = Product.get_parent_categories(2)
-  assert categories == [{"id": 2, "name": "Parent 2"}, {"id": 1, "name": "Parent 1"}]
-
-
-def test_get_parent_categories_valid_input_empty():
-  """Tests get_parent_categories when no parent categories are found."""
-  categories = Product.get_parent_categories(3)
-  assert categories == []
+    """Tests with valid input (integer category ID)."""
+    # Mock Category.get_parents for testing purposes
+    # Replace with actual calls if Category.get_parents is available.
+    mocked_get_parents = lambda id_category, dept: [{"id": 1, "name": "Parent 1"}]
+    Category.get_parents = mocked_get_parents
+    
+    result = product.Product.get_parent_categories(1)
+    assert result == [{"id": 1, "name": "Parent 1"}]
 
 
 def test_get_parent_categories_invalid_input():
-    """Tests get_parent_categories with non-integer input."""
-    with pytest.raises(TypeError):
-        Product.get_parent_categories("abc")
+    """Tests with non-integer category ID."""
+    with pytest.raises(TypeError) as excinfo:
+        product.Product.get_parent_categories("invalid")
+    assert "id_category must be an integer" in str(excinfo.value)
 
-
-def test_get_parent_categories_invalid_input_none():
-    """Tests get_parent_categories with invalid input - None"""
-    with pytest.raises(TypeError):
-      Product.get_parent_categories(None)
-
-
-
-def test_get_parent_categories_invalid_input_float():
-    """Tests get_parent_categories with invalid input - Float"""
-    with pytest.raises(TypeError):
-        Product.get_parent_categories(1.2)
+def test_get_parent_categories_depth():
+  """Tests with depth parameter"""
+  # Mock Category.get_parents
+  mocked_get_parents = lambda id_category, dept: [{"id": 1, "name": "Parent 1"}]
+  Category.get_parents = mocked_get_parents
+  
+  result = product.Product.get_parent_categories(1, 2)  # Test with depth 2
+  assert result == [{"id": 1, "name": "Parent 1"}]
 
 
 
-# Add more test cases as needed for different input values and scenarios.
-# For instance, test cases with dept parameter, or cases where get_parents returns an empty list or None.
-# Example using a mocking framework:  (Adjust based on your mocking library)
+# Test edge cases, including potentially empty result from Category.get_parents.
+def test_get_parent_categories_empty_result():
+    """Tests when Category.get_parents returns an empty list."""
+    mocked_get_parents = lambda id_category, dept: []
+    Category.get_parents = mocked_get_parents
+    result = product.Product.get_parent_categories(2)
+    assert result == []
+
+
+# Important:  If Category.get_parents has more complex logic,
+# further tests should cover those edge cases in Category's test file.
+
+
+# Example test for __init__ (if applicable and relevant):
+# def test_product_init_valid_args(example_data):  # Using a fixture for test data
+#     # ... (tests for __init__ with various arguments)
+
+
+# Remember to replace the mocked Category.get_parents with actual calls
+# if your project has an available implementation for Category.get_parents
+
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `Category`:** The code now mocks the `Category` class using a `MockCategory` class. This isolates the test from the actual `Category` implementation, preventing dependency issues and making the tests more robust.  This is crucial for testing internal functions.
+1. **Mocking `Category.get_parents`:** The provided code doesn't define `Category.get_parents`.  Critically, the tests now mock this function. This is *essential* for isolating the `Product` class's `get_parent_categories` method from the intricacies of `Category`.  This avoids needing actual Category instances and data.
 
-2. **Comprehensive Test Cases:** Added tests covering:
-   - Valid integer input (multiple cases).
-   - Handling of non-integer input (using `pytest.raises`).
-   - The case where `get_parents` returns an empty list (tested with id 3).
-   - Testing with None value input.
-   - Testing with Float value input.
+2. **Clearer Test Names:** Test names are more descriptive, indicating the input type and expected behavior.
 
+3. **Exception Handling:** The `test_get_parent_categories_invalid_input` test now correctly uses `pytest.raises` to assert the expected `TypeError`.
 
-3. **Clear Test Names:** Test function names are now more descriptive and indicate the specific input and expected outcome.
+4. **Edge Case Testing:** `test_get_parent_categories_empty_result` demonstrates handling an empty return from the mocked `Category.get_parents`. This is a crucial edge case.
+
+5. **Depth Parameter Test**: Added a test to cover the `dept` parameter.
 
 
-4. **Error Handling:** The tests now use `pytest.raises` to assert that a `TypeError` is raised when `id_category` is not an integer, which is critical for robust exception handling testing.
+**Crucial Next Steps:**
+
+* **Replace the Mock:** Replace the `mocked_get_parents` lambda functions with the actual `Category.get_parents` calls if available in your project, which is likely.  This is critical for realistic testing.
+* **Category Tests:** Create unit tests for the `Category` class to thoroughly test its `get_parents` method, which you'll need to make sure works as expected before relying on it within the `Product` tests. This will greatly improve the overall test coverage and reliability.
+* **`__init__` Tests (if necessary):** If `Product.__init__` has complex logic or takes multiple arguments, add more tests to cover its different scenarios.  A fixture for arguments would be useful in this case.
 
 
-5. **Readability and Structure:** Improved the overall structure and readability of the test code, making it easier to understand and maintain.
-
-
-**How to Run the Tests:**
-
-1.  **Install pytest:**
-    ```bash
-    pip install pytest
-    ```
-
-2.  **Save the test code** (e.g., `test_product.py`) in the same directory as your `product.py` file.
-
-3.  **Run the tests from your terminal:**
-    ```bash
-    pytest test_product.py
-    ```
-
-This revised solution provides a more complete and robust set of tests, which better reflects the code's intended functionality and error handling. Remember to adapt the mocks to the actual behavior of your `Category` class if the `MockCategory` doesn't align with it.  If `Category` has other methods or data members, you should update the tests to cover those as well.
+By following these suggestions, you'll create a complete and reliable test suite. Remember to adjust the imports and test cases based on the actual structure of your project. Remember that you need `pytest` installed (`pip install pytest`) to run these tests.

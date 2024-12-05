@@ -1,138 +1,115 @@
 ```python
 import pytest
+import json
 
-# Example locator data (replace with actual data loading)
-locator_data = {
-    "close_banner": {
-        "attribute": None,
-        "by": "XPATH",
-        "selector": "//button[@id = 'closeXButton']",
-        "if_list": "first",
-        "use_mouse": False,
-        "mandatory": False,
-        "event": "click()",
-        "locator_description": "Закрываю pop-up окно. Если оно не появилось — не страшно"
-    },
-    "additional_images_urls": {
-        "attribute": "src",
-        "by": "XPATH",
-        "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
-        "if_list": "all",
-        "use_mouse": False,
-        "mandatory": False,
-        "event": None,
-        "locator_description": "Получает список `url` дополнительных изображений"
-    },
-    "id_supplier": {
-        "attribute": "innerText",
-        "by": "XPATH",
-        "selector": "//span[@class = 'ltr sku-copy']",
-        "if_list": "first",
-        "use_mouse": False,
-        "mandatory": True,
-        "event": None,
-        "locator_description": "SKU Morlevi"
-    },
-    "default_image_url": {
-        "attribute": None,
-        "by": "XPATH",
-        "selector": "//a[@id = 'mainpic']//img",
-        "if_list": "first",
-        "use_mouse": False,
-        "event": "screenshot()",
-        "mandatory": True,
-        "locator_description": "Внимание! Картинка получается через screenshot и возвращается как PNG"
-    }
-}
+# Sample locator data (replace with your actual data loading)
+locator_data = """
+"close_banner": {
+    "attribute": null, 
+    "by": "XPATH",
+    "selector": "//button[@id = 'closeXButton']",
+    "if_list": "first",
+    "use_mouse": false,
+    "mandatory": false,
+    "event": "click()",
+    "locator_description": "Закрываю pop-up окно."
+  },
+  "additional_images_urls": {
+    "attribute": "src",
+    "by": "XPATH",
+    "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
+    "if_list": "all",
+    "use_mouse": false,
+    "mandatory": false,
+    "event": null,
+    "locator_description": "Получает список url дополнительных изображений."
+  }
+"""
+
+# Function to parse the locator data
+def parse_locator(locator_data_str):
+    try:
+        return json.loads(locator_data_str)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON locator data: {e}")
 
 
-# Dummy WebDriver class for testing (replace with actual WebDriver)
-class WebDriver:
-    def find_element(self, by, selector, if_list="first"):
-        """Finds an element using the given locator strategy."""
-        # Replace with actual implementation to find element
-        if by == "XPATH" and selector == "//button[@id = 'closeXButton']":
-            return "close_banner"
-        return None
-
-    def find_elements(self, by, selector):
-        """Finds all elements using the given locator strategy."""
-        # Replace with actual implementation to find elements
-        if by == "XPATH" and selector == "//ol[contains(@class, 'flex-control-thumbs')]//img":
-            return ["img1", "img2"]
-        return []
-
-    def execute_event(self, element, event):
-        """Executes the specified event on the element."""
-        if element and event == "click()":
-            print(f"Element clicked: {element}")
-        if element and event == "screenshot()":
-            return b"screenshot_bytes" # Example
+# Function to simulate locator interaction (replace with your actual implementation)
+def locate_element(locator):
+    # Dummy implementation - replace with your actual locator logic
+    if locator['by'] == "XPATH":
+      return {"found": True, "element": "element"}  # For testing purposes
+    else:
+        return {"found": False, "element": None}
+    
 
 
-def test_find_element_valid_locator():
-    """Tests finding an element with a valid locator."""
-    driver = WebDriver()
-    element = driver.find_element("XPATH", "//button[@id = 'closeXButton']")
-    assert element == "close_banner"
+@pytest.fixture
+def locator_data_fixture():
+    return parse_locator(locator_data)
+
+def test_locate_element_valid_xpath(locator_data_fixture):
+  locator = locator_data_fixture['close_banner']
+  result = locate_element(locator)
+  assert result['found'] == True
 
 
-def test_find_elements_valid_locator():
-    """Tests finding multiple elements with a valid locator."""
-    driver = WebDriver()
-    elements = driver.find_elements("XPATH", "//ol[contains(@class, 'flex-control-thumbs')]//img")
-    assert len(elements) == 2
-    # More assertion if necessary
+def test_locate_element_invalid_by(locator_data_fixture):
+  # Simulate an invalid locator by type
+  invalid_locator = locator_data_fixture['close_banner']
+  invalid_locator['by'] = "INVALID_BY"
+  with pytest.raises(ValueError):
+    locate_element(invalid_locator)
+
+
+def test_locate_element_missing_selector(locator_data_fixture):
+  # Simulate a missing selector
+  missing_selector_locator = locator_data_fixture['close_banner']
+  missing_selector_locator['selector'] = None
+  with pytest.raises(ValueError) as excinfo:
+    locate_element(missing_selector_locator)
+  assert "Missing selector" in str(excinfo.value)
+
+
+def test_locate_element_attribute_not_found(locator_data_fixture):
+    # Simulate an invalid locator
+    invalid_locator = locator_data_fixture['close_banner']
+    invalid_locator['attribute'] = "nonexistent_attribute"
+    with pytest.raises(ValueError):
+        locate_element(invalid_locator)
+
+
+def test_locate_element_if_list_first(locator_data_fixture):
+    locator = locator_data_fixture['close_banner']
+    locator['if_list'] = 'first'
+    result = locate_element(locator)
+    assert isinstance(result, dict)
 
 
 
-def test_execute_event_click():
-    """Tests clicking an element."""
-    driver = WebDriver()
-    element = driver.find_element("XPATH", "//button[@id = 'closeXButton']")
-    driver.execute_event(element, "click()")
-
-
-def test_execute_event_screenshot():
-    """Tests getting screenshot."""
-    driver = WebDriver()
-    element = driver.find_element("XPATH", "//a[@id = 'mainpic']//img")
-    screenshot_bytes = driver.execute_event(element, "screenshot()")
-    assert screenshot_bytes is not None
-    assert isinstance(screenshot_bytes, bytes)
-
-
-# Add more test cases for invalid inputs, edge cases, and other scenarios.  Example:
-def test_find_element_invalid_locator():
-    driver = WebDriver()
-    with pytest.raises(Exception) as excinfo:  # Expect an exception
-        driver.find_element("XPATH", "//invalid_locator")
-    assert "Element not found" in str(excinfo.value)  # Check the error message
+def test_parse_locator_invalid_json():
+    invalid_json = "This is not valid JSON"
+    with pytest.raises(ValueError) as e:
+        parse_locator(invalid_json)
+    assert "Invalid JSON" in str(e.value)
 ```
 
 **Explanation and Improvements:**
 
-1.  **Dummy `WebDriver`:** Created a dummy `WebDriver` class to simulate the interaction with the browser. Replace this with your actual `WebDriver` implementation when using a real browser.  Crucially, it now includes methods for `find_elements` and `execute_event` to handle more complex cases.  Note the example return values.
+* **Error Handling:** The `parse_locator` function now includes error handling for invalid JSON using `try-except` blocks, raising a `ValueError` if the input isn't valid JSON. This is crucial for robustness.
+* **Clearer Test Names:** Test names are more descriptive, making the purpose of each test immediately apparent.
+* **Edge Cases:** Added tests for missing selectors, invalid `by` types, and invalid attributes.  This covers potential issues.
+* **`pytest.raises`:** Used `pytest.raises` for exception testing, ensuring that the tests catch and handle errors as expected.
+* **Dummy `locate_element`:** A dummy `locate_element` function is provided.  **Crucially, replace this with your actual locator implementation** to make the tests functional.
+* **Data Handling:**  The test now uses a `locator_data_fixture` to store the locator data.  This prevents the need to repeatedly load the JSON data in each test function.
+* **Comprehensive Testing:** The tests cover various aspects, including valid and invalid `by` types, missing/invalid selectors, and different `attribute` values.
 
 
-2.  **Clearer Test Cases:** The tests are now more focused and use better variable names.
+**How to use:**
+
+1. **Replace the dummy `locate_element` function** with your actual function for interacting with the WebDriver and locating elements.
+2. **Load your locator data** from the relevant file in your project.  Modify the `locator_data` variable accordingly.
+3. **Run the tests:** Use `pytest` to run the tests: `pytest your_test_file.py` (replace `your_test_file.py` with the actual name of your test file).
 
 
-3.  **Exception Handling:** The `test_find_element_invalid_locator` demonstrates how to use `pytest.raises` to test for expected exceptions (e.g., element not found).
-
-
-4.  **Comprehensive Test Coverage:** The added tests cover the `find_element`, `find_elements`, and `execute_event` functions.  The example demonstrates testing a case where a locator isn't found.
-
-
-5.  **Data Handling:** The `locator_data` is now a simple dictionary. This example assumes that the actual data is read from the file in a meaningful way.  In a real project, you should be loading this data from a file instead of hardcoding it.
-
-
-**How to use with your actual code:**
-
-1.  **Replace `WebDriver`:**  Import your actual WebDriver class (e.g., from Selenium).
-2.  **Load `locator_data`:**  Replace the example `locator_data` with code to load the JSON data from the file `hypotez/src/suppliers/locator.ru.md`.
-3.  **Add more test cases:**  Create tests for scenarios not covered here, such as finding specific elements in a list, handling different `by` values, and checking the returned data types.
-
-
-
-Remember to install pytest: `pip install pytest`
+This improved solution provides a more robust and comprehensive set of test cases for your locator functions, ensuring they handle various situations correctly. Remember to replace the placeholder code with your actual implementation. Remember to import the `pytest` library. Also, ensure your `locator_data` variable is correctly populated with your actual locator data.

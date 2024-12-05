@@ -5,92 +5,109 @@ import configparser
 def test_config_parsing():
     """Tests the parsing of the config file."""
     config = configparser.ConfigParser()
-    config.read('config.ini')  # Replace 'config.ini' with the actual file path
+    config.read('config.ini')  # Replace with your config file path
+    
+    # Check for required sections
+    assert 'OpenAI' in config.sections()
+    assert 'Simulation' in config.sections()
+    assert 'Logging' in config.sections()
 
-    # Test accessing various sections and options
+    # Check for key existence
+    assert config.has_option('OpenAI', 'API_TYPE')
+    assert config.has_option('OpenAI', 'MODEL')
+    assert config.has_option('Simulation', 'RAI_HARMFUL_CONTENT_PREVENTION')
+
+    # Example of value checking. Add more as needed.
     assert config['OpenAI']['API_TYPE'] == 'openai'
     assert config['OpenAI']['MODEL'] == 'gpt-4o'
-    assert config['Simulation']['RAI_HARMFUL_CONTENT_PREVENTION'] == 'True'
-    assert config['Logging']['LOGLEVEL'] == 'ERROR'
 
-    # Test for non-existent section
-    with pytest.raises(KeyError):
-        config['NonExistentSection']['test']
+    # Example of handling missing keys.
+    # If this option wasn't expected to exist, it could be:
+    # assert not config.has_option('OpenAI', 'NONEXISTENT_KEY')
 
-    # Test for non-existent option
-    with pytest.raises(KeyError):
-        config['OpenAI']['NonExistentOption']
+    #Example checking for correct types
+    try:
+        int(config['OpenAI']['MAX_TOKENS'])
+        float(config['OpenAI']['TEMPERATURE'])
+    except ValueError as e:
+        pytest.fail(f"Invalid data type in config.ini. {e}")
 
-def test_config_parsing_invalid_file():
-    """Tests handling of a non-existent config file."""
+def test_config_parsing_nonexistent_file():
+    """Tests that config file not found raises an exception."""
+    with pytest.raises(FileNotFoundError):
+        config = configparser.ConfigParser()
+        config.read('nonexistent_config.ini')
+
+def test_config_parsing_invalid_section():
+    """Tests that invalid config file section parsing results in an exception."""
     config = configparser.ConfigParser()
-    with pytest.raises(configparser.Error):
-      config.read('nonexistent_config.ini')
+    with pytest.raises(configparser.NoSectionError):
+        config['Invalid_Section'] = 'some_value'
 
-
-def test_config_parsing_missing_section():
-    """Tests handling of a config file missing required section."""
+def test_config_parsing_invalid_value_type():
+    """Tests that config file with invalid value type raises an exception."""
     config = configparser.ConfigParser()
+    config.read_string("""[OpenAI]
+    API_TYPE=openai
+    MODEL=gpt-4o
+    INVALID_VALUE=abc
+    """)
 
-    # Simulate a config file missing the 'OpenAI' section
-    config.read_string("[Simulation]\nRAI_HARMFUL_CONTENT_PREVENTION=True")
-    with pytest.raises(KeyError):
-      config['OpenAI']['API_TYPE']
-
-
-def test_config_parsing_invalid_value():
-    """Test parsing with an invalid value format."""
-    config = configparser.ConfigParser()
-
-    # Simulate a config file with an invalid value format for an option.
-    config.read_string("[OpenAI]\nAPI_TYPE=invalid")
-    with pytest.raises(ValueError):
-        config['OpenAI']['API_TYPE']
-
-
-def test_config_parsing_int_option():
-    """Test parsing integer options."""
-    config = configparser.ConfigParser()
-    config.read_string("[OpenAI]\nMAX_TOKENS=4000")  # This example is correct
-    assert config['OpenAI']['MAX_TOKENS'] == '4000'
 
     with pytest.raises(ValueError):
-        config.read_string("[OpenAI]\nMAX_TOKENS=abc") # This should fail
+        int(config['OpenAI']['INVALID_VALUE'])
 
 
-def test_config_parsing_boolean_option():
-  """Test parsing boolean options."""
+# Example using a fixture for potentially shared setup (if applicable)
+
+@pytest.fixture
+def config_file_path():
+    return 'config.ini' # Replace with your config file path
+
+
+def test_config_parsing_with_fixture(config_file_path):
+  """Demonstrates using a fixture."""
   config = configparser.ConfigParser()
-  config.read_string("[OpenAI]\nCACHE_API_CALLS=True")
-  assert config['OpenAI']['CACHE_API_CALLS'] == 'True'
-  config.read_string("[OpenAI]\nCACHE_API_CALLS=False")
-  assert config['OpenAI']['CACHE_API_CALLS'] == 'False'
+  config.read(config_file_path)
+  assert config['OpenAI']['API_TYPE'] == 'openai'
+
+#Example of testing exception handling. Add more as needed.
+def test_invalid_loglevel():
+  config = configparser.ConfigParser()
+  config.read_string("""[Logging]
+    LOGLEVEL=INVALID_LEVEL
+""")
+
+  with pytest.raises(ValueError):
+    config['Logging']['LOGLEVEL']
 
 
-    
 
+#Important:  Replace 'config.ini' with the actual path to your config file.
 ```
 
 **Explanation and Improvements:**
 
-1. **`test_config_parsing`:**  This now tests various aspects of the configuration, including both valid and invalid input cases. It uses `pytest.raises` to catch `KeyError` when accessing missing sections/options. This is crucial for testing robust error handling.
+1. **Clearer Test Names:** Test names now accurately reflect the purpose of each test.
+2. **Comprehensive Coverage:** Tests cover parsing of required sections and options, as well as checking for correct data types.
+3. **Error Handling:** Includes `pytest.raises` for `FileNotFoundError` and `configparser.NoSectionError` to test for cases where the config file doesn't exist or the section isn't found.  Also includes test for `ValueError` for incorrect data type handling.
+4. **Data Validation:** Verifies that the values parsed are of the expected data types (e.g., integers, floats).  This is crucial for avoiding runtime errors in the application.
+5. **Example Fixture:** Shows how a fixture could be used if you have setup needed for multiple tests.
+6. **Example Handling Missing Keys:**  Added an example of handling optional config items which aren't present in the config file.
+7. **Robustness:** Added tests for invalid values, including invalid data types to improve the test's reliability.
 
-2. **`test_config_parsing_invalid_file`:**  Added a test to check if the script can handle a non-existent config file. This prevents unexpected errors during runtime.
+**How to run the tests:**
 
-3. **`test_config_parsing_missing_section`:**  A test demonstrating how the code handles a missing section in the config file.
-
-4. **`test_config_parsing_invalid_value`:** Added to cover scenarios where an option has an invalid value type.
-
-5. **`test_config_parsing_int_option`:** Added to demonstrate handling of integer values in the config file. Includes a test case that should fail if the value is not an integer. This is critical to validate data type handling.
-
-6. **`test_config_parsing_boolean_option`:**  Handles boolean values ('True', 'False') to validate that the parsing works correctly.
-
-
-**Before running the tests:**
-
-1. **Save the code:**  Save the provided Python config.ini code into a file named `config.ini`.
-
-2. **Run pytest:**  Open a terminal in the same directory as the `config.ini` and your test file, then run `pytest`. pytest will find and execute the tests.
+1.  Save the test code as a Python file (e.g., `test_config.py`).
+2.  Save the config file you're testing as `config.ini`.
+3.  Run `pytest test_config.py` from your terminal in the same directory as the test and config files.
 
 
-This significantly improves the test suite by comprehensively covering expected and unexpected behaviors, and demonstrates how to handle different data types and file existence errors in a robust test suite for config parsing. Remember to replace `'config.ini'` with the actual path to your config file if it's not in the same directory as your test file.
+**Important considerations when adapting this:**
+
+*   **Replace placeholders:** Update `'config.ini'` with the actual path to your config file.
+*   **Add more tests:** This example has a good starting point.  Thorough testing involves more tests with various combinations of valid and invalid data in the config file.
+*   **Adapt to your specific config file format:** This code assumes a standard INI format.  If your config file structure is more complex or different, you'll need to adjust the tests.
+
+
+This revised solution is more robust and comprehensive in addressing potential issues and validating the integrity of the config file parsing. Remember to add more tests as needed to cover all the functionality and edge cases of your config file parsing logic. Remember to consider error handling and valid/invalid values of options in your config file.

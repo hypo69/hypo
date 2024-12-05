@@ -4,69 +4,75 @@ from pathlib import Path
 from hypotez.src.utils.path import get_relative_path
 
 def test_get_relative_path_valid_input():
-    """Checks correct behavior with valid input."""
-    full_path = "/Users/john/Documents/project/src/utils/path.py"
-    relative_from = "src/utils"
-    expected_output = "path.py"
-    assert get_relative_path(full_path, relative_from) == expected_output
+    """Checks correct behavior with a valid input."""
+    full_path = "/home/user/project/src/utils/path.py"
+    relative_from = "project/src/utils"
+    expected_relative_path = "path.py"
+    actual_relative_path = get_relative_path(full_path, relative_from)
+    assert actual_relative_path == expected_relative_path
 
-def test_get_relative_path_valid_input_different_sep():
-    """Checks correct behavior with valid input and different separator."""
-    full_path = "C:\\Users\\john\\Documents\\project\\src\\utils\\path.py"
-    relative_from = "src\\utils"
-    expected_output = "path.py"
-    assert get_relative_path(full_path, relative_from) == expected_output
+    full_path = "C:/Users/John/Documents/project/data/file.txt"
+    relative_from = "project/data"
+    expected_relative_path = "file.txt"
+    actual_relative_path = get_relative_path(full_path, relative_from)
+    assert actual_relative_path == expected_relative_path
 
 
-def test_get_relative_path_relative_from_at_end():
-    """Checks behavior when relative_from is the last part of the path."""
-    full_path = "/Users/john/Documents/project/src/utils"
-    relative_from = "src/utils"
-    expected_output = ""
-    assert get_relative_path(full_path, relative_from) == expected_output
+def test_get_relative_path_relative_from_at_root():
+    """Tests relative_from at root path."""
+    full_path = "/home/user/project/file.txt"
+    relative_from = "/"
+    expected_relative_path = "home/user/project/file.txt"
+    actual_relative_path = get_relative_path(full_path, relative_from)
+    assert actual_relative_path == expected_relative_path
 
 
 def test_get_relative_path_relative_from_not_found():
-    """Checks the function's handling when relative_from is not found."""
-    full_path = "/Users/john/Documents/project/src/utils/path.py"
-    relative_from = "src/data"
-    assert get_relative_path(full_path, relative_from) is None
+    """Checks handling when relative_from is not in the path."""
+    full_path = "/home/user/project/data/file.txt"
+    relative_from = "project/src/utils"
+    actual_relative_path = get_relative_path(full_path, relative_from)
+    assert actual_relative_path is None
 
 
-def test_get_relative_path_empty_relative_from():
-    """Tests the function with an empty string as relative_from."""
-    full_path = "/Users/john/Documents/project/src/utils/path.py"
-    relative_from = ""
-    expected_output = "/Users/john/Documents/project/src/utils/path.py"
-    assert get_relative_path(full_path, relative_from) == expected_output
-
-
-def test_get_relative_path_invalid_full_path():
-    """Checks the function's handling with an invalid full_path."""
-    full_path = "invalid_path"  # Invalid path
-    relative_from = "src/utils"
-    with pytest.raises(TypeError):
-        get_relative_path(full_path, relative_from)
-
-def test_get_relative_path_invalid_relative_from():
-  """Tests the function with an invalid relative_from."""
-  full_path = "/Users/john/Documents/project/src/utils/path.py"
-  relative_from = 123 #Invalid input type
-  with pytest.raises(TypeError):
-      get_relative_path(full_path, relative_from)
-
-
-def test_get_relative_path_empty_full_path():
-  """Tests handling empty full_path."""
+def test_get_relative_path_empty_path():
+  """Checks behavior with empty full_path."""
   full_path = ""
-  relative_from = "src/utils"
-  assert get_relative_path(full_path, relative_from) is None
+  relative_from = "project/src"
+  actual_relative_path = get_relative_path(full_path, relative_from)
+  assert actual_relative_path is None
 
-# test with different path separators - important for cross-platform compatibility
-def test_get_relative_path_windows_paths():
-  """Checks for handling different path separators (Windows)."""
-  full_path = "C:\\Users\\john\\Documents\\project\\src\\utils\\path.py"
-  relative_from = "src\\utils"
-  assert get_relative_path(full_path, relative_from) == "path.py"
+def test_get_relative_path_relative_from_empty_string():
+  """Checks behavior with empty relative_from."""
+  full_path = "/home/user/project/file.txt"
+  relative_from = ""
+  actual_relative_path = get_relative_path(full_path, relative_from)
+  assert actual_relative_path is None
 
+def test_get_relative_path_invalid_input_type():
+    """Tests with invalid input types."""
+    with pytest.raises(TypeError):
+        get_relative_path(123, "project/src")  # Integer as full_path
+    with pytest.raises(TypeError):
+        get_relative_path("/path/to/file", 123) # Integer as relative_from
+    with pytest.raises(TypeError):
+        get_relative_path(None, "project/src") # None as full_path
+
+def test_get_relative_path_empty_relative_from_in_path():
+    """Tests relative_from existing but being empty str."""
+    full_path = "/home/user/project/src/utils"
+    relative_from = ""
+    actual_relative_path = get_relative_path(full_path, relative_from)
+    assert actual_relative_path == ""
+
+
+
+#Example using Windows paths
+def test_get_relative_path_windows_path():
+    """Tests with Windows path."""
+    full_path = "C:/Users/John/Documents/project/data/file.txt"
+    relative_from = "C:/Users/John/Documents/project"
+    expected_relative_path = "data/file.txt"
+    actual_relative_path = get_relative_path(full_path, relative_from)
+    assert actual_relative_path == expected_relative_path
 ```

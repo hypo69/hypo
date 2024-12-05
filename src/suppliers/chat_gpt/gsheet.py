@@ -47,7 +47,7 @@ from typing import List
 from gspread.worksheet import Worksheet
 from src.goog.spreadsheet.spreadsheet import SpreadSheet
 
-from src.utils import j_dumps
+from src.utils.jjson import j_dumps
 from src.utils.printer import pprint
 from src.logger import logger
 

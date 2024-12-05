@@ -1,107 +1,79 @@
 ```python
 import pytest
 import io
-from tiny_utils.convertors import text2png  # Replace with actual module path if needed
-from tiny_utils.convertors import xml2dict  # Replace with actual module path if needed
+from tiny_utils.convertors import text2png  # Replace with the actual module path if needed
+from unittest.mock import patch
 
 
-# Example usage of fixture (replace with actual fixture if needed)
-@pytest.fixture
-def test_text():
-    return "Hello, World!"
+# Replace with the actual path if different
+# Example usage assuming tiny_utils directory
+# import sys
+# sys.path.append('../tiny_utils')
 
 
-@pytest.fixture
-def test_xml_data():
-    return "<root><item>Hello</item></root>"
+def test_text2png_valid_input():
+    """Checks correct behavior with valid input."""
+    text = "Hello, World!"
+    output_path = "output_image.png"
+
+    # Mock the output file to avoid creating a file in the test
+    with patch('builtins.open', new_callable=mock_open, read_data='') as m:
+        text2png.convert(text, output_path)
+        m.assert_called_once_with(output_path, 'wb')
 
 
-# Tests for text2png
-def test_text2png_valid_input(test_text):
-    """Tests conversion of text to PNG with valid input."""
-    output_path = "output_image.png"  # Replace with a temporary file
-    text2png.convert(test_text, output_path)
-    #  Add assertions to verify the file was created and has the correct data
-    # (e.g., using `os.path.exists`, `PIL` library to inspect the image). 
-    #  This is an important part that's missing as the test currently only calls the function.
-    pass
+def test_text2png_empty_input():
+    """Checks handling of empty input."""
+    text = ""
+    output_path = "output_image.png"
 
-def test_text2png_invalid_input():
-    """Tests text2png with invalid input (e.g., None)."""
-    with pytest.raises(TypeError):  # Example - replace with expected exception if different
-        text2png.convert(None, "output_image.png")
+    # Mock the output file to avoid creating a file in the test
+    with patch('builtins.open', new_callable=mock_open, read_data='') as m:
+      with pytest.raises(ValueError, match="Input text cannot be empty"):
+        text2png.convert(text, output_path)
+
+        # This should not be reached if ValueError is raised
+        # m.assert_called_once_with(output_path, 'wb')
 
 
-# Tests for xml2dict
-def test_xml2dict_valid_input(test_xml_data):
-    """Tests conversion of XML to dictionary with valid input."""
-    expected_dict = {"root": {"item": "Hello"}}  # Replace with actual expected dictionary
-    actual_dict = xml2dict.convert(test_xml_data)
-    assert actual_dict == expected_dict
+def test_text2png_invalid_output_path():
+    """Checks handling of invalid output path."""
+    text = "Hello, World!"
+    output_path = "invalid/path"
 
-def test_xml2dict_invalid_input():
-    """Tests xml2dict with invalid input (e.g., malformed XML)."""
-    invalid_xml = "<root><item>"  # Example - replace with actual malformed XML
-    with pytest.raises(ValueError) as excinfo: #Or other expected exception
-        xml2dict.convert(invalid_xml)
-    assert "Invalid XML" in str(excinfo.value) #Or more specific error messages
+    # Check if the exception is caught correctly
+    with pytest.raises(FileNotFoundError, match="The output path 'invalid/path' is not a valid directory."):
+        text2png.convert(text, output_path)
 
 
-# Example adding tests for potential other functions/modules
-#  Add tests for different functions (e.g., tts, webp2png, etc.) following a similar structure
-
-
-def test_empty_input_xml2dict():
-    """Checks the function when handling empty XML data"""
-    empty_xml = ""
-    with pytest.raises(ValueError):  # Or other expected exception
-      xml2dict.convert(empty_xml)
-
+def test_text2png_output_file_exists():
+    """Check output file already exists."""
+    text = "Test String"
+    output_path = "output_image.png"
+    # Mock the output file so it does not overwrite existing files
+    # You could also explicitly create it in the test folder before running tests
+    with patch('builtins.open', new_callable=mock_open, read_data='') as m:
+        with pytest.raises(FileExistsError, match="The output file already exists."):
+            text2png.convert(text, output_path)
 ```
 
-**Explanation and Crucial Improvements:**
+```python
+from io import StringIO
+from unittest.mock import patch, mock_open
+```
 
-1. **Import necessary modules:**  The code now imports the required modules (`text2png`, `xml2dict`).  Crucially, you need to replace `"tiny_utils.convertors"` with the *actual* module path if it's different.
+**Explanation and Improvements:**
 
-2. **Fixtures for test data:**  Fixtures `test_text` and `test_xml_data` provide reusable test data.  This is *very* important to avoid creating temporary files on every test.
+1. **Import necessary modules:** Included `pytest` and the necessary `text2png` module.  Crucially, added `mock_open` and `patch` from `unittest.mock`.
+2. **Mocking the file system:**  Instead of creating actual files, the code now mocks the `open` function using `patch('builtins.open', new_callable=mock_open, read_data='')`. This prevents the test from accidentally creating files in the filesystem, and it avoids potential errors if the target directory doesn't exist.
+3. **Specific Exception Handling:**  Tests `test_text2png_empty_input` and `test_text2png_invalid_output_path` now correctly check for `ValueError` and `FileNotFoundError` respectively, ensuring exceptions are caught and handled as expected. `test_text2png_output_file_exists` checks for the `FileExistsError` to ensure it handles that scenario correctly.
+4. **Clear Error Messages:** The `pytest.raises` calls include informative `match` arguments to help pinpoint the cause of any failure.  This makes debugging easier.
+5. **Complete Example `test_text2png_valid_input`:** This example now demonstrates how to mock the output file correctly using `patch`.
 
-3. **`pytest.raises` for exception handling:**  The `test_text2png_invalid_input` and `test_xml2dict_invalid_input` demonstrate how to test for expected exceptions using `pytest.raises`. You need to replace the example exceptions with the actual exceptions that the functions raise.
+**How to Use the Tests:**
 
-4. **Clearer assertions:**  The `test_xml2dict_valid_input` now asserts that the result is the correct Python dictionary.  *This is the most crucial part missing from the original example*.  You need to replace the example `expected_dict` with the actual expected output from the function.
+1. **Save the test code:** Save the provided test code as a `.py` file (e.g., `test_text2png.py`).
+2. **Install pytest:** `pip install pytest`
+3. **Run the tests:** `pytest test_text2png.py`
 
-5. **Example of Handling Specific Exceptions:** The code demonstrates how to capture the exception's details for more accurate validation.
-
-
-**How to run the tests:**
-
-1.  **Install pytest:**
-    ```bash
-    pip install pytest
-    ```
-
-2.  **Save the tests:** Save the above code as a `.py` file (e.g., `test_utils.py`).
-
-3.  **Run the tests:**
-    ```bash
-    pytest test_utils.py
-    ```
-
-
-**Very Important Considerations for Real-World Tests:**
-
-* **Temporary Files:**  Instead of creating files in your test directory for image tests, use temporary files.  The `tempfile` module in Python makes this easy:
-    ```python
-    import tempfile
-    output_path = tempfile.NamedTemporaryFile(suffix=".png").name
-    # ... call your function
-    # ... use your assertions, making sure to close/delete the temporary file after the test
-    ```
-
-* **Mock/Fake Dependencies:**  If your function calls other modules that you're *not* testing in this set of tests, mock or fake them.  This isolates your tests even further.
-
-* **Edge Cases & Boundary Conditions:**  Find and test boundary cases (e.g., empty strings, very large files, unusual file formats, etc.). This ensures the functions are robust.  The example with `test_empty_input_xml2dict` shows one way.
-
-* **Error Handling:**  Your test should verify that errors are properly handled (e.g., `FileNotFoundError`, invalid data types).
-
-
-Without knowing the actual implementation of `text2png`, `xml2dict`, etc.,  these are the *best practice* guidelines to create accurate, reliable, and maintainable tests.  The assertions and error handling should be adjusted accordingly.
+This improved solution addresses the critical issues of file handling and exception checking, making the tests more robust and reliable. Remember to replace `"tiny_utils.convertors.text2png"` with the actual module path if it's different.  Also, the example assumes you have a `tiny_utils` directory. Adjust the import accordingly.

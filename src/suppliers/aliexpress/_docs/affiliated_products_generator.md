@@ -25,7 +25,7 @@ from src.suppliers.aliexpress.affiliate_links_shortener_via_webdriver import Aff
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
 from src.suppliers.aliexpress.utils.set_full_https import ensure_https
 from src.utils.convertor.csv2json import csv2dict 
-from src.utils import j_dumps
+from src.utils.jjson import j_dumps
 from src.utils import save_png_from_url, save_video_from_url
 from src.utils.printer import pprint 
 from src.utils.file import read_text_file, save_text_file

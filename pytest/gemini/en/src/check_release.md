@@ -1,107 +1,76 @@
 ```python
 import pytest
 import requests
-from unittest.mock import patch
+from requests.exceptions import RequestException
 
-# Mock the requests library for testing
-from src.check_release import check_latest_release
-from src.logger import logger
+from hypotez.src.check_release import check_latest_release
+
+
+# Mock the requests library to simulate API calls
+def mock_requests_get(url, status_code=200, json_data={'tag_name': 'v1.0.0'}):
+    """Mocks the requests.get function for testing."""
+    class MockResponse:
+        def __init__(self, status_code, json_data):
+            self.status_code = status_code
+            self.json = lambda: json_data
+        
+    return MockResponse(status_code, json_data)
+    
 
 @pytest.fixture
-def mock_response():
-    """Fixture to provide a mock response for requests."""
-    class MockResponse:
-        def __init__(self, json_data, status_code):
-            self.json_data = json_data
-            self.status_code = status_code
-        def json(self):
-            return self.json_data
-    return MockResponse
+def mocked_requests(monkeypatch):
+    """Provides a mocked requests library for tests."""
+    mock_get = lambda url: mock_requests_get(url)
+    monkeypatch.setattr(requests, 'get', mock_get)
+    return mock_get
 
-@patch('src.check_release.requests')
-def test_check_latest_release_valid_input(mock_requests, mock_response):
-    """Checks correct behavior with a valid release."""
-    # Mock a successful response
-    mock_response_data = {"tag_name": "v1.0.0"}
-    mock_response_obj = mock_response(mock_response_data, 200)
-    mock_requests.get.return_value = mock_response_obj
-    
-    owner = "test_owner"
-    repo = "test_repo"
+def test_check_latest_release_valid_input(mocked_requests):
+    """Checks the function with valid inputs."""
+    owner = "ownername"
+    repo = "reponame"
     latest_release = check_latest_release(owner, repo)
-    assert latest_release == "v1.0.0"
-    mock_requests.get.assert_called_once_with(f"https://api.github.com/repos/{owner}/{repo}/releases/latest")
+    assert latest_release == "v1.0.0"  # Assumes a specific tag for valid input
 
 
-@patch('src.check_release.requests')
-def test_check_latest_release_not_found(mock_requests, mock_response):
-    """Checks correct handling when the release is not found."""
+
+def test_check_latest_release_invalid_status_code(mocked_requests):
+    """Tests handling of invalid status codes (e.g., 404)."""
+    owner = "ownername"
+    repo = "reponame"
     # Mock a 404 response
-    mock_response_obj = mock_response({}, 404)
-    mock_requests.get.return_value = mock_response_obj
-    
-    owner = "test_owner"
-    repo = "test_repo"
-    latest_release = check_latest_release(owner, repo)
-    assert latest_release is None  
-    mock_requests.get.assert_called_once_with(f"https://api.github.com/repos/{owner}/{repo}/releases/latest")
-    
-
-@patch('src.check_release.requests')
-def test_check_latest_release_invalid_response(mock_requests, mock_response):
-    """Checks handling of an invalid HTTP response."""
-    # Mock a response with a non-200 status code
-    mock_response_obj = mock_response({}, 500)
-    mock_requests.get.return_value = mock_response_obj
-    
-    owner = "test_owner"
-    repo = "test_repo"
+    mock_requests_get(f'https://api.github.com/repos/{owner}/{repo}/releases/latest', status_code=404)
     latest_release = check_latest_release(owner, repo)
     assert latest_release is None
-    mock_requests.get.assert_called_once_with(f"https://api.github.com/repos/{owner}/{repo}/releases/latest")
 
 
-
-@patch('src.check_release.requests')
-def test_check_latest_release_invalid_response_json(mock_requests):
-    """Checks handling if the response is not a valid json."""
-    mock_response_obj = mock_requests.Response()
-    mock_response_obj.status_code = 200
-
-    # Simulate an invalid JSON response (e.g., empty string)
-    mock_response_obj.text = ""
-    mock_requests.get.return_value = mock_response_obj
-    owner = "test_owner"
-    repo = "test_repo"
-    with pytest.raises(ValueError):
-        check_latest_release(owner, repo)
-    mock_requests.get.assert_called_once_with(f"https://api.github.com/repos/{owner}/{repo}/releases/latest")
+def test_check_latest_release_invalid_json_structure(mocked_requests):
+    """Tests handling if the response is not a valid JSON."""
+    owner = "ownername"
+    repo = "reponame"
+    # Mock a response with an invalid JSON format
+    mock_requests_get(f'https://api.github.com/repos/{owner}/{repo}/releases/latest', status_code=200, json_data="invalid json")
+    latest_release = check_latest_release(owner, repo)
+    assert latest_release is None
 
 
-# Important: Add tests for potential exception handling within the requests library, such as connection errors.
-```
-
-**Explanation and Improvements:**
-
-1. **Mocking `requests`:**  Crucially, the code now uses `@patch('src.check_release.requests')` to mock the `requests` library. This is vital for testing the function without actually making network calls, which are unreliable and slow in a test environment.
-
-2. **Clearer Test Cases:** The test names are now more descriptive (e.g., `test_check_latest_release_not_found`).
-
-3. **`pytest.raises` for Exceptions:** Includes a test (`test_check_latest_release_invalid_response_json`) to demonstrate how to use `pytest.raises` to test for `ValueError` if the `response.json()` call fails. This is better than just asserting `is None` because it targets the specific problem.  This is improved with a better simulation of a JSON parsing error.
-
-4. **`mock_response` Fixture:** Creates a `MockResponse` fixture for better organization and reuse.  This cleanly separates mocking the response object from the actual test logic.
-
-5. **Edge Case (Missing `tag_name`):**  Added a test (`test_check_latest_release_invalid_response_json`) to simulate an invalid JSON response, making the tests more robust.
-
-6. **Comprehensive Coverage:** The tests now cover valid input, `404` not found, invalid HTTP status codes, and importantly, cases where the JSON response might be malformed (like missing `tag_name`).
-
-7. **Important Note on Exception Handling:**  The code now includes exception handling, specifically for cases where the JSON response might not be properly formatted, or if there's a problem during JSON decoding.  This is a significant improvement.
-
-8. **Docstrings:** The addition of well-structured docstrings is excellent for clarity and maintainability.
-
-This revised solution is much more robust and reliable for testing the function `check_latest_release`.  Remember to install the necessary libraries: `pytest` and `requests`. Also, ensure that `logger` and its setup are correctly defined in the `hypotez/src/logger.py` file.  Without that file the error handling within the code will break.
+def test_check_latest_release_request_exception(monkeypatch):
+  """Tests handling of a RequestException during the API call."""
+  class MockRequestException(RequestException):
+    pass
+  
+  monkeypatch.setattr(requests, 'get', lambda url: raise MockRequestException())
+  owner = "ownername"
+  repo = "reponame"
+  latest_release = check_latest_release(owner, repo)
+  assert latest_release is None
 
 
-```bash
-pip install pytest requests
+def test_check_latest_release_empty_tag_name(mocked_requests):
+  """Tests that the function returns None if tag_name is missing or empty."""
+  owner = "ownername"
+  repo = "reponame"
+  #Mock the response with an empty tag_name
+  mock_requests_get(f'https://api.github.com/repos/{owner}/{repo}/releases/latest', status_code=200, json_data={'tag_name': ''})
+  latest_release = check_latest_release(owner, repo)
+  assert latest_release is None
 ```

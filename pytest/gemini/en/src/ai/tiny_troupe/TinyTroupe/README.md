@@ -1,110 +1,127 @@
 ```python
 import pytest
-import tinytroupe  # Replace with your actual module import
+from tinytroupe import TinyPerson, TinyWorld  # Replace with your actual import
 
-# Replace with your actual fixture if needed
-# @pytest.fixture
-# def example_data():
-#     return {"data": 123}
-
-def test_create_lisa_the_data_scientist():
-    """Tests the creation of Lisa, the data scientist."""
-    try:
-        lisa = tinytroupe.examples.create_lisa_the_data_scientist()
-        assert isinstance(lisa, tinytroupe.TinyPerson)
-        assert lisa.name == "Lisa"
-        assert lisa.occupation == "Data Scientist"
-        # Add more assertions based on Lisa's expected attributes
-    except Exception as e:
-        pytest.fail(f"Failed to create Lisa: {e}")
-
-def test_lisa_attributes():
-    """Test different attributes of Lisa."""
-    try:
-        lisa = tinytroupe.examples.create_lisa_the_data_scientist()
-        assert lisa.age == 28
-        assert lisa.nationality == "Canadian"
-    except Exception as e:
-        pytest.fail(f"Failed to access Lisa's attributes: {e}")
-
-def test_tiny_person_factory_generation():
-    """Test generating a TinyPerson using TinyPersonFactory."""
-    try:
-        factory = tinytroupe.factory.TinyPersonFactory("A hospital in São Paulo.")
-        person = factory.generate_person("Create a Brazilian person that is a doctor, like pets and the nature and love heavy metal.")
-        assert isinstance(person, tinytroupe.TinyPerson)
-    except Exception as e:
-        pytest.fail(f"Failed to generate TinyPerson: {e}")
-
-def test_tiny_world_creation_and_interaction():
-    """Test creating a TinyWorld and running a simple interaction."""
-    try:
-        from tinytroupe.examples import create_lisa_the_data_scientist
-        lisa = create_lisa_the_data_scientist()
-        oscar = tinytroupe.TinyPerson("Oscar")  # Replace with actual creation if available
-        world = tinytroupe.TinyWorld("Chat Room", [lisa, oscar])
-        world.make_everyone_accessible()
-        lisa.listen("Talk to Oscar to know more about him")
-        world.run(4)  # Adjust run iterations as needed
-        # Add assertions to check for expected interactions, e.g.,
-        # assert "Hi Lisa!" in world.conversation_log # Add a proper conversation log access
-
-    except Exception as e:
-        pytest.fail(f"Failed in TinyWorld Interaction: {e}")
+# Replace with actual TinyPersonFactory and any other necessary imports
+from tinytroupe.factory import TinyPersonFactory
 
 
-# Example test for exception handling (replace with actual function and exception)
-def test_llm_api_call_failure():
-    """Test exception handling when an LLM API call fails."""
-    with pytest.raises(tinytroupe.LLMApiError):
-        # Replace this with the code that calls the LLM API and might fail
-        tinytroupe.call_llm_api("This will fail.")
+# Example fixture for test data (replace with your actual fixture if needed)
+@pytest.fixture
+def lisa_data():
+    """Provides test data for Lisa."""
+    return {
+        "age": 28,
+        "nationality": "Canadian",
+        "occupation": "Data Scientist",
+    }
 
 
-# Example test for checking utilities (replace with actual utility function and assertions)
-def test_results_extractor_basic():
-    """Test basic functionality of ResultsExtractor."""
-    try:
-        # Replace this with a valid simulation output
-        simulation_result = {"choices": [{"choice": "yes"}, {"choice": "no"}]}
-        extractor = tinytroupe.ResultsExtractor()
-        extracted_results = extractor.extract_results(simulation_result)
-        assert extracted_results == [{"choice": "yes"}, {"choice": "no"}]
-    except Exception as e:
-        pytest.fail(f"Failed in ResultsExtractor: {e}")
+# Example test cases
+def test_tiny_person_creation(lisa_data):
+    """Tests the creation of a TinyPerson object."""
+    lisa = TinyPerson("Lisa")
+    for key, value in lisa_data.items():
+        assert hasattr(lisa, key), f"Attribute {key} missing from TinyPerson object."
+        assert lisa.get(key) == value, f"Attribute {key} value is incorrect."
 
-# Add more tests for other functions, classes, and edge cases as needed.
-# Be sure to replace placeholders with actual code and expected outputs.
-# Importantly, add tests for the actual functionality of the library.
+
+def test_tiny_person_listen_and_act():
+    """Tests the listen_and_act method for a TinyPerson."""
+    lisa = TinyPerson("Lisa")
+    response = lisa.listen_and_act("Hello!")
+    assert isinstance(response, str), "listen_and_act should return a string."
+
+
+def test_tiny_world_creation():
+    """Tests the creation of a TinyWorld object."""
+    lisa = TinyPerson("Lisa")
+    oscar = TinyPerson("Oscar")
+    world = TinyWorld("Chat Room", [lisa, oscar])
+    assert isinstance(world, TinyWorld), "Object is not a TinyWorld instance."
+
+
+def test_tiny_world_make_accessible():
+    """Tests the make_everyone_accessible method of TinyWorld."""
+    lisa = TinyPerson("Lisa")
+    oscar = TinyPerson("Oscar")
+    world = TinyWorld("Chat Room", [lisa, oscar])
+    world.make_everyone_accessible()
+
+    assert lisa.is_accessible(), "Lisa should be accessible."
+    assert oscar.is_accessible(), "Oscar should be accessible."
+
+
+def test_tiny_world_run():
+    """Tests the run method of TinyWorld."""
+    lisa = TinyPerson("Lisa")
+    oscar = TinyPerson("Oscar")
+    world = TinyWorld("Chat Room", [lisa, oscar])
+    world.run(4)
+
+
+def test_tiny_person_factory_creation():
+    """Tests the creation of a TinyPersonFactory object."""
+    factory = TinyPersonFactory("A hospital in São Paulo.")
+    assert isinstance(factory, TinyPersonFactory), "Object is not a TinyPersonFactory instance."
+
+
+def test_tiny_person_factory_generate_person():
+    """Tests the generate_person method of TinyPersonFactory."""
+    factory = TinyPersonFactory("A hospital in São Paulo.")
+    person = factory.generate_person("Create a Brazilian person that is a doctor, like pets and the nature and love heavy metal.")
+    assert isinstance(person, TinyPerson), "Generated object is not a TinyPerson instance."
+
+
+
+# Example test for exception handling (if applicable)
+def test_invalid_input_raises_exception():
+    """Tests exception handling for invalid input."""
+    with pytest.raises(ValueError):  # Replace with the actual exception type
+        # Replace with your function and invalid input
+        invalid_input_function()
+
+
+
+
+# Placeholder for functions used in tests (replace with your actual functions)
+def invalid_input_function():
+    raise ValueError("Invalid input.")
+
+
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Import tinytroupe:**  Crucially, you need to import the `tinytroupe` module.  The provided code doesn't have any sample functions or classes, so the example tests are updated.
-
-2. **Example Tests with Assertions:** The example tests now include assertions to check the *actual* return values and properties of the `TinyPerson` and `TinyWorld` objects.  This is *essential* to validate that the functions are working as expected.  For example, `test_create_lisa_the_data_scientist` verifies that `lisa` is an instance of `TinyPerson` and that the correct attributes are set.  Replace `# Add more assertions...` with appropriate assertions based on the expected behavior of your code.
+1. **Import Statements:** The code now includes imports for `TinyPerson`, `TinyWorld` (and `TinyPersonFactory`).  **Crucially, you need to replace these placeholders with the actual imports from your `tinytroupe` module.**  If you're using a different structure, adjust the imports accordingly.
 
 
-3. **Exception Handling:** `test_llm_api_call_failure` demonstrates how to use `pytest.raises` to test for exceptions. This is extremely important because your code likely uses external APIs (like Azure or OpenAI) that can fail.
-
-4. **Utility Function Tests:** The example `test_results_extractor_basic` shows how to test a utility function.  This is a crucial part of comprehensive testing:  you should test both your core functionality *and* the helper functions.
-
-5. **Missing Code:** The original code provides descriptions but lacks actual Python code for testing.  I've made tests *based on what the example descriptions suggest* should be there.  You'll need to replace these placeholder tests with tests based on the actual code in your `tinytroupe` module.
+2. **Example Fixture:** A `lisa_data` fixture is included to provide test data for a `TinyPerson` object.  Modify this fixture to match your actual data structure if needed.
 
 
-**How to Use:**
-
-1. **Replace Placeholders:** Substitute the placeholder comments (`# Replace with your actual...`) with the import statements, fixture definitions, and actual code from your `tinytroupe` module that you want to test.
-
-2. **Add Assertions:** Fill in the placeholder assertions (e.g., `assert lisa.name == "Lisa"`) to validate the expected behavior of your functions and methods.
-
-3. **Adapt Tests:**  Crucially, the tests need to be tailored to the specific functions and methods of your `tinytroupe` module.
-
-4. **Run Tests:** Save this code as a `.py` file (e.g., `test_tinytroupe.py`) in the same directory as your `tinytroupe` module and run it with `pytest`:
-
-   ```bash
-   pytest test_tinytroupe.py
-   ```
+3. **Comprehensive Tests:** Added tests for `TinyPerson` creation, `listen_and_act`, `TinyWorld` creation and methods, `TinyPersonFactory` creation and methods, and exception handling.
 
 
-This improved response provides a much more realistic and practical set of test cases, tailored to what a proper `pytest` test suite should look like. Remember to replace placeholders with your code!  The key to testing is knowing *exactly* what the output should be, given different inputs. Remember to handle potential exceptions. Also, remember to include tests for edge cases and invalid inputs.
+4. **Test Structure:** The tests now follow the example structure, using clear and descriptive names.
+
+
+5. **Exception Handling:** Added a `test_invalid_input_raises_exception` example to show how to use `pytest.raises` to check for exceptions. You need to replace `invalid_input_function` with the actual function and the correct exception type.
+
+6. **Placeholder Functions:** Added placeholder functions (`invalid_input_function`) so the tests compile. **Replace these placeholders** with your actual functions.
+
+**How to use this template:**
+
+1. **Replace Placeholders:**
+   - Change `from tinytroupe import ...` to the correct imports for your `tinytroupe` module.
+   - Update the `lisa_data` fixture to match the attributes of your `TinyPerson` object.
+   - Replace `invalid_input_function` with your actual function that might raise exceptions.
+
+2. **Run Tests:** Save this code as a `.py` file (e.g., `test_tinytroupe.py`) in the `tests` directory of your TinyTroupe project.  Run `pytest test_tinytroupe.py` from your terminal to execute the tests.
+
+3. **Adapt and Expand:** Extend these tests to cover more functionalities and edge cases in your `tinytroupe` library.
+
+
+**Crucial Considerations:**
+
+* **Actual `tinytroupe` code:** The provided code has no actual `tinytroupe` library to test against. You need to have the TinyTroupe code to write functional test cases.
+* **API interaction:**  If the `tinytroupe` code interacts with external APIs (like OpenAI), consider using mocks in your tests to avoid actual API calls. This will prevent your tests from requiring API keys and external services.  `pytest-mock` is a useful tool for this.

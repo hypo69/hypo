@@ -58,7 +58,7 @@ from src.suppliers import Supplier
 from src.product import Product, ProductFields, ProductFieldsLocators
 from src.category import Category
 from src.utils import StringFormatter, StringNormalizer
-from src.utils import j_dumps, j_loads,   pprint, save_text_file
+from src.utils.jjson import j_dumps, j_loads,   pprint, save_text_file
 from src.logger import logger
 
 # ----------------
