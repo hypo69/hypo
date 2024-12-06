@@ -1610,21 +1610,12 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.quantity) or ''
+            self.fields.quantity = normalize_int( value or  await self.driver.execute_locator(self.locator.quantity) or 1 )
+            return True
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `quantity`', ex)
             ...
             return
-
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.quantity}')
-            ...
-            return
-
-        # Записываем результат в поле `quantity` объекта `ProductFields`
-        self.fields.quantity = value
-        return True
 
 
     @close_pop_up()
@@ -1637,21 +1628,12 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.quantity_discount) or ''
+            self.fields.quantity_discount = normalize_string( value or  await self.driver.execute_locator(self.locator.quantity_discount) or '' )
+            return True
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `quantity_discount`', ex)
             ...
             return
-
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.quantity_discount}')
-            ...
-            return
-
-        # Записываем результат в поле `quantity_discount` объекта `ProductFields`
-        self.fields.quantity_discount = value
-        return True
 
 
     @close_pop_up()
@@ -1691,24 +1673,19 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.reference) or ''
+            value = normalize_string( value or  await self.driver.execute_locator(self.locator.reference) or '')
+            if  value:
+                self.fields.reference = value
+                return True
+            ...
+            return
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `reference`', ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.reference}')
-            ...
-            return
-
-        # Записываем результат в поле `reference` объекта `ProductFields`
-        self.fields.reference = value
-        return True
-
     @close_pop_up()
-    async def show_condition(self, value:Optional[Any] = None):
+    async def show_condition(self, value:Optional[int] = None):
         """Fetch and set show condition.
     
         Args:
@@ -1717,23 +1694,15 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.show_condition) or ''
+            self.fields.show_condition = normalize_int( value or  await self.driver.execute_locator(self.locator.show_condition) or 1 )
+            return True
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `show_condition`', ex)
             ...
             return
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.show_condition}')
-            ...
-            return
-
-        # Записываем результат в поле `show_condition` объекта `ProductFields`
-        self.fields.show_condition = value
-        return True
 
     @close_pop_up()
-    async def show_price(self, value:Optional[Any] = None):
+    async def show_price(self, value:Optional[int] = None):
         """Fetch and set show price.
     
         Args:
@@ -1742,20 +1711,13 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.show_price) or ''
+            self.fields.show_price = normalize_int( value or  await self.driver.execute_locator(self.locator.show_price) or 1 )
+            return True
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `show_price`', ex)
             ...
             return
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.show_price}')
-            ...
-            return
 
-        # Записываем результат в поле `show_price` объекта `ProductFields`
-        self.fields.show_price = value
-        return True
 
     @close_pop_up()
     async def state(self, value:Optional[Any] = None):
@@ -1831,8 +1793,9 @@ class Graber:
         # Записываем результат в поле `unit_price_ratio` объекта `ProductFields`
         self.fields.unit_price_ratio = value
         return True
+
     @close_pop_up()
-    async def unity(self, value:Optional[Any] = None):
+    async def unity(self, value:Optional[str] = None):
         """Fetch and set unity.
 
         Args:
@@ -1841,23 +1804,16 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.unity) or ''
+            self.fields.unity = normalize_string( value or  await self.driver.execute_locator(self.locator.unity) or '')
+            return True
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `unity`', ex)
             ...
             return
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.unity}')
-            ...
-            return
 
-        # Записываем результат в поле `unity` объекта `ProductFields`
-        self.fields.unity = value
-        return True
 
     @close_pop_up()
-    async def upc(self, value:Optional[Any] = None):
+    async def upc(self, value:Optional[str] = None):
         """Fetch and set UPC.
 
         Args:
@@ -1866,20 +1822,13 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.upc) or ''
+            self.fields.upc = normalize_string( value or  await self.driver.execute_locator(self.locator.upc) or '')
+            return True
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `upc`', ex)
             ...
             return
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.upc}')
-            ...
-            return
 
-        # Записываем результат в поле `upc` объекта `ProductFields`
-        self.fields.upc = value
-        return True
 
     @close_pop_up()
     async def uploadable_files(self, value:Optional[Any] = None):
@@ -1917,47 +1866,44 @@ class Graber:
         try:
             # Получаем значение через execute_locator
             value = value or  await self.driver.execute_locator(self.locator.default_image_url) or ''
+            if  value:
+                self.fields.default_image_url = value
+                return True
+            ...
+            return
+
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `default_image_url`', ex)
             ...
             return
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.default_image_url}')
-            ...
-            return
-
-        # Записываем результат в поле `default_image_url` объекта `ProductFields`
-        self.fields.default_image_url = value
-        return True
 
     @close_pop_up()
-    async def visibility(self, value:Optional[Any] = None):
+    async def visibility(self, value:Optional[str] = None):
         """Fetch and set visibility.
-
+          
         Args:
             value (Any): это значение можно передать в словаре kwargs через ключ {visibility = `value`} при определении класса.
+              В таблице ps_products  поле visibility определяет, 
+            как товар будет виден на сайте. Возможные значения этого поля обычно следующие:
+
+            `both`: Товар будет виден как в каталоге, так и в результатах поиска.  
+            `catalog`: Товар будет виден только в каталоге, но не будет отображаться в результатах поиска.
+            `search`: Товар будет виден только в результатах поиска, но не будет отображаться в каталоге.
+            `none`: Товар будет скрыт от всех пользователей и не будет виден ни в каталоге, ни в результатах поиска.
+            Эти значения позволяют управлять видимостью товаров на сайте, что может быть полезно для различных маркетинговых стратегий или временного скрытия товаров.
             Если `value` был передан - его значение подставляется в поле `ProductFields.visibility`.
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.visibility) or ''
+            self.fields.visibility = value or  await self.driver.execute_locator(self.locator.visibility) or 'both'
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `visibility`', ex)
             ...
             return
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.visibility}')
-            ...
-            return
 
-        # Записываем результат в поле `visibility` объекта `ProductFields`
-        self.fields.visibility = value
-        return True
 
     @close_pop_up()
-    async def weight(self, value:Optional[Any] = None):
+    async def weight(self, value:Optional[float] = None):
         """Fetch and set weight.
     
         Args:
@@ -1966,25 +1912,17 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.weight) or ''
+            self.fields.weight = normalize_int( value or  await self.driver.execute_locator(self.locator.weight) or 0  )
+            return True
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `weight`', ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.weight}')
-            ...
-            return
-
-        # Записываем результат в поле `weight` объекта `ProductFields`
-        self.fields.weight = value
-        return True
 
 
     @close_pop_up()
-    async def wholesale_price(self, value:Optional[Any] = None):
+    async def wholesale_price(self, value:Optional[float] = None):
         """Fetch and set wholesale price.
     
         Args:
@@ -1993,25 +1931,15 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.wholesale_price) or ''
+            self.fields.wholesale_price = normalize_float( value or  await self.driver.execute_locator(self.locator.wholesale_price) or 0)
+            return True
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `wholesale_price`', ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.wholesale_price}')
-            ...
-            return
-
-        # Записываем результат в поле `wholesale_price` объекта `ProductFields`
-        self.fields.wholesale_price = value
-        return True
-
-
     @close_pop_up()
-    async def width(self, value:Optional[Any] = None):
+    async def width(self, value:Optional[float] = None):
         """Fetch and set width.
     
         Args:
@@ -2020,25 +1948,15 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.width) or ''
+            self.fields.width = normalize_float( value or  await self.driver.execute_locator(self.locator.width) or 0)
+            return True
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `width`', ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.width}')
-            ...
-            return
-
-        # Записываем результат в поле `width` объекта `ProductFields`
-        self.fields.width = value
-        return True
-
-
     @close_pop_up()
-    async def specification(self, value:Optional[Any] = None):
+    async def specification(self, value:Optional[str|list] = None):
         """Fetch and set specification.
     
         Args:
@@ -2048,24 +1966,18 @@ class Graber:
         try:
             
             value = normalize_string( value or  await self.driver.execute_locator(self.locator.specification) or '')
+            if value:
+                self.fields.specification = value
+                return True
+            ...
+            return
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `specification`', ex)
             ...
             return
 
-        # Проверка валидности результата
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.specification}')
-            ...
-            return
-
-        # Код записывает результат в поле `specification` объекта `ProductFields`
-        self.fields.specification = value
-        return True
-
-
     @close_pop_up()
-    async def link(self, value:Optional[Any] = None):
+    async def link(self, value:Optional[str] = None):
         """Fetch and set link.
     
         Args:
@@ -2074,24 +1986,15 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.link) or ''
+            self.fields.link = value or  await self.driver.execute_locator(self.locator.link) or ''
+            return True
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `link`', ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.link}')
-            ...
-            return
-
-        # Записываем результат в поле `link` объекта `ProductFields`
-        self.fields.link = value
-        return True
-
     @close_pop_up()
-    async def byer_protection(self, value:Optional[Any] = None):
+    async def byer_protection(self, value:Optional[str|list] = None):
         """Fetch and set buyer protection.
         
         Args:
@@ -2100,21 +2003,12 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.byer_protection) or ''
+            self.fields.byer_protection = normalize_string( value or  await self.driver.execute_locator(self.locator.byer_protection) or '' )
+            return True
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `byer_protection`', ex)
             ...
             return
-
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.byer_protection}')
-            ...
-            return
-
-        # Записываем результат в поле `byer_protection` объекта `ProductFields`
-        self.fields.byer_protection = value
-        return True
 
     @close_pop_up()
     async def customer_reviews(self, value:Optional[Any] = None):
