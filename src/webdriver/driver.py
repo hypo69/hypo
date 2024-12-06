@@ -40,6 +40,7 @@ from selenium.common.exceptions import (
 )
 import header
 from src import gs
+
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException, WebDriverException
 
@@ -71,6 +72,7 @@ class Driver:
             >>> from selenium.webdriver import Chrome
             >>> driver = Driver(Chrome, executable_path='/path/to/chromedriver')
         """
+        
         if not hasattr(webdriver_cls, 'get'):
             raise TypeError('`webdriver_cls` должен быть допустимым классом WebDriver.')
         self.driver = webdriver_cls(*args, **kwargs)

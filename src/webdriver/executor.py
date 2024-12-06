@@ -297,13 +297,14 @@ class ExecuteLocator:
             result = {}
             for key, value in attr_dict.items():
                 try:
-                    attr_key = element.get_attribute(key)
-                    attr_value = element.get_attribute(value)
+                    attr_key = web_element.get_attribute(key)
+                    attr_value = web_element.get_attribute(value)
                     result[attr_key] = attr_value
                 except Exception as ex:
                     if MODE in ('dev','debug'):
                         logger.debug(
-                            f"Error retrieving attributes '{pprint(key, text_color='WHITE', bg_color='RED')}' or '{pprint(value, text_color='WHITE', bg_color='RED')}' from element.", ex, False)
+                            f"Error retrieving attributes '{key}' or '{value}' from element.", ex, False)
+                    ...
                     return
             return result
 

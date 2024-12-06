@@ -729,9 +729,11 @@
     "selector": "//div[@id = 'product-page-root']//h1[contains(@class, 'title')]",
     "if_list": "first",
     "use_mouse": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 1,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "mandatory": true,
-    "locator_description": "Название товара"
+    "locator_description": "KSP - Название товара"
   },
   "description_short": {
     "attribute": "innerText",
@@ -739,7 +741,9 @@
     "selector": "//h2[contains(text(), 'תיאור קצר')]/following-sibling::p",
     "if_list": "all",
     "use_mouse": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 1,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "mandatory": true,
     "locator_description": "краткое Описание товара. "
   },
@@ -762,7 +766,9 @@
     "if_list": "all",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "KSP Технические характеристики. "
   },
   "affiliate_short_link": {

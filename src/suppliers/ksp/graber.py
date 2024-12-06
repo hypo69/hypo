@@ -1,3 +1,4 @@
+from __future__ import annotations
 ## \file hypotez/src/suppliers/ksp/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
@@ -21,7 +22,8 @@ MODE = 'dev'
 from typing import Any
 import header
 from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
-from src.webdriver.driver import Driver
+#from src.webdriver.driver import Driver
+from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
 # # Глобальные настройки через отдельный объект
@@ -60,7 +62,7 @@ class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
     supplier_prefix: str
 
-    def __init__(self, driver: Driver):
+    def __init__(self, driver: 'Driver'):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'ksp'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)

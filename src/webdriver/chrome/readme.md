@@ -1,63 +1,151 @@
-### How WebDriver and DevTools Work Together
+```rst
+.. :module: src.webdriver.chrome
+```
+# Chrome WebDriver for Selenium
 
-1. **Integration with DevTools Protocol:**
-   - WebDriver can utilize DevTools Protocol functions to perform tasks such as gathering performance data, managing network requests, working with mobile devices, and more.
-   - You can activate DevTools mode through `ChromeOptions` settings in WebDriver and use DevTools Protocol commands to perform operations.
+This repository provides a custom implementation of the Chrome WebDriver using Selenium. It integrates configuration settings defined in the `chrome.json` file, such as user-agent and browser profile settings, to enable flexible and automated browser interactions.
 
-2. **Using `DevTools` through `Chrome DevTools Protocol`:**
-   - You can use built-in DevTools Protocol commands to perform tasks not available through the standard WebDriver methods.
-   - For example, you can use DevTools Protocol to analyze performance, navigate pages, or manage network requests.
+## Key Features
 
-### Example of Using DevTools Protocol via WebDriver
+- **Centralized Configuration**: Configuration is managed through a `chrome.json` file.
+- **Multiple Browser Profiles**: Supports multiple browser profiles, enabling users to configure different settings for testing.
+- **Enhanced Logging and Error Handling**: Provides detailed logs for initialization, configuration issues, and WebDriver errors.
 
-In recent versions of Selenium, starting from version 4, there is direct support for integrating with the DevTools Protocol. Here’s an example of how to do this using Selenium and WebDriver for Chrome:
+## Prerequisites
 
-```python
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+Before using this WebDriver, ensure that the following dependencies are installed:
 
-# Set the path to ChromeDriver
-service = Service('/path/to/chromedriver')
+- Python 3.x
+- Selenium
+- Fake User Agent
+- WebDriver binary for Chrome (e.g., `chromedriver`)
 
-# Configure ChromeOptions
-chrome_options = Options()
-chrome_options.add_argument('--remote-debugging-port=9222')
+Install the required Python dependencies:
 
-# Launch Chrome with specified options
-driver = webdriver.Chrome(service=service, options=chrome_options)
-
-# Get DevTools session
-dev_tools = driver.execute_cdp_cmd('Page.enable', {})
-
-# Execute a command via DevTools Protocol
-response = driver.execute_cdp_cmd('Page.navigate', {'url': 'https://www.example.com'})
-print(response)
-
-# Close the browser
-driver.quit()
+```bash
+pip install selenium fake_useragent
 ```
 
-### Key Steps:
+Additionally, ensure that the `chromedriver` binary is available in your system's `PATH` or specify the path in the configuration.
 
-1. **Configure WebDriver:**
-   - Ensure that ChromeDriver is set up to work with the remote debugging option (`--remote-debugging-port`).
+## Configuration
 
-2. **Obtain DevTools Session:**
-   - Use `driver.execute_cdp_cmd` to execute DevTools Protocol commands. The `Page.enable` command activates certain DevTools features for the current session.
+The configuration for the Chrome WebDriver is stored in a `chrome.json` file. Below is an example of how to structure the configuration file and its description:
 
-3. **Execute DevTools Protocol Commands:**
-   - Through `execute_cdp_cmd`, you can send commands to control the page, gather information, or perform other tasks.
+### Example Configuration (`chrome.json`)
 
-### Additional Capabilities
+```json
+{
+  "options": {
+    "log-level": "5",
+    "disable-dev-shm-usage": "",
+    "remote-debugging-port": "0",
+    "arguments": [ "--kiosk", "--disable-gpu" ]
+  },
 
-- **Performance Analysis:** Use DevTools Protocol to collect and analyze performance data of the page.
-- **Network Monitoring:** Monitor network requests and responses by using commands like `Network.enable`.
-- **DOM Management:** Manage DOM elements and CSS through DevTools Protocol commands such as `DOM.getDocument` and `CSS.getComputedStyleForNode`.
+  "disabled_options": { "headless": "" },
 
-### Documentation and Resources
+  "profile_directory": {
+    "os": "%LOCALAPPDATA%\\Google\\Chrome\\User Data",
+    "internal": "webdriver\\chrome\\profiles\\default",
+    "testing": "%LOCALAPPDATA%\\Google\\Chrome for Testing\\User Data"
+  },
 
-- [Selenium Documentation](https://www.selenium.dev/documentation/en/)
-- [Chrome DevTools Protocol Documentation](https://chromedevtools.github.io/devtools-protocol/)
+  "binary_location": {
+    "os": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "exe": "bin\\webdrivers\\chrome\\125.0.6422.14\\chromedriver.exe",
+    "binary": "bin\\webdrivers\\chrome\\125.0.6422.14\\win64-125.0.6422.14\\chrome-win64\\chrome.exe",
+    "chromium": "bin\\webdrivers\\chromium\\chrome-win\\chrome.exe"
+  },
 
-Thus, WebDriver for Chrome and DevTools Protocol can work together, providing a powerful tool for automating and testing web applications.
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml,application/json;q=0.9,*/*;q=0.8",
+    "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
+    "Accept-Encoding": "none",
+    "Accept-Language": "en-US,en;q=0.8",
+    "Connection": "keep-alive"
+  },
+  "proxy_enabled": false
+}
+```
+
+### Configuration Fields
+
+#### 1. `options`
+A dictionary of Chrome options to modify browser behavior:
+- **log-level**: Set the logging level. The value `5` corresponds to the most detailed logging level.
+- **disable-dev-shm-usage**: Disables the use of `/dev/shm` in Docker containers (useful for avoiding errors in containerized environments).
+- **remote-debugging-port**: Sets the port for Chrome’s remote debugging. `0` means a random port will be assigned.
+- **arguments**: A list of command-line arguments to pass to Chrome. Examples include `--kiosk` to run in kiosk mode and `--disable-gpu` to disable GPU acceleration.
+
+#### 2. `disabled_options`
+Options that are explicitly disabled. In this case, the `headless` mode is disabled, meaning the Chrome browser will run in a visible window rather than in headless mode.
+
+#### 3. `profile_directory`
+Paths to Chrome's user data directories for different environments:
+- **os**: Path to the default user data directory (typically for Windows systems).
+- **internal**: Internal path for the WebDriver's default profile.
+- **testing**: Path to the user data directory specifically set up for testing.
+
+#### 4. `binary_location`
+Paths to various Chrome binaries:
+- **os**: Path to the installed Chrome binary for the operating system.
+- **exe**: Path to the ChromeDriver executable.
+- **binary**: A specific path to a version of Chrome for testing.
+- **chromium**: Path to a Chromium binary that can be used as an alternative to Chrome.
+
+#### 5. `headers`
+Custom HTTP headers to use in browser requests:
+- **User-Agent**: Specifies the browser's user-agent string.
+- **Accept**: Specifies the media types the browser is willing to accept.
+- **Accept-Charset**: Specifies the character encoding supported by the browser.
+- **Accept-Encoding**: Specifies the encoding methods accepted (set to `none` to disable).
+- **Accept-Language**: Specifies the preferred languages.
+- **Connection**: Specifies the connection type to be used by the browser (e.g., `keep-alive`).
+
+#### 6. `proxy_enabled`
+Boolean value indicating whether a proxy server should be used for the WebDriver. Set to `false` by default.
+
+## Usage
+
+To use the `Chrome` WebDriver in your project, simply import it and initialize:
+
+```python
+from src.webdriver.chrome import Chrome
+
+# Initialize Chrome WebDriver with user-agent settings
+browser = Chrome(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+
+# Open a website
+browser.get("https://www.example.com")
+
+# Close the browser
+browser.quit()
+```
+
+The `Chrome` class automatically loads settings from the `chrome.json` file and uses them to configure the WebDriver. You can also specify a custom user-agent when initializing the WebDriver.
+
+### Singleton Pattern
+
+The `Chrome` WebDriver follows the Singleton pattern. This means that only one instance of the `Chrome` WebDriver will be created. If an instance already exists, it will reuse the same instance and open a new window.
+
+## Logging and Debugging
+
+The WebDriver class uses the `logger` from `src.logger` to log errors, warnings, and general information. Any issues during initialization, configuration, or execution will be logged for easy debugging.
+
+### Example Logs
+
+- **Error during WebDriver initialization**: `Error initializing Chrome WebDriver: <error details>`
+- **Configuration issues**: `Error in chrome.json file: <issue details>`
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
+
+### Explanation:
+- **Configuration Description**: I added an explanation of each configuration field in the `chrome.json` file, which provides clarity on what each setting does and how it influences the behavior of the WebDriver.
+- **Detailed Example**: I included a detailed explanation of the `chrome.json` file and how its settings are used in the WebDriver.
+
+This should provide users with a clear understanding of how to configure and use the Chrome WebDriver with the necessary settings for their automation tasks.

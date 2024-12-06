@@ -4,28 +4,39 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.chrome
-    :platform: Windows, Unix
-    :synopsis: Chrome WebDriver implementation.
+Module for Chrome WebDriver
+=========================================================================================
 
-This module provides a custom implementation of Selenium's Chrome WebDriver. It integrates
-settings defined in the `chrome.json` configuration file, such as user-agent and browser
-profile settings, to allow for flexible and automated browser interactions.
+This module contains a custom implementation of the Chrome WebDriver using Selenium. It integrates
+configuration settings defined in the `chrome.json` file, such as user-agent and browser profile settings,
+to enable flexible and automated browser interactions.
 
 Key Features:
-    - Centralized configuration through JSON files.
+    - Centralized configuration via JSON files.
     - Support for multiple browser profiles.
-    - Enhanced logging and exception handling.
+    - Enhanced logging and error handling.
+
+Example usage
+--------------------
+
+Example of using the `Chrome` class:
+
+.. code-block:: python
+
+    from src.webdriver.chrome import Chrome
+
+    # Initialize Chrome WebDriver with user-agent settings
+    browser = Chrome(user_agent='Mozilla/5.0...')
+    browser.get("https://www.example.com")
+    browser.quit()
 """
+
 MODE = 'dev'
 
 import os
 import sys
-import threading
-import socket
 from pathlib import Path
-from typing import List, Optional, Dict, Union
-from types import SimpleNamespace
+from typing import Optional
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -50,7 +61,7 @@ class Chrome(webdriver.Chrome):
     def __new__(cls, *args, **kwargs):
         """Ensure a single instance of Chrome WebDriver.
 
-        If an instance already exists, calls `window_open()`.
+        If an instance already exists, it calls `window_open()`.
 
         Returns:
             Chrome: The singleton instance of the Chrome WebDriver.
@@ -62,17 +73,17 @@ class Chrome(webdriver.Chrome):
         return cls._instance
 
     def __init__(self, user_agent: Optional[str] = None, *args, **kwargs):
-        """Initializes the Chrome WebDriver with the specified options and profile.
+        """Initializes the Chrome WebDriver with specified options and profile.
 
         Args:
-            user_agent (Optional[str]): The user agent string to be used. Defaults to a random user agent.
+            user_agent (Optional[str]): The user-agent string to be used. Defaults to a random user agent.
         """
         try:
-            # Function attributes declaration
             user_agent = user_agent or UserAgent().random
             self.config = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))  # Load settings from JSON file
+
             if not self.config:
-                logger.debug(f'Ошибка в файле config `chrome.json`')
+                logger.debug(f'Error in `chrome.json` file.')
                 ...
                 return
 
@@ -96,19 +107,18 @@ class Chrome(webdriver.Chrome):
                         .replace('%LOCALAPPDATA%', os.getenv('LOCALAPPDATA', ''))
                 )
 
-            # Add arguments from options_settings
+            # Add arguments from options settings
             if hasattr(self.config, 'options') and self.config.options:
                 for key, value in vars(self.config.options).items():
                     options.add_argument(f'--{key}={value}')
 
-            # Add arguments from settings.headers
+            # Add arguments from headers settings
             if hasattr(self.config, 'headers') and self.config.headers:
                 for key, value in vars(self.config.headers).items():
                     options.add_argument(f'--{key}={value}')
 
             profile_directory = Path(gs.path.root / normalize_path(self.config.profile_directory.testing))
-       
-            binary_location = Path(gs.path.root /  normalize_path(self.config.binary_location.binary))
+            binary_location = Path(gs.path.root / normalize_path(self.config.binary_location.binary))
 
             if profile_directory:
                 options.add_argument(f'user-data-dir={profile_directory}')
@@ -117,7 +127,6 @@ class Chrome(webdriver.Chrome):
             options.binary_location = str(binary_location)
 
             service = ChromeService(executable_path=str(binary_location)) if binary_location else ChromeService()
-            service = ChromeService()
 
         except Exception as ex:
             logger.error('Error setting up Chrome WebDriver:', ex)
@@ -125,9 +134,7 @@ class Chrome(webdriver.Chrome):
             return
 
         try:
-            # super().__init__(options=options, service=service)
-            ...
-            super().__init__(options=options)
+            super().__init__(options=options, service=service)
         except WebDriverException as ex:
             logger.critical('Error initializing Chrome WebDriver:', ex)
             ...
@@ -155,4 +162,6 @@ class Chrome(webdriver.Chrome):
         self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
         self.send_message = self.send_key_to_webelement = execute_locator.send_message
 
-
+if __name__ == "__main__":
+    driver = Chrome()
+    driver.get(r"https://google.com")

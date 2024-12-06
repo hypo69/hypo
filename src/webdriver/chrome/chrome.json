@@ -31,5 +31,6 @@
     "Accept-Encoding": "none",
     "Accept-Language": "en-US,en;q=0.8",
     "Connection": "keep-alive"
-  }
+  },
+  "proxy_enabled": false
 }
