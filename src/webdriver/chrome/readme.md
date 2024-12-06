@@ -142,10 +142,3 @@ The WebDriver class uses the `logger` from `src.logger` to log errors, warnings,
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
-### Explanation:
-- **Configuration Description**: I added an explanation of each configuration field in the `chrome.json` file, which provides clarity on what each setting does and how it influences the behavior of the WebDriver.
-- **Detailed Example**: I included a detailed explanation of the `chrome.json` file and how its settings are used in the WebDriver.
-
-This should provide users with a clear understanding of how to configure and use the Chrome WebDriver with the necessary settings for their automation tasks.
