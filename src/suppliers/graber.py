@@ -796,21 +796,13 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.delivery_out_stock) or ''
+            self.fields.delivery_out_stock = normalize_string( value or  await self.driver.execute_locator(self.locator.delivery_out_stock) or '')
+            return True
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `delivery_out_stock`", ex)
             ...
             return
-
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.delivery_out_stock}")
-            ...
-            return
-
-        # Записываем результат в поле `delivery_out_stock` объекта `ProductFields`
-        self.fields.delivery_out_stock = value
-        return True
+        
 
     @close_pop_up()
     async def depth(self, value: Any = None):
@@ -822,21 +814,13 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.depth) or ''
+            self.fields.depth = normalize_float( value or  await self.driver.execute_locator(self.locator.depth) or '' )
+            return True
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `depth`", ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.depth}")
-            ...
-            return
-
-        # Записываем результат в поле `depth` объекта `ProductFields`
-        self.fields.depth = value
-        return True
     @close_pop_up()
     async def description(self, value: Any = None):
         """Fetch and set description.
@@ -847,26 +831,13 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.description) or ''
+            self.fields.description = normalize_string( value or  await self.driver.execute_locator(self.locator.description) or '' )
+            return True
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description`", ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.description}")
-            ...
-            return
-
-        # Если значение - список, код преобразовывает его в строку с разделителем `\n`
-        if isinstance(value, list):
-            value = '\n'.join(map(str, value))
-
-        value = normalize_string(value)
-        # Записываем результат в поле `description` объекта `ProductFields`
-        self.fields.description = value
-        return True
 
     @close_pop_up()
     async def description_short(self, value: Any = None):
@@ -878,24 +849,12 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value =  value or  await self.driver.execute_locator(self.locator.description_short) or ''
+            value =   normalize_string(value or  await self.driver.execute_locator(self.locator.description_short) or '' )
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `description_short`", ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.description_short}")
-            ...
-            return
-
-        # Если значение - список, код преобразовывает его в строку с разделителем `\n`
-        if isinstance(value, list):
-            value = '\n'.join(map(str, value))
-
-        value = normalize_string(value)
-        # Записываем результат в поле `description_short` объекта `ProductFields`
         self.fields.description_short = value
         return True
 

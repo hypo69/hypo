@@ -21,6 +21,7 @@ MODE = 'dev'
 
 from typing import Any
 import header
+from src import gs
 from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 #from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns

@@ -23,6 +23,7 @@
 
 import re
 import html
+from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from typing import Any, List, Union
 from src.logger import logger
@@ -170,6 +171,45 @@ def remove_html_tags(input_html: str) -> str:
         str: String without HTML tags.
     """
     return re.sub(r'<.*?>', '', input_html).strip()
+
+
+
+def normalize_sql_date(input_data: str) -> str:
+    """Normalize data into SQL date format (YYYY-MM-DD).
+
+    Args:
+        input_data (str): Data that can represent a date (e.g., string, datetime object).
+
+    Returns:
+        str: Normalized date in SQL format (YYYY-MM-DD) or original value if conversion fails.
+
+    Example:
+        >>> normalize_sql_date('2024-12-06')
+        '2024-12-06'
+        >>> normalize_sql_date('12/06/2024')
+        '2024-12-06'
+    """
+    original_input = input_data  # Сохраняется исходное значение
+
+    try:
+        # Проверка и преобразование строки в формат даты
+        if isinstance(input_data, str):
+            # Попытка распарсить дату из строки
+            for date_format in ['%Y-%m-%d', '%m/%d/%Y', '%d/%m/%Y']:
+                try:
+                    normalized_date = datetime.strptime(input_data, date_format).date()
+                    return normalized_date.isoformat()  # Возвращаем дату в формате 'YYYY-MM-DD'
+                except ValueError:
+                    continue
+        # Если входные данные уже объект datetime
+        if isinstance(input_data, datetime):
+            return input_data.date().isoformat()
+
+    except Exception as ex:
+        logger.error('Ошибка в normalize_sql_date: ', ex)
+
+    logger.debug(f'Не удалось преобразовать в SQL дату: {input_data}')
+    return original_input  # Возвращается исходное значение
 
 
 def remove_special_characters(input_str: str | list) -> str | list:

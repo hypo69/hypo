@@ -18,6 +18,7 @@ The `normalizer` module provides functionality for normalizing various data type
    - [remove_line_breaks](#remove_line_breaks)
    - [remove_html_tags](#remove_html_tags)
    - [remove_special_characters](#remove_special_characters)
+   - [normalize_sql_date](#normalize_sql_date)
 3. [Usage Example](#usage-example)
 4. [Requirements](#requirements)
 
@@ -164,10 +165,29 @@ remove_special_characters('Hello@World!')  # Result: 'HelloWorld'
 
 ---
 
+### `normalize_sql_date`
+
+**Description:**  
+Converts a string or datetime object into a standard SQL date format (`YYYY-MM-DD`).
+
+**Arguments:**  
+- `input_data (str | datetime)`: A string or datetime object representing a date.
+
+**Returns:**  
+- `str`: The normalized SQL date as a string in `YYYY-MM-DD` format.
+
+**Example:**  
+```python
+normalize_sql_date('2024-12-06')  # Result: '2024-12-06'
+normalize_sql_date(datetime(2024, 12, 6))  # Result: '2024-12-06'
+```
+
+---
+
 ## Usage Example
 
 ```python
-from src.utils.string.normalizer import normalize_string, normalize_boolean, normalize_int, normalize_float
+from src.utils.string.normalizer import normalize_string, normalize_boolean, normalize_int, normalize_float, normalize_sql_date
 
 # Normalizing a string
 clean_str = normalize_string(['<h1>Header</h1>', '  text with spaces  '])
@@ -184,6 +204,10 @@ print(integer_value)  # 42
 # Normalizing a floating-point number
 float_value = normalize_float('3.14159')
 print(float_value)  # 3.14159
+
+# Normalizing a SQL date
+sql_date = normalize_sql_date('2024-12-06')
+print(sql_date)  # '2024-12-06'
 ```
 
 ---

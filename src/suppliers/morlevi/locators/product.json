@@ -761,7 +761,7 @@
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "locator_description": "Описание"
+    "locator_description": "MORLEVI поле (description)"
   },
   "specification": {
     "attribute": "innerText",
