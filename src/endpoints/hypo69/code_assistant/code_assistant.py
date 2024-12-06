@@ -234,8 +234,8 @@ class CodeAssistant:
 
                 
 
-                # Отправка файла в модель
-                # response = self.gemini_model.upload_file(file_path)
+                #Отправка файла в модель
+                response = self.gemini_model.upload_file(file_path)
 
                 if response:
                     pprint(response, text_color='light_gray')
@@ -248,36 +248,28 @@ class CodeAssistant:
                 ...
                 return False
 
-
-
         for i, (file_path, content) in enumerate(self._yield_files_content()):
             if not any((file_path, content)):    # <- ошибка чтения файла
                 continue
-            if i < start_file_number:
+            if i < start_file_number: # <- старт с номера файла
                 continue
             if file_path and content:
+                # send_file(file_path)
                 content_request = self._create_request(file_path, content)
+                response = self.gemini_model.ask(content_request)
 
-                if self.gemini_model:
-                    model_saved_file = send_file(file_path) # <- отправляет файл целиком
-                    response = self.gemini_model.ask(str(content_request))
-                    # response = True # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (comment out the line above)
-                    if response:
-                        ... # comment for debug / uncomment for prod
-                        # pprint(f"RAW response:\n{response}") # посмотреть на ответ
-                        response = self._remove_outer_quotes(response) # <- ~~~~~~~~~~~~~~~~~~ DEBUG (comment line to skip remove_outer_quotes)
-                        # pprint(f"CLEAR response:\n{response}")  # посмотреть на очищенный ответ
-                        if model_saved_file:
-                            response = response + '\n' + '##### filename saved in GEMINI model: ' + model_saved_file 
+                if response:
+                    response = self._remove_outer_quotes(response)
 
-                        self._save_response(file_path, response, "gemini") # <- ~~~~~~~~~~~~~~~~~~ DEBUG (comment line to skip saving)
-                        ...
-                    else:
-                        logger.error("Ошибка ответа модели")
-                        return
-                        ...
+                    self._save_response(file_path, response, "gemini")
+                    pprint(f"Processed file number: {i + 1}", text_color="yellow")
+                    ...
+                else:
+                    logger.error("Ошибка ответа модели")
+                    ...
+                    continue
 
-            pprint(f"Processed file number: {i + 1}", text_color="yellow")
+            
 
             asyncio.run(asyncio.sleep(20)) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
 
@@ -299,7 +291,7 @@ class CodeAssistant:
         except Exception as ex:
             logger.error(f"Ошибка в составлении запроса ", ex)
             ...
-        return content_request
+        return str(content_request)
 
     def _yield_files_content(
         self,

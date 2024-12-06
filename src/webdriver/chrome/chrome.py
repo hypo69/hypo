@@ -37,6 +37,7 @@ import os
 import sys
 from pathlib import Path
 from typing import Optional
+from types import SimpleNamespace
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
