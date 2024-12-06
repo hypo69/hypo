@@ -2020,21 +2020,13 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.customer_reviews) or ''
+            self.fields.customer_reviews = normalize_string( value or  await self.driver.execute_locator(self.locator.customer_reviews) or ''  )
+            return True
         except Exception as ex:
             logger.error(f'Ошибка получения значения в поле `customer_reviews`', ex)
             ...
             return
 
-        # Проверка валидности `value`
-        if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.customer_reviews}')
-            ...
-            return
-
-        # Записываем результат в поле `customer_reviews` объекта `ProductFields`
-        self.fields.customer_reviews = value
-        return True
 
     @close_pop_up()
     async def link_to_video(self, value:Optional[Any] = None):
@@ -2063,7 +2055,7 @@ class Graber:
         return True
 
     @close_pop_up()
-    async def local_saved_image(self, value:Optional[Any] = None):
+    async def local_saved_image(self, value:Optional[str] = None):
         """Fetch and save image locally.
         Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`
         Args:
@@ -2075,24 +2067,26 @@ class Graber:
             - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
             - Как передать путь кроме жестко указанного   
         """
-       
-        if not value:
-            try:
-                if not self.fields.id_product:
-                    self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-                img_url = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
-                img_tmp_path = await save_png_from_url(img_url[0] if isinstance(img_url, list) else img_url , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
-                if img_tmp_path:
-                    self.fields.local_saved_image = img_tmp_path
-                    return True
-                else:
-                    logger.debug(f"Ошибка сохранения изображения")
-                    ...
-                    return
-            except Exception as ex:
-                logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+        if value:
+            self.fields.local_saved_image = value
+            return True
+
+        try:
+            if not self.fields.id_product:
+                self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
+            img_url = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
+            img_tmp_path = await save_png_from_url(img_url[0] if isinstance(img_url, list) else img_url , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
+            if img_tmp_path:
+                self.fields.local_saved_image = img_tmp_path
+                return True
+            else:
+                logger.debug(f"Ошибка сохранения изображения")
                 ...
                 return
+        except Exception as ex:
+            logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+            ...
+            return
 
     @close_pop_up()
     async def local_saved_video(self, value:Optional[Any] = None):
