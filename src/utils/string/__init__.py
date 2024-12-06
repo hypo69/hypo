@@ -17,6 +17,7 @@ from .normalizer import (
 						normalize_int,
 						normalize_float,
 						normalize_boolean,
+						normalize_sql_date,
 					)
 
 

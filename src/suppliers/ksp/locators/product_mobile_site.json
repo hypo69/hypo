@@ -857,7 +857,7 @@
     "selector": "//h1[@class = 'rtl-16esk6i']",
     "if_list": "first",
     "use_mouse": false,
-    "timeout": 0,
+    "timeout": 1,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
     "mandatory": true,

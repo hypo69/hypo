@@ -149,31 +149,6 @@ def normalize_float(value: Any) -> float | None:
         return original_value  # Возвращается исходное значение
 
 
-def remove_line_breaks(input_str: str) -> str:
-    """Remove line breaks from the input string.
-
-    Args:
-        input_str (str): Input string.
-
-    Returns:
-        str: String without line breaks.
-    """
-    return input_str.replace('\n', ' ').replace('\r', ' ').strip()
-
-
-def remove_html_tags(input_html: str) -> str:
-    """Remove HTML tags from the input string.
-
-    Args:
-        input_html (str): Input HTML string.
-
-    Returns:
-        str: String without HTML tags.
-    """
-    return re.sub(r'<.*?>', '', input_html).strip()
-
-
-
 def normalize_sql_date(input_data: str) -> str:
     """Normalize data into SQL date format (YYYY-MM-DD).
 
@@ -211,16 +186,69 @@ def normalize_sql_date(input_data: str) -> str:
     logger.debug(f'Не удалось преобразовать в SQL дату: {input_data}')
     return original_input  # Возвращается исходное значение
 
+def simplify_string(input_str: str) -> str:
+    """ Simplifies the input string by keeping only letters, digits, and replacing spaces with underscores.
 
-def remove_special_characters(input_str: str | list) -> str | list:
-    """Remove special characters not allowed in specific contexts.
+    @param input_str: The string to be simplified.
+    @return: The simplified string.
+    @code
+        example_str = "It's a test string with 'single quotes', numbers 123 and symbols!"
+        simplified_str = StringNormalizer.simplify_string(example_str)
+        print(simplified_str)  # Output: Its_a_test_string_with_single_quotes_numbers_123_and_symbols
+    @endcode
+    """
+    try:
+        # Remove all characters except letters, digits, and spaces
+        cleaned_str = re.sub(r'[^a-zA-Z0-9\s]', '', input_str)
+        # Replace spaces with underscores
+        cleaned_str = cleaned_str.replace(' ', '_')
+        # Remove consecutive underscores
+        cleaned_str = re.sub(r'_+', '_', cleaned_str)
+        return cleaned_str
+    except Exception as ex:
+        logger.error("Error simplifying the string", ex)
+        return input_str
+
+def remove_line_breaks(input_str: str) -> str:
+    """Remove line breaks from the input string.
+
+    Args:
+        input_str (str): Input string.
+
+    Returns:
+        str: String without line breaks.
+    """
+    return input_str.replace('\n', ' ').replace('\r', ' ').strip()
+
+
+def remove_html_tags(input_html: str) -> str:
+    """Remove HTML tags from the input string.
+
+    Args:
+        input_html (str): Input HTML string.
+
+    Returns:
+        str: String without HTML tags.
+    """
+    return re.sub(r'<.*?>', '', input_html).strip()
+
+
+
+def remove_special_characters(input_str: str | list, chars: list[str] = None) -> str | list:
+    """Remove specified special characters from a string or list of strings.
 
     Args:
         input_str (str | list): Input string or list of strings.
+        chars (list[str], optional): List of characters to remove. Defaults to None.
 
     Returns:
-        str | list: Processed string or list with special characters removed.
+        str | list: Processed string or list with specified characters removed.
     """
+    if chars is None:
+        chars = ['#']  # Default list of characters to remove
+
+    pattern = '[' + re.escape(''.join(chars)) + ']'
+
     if isinstance(input_str, list):
-        return [re.sub(r'[^a-zA-Z0-9\s]', '', s) for s in input_str]
-    return re.sub(r'[^a-zA-Z0-9\s]', '', input_str)
+        return [re.sub(pattern, '', s) for s in input_str]
+    return re.sub(pattern, '', input_str)

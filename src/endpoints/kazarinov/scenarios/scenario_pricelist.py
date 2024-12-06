@@ -152,7 +152,7 @@ class Mexiron:
                 logger.error(f"Error on url{url}")
                 ...
                 continue
-            self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
+            self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
             try:
                 f = await graber.grab_page(*required_fields)
             except Exception as ex:
