@@ -140,6 +140,9 @@ class ExecuteLocator:
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
         )
 
+        if not locator.attribute and not locator.selector:
+            return # <- локатор - заглушка
+
         async def _parse_locator(
             locator: Union[dict, SimpleNamespace], message: Optional[str]
         ) -> str | list | dict | WebElement | bool:

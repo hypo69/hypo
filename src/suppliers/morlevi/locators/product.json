@@ -752,9 +752,9 @@
     "locator_description": "Morlevi - краткое Описание товара. "
   },
   "description": {
-    "attribute": "innerText",
-    "by": "XPATH",
-    "selector": "//div[contains(@class, 'product-params')]//li",
+    "attribute": null,
+    "by": null,
+    "selector": null,
     "if_list": "all",
     "use_mouse": false,
     "mandatory": true,

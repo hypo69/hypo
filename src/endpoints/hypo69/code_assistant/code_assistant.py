@@ -2,16 +2,6 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
-"""
-.. module: src.endpoints.hypo69.code_assistant 
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы ассистента программиста
-"""
-
-MODE = "dev"
-
-
 """
 Модуль для работы ассистента программиста
 =========================================================================================
@@ -29,7 +19,12 @@ MODE = "dev"
 
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
     assistant.process_files()
+
+.. module: src.endpoints.hypo69.code_assistant 
+    :platform: Windows, Unix
+    :synopsis: Модуль для работы ассистента программиста
 """
+
 import asyncio
 import argparse
 import sys
@@ -50,8 +45,9 @@ from src.utils.printer import pprint
 from src.utils.path import get_relative_path
 from src.logger import logger
 from src.endpoints.hypo69.code_assistant.make_summary import make_summary 
-from toolbox import 
+# from toolbox import 
 
+MODE = "dev"
 
 class CodeAssistant:
     """ 

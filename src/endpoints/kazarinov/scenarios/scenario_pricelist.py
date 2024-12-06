@@ -138,7 +138,7 @@ class Mexiron:
             ...
             return False
 
-        product_fields_list = []
+        required_fields:tuple = ('id_product','name','description_short','description','specification','local_saved_image')
         products_list = []
 
         for url in urls_list:
@@ -152,7 +152,12 @@ class Mexiron:
                 logger.error(f"Error on url{url}")
                 continue
 
-            f = await graber.grab_page(self.driver)
+            try:
+                f = await graber.grab_page(*required_fields)
+            except Exception as ex:
+                logger.error(f"Ошибка получения полей товара",ex)
+                ...
+                continue
 
             if not f:
                 logger.debug(f'Failed to parse product fields for URL: {url}')
@@ -205,6 +210,7 @@ class Mexiron:
         Returns:
             Optional[object]: Graber instance if a match is found, None otherwise.
         """
+        self.driver.get_url(url)
         if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
             return MorleviGraber(self.driver)
         if url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
