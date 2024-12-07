@@ -1,4 +1,4 @@
-[English](https://github.com/hypo69/hypo/blob/master/src/README.MD)
+[English](https://github.com/hypo69/hypo/blob/master/src/readme.md)
 # Оглавление
 
 1. [webdriver](#webdriver)  
