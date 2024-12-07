@@ -47,16 +47,14 @@ from src.logger import logger
 
 class Mexiron:
     """
-    Handles suppliers' product extraction, parsing, and saving processes.
+    Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
     
-    Supported suppliers:
-    - https://morlevi.co.il
-    - https://ivory.co.il
-    - https://ksp.co.il
-    - https://grandadvance.co.il
+    Attributes:
+        driver (Driver): Экземпляр Selenium WebDriver.
+        export_path (Path): Путь для экспорта данных.
+        products_list (List[dict]): Список обработанных данных о продуктах.
     """
 
-    # Class attributes
     driver: Driver
     export_path: Path
     mexiron_name: str
@@ -152,7 +150,7 @@ class Mexiron:
                 logger.error(f"Error on url{url}")
                 ...
                 continue
-            self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
+            self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
             try:
                 f = await graber.grab_page(*required_fields)
             except Exception as ex:
@@ -260,7 +258,7 @@ class Mexiron:
             return
         return True
 
-    async def process_ai(self, products_list: str, attempts: int = 3) -> tuple | bool:
+    async def process_ai(self, products_list: List[str], attempts: int = 3) -> tuple | bool:
         """
         Processes the product list through the AI model.
 
