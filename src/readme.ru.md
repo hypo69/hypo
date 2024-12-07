@@ -20,6 +20,9 @@
 
 ## webdriver  
 Модуль для работы с веб-драйверами и автоматизацией действий в браузере.
+- [code](https://github.com/hypo69/hypo/tree/master/src/webdriver/readme.ru.md) 
+- [doc](https://github.com/hypo69/hypo/tree/master/docs/gemini/en/doc/src/webdriver/readme.ru.md) 
+- [test](https://github.com/hypo69/hypo/tree/master/docs/gemini/en/doc/src/webdriver/readme.ru.md) 
 
 ## ai  
 Модуль для интеграции с искусственным интеллектом, включая взаимодействие с различными ИИ-моделями.
