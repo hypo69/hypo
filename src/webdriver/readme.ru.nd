@@ -102,10 +102,6 @@ if __name__ == "__main__":
     main()
 ```
 
-Here is the translated overview for the `Driver` module:
-
----
-
 ### Module Overview: `Driver`
 
 **Description:**
