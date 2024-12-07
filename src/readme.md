@@ -1,115 +1,73 @@
+```rst
+.. :module: src
+```
 [Русский](https://github.com/hypo69/hypo/blob/master/src/readme.ru.md)
-# Table of Contents
 
-1. [webdriver](#webdriver)  
-2. [ai](#ai)  
-3. [bots](#bots)  
-4. [category](#category)  
-5. [db](#db)  
-6. [endpoints](#endpoints)  
-7. [fast_api](#fast_api)  
-8. [goog](#goog)  
-9. [logger](#logger)  
-10. [product](#product)  
-11. [scenario](#scenario)  
-12. [suppliers](#suppliers)  
-13. [templates](#templates)  
-14. [translators](#translators)  
-15. [utils](#utils)  
+Modules Overview
+=========================================================================================
 
-# Modules
+This document provides an overview of various modules, including links to the source code, documentation, tests, and examples.
 
-## webdriver  
-Module for working with web drivers and automating browser actions.   
-- [code](https://github.com/hypo69/hypo/blob/master/src/webdriver/readme.md) 
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/webdriver) 
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver) 
+## assistant  
+Module for interacting with the `CodeAssistant` class, which helps with processing code tasks.
 
+- [Module code](https://github.com/hypo69/hypo/blob/master/src/assistant/readme.en.md) - Source code for the `assistant` module.
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/assistant/readme.en.md) - Documentation for the `assistant` module.
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/assistant) - Tests for the `assistant` module.
+- [Examples](https://github.com/hypo69/hypo/tree/master/docs/examples/assistant) - Examples of using the `assistant` module.
 
-## ai  
-Module for integrating artificial intelligence, including interaction with various AI models. 
-- [code](https://github.com/hypo69/hypo/blob/master/src/ai) 
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/ai)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/ai)
+## bot  
+Module for the bot logic, including message processing and handling bot commands.
 
-
-## bots  
-Module for creating and managing bots that interact with users.
-- [code](https://github.com/hypo69/hypo/blob/master/src/bots)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/bots)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bots)
-
-
-
-## category  
-Module for working with product or data categories.
-- [code](https://github.com/hypo69/hypo/blob/master/src/category)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/category)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/category)
-
-
-## db  
-Module for interacting with databases, including creating, reading, and updating data.
-- [code](https://github.com/hypo69/hypo/blob/master/src/db)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/db)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/doc/src/db)
-
-## endpoints  
-Module for creating and handling API endpoints that interact with clients.
-- [code](https://github.com/hypo69/hypo/blob/master/src/endpoints)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/endpoints)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/doc/src/endpoints)
-
-## fast_api  
-Module for using FastAPI within the project, including request routing and configuration.
-- [code](https://github.com/hypo69/hypo/blob/master/src/fast_api)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/fast_api)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/fast_api)
-
-## goog  
-Module for working with Google services, such as Google Cloud or APIs.
-- [code](https://github.com/hypo69/hypo/blob/master/src/goog)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/goog)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/goog)
-
-## logger  
-Module for logging, providing functionality for recording logs and errors.
-- [code](https://github.com/hypo69/hypo/blob/master/src/logger)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/logger)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/logger)
-
-## product  
-Module for working with products, including processing product and service data.
-- [code](https://github.com/hypo69/hypo/blob/master/src/product)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/product)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/product)
+- [Module code](https://github.com/hypo69/hypo/blob/master/src/bot/readme.en.md) - Source code for the `bot` module.
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/bot/readme.en.md) - Documentation for the `bot` module.
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/bot) - Tests for the `bot` module.
+- [Examples](https://github.com/hypo69/hypo/tree/master/docs/examples/bot) - Examples of using the `bot` module.
 
 ## scenario  
-Module for modeling and executing interaction scenarios.
-- [code](https://github.com/hypo69/hypo/blob/master/src/scenario)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/scenario)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/scenario)
+Module for working with scenarios, including scenario generation and execution.
+
+- [Module code](https://github.com/hypo69/hypo/blob/master/src/scenario/readme.en.md) - Source code for the `scenario` module.
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/scenario/readme.en.md) - Documentation for the `scenario` module.
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/scenario) - Tests for the `scenario` module.
+- [Examples](https://github.com/hypo69/hypo/tree/master/docs/examples/scenario) - Examples of using the `scenario` module.
 
 ## suppliers  
-Module for interacting with suppliers, including integration with external systems.
-- [code](https://github.com/hypo69/hypo/blob/master/src/suppliers)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/suppliers)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/suppliers)
+Module for working with suppliers, including managing their data and relationships.
+
+- [Module code](https://github.com/hypo69/hypo/blob/master/src/suppliers/readme.en.md) - Source code for the `suppliers` module.
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/suppliers/readme.en.md) - Documentation for the `suppliers` module.
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/suppliers) - Tests for the `suppliers` module.
+- [Examples](https://github.com/hypo69/hypo/tree/master/docs/examples/suppliers) - Examples of using the `suppliers` module.
 
 ## templates  
-Module for working with data templates and generating them.
-- [code](https://github.com/hypo69/hypo/blob/master/src/templates)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/templates)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/templates)
+Module for working with templates, including creating and managing templates for various purposes.
+
+- [Module code](https://github.com/hypo69/hypo/blob/master/src/templates/readme.en.md) - Source code for the `templates` module.
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/templates/readme.en.md) - Documentation for the `templates` module.
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/templates) - Tests for the `templates` module.
+- [Examples](https://github.com/hypo69/hypo/tree/master/docs/examples/templates) - Examples of using the `templates` module.
 
 ## translators  
-Module for text translation using various tools and APIs.
-- [code](https://github.com/hypo69/hypo/blob/master/src/translators)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/translators)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/translators)
+Module for working with translators and text translation.
+
+- [Module code](https://github.com/hypo69/hypo/blob/master/src/translators/readme.en.md) - Source code for the `translators` module.
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/translators/readme.en.md) - Documentation for the `translators` module.
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/translators) - Tests for the `translators` module.
+- [Examples](https://github.com/hypo69/hypo/tree/master/docs/examples/translators) - Examples of using the `translators` module.
 
 ## utils  
-Utility module that includes various helper functions for the project.
-- [code](https://github.com/hypo69/hypo/blob/master/src/utils)
-- [doc](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/utils)
-- [test](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/utils)
+Module for auxiliary utilities, simplifying common tasks.
+
+- [Module code](https://github.com/hypo69/hypo/blob/master/src/utils/readme.en.md) - Source code for the `utils` module.
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/utils/readme.en.md) - Documentation for the `utils` module.
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/utils) - Tests for the `utils` module.
+- [Examples](https://github.com/hypo69/hypo/tree/master/docs/examples/utils) - Examples of using the `utils` module.
+
+## webdriver  
+Module for working with web browser drivers and managing web elements.
+
+- [Module code](https://github.com/hypo69/hypo/blob/master/src/webdriver/readme.en.md) - Source code for the `webdriver` module.
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/webdriver/readme.en.md) - Documentation for the `webdriver` module.
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/webdriver) - Tests for the `webdriver` module.
+- [Examples](https://github.com/hypo69/hypo/tree/master/docs/examples/webdriver) - Examples of using the `webdriver` module.
