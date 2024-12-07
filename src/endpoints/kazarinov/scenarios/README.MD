@@ -1,5 +1,5 @@
 ```mermaid
-flowchart LR
+flowchart TD
     A[Запрос на обработку продуктов products_list] --> B[Обработка запроса с командой модели]
     B --> C[Ответ от модели]
     
