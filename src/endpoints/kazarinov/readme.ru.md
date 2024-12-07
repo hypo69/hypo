@@ -1,5 +1,4 @@
-
-
+[English]()
 `KazarinovTelegramBot`
 - https://one-tab.co.il
 - https://morlevi.co.il
