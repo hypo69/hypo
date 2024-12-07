@@ -1,3 +1,5 @@
+
+
 `KazarinovTelegramBot`
 - https://one-tab.co.il
 - https://morlevi.co.il
@@ -6,7 +8,12 @@
 - https://ksp.co.il 
 -------- 
 `BotHandler` 
-- парсит линки
+
+На стороне клиента:  
+выбор комплектующих для сборки компьютера -> объединение в one-tab -> отправка ссыли `one-tab` телеграм боту (`hypo69_kazarinov_bot` - prod or `hypo69_test_bot`) ->  
+
+На стороне кода:  
+`kazarinov_bot.handle_message()` -> `kazarinov.scenarios.run_scenario()`
 
 ```mermaid
 flowchart TD

@@ -6,8 +6,7 @@
 """
 .. module: src.endpoints.kazarinov.scenarios 
 	:platform: Windows, Unix
-	:synopsis:
-
+	:synopsis: Модуль сценария для создания прайлиста.
 """
 MODE = 'dev'
 
