@@ -11,27 +11,4 @@
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
 
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-# https://www.rev.com/api/docs
-# https://docs.rev.ai/resources/code-samples/python/

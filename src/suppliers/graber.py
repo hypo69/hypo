@@ -2055,17 +2055,24 @@ class Graber:
         return True
 
     @close_pop_up()
-    async def local_saved_image(self, value:Optional[str] = None):
-        """Fetch and save image locally.
-        Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`
+    async def local_saved_image(self, value: Optional[str] = None):
+        """Fetch and save an image locally.
+
+        Функция получает `URL` картинки или байты изображения, сохраняет изображение в формате `PNG` в директории `tmp` 
+        и устанавливает путь к сохранённой картинке в поле `local_saved_image`. Если передано значение в параметре `value`,
+        оно записывается в поле без изменений.
+
         Args:
-        value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
+            value (Optional[str], optional): URL изображения, который можно передать в классе через ключ `{local_saved_image = value}`.
+                Если `value` было передано, его значение подставляется в поле `ProductFields.local_saved_image`.
+
         .. note:
-            путь к изображению ведет в директорию  `tmp`
+            Путь к изображению ведёт в директорию `tmp`.
+
         .. todo:
-            - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-            - Как передать путь кроме жестко указанного   
+            - Как передать значение из `**kwargs` функции `grab_product_page(**kwargs)`?
+            - Как передать путь к файлу без жесткой привязки?
+
         """
         if value:
             self.fields.local_saved_image = value
@@ -2073,14 +2080,19 @@ class Graber:
 
         try:
             if not self.fields.id_product:
-                self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-            img_url = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
-            img_tmp_path = await save_png_from_url(img_url[0] if isinstance(img_url, list) else img_url , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
-            if img_tmp_path:
-                self.fields.local_saved_image = img_tmp_path
-                return True
+                self.id_product()  # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwargs` функции `grab_product_page(**kwargs)`?
+        
+            # Получаем результат из локатора как `bytes` или `str`(url)
+            raw_image = await self.driver.execute_locator(self.locator.default_image_url)
+            raw_image = raw_image[0] if isinstance(raw_image, list) else raw_image
+
+            if isinstance(raw_image, bytes):
+                # Если это байты, вызываем save_png для сохранения изображения
+                img_tmp_path = await save_png(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
+            elif isinstance(raw_image, str):  # если это строка, предполагаем, что это URL изображения
+                img_tmp_path = await save_png_from_url(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
             else:
-                logger.debug(f"Ошибка сохранения изображения")
+                logger.debug("Неизвестный тип данных для изображения", None, False)
                 ...
                 return
         except Exception as ex:
