@@ -247,8 +247,9 @@ Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\p
 ```
 ---
 ## Далее:
-1. [Документация для разработчика](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/ru) ( **Не готова* 😕
-2. [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.RU.MD) ( **Не готова* 😕)
-3. [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
+1. [код](https://github.com/hypo69/hypo/tree/master/src/README.RU.MD)
+2. [Документация для разработчика](https://github.com/hypo69/hypo/tree/master/docs/gemini/ru/consultant/README.RU.MD) ( **Не готова* 😕
+3. [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.RU.MD) ( **Не готова* 😕)
+4. [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
 ## Дополнительная информация
 [https://davidka.net](https://davidka.net).
