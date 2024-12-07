@@ -28,9 +28,9 @@
   - [Настройка учетных данных](#настройка-учетных-данных)
 
 - [Документация для разработчика](https://github.com/hypo69/hypo/blob/master/docs/gemini/consultant/ru) ( **Не готова* 😕)  
-- [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.RU.MD) ( **Не готова* 😕) 
+- [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/readme.ru.md) ( **Не готова* 😕) 
 - [Примеры](https://github.com/hypo69/hypo/blob/master/examples/readme.ru.md) 
-- [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
+- [Тесты](https://github.com/hypo69/hypo/tree/master/pytest/readme.ru.md)
 - [Дополнительная информация](#дополнительная-информация)
 
 ## Описание проекта
@@ -250,9 +250,9 @@ Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\p
 ---
 ## Далее:
 - [Документация для разработчика](https://github.com/hypo69/hypo/blob/master/docs/gemini/consultant/ru) ( **Не готова* 😕)  
-- [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.RU.MD) ( **Не готова* 😕) 
+- [Документация для пользователя](https://github.com/hypo69/hypo/blob/master/docs/scenarios/readme.ru.md) ( **Не готова* 😕) 
 - [Примеры](https://github.com/hypo69/hypo/blob/master/examples/readme.ru.md) 
-- [Тесты](https://github.com/hypo69/hypo/tree/master/pytest)
+- [Тесты](https://github.com/hypo69/hypo/tree/master/pytest/readme.ru.md)
 
 ## Дополнительная информация
 [https://davidka.net](https://davidka.net).
