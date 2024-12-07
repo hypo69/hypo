@@ -1,3 +1,7 @@
+```rst
+.. :module: pytest
+```
+[Русский](https://github.com/hypo69/hypo/blob/master/pytest/readme.ru.md)
 # Testing Documentation
 
 This directory contains documentation related to the testing of the project.
