@@ -1,4 +1,4 @@
-[Русский](https://github.com/hypo69/hypo/blob/master/src/README.RU.MD)
+[Русский](https://github.com/hypo69/hypo/blob/master/src/readme.ru.md)
 # Table of Contents
 
 1. [webdriver](#webdriver)  
