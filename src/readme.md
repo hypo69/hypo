@@ -71,3 +71,24 @@ Module for working with web browser drivers and managing web elements.
 - [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/webdriver/readme.en.md) - Documentation for the `webdriver` module.
 - [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver) - Tests for the `webdriver` module.
 - [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver) - Examples of using the `webdriver` module.
+
+Glossary
+=========
+
+### 1. **webdriver**
+   - **`Driver`**: An object that controls the browser (e.g., Chrome, Firefox) and performs actions such as navigating web pages, filling out forms, etc.
+   - **`Executor`**: An interface or class that executes commands or scripts within the context of the web driver.
+   - **`Chrome`, `Firefox`, ...**: Specific browsers that can be controlled using the web driver.
+   - **`locator`**: A mechanism for finding elements on a web page (e.g., by ID, CSS selector, XPath).
+
+### 2. **`Supplier`**
+   - **list of suppliers (`Amazon`, `Aliexpress`, `Morlevi`, ...)**: A list of companies or platforms that provide products or services.
+   - **`Graber`**: A tool or module that automatically collects data from supplier websites (e.g., prices, product availability).
+
+### 3. **`Product`**
+   - **`Product`**: An object representing a product or service that can be available on various platforms.
+   - **`ProductFields`**: Fields or attributes that describe the characteristics of a product (e.g., name, price, description, images).
+
+Next
+=====
+[Project Initialization and Setup]((https://github.com/hypo69/hypo/blob/master/src/credentials.md)
