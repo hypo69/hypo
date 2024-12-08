@@ -1,22 +1,110 @@
-### Initialization and Setup
+```rst
+.. :module: src.credentials
+```
+[Русский](https://github.com/hypo69/hypo/tree/master/src/credentials.ru.md)
+[Up to Parent](https://github.com/hypo69/hypo/tree/master/src/README.MD)
+## Overview
 
-Upon startup, the project initializes and sets up various configurations and credentials. This document explains how these values are established and managed.
+This module contains the `ProgramSettings` class, which implements the Singleton pattern to store global project settings. The class loads and stores credential information (API keys, passwords, etc.) from the `credentials.kdbx` KeePass database file. It also includes the `set_project_root` function to locate the project's root directory.
 
-#### Project Root Detection
+## Functions
 
-The project automatically detects its root directory by searching upwards from the current file's directory for specific marker files (`pyproject.toml`, `requirements.txt`, `.git`). This ensures that the project can locate its resources regardless of the current working directory.
+### `set_project_root`
+
+**Description**: Finds the project's root directory starting from the current directory. The search goes up through the directories until a directory containing one of the files in the `marker_files` list is found.
+
+**Parameters**:
+
+- `marker_files` (tuple): A tuple of strings representing file or directory names used to identify the project's root directory. By default, it looks for the following markers: `pyproject.toml`, `requirements.txt`, `.git`.
+
+**Returns**:
+
+- `Path`: The path to the project's root directory if found, otherwise the path to the directory where the script is located.
+
+### `singleton`
+
+**Description**: A decorator to create a singleton class.
+
+**Parameters**:
+
+- `cls`: The class that should be converted into a singleton.
+
+**Returns**:
+
+- `function`: A function that returns an instance of the singleton class.
+
+## Classes
+
+### `ProgramSettings`
+
+**Description**: A class for program settings. It sets up the main parameters and project settings. It loads the configuration from `config.json` and credential data from the `credentials.kdbx` KeePass database file.
+
+**Attributes**:
+
+- `host_name` (str): The host name.
+- `base_dir` (Path): The path to the project's root directory.
+- `config` (SimpleNamespace): An object containing the project configuration.
+- `credentials` (SimpleNamespace): An object containing the credentials.
+- `MODE` (str): The project's operation mode (e.g., 'dev', 'prod').
+- `path` (SimpleNamespace): An object containing paths to various project directories.
+
+**Methods**:
+
+- `__init__(self, **kwargs)`: Initializes the class instance.
+  - Loads the project configuration from `config.json`.
+  - Initializes the `path` attribute with paths to various project directories.
+  - Calls `check_latest_release` to check for a new project version.
+  - Loads credentials from `credentials.kdbx`.
+- `_load_credentials(self) -> None`: Loads credentials from KeePass.
+- `_open_kp(self, retry: int = 3) -> PyKeePass | None`: Opens the KeePass database. Handles possible exceptions when opening the database.
+- `_load_aliexpress_credentials(self, kp: PyKeePass) -> bool`: Loads Aliexpress credentials from KeePass.
+- `_load_openai_credentials(self, kp: PyKeePass) -> bool`: Loads OpenAI credentials from KeePass.
+- `_load_gemini_credentials(self, kp: PyKeePass) -> bool`: Loads GoogleAI credentials from KeePass.
+- `_load_telegram_credentials(self, kp: PyKeePass) -> bool`: Loads Telegram credentials from KeePass.
+- `_load_discord_credentials(self, kp: PyKeePass) -> bool`: Loads Discord credentials from KeePass.
+- `_load_PrestaShop_credentials(self, kp: PyKeePass) -> bool`: Loads PrestaShop credentials from KeePass.
+- `_load_presta_translations_credentials(self, kp: PyKeePass) -> bool`: Loads PrestaShop Translations credentials from KeePass.
+- `_load_smtp_credentials(self, kp: PyKeePass) -> bool`: Loads SMTP credentials from KeePass.
+- `_load_facebook_credentials(self, kp: PyKeePass) -> bool`: Loads Facebook credentials from KeePass.
+- `_load_gapi_credentials(self, kp: PyKeePass) -> bool`: Loads Google API credentials from KeePass.
+- `now(self) -> str`: Returns the current timestamp in the format specified in the `config.json` file.
+
+**Possible Exceptions**:
+
+- `BinaryError`: Exception for binary data errors.
+- `CredentialsError`: Exception for credential data errors.
+- `DefaultSettingsException`: Exception for default settings errors.
+- `HeaderChecksumError`: Exception for header checksum errors.
+- `KeePassException`: Exception for KeePass database errors.
+- `PayloadChecksumError`: Exception for payload checksum errors.
+- `UnableToSendToRecycleBin`: Exception for recycle bin sending errors.
+- `Exception`: General exception.
+
+## Notes
+
+- The module uses PyKeePass to work with the `credentials.kdbx` file.
+- Exception handling blocks (`ex`) are present in the code.
+- The password file (`password.txt`) contains passwords in plain text. This is a potential vulnerability. A secure password storage mechanism needs to be developed.
+
+## Initialization and Configuration
+
+When the project starts, it initializes and configures various settings and credentials. This document explains how these values are set and managed.
+
+### Determining the Project's Root Directory
+
+The project automatically determines its root directory by searching upwards from the current file directory for specific marker files (`pyproject.toml`, `requirements.txt`, `.git`). This ensures that the project can find its resources regardless of the current working directory.
 
 ```python
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Finds the root directory of the project starting from the current file's directory,
+    Finds the project's root directory starting from the current file directory,
     searching upwards and stopping at the first directory containing any of the marker files.
     
     Args:
-        marker_files (tuple): Filenames or directory names to identify the project root.
+        marker_files (tuple): File or directory names for identifying the project's root directory.
     
     Returns:
-        Path: Path to the root directory if found, otherwise the directory where the script is located.
+        Path: The path to the root directory if found, otherwise the directory where the script is located.
     """
     __root__:Path
     current_path:Path = Path(__file__).resolve().parent
@@ -30,48 +118,48 @@ def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
     return __root__
 ```
 
-#### Configuration Loading
+### Loading Configuration
 
 The project loads its default settings from the `config.json` file located in the `src` directory. This JSON file contains various configuration parameters such as:
 
 - **Author Information**: Details about the author.
 - **Available Modes**: Supported modes (`dev`, `debug`, `test`, `prod`).
 - **Paths**: Directories for logs, temporary files, external storage, and Google Drive.
-- **Project Details**: Name, version, and release information.
+- **Project Details**: Name, version, and release information of the project.
 
 ```python
 self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')
 if not self.config:
-    logger.error('Ошибка при загрузке настроек')
+    logger.error('Error loading settings')
     ...
     return
 
 self.config.project_name = self.base_dir.name
 ```
 
-#### Credential Management with KeePass
+### Managing Credentials Using KeePass
 
 **What is KeePass?**
 
-KeePass is a free and open-source password manager that securely stores your passwords and other sensitive information in an encrypted database. The database is protected by a master password, which is the only password you need to remember. KeePass uses strong encryption algorithms (such as AES and Twofish) to ensure that your data is secure.
+KeePass is a free and open-source password manager that securely stores your passwords and other sensitive information in an encrypted database. The database is protected by a master password, which is the only password you need to remember. KeePass uses strong encryption algorithms (such as AES and Twofish) to ensure the security of your data.
 
-**Why Use KeePass?**
+**Why is KeePass Good?**
 
 - **Security**: KeePass uses industry-standard encryption to protect your data, making it highly secure against unauthorized access.
-- **Portability**: You can store your KeePass database on a USB drive or cloud storage and access it from multiple devices.
-- **Customization**: KeePass allows you to organize your passwords into groups and subgroups, making it easy to manage large numbers of credentials.
-- **Open Source**: Being open-source, KeePass is transparent and can be audited by the community to ensure its security.
+- **Portability**: You can store your KeePass database on a USB drive or in cloud storage and access it from multiple devices.
+- **Customization**: KeePass allows you to organize your passwords into groups and subgroups, making it easier to manage a large number of credentials.
+- **Open Source**: Being an open-source project, KeePass is transparent and can be reviewed by the community for its security.
 
 **How KeePass Works in This Project**
 
-Credentials are securely managed using a KeePass database (`credentials.kdbx`). The master password for this database is handled differently based on the environment:
+Credentials are securely managed using the KeePass database (`credentials.kdbx`). The master password for this database is handled differently depending on the environment:
 
 - **Development Mode**: The password is read from a file named `password.txt` located in the `secrets` directory.
-- **Production Mode**: The password is entered via the console.
+- **Production Mode**: The password is entered via the console. (Remove the `password.txt` file from the `secrets` directory)
 
 ```python
 def _open_kp(self, retry: int = 3) -> PyKeePass | None:
-    """ Open KeePass database
+    """ Opens the KeePass database
     Args:
         retry (int): Number of retries
     """
@@ -82,7 +170,7 @@ def _open_kp(self, retry: int = 3) -> PyKeePass | None:
                            password = password or getpass.getpass(print('Enter KeePass master password: ').lower()))
             return kp
         except Exception as ex:
-            print(f"Failed to open KeePass database Exception: {ex}, {retry-1} retries left.")
+            print(f"Failed to open KeePass database. Exception: {ex}, {retry-1} retries left.")
             ...
             retry -= 1
             if retry < 1:
@@ -91,162 +179,114 @@ def _open_kp(self, retry: int = 3) -> PyKeePass | None:
                 sys.exit()
 ```
 
-#### Singleton Design Pattern
+### KeePass Database Tree Structure
 
-The `ProgramSettings` class follows the Singleton design pattern, ensuring that only one instance of this class is created. This instance holds all the project's settings and credentials, providing a consistent configuration across the application.
-
-```python
-@singleton
-class ProgramSettings(BaseModel):
-    """ 
-    `ProgramSettings` - класс настроек программы.
-    
-    Синглтон, хранящий основные параметры и настройки проекта.
-    """
-    
-    class Config:
-        arbitrary_types_allowed = True
-
-    host_name:str = socket.gethostname()
-    print(f'host_name: {host_name}')
-
-    base_dir: Path = Field(default_factory=lambda: set_project_root())
-    config: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
-    credentials: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
-        aliexpress=SimpleNamespace(
-            api_key=None,
-            secret=None,
-            tracking_id=None,
-            username=None,
-            email=None,
-            password=None
-        ),
-        presta=SimpleNamespace(
-            translations=SimpleNamespace(
-                server=None,
-                port=None,
-                database=None,
-                user=None,
-                password=None,
-            ),
-            client=[SimpleNamespace(
-                server=None,
-                port=None,
-                database=None,
-                user=None,
-                password=None,
-            )]
-        ),
-        openai=SimpleNamespace(
-            api_key=None, 
-            assistant_id=SimpleNamespace(), 
-            project_api=None
-        ),
-        gemini=SimpleNamespace(api_key=None),
-        rev_com=SimpleNamespace(client_api=None,
-                                user_api=None),
-        shutter_stock=SimpleNamespace(token=None),
-        discord=SimpleNamespace(
-            application_id=None, 
-            public_key=None, 
-            bot_token=None
-        ),
-        telegram=SimpleNamespace(
-            bot=SimpleNamespace()
-        ),
-        smtp=[],
-        facebook=[],
-        gapi={}
-    ))
-    MODE: str = Field(default='dev')
-    path: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(
-        root = None,
-        src = None,
-        bin = None,
-        log = None,
-        tmp = None,
-        data = None,
-        secrets = None,
-        google_drive = None,
-        external_storage = None,
-        tools = None,
-        dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
-    ))
+```
+credentials.kdbx
+├── suppliers
+│   └── aliexpress
+│       └── api
+│           └── entry (Aliexpress API credentials)
+├── openai
+│   ├── entry (OpenAI API keys)
+│   └── assistants
+│       └── entry (OpenAI assistant IDs)
+├── gemini
+│   └── entry (GoogleAI credentials)
+├── telegram
+│   └── entry (Telegram credentials)
+├── discord
+│   └── entry (Discord credentials)
+├── prestashop
+│   ├── entry (PrestaShop credentials)
+│   └── clients
+│       └── entry (PrestaShop client credentials)
+│   └── translation
+│       └── entry (PrestaShop translation credentials)
+├── smtp
+│   └── entry (SMTP credentials)
+├── facebook
+│   └── entry (Facebook credentials)
+└── google
+    └── gapi
+        └── entry (Google API credentials)
 ```
 
-#### Path Setup
+### Detailed Structure Description:
 
-The project sets up various paths for binaries, source code, logs, temporary files, and data directories. These paths are derived from the project root and can be overridden by values specified in the `config.json` file.
+1. **suppliers/aliexpress/api**:
+   - Contains Aliexpress API credentials.
+   - Example entry: `self.credentials.aliexpress.api_key`, `self.credentials.aliexpress.secret`, `self.credentials.aliexpress.tracking_id`, `self.credentials.aliexpress.email`, `self.credentials.aliexpress.password`.
 
-```python
-self.path = SimpleNamespace(
-    root = Path(self.base_dir),
-    bin = Path(self.base_dir / 'bin'), # <- тут бинарники (chrome, firefox, ffmpeg, ...)
-    src = Path(self.base_dir) / 'src', # <- тут весь код
-    endpoints = Path(self.base_dir) / 'src' / 'endpoints', # <- тут все клиенты
-    secrets = Path(self.base_dir / 'secrets'),  # <- это папка с паролями и базой данных ! Ей нельзя попадать в гит!!!
-    toolbox = Path(self.base_dir / 'toolbox'), # <- служебные утилиты
+2. **openai**:
+   - Contains OpenAI API keys.
+   - Example entry: `self.credentials.openai.api_key`.
 
-    log = Path(getattr(self.config.path, 'log', self.base_dir / 'log')), 
-    tmp = Path(getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
-    data = Path(getattr(self.config.path, 'data', self.base_dir / 'data')), # <- данные от endpoints (hypo69, kazarinov, prestashop, etc ...)
-    google_drive = Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')), # <- GOOGLE DRIVE ЧЕРЕЗ ЛОКАЛЬНЫЙ ДИСК (NOT API) 
-    external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage') ),
-)
-```
+3. **openai/assistants**:
+   - Contains OpenAI assistant IDs.
+   - Example entry: `self.credentials.openai.assistant_id`.
 
-#### Credential Loading
+4. **gemini**:
+   - Contains GoogleAI credentials.
+   - Example entry: `self.credentials.gemini.api_key`.
 
-The project loads credentials for various services (e.g., Aliexpress, OpenAI, Discord, Telegram) from the KeePass database. Each service has its own method for extracting and storing these credentials in the `ProgramSettings` instance.
+5. **telegram**:
+   - Contains Telegram credentials.
+   - Example entry: `self.credentials.telegram.token`.
 
-```python
-def _load_credentials(self) -> None:
-    """ Загружает учетные данные из настроек."""
+6. **discord**:
+   - Contains Discord credentials.
+   - Example entry: `self.credentials.discord.application_id`, `self.credentials.discord.public_key`, `self.credentials.discord.bot_token`.
 
-    kp = self._open_kp(3)
-    if not kp:
-        print("Error :( ")
-        ...
-        sys.exit(1)
+7. **prestashop**:
+   - Contains PrestaShop credentials.
+   - Example entry: `self.credentials.presta.client.api_key`, `self.credentials.presta.client.api_domain`, `self.credentials.presta.client.db_server`, `self.credentials.presta.client.db_user`, `self.credentials.presta.client.db_password`.
 
-    if not self._load_aliexpress_credentials(kp):
-        print('Failed to load Aliexpress credentials')
+8. **prestashop/clients**:
+   - Contains PrestaShop client credentials.
+   - Example entry: `self.credentials.presta.client.api_key`, `self.credentials.presta.client.api_domain`, `self.credentials.presta.client.db_server`, `self.credentials.presta.client.db_user`, `self.credentials.presta.client.db_password`.
 
-    if not self._load_openai_credentials(kp):
-        print('Failed to load OpenAI credentials')
+9. **prestashop/translation**:
+   - Contains PrestaShop translation credentials.
+   - Example entry: `self.credentials.presta.translations.server`, `self.credentials.presta.translations.port`, `self.credentials.presta.translations.database`, `self.credentials.presta.translations.user`, `self.credentials.presta.translations.password`.
 
-    if not self._load_gemini_credentials(kp):
-        print('Failed to load GoogleAI credentials')
+10. **smtp**:
+    - Contains SMTP credentials.
+    - Example entry: `self.credentials.smtp.server`, `self.credentials.smtp.port`, `self.credentials.smtp.user`, `self.credentials.smtp.password`.
 
-    if not self._load_discord_credentials(kp):
-        print('Failed to load Discord credentials')
+11. **facebook**:
+    - Contains Facebook credentials.
+    - Example entry: `self.credentials.facebook.app_id`, `self.credentials.facebook.app_secret`, `self.credentials.facebook.access_token`.
 
-    if not self._load_telegram_credentials(kp):
-        print('Failed to load Telegram credentials')
+12. **google/gapi**:
+    - Contains Google API credentials.
+    - Example entry: `self.credentials.gapi.api_key`.
 
-    if not self._load_PrestaShop_credentials(kp):
-        print('Failed to load PrestaShop credentials')
+### Notes:
+- Each group (`group`) in KeePass corresponds to a specific path (`path`).
+- Each entry (`entry`) in a group contains specific credentials.
+- The `_load_*_credentials` methods load data from the corresponding groups and entries in the KeePass database and store them in the `self.credentials` object attributes.
 
-    if not self._load_smtp_credentials(kp):
-        print('Failed to load SMTP credentials')
-
-    if not self._load_facebook_credentials(kp):
-        print('Failed to load Facebook credentials')
-
-    if not self._load_presta_translations_credentials(kp):
-        print('Failed to load Translations credentials')
-
-    if not self._load_gapi_credentials(kp):
-        print('Failed to load GAPI credentials')
-```
-
-#### Global Instance
-
-A global instance of `ProgramSettings` is created to ensure that all parts of the application use the same settings and credentials.
+### Global Instance of `ProgramSettings`
 
 ```python
-# Global instance of ProgamSettings
+# Global instance of ProgramSettings
 gs: ProgramSettings = ProgramSettings()
 ```
 
-This setup ensures that the project is initialized with the correct paths, configurations, and credentials, providing a robust and secure environment for development and production.
+**Why is this needed?**
+
+This global instance of `ProgramSettings` (`gs`) is created to provide access to the project settings and credentials from anywhere in the code. This way, you don't need to create a new instance of the `ProgramSettings` class every time you need to access settings or credentials.
+
+**How is it used?**
+
+In other project modules, you can import this global instance and use it to access settings and credentials:
+
+```python
+from src import gs
+
+# Example usage
+api_key = gs.credentials.openai.api_key
+```
+
+This simplifies access to settings and credentials, making the code cleaner and more convenient to use.

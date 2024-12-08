@@ -6,7 +6,7 @@
 Modules Overview
 =========================================================================================
 
-This document provides an overview of various modules, including links to the source code, documentation, tests, and examples.
+This document provides an overview of main progam modules
 
 ## assistant  
 Module for interacting with the `CodeAssistant` class, which helps with processing code tasks.

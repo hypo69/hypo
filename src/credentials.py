@@ -487,7 +487,7 @@ class ProgramSettings(BaseModel):
 
 
     @property
-    def now(self, dformat: str = '%y_%m_%d_%H_%M_%S_%f') -> str:
+    def now(self) -> str:
         """Возвращает текущую метку времени в формате год-месяц-день-часы-минуты-секунды-милисекунды.
 
         Этот метод возвращает строку, представляющую текущую метку времени, в формате `год_месяц_день_часы_минуты_секунды_миллисекунды`.
@@ -498,7 +498,7 @@ class ProgramSettings(BaseModel):
         Returns:
             str: Текущая метка времени в строковом формате.
         """
-        timestamp = datetime.now().strftime(dformat)
+        timestamp = datetime.now().strftime(self.credentials.timestamp_format)
         # Вернём только первые 3 цифры миллисекунд, т.к. %f возвращает микросекунды (6 цифр)
         return f"{timestamp[:-3]}"
 

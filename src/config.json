@@ -1,19 +1,21 @@
 {
-  "author": "David Ben Avraham",
+  "author": "Hypo69",
+  "project_name": "hypotez",
+  "mode": "dev",
   "avaible_modes": [ "dev", "debug", "test", "prod" ],
-  "cofee": "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69",
-  "copyright": "2024, hypo69",
+
   "git": "hypo",
   "git_user": "hypo69",
-  "mode": "dev",
+
   "path": {
     "external_storage": "E:\\hypo69\\data",
     "google_drive": "H:\\My Drive\\hypotez",
     "log": "E:\\hypo69\\log",
     "tmp": "E:\\hypo69\\tmp"
   },
-  "project_folder": "hypotez",
-  "project_name": "hypotez",
+  "timestamp_format": "%y%m%d%H%M%S%f",
   "release": "0.1",
-  "version": "0.11"
+  "version": "0.11",
+  "copyright": "2024, hypo69",
+  "cofee": "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 }
