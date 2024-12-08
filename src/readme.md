@@ -3,9 +3,7 @@
 ```
 [Русский](https://github.com/hypo69/hypo/blob/master/src/readme.ru.md)
 
-Modules Overview
-=========================================================================================
-
+[Root ↑](https://github.com/hypo69/hypo/blob/master/readme.ru.md)
 This document provides an overview of main progam modules
 
 ## assistant  
@@ -89,6 +87,9 @@ Glossary
    - **`Product`**: An object representing a product or service that can be available on various platforms.
    - **`ProductFields`**: Fields or attributes that describe the characteristics of a product (e.g., name, price, description, images).
 
+### 4. **`ai`**
+	- **`Model Prompt`**: Specifies how the model should process incoming information and return a response. It is set during model initialization.
+	- **`Command Instruction`**: A small command or instruction sent with each request.
 Next
 =====
 [Project Initialization and Setup]((https://github.com/hypo69/hypo/blob/master/src/credentials.md)

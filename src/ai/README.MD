@@ -8,7 +8,11 @@
 The **ai** module is responsible for managing various AI models, facilitating interactions with external APIs, and handling different configurations for data analysis and language processing. It includes the following submodules:
 
 1. **prompts**  
-   Handles the creation and customization of prompts, allowing tailored input for various AI models to improve response accuracy and relevance.
+   System and Command Prompts in markdown Format for AI Models
+    - System Prompts:
+    System prompts are used to set the context or provide instructions to the AI model before it processes user input. These prompts help guide the model's behavior and ensure it understands the task at hand.
+    - Command Instructions:
+        Находятся непосредственно в эндпоинтах
 
 2. **anthropic**  
    Provides integration with Anthropic AI models, enabling tasks that rely on advanced language comprehension and response generation.
