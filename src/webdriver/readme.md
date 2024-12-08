@@ -601,3 +601,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+[Driver explanantion](https://github.com/hypo69/hypo/tree/master/src/webdriver/executor.md)
+[Executor explanantion](https://github.com/hypo69/hypo/tree/master/src/webdriver/executor.md)
+[Locator explanantion](https://github.com/hypo69/hypo/tree/master/src/webdriver/locator.md)
