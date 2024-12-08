@@ -1,3 +1,8 @@
+rst
+.. :module: docs
+```
+[English](https://github.com/hypo69/hypo/tree/master/docs/README.MD)
+
 Содержание
 ==========
 

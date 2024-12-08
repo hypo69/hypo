@@ -1,61 +1,37 @@
-
-# Project Documentation
-TOC:
-- requirements - файл содержит список библиотек для `Sphinx`  - `pip install -r requirements`
-- assets - изображения, иконки для документации
-- dot
-- gemini
-- mermaid
-- scenarios
-- sphinx
-- conf.py
-- jeykill.md
-- mdbook.md
-
-
-The `docs` folder contains compiled documentation, as well as recommendations and documentation created by artificial intelligence models. The following materials are gathered here:
-
-## Compiled Sphinx Documentation
-
-This section contains the main documentation generated using the Sphinx tool. It includes descriptions of the project structure, API, architecture, and other important aspects. The documentation can be compiled into various formats, such as HTML, PDF, and others.
-
-### How to Compile the Documentation
-
-1. Ensure that Python and Sphinx are installed.
-2. In the command line, navigate to the `docs` folder.
-3. Run the following command to build the documentation:
-
-   ```bash
-   sphinx-build -b html . _build/html
-   ```
-
-4. The resulting documentation will be available in the `_build/html` folder.
-
-## AI-Generated Recommendations and Documentation
-
-This section contains recommendations created using artificial intelligence models to improve code quality, development, and documentation. The models may provide suggestions in the following areas:
-
-- Function and class descriptions
-- Coding standards
-- Testing recommendations
-- Performance optimization
-- Best practices
-
-## Folder Structure
-
+```rst
+.. :module: docs
 ```
-docs/
-│
-├── _build/               # Compiled documentation (HTML, PDF, and other formats)
-├── source/               # Source files for Sphinx documentation
-├── ai_recommendations/   # Recommendations and documentation from AI models
-└── index.rst             # Main page of the documentation
-```
+[Russian](https://github.com/hypo69/hypo/tree/master/docs/readme.ru.md)
 
-## Contributing
+Contents  
+==========  
 
-If you would like to make changes to the documentation or add new recommendations, please create a Pull Request. Ensure that your code adheres to the formatting standards and guidelines specified in the project.
+--------------------------------------------------  
+- **Directory with DOT Graphs**  
 
-## License
+    `docs\dot`  
+    Contains files describing the use of the DOT format, graph construction capabilities, and integration with Graphviz-compatible tools. The documentation includes examples, recommendations, and an API description for working with graphs.  
 
-The documentation is distributed under the MIT license. See the [LICENSE](../LICENSE) file for details.
+- **Directory with Documentation for the Gemini AI Model**  
+    [`docs\gemini`](https://github.com/hypo69/hypo/tree/master/docs/gemini/readme.ru.md)  
+    Contains materials detailing the functionality and applications of the Gemini model. Includes API descriptions, model configuration guides, usage examples, and instructions for project integration.  
+
+- **Directory with Mermaid Diagrams**  
+    [`docs\mermaid`](https://github.com/hypo69/hypo/tree/master/docs/gemini/readme.ru.md)  
+    Contains descriptions of the Mermaid syntax, examples of diagram creation, and editing guides. Also features advice on integrating Mermaid diagrams into documentation.  
+
+- **Directory with Documentation Compiled by Sphinx**  
+    [`docs\sphinx`](https://github.com/hypo69/hypo/tree/master/docs/sphinx/readme.ru.md)  
+    Contains materials describing the process of creating documentation using Sphinx. Includes a guide to configuring `conf.py`, instructions for generating `toctree`, and tips for formatting documentation.  
+
+- **Directory with User Scenarios**  
+    [`docs\user_scenarios`](https://github.com/hypo69/hypo/tree/master/docs/user_scenarios/readme.ru.md)  
+    Contains descriptions of user scenarios, examples of their implementation and testing. The materials include recommendations for automating scenarios and verifying their correctness.  
+
+## Contributing  
+
+If you would like to make changes to the documentation or add new recommendations, please create a Pull Request. Ensure that your code adheres to formatting standards and is structured according to the project's guidelines.  
+
+## License  
+
+The documentation is distributed under the MIT License. See the [LICENSE](../LICENSE) file for details.  
