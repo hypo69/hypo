@@ -1,3 +1,11 @@
+```rst
+.. :module: docs.user_scenarios
+```
+[Русский](https://github.com/hypo69/hypo/tree/master/docs/user_scenarios/readme.ru.md)
+
+List of scenarios:
+===================
+
 [How to Handle WebElements](https://github.com/hypo69/hypo/blob/master/docs/scenarios/how_handle_webelements.md)  
 [How to Build Price List from Websites](https://github.com/hypo69/hypo/blob/master/docs/scenarios/how_to_build_pricekist_from_websites.md)  
 [How to Create New Supplier](https://github.com/hypo69/hypo/blob/master/docs/scenarios/how_to_create_new_supplier.md)  
