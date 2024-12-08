@@ -6,23 +6,11 @@
 """
 .. module: src.ai.helicone 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: Модуль интерфейса с моделью от Coogle - generativeai
 
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
-    :TODO: В дальнейшем перенести в системную переменную
-
-"""
 
 import sys
 import json
@@ -58,10 +46,10 @@ __root__ = set_project_root()
 
 from src import gs
 
-settings:dict = None
+config:dict = None
 try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
-        settings = json.load(settings_file)
+    with open(gs.path.root / 'src' /  'config.json', 'r') as f:
+        config = json.load(f)
 except (FileNotFoundError, json.JSONDecodeError):
     ...
 
@@ -75,10 +63,10 @@ except (FileNotFoundError, json.JSONDecodeError):
 
  
 
-__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
-__version__: str = settings.get("version", '')  if settings  else ''
+__project_name__ = config.get("project_name", 'hypotez') if config else 'hypotez'
+__version__: str = config.get("version", '')  if config else ''
 __doc__: str = doc_str if doc_str else ''
 __details__: str = ''
-__author__: str = settings.get("author", '')  if settings  else ''
-__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
+__author__: str = config.get("author", '')  if config else ''
+__copyright__: str = config.get("copyrihgnt", '')  if config else ''
 __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"

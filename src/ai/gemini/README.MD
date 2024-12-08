@@ -1,3 +1,8 @@
+```rst
+.. :module: src.ai.gemini
+```
+[Русский](https://github.com/hypo69/hypo/tree/master/src/ai/gemini/readme.ru.md)
+
 # Google Generative AI Integration Module
 
 ## Overview
