@@ -1,7 +1,7 @@
 ```rst
 .. :module: docs
 ```
-[Русский](https://github.com/hypo69/hypo/blob/master/docs/readme.ru.md)
+[Русский](https://github.com/hypo69/hypo/blob/master/docs/README.RU.MD)
 
 Contents  
 ==========  
