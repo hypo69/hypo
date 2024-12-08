@@ -775,12 +775,16 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {description = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.description`.
         """
+        if value:
+            self.fields.description = value
+            return True
         try:
             # Получаем значение через execute_locator
-            self.fields.description = normalize_string( value or  await self.driver.execute_locator(self.locator.description) or '' )
+            raw_value = await self.driver.execute_locator(self.locator.description)
+            self.fields.description = normalize_string( raw_value )
             return True
         except Exception as ex:
-            logger.error(f"Ошибка получения значения в поле `description`", ex)
+            logger.error(f"Ошибка получения значения в поле `description` \n {pprint(raw_value)}", ex)
             ...
             return
 
@@ -1463,16 +1467,21 @@ class Graber:
         value (Any): это значение можно передать в словаре kwargs через ключ {name = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.name`.
         """
+        if value:
+            self.fields.name = value
+            return True       
+        
         try:
             # Получаем значение через execute_locator
-            raw = await self.driver.execute_locator(self.locator.name)
-            ...
-            value = normalize_string(value or raw)
-            if  value:
-                self.fields.name = value
-                return True
-            ...
-            return
+            raw_data = await self.driver.execute_locator(self.locator.name)
+            if not raw_data:
+                logger.error(f'Нет данных для поля `name`')
+                ...
+                return
+
+            self.fields.name = normalize_string(value or raw_data)
+            return True
+
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `name`", ex)
             ...
@@ -2080,7 +2089,7 @@ class Graber:
 
         try:
             if not self.fields.id_product:
-                self.id_product()  # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwargs` функции `grab_product_page(**kwargs)`?
+                await self.id_product()  # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwargs` функции `grab_product_page(**kwargs)`?
         
             # Получаем результат из локатора как `bytes` или `str`(url)
             raw_image = await self.driver.execute_locator(self.locator.default_image_url)
@@ -2095,6 +2104,8 @@ class Graber:
                 logger.debug("Неизвестный тип данных для изображения", None, False)
                 ...
                 return
+            self.fields.local_saved_image = img_tmp_path
+            return True
         except Exception as ex:
             logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
             ...

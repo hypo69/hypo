@@ -1,14 +1,20 @@
+from __future__ import annotations
 ## \file hypotez/src/endpoints/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
+Модуль исполнения сценария создания мехирона для Сергея Казаринова
+==================================================================
+
+```rst
 .. module: src.endpoints.kazarinov.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Provides functionality for extracting, parsing, and processing product data from 
 various suppliers. The module handles data preparation, AI processing, 
 and integration with Facebook for product posting.
+```
 
 """
 MODE = 'dev'
@@ -23,6 +29,7 @@ from dataclasses import field
 
 import header
 from src import gs
+from src.bots.telegram.bot import TelegramBot
 from src.product.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
@@ -37,7 +44,7 @@ from src.endpoints.kazarinov.pricelist_generator import ReportGenerator
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from src.utils.jjson import j_loads_ns, j_dumps
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
 from src.utils.image import save_png_from_url, save_png
 from src.utils.convertors.unicode import decode_unicode_escape
@@ -45,7 +52,7 @@ from src.utils.printer import pprint
 from src.logger import logger
 
 
-class Mexiron:
+class MexironBuilder:
     """
     Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
     
@@ -62,7 +69,6 @@ class Mexiron:
     timestamp: str
     products_list: List = field(default_factory=list)
     model: GoogleGenerativeAI
-    model_command: str
     config: SimpleNamespace
 
     def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
@@ -93,7 +99,7 @@ class Mexiron:
 
         try:
             system_instruction = (gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
-            self.model_command = (gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md').read_text(encoding='UTF-8')
+            
             api_key = gs.credentials.gemini.kazarinov
             self.model = GoogleGenerativeAI(
                 api_key=api_key,
@@ -104,7 +110,6 @@ class Mexiron:
             logger.error(f"Error loading instructions or API key:", ex)
             return
 
-        # ... (rest of the __init__ method)
 
     async def run_scenario(
         self, 
@@ -112,7 +117,7 @@ class Mexiron:
         price: Optional[str] = None, 
         mexiron_name: Optional[str] = None, 
         urls: Optional[str | List[str]] = None,
-        update: Update = None, 
+        bot  = None, 
     ) -> bool:
         """
         Executes the scenario: parses products, processes them via AI, and stores data.
@@ -136,7 +141,12 @@ class Mexiron:
             ...
             return False
 
-        required_fields:tuple = ('id_product','name','description_short','description','specification','local_saved_image')
+        required_fields:tuple = ('id_product',
+                                 'name',
+                                 'description_short',
+                                 'description',
+                                 'specification',
+                                 'local_saved_image')
         products_list = []
 
         for url in urls_list:
@@ -146,13 +156,10 @@ class Mexiron:
                 ...
                 continue
 
-            if not self.driver.get_url(url):
-                logger.error(f"Error on url{url}")
-                ...
-                continue
-            self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
             try:
                 f = await graber.grab_page(*required_fields)
+                if gs.host_name == 'Vostro-3888':
+                    self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
             except Exception as ex:
                 logger.error(f"Ошибка получения полей товара",ex)
                 ...
@@ -176,23 +183,26 @@ class Mexiron:
             products_list.append(product_data)    
 
         # AI processing
-        he,ru = await self.process_ai(products_list, price)
+        he = await self.process_ai(products_list,'he')
+        ru = await self.process_ai(products_list,'ru')
         """ сырые данные уходят в обработку моделью (`gemini`) -> 
         модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
         Внимание! модель может ошибаться"""
 
-        if he and ru:
-            if not j_dumps(he, self.export_path / 'he.json'):
+        if he:
+            if not j_dumps(he, self.export_path / f'{self.mexiron_name}_he.json'):
                 logger.error(f'Ошибка сохранения словаря `he`')
                 ...
-                
-            if not j_dumps(ru, self.export_path / 'ru.json'):
+        if ru:        
+            if not j_dumps(ru, self.export_path / f'{self.mexiron_name}_ru.json'):
                 logger.error(f'Ошибка сохранения словаря `ru`')
                 ...
-            await self.create_report(he,Path(self.export_path/'he.html'),Path(self.export_path/'he.pdf'))
-            await self.create_report(ru,Path(self.export_path/'ru.html'),Path(self.export_path/'ru.pdf'))
-            await self.post_facebook(ru)
-            await self.post_facebook(he)
+            await self.create_report(he, Path(self.export_path/f'{self.mexiron_name}_he.html'), Path(self.export_path/f'{self.mexiron_name}_he.pdf'))
+
+            await self.create_report(ru, Path(self.export_path/f'{self.mexiron_name}_ru.html'), Path(self.export_path/f'{self.mexiron_name}_ru.pdf'))
+            
+            # await self.post_facebook(he)
+            # await self.post_facebook(ru)
             return True
         ...
         return 
@@ -258,7 +268,7 @@ class Mexiron:
             return
         return True
 
-    async def process_ai(self, products_list: List[str], attempts: int = 3) -> tuple | bool:
+    async def process_ai(self, products_list: List[str], lang:str,  attempts: int = 3) -> tuple | bool:
         """
         Processes the product list through the AI model.
 
@@ -269,71 +279,105 @@ class Mexiron:
         Returns:
             tuple: Processed response in `ru` and `he` formats.
             bool: False if unable to get a valid response after retries.
-    
-        .. note:
+
+        .. note::
             Модель может возвращать невелидный результат.
             В таком случае я переспрашиваю модель разумное количество раз.
         """
         if attempts <= 0:
             return False  # return early if no attempts are left
-
+        model_command = Path(gs.path.endpoints / 'kazarinov' / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
         # Request response from the AI model
-        response = self.model.ask(self.model_command + '\n' + str(products_list))
+        response = self.model.ask(model_command + '\n' + str(products_list))
         if not response:
-            logger.error("no response from gemini")
+            logger.error(f"Нет ответа от модели")
             ...
-            return self.process_ai(products_list, attempts - 1)  # Retry if no response
+            return {}
 
-        data: SimpleNamespace = j_loads_ns(response)  # Returns False on error
-        if not data:
-            logger.error(f"Error in data from gemini: {data}")
-            ...
-            return self.process_ai(products_list, attempts - 1)  # Retry if data is invalid
+        response_dict:dict = j_loads(response)
+        if not response_dict:
+            logger.error("Ошибка парсинга ответа модели", None, False)
+            if attempts >1:
+                await self.process_ai(lang, attempts -1 )
+            return {}
 
-        try:
-            def extract_data(data: SimpleNamespace, language: str) -> SimpleNamespace:
-                """Helper function to extract language-specific data."""
-                if hasattr(data, language):
-                    result = getattr(data, language)
-                    if not result:
-                        logger.debug(f"Invalid {language} data")
-                        ...
-                        return self.process_ai(products_list, attempts - 1)  # Retry if data is invalid
-                    return result
-                return 
+        # for lang in ['he', 'ru']:
+        #     # Формирование пути к файлу команд для каждого языка
+        #     model_command = (gs.path.endpoints / 'kazarinov' / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
+    
+        #     # Отправка запроса к модели и получение ответа
+        #     response = self.model.ask(self.model_command + '\n' + str(products_list))
+    
+        #     # Проверка на отсутствие ответа
+        #     if not response:
+        #         logger.error("No response from Gemini")
+        #         ...
+        #         return await self.process_ai(products_list, attempts - 1)  # Retry if no response
 
-            # Process response assuming data can be in list or direct object format
-            if isinstance(data, list):
-                if len(data) == 2:
-                    he = extract_data(data[0], 'he')
-                    ru = extract_data(data[1], 'ru')
-                    if he and ru:
-                        return he, ru
-                    return ru, he
-                elif len(data) == 1:
-                    he = extract_data(data[0], 'he')
-                    ru = extract_data(data[0], 'ru')
-                    if he and ru:
-                        return he,ru
-                    else:
-                        ...
-                else:
-                    logger.warning(f'Problem parsing response\n{pprint(data)}')
-                    ...
-                    return self.process_ai(products_list, attempts - 1)  # Retry if data structure is invalid
+        #     # Преобразование ответа в формат SimpleNamespace
+        #     response_ns = j_loads_ns(response)
+        #     if not response_ns:
+        #         logger.error(f"Скорее всего неверный формат ответа модели")
+        #         pprint(response, text_color='yellow')
+        #         ...
+    
+        #     # Сохранение ответа в атрибут соответствующего языка
+        #     setattr(data, lang, response_ns)
 
-            ru = extract_data(data, 'ru')
-            he = extract_data(data, 'he')
-            if not ru or not he:
-                ...
-                return self.process_ai(products_list, attempts - 1)  # Retry if any of the languages are invalid
+        # return data
 
-            # Return successfully extracted data
-            return he,ru
 
-        except Exception as ex:
-            logger.debug(f"Model returned invalid result: {str(ex)}")
-            return self.process_ai(products_list, attempts - 1)  # Retry on any exception
+        # data: SimpleNamespace = j_loads_ns(response)  # Returns False on error
+        # if not data:
+        #     logger.error(f"Error in data from gemini: {data}")
+        #     ...
+        #     return self.process_ai(products_list, attempts - 1)  # Retry if data is invalid
+
+        # try:
+        #     def extract_data(data: SimpleNamespace, language: str) -> SimpleNamespace:
+        #         """Helper function to extract language-specific data."""
+        #         if hasattr(data, language):
+        #             result = getattr(data, language)
+        #             if not result:
+        #                 logger.debug(f"Invalid {language} data")
+        #                 ...
+        #                 return self.process_ai(products_list, attempts - 1)  # Retry if data is invalid
+        #             return result
+        #         ...
+        #         return 
+
+        #     # Process response assuming data can be in list or direct object format
+        #     if isinstance(data, list):
+        #         if len(data) == 2:
+        #             he = extract_data(data[0], 'he')
+        #             ru = extract_data(data[1], 'ru')
+        #             if he and ru:
+        #                 return he, ru
+        #             return ru, he
+        #         elif len(data) == 1:
+        #             he = extract_data(data[0], 'he')
+        #             ru = extract_data(data[0], 'ru')
+        #             if he and ru:
+        #                 return he,ru
+        #             else:
+        #                 ...
+        #         else:
+        #             logger.warning(f'Problem parsing response\n{pprint(data)}')
+        #             ...
+        #             return self.process_ai(products_list, attempts - 1)  # Retry if data structure is invalid
+
+        #     ru = extract_data(data, 'ru')
+        #     he = extract_data(data, 'he')
+        #     if not ru or not he:
+        #         ...
+        #         return self.process_ai(products_list, attempts - 1)  # Retry if any of the languages are invalid
+
+        #     # Return successfully extracted data
+        #     return he,ru
+
+        # except Exception as ex:
+        #     logger.debug(f"Model returned invalid result: {str(ex)}")
+        #     return self.process_ai(products_list, attempts - 1)  # Retry on any exception
 
     async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
         """Функция исполняет сценарий рекламного модуля `facvebook`."""
@@ -357,7 +401,7 @@ class Mexiron:
 
         return True
 
-    def create_report(self, data:dict, html_file:Path, pdf_file:Path):
+    async def create_report(self, data:dict, html_file:Path, pdf_file:Path):
         """Функция отправляет задание на создание мехирона в форматax `html` и `pdf`"""
 
         generator = ReportGenerator( base_path = self.export_path, timestamp = self.timestamp )

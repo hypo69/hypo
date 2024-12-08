@@ -141,7 +141,7 @@ class ExecuteLocator:
         )
 
         if not locator.attribute and not locator.selector:
-            return # <- локатор - заглушка
+            return None # <- локатор - заглушка
 
         async def _parse_locator(
             locator: Union[dict, SimpleNamespace], message: Optional[str]

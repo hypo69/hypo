@@ -79,7 +79,7 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
         # Call parent initializers
         TelegramBot.__init__(self, self.token)
-        BotHandler.__init__(self, self.config.webdriver_name)
+        BotHandler.__init__(self, getattr(self.config , 'webdriver_name' ,'firefox') )
 
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:

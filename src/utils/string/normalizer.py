@@ -77,7 +77,10 @@ def normalize_string(input_data: str | list) -> str:
     Raises:
         TypeError: If `input_data` is not of type `str` or `list`.
     """
-    original_input = input_data  # Сохраняется исходное значение
+    if not input_data:
+        return ''
+
+    original_input = input_data  # Сохраняется исходное значение. В случае ошибки парсинга строки вернется это значение
 
     if not isinstance(input_data, (str, list)):
         raise TypeError('Данные должны быть строкой или списком строк.')

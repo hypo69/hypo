@@ -39,7 +39,7 @@ from src.webdriver.chrome import Chrome
 from src.webdriver.firefox import Firefox
 from src.webdriver.edge import Edge
 from src.ai.gemini import GoogleGenerativeAI
-from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
+from src.endpoints.kazarinov.scenarios.scenario_pricelist import MexironBuilder
 from src.utils.url import is_url
 from src.utils.printer import pprint
 from telegram import Update
@@ -49,9 +49,9 @@ from telegram.ext import CallbackContext
 class BotHandler:
     """Исполнитель команд, полученных ботом."""
 
-    mexiron: Mexiron
+    mexiron: MexironBuilder
 
-    def __init__(self, webdriver_name: Optional[str] = 'firefox'):
+    def __init__(self, webdriver_name: str ):
         """
         Инициализация обработчика событий телеграм-бота.
 
@@ -59,7 +59,7 @@ class BotHandler:
             webdriver_name (Optional[str]): Название веб-драйвера для запуска.
         """
 
-        self.mexiron = Mexiron(
+        self.mexiron = MexironBuilder(
             Driver(
                 Firefox if webdriver_name.lower() == 'firefox'
                 else Chrome if webdriver_name.lower() == 'chrome'
@@ -79,11 +79,11 @@ class BotHandler:
         response = update.message.text
         if response.startswith(('https://one-tab.com', 'http://one-tab.com',
                                 'https://www.one-tab.com', 'http://www.one-tab.com')):
-            price, mexiron_name, urls = self.get_data_from_onetab(response)
-            if not all([price, mexiron_name, urls]):
+            price, mexiron_name, urls = self.fetch_target_urls_onetab(response)
+            if not urls:
                 await update.message.reply_text('Некорректные данные.')
 
-            if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls, update=update):
+            if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls, bot = super()):
                 await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
                 return True
         else:
@@ -91,22 +91,6 @@ class BotHandler:
             ...
             return
 
-    def get_data_from_onetab(self, response: str) -> list[int | float, str, list] | bool:
-        """
-        Извлечение данных (цена, имя, ссылки) из OneTab.
-
-        Args:
-            response (str): Ссылка на страницу OneTab.
-
-        Returns:
-            list[int | float, str, list] | bool: Данные OneTab или False в случае ошибки.
-        """
-        price, mexiron_name, urls = self.fetch_target_urls_onetab(response)
-
-        if not all([price, mexiron_name, urls]):
-            return False, False, False
-
-        return price, mexiron_name, urls
 
     async def handle_next_command(self, update: Update) -> None:
         """
@@ -160,18 +144,13 @@ class BotHandler:
 
             if not data:
                 ...
-                return
-
-            # Разбивка данных на цену и имя
-            parts = data.split(maxsplit=1)
-            try:
-                price = int(parts[0])
-            except ValueError as ex:
-                logger.error('Ошибка при преобразовании цены: %s', ex)
-                ...
-                return
-
-            mexiron_name = parts[1] if len(parts) > 1 else gs.now
+                price = None
+                mexiron_name = gs.now
+            else:
+                # Разбивка данных на цену и имя
+                parts = data.split(maxsplit=1)
+                price = int(parts[0]) or None
+                mexiron_name = parts[1] if len(parts) > 1 else gs.now
 
             return price, mexiron_name, urls
 

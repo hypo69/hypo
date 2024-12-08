@@ -852,12 +852,12 @@
     "event": null
   },
   "name": {
-    "attribute": "aria-label",
+    "attribute": "innerText",
     "by": "XPATH",
     "selector": "//h1[@class = 'rtl-16esk6i']",
     "if_list": "first",
     "use_mouse": false,
-    "timeout": 1,
+    "timeout": 2,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
     "mandatory": true,

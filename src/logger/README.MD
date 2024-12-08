@@ -1,3 +1,7 @@
+```rst
+.. :module: src.logger
+```
+[Русский](https://github.com/hypo69/hypo/blob/master/src/logger/readme.ru.md)
 ### Documentation for the `src.logger` Module
 
 The `src.logger` module provides a flexible logging system that supports console, file, and JSON logging. It utilizes the Singleton design pattern to ensure only a single instance of the logger is used across the application. The logger supports various log levels (e.g., `INFO`, `ERROR`, `DEBUG`) and includes colorized output for console logs. You can also customize the log output formats and control logging to different files.
@@ -156,5 +160,4 @@ logger.error('This message will have a red background', colors=(colorama.Fore.WH
 
 ---
 
-### Conclusion
 This module provides a comprehensive and flexible logging system for Python applications. You can configure console and file logging with different formats and colors, manage logging levels, and handle exceptions gracefully. The configuration for file logging is stored in a `config` dictionary, which allows for easy customization.

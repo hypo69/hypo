@@ -89,7 +89,7 @@ class ProgramSettings(BaseModel):
         arbitrary_types_allowed = True
 
     host_name:str = socket.gethostname()
-    print(f'Имя машины: {host_name}')
+    print(f'host_name: {host_name}')
 
     base_dir: Path = Field(default_factory=lambda: set_project_root())
     config: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())

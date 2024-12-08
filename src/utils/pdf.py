@@ -230,3 +230,13 @@ class PDFUtils:
             logger.error("Ошибка при сохранении PDF через xhtml2pdf: ", ex)
             ...
             return False
+
+    @staticmethod
+    def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
+        """Converts HTML content to a PDF file using WeasyPrint."""
+        try:
+            HTML(string=html_str).write_pdf(pdf_file)
+            return True
+        except Exception as e:
+            print(f"Error during PDF generation: {e}")
+            return

@@ -68,8 +68,10 @@ class Graber(Grbr):
         self.supplier_prefix = 'ksp'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
  
-        if 'ksp.co.il/mob' in self.driver.current_url: # <- бывет, что подключается к мобильной версии сайта
+        if '/mob/' in self.driver.current_url: # <- бывет, что подключается к мобильной версии сайта
             self.locator = j_loads_ns(gs.path.src / 'suppliers' / 'ksp' / 'locators' / 'product_mobile_site.json')
+            logger.info("Установлены локаторы для мобильной версии сайта KSP")
+            ...
 
         Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
 

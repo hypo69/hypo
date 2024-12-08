@@ -9,7 +9,3 @@
 	:synopsis: Модуль сценария для создания прайлиста.
 """
 MODE = 'dev'
-
-
-from .scenario_pricelist import Mexiron
-
