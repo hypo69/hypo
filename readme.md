@@ -91,6 +91,8 @@ I am working on the `hypotez` project, aimed at creating a versatile AI assistan
 - Collect data through APIs and complex integrations.  
 - Configure scenarios for automatic document creation.
 
+Where to start with the project? [Start here](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/README.MD)
+
 ---
 
 ## Required Tools and Software
