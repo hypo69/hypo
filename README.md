@@ -16,10 +16,12 @@
   - [Installing Playwright](#installing-playwright)
 - [Configuration](#configuration)
   - [Setting Up Credentials](#setting-up-credentials)
-- [Additional Information](#additional-information)
+
+- [Code](https://github.com/hypo69/hypo/blob/master/src/README.MD)
 - [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/out/en) (**Not Ready* 😕)
 - [User Scenarios](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/README.MD) (**Not Ready* 😕)
 - [Tests](https://github.com/hypo69/hypo/tree/master/pytest)
+- [Additional Information](#additional-information)
 
 ## Project Overview
 

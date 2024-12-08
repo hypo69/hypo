@@ -26,7 +26,7 @@
   - [Установка Playwright](#установка-playwright)
 - [Конфигурация](#конфигурация)
   - [Настройка учетных данных](#настройка-учетных-данных)
-
+- [Код](https://github.com/hypo69/hypo/blob/master/src/readme.ru.md)
 - [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/doc/src/readme.ru.md) ( *В процессе* 😕)  
 - [Пользовательские сценарии](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/readme.ru.md) ( *В процессе* 😕) 
 - [Примеры](https://github.com/hypo69/hypo/blob/master/examples/readme.ru.md) 
