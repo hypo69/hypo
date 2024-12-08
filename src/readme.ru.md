@@ -1,8 +1,10 @@
 ```rst
 .. :module: src
 ```
+[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.RU.MD)
+
 [English](https://github.com/hypo69/hypo/blob/master/src/readme.md)
-[Root ↑](https://github.com/hypo69/hypo/blob/master/readme.ru.md) 
+
 
 Этот документ предоставляет обзор основных модулей программы
 
