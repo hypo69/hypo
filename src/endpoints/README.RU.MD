@@ -1,4 +1,7 @@
-[English](https://github.com/hypo69/hypo/endpoints/blob/master/readme.md)
+[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.RU.MD)
+
+[English](https://github.com/hypo69/hypo/blob/master/endpoints/README.MD)
+
 Модуль конечных точек взаимодействия с потребителями данных  
 =========================================================================================  
 
@@ -9,24 +12,7 @@
 
 
 ## Структура модуля
-```mermaid
-flowchart LR
-    %% Определение стиля для узлов
-    classDef unifiedWidth fill:#888,stroke:#333,stroke-width:2px,width:800px;
-    
-    %% Основная диаграмма
-    src["src.endpoints"] --> prestashop[".prestashop: API for integration with PrestaShop system"]
-    src --> advertisement[".advertisement: API for working with advertisement platforms.  f.e. `Facebook`"]
-    src --> emil[".emil: API for Emil service"]
-    src --> hypo69[".hypo69: API for interacting with Hypo69 platform"]
-    src --> kazarinov[".kazarinov: API for Kazarinov service"]
-    src --> websites["фреймворки клиентов `sergey.mymaster.co.il`,`emil-design.com`"]
 
-    %% Применение стиля
-    %% class prestashop,advertisement,emil,hypo69,kazarinov,websites unifiedWidth;
-
-
-```
 
 ### Final Consumer Endpoints
 
