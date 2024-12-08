@@ -1,7 +1,7 @@
 ```rst
 .. :module: src.ai
 ```
-[Русский](https://github.com/hypo69/hypo/blob/master/src/аи/readme.ru.md)
+[Русский](https://github.com/hypo69/hypo/blob/master/src/ai/readme.ru.md)
 
 ### **ai Module**: AI Model Management
 
