@@ -1,3 +1,8 @@
+```rst
+.. :module: src.ai
+```
+[Русский](https://github.com/hypo69/hypo/blob/master/src/аи/readme.ru.md)
+
 ### **ai Module**: AI Model Management
 
 The **ai** module is responsible for managing various AI models, facilitating interactions with external APIs, and handling different configurations for data analysis and language processing. It includes the following submodules:
