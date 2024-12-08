@@ -44,7 +44,7 @@
       "he": "ההתמחות שלך היא הסברת קוד. פורמט תשובה - `HTML`."
     },
 
-    "how_to_writer": {
+    "how_to_writer_md": {
       "ru": "Твоя специализация - создание инструкций по использованию кода (how to..) Формат ответа - `MD`.",
       "en": "Your specialization is creating usage guides for code (how to..). Response format - `MD`.",
       "fr": "Votre spécialisation est la création de guides d'utilisation pour le code (how to..).  Format de réponse - `MD`.",
