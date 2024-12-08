@@ -27,8 +27,8 @@
 - [Конфигурация](#конфигурация)
   - [Настройка учетных данных](#настройка-учетных-данных)
 
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/readme.ru.md) ( **В процессе* 😕)  
-- [Пользовательские сценарии](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/readme.ru.md) ( **Не готова* 😕) 
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/doc/src/readme.ru.md) ( *В процессе* 😕)  
+- [Пользовательские сценарии](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/readme.ru.md) ( *В процессе* 😕) 
 - [Примеры](https://github.com/hypo69/hypo/blob/master/examples/readme.ru.md) 
 - [Тесты](https://github.com/hypo69/hypo/tree/master/pytest/readme.ru.md)
 - [Дополнительная информация](#дополнительная-информация)
