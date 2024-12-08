@@ -1,7 +1,7 @@
 ```rst
 .. :module: src.product
 ```
-[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.MD)
+[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.RU.MD)
 
 [English](https://github.com/hypo69/hypo/blob/master/src/product/README.MD)
 # Модуль hypotez/src/product/product.py
