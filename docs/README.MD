@@ -1,10 +1,11 @@
 ```rst
 .. :module: docs
 ```
-[Russian](https://github.com/hypo69/hypo/blob/master/docs/README.RU.MD)
+[Русский](https://github.com/hypo69/hypo/tree/master/docs/readme.ru.md)
 
 Contents  
 ==========  
+1. Directories  
 
 --------------------------------------------------  
 - **Directory with DOT Graphs**  
@@ -27,6 +28,58 @@ Contents
 - **Directory with User Scenarios**  
     [`docs\user_scenarios`](https://github.com/hypo69/hypo/tree/master/docs/user_scenarios/readme.ru.md)  
     Contains descriptions of user scenarios, examples of their implementation and testing. The materials include recommendations for automating scenarios and verifying their correctness.  
+
+2. Files  
+
+#### docs\conf.py  
+
+- **Configuration file for Sphinx**  
+
+    This file contains the settings required to build documentation using Sphinx.  
+    It includes options for defining paths, styles, extensions, and other configurations, such as:  
+
+    - Specifying themes.  
+    - Configuring extensions (`extensions`).  
+    - Defining the `toctree` structure.  
+    - Generating project metadata.  
+
+    It serves as the main file for managing the documentation compilation process into formats like HTML, PDF, and others.  
+
+---  
+
+#### docs\requirements  
+
+- **Dependencies file for documentation tools**  
+
+    This file lists the packages and their versions required for working with documentation tools like Sphinx and its extensions.  
+    The file format adheres to `pip` standards.  
+
+    Example content:  
+    ```  
+    sphinx==5.3.0  
+    sphinx-rtd-theme==1.2.0  
+    ```  
+
+    It is used to install dependencies via the command:  
+    ```  
+    pip install -r docs/requirements  
+    ```  
+
+#### docs\jeykill.md  
+
+- **Guide to using Jekyll for generating documentation**  
+
+    This file describes the process of working with Jekyll — a tool for creating static websites,  
+    which can be used to host and publish documentation created in `docs`.  
+
+    The file includes:  
+
+    - Instructions for installing Jekyll.  
+    - A guide to Jekyll project structure.  
+    - Steps to run a local server and build the site.  
+    - Tips for integrating with GitHub Pages.  
+
+    Designed for users who want to publish documentation using Jekyll.  
 
 ## Contributing  
 
