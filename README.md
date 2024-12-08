@@ -17,8 +17,8 @@
 - [Configuration](#configuration)
   - [Setting Up Credentials](#setting-up-credentials)
 - [Additional Information](#additional-information)
-- [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/en) (**Not Ready* 😕)
-- [User Documentation](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.MD) (**Not Ready* 😕)
+- [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/out/en) (**Not Ready* 😕)
+- [User Scenarios](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/README.MD) (**Not Ready* 😕)
 - [Tests](https://github.com/hypo69/hypo/tree/master/pytest)
 
 ## Project Overview
