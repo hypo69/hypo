@@ -2,74 +2,82 @@
 import pytest
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
 
-# Fixture for providing test data
+# Fixture for providing example data
 @pytest.fixture
-def example_request_data():
-    return {
-        "app": "testApp",
-        "app_signature": "testAppSignature",
-        "country": "US",
-        "device": "Desktop",
-        "device_id": "testDeviceId",
-        "fields": ["title", "price"],
-        "keywords": "testKeywords",
-        "page_no": 1,
-        "product_id": 123,
-        "site": "aliexpress.com",
-        "target_currency": "USD",
-        "target_language": "en",
-        "tracking_id": "testTrackingId",
-        "user": "testUser"
-    }
+def example_request():
+    return AliexpressAffiliateProductSmartmatchRequest()
 
-# Test cases for AliexpressAffiliateProductSmartmatchRequest
-def test_AliexpressAffiliateProductSmartmatchRequest_init_valid_input(example_request_data):
-    """Tests the __init__ method with valid input data."""
-    request = AliexpressAffiliateProductSmartmatchRequest(
-        domain="api-sg.aliexpress.com", port=80
-    )
-    for key, value in example_request_data.items():
-        setattr(request, key, value)
 
-    assert request.app == example_request_data["app"]
-    assert request.country == example_request_data["country"]
+def test_getapiname(example_request):
+    """Tests the getapiname method for a valid request."""
+    expected_api_name = 'aliexpress.affiliate.product.smartmatch'
+    actual_api_name = example_request.getapiname()
+    assert actual_api_name == expected_api_name
 
-def test_AliexpressAffiliateProductSmartmatchRequest_getapiname(example_request_data):
-    """Tests the getapiname method."""
+
+def test_init_valid_inputs(example_request):
+    """Tests the __init__ method with valid domain and port."""
+    expected_domain = "api-sg.aliexpress.com"
+    expected_port = 80
+    assert example_request.domain == expected_domain
+    assert example_request.port == expected_port
+
+def test_init_with_custom_domain_and_port():
+    """Tests __init__ with custom domain and port."""
+    domain = "another-domain.com"
+    port = 443
+    request = AliexpressAffiliateProductSmartmatchRequest(domain, port)
+    assert request.domain == domain
+    assert request.port == port
+
+
+def test_init_with_invalid_port(example_request):
+  """Tests for handling invalid port during initialization"""
+  with pytest.raises(TypeError):
+    AliexpressAffiliateProductSmartmatchRequest(domain="valid-domain", port="invalid_port")
+
+
+def test_init_with_no_arguments():
+    """Tests the constructor with no arguments (defaults used)."""
     request = AliexpressAffiliateProductSmartmatchRequest()
-    assert request.getapiname() == 'aliexpress.affiliate.product.smartmatch'
-
-# Test cases for potential errors, including missing or incorrect type values.
-def test_AliexpressAffiliateProductSmartmatchRequest_init_missing_app(example_request_data):
-    """Tests the __init__ method with a missing 'app' attribute."""
-    request = AliexpressAffiliateProductSmartmatchRequest()
-    # Create a copy of the data, excluding the 'app' field
-    temp_data = example_request_data.copy()
-    del temp_data["app"]
-
-    for key, value in temp_data.items():
-        setattr(request, key, value)  # Assigning attributes without app
-
-    # Add assertions to check if the expected attributes were set correctly or the expected error was thrown
-    assert request.app is None
+    assert request.domain == "api-sg.aliexpress.com"
+    assert request.port == 80
 
 
-def test_AliexpressAffiliateProductSmartmatchRequest_init_invalid_country():
-    """Tests the __init__ method with an invalid country type."""
-    with pytest.raises(TypeError):  # Expect TypeError
-        request = AliexpressAffiliateProductSmartmatchRequest(country=123)  # Attempting to set country to a number
+# Test attributes initialization.  Basic tests that attributes have been set
+# to None as initialized.
 
-def test_getapiname_no_request_instance():
-    """Tests the function with no instance of the request class."""
-    with pytest.raises(AttributeError):
-        AliexpressAffiliateProductSmartmatchRequest.getapiname()
+def test_init_attribute_values(example_request):
+    """Verify that attributes are initialized to None."""
+    assert example_request.app is None
+    assert example_request.app_signature is None
+    assert example_request.country is None
+    assert example_request.device is None
+    assert example_request.device_id is None
+    assert example_request.fields is None
+    assert example_request.keywords is None
+    assert example_request.page_no is None
+    assert example_request.product_id is None
+    assert example_request.site is None
+    assert example_request.target_currency is None
+    assert example_request.target_language is None
+    assert example_request.tracking_id is None
+    assert example_request.user is None
 
-# Test with an empty dictionary as input (edge case)
-def test_AliexpressAffiliateProductSmartmatchRequest_init_empty_data():
-    """Tests initialization with an empty dictionary."""
-    request = AliexpressAffiliateProductSmartmatchRequest()
-    for key in request.__dict__.keys():
-        assert getattr(request, key) is None
+
+
+# Further tests could be added for specific attributes (e.g., testing setting
+# specific values to ensure they are correctly stored) and more comprehensive 
+# testing of the input validation within the __init__ method, which is
+# implicitly tested in the existing tests.
+
+# Example of testing a specific attribute:
+
+def test_setting_country_attribute(example_request):
+    """Tests that the country attribute can be set."""
+    country_value = "US"
+    example_request.country = country_value
+    assert example_request.country == country_value
 
 
 

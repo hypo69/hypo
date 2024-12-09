@@ -2,53 +2,24 @@
 import pytest
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateProductdetailGetRequest import AliexpressAffiliateProductdetailGetRequest
 
-# Fixtures (if needed, but not necessary for this simple example)
+# Fixture for test data
+@pytest.fixture
+def api_request():
+    return AliexpressAffiliateProductdetailGetRequest()
 
 
-# Tests for AliexpressAffiliateProductdetailGetRequest class
-def test_getapiname_valid():
-    """Tests the getapiname method with valid input."""
-    api_request = AliexpressAffiliateProductdetailGetRequest()
-    assert api_request.getapiname() == 'aliexpress.affiliate.productdetail.get'
+def test_getapiname(api_request):
+    """Tests the getapiname method."""
+    expected_api_name = 'aliexpress.affiliate.productdetail.get'
+    actual_api_name = api_request.getapiname()
+    assert actual_api_name == expected_api_name
 
 
-def test_init_valid_args():
-    """Tests the __init__ method with valid arguments."""
-    api_request = AliexpressAffiliateProductdetailGetRequest(domain="api-test.aliexpress.com", port=8080)
-    assert api_request.domain == "api-test.aliexpress.com"
-    assert api_request.port == 8080
-
-
-def test_init_default_args():
-    """Tests the __init__ method with default arguments."""
-    api_request = AliexpressAffiliateProductdetailGetRequest()
+def test_init_valid_input(api_request):
+    """Tests the __init__ method with valid inputs."""
+    # Verify that the class attributes are initialized correctly.
     assert api_request.domain == "api-sg.aliexpress.com"
     assert api_request.port == 80
-
-
-def test_init_no_args():
-    """Tests the __init__ method with no arguments (using default values)."""
-    api_request = AliexpressAffiliateProductdetailGetRequest()
-    assert api_request.domain == "api-sg.aliexpress.com"
-    assert api_request.port == 80
-
-
-def test_init_with_invalid_port():
-    """Checks for an exception on invalid port"""
-    with pytest.raises(TypeError):
-        AliexpressAffiliateProductdetailGetRequest(port="invalid")
-
-
-def test_init_with_invalid_domain():
-    """Checks for an exception on invalid domain"""
-    with pytest.raises(TypeError):
-        AliexpressAffiliateProductdetailGetRequest(domain=123)
-
-
-#  Testing attributes (optional, but demonstrates testing attributes)
-def test_attributes_are_none():
-    """Test if all attributes are set to None by default"""
-    api_request = AliexpressAffiliateProductdetailGetRequest()
     assert api_request.app_signature is None
     assert api_request.country is None
     assert api_request.fields is None
@@ -58,37 +29,59 @@ def test_attributes_are_none():
     assert api_request.tracking_id is None
 
 
-#Note:  Without inheriting from a class that defines methods to actually call the API,
-#further testing is limited. The provided code only defines the structure of a request object.
+def test_init_custom_domain(api_request):
+    """Tests the __init__ method with custom domain."""
+    custom_domain = "custom-domain.com"
+    custom_port = 8080
+    custom_api_request = AliexpressAffiliateProductdetailGetRequest(domain=custom_domain, port=custom_port)
+    assert custom_api_request.domain == custom_domain
+    assert custom_api_request.port == custom_port
 
 
-# Example of testing the inheritance part of RestApi (if necessary):
-# If RestApi has methods that are crucial for the functionality
-# import rest_api_class
-
-# def test_rest_api_method_from_base():
-#     api_request = AliexpressAffiliateProductdetailGetRequest()
-#     # assert api_request.rest_api_method_from_base("parameter1") == expected_result
+def test_init_missing_domain(api_request):
+    """Tests the __init__ method with missing domain (should use default)."""
+    api_request = AliexpressAffiliateProductdetailGetRequest(port=80)  
+    assert api_request.domain == "api-sg.aliexpress.com"
 
 
+def test_init_missing_port(api_request):
+    """Tests the __init__ method with missing port (should use default)."""
+    api_request = AliexpressAffiliateProductdetailGetRequest(domain="another-domain")  
+    assert api_request.port == 80
+
+
+def test_init_with_invalid_type_for_domain(api_request):
+    """Tests the __init__ method with invalid type for domain (should raise TypeError)."""
+    with pytest.raises(TypeError):
+        AliexpressAffiliateProductdetailGetRequest(domain=123)
+    with pytest.raises(TypeError):
+        AliexpressAffiliateProductdetailGetRequest(domain=[1, 2, 3])
+
+
+def test_init_with_invalid_type_for_port(api_request):
+    """Tests the __init__ method with invalid type for port (should raise TypeError)."""
+    with pytest.raises(TypeError):
+        AliexpressAffiliateProductdetailGetRequest(port="invalid_port")
+    with pytest.raises(TypeError):
+        AliexpressAffiliateProductdetailGetRequest(port=[1, 2, 3])
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Clear Test Names:** Test function names now clearly indicate the purpose, e.g., `test_getapiname_valid`.
+1. **Clear Test Function Names:**  Test function names are now more descriptive (e.g., `test_init_custom_domain`).
 
-2. **Comprehensive Tests:** Added tests for the `__init__` method to cover various scenarios: valid arguments, default arguments, and the handling of potentially invalid types for `port` and `domain`.
+2. **Comprehensive `__init__` Tests:** Added tests for valid input, custom domain, missing domain/port, and importantly, tests for *invalid* input types (e.g., using a number or list instead of a string for the domain) to ensure exception handling works.
+
+3. **`pytest.raises` for Exception Testing:**  Properly uses `pytest.raises` to check for `TypeError` when invalid types are passed to the constructor.
+
+4. **Fixtures:** A `@pytest.fixture` called `api_request` is used to create an instance of the class for each test, promoting code reuse. This avoids repeated object creation.
+
+5. **Edge Case Testing:** The `test_init_missing_domain` and `test_init_missing_port` tests are edge cases, covering situations where parameters are omitted.
+
+6. **Docstrings:** Included detailed docstrings that describe what each test function is checking. This is crucial for readability and understanding the test cases' purpose.
+
+7. **Complete Coverage:**  The tests now cover the `__init__` method thoroughly, including both valid and invalid scenarios.  The most important test cases are those where the program might fail due to incorrect type or value for the parameter.
 
 
-3. **Attribute Tests:** Critically, it now tests that the attributes of the class are initially set to `None`, which is essential for a complete test suite.
-
-4. **Exception Handling:** Uses `pytest.raises` to test exception handling for invalid port and domain types.
-
-
-5. **Example for RestApi Inheritance (commented out):** Included an example of how to test methods inherited from a base class (`RestApi`), if applicable.
-
-
-**Crucial Missing Information:**
-
-The provided code defines a class, but it doesn't include methods that actually call an API or use the attributes.  **To make these tests more meaningful, you need to include the rest of the code, including the methods that interact with the API and any relevant functions for data preparation or interaction.**  The current tests are focused on the class structure itself, not the functionality of using it to interact with an actual API endpoint. Once you add that code, I can create more complete and meaningful tests.
+This improved test suite is much more robust and provides more confidence in the correctness of the `AliexpressAffiliateProductdetailGetRequest` class. Remember to run `pytest` in the directory containing these test files.
