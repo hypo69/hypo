@@ -1,13 +1,20 @@
 ```rst
 .. :module: src.bots.discord
 ```
-[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.MD)
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>src</A> /
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/bots/readme.ru.md'>bots</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/bots/discord/README.MD'>English</A>
+</TD>
+</TABLE>
 
-[src](https://github.com/hypo69/hypo/blob/master/src/bots/readme.ru.md) /
-[bots](https://github.com/hypo69/hypo/blob/master/src/bots/REDAME.RU.MD)  
-
-
-[English](https://github.com/hypo69/hypo/blob/master/src/bots/discord/readme.ru.md)
 
 Модуль Discord-бота.
 ======================

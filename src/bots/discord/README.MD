@@ -1,13 +1,21 @@
 ```rst
 .. :module: src.bots.discord
 ```
-[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.MD)
 
-[src](https://github.com/hypo69/hypo/blob/master/src/bots/REDAME.MD) /
-[bots](https://github.com/hypo69/hypo/blob/master/src/bots/REDAME.MD)  
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> /
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/bots/README.MD'>bots</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/bots/discord/readme.ru.md'>Русский</A>
+</TD>
+</TABLE>
 
-
-[Русский](https://github.com/hypo69/hypo/blob/master/src/bots/discord/readme.ru.md)
 
 This code represents a Discord bot written in Python using the `discord.py` library. The bot performs several functions related to managing a machine learning model, processing audio, and interacting with users in both text and voice channels on Discord. Here is a brief description of the main functions and commands that this bot implements:
 

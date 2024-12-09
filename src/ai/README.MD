@@ -3,34 +3,53 @@
 ```
 [Русский](https://github.com/hypo69/hypo/blob/master/src/ai/readme.ru.md)
 
-### **ai Module**: AI Model Management
+### **ai Module**: Управление Моделями ИИ
 
-The **ai** module is responsible for managing various AI models, facilitating interactions with external APIs, and handling different configurations for data analysis and language processing. It includes the following submodules:
+Модуль **ai** отвечает за управление различными моделями ИИ, облегчает взаимодействие с внешними API и обрабатывает различные конфигурации для анализа данных и обработки языка. Он включает следующие подмодули:
 
 1. **prompts**  
-   System and Command Prompts in markdown Format for AI Models
-    - System Prompts:
-    System prompts are used to set the context or provide instructions to the AI model before it processes user input. These prompts help guide the model's behavior and ensure it understands the task at hand.
-    - Command Instructions:
+   Системные и Командные Подсказки в формате Markdown для Моделей ИИ
+    - Системные Подсказки:
+    Системные подсказки используются для установки контекста или предоставления инструкций модели ИИ перед обработкой пользовательского ввода. Эти подсказки помогают направлять поведение модели и обеспечивают понимание задачи.
+    - Командные Инструкции:
         Находятся непосредственно в эндпоинтах
 
 2. **anthropic**  
-   Provides integration with Anthropic AI models, enabling tasks that rely on advanced language comprehension and response generation.
+   Обеспечивает интеграцию с моделями Anthropic AI, позволяя выполнять задачи, требующие продвинутого понимания языка и генерации ответов.
 
 3. **dialogflow**  
-   Integrates with Google Dialogflow, supporting natural language understanding (NLU) and conversational AI functionalities for building interactive applications.
+   Интегрируется с Google Dialogflow, поддерживая естественное понимание языка (NLU) и функциональности диалогового ИИ для создания интерактивных приложений.
 
 4. **gemini**  
-   Manages connections with Gemini AI models, offering support for applications that require Gemini’s unique AI capabilities.
+   Управляет соединениями с моделями Gemini AI, предлагая поддержку для приложений, требующих уникальных возможностей Gemini.
 
 5. **helicone**  
-   Connects to Helicone models, providing access to specialized features for customized AI solutions.
+   Подключается к моделям Helicone, предоставляя доступ к специализированным функциям для настроенных решений ИИ.
 
 6. **llama**  
-   Interfaces with LLaMA (Large Language Model Meta AI), designed for tasks involving natural language understanding and generation in a variety of applications.
+   Интерфейс с LLaMA (Large Language Model Meta AI), предназначенный для задач, связанных с пониманием и генерацией естественного языка в различных приложениях.
 
 7. **myai**  
-   A custom AI submodule designed for specialized model configurations and implementations, enabling unique, project-specific AI functionalities.
+   Пользовательский подмодуль ИИ, разработанный для специализированных конфигураций и реализаций моделей, обеспечивающий уникальные, специфичные для проекта функциональности ИИ.
 
 8. **openai**  
-   Integrates with OpenAI's API, allowing access to their suite of models (e.g., GPT) for tasks such as text generation, classification, translation, and more.
+   Интегрируется с API OpenAI, предоставляя доступ к их набору моделей (например, GPT) для задач, таких как генерация текста, классификация, перевод и другие.
+
+9. **xai**: 
+    Взаимодействие с xAI
+    Модуль предназначен для взаимодействия с API xAI, 
+    предоставляя удобный интерфейс для отправки запросов и обработки ответов от моделей xAI. 
+
+
+    [документации API xAI](https://api.x.ai/docs).
+
+### Вклад
+
+Вклад приветствуется! Не стесняйтесь отправлять pull request или открывать issue, если вы столкнулись с какими-либо проблемами или имеете предложения по улучшению.
+
+### Лицензия
+
+Этот проект лицензирован под MIT License. Подробности смотрите в файле [LICENSE](LICENSE).
+
+
+Для получения дополнительной информации, пожалуйста, обратитесь к [документации API xAI](https://api.x.ai/docs).

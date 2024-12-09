@@ -1,8 +1,22 @@
 ```rst
 .. :module: src.logger
 ```
-[English](https://github.com/hypo69/hypo/blob/master/src/logger/README.MD)
-### Документация для модуля `src.logger`
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> /
+
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/logger/README.MD'>English</A>
+</TD>
+</TABLE>
+
+Документация для модуля `src.logger`
+=====================================================================================
 
 Модуль `src.logger` предоставляет гибкую систему логирования, поддерживающую логирование в консоль, файлы и в формате JSON. Он использует шаблон проектирования Singleton, чтобы обеспечить использование единственного экземпляра логгера во всем приложении. Логгер поддерживает различные уровни логирования (например, `INFO`, `ERROR`, `DEBUG`) и включает цветное отображение для вывода в консоль. Также доступны настройки форматов вывода и управление логированием в различные файлы.
 
