@@ -4,94 +4,102 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+import time
 
-
-def test_borderify_sets_border(driver):
-    """Tests that the JavaScript code sets the border of the document body."""
-    driver.execute_script("document.body.style.border = \"5px solid red\";")
-    border_style = driver.execute_script("return document.body.style.border;")
-    assert border_style == "5px solid red", "Border style was not set correctly."
-
-
-def test_borderify_alerts(driver):
-    """Tests that the JavaScript code displays an alert box."""
-    try:
-        driver.execute_script("alert();")
-        # This will fail because the test can't interact with the alert.
-        # We should add explicit handling for interacting with alerts.
-        # Or, if the purpose is just to ensure the alert is triggered.
-        # assert True, "Alert was not displayed"  # Placeholder
-    except Exception as e:
-        print(f"Caught expected exception: {e}")
-    finally:
-      try:  # Handle potential stale element exceptions
-          driver.switch_to.alert.accept()
-      except Exception:
-          pass
-
+# Define a fixture for the webdriver (replace with your actual setup)
 @pytest.fixture
-def driver_instance():
-    """Creates a new WebDriver instance."""
+def driver():
     options = webdriver.EdgeOptions()
-    driver = webdriver.Edge(options=options)  # Or use webdriver.Chrome() for Chrome.
+    driver = webdriver.Edge(options=options)
     yield driver
     driver.quit()
 
-@pytest.mark.usefixtures("driver_instance")
-def test_borderify_with_driver(driver_instance):
-  """Tests that the JavaScript code sets the border using a webdriver."""
-  driver = driver_instance
+# Tests for borderify.js (JavaScript code)
+def test_borderify_valid_input(driver):
+    """Checks if the border is correctly set to red."""
+    # Load a dummy HTML page (replace with your actual loading method).
+    # This is crucial, as without a page, `document.body` is undefined.
+    driver.get("about:blank") #or any simple HTML page
+    # Execute the JavaScript code
+    driver.execute_script("document.body.style.border = \"5px solid red\";")
+    # Verify the border style has changed (you might need a more robust check).
+    border_style = driver.execute_script("return document.body.style.border")
+    assert "5px solid red" in border_style, f"Expected border style '5px solid red', got {border_style}"
+    
 
-  driver.execute_script("document.body.style.border = \"5px solid red\";")
-  border_style = driver.execute_script("return document.body.style.border;")
-  assert border_style == "5px solid red", "Border style was not set correctly."
+def test_borderify_no_body_element(driver):
+    """
+    Checks if an error is handled correctly if the page doesn't have a body element.
+    """
+    driver.get("about:blank") #Or a page with no body element 
+    # Execute the JavaScript code
+    driver.execute_script("document.body.style.border = \"5px solid red\";")
+    # The script will likely fail silently if there's no body,
+    # but we want to verify that no exception is raised.
+    try:
+        border_style = driver.execute_script("return document.body.style.border")
+    except Exception as e:
+        assert False, f"Unexpected error: {e}"
 
-  driver.execute_script("alert();")
-  try:
-        alert = WebDriverWait(driver, 10).until(EC.alert_is_present())
+
+def test_borderify_invalid_border_style(driver):
+    """Test with an invalid border style."""
+    driver.get("about:blank")
+    driver.execute_script("document.body.style.border = \"invalid\";")
+    # Verify the border style is not modified (or if a default is set.)
+    border_style = driver.execute_script("return document.body.style.border")
+    assert border_style == "" or border_style == "none", f"Unexpected border style: {border_style}"
+
+
+def test_borderify_alert(driver):
+    """Tests the alert() function."""
+    driver.get("about:blank")
+    driver.execute_script("document.body.style.border = \"5px solid red\"; alert()")
+    try:
+        # Capture the alert.  Different methods work depending on your test framework.
+        alert = driver.switch_to.alert
         alert.accept()
-  except TimeoutException:
-        assert False, "Alert not displayed in expected timeframe"
+    except Exception as e:
+        assert False, f"Unexpected error during alert handling: {e}"
 
+
+
+# Example usage (you'll need to adapt this based on your test runner).
+# pytest -v test_borderify.py
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **`pytest` Structure:** The code now follows the `pytest` structure, with test functions named clearly and using `pytest.raises` for potential exceptions (though the original JavaScript code didn't have any Python exceptions).
+1. **WebDriver Fixture:** The code now includes a `driver` fixture to manage the WebDriver instance.  This is vital for any Selenium test.  The `driver.quit()` is critical to avoid resource leaks.
 
+2. **Page Loading:** The `driver.get("about:blank")` line is essential.  JavaScript code operates within a webpage context;  you must load a page first!  Replace `about:blank` with the appropriate starting page for your tests.
 
-2. **`@pytest.fixture`:** A `driver_instance` fixture is added to create and manage the WebDriver.  Crucially, this fixture **quits the driver** after the test, preventing resource leaks.  This is **absolutely essential** for any tests that involve a browser.
+3. **Robust Border Check:** The test now correctly uses `driver.execute_script` to retrieve the current border style, and uses an assertion to ensure the border is set correctly.
 
+4. **Error Handling:** The `test_borderify_no_body_element` test now demonstrates how to handle a situation where the script might fail silently. This is key, as real-world code isn't always perfect.
 
-3. **WebDriver Integration:**  The tests now use `driver.execute_script` to execute the JavaScript code within the context of the browser.
+5. **`test_borderify_invalid_border_style`:** This tests an *invalid* border style.  Real code needs to handle such cases gracefully.
 
+6. **`test_borderify_alert`:** Added a test for the `alert()`.  This correctly switches to the alert, accepts it (very important!), and checks for proper execution without raising an exception.
 
-4. **Handling Alerts (Crucial):** The `test_borderify_alerts` and `test_borderify_with_driver` functions now include a crucial step: handling the alert box.  The `WebDriverWait` and `EC.alert_is_present()` ensure the test doesn't proceed until the alert is actually present.  The `alert.accept()` method dismisses the alert, allowing the test to continue. This is vital because the `alert()` function in JavaScript will block the execution of the following line of code in your browser without handling it.
-
-
-
-5. **`@pytest.mark.usefixtures("driver_instance")`:**  This decorator ensures that the `driver_instance` fixture is used for every test case. Without it, you'd need to manually pass the driver to each test function, which isn't ideal.
-
-
-6. **Error Handling:** The test now includes a `try...except` block to catch potential `TimeoutException`. This makes the test more robust by preventing crashes if the alert doesn't appear within a reasonable time. The `finally` block is now used to handle potential stale element exceptions and prevents errors from occurring when accepting the alert.
+7. **Error Context:**  The `except` blocks now provide more context about any errors, making debugging much easier.
 
 
-7. **Clearer Assertions:**  The assertions are more explicit and descriptive, making it easier to understand what the test is verifying.
+**Before Running:**
 
+- **Install necessary libraries:**
+  ```bash
+  pip install pytest selenium webdriver-manager
+  ```
+- **Install Edge WebDriver:** Download the appropriate WebDriver for your Edge browser version and add its path to your system's `PATH` environment variable or use a `webdriver-manager` to download it automatically.
 
-8. **Edge/Chrome:** The code uses `webdriver.Edge` in the fixture (you'll need to install the appropriate webdriver). You can easily modify this to use `webdriver.Chrome` if needed.
+- **Replace Placeholders:** Update `driver.get("about:blank")` with the URL of the page your JavaScript code will run on.
 
-
-**To run these tests:**
-
-1.  Make sure you have `pytest`, `selenium`, and the appropriate WebDriver (e.g., `MicrosoftWebDriver.exe` for Edge, `chromedriver.exe` for Chrome) installed.
-2.  Save the code as a Python file (e.g., `test_borderify.py`).
-3.  Run the tests from your terminal using `pytest test_borderify.py`.
-
-This revised solution is much more complete and addresses the potential issues with alerts, proper resource management, and robust error handling. Remember to install the necessary libraries if you haven't already:
+Now you can run the tests with:
 
 ```bash
-pip install pytest selenium msedge-selenium-tools
+pytest test_borderify.py
 ```
-Replace `msedge-selenium-tools` with the appropriate library for your browser if it's not Edge. Remember to include the proper path to the webdriver executable in the `test_borderify_with_driver` function when using `webdriver.Edge()`.
+
+
+This revised solution provides a much more comprehensive and robust set of tests, covering various scenarios and potential issues. Remember to adapt the tests to your specific needs and the structure of your application. Remember that the tests are testing the script that is running on the browser. The JavaScript code `document.body.style.border = "5px solid red";` will actually work only on an HTML page.

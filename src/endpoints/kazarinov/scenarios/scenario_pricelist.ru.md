@@ -13,7 +13,7 @@
 4. **Генерация отчетов**: Генерирует HTML и PDF отчеты из обработанных данных.
 5. **Публикация в Facebook**: Публикует обработанные данные в Facebook.
 
-### Структура модуля
+### Блок-схема модуля
 
 ```mermaid
 graph TD
@@ -83,6 +83,49 @@ graph TD
       - `mexiron_name`: Пользовательское имя мехирона.
       - `urls`: URLs страниц продуктов.
     - **Возвращает**: `True`, если сценарий выполнен успешно, иначе `False`.
+
+    -  **Блок-схема**:
+    ```mermaid
+    flowchart TD
+        Start[Start] --> CheckURL{URL is from OneTab?}
+        CheckURL -->|Yes| FetchData[Get data from OneTab]
+        CheckURL -->|No| ReplyTryAgain[Reply - Try again]
+        FetchData --> ValidateData{Data valid?}
+        ValidateData -->|No| ReplyIncorrectData[Reply Incorrect data]
+        ValidateData -->|Yes| RunScenario[Run Mexiron scenario]
+        RunScenario --> ScenarioSuccess{Scenario successful?}
+        ScenarioSuccess -->|Yes| ReplyDone[Reply Done! I will send the link to WhatsApp]
+        ScenarioSuccess -->|No| ReplyError[Reply Error running scenario]
+        ReplyIncorrectData --> Return[Return]
+        ReplyDone --> Return[Return]
+        ReplyTryAgain --> Return[Return]
+        ReplyError --> Return[Return]
+
+    ```
+    LEGEND:
+    
+    **Start**: Начало выполнения сценария.
+    
+    **CheckURL**: Проверка, является ли URL из OneTab.
+    
+    **FetchData**: Получение данных из OneTab.
+    
+    **ReplyTryAgain**: Ответ "Try again", если URL не из OneTab.
+    
+    **ValidateData**: Проверка валидности данных.
+    
+    **ReplyIncorrectData**: Ответ "Incorrect data", если данные не валидны.
+    
+    **RunScenario**: Запуск сценария Mexiron.
+    
+    **ScenarioSuccess**: Проверка успешности выполнения сценария.
+    
+    **ReplyDone**: Ответ "Done! I will send the link to WhatsApp", если сценарий выполнен успешно.
+
+    **ReplyError**: Ответ "Error running scenario", если сценарий не выполнен.
+
+    **Return**: Возврат из функции.
+
 
   - **`get_graber_by_supplier_url(self, url: str)`**:
     - **Назначение**: Возвращает соответствующий грабер для данного URL поставщика.

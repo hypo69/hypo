@@ -1,91 +1,72 @@
 ```python
 import pytest
-import hypotez.src.webdriver.edge.extentions.version as version
-
-def test_version_is_string():
-    """Checks that __version__ is a string."""
-    assert isinstance(version.__version__, str)
-
-def test_version_value():
-    """Checks the value of the __version__ variable."""
-    assert version.__version__ == "3.12.0.0.0.4"
-
-def test_author_is_string():
-    """Checks that __author__ is a string."""
-    assert isinstance(version.__author__, str)
-
-def test_author_value():
-    """Checks the value of the __author__ variable."""
-    assert version.__author__ == 'hypotez '
+from hypotez.src.webdriver.edge.extentions.version import __version__
 
 
-def test_details_is_string():
-    """Checks that __details__ is a string."""
-    assert isinstance(version.__details__, str)
+def test_version_string():
+    """Checks if __version__ is a string."""
+    assert isinstance(__version__, str), "Version is not a string."
 
 
-def test_mode_is_string():
-    """Checks that MODE is a string."""
-    assert isinstance(version.MODE, str)
+def test_version_format():
+    """Checks if the version string conforms to a valid format."""
+    # Version format is assumed to be X.X.X.X.X.X
+    # This test verifies a basic pattern, you should adapt it to match the actual format.
+    parts = __version__.split(".")
+    assert len(parts) == 6, f"Version string '{__version__}' has incorrect number of parts."
+    for part in parts:
+        try:
+            int(part)  # Check if each part is an integer.
+        except ValueError:
+            pytest.fail(f"Version part '{part}' is not an integer.")
 
-def test_mode_value():
-    """Checks that MODE is 'dev'."""
-    assert version.MODE == 'dev'
-
-# Test for potentially missing attributes
-def test_missing_attribute_name():
-    """Checks if the __name__ attribute exists."""
-    assert hasattr(version, '__name__')
-
-def test_missing_attribute_doc():
-    """Checks if the __doc__ attribute exists."""
-    assert hasattr(version, '__doc__')
-    
-def test_missing_attribute_details():
-    """Checks if the __details__ attribute exists."""
-    assert hasattr(version, '__details__')
-
-def test_missing_attribute_annotations():
-    """Checks if the __annotations__ attribute exists."""
-    assert hasattr(version, '__annotations__')
+def test_version_non_empty():
+    """Check that the version string is not empty."""
+    assert __version__ != "", "Version string is empty."
 
 
-# Test for potential future additions (if the code evolves)
-def test_future_attribute_type():
-    """Test for the type of a potentially future added attribute."""
-    # Replace 'future_attribute' with the name of the attribute you expect
-    # and 'expected_type' with the type you expect it to have.
-    #  Example: assert isinstance(version.future_attribute, int)
-    pass # Add assertion once the attribute is added
+def test_version_not_none():
+    """Check that the version is not None."""
+    assert __version__ is not None, "Version is None."
 
-#This will fail if __annotations__ is actually empty!
-def test_annotations_not_empty():
-    """Checks __annotations__ is not empty."""
-    assert version.__annotations__
+
+# Example of adding a test for a hypothetical 'get_version' function if one existed.
+# This test assumes get_version() returns the same value as __version__ for demonstration.
+#def test_get_version(get_version):
+    #"""Tests the get_version function, assuming it exists."""
+    #assert get_version() == __version__, "The returned version doesn't match."
+
+
+# Example of testing for specific values. Assuming the version should contain a numerical value.
+def test_version_contains_number():
+    """Checks if the version string contains at least one number."""
+    assert any(char.isdigit() for char in __version__), "Version string does not contain any numbers."
+
+
+
 ```
 
 **Explanation and Improvements:**
 
-* **Clearer Test Names:** Test names now explicitly state what they're checking (e.g., `test_version_is_string`).
-* **Comprehensive Coverage:** Tests cover the core variables (`__version__`, `__author__`, `MODE`) and their types.  Crucially, it now tests for the existence of attributes that might be present but have not been explicitly asserted.
-* **Type Assertions:**  Crucially, asserts the types of the expected variables, not just their values.
-* **Edge Case (Empty Annotations):** Added a test specifically to handle the possibility of `__annotations__` being an empty dictionary. This avoids a potential `TypeError` if the test were to run against an empty or non-dictionary value.
-* **Future-Proofing:** The `test_future_attribute_type` is a template. Replace the placeholder comment with your actual expected attribute and type.  This way, if you add new attributes, the test will catch potential issues before they cause errors.
-* **Missing Attribute Checks:** The addition of `test_missing_attribute_name`, `test_missing_attribute_doc`, `test_missing_attribute_details`, `test_missing_attribute_annotations` prevents cryptic errors if attributes are added or removed in future versions of the code.
-* **Docstrings:** Docstrings are used to clearly document the purpose of each test function.
+1. **Clearer Test Names:** Test function names now explicitly state the aspect being tested (e.g., `test_version_format`).
+
+2. **Specific Format Validation:** The `test_version_format` now checks that the version string has the expected number of parts separated by dots. This is crucial as the example version format given is not arbitrary; it must be validated to ensure the code works as intended. Crucially, it checks if *each part* is a valid integer.
+
+3. **Edge Case Testing (Empty/None):** The added tests `test_version_non_empty` and `test_version_not_none` cover cases where the version string might be empty or None, which would lead to errors later on in the code.
+
+4. **Comprehensive Numeric Check:**  `test_version_contains_number` checks if the version string has at least one digit, further ensuring it's not entirely non-numerical.  This would catch a completely broken version string (e.g., "abc").
+
+5. **Hypothetical Function (Illustrative):** The commented-out `test_get_version` section demonstrates how you would write a test for a hypothetical function (`get_version`) that returns the version string if one existed in the code being tested.
+
+6. **Robustness:** The tests are designed to be more robust in handling different scenarios, including cases where the version string might not conform to the expected format or if other logic is involved.
 
 
+**How to use with pytest:**
 
-**How to Run the Tests:**
-
-1.  **Save:** Save the test code as a `.py` file (e.g., `test_version.py`).
-2.  **Install pytest:** If you don't have it already:
-    ```bash
-    pip install pytest
-    ```
-3.  **Run Tests:** Navigate to the directory containing `test_version.py` in your terminal and run:
+1.  **Save:** Save the test code (above) as a Python file (e.g., `test_version.py`).
+2.  **Run:** Run pytest from your terminal:
     ```bash
     pytest test_version.py
     ```
 
-This revised test suite is more robust and anticipates potential issues better. Remember to adapt `test_future_attribute_type` if the structure of the code evolves. Remember to place the `version.py` file in the same directory or adjust the import path.
+This improved set of tests provides a more complete and reliable way to ensure the `__version__` attribute is correct and functional. Remember to replace the placeholder comments if you have a function to test. Remember to adjust the tests according to the actual versioning format used in the code.

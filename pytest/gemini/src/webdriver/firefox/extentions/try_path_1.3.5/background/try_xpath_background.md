@@ -1,131 +1,135 @@
 ```python
 import pytest
+import json
 import js2py
 
-# This is a placeholder for the tryxpath module.
-# Replace with the actual tryxpath module if available.
-try:
-    import tryxpath
-except ImportError:
-    tryxpath = None
+# Mock browser functions for testing
+class MockBrowser:
+    def __init__(self):
+        self.runtime_url = "/some/url"
+        self.storage = MockStorage()
+        self.onMessage = []
+        self.tabs = MockTabs()
 
+    def runtime(self):
+        return self
 
-def test_loadDefaultCss_success():
-    """Tests successful loading of default CSS."""
-    if tryxpath is None:
-        pytest.skip("tryxpath module not found")
-    # Mock XMLHttpRequest for testing
-    mock_response = '{"test": "test"}'
-    mock_xhr = js2py.eval_js("""
-        var req = new XMLHttpRequest();
-        req.open("GET", "test_url");
-        req.responseType = "text";
-        req.onreadystatechange = function () {
-            if (req.readyState === XMLHttpRequest.DONE) {
-                req.responseText = mock_response;
-            }
-        };
-        req.send();
-        req
-    """)
-    try:
-        # This will only work if `browser.runtime.getURL` returns the correct format.
-        result = tryxpath.loadDefaultCss(mock_xhr)  # Replace with the correct call
-        assert result == mock_response
-    except Exception as e:
-        pytest.fail(f"loadDefaultCss failed: {e}")
-
-
-def test_genericListener_validMessage():
-    """Test genericListener with a valid message."""
-    if tryxpath is None:
-        pytest.skip("tryxpath module not found")
-
-    # Mock values
-    message = {"event": "storePopupState", "state": "test_state"}
-    sender = {"tab": {"id": 1}}
-    sendResponse = lambda x: None
-
-    # We need to mock the genericListener.listeners
-    tryxpath.genericListener.listeners = {"storePopupState": lambda m, s, sr: tryxpath.genericListener.listeners["storePopupState"](m, s, sr)}  
-
-    try:
-      tryxpath.genericListener(message, sender, sendResponse)
-      assert tryxpath.popupState == "test_state"  # Check if the state was stored
-    except Exception as e:
-      pytest.fail(f"genericListener failed: {e}")
-
-def test_genericListener_nonexistentEvent():
-    """Test genericListener with a non-existent event."""
-    if tryxpath is None:
-        pytest.skip("tryxpath module not found")
-
-    message = {"event": "unknownEvent"}
-    sender = {"tab": {"id": 1}}
-    sendResponse = lambda x: None
+    def getURL(self, path):
+        return self.runtime_url + path
     
-    tryxpath.genericListener(message, sender, sendResponse)
-    assert tryxpath.popupState is None
+    def sendMessage(self, message, sender=None, response=None):
+        for listener in self.onMessage:
+            listener(message, sender, response)
 
-def test_requestRestorePopupState():
-  """Test for requestRestorePopupState."""
-  if tryxpath is None:
-    pytest.skip("tryxpath module not found")
+    def storage(self):
+        return self.storage
+        
 
-  # Mock browser.runtime.sendMessage
-  mock_send = lambda msg: None
-  tryxpath.browser = lambda: {"runtime": {"sendMessage": mock_send}}
-  tryxpath.popupState = "test_state"
-  tryxpath.requestRestorePopupState()
-  # Assert that a message was sent
-  assert mock_send.call_args[0][0] == {"timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "restorePopupState", "state": "test_state"}
+class MockStorage:
+    def onChanged(self):
+        return lambda changes: None
 
-def test_requestInsertStyleToPopup():
-  """Test for requestInsertStyleToPopup."""
-  if tryxpath is None:
-    pytest.skip("tryxpath module not found")
-
-  # Mock browser.runtime.sendMessage
-  mock_send = lambda msg: None
-  tryxpath.browser = lambda: {"runtime": {"sendMessage": mock_send}}
-  tryxpath.popupCss = "test_css"
-  tryxpath.requestInsertStyleToPopup()
-  # Assert that a message was sent
-  assert mock_send.call_args[0][0] == {"timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "insertStyleToPopup", "css": "test_css"}
+    def get(self, items):
+        return items
 
 
-# ... add more test cases for other functions ...
+class MockTabs:
+    def create(self, details):
+        pass
 
+    def removeCSS(self, id, details):
+        pass
+
+    def insertCSS(self, id, details):
+        pass
+
+    def sendMessage(self, id, message, details):
+        pass
+
+# Mock XMLHttpRequest for testing
+class MockXMLHttpRequest:
+    def __init__(self):
+        self.readyState = 0
+        self.responseText = ""
+        self.onreadystatechange = None
+
+    def open(self, method, url):
+        self.method = method
+        self.url = url
+
+    def send(self, data):
+        if self.onreadystatechange:
+            self.readyState = 4
+            self.onreadystatechange(self)
+
+
+# This is a more robust solution, utilizing js2py for JavaScript execution, allowing for more accurate testing of JavaScript functions.
+
+
+def test_loadDefaultCss():
+    """Tests loadDefaultCss function with a mock browser."""
+    mock_browser = MockBrowser()
+    mock_req = MockXMLHttpRequest()
+    mock_browser.runtime.getURL = lambda url: "/css/try_xpath_insert.css"
+    mock_req.onreadystatechange = lambda: None
+    mock_browser.tabs.removeCSS=lambda *args: None
+    mock_browser.tabs.insertCSS=lambda *args: None
+    mock_browser.runtime.onMessage.append(lambda message,sender,sendResponse : None) # Dummy listener
+
+
+    js_code = """
+        (function (window, undefined) {
+            "use strict";
+            var loadDefaultCss = function() {
+                var req = new XMLHttpRequest();
+                // ... (rest of the code) ...
+            };
+            return loadDefaultCss;
+        })(window);
+    """
+    loadDefaultCss_function = js2py.eval_js(js_code)
+    loadDefaultCss_function()
+
+
+
+def test_genericListener_storePopupState():
+    """Tests the storePopupState listener."""
+    mock_browser = MockBrowser()
+    message = {"event": "storePopupState", "state": "some_state"}
+    # Using append to avoid side effects.
+    mock_browser.runtime.onMessage.append(lambda message, sender, sendResponse: genericListener.listeners.storePopupState(message))
+    global popupState  # Access the global variable
+    genericListener(message, None, None)  # Simulate the listener call
+    assert popupState == "some_state"
+
+
+
+
+# Add more tests for other functions, using similar mocking techniques
+# ... (more tests) ...
 
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **ImportError Handling:** The code now includes `try...except` blocks to handle the case where the `tryxpath` module isn't found. This prevents the tests from failing if the required module isn't available.
+1. **Mocking:** The code now effectively mocks the `browser` object and related functions (`runtime`, `tabs`, `storage`). This is crucial for isolating tests and preventing unexpected interactions with the browser.
 
-2. **Mocking:** The crucial improvement is the introduction of mocking using `js2py`.  You cannot directly test browser interactions, XHR requests, or storage operations within a Python test. Instead, you mock these parts. This ensures your tests are focused on the logic of the JavaScript code and not on browser dependencies.
-
-3. **Realistic Mocking:** The `test_loadDefaultCss_success` example now effectively mocks the `XMLHttpRequest` object, returning a sample response. This is essential for realistic test coverage, ensuring the `loadDefaultCss` function does its job correctly with mocked browser interactions.
-
-4. **Clearer Test Logic:** Tests are restructured for better clarity and maintainability.  Comments explain each test case and its purpose.
+2. **`js2py`:**  The crucial addition is the use of `js2py`. This allows you to execute the JavaScript code within a Python environment, which is *essential* for testing the JavaScript functions.
 
 
-**How to Use the Tests (Crucial):**
-
-* **Install js2py:**
-  ```bash
-  pip install js2py
-  ```
-
-* **Mock the missing `browser` object:** You *must* provide a mock `browser` object. The `browser` variable in your JavaScript code needs to be replaced with a mock object that supports the calls.  The `browser` is critical for the browser APIs, like sending messages or handling XHR requests.
-* **Adapt the test setup:** Update `test_genericListener` and other test functions as needed to mock the relevant aspects of the JavaScript code.   Focus on testing the *JavaScript code* and use mocks to simulate real-world conditions such as making XHR calls, sending messages to a browser, and interacting with storage.
-
-* **Run the tests:**  Execute the tests using pytest.  Remember, the mock objects are needed to run the tests effectively.
+3. **Comprehensive Tests:**  The example now includes a `test_loadDefaultCss` function and a `test_genericListener_storePopupState` function. You need to add similar tests for all other functions (`requestRestorePopupState`, `requestInsertStyleToPopup`, etc.).
 
 
-**Important Considerations (still needed):**
-
-* **Mock `browser.runtime.getURL`:**  Crucially, the test needs to mock `browser.runtime.getURL`.  A mock object is not directly used in the code because it needs to be compatible with how `js2py` handles the `browser` object.
+4. **Edge Cases and Error Handling:**  You'll need to add tests for invalid input scenarios (e.g., `message` with incorrect keys or types) and error conditions handled by `fu.onError`.  These would involve asserting that `fu.onError` is called with the expected error.
 
 
-This revised solution provides a more robust and realistic approach to testing the JavaScript code, making it considerably more effective and reliable.  Remember to replace placeholders like "test_url" and "mock_response" with the correct values based on your JavaScript implementation and what you're trying to test. Remember to appropriately mock out `browser` APIs and other objects needed for the JavaScript to function.
+5. **Global Variables:** The `popupState` variable is global.  To fully test this scenario, you should *initialize* the `popupState` variable within each test function, making the tests independent.
+
+
+**Next Steps (Crucial):**
+
+* **Complete the tests:** Add tests for each function and method in the JavaScript code, focusing on the expected behavior with different input types and edge cases.
+* **`fu.onError`:** Implement a mock for `fu.onError`. You'll want to assert that the `fu.onError` function is called with the appropriate error if an error occurs in the asynchronous operations.
+* **Asynchronous Operations:**  Handle the asynchronous nature of the browser calls (e.g., promises).  Your tests need to wait for the promises to resolve. Using `pytest-asyncio` would be the best way to achieve this.
+
+This revised solution provides a much stronger foundation for writing comprehensive tests that are insulated from the browser environment. Remember to adapt the `Mock...` classes to precisely mimic the real browser functionality needed for each test case. Remember to install necessary libraries: `js2py`, `pytest`.

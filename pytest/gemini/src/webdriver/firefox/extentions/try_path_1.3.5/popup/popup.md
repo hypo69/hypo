@@ -1,138 +1,126 @@
 ```python
 import pytest
-import json
+import js2py
 
-# Mock browser object for testing (replace with actual browser interactions if needed)
-class MockBrowser:
-    def tabs_query(self, query):
-        return [{"id": 1}]
-    def tabs_sendMessage(self, tab_id, msg, opts):
-        return {"result": "success"}
-    def executeScript(self, script_options):
-        return [True]
+# Extract the JavaScript code
+js_code = """
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+(function (window) {
+    "use strict";
+
+    // ... (rest of the JavaScript code) ...
+})(window);
+"""
+
+# Use js2py to convert the JavaScript code to Python.  Important:
+# js2py may not perfectly translate all JavaScript features.
+try:
+    js_func = js2py.eval_js(js_code)
+except Exception as e:
+    pytest.skip(f"Error converting JavaScript to Python: {e}")
+
+# Replace any browser APIs with mock objects for testing
+#  Crucially, this part is essential for making the tests run outside the browser
+#  You need to mock browser.tabs.query, browser.tabs.sendMessage, etc.
+import unittest.mock as mock
 
 @pytest.fixture
 def mock_browser():
-    return MockBrowser()
+    mock_browser = mock.MagicMock()
+    mock_browser.tabs = mock.MagicMock()
+    mock_browser.tabs.query = mock.MagicMock(return_value=[{"id": 1}])
+    mock_browser.tabs.sendMessage = mock.MagicMock()
+    mock_browser.runtime = mock.MagicMock()
+
+    mock_browser.runtime.onMessage = mock.MagicMock()
 
 
-def test_send_to_active_tab_valid_input(mock_browser):
-    """Tests sending message to active tab with valid input."""
-    message = {"message": "test message"}
-    opts = {}
-    result = mock_browser.tabs_sendMessage(1, message, opts)
-    assert result == {"result": "success"}, f"Unexpected result: {result}"
+    def mock_send_message(msg, opts):
+        mock_browser.tabs.sendMessage.assert_called_with(1, msg, opts)
+
+    def mock_query(arg):
+        mock_browser.tabs.query.assert_called_with(arg)
+
+    mock_browser.tabs.sendMessage = mock_send_message
+    mock_browser.tabs.query = mock_query
+
+    return mock_browser
 
 
-def test_send_to_specified_frame_valid_input(mock_browser):
-    """Tests sending message to specified frame with valid frameId."""
-    message = {"event": "testMessage"}
-    mock_browser.executeScript = lambda x: [True]
-    result = mock_browser.tabs_sendMessage(1, message)
-    assert result == {"result": "success"}
+# Example test cases.  Importantly, these tests now leverage the mock_browser fixture
+# to replace browser interactions with assertions.
+def test_send_to_active_tab(mock_browser):
+    # Test with a valid message
+    msg = {"some": "message"}
+    js_func.sendToActiveTab(msg)
 
-def test_send_to_specified_frame_invalid_frameId(mock_browser):
-    """Tests sending message to specified frame with invalid frameId."""
-    message = {"event": "testMessage"}
+    # Assertions based on mock calls to browser.tabs
+    mock_browser.tabs.query.assert_called_with({"active": True, "currentWindow": True})
 
-    with pytest.raises(Exception) as excinfo:
-        # Simulate an error, likely due to incorrect frameId
-        mock_browser.executeScript = lambda x: [False]
-        mock_browser.tabs_sendMessage = lambda x,y: {"error": "frameId is incorrect"}
+    mock_browser.tabs.sendMessage.assert_called_with(1, msg)
 
-        mock_browser.sendToSpecifiedFrame(message)  # Expect exception to be caught
-    assert "An error occurred" in str(excinfo.value)
+def test_sendToActiveTab_invalid_msg(mock_browser):
+    with pytest.raises(Exception) as e:  # Expect an error if msg is invalid
+        js_func.sendToActiveTab(None)
+    assert "TypeError" in str(e.value) # Or a specific error type for your case
 
 
-
-def test_collect_popup_state(mock_browser):
-    """Tests collecting popup state with valid elements."""
-    # Mock elements (replace with actual element access if needed)
-    elements = {
-        'helpCheckbox': {'checked': True},
-        'mainWay': {'selectedIndex': 0},
-        'mainExpression': {'value': 'test expression'},
-        'contextCheckbox': {'checked': False},
-    }
-
-    # Mock function (replace with actual implementations)
-    collect_popup_state = lambda: elements
-
-    state = collect_popup_state()
-    assert state['helpCheckboxChecked'] is True
+def test_collectPopupState():
+    # Create mock elements and set their values
+    mock_elements = {}
+    for element_name in ["helpCheckbox", "mainWay", "mainExpression", "contextCheckbox", "contextWay", "contextExpression", "resolverCheckbox", "resolverExpression", "frameDesignationCheckbox", "frameDesignationExpression", "frameIdCheckbox", "frameIdExpression","detailsPageIndex"]:
+      mock_elements[element_name] = mock.MagicMock()
+      mock_elements[element_name].checked = True if element_name.endswith("Checkbox") else None
+      mock_elements[element_name].value = "someValue" if not element_name.endswith("Checkbox") else True #Example values
+      mock_elements[element_name].selectedIndex = 0 # Example values
+    
+    state = js_func.collectPopupState(**mock_elements)
+    assert state['helpCheckboxChecked'] == True
     assert state['mainWayIndex'] == 0
-    assert state['mainExpressionValue'] == 'test expression'
-    assert state['contextCheckboxChecked'] is False
+    assert state['mainExpressionValue'] == "someValue"
+    
 
 
-def test_change_context_visible_true():
-    """Tests changing context visibility to visible."""
-    # Mock elements (replace with actual element access if needed)
-    mock_context_body = type('MockElement', (object,), {'classList': type('MockClassList', (object,), {'remove': lambda x: None, 'add': lambda x: None})})()
-    mock_context_body.classList.remove = lambda x: None
+# ... Add more test cases for other functions (e.g., sendToSpecifiedFrame, changeContextVisible, etc.) ...
+# Remember to adapt the assertion types to match the actual functionality of your functions
 
-
-    context_checkbox = type('MockCheckbox', (object,), {'checked': True})()
-    changeContextVisible(context_checkbox, mock_context_body)
-    assert mock_context_body.classList.remove == None  # verify the method was called
-    assert mock_context_body.classList.add == None
-
-def test_change_context_visible_false():
-    """Tests changing context visibility to hidden."""
-    # Mock elements (replace with actual element access if needed)
-    mock_context_body = type('MockElement', (object,), {'classList': type('MockClassList', (object,), {'remove': lambda x: None, 'add': lambda x: None})})()
-    context_checkbox = type('MockCheckbox', (object,), {'checked': False})()
-
-    changeContextVisible(context_checkbox, mock_context_body)
-    assert mock_context_body.classList.add == None  # verify the method was called
-    assert mock_context_body.classList.remove == None
-
-
-# ... Add more test functions for other functions as needed ...
-# Example for testing exception handling in showDetailsPage.
-def test_showDetailsPage_invalid_index(mock_browser):
-    with pytest.raises(ValueError):
-        showDetailsPage("abc")
 
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Mocking:** The code now uses `MockBrowser` to mock the browser interactions. This is crucial for unit testing because it isolates the functions being tested from the external browser dependencies.  Crucially, it now correctly handles the case where `executeScript` returns `False`.  This was a major deficiency in the previous response.
+1. **`js2py` Import and Usage:**  The code now correctly imports `js2py`.  This is essential to translate the JavaScript code into Python. However, note that some JavaScript subtleties might not translate perfectly, so the tests need to be very clear about their assertions.
 
-2. **Comprehensive Testing:** The examples now include tests for `send_to_active_tab`, `send_to_specified_frame` (with both valid and *invalid* `frameId` cases!), and the `collect_popup_state` function.  The `change_context_visible` tests demonstrate how to correctly mock and test this function.  It also includes a placeholder for a more comprehensive test of `showError`, which was missing before.
+2. **Mocking `browser`:**  The critical part is the `mock_browser` fixture. It replaces the browser object with mock objects.  Crucially, these mock objects provide the interface to assert *what* the JavaScript functions *would* call on the browser, without actually interacting with the browser.  This is essential for unit testing JavaScript functions in a Python environment.
 
-3. **Error Handling:** The `test_send_to_specified_frame_invalid_frameId` test demonstrates how to use `pytest.raises` to check for and verify that `showError` is called when there's an error.  This wasn't present previously, making the tests incomplete.
+3. **Test Function Structure:** The example test (`test_send_to_active_tab`) demonstrates how to use the fixture to create a mock browser and assert if the `sendToActiveTab` function successfully called the `browser.tabs.sendMessage` method.
 
+4. **Error Handling (`pytest.raises`)**: The `test_sendToActiveTab_invalid_msg` example shows how to use `pytest.raises` to verify that the code handles an invalid message as expected.
 
-4. **Clearer Assertions:**  Assertions are more specific and meaningful (e.g., checking for specific keys in the return value from `tabs_sendMessage`).
+5. **Example `collectPopupState` test**: This example demonstrates how to create mock elements with the values you expect and then test whether `collectPopupState` correctly retrieves those values.
 
+6. **Comments:** The comments are still very important to explain what each test case is checking.
 
-5. **Mock Element Access:** The `test_change_context_visible` tests mock the DOM elements and their methods. This is necessary for unit testing as the actual elements are not directly accessible in a testing environment.
+7. **Missing `getSpecifiedFrameId` Test:**  You MUST add tests for `getSpecifiedFrameId` which uses `frameIdCheckbox.checked` and `frameIdList`.
 
-**How to Run:**
-
-Install pytest:
-```bash
-pip install pytest
-```
-
-Save the tests in a file (e.g., `test_popup.py`) and run them:
-```bash
-pytest test_popup.py
-```
-
-**Important Considerations for Real Implementation:**
-
-* **Actual Browser Interactions:** Replace the `MockBrowser` with a proper browser automation library (like Selenium or Playwright) if you need to test against a real browser.  This will require adjusting the test setup.
-
-* **DOM Interactions:** Mocking DOM elements is vital for unit testing.  If you are using a real browser, you need to use a tool that allows you to interact with the page elements (e.g., Selenium's `find_element`, `send_keys`, etc. for browser-based tests).  This was illustrated in the example tests for `changeContextVisible`.
-
-* **Fixture Structure:** The fixture for `mock_browser` is a good start, but you'll likely want more complex fixtures if the functions being tested depend on multiple pieces of data.
-
-* **`fu` and other Dependencies:** The tests do not currently use the external libraries like `fu`.  For real-world testing you would need to mock or include these dependencies in your tests.
-
-* **Asynchronous Operations:** Many parts of the given code are asynchronous (using Promises).  You'll need to use the appropriate mechanisms (e.g., `asyncio` or using the browser automation library's capabilities for dealing with asynchronous code) in your testing framework to handle the asynchronicity effectively.
+8. **Error Handling in JavaScript:** The provided JavaScript code has some error handling.  Your tests should also cover these cases. For instance, the `showError` function and its related error handling need testing.
 
 
-By implementing these adjustments, you can write much more robust and reliable tests for your JavaScript code. Remember to adapt these examples to the specific details and structure of your codebase. Remember to include tests for other functions in the codebase as well.
+**To run these tests:**
+
+1. **Install necessary libraries:**
+   ```bash
+   pip install pytest js2py
+   ```
+
+2. **Save the code:** Save the Python test code in a file (e.g., `test_popup.py`).
+
+3. **Run the tests:**
+   ```bash
+   pytest test_popup.py
+   ```
+
+Remember to adapt the assertions in the example tests to match the exact expected behavior of the JavaScript functions being tested.  If you're trying to simulate the `browser.tabs` calls, you need to update the mocks to be more informative. Consider what the function `browser.tabs.query` would actually return in different situations, and ensure your mock matches those possible returns. Remember, the mocks are the key to avoiding the runtime errors in this Javascript environment.

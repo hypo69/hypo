@@ -3,81 +3,101 @@ import pytest
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
 
-# No functions or methods are defined in the provided code to test.
-# We cannot create tests for the example code. 
-# It contains only variable assignments, docstrings, and import statements.
+# Tests for __version__
+def test_version_type():
+    """Checks if __version__ is a Version object."""
+    assert isinstance(__version__, Version)
 
-# Example test if you had a function (replace with your actual function)
-# def my_function(input_value):
-#     if input_value == 0:
-#         raise ZeroDivisionError("Input cannot be zero")
-#     return input_value * 2
+def test_version_string():
+    """Checks if __version__ is a valid version string."""
+    assert isinstance(__version__, str)
+    # More thorough checks to ensure the version string matches expected format
+    # (e.g., MAJOR.MINOR.PATCH)
+    version_parts = __version__.split(".")
+    assert len(version_parts) >= 2
+    for part in version_parts:
+        try:
+            int(part)
+        except ValueError:
+            pytest.fail(f"Invalid version string: {__version__}")
+
+# Tests for __doc__
+def test_docstring_type():
+    """Checks if __doc__ is a string."""
+    assert isinstance(__doc__, str)
+
+def test_docstring_not_empty():
+    """Checks if __doc__ is not empty."""
+    assert __doc__
+
+# Tests for __details__
+def test_details_type():
+    """Checks if __details__ is a string."""
+    assert isinstance(__details__, str)
+
+def test_details_not_empty():
+    """Checks if __details__ is not empty."""
+    assert __details__
 
 
-# @pytest.fixture
-# def my_data():
-#     return 5
+# Additional tests to handle potential edge cases (if any in the actual code)
+# For example, if __version__, __doc__, or __details__ can be None or empty
+# under certain circumstances:
+def test_version_none():
+    """Tests if __version__ is not None."""
+    assert __version__ is not None
 
 
-# def test_my_function_valid_input(my_data):
-#     result = my_function(my_data)
-#     assert result == 10
+def test_doc_none():
+    """Tests if __doc__ is not None."""
+    assert __doc__ is not None
 
-# def test_my_function_invalid_input():
-#     with pytest.raises(ZeroDivisionError, match="Input cannot be zero"):
-#         my_function(0)
+def test_details_none():
+    """Tests if __details__ is not None."""
+    assert __details__ is not None
 
-# def test_version_type():
-#     assert isinstance(__version__, Version)
+# Example of testing for a specific format or structure within __details__
+# if applicable
+def test_details_contains_key_value():
+  """Checks if __details__ contains key-value pairs."""
+  #Example assuming __details__ is a string of key-value pairs.
+  try:
+    #Parse string, extract key-value pairs
+      #Implement your parsing logic here for the specific format
+      #e.g., if it's a JSON string, use json.loads()
+      #Example:
+      # import json
+      # if not __details__:
+      #   pytest.fail("Details is empty")
+      # details_dict = json.loads(__details__)
+      # for key, value in details_dict.items():
+      #   assert isinstance(key, str)  #check if key is string
+      #   assert isinstance(value, (str, int, float))  #check if value is str/int/float
 
-# def test_version_string():
-#     assert isinstance(__version__, str)
 
-# Test that __version__ variable exists
-def test_version_exists():
-    assert '__version__' in globals()
-    
-# Test that __doc__ variable exists
-def test_docstring_exists():
-    assert '__doc__' in globals()
-    
-# Test that __details__ variable exists
-def test_details_exists():
-    assert '__details__' in globals()
+  except (ValueError, KeyError) as e:
+    pytest.fail(f"Error parsing __details__: {e}")
 
-# Test that MODE variable exists
-def test_mode_exists():
-    assert 'MODE' in globals()
 
-#Example test with invalid/edge case (replace with your appropriate testing scenarios)
-
-# This is an example of a test for version comparison or other logic, if applicable.
-# def test_version_comparison():
-#     version1 = Version("1.2.3")
-#     version2 = Version("1.2.4")
-#     assert version1 < version2
 ```
 
-**Explanation and Important Considerations:**
+**Explanation and Improvements:**
 
-1. **No Testable Code:** The provided Python code (`hypotez/src/webdriver/edge/_examples/__init__.py`) only contains variable declarations, import statements, and docstrings.  There are no functions or methods to test.  The example test cases are placeholders demonstrating the structure for testing *real* functions and methods.  
+1. **Clear Test Names:**  Test function names clearly indicate the purpose of each test.
 
-2. **Example Test Cases (commented out):** The commented-out example test cases show how to write tests for a hypothetical function named `my_function`. These examples illustrate the use of `pytest.raises` for exception handling, fixtures for data provision, and assertions for verifying expected outputs.
+2. **Type Checking:**  Critically checks if `__version__`, `__doc__`, and `__details__` are of the correct types.  This is crucial for robustness.
 
-3. **Testing Strategy:**  To create meaningful tests, you need to analyze the actual functions and methods of the code base under test and consider valid inputs, invalid inputs, boundary conditions, and error handling.
+3. **Version String Validation:** Now includes checks for the expected format of the version string.
 
-4. **Missing Context:**  Without knowing the functions and classes in the code, the provided tests are not accurate.
+4. **Empty String Checks:** Added tests to ensure that the strings are not empty to detect potential issues during initialization or data retrieval.
 
-5. **Versioning:** The example `test_version_type` and `test_version_string` demonstrate how to test that `__version__` is of the correct type. These are essential if the code relies on the `Version` class from `packaging.version`.
+5. **None Checks:** Checks if the attributes could be `None`, preventing unexpected failures if they were accidentally set to `None`.
 
-6. **Comprehensive Tests:**  Remember to add more specific tests based on the actual functionality of the code you're testing.
+6. **Robust Error Handling (details):** The `test_details_contains_key_value` is now more robust, with `try-except` blocks.  Importantly, it assumes the specific structure (`__details__`) is a string of key-value pairs.  Replace the placeholder comments in that test with the actual parsing logic to validate the content of `__details__` based on its expected structure.
 
-**How to Use with Your Code:**
+**To use these tests:**
 
-1. **Uncomment:**  Replace the example test cases with tests for the functions/methods in your actual code.  
-2. **Replace:** Replace the placeholder function (`my_function`) and fixture (`my_data`) with your actual code and relevant fixtures.
-3. **Analyze:** Determine the possible inputs, outputs, and potential errors for each function or method you are testing.
-4. **Write Tests:** Develop assertions to validate the expected behavior in various scenarios.
+1.  Save the test code (e.g., as `test_examples.py`) in the same directory as the `__init__.py` file.
+2.  Run `pytest test_examples.py` from your terminal.
 
-
-By following these steps, you can create robust and accurate tests for your code. Remember to adapt these examples based on the actual functionality of your code. Remember to install the `pytest` library if you haven't already:  `pip install pytest`
+**Important:**  The most crucial improvement is the placeholder comments in the `test_details_contains_key_value` function.  You absolutely must replace these comments with the actual parsing logic for `__details__`. The current structure assumes `__details__` is a string.  If it's a dictionary or some other data structure, the parsing logic will need to change accordingly.  Provide the expected structure of `__details__` and I can help adjust the test accordingly.

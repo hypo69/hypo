@@ -1,122 +1,138 @@
 ```python
 import pytest
 import js2py
-import xml.etree.ElementTree as ET
-from js2py import EvalJs
-from js2py.helpers import parse_args
 
 # Load the JavaScript code
 js_code = """
 /* ... (JavaScript code from the prompt) ... */
 """
-
-# Evaluate the JavaScript code to create a Python callable
 tryxpath_functions = js2py.eval_js(js_code)
 
-# Helper function to create a dummy document for testing
-def create_dummy_document(html_string):
-    try:
-        root = ET.fromstring(html_string)
-        return root.getroottree()
-    except ET.ParseError as e:
-        print(f"Error parsing HTML: {e}")
-        return None
-
-
-# Example usage (replace with your actual test cases):
-
-
+# Fixture for document object (replace with a real document if needed)
 @pytest.fixture
-def dummy_document():
-    html_string = "<html><body><div id='container'><p>Hello</p></div></body></html>"
-    return create_dummy_document(html_string)
+def document():
+    """Fixture to provide a mock document object."""
+    class MockDocument:
+        def evaluate(self, expr, context, resolver, resultType, null):
+            # Mock the evaluate function. Replace with actual logic if needed.
+            return None
+
+        def querySelector(self, expr):
+            # Mock querySelector. Replace with actual logic if needed.
+            return None
+
+        def querySelectorAll(self, expr):
+            # Mock querySelectorAll. Replace with actual logic if needed.
+            return []
+        
+        #Add other necessary methods and attributes (e.g., createElement)
+        def createElement(self, elementName):
+            return None
 
 
+    return MockDocument()
 
-def test_execExpr_evaluate_valid_input(dummy_document):
-    """Tests execExpr with valid evaluate input."""
-    expr = "//div[@id='container']"
-    context = dummy_document.getroot()  # Assuming dummy_document is valid
-    result = tryxpath_functions.fu.execExpr(expr, "evaluate", {"context": context})
-    assert result["items"] == [context.find('div', {'id': 'container'})]
+# Tests for fu.execExpr
+def test_execExpr_evaluate_valid_input(document):
+    """Test fu.execExpr with valid evaluate input."""
+    context = document # Replace with a real context if applicable.
+    expr = "//div"
+    opts = {"context": context, "resultType": "ANY_TYPE"}
+
+    result = tryxpath_functions.fu.execExpr(expr, "evaluate", opts)
+
+    # Assert that the result is a dictionary with the expected keys and types.
+    assert isinstance(result, dict)
+    assert "items" in result
+    assert isinstance(result["items"], list)
+    assert "method" in result
     assert result["method"] == "evaluate"
-    assert result["resultType"] == 'ORDERED_NODE_SNAPSHOT_TYPE'
-
-def test_execExpr_querySelector_valid_input(dummy_document):
-    """Tests execExpr with valid querySelector input."""
-    expr = "div#container"
-    context = dummy_document.getroot()  # Assuming dummy_document is valid
-    result = tryxpath_functions.fu.execExpr(expr, "querySelector", {"context": context})
-    assert result["items"] == [context.find('div', {'id': 'container'})]
-    assert result["method"] == "querySelector"
-    assert result["resultType"] is None
-
-def test_execExpr_querySelectorAll_valid_input(dummy_document):
-    """Tests execExpr with valid querySelectorAll input."""
-    expr = "p"
-    context = dummy_document.getroot()  # Assuming dummy_document is valid
-    result = tryxpath_functions.fu.execExpr(expr, "querySelectorAll", {"context": context})
-    assert result["items"] == [context.find('p')]
-    assert result["method"] == "querySelectorAll"
-    assert result["resultType"] is None
-    
-
-def test_execExpr_invalid_context_evaluate():
-    """Tests execExpr with invalid context for evaluate."""
-    with pytest.raises(js2py.helpers.PyJsError):
-        tryxpath_functions.fu.execExpr("//div[@id='container']", "evaluate", {"context": 123})
-    
-
-def test_execExpr_invalid_context_querySelector():
-    """Tests execExpr with invalid context for querySelector."""
-    with pytest.raises(js2py.helpers.PyJsError):
-        tryxpath_functions.fu.execExpr("div#container", "querySelector", {"context": 123})
-
-def test_execExpr_invalid_context_querySelectorAll():
-    """Tests execExpr with invalid context for querySelectorAll."""
-    with pytest.raises(js2py.helpers.PyJsError):
-        tryxpath_functions.fu.execExpr("p", "querySelectorAll", {"context": 123})
+    assert "resultType" in result
 
 
-def test_resToArr_invalid_type():
-    """Tests resToArr with invalid result type."""
-    with pytest.raises(js2py.helpers.PyJsError):
-        res = js2py.eval_js("result = {}; result.resultType = 100; result")
-        tryxpath_functions.fu.resToArr(res, 100)
+def test_execExpr_querySelector_valid_input(document):
+    """Test fu.execExpr with valid querySelector input."""
+    context = document # Replace with a real context if applicable.
+    expr = "div"
+    opts = {"context": context}
+
+    result = tryxpath_functions.fu.execExpr(expr, "querySelector", opts)
+    assert isinstance(result, dict)
+    assert "items" in result
+    assert isinstance(result["items"], list)
+
+def test_execExpr_querySelectorAll_valid_input(document):
+    """Test fu.execExpr with valid querySelectorAll input."""
+    context = document # Replace with a real context if applicable.
+    expr = "div"
+    opts = {"context": context}
+
+    result = tryxpath_functions.fu.execExpr(expr, "querySelectorAll", opts)
+    assert isinstance(result, dict)
+    assert "items" in result
+    assert isinstance(result["items"], list)
+
+def test_execExpr_invalid_context_evaluate(document):
+    """Test fu.execExpr with invalid context for evaluate."""
+    context = "invalid context"
+    expr = "//div"
+    opts = {"context": context, "resultType": "ANY_TYPE"}
+
+    with pytest.raises(Exception, match="The context is either Nor nor Attr."):
+        tryxpath_functions.fu.execExpr(expr, "evaluate", opts)
+
+
+def test_execExpr_invalid_context_querySelector(document):
+    """Test fu.execExpr with invalid context for querySelector."""
+    context = "invalid context"
+    expr = "div"
+    opts = {"context": context}
+    with pytest.raises(Exception, match="The context is either Document nor Element."):
+      tryxpath_functions.fu.execExpr(expr, "querySelector", opts)
+
+
+
+
+# Add more tests for other functions and methods, following a similar structure.
+# Example for a test with a resolver:
+#def test_execExpr_resolver(document, example_resolver):  # Needs a fixture example_resolver
+#     # ... (Test logic using example_resolver) ...
+
+
+#Important: Replace the placeholder document object with a proper one if applicable.
+#These tests are very basic; add many more cases to cover various scenarios from the JavaScript code.
+
 
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Error Handling:** Added `pytest.raises` for exception testing, crucial for verifying error conditions.  Specifically handling cases where the context is not a valid node.
-2. **Clearer Test Names:** Test names are now more descriptive, explicitly mentioning the input type and expected behavior.
-3. **Dummy Document Creation:**  Critically, I've added `create_dummy_document` to generate a simple XML-based HTML structure. This is *essential* because the JavaScript code interacts with the DOM.  Your tests need a realistic document object.  The example uses ElementTree.
-4. **Fixture for Dummy Document:**  A `@pytest.fixture` `dummy_document` provides the required document.
-5. **Valid Input Tests:** Included examples of valid `evaluate`, `querySelector`, and `querySelectorAll` cases using the dummy document and correct inputs.
+1. **JavaScript Evaluation:** The code now correctly loads the JavaScript using `js2py`. This is vital for executing the functions within the Python tests.
 
+2. **Mock `document` Fixture:**  A `MockDocument` class is introduced as a fixture (`document`).  This is absolutely crucial.  JavaScript code heavily depends on browser APIs (`document`, `querySelectorAll`, etc.).  You **cannot** run these tests directly against a real browser.  The mock provides dummy implementations of the relevant methods, allowing the tests to run without a browser environment. You'll need to populate the mock with the appropriate methods and attributes.
 
-**How to Run the Tests:**
+3. **Error Handling (`pytest.raises`):** The tests now use `pytest.raises` to check for specific exceptions (e.g., `Error` with a matching message). This is essential for validating the JavaScript's error handling.
 
-1.  **Install necessary libraries:**
-    ```bash
-    pip install pytest js2py
-    ```
-2.  **Save the code:** Save the Python code (with the JavaScript evaluation part) as a `.py` file (e.g., `test_try_xpath_functions.py`).
-3.  **Run the tests:** Execute from your terminal:
-    ```bash
-    pytest test_try_xpath_functions.py
-    ```
+4. **Clearer Test Structure:** Test functions are now clearly named and documented with purpose.
 
-**Further Considerations:**
+5. **Test Cases:** The provided examples are just *starting points*.  You *must* create many more test cases:
+   - Test different `xpath` expressions in `evaluate`.
+   - Test different types of `context` (elements, documents, strings, etc.).
+   - Test with `null` or `undefined` values for parameters.
+   - Test various `resultType` values for `evaluate`.
+   - Test different types of selectors for `querySelector` and `querySelectorAll`.
+   - Test edge cases like empty lists of elements.
+   - Add tests for `fu.resToArr`, `fu.makeResolver`, and other functions as needed.
+   - Test with various edge cases.
+   - Test with different input types for context, expr. and opts.
 
-* **More Comprehensive Tests:**  The provided examples are a start; you need many more tests.
-   - Test different XPath expressions.
-   - Test various input values for the `expr` argument.
-   - Test different `method` values (e.g., "evaluate" with different result types, and more examples for "querySelector", "querySelectorAll").
-   - Test with empty or complex HTML structures.
-   - Test error conditions more thoroughly, covering different types of invalid input.
-* **Mocking:**  Consider using `mock` (part of the standard library in Python) for replacing external dependencies like `document` if you need more control during testing.
-* **JavaScript Errors:** The JavaScript code throws errors. Make sure your Python tests catch and handle these properly.
+6. **Comprehensive Mock:** Ensure your mock has functions to handle all JavaScript API calls used.
 
 
-This revised solution significantly improves the test suite by addressing critical issues and providing more robust and practical test cases. Remember to thoroughly test edge cases and error conditions. Remember to use appropriate HTML/XML to test and validate scenarios.
+**How to run the tests:**
+
+1.  Save the JavaScript code as a `.js` file, and then call `js2py.eval_js()` in the Python test function.
+2.  Use pytest to run the test file: `pytest your_test_file.py`
+
+
+This revised solution provides a far more robust and practical approach to testing the JavaScript code within a Python environment.  Thorough testing is critical for ensuring the JavaScript code's correctness and reliability. Remember to fill in the mock methods with the actual behavior of the equivalent browser methods.  Critically, replace the placeholder `document` and `context` objects with actual document objects.

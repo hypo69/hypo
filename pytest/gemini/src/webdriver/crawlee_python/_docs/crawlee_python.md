@@ -1,124 +1,121 @@
 ```python
 import pytest
 import asyncio
-import json
-from unittest.mock import patch
+from playwright.sync_api import sync_playwright
+from crawlee import PlaywrightCrawler  # Assuming this is in the correct import path
 
-# Replace 'your_module' with the actual module name
-from your_module import CrawleePython, PlaywrightCrawler
+# Replace with your actual CrawleePython class
+class CrawleePython:
+    def __init__(self, max_requests=10, headless=True, browser_type='chromium'):
+        with sync_playwright() as p:
+            self.browser = p.chromium.launch(headless=headless)
+            self.page = self.browser.new_page()
+        self.crawler = PlaywrightCrawler(self.page, max_requests=max_requests, browser_type=browser_type)
+
+    async def setup_crawler(self):
+        # Replace with your actual request handler
+        async def request_handler(request):
+            # Example data extraction (adapt to your specific needs)
+            try:
+                await request.response.content()
+                await request.page.title()
+            except Exception as e:
+                print(f"Error processing request: {e}")
+            return []
+
+        await self.crawler.setup(request_handler)
+
+    async def run_crawler(self, urls):
+      await self.crawler.crawl(urls)
+
+    async def export_data(self, filename="output.json"):
+        data = await self.crawler.get_data()
+        with open(filename, "w") as f:
+            import json
+            json.dump(data, f, indent=4)
+
+    async def get_data(self):
+        return await self.crawler.get_data()
+
+
+    async def run(self, initial_urls):
+        await self.setup_crawler()
+        await self.run_crawler(initial_urls)
+        await self.export_data()
+        extracted_data = await self.get_data()
+        print(extracted_data)
+
+
+async def main():
+  crawler_instance = CrawleePython()
+  await crawler_instance.run(["https://news.ycombinator.com/"])
 
 
 @pytest.fixture
-def example_data():
-    """Provides example data for testing."""
-    return {
-        "data": [
-            {"title": "Title 1", "rank": 1, "link": "link1"},
-            {"title": "Title 2", "rank": 2, "link": "link2"},
-        ]
-    }
+def crawler_instance_valid():
+    return CrawleePython()
+
+@pytest.mark.asyncio
+async def test_run_crawler_valid_input(crawler_instance_valid):
+    """Tests the run method with valid input URLs."""
+    await crawler_instance_valid.run(["https://news.ycombinator.com"])
+
+@pytest.mark.asyncio
+async def test_run_crawler_empty_input(crawler_instance_valid):
+    """Tests the run method with empty input URLs."""
+    with pytest.raises(Exception):
+        await crawler_instance_valid.run([])
 
 
-@pytest.fixture
-def mock_crawler(monkeypatch):
-    """Mocks the PlaywrightCrawler for testing."""
-    mock_crawler = PlaywrightCrawler()
-    mock_crawler.run = lambda urls, handler: asyncio.Future().set_result(example_data())
-    monkeypatch.setattr(CrawleePython, 'crawler', mock_crawler)  # Mock the crawler attribute
-    return mock_crawler
+@pytest.mark.asyncio
+async def test_setup_crawler_valid_input(crawler_instance_valid):
+    """Tests the setup_crawler method with valid input."""
+    await crawler_instance_valid.setup_crawler()
+    #Add more asserts to verify the setup function
+    assert crawler_instance_valid.crawler is not None
 
 
-def test_crawlee_python_init_valid_input(mock_crawler):
-    """Test CrawleePython initialization with valid input."""
-    crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium')
-    assert crawler.crawler.max_requests == 10
-    assert crawler.crawler.headless == True
-    assert crawler.crawler.browser_type == 'chromium'
-
-def test_crawlee_python_init_invalid_max_requests(monkeypatch):
-    """Test CrawleePython initialization with invalid max_requests."""
-    with pytest.raises(ValueError):
-        CrawleePython(max_requests=-10, headless=True, browser_type='chromium')
+#Example for handling exceptions
+@pytest.mark.asyncio
+async def test_crawler_invalid_url(crawler_instance_valid):
+    """Test the crawler with invalid URLs"""
+    with pytest.raises(Exception) as excinfo: # using pytest.raises
+        await crawler_instance_valid.run(["invalid_url"])
 
 
-def test_crawlee_python_setup_crawler(mock_crawler):
-    """Test CrawleePython setup_crawler method (using mocked crawler)."""
-    crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium')
-    crawler.setup_crawler()
-    # Add assertions to check if the setup was successful. 
-    # This will depend on how setup_crawler was implemented.
-    assert hasattr(crawler.crawler, "handler")
-
-
-@patch('your_module.json')
-def test_crawlee_python_export_data(mock_json, mock_crawler):
-    """Test CrawleePython export_data method (using mocked JSON)."""
-    crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium')
-    crawler.data = example_data()  # Set the data attribute
-    crawler.export_data('test_data.json')
-    mock_json.dump.assert_called_once()
-    # Check the argument passed to json.dump
-
-
-def test_crawlee_python_run_crawler(mock_crawler):
-    """Test CrawleePython run_crawler method (using mocked crawler)."""
-    crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium')
-    urls = ["https://example.com"]
-    crawler.run_crawler(urls)
-    # Add assertions based on how run_crawler was implemented
-    assert crawler.data is not None
-    
-
-def test_crawlee_python_run_invalid_urls(mock_crawler):
-  """Test run_crawler with invalid urls."""
-  crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium')
-  with pytest.raises(TypeError):
-    crawler.run_crawler([1,2,3])
-
-#Example test for get_data.  Replace this with actual testing logic if applicable
-def test_crawlee_python_get_data(mock_crawler):
-  crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium')
-  crawler.data = example_data()
-  data_dict = crawler.get_data()
-  assert isinstance(data_dict, dict)
-  assert 'data' in data_dict
-
-
+if __name__ == "__main__":
+    pytest.main([__file__])
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock.patch` to mock the `json` module and `PlaywrightCrawler` for testing the `export_data` and `run_crawler` methods. This isolates the tests from external dependencies.  Crucially, it mocks the `crawler` attribute for the class.
-
-2. **Edge Cases and Invalid Input:**  Added a test `test_crawlee_python_init_invalid_max_requests` to demonstrate handling a negative `max_requests` value, a typical edge case in input validation.  Also added `test_crawlee_python_run_invalid_urls` to handle a TypeError from bad input.
-
-3. **Clearer Assertions:** Added more explicit assertions in the tests to verify that the expected results are obtained. For example, checking the `crawler.data` attribute is now present, and the test of `get_data` shows basic validation.
-
-4. **Fixture for Example Data:** The `example_data` fixture provides test data that can be used by multiple tests, promoting code reuse and readability.
-
-5. **Mock PlaywrightCrawler:** A `mock_crawler` fixture mocks the `PlaywrightCrawler` to avoid actual interactions with the browser.
+* **Import `PlaywrightCrawler`:**  Added an import statement to match your assumption.  Crucially, replace `crawlee` with the actual name of your module if it's different.
+* **`pytest.raises` for Exceptions:** Added `pytest.raises` to test expected exceptions for empty input and invalid URLs. This is critical for robustness.
+* **`crawler_instance_valid` Fixture:** Introduced a fixture to create `CrawleePython` instances, making tests more organized and avoiding redundant setup.
+* **`test_run_crawler_empty_input`:** Added a test specifically for handling empty input URLs, as this is an important edge case.
+* **`test_setup_crawler_valid_input`:** Added a test for the `setup_crawler` function to ensure it works correctly.
+* **Example Error Handling:** Includes a rudimentary example of handling an exception during the request handler.
+* **`async` and `await`:** All test functions using the crawler instance are now correctly decorated with `@pytest.mark.asyncio` and use `await` for asynchronous operations.
 
 
-**How to Run:**
+**How to run the tests:**
 
-1.  **Replace `your_module`:** Change `from your_module import ...` to the actual module where your `CrawleePython` class is defined.
-2.  **Install pytest:**
+1.  **Install necessary packages:**
     ```bash
-    pip install pytest
+    pip install pytest playwright crawlee
     ```
+2.  **Replace placeholders:** Update the `CrawleePython` class and the `request_handler` with your actual code.
 3.  **Run the tests:**
     ```bash
-    pytest
+    pytest your_test_file.py  # Replace your_test_file.py with the actual filename
     ```
 
-**Important Considerations:**
+**Crucial Considerations:**
 
-- **Actual `setup_crawler` Implementation:** The `test_crawlee_python_setup_crawler` needs more specific assertions about how the `setup_crawler` method is implemented and what the crawler should be setup with.  This depends on what your `setup_crawler` method actually does.
-
-
-- **Error Handling:**  The code needs more comprehensive tests for error handling, such as invalid URLs, network issues, and other potential exceptions that `PlaywrightCrawler` might raise.
-
-- **Data Validation:**  Critically, tests are needed to ensure that the `data` retrieved by `get_data` matches the expected format and contents.
+* **`async` Context:**  Crucially, you need to run your tests in an asynchronous context. The `@pytest.mark.asyncio` decorator and `await` keywords in the test functions are essential for this.
+* **Playwright Setup:** Ensure your `CrawleePython` class initializes Playwright correctly (e.g., using `with sync_playwright() as p:` or a similar pattern).
+* **Error Handling:** The error-handling example is a starting point. Your actual request handler should have more robust error handling to deal with various situations that could occur during the web scraping process.
+* **Specific Test Cases:**  The examples are a framework. You need to add more specific tests for different input scenarios and to verify that your data extraction logic works as expected.  Adding assertions to check the content of extracted data will be essential.
 
 
-This revised solution provides a more robust and comprehensive set of test cases for the `CrawleePython` class. Remember to adapt the assertions to accurately reflect your specific implementation of the methods in the `CrawleePython` class. Remember to add tests for potential exceptions and more edge cases.
+Remember to adapt the test cases to precisely match the intended behavior and error handling within your `CrawleePython` class. Remember to replace placeholders like `your_test_file.py` with the appropriate filename.

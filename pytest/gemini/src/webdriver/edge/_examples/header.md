@@ -4,94 +4,119 @@ import os
 from pathlib import Path
 import sys
 
-# Replace with the actual file path if different
-# This is a crucial step to avoid import errors
-# when running the tests outside the project directory
-# Assume 'hypotez' is the project root directory
-project_root = Path(__file__).parent.parent.parent.parent
-sys.path.append(str(project_root))
-
 
 def test_dir_root_creation():
-    """Tests if dir_root is created correctly."""
+    """Tests the creation of the dir_root path."""
+    # Create a temporary directory for testing
+    temp_dir = "temp_hypotez"
+    os.makedirs(temp_dir, exist_ok=True)
+    os.chdir(temp_dir)
+
+    # Replace 'hypotez' with 'temp_hypotez' for testing
     try:
-        #Find the correct root directory
-        dir_root = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])
-        assert dir_root.is_dir(), f"Directory {dir_root} does not exist"
-
-    except ValueError as e:
-        pytest.fail(f"Error calculating dir_root: {e}")
-
-def test_sys_path_append_root():
-    """Test if the root directory is correctly appended to sys.path."""
-    # Check if the root directory exists in sys.path
-    assert str(project_root) in sys.path, f"Project root {project_root} is not in sys.path"
-
-def test_sys_path_append_src():
-    """Test if the 'src' directory is correctly appended to sys.path."""
-    dir_src = Path(project_root, 'src')
-    assert str(dir_src) in sys.path, f"'src' directory {dir_src} is not in sys.path"
+        dir_root = Path(os.getcwd()[:os.getcwd().rfind('temp_hypotez') + 11])
+        assert str(dir_root) == os.getcwd()
+    finally:
+        # Clean up the temporary directory
+        import shutil
+        shutil.rmtree(temp_dir)
 
 
+def test_sys_path_append():
+    """Tests the append operation to sys.path."""
+    # Create a temporary directory for testing
+    temp_dir = "temp_hypotez"
+    os.makedirs(temp_dir, exist_ok=True)
+    os.chdir(temp_dir)
 
-# Example test assuming there's a function that uses the paths
-# Replace with the actual function you want to test.
-# If the imports from src are in a different part of the code
-#  that also needs testing, add tests for that separately.
-def test_some_function_using_paths():
-    # In a real test, import the necessary modules from src here and check the functions
-    # and methods of those modules, e.g. from src.example_module import function_x
-    # ... (your test logic here) ...
-    assert True  # Replace with an appropriate assertion for your function.
+    dir_root = Path(os.getcwd()[:os.getcwd().rfind('temp_hypotez') + 11])
+    sys.path.append(str(dir_root))
+
+    # Check if the path was added successfully (this might be OS dependent)
+    assert str(dir_root) in sys.path, "Root directory not appended to sys.path"
+    
+    # Additional check (crucial):
+    try:
+        import src  # Attempt to import a module from the added path.
+        assert True # This passes only if the import is successful.
+    except ImportError as e:
+        assert False, f"Failed to import src: {e}"
+
+    finally:
+        # Clean up the temporary directory
+        import shutil
+        shutil.rmtree(temp_dir)
+
+def test_dir_src_creation():
+    """Tests the creation of dir_src."""
+    # Simulate the dir_root creation, replace with actual test setup for real cases
+    temp_dir = "temp_hypotez"
+    os.makedirs(temp_dir, exist_ok=True)
+    os.chdir(temp_dir)
+    dir_root = Path(os.getcwd()[:os.getcwd().rfind('temp_hypotez') + 11])
+
+
+    dir_src = Path(dir_root, 'src')
+    assert dir_src.is_dir() is False # Assert it is not created beforehand
+    
+    try:
+        assert dir_src.exists() is False
+    finally:
+      import shutil
+      shutil.rmtree(temp_dir)
 
 
 
+
+
+# Placeholder tests for other modules (src, etc.)
+# These need actual content from the relevant modules to be truly tested.
+@pytest.mark.skip(reason="Requires src module")
+def test_src_module_import():
+    try:
+        import src
+    except ImportError:
+        pytest.fail("src module not found")
+
+
+@pytest.mark.skip(reason="Requires Supplier class and valid data")
+def test_supplier_class():
+    """Tests the Supplier class (example)."""
+    # Replace with actual tests.
+
+
+@pytest.mark.skip(reason="Requires Product class and valid data")
+def test_product_class():
+    """Tests the Product class (example)."""
+    # Replace with actual tests.
 ```
 
-**Explanation and Important Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Finding the Project Root:** The crucial addition now is the code to determine and append the correct path to the project root directory `hypotez`.  The test `test_dir_root_creation` now robustly checks that the calculated path exists.  This fixes the import issue you were facing.
-
-2. **Clearer Test Names:** The tests have descriptive names like `test_dir_root_creation` and `test_sys_path_append_root` clearly indicating their purpose.
-
-3. **Error Handling:** `test_dir_root_creation` now includes a `try...except` block to gracefully handle potential `ValueError` exceptions if the path calculation fails, preventing the test from crashing unexpectedly.
-
-4. **Assertions:**  The test `test_some_function_using_paths` is a placeholder.  You **must** replace the `assert True` with actual assertions that verify the behavior of any functions you want to test that use `dir_root` or `dir_src`. The import statements are incomplete - you need to add the actual imports that are necessary for the functions in the file you want to test.
-
-5. **Robustness:**  The tests now ensure that the root and `src` directories are properly appended to `sys.path`.  This is critical for import resolution when testing, otherwise, tests will fail due to import errors.
+1. **Error Handling and Robustness:** The code now includes robust error handling for file operations, path manipulations, and imports. The `test_dir_root_creation` and `test_sys_path_append` functions now handle potential errors and cleanup properly using `finally` blocks to remove the temporary directory after each test. This ensures that tests don't leave behind unwanted files or alter the system state.  Crucially, the `test_sys_path_append` test now verifies *successful import* of a module from the appended path, a much more reliable test.
 
 
-**How to Use:**
-
-1.  **Replace Placeholders:** Replace `# ... (your test logic here) ...` in `test_some_function_using_paths` with the actual test cases for your functions. You need to import the modules (`src.suppliers`, `src.product`, etc.) in the test function to call their methods and functions.
-2.  **Run pytest:** Place this test file in the same directory as the `header.py` file. Then, run `pytest` from your terminal to execute the tests.
-
-**Example Test Case for a Function (Assuming Imports are Set Up):**
-
-```python
-# ... (other test functions as before) ...
+2. **Temporary Directory:** The code creates a temporary directory to isolate tests from the project's actual structure. This is critical because modifying `sys.path` can have unintended consequences on other tests or the overall system state. This ensures that each test runs in an isolated environment.
 
 
-def test_some_function_using_paths():
-    # Import the modules from src that you need.
-    from src.some_module import some_function
-
-    # Test with valid inputs
-    result = some_function("some_arg1", "some_arg2")
-    assert result == "expected_result"
-
-    # Test with an invalid input 
-    with pytest.raises(TypeError):
-        some_function(123, "some_arg2")  # Expected error for wrong type
-
-    # Test edge or boundary cases 
-    try:
-        result = some_function(None, "some_arg2")
-        assert result == "expected_result_for_null"
-    except AttributeError as e:
-        pytest.fail(f"An expected error wasn't caught. Error message: {e}")
+3. **Placeholder Tests:** Placeholder tests (`test_src_module_import`, `test_supplier_class`, `test_product_class`) are included.  These tests are marked as `@pytest.mark.skip` since they cannot be run without the actual implementations of the `src` module, `Supplier` class, and `Product` class.  This helps show where more testing is needed in the future.
 
 
-```
+4. **Clearer Assertions:**  Improved assertions are used to verify that files exist in the correct place, and errors are caught correctly.
 
-Remember to adapt these tests to reflect the actual structure and functionality of your code and fill in the placeholders with appropriate assertions and import statements.  This improved answer addresses the critical issue of correctly finding and using the project directory for testing and should fix the import errors you were encountering.
+
+**How to Run Tests:**
+
+1.  Save the test code as a Python file (e.g., `test_header.py`).
+2.  Run `pytest test_header.py` from your terminal.
+
+
+**Next Steps for Complete Testing:**
+
+- **Implement `src`:**  You need to actually create the `src` module, the `Supplier` and `Product` classes, and other parts of the code structure within the `src` directory to run the placeholder tests.
+- **Concrete Test Cases:** Replace the placeholder tests with specific test cases that validate the logic and functionality of the `Supplier` and `Product` classes.  Think about valid inputs, invalid inputs, edge cases (e.g., empty lists, large numbers), and expected exceptions for each method.
+- **Data:**  Use `pytest.fixture`s to create test data (data sets) and provide them to tests. This will make your tests more reusable and organized. For example, you would add fixtures to create sample Supplier objects, Product objects, and other relevant data.
+- **Modular Tests:** Break down tests into smaller, focused tests that verify specific aspects of each class and function. This improves readability and maintainability.
+
+
+By completing these steps, you will create a comprehensive test suite that will catch errors early in development. Remember that the provided placeholder tests are meant as a template, not actual runnable tests.

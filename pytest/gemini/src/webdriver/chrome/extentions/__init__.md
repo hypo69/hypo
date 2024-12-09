@@ -1,88 +1,78 @@
 ```python
 import pytest
 from packaging.version import Version
-from hypotez.src.webdriver.chrome.extentions import __version__, __doc__, __details__  # Import the module
+from hypotez.src.webdriver.chrome.extentions import __version__, __doc__, __details__, MODE
+
+# Tests for __version__
+def test_version_type():
+    """Checks if __version__ is a Version object."""
+    assert isinstance(__version__, Version)
+
+def test_version_string():
+    """Checks if __version__ is a valid version string."""
+    assert isinstance(str(__version__), str)
+
+def test_version_correctness():
+    """Checks if __version__ is correctly initialized."""
+    # This assumes you have a known correct version in the file
+    # Replace '1.0.0' with the actual version from __version__
+    #   If __version__ is dynamically generated you will need a better way
+    #   to test this, otherwise these tests might fail when version changes
+    expected_version = '1.0.0'  # Replace with expected value
+    assert str(__version__) == expected_version
+
+# Tests for MODE
+def test_mode_value():
+    """Checks the value of MODE."""
+    assert MODE == 'dev'
 
 
-def test_version_is_a_version_object():
-    """Checks that __version__ is a Version object."""
-    assert isinstance(__version__, Version), "The __version__ should be a Version object."
+#Tests for __doc__ and __details__
+# These tests are less strict, but essential for the presence of the docstrings
+def test_docstring_presence():
+  """Checks if __doc__ and __details__ have docstrings."""
+  assert __doc__ is not None
+  assert __details__ is not None
+
+def test_docstring_type():
+  """Checks if __doc__ is a string and __details__ is a string."""
+  assert isinstance(__doc__, str)
+  assert isinstance(__details__, str)
+
+#Example of testing dynamic version
+#def test_dynamic_version(mocker):
+#   mock_version = mocker.patch('hypotez.src.webdriver.chrome.extentions.__version__', return_value='1.2.3') #replace with your versioning logic
+#   assert __version__ == '1.2.3'
+
+# Example of an exception test (if applicable):
+# def test_function_raises_exception_on_invalid_input():
+#     with pytest.raises(ValueError) as excinfo:
+#         invalid_input_function(invalid_input)
+#     assert str(excinfo.value) == "Invalid input"
 
 
-def test_version_is_not_empty():
-    """Checks that __version__ is not empty."""
-    assert __version__ != "", "The __version__ should not be empty."
-
-
-def test_docstring_is_a_string():
-    """Checks that __doc__ is a string."""
-    assert isinstance(__doc__, str), "The __doc__ should be a string."
-
-def test_details_is_a_string():
-    """Checks that __details__ is a string."""
-    assert isinstance(__details__, str), "The __details__ should be a string."
-
-
-def test_version_string_format():
-    """Checks if the __version__ string is in a valid format (e.g., '1.0.0')"""
-    try:
-        Version(__version__)
-    except ValueError as e:
-        pytest.fail(f"Invalid __version__ format: {e}")
-
-
-# Example of testing for specific values (if available):
-# def test_details_contains_specific_string():
-#    """Checks if __details__ contains a specific string."""
-#    assert "specific_string" in __details__, "The __details__ string does not contain the expected string."
-
-
-# Example of testing if exception is raised for invalid input
-# def test_version_invalid_input():
-#    with pytest.raises(ValueError):
-#        Version("invalid version")
-
-
-# Example to test empty strings (if applicable):
-# def test_docstring_empty():
-#    """Checks if __doc__ is empty"""
-#    empty_docstring = ""
-#    assert __doc__ != empty_docstring, "__doc__ should not be empty"
-#
-
-
-# These examples are based on the provided code snippet. If the actual functions have more complex logic,
-#  add more relevant test cases that cover all possible scenarios.
-#  For example, if there were functions that take arguments or modify variables, you would write test cases for different values of those inputs
 ```
 
 **Explanation and Improvements:**
 
-1. **Import Correctly:** The code now imports `__version__`, `__doc__`, and `__details__` from the correct module.  This is crucial for the tests to work.
+* **`test_version_correctness`:**  Crucially, this test now includes a placeholder (`expected_version`). You need to replace `'1.0.0'` with the actual version number that your `__version__` variable is *supposed* to hold.  This is essential because if your versioning logic isn't correct, these tests will fail (which is what you want).  Without a known good version, there's no way to reliably test for the correctness of your versioning logic.
 
-2. **Clearer Test Names:**  Test names are more descriptive and indicate the purpose of each test.
+* **`test_docstring_presence` and `test_docstring_type`:**  These tests are added to verify that the `__doc__` and `__details__` variables are present and have the correct type (string).  These checks are vital for documentation; if these are empty or of an incorrect type, your documentation is broken.
 
-3. **`pytest.raises` (Example):**  An example of using `pytest.raises` to check for a `ValueError` if `__version__` isn't a valid version string is included.  **Important:**  This example is a placeholder; you should add `pytest.raises` calls if there are functions that might raise exceptions.
+* **Example of Exception Handling:** The example exception test is commented out because no exception handling was present in the provided code.  If your code *did* include exception handling, this part would be crucial.
 
-4. **Version Handling:** The `test_version_is_a_version_object` and `test_version_string_format` tests are crucial for ensuring the version string is properly validated.
+* **`mocker` patching (example):** The commented-out `test_dynamic_version` demonstrates how you'd mock a dynamically-created `__version__` in a testing environment if your versioning depended on external data.
 
-5. **Comprehensive Testing (Placeholder):**  The provided code example doesn't have any function calls; thus, there are no meaningful tests beyond basic validation.
-
-
-**How to Run the Tests:**
-
-1.  Save the test code as a `.py` file (e.g., `test_extentions.py`).
-2.  Ensure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_extentions.py`
+* **Clarity and Specificity:** Test names (`test_version_type`, `test_version_string`, etc.) are now clearer and more descriptive of the specific aspect of the code being tested.
 
 
-**Important Considerations:**
+**How to Use:**
 
+1.  **Save:** Save this code as a `.py` file (e.g., `test_extentions.py`).
+2.  **Run:** Run `pytest test_extentions.py` from your terminal.  Pytest will discover and execute the tests.
 
-* **Missing Code:** The provided code snippet is extremely minimal.  If the actual module had functions with arguments, loops, conditional statements, etc., you'd need to write tests that verify the correct behavior for various scenarios.
-* **Specific Scenarios:** Identify functions and methods within the module and create test cases to cover the different situations (e.g., normal inputs, edge cases, error handling).
-* **Edge Cases:**  Think about boundary conditions (minimum/maximum values, empty inputs, etc.) for inputs to functions and methods.
-* **Example Error Handling:** A test case has been added to show how to test for exceptions if a function's inputs are wrong. You should adapt this example to the functions you are testing.
+**Important:**
 
-
-Remember to adapt these tests to the actual logic and functionality of your module. The provided example covers the basics for testing constants but is far from exhaustive. Provide the full module content for more targeted and comprehensive test coverage.
+- **Replace placeholders:**  Substitute the placeholder version number in `test_version_correctness` with the actual expected value of your `__version__` variable.  Without a known good `__version__` value, this test, and indeed this part of the whole test suite, is useless.
+- **Extend tests:** Add more tests for other functions or attributes in the `hypotez.src.webdriver.chrome.extentions` module if needed.
+- **Adapt to your code:** Adjust the test cases to precisely match the functionality of your code.  If your code has complex logic or exceptions, you need to write tests that cover all those cases.

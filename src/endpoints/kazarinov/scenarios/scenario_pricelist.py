@@ -29,7 +29,6 @@ from dataclasses import field
 
 import header
 from src import gs
-from src.bots.telegram.bot import TelegramBot
 from src.product.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
@@ -134,6 +133,25 @@ class MexironBuilder:
         .. todo:
             сделать логер перед отрицательным выходом из функции. 
             Важно! модель ошибается. 
+
+        ```mermaid
+flowchart TD
+    A[Start] --> B{URL is from OneTab?}
+    B -->|Yes| C[Get data from OneTab]
+    B -->|No| D[Reply - Try again]
+    C --> E{Data valid?}
+    E -->|No| F[Reply Incorrect data]
+    E -->|Yes| G[Run Mexiron scenario]
+    G --> H{Scenario successful?}
+    H -->|Yes| I[Reply Done! I will send the link to WhatsApp]
+    H -->|No| J[Reply Error running scenario]
+    F --> K[Return]
+    I --> K[Return]
+    D --> K[Return]
+    J --> K[Return]
+
+
+```
         """
         urls_list = [urls] if isinstance(urls, str) else urls
         if not urls_list:
@@ -301,84 +319,7 @@ class MexironBuilder:
                 await self.process_ai(lang, attempts -1 )
             return {}
 
-        # for lang in ['he', 'ru']:
-        #     # Формирование пути к файлу команд для каждого языка
-        #     model_command = (gs.path.endpoints / 'kazarinov' / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
-    
-        #     # Отправка запроса к модели и получение ответа
-        #     response = self.model.ask(self.model_command + '\n' + str(products_list))
-    
-        #     # Проверка на отсутствие ответа
-        #     if not response:
-        #         logger.error("No response from Gemini")
-        #         ...
-        #         return await self.process_ai(products_list, attempts - 1)  # Retry if no response
-
-        #     # Преобразование ответа в формат SimpleNamespace
-        #     response_ns = j_loads_ns(response)
-        #     if not response_ns:
-        #         logger.error(f"Скорее всего неверный формат ответа модели")
-        #         pprint(response, text_color='yellow')
-        #         ...
-    
-        #     # Сохранение ответа в атрибут соответствующего языка
-        #     setattr(data, lang, response_ns)
-
-        # return data
-
-
-        # data: SimpleNamespace = j_loads_ns(response)  # Returns False on error
-        # if not data:
-        #     logger.error(f"Error in data from gemini: {data}")
-        #     ...
-        #     return self.process_ai(products_list, attempts - 1)  # Retry if data is invalid
-
-        # try:
-        #     def extract_data(data: SimpleNamespace, language: str) -> SimpleNamespace:
-        #         """Helper function to extract language-specific data."""
-        #         if hasattr(data, language):
-        #             result = getattr(data, language)
-        #             if not result:
-        #                 logger.debug(f"Invalid {language} data")
-        #                 ...
-        #                 return self.process_ai(products_list, attempts - 1)  # Retry if data is invalid
-        #             return result
-        #         ...
-        #         return 
-
-        #     # Process response assuming data can be in list or direct object format
-        #     if isinstance(data, list):
-        #         if len(data) == 2:
-        #             he = extract_data(data[0], 'he')
-        #             ru = extract_data(data[1], 'ru')
-        #             if he and ru:
-        #                 return he, ru
-        #             return ru, he
-        #         elif len(data) == 1:
-        #             he = extract_data(data[0], 'he')
-        #             ru = extract_data(data[0], 'ru')
-        #             if he and ru:
-        #                 return he,ru
-        #             else:
-        #                 ...
-        #         else:
-        #             logger.warning(f'Problem parsing response\n{pprint(data)}')
-        #             ...
-        #             return self.process_ai(products_list, attempts - 1)  # Retry if data structure is invalid
-
-        #     ru = extract_data(data, 'ru')
-        #     he = extract_data(data, 'he')
-        #     if not ru or not he:
-        #         ...
-        #         return self.process_ai(products_list, attempts - 1)  # Retry if any of the languages are invalid
-
-        #     # Return successfully extracted data
-        #     return he,ru
-
-        # except Exception as ex:
-        #     logger.debug(f"Model returned invalid result: {str(ex)}")
-        #     return self.process_ai(products_list, attempts - 1)  # Retry on any exception
-
+ 
     async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
         """Функция исполняет сценарий рекламного модуля `facvebook`."""
         ...
