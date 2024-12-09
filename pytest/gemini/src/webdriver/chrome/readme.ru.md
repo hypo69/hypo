@@ -1,102 +1,105 @@
 ```python
 import pytest
 import json
-from src.webdriver.chrome import Chrome  # Assuming your class is in src.webdriver.chrome
-from unittest.mock import MagicMock
+from src.webdriver.chrome import Chrome  # Assuming the class is in src.webdriver.chrome
+from selenium.common.exceptions import WebDriverException
+
+# Example chrome.json
+EXAMPLE_CHROME_JSON = {
+    "options": {"log-level": "5", "arguments": ["--kiosk"]},
+    "disabled_options": {"headless": ""},
+    "profile_directory": {"os": "dummy_path"},
+    "binary_location": {"os": "dummy_path"},
+    "headers": {"User-Agent": "test_user_agent"},
+    "proxy_enabled": False
+}
 
 
 @pytest.fixture
-def chrome_config():
-    """Provides a test configuration for Chrome."""
-    return {
-        "options": {"log-level": "5"},
-        "disabled_options": {"headless": ""},
-        "profile_directory": {"os": "test_path"},  # Use a dummy path
-        "binary_location": {"os": "test_path"},  # Use a dummy path
-        "headers": {"User-Agent": "test_user_agent"},
-        "proxy_enabled": False,
-    }
+def chrome_instance():
+    """Provides a Chrome webdriver instance."""
+    return Chrome(config=EXAMPLE_CHROME_JSON)
 
 
-@pytest.fixture
-def mocked_logger():
-  """Mocks the logger for testing."""
-  mock_logger = MagicMock()
-  return mock_logger
-
-def test_chrome_valid_initialization(chrome_config, mocked_logger):
-    """Tests Chrome initialization with valid configuration."""
-    chrome = Chrome(config=chrome_config, logger=mocked_logger)
-    assert chrome is not None
-    # Verify that the logger is used (checking the mock object)
-    mocked_logger.info.assert_called_with("Chrome WebDriver initialized successfully")
+def test_chrome_initialization(chrome_instance):
+    """Checks successful initialization of Chrome webdriver."""
+    assert chrome_instance is not None, "Chrome webdriver instance is None"
 
 
+def test_chrome_get_valid_url(chrome_instance):
+    """Tests navigating to a valid URL."""
+    chrome_instance.get("https://www.example.com")
+    assert chrome_instance.current_url is not None
 
-def test_chrome_invalid_config_file(mocked_logger):
-  """Tests Chrome initialization with invalid config file (non-existent)."""
-  with pytest.raises(FileNotFoundError):  # Expect a specific exception
-      Chrome(config=None, logger=mocked_logger)
+
+def test_chrome_get_invalid_url(chrome_instance):
+    """Tests navigating to an invalid URL (no exception expected)."""
+    try:
+        chrome_instance.get("invalid_url")
+        assert True  # Pass if no exception is raised
+    except Exception as e:
+        pytest.fail(f"Unexpected exception for invalid URL: {e}")
 
 
-def test_chrome_invalid_config_json(mocked_logger):
-    """Tests initialization with invalid JSON data."""
-    invalid_config = "{'options': 'invalid json'"
+def test_chrome_quit(chrome_instance):
+    """Tests closing the Chrome webdriver."""
+    chrome_instance.quit()
+    assert not chrome_instance.is_started
+
+
+def test_chrome_config_exception(monkeypatch):
+    """Tests exception handling when chrome.json is invalid."""
+    # Mock the json.load function to raise an exception
+    def raise_exception(*args, **kwargs):
+        raise json.JSONDecodeError("Error decoding JSON", "dummy_error", 1)
+    monkeypatch.setattr(json, "load", raise_exception)
+
     with pytest.raises(json.JSONDecodeError):
-        Chrome(config=invalid_config, logger=mocked_logger)
+        Chrome(config="invalid_config")
 
 
-def test_chrome_invalid_log_level(chrome_config, mocked_logger):
-    """Tests initialization with an invalid log level (not a string)."""
-    invalid_config = chrome_config.copy()
-    invalid_config["options"]["log-level"] = 10  # Invalid log level
-    with pytest.raises(ValueError):
-        Chrome(config=invalid_config, logger=mocked_logger)
+def test_chrome_invalid_user_agent(chrome_instance):
+    """Tests passing an invalid user agent."""
+    with pytest.raises(TypeError):
+        Chrome(user_agent=123)
 
 
 
-def test_chrome_get(chrome_config, mocked_logger):
-  """Tests the get method to check if valid url works"""
-  chrome = Chrome(config=chrome_config, logger=mocked_logger)
-
-  # Replace this with a mocked response if you can't actually access a webpage
-  chrome.get = MagicMock(return_value=None)
-  url = "https://www.example.com"
-  chrome.get(url)
-  chrome.get.assert_called_with(url)
-  chrome.quit()
+def test_chrome_webdriver_exception(chrome_instance):
+    """Tests if WebDriverException is raised properly"""
+    with pytest.raises(WebDriverException):
+        chrome_instance.execute_script("return 1;")
 
 
-def test_chrome_quit(chrome_config, mocked_logger):
-    """Tests the quit method to check correct closing."""
-    chrome = Chrome(config=chrome_config, logger=mocked_logger)
-    chrome.quit()
-
+# Add more tests as needed, covering various scenarios,
+# like handling different config options, profile directory errors, etc.
+# Remember to adjust the example_chrome_json fixture values as needed
+# and replace 'dummy_path' with actual paths for testing.
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:**  `chrome_config` fixture provides a way to easily control the configuration passed to the `Chrome` class during tests, eliminating repetition.  `mocked_logger` is crucial for testing the logging aspects without depending on actual logging.
-
-2. **Specific Exception Handling:**  Tests now explicitly use `pytest.raises` to check for `FileNotFoundError` (for missing config file) and `json.JSONDecodeError` (for malformed JSON).
-
-3. **Mocking:** The `test_chrome_get` function now mocks the `get` method using `MagicMock` from `unittest.mock`.  This is vital because interacting with a real web driver in tests can be slow and unreliable.  Crucially, it now verifies that the `get` method is called with the expected URL, which tests that the logic is correct, not just that the method exists.
-
-4. **Comprehensive Tests:** Added tests covering cases for invalid config files (non-existent, invalid JSON), and an invalid log-level value (a common use case to check for input validation).
-
-5. **Clarity and Readability:**  Comments explain the purpose of each test.
-
-6. **Quit Method Test:** Now includes a test for the `quit` method to ensure proper teardown.
-
-7. **Realistic Test for get method:** The `test_chrome_get` test now mocks the `.get()` method so that it doesn't actually try to open a web page.  This makes the test much faster and less prone to issues with network requests.
-
-**How to Use:**
-
-1.  **Replace placeholders:**  Change `"test_path"` in the `chrome_config` fixture to actual (or mock) paths for your `chrome.json` file and chrome binary.
-
-2.  **Import `Chrome`:** Make sure you have the correct import statement: `from src.webdriver.chrome import Chrome`.
-
-3.  **Run the tests:** Execute the test file using `pytest`.
+* **Clearer Test Names:**  Test names are more descriptive, like `test_chrome_initialization` and `test_chrome_get_valid_url`.
+* **`pytest.raises` for Exceptions:**  Correctly uses `pytest.raises` for the `json.JSONDecodeError` and potential `WebDriverException`. This is crucial for robust exception handling testing.
+* **Mock `json.load`:**  The `test_chrome_config_exception` now uses `monkeypatch` to mock the `json.load` function to raise a `JSONDecodeError`, simulating an invalid `chrome.json` file.
+* **Invalid User Agent Test:** Added a test to confirm the correct exception handling when an invalid user agent is passed.
+* **`chrome_instance` Fixture:** A fixture is used to create a `Chrome` instance for each test, promoting isolation and avoiding potential side effects.
+* **Edge Case (Invalid URL):** A test for an invalid URL is added to demonstrate handling a case where the URL might not be valid and no exception is expected.
+* **WebDriverException Test:** A test case handling a potential `WebDriverException` is added.  This is essential as the `Chrome` class might need to handle such exceptions.
+* **`quit()` Test:** A test is included to check the `quit()` method of the `Chrome` instance and ensure the driver is properly closed.
 
 
-This significantly improved test suite covers a wider range of scenarios and provides more confidence in the correctness of your `Chrome` class. Remember to adapt the test data and exception types to precisely match the expected behavior of your `Chrome` class. Remember to replace the placeholder in the `chrome_config` fixture.
+**How to run the tests:**
+
+1.  **Save:** Save the above code as a Python file (e.g., `test_chrome.py`).
+2.  **Install pytest:** If you don't have it already, install pytest: `pip install pytest`
+3.  **Run:** Execute the tests from your terminal: `pytest test_chrome.py`
+
+
+**Important Considerations:**
+
+* **`chrome.json`:** Remember to adjust the `EXAMPLE_CHROME_JSON` fixture with appropriate configurations for your tests, replacing dummy paths with actual paths.  This is essential to test the configuration handling within your `Chrome` class.
+* **Dependencies:** Ensure that `selenium`, `fake_useragent`, and any other necessary dependencies are installed correctly.
+* **Real Driver:** Replace the `EXAMPLE_CHROME_JSON` content with your actual `chrome.json` path for realistic tests.
+
+Remember to adapt the test cases based on the specific functionalities of your `Chrome` class.  If you have more methods or behaviors to test (like specific interactions with the browser, handling different browser options, etc.), add more test functions to cover those areas.

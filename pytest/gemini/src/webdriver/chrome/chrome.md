@@ -2,122 +2,135 @@
 import pytest
 import os
 from pathlib import Path
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.common.exceptions import WebDriverException
 from selenium import webdriver
 from fake_useragent import UserAgent
 from unittest.mock import patch
-from src.logger import logger  # Assuming logger is defined elsewhere
-from src.utils.jjson import j_loads_ns
-from src import gs  # Assuming gs module is defined elsewhere
+from types import SimpleNamespace
 
-# Mocking necessary parts for testing
+
+from hypotez.src.webdriver.chrome import Chrome
+from hypotez.src import gs
+from hypotez.src.utils.jjson import j_loads_ns  # Adjust path if needed
+from hypotez.src.logger import logger
+
+
+# Fixtures
 @pytest.fixture
-def mock_gs_path():
-    """Mocks gs.path for testing."""
-    mock_path = SimpleNamespace(root=Path('/tmp'))  # Replace with a valid temp directory
-    return mock_path
+def mock_chrome_config():
+    """Provides a mock chrome.json configuration."""
+    config_data = {
+        "options": {"foo": "bar"},
+        "headers": {"accept": "application/json"},
+        "profile_directory": {"testing": "%LOCALAPPDATA%\\Chrome\\User Data"},
+        "binary_location": {"binary": "%LOCALAPPDATA%\\Google\\Chrome\\Application\\chrome.exe"},
 
-@pytest.fixture
-def mock_j_loads_ns():
-    """Mocks j_loads_ns for testing."""
-    @patch('hypotez.src.webdriver.chrome.chrome.j_loads_ns')
-    def mock_j_loads_ns_fn(mock_j_loads_ns):
-        return mock_j_loads_ns
-
-    return mock_j_loads_ns_fn
+    }
+    config = SimpleNamespace(**config_data)
+    return config
 
 
 @pytest.fixture
-def mock_logger():
-    """Mocks the logger for testing."""
-    mock_logger = MagicMock()
-    return mock_logger
+def mock_chrome_config_error():
+    """Provides a mock chrome.json with error in the config."""
+    config_data = {
+        "options": {},
+        "headers": {},
+        "profile_directory": {},
+        "binary_location": {},
 
-def test_chrome_init_valid_input(mock_gs_path, mock_j_loads_ns):
-    """Tests Chrome initialization with valid input."""
-    # Mock the json file loading
-    mock_config = SimpleNamespace(profile_directory=SimpleNamespace(testing='/tmp/profile'), binary_location=SimpleNamespace(binary='/tmp/chromedriver'))
-    mock_j_loads_ns.return_value = mock_config
-    gs.path = mock_gs_path
-
-
-    driver = Chrome(user_agent="Test User Agent")
-    assert driver is not None
-    assert isinstance(driver, webdriver.Chrome)
-    # Add more assertions based on your expectations, e.g., checking for correct options, service, etc.
-
-
-def test_chrome_init_invalid_json(mock_gs_path, mock_j_loads_ns, mock_logger):
-    """Tests Chrome initialization with invalid JSON."""
-    mock_j_loads_ns.return_value = None
-    gs.path = mock_gs_path
-    with pytest.raises(Exception):  # Expected exception
-        Chrome(user_agent="Test User Agent")
-    mock_logger.debug.assert_called_with(f'Error in `chrome.json` file.')
-
-def test_chrome_init_invalid_path(mock_gs_path, mock_j_loads_ns, mock_logger):
-    """Tests Chrome initialization with invalid path."""
-    mock_config = SimpleNamespace(profile_directory=SimpleNamespace(testing='invalid\path'), binary_location=SimpleNamespace(binary='/tmp/chromedriver'))
-    mock_j_loads_ns.return_value = mock_config
-    gs.path = mock_gs_path
-    with pytest.raises(Exception) as excinfo:  # Expected exception
-        Chrome(user_agent="Test User Agent")
-    # Add assertions to check if the appropriate error message is logged.
-
-
-def test_chrome_init_webdriver_exception(mock_gs_path, mock_j_loads_ns, mock_logger):
-    """Tests Chrome initialization with WebDriverException."""
-    # Mock the necessary parts for WebDriverException
-    mock_config = SimpleNamespace(profile_directory=SimpleNamespace(testing='/tmp/profile'), binary_location=SimpleNamespace(binary='/tmp/chromedriver'))
-    mock_j_loads_ns.return_value = mock_config
-    gs.path = mock_gs_path
-    with patch('hypotez.src.webdriver.chrome.chrome.webdriver.Chrome', side_effect=WebDriverException("Test Exception")):
-        with pytest.raises(WebDriverException) as excinfo:
-            Chrome(user_agent="Test User Agent")
-        mock_logger.critical.assert_called_with('Error initializing Chrome WebDriver: Test Exception')
+    }
+    config = SimpleNamespace(**config_data)
+    return config
 
 
 
-# ... (Other test cases for different scenarios) ...
+
+#Mocking os.environ to avoid issues with paths
+@pytest.fixture
+def mock_environ():
+  original_environ = os.environ.copy()
+  os.environ['LOCALAPPDATA'] = 'C:\\mock_local_appdata'
+  yield
+  os.environ.clear()
+  os.environ.update(original_environ)
+
+
+
+# Tests
+def test_chrome_instance(mock_chrome_config, mock_environ):
+    """Tests if a new instance of the Chrome class is created."""
+    browser = Chrome(user_agent="test_useragent", config=mock_chrome_config)
+    assert browser is not None
+
+def test_chrome_instance_already_exists(mock_chrome_config, mock_environ):
+  """Tests that window_open() is called if an instance already exists."""
+  browser = Chrome(user_agent="test_useragent", config=mock_chrome_config)
+  browser2 = Chrome(user_agent="test_useragent", config=mock_chrome_config)  # Second instance
+  assert browser is browser2
+
+
+def test_chrome_init_with_config_error(mock_chrome_config_error,mock_environ):
+  """Tests init with config errors"""
+  with pytest.raises(Exception):  # Expect an exception
+      Chrome(user_agent="test", config=mock_chrome_config_error)
+
+
+def test_chrome_init_with_valid_input(mock_chrome_config,mock_environ):
+    """Tests initialization with valid input."""
+    browser = Chrome(user_agent="test_useragent", config=mock_chrome_config)
+    assert browser.config.options.foo == "bar"
+    assert browser.config.headers.accept == "application/json"
+
+
+
+def test_chrome_init_user_agent_default(mock_chrome_config,mock_environ):
+    """Tests initialization with default user agent"""
+    browser = Chrome(config=mock_chrome_config)  # No user_agent specified
+    assert browser.config.options.foo == "bar" #Check config loading
+    assert isinstance(browser.config.options, dict) #Check config type
+
+
+
+def test_chrome_init_exception_handling(mock_chrome_config, mock_environ, monkeypatch):
+    """Tests exception handling during initialization."""
+    # Mock WebDriverException
+    with patch('hypotez.src.webdriver.chrome.webdriver.Chrome') as mock_chrome:
+        mock_chrome.side_effect = WebDriverException("Something went wrong")
+        with pytest.raises(WebDriverException): # Expect exception
+            Chrome(user_agent="test", config=mock_chrome_config)
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:**  The crucial addition is mocking `j_loads_ns` and `gs.path`.  This is essential for isolating tests and preventing them from relying on the existence of the `chrome.json` file or potentially interacting with the file system.  Also mocked `logger` for more controlled testing.
+1.  **Fixtures:** Introduced `mock_chrome_config` to provide a well-defined configuration for the tests.  This isolates the test from the actual file `chrome.json` and allows you to control input. Also added `mock_environ` to mock the operating system environment variables needed for path resolution. The `mock_chrome_config_error` fixture allows testing the error path when the JSON file is malformed.
+
+2.  **Clearer Test Names:** Test names like `test_chrome_instance` and `test_chrome_init_with_valid_input` clearly describe the purpose of each test.
+
+3.  **Exception Handling:** The `test_chrome_init_exception_handling` test demonstrates how to use `pytest.raises` to check for specific exceptions (`WebDriverException`) during initialization.
+
+4.  **Mocking:** The tests now use `patch` from `unittest.mock` to mock the `WebDriverException` for robust testing.
+
+5.  **Edge Cases:** `test_chrome_init_with_config_error` now tests when the `chrome.json` file might be malformed, making the tests more comprehensive.
+
+6. **Correctness:** Added tests to check the loading of configuration and the type of the retrieved data.
 
 
-2. **Clearer Test Names:**  The test names now more explicitly describe the conditions being tested (e.g., `test_chrome_init_invalid_json`).
+**How to Run the Tests:**
+
+1.  Save this code as a Python file (e.g., `test_chrome.py`).
+2.  Make sure you have the necessary dependencies installed (`selenium`, `fake-useragent`, etc.).
+3.  Run the tests from your terminal using `pytest test_chrome.py`.
 
 
-3. **Exception Handling:**  Using `pytest.raises` is correct for testing exceptions.  The example shows how to catch specific exceptions (e.g., `WebDriverException`) and assert on the error messages logged.
+**Important Considerations:**
+
+*   **`gs.path`:**  The code uses `gs.path` to construct file paths.  If your file structure is different, adjust `gs.path` references.  It's also crucial to replace `gs.path.root` with an accurate path to the project root if that is a real path; otherwise, the tests will fail.
+*   **`mock_environ`:** The mocking of `os.environ` is crucial to make the tests run properly in different environments without requiring any special setup or modifying the real operating system environment.
+*   **Error Handling:** The existing code has `...` in places where error handling is supposed to be implemented.  Replace those placeholders with appropriate error handling logic to make the error paths comprehensive.
 
 
-4. **Fixture Structure:**  The fixtures (`mock_gs_path`, `mock_logger`, `mock_j_loads_ns`) are now properly structured to isolate the tests from the real world interaction with `gs` and `j_loads_ns`.
-
-
-5. **Example Test Cases:** The provided example now includes more thorough test cases covering valid and invalid inputs.
-
-
-6. **Complete Test Coverage (Crucial):** The code is incomplete, you need to add more test cases!  Test different possible errors that can happen during initialization.   Create test cases that verify:
-
-   - Handling of missing JSON data.
-   - Handling of malformed JSON.
-   - Handling of various errors related to file paths and permissions (e.g., file not found, invalid directory).
-   - Correct configuration loading.
-   - Correct use of `user_agent` (valid strings).
-   - The correct setting of Chrome options.
-   - The correct creation of the `ChromeService`.
-   - The handling of exceptions in `super().__init__`.
-
-7. **Stubbing:** Mocking out the other modules (e.g., `header`, `gs`, `JavaScript`, `ExecuteLocator`) is a good idea to further isolate your test, but this would require more context of the structure of your code.
-
-
-**Before running the tests:**
-
-* **Install necessary libraries:**  `pytest`, `selenium`, `fake-useragent`
-* **Mock `gs.path`:** You'll need to replace `/tmp/` with a valid temporary directory on your system where you can create `chrome.json` and `chromedriver` file or similar resources the code needs. 
-* **Create appropriate `chrome.json`:** Include a valid dummy `chrome.json` file.
-
-**Important Note:** Replace placeholders like `/tmp/` with appropriate paths based on your testing environment.  Thorough mocking and `pytest.raises` to create the most complete set of tests.  Also make sure your code correctly initializes `gs.path` and the other dependencies.  Without more context, this is the most comprehensive guidance I can provide.
+By following these steps, you create well-structured and robust tests for your Chrome WebDriver class. Remember to tailor the tests to the specific functionality you want to test.

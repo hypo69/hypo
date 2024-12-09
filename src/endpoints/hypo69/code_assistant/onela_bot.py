@@ -25,7 +25,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 from src import gs
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
-from src.bots.telegram import TelegramBot
+from src.endpoints.bots.telegram import TelegramBot
 from src.logger import logger
 
 

@@ -1,10 +1,10 @@
-## \file hypotez/src/bots/header.py
+## \file hypotez/src/endpoints/bots/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.bots 
+.. module: src.endpoints.bots 
 	:platform: Windows, Unix
 	:synopsis:
 

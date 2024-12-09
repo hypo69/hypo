@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.bots
+.. :module: src.endpoints.bots
 ```
 
 [Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.MD)

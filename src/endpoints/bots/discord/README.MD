@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.bots.discord
+.. :module: src.endpoints.bots.discord
 ```
 
 <TABLE >
@@ -9,6 +9,7 @@
 </TD>
 <TD>
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> /
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A> /
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/bots/README.MD'>bots</A>
 </TD>
 <TD>

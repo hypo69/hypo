@@ -2,120 +2,77 @@
 import pytest
 from hypotez.src.webdriver.chrome import Chrome
 
-# Tests for the Chrome class (assuming Chrome class exists and has methods)
+
+# Test cases for Chrome class (assuming a Chrome class exists in chrome.py)
+# Replace the placeholder with the actual import statements
 
 
-# Dummy implementation for testing purposes.  Replace with actual Chrome class if available.
-class DummyChrome:
-    def __init__(self, options=None):
-        self.options = options
+def test_chrome_object_creation():
+    """Tests the creation of a Chrome object."""
+    chrome_instance = Chrome()
+    assert isinstance(chrome_instance, Chrome)
+    # add assertion for other attributes if needed, e.g., assert chrome_instance.driver is not None
 
-    def start(self, url=None):
-        if url is None:
-            return True
-        elif 'invalid' in url:
-            raise ValueError("Invalid URL provided")
-        else:
-            return True
-        
-    def quit(self):
-        return True
-
-    def get_page_source(self):
-        return "test page source"
-
-
-
-def test_chrome_start_valid_url():
-    """Tests starting Chrome with a valid URL."""
-    chrome = DummyChrome()
-    result = chrome.start("https://www.example.com")
-    assert result is True
-
-
-def test_chrome_start_no_url():
-    """Tests starting Chrome without a URL."""
-    chrome = DummyChrome()
-    result = chrome.start()
-    assert result is True
-
-
-def test_chrome_start_invalid_url():
-    """Tests starting Chrome with an invalid URL."""
-    chrome = DummyChrome()
-    with pytest.raises(ValueError) as excinfo:
-        chrome.start("invalid_url")
-    assert "Invalid URL provided" in str(excinfo.value)
-
-
-def test_chrome_quit():
-    """Tests the quit method."""
-    chrome = DummyChrome()
-    result = chrome.quit()
-    assert result is True
-
-
-def test_chrome_get_page_source():
-    """Tests getting the page source."""
-    chrome = DummyChrome()
-    source = chrome.get_page_source()
-    assert source == "test page source"
-
-
-
-
-# Example of using a fixture for more complex setups
-@pytest.fixture
-def chrome_instance():
-    """Provides a Chrome instance for testing."""
-    return DummyChrome()
-
-
-#Tests with fixture
-def test_chrome_start_with_fixture(chrome_instance):
-    """Tests Chrome.start using a fixture."""
-    result = chrome_instance.start("https://www.example.com")
-    assert result is True
-
-
-# Example of handling an optional argument
-def test_chrome_start_with_options(chrome_instance):
+def test_chrome_object_creation_with_options():
+    """Tests the creation of a Chrome object with options."""
+    #Example using a simple dictionary. Adjust according to your class's requirements
     options = {"headless": True}
-    chrome = DummyChrome(options=options)
-    result = chrome.start()
-    assert result is True
+    chrome_instance = Chrome(options=options)
+    assert isinstance(chrome_instance, Chrome)
+    #assert chrome_instance.driver_options["headless"] == True
+    # Add more assertions as needed
+
+def test_chrome_invalid_options():
+    """Tests the handling of invalid options (example: non-dictionary)."""
+    with pytest.raises(TypeError):
+        #Example demonstrating the error case.
+        Chrome(options="invalid") 
 
 
+#Example assuming a method 'start_session' exists
+def test_chrome_start_session_valid_input():
+    """Checks the start_session method with valid input (example)."""
+    chrome_instance = Chrome()
+    #Replace with the relevant test logic if 'start_session' accepts parameters
+    #result = chrome_instance.start_session() 
+    #assert result is not None  # or any other assertion
+
+
+def test_chrome_start_session_invalid_input():
+    """Checks the start_session method with invalid input (example)."""
+    #If 'start_session' has a parameter causing invalid input, show it here
+    chrome_instance = Chrome()
+    #Example error handling
+    with pytest.raises(ValueError) as excinfo: #Replace with appropriate exception
+        chrome_instance.start_session(invalid_parameter = "incorrect")
+    assert "Invalid parameter" in str(excinfo.value)
+# ... add more test cases for other functions/methods
+
+
+# Example fixtures (if needed):
+
+
+# ... add more test cases and fixtures as needed based on the actual content of the 'chrome.py' module
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Dummy `Chrome` class:** The provided code only imported the `Chrome` class, but didn't define it.  This solution creates a `DummyChrome` class for testing purposes.  Crucially, it demonstrates handling different possible outcomes (valid URL, invalid URL, no URL) and raising exceptions where appropriate.  **Replace `DummyChrome` with your actual `Chrome` class** once you have access to it for comprehensive tests.
-
-2. **Clear Test Names:** Test names like `test_chrome_start_valid_url` clearly indicate the test's purpose.
-
-3. **`pytest.raises` for Exceptions:**  The `test_chrome_start_invalid_url` test now uses `pytest.raises` to check for the expected `ValueError`.
-
-4. **Fixture Example:** The `chrome_instance` fixture demonstrates how to set up a `Chrome` object for multiple tests.  Importantly, this example showcases handling an optional argument in your `Chrome` constructor by passing the `options` correctly.
-
-5. **Comprehensive Test Cases:** The tests now cover valid URL, no URL, and invalid URL scenarios, along with the `quit` and `get_page_source` methods. **Important**: Replace these example tests with the actual tests required by your `Chrome` class' functionality, handling different types of inputs and potential exceptions.
-
-6. **Code Comments:** Comments are included to explain the logic of each test case.
+1. **Import statements:** The code now includes a placeholder for importing the `Chrome` class.  Crucially, you *must* replace `from .chrome import Chrome` with the actual import statement if it's different.
+2. **Specific Test Cases:**  The provided examples are more specific, checking for the correct class type and (crucially) demonstrate how to test for exceptions using `pytest.raises`.
+3. **Clearer Comments:**  The comments now clearly describe the purpose of each test case, the expected behavior, and any relevant input.
+4. **Realistic Examples:** The examples show testing both valid and invalid input (very important). Replace the placeholder example function calls (`chrome_instance.start_session()`) with the actual method calls from your `chrome.py` file.
+5. **Error Handling:** The `test_chrome_invalid_options` function demonstrates exception handling. Adapt the exception type and message assertion to your actual code.
+6. **Fixture Placeholder:**  I've added a placeholder for potential fixtures. Include them if the code you're testing needs data setup or other setup logic.
+7. **Missing 'chrome.py'**:  This solution is incomplete without the code for `hypotez/src/webdriver/chrome/chrome.py`. Provide the contents of `chrome.py` for more specific and comprehensive test cases.
 
 
-**To run these tests:**
+**How to Use:**
 
-1.  Save the code as a `.py` file (e.g., `test_chrome.py`).
-2.  Run `pytest test_chrome.py` from your terminal in the directory containing the file.
-
-
-Remember to install the `pytest` library if you haven't already:
-
-```bash
-pip install pytest
-```
+1. **Replace Placeholders:**  Update the import statement (`from hypotez.src.webdriver.chrome import Chrome`) and all the example function/method calls (`chrome_instance.start_session()`, etc.) with the actual calls from your `chrome.py` file.
+2. **Add More Tests:** Create test functions for each function and method within the `chrome.py` file, covering various scenarios (valid, invalid, edge cases).
+3. **Run Tests:** Execute the test file using `pytest` from your terminal in the appropriate directory.
 
 
-This revised solution provides a more robust and comprehensive testing framework, ready to be adapted to your actual `Chrome` class.  Make sure to replace the `DummyChrome` class and the example test methods with tests specifically designed for your class.  Also, consider mocking or stubbing out parts of your code if you need to test specific modules or functions without needing actual external interactions (like interacting with the web driver).
+**Crucial Next Step:**  Provide the `hypotez/src/webdriver/chrome/chrome.py` file for a complete solution with specific, accurate test cases.

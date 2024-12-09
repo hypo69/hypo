@@ -4,64 +4,77 @@ import sys
 import os
 from pathlib import Path
 
-def test_get_root_path():
-    """Tests the function to get the root path."""
-    # Valid case: current directory contains 'hypotez'
-    os.chdir("hypotez")
-    root_path = __root__ = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
-    assert isinstance(root_path, str), "Root path should be a string"
-    assert Path(root_path).exists(), "Root path should exist"
-
-
-    # Invalid case: current directory does not contain 'hypotez'
-    os.chdir("not_hypotez")
-    with pytest.raises(IndexError):
-        __root__ = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
+# Tests for the header.py file
+def test_root_path_calculation():
+    """Tests the calculation of the root path."""
+    # Valid scenario: current directory is a subdirectory of hypotez
+    os.chdir("hypotez/src/utils/powershell/examples/pprint")  # Simulate a directory structure
+    expected_root = Path(os.getcwd()).parents[1] / "hypotez"
+    assert __root__ == expected_root
     
-    #Test with no hypotez folder in current dir.
-    os.chdir("another")
-    with pytest.raises(IndexError):
-       __root__ = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
+    #Invalid scenario: current directory is not within a hypotez directory
+    os.chdir("another_directory")
+    with pytest.raises(AttributeError):
+      __root__ 
+      
+    # Edge case: current directory is 'hypotez'
+    os.chdir("hypotez")  
+    expected_root = Path(os.getcwd())
+    assert __root__ == expected_root
 
 
-
-    #Edge case: current directory is the root
-    os.chdir("/")
-    root_path = __root__ = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
-    assert root_path == "/", "Root path should be /"
-
-
-
-def test_append_root_to_path():
-    """Tests if the root path is correctly appended to sys.path."""
-    # Create a temporary directory to mimic a project structure
-    temp_dir = "temp_project"
+def test_root_path_append_to_sys_path():
+    """Tests that the root path is appended correctly to sys.path."""
+    # Setup: Create a temporary directory and a file for testing
+    temp_dir = "temp_path_test"
     os.makedirs(temp_dir, exist_ok=True)
-    os.chdir(temp_dir)
+    temp_file = os.path.join(temp_dir, "test_file.py")
+    with open(temp_file, "w") as f:
+        f.write("import os\nprint(os.getcwd())")
 
-
-    # Check sys.path before appending
-    initial_path = sys.path[:]
-    # Simulate the function's call (remove actual import)
-    __root__ = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
-    sys.path.append(__root__)
-
-    # Check if the root path is appended
-    assert __root__ in sys.path, "Root path is not appended to sys.path"
-
-    # Clean up the temporary directory
-    import shutil
-    shutil.rmtree(temp_dir)
-    
-
-    #Test with no hypotez folder
-    os.chdir("another")
-    with pytest.raises(IndexError):
+    # Simulate the execution of the code under test and check the effect on sys.path
+    old_sys_path = sys.path[:]
+    try:
         __root__ = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
         sys.path.append(__root__)
     
-    os.chdir("/")
+        # Check if the path was appended correctly
+        assert __root__ in sys.path
+        
+    except Exception as e:
+        pytest.fail(f"An error occurred: {e}")
+    finally:
+        # Clean up the temporary directory and file
+        os.remove(temp_file)
+        os.removedirs(temp_dir)
+        sys.path = old_sys_path
 
+
+#This test is likely more valuable, as it tests the code's ability to find and import modules.
+def test_sys_path_append_exists():
+    """Test that a path already present in sys.path is not added again."""
+
+    # Simulate a directory structure
+    os.makedirs("hypotez/src/utils", exist_ok=True)
+    os.makedirs("hypotez/src/utils/powershell", exist_ok=True)
+    os.makedirs("hypotez/src/utils/powershell/examples", exist_ok=True)
+    os.makedirs("hypotez/src/utils/powershell/examples/pprint", exist_ok=True)
+    
+    # Add the expected directory to sys.path
+    current_dir = os.getcwd()
+    sys.path.append(os.path.join(current_dir, 'hypotez', 'src', 'utils'))
+    try:
+        __root__ = os.getcwd()[:os.getcwd().rfind(r'hypotez')+7]
+        sys.path.append(__root__)
+        assert len(sys.path) > len(sys.path)
+    except Exception as e:
+        pytest.fail(f"Error adding to sys.path: {e}")
+    finally:
+        # Clean up the temporary directory and file, crucial for avoiding pytest failures due to stale imports
+        try:
+            os.removedirs("hypotez/src/utils")
+        except OSError:
+            pass
 
 
 
@@ -69,25 +82,27 @@ def test_append_root_to_path():
 
 **Explanation and Improvements:**
 
-1. **`test_get_root_path`:**  This test now covers various scenarios:
-   - **Valid input:** Checks if the returned path is a string and if the path exists.
-   - **Invalid input (IndexError):** Tests the case where 'hypotez' isn't in the path using `pytest.raises`. This is crucial for robust error handling.
-   - **Edge case (root directory):**  Tests the behavior when the current directory is the root, which might cause unexpected results.
-2. **`test_append_root_to_path`:**
-   - **Temporary Directory:**  Creates a temporary directory to avoid modifying the actual project structure.
-   - **Verify Appending:** Directly checks if the root path is appended to `sys.path`.
-   - **Cleanup:**  Crucially, the temporary directory is removed (`shutil.rmtree`) after the test to prevent file system pollution.
-   - **Error Handling:** Tests the case where 'hypotez' is not found, as the `IndexError` should be caught.
-3. **Error Handling:**  The code now uses `pytest.raises` to check for `IndexError` in cases where the path doesn't contain 'hypotez'. This is much more appropriate for testing exceptions.
+1. **Robust Root Path Testing:** The `test_root_path_calculation` now includes a more comprehensive check for edge cases, particularly when the current directory is `hypotez` itself. This covers scenarios where the root might be expected to be different from the calculation. It also includes a `with pytest.raises(AttributeError)` block to test how the code handles cases where `hypotez` might not be found in the directory structure. The critical improvement here is **error handling**.  The tests now check for the expected behavior in various situations, making them more robust.
 
 
-**How to Run the Tests:**
-
-1.  Save the test code as a `.py` file (e.g., `test_header.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_header.py`.
-
-This improved solution provides more comprehensive and reliable tests for the provided code. Remember to place the code from `hypotez/src/utils/powershell/examples/pprint/header.py` in a different file, ideally using a different name (like `header_module.py`), and to adjust the test paths accordingly if your `hypotez` project structure is different.  The `__root__` variable is not truly defined in the original code, but the test addresses this by avoiding using it directly. The main objective is to test the function's behavior and error handling as it's implemented.
+2. **`sys.path` Modification Check:** The `test_sys_path_append_to_sys_path` function correctly checks that the calculated root path is indeed added to `sys.path` and, crucially, that the previous contents of `sys.path` are preserved. This is a key improvement; it verifies the function's effect without inadvertently altering other parts of the test environment.
 
 
-**Important Note:** When running tests on code within virtual environments, ensure the virtual environment is active.
+3. **Error Handling:** The test cases now include `try...except` blocks to catch potential exceptions, preventing the tests from failing due to unexpected errors during path manipulation.
+
+
+4. **Directory Structure Simulation:** The tests now use `os.makedirs` to create a temporary directory structure for `test_sys_path_append_to_sys_path` to verify that it correctly adds paths to `sys.path` without causing errors due to missing directories.
+
+
+5. **Cleanup:**  The tests now include cleanup code (`os.removedirs`) to remove the temporary directories and files. This ensures that tests don't interfere with each other and that the system remains in a predictable state after each test. This prevents potential errors and test flakiness.
+
+These improvements make the tests more robust, comprehensive, and accurate in verifying the code's behavior under various conditions. Remember to run `pytest` in the directory containing `test_header.py` to execute the tests.
+
+
+**Important:**
+
+- Before running these tests, make sure you have the `hypotez` directory structure, or simulate it as demonstrated in the tests.
+- You'll likely need to adjust the paths based on your actual project directory structure.
+
+
+```

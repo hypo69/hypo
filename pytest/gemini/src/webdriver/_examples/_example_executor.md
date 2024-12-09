@@ -2,136 +2,150 @@
 import pytest
 from selenium import webdriver
 from src.webdriver.executor import ExecuteLocator
-from src import gs
+from src import gs  # Assuming gs is defined elsewhere
 from src.logger.exceptions import ExecuteLocatorException
-import os
 
-
-def test_main_valid_input(tmp_path):
-    """
-    Test the main function with valid input.
-    Create a temporary Chrome driver executable path for the test
-    """
-    # Create a dummy gs object for the test
-    gs_data = {"chrome_driver_path": str(tmp_path / "chromedriver")}
-    setattr(gs, 'gs', gs_data)
-    os.makedirs(os.path.dirname(gs_data['chrome_driver_path']), exist_ok=True)
-    with open(gs_data['chrome_driver_path'], "w") as f:
-      f.write("")
-
-    # Mock webdriver.Chrome to avoid external dependencies
-    class MockWebDriver:
-        def __init__(self, *args, **kwargs):
-          self.executable_path = kwargs.get('executable_path')
-        def get(self, url):
-          pass
-        def quit(self):
-          pass
-        def find_element(self, *args, **kwargs):
-          pass
-
-    def mock_webdriver(*args, **kwargs):
-      return MockWebDriver(*args, **kwargs)
-
-
-    webdriver.Chrome = mock_webdriver
-    try:
-        main()  # Call the main function
-    except ExecuteLocatorException as e:
-        pytest.fail(f"Unexpected ExecuteLocatorException in valid input test: {e}")
-    except Exception as e:
-        pytest.fail(f"Unexpected error in valid input test: {e}")
-
-
+# Fixture for creating a WebDriver instance
 @pytest.fixture
-def driver_locator():
-    """Provides a driver and locator for testing other functions."""
-    driver = webdriver.Chrome()  # Replace with mock if needed
-    locator = ExecuteLocator(driver)
-    yield driver, locator
+def driver_fixture():
+    """Creates a WebDriver instance for tests."""
+    driver = webdriver.Chrome(executable_path=gs['chrome_driver_path'])
+    driver.get("https://www.example.com")  # Navigate to a known website
+    yield driver
     driver.quit()
 
 
-def test_execute_locator_valid_input(driver_locator):
-    """Tests execute_locator with a valid locator."""
-    driver, locator = driver_locator
-    driver.get("https://example.com")
+# Test cases for execute_locator
+def test_execute_locator_valid_input(driver_fixture):
+    """Tests execute_locator with valid input."""
+    locator = ExecuteLocator(driver_fixture)
     simple_locator = {
         "by": "XPATH",
         "selector": "//h1",
         "attribute": "textContent",
-        "timeout": 0,
-        "timeout_for_event": "presence_of_element_located",
+        "timeout": 10,  # Add a timeout for real tests
+        "timeout_for_event":"presence_of_element_located",
         "event": None,
-        "if_list": "first",
+        "if_list":"first",
         "use_mouse": False,
         "mandatory": True,
         "locator_description": "Getting the page title"
     }
     result = locator.execute_locator(simple_locator)
-    assert result is not None
+    assert result is not None, "Result should not be None for valid input"
 
 
-def test_execute_locator_invalid_locator(driver_locator):
-    """Tests execute_locator with an invalid locator."""
-    driver, locator = driver_locator
-    driver.get("https://example.com")
-    invalid_locator = {"by": "INVALID", "selector": "//h1"}
+def test_execute_locator_invalid_selector(driver_fixture):
+    """Tests execute_locator with an invalid selector."""
+    locator = ExecuteLocator(driver_fixture)
+    invalid_locator = {
+        "by": "XPATH",
+        "selector": "//invalid_selector",
+        "attribute": "textContent",
+        "timeout": 10,  # Add a timeout for real tests
+        "timeout_for_event":"presence_of_element_located",
+        "event": None,
+        "if_list":"first",
+        "use_mouse": False,
+        "mandatory": True,
+        "locator_description": "Getting the page title"
+    }
     with pytest.raises(ExecuteLocatorException):
         locator.execute_locator(invalid_locator)
 
 
-def test_send_message_valid_input(driver_locator):
-  """Tests the send_message method with valid input."""
-  driver, locator = driver_locator
-  driver.get("https://example.com")
-  message_locator = {
-      "by": "XPATH",
-      "selector": "//input[@name='search']",
-      "attribute": None,
-      "timeout": 0,
-      "timeout_for_event": "presence_of_element_located",
-      "event": "%SEARCH%",
-      "if_list": "first",
-      "use_mouse": False,
-      "mandatory": True,
-      "locator_description": "Sending a search query"
-  }
-  message = "Buy a new phone"
-  result = locator.send_message(message_locator, message, typing_speed=0.05)
-  assert result is not None
+def test_execute_locator_timeout(driver_fixture):
+    """Tests execute_locator with a timeout."""
+    locator = ExecuteLocator(driver_fixture)
+    timeout_locator = {
+        "by": "XPATH",
+        "selector": "//some_element_not_found",
+        "attribute": "textContent",
+        "timeout": 1,
+        "timeout_for_event":"presence_of_element_located",
+        "event": None,
+        "if_list":"first",
+        "use_mouse": False,
+        "mandatory": True,
+        "locator_description": "Getting the page title"
+    }
+    with pytest.raises(ExecuteLocatorException) as excinfo:
+        locator.execute_locator(timeout_locator)
+    assert "Timeout" in str(excinfo.value)
 
 
-# Add more tests for other functions like evaluate_locator, etc.  as needed
+
+# Test cases for send_message (example)
+def test_send_message_valid_input(driver_fixture):
+    """Tests send_message with valid input."""
+    locator = ExecuteLocator(driver_fixture)
+    message_locator = {
+        "by": "XPATH",
+        "selector": "//input[@name='search']",  # Example selector
+        "attribute": None,
+        "timeout": 10,
+        "timeout_for_event":"presence_of_element_located",
+        "event": "%SEARCH%",
+        "if_list": "first",
+        "use_mouse": False,
+        "mandatory": True,
+        "locator_description": "Sending a search query"
+    }
+    message = "Test message"
+    result = locator.send_message(message_locator, message, 0.1)
+    assert result is not None, "Result should not be None for valid input"
 
 
-# important! avoid calling `main()` directly in the tests.  use a fixture
-# to manage the driver and the locator.
+
+# Add more test cases for other methods as needed
+# ...
+
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Error Handling:** The tests now include `pytest.raises` for exception testing, ensuring the code handles invalid input correctly.
-2. **Mocking:** The `test_main_valid_input` function now mocks the `webdriver.Chrome` class to avoid relying on the external `chromedriver` executable.
-3. **Temporary Directory:** Creates a temporary directory to store a dummy `chromedriver` file for use in the tests; this resolves the issue with the use of the file from `gs`
-4. **Fixture for Driver and Locator:** The `driver_locator` fixture creates a `webdriver` and `ExecuteLocator` instance within a function and yields them to the tests.  Crucially, it also quits the driver at the end of the test, preventing resource leaks. This is a best practice for pytest tests, which makes tests independent.
-5. **Clearer Test Names:**  Test names (e.g., `test_execute_locator_valid_input`) are more descriptive and informative.
-6. **pytest.raises:** Now properly used to test for `ExecuteLocatorException`.
-7. **Comprehensive Test Coverage:** Added a basic `test_execute_locator_invalid_locator` test to demonstrate handling of invalid locator scenarios.
+1. **Fixtures:**  Crucially, I've introduced a `driver_fixture` to manage the WebDriver instance.  This ensures each test gets a fresh browser session, avoiding issues where tests modify the state of the browser, affecting subsequent tests.
+
+2. **`pytest.raises`:** Used correctly for exception testing, specifically for `ExecuteLocatorException` and timeouts.
+
+3. **Clearer Test Names:**  Test names are now more descriptive.
+
+4. **Timeout Handling:** Added `timeout` values to locators. This is crucial for real-world testing, ensuring your tests don't hang indefinitely if an element isn't found.
+
+5. **Valid Input Example:**  A `test_execute_locator_valid_input` demonstrates how to check for successful execution and a non-None return value.
+
+6. **Invalid Input Example:** A `test_execute_locator_invalid_selector`  tests with an *invalid* XPath to demonstrate handling of invalid input cases.
+
+7. **Edge Case (Timeout):** The `test_execute_locator_timeout` example demonstrates testing the timeout scenario.
 
 
-**To run these tests:**
+**How to Use:**
 
-1.  Install pytest: `pip install pytest`
-2.  Run the tests: `pytest hypotez/src/webdriver/_examples/test_example_executor.py`  (create `test_example_executor.py` from the example)
+1. **Install pytest:**
+   ```bash
+   pip install pytest
+   ```
 
-**Crucial Next Steps**:
+2. **Install Selenium:**
+   ```bash
+   pip install selenium
+   ```
 
-* **Complete Test Coverage:** Add more tests to cover other functions, edge cases, invalid input scenarios, exception handling, and boundary conditions in `ExecuteLocator` methods.  
-* **Mock gs:** Ensure the `gs` module is properly mocked (or a substitute used, ideally a parameter) in your testing environment to avoid relying on real configuration files.
-* **Comprehensive Locator Cases:** Create tests covering different types of locators (e.g., CSS selectors, IDs).
-* **Error Cases:** Create tests to cover various types of locator errors (e.g., no element found, timeout errors).
-* **Edge Cases:** Test edge cases like empty locators, large lists of locators, etc.
+3. **Set up `gs`:** Ensure the `gs` dictionary (containing `chrome_driver_path`) is correctly defined in your `src` package.
+
+4. **Run the tests:**
+   ```bash
+   pytest test_example_executor.py  # Assuming your test file is test_example_executor.py
+   ```
+
+**Important Considerations:**
+
+* **`gs['chrome_driver_path']`:**  Make sure the path to your Chrome WebDriver executable is correctly configured in the `gs` dictionary.
+* **Example URL:** The `driver.get("https://www.example.com")` line in the fixture now points to a valid website. This is vital for your tests to work. Replace this with a suitable example URL if needed, or ideally, your test should support a dynamic URL that's passed as a parameter or retrieved in another fixture.
+* **Robustness:**  Add more tests for different types of locators, timeout scenarios, errors, and edge cases (empty dictionaries, missing keys, etc.).
+* **Error Messages:** When using `pytest.raises`, ensure your exceptions contain helpful error messages for debugging.
+* **Data-Driven Tests (Optional):** Consider using `pytest.mark.parametrize` if your tests have different but related input values to make them more concise.
 
 
-This improved solution provides a more robust and comprehensive set of tests to validate the functionality of the code. Remember to adapt the mocks and fixtures as needed depending on the actual implementation of `gs` and `ExecuteLocator`. Remember to place the tests in a file named `test_example_executor.py`. Remember to handle `driver` correctly and do not directly use `main` within your tests.
+This significantly improved solution provides a robust starting point for testing your code. Remember to expand these tests to cover all possible scenarios and error conditions in your `ExecuteLocator` class. Remember to adapt the examples (e.g., the `message_locator`) to your specific locator structure.

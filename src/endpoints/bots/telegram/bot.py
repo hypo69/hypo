@@ -1,10 +1,10 @@
-## \file hypotez/src/bots/telegram/bot.py
+## \file hypotez/src/endpoints/bots/telegram/bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.bots.telegram 
+.. module: src.endpoints.bots.telegram 
 	:platform: Windows, Unix
 	:synopsis:
 

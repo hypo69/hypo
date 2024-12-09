@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.bots.telegram
+.. :module: src.endpoints.bots.telegram
 ```
 <TABLE >
 <TR>

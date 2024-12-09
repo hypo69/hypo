@@ -5,7 +5,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from src.webdriver.executor import ExecuteLocator
@@ -16,73 +15,72 @@ def driver():
     """Fixture to set up and tear down the WebDriver."""
     options = Options()
     options.add_argument("--headless")  # Run headless browser for testing
-    # Replace with your actual chromedriver path
-    service = Service(executable_path="/path/to/chromedriver")
+    # Replace with the actual path to your chromedriver
+    service = Service(executable_path="/path/to/chromedriver") 
     driver = webdriver.Chrome(service=service, options=options)
-    driver.get("http://example.com")
+    driver.get("http://example.com")  # URL for the tests
     yield driver
     driver.quit()
+
 
 @pytest.fixture
 def execute_locator(driver):
     """Fixture to initialize the ExecuteLocator instance."""
     return ExecuteLocator(driver)
 
-# Tests for navigate_to_page
-def test_navigate_to_page_valid_url(execute_locator, driver):
-    """Test navigating to a valid URL."""
-    assert driver.current_url == "http://example.com"
 
-def test_navigate_to_page_invalid_url(execute_locator, driver):
-   """Test navigating to a potentially invalid URL (best practice to not hardcode)"""
-    with pytest.raises(Exception):  # Or more specific exception if expected
-        driver.get("invalid_url")  # Replace with an invalid URL
+def test_navigate_to_page(execute_locator, driver):
+    """Test to ensure that the WebDriver can navigate to a page."""
+    assert driver.current_url == "http://example.com", f"Expected URL 'http://example.com', got '{driver.current_url}'"
 
 
-# Tests for get_webelement_by_locator
-def test_get_webelement_by_locator_valid_xpath(execute_locator, driver):
-    """Test with a valid XPath locator."""
+def test_get_webelement_by_locator_single_element(execute_locator, driver):
+    """Test to get a single web element by locator."""
     locator = {"by": "XPATH", "selector": "//h1"}
     element = execute_locator.get_webelement_by_locator(locator)
-    assert element is not None  # More robust assertion than just 'assert isinstance(element, WebElement)'
-    assert element.text == "Example Domain"
+    assert element, "Element not found"
+    assert isinstance(element, WebElement), f"Expected WebElement, got {type(element)}"
+    assert element.text == "Example Domain", f"Expected 'Example Domain', got '{element.text}'"
 
 
-def test_get_webelement_by_locator_invalid_xpath(execute_locator, driver):
-    """Test with an invalid XPath locator."""
-    locator = {"by": "XPATH", "selector": "//nonexistent_element"}
+def test_get_webelement_by_locator_no_element(execute_locator, driver):
+    """Test when no element is found by the locator."""
+    locator = {"by": "XPATH", "selector": "//div[@id='nonexistent']"}
     result = execute_locator.get_webelement_by_locator(locator)
-    assert result is False
+    assert result is False, "Element was found, but should not have been"
 
 
-# Tests for send_message (updated for robustness)
 def test_send_message_valid_input(execute_locator, driver):
-    locator = {"by": "ID", "selector": "search"}  # Use a better ID if available
-    message = "test"
-    execute_locator.send_message(locator, message, typing_speed=0, continue_on_error=True)
-
-    # Add assertion to verify that the message was actually entered.
-    # For example, if the search input is visible on the page.
-    search_field = execute_locator.get_webelement_by_locator({"by": "ID", "selector": "search"}) #Using more specific ID
-    assert message in search_field.get_attribute("value")
-
-
-def test_send_message_invalid_input(execute_locator, driver):
-    locator = {"by": "INVALID", "selector": "search"}
-    message = "test"
-    with pytest.raises(ExecuteLocatorException):
-        execute_locator.send_message(locator, message, typing_speed=0, continue_on_error=True)
-
-
-# Add tests for other methods (get_attribute_by_locator, execute_locator_event, etc.)
-# following the same pattern as above.  Ensure you have appropriate locators and checks!
-#   For example, for get_attribute_by_locator, check that the returned value is the expected type and value.
-#   For execute_locator_event, check for the element state change after the event.
+    """Test sending a message to a web element with valid input."""
+    locator = {"by": "XPATH", "selector": "//input[@id='search']"}  # Change to a valid input if available.
+    message = "Hello"
+    result = execute_locator.send_message(locator, message, typing_speed=0, continue_on_error=True)
+    assert result is True, "Message sending failed unexpectedly"
 
 
 
-# Example test for get_locator_keys (no need for driver/execute_locator here)
+def test_get_attribute_by_locator(execute_locator, driver):
+    """Test to get an attribute value from a web element."""
+    locator = {"by": "XPATH", "selector": "//a[@id='more-information']"}
+    attribute_value = execute_locator.get_attribute_by_locator(locator, message="href")
+    assert attribute_value == "https://www.iana.org/domains/example", f"Expected 'https://www.iana.org/domains/example', got '{attribute_value}'"
+
+
+def test_execute_locator_event_click(execute_locator, driver):
+    """Test executing a click event on a web element."""
+    locator = {"by": "XPATH", "selector": "//a[@id='more-information']"}
+    result = execute_locator.execute_locator(locator, message="click")
+    assert result is True, "Click event failed"
+
+def test_execute_locator_event_invalid_message(execute_locator, driver):
+  """Test executing an invalid event on a web element."""
+  locator = {"by": "XPATH", "selector": "//a[@id='more-information']"}
+  with pytest.raises(ExecuteLocatorException):
+    execute_locator.execute_locator(locator, message="invalid_event")
+
+
 def test_get_locator_keys():
+    """Test to get available locator keys."""
     expected_keys = [
         'attribute',
         'by',
@@ -93,39 +91,56 @@ def test_get_locator_keys():
         'locator_description',
     ]
     result = ExecuteLocator.get_locator_keys()
-    assert set(result) == set(expected_keys)
+    assert set(result) == set(expected_keys), f"Expected keys: {expected_keys}, Got: {result}"
 
 
 
-# ... (other test functions for remaining methods)
+def test_invalid_locator(execute_locator, driver):
+    """Test handling of invalid locators."""
+    locator = {"by": "INVALID_BY", "selector": "//div[@id='test']"}
+    with pytest.raises(ExecuteLocatorException) as excinfo:
+        execute_locator.execute_locator(locator, message="click")
+    assert "Invalid locator type" in str(excinfo.value), f"Expected 'Invalid locator type', got '{str(excinfo.value)}'"
 
 
+# Add more tests for different scenarios, edge cases, and error handling as needed.
 ```
 
-**Explanation of Improvements and Crucial Considerations:**
+**Explanation of Improvements and Key Considerations:**
 
-* **Robustness:** The tests now include more robust assertions. Instead of just checking `isinstance(element, WebElement)`, which might not be enough to ensure the element is valid,  tests now assert `element is not None` to check for the existence of the element after locating.  For `send_message`, I've added an assertion that the message is *actually* entered into the input field.
-
-* **Clearer assertions:**  The test descriptions now give more context and improve assertion clarity for better debugging.
-
-* **Valid Locator Usage:**   The examples now use `By.ID` as an example locator strategy. This is more typical than relying solely on XPaths.  Your actual locator strategy will need to be correct to match your page structure (replace `"search"` in the example with the actual ID of the search box on your target website).
-
-* **Error Handling and Exceptions:** The tests now properly use `pytest.raises` to test for `ExecuteLocatorException` or other expected exceptions.
-
-* **Real Example Locator:**   Ensure you have appropriate, correct locators for your website. XPaths are prone to breaking if the page structure changes, so consider alternative strategies like `By.ID`, `By.NAME`, or `By.CLASS_NAME` if possible.
-
-* **Invalid URLs and Locators:**  Always test with invalid input, including non-existent URLs and impossible locators. This helps ensure the code handles errors gracefully.
-
-* **Headless Mode:** The `--headless` argument in `options` is important for automated tests to run without a visible browser window.
+* **Error Handling:**  Crucially, added `pytest.raises` to test for `ExecuteLocatorException` when an invalid locator is provided. This is critical for robust error handling in the `execute_locator` method.  The assertion within the `with` block now more clearly checks for the expected error message.
 
 
-**Crucial Next Steps:**
+* **Clearer Assertions:** Assertions now include descriptive error messages (e.g., `f"Expected 'Example Domain', got '{element.text}'"`). This makes debugging much easier when tests fail.
 
-1. **Replace Placeholders:** Replace `/path/to/chromedriver` with the actual path to your ChromeDriver executable.
-2. **Website-Specific Locators:**  Use appropriate and valid locators that will be accurate for your web application.  Use the developer tools in your browser (usually by right-clicking and choosing Inspect) to find valid locators for your elements.  For instance, you can use CSS Selectors, or more accurate IDs.
-3. **Specific Element Checks:**  Enhance the tests to validate specific actions or values after the methods execute. (See the example for `send_message`)
-4. **Comprehensive Test Coverage:**  Write similar test functions for all methods (`get_attribute_by_locator`, `execute_locator_event`, etc.).
 
-Remember to install the required libraries: `pip install pytest selenium`
+* **Fixture Parameterization (Optional but Highly Recommended):** For increased testing coverage, consider using `pytest.mark.parametrize` if the `locator` data can be varied (different locators, elements, etc.) for better test coverage.
 
-```
+
+
+* **Real Input Data:** The `//input[@id='search']` locator in `test_send_message_valid_input` needs to be replaced with a valid input locator on the `example.com` page, otherwise it will always fail.
+
+
+* **More Comprehensive Tests:**  Added a test specifically for handling an invalid `message` to the `execute_locator` method, demonstrating another aspect of the error handling.
+
+* **Path to chromedriver:**  The test now has a commented-out placeholder for the actual path to your chromedriver executable.  **Replace `/path/to/chromedriver` with the correct path.**
+
+* **Headless Mode:** The `--headless` flag is important for running these tests in a CI environment where a graphical browser window is undesirable.
+
+
+**How to Run the Tests:**
+
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
+
+2.  **Save:** Save the code as `test_driver_executor.py` in the same directory as your `src/webdriver/executor.py` and related files.
+
+3.  **Run:**
+    ```bash
+    pytest test_driver_executor.py
+    ```
+
+
+Remember to adapt the test cases based on the actual structure and functionality of the code in `src/webdriver/executor.py`.  If there are specific methods you need to test, add them to the test file.  If you have specific expected outputs or behaviours, be sure to include assertions to verify them. This updated example provides a more comprehensive and robust set of tests. Remember to replace placeholders like `/path/to/chromedriver` and the example input locators with the appropriate values in your project.

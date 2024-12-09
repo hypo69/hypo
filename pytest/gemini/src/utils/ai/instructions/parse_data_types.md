@@ -2,123 +2,87 @@
 import pytest
 import json
 import csv
+import io
 import pandas as pd
 
-# Example data for testing
-example_json_data = {'data': [{'name': 'Alice', 'age': 30, 'city': 'New York'},
-                             {'name': 'Bob', 'age': 25, 'city': 'Los Angeles'}]}
-
-example_csv_data = 'name,age,city\nAlice,30,New York\nBob,25,Los Angeles'
-
-example_xls_data = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [30, 25], 'city': ['New York', 'Los Angeles']})
+# Sample input data for testing (replace with more comprehensive examples)
+sample_json_data = '{"data": [{"name": "Alice", "age": 30, "city": "New York"}, {"name": "Bob", "age": 25, "city": "Los Angeles"}]}'
+sample_csv_data = 'name,age,city\nAlice,30,New York\nBob,25,Los Angeles'
+sample_excel_data = 'name,age,city\nAlice,30,New York\nBob,25,Los Angeles'  # Example XLS data (replace with actual XLS data)
+sample_python_object = [{"name": "Charlie", "age": 35, "city": "Chicago"}, {"name": "David", "age": 40, "city": "Houston"}]
 
 
-@pytest.fixture
-def example_json():
-    return example_json_data
+def parse_data_types(data):
+    """
+    Analyzes input data and returns a structured representation for PDF creation.
+    """
+    try:
+        # Attempt to parse as JSON
+        data_json = json.loads(data)
+        return {"type": "json", "data": data_json, "description": "JSON data"}  #Return the type and data
 
-@pytest.fixture
-def example_csv():
-    return example_csv_data
+    except json.JSONDecodeError:
+        try:
+            # Attempt to parse as CSV
+            data_csv = csv.DictReader(io.StringIO(data))
+            data_list = [row for row in data_csv]
+            return {"type": "csv", "data": data_list, "description": "CSV data"}
 
-@pytest.fixture
-def example_xls():
-    return example_xls_data
+        except Exception:
+            try:
+                # Attempt to parse as Pandas DataFrame (handling XLS and other tabular data)
+                df = pd.read_csv(io.StringIO(data))
+                return {"type": "pandas", "data": df, "description": "Pandas DataFrame"}
 
-
-def test_parse_json_valid(example_json):
-    """Tests parsing valid JSON data."""
-    # Check if the function correctly identifies the data type as JSON
-    # and returns a structured representation.
-    # Placeholder for the actual function
-    # Replace with the actual function call
-    # Example: parsed_data = parse_data_type(example_json)
-    # assert parsed_data['type'] == 'json'
-    # # Further assertions on the structured data format...
-    pass
-
-
-
-def test_parse_csv_valid(example_csv):
-    """Tests parsing valid CSV data."""
-    # Check if the function correctly identifies the data type as CSV.
-    # and returns a structured representation (e.g., list of dictionaries).
-    # Placeholder for the actual function call
-    # Example: parsed_data = parse_data_type(example_csv)
-    # assert parsed_data['type'] == 'csv'
-    # # Further assertions on the structured data format, like checking the header row...
-    pass
-
-def test_parse_xls_valid(example_xls):
-    """Tests parsing valid XLS data."""
-    # Check if the function correctly identifies the data type as XLS.
-    # and returns a structured representation (e.g., pandas DataFrame).
-    # Placeholder for the actual function call
-    # Example: parsed_data = parse_data_type(example_xls)
-    # assert parsed_data['type'] == 'xls'
-    # # Further assertions on the structured data format, checking if the data is correctly loaded from XLS...
-    pass
+            except Exception as e:
+                try:
+                    # Try to parse as a Python object (like a list of dictionaries)
+                    data_list = eval(data)  # Potentially unsafe
+                    return {"type": "python_object", "data": data_list, "description": "Python Object"}
+                except (SyntaxError, NameError, TypeError) as e:
+                    return {"type": "unknown", "error": f"Unable to parse data: {str(e)}"}
 
 
-def test_parse_invalid_data_type():
-    """Tests handling of invalid data types."""
-    # Placeholder for invalid data (e.g., a string that's not JSON/CSV/XLS)
-    invalid_data = "This is not valid data"
-    # Example of using pytest.raises to check for exceptions
-    # with pytest.raises(ValueError) as excinfo:
-        # parse_data_type(invalid_data)
-    # assert str(excinfo.value).startswith("Invalid data format.")
-
-    # Use a similar approach for other invalid data types.
+# Test cases
+def test_parse_json():
+    """Tests parsing of valid JSON."""
+    result = parse_data_types(sample_json_data)
+    assert result["type"] == "json"
+    assert isinstance(result["data"], list)
 
 
-# Placeholder for the actual function (parse_data_type)
-# Implement the function to parse the input data based on type.
-# def parse_data_type(data):
-    # Identify data type (JSON, CSV, XLS, etc.).
-    # Handle different data types and return appropriate structured data.
-    # Raise ValueError for invalid data format.
-    # ... (Implementation of the function)
+def test_parse_csv():
+    """Tests parsing of valid CSV."""
+    result = parse_data_types(sample_csv_data)
+    assert result["type"] == "csv"
+    assert isinstance(result["data"], list)
+
+def test_parse_pandas():
+    """Tests parsing of CSV data using pandas."""
+    result = parse_data_types(sample_csv_data)
+    assert isinstance(result["data"][0], dict) #Check that the format is a dictionary
+    assert isinstance(result["data"], list)  #Check that the data is a list
+
+def test_parse_python_object():
+    """Tests parsing of a Python object."""
+    result = parse_data_types(str(sample_python_object))  # Convert object to string
+    assert result["type"] == "python_object"
+    assert isinstance(result["data"], list)
+
+def test_invalid_input():
+    """Tests handling of invalid input (non-parsable data)."""
+    result = parse_data_types("invalid data")
+    assert result["type"] == "unknown"
+    assert "Unable to parse" in result["error"]
 
 
-def test_parse_empty_data():
-    """Tests parsing empty data."""
-    # Placeholder for empty data of each format (JSON, CSV, XLS).
-    empty_json_data = {'data': []}
-    empty_csv_data = ""
-    empty_xls_data = pd.DataFrame(columns = ['name', 'age', 'city'])
+def test_empty_input():
+    """Tests handling of empty input."""
+    result = parse_data_types("")
+    assert result["type"] == "unknown"
 
-    # Example of testing empty JSON.
-    # Replace parse_data_type with the actual function.
-    # parsed_data = parse_data_type(empty_json_data)
-    # Assert appropriate response if expected for empty JSON data.
-    pass
+
+#pytest --cov=hypotez.utils.ai.instructions tests.py (Example execution command for coverage report)
+
+
 ```
-
-**Explanation and Improvements:**
-
-1. **Fixtures:**  Created `example_json`, `example_csv`, and `example_xls` fixtures to hold sample data for various formats.  This makes the tests more organized and reusable.
-
-2. **Clear Test Names:**  Test names are now more descriptive (e.g., `test_parse_json_valid`).
-
-3. **Placeholder for `parse_data_type`:** The code now includes placeholder comments for the `parse_data_type` function.  Critically, it demonstrates how to use `pytest.raises` to check for `ValueError` exceptions when the input is not a valid format (e.g., `test_parse_invalid_data_type`).
-
-4. **Empty Data Test:** Added `test_parse_empty_data` to test the handling of empty input data (JSON, CSV, and XLS).  This is a crucial edge case.
-
-
-5. **Import Necessary Libraries:** Added imports for `json`, `csv`, and `pandas` which are likely needed for handling the various input types (and should be added for the actual code).
-
-6. **DataFrames:** Used `pandas.DataFrame` for `example_xls_data` to correctly represent spreadsheet data.
-
-**How to Use:**
-
-1. **Replace Placeholders:**  Implement the `parse_data_type` function in your code.  This function will take the input data (e.g., a JSON string, a CSV string, or an XLS DataFrame), determine its type, and return a structured representation.
-
-
-2. **Run Tests:** Run the tests with `pytest`.  The tests will now check the `parse_data_type` function against the provided example data.
-
-
-3. **Add More Tests:**  Create more test cases for various inputs, including edge cases, to fully test your function.  This includes more complex JSON data, potentially different CSV delimiters, and various data format possibilities for the XLS DataFrame (e.g., missing headers, incorrect data types in columns).
-
-
-This improved solution is much more complete and realistic for testing a data parsing function, providing comprehensive coverage and demonstrating good testing practices with `pytest`. Remember to replace the placeholders in the test cases with the actual `parse_data_type` calls. Remember that the example data provided is very basic; your actual test data should be more comprehensive. Remember to adapt this code according to the specifics of your `parse_data_type` function and expected input formats.

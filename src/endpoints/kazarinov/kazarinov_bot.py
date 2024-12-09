@@ -33,7 +33,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 
 import header
 from src import gs
-from src.bots.telegram import TelegramBot
+from src.endpoints.bots.telegram import TelegramBot
 from src.endpoints.kazarinov.bot_handlers import BotHandler
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI

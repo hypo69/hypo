@@ -22,19 +22,10 @@
 
 Данный документ предоставляет обзор различных модулей проекта, включая ссылки на исходный код, документацию, тесты и примеры.
 
-## Модуль `assistant`
-
-Модуль для взаимодействия с классом `CodeAssistant`. Назначение класса: обучение модели коду проекта
-
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/code_assistant/readme.ru.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/doc/src/readme.ru.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/assistant)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/assistant)
-
 
 ## Модуль `bot`
 
-Модуль для логики бота, включая обработку сообщений и управление командами бота.
+Модуль интерфейсов для `telegram`,`doscord` ботов
 
 - [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/bot/readme.ru.md)
 - [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/bot/readme.ru.md)

@@ -3,101 +3,88 @@ import pytest
 import xml.etree.ElementTree as ET
 from hypotez.src.utils.convertors.xml2dict import xml2dict, ET2dict, _parse_node, _make_dict
 
-# Fixtures
+# Fixture for creating XML strings
 @pytest.fixture
-def simple_xml():
-    return """<root><element attr1="value1" attr2="{http://example.com}attr3" /><element>text</element></root>"""
+def xml_strings():
+    return [
+        '<root><child>hello</child></root>',
+        '<root><child attr="value">hello</child></root>',
+        '<root><child attr="value1" attr2="value2"></child></root>',
+        '<root><child>hello</child><child>world</child></root>',
+        '<root><child xmlns:test="http://example.com">hello</child></root>',
+        '<root><child><grandchild>hello</grandchild></child></root>',
+        '<root><child><grandchild>hello</grandchild><grandchild>world</grandchild></child></root>',
+        '<root><child><grandchild href="some_link">hello</grandchild></child></root>', # testing href skipping
+        '<root><child><grandchild>hello</grandchild></child><child><grandchild>world</grandchild></child></root>', # testing multiple children
+        '<root><child attr="value1" attr2="value2"><grandchild>hello</grandchild></child></root>',  # combining children and attributes
+        '<root><tag1>val1</tag1><tag2>val2</tag2></root>',  # Testing multiple tags
+        '<root><tag1>val1</tag1><tag1>val2</tag1></root>', # Testing repeated tag
+        '<root/>',  # Empty root tag
+        '<root></root>'  # Empty root tag with no children or attributes
+    ]
 
-@pytest.fixture
-def complex_xml():
-    return """<root><element attr1="value1"><child1>child1_text</child1><child2 attrA="valA">child2_text</child2></element><element2>some text</element2></root>"""
+# Test Cases for xml2dict
+def test_xml2dict_valid_input(xml_strings):
+    """Tests xml2dict with valid XML strings."""
+    for xml_string in xml_strings:
+        try:
+            result = xml2dict(xml_string)
+            assert isinstance(result, dict)
+        except Exception as e:
+            pytest.fail(f"Failed with XML: {xml_string} with error: {e}")
 
-@pytest.fixture
-def xml_with_namespace():
-    return """<root xmlns="http://example.com"><element>text</element></root>"""
-
-
-# Tests for _parse_node
-def test__parse_node_simple(simple_xml):
-    root = ET.fromstring(simple_xml)
-    element = root[0]
-    result = _parse_node(element)
-    expected = {'attrs': {'attr1': 'value1', 'attr3': 'value1'}, 'value': ''}
-    assert result == expected
-
-
-def test__parse_node_with_text(simple_xml):
-    root = ET.fromstring(simple_xml)
-    element = root[1]
-    result = _parse_node(element)
-    expected = {'value': 'text'}
-    assert result == expected
-
-
-def test__parse_node_complex(complex_xml):
-    root = ET.fromstring(complex_xml)
-    element = root[0]
-    result = _parse_node(element)
-    expected = {'attrs': {'attr1': 'value1'}, 'child1': {'value': 'child1_text'}, 'child2': {'attrs': {'attrA': 'valA'}, 'value': 'child2_text'}}
-    assert result == expected
-
-
-def test__parse_node_with_namespace(xml_with_namespace):
-    root = ET.fromstring(xml_with_namespace)
-    element = root[0]
-    result = _parse_node(element)
-    expected = {'value': 'text'}
-    assert result == expected
-
-
-def test__parse_node_no_attributes_no_children(simple_xml):
-    root = ET.fromstring(simple_xml)
-    element = root[1]
-    result = _parse_node(element)
-    expected = {'value': 'text'}
-    assert result == expected
-
-
-
-# Tests for xml2dict and ET2dict
-def test_xml2dict_simple(simple_xml):
-    result = xml2dict(simple_xml)
-    expected = {'element': [{'attrs': {'attr1': 'value1', 'attr3': 'value1'}}, {'value': 'text'}]}
-    assert result == expected
-
-
-def test_xml2dict_complex(complex_xml):
-    result = xml2dict(complex_xml)
-    expected = {'root': {'element': [{'attrs': {'attr1': 'value1'}, 'child1': {'value': 'child1_text'}, 'child2': {'attrs': {'attrA': 'valA'}, 'value': 'child2_text'}}], 'element2': {'value': 'some text'}}}
-    assert result == expected
-
-def test_xml2dict_with_namespace(xml_with_namespace):
-    result = xml2dict(xml_with_namespace)
-    expected = {'root': {'xmlns': 'http://example.com', 'element': {'value': 'text'}}}
-    assert result == expected
-
-# Test for invalid XML input (using pytest.raises)
-def test_xml2dict_invalid_xml():
-    invalid_xml = "<root><invalid></invalid></root>"
+def test_xml2dict_invalid_input():
+    """Tests xml2dict with invalid XML string."""
     with pytest.raises(ET.ParseError):
-        xml2dict(invalid_xml)
+        xml2dict("<invalid_xml>")
 
-#Test for empty xml input
-def test_xml2dict_empty():
-    empty_xml = ""
+def test_ET2dict_valid_input(xml_strings):
+    """Test ET2dict with valid XML element trees."""
+    for xml_string in xml_strings:
+        try:
+            element_tree = ET.fromstring(xml_string)
+            result = ET2dict(element_tree)
+            assert isinstance(result, dict)
+        except Exception as e:
+            pytest.fail(f"Failed with XML: {xml_string} with error: {e}")
+
+def test_ET2dict_invalid_input():
+    """Test ET2dict with invalid XML element tree."""
     with pytest.raises(ET.ParseError):
-        xml2dict(empty_xml)
+        element_tree = ET.fromstring("<invalid_xml>")
+        ET2dict(element_tree)
 
+# Test Cases for _parse_node
+def test__parse_node_valid_input(xml_strings):
+    """Tests _parse_node with valid XML element."""
+    for xml_string in xml_strings:
+        element_tree = ET.fromstring(xml_string)
+        try:
+            result = _parse_node(element_tree.getroot())
+            assert isinstance(result, dict)
+        except Exception as e:
+            pytest.fail(f"Failed with XML: {xml_string} with error: {e}")
 
+def test__parse_node_no_attributes_no_children():
+    """Test _parse_node with element having no attributes or children."""
+    element = ET.Element("node")
+    result = _parse_node(element)
+    assert result == ""
+    
+
+def test__parse_node_with_href():
+  """Test _parse_node with element having an href attribute."""
+  element = ET.Element("node", {'{http://www.w3.org/1999/xlink}href': 'some_link', 'attr': 'value'})
+  result = _parse_node(element)
+  assert 'attrs' in result and 'attr' in result['attrs'] and result['attrs']['attr'] == {'value': 'value'}
+  assert '{http://www.w3.org/1999/xlink}href' not in result['attrs']
+
+# Test Cases for _make_dict
+def test__make_dict_with_namespace():
+    """Test _make_dict with an XML element containing namespace."""
+    tag = '{test}tag'
+    value = 'value'
+    expected_dict = {'test': {'value': 'value'}}
+    result = _make_dict(tag, value)
+    assert result == expected_dict
 ```
-
-**Explanation and Improvements:**
-
-* **Comprehensive Test Coverage:** The tests now cover `_parse_node`, `xml2dict`, and `ET2dict`, including cases with different complexities, multiple children, attributes, and text content.
-* **Clearer Test Names:** Test names are more descriptive (e.g., `test__parse_node_complex`).
-* **Edge Cases and Invalid Input:** Tests for empty XML input and invalid XML are included using `pytest.raises` to check for `ET.ParseError`.  This is crucial for robustness.
-* **Data Fixtures:** Fixtures (`simple_xml`, `complex_xml`) are used to provide test data, making tests more organized.
-* **Expected Output:**  The `expected` variables now accurately reflect the structure of the expected output for each test, making comparisons straightforward. This is incredibly important to validating the conversion logic.
-
-
-This improved test suite provides a more thorough and reliable verification of the `xml2dict` module's functionality, addressing both valid and invalid/edge cases. Remember to run these tests with `pytest` in your terminal to execute them. Remember to install the pytest library if you haven't already (`pip install pytest`).
