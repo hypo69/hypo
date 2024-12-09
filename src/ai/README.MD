@@ -1,55 +1,70 @@
 ```rst
+
 .. :module: src.ai
 ```
-[Русский](https://github.com/hypo69/hypo/blob/master/src/ai/readme.ru.md)
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>src</A> 
+</TD>
 
-### **ai Module**: Управление Моделями ИИ
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/readme.ru.md'>Русский</A>
+</TD>
+</TABLE>
 
-Модуль **ai** отвечает за управление различными моделями ИИ, облегчает взаимодействие с внешними API и обрабатывает различные конфигурации для анализа данных и обработки языка. Он включает следующие подмодули:
+### **ai Module**: AI Model Management
 
-1. **prompts**  
-   Системные и Командные Подсказки в формате Markdown для Моделей ИИ
-    - Системные Подсказки:
-    Системные подсказки используются для установки контекста или предоставления инструкций модели ИИ перед обработкой пользовательского ввода. Эти подсказки помогают направлять поведение модели и обеспечивают понимание задачи.
-    - Командные Инструкции:
-        Находятся непосредственно в эндпоинтах
+The **ai** module is responsible for managing various AI models, facilitating interaction with external APIs, and handling different configurations for data analysis and language processing. It includes the following submodules:
 
-2. **anthropic**  
-   Обеспечивает интеграцию с моделями Anthropic AI, позволяя выполнять задачи, требующие продвинутого понимания языка и генерации ответов.
+1. **anthropic**  
+   Provides integration with Anthropic AI models, enabling tasks related to advanced language understanding and response generation.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/anthropic/README.MD)
 
-3. **dialogflow**  
-   Интегрируется с Google Dialogflow, поддерживая естественное понимание языка (NLU) и функциональности диалогового ИИ для создания интерактивных приложений.
+2. **dialogflow**  
+   Integrates with Google Dialogflow, supporting natural language understanding (NLU) and conversational AI functions for creating interactive applications.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/dialogflow/README.MD)
 
-4. **gemini**  
-   Управляет соединениями с моделями Gemini AI, предлагая поддержку для приложений, требующих уникальных возможностей Gemini.
+3. **gemini**  
+   Manages connections with Gemini AI models, providing support for applications that require unique Gemini AI capabilities.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/gemini/README.MD)
 
-5. **helicone**  
-   Подключается к моделям Helicone, предоставляя доступ к специализированным функциям для настроенных решений ИИ.
+4. **helicone**  
+   Connects to Helicone models, providing access to specialized functions for customizing AI-based solutions.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/helicone/README.MD)
 
-6. **llama**  
-   Интерфейс с LLaMA (Large Language Model Meta AI), предназначенный для задач, связанных с пониманием и генерацией естественного языка в различных приложениях.
+5. **llama**  
+   Interface for LLaMA (Large Language Model Meta AI), designed for tasks related to understanding and generating natural language in various applications.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/llama/README.MD)
 
-7. **myai**  
-   Пользовательский подмодуль ИИ, разработанный для специализированных конфигураций и реализаций моделей, обеспечивающий уникальные, специфичные для проекта функциональности ИИ.
+6. **myai**  
+   Custom AI submodule, developed for specialized model configurations and implementations, providing unique AI functions specific to the project.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/myai/README.MD)
 
-8. **openai**  
-   Интегрируется с API OpenAI, предоставляя доступ к их набору моделей (например, GPT) для задач, таких как генерация текста, классификация, перевод и другие.
+7. **openai**  
+   Integrates with OpenAI API, providing access to their suite of models (e.g., GPT) for tasks such as text generation, classification, translation, and more.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/openai/README.MD)
 
-9. **xai**: 
-    Взаимодействие с xAI
-    Модуль предназначен для взаимодействия с API xAI, 
-    предоставляя удобный интерфейс для отправки запросов и обработки ответов от моделей xAI. 
+8. **tiny_troupe**  
+   Provides integration with Microsoft's AI models, offering solutions for natural language processing and data analysis tasks using small, performance-optimized models.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/tiny_troupe/README.MD)
 
+9. **revai**  
+   Integrates with rev.com's model, specializing in working with audio files such as recordings of meetings, conferences, calls, and other audio materials.
+   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/revai/README.MD)
 
-    [документации API xAI](https://api.x.ai/docs).
+<HR>
 
-### Вклад
+10. **prompts**  
+   System and command prompts in `markdown` format, for AI models.
 
-Вклад приветствуется! Не стесняйтесь отправлять pull request или открывать issue, если вы столкнулись с какими-либо проблемами или имеете предложения по улучшению.
+### Contribution
 
-### Лицензия
+Contributions are welcome! Feel free to submit a pull request or open an issue if you encounter any problems or have suggestions for improvement.
 
-Этот проект лицензирован под MIT License. Подробности смотрите в файле [LICENSE](LICENSE).
+### License
 
-
-Для получения дополнительной информации, пожалуйста, обратитесь к [документации API xAI](https://api.x.ai/docs).
+This project is licensed under the MIT License. See the [LICENSE](../../LICENSE) file for details.
