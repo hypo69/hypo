@@ -1,97 +1,115 @@
 ```python
 import pytest
-from hypotez.src.suppliers import MODE  # Assuming MODE is defined in the file
+import sys
 
-# Add imports for any classes/functions you need to test
-# Example: from hypotez.src.suppliers import Supplier, Graber
-
-
-# Example test cases (replace with actual tests based on the code)
+# Replace with the actual path if needed
+sys.path.append("hypotez/src")  
 
 
-def test_mode_is_defined():
-    """Checks if the MODE constant is defined and has a value."""
-    assert MODE is not None
-    assert isinstance(MODE, str)  # Or whatever the expected type is
+# Placeholder for the actual Supplier class (replace with your code)
+class Supplier:
+    def __init__(self, supplier_prefix):
+        self.supplier_prefix = supplier_prefix
 
 
-# Example testing for invalid input (if applicable)
-# def test_invalid_supplier_prefix():
-#     """Tests with invalid supplier prefix input."""
-#     with pytest.raises(ValueError) as excinfo:
-#         # Call the function that expects the prefix and provide bad input
-#         # example: Supplier(invalid_prefix)
-#     assert "Invalid supplier prefix" in str(excinfo.value)  # Or the expected error message
+# Tests for the Supplier class
+def test_supplier_creation():
+    """Tests the creation of a Supplier object."""
+    supplier = Supplier("amazon")
+    assert isinstance(supplier, Supplier)
+    assert supplier.supplier_prefix == "amazon"
+
+    #Test for empty string input
+    with pytest.raises(TypeError):
+        supplier = Supplier("")
 
 
-# Example test case for a function
-# def test_get_product_details_valid():
-#     """Tests the function to get product details with valid inputs."""
-#     # Assuming get_product_details is a function in the suppliers module
-#     product_data = get_product_details("valid_supplier_prefix", "product_id")
-#     assert isinstance(product_data, dict)
-#     # Add more assertions based on the expected structure of product_data
+def test_supplier_creation_invalid_input():
+    """Tests the creation of a Supplier object with invalid input."""
+    
+    #Test for non-string input
+    with pytest.raises(TypeError):
+        supplier = Supplier(123)  
+    
 
 
-# Example test for exception handling
-# def test_get_product_details_invalid_supplier():
-#     """Tests the function to get product details for an invalid supplier."""
-#     with pytest.raises(ValueError) as excinfo:
-#         get_product_details("invalid_supplier", "product_id")
-#     assert "Supplier not found" in str(excinfo.value)
+# Add more test functions as needed based on the actual functions of the Supplier class
+# and related functions in the supplier.related_functions module
 
 
-# Example test case for edge case (boundary condition)
-# def test_get_product_details_empty_prefix():
-#     """Tests the function with an empty supplier prefix."""
-#     with pytest.raises(ValueError) as excinfo:
-#         get_product_details("", "product_id")  # Or other edge case input
-#     assert "Supplier prefix cannot be empty" in str(excinfo.value)  # Or the expected error message
+# Example demonstrating tests for functions that would be in 'supplier.related_functions' (replace with your functions)
+def test_related_functions_example():
+    # This is a placeholder for a function you'll find in supplier.related_functions
+    # Replace with the actual implementation
+    def get_product_info(supplier_prefix):
+      if supplier_prefix == "amazon":
+          return {"name": "Product A", "price": 10.0}
+      else:
+          return None
+    
+    # Example Usage
+    amazon_info = get_product_info("amazon")
+    assert amazon_info["name"] == "Product A"
+    assert amazon_info["price"] == 10.0
+    
+    invalid_supplier_info = get_product_info("invalid_supplier")
+    assert invalid_supplier_info is None
+    
+    # Test for an empty string input
+    with pytest.raises(TypeError):
+        get_product_info("")
+
+    # Add more test cases for related functions as needed, covering different supplier prefixes, valid and invalid inputs, and edge cases
 
 
-# Example fixture (if needed)
-# @pytest.fixture
-# def example_supplier_data():
-#     """Provides example data for the supplier."""
-#     return {"supplier_prefix": "example", "product_id": "12345"}
+# Example test for a function that might use a fixture
+
+@pytest.fixture
+def example_supplier():
+    return Supplier("test_supplier")
 
 
-# Remember to replace the example comments and function calls with the actual code
-# under test and the necessary assertions.
+# Example test with a fixture
+def test_get_product_info_using_fixture(example_supplier):
+  
+    def get_product_info(supplier):
+      #add your supplier logic here
+      return {"name": f"Product from {supplier.supplier_prefix}"} 
+    
+    product_info = get_product_info(example_supplier)
+    assert product_info["name"] == "Product from test_supplier"
+
 
 
 
 
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Import Statements:**  The code now includes placeholder imports (`from hypotez.src.suppliers import MODE`).  **Crucially**, you *must* import any classes or functions from the `hypotez.src.suppliers` module that you're testing. This is essential for `pytest` to recognize them.
+1. **Placeholder `Supplier` class:**  I've created a placeholder `Supplier` class.  Crucially, you **must** replace this with the actual code from your `hypotez/src/suppliers/__init__.py` file.
 
-2. **Placeholder Tests:** The provided example tests are now *placeholder* tests.  You need to replace the comments with the actual function calls, class instantiations, and assertions that correspond to the functions and classes in your `hypotez/src/suppliers/__init__.py` file.
+2. **Clear Test Function Names:** The test function names are descriptive.
 
-3. **Error Handling:** The example `test_invalid_supplier_prefix` demonstrates how to use `pytest.raises` to test for specific exceptions. Replace the example with the correct error handling checks from your `Supplier` class or relevant functions.
+3. **Edge Cases and Invalid Inputs:** The `test_supplier_creation_invalid_input` function now includes tests for various invalid input types (empty string, non-string input).
 
-4. **Valid Input Test:** The example `test_mode_is_defined` checks if `MODE` is properly defined and what its type should be.  This is a very basic but important test.
+4. **`pytest.raises` for Exceptions:** I've shown how to use `pytest.raises` to test for `TypeError` exceptions that might be raised with invalid inputs.
 
-5. **Edge Cases and Boundary Conditions:** The example `test_get_product_details_empty_prefix` shows how to test edge cases (like an empty supplier prefix).  Look for potential problems and situations, like empty strings, or very small/large numbers.
+5. **Example `test_related_functions_example`:**  Crucially, this example shows how to test functions likely to be in `supplier.related_functions`.  You must replace the placeholder `get_product_info` with the actual function from your code. This is where you'll test the logic specific to individual suppliers.
 
-6. **Specific Assertions:** Each test should include specific assertions to verify that the function is returning the correct data type, value, or raising the expected exception.
+6. **Example `@pytest.fixture`:** The `test_get_product_info_using_fixture` and `example_supplier` fixture demonstrate how to use fixtures. Adapt the fixture and test function to your actual code.
 
-7. **Fixture:** The example `example_supplier_data` fixture demonstrates a useful pattern for supplying data to your tests. This is crucial when your tests depend on specific data.
 
-**Before Running the Tests:**
+**How to use this:**
 
-* **Make sure your `hypotez/src/suppliers/__init__.py` file is correctly structured.**
-* **Import the correct classes and functions** from your file in the test file.
-* **Replace all placeholder comments** with your actual test logic.
+1. **Replace Placeholders:** Substitute the placeholder `Supplier` class and the example `get_product_info` function with the actual code from your `hypotez/src/suppliers/__init__.py` file and any related functions in the `supplier.related_functions` module.
 
-**How to run tests:**
+2. **Adapt Tests:** Expand these tests to cover all methods and functionalities you want to test within the Supplier class and any related function(s).  Add more `pytest.raises` calls and test cases for various inputs and scenarios.
 
-From the directory containing your `hypotez` folder:
 
-```bash
-pytest
-```
+**Before running the tests:**
 
-This will run all the test functions within your test file.  If you encounter errors or issues, the output of `pytest` will tell you precisely what went wrong and where to modify your tests or code. Remember to adapt the tests to the actual code in the `hypotez/src/suppliers/__init__.py` file.
+- Ensure you have `pytest` installed:  `pip install pytest`
+-  Make sure the Python interpreter can find the `hypotez/src` directory in your PYTHONPATH.  If you are in the `hypotez/` directory, the above example `import` statements should work without problems. Otherwise, adapt the import paths to the location of your file.
+
+Now you have a much more robust starting point for testing your supplier code. Remember to add tests for every aspect of your implementation that you want to verify.

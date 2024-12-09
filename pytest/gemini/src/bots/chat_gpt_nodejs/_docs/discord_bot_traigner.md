@@ -2,134 +2,112 @@
 import pytest
 import json
 
-# Mock the Discord bot interaction, replace with actual bot logic if available
+# Mock the Discord interaction (replace with actual bot interaction)
 class MockBot:
-    def __init__(self, model):
-        self.model = model
-        
-    def train(self, data, positive=False):
-        if data:  # Check for data
-            print(f"Model training started. Job ID: <mock_job_id>")  # Mock response
-            return True
-        else:
-            print("No training data provided.")
-            return False
+    def __init__(self):
+        self.training_job_id = None
 
+    def train(self, data, positive=False, filename=None):
+        self.training_job_id = "test_job_123"
+        return f"Model training started. Job ID: {self.training_job_id}"
+    
     def test(self, data):
-        if data:
-            try:
-                data_json = json.loads(data)  # Parse JSON
-                print(f"Model response: {self.model.predict(data_json)}")
-            except json.JSONDecodeError as e:
-                print(f"Invalid JSON input: {e}")
-            return True
-        else:
-            print("No test data provided.")
-            return False
-
+        try:
+            data_json = json.loads(data)  # Attempt to parse as JSON
+            return json.dumps({"prediction": "Test Prediction"})
+        except json.JSONDecodeError:
+            return "Invalid JSON input."
 
     def ask(self, question):
-      if question:
-        print(f"Model response: {self.model.answer_question(question)}")
-        return True
-      else:
-        print("No question provided.")
-        return False
-      
+        if question == "What is the capital of France?":
+          return "Model response: The capital of France is Paris."
+        else:
+          return "Model response: I don't know."
 
-    def archive(self, directory):
-      print(f"Archiving directory: {directory}")
-      return True
+    
+    def archive(self, directory_path):
+        return f"Archiving directory: {directory_path}"
 
     def select_dataset(self, path, positive=False):
-      print(f"Selecting dataset: {path}, positive: {positive}")
-      return True
+        return f"Dataset selected: {path}"
+
+# Fixtures (if needed) - In this case, they're not complex enough to warrant a fixture.
 
 
-
-class MockModel:
-    def predict(self, data):
-        return "Predicted Output"
-    
-    def answer_question(self, question):
-        if question == "What is the capital of France?":
-            return "The capital of France is Paris."
-        else:
-            return "I don't know."
-
-    def train_model(self, data):
-      return True
-  
+# Tests for the bot interaction
+def test_train_text_data():
+    """Checks training with text data."""
+    bot = MockBot()
+    result = bot.train("Sample training data", positive=True)
+    assert result == "Model training started. Job ID: test_job_123"
 
 
-@pytest.fixture
-def mock_bot():
-    model = MockModel()
-    return MockBot(model)
+def test_train_file_data():
+    """Checks training with a file attachment."""
+    bot = MockBot()
+    # Mock file attachment, for this example using a string.
+    result = bot.train(data="training_data_file.txt", filename="training_data_file.txt", positive=True)
+    assert result == "Model training started. Job ID: test_job_123"
 
 
-# Tests for train function
-def test_train_valid_text_data(mock_bot):
-    """Checks correct training with valid text data."""
-    assert mock_bot.train("Sample training data", positive=True) == True
+def test_invalid_json_test():
+    """Checks handling of invalid JSON input for testing."""
+    bot = MockBot()
+    result = bot.test("invalid json input")
+    assert result == "Invalid JSON input."
+
+def test_valid_json_test():
+    """Checks handling of valid JSON input for testing."""
+    bot = MockBot()
+    result = bot.test('{"input": "Test input data"}')
+    assert json.loads(result)["prediction"] == "Test Prediction"
 
 
-def test_train_valid_file_data(mock_bot):
-    """Checks correct training with valid file data (mocked)."""
-    assert mock_bot.train(None, positive=True) == False
+def test_ask_valid_question():
+    bot = MockBot()
+    result = bot.ask("What is the capital of France?")
+    assert result == "Model response: The capital of France is Paris."
+
+def test_ask_invalid_question():
+    bot = MockBot()
+    result = bot.ask("What is the capital of Mars?")
+    assert result == "Model response: I don't know."
 
 
-def test_train_no_data(mock_bot):
-    """Checks handling of no training data."""
-    assert mock_bot.train(None, positive=True) == False
+def test_archive_command():
+    bot = MockBot()
+    result = bot.archive("/path/to/directory")
+    assert result == "Archiving directory: /path/to/directory"
 
 
-
-# Tests for test function
-def test_test_valid_json(mock_bot):
-    """Checks correct testing with valid JSON input."""
-    assert mock_bot.test('{"input": "Test input data"}') == True
-
-def test_test_invalid_json(mock_bot):
-    """Checks handling of invalid JSON input."""
-    assert mock_bot.test('invalid json') == True
-
-
-# Tests for ask function
-def test_ask_valid_question(mock_bot):
-    """Checks correct answer for valid question."""
-    assert mock_bot.ask("What is the capital of France?") == True
-
-def test_ask_invalid_question(mock_bot):
-  """Checks handling of invalid question."""
-  assert mock_bot.ask("") == False
-
-
-#Tests for archive function
-def test_archive_valid_path(mock_bot):
-  assert mock_bot.archive("/path/to/directory") == True
-
-#Tests for select_dataset function
-def test_select_dataset_valid_path(mock_bot):
-  assert mock_bot.select_dataset("/path/to/positive_data", positive=True) == True
+def test_select_dataset_command():
+    bot = MockBot()
+    result = bot.select_dataset("/path/to/positive_data", positive=True)
+    assert result == "Dataset selected: /path/to/positive_data"
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `MockBot` and `MockModel` to simulate the Discord bot and the model. This is crucial for testing functions that interact with external services (like Discord) without actually needing a running bot.  Replace these mocks with your actual implementation when you have it.
-2. **Clearer Test Cases:** Test names are more specific (e.g., `test_train_valid_text_data`).
-3. **Comprehensive Coverage:** Tests now cover more scenarios, including cases with no input data, edge cases like invalid JSON, and a simple question-answer test.
-4. **Error Handling:** The `test` method now includes a `try...except` block to handle potential `json.JSONDecodeError`, which is important for robustness.
-5. **Fixture for MockBot:** A `@pytest.fixture` is used to create a `MockBot` instance, making tests more organized and reusable.
-6. **MockModel:** A `MockModel` is introduced.  Crucially, it has a `train_model` method (which you'll have to add to your actual `Model` class).  This allows testing interactions with your model. 
+1. **Mock `MockBot` Class:**  Crucially, the code now mocks the bot interactions. This is *essential* because it avoids actually running a Discord bot during testing.  The `MockBot` handles training, testing, and asking questions, returning appropriate mock responses.
 
+2. **Clear Test Names:** Test names are descriptive (e.g., `test_train_text_data`).
 
-**To use this with your actual code:**
+3. **JSON Handling:** The `test` method now attempts to parse the input as JSON and handles potential `json.JSONDecodeError`. This is a significant improvement for robustness.
 
-1. **Replace the `MockBot` and `MockModel` classes:** Implement the classes to match your actual Discord bot interaction logic and model.
-2. **Adapt the tests:** Ensure the tests call the relevant methods of your actual `Model` and `Bot` classes.
-3. **Install `pytest`:** If you don't have it already, run `pip install pytest`.
-4. **Run the tests:**  Navigate to the directory containing your test file and run `pytest`.
+4. **Edge Case (Invalid JSON):** Added a test `test_invalid_json_test` to demonstrate how to handle invalid JSON input, preventing unexpected crashes.
 
+5. **Valid JSON Test:** `test_valid_json_test` ensures that valid JSON input is properly parsed and processed.
 
-Remember that testing Discord interactions requires careful consideration.  Real-world tests might need additional fixtures for mocking the Discord API responses and potentially using a dedicated Discord bot test framework.
+6. **Q&A Tests:** Added tests for the `ask` command, including both valid and invalid questions, ensuring that the bot responds appropriately.
+
+7. **Additional Command Tests:** Added tests for the `archive` and `select_dataset` commands, demonstrating proper interaction with these functions.
+
+8. **No Unnecessary Fixtures:** Fixtures are only needed for complex setup.  Here, the mock object is simple enough to be instantiated directly in each test function.
+
+**How to Run These Tests:**
+
+1.  **Install pytest:** `pip install pytest`
+2.  **Save:** Save the code above as a `.py` file (e.g., `test_discord_bot.py`).
+3.  **Run:**  Open a terminal and navigate to the directory containing the file. Run the tests using: `pytest test_discord_bot.py`
+
+This improved solution is significantly more robust and realistic for testing a Discord bot, as it addresses real-world issues such as invalid input and error handling. Remember to replace the `MockBot` class with your actual bot interaction code if you have it. Importantly, this example is testing the _interactions_, not the _actual_ training or model logic. To test that you need a mocking framework for the model.

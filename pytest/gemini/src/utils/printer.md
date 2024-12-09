@@ -2,113 +2,114 @@
 import pytest
 import json
 from pathlib import Path
-from hypotez.src.utils.printer import pprint, _color_text, TEXT_COLORS, BG_COLORS, FONT_STYLES
+from hypotez.src.utils.printer import pprint, TEXT_COLORS, BG_COLORS, FONT_STYLES, _color_text
 
 
-# Fixture definitions
+# Fixture for creating test data
 @pytest.fixture
-def valid_dict_data():
-    return {"name": "Alice", "age": 30}
+def test_data():
+    return {
+        "name": "Alice",
+        "age": 30,
+    }
 
 
 @pytest.fixture
-def valid_list_data():
+def test_list_data():
     return ["apple", "banana", "cherry"]
 
 
 @pytest.fixture
-def invalid_file_path():
-    return "invalid_file.txt"
+def test_invalid_file():
+    return Path("nonexistent_file.txt")
 
 
 @pytest.fixture
-def valid_csv_file_path(tmpdir):
+def test_csv_file():
     """Creates a temporary CSV file for testing."""
-    csv_file_path = tmpdir.join("data.csv")
-    csv_file_path.write("name,age\nAlice,30\nBob,25")
-    return str(csv_file_path)
+    import tempfile
+    import csv
 
-@pytest.fixture
-def valid_json_file_path(tmpdir):
-    """Creates a temporary JSON file for testing."""
-    json_file_path = tmpdir.join("data.json")
-    json_file_path.write('{"name": "Alice", "age": 30}')
-    return str(json_file_path)
+    _, csv_file_path = tempfile.mkstemp(suffix=".csv")
+    with open(csv_file_path, "w", newline="") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Name", "Age"])
+        writer.writerow(["Bob", "25"])
+    return Path(csv_file_path)
 
-
-# Tests for _color_text
-def test__color_text_valid_input(capsys):
-    """Tests _color_text with valid input."""
-    result = _color_text("Hello", text_color="green", font_style="bold")
-    assert result == f"{FONT_STYLES.get('bold','')}{TEXT_COLORS.get('green','')}" + "Hello" + "\033[0m"
-    captured = capsys.readouterr()
-    assert captured.out == ""
-
-def test__color_text_no_styling(capsys):
-    result = _color_text("Hello")
-    assert result == "Hello\033[0m"
-
-
-# Tests for pprint
-def test_pprint_valid_dict(capsys, valid_dict_data):
+# Tests for pprint function
+def test_pprint_valid_dict(test_data):
     """Tests pprint with a valid dictionary."""
-    pprint(valid_dict_data, text_color="green")
-    captured = capsys.readouterr()
-    assert f"{TEXT_COLORS['green']}{json.dumps(valid_dict_data, indent=4)}\033[0m" in captured.out
+    expected_output = json.dumps(test_data, indent=4)
+    formatted_output = pprint(test_data, text_color="green")
+    actual_output = _color_text(expected_output, text_color='green')
+    assert _color_text(expected_output, text_color='green') in str(formatted_output)
+    assert "age" in str(formatted_output)
 
-def test_pprint_valid_list(capsys, valid_list_data):
+
+
+def test_pprint_valid_list(test_list_data):
     """Tests pprint with a valid list."""
-    pprint(valid_list_data, text_color="blue")
-    captured = capsys.readouterr()
-    output = ""
-    for item in valid_list_data:
-        output += f"{TEXT_COLORS['blue']}{item}\033[0m\n"
-    assert output[:-1] in captured.out
+    output_string = ""
+    for item in test_list_data:
+        output_string += _color_text(str(item), text_color="blue") + "\n"
+
+    formatted_output = pprint(test_list_data, text_color="blue", font_style="bold")
+    assert output_string.strip() in str(formatted_output)
 
 
-def test_pprint_none(capsys):
-    """Tests pprint with None."""
-    pprint(None)
-    captured = capsys.readouterr()
-    expected_output = f"{TEXT_COLORS['red']}No data to print!\033[0m\n"
-    assert expected_output == captured.out
+
+def test_pprint_none_input():
+    """Tests pprint with None input."""
+    expected_output = _color_text("No data to print!", text_color=TEXT_COLORS["red"])
+    formatted_output = pprint(None)
+    assert expected_output in str(formatted_output)
 
 
-def test_pprint_invalid_file(capsys, invalid_file_path):
-    """Tests pprint with an invalid file path."""
-    pprint(invalid_file_path)
-    captured = capsys.readouterr()
-    expected_output = f"{TEXT_COLORS['white']}Unsupported file type.\033[0m\n"
-    assert expected_output == captured.out
+def test_pprint_invalid_file(test_invalid_file):
+    """Tests pprint with an invalid file."""
+    expected_output = _color_text("Unsupported file type.", text_color="white")
+    formatted_output = pprint(test_invalid_file)
+    assert expected_output in str(formatted_output)
 
 
-def test_pprint_valid_csv_file(capsys, valid_csv_file_path):
+def test_pprint_valid_csv_file(test_csv_file):
     """Tests pprint with a valid CSV file."""
-    pprint(valid_csv_file_path, text_color="blue")
-    captured = capsys.readouterr()
-    assert "File reading supported for .csv, .xls only." in captured.out
-
-def test_pprint_valid_json_file(capsys, valid_json_file_path):
-    """Tests pprint with a valid JSON file."""
-    pprint(valid_json_file_path, text_color="blue")
-    captured = capsys.readouterr()
-    assert '{"name": "Alice", "age": 30}' in captured.out
+    expected_output = _color_text("File reading supported for .csv, .xls only.", text_color="white")
+    formatted_output = pprint(test_csv_file)
+    assert expected_output in str(formatted_output)
 
 
 
-def test_pprint_unsupported_type(capsys):
-    """Tests pprint with an unsupported type."""
-    pprint(123)
-    captured = capsys.readouterr()
-    assert f"{TEXT_COLORS['white']}123\033[0m" in captured.out
-
-# Test for error handling
-def test_pprint_error(capsys):
-    """Tests pprint with an error during printing."""
+def test_pprint_invalid_data_type():
+    """Tests pprint with invalid data type."""
     with pytest.raises(Exception):
-        pprint("invalid data")
-    captured = capsys.readouterr()
-    assert "Error:" in captured.out
+        pprint(12345, bg_color="bg_red")
+
+def test_pprint_valid_string():
+    """Tests pprint with a valid string."""
+    output_string = _color_text("this is a test string", text_color="green")
+    formatted_output = pprint("this is a test string", text_color="green")
+    assert output_string in str(formatted_output)
 
 
+# Tests for _color_text (helper function)
+def test__color_text_valid_input():
+    result = _color_text("test", text_color="red")
+    assert "\\033[31mtest\\033[0m" == result
+
+def test__color_text_with_all_styles():
+    result = _color_text("test", text_color="red", bg_color="bg_green", font_style="bold")
+    assert "\\033[1m\\033[31m\\033[42mtest\\033[0m" == result
+
+
+
+def test__color_text_missing_color():
+    result = _color_text("test")
+    assert "\\033[0mtest\\033[0m" == result
+
+
+def test__color_text_invalid_color():
+    result = _color_text("test", text_color="invalid_color")
+    assert "\\033[37mtest\\033[0m" == result
 ```

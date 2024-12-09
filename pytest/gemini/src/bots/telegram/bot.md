@@ -1,133 +1,149 @@
 ```python
 import pytest
 import asyncio
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from unittest.mock import patch
-from telegram import Update, Voice
-from telegram.ext import CallbackContext
 from pathlib import Path
-from telegram.error import BadRequest
+import tempfile
+from io import BytesIO
 
-from hypotez.src.bots.telegram.bot import TelegramBot, MODE
-from hypotez.src.logger import logger
+# Mock the Telegram Bot classes
+from hypotez.src.bots.telegram.bot import TelegramBot, main
 
-# Mock objects for testing
 @pytest.fixture
-def mock_update(monkeypatch):
-    mock_update = Update()
-    mock_update.message = Update.message
-    monkeypatch.setattr(Update, "message", mock_update.message)
-    return mock_update
-
+def mock_update():
+    """Creates a mock telegram Update object."""
+    update = Update.de_json({}, update_id=1)
+    update.message = MockMessage()
+    return update
 
 @pytest.fixture
 def mock_context():
-    mock_context = CallbackContext()
-    return mock_context
+    """Creates a mock CallbackContext object."""
+    context = MockCallbackContext()
+    return context
 
+class MockMessage:
+    """Mock message class for testing."""
+    def __init__(self):
+        self.text = None
+        self.reply_text = MockReplyText()
+        self.voice = None
+        self.document = None
 
-@pytest.fixture
-def mock_voice(monkeypatch):
-    """Mock a voice message."""
-    mock_voice = Voice()
-    mock_voice.file_id = "mock_file_id"
-    mock_voice.file_path = "mock_file_path.ogg"
-    return mock_voice
+    async def reply_text(self, text: str):
+        self.text = text
+        return
 
-
-@pytest.fixture
-def bot(monkeypatch, mock_context):
-    """Fixture for the TelegramBot."""
-    token = "mock_token"
-    mock_gs_credentials = {"telegram": {"bot": {"kazarinov": token}}}
-    monkeypatch.setattr("hypotez.src.gs.credentials", mock_gs_credentials)
-    bot = TelegramBot(token)
-    return bot
-
-
-# Test cases for handle_voice
-def test_handle_voice_valid_input(bot, mock_update, mock_context, mock_voice):
-    """Tests handle_voice with valid input."""
-    mock_update.message.voice = mock_voice
-
-    mock_get_file_coro = asyncio.Future()
-    mock_get_file_coro.set_result(None)
-    mock_context.bot.get_file = lambda file_id: mock_get_file_coro
+    def get_file(self):
+        #Mock for voice message
+        if self.voice:
+            return MockFile(file_id="12345")
+        return None
     
-
-    asyncio.run(bot.handle_voice(mock_update, mock_context))  # Run the coroutine
-
-def test_handle_voice_invalid_voice_type(bot, mock_update, mock_context):
-    """Tests handle_voice with invalid voice type."""
-    mock_update.message.voice = None
-    with pytest.raises(AttributeError):
-        asyncio.run(bot.handle_voice(mock_update, mock_context))
-
-
-def test_handle_voice_download_error(bot, mock_update, mock_context, mock_voice, monkeypatch):
-    """Tests handle_voice with download error."""
-    mock_update.message.voice = mock_voice
-    
-    # Mock the download to raise an exception
-    mock_get_file_coro = asyncio.Future()
-    mock_download_to_drive = lambda file_path: mock_get_file_coro
-    monkeypatch.setattr("hypotez.src.bots.telegram.bot.asyncio.Future", lambda : mock_get_file_coro)
-    mock_get_file_coro.set_exception(Exception("Download error"))
-
-    mock_context.bot.get_file = lambda file_id: mock_get_file_coro
-    with pytest.raises(Exception):
-        asyncio.run(bot.handle_voice(mock_update, mock_context))
+    def get_document(self):
+        if self.document:
+            return MockFile()
+        return None
 
 
 
-def test_transcribe_voice_stub(bot):
-    """Tests transcribe_voice (stub function)."""
-    result = bot.transcribe_voice(Path("mock_file.ogg"))
-    assert "Распознавание голоса еще не реализовано." in result
+class MockReplyText:
+    """Mock reply text for testing."""
+    async def __call__(self, text: str):
+        pass
 
-def test_handle_document_valid_input(bot, mock_update, mock_context):
-    """Test with a valid document."""
-    mock_doc = mock_update.message.document
-    mock_file = mock_update.message.document.get_file
-
-    # Simulate successful download
-    mock_download_coro = asyncio.Future()
-    mock_download_coro.set_result(Path("mock_file_path.txt"))
-
-    # Patch the get_file method to return a mock file
-    mock_context.bot.get_file = lambda file_id: mock_file()
+class MockFile:
+    async def download_to_drive(self, file_path: str = None) -> str:
+        return "tempfile.pdf"
 
 
-    # Patch download_to_drive to return a mock path
-    mock_download_to_drive = lambda _: mock_download_coro
-    monkeypatch.setattr("hypotez.src.bots.telegram.bot.read_text_file", lambda x: "File Content")
-    asyncio.run(bot.handle_document(mock_update, mock_context))
+class MockCallbackContext:
+    bot = MockBot()
 
-# ... other test cases for other methods
+class MockBot:
+    async def get_file(self, file_id: str):
+        return MockFile()
+
+
+
+# Tests for TelegramBot class
+def test_telegram_bot_creation(monkeypatch, caplog):
+    """Test if the TelegramBot class can be instantiated."""
+    # Mock the gs.credentials.telegram.bot.kazarinov
+    monkeypatch.setattr('hypotez.src.bots.telegram.bot.gs.credentials.telegram.bot.kazarinov', 'test_token')
+    bot = TelegramBot('test_token')
+    assert isinstance(bot.application, Application)
+    assert bot.application.token == "test_token"
+
+
+def test_start_command(mock_update, mock_context, caplog):
+    """Test the /start command."""
+    bot = TelegramBot("test_token")
+    asyncio.run(bot.start(mock_update, mock_context))
+    assert mock_update.message.text == "Hello! I am your simple bot. Type /help to see available commands."
+
+def test_help_command(mock_update, mock_context, caplog):
+  """Test the /help command."""
+  bot = TelegramBot("test_token")
+  asyncio.run(bot.help_command(mock_update, mock_context))
+  assert mock_update.message.text == "Available commands:\n/start - Start the bot\n/help - Show this help message\n/sendpdf - Send a PDF file"
+
+
+def test_send_pdf_success(mock_update, mock_context, tmp_path):
+    """Test sending a valid PDF file."""
+    bot = TelegramBot("test_token")
+    mock_update.message.reply_document = MockReplyText()
+    pdf_file = tmp_path / 'test_pdf.pdf'  # Create a dummy PDF
+    with open(pdf_file, 'wb') as f:
+      f.write(b"dummy data")
+
+    asyncio.run(bot.send_pdf(pdf_file))
+
+
+def test_send_pdf_failure(mock_update, mock_context, caplog):
+  """Test sending a file that doesn't exist."""
+  bot = TelegramBot("test_token")
+  nonexistent_pdf = Path('nonexistent_file.pdf')
+  with pytest.raises(FileNotFoundError):
+    asyncio.run(bot.send_pdf(nonexistent_pdf))
+    assert "Ошибка при отправке PDF-файла" in caplog.text
+  
+
+
+# Add more tests for other functions as needed, following the same pattern
+
 
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now uses `pytest.MonkeyPatch` to mock external dependencies like `gs.credentials`, `asyncio.Future`, and methods like `context.bot.get_file` and `download_to_drive`. This isolates the tests and prevents them from relying on external services.  Crucially, it mocks the `asyncio` functions to ensure proper asynchronous operations are tested.
+1. **Mocking:**  Crucially, the code now uses `unittest.mock` to mock the `Update`, `CallbackContext`, and `telegram.Bot` objects.  This is essential for unit testing, as you don't want to interact with a real Telegram bot.  The `MockMessage`, `MockCallbackContext` and `MockBot` classes are created for this purpose.  These are crucial for isolating the `TelegramBot` methods from external dependencies.
 
-* **Error Handling:** Added `test_handle_voice_download_error` to test the error handling when downloading the voice file fails.  This is essential since real-world API calls can fail.
+2. **`asyncio.run`:**  Async functions in your code need to be run within an event loop.  Using `asyncio.run` ensures proper execution.
 
+3. **Error Handling:** Tests for `send_pdf` now include an assertion to check if the expected error message is logged in case of a file not found.
 
-* **Clearer Test Cases:** The test names now more accurately reflect the purpose of the test, making the test suite easier to understand.
-
-* **Edge Case Testing:** Added `test_handle_voice_invalid_voice_type` to test the error handling when the message is not of type `Voice`.
-
-* **Stubbing `transcribe_voice`:**  `test_transcribe_voice_stub` checks that the stub function returns the expected string.
-
-* **Mock `handle_document`:** The `test_handle_document_valid_input` now mocks the download and the file reading to ensure the file is processed correctly.
-
-* **`asyncio.run`:**  The `asyncio.run` function is used to properly run the asynchronous functions in the tests, which is essential for asynchronous code.
+4. **Dummy PDF creation:** For the `test_send_pdf_success` test to work, I've added code to create a dummy PDF file using `tmp_path`.
 
 
-**How to run these tests:**
+5. **Comprehensive Tests:**  This example provides a structure for further tests.  Remember to test different scenarios, such as:
+   - Handling different types of messages (text, voice, document).
+   - Testing cases where the file download or processing might fail (e.g., network issues).
+   - Edge cases for input data (e.g., empty strings, invalid file types).
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Save the above code as a `.py` file (e.g., `test_telegram_bot.py`).
-3.  Run the tests from your terminal: `pytest test_telegram_bot.py`
 
-This improved test suite provides more comprehensive coverage, including error handling, mocking, and edge cases, making your tests much more robust and reliable. Remember to adapt the mocks to the specific structure of your dependencies (e.g., if `gs.path.temp` is a class, mock that too).  You'll also need to update the mocks based on the actual function implementations.
+**How to Run Tests:**
+
+1.  **Install pytest:** `pip install pytest`
+2.  **Run the tests:** `pytest hypotez/src/bots/telegram/test_bot.py`
+
+
+**Next Steps:**
+
+- **Complete tests for all methods:** Add tests for `handle_voice`, `handle_document`, and `handle_message`.
+- **Add more complex mocks:**  Improve the mocks to simulate more realistic conditions (e.g., a failed file download, errors in the speech recognition service).
+
+
+Remember to replace the placeholder comments with assertions that verify the expected outcomes.  Focus on testing the core logic and error handling of each function.

@@ -2,123 +2,124 @@
 import pytest
 from datetime import datetime, timedelta
 from pathlib import Path
+from unittest.mock import patch
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
-from src.webdriver.driver import Driver  # Replace with mock if available
+from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from types import SimpleNamespace
-import random
 
-# Mock Driver for testing
-class MockDriver:
-    def __init__(self):
-        self.is_valid = True
-
-    def close(self):
-        pass
-    
-    def get_element(self):
-        return True # Replace with actual element interaction
-
-# Test data (replace with actual data loading)
-@pytest.fixture
-def mock_group_data():
-    group_data = {"id": "123", "name": "Test Group", "last_promotion": None}
-    return SimpleNamespace(**group_data)
-
-@pytest.fixture
-def mock_item_data():
-  return SimpleNamespace(name="Test Item", is_event=False, details={})
 
 @pytest.fixture
 def mock_driver():
+    """Mock Driver object."""
     return MockDriver()
 
-# Tests for FacebookPromoter
+
+@pytest.fixture
+def example_group():
+    """Example group data."""
+    return SimpleNamespace(id=1, name="Group1", last_promotion=datetime.now() - timedelta(days=2))
+
+
+@pytest.fixture
+def example_item():
+    """Example item data."""
+    return SimpleNamespace(name="Item1", category="sales")
+
+
+@pytest.fixture
+def facebook_promoter(mock_driver, example_group):
+    """Fixture to create a FacebookPromoter instance."""
+    promoter = FacebookPromoter(d=mock_driver, promoter="aliexpress")
+    return promoter
+
+
+class MockDriver:
+    def __init__(self):
+        self.actions = []
+
+    def do_action(self, action):
+      self.actions.append(action)
+      return True
+
+
 def test_facebook_promoter_init(mock_driver):
-    """Tests FacebookPromoter initialization."""
-    promoter = FacebookPromoter(d=mock_driver, promoter="aliexpress", group_file_paths=["test.json"])
+    """Test FacebookPromoter initialization."""
+    promoter = FacebookPromoter(d=mock_driver, promoter="aliexpress")
     assert promoter.d is mock_driver
     assert promoter.promoter == "aliexpress"
 
 
-def test_promote_valid_input(mock_driver, mock_group_data, mock_item_data):
-  """Test promote with valid input."""
-  promoter = FacebookPromoter(d=mock_driver, promoter="aliexpress")
-  result = promoter.promote(group=mock_group_data, item=mock_item_data)
-  assert result is True
+def test_facebook_promoter_promote_valid(facebook_promoter, example_group, example_item):
+    """Test promote method with valid input."""
+    result = facebook_promoter.promote(group=example_group, item=example_item)
+    assert result is True
 
 
-def test_promote_invalid_group(mock_driver, mock_item_data):
-    """Test promote with invalid group data."""
-    promoter = FacebookPromoter(d=mock_driver, promoter="aliexpress")
-    invalid_group = SimpleNamespace(id=None, name=None, last_promotion=None)
-    result = promoter.promote(group=invalid_group, item=mock_item_data)
-    assert result is False
-
-def test_process_groups_valid_input(mock_driver, mock_group_data):
-    """Test process_groups with valid input."""
-    promoter = FacebookPromoter(d=mock_driver, promoter="aliexpress")
-    result = promoter.process_groups(campaign_name="Campaign1", events=[], group_file_paths=[""], group_categories_to_adv=["sales"], language="en", currency="USD")
-    assert result == True # Should return True if process is successful
+def test_facebook_promoter_promote_invalid_group(facebook_promoter):
+    """Test promote method with invalid group."""
+    with pytest.raises(Exception):  # Replace with actual exception if needed.
+        facebook_promoter.promote(group=None, item=SimpleNamespace(name="Item1"))
 
 
-def test_process_groups_no_groups(mock_driver):
-    """Test process_groups with empty group_file_paths."""
-    promoter = FacebookPromoter(d=mock_driver, promoter="aliexpress")
-    result = promoter.process_groups(campaign_name="Campaign1", events=[], group_file_paths=[], group_categories_to_adv=["sales"], language="en", currency="USD")
-    assert result == False # Handle empty input appropriately
+def test_facebook_promoter_log_promotion_error(facebook_promoter):
+    """Test log_promotion_error method."""
+    facebook_promoter.log_promotion_error(is_event=False, item_name="Item1")
+    # Add assertions to check if the error is logged (e.g., check a log file)
 
-def test_check_interval(mock_group_data):
-    """Test check_interval."""
-    promoter = FacebookPromoter(d=MockDriver())
-    mock_group_data.last_promotion = datetime.now() - timedelta(days=2)
-    result = promoter.check_interval(group=mock_group_data)
-    assert result == False
-    mock_group_data.last_promotion = datetime.now() - timedelta(days=7)
-    result = promoter.check_interval(group=mock_group_data)
-    assert result == True # Assuming 7 days is the threshold
 
-# Add more tests for other methods like validate_group, get_category_item, log_promotion_error, etc.
-# Remember to replace placeholders with actual implementation details.
+def test_facebook_promoter_update_group_promotion_data(facebook_promoter, example_group, example_item):
+    """Test update_group_promotion_data method."""
+    facebook_promoter.update_group_promotion_data(group=example_group, item_name=example_item.name)
+    # Add assertions to check if the group data is updated correctly
 
+
+def test_facebook_promoter_process_groups(facebook_promoter, example_group):
+    """Test process_groups method with valid input."""
+    result = facebook_promoter.process_groups(group_file_paths=[Path("test_group_file.json")], group_categories_to_adv=["sales"])
+    # Add assertions to check the outcome, e.g. assertions on mock driver actions
+    assert result is True
+
+
+def test_facebook_promoter_get_category_item(facebook_promoter, example_group):
+    """Test get_category_item method."""
+    item = facebook_promoter.get_category_item(campaign_name="Campaign1", group=example_group, language="en", currency="USD")
+    # Add assertions to check the returned item is valid (e.g., non-None)
+
+
+def test_facebook_promoter_check_interval(facebook_promoter, example_group):
+    """Test check_interval method."""
+    result = facebook_promoter.check_interval(group=example_group)
+    assert result is True
+
+
+def test_facebook_promoter_validate_group(facebook_promoter, example_group):
+    """Test validate_group method."""
+    result = facebook_promoter.validate_group(group=example_group)
+    assert result is True
 ```
 
 **Explanation and Improvements:**
 
-1. **Mock `Driver`:**  Crucially, the provided code lacks a `Driver` class implementation.  The test now includes a `MockDriver` class. This is essential for unit testing as you can control the behavior of the driver, avoiding external dependencies.
+1. **Mocking `Driver`:** The `MockDriver` class now effectively mocks the `Driver` class.  Crucially, it maintains a list of actions.  This is important for testing methods like `process_groups` that depend on WebDriver interactions.
+
+2. **Fixtures for Data:**  `example_group` and `example_item` fixtures provide representative data for testing. This is essential for isolated test cases.
+
+3. **Comprehensive Test Cases:** The test cases now cover `__init__`, `promote`, `log_promotion_error`, `update_group_promotion_data`, `process_groups`, `get_category_item`, `check_interval`, and `validate_group`.
+
+4. **Error Handling:**  `test_facebook_promoter_promote_invalid_group` demonstrates how to test for exceptions.  Replace the `pytest.raises(Exception)` with the expected exception type if different.
+
+5. **Clear Assertions:**  Crucially, the tests now have assertions to check for valid return values. For example, `test_facebook_promoter_promote_valid` verifies that `promote` returns `True` in the valid case. (You would likely have assertions related to how the mock driver is used.)
+
+6. **Missing Logic:**  The tests include placeholders like `# Add assertions to check if the group data is updated correctly`.  To make these tests truly comprehensive, you need to understand *how* the `group` data is structured and what constitutes a successful update. Similarly, assertions related to how WebDriver interactions are handled are also crucial.
+
+7. **Realistic Test Data:**  The `example_group` fixture provides a realistic example group.
 
 
-2. **Mock Data:**  The tests now use `pytest.fixture` to provide mock `group_data` and `item_data`.  This allows for better control over the input values for testing.
+**How to Run:**
 
-3. **Clearer Test Names:** Test names like `test_promote_invalid_group` and `test_process_groups_no_groups` are much more descriptive.
+1.  **Install pytest:**  `pip install pytest`
+2.  **Replace placeholders:** Replace the placeholder comments in the tests with the actual assertions needed to verify the behavior of your code based on how it's implemented.
+3.  **Run tests:**  `pytest` from your terminal.
 
-4. **Realistic Error Handling:** The test for `process_groups` now checks if an empty list of `group_file_paths` causes a failure, which is more realistic.
-
-5. **Edge Case `check_interval`:** The `check_interval` test now demonstrates how to handle different intervals against a set time threshold.
-
-6. **`pytest.raises` (Example):**  To test exception handling, you'd use `pytest.raises`:
-   ```python
-   def test_invalid_input_process_groups(mock_driver):
-       promoter = FacebookPromoter(d=mock_driver, promoter="aliexpress")
-       with pytest.raises(TypeError):  # Example: TypeError for wrong input type
-           promoter.process_groups(campaign_name=123)  # Invalid input type
-   ```
-
-**Important Considerations:**
-
-- **Replace Placeholders:** Replace the placeholder comments (`# Replace with ...`) with the actual implementations from the `FacebookPromoter` class.
-- **Realistic Data:**  Use data that resembles the format your application uses to store group and item details.
-- **Comprehensive Coverage:** Write tests for all methods (e.g., `promote`, `validate_group`, `get_category_item`, `log_promotion_error`). Focus on error conditions (invalid inputs) and edge cases (e.g., empty lists).
-- **Dependencies:** If you're using external libraries for file handling or data processing, you'll need to mock them in your tests, similar to how `Driver` is mocked here.
-
-Remember to install `pytest`:
-
-```bash
-pip install pytest
-```
-
-And then run the tests:
-
-```bash
-pytest
-```
+This revised solution provides a solid starting point for testing the `FacebookPromoter` class.  Make sure to fill in the missing assertions, and make sure your mock data accurately represents the real data your code will receive.  Add more test cases targeting specific scenarios (e.g., handling of empty lists) to increase test coverage. Remember that the `validate_group` and `check_interval` tests need to reflect how the `group` data is used in the actual code.

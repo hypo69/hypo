@@ -1,93 +1,93 @@
 ```python
 import pytest
 
-# This is a placeholder.  The actual code from rai_harmful_content_prevention.md would go here.
-# Replace with the actual function from the file.
-def check_harmful_content(text):
-    """
-    Checks if the input text contains harmful content.
+def test_harmful_content_prevention_valid_input():
+    """Checks if valid input (not harmful) passes."""
+    input_text = "This is a harmless statement."
+    assert not harmful_content_check(input_text)  # Should return False for harmless text
 
-    Args:
-        text: The input text to check.
+def test_harmful_content_prevention_hate_speech():
+    """Checks if hate speech is identified as harmful."""
+    input_text = "This is a hateful and discriminatory statement."
+    assert harmful_content_check(input_text)  # Should return True for harmful content
 
-    Returns:
-        True if the input contains harmful content, False otherwise.
-        Raises ValueError for invalid input types.
-    """
-    if not isinstance(text, str):
-        raise ValueError("Input must be a string.")
+def test_harmful_content_prevention_racist_slur():
+    """Checks if racist slurs are identified."""
+    input_text = "That person is a [racial slur]."
+    assert harmful_content_check(input_text) # Should return True for harmful content
 
-    harmful_keywords = ["hateful", "racist", "sexist", "lewd", "violent"]
-    for keyword in harmful_keywords:
-        if keyword in text.lower():
-            return True
-    return False
+def test_harmful_content_prevention_sexist_comment():
+    """Checks if sexist comments are identified."""
+    input_text = "Women are not as strong as men."
+    assert harmful_content_check(input_text)  # Should return True for harmful content
 
+def test_harmful_content_prevention_lewd_comment():
+    """Checks if lewd comments are identified."""
+    input_text = "I'd like to see some [pornographic act]."
+    assert harmful_content_check(input_text)  # Should return True for harmful content
 
-def test_check_harmful_content_valid_input():
-    """Tests the function with valid, harmful input."""
-    text = "This is a hateful message."
-    assert check_harmful_content(text) is True
+def test_harmful_content_prevention_violent_statement():
+    """Checks if violent statements are identified."""
+    input_text = "I will hurt you."
+    assert harmful_content_check(input_text)  # Should return True for harmful content
 
-
-def test_check_harmful_content_valid_non_harmful_input():
-    """Tests the function with valid, non-harmful input."""
-    text = "This is a harmless message."
-    assert check_harmful_content(text) is False
-
-
-def test_check_harmful_content_empty_string():
-    """Tests the function with an empty string."""
-    text = ""
-    assert check_harmful_content(text) is False
+def test_harmful_content_prevention_empty_string():
+    """Checks if an empty string is considered harmless."""
+    input_text = ""
+    assert not harmful_content_check(input_text)  # Should return False for empty string
 
 
-def test_check_harmful_content_case_insensitive():
-    """Tests the function's case-insensitivity."""
-    text = "This is a HATEFUL message."
-    assert check_harmful_content(text) is True
+def test_harmful_content_prevention_mixed_content():
+    """Checks if a string with mixed content is correctly identified."""
+    input_text = "This is harmless, but this is harmful content."
+    assert harmful_content_check(input_text) # Should return True as harmful content is present
+
+def test_harmful_content_prevention_case_insensitive():
+    """Checks if the function is case-insensitive."""
+    input_text = "hARMFUL CONTENT"
+    assert harmful_content_check(input_text)  # Should return True
 
 
-def test_check_harmful_content_multiple_keywords():
-    """Tests the function with multiple harmful keywords."""
-    text = "This is a hateful and violent message."
-    assert check_harmful_content(text) is True
+# Placeholder for the function being tested (replace with your actual function)
+def harmful_content_check(text):
+  """
+  This function checks if the input text contains harmful content.
+  Note:  This is a placeholder. You'll need to replace this with your
+         actual function that checks for harmful content based on
+         your logic.
+  """
+
+  # Example (replace with your actual checks)
+  harmful_keywords = ["hate", "racist", "sexist", "lewd", "violent", "kill", "hurt"]
+  text_lower = text.lower()
+  for keyword in harmful_keywords:
+    if keyword in text_lower:
+      return True
+  return False
 
 
-def test_check_harmful_content_no_keywords():
-    """Tests the function with no harmful keywords."""
-    text = "This is a neutral message."
-    assert check_harmful_content(text) is False
-
-
-def test_check_harmful_content_invalid_input_type():
-    """Tests the function with invalid input (not a string)."""
-    with pytest.raises(ValueError, match="Input must be a string."):
-        check_harmful_content(123)
 ```
 
 **Explanation and Improvements:**
 
-1. **Placeholder for Actual Code:**  The provided example code was very minimal.  The tests now work with a placeholder function `check_harmful_content` that mimics a likely function in the actual file (`rai_harmful_content_prevention.md`).  Replace this placeholder with the actual function you want to test.
+1. **Placeholder Function:** The code now includes a placeholder for the actual `harmful_content_check` function.  Crucially, **you must replace this placeholder with your actual function** from the `input_code`.
 
-2. **Comprehensive Test Cases:** The tests cover:
-   - Valid harmful input
-   - Valid non-harmful input
-   - Empty string
-   - Case-insensitive matching
-   - Multiple harmful keywords
-   - No harmful keywords
-   - Invalid input type (using `pytest.raises`)
+2. **Comprehensive Test Cases:** The tests now cover various types of harmful content (hate speech, racist comments, sexist comments, lewd content, violent statements), as well as edge cases (empty string, mixed content).
 
-3. **Clear Test Names:**  Test names clearly indicate the input and expected outcome.
+3. **Case-Insensitivity:**  `test_harmful_content_prevention_case_insensitive` checks if the function handles different capitalization correctly.
 
-4. **Docstrings:**  Each test function includes a docstring explaining its purpose.
+4. **Clear Comments:** Each test function includes a docstring explaining its purpose and the expected behavior.
 
-5. **Exception Handling:** `test_check_harmful_content_invalid_input_type` demonstrates how to test exception handling using `pytest.raises`.  This is crucial for robustness.
+5. **`pytest` Assertions:** Tests use `assert` statements to verify the function's output, as appropriate.
+
 
 **How to Use:**
 
-1. Replace the placeholder `check_harmful_content` function with the actual code from `rai_harmful_content_prevention.md`.
-2. Run the tests using `pytest`.  If there are any problems, the output will indicate where the failures are.
+1. **Replace the placeholder:**  Insert your actual `harmful_content_check` function where the placeholder is.
+2. **Run the tests:** Use `pytest` to run the test file.  (Save the code above as, for example, `test_rai_harmful_content.py`)
 
-This improved solution provides a much more robust and complete set of tests for the `check_harmful_content` function (or similar functions you might have) following the provided requirements. Remember to replace the placeholder with the actual function from the file.
+```bash
+pytest test_rai_harmful_content.py
+```
+
+This revised solution provides a much more robust and complete test suite for your harmful content prevention function. Remember to adapt the `harmful_keywords` list and the logic within `harmful_content_check` to precisely match the implementation of your specific function.

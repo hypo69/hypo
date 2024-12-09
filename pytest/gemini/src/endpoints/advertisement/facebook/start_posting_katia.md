@@ -2,107 +2,110 @@
 import pytest
 import os
 from unittest.mock import patch
-from hypotez.src.endpoints.advertisement.facebook.start_posting_katia import (
-    MODE,
-    filenames,
-    campaigns,
-    FacebookPromoter,
-    Driver,
-    Chrome,
-)
+from hypotez.src.endpoints.advertisement.facebook.start_posting_katia import FacebookPromoter
+from hypotez.src.webdriver.driver import Driver, Chrome
 from hypotez.src.logger import logger
 
 
-# Fixture to mock Driver and Chrome
+# Mock the Driver class and its methods
 @pytest.fixture
 def mock_driver():
-    """Mocking the Driver and Chrome for testing."""
-    with patch("hypotez.src.endpoints.advertisement.facebook.start_posting_katia.Driver") as mock_driver_class, \
-            patch("hypotez.src.endpoints.advertisement.facebook.start_posting_katia.Chrome") as mock_chrome_class:
-        mock_driver = mock_driver_class.return_value
-        mock_driver.get_url.return_value = None  # Mock get_url return value
-        yield mock_driver
-        mock_driver_class.assert_called_once()
+    with patch('hypotez.src.endpoints.advertisement.facebook.start_posting_katia.Driver', autospec=True) as mock_driver_class:
+        mock_driver_instance = mock_driver_class.return_value
+        mock_driver_instance.get_url.return_value = None
+        yield mock_driver_instance
+
+@pytest.fixture
+def mock_logger():
+    with patch('hypotez.src.endpoints.advertisement.facebook.start_posting_katia.logger') as mock_logger:
+        yield mock_logger
+
+# Mock the FacebookPromoter init method
+@pytest.fixture
+def mock_promoter(mock_driver, mock_logger):
+    filenames = ['katia_homepage.json']
+    campaigns = ['sport_and_activity', 'bags_backpacks_suitcases', 'pain', 'brands', 'mom_and_baby', 'house']
+
+    with patch('hypotez.src.endpoints.advertisement.facebook.start_posting_katia.FacebookPromoter.__init__', autospec=True) as mock_init:
+        mock_promoter = mock_init.return_value
+        mock_promoter.driver = mock_driver
+        yield mock_promoter
+
+# Test successful campaign run
+def test_run_campaigns_success(mock_promoter, mock_logger):
+    campaigns = ['sport_and_activity']
+    mock_promoter.run_campaigns(campaigns)
+
+    mock_logger.info.assert_called_once()
 
 
-# Test cases for FacebookPromoter
-def test_facebook_promoter_init(mock_driver):
-    """Tests the initialization of FacebookPromoter."""
-    promoter = FacebookPromoter(mock_driver, filenames, no_video=False)
-    assert promoter.driver is mock_driver
-    assert promoter.group_file_paths == filenames
-    assert promoter.no_video is False
+# Test KeyboardInterrupt
+def test_run_campaigns_keyboard_interrupt(mock_promoter, mock_logger):
+    campaigns = ['sport_and_activity']
+    with pytest.raises(KeyboardInterrupt):
+        mock_promoter.run_campaigns(campaigns)
+    mock_logger.info.assert_called_once_with("Campaign promotion interrupted.")
 
 
-def test_facebook_promoter_run_campaigns_no_exception(mock_driver):
-    """Tests run_campaigns with valid inputs and no exception."""
-    with patch.object(FacebookPromoter, "run_campaign") as mock_run_campaign:  # Mock run_campaign
-        promoter = FacebookPromoter(mock_driver, filenames, no_video=False)
-        promoter.run_campaigns(campaigns)
-        mock_run_campaign.assert_any_call(campaigns)  # Verify run_campaign is called at least once
+# Test missing campaign list
+def test_run_campaigns_no_campaigns(mock_promoter, mock_logger):
+    with pytest.raises(TypeError):
+        mock_promoter.run_campaigns(None)
 
 
-@pytest.mark.parametrize("invalid_input", [None, [], "string"])
-def test_facebook_promoter_run_campaigns_invalid_input(mock_driver, invalid_input):
-    """Tests run_campaigns with invalid input (None, empty list, string)."""
-    promoter = FacebookPromoter(mock_driver, filenames, no_video=False)
-    with pytest.raises(TypeError):  # Expected TypeError, adjust if different
-        promoter.run_campaigns(invalid_input)
+# Test for invalid data type (e.g., string instead of list)
+def test_run_campaigns_invalid_input_type(mock_promoter, mock_logger):
+    with pytest.raises(TypeError) as excinfo:  # Capture the exception
+        mock_promoter.run_campaigns("not a list")
+    assert "must be a list" in str(excinfo.value)
+
+
+# Test for empty campaign list
+def test_run_campaigns_empty_campaigns(mock_promoter, mock_logger):
+    with pytest.raises(TypeError) as excinfo:  # Capture the exception
+        mock_promoter.run_campaigns([])
+    assert "must not be empty" in str(excinfo.value)
+
+
+# Test for non-existent file path (in filenames)
+def test_run_campaigns_nonexistent_file(mock_driver, mock_logger):
+    filenames = ['nonexistent_file.json']
+    with pytest.raises(FileNotFoundError):
+        FacebookPromoter(mock_driver, filenames, no_video=False)
 
 
 
-def test_facebook_promoter_run_campaigns_keyboard_interrupt():
-    """Tests run_campaigns handling KeyboardInterrupt."""
-    with patch('hypotez.src.endpoints.advertisement.facebook.start_posting_katia.logger.info') as mock_info:
-        with patch('hypotez.src.endpoints.advertisement.facebook.start_posting_katia.FacebookPromoter.run_campaign') as mock_run_campaign:
-
-            with pytest.raises(KeyboardInterrupt):
-                promoter = FacebookPromoter(Driver(Chrome), filenames, no_video=False)
-
-                promoter.run_campaigns(campaigns)
-
-            mock_info.assert_called_once()
-
-#Additional test for Driver get_url method
-def test_driver_get_url(mock_driver):
-    """Tests the get_url method of Driver class (using the mock)."""
-    mock_driver.get_url(r"https://facebook.com")
-    mock_driver.get_url.assert_called_once_with(r"https://facebook.com")
-
-
-#Check if files exist, if not, use a mock fixture for them.
-@pytest.fixture(scope="module")
-def file_exists():
-    """Check if files exist."""
-    filenames_exist = all(os.path.exists(filename) for filename in filenames)
-    if filenames_exist:
-        return filenames
-    else:
-        raise ValueError("Some JSON files are missing!")
-
-
-def test_file_paths(file_exists):
-    """Check if file paths are valid."""
-    assert isinstance(file_exists, list) and all(isinstance(f, str) for f in file_exists)
+# Note:  Tests for edge cases (e.g., specific campaign names with special characters) are not feasible without the actual logic
+# of the `FacebookPromoter.run_campaigns` and related methods. Add these as needed with example edge cases.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The `mock_driver` fixture now effectively mocks `Driver` and `Chrome`, preventing real interactions with a web browser during testing. This is crucial for unit testing, making tests faster and more reliable.
+1. **Mocking:** Critically important for testing functions that interact with external resources (like web drivers and file systems).  The `@pytest.fixture` and `patch` from `unittest.mock` correctly mock `Driver` and `logger`. This isolates the test from the actual Facebook interaction.
 
-2. **Parameterization:** The `test_facebook_promoter_run_campaigns_invalid_input` test now uses `pytest.mark.parametrize` to test with different types of invalid input (None, empty list, string).  This makes the test more comprehensive.
+2. **Specific Error Handling:** Tests now explicitly check for `TypeError` and `FileNotFoundError`,  providing more informative error messages.  This is crucial for debugging.
 
-3. **Explicit Exception Handling:** The `test_facebook_promoter_run_campaigns_keyboard_interrupt` tests explicitly checks for the `KeyboardInterrupt` exception, and the test now correctly mocks the `logger.info` call.
+3. **Comprehensive Error Cases:**  Tests for missing or empty campaign lists, and an invalid input type are added.
 
-4. **File Existence Check (Important):**  The `test_file_paths` test and the `file_exists` fixture are critical.  The original code assumes the JSON files exist.  This test now checks if the files exist, raising a `ValueError` if they're missing. This prevents your tests from failing unpredictably.  The `scope="module"` ensures this only happens once per test run, not repeatedly. This is necessary, as the filenames variable is now tested.
+4. **Clearer Test Names:** The test names better reflect the purpose of each test case.
 
-5. **Comprehensive Input Validation:** The `test_facebook_promoter_run_campaigns_invalid_input` test covers various potential `run_campaigns` input errors.
+5. **Fixture for `mock_promoter`:** Makes the test setup more organized and reusable.
 
+6. **`pytest.raises`:** Properly used to catch exceptions and verify their types.
+
+7. **Missing File Handling:**  A test `test_run_campaigns_nonexistent_file` is added to check for non-existent file paths in `filenames`.
 
 **How to Run the Tests:**
 
-1. Save this code as a `.py` file (e.g., `test_start_posting_katia.py`).
-2. Make sure you have `pytest` installed (`pip install pytest`).
-3. Run `pytest test_start_posting_katia.py` from your terminal.
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the code as `test_start_posting_katia.py` (or a similar name).
+3.  Run the tests from your terminal: `pytest test_start_posting_katia.py`
 
-This improved test suite provides a more robust and realistic test coverage for the provided code, making your code more reliable and maintainable. Remember to adapt the error handling and expected exceptions based on the actual behavior of the functions. If `run_campaign` raises a specific exception, adapt the test to reflect that.
+
+**Crucial Considerations for Further Testing (Beyond the Code Provided):**
+
+- **Facebook Interaction:**  If the code interacts directly with the Facebook API or web pages, you need sophisticated mocks or integration tests within a controlled environment. Mocking `FacebookPromoter.run_campaigns` (or equivalent) is crucial for isolation, but tests need to check the *internal* logic, to ensure data is prepared and processed correctly.
+- **Edge Cases:**  The Facebook API and web pages have many edge cases.  Consider error handling (e.g., login failures, rate limits), invalid input cases.
+
+
+Remember to adapt the tests based on the actual implementation details of your code. The mocks provided now allow you to better test the internal logic and handling without external dependencies.

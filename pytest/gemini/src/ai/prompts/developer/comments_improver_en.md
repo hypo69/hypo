@@ -1,95 +1,83 @@
 ```python
 import pytest
-import comments_improver_en as c_i  # Replace with your module name
+import comments_improver_en  # Assuming the file is comments_improver_en.py
 
-# Example usage (replace with your actual function/class)
+
+# Example code (replace with your actual code):
 def improve_comment(comment):
-    """Improves a user comment."""
+    """Improves a code comment."""
+    if not isinstance(comment, str):
+        raise TypeError("Input must be a string.")
     if not comment:
-        raise ValueError("Comment cannot be empty.")
-    improved_comment = comment.capitalize()
+        return ""  # Handle empty comments
+
+    improved_comment = comment.replace("  ", " ").strip()  # Basic improvement
     return improved_comment
 
 
-# Fixture definitions (if needed)
+# Fixture for providing example comments
+@pytest.fixture
+def comments():
+    """Provides example comments for testing."""
+    return [
+        "This is a test comment.",
+        "  This is a comment with extra spaces.   ",
+        "Another comment.",
+        "",  # Empty comment
+        "  ",  # Comment with only spaces
+        "This is a very very very long comment.",
+    ]
 
 
 # Tests for improve_comment function
-def test_improve_comment_valid_input():
-    """Checks correct behavior with valid input."""
-    comment = "hello world"
-    expected_output = "Hello world"
-    assert c_i.improve_comment(comment) == expected_output
+def test_improve_comment_valid_input(comments):
+    """Checks correct behavior with valid input comments."""
+    for comment in comments:
+        improved = improve_comment(comment)
+        assert isinstance(improved, str), "Improved comment should be a string."
+        assert improved == comment.replace("  ", " ").strip(), f"Expected '{comment.replace(\" \",\" \").strip()}' got '{improved}'."
 
 
-def test_improve_comment_empty_string():
-    """Checks handling of empty string."""
-    with pytest.raises(ValueError) as excinfo:
-        c_i.improve_comment("")
-    assert str(excinfo.value) == "Comment cannot be empty."
-
-def test_improve_comment_single_word():
-  """Checks handling of single-word input."""
-  comment = "hi"
-  expected_output = "Hi"
-  assert c_i.improve_comment(comment) == expected_output
+def test_improve_comment_empty_comment(comments):
+    """Tests handling of empty comments."""
+    empty_comment = ""
+    improved_comment = improve_comment(empty_comment)
+    assert improved_comment == "", "Empty comment should be returned as an empty string."
 
 
-def test_improve_comment_multiple_words():
-  """Checks handling of multiple-word input."""
-  comment = "this is a comment"
-  expected_output = "This is a comment"
-  assert c_i.improve_comment(comment) == expected_output
+def test_improve_comment_spaces_only():
+    """Tests handling of comments containing only spaces."""
+    spaces_only_comment = "  "
+    improved_comment = improve_comment(spaces_only_comment)
+    assert improved_comment == "", "Comment containing only spaces should be returned as an empty string."
 
 
-def test_improve_comment_uppercase():
-  """Checks handling of uppercase input."""
-  comment = "HELLO WORLD"
-  expected_output = "Hello world"
-  assert c_i.improve_comment(comment) == expected_output
-
-def test_improve_comment_mixed_case():
-    """Checks handling of mixed-case input."""
-    comment = "hElLo wOrLd"
-    expected_output = "Hello world"
-    assert c_i.improve_comment(comment) == expected_output
-
-
-def test_improve_comment_numbers_and_symbols():
-    """Checks handling of numbers and symbols in input."""
-    comment = "123 hi there!"
-    expected_output = "123 hi there!"
-    assert c_i.improve_comment(comment) == expected_output
-
-# Add more test functions as needed for other functions or classes in your code.
-# For example, if you have a class with methods, test those methods.
+def test_improve_comment_invalid_input():
+    """Checks for TypeError when input is not a string."""
+    with pytest.raises(TypeError) as excinfo:
+        improve_comment(123)
+    assert str(excinfo.value) == "Input must be a string."
 ```
 
 **Explanation and Improvements:**
 
-1. **Import:** Imports the `comments_improver_en` module. **Crucially, replace `comments_improver_en` with the actual name of your Python file.**
-
-2. **Example Function:**  I've created a placeholder `improve_comment` function.  **Replace this with your actual code.**
-
-3. **Comprehensive Tests:** The tests now cover:
-   - Valid input (different types of strings).
-   - Empty string (ValueError).
-   - Uppercase, lowercase, and mixed-case strings.
-   - Numbers and symbols.
-
-4. **`pytest.raises`:**  Uses `pytest.raises` to check for the expected `ValueError` when an empty string is provided.  This is important for exception handling.
-
-5. **Clear Test Names:** Function names clearly describe the test case.
-
-6. **Docstrings:** Docstrings explain the purpose of each test.
-
-7. **Isolated Tests:** Each test is independent, ensuring that failures don't propagate.
-
-**How to Run the Tests:**
-
-1.  Save the above code as a Python file (e.g., `test_comments_improver.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_comments_improver.py`
+1. **Import:** The code now imports the necessary module (`comments_improver_en`).  Crucially, it assumes the file is named `comments_improver_en.py`. Change this if your file has a different name.
+2. **Example Code:**  Added placeholder example code for `improve_comment`.  **Replace** this with your actual function.
+3. **Fixture:** Introduced a `comments` fixture to provide a list of example comments for testing different scenarios in a single test. This significantly improves code organization.
+4. **Clearer Assertions:** Instead of just `assert improved == ...`, I now use more informative assertions, checking the type (`assert isinstance(improved, str)`) and the expected output (including the exact format of the expected output), which helps debugging when tests fail.
+5. **Comprehensive Test Cases:** The test cases now cover:
+   - Valid inputs (various types of comments)
+   - Empty comments
+   - Comments with only spaces
+   - Invalid input (non-string)
+6. **Exception Handling:** Uses `pytest.raises` to test for the `TypeError` when an invalid input is provided.  This is crucial for robust testing.
+7. **Descriptive Test Names:**  Test names are now more descriptive, making it easier to understand the purpose of each test.
+8. **Docstrings:** The code includes docstrings in the functions and fixture, which is important for clarity and maintainability.
 
 
-**Important:** The provided code structure assumes you have a `comments_improver_en.py` file containing the function you want to test.  Replace the placeholder function and filename with the correct ones from your project. Remember to adapt the test cases to the actual functions and classes you want to test.
+**How to Run:**
+
+1.  Save the example code and the test code (above) in separate files (e.g., `comments_improver_en.py` and `test_comments_improver.py`).
+2.  Run pytest from your terminal: `pytest test_comments_improver.py`
+
+Remember to replace the example `improve_comment` function with your actual code, and adjust imports if necessary. This improved test suite provides more thorough coverage and makes debugging easier. Remember to change `comments_improver_en` to the correct name of your file.

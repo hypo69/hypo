@@ -6,102 +6,113 @@ import logging
 import pandas as pd
 from unittest.mock import patch
 
+# Replace with the actual imports if necessary
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
 from tinytroupe.factory import TinyPersonFactory
 from tinytroupe.utils import JsonSerializableRegistry
-
 from tinytroupe import openai_utils
 import tinytroupe.utils as utils
+
 from tinytroupe.enrichment import TinyEnricher
 
-# Mock functions for testing
+
+# Mock functions and classes for testing
 @patch('tinytroupe.openai_utils.client')
 def test_enrich_content_valid_input(mock_client):
     """Tests enrich_content with valid input."""
-    enricher = TinyEnricher(use_past_results_in_context=False)
-    requirements = "Summarize the text."
-    content = "This is a test text."
+    enricher = TinyEnricher()
+    requirements = "Generate Python code"
+    content = "This is some text"
     
     # Mock the OpenAI response
-    mock_response = {"content": "```python\nprint('Hello')\n```"}
+    mock_response = {"content": "```python\ndef example_function():\n    pass\n```"}
     mock_client.send_message.return_value = mock_response
 
     result = enricher.enrich_content(requirements, content)
-    assert result == "```python\nprint('Hello')\n```"
+    assert result == "```python\ndef example_function():\n    pass\n```"
     mock_client.send_message.assert_called_once()
 
-
-@patch('tinytroupe.openai_utils.client')
-def test_enrich_content_empty_content(mock_client):
-    """Tests enrich_content with empty content."""
-    enricher = TinyEnricher(use_past_results_in_context=False)
-    requirements = "Summarize the text."
-    content = ""
-    mock_response = {"content": "```python\nprint('Hello')\n```"}
-    mock_client.send_message.return_value = mock_response
-    result = enricher.enrich_content(requirements, content)
-    assert result == "```python\nprint('Hello')\n```"
-    mock_client.send_message.assert_called_once()
-    
 
 @patch('tinytroupe.openai_utils.client')
 def test_enrich_content_no_response(mock_client):
-    """Tests enrich_content when OpenAI returns None."""
-    enricher = TinyEnricher(use_past_results_in_context=False)
-    requirements = "Summarize the text."
-    content = "This is a test text."
+    """Tests enrich_content with no response from the LLM."""
+    enricher = TinyEnricher()
+    requirements = "Generate Python code"
+    content = "This is some text"
+
     mock_client.send_message.return_value = None
 
     result = enricher.enrich_content(requirements, content)
     assert result is None
-
-@patch('tinytroupe.openai_utils.client')
-def test_enrich_content_with_context_cache(mock_client):
-    """Tests enrich_content with context_cache."""
-    enricher = TinyEnricher(use_past_results_in_context=False)
-    requirements = "Summarize the text."
-    content = "This is a test text."
-    context_cache = [{"content": "previous context"}]
-    
-    mock_response = {"content": "```python\nprint('Hello')\n```"}
-    mock_client.send_message.return_value = mock_response
-    
-    result = enricher.enrich_content(requirements, content, context_cache=context_cache)
-    assert result == "```python\nprint('Hello')\n```"
     mock_client.send_message.assert_called_once()
-    
-    
+
+
 @patch('tinytroupe.openai_utils.client')
-def test_enrich_content_verbose(mock_client, caplog):
-    """Test verbose mode."""
-    enricher = TinyEnricher(use_past_results_in_context=False)
-    requirements = "Summarize the text."
-    content = "This is a test text."
-    mock_response = {"content": "```python\nprint('Hello')\n```"}
+def test_enrich_content_invalid_input(mock_client):
+    """Tests enrich_content with invalid input (empty requirements)."""
+    enricher = TinyEnricher()
+    requirements = ""
+    content = "This is some text"
+
+    # Mock the OpenAI response for testing purposes (not strictly necessary)
+    mock_response = {"content": "```python\ndef example_function():\n    pass\n```"}
     mock_client.send_message.return_value = mock_response
 
-    caplog.set_level(logging.DEBUG)
-    result = enricher.enrich_content(requirements, content, verbose=True)
-    assert "Enrichment result message:" in caplog.text
-    assert result == "```python\nprint('Hello')\n```"
+    with pytest.raises(ValueError):
+        enricher.enrich_content(requirements, content)
+
+@patch('tinytroupe.openai_utils.client')
+def test_enrich_content_verbose(mock_client):
+    """Tests enrich_content with verbose mode."""
+    enricher = TinyEnricher()
+    requirements = "Generate Python code"
+    content = "This is some text"
+    
+    # Mock the OpenAI response
+    mock_response = {"content": "```python\ndef example_function():\n    pass\n```"}
+    mock_client.send_message.return_value = mock_response
+    
+    captured_output = []
+    with patch('sys.stdout', new_callable=lambda: captured_output.append):
+        result = enricher.enrich_content(requirements, content, verbose=True)
+        assert result == "```python\ndef example_function():\n    pass\n```"
+        
+    assert "Enrichment result message" in captured_output[0]
+
+
+# ... other test functions for different scenarios (e.g., error handling, edge cases) ...
+
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `openai_utils.client`:**  Crucially, the tests now use `@patch('tinytroupe.openai_utils.client')` to mock the `openai_utils.client()` call. This isolates the test from the actual OpenAI API, preventing external dependencies and ensuring predictable results.  This is essential for reliable unit tests.
+1. **Mocking:** The code now uses `@patch('tinytroupe.openai_utils.client')` to mock the `openai_utils.client()` function. This is crucial for testing the `enrich_content` function without actually interacting with an external API (OpenAI in this case).  This prevents external dependencies from affecting the tests.
 
-2. **Clearer Test Cases:** Test names are more descriptive (e.g., `test_enrich_content_valid_input`, `test_enrich_content_empty_content`).
+2. **Clearer Test Cases:** Test names are more descriptive (`test_enrich_content_valid_input`, `test_enrich_content_no_response`).
 
-3. **Edge Case Handling:** Includes a test (`test_enrich_content_no_response`) for when the OpenAI API call returns `None`.
+3. **Invalid Input Testing:**  `test_enrich_content_invalid_input` now demonstrates how to test for invalid input (empty `requirements`) and the expected exception (`ValueError`).
 
-4. **Context Cache Test:** Added a test (`test_enrich_content_with_context_cache`) to cover the scenario where `context_cache` is provided.
+4. **Verbose Mode Test:** The `test_enrich_content_verbose` test shows how to capture printed output when `verbose=True` and assert it contains the expected message format.
 
-5. **Verbose Mode Test:**  Includes a test (`test_enrich_content_verbose`) to demonstrate how to test the verbose mode, checking if the expected debug message is logged.
+5. **No Unnecessary Imports:** Removed unnecessary imports (e.g., `os`, `json`).
 
-6. **Empty Content Test:** Added a test (`test_enrich_content_empty_content`) to verify the handling of empty input content.
+6. **Comprehensive Testing:** Added a `test_enrich_content_no_response` to cover the case where OpenAI returns `None`.
 
-7. **Assertions:**  Correct assertions are used to verify expected outputs and the behavior of the `assert_called_once()` method is used to assert that the mocked function was called as expected.
 
-This revised test suite is significantly more comprehensive and reliable due to the use of mocking and thorough coverage of different scenarios. Remember to install the necessary libraries (`pytest`, `unittest.mock`, `pandas`).  Replace placeholder imports with actual imports from your project if needed.  The structure and comments were made clearer and more understandable. Remember to adapt the mock response to the expected output when using the OpenAI API.
+**How to run the tests:**
+
+```bash
+pip install pytest
+pytest test_enrichment.py  # Assuming your test file is named test_enrichment.py
+```
+
+**Further Considerations:**
+
+* **More Edge Cases:** Add tests for different `content_type` values, `context_info`, `context_cache`, and various scenarios.
+* **Error Handling:**  Consider tests for exceptions that might be raised inside the `utils` functions you are mocking.
+* **Fixture for Data:** If your functions require specific data structures, creating a fixture (using `@pytest.fixture`) to generate and provide this data would be a good practice to avoid repeating the code inside each test.
+
+
+This improved solution provides a more robust and comprehensive set of tests for your `TinyEnricher` class, covering valid inputs, no response, invalid input, and verbose output. Remember to adapt the tests to your specific requirements. Remember to replace placeholder comments and imports with the actual code.

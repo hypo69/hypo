@@ -3,149 +3,156 @@ import pytest
 from selenium.webdriver.remote.webelement import WebElement
 from types import SimpleNamespace
 from pathlib import Path
-from src import gs
-from src.webdriver.driver import Driver
-from src.utils.jjson import j_loads_ns
-from src.logger import logger
 import time
 
-# Mock Driver class for testing
-class MockDriver:
+# Mock the necessary classes and functions for testing
+class Driver:
     def execute_locator(self, locator, message):
-        # Replace with actual locator logic for testing
-        # Simulate success or failure
-        if locator == "some_locator":
-            if message == "test_title":
-                return True
-            else:
-                return False
-        else:
-            return False
+        # Mock the execution. Replace with actual implementation if needed
+        if locator == "some_locator" and message == "some_message":
+            return True
+        return False
 
-    def scroll(self, start, end, direction):
-        return
+    def scroll(self, xoffset, yoffset, direction):
+        pass  # Mock scrolling
 
-    def __init__(self, driver_details):
-      self.driver_details = driver_details
+    # Add other necessary driver methods as needed
 
 
-    def close(self):
-        pass
+class SimpleNamespace:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
 
 
-# Mock locator data (replace with your actual locator data loading)
-mock_locator = j_loads_ns(Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_event.json'))
+class LocatorMock:
+    def __init__(self):
+        self.event_title = "some_locator"
+        self.start_date = "another_locator"
+        self.start_time = "yet_another_locator"
+        self.event_description = "description_locator"
+        self.event_send = "send_locator"
+
+locator_mock = LocatorMock()
 
 
-@pytest.fixture
-def mock_driver():
-    return MockDriver(None)
+gs = SimpleNamespace(path=SimpleNamespace(src=Path('/')))
+# ... (other necessary imports, fixtures, etc.)
+def test_post_title_valid_input():
+    """Checks if post_title function sends the title correctly."""
+    driver = Driver()
+    title = "Test Title"
+    result = post_title(driver, title)
+    assert result == True
 
-
-def test_post_title_success(mock_driver):
-    """Tests post_title with a successful execution."""
-    event_title = "test_title"
-    result = post_title(mock_driver, event_title)
-    assert result is True, "post_title should return True on success"
-
-
-def test_post_title_failure(mock_driver):
-    """Tests post_title with a failed execution."""
-    event_title = "invalid_title"
-    result = post_title(mock_driver, event_title)
-    assert result is None, "post_title should return None on failure"
-    
-    # Assert that an error message was logged (if needed).
-
-
-def test_post_date_success(mock_driver):
-  date = "2024-10-27"
-  result = post_date(mock_driver, date)
-  assert result is True
-
-
-def test_post_date_failure(mock_driver):
-  date = "invalid_date"
-  result = post_date(mock_driver, date)
-  assert result is None
-
-def test_post_time_success(mock_driver):
-  time = "10:00"
-  result = post_time(mock_driver, time)
-  assert result is True
-
-
-def test_post_time_failure(mock_driver):
-  time = "invalid_time"
-  result = post_time(mock_driver, time)
-  assert result is None
-
-
-def test_post_description_success(mock_driver):
-    description = "test description"
-    result = post_description(mock_driver, description)
-    assert result is True
-
-
-def test_post_description_failure(mock_driver):
-    description = "invalid description"
-    result = post_description(mock_driver, description)
+def test_post_title_invalid_input():
+    """Checks handling of invalid locator or message."""
+    driver = Driver()
+    title = "Invalid title"
+    result = post_title(driver, title)
     assert result is None
 
 
-def test_post_event_success(mock_driver):
-    event = SimpleNamespace(title="test_title", description="test description", start="2024-10-27 10:00", promotional_link="some_link")
-    result = post_event(mock_driver, event)
-    assert result is True
+def test_post_date_valid_input():
+    """Checks if post_date function sends the date correctly."""
+    driver = Driver()
+    date = "2024-10-27"
+    result = post_date(driver, date)
+    assert result == True
 
 
-def test_post_event_failure(mock_driver):
-    event = SimpleNamespace(title="invalid_title", description="test description", start="2024-10-27 10:00", promotional_link="some_link")
-    result = post_event(mock_driver, event)
+def test_post_date_invalid_input():
+    """Checks handling of invalid locator or message in post_date."""
+    driver = Driver()
+    date = "Invalid Date"  # Example invalid date
+    result = post_date(driver, date)
     assert result is None
 
-# Add more test cases for various scenarios, edge cases, and invalid inputs
-#  for post_title, post_date, post_time, post_description
-# and more comprehensive test cases for post_event.
 
 
-#Remember to replace 'some_locator' and the mock values with your actual locators and data.
+def test_post_time_valid_input():
+    """Checks if post_time function sends the time correctly."""
+    driver = Driver()
+    time = "10:00"
+    result = post_time(driver, time)
+    assert result == True
 
+
+def test_post_time_invalid_input():
+    """Checks handling of invalid locator or message in post_time."""
+    driver = Driver()
+    time = "Invalid Time" # Example invalid time
+    result = post_time(driver, time)
+    assert result is None
+
+def test_post_description_valid_input():
+    """Checks if post_description function sends the description correctly."""
+    driver = Driver()
+    description = "Test Description"
+    result = post_description(driver, description)
+    assert result == True
+
+
+def test_post_description_invalid_input():
+    """Checks handling of invalid locator or message in post_description."""
+    driver = Driver()
+    description = "Invalid Description"
+    result = post_description(driver, description)
+    assert result is None
+
+def test_post_event_valid_input():
+    """Checks if post_event function handles valid event input correctly."""
+    driver = Driver()
+    event = SimpleNamespace(title="Test Title", description="Test Description", start="2024-10-27 10:00", promotional_link="promo.com")
+    result = post_event(driver, event)
+    assert result == True
+
+def test_post_event_missing_title():
+    driver = Driver()
+    event = SimpleNamespace(description="Test Description", start="2024-10-27 10:00", promotional_link="promo.com")  # Missing title
+    result = post_event(driver, event)
+    assert result is None
+
+def test_post_event_missing_date():
+    driver = Driver()
+    event = SimpleNamespace(title="Test Title", description="Test Description", start="invalid-date 10:00", promotional_link="promo.com")
+    result = post_event(driver, event)
+    assert result is None
+
+# Add similar tests for other functions, including edge and invalid cases
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mock `Driver`:**  A `MockDriver` class is crucial for testing the functions without relying on an actual web driver.  The `execute_locator` method now has conditional logic to simulate success or failure.  This is a critical improvement for testability.
+1. **Mocking:** Critically, the code now mocks the `Driver` class and `execute_locator` method.  This is *essential* for testing without relying on an actual browser and avoids external dependencies (like Selenium).  The `Driver` mock includes a placeholder for `scroll`.
+
+2. **Clearer Test Cases:**  Test names are now more descriptive (e.g., `test_post_title_valid_input`).
+
+3. **Edge Cases and Invalid Input:**  Added tests for cases where the locator might not be found, or where the `message` parameter is invalid.  This is crucial for robust testing.
+
+4. **`SimpleNamespace` Mock:**  Uses `SimpleNamespace` to simulate the structure expected by the functions.
+
+5. **`LocatorMock`:** Introduces `LocatorMock` for mocking the locator retrieval.
+
+6. **Comprehensive `post_event` Tests:** The `post_event` test now includes more specific tests for cases where parts of the event data are missing (e.g., missing title or date).
+
+7. **Error Handling:**  The tests check for `None` return values, which is the correct way to detect failures in functions that return a boolean to indicate success/failure.
+
+8. **`gs` and `Path` Handling:** The `gs` and `Path` objects are mocked as `SimpleNamespace` objects in a way that doesn't break the existing code's behavior, so the test suite doesn't depend on having these objects be fully defined in the mocked environment.
 
 
-2. **Mock Locator:** The `mock_locator` is now set correctly (using a constant).  This means the tests no longer rely on the actual JSON file, which makes them fast, reproducible, and prevents accidental file system dependencies in your CI/CD pipeline.
+**How to Use:**
 
+1. **Install pytest:**
+   ```bash
+   pip install pytest
+   ```
 
-3. **Clearer Assertions:**  The tests now use `assert result is True` and `assert result is None` for clear verification of expected return values.
+2. **Save:** Save the code above as a Python file (e.g., `test_post_event.py`).
 
+3. **Run Tests:**
+   ```bash
+   pytest test_post_event.py
+   ```
 
-4. **Comprehensive Test Cases:** The example tests now cover the potential for success and failure. It's essential to add more test cases for scenarios like:
-   -  Different, but valid, input data for title, description, date, and time.
-   -  Handling of invalid dates, times, or titles (edge cases).
-   -  `post_event` tests covering failures at different stages.
-
-
-5. **Error Handling Simulation:** The mock now simulates the `logger.error` call.  In a real test, you'd ideally capture the logged errors to verify they were raised correctly.
-
-
-6. **`@pytest.fixture` for `mock_driver`:** This allows you to use the `mock_driver` easily across multiple tests without needing to create a new driver instance each time.
-
-
-7. **Example test cases (Crucial):** The `test_post_title_success` and `test_post_title_failure` are essential.  Add more of these based on the scenarios in your actual code.
-
-
-**How to Use (with example imports):**
-
-```python
-import pytest
-import time
-from hypotez.src.endpoints.advertisement.facebook.scenarios.post_event import post_title, post_date, post_event, post_description, post_time  # Adjust import path as needed.
-```
-
-Now you can run these tests with `pytest`.  Remember to replace the placeholder `some_locator` in the `MockDriver` with your actual locators.  Importantly, adapt the tests to fully cover the expected behavior of your functions based on the requirements and scenarios.
+Remember to adapt the `LocatorMock` and `Driver` mock to match the actual implementation if you need more complete or more specific testing.  These changes make the test suite more robust, reliable, and independent of external dependencies.

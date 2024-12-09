@@ -1,119 +1,86 @@
 ```python
 import pytest
+import json
 from pathlib import Path
-from hypothesis import given, strategies as st
-from hypotez.src.endpoints.advertisement.facebook.facebook_groups_widgets import FacebookGroupsWidget
-from IPython.display import display  # Needed for testing display
 from unittest.mock import patch
+from IPython.display import display
+from ipywidgets import Dropdown
+from src.endpoints.advertisement.facebook.facebook_groups_widgets import FacebookGroupsWidget
+from src.utils.jjson import j_loads_ns
+from types import SimpleNamespace
 
-
-# Hypothesis strategies
-filepath_strategy = st.files().map(lambda f: Path(f))
-
-
-@pytest.fixture
-def example_json_data():
-    """Fixture for example valid JSON data."""
-    return {
+# Mock display function to prevent actual display in tests
+@patch('IPython.display.display', return_value=None)
+def test_facebook_groups_widget_valid_input(mock_display):
+    """Tests FacebookGroupsWidget with valid JSON input."""
+    # Example valid JSON data
+    test_json = {
         "group1": "url1",
-        "group2": "url2",
-        "group3": "url3",
+        "group2": "url2"
     }
+    json_file_path = Path("test_groups.json")
+    with open(json_file_path, "w") as f:
+        json.dump(test_json, f)
 
+    widget = FacebookGroupsWidget(json_file_path)
+    assert isinstance(widget.dropdown, Dropdown)
+    assert widget.dropdown.options == list(test_json.keys())
+    assert widget.dropdown.description == 'Facebook Groups:'
+    assert widget.dropdown.disabled is False
 
-@pytest.fixture
-def example_json_file(tmp_path, example_json_data):
-    """Creates a temporary JSON file."""
-    json_file = tmp_path / "groups.json"
-    with open(json_file, "w") as f:
-        import json
-        json.dump(example_json_data, f)
-    return json_file
-
-
-@given(json_file=filepath_strategy)
-def test_facebook_groups_widget_valid_file(json_file, example_json_data, tmp_path):
-    """Test with a valid JSON file path."""
+    widget.display_widget() # Check if display is called and doesn't raise error
+    mock_display.assert_called_once()
     
-    #Check if file exists.  Hypothesis can generate invalid file paths
-    if not json_file.exists():
-      pytest.skip("Hypothesis generated invalid file path.")
-    
-    widget = FacebookGroupsWidget(json_file)
-    assert isinstance(widget.dropdown, object)  # Check if dropdown is initialized
-    options = widget.dropdown.options
-    assert all(opt in example_json_data for opt in options)
+    # Clean up the temporary file
+    json_file_path.unlink()
 
+def test_facebook_groups_widget_invalid_json():
+    """Tests FacebookGroupsWidget with invalid JSON input."""
+    invalid_json_path = Path("invalid_json.json")
+    with open(invalid_json_path, "w") as f:
+        f.write("invalid json data")
 
-@given(json_file=filepath_strategy)
-def test_facebook_groups_widget_invalid_file(json_file, tmp_path):
-    """Test with a file that does not exist."""
-    
-    if json_file.exists():
-        pytest.skip("Hypothesis generated existing file path.")
-    
+    with pytest.raises(json.JSONDecodeError):
+        FacebookGroupsWidget(invalid_json_path)
+
+    invalid_json_path.unlink()
+
+def test_facebook_groups_widget_nonexistent_file():
+    """Tests FacebookGroupsWidget with a non-existent JSON file."""
+    nonexistent_file = Path("nonexistent_file.json")
     with pytest.raises(FileNotFoundError):
-        FacebookGroupsWidget(json_file)
+        FacebookGroupsWidget(nonexistent_file)
 
 
-def test_facebook_groups_widget_empty_file(tmp_path):
-    """Test with an empty JSON file."""
-    empty_file = tmp_path / "empty.json"
-    with open(empty_file, "w") as f:
-        json.dump({}, f)
+def test_facebook_groups_widget_empty_json():
+    """Tests FacebookGroupsWidget with an empty JSON file."""
+    empty_json_path = Path("empty_json.json")
+    with open(empty_json_path, "w") as f:
+        json.dump({}, f)  # Empty JSON object
+    
+    widget = FacebookGroupsWidget(empty_json_path)
+    assert isinstance(widget.dropdown, Dropdown)
+    assert widget.dropdown.options == []
+    
+    empty_json_path.unlink()
 
-    with pytest.raises(KeyError):
-        FacebookGroupsWidget(empty_file)
 
-
-
-@patch('IPython.display.display')
-def test_display_widget(mock_display, example_json_file):
-    """Test the display_widget method."""
-    widget = FacebookGroupsWidget(example_json_file)
-    widget.display_widget()
-    mock_display.assert_called_once_with(widget.dropdown)
+def test_facebook_groups_widget_no_dict_json():
+    """Tests FacebookGroupsWidget with JSON data not a dictionary."""
+    no_dict_json_path = Path("no_dict_json.json")
+    with open(no_dict_json_path, "w") as f:
+        json.dump("not a dictionary", f)
+    with pytest.raises(TypeError):
+        FacebookGroupsWidget(no_dict_json_path)
+    no_dict_json_path.unlink()
 ```
 
 **Explanation and Improvements:**
 
-1. **Hypothesis:** Added `hypothesis` for more comprehensive testing of various JSON data structures and file paths. This significantly expands test coverage for valid inputs.
-
-2. **Robust Error Handling:** The `test_facebook_groups_widget_invalid_file` test now uses `pytest.raises` to ensure that a `FileNotFoundError` is raised when a non-existent file is provided.  The `test_facebook_groups_widget_empty_file` now tests the case where the JSON is empty
-
-3. **Clearer Test Names:** Test names are more descriptive, improving readability.
-
-4. **Fixture for JSON Data:** `example_json_data` and `example_json_file` fixtures make tests more organized and reusable.
-
-5. **`@patch` for `display`:** Using `@patch` to mock `IPython.display.display` allows us to test the `display_widget` method without actually displaying anything in a notebook environment. This is a crucial improvement for running tests in a non-interactive environment like pytest.
-
-6. **File Existence Check (Critical):**  The `test_facebook_groups_widget_valid_file` now checks if the file exists, which is essential to avoid issues with incorrect file paths generated by Hypothesis.
-
-7. **pytest.skip:** The `pytest.skip` decorator is used to skip tests that would fail with invalid file paths generated by Hypothesis. This avoids unnecessary errors and improves test reliability.
+* **Mocking `display`:** The `@patch` decorator now correctly mocks the `IPython.display.display` function. This is crucial because `display` interacts with the IPython environment, which is not available in a testing context.  This prevents `display` from trying to show the widget on the console.
+* **Error Handling:** Added tests for invalid JSON (`test_facebook_groups_widget_invalid_json`), a non-existent file (`test_facebook_groups_widget_nonexistent_file`), and empty JSON data (`test_facebook_groups_widget_empty_json`).  These tests ensure the code gracefully handles various potential issues.
+* **Clearer Assertions:** Assertions are more specific and descriptive, making it easier to understand the expected behavior and identify failures.
+* **File Cleanup:**  The temporary test JSON files are deleted using `json_file_path.unlink()` after each test, ensuring clean tests.
 
 
-
-**How to Run:**
-
-1.  Make sure you have `hypothesis`, `pytest`, and `IPython` installed:
-    ```bash
-    pip install hypothesis pytest IPython
-    ```
-
-2.  Save the provided code as `facebook_groups_widgets.py` and the test code as a separate file (e.g., `test_facebook_groups_widgets.py`).
-
-3.  Run the tests from the command line:
-    ```bash
-    pytest test_facebook_groups_widgets.py
-    ```
-
-This revised solution addresses the potential for errors and provides a much more thorough and robust test suite. Remember to adapt the test cases further if there are specific edge cases or input constraints not covered in this example.
-
-
-**Further Considerations:**
-
-- **More complex JSON structures:** If the JSON data has nested structures, modify the Hypothesis strategy for more accurate testing.
-- **Error handling for malformed JSON:**  Add tests to verify correct handling of JSON parsing errors (e.g., invalid JSON syntax).
-
-
-This more comprehensive example addresses many of the issues present in the original response. This improved version leverages the strengths of Hypothesis for generating valid inputs, while also including essential checks for error handling and robustness.
+This revised solution is more robust and comprehensive, addressing potential errors and edge cases. Remember to have the `IPython` and `ipywidgets` libraries installed for these tests to run.  Also, the `src.utils.jjson` module (and its `j_loads_ns` function) is expected to be in your project's structure.  If it's not defined, you'll need to mock or replace it for testing.

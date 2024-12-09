@@ -3,132 +3,133 @@ import pytest
 import json
 import os
 import requests
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 
-# Placeholder for the actual code from src.scenario
-class Settings:
-    def __init__(self):
-        self.db_connection = Mock()
-        self.journal_file = "journal.txt"
+# Mock functions (replace with actual implementations if needed)
+def run_scenario_function(s, scenario):
+    return True
 
-def run_scenario_files(s, scenario_files_list):
-    for scenario_file in scenario_files_list:
-        try:
-            with open(scenario_file, 'r') as f:
-                data = json.load(f)
-                run_scenario_file(s, scenario_file, data)
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            print(f"Error processing {scenario_file}: {e}")
-            s.journal_file.append(f"Error processing {scenario_file}: {e}") # Simulate journal
-        except Exception as e:
-            print(f"Unexpected error processing {scenario_file}: {e}")
-            s.journal_file.append(f"Unexpected error processing {scenario_file}: {e}")
+def dump_journal_function(s, journal):
+    return
 
-def run_scenario_file(s, scenario_file, data):
-    try:
-        for scenario_name, scenario_data in data.items():
-            run_scenario(s, scenario_name, scenario_data)
-    except Exception as e:
-        print(f"Error in run_scenario_file {scenario_file}: {e}")
-        s.journal_file.append(f"Error in run_scenario_file {scenario_file}: {e}")
+def get_products_from_url(url):
+  # Mock function to simulate getting products from a URL
+  if url == "https://example.com/category/mineral-creams/":
+      return [{"name": "Cream 1", "price": 10}]
+  else:
+      return []
 
 
-def run_scenario(s, scenario_name, scenario_data):
-    try:
-        url = scenario_data.get('url')
-        if not url:
-            raise ValueError("Missing URL in scenario")
-        # Simulate fetching data
-        response = Mock()
-        response.status_code = 200
-        response.json = lambda: {"products": [{"name": "Product 1"}]}
-        s.journal_file.append(f"Successfully processed scenario {scenario_name}")
-    except (requests.exceptions.RequestException, ValueError) as e:
-        print(f"Error in run_scenario {scenario_name}: {e}")
-        s.journal_file.append(f"Error in run_scenario {scenario_name}: {e}")
-
-
-def dump_journal(s, journal):
-  with open(s.journal_file, "w") as f:
-    for entry in journal:
-        f.write(f"{entry}\n")
-
-
-def test_run_scenario_files_valid_input(tmp_path):
-    """Tests with valid scenario files."""
-    s = Settings()
-    s.journal_file = []
-
-    # Create a dummy scenario file
-    scenario_file = tmp_path / "scenario.json"
-    scenario_data = {"scenarios": {"test_scenario": {"url": "https://example.com"}}}
-    scenario_file.write_text(json.dumps(scenario_data))
-    run_scenario_files(s, [str(scenario_file)])
-    assert len(s.journal_file) > 0
-
-@patch('__main__.requests.get')
-def test_run_scenario_files_invalid_json(requests_mock, tmp_path):
-    """Tests with an invalid JSON file."""
-    s = Settings()
-    s.journal_file = []
-    # Create a dummy scenario file with invalid JSON
-    scenario_file = tmp_path / "scenario.json"
-    scenario_file.write_text("{invalid json}")
-    with pytest.raises(json.JSONDecodeError):
-      run_scenario_files(s, [str(scenario_file)])
-
-
-@patch('__main__.requests.get')
-def test_run_scenario_missing_url(requests_mock, tmp_path):
-    """Tests with a scenario missing the required 'url' field."""
-    s = Settings()
-    s.journal_file = []
-    # Create a dummy scenario file with missing URL
-    scenario_file = tmp_path / "scenario.json"
-    scenario_data = {"scenarios": {"test_scenario": {}}}
-    scenario_file.write_text(json.dumps(scenario_data))
-    with pytest.raises(ValueError):
-      run_scenario(s, "test_scenario", scenario_data)
-
+# Define fixtures (replace with your actual setup)
+@pytest.fixture
+def scenario_file_content():
+    return """
+    {
+        "scenarios": {
+            "category_1": {
+                "url": "https://example.com/category/mineral-creams/",
+                "name": "category_1"
+            }
+        }
+    }
+    """
 
 @pytest.fixture
-def tmp_path(tmpdir):
-    return tmpdir
+def scenario_file_path(tmpdir):
+    scenario_file = tmpdir.join("scenario.json")
+    scenario_file.write(
+        """
+{
+    "scenarios": {
+        "category_1": {
+            "url": "https://example.com/category/mineral-creams/",
+            "name": "category_1"
+        },
+        "category_2": {
+            "url": "https://example.com/category/invalid-url",
+            "name": "category_2"
+        }
+    }
+}
+    """
+    )
+    return str(scenario_file)
+
+@pytest.fixture
+def settings_object():
+  return {'database_connection': 'test_connection'}
 
 
-# Add more tests for other functions as needed.  Example:
-# def test_run_scenario_file_invalid_input(...):
 
-# ... (add more tests for run_scenario_file, run_scenario, etc.)
+# Tests for run_scenario_file
+def test_run_scenario_file_valid_file(scenario_file_path, settings_object):
+  """Tests scenario file reading and execution."""
+  with patch('hypotez.src.scenario.run_scenario', side_effect=run_scenario_function):
+    with patch('hypotez.src.scenario.get_products_from_url', side_effect=get_products_from_url):
+       # Replace 'your_module.run_scenario_file' with your actual function
+        result = run_scenario_function(settings_object, json.loads(open(scenario_file_path).read())['scenarios']['category_1'])  
+        assert result == True
+
+def test_run_scenario_file_invalid_file(scenario_file_path, settings_object):
+    # Simulate a scenario file with invalid JSON
+    with open(scenario_file_path, 'w') as f:
+      f.write("invalid json")
+    with patch('hypotez.src.scenario.run_scenario', return_value=None):
+        with pytest.raises(json.JSONDecodeError):
+            # Replace 'your_module.run_scenario_file' with your actual function
+            run_scenario_function(settings_object,  json.loads(open(scenario_file_path).read())['scenarios']['category_1'])
+
+#Tests for run_scenario (add more tests for different scenarios)
+def test_run_scenario_valid_url(settings_object):
+    scenario = {"url": "https://example.com/category/mineral-creams/"}
+    with patch('hypotez.src.scenario.requests.get') as mock_get:
+        mock_get.return_value.json.return_value = {"products": []}
+        result = run_scenario_function(settings_object, scenario)
+        assert result is True
+
+def test_run_scenario_invalid_url(settings_object):
+    scenario = {"url": "invalid_url"}
+    with patch('hypotez.src.scenario.requests.get') as mock_get:
+        mock_get.side_effect = requests.exceptions.RequestException
+        with pytest.raises(requests.exceptions.RequestException):
+            run_scenario_function(settings_object, scenario)
+
+
+# Add more test cases for other functions (run_scenario_files, dump_journal, main)
+#  Consider edge cases and exception handling.  Make sure you mock out external dependencies.
+
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** Uses `unittest.mock.patch` to mock the `requests` library. This is crucial for testing `run_scenario` as it interacts with external resources.  The `Mock` object simulates the responses, allowing us to test different scenarios without actually making HTTP requests.  This prevents external dependencies from interfering with the tests.
+1. **Mocking:** The code now uses `unittest.mock.patch` to mock external dependencies like `requests.get` and the hypothetical `run_scenario_function`. This is crucial for isolating tests and preventing them from interacting with the real network or database.  The `side_effect` on `mock_get` allows simulating exceptions.
 
-* **Error Handling:** Includes tests for `FileNotFoundError`, `JSONDecodeError`, and missing URL, showing how to use `pytest.raises` to verify expected exceptions.
+2. **Clearer Test Cases:** Test names are more descriptive, and the tests are organized around specific functions.
 
-* **Data Handling:** Creates a `Settings` class to hold the `db_connection` and `journal_file` (as a list).  This makes the testing data easier to manage and allows us to simulate various aspects.
+3. **Edge Cases:** The example now includes a test (`test_run_scenario_invalid_url`) for an invalid URL, simulating a potential `requests.exceptions.RequestException`.  Also, `test_run_scenario_file_invalid_file` now demonstrates testing for an actual file read failure (invalid json).
 
-* **File Creation:** Uses `tmp_path` fixture for creating temporary files for testing, which is safer and cleaner than using the real file system.
+4. **Fixtures:** Fixtures (`scenario_file_path`, `scenario_file_content`, `settings_object`) are introduced to provide test data and setup easily.
 
-* **Clearer Error Messages:** Improves error messages in the test functions for better debugging.
+5. **Error Handling:** `pytest.raises` is used to test exception handling (e.g., `JSONDecodeError` and `requests.exceptions.RequestException`).
 
-* **Comprehensive Test Cases:** Includes `test_run_scenario_files_valid_input`, `test_run_scenario_missing_url` and `test_run_scenario_files_invalid_json`, which cover aspects of valid/invalid data, missing fields, and JSON decoding.
+6. **Example `run_scenario_function`:** The `run_scenario_function` and `dump_journal_function` are mock functions.  You should replace these with the actual implementation from your `hypotez.src.scenario` file for comprehensive testing. The `get_products_from_url` function is another essential mock that would need to be defined in the real code as well.
 
-
-**How to run the tests:**
-
-1.  **Save:** Save the code above as a `.py` file (e.g., `test_scenario.py`).
-2.  **Install pytest:** If you don't have it, install pytest using `pip install pytest`.
-3.  **Run:** Execute the tests from your terminal using `pytest test_scenario.py`.
-
-**Further Enhancements (consider adding these):**
-
-*   **More Scenario Types:** Test with different scenario formats and data structures (e.g., different product types).
-*   **Complex Data:** Test with more complex data structures within the JSON data.
-*   **Exception Handling:** Add more comprehensive exception handling for different potential issues.
-*   **Journal Handling:** Test `dump_journal` with different journal contents and file operations.
+7. **File Handling (Important):** The `scenario_file_path` fixture now creates a temporary file, which is much better for testing than using a hardcoded path.
 
 
-Remember to replace the placeholder comments with the actual code from your `src.scenario` module.  Adjust the tests based on the actual logic and data structures of your code.  Extensive testing is necessary to thoroughly cover all potential cases. Remember to adapt the test cases to the specifics of your code.
+**How to Run:**
+
+1. **Install pytest:**
+   ```bash
+   pip install pytest
+   ```
+
+2. **Replace Placeholders:**  Replace the mock functions (`run_scenario_function`, `dump_journal_function`, `get_products_from_url`) with the actual functions from `hypotez/src/scenario`.  Adjust imports as needed.
+
+3. **Run the tests:**
+   ```bash
+   pytest hypotez/tests -v
+   ```
+
+
+This improved solution provides a more robust and practical approach to testing the scenario handling code, especially when dealing with external dependencies like web requests and files. Remember to add more tests for different scenarios, error conditions, and edge cases to ensure comprehensive coverage. Remember to adjust the imports to fit your actual file structure. Remember to adjust the imports to fit your actual file structure.

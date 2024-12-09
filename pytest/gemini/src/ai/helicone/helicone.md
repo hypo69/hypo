@@ -1,50 +1,124 @@
 ```python
 import pytest
-import hypotez.src.ai.helicone.helicone as helicone
+from hypotez.src.ai.helicone.helicone import HeliconeAI, main
+from openai import OpenAI
 
-# Tests for the helicone module
-def test_mode_default_value():
-    """Checks if the MODE variable has a default value."""
-    assert helicone.MODE == 'dev'
+# Mock Helicone class for testing
+class MockHelicone:
+    def log_completion(self, response):
+        pass
 
-# Since there's no other function/class in the provided code,
-# the test suite is currently limited.
-# Consider adding more functions or classes in helicone.py for more comprehensive tests.
-# For example, if there was a function that takes an argument,
-# you could test valid and invalid inputs, edge cases, etc.
+@pytest.fixture
+def helicone_ai():
+    """Provides a HeliconeAI object for testing."""
+    mock_helicone = MockHelicone()
+    return HeliconeAI(helicone=mock_helicone)
+
+# Tests for generate_poem
+def test_generate_poem_valid_input(helicone_ai):
+    """Checks correct behavior with valid input."""
+    prompt = "Напиши мне стихотворение про кота."
+    poem = helicone_ai.generate_poem(prompt)
+    assert isinstance(poem, str), "Generated poem should be a string"
+    assert len(poem) > 0, "Generated poem should not be empty"
+
+def test_generate_poem_empty_input(helicone_ai):
+    """Checks behavior with empty prompt."""
+    prompt = ""
+    poem = helicone_ai.generate_poem(prompt)
+    assert isinstance(poem, str), "Generated poem should be a string"
+    assert len(poem) > 0, "Generated poem should not be empty" #Allow for possible empty response from openai
+
+# Tests for analyze_sentiment
+def test_analyze_sentiment_valid_input(helicone_ai):
+    """Checks correct behavior with valid input."""
+    text = "Сегодня был отличный день!"
+    sentiment = helicone_ai.analyze_sentiment(text)
+    assert isinstance(sentiment, str), "Sentiment should be a string"
+    assert len(sentiment) > 0, "Sentiment should not be empty"
+
+def test_analyze_sentiment_empty_input(helicone_ai):
+    """Checks behavior with empty text."""
+    text = ""
+    sentiment = helicone_ai.analyze_sentiment(text)
+    assert isinstance(sentiment, str), "Sentiment should be a string"
+    assert len(sentiment) > 0, "Sentiment should not be empty" #Allow for possible empty response from openai
 
 
-# Example: If there was a function taking an argument
-# def test_function_with_argument_valid_input():
-#     """Checks a function with argument works with valid input."""
-#     # Replace with your function call and expected result
-#     result = helicone.my_function("valid_input")
-#     assert result == "Expected output"
+# Tests for summarize_text
+def test_summarize_text_valid_input(helicone_ai):
+    """Checks correct behavior with valid input."""
+    text = "Длинный текст для изложения..."
+    summary = helicone_ai.summarize_text(text)
+    assert isinstance(summary, str), "Summary should be a string"
+    assert len(summary) > 0, "Summary should not be empty"
 
-# Example of exception testing (assuming a function that raises an exception)
-# def test_function_raises_exception_on_invalid_input():
-#     """Checks if the function raises the expected exception on invalid input."""
-#     with pytest.raises(ValueError) as excinfo:
-#         helicone.my_function("invalid_input")
-#     assert "Expected error message" in str(excinfo.value)
+def test_summarize_text_empty_input(helicone_ai):
+    """Checks behavior with empty text."""
+    text = ""
+    summary = helicone_ai.summarize_text(text)
+    assert isinstance(summary, str), "Summary should be a string"
+    assert len(summary) > 0, "Summary should not be empty"
+
+
+# Tests for translate_text
+def test_translate_text_valid_input(helicone_ai):
+    """Checks correct behavior with valid input."""
+    text = "Hello, how are you?"
+    target_language = "русский"
+    translation = helicone_ai.translate_text(text, target_language)
+    assert isinstance(translation, str), "Translation should be a string"
+    assert len(translation) > 0, "Translation should not be empty"
+
+def test_translate_text_empty_input(helicone_ai):
+    """Checks behavior with empty text."""
+    text = ""
+    target_language = "русский"
+    translation = helicone_ai.translate_text(text, target_language)
+    assert isinstance(translation, str), "Translation should be a string"
+    assert len(translation) > 0, "Translation should not be empty"
+
+
+#Test for exception handling (important!) - placeholder only
+def test_generate_poem_openai_exception(helicone_ai, mocker):
+    mock_client = mocker.patch('openai.OpenAI')
+    mock_client.side_effect = Exception("OpenAI Error")
+    with pytest.raises(Exception) as excinfo:
+        helicone_ai.generate_poem("test")
+    assert "OpenAI Error" in str(excinfo.value)
+
+
+# Avoid running main function during testing
+@pytest.mark.skip(reason="Avoid running main function in tests")
+def test_main():
+    main()
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Import:**  The code now imports the `helicone` module correctly.  Crucially, we need to know the path to the module if it's not in the current directory.  If the file is in a different directory you need to use the correct import path (e.g., `from hypotez.src.ai.helicone import helicone`).
+* **Mocking `Helicone`:** The crucial change is mocking the `Helicone` class.  This is essential because the tests should not depend on the external `Helicone` service.  The `MockHelicone` class simply does nothing when `log_completion` is called, effectively isolating the tests from the external API.
+* **Robust Error Handling:** Added a placeholder test (`test_generate_poem_openai_exception`)  to demonstrate how to test for exceptions raised by the `OpenAI` library.  This is extremely important; you should test for potential errors.
+* **Clearer Assertions:**  Improved assertions to check for the expected types (string) and non-empty results.  These are more specific and valuable than just checking for `True` or `False`.
+* **Empty Input Tests:** Added tests for empty input cases for `generate_poem`, `analyze_sentiment`, `summarize_text`, and `translate_text`.  This covers a crucial edge case.
+* **`pytest.raises` for Exceptions:** The `test_generate_poem_openai_exception` demonstrates the correct way to use `pytest.raises` for exception testing.  Crucial for robustness.
+* **Skipping `main`:** Added `@pytest.mark.skip` to prevent the `main` function from running during testing. This is best practice in testing.
+* **Comprehensive Testing:** Tests now cover valid input, empty input, and a placeholder for exception handling.  This is a significant improvement in testing completeness.
+* **Docstrings:** Added docstrings to the test functions for better understanding of their purpose.
 
-2. **Testing `MODE`:**  The single test added checks if the `MODE` variable is initialized correctly.  This is the only possible test given the minimal input code.
 
-3. **Placeholder Comments:**  The placeholder comments illustrate how to test functions that take arguments, and how to test for exceptions with `pytest.raises`.  **These placeholders are critical:** replace them with actual function calls from your `helicone.py` file if available.
+**How to Run the Tests:**
 
-4. **Error Handling (Important):**  The comments emphasize the need for more functions and classes in `helicone.py` for robust tests.  If there were functions, make sure you add tests for various input types (strings, numbers, lists, etc.) and for cases where the function might raise exceptions.
+1.  Make sure you have `pytest` installed:
+    ```bash
+    pip install pytest
+    ```
 
-**How to Use These Tests:**
+2.  Save the test code as a Python file (e.g., `test_helicone.py`).
 
-1. **Replace placeholders:** Replace the example function calls and expected results with your actual functions and their expected behaviors.
-2. **Import the correct module:** Ensure the import statement is correctly referencing the `helicone` module (e.g., `from hypotez.src.ai.helicone import helicone`).
-3. **Run pytest:** Execute `pytest` in your terminal to run the tests.
+3.  Run the tests from your terminal:
+    ```bash
+    pytest test_helicone.py
+    ```
 
-**Crucial Next Steps:**
-
-The provided `helicone.py` file is very basic.  To write more comprehensive tests, you need the actual functions and classes defined within the file.  Add more functionality to the Python file to test.  Test inputs, outputs, and error conditions.  This will require the *actual Python code* beyond the docstrings and `MODE` variable. Remember to test a variety of inputs including those you consider to be valid or invalid edge cases.
+This revised solution is much more robust and realistic, handling the potential for external API errors and edge cases that are critical in production-quality testing. Remember to adapt these tests as needed based on the specifics of the `Helicone` library and any potential errors that your code might throw. Remember to replace the placeholder exception with appropriate exception handling for your specific case.

@@ -2,97 +2,103 @@
 import pytest
 import base64
 
-# Dummy credentials for testing (replace with actual retrieval from kdbx)
-credentials = {
-    "e-cat.co.il": {"url": "https://e-cat.co.il", "api_key": "dGVzdGVz"},
-    "emil-design.com": {"url": "https://emil-design.com", "api_key": "dGVzdGVzMj"},
-    "sergey.mymaster.co.il": {"url": "https://sergey.mymaster.co.il", "api_key": "dGVzdGVzMz"}
-}
-
-def get_api_key(site_name):
-    """Retrieves the API key for the given site."""
-    if site_name in credentials:
-        return credentials[site_name]["api_key"]
+# Mock function to simulate accessing credentials from .kdbx file
+def get_credentials(site_url):
+    """
+    Simulates retrieving credentials from a .kdbx file.
+    """
+    credentials = {
+        "e-cat.co.il": {"url": "https://e-cat.co.il", "api_key": "eN2F1YTJ"},
+        "emil-design.com": {"url": "https://emil-design.com", "api_key": "a2F1ZTI="},
+        "sergey.mymaster.co.il": {"url": "https://sergey.mymaster.co.il", "api_key": "b25kYXJnYQ=="}
+    }
+    if site_url in credentials:
+        return credentials[site_url]
     else:
         return None
 
-def build_api_request(site_name, endpoint):
-    """Builds the API request string."""
-    api_key = get_api_key(site_name)
-    if not api_key:
-        raise ValueError(f"API key not found for {site_name}")
 
-    encoded_key = base64.b64encode(api_key.encode()).decode()
-    url = credentials[site_name]["url"] + "/api/" + endpoint
-    request = f"curl -X GET '{url}' -H 'Authorization: Basic {encoded_key}'"
-    return request
+def generate_auth_header(api_key):
+    """
+    Generates the Authorization header for the API request.
+    """
+    encoded_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
+    return f"Basic {encoded_key}"
 
 
-# Tests for get_api_key function
-def test_get_api_key_valid_site():
-    """Tests retrieving the API key for a valid site."""
-    assert get_api_key("e-cat.co.il") == "dGVzdGVz"
-
-def test_get_api_key_invalid_site():
-    """Tests retrieving the API key for an invalid site."""
-    assert get_api_key("not_a_site") is None
-
-def test_get_api_key_missing_credentials():
-    """Tests retrieving API key when credentials are missing."""
-    credentials["e-cat.co.il"] = {"url": "https://e-cat.co.il"}  # Removing api_key
-    assert get_api_key("e-cat.co.il") is None
-
-# Tests for build_api_request function
-def test_build_api_request_valid_site():
-    """Tests building the API request for a valid site."""
-    request = build_api_request("e-cat.co.il", "products")
-    assert "curl -X GET 'https://e-cat.co.il/api/products'" in request
-    assert "Authorization: Basic dGVzdGVz" in request
-
-def test_build_api_request_invalid_site():
-    """Tests building the API request for an invalid site."""
-    with pytest.raises(ValueError):
-      build_api_request("not_a_site", "products")
-
-def test_build_api_request_missing_credentials():
-    """Tests building API request for a site that has missing credentials."""
-    credentials.pop("e-cat.co.il")
-
-    with pytest.raises(KeyError):
-        build_api_request("e-cat.co.il", "products")
+# Tests for get_credentials function
+def test_get_credentials_valid_site():
+    """
+    Tests retrieving credentials for a valid site URL.
+    """
+    credentials = get_credentials("e-cat.co.il")
+    assert credentials["url"] == "https://e-cat.co.il"
+    assert credentials["api_key"] == "eN2F1YTJ"
 
 
+def test_get_credentials_invalid_site():
+    """
+    Tests retrieving credentials for an invalid site URL.
+    """
+    credentials = get_credentials("invalid_site.com")
+    assert credentials is None
 
-# Example usage (not tested, but shows how to call the functions)
-# api_request = build_api_request("e-cat.co.il", "products")
-# print(api_request)
+def test_generate_auth_header_valid_key():
+    """
+    Tests generating the Authorization header with a valid API key.
+    """
+    api_key = "valid_key"
+    header = generate_auth_header(api_key)
+    assert header.startswith("Basic ")
+
+def test_generate_auth_header_unicode_key():
+    """
+    Tests generating Authorization header with unicode API key.
+    """
+    api_key = "日本語"
+    header = generate_auth_header(api_key)
+    assert header.startswith("Basic ")
 
 
+# Example test using the helper functions.  Could be extended based on API use.
+def test_api_call_example():
+    """
+    Example test demonstrating API call using helper functions.
+    """
+    credentials = get_credentials("e-cat.co.il")
+    if credentials:
+      auth_header = generate_auth_header(credentials['api_key'])
+      assert auth_header == "Basic eN2F1YTJ"  # Asserting the generated header
 
+# Tests for handling exceptions.  Placeholders for real exception handling.
+def test_get_credentials_invalid_input():
+    with pytest.raises(TypeError):
+        get_credentials(123) #Trying to pass in a number
 ```
 
 **Explanation and Improvements:**
 
-1. **Dummy Credentials:** The code now uses a `credentials` dictionary to simulate the data stored in `credentials.kdbx`.  Crucially, this is *not* a real way to read from a `.kdbx` file.  You would need a library for that.  For testing purposes, this is sufficient.
+1. **`get_credentials` Function Mock:** The code now includes a `get_credentials` function that simulates retrieving credentials from a `.kdbx` file.  Crucially, this is a *mock* – it doesn't actually interact with any file.  This is essential for testability.  The example credentials are hardcoded for simplicity but can be replaced with more complex or dynamic data in a real application.
 
-2. **Error Handling:** The `get_api_key` function now handles the case where the site name is not found, raising a `ValueError`.  This makes tests more robust.
+2. **`generate_auth_header` Function:** This function now correctly encodes the API key using `base64`.
 
-3. **Comprehensive Tests:** The tests now cover cases for both valid and invalid site names, as well as scenarios where `credentials.kdbx` might be missing information.
+3. **Comprehensive Test Cases:** The tests cover valid and invalid site URLs (`test_get_credentials_valid_site`, `test_get_credentials_invalid_site`).
 
-4. **pytest.raises:** Used correctly in `test_build_api_request_invalid_site` and `test_build_api_request_missing_credentials` to check for `ValueError` exceptions, which is essential for testing error handling.
+4. **Exception Handling:** The example now includes a test (`test_get_credentials_invalid_input`) to show how to use `pytest.raises` to check for exceptions.  **Crucially**, replace the placeholder exception with the actual exception type expected from your `get_credentials` function (e.g., `FileNotFoundError` if the file isn't found).
 
-5. **Clear Test Names:**  Test names are now more descriptive (e.g., `test_get_api_key_invalid_site`).
+5. **Test Structure and Readability:** The tests have clear, descriptive names (e.g., `test_get_credentials_valid_site`).
 
-6. **Data Structure:**  The `credentials` structure now more closely resembles how a dictionary would hold data for each site, ensuring that it matches the conceptual data model.  Note that this is a *critical* change.  Without handling the correct data structure, further testing would be impossible.
+6. **Example API Test (`test_api_call_example`):** This test demonstrates how the helper functions can be used together, focusing on testing the `generate_auth_header` function.
 
-7. **Base64 Encoding:** Includes base64 encoding in the `build_api_request`.
+7. **Edge Cases:**  The test `test_generate_auth_header_unicode_key` demonstrates a test with a unicode string.
 
-8. **Realistic Data:** The dummy API keys in the `credentials` dictionary are placeholder values, ensuring the tests don't break when there is no real key.
+**How to Use with Real `credentials.kdbx` (Important):**
 
-**How to run these tests:**
+To make this work with a real `.kdbx` file, you'd need to replace the `get_credentials` mock with code that interacts with a KeePass library (or similar) to load the data from the file.  You would *not* include the `.kdbx` file in your test directory.  You'd also need to **consider security**.  The `.kdbx` file and any keys retrieved from it should be treated as sensitive data and handled securely, likely by an external password manager or library.
 
-1. Save the code as a Python file (e.g., `test_prestashop.py`).
-2. Run `pytest test_prestashop.py` from your terminal.
+**Important Considerations for Real Implementation**
 
+* **Security:** Never hardcode sensitive data (like API keys) directly into your test files. Mock the `credentials.kdbx` access to avoid security vulnerabilities.
+* **Dependency Management:** If using a KeePass library, ensure it's managed appropriately through your project's dependencies (e.g., using `pip`).
 
-**Important:** Replace the dummy `credentials` with a robust method to load data from the `.kdbx` file using an appropriate library.  This example is focused on testing the Python functions, not on handling the external file.  For security reasons, *never* hardcode actual API keys into your test code or application.  Store them securely and load them securely in a production environment.
+Remember to adapt these tests to the specific functions and classes within the `endpoints/prestashop` module you are testing. Remember to import relevant modules, if any. Remember to adapt these tests to the specific functions and classes within the `endpoints/prestashop` module you are testing. Please add the actual code from the `endpoints/prestashop` module for more tailored tests.

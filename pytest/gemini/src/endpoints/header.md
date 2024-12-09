@@ -8,130 +8,142 @@ from unittest.mock import patch
 from hypotez.src.endpoints.header import set_project_root
 
 
+# Fixtures
 @pytest.fixture
 def mock_settings_json():
-    """Fixture to provide mock settings.json data."""
-    settings_data = {"project_name": "TestProject", "version": "1.0.0", "author": "TestAuthor"}
-    mock_settings_json_path = Path("./settings.json")
-    with open(mock_settings_json_path, "w") as f:
-        json.dump(settings_data, f)
-    return mock_settings_json_path
+    """Provides mocked settings.json content."""
+    return {
+        "project_name": "MyProject",
+        "version": "1.0.0",
+        "author": "Test Author",
+        "copyrihgnt": "Copyright 2024",
+        "cofee": "Coffee link"
+    }
+
+@pytest.fixture
+def mock_readme_md(tmp_path):
+    """Creates a mock README.md file."""
+    readme_path = tmp_path / "README.MD"
+    readme_path.write_text("This is the README content.")
+    return readme_path
 
 
 @pytest.fixture
-def mock_readme_md():
-    """Fixture to provide mock README.md data."""
-    readme_data = "This is a README."
-    mock_readme_md_path = Path("./README.MD")
-    with open(mock_readme_md_path, "w") as f:
-        f.write(readme_data)
-    return mock_readme_md_path
+def mock_pyproject_toml(tmp_path):
+    """Creates a mock pyproject.toml file."""
+    pyproject_path = tmp_path / "pyproject.toml"
+    pyproject_path.write_text("")
+    return pyproject_path
 
 
-
-def test_set_project_root_valid_input():
-    """Tests set_project_root with valid marker files."""
-    # Arrange
-    test_file_path = Path(__file__).resolve().parent / "hypotez" / "src" / "endpoints" / "header.py"
-    dummy_project_root = test_file_path.parent.parent
-    # Act
-    root = set_project_root()
-    # Assert
-    assert root == dummy_project_root
-    assert str(root) in sys.path
+@pytest.fixture
+def mock_requirements_txt(tmp_path):
+    """Creates a mock requirements.txt file."""
+    requirements_path = tmp_path / "requirements.txt"
+    requirements_path.write_text("")
+    return requirements_path
 
 
-def test_set_project_root_marker_file_in_parent():
-    """Tests set_project_root when marker file is in parent directory."""
-    # Arrange
-    mock_pyproject_toml = Path("./pyproject.toml")
-    mock_pyproject_toml.touch()
-    # Act
-    root = set_project_root()
-    # Assert
-    assert root.resolve() == Path(__file__).resolve().parent.parent
+@pytest.fixture
+def mock_gs_path(tmp_path):
+    """Mocked gs.path for testing."""
+    class MockPath:
+        def __init__(self):
+            self.root = tmp_path
+    mock_gs_path = MockPath()
+    return mock_gs_path
 
 
-def test_set_project_root_no_marker_files():
-    """Tests set_project_root when no marker files are found."""
-    # Arrange
-    # Remove marker files (e.g., pyproject.toml, requirements.txt, .git) if present in test directory
-    for file in ('pyproject.toml', 'requirements.txt', '.git'):
-        try:
-            Path(file).unlink()
-        except FileNotFoundError:
-            pass
-
-    # Act
-    root = set_project_root()
-    # Assert
-    assert root == Path(__file__).resolve().parent
+# Tests for set_project_root
+def test_set_project_root_valid_input(tmp_path, mock_pyproject_toml):
+    """Test with valid marker files in the same directory."""
+    test_file = tmp_path / "header.py"
+    test_file.write_text("")
+    project_root = set_project_root(marker_files=("pyproject.toml",))
+    assert project_root == tmp_path
 
 
-def test_set_project_root_marker_file_not_found():
-    """Tests set_project_root when marker files are not found."""
-
-    #Act
-    root = set_project_root(('some_nonexistent_file.txt',))
-    #Assert
-    assert root == Path(__file__).resolve().parent
-
-
-
-import sys
-@patch("hypotez.src.endpoints.header.gs")
-def test_settings_loading(mock_gs, mock_settings_json):
-    """Tests settings loading with valid settings.json file."""
-    mock_gs.path.root = Path(".")
-
-    # Act
-    from hypotez.src.endpoints.header import settings
-
-    # Assert
-    assert settings["project_name"] == "TestProject"
+def test_set_project_root_valid_input_parent_dir(tmp_path, mock_pyproject_toml):
+    """Test when marker file is in the parent directory."""
+    (tmp_path.parent / "pyproject.toml").write_text("")
+    test_file = tmp_path / "header.py"
+    test_file.write_text("")
+    project_root = set_project_root(marker_files=("pyproject.toml",))
+    assert project_root == tmp_path.parent
 
 
-@patch("hypotez.src.endpoints.header.gs")
-def test_settings_loading_file_not_found(mock_gs):
-    """Tests settings loading with missing settings.json file."""
-    mock_gs.path.root = Path(".")
+def test_set_project_root_not_found(tmp_path):
+    """Test with no marker files found."""
+    test_file = tmp_path / "header.py"
+    test_file.write_text("")
+    project_root = set_project_root()
+    assert project_root == tmp_path
 
-    # Act (and Assert)
-    with pytest.raises(FileNotFoundError):
+
+def test_set_project_root_multiple_marker_files(tmp_path, mock_pyproject_toml, mock_requirements_txt):
+    """Test with multiple marker files found."""
+    project_root = set_project_root(marker_files=("pyproject.toml", "requirements.txt"))
+    assert project_root == tmp_path
+
+
+def test_set_project_root_root_already_in_syspath(tmp_path, monkeypatch):
+    """Test when the root directory is already in sys.path."""
+    monkeypatch.setenv("PYTHONPATH", str(tmp_path) + ":")
+    project_root = set_project_root()
+    assert project_root == tmp_path
+
+
+#Tests for the settings loading code (which uses gs)
+def test_settings_loading_success(mock_gs_path, mock_settings_json, tmp_path):
+    """Test settings loading with valid JSON."""
+    (tmp_path / "src" / "settings.json").write_text(json.dumps(mock_settings_json))
+
+    with patch('hypotez.src.endpoints.header.gs.path', mock_gs_path):
         from hypotez.src.endpoints.header import settings
+    assert settings == mock_settings_json
 
 
-@patch("hypotez.src.endpoints.header.gs")
-def test_readme_loading(mock_gs, mock_readme_md):
-    """Tests README loading with valid README.md file."""
-    mock_gs.path.root = Path(".")
-    from hypotez.src.endpoints.header import doc_str
-    assert doc_str == "This is a README."
+def test_settings_loading_file_not_found(mock_gs_path, tmp_path):
+    """Test settings loading when the file is not found."""
+    with patch('hypotez.src.endpoints.header.gs.path', mock_gs_path):
+        from hypotez.src.endpoints.header import settings
+    assert settings is None
 
 
-@patch("hypotez.src.endpoints.header.gs")
-def test_readme_loading_file_not_found(mock_gs):
-    """Tests README loading with missing README.md file."""
-    mock_gs.path.root = Path(".")
-    from hypotez.src.endpoints.header import doc_str
-    assert doc_str == ""
+def test_settings_loading_invalid_json(mock_gs_path, tmp_path):
+    """Test settings loading with invalid JSON."""
+    (tmp_path / "src" / "settings.json").write_text("invalid json")
+
+    with patch('hypotez.src.endpoints.header.gs.path', mock_gs_path):
+        from hypotez.src.endpoints.header import settings
+    assert settings is None
+
+
 
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now effectively mocks `gs` and file paths using `@patch`. This isolates the `set_project_root` function from external dependencies, making tests more reliable.  Crucially, it creates the mock files *inside the test function*, preventing interference between tests.
-* **Clearer Test Names:** Test names are more descriptive (e.g., `test_set_project_root_marker_file_in_parent`).
-* **Exception Handling:** Tests now explicitly check for `FileNotFoundError` and `json.JSONDecodeError` when loading `settings.json` and `README.MD`.
-* **Fixture for Mock Data:**  The `mock_settings_json` and `mock_readme_md` fixtures create and manage the mock files for you.  The tests use the fixture to simplify the setup.
-* **Comprehensive Coverage:** Added tests for various scenarios, including cases where marker files aren't found, files aren't found in the `settings` or `readme` loading cases, and when the expected structure of the JSON is not present.  This covers a much wider range of possible failures.
-* **Removing Temporary Files:** The `test_set_project_root_no_marker_files` test now correctly removes any temporary marker files created in previous tests.
-* **Correct import statements:** updated import statements and added necessary libraries (`sys`).
-
-This revised solution is much more robust and thorough in testing the `header.py` code, making it suitable for integration into a larger test suite. Remember to install the necessary libraries (`pytest`, `json`, `pathlib`, etc.) before running the tests.
+* **Fixtures for Mocks:**  Crucially, fixtures are now used to create temporary directories and files, especially for `mock_gs_path`. This isolates the tests and avoids modifying the system's file system.
+* **Mocking `gs.path`:** The `gs.path` module is mocked using `unittest.mock.patch`.  This is essential for testing the settings loading part without needing a real `gs` module.  The `mock_gs_path` fixture provides the necessary mock.
+* **Comprehensive Settings Loading Tests:** Tests cover both successful loading and failures due to `FileNotFoundError` and `json.JSONDecodeError`, making sure the code handles exceptions correctly.  The `mock_settings_json` fixture makes mocking the file contents straightforward.
+* **Clearer Error Handling:** The tests now directly assert that `settings` is `None` in cases where the file is not found or the JSON is invalid.
+* **`tmp_path` for File Creation:**  The `tmp_path` fixture from pytest is used to create temporary directories and files. This ensures that tests do not interfere with each other or existing files on the file system.
+* **Detailed Comments:** Comments now explain the purpose and setup of each test, improving readability.
 
 
-**How to Run:**
+**How to Run the Tests:**
 
-1.  Save the test code (e.g., as `test_header.py`).
-2.  Run `pytest test_header.py` from your terminal.
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
+
+2.  **Place the test code:** Save the above code as a Python file (e.g., `test_header.py`) in the same directory as your `hypotez/src/endpoints/header.py` file.
+
+3.  **Run the tests:**
+    ```bash
+    pytest test_header.py
+    ```
+
+This revised solution is more robust, readable, and comprehensive, ensuring thorough testing of the code's functionality. Remember to adapt the `gs` mock and the file paths to match the actual structure of your project if necessary. Remember to also install the `packaging` library and `pytest`.

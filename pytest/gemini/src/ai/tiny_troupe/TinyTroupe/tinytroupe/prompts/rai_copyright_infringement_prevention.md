@@ -1,92 +1,68 @@
 ```python
 import pytest
 
-# Tests for the copyright infringement prevention logic
+def test_copyright_infringement_prevention_valid_request_book():
+    """Tests handling of a valid request for a book summary."""
+    request = "Give me a summary of the book 'Pride and Prejudice'."
+    expected_response = "I'm sorry, I cannot provide a summary of 'Pride and Prejudice' as it may violate copyright laws.  Please understand that I am not permitted to generate content that infringes on copyrights."
+    assert rai_copyright_infringement_prevention(request) == expected_response
 
 
-def test_copyright_infringement_prevention_valid_request():
-    """Checks response to a valid request that does not involve copyrighted material."""
-    request_text = "Write a short story about a cat."
-    expected_response = "Okay, I can do that."  # Replace with actual expected response
-    assert expected_response in str(
-        generate_response(request_text)
-    ), "Expected response not found"
+def test_copyright_infringement_prevention_valid_request_lyrics():
+    """Tests handling of a valid request for lyrics."""
+    request = "Give me the lyrics to 'Bohemian Rhapsody'."
+    expected_response = "I'm sorry, I cannot provide the lyrics to 'Bohemian Rhapsody' as it may violate copyright laws. Please understand that I am not permitted to generate content that infringes on copyrights."
+    assert rai_copyright_infringement_prevention(request) == expected_response
+
+def test_copyright_infringement_prevention_valid_request_recipe():
+    """Tests handling of a valid request for a recipe."""
+    request = "What is the recipe for chocolate chip cookies?"
+    expected_response = "I'm sorry, I cannot provide the recipe for chocolate chip cookies as it may violate copyright laws. Please understand that I am not permitted to generate content that infringes on copyrights."
+    assert rai_copyright_infringement_prevention(request) == expected_response
+
+def test_copyright_infringement_prevention_valid_request_news_article():
+    """Tests handling of a valid request for a news article."""
+    request = "Give me a summary of the recent article about the US election."
+    expected_response = "I'm sorry, I cannot provide a summary of the recent article about the US election as it may violate copyright laws. Please understand that I am not permitted to generate content that infringes on copyrights."
+    assert rai_copyright_infringement_prevention(request) == expected_response
 
 
-def test_copyright_infringement_prevention_book_request():
-    """Checks response to a request for a copyrighted book."""
-    request_text = "Write chapter 3 of 'Pride and Prejudice'."
-    expected_response = (
-        "I cannot provide content from copyrighted works like books. Please let me know if you have any other requests."
-    )
-    assert expected_response in str(
-        generate_response(request_text)
-    ), "Expected response not found."
+def test_copyright_infringement_prevention_valid_request_webmd():
+    """Tests handling of a valid request from WebMD."""
+    request = "What are the symptoms of diabetes according to WebMD?"
+    expected_response = "I'm sorry, I cannot provide information from WebMD as it may violate copyright laws. Please understand that I am not permitted to generate content that infringes on copyrights."
+    assert rai_copyright_infringement_prevention(request) == expected_response
 
 
-def test_copyright_infringement_prevention_lyrics_request():
-    """Checks response to a request for copyrighted lyrics."""
-    request_text = "Write the lyrics to 'Bohemian Rhapsody'."
-    expected_response = (
-        "I cannot provide content from copyrighted works like songs. Please let me know if you have any other requests."
-    )
-    assert expected_response in str(
-        generate_response(request_text)
-    ), "Expected response not found."
+def test_copyright_infringement_prevention_empty_request():
+    """Tests handling of an empty request."""
+    request = ""
+    expected_response = "I'm sorry, I cannot provide content based on an empty request.  Please provide a request."
+    assert rai_copyright_infringement_prevention(request) == expected_response
 
 
-def test_copyright_infringement_prevention_recipe_request():
-    """Checks response to a request for a copyrighted recipe."""
-    request_text = "Give me the recipe for 'Chicken Tikka Masala' from the cookbook 'The Curry King'."
-    expected_response = (
-        "I cannot provide content from copyrighted works like recipes. Please let me know if you have any other requests."
-    )
-    assert expected_response in str(
-        generate_response(request_text)
-    ), "Expected response not found."
+def test_copyright_infringement_prevention_invalid_request_format():
+    """Tests handling of an invalid request format."""
+    request = 123  # Invalid input type
+    expected_response = "I'm sorry, I cannot provide content based on an invalid request format. Please provide a text request."
+    assert rai_copyright_infringement_prevention(request) == expected_response
 
 
-def test_copyright_infringement_prevention_news_article_request():
-    """Checks response to a request for a copyrighted news article."""
-    request_text = "Write the article about the recent economic summit."
-    expected_response = (
-        "I cannot fulfill requests for copyrighted content, such as news articles. Please provide alternative requests."
-    )
-    assert expected_response in str(
-        generate_response(request_text)
-    ), "Expected response not found."
+def test_copyright_infringement_prevention_non_string_input():
+    """Tests handling of non-string input."""
+    request = 123  # Integer input
+    expected_response = "I'm sorry, I cannot provide content based on an invalid request format. Please provide a text request."
+    assert rai_copyright_infringement_prevention(request) == expected_response
 
 
-def test_copyright_infringement_prevention_webmd_request():
-    """Checks response to a request for content from WebMD."""
-    request_text = "What are the symptoms of the flu according to WebMD?"
-    expected_response = (
-        "I cannot provide medical advice or information from copyrighted sources like WebMD. Please consult a medical professional."
-    )
-    assert expected_response in str(
-        generate_response(request_text)
-    ), "Expected response not found."
-
-def generate_response(user_request):
-    """
-    Simulates the code logic for handling user requests, returning a string.
-    Replace this with the actual implementation from the file if available.
-    """
-
-    if any(
-        keyword in user_request.lower()
-        for keyword in ["books", "lyrics", "recipes", "news", "webmd"]
-    ):
-        return (
-            "I cannot provide content from copyrighted works. Please let me know if you have any other requests."
-        )
-    else:
-        return "Okay, I can do that."  # Replace with actual response
 
 
-# Example usage to test the function (uncomment to test)
+# Placeholder for the actual function.  This needs to be defined in the real code.
+def rai_copyright_infringement_prevention(user_request):
+    if not isinstance(user_request, str):
+        return "I'm sorry, I cannot provide content based on an invalid request format. Please provide a text request."
+    if not user_request:
+        return "I'm sorry, I cannot provide content based on an empty request.  Please provide a request."
 
-# test_copyright_infringement_prevention_valid_request()
-# test_copyright_infringement_prevention_book_request()
-# ... (other test functions)
+    return "I'm sorry, I cannot provide {} as it may violate copyright laws. Please understand that I am not permitted to generate content that infringes on copyrights.".format(user_request)
 ```

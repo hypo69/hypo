@@ -3,109 +3,101 @@ import pytest
 import json
 from pathlib import Path
 from packaging.version import Version
+from unittest.mock import patch
+
 import sys
 
 from hypotez.src.ai.gemini.header import set_project_root
 
+# Fixtures
+@pytest.fixture
+def dummy_config():
+    return {"project_name": "test_project", "version": "1.0.0", "author": "Test Author"}
 
-def test_set_project_root_valid_input():
-    """Tests set_project_root with valid input (pyproject.toml exists)."""
-    # Create a temporary directory structure for testing
-    tmp_dir = Path("./tmp_test_dir")
-    tmp_dir.mkdir(parents=True, exist_ok=True)
-    (tmp_dir / "pyproject.toml").touch()
-    
-    # Call the function with a known root
+
+@pytest.fixture
+def dummy_config_file(tmp_path):
+    """Creates a dummy config.json file."""
+    config_file = tmp_path / "src" / "config.json"
+    config_file.parent.mkdir(parents=True, exist_ok=True)
+    config = {"project_name": "test_project", "version": "1.0.0"}
+    with open(config_file, "w") as f:
+        json.dump(config, f, indent=4)
+    return config_file
+
+
+@pytest.fixture
+def dummy_readme(tmp_path):
+    """Creates a dummy README.MD file."""
+    readme_file = tmp_path / "src" / "README.MD"
+    readme_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(readme_file, "w") as f:
+        f.write("This is a dummy README.")
+    return readme_file
+
+# Tests for set_project_root
+def test_set_project_root_valid_path(tmp_path):
+    """Tests with a valid project structure."""
+    (tmp_path / "pyproject.toml").touch()
     root_path = set_project_root()
-    assert root_path == tmp_dir
-    
-    # Clean up temporary directory
-    import shutil
-    shutil.rmtree(tmp_dir)
-    
+    assert root_path == tmp_path
 
-
-def test_set_project_root_invalid_input():
-    """Tests set_project_root with invalid input (no marker files)."""
-    # Create a temporary directory to test with
-    tmp_dir = Path("./tmp_test_dir")
-    tmp_dir.mkdir(parents=True, exist_ok=True)
-    
+def test_set_project_root_multiple_marker_files(tmp_path):
+    (tmp_path / "pyproject.toml").touch()
+    (tmp_path / "requirements.txt").touch()
     root_path = set_project_root()
-    assert root_path == Path.cwd()
-    
-    # Clean up temporary directory
-    import shutil
-    shutil.rmtree(tmp_dir)
-    
+    assert root_path == tmp_path
 
-
-
-def test_set_project_root_edge_case_root_in_path():
-    """Tests set_project_root edge case, when root already in sys.path."""
-    # Create a temporary directory to test with
-    tmp_dir = Path("./tmp_test_dir")
-    tmp_dir.mkdir(parents=True, exist_ok=True)
-    (tmp_dir / "pyproject.toml").touch()
-    
-    # Simulate root already being in sys.path.  No change should be made
+def test_set_project_root_no_marker_files(tmp_path):
+    """Test if the current directory is returned if no marker files are found."""
     root_path = set_project_root()
-    assert root_path == tmp_dir
+    assert root_path == Path(__file__).resolve().parent
+    
+def test_set_project_root_marker_in_parent(tmp_path):
+    """Tests if the parent directory is returned if a marker file is found in a parent directory."""
+    (tmp_path.parent / "pyproject.toml").touch()
+    root_path = set_project_root()
+    assert root_path == tmp_path.parent
 
-    # Clean up temporary directory
-    import shutil
-    shutil.rmtree(tmp_dir)
+def test_set_project_root_add_to_path(tmp_path):
+  (tmp_path / "pyproject.toml").touch()
+  root_path = set_project_root()
+  assert str(root_path) in sys.path
+
+# Tests for config loading
+def test_config_loading_success(dummy_config_file):
+    """Test successful loading of config.json."""
+    with patch('hypotez.src.ai.gemini.header.gs', autospec=True) as mock_gs:
+        mock_gs.path.root = Path('./')
+        __root__ = set_project_root()
+        mock_config_file_path = __root__ / 'src' / 'config.json'
+        assert mock_config_file_path == dummy_config_file
+
+        config = json.load(open(dummy_config_file, 'r'))
+        assert config['project_name'] == 'test_project'
 
 
-@pytest.mark.parametrize("marker_files", [[], [".invalid_file"]])
-def test_set_project_root_invalid_marker_files(marker_files):
-    """Tests set_project_root with empty or non-existent marker files."""
+def test_config_loading_file_not_found(tmp_path):
+    """Tests for FileNotFoundError handling."""
+    with patch('hypotez.src.ai.gemini.header.gs', autospec=True) as mock_gs:
+        mock_gs.path.root = Path(tmp_path)
+        __root__ = set_project_root()
+        
+        with pytest.raises(FileNotFoundError):
+            set_project_root(marker_files=['config.json'])
 
-    with pytest.raises(AttributeError, match=r"no marker files passed"):  # More specific error check
-        set_project_root(marker_files)
+
+def test_config_loading_invalid_json(dummy_config_file):
+    """Tests for JSONDecodeError handling."""
+    with open(dummy_config_file, 'w') as f:
+        f.write("invalid json")
+
+    with patch('hypotez.src.ai.gemini.header.gs', autospec=True) as mock_gs:
+        mock_gs.path.root = Path('./')
+        with pytest.raises(json.JSONDecodeError):
+           set_project_root(marker_files=['config.json'])
 
 
 
-def test_set_project_root_file_not_found_no_marker():
-    """ Tests if the correct path is returned when there are no files. """
-    current_path = Path.cwd()
-    with pytest.raises(AttributeError, match=r"no marker files passed"):
-       set_project_root()
-
-def test_set_project_root_file_not_found():
-    """ Tests if the correct path is returned when the file is not found. """
-
-    with pytest.raises(FileNotFoundError):
-        set_project_root(marker_files = (".not_exist_file",))
 
 ```
-
-**Explanation and Improvements:**
-
-1. **Clearer Test Names:** Test names now explicitly describe the input scenario (e.g., `test_set_project_root_valid_input`).
-
-2. **Robust Error Handling:** Uses `pytest.raises` for exception handling (FileNotFoundError, AttributeError) with more specific error messages (using `match` in `pytest.raises`).  This makes the tests more reliable and informative.
-
-3. **Edge Cases:**  `test_set_project_root_edge_case_root_in_path` is added to handle situations where the root directory might already be in `sys.path`.
-
-
-4. **Parameterization:** Uses `pytest.mark.parametrize` to test different marker file tuples efficiently.
-
-
-5. **Robustness and Cleanup:** Added `shutil.rmtree` to safely remove the temporary directory created for testing, crucial for avoiding conflicts in subsequent tests.
-
-6. **Comprehensive Coverage:** The tests now cover more possible scenarios, including empty marker file lists and marker files that don't exist.
-
-
-7. **More Specific Error Messages:** Added more specific error messages to the `pytest.raises` calls for more informative test failures (e.g. `match=r"no marker files passed"`).
-
-This improved test suite is much more robust and thoroughly covers various scenarios. Remember to replace `"./tmp_test_dir"` with a suitable temporary directory path if you have particular requirements for where tests are run.  You will likely want to parametrize the `marker_files` parameter further for additional test cases.  
-
-
-**How to run the tests:**
-
-1.  Save the test code as a Python file (e.g., `test_header.py`).
-2.  Run `pytest test_header.py` from your terminal.
-
-
-Remember to place this test file in a directory that Pytest can find (`pytest test_header.py` should work).  Also consider using `conftest.py` if you have common fixtures that you want to use across multiple test modules.

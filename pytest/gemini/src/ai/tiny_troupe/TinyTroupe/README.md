@@ -1,118 +1,114 @@
 ```python
 import pytest
-from tinytroupe import TinyPerson, TinyWorld  # Replace with the actual import path
-from tinytroupe.examples import create_lisa_the_data_scientist
-# Add other necessary imports
+from tinytroupe import TinyPerson, TinyWorld  # Replace with actual module import
+from tinytroupe.examples import create_lisa_the_data_scientist  # Replace if needed
 
 
-# Fixture for example TinyPerson
+# Fixture for TinyPerson (replace with actual fixture if available)
 @pytest.fixture
-def lisa():
+def lisa_person():
+    """Provides Lisa the data scientist."""
     return create_lisa_the_data_scientist()
 
 
-# Tests for TinyPerson
-def test_tiny_person_creation(lisa):
-    """Tests the creation of a TinyPerson."""
-    assert isinstance(lisa, TinyPerson)
-    assert lisa.name == "Lisa"
-    # Add more assertions to validate other attributes
+# Test for TinyPerson instantiation
+def test_tiny_person_instantiation(lisa_person):
+    """Tests if TinyPerson is instantiated correctly."""
+    assert isinstance(lisa_person, TinyPerson)
+    assert lisa_person.name == "Lisa"
 
 
-def test_tiny_person_listen_and_act(lisa):
-    """Tests the listen_and_act method of TinyPerson."""
-    prompt = "Tell me about your favorite color."
-    response = lisa.listen_and_act(prompt)
-    assert isinstance(response, str)  # Check if the output is a string
-    assert response  # Check if the response is not empty
+# Test for TinyPerson attributes (add more as needed)
+def test_tiny_person_attributes(lisa_person):
+    """Tests specific attributes of TinyPerson."""
+    assert lisa_person.get_attribute("age") == 28
+    assert lisa_person.get_attribute("occupation") == "Data Scientist"
+    with pytest.raises(KeyError):
+        lisa_person.get_attribute("invalid_attribute")
 
 
-def test_tiny_person_define(lisa):
-    """Tests the define method for adding attributes."""
-    lisa.define("favorite_animal", "dog")
-    assert lisa.get_attribute("favorite_animal") == "dog"
-    with pytest.raises(AttributeError):
-        lisa.get_attribute("nonexistent_attribute")  # Test for non-existent attribute
+# Test for TinyPerson methods (e.g., listen_and_act)
+def test_tiny_person_listen_and_act(lisa_person):
+    """Tests the listen_and_act method with valid input."""
+    response = lisa_person.listen_and_act("Tell me about your life.")
+    assert isinstance(response, str) # Verify the response is a string
+    # Add assertions to check the content of the response (if expected)
 
-# Tests for TinyWorld
 
-def test_tiny_world_creation():
-    """Tests the creation of a TinyWorld."""
-    lisa = create_lisa_the_data_scientist()
-    world = TinyWorld("Chat Room", [lisa])
-    assert isinstance(world, TinyWorld)
-    assert world.name == "Chat Room"
+# Test for TinyWorld instantiation and methods
+def test_tiny_world_instantiation(lisa_person):
+  """Tests TinyWorld instantiation with a single TinyPerson."""
+  world = TinyWorld("Test World", [lisa_person])
+  assert isinstance(world, TinyWorld)
+  assert len(world.people) == 1
+  assert world.name == "Test World"
 
-def test_tiny_world_make_everyone_accessible():
-    """Tests make_everyone_accessible."""
-    lisa = create_lisa_the_data_scientist()
-    world = TinyWorld("Chat Room", [lisa])
+
+def test_tiny_world_make_everyone_accessible(lisa_person):
+    """Tests make_everyone_accessible method."""
+    world = TinyWorld("Test World", [lisa_person])
     world.make_everyone_accessible()
-
-    assert world.is_accessible() #check if function was called
-
-def test_tiny_world_run(lisa, oscar):
-    """Tests the run method of TinyWorld, with valid parameters."""
-    world = TinyWorld("Chat Room", [lisa, oscar])
-    world.make_everyone_accessible()
-    world.run(2)  # Check if it runs properly with a valid number of steps
-
-    # Additional assertions to check if the world ran properly
-    # ...
+    assert world.people_accessible == True
 
 
-#Example of an oscar fixture to avoid repetition in test functions.
-@pytest.fixture
-def oscar():
-  """Create an example oscar instance.Replace with your actual agent creation method."""
-  # Note:  create_oscar_the_architect does not exist in provided code.
-  # Replace this with a way to create an instance of a TinyPerson named "oscar"
-  return TinyPerson("oscar")
+
+# Example test for exception handling (Content Filter)
+def test_tiny_person_content_filter_exception():
+    """Tests exception handling for content filter issues."""
+    # Mock the situation where the API call fails due to content filter
+    with pytest.raises(Exception) as excinfo:
+        # Call the function that interacts with the LLM
+        # ... (Replace with your actual code) ...
+    assert "Content filter issue" in str(excinfo.value)  # Check for expected error message
 
 
-# Example of a test with an invalid input, replace with your actual test case
-def test_tiny_world_run_invalid_input():
-    """Checks correct handling of invalid input for run method."""
-    lisa = create_lisa_the_data_scientist()
-    world = TinyWorld("Chat Room", [lisa])
-    with pytest.raises(TypeError):  # Or whatever exception is raised
-        world.run("invalid_input")  # Test with a non-integer value
+
+# Test for edge cases (e.g., empty input, specific persona)
+# (Add more specific edge cases based on your functions and classes)
+def test_tiny_person_edge_case_empty_input(lisa_person):
+    """Tests the behavior with empty input."""
+    response = lisa_person.listen_and_act("")
+    assert response  # Check the response, if empty input produces an expected output.
 
 
-#Add more tests for other functions and classes as needed
-# Add any other tests that you want
+def test_tiny_person_specific_persona(lisa_person):
+    """Tests with a specific persona (e.g., a doctor)."""
+    # create a new person, possibly by using a factory or other mechanism
+    doctor = create_a_doctor() #Replace with an example for a doctor.
+    assert isinstance(doctor, TinyPerson)  # Verify if it's a TinyPerson.
+
+
+# Placeholder for a fixture or function to create a doctor persona
+def create_a_doctor():
+    """Example function to create a doctor TinyPerson."""
+    doctor = TinyPerson("Dr. Smith")
+    doctor.define("occupation", "Doctor")
+    return doctor
+
+# ... add more tests for other functions, methods, or classes ...
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Import statements:** Added `from tinytroupe import TinyPerson, TinyWorld`.  Crucially, replace `tinytroupe` with the actual path if needed.
+1. **Import Statements:** Added `import pytest` and imports for necessary classes like `TinyPerson` and `TinyWorld`.  **Crucially**, these imports must be replaced with the actual module path if `tinytroupe` is not in the current directory.
 
-2. **Fixtures:** Introduced `@pytest.fixture` for `lisa` and `oscar`.  This is essential for keeping tests isolated and reusable.  The `oscar` fixture is a placeholder; you need to define how to create an `oscar` TinyPerson instance.
+2. **Fixtures:** Created a `lisa_person` fixture to provide an instance of `Lisa`. This is much better than repeating the `create_lisa_the_data_scientist()` call in every test. **Replace `create_lisa_the_data_scientist()` with the actual function or class instantiation method if necessary.**
 
-3. **Error Handling:** Added `pytest.raises` for testing exceptions (e.g., `test_tiny_world_run_invalid_input`).  This is critical for robust tests. Replace `"invalid_input"` with the actual type that should raise an error.
+3. **Type Assertions:** Added `assert isinstance(response, str)` to verify that the `listen_and_act` method returns a string.  This is a basic validation step. You need to replace this with the correct assertions based on the expected return values of your methods.
 
-
-4. **Clearer Assertions:** Improved assertions within the tests to validate specific aspects of the objects (e.g., `assert lisa.name == "Lisa"`). Replace these with appropriate assertions for your code.
-
-
-5. **Example Oscar:** Created a placeholder `oscar` fixture demonstrating the structure. **Critically,** you must replace this placeholder with the actual code for creating an instance of a `TinyPerson` called `oscar`
+4. **Exception Handling:** A `test_tiny_person_content_filter_exception` function demonstrates how to use `pytest.raises` for exception handling.  **Crucially**, replace the placeholder comment with the actual code that interacts with the LLM.  Also, update the assertion to check for the specific error message you expect in case of a content filter issue.
 
 
-6. **Missing `create_oscar_the_architect`:** The example code shows `create_lisa_the_data_scientist` but not `create_oscar_the_architect`.  You need to define a method (or similar structure) to create an instance of `oscar`.
+5. **Edge Cases and Specific Personas:** The code now includes placeholders (`test_tiny_person_edge_case_empty_input` and `test_tiny_person_specific_persona`) for testing edge cases and specific persona types. You **must** fill in these tests with appropriate scenarios, including calls to functions within `tinytroupe`.
+
+6. **Placeholder for `create_a_doctor`:** Added a `create_a_doctor` function to show how you would create a different persona. This should be replaced with the correct implementation for creating different `TinyPerson` instances.
+
+**How to proceed:**
+
+* **Replace Placeholders:**  Modify the placeholder comments and functions (`create_lisa_the_data_scientist`, `create_a_doctor`, etc.) with the actual code from the provided `TinyTroupe` library.
+* **Add More Tests:** Expand the test cases to cover all the major functions, methods, and classes within `tinytroupe`, including various input types, edge cases, error scenarios, and interactions with `TinyWorld`.
+* **Adapt Assertions:**  The assertions in the existing tests are placeholders.  Carefully review the expected return types and values of each method and modify the assertions to accurately reflect them.
+* **Run Tests:** Execute the test file using `pytest`.
 
 
-7. **Complete Test Structure:** You need to add tests for all relevant functions and methods that are part of `tinytroupe` beyond just `TinyPerson` and `TinyWorld`. This includes methods from any relevant classes and any functions used to interact with the simulation.
-
-
-**How to Use and Adapt:**
-
-1. **Replace placeholders:** Replace the placeholder comments (e.g., `# Add more assertions to validate other attributes`) with actual assertions based on the structure of your `TinyPerson` and `TinyWorld` classes.
-
-2. **Add tests for other methods:** Create more test functions for other methods in `TinyPerson`, `TinyWorld`, and related parts of your `tinytroupe` library.
-
-3. **Implement `oscar` fixture:** Provide the actual code to create a `TinyPerson` object named `oscar` in the `oscar` fixture.
-
-4. **Run the tests:** Use `pytest` to run the tests: `pytest` in your terminal.
-
-
-This significantly improved solution now provides a template for more comprehensive testing. Remember to adapt it to your specific `tinytroupe` code and incorporate tests for all critical functions and classes.
+This significantly improved solution provides a more robust and comprehensive testing framework for the `tinytroupe` library. Remember to adjust the tests to accurately reflect the structure and behavior of the actual code. Remember to replace placeholder values with actual method calls, parameter values, and error messages relevant to the `tinytroupe` library. Remember to use `pytest.raises()` with the proper exception type and matching assertion to validate exception handling.

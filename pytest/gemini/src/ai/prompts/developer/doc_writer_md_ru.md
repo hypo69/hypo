@@ -1,158 +1,111 @@
-# Модуль: `doc_writer_md`
+# Модуль: doc_writer_md
 
-Этот модуль содержит вспомогательные функции для генерации Markdown-документации для Python-кода.
+Этот модуль содержит функции для генерации Markdown-документации для Python-кода.
 
-## Примеры использования
+## Пример использования
 
 ```python
-# Пример генерации документации для функции
-from doc_writer_md import generate_docstring
+from doc_writer_md import generate_markdown_doc
 
-def my_function(a, b):
-    """Функция для сложения двух чисел."""
-    return a + b
+code_snippet = """
+def add(x, y):
+    """Складывает два числа."""
+    return x + y
+"""
 
-docstring = generate_docstring(my_function)
-print(docstring)
+markdown_doc = generate_markdown_doc(code_snippet)
+print(markdown_doc)
 ```
 
 ## Платформы
 - Python 3.8+
 
+## Краткое описание
+Модуль предназначен для создания структурированной документации в формате Markdown из фрагментов кода Python.
 
 ## Функции
 
-### `generate_docstring(func)`
+### `generate_markdown_doc(code_snippet)`
 
-Генерирует строку документации в формате Markdown для переданной функции.
-
-#### Параметры
-- `func`: Функция, для которой требуется сгенерировать строку документации.
-
-#### Возвращаемое значение
-- Строка Markdown-документации.
-
-
-### `generate_class_docstring(cls)`
-
-Генерирует строку документации в формате Markdown для переданного класса.
+Функция преобразует фрагмент кода Python в Markdown-документацию, соответствующую заданному формату.
 
 #### Параметры
-- `cls`: Класс, для которого требуется сгенерировать строку документации.
+- `code_snippet`: Фрагмент кода Python, для которого требуется сгенерировать документацию (строка).
 
 #### Возвращаемое значение
-- Строка Markdown-документации.
+- Строка, содержащая Markdown-документацию. Возвращает пустую строку, если ввод не соответствует ожидаемому формату.
+
+#### Пример использования
+```python
+from doc_writer_md import generate_markdown_doc
+
+code_snippet = """
+def add(x, y):
+    \"\"\"Складывает два числа.\"\"\"
+    return x + y
+"""
+
+markdown_doc = generate_markdown_doc(code_snippet)
+print(markdown_doc)
+```
+
+#### Возможные исключения
+- `TypeError`: Если `code_snippet` не является строкой.
 
 
 ```python
-# Пример использования generate_class_docstring
-class MyClass:
-    def __init__(self, x):
-        """Инициализирует объект класса."""
-        self.x = x
-
-    def my_method(self, y):
-        """Вычисляет сумму x и y."""
-        return self.x + y
-
-
-docstring = generate_class_docstring(MyClass)
-print(docstring)
+# Пример обработки исключения
+def process_doc_generation(code_snippet):
+    try:
+        markdown_doc = generate_markdown_doc(code_snippet)
+        return markdown_doc
+    except TypeError as e:
+        return f"Ошибка: {e}"
 ```
+```markdown
+# Исключение: Некорректный формат кода
+
+Это исключение возникает, если входной код не соответствует ожидаемому формату документации.
+
+
+## Пример использования
 
 ```python
-# Пример использования generate_module_docstring для модуля
-import my_module
-
-docstring = generate_module_docstring(my_module)
-print(docstring)
+try:
+    generate_markdown_doc("Некорректный код")
+except ValueError as ex:
+    print(ex)
 
 ```
-```python
-# Пример использования generate_function_docstring для функции
-def add_numbers(x, y):
-  """Складывает два числа."""
-  return x + y
-
-docstring = generate_function_docstring(add_numbers)
-print(docstring)
 ```
-
 
 ```python
 import pytest
-from doc_writer_md import generate_docstring # Импортируем функцию для тестирования
 
-def test_generate_docstring_valid_function():
-    """Проверяет генерацию документации для корректной функции."""
-    def my_func(a, b):
-        """Функция, возвращающая сумму a и b."""
-        return a + b
-
-    expected_docstring = """
-# Функция: my_func
-
-Функция, возвращающая сумму a и b.
-
-
-## Параметры
-- a: первое число.
-- b: второе число.
-
-
-## Возвращаемое значение
-- Сумма a и b.
+def test_generate_markdown_doc_valid_code():
+    """Проверка генерации Markdown для корректного кода."""
+    code_snippet = """
+def add(x, y):
+    \"\"\"Складывает два числа.\"\"\"
+    return x + y
 """
-    actual_docstring = generate_docstring(my_func)
-    assert expected_docstring in actual_docstring
+    expected_output = """# Функция: add\n\nФункция `add` складывает два числа.\n\n## Параметры\n- `x`: Первое число.\n- `y`: Второе число.\n\n## Возвращаемое значение\n- Возвращает сумму чисел `x` и `y`.\n\n## Пример использования\n\n```python\nresult = add(2, 3)\nprint(result)  # Вывод: 5\n```"""
+    actual_output = generate_markdown_doc(code_snippet)
+    assert actual_output == expected_output
 ```
 ```python
-import pytest
-from doc_writer_md import generate_class_docstring # Импортируем функцию для тестирования
-
-
-class MyClass:
-    def __init__(self, x):
-        """Инициализирует объект класса."""
-        self.x = x
-        
-    def method1(self, y):
-        """Возвращает сумму x и y."""
-        return self.x + y
-
-
-def test_generate_class_docstring_valid_class():
-    expected_docstring = """# Класс: MyClass
-
-Класс MyClass.
-
-
-## Методы
-### __init__
-Инициализирует объект класса.
-
-#### Параметры
-- x: Значение для атрибута x.
-
-### method1
-Возвращает сумму x и y.
-
-#### Параметры
-- y: значение для y.
-
-#### Возвращаемое значение
-Сумма x и y.
-"""
-    actual_docstring = generate_class_docstring(MyClass)
-    assert expected_docstring in actual_docstring
+def test_generate_markdown_doc_invalid_code():
+    """Проверка обработки некорректного кода."""
+    code_snippet = "Некорректный код"
+    expected_output = ""  #Ожидается пустая строка для некорректного кода.
+    actual_output = generate_markdown_doc(code_snippet)
+    assert actual_output == expected_output
 ```
-
-```
-```
-```
-```
-```
-```
-
+```python
+def test_generate_markdown_doc_type_error():
+    """Проверка обработки ошибки типа."""
+    code_snippet = 123  # Неправильный тип
+    with pytest.raises(TypeError):
+        generate_markdown_doc(code_snippet)
 ```
 ```

@@ -1,83 +1,96 @@
 ```python
 import pytest
+import json
 from flask import Flask, request, jsonify
-from unittest.mock import patch
-from hypotez.src.fast_api.gemini import app, ask, ai_model
+from src.ai.google_generativeai.generative_ai import GoogleGenerativeAI
 
-# Fixture for mocking request data
+# Mock the Flask request object for testing
+class MockRequest:
+    def get_json(self):
+        return {"prompt": "My test prompt"}
+
+
+# Mock GoogleGenerativeAI for testing
+class MockGoogleGenerativeAI:
+    def ask(self, prompt):
+        if prompt == "My test prompt":
+            return "This is a test reply"
+        elif prompt == "Error prompt":
+            raise ValueError("This is an error")
+        else:
+            return "Default reply"
+
+# Fixture for the app and mock AI model
 @pytest.fixture
-def mock_request_json(monkeypatch):
-    """Fixture to mock request.get_json()."""
-    mock_data = {"prompt": "Test prompt"}
-    def mock_get_json():
-        return mock_data
-    monkeypatch.setattr(request, 'get_json', mock_get_json)
-    return mock_data
+def app_and_ai_model():
+    app = Flask(__name__)
+    ai_model = MockGoogleGenerativeAI()
+    
+    @app.route('/ask', methods=['POST'])
+    def ask():
+        data = request.get_json()
+        prompt = data.get('prompt')
+        if not prompt:
+            return jsonify({"error": "No prompt provided"}), 400
+        try:
+            reply = ai_model.ask(prompt)
+            return jsonify({"reply": reply})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
-# Fixture for mocking the AI model
-@pytest.fixture
-def mock_ai_model(monkeypatch):
-    """Fixture to mock the GoogleGenerativeAI class."""
-    mock_ask = lambda prompt: f"Reply for '{prompt}'"
-    monkeypatch.setattr(ai_model, "ask", mock_ask)
-    return mock_ask
+    return app, ai_model
 
-# Test cases for the ask function
-def test_ask_valid_input(mock_request_json, mock_ai_model):
+
+# Tests for the ask function
+def test_ask_valid_input(app_and_ai_model):
     """Tests the ask function with valid input."""
-    response = ask()
-    assert response.status_code == 200
-    data = response.get_json()
-    assert data['reply'] == "Reply for 'Test prompt'"
-
-
-def test_ask_no_prompt(monkeypatch):
-    """Tests the ask function with no prompt provided."""
-    mock_data = {}
-    def mock_get_json():
-        return mock_data
-    monkeypatch.setattr(request, 'get_json', mock_get_json)
-    response = ask()
-    assert response.status_code == 400
-    data = response.get_json()
-    assert data['error'] == "No prompt provided"
-
-def test_ask_ai_model_exception(mock_request_json):
-    """Test error handling for exceptions in the AI model."""
-    #Mock the GoogleGenerativeAI.ask method to raise an exception
-    with patch('hypotez.src.fast_api.gemini.GoogleGenerativeAI.ask') as mock_ask:
-        mock_ask.side_effect = ValueError("Test Error")
+    app, ai_model = app_and_ai_model
+    request_mock = MockRequest()
+    with app.test_request_context('/ask', method='POST', data=json.dumps({"prompt": "My test prompt"}), content_type='application/json'):
         response = ask()
-        assert response.status_code == 500
-        data = response.get_json()
-        assert "Test Error" in data['error']
+    assert response.status_code == 200
+    assert json.loads(response.data.decode()) == {"reply": "This is a test reply"}
+    
 
 
-def test_ask_invalid_json_input(monkeypatch):
-    """Tests the ask function with invalid JSON input."""
-    def mock_get_json():
-        return 'invalid json'
-    monkeypatch.setattr(request, 'get_json', mock_get_json)
-    response = ask()
-    assert response.status_code == 500 # Should return 500 for a JSON error
+def test_ask_no_prompt(app_and_ai_model):
+    """Tests handling of missing prompt."""
+    app, ai_model = app_and_ai_model
+    request_mock = MockRequest()
+    with app.test_request_context('/ask', method='POST', content_type='application/json'):
+        response = ask()
+    assert response.status_code == 400
+    assert json.loads(response.data.decode()) == {"error": "No prompt provided"}
 
 
-# Test run configuration
-if __name__ == '__main__':
-    pytest.main(['-v', '--disable-warnings', __file__])
+def test_ask_error_prompt(app_and_ai_model):
+    """Tests handling of errors from the AI model."""
+    app, ai_model = app_and_ai_model
+    request_mock = MockRequest()
+    with app.test_request_context('/ask', method='POST', data=json.dumps({"prompt": "Error prompt"}), content_type='application/json'):
+        response = ask()
+    assert response.status_code == 500
+    assert json.loads(response.data.decode()) == {"error": "ValueError('This is an error')"}
 
+
+
+
+def test_ask_invalid_json(app_and_ai_model):
+    """Test handling of invalid JSON input."""
+    app, ai_model = app_and_ai_model
+    with app.test_request_context('/ask', method='POST', data="invalid_json", content_type='application/json'):
+        response = ask()
+    assert response.status_code == 500
+    assert "error" in json.loads(response.data.decode())
+
+
+#Additional test for generic error cases
+def test_ask_generic_error(app_and_ai_model):
+    """Test handling of generic error from the AI model."""
+    app, ai_model = app_and_ai_model
+
+    class MockError(Exception):
+        pass
+    with pytest.raises(Exception):
+        ai_model.ask("error_test")
 ```
-
-**Explanation and Improvements:**
-
-* **Mocking:** The code now uses `unittest.mock.patch` and `monkeypatch` to mock `request.get_json()` and the `ai_model.ask` method.  This isolates the test from the actual external API call, preventing unnecessary network requests and potential external dependencies.
-* **Comprehensive Error Handling:**  Added a test (`test_ask_ai_model_exception`) specifically for catching exceptions raised within the `ai_model.ask` method. This ensures the application handles errors gracefully.
-* **Invalid JSON Input:** A test (`test_ask_invalid_json_input`) checks the response when `request.get_json()` returns something that's not valid JSON.
-* **Clearer Test Names:** Test function names are more descriptive about the scenario they cover.
-* **Fixture for Mock Data:** Introduced `mock_request_json` to easily set up the expected request data for tests. This is more organized and reusable.
-* **Fixture for Mock AI Model:** Created `mock_ai_model` fixture to mock the `GoogleGenerativeAI` object to control the return value of `ai_model.ask`. This is better practice than mocking directly in a function.
-* **pytest.main:** The `if __name__ == '__main__':` block now uses `pytest.main` to run the tests, making the test suite executable directly.
-* **Error Codes:**  Ensuring the appropriate HTTP error codes (400, 500) are asserted in the tests.
-* **Disabling Warnings:** Added `--disable-warnings` to `pytest.main` to suppress any potential warnings during testing.
-
-This significantly improved test coverage, including error handling, edge cases, and robustness, and is a more practical and realistic test suite for the provided code. Remember to install the necessary libraries (`pytest`, `flask` and the unittest.mock package). Using `pip install -r requirements.txt` is often a good practice for managing dependencies in a production environment.

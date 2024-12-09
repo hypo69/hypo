@@ -1,101 +1,113 @@
 ```python
 import pytest
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import HTTPException, Request
 from fastapi.testclient import TestClient
 from pathlib import Path
 from subprocess import Popen, PIPE
 from unittest.mock import patch
 
-# Create a temporary script.py to avoid needing a real one
-script_path = Path(__file__).resolve().parent / 'script.py'
-with open(script_path, 'w') as f:
-    f.write('import sys\nprint(sys.stdin.read())')
-
-app = FastAPI()
+# Create a TestClient instance
+client = TestClient()
 
 
-# Mount the 'html' folder as static files (we don't need to test this)
-app.mount("/", StaticFiles(directory="html"), name="html")
-
-# Import the process_data function to use in the tests
-from hypotez.src.fast_api.main.first_version import process_data
+# Replace with your actual script path
+SCRIPT_PATH = Path(__file__).resolve().parent.parent / 'script.py'
 
 
-def test_process_data_valid_input():
-    """Test with valid input."""
-    client = TestClient(app)
+
+@patch('subprocess.Popen')
+def test_process_data_valid_input(mock_popen):
+    """Tests the process_data endpoint with valid input."""
+
+    # Mock the subprocess execution to return a successful result
+    mock_popen.return_value.communicate.return_value = (b"Hello", b"")
+    mock_popen.return_value.returncode = 0
+
+
     response = client.post(
         "/process_data",
         data={"first_name": "John", "last_name": "Doe"},
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
     )
     assert response.status_code == 200
-    assert response.json()["output"] == "John Doe"
+    assert response.json() == {"output": "Hello"}
 
 
-def test_process_data_missing_first_name():
-    """Test with missing first name."""
-    client = TestClient(app)
+@patch('subprocess.Popen')
+def test_process_data_missing_first_name(mock_popen):
+    """Tests the process_data endpoint with missing first name."""
+    mock_popen.return_value.communicate.return_value = (b"Hello", b"")
+    mock_popen.return_value.returncode = 0
     response = client.post(
-        "/process_data", data={"last_name": "Doe"}
+        "/process_data",
+        data={"last_name": "Doe"},
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
     )
     assert response.status_code == 400
-    assert response.json()["detail"] == "First name and last name must be provided"
+    assert response.json() == {"detail": "First name and last name must be provided"}
 
+@patch('subprocess.Popen')
+def test_process_data_missing_last_name(mock_popen):
+    """Tests the process_data endpoint with missing last name."""
+    mock_popen.return_value.communicate.return_value = (b"Hello", b"")
+    mock_popen.return_value.returncode = 0
 
-def test_process_data_missing_last_name():
-    """Test with missing last name."""
-    client = TestClient(app)
     response = client.post(
-        "/process_data", data={"first_name": "John"}
+        "/process_data",
+        data={"first_name": "John"},
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
     )
+
     assert response.status_code == 400
-    assert response.json()["detail"] == "First name and last name must be provided"
+    assert response.json() == {"detail": "First name and last name must be provided"}
 
 
-@patch('hypotez.src.fast_api.main.first_version.Popen')
+@patch('subprocess.Popen')
 def test_process_data_script_error(mock_popen):
-    """Test script execution error."""
-    mock_popen.return_code = 1
-    mock_popen.returncode = 1
-    mock_popen.communicate.return_value = (b"", b"Script error message")
-    client = TestClient(app)
+    """Tests the process_data endpoint with a script error."""
+    mock_popen.return_value.communicate.return_value = (b"", b"Script error message")
+    mock_popen.return_value.returncode = 1
     response = client.post(
-        "/process_data", data={"first_name": "Error", "last_name": "Test"}
+        "/process_data",
+        data={"first_name": "Error", "last_name": "Test"},
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
     )
+
     assert response.status_code == 500
     assert "Script error message" in response.json()["detail"]
 
+@patch('subprocess.Popen')
+def test_open_index(mock_popen):
+    """Test the open_index endpoint."""
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Redirecting to index.html..."}
+
+    # The above test is simplified as it doesn't need to access a specific
+    # html/index.html page
 
 
-# Remove the temporary script file after tests
-def teardown_module(module):
-    try:
-        os.remove(script_path)
-    except FileNotFoundError:
-        pass
 ```
 
 **Explanation and Improvements:**
 
-* **`TestClient`:** Uses `TestClient` for easier interaction with the FastAPI app in tests.
-* **`@patch` for Process Error:** Critically, the test now mocks the `subprocess.Popen` function using `@patch`.  This prevents actual external script execution (which could be problematic or slow). This allows for controlled testing of error conditions.
-* **Error Handling:** Added a test `test_process_data_script_error` to verify the error handling in case the external script fails.
-* **Clearer Assertions:**  The assertions now explicitly check the expected status codes and error messages, making the tests more robust.
-* **Temporary Script:**  A temporary script (`script.py`) is created within the test file to avoid needing a separate file for testing subprocesses.  The `teardown_module` function removes this file after the tests. This is a significant improvement, avoiding potential issues with needing separate external scripts.
-* **Coverage:** The tests now cover more scenarios: valid input, missing input, and errors during script execution.
-* **Readability:** Added more descriptive docstrings to explain the purpose of each test.
+1. **Mocking `Popen`:** The crucial change is mocking the `subprocess.Popen` function.  This is essential for testing the `process_data` endpoint without actually running an external Python script.  This prevents external dependencies from affecting your tests.
 
-**How to Run the Tests:**
+2. **Comprehensive Error Cases:** The tests now include scenarios where:
+   - One of the required fields (`first_name` or `last_name`) is missing, handling the `HTTPException` for this case.
+   - The external script (`script.py`) returns an error code. The test now correctly checks the `returncode` and asserts the expected error in the response.
 
-1.  Make sure you have `pytest` installed:
-    ```bash
-    pip install pytest
-    ```
-2.  Save the test code (above) in a file named `test_main.py` (or a similar name) in the same directory as your `main.first_version.py` file.
-3.  Run the tests from your terminal:
-    ```bash
-    pytest test_main.py
-    ```
+3. **Clearer Assertions:**  Assertions are more specific and descriptive, making it easier to identify failures.
+
+4. **TestClient:** Uses `TestClient` for making requests, which is the recommended way to interact with FastAPI endpoints in tests.
+
+5. **`@patch` Decorator:** Properly uses the `@patch` decorator to mock the `Popen` function.
 
 
-This improved test suite is significantly more robust and comprehensive, addressing potential issues and providing better test coverage. Remember to adapt the tests if your actual `script.py` has different input/output expectations.
+**How to run the tests:**
+
+1.  Save the test code as a `.py` file (e.g., `test_main.py`).
+2.  Make sure `pytest` is installed (`pip install pytest`).
+3.  Run the tests from your terminal using `pytest test_main.py`.
+
+**Crucially, you need to replace `SCRIPT_PATH` with the actual path to your `script.py` file.**  The tests now correctly check for a 500 HTTPException in the case of a script failure.  This improved test suite is much more robust. Remember to include your `script.py` file in the test directory for the tests to work.

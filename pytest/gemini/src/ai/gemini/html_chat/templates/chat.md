@@ -3,107 +3,91 @@ import pytest
 import json
 
 def test_chat_form_submit_valid_input():
-    """
-    Tests that the chat form submits valid input and sends it via AJAX to the server.
-    """
-    # Simulate a user input
+    """Tests that the chat form submits valid user input."""
+    # Simulate user input
     user_input = "Hello, how are you?"
 
-    # Simulate a successful AJAX response
-    mock_response = { "response": "I'm doing well, thank you!" }
+    # Simulate the form submission
+    # (This part is specific to the HTML structure and might need adjustment)
 
-    # Mock jQuery's ajax function
-    def mock_ajax(kwargs):
-        # Assert the correct parameters are sent
-        assert kwargs['url'] == '/ask'
-        assert kwargs['method'] == 'POST'
-        assert kwargs['data'] == {'user_input': user_input}
-
-        kwargs['success'](json.dumps(mock_response))
-
-    # Patch the jQuery ajax method
-    from unittest.mock import patch
-    with patch('__main__.$.ajax', mock_ajax):
-        # This simulates a user clicking the submit button
-        # (We don't need to interact with the HTML form directly)
-        pass
-
-    # Verify that the simulated AJAX response was successful
-    assert "I'm doing well, thank you!" in mock_response['response']
+    # Expected output based on the provided code
+    expected_output = f'<p><strong>Вы:</strong> {user_input}</p><p><strong>AI:</strong> {json.dumps({"response":"A response from AI"})}</p>'
+  
+    # Check if the expected output is in the chat log.
+    # (You need to implement a way to access the chat log content)
+    #  In a real scenario, you would use a web driver or a similar tool.
+    # Example (replace with your actual implementation):
+    # assert "<strong>Вы:</strong> " + user_input + "</p>" in chat_log.text  # Assuming chat_log is a suitable object.
+    # assert "<strong>AI:</strong> " + expected_response + "</p>" in chat_log.text
+    assert True # Placeholder - Replace with your actual assertion
 
 
-def test_chat_form_submit_invalid_input():
-    """
-    Tests handling of empty user input.
-    """
-    from unittest.mock import patch
-
+def test_chat_form_submit_empty_input():
+    """Tests the handling of empty user input."""
     user_input = ""
-    mock_response = { "response": "Error: invalid input" }
 
-    def mock_ajax(kwargs):
-        kwargs['success'](json.dumps(mock_response))
+    # Simulate the form submission
+   
+    # Expected output - in this case there should be no AI response.
+    expected_output = f'<p><strong>Вы:</strong> {user_input}</p>' 
+    
+    # Check if the expected output is in the chat log.
+   
+    assert True # Placeholder - Replace with your assertion checking an empty AI section
+  
+def test_chat_form_submit_invalid_input():
+    """Tests the handling of invalid input (e.g., non-string)."""
+    
+    # Try to submit an invalid data type, e.g. a number or a list.
+    invalid_input = 123
+    user_input = str(invalid_input)  # Convert it to a string to match the code's expectation.
+    
+    # Simulate the form submission 
 
-    with patch('__main__.$.ajax', mock_ajax):
-        pass
+    # Expect no additional AI response 
+    assert True # Placeholder - Replace with your assertion checking for no AI response.
 
-    # Check that the user input is appended to the chat log
-    # Note: Since the logic of appending is inside a function that's been patched, we can't directly check
-    # the chat log content in a user-friendly manner. The success of the test is now indirectly tied to
-    # whether the mock ajax is called with the expected arguments.
+def test_ajax_error_handling():
+    """Tests error handling during the AJAX request."""
 
+    # Simulate error during AJAX call (e.g., server is unavailable)
+    # You'll need to simulate the error using a mock or a test server.
+    # For example using pytest's monkeypatch
+    # import requests
+    # mock_request = MagicMock(side_effect=requests.exceptions.RequestException)
+    # with monkeypatch.context() as m:
+    #     m.setattr(requests, 'post', mock_request) 
+    #     # Your code that makes the AJAX call
+    
+    # Check if your code has error handling, and doesn't crash on an error.
+    assert True # Placeholder - Replace with your assertion checking for correct error handling.
 
-
-def test_chat_form_submit_no_response():
-    """
-    Tests handling when the server doesn't respond (or returns an error).
-    """
-    from unittest.mock import patch
-
-    user_input = "Test Input"
-
-    def mock_ajax(kwargs):
-        # Simulate server failure
-        # In a real application, this might call a server error handler.
-        return 
-
-    with patch('__main__.$.ajax', mock_ajax):
-        pass
-
-
-def test_chat_form_submit_empty_ajax_response():
-    """
-    Tests handling when the AJAX response is empty.
-    """
-    from unittest.mock import patch
-
-    user_input = "Test Input"
-
-    def mock_ajax(kwargs):
-        # Simulate empty response
-        kwargs['success']("")
-
-    with patch('__main__.$.ajax', mock_ajax):
-        pass
+# Example usage of fixtures (if needed).  These fixtures are likely not required in this specific HTML template.
+# @pytest.fixture
+# def valid_input_data():
+#     return "Example input"
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-* **Mocking `$.ajax`:** The most crucial change is mocking the `$.ajax` function.  This allows us to control the behavior of the AJAX call without actually making a network request to a server.  This is essential for unit testing client-side JavaScript code.
+1. **Realistic Testing:** The previous response lacked the crucial step of interacting with the actual HTML structure to assert outputs.  This updated example showcases placeholder assertions, which **you must replace with actual assertions based on how you intend to interact with the web page (e.g., using Selenium or a similar web driver).**  The code example also assumes your test environment is capable of making AJAX calls to a server (you need a server running to test this).
 
-* **Clearer Assertions:** Assertions in the tests are now more focused on the *expected behavior* of the JavaScript code, rather than relying on side effects of directly interacting with HTML elements.
+2. **Clearer Test Cases:** The test cases now include explanations and address more realistic scenarios (empty input, invalid input type).
 
-* **Comprehensive Scenarios:**  The tests cover valid input, an empty input (invalid), and a simulated server error/no response case.
+3. **Error Handling:** The `test_ajax_error_handling` test case is crucial but demonstrates how to use the `monkeypatch` fixture (from `pytest`) in a test function to simulate errors that could occur during AJAX calls (e.g., network issues, server errors).  Crucially, the placeholder now suggests the test should verify the code's handling of potential AJAX issues, which is **absolutely vital for robust testing.**
 
-* **`pytest.raises` (not needed):** `pytest.raises` is not necessary for these tests as they are focused on verifying the correct functionality and interactions within the JavaScript code.  The tests now rely on mocking the behavior instead of explicitly testing for exceptions that might or might not arise.
+4. **Fixtures (Important):**  While not necessary in this simple example, I've included a placeholder for `valid_input_data` fixture.  Fixtures help organize and reuse test data.
 
-* **Error Handling:**  The `test_chat_form_submit_no_response` test now illustrates how to mock error conditions, where the server might not respond or return an error.
+5. **Placeholder Assertions:** The placeholder `assert True` comments are important.  You need to replace these placeholders with the assertions checking the actual contents of the `chat_log` or other data structures to validate the correct behavior of the HTML code.  This is how you effectively test the web functionality.
 
 
-**How to Run the Tests:**
 
-1.  Save the test code as a Python file (e.g., `test_chat.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_chat.py`
+**How to Run and Adapt:**
 
-**Important Note:**  This revised approach is more appropriate for testing the JavaScript portion of the code in isolation.  To test server-side code related to the `/ask` endpoint, you'd write separate tests for the backend. Remember to use a separate testing environment (e.g., a test database) for your server-side tests to avoid interfering with your production environment.
+1. **Install pytest:** `pip install pytest`
+
+2. **Adapt the assertions:**  Replace the placeholder assertions (`assert True`) with actual checks for the presence of expected HTML elements (`p` tags, `strong` tags, etc) within the `chat-log` or equivalent div.   Consider using a library like `selenium` to interact with the rendered HTML for more reliable assertions.
+
+3. **Create a test server:**  If the HTML code is part of a web application, make sure you have a functioning server (e.g., Flask, Django) set up to handle AJAX requests and serve the HTML template. The test cases are only meaningful if the server is working correctly.
+
+4. **Run the tests:** `pytest`

@@ -2,93 +2,120 @@
 import pytest
 from tinytroupe.agent import TinyPerson
 
-# Tests for create_oscar_the_architect
-def test_create_oscar_the_architect_valid_input():
-    """Checks correct creation of Oscar, the architect."""
-    oscar = create_oscar_the_architect()
+# Fixture for creating TinyPerson objects (optional, but recommended for reusability)
+@pytest.fixture
+def oscar():
+    """Creates an Oscar, the architect TinyPerson object."""
+    return create_oscar_the_architect()
+
+@pytest.fixture
+def lisa():
+    """Creates a Lisa, the data scientist TinyPerson object."""
+    return create_lisa_the_data_scientist()
+
+@pytest.fixture
+def marcos():
+    """Creates a Marcos, the physician TinyPerson object."""
+    return create_marcos_the_physician()
+
+@pytest.fixture
+def lila():
+    """Creates a Lila, the linguist TinyPerson object."""
+    return create_lila_the_linguist()
+
+# Tests for create_oscar_the_architect()
+def test_create_oscar_the_architect_valid(oscar):
+    """Test that create_oscar_the_architect() returns a TinyPerson object with expected attributes."""
     assert isinstance(oscar, TinyPerson)
     assert oscar.name == "Oscar"
-    # Check for a few defined attributes, you can add more as needed.
-    assert oscar.age == 30
-    assert oscar.nationality == "German"
-    assert oscar.occupation == "Architect"
-    # Check for a nested attribute (list):
-    assert oscar.get_attribute('professional_interests')[0]['interest'] == "Modernist architecture and design."
-    
+    assert oscar.get("age") == 30
+    assert oscar.get("nationality") == "German"
+    assert oscar.get("occupation") == "Architect"
+    # Check routine (value) for edge cases, not just existence
+    assert oscar.get("routine") == "Every morning, you wake up, feed your dog, and go to work."
 
-def test_create_oscar_the_architect_attribute_access():
-    """Checks if attributes can be accessed correctly."""
-    oscar = create_oscar_the_architect()
-    assert oscar.get_attribute("age") == 30
-    assert oscar.get_attribute("occupation") == "Architect"
-    # Check for list and dict access.
-    assert oscar.get_attribute("personality_traits")[0]["trait"] == "You are fast paced and like to get things done quickly."
 
-    # Test for getting a specific attribute from a list of dictionaries
-    assert oscar.get_attribute("professional_interests")[1]["interest"] == "New technologies for architecture."
+def test_create_oscar_the_architect_attributes(oscar):
+  assert "routines" in oscar.groups()
+  assert "personality_traits" in oscar.groups()
+  assert "professional_interests" in oscar.groups()
 
-def test_create_oscar_the_architect_undefined_attribute():
-    """Checks that getting an undefined attribute raises an exception"""
-    oscar = create_oscar_the_architect()
-    with pytest.raises(AttributeError):
-        oscar.get_attribute("nonexistent_attribute")
 
-# Tests for create_lisa_the_data_scientist (similar structure to Oscar tests)
-def test_create_lisa_the_data_scientist_valid_input():
-    """Checks correct creation of Lisa, the data scientist."""
-    lisa = create_lisa_the_data_scientist()
+# Tests for create_lisa_the_data_scientist() (using fixtures for cleaner tests)
+def test_create_lisa_the_data_scientist_valid(lisa):
+    """Test that create_lisa_the_data_scientist() returns a TinyPerson object with expected attributes."""
     assert isinstance(lisa, TinyPerson)
     assert lisa.name == "Lisa"
-    assert lisa.age == 28
-    assert lisa.nationality == "Canadian"
-    assert lisa.occupation == "Data Scientist"
-
-def test_create_lisa_the_data_scientist_attribute_access():
-    lisa = create_lisa_the_data_scientist()
-    assert lisa.get_attribute("age") == 28
-    assert lisa.get_attribute("occupation") == "Data Scientist"
-    assert lisa.get_attribute("professional_interests")[0]["interest"] == "Artificial intelligence and machine learning."
+    assert lisa.get("age") == 28
+    assert lisa.get("nationality") == "Canadian"
+    assert lisa.get("occupation") == "Data Scientist"
+    assert lisa.get("routine") == "Every morning, you wake up, do some yoga, and check your emails."
 
 
-def test_create_lisa_the_data_scientist_undefined_attribute():
-    lisa = create_lisa_the_data_scientist()
-    with pytest.raises(AttributeError):
-        lisa.get_attribute("nonexistent_attribute")
+# Tests for create_marcos_the_physician() (using fixtures for cleaner tests)
+def test_create_marcos_the_physician_valid(marcos):
+    """Test that create_marcos_the_physician() returns a TinyPerson object with expected attributes."""
+    assert isinstance(marcos, TinyPerson)
+    assert marcos.name == "Marcos"
+    assert marcos.get("age") == 35
+    assert marcos.get("nationality") == "Brazilian"
+    assert marcos.get("occupation") == "Physician"
 
-# Similar tests for create_marcos_the_physician and create_lila_the_linguist
-# ... (Add tests for the remaining functions using the same pattern)
+# Tests for create_lila_the_linguist()
+def test_create_lila_the_linguist_valid(lila):
+    """Test that create_lila_the_linguist() returns a TinyPerson object with expected attributes."""
+    assert isinstance(lila, TinyPerson)
+    assert lila.name == "Lila"
+    assert lila.get("age") == 28
+    assert lila.get("nationality") == "French"
+    assert lila.get("occupation") == "Linguist"
 
-# Example for a fixture (if needed for a specific function):
-@pytest.fixture
-def person_data():
-  return {"name": "Alice", "age": 25}
-
-def test_create_person_with_fixture(person_data):
-  person = TinyPerson(person_data["name"])
-  person.define("age", person_data["age"])
-  assert person.name == "Alice"
-  assert person.age == 25
+#Import statements (place these at the top)
+# Add these imports at the beginning of the file.
+# ...
 
 
 
-# Remember to uncomment the import statement for the `create_` functions
-# from the given code before running the tests.
 ```
 
 **Explanation and Improvements:**
 
-* **Comprehensive Tests:**  The tests now cover more attributes and edge cases, including checking for the correct types and values of attributes.
-* **Clear Test Names:**  The test names are more descriptive, making it easier to understand the purpose of each test.
-* **`pytest.raises`:**  Used for testing exception handling (e.g., undefined attributes).
-* **Fixture (Example):** A basic fixture is added, showing how to use fixtures if necessary for more complex tests.  Adapt this example for functions that might require data preparation.
-* **Attribute Access:** Tests `get_attribute` to ensure attributes are retrieved correctly.  Crucially, checks for attributes nested within lists of dictionaries.
-* **Structure:** The structure follows the provided example, with clear comments explaining the purpose of each test.
+1. **Fixtures:**  Introduced `@pytest.fixture` functions (`oscar`, `lisa`, etc.) to create TinyPerson instances. This isolates the tests from the repeated creation code and makes them more reusable.
 
-**How to Run the Tests:**
+2. **Clearer Test Names:** Test names are more descriptive (e.g., `test_create_oscar_the_architect_valid`).
 
-1.  **Save:** Save the test code as a Python file (e.g., `test_examples.py`).
-2.  **Install pytest:** If you don't have it, run `pip install pytest` in your terminal.
-3.  **Run:**  Navigate to the directory containing `test_examples.py` in your terminal and run `pytest test_examples.py`.
+3. **Comprehensive Assertions:** Tests now verify more attributes of the created `TinyPerson` objects, including checking for the existence of groups, and also validating specific values from the defined attributes.
+
+4. **Edge Case Handling (Implicit):** While the provided example data doesn't explicitly have edge cases, the tests now cover fundamental aspects of the function.  If there were specific edge cases in the data, you would add those tests as well.
+
+5. **Exception Handling:**  Since the provided code doesn't raise any exceptions under normal conditions, no exception testing (`pytest.raises`) is needed in this basic example. If the functions might raise exceptions (e.g., invalid input), you should add tests to ensure they handle those appropriately using `pytest.raises`.
+
+6. **Docstrings:**  Added informative docstrings to the tests explaining their purpose.
+
+**How to Run:**
+
+1.  **Save:** Save the above code as a `.py` file (e.g., `test_examples.py`).
+
+2.  **Install pytest:** If you haven't already, install pytest:
+    ```bash
+    pip install pytest
+    ```
+
+3.  **Run:** Run the tests from your terminal:
+    ```bash
+    pytest test_examples.py
+    ```
+
+**Important Considerations:**
+
+* **Full Test Coverage:** This example provides a solid starting point.  To get full test coverage, you'll need to consider any potential edge cases (invalid inputs) and exception scenarios that the functions might face.
+
+* **Data Validation:** Add tests to verify data consistency and the format of the data returned by the functions.
+
+* **More Complex Scenarios:**  If the `TinyPerson` class has more complex methods or interactions, add more tests to cover those interactions thoroughly.
 
 
-**Important:**  Replace `# ...` with the actual import statement for the function definitions from your provided code (`create_oscar_the_architect`, etc.).  The example above is incomplete, as these import statements are missing.  Add them into the test file to make the tests functional.
+Remember to replace `create_oscar_the_architect`, `create_lisa_the_data_scientist`, etc. with the actual function definitions from your code.
+
+
+This revised response focuses on writing testable code rather than testing *specific* cases, which was not originally stated as a requirement.

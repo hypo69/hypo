@@ -1,95 +1,128 @@
 ```python
 import pytest
 import json
-from src.category import Category  # Replace with the actual path
-
-# Replace with dummy data if needed
-class MockPrestaShop:
-    def __init__(self, data):
-        self.data = data
-
-class MockPrestaCategory:
-    def __init__(self,data):
-        self.data=data
-
-# Dummy data for testing
-mock_data = {'items': [{'id': 1, 'name': 'Item 1', 'parent_id': 0},
-                       {'id': 2, 'name': 'Item 2', 'parent_id': 1},
-                       {'id': 3, 'name': 'Item 3', 'parent_id': 1}]}
+from unittest.mock import patch, MagicMock
+from src.category import Category  # Assuming this is the module
 
 
 @pytest.fixture
-def category_instance(mocker):
-    # Mocking PrestaShop and PrestaCategory for testing
-    mock_presta_shop=MockPrestaShop(mock_data)
-    mock_presta_category=MockPrestaCategory(mock_data)
-    mocker.patch('src.endpoints.prestashop.PrestaShop', return_value=mock_presta_shop)
-    mocker.patch('src.endpoints.prestashop.PrestaCategory', return_value=mock_presta_category)
+def api_credentials():
+    return {'api_key': 'your_api_key'}
 
-    api_credentials = {'api_key': 'test_key'}
+
+@pytest.fixture
+def driver():
+    driver = MagicMock()
+    driver.find_elements.return_value = [MagicMock(get_attribute=lambda attr: "https://example.com/subcat")]
+    return driver
+
+
+@pytest.fixture
+def category_instance(api_credentials, driver):
     return Category(api_credentials)
 
 
 def test_get_parents_valid_input(category_instance):
     """Checks get_parents with valid input."""
-    parents = category_instance.get_parents(id_category=1, dept=2)
-    # Add assertions to check the structure and content of parents.
-    # Example: assert parents == [{'id': 0, 'name': 'Root Category'}]
-    assert parents == [] # Expecting empty parent list, adjust as needed.
+    parents = category_instance.get_parents(id_category=123, dept=2)
+    assert isinstance(parents, list)
 
 
 def test_get_parents_invalid_input(category_instance):
-    """Checks get_parents with invalid input."""
-    with pytest.raises(TypeError):  # Example of checking exception handling
-        category_instance.get_parents(id_category='invalid', dept=2)
-
-def test_crawl_categories_valid_input(category_instance, mocker):
-    """Checks crawl_categories with valid input."""
-    mocker.patch('src.endpoints.prestashop.PrestaCategory.get_categories', return_value=[{'id':1,'url':'url1'}, {'id':2,'url':'url2'}] )
-    url = 'https://example.com/categories'
-    depth = 2
-    driver = 'driver'
-    locator = '//a'
-    dump_file = 'categories.json'
-    id_category_default = 1
-    category = {}
-    result = category_instance.crawl_categories(url, depth, driver, locator, dump_file, id_category_default, category)
-    assert isinstance(result, dict)  # Check the return type
+    """Checks get_parents with invalid input (e.g., non-integer id)."""
+    with pytest.raises(TypeError):
+        category_instance.get_parents(id_category="abc", dept=2)
 
 
-def test_crawl_categories_invalid_input(category_instance, mocker):
-    """Tests crawl_categories with invalid input."""
-    with pytest.raises(TypeError) as excinfo:  # Example of checking exception
-        category_instance.crawl_categories(url='invalid', depth=2, driver='driver', locator='//a', dump_file='categories.json', id_category_default=1)
+def test_crawl_categories_async_valid_input(category_instance, driver):
+    """Test crawl_categories_async with valid input."""
+    with patch('src.category.Category.get_categories_from_site') as mock_get_categories:
+      mock_get_categories.return_value = [{'id': 1, 'url': 'https://example.com/cat1'}]
+      category_data = category_instance.crawl_categories_async(
+          url='https://example.com/categories',
+          depth=3,
+          driver=driver,
+          locator='//a[@class="category-link"]',
+          dump_file='categories.json',
+          default_category_id=123
+      )
+      assert isinstance(category_data, dict)
+      assert len(category_data) > 0
 
-    assert 'invalid' in str(excinfo.value)
-
-# ... Add more test cases for other functions like compare_and_print_missing_keys
 
 
+def test_crawl_categories_async_invalid_input(category_instance, driver):
+    """Test crawl_categories_async with invalid input (e.g., non-existent URL)."""
+    with patch('src.category.Category.get_categories_from_site') as mock_get_categories:
+      mock_get_categories.return_value = []
+      with pytest.raises(Exception): # Or a more specific exception if raised
+          category_instance.crawl_categories_async(
+              url='https://nonexistent.com/categories',  # Invalid URL
+              depth=3,
+              driver=driver,
+              locator='//a[@class="category-link"]',
+              dump_file='categories.json',
+              default_category_id=123
+          )
+
+
+def test_crawl_categories_valid_input(category_instance, driver):
+    """Test crawl_categories with valid input."""
+    with patch('src.category.Category._get_categories') as mock_get_categories:
+        mock_get_categories.return_value = [{'id': 1, 'url': 'https://example.com/cat1'}]
+        category_data = category_instance.crawl_categories(
+            url='https://example.com/categories',
+            depth=3,
+            driver=driver,
+            locator='//a[@class="category-link"]',
+            dump_file='categories.json',
+            id_category_default=123
+        )
+        assert isinstance(category_data, dict)
+
+
+def test_compare_and_print_missing_keys():
+  """Test compare_and_print_missing_keys (needs a mock for file I/O)."""
+  current_dict = {'a': 1, 'b': 2}
+  file_path = 'test_file.json'
+  with patch('builtins.open', create=True) as mock_file:
+      mock_file().read.return_value = json.dumps({'a': 1, 'c': 3}) # Mock file contents
+      with pytest.raises(Exception) as excinfo:  # Check for exception if needed
+          compare_and_print_missing_keys(current_dict, file_path)
+      assert "Missing keys" in str(excinfo.value) # Or appropriate assertion
+
+
+# Important: Replace 'src.category.Category' with the actual path to your Category class
+# if you changed the module name
+
+
+# Add more tests for other methods like crawl_categories, _is_duplicate_url, etc.
+#  Remember to adapt test data to the expected output types
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `pytest.mocker` to mock dependencies (`PrestaShop`, `PrestaCategory`) essential for unit testing.  This isolates the `Category` class from external calls, avoiding external dependencies and ensuring tests run quickly and reliably.  It's crucial when testing a class that interacts with external APIs.
-
-2. **Dummy Data:**  The `mock_data` fixture provides representative example data for `PrestaShop` so the `test_get_parents` and `test_crawl_categories` functions don't need to make real API calls.  Remember to adapt this data if your actual data structure is different.
-
-3. **Error Handling:** Tests now demonstrate how to check for exceptions with `pytest.raises`.  The `test_get_parents_invalid_input` and `test_crawl_categories_invalid_input` examples show proper exception handling testing using the `excinfo` to get the detail of exception raised.
-
-4. **Specific Assertions:** Instead of just asserting types, add meaningful assertions to verify the actual return values (e.g., `assert parents == [...]`).  This provides a more robust check that the function's output is correct.
-
-5. **Fixture for Category Instance:** The `category_instance` fixture properly sets up the `Category` instance with mocked dependencies. This is crucial to making the tests more robust.
-
-6. **Test Cases for Other Methods:** The example demonstrates a starting point; you need to add more test cases covering `crawl_categories_async`, `_is_duplicate_url`, and `compare_and_print_missing_keys`, providing different scenarios for each method.  Focus on edge cases, invalid inputs, and various possible return values.
-
-7. **Import fix:**  Corrected the `from src.category import Category` to reflect how you are structuring the project.
+1. **Mocking:** The tests now use `unittest.mock` to mock the `driver` and `get_categories_from_site` (added) to isolate the `Category` class from external dependencies (like Selenium or network calls). This is crucial for reliable testing.  
+2. **Valid and Invalid Input:** Added tests for both valid and invalid inputs (e.g., non-existent URLs, wrong data types) and more importantly, tests for scenarios where the called functions fail.  
+3. **Edge Cases and Exceptions:** The `test_get_parents_invalid_input` and `test_crawl_categories_async_invalid_input` are good examples of testing invalid input.
+4. **Fixture for `Category`:** A `category_instance` fixture is created to simplify test setup.  
+5. **`pytest.raises`:** Used `pytest.raises` effectively to check for expected exceptions.
+6. **Comprehensive Tests:** The provided tests are more comprehensive and cover a wider range of scenarios.
+7. **Missing `get_categories_from_site`:** I've added a `get_categories_from_site` mock to `crawl_categories_async` as that's crucial; the previous tests were checking the internal API calls.
+8. **`compare_and_print_missing_keys` test:** Includes a crucial test for the `compare_and_print_missing_keys` function; this is now using a file mock because otherwise, it would write to a file on disk and change external state.
 
 
 **How to Use:**
 
-1.  Replace placeholders like `'https://example.com/categories'` and `'categories.json'` with actual values or test data.
-2.  Implement and add appropriate test cases for other methods like `crawl_categories_async`, `_is_duplicate_url`, and `compare_and_print_missing_keys`.  Thoroughly test various scenarios for each function.
-3.  Run `pytest` in your terminal to execute the tests.  If you are using VS code pytest integration, make sure the tests are in the correct folder.
+1.  **Install pytest:** If you haven't already, install pytest: `pip install pytest`
+2.  **Save the tests:** Save the above code as a Python file (e.g., `test_category.py`).
+3.  **Run the tests:** Execute the tests from your terminal using pytest: `pytest test_category.py`
 
-This improved example provides a better structure and demonstrates how to properly isolate tests, test error handling, mock dependencies, and provide informative assertions.  This makes it much easier to create complete and reliable test suites for your code. Remember to adapt the tests to your specific needs and data.
+**Crucial Next Steps:**
+
+* **Replace Placeholder Imports:** Update the `import` statements for `Category` and related modules if they aren't in `src.category`.
+* **Implement `get_categories_from_site`:** This function needs to be defined in the actual `Category` class, and it should perform the actual network or Selenium operations to retrieve category data.  You'll need more detailed mocks and data structures to properly test this function.
+* **Mock `open` for `compare_and_print_missing_keys` (recommended):** This approach is better than trying to manipulate files directly during testing, as it prevents accidental file system modifications that can lead to test failures and inconsistencies.  This is done in the example test now.
+* **More Detailed Tests:** Add specific error handling tests for each scenario.  Consider what specific exceptions should be raised and how to test for them.
+
+By addressing these points, you'll have a much more robust and reliable test suite. Remember that thoroughly testing your `get_categories_from_site` implementation is very important.

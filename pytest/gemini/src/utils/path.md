@@ -3,79 +3,60 @@ import pytest
 from pathlib import Path
 from hypotez.src.utils.path import get_relative_path
 
+# Test data
+TEST_DATA = [
+    ("C:\\Users\\User\\Project\\data\\file.txt", "Project", "data\\file.txt"),
+    ("C:\\Users\\User\\Project\\data\\file.txt", "data", "file.txt"),
+    ("C:\\Users\\User\\Project\\data\\file.txt", "not_found", None),
+    ("/", "home", "home"),
+    ("/home/user/documents/file.txt", "/home", "/home/user/documents/file.txt"),
+    ("C:/Users/User/Project/data/file.txt", "Project", "data\\file.txt"), # Test with different separator
+    ("C:/Users/User/Project", "Project", ""),
+    ("/tmp/myproject/src/main.py", "/tmp/myproject/src", "main.py")
+
+]
+
+
 def test_get_relative_path_valid_input():
-    """Checks correct behavior with a valid input."""
-    full_path = "/home/user/project/src/utils/path.py"
-    relative_from = "src"
-    expected_result = "utils/path.py"
-    result = get_relative_path(full_path, relative_from)
-    assert result == expected_result
+    """Tests with valid input, checking successful extraction."""
+    for full_path, relative_from, expected_relative_path in TEST_DATA:
+        if expected_relative_path is not None:
+            result = get_relative_path(full_path, relative_from)
+            assert result == expected_relative_path, f"Input: {full_path}, {relative_from}. Expected: {expected_relative_path}, Got: {result}"
+
+def test_get_relative_path_invalid_input():
+    """Tests with non-existent relative_from segment."""
+    for full_path, relative_from, expected_relative_path in TEST_DATA:
+        if expected_relative_path is None:
+            result = get_relative_path(full_path, relative_from)
+            assert result is None, f"Input: {full_path}, {relative_from}. Expected: None, Got: {result}"
 
 
-def test_get_relative_path_valid_input_with_multiple_matches():
-    """Tests when relative_from appears multiple times"""
-    full_path = "/home/user/project/src/utils/src/path.py"
-    relative_from = "src"
-    expected_result = "utils/src/path.py"
-    result = get_relative_path(full_path, relative_from)
-    assert result == expected_result
 
-
-def test_get_relative_path_relative_from_at_the_beginning():
-    """Tests when relative_from is at the beginning of the path."""
-    full_path = "/home/user/project/src/file.txt"
-    relative_from = "src"
-    expected_result = "file.txt"
-    result = get_relative_path(full_path, relative_from)
-    assert result == expected_result
-
-
-def test_get_relative_path_relative_from_at_the_end():
-    """Tests when relative_from is at the end of the path."""
-    full_path = "/home/user/project/src/utils/path.py"
-    relative_from = "path.py"
-    expected_result = "path.py"
-    result = get_relative_path(full_path, relative_from)
-    assert result == expected_result
-
-
-def test_get_relative_path_relative_from_not_found():
-    """Checks handling when the relative_from segment is not found."""
-    full_path = "/home/user/project/src/utils/path.py"
-    relative_from = "data"
-    result = get_relative_path(full_path, relative_from)
-    assert result is None
-
-
-def test_get_relative_path_invalid_input_full_path():
-    """Checks handling of invalid full_path (not a valid path)."""
+def test_get_relative_path_empty_string():
+    """Tests with empty string as input."""
+    result = get_relative_path("", "root")
+    assert result is None, "Empty string input should return None."
+    
+def test_get_relative_path_none_input():
+    """Tests with None input."""
     with pytest.raises(TypeError):
-        get_relative_path("invalid_path", "src")
+        get_relative_path(None, "root")
 
-
-def test_get_relative_path_invalid_input_relative_from():
-    """Checks handling of invalid relative_from (not a string)."""
-    full_path = "/home/user/project/src/utils/path.py"
+def test_get_relative_path_non_string_input():
+    """Tests with non-string input."""
     with pytest.raises(TypeError):
-        get_relative_path(full_path, 123)  # Example invalid input
+        get_relative_path(Path("/path/to/file"), "path")
+    with pytest.raises(TypeError):
+        get_relative_path("/path/to/file", 123) #non-string relative_from
 
-
-def test_get_relative_path_empty_string_input():
-    """Tests with empty strings for full_path and relative_from."""
-    full_path = ""
-    relative_from = ""
-    result = get_relative_path(full_path, relative_from)
-    assert result is None
-
-
-def test_get_relative_path_with_windows_path():
-    """Test with a Windows path."""
-    full_path = "C:\\Users\\user\\project\\src\\utils\\path.py"
-    relative_from = "src"
-    expected_result = "utils\\path.py"
-    result = get_relative_path(full_path, relative_from)
-    assert result == expected_result
-
-
-
+def test_get_relative_path_with_relative_from_at_the_start():
+    """Tests with relative_from being the first segment of the path."""
+    result = get_relative_path("/home/user", "/home")
+    assert result == "/home/user"
+    
+def test_get_relative_path_with_relative_from_at_the_end():
+    """Tests with relative_from at the end of the path (which will return empty string)."""
+    result = get_relative_path("C:\\Users\\User\\Project", "Project")
+    assert result == ""
 ```

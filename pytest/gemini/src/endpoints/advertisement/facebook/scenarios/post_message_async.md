@@ -4,144 +4,133 @@ import asyncio
 from pathlib import Path
 from types import SimpleNamespace
 from typing import List
-from unittest.mock import MagicMock
-
-from src.endpoints.advertisement.facebook.scenarios.post_message_async import (
+from unittest.mock import Mock
+from selenium.webdriver.remote.webelement import WebElement
+from src.webdriver.driver import Driver  # Assuming this is in src.webdriver.driver
+from src import gs
+from src.logger import logger
+from hypotez.src.endpoints.advertisement.facebook.scenarios.post_message_async import (
     post_title,
     upload_media,
     promote_post,
     update_images_captions,
+    locator,
 )
-from src.webdriver.driver import Driver
-from src.logger import logger
 
 
 # Mock objects for testing
 @pytest.fixture
 def mock_driver():
-    driver_mock = MagicMock(spec=Driver)
-    driver_mock.scroll.return_value = True
-    driver_mock.execute_locator.side_effect = [
+    """Provides a mock Driver object."""
+    driver = Mock(spec=Driver)
+    driver.scroll.return_value = True
+    driver.execute_locator.side_effect = [
         True,
-        True,
-        True,  # Mock open_add_post_box, add_message, and open_add_foto_video_form
-        True,  # Mock for upload media
-        True,
-        True, # Mock for edit uloaded media button
-        [MagicMock()] # Mock for uploaded_media_frame
+        True,  # Return True for the add message, and add foto video form
+        True,  # Mock execute locator for the upload media file
+        True,  # Mock execute_locator for finish editing button
+        True,  # Mock execute_locator for publish button
+        [],
+        []  # Mock execute_locator for media frame and textarea list for edge case
     ]
-    driver_mock.wait.side_effect = [None] * 10 # avoid repeated calls.
-    driver_mock.execute_locator.side_effect = [True, MagicMock(send_keys=lambda x: True), True] # for upload media, send_keys
-
-    return driver_mock
+    driver.wait.side_effect = [None] * 5 # To avoid errors when calling wait multiple times
+    return driver
 
 
 @pytest.fixture
 def category():
+    """Provides a category object."""
     return SimpleNamespace(title="Campaign Title", description="Campaign Description")
 
 
 @pytest.fixture
 def products():
-    return [SimpleNamespace(local_saved_image="image.jpg")]
+    """Provides a list of product objects."""
+    return [
+        SimpleNamespace(local_saved_image="image1.jpg", product_title="Product 1"),
+        SimpleNamespace(local_saved_image="image2.png", product_title="Product 2")
+    ]
 
 
-# Tests for post_title function
+# Tests for post_title
 def test_post_title_valid_input(mock_driver, category):
-    """Tests post_title with valid input."""
-    result = post_title(mock_driver, category)
-    assert result is True
+    """Checks correct behavior with valid input for post_title."""
+    assert post_title(mock_driver, category) is True
 
 
-def test_post_title_scroll_failure(mock_driver, category):
-    """Tests post_title with scroll failure."""
+def test_post_title_scroll_failed(mock_driver, category):
+    """Tests the scroll function failing in post_title."""
     mock_driver.scroll.return_value = False
-    result = post_title(mock_driver, category)
-    assert result is None
-    mock_driver.scroll.assert_called_once_with(1, 1200, 'backward')
+    assert post_title(mock_driver, category) is None
 
 
-def test_post_title_open_add_post_box_failure(mock_driver, category):
-    """Tests post_title with open_add_post_box failure."""
-    mock_driver.execute_locator.side_effect = [False]
-    result = post_title(mock_driver, category)
-    assert result is None
-
-
-def test_post_title_add_message_failure(mock_driver, category):
-    """Tests post_title with add_message failure."""
+def test_post_title_open_add_post_box_failed(mock_driver, category):
+    """Tests the open_add_post_box function failing in post_title."""
     mock_driver.execute_locator.side_effect = [True, False]
-    result = post_title(mock_driver, category)
-    assert result is None
+    assert post_title(mock_driver, category) is None
 
-# Tests for upload_media function
+
+def test_post_title_add_message_failed(mock_driver, category):
+    """Tests the add message function failing in post_title."""
+    mock_driver.execute_locator.side_effect = [True, True, False]
+    assert post_title(mock_driver, category) is None
+
+
+
+# Tests for upload_media
 def test_upload_media_valid_input(mock_driver, products):
-    """Tests upload_media with valid input."""
-    asyncio.run(upload_media(mock_driver, products))
-    assert mock_driver.execute_locator.call_count == 3
-    
-def test_upload_media_invalid_input(mock_driver, products):
-    """Tests upload_media with incorrect input type products."""
-    product = "not a list"
-    with pytest.raises(TypeError):
+    """Checks valid input for upload_media."""
+    assert asyncio.run(upload_media(mock_driver, products)) is True
+
+def test_upload_media_invalid_input(mock_driver):
+    """Checks the behavior of upload_media with invalid input (not a list)."""
+    product = SimpleNamespace(local_saved_image="image.jpg")
+    with pytest.raises(Exception) as excinfo:
         asyncio.run(upload_media(mock_driver, product))
+    assert "isinstance" in str(excinfo.value) # Checking the error message
 
-
-def test_upload_media_failure_to_upload(mock_driver, products):
-    """Tests upload_media function with a failure in execution_locator method"""
+def test_upload_media_upload_error(mock_driver, products):
+    """Checks if upload_media correctly handles an upload error."""
     mock_driver.execute_locator.side_effect = [True, False]
-    result = asyncio.run(upload_media(mock_driver, products))
-    assert result is False
-
-# Tests for promote_post function
-def test_promote_post_success(mock_driver, category, products):
-    """Tests promote_post with successful execution."""
-    result = asyncio.run(promote_post(mock_driver, category, products))
-    assert result is True
+    with pytest.raises(Exception) as excinfo:
+        asyncio.run(upload_media(mock_driver, products))
+    assert "Ошибка загрузки изображения" in str(excinfo.value) # Checking the error message
 
 
-def test_promote_post_failure_title(mock_driver, category, products):
-    """Tests promote_post with failure in post_title."""
-    mock_driver.execute_locator.side_effect = [False]
-    result = asyncio.run(promote_post(mock_driver, category, products))
-    assert result is None
 
-# ... (Add more tests for other functions, especially update_images_captions with various scenarios) ...
+# Tests for promote_post
+def test_promote_post_valid_input(mock_driver, category, products):
+    """Checks valid input for promote_post."""
+    assert asyncio.run(promote_post(mock_driver, category, products)) is True
 
+
+# Tests for update_images_captions (Testing async function with mocked driver)
+def test_update_images_captions_valid_input(mock_driver, products, category):
+    """Tests valid input and functionality of update_images_captions using mocked Driver."""
+    textarea_list = [Mock(spec=WebElement)] * len(products)
+    asyncio.run(update_images_captions(mock_driver, products, textarea_list))
+
+# Add tests for error scenarios in update_images_captions (e.g., missing product data, error in message generation)
+
+
+#Important: Replace placeholders like "image1.jpg" and specific error messages with actual expected values from your application.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:**  Critically, the code now uses `unittest.mock.MagicMock` to mock the `Driver` object. This isolates the tests from the external dependencies (like the Selenium WebDriver) and prevents any actual interactions with a browser. This is essential for reliable and fast testing.
-
-2. **Clearer Error Handling:**  Tests now explicitly check for `None` or `False` return values from functions to represent failure cases.
-
-3. **Comprehensive Test Cases:** I've added tests for both valid and invalid inputs, including cases where the core functions might fail at different stages, like `scroll` failure or failed `execute_locator` calls.
-
-4. **Edge Cases and Boundary Conditions:** Included tests for the scenario where `scroll` might fail, and also the important case where input is not a list (a TypeError).
-
-5. **Fixture Improvements:** The `mock_driver` fixture now sets up more realistic mock behaviors and handles repeated calls to `driver.wait()` correctly.
-
-6. **Exception Handling:** Tests for `upload_media` now use `pytest.raises` for testing exception scenarios and cover the edge case where the input `products` isn't a list, which would cause a `TypeError`.
-
-7. **`asyncio.run`:** I've added `asyncio.run()` to run the asynchronous functions in the tests. This is essential for testing async functions correctly.
-
-8. **Complete tests with mock return values:** Added mock values to the `mock_driver` fixture to ensure complete test coverage
+* **Mocking:** The solution now effectively mocks the `Driver` object, avoiding the need for a real browser instance. This is crucial for unit tests because it isolates the functions being tested from external dependencies.  The mocks are more comprehensive, handling various failure scenarios within the tested functions.
+* **Clearer Error Handling:**  `pytest.raises` is used for testing exceptions, and assertions are more specific, checking for the expected error messages.  This provides more confidence in the test's ability to catch problems.
+* **Edge Cases:** Tests for `post_title` and `upload_media` now cover cases where `scroll`, `open_add_post_box`, and the message addition may fail, and for `upload_media`, it covers an invalid `products` input.
+* **Comprehensive `promote_post` Test:** A basic positive test is added.
+* **`update_images_captions` Test:** A test for `update_images_captions` is added with mocked objects.  **Crucially**, it's important to add tests for edge cases, especially regarding `handle_product`, to cover situations where `product` attributes might be missing or there are errors in constructing the message.
+* **Asynchronous Tests:** Correctly uses `asyncio.run` to execute the asynchronous functions within the `pytest` test context.
+* **Comments:** Added comments to explain the test logic.
 
 
-**How to Run the Tests:**
+**To Run the Tests:**
 
-1.  Install pytest:
-    ```bash
-    pip install pytest
-    ```
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Replace the placeholder paths (`'image1.jpg'`) with the actual paths or data your application uses.
+3.  Run `pytest` in the directory containing your test file.
 
-2.  Save the test code (as `test_post_message_async.py`) in the same directory as the `post_message_async.py` file.
-
-3.  Run the tests from your terminal:
-    ```bash
-    pytest test_post_message_async.py
-    ```
-
-
-This significantly improved test suite provides much better coverage and reliability compared to the previous version. Remember to add more specific tests for edge cases and error conditions in the `update_images_captions` function.  Also, adapt the `mock_driver` fixture to realistically reflect the return values for your `execute_locator` calls and `scroll` methods.  This will improve the reliability of your tests.
+This improved solution addresses the previous limitations, making the tests more robust and valuable for ensuring the correctness of the code under test. Remember to add more tests, especially for error scenarios and edge cases, to make the test suite more comprehensive. Remember to adapt the mocks and assertion messages to match the specific behavior of your application.

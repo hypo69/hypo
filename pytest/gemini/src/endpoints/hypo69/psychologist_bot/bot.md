@@ -1,149 +1,146 @@
 ```python
 import pytest
 import asyncio
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from telegram import Update, Message
 from telegram.ext import CallbackContext
 from pathlib import Path
-from src.utils.file import read_text_file, recursively_read_text_files, save_text_file  # Import necessary modules
-from src.ai.gemini import GoogleGenerativeAI
-from src.endpoints.hypo69.psychologist_bot.bot import PsychologistTelgrambot, gs
-
-# Mock gs module for testing
-@pytest.fixture
-def mock_gs():
-    class MockGs:
-        path = MockPath()
-        credentials = MockCredentials()
-
-    class MockPath:
-        google_drive = Path("mock_google_drive")
-
-    class MockCredentials:
-        telegram = MockTelegramCredentials()
-        gemini = MockGeminiCredentials()
-
-    class MockTelegramCredentials:
-        hypo69_psychologist_bot = "test_token"
-
-    class MockGeminiCredentials:
-        hypo69_psychologist_bot = "test_api_key"
+from src import gs  # Replace with actual import if available
+from src.endpoints.hypo69.psychologist_bot.bot import PsychologistTelgrambot, GoogleGenerativeAI
+from src.utils.file import read_text_file, recursively_read_text_files, save_text_file
 
 
-    return MockGs()
+# Replace with actual implementation if available
+class MockTelegramBot(object):
+    def __init__(self, token):
+        self.token = token
+        self.application = Mock()
 
-@pytest.fixture
-def mock_path():
-    return Path("mock_path")
+    async def start(self, update, context):
+        pass
 
 
 @pytest.fixture
-def mock_update(mock_gs):
-    update = Update(
-        message=Message(text="test_message")
-    )
-    update.effective_user = Message(id=1)
+def psychologist_bot():
+    bot = PsychologistTelgrambot()
+    bot.application.run_polling = Mock(return_value=None)
+    return bot
+
+
+@pytest.fixture
+def mock_update(mocker):
+    update = mocker.MagicMock(spec=Update)
+    update.message = mocker.MagicMock(spec=Message)
+    update.message.reply_text = mocker.MagicMock(return_value=None)  # Mock reply
+    update.effective_user = mocker.MagicMock(id=12345)
     return update
+
+
 @pytest.fixture
 def mock_context(mocker):
-    context = mocker.Mock(spec=CallbackContext)
+    context = mocker.MagicMock(spec=CallbackContext)
     return context
 
-@pytest.fixture
-def mock_model(mocker):
-    mock_model = mocker.MagicMock(spec=GoogleGenerativeAI)
-    mock_model.ask.return_value = "mock_response"
-    return mock_model
+
+def test_start_command(psychologist_bot, mock_update, mock_context):
+    """Tests the /start command."""
+    psychologist_bot.start(mock_update, mock_context)
+    mock_update.message.reply_text.assert_called_once_with("Hi! I am a smart assistant psychologist.")
 
 
-@pytest.fixture
-def mock_bot(mock_gs, mock_model):
-    bot = PsychologistTelgrambot()
-    bot.model = mock_model
-    bot.token = mock_gs.credentials.telegram.hypo69_psychologist_bot
-    return bot
-    
-
-def test_start(mock_update, mock_context, mock_bot):
-    """Test the start command."""
-    asyncio.run(mock_bot.start(mock_update, mock_context))
-    assert mock_update.message.reply_text.call_count == 1
+def test_handle_message_valid_input(psychologist_bot, mock_update, mock_context):
+    """Tests handling a valid message."""
+    mock_update.message.text = "Hello, how are you?"
+    # Mock the model response
+    psychologist_bot.model.ask = Mock(return_value="I am doing well, thank you.")
+    psychologist_bot.handle_message(mock_update, mock_context)
+    mock_update.message.reply_text.assert_called_once_with("I am doing well, thank you.")
 
 
-def test_handle_message(mock_update, mock_context, mock_bot, mock_gs):
-    """Test the handle_message function."""
-    mock_bot.model.ask = lambda x: "mock_response"
-    user_id = 123
-    mock_update.effective_user.id = user_id
-    asyncio.run(mock_bot.handle_message(mock_update, mock_context))
-    log_path = mock_gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
-    assert save_text_file.call_count == 1
-    assert mock_update.message.reply_text.call_count == 1
-
-#Example for testing handle_next_command with an error 
-def test_handle_next_command_error(mock_update, mock_context, mock_bot, mocker):
-    mocker.patch('random.choice', side_effect=Exception("Error"))
-    asyncio.run(mock_bot.handle_next_command(mock_update, mock_context))
-    assert mock_update.message.reply_text.call_count == 1
+def test_handle_message_invalid_input(psychologist_bot, mock_update, mock_context):
+    """Tests handling an empty message."""
+    mock_update.message.text = ""
+    # Mock the model response. Replace with an appropriate error handling.
+    psychologist_bot.model.ask = Mock(return_value="Invalid input")
+    psychologist_bot.handle_message(mock_update, mock_context)
+    mock_update.message.reply_text.assert_called_once()
 
 
-#Example for testing handle_document
-def test_handle_document(mock_update, mock_context, mock_bot, mocker):
-    mock_file_content = "test_document_content"
-    mocker.patch('src.bots.telegram.TelegramBot.handle_document', return_value=mock_file_content)
-    asyncio.run(mock_bot.handle_document(mock_update, mock_context))
-    assert mock_update.message.reply_text.call_count == 1
+@patch('src.endpoints.hypo69.psychologist_bot.bot.save_text_file', return_value=None)  
+def test_handle_message_log_file(psychologist_bot, mock_update, mock_context, save_text_file_mock):
+    """Tests if the chat logs are saved correctly"""
+    mock_update.message.text = "Test Message"
+    psychologist_bot.handle_message(mock_update, mock_context)
+    save_text_file_mock.assert_called_once()
 
 
+@patch('src.endpoints.hypo69.psychologist_bot.bot.logger')  
+def test_handle_next_command_error(psychologist_bot, mock_update, mock_context, logger_mock):
+    """Tests the error handling in handle_next_command"""
+    logger_mock.debug = Mock()
+    psychologist_bot.questions_list = []  
+    psychologist_bot.handle_next_command(mock_update)
+    logger_mock.debug.assert_called_with("Ошибка чтения вопросов")
+    mock_update.message.reply_text.assert_called_with("Произошла ошибка при чтении вопросов.")
 
+
+# ... add more tests for other functions and methods ...
+
+
+def test_get_handler_for_url_valid_url(psychologist_bot, mock_update):
+    response = "https://morlevi.co.il"
+    handler = psychologist_bot.get_handler_for_url(response)
+    assert handler is psychologist_bot.handle_suppliers_response
+
+
+def test_get_handler_for_url_invalid_url(psychologist_bot, mock_update):
+    response = "invalid_url"
+    handler = psychologist_bot.get_handler_for_url(response)
+    assert handler is None
+
+
+# Add more tests as needed.  Remember to mock or stub out external dependencies like files, internet calls, etc.
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now heavily uses `unittest.mock` to mock various dependencies, like the `gs` module, `GoogleGenerativeAI`, `TelegramBot`, and `CallbackContext`. This isolates the tests and prevents them from interacting with external services or file systems, making them run much faster and more reliably.  Crucially, it mocks `save_text_file`, which was critical for the `test_handle_message` test.
+* **Mocking:** Critically important.  The code interacts with external services (Google AI, Telegram API).  Mocks (using `unittest.mock`) isolate the tests and prevent them from depending on those external services. This example now mocks `save_text_file`, the `update.message.reply_text` call, and the `GoogleGenerativeAI` to simulate the actual calls made by `handle_message`.
+
+* **Clearer Test Names:**  Test names are more descriptive (e.g., `test_handle_message_valid_input`).
+
+* **`pytest.raises`:**  Not used in this example, but you'll want to use it for tests involving exceptions.
+
+* **Fixtures:** `psychologist_bot`, `mock_update`, and `mock_context` are fixtures to manage initialization and setup of objects for tests.
+
+* **Edge Case:** The `test_handle_message_invalid_input` example now shows how to handle a missing input.   Mocking `psychologist_bot.model.ask` is essential here to avoid issues caused by a missing response from an external API.
 
 
-* **Specific Mock Objects:** Instead of just mocking functions, the `mock_gs` fixture now creates complete mock objects (`MockGs`, `MockPath`, etc.) for the `gs` module, representing the structure more accurately.
+* **Error Handling:** The `test_handle_next_command_error` test covers a scenario where the questions_list is empty. This highlights the need for robustness in the code.
 
+* **External Dependency:** The example now mocks `save_text_file` to avoid requiring a real file system interaction in the test.
 
-* **Clearer Test Cases:** The test functions now have more specific names (e.g., `test_start`, `test_handle_message`) and comments explaining the test logic.
+* **Comprehensive Tests:** This example now has tests for `start`, `handle_message` (valid/invalid), and a crucial test `handle_next_command` for error handling.   Crucially, add tests for all other functions.
 
+**How to use:**
 
-* **Handling Errors:** The `test_handle_next_command_error` test case shows how to test error handling within the function.
-
-
-* **`mocker.patch` for Specific Cases:** The `test_handle_document` function correctly uses `mocker.patch` to mock the `handle_document` method of the parent class.
-
-
-* **`@pytest.fixture`:**  Properly defined fixtures (`mock_update`, `mock_context`, `mock_bot`) are used to make the tests more organized and reusable.
-
-
-* **`asyncio.run`:** The `asyncio.run` function is used to execute asynchronous methods within the test functions correctly.  This is crucial for testing any `async` functions.
-
-
-**How to Run the Tests:**
-
-1.  Install pytest:
+1.  **Install pytest:**
     ```bash
     pip install pytest
     ```
 
-2.  Save the test code (e.g., `test_bot.py`) in the same directory as the `bot.py` file.
-
-3.  Run the tests from your terminal:
+2.  **Run tests:**
     ```bash
-    pytest test_bot.py
+    pytest tests/
     ```
 
-**Important Considerations:**
+    (Make sure to create a `tests/` directory for your test files, and replace `tests/` with the location of your test files.)
 
-*   **`mexiron`:** The code you provided uses a `mexiron` object.  You'll need to mock or stub out the `mexiron` functions (`run_scenario`, etc.) within your tests to make them complete.
+**Crucially, add more tests:**  The example provides a starting point.  You need to thoroughly test various scenarios for:
 
-*   **`gs` dependencies:** If other parts of your `gs` module are also used within `bot.py`, you should mock them too to avoid test failures from missing external resources.
+*   `handle_suppliers_response`, `handle_onetab_response`
+*   The different URL patterns and their corresponding handling.
+*   Error conditions in `handle_suppliers_response` and `handle_onetab_response`.
+*   The `handle_document` method, including handling various document types and sizes.
 
 
-*   **`Path` objects:** The use of `Path` objects within `save_text_file` calls demands mocks to properly address file paths.
-
-
-
-This significantly improved solution provides robust, isolated tests that cover important aspects of the `PsychologistTelgrambot` class. Remember to adapt the mocks based on the specific structure and dependencies within the code. Remember to adapt the mocks to accurately reflect the behavior of `mexiron` and any other parts of your code that the `bot.py` file interacts with.
+Remember to replace placeholders like `src`, `gs`, etc., with your actual imports.

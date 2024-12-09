@@ -2,94 +2,90 @@
 import pytest
 import unittest
 
-# Replace with the actual code from the file.  Since the provided code is just a link,
-# I'm creating placeholder functions.  You'll need to replace these with the actual functions
-# from the chatgpt-telegram code.
 
-def process_message(message, context={}):
-    """Processes a message from Telegram."""
-    if message == "hello":
-        return "Hello there!"
-    elif message == "bye":
-        return "Goodbye!"
-    else:
-        return "I don't understand."
-
-def handle_command(command, context):
-    """Handles a command from the user."""
-    if command == "start":
-        return "Welcome!"
-    elif command == "help":
-        return "Available commands: start, help, bye, hello"
-    else:
-        return "Unknown command."
+# Placeholder for the actual code from the file. Replace with the relevant Python code.
+#  Assume a function for interacting with Telegram and ChatGPT
+def send_message_to_telegram(chat_id, message):
+    """Sends a message to a Telegram chat."""
+    #  This is a placeholder for the actual implementation.
+    #  Crucially, it needs to raise an exception for invalid inputs!
+    if not isinstance(chat_id, int):
+        raise TypeError("Chat ID must be an integer.")
+    if not isinstance(message, str):
+        raise TypeError("Message must be a string.")
+    
+    # Simulate sending the message (replace with actual Telegram API call)
+    print(f"Sending message '{message}' to chat ID {chat_id}")
+    return True  #  Return True if successful
 
 
-
-# Test functions
-def test_process_message_valid_input_hello():
-    """Tests the process_message function with valid input 'hello'."""
-    assert process_message("hello") == "Hello there!"
-
-def test_process_message_valid_input_bye():
-    """Tests the process_message function with valid input 'bye'."""
-    assert process_message("bye") == "Goodbye!"
-
-def test_process_message_invalid_input():
-    """Tests the process_message function with invalid input."""
-    assert process_message("unknown") == "I don't understand."
+# Test cases
+def test_send_message_valid_input():
+    """Tests sending a message with valid input."""
+    chat_id = 12345
+    message = "Hello, world!"
+    result = send_message_to_telegram(chat_id, message)
+    assert result is True, "Message should have been sent successfully."
 
 
-def test_handle_command_valid_input_start():
-    """Tests the handle_command function with valid input 'start'."""
-    assert handle_command("start", {}) == "Welcome!"
-
-def test_handle_command_valid_input_help():
-    """Tests the handle_command function with valid input 'help'."""
-    assert handle_command("help", {}) == "Available commands: start, help, bye, hello"
-
-def test_handle_command_invalid_input():
-    """Tests the handle_command function with invalid input."""
-    assert handle_command("invalid_command", {}) == "Unknown command."
-
-def test_process_message_empty_string():
-    """Test process_message with empty string."""
-    assert process_message("") == "I don't understand."
-
-# Example test demonstrating exception handling (replace with actual exceptions if needed).
-# This example demonstrates a hypothetical case for exception handling.
-# @pytest.mark.parametrize("invalid_input", [None, [], "not a string"])
-# def test_process_message_invalid_input_type(invalid_input):
-#     with pytest.raises(TypeError):
-#         process_message(invalid_input)
+def test_send_message_invalid_chat_id():
+    """Tests sending a message with an invalid chat ID (not an integer)."""
+    chat_id = "abc"
+    message = "Hello"
+    with pytest.raises(TypeError) as excinfo:
+        send_message_to_telegram(chat_id, message)
+    assert "Chat ID must be an integer." in str(excinfo.value)
 
 
+def test_send_message_invalid_message():
+    """Tests sending a message with an invalid message (not a string)."""
+    chat_id = 12345
+    message = 123
+    with pytest.raises(TypeError) as excinfo:
+        send_message_to_telegram(chat_id, message)
+    assert "Message must be a string." in str(excinfo.value)
+
+
+def test_send_message_empty_message():
+    """Tests sending an empty message."""
+    chat_id = 12345
+    message = ""
+    result = send_message_to_telegram(chat_id, message)
+    assert result is True, "Empty message should be sent successfully."
+
+
+
+# Example usage (assuming you have a chat_id)
+# chat_id = get_chat_id_from_telegram()  # Replace with your function to get the chat ID
+# send_message_to_telegram(chat_id, "Hello, world!")
+
+
+#Important: Replace placeholders for send_message_to_telegram with the actual function definition if you have it.
+#Run this with: pytest test_chatgpt_telegram.py (assuming you saved it as test_chatgpt_telegram.py)
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Placeholder Functions:** The code now includes placeholder functions (`process_message`, `handle_command`) to illustrate the structure.  Crucially, you **must** replace these with the actual functions from your `chatgpt-telegram` code.
+1. **Error Handling:** The `send_message_to_telegram` function now explicitly raises `TypeError` for invalid inputs (non-integer `chat_id` and non-string `message`).  This is crucial for robust tests.  The tests now use `pytest.raises` to verify these exceptions are correctly handled.
 
-2. **Comprehensive Test Cases:** The test cases cover valid inputs (e.g., "hello", "bye"), invalid inputs ("unknown"), and edge cases (empty string).
+2. **Clear Test Names:** Test function names are descriptive (e.g., `test_send_message_invalid_chat_id`).
 
-3. **Clear Test Names:**  Test names clearly indicate the purpose of each test.
+3. **Edge Cases:**  The test `test_send_message_empty_message` demonstrates handling of an empty string, which is often an edge case.
 
-4. **`pytest.raises` (Example):**  While I haven't included exception handling that would make sense for a real use case (e.g., catching a file not found error for a telegram API or a database query error), I've included an example of how to test exception handling with `pytest.raises()`.  Adapt this to your specific exception handling logic.
+4. **Structure:** The code is structured with clear test functions for different scenarios.
 
-5. **Data-Driven Tests (Optional):** Using `@pytest.mark.parametrize` (as commented out) allows you to define different test values in a parameter list, running the tests multiple times with various inputs in a concise way.
+5. **Robustness:** The tests now validate the type of the input and not only the result of the function.
+
+6. **Comments:** Comments within the tests explain the purpose of each test case.
+
+7. **Placeholder:** Critically, a placeholder for the actual function definition `send_message_to_telegram` is included. You must replace this placeholder with the code from your actual Telegram bot file to make the tests run against your real code.
+
+**How to Run:**
+
+1.  **Save:** Save the code above as a Python file (e.g., `test_chatgpt_telegram.py`).
+2.  **Replace:**  Replace the placeholder `send_message_to_telegram` function definition with the actual code from your `chatgpt-telegram` file.
+3.  **Run:**  Run `pytest test_chatgpt_telegram.py` in your terminal.
 
 
-**How to Run the Tests:**
-
-1.  **Save:** Save the above code as a Python file (e.g., `test_chatgpt_telegram.py`).
-2.  **Install pytest:** If you don't have it already, install pytest:
-    ```bash
-    pip install pytest
-    ```
-3.  **Run the tests:**
-    ```bash
-    pytest test_chatgpt_telegram.py
-    ```
-
-**Important:**  The most critical part is replacing the placeholder functions with the actual functions from your `chatgpt-telegram` code.  Without the actual code, it's impossible to write fully accurate and meaningful tests.  Provide the Python code itself, and I can create more tailored and comprehensive tests. Remember to adjust the tests to match the specific input validation and error handling implemented in your code.
+This improved solution provides much more comprehensive and useful test cases, ensuring that your code behaves correctly under various conditions. Remember to adapt the placeholders to the actual function calls and input handling in your code.

@@ -1,92 +1,108 @@
 ```python
 import pytest
-from hypotez.src.product.product import Product
-from hypotez.src.category import Category
-import unittest
+import hypotez.src.product.product as product
+from unittest.mock import MagicMock
 
 
-# Fixture for test data (replace with actual data if available)
+# Mock the Category class for testing
+class MockCategory:
+    @staticmethod
+    def get_parents(id_category: int, dept: int = 0) -> list:
+        # Replace with your desired mock behavior.  For example:
+        if id_category == 1:
+            return [{"id": 1, "name": "Parent 1"}, {"id": 2, "name": "Parent 2"}]
+        elif id_category == 2:
+            return [{"id": 2, "name": "Parent 2"}]
+        else:
+            return []
+
+product.Category = MockCategory
+
+
+# Fixture for providing test data (optional but helpful)
 @pytest.fixture
-def example_category_data():
-    return {'id': 123, 'parent_ids': [10, 20]}
+def valid_category_id():
+    return 1
 
 
-# Tests for Product.get_parent_categories
-def test_get_parent_categories_valid_input(example_category_data):
-    """Tests with valid integer input."""
-    id_category = example_category_data['id']
-    expected_parents = example_category_data['parent_ids']
-    
-    # Mock Category.get_parents to avoid external dependencies
-    def mock_get_parents(cat_id, depth):
-        return expected_parents
-    Category.get_parents = mock_get_parents  # Replace with the real function
+# Tests for get_parent_categories
+def test_get_parent_categories_valid_input(valid_category_id):
+    """Tests with a valid integer category ID."""
+    parent_categories = product.Product.get_parent_categories(valid_category_id)
+    assert isinstance(parent_categories, list), "Returned value should be a list"
+    # Add assertions based on expected output for valid category ID
+    assert len(parent_categories) > 0, "List should not be empty for valid category ID"
 
-    result = Product.get_parent_categories(id_category)
-    assert result == expected_parents
+
+def test_get_parent_categories_valid_input_different_id(valid_category_id):
+    """Tests with a valid integer category ID, different scenario."""
+    parent_categories = product.Product.get_parent_categories(2)
+    assert isinstance(parent_categories, list), "Returned value should be a list"
+    assert len(parent_categories) > 0, "List should not be empty for valid category ID"
 
 
 def test_get_parent_categories_invalid_input():
-    """Tests with non-integer input."""
+    """Tests with a non-integer category ID."""
     with pytest.raises(TypeError) as excinfo:
-        Product.get_parent_categories("abc")  # Invalid input
-    assert str(excinfo.value) == "id_category must be an integer"
+        product.Product.get_parent_categories("invalid")
+    assert "id_category must be an integer" in str(excinfo.value)
 
 
-def test_get_parent_categories_zero_depth(example_category_data):
-    """Tests with dept=0."""
-    id_category = example_category_data['id']
-    expected_parents = example_category_data['parent_ids']
-    
-    def mock_get_parents(cat_id, depth):
-        return expected_parents
-    Category.get_parents = mock_get_parents
-    
-    result = Product.get_parent_categories(id_category, dept=0)
-    assert result == expected_parents
-
-
-# Example test, needs to be adjusted according to the actual implementation
-# Replace with a test for __init__ or other relevant method if present
-def test_product_init_valid():
-    """Basic test for the Product __init__ method (replace with actual data)."""
-    # Need to mock/stub out necessary dependencies for a meaningful test
-    # This is a placeholder, replace with actual object or fixture if needed.
-    product = Product(123, name="Example Product")
-    assert product.id == 123
-    assert product.name == "Example Product"
+def test_get_parent_categories_empty_input():
+    """Tests with a valid category ID that returns no parents."""
+    parent_categories = product.Product.get_parent_categories(99)
+    assert parent_categories == [], "List should be empty for non-existent category"
 
 
 
-# Test edge cases and boundary conditions for get_parent_categories as needed
+def test_get_parent_categories_dept_parameter():
+    """Tests with a dept parameter."""
+    parent_categories = product.Product.get_parent_categories(1, dept=1)
+    assert len(parent_categories) > 0, "List should not be empty for valid category ID with dept"
+
+# Example test using a mock object (in case other parts of your class depend on it)
+@pytest.fixture
+def mock_presta_shop():
+    mock_obj = MagicMock()
+    return mock_obj
 
 
-#  Crucially, test with a real implementation of Category.get_parents.
-#  If get_parents has no side-effects, the mock functions in the tests above are sufficient.
-#  If get_parents has any external dependencies or other complex logic,
-#  a complete mock of the entire dependency graph will be needed, 
-#  but the tests will remain simple to read.
+def test_product_initialization(mock_presta_shop):
+    """Tests the initialization of the Product class."""
+    # Mock other parts of the class if necessary
+    mock_product_fields = MagicMock()
+    product_instance = product.Product(mock_product_fields, presta_shop=mock_presta_shop)
+    # Assertions to verify the initialization (e.g., checking if attributes were set)
+    assert product_instance.presta_shop == mock_presta_shop
+    # If needed
+    assert product_instance.presta_shop.some_method.call_count == 0 # Assuming some_method is present in presta_shop
+
+
 ```
 
 **Explanation and Improvements:**
 
-* **Fixtures:**  A `example_category_data` fixture is introduced to provide test data, making the tests more reusable and less repetitive.
-* **Mocking:**  The tests now mock the `Category.get_parents` function to avoid relying on the external `Category` class and its dependencies.  This isolates the `Product.get_parent_categories` method's behavior.  Critically, this will let the tests run without needing an actual `Category` class to be present, which is extremely important in real-world testing.
-* **Clearer Test Names:** Test names are more descriptive, using verbs to indicate the action.
-* **`pytest.raises`:** Correctly used for testing exceptions, catching the `TypeError` raised when the input isn't an integer.
-* **Edge Case:** A test for `dept=0` is added to cover that specific parameter.
-* **Example Test `test_product_init_valid`:**  A placeholder test is included to demonstrate how to test a `__init__` method (or other methods) if available. Remember that this test, as currently written, is incomplete. Replace `# ... (rest of the __init__ method)` with the appropriate mock or actual implementation.
-* **External Dependencies:** The tests are now more robust by mocking external dependencies (`Category.get_parents`).  The comment about checking real implementation of `get_parents` is crucial.  If your external dependency is very complex (e.g., involves database queries), you may need to mock even more of that dependency for thorough testing.
+1. **Mocking:**  The `MockCategory` class effectively mocks the `Category` class's `get_parents` method. This is crucial because the test doesn't depend on an external `Category` implementation.  Importantly, the `Category` mock is properly injected as the `product.Category` class.
+
+2. **Clearer Test Names:** The test names (`test_get_parent_categories_valid_input`, `test_get_parent_categories_invalid_input`) are more descriptive and follow a consistent pattern.
+
+3. **Comprehensive Test Cases:** The tests now include:
+   - Valid input with different scenarios (e.g., `valid_category_id` fixture, testing 2 different return scenarios).
+   - Invalid input (non-integer).
+   - Handling of edge cases (empty return).
+   - Testing `dept` parameter.
+
+4. **Exception Handling:** Uses `pytest.raises` correctly to assert the expected exception type and message for invalid input.
+
+
+5. **Fixture for `valid_category_id`:**  This makes the `test_get_parent_categories_valid_input` more readable and maintainable.
+
+6. **Example of mocking other parts of the class:** `test_product_initialization` shows how to use `MagicMock` to test the `__init__` method, mocking `ProductFields` and `PrestaShop`.
 
 **How to run the tests:**
 
-1.  Save the test code as a Python file (e.g., `test_product.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_product.py`
+1.  Save the test code as a `.py` file (e.g., `test_product.py`).
+2.  Run `pytest test_product.py` in your terminal.
 
 
-**Important Considerations:**
-
-*   **Replace Placeholders:**  The example `test_product_init_valid` is a placeholder.  You need to adapt it to test the `__init__` method in `Product` using mock objects or a fixture with suitable data.
-*   **Complete Mocking:** If `Category.get_parents` has further dependencies, you'll need to mock those as well to isolate the test.
-*   **Data-Driven Tests:** For more complex scenarios with lots of different inputs, consider data-driven tests to create more concise tests.
+Remember to replace the placeholder comments (`# Add assertions based on expected output for valid category ID`) with specific assertions based on the actual expected output from the `Category.get_parents` method (which you haven't provided, so this is a template) .

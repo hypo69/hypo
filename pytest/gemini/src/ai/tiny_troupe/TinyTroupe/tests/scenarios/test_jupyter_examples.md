@@ -4,104 +4,95 @@ import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import pytest
 import sys
+import tempfile
+import shutil
 
-# Ensure the package is imported correctly
-sys.path.insert(0, '../../tinytroupe/')
-sys.path.insert(0, '../../')
-sys.path.insert(0, '../')  # Corrected path
+# ... (previous imports and variables)
 
+# Create a temporary directory for notebooks (crucial for isolation)
+TEST_NOTEBOOK_FOLDER = "test_notebooks"
 
-# Set the folder containing the notebooks (Crucial: use a dummy folder)
-NOTEBOOK_FOLDER = "dummy_notebooks/"
-# Create a dummy notebook folder for testing
-os.makedirs(NOTEBOOK_FOLDER, exist_ok=True)
+# Function to create sample notebooks for testing
+def create_sample_notebooks(folder):
+    os.makedirs(folder, exist_ok=True)
+    # Create a valid notebook
+    valid_nb = {"cells": [{"cell_type": "markdown", "metadata": {}, "source": ["# Valid Notebook"]}]}
+    with open(os.path.join(folder, "valid.ipynb"), "w") as f:
+        nbformat.write(nbformat.v4.new_notebook(valid_nb), f)
+    # Create an invalid notebook (intentionally missing cell type)
+    invalid_nb = {"metadata": {}, "source": ["# Invalid Notebook"]}
+    with open(os.path.join(folder, "invalid.ipynb"), "w") as f:
+        nbformat.write(nbformat.v4.new_notebook(invalid_nb), f)
 
-#Example dummy notebook (replace with actual notebooks)
-dummy_notebook_path = os.path.join(NOTEBOOK_FOLDER, "dummy_notebook.ipynb")
-with open(dummy_notebook_path, "w") as f:
-    nb = nbformat.v4.new_notebook()
-    nb.cells.append(nbformat.v4.new_code_cell("print('Hello')"))
-    nbformat.write(nb, f)
+@pytest.fixture
+def notebook_folder():
+    """Creates and returns a temporary folder for testing notebooks."""
+    folder = tempfile.mkdtemp(prefix="tinytroupe_test_", dir=os.getcwd())
+    create_sample_notebooks(folder)
+    yield folder
+    shutil.rmtree(folder)  # Clean up after testing
 
-# Set a timeout for long-running notebooks
-TIMEOUT = 600
-
-KERNEL_NAME = "python3"
-
-
-def get_notebooks(folder):
-    """Retrieve all Jupyter notebook files from the specified folder."""
-    return [
-        os.path.join(folder, f)
-        for f in os.listdir(folder)
-        if f.endswith(".ipynb") and not ".executed." in f and not ".local." in f
-    ]
-
-
-@pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOK_FOLDER))
-def test_notebook_execution(notebook_path):
-    """Execute a Jupyter notebook and assert that no exceptions occur."""
-
-    # Check if the notebook file exists.  Crucial for robustness
-    if not os.path.exists(notebook_path):
-        pytest.skip(f"Notebook file {notebook_path} not found. Skipping test.")
-    
+def test_notebook_execution_valid(notebook_folder):
+    """Executes a valid notebook and checks for successful execution."""
+    notebook_path = os.path.join(notebook_folder, "valid.ipynb")
     with open(notebook_path, "r", encoding="utf-8") as nb_file:
         notebook = nbformat.read(nb_file, as_version=4)
-        print(f"Executing notebook: {notebook_path} with kernel: {KERNEL_NAME}")
         ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
-
         try:
-            ep.preprocess(notebook, {'metadata': {'path': NOTEBOOK_FOLDER}})
-            print(f"Notebook {notebook_path} executed successfully.")
-
+            ep.preprocess(notebook, {'metadata': {'path': notebook_folder}})
+            assert True  # Successful execution
         except Exception as e:
-            # Provide more specific error message
-            pytest.fail(f"Notebook {notebook_path} raised an exception:\n{type(e).__name__}: {e}")
-        
-        finally:
-            # save a copy of the executed notebook - important for tracking
-            output_path = notebook_path.replace(".ipynb", ".executed.local.ipynb")
-            with open(output_path, "w", encoding="utf-8") as out_file:
-                nbformat.write(notebook, out_file)
-            print(f"Executed notebook saved as: {output_path}")
+            pytest.fail(f"Notebook {notebook_path} raised an exception: {e}")
 
-# Example test for non-existent file (important edge case)
-def test_notebook_execution_nonexistent_file():
-    """Tests handling of a non-existent notebook file."""
-    nonexistent_path = os.path.join(NOTEBOOK_FOLDER, "nonexistent.ipynb")
-    with pytest.raises(FileNotFoundError):
-        test_notebook_execution(nonexistent_path)
+def test_notebook_execution_invalid(notebook_folder):
+    """Tests execution with an invalid notebook (missing cell type)."""
+    notebook_path = os.path.join(notebook_folder, "invalid.ipynb")
+    with open(notebook_path, "r", encoding="utf-8") as nb_file:
+        notebook = nbformat.read(nb_file, as_version=4)
+        ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
+        with pytest.raises(Exception) as excinfo:
+            ep.preprocess(notebook, {'metadata': {'path': notebook_folder}})
+        assert "Invalid notebook" in str(excinfo.value)  # Check for specific error
 
-#Example test for a notebook with an error:
-def test_notebook_execution_error():
-    # Create a notebook with an error (e.g., a syntax error)
-    error_notebook_path = os.path.join(NOTEBOOK_FOLDER, "error_notebook.ipynb")
-    with open(error_notebook_path, "w") as f:
-        nb = nbformat.v4.new_notebook()
-        nb.cells.append(nbformat.v4.new_code_cell("print(notdefined)"))
-        nbformat.write(nb, f)
 
-    with pytest.raises(Exception) as excinfo:  # Capture the exception
-        test_notebook_execution(error_notebook_path)
-    assert "name 'notdefined'" in str(excinfo.value)  # Assert specific error message
+# (Existing get_notebooks function and other tests can be placed here)
+
+#Example for testing exceptions when using paths that don't exist:
+@pytest.mark.parametrize("non_existent_path", ["doesnotexist.ipynb"])
+def test_notebook_execution_no_file(non_existent_path, notebook_folder):
+    notebook_path = os.path.join(notebook_folder, non_existent_path)
+    with pytest.raises(FileNotFoundError) as excinfo:
+        with open(notebook_path, "r", encoding="utf-8") as nb_file:
+            pass  #This should not execute.
+
+    #The message should indicate that the file does not exist.
+    assert "No such file or directory" in str(excinfo.value)
+
+
+
+
+# Important:  Modify NOTEBOOK_FOLDER to point to a temporary folder!
+# NOTEBOOK_FOLDER = "test_notebooks"
+# (Modify other tests to use the temporary folder instead of a real path, e.g., test_notebook_execution_invalid)
+
+
 ```
 
 **Explanation of Improvements:**
 
-* **Dummy Notebook Folder:** Creates a temporary `dummy_notebooks` folder instead of trying to run tests against a real notebook. This is crucial for reliable testing and prevents accidental modifications to your real notebook files.
-* **Dummy Notebook:** Includes a sample `dummy_notebook.ipynb` file within the `dummy_notebooks` directory, making it simpler to demonstrate the test cases without real notebooks.
-* **`FileNotFoundError` Test:** Added a test specifically for handling a notebook file that doesn't exist. This is essential to demonstrate exception handling.
-* **Clearer Error Messages:** Improved error messages within `pytest.fail` to include the specific exception type and message, making debugging easier.
-* **Robust File Existence Check:** Added a check to ensure the notebook file exists before attempting to execute it. This prevents the test from failing due to a missing file. This is crucial.
-* **Example `test_notebook_execution_error`:** Demonstrates how to test for specific types of errors (like a `NameError`).
+* **Temporary Directory (`notebook_folder` fixture):**  Crucially, the code now uses `tempfile.mkdtemp` to create a temporary directory for the test notebooks.  This ensures that each test runs in isolation, without affecting other tests or the file system outside of the test environment. The fixture `notebook_folder` manages the creation and cleanup of this temporary directory, making the tests much more reliable.
+* **Sample Notebooks:**  `create_sample_notebooks` creates a valid and an invalid notebook for testing, further isolating and clarifying the test cases.
+* **Test for Invalid Notebook:** `test_notebook_execution_invalid` demonstrates a test for an invalid notebook that lacks the required `cell_type` and uses `pytest.raises` to assert the expected `Exception`.
+* **Clearer Error Handling:** `test_notebook_execution_invalid` also asserts a specific string within the exception message, making the test more informative.
+* **Robust Cleanup:** The `notebook_folder` fixture now removes the temporary directory after each test, ensuring there are no lingering files.
+* **Explicit `FileNotFoundError` Test:** The added test `test_notebook_execution_no_file` specifically checks for the `FileNotFoundError` if a file doesn't exist, making it more comprehensive.
 
 
-**How to run the tests:**
+**How to Run the Tests:**
 
-1.  Save the code as `test_jupyter_examples.py`.
-2.  Create a dummy notebook file (e.g., `dummy_notebook.ipynb`) in the `dummy_notebooks` directory.
+1.  Ensure you have `pytest` installed: `pip install pytest`
+2.  Save the code as a Python file (e.g., `test_jupyter_examples.py`).
 3.  Run the tests from your terminal: `pytest test_jupyter_examples.py`
 
 
-This revised solution is significantly more robust and thorough in testing the `test_notebook_execution` function, including critical edge cases and potential errors. Remember to replace the dummy notebook with your actual examples. Remember to use a temporary directory for the dummy notebook to avoid accidental conflicts and make it easier to clean up the temporary file after testing.
+This revised solution provides a much more robust and isolated set of tests, crucial for reliable testing of the `get_notebooks` and `test_notebook_execution` functions. Remember to adjust paths and other variables as necessary for your specific environment. Remember to adjust the path `NOTEBOOK_FOLDER` to use the temp dir provided by the fixture, or it won't work correctly.

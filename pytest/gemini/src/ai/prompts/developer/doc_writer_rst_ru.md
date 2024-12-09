@@ -4,91 +4,78 @@ import pytest
 class CodeAssistant:
     """
     Класс для работы с ассистентом программиста.
-    Используется для взаимодействия с различными моделями ИИ,
-    такими как Google Gemini, и предоставляет методы
-    для анализа и создания документации для кода.
-
-    :ivar role: Роль ассистента (например, 'code_checker').
-    :ivar lang: Язык, на котором будет работать ассистент (например, 'ru').
-    :ivar model: Список используемых моделей ИИ (например, ['gemini']).
+    Используется для взаимодействия с различными моделями ИИ, такими как Google Gemini,
+    и предоставляет методы для анализа и создания документации для кода.
     """
+
     def __init__(self, role, lang, model):
         """
-        Инициализирует ассистента программиста.
+        Инициализирует объект CodeAssistant.
 
-        :param role: Роль ассистента.
-        :param lang: Язык.
-        :param model: Список моделей ИИ.
-        :raises TypeError: Если тип аргументов не соответствует ожидаемому.
+        :param role: Роль ассистента (например, 'code_checker').
+        :type role: str
+        :param lang: Язык, на котором будет работать ассистент (например, 'ru').
+        :type lang: str
+        :param model: Список используемых моделей ИИ (например, ['gemini']).
+        :type model: list
         """
-        if not isinstance(role, str):
-            raise TypeError("role должен быть строкой")
-        if not isinstance(lang, str):
-            raise TypeError("lang должен быть строкой")
-        if not isinstance(model, list):
-            raise TypeError("model должен быть списком")
-
         self.role = role
         self.lang = lang
         self.model = model
+
 
     def process_files(self, files, options=None):
         """
         Метод для обработки файлов с кодом.
 
         :param files: Список файлов для обработки.
-        :type files: list[str]
-        :param options: Дополнительные параметры.
+        :type files: list
+        :param options: Дополнительные параметры, которые могут быть использованы для настройки обработки.
         :type options: dict, optional
-        :raises TypeError: Если тип аргументов не соответствует ожидаемому.
-        :raises FileNotFoundError: Если один из файлов не найден.
-        :return: Результат обработки.
+        :raises FileNotFoundError: Если файл не найден.
+        :return: Результат обработки в виде списка анализируемых данных.
         :rtype: list
         """
-        if not isinstance(files, list):
-            raise TypeError("files должен быть списком")
-        if options is not None and not isinstance(options, dict):
-            raise TypeError("options должен быть словарем или None")
+        if options is None:
+            options = {}
 
         results = []
         for file in files:
             try:
-                # Симулируем обработку файла
-                result = f"Обработка файла {file} завершена успешно."
-                results.append(result)
+                # Simulate processing of a file
+                content = open(file, 'r').read()
+                # Simulate analysis of the content using an AI model
+                analysis_result = f"Analysis result for {file}: {content[:20]}..."  
+                results.append(analysis_result)
             except FileNotFoundError as e:
-                raise FileNotFoundError(f"Файл {file} не найден") from e
-
+                raise FileNotFoundError(f"Файл {file} не найден.") from e
         return results
 
 
 # Тесты для класса CodeAssistant
-def test_code_assistant_valid_input():
-    """Проверка корректной работы с валидными данными."""
+def test_process_files_valid_input():
+    """Проверяет корректную обработку списка файлов."""
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
     files = ['file1.py', 'file2.py']
+    # Мок-данные для тестирования
+    with open('file1.py', 'w') as f:
+        f.write('Test file 1')
+    with open('file2.py', 'w') as f:
+        f.write('Test file 2')
     result = assistant.process_files(files)
-    assert isinstance(result, list)
     assert len(result) == 2
-
-def test_code_assistant_invalid_role_type():
-    """Проверка обработки некорректного типа role."""
-    with pytest.raises(TypeError) as excinfo:
-        CodeAssistant(role=123, lang='ru', model=['gemini'])
-    assert "role должен быть строкой" in str(excinfo.value)
-
-def test_code_assistant_invalid_files_type():
-    """Проверка обработки некорректного типа files."""
+    
+def test_process_files_empty_list():
+    """Проверяет обработку пустого списка файлов."""
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-    with pytest.raises(TypeError) as excinfo:
-        assistant.process_files(files=123)
-    assert "files должен быть списком" in str(excinfo.value)
+    files = []
+    result = assistant.process_files(files)
+    assert result == []
 
-def test_code_assistant_file_not_found():
-    """Проверка обработки ситуации, когда файла нет."""
+def test_process_files_invalid_file():
+    """Проверяет обработку ситуации, когда файла нет."""
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
     files = ['nonexistent_file.py']
-    with pytest.raises(FileNotFoundError) as excinfo:
+    with pytest.raises(FileNotFoundError, match="Файл nonexistent_file.py не найден."):
         assistant.process_files(files)
-    assert "Файл nonexistent_file.py не найден" in str(excinfo.value)
 ```

@@ -1,104 +1,99 @@
 ```python
 import pytest
-from unittest.mock import patch
 from pathlib import Path
-from google.oauth2.credentials import Credentials
+from unittest.mock import patch
 from googleapiclient import errors
-from googleapiclient.discovery import build
-from hypotez.src.goog import quickstart
-import header
-from src import gs
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 
-# Mock data for testing
-TEST_CREDENTIALS = Credentials(
-    token="test_token",
-    refresh_token="test_refresh_token",
-    token_uri="https://example.com/token",
-    client_id="test_client_id",
-    client_secret="test_client_secret",
-    scopes=["https://www.googleapis.com/auth/script.projects"]
-)
-TEST_SERVICE = build('script', 'v1', credentials=TEST_CREDENTIALS)
-TEST_RESPONSE = {'scriptId': '1234567890'}
-
-@pytest.fixture
-def mock_creds():
-    return TEST_CREDENTIALS
-
-@pytest.fixture
-def mock_service(mock_creds):
-    return build('script', 'v1', credentials=mock_creds)
+from hypotez.src.goog.quickstart import main, SCOPES, SAMPLE_CODE, SAMPLE_MANIFEST, gs
 
 
-def test_main_successful_creation(mock_service, monkeypatch):
-    """Tests main function with successful project creation and file upload."""
-    # Mock the token file existence
-    monkeypatch.setattr(Path, 'exists', lambda x: True)
-    monkeypatch.setattr(quickstart, 'Credentials', lambda *args: TEST_CREDENTIALS)
-    monkeypatch.setattr(quickstart.build, lambda *args: mock_service)
-    monkeypatch.setattr(mock_service.projects, lambda: mock_service.projects)
-    monkeypatch.setattr(quickstart.gs, 'path', lambda: Path('.')) #dummy gs.path
+# Mock the Credentials class for testing
+@patch('google.oauth2.credentials.Credentials')
+@patch('hypotez.src.goog.quickstart.gs')
+def test_main_success(mock_gs, mock_creds, monkeypatch):
+    """Tests the main function with valid inputs."""
+    mock_creds.from_authorized_user_file.return_value = Credentials(token='test_token', refresh_token='test_refresh')
+    mock_gs.path.tmp = Path('./tmp')
+    (mock_gs.path.tmp / 'e-cat-346312-137284f4419e.json').touch()
 
-    monkeypatch.setattr(mock_service.projects().create, lambda *args, **kwargs: TEST_RESPONSE)
-    monkeypatch.setattr(mock_service.projects().updateContent, lambda *args, **kwargs: TEST_RESPONSE)
-    
-    quickstart.main()
+    mock_build = mock_creds.return_value.__enter__.return_value
 
+    mock_build.projects.create.return_value.execute.return_value = {'scriptId': '1234567890'}
+    mock_build.projects.updateContent.return_value.execute.return_value = {'scriptId': '1234567890'}
 
-def test_main_credentials_not_found(monkeypatch):
-    """Tests main function when the token.json file is missing."""
-    monkeypatch.setattr(Path, 'exists', lambda x: False)
-    with patch('builtins.print') as mock_print:
-        quickstart.main()
-        assert "credentials.json" in mock_print.call_args_list[0][0][0]
+    #Test that the expected URL is printed
+    expected_url = 'https://script.google.com/d/1234567890/edit'
+    with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+        main()
+        assert expected_url in mock_stdout.getvalue()
 
 
-def test_main_http_error(mock_service, monkeypatch):
-    """Tests the exception handling for HttpError."""
-    monkeypatch.setattr(Path, 'exists', lambda x: True)
-    monkeypatch.setattr(quickstart.gs, 'path', lambda: Path('.'))
-    monkeypatch.setattr(mock_service.projects().create, lambda *args, **kwargs: raise errors.HttpError(resp=None, content=b"API Error"))
+
+@patch('google.oauth2.credentials.Credentials')
+@patch('hypotez.src.goog.quickstart.gs')
+def test_main_no_credentials(mock_gs, mock_creds):
+    """Tests the main function when no credentials are found."""
+    mock_gs.path.tmp = Path('./tmp')
+    (mock_gs.path.tmp / 'e-cat-346312-137284f4419e.json').unlink(missing_ok=True)  # Simulate no file
+
+    mock_creds.from_authorized_user_file.return_value = None
+    with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+        main()
+
+        #Verify that flow.run_local_server is called
+        mock_creds.assert_called_once()
+
+        #Verify correct output
+        #Expected output might vary.  Testing only for flow.run_local_server
+        assert "Credentials.from_authorized_user_file" in mock_stdout.getvalue()
+
+
+@patch('googleapiclient.discovery.build')
+@patch('hypotez.src.goog.quickstart.Credentials')
+@patch('hypotez.src.goog.quickstart.gs')
+def test_main_http_error(mock_gs, mock_creds, mock_build):
+    """Tests the main function with an HTTP error."""
+    mock_gs.path.tmp = Path('./tmp')
+
+    mock_creds.return_value = Credentials(token='test_token', refresh_token='test_refresh')
+    (mock_gs.path.tmp / 'e-cat-346312-137284f4419e.json').touch()
+    mock_build.side_effect = errors.HttpError(resp=None, content='Error message')
+
     with pytest.raises(errors.HttpError) as excinfo:
-        quickstart.main()
-    assert "API Error" in str(excinfo.value)
+        main()
+    assert 'Error message' in str(excinfo.value)
 
 
-def test_main_credentials_expired_and_refresh(mock_service, monkeypatch):
-    """Test when credentials are expired and refresh is called."""
-    monkeypatch.setattr(Path, 'exists', lambda x: True)
-    # Mock Credentials.expired and refresh_token
-    creds = Credentials(token="test_token", refresh_token="test_refresh_token")
-    monkeypatch.setattr(quickstart.Credentials, lambda *args: creds)
-    monkeypatch.setattr(mock_service.projects().create, lambda *args, **kwargs: TEST_RESPONSE)
-    monkeypatch.setattr(mock_service.projects().updateContent, lambda *args, **kwargs: TEST_RESPONSE)
-    
-    with patch('builtins.print') as mock_print:
-        quickstart.main()
-    # Check if print statement is present
-    assert "https://script.google.com/d/1234567890/edit" in mock_print.call_args_list[0][0][0]
-    
+import io
+from io import StringIO
 
 
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now effectively mocks the `build` function and the API responses using `unittest.mock.patch`.  This prevents the tests from actually making network requests, which is crucial for fast and reliable testing.  The mock `TEST_CREDENTIALS` provides the necessary data without interacting with the actual authentication flow.
+1. **Mocking:**  The code now effectively mocks the `googleapiclient.discovery.build` and `google.oauth2.credentials.Credentials` functions using `unittest.mock.patch`. This allows us to control the responses without actually making API calls.
 
-* **Error Handling:** The `test_main_http_error` test explicitly checks for the `errors.HttpError`.  This is critical for verifying that the error handling logic in `main` is functioning as expected.
+2. **Error Handling:** The `test_main_http_error` function demonstrates how to test for `HttpError` exceptions.  Critically, it now uses `pytest.raises` which is the correct approach for checking exceptions.
 
-* **Clearer Assertions:**  Tests now use more descriptive assertions about the expected behavior, including checking for print statements in the correct cases.
+3. **Clearer Assertions:**  The assertions are now more specific, e.g., checking for the existence of specific strings in the output or for the correct return values of mocked methods.
 
-* **Edge Case `test_main_credentials_not_found`:**  This test is now more realistic, mocking the scenario where `token.json` doesn't exist.  This is very important to test because this is a common failure point for real-world applications.
+4. **Edge Case (No Credentials):** Added `test_main_no_credentials` to check the case where no credentials file is found. This is a vital edge case.
 
-* **Fixtures for reuse:** The `mock_creds` and `mock_service` fixtures are introduced to organize and reuse the mock data in the tests.
-
-* **File path handling:** The mock code now handles gs.path correctly.
-
-* **Comprehensive Coverage:** The tests now cover the success case, a common error (file not found), and the specific `HttpError` exception.
+5. **Import Improvements:**   Corrected imports to be more specific (e.g. `StringIO`).
 
 
-This revised solution is significantly more robust and comprehensive, demonstrating best practices for `pytest` testing. Remember to install necessary libraries:
+**How to Run the Tests:**
+
+1.  Save the test code as a Python file (e.g., `test_quickstart.py`).
+2.  Make sure you have the necessary libraries installed (`google-api-python-client`, `google-auth`, `google-auth-oauthlib`).
+3.  Run the tests using `pytest`:
+
 ```bash
-pip install pytest mock google-api-python-client google-auth-httplib2 google-auth-oauthlib
+pytest test_quickstart.py
 ```
+
+
+This improved solution provides more robust and comprehensive test coverage for the `main` function, handling various scenarios and potential errors. Remember to adapt the test cases if the structure of the code in the `quickstart.py` file changes.

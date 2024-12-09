@@ -2,103 +2,93 @@
 import pytest
 import base64
 
-# No Python code to test in the input, so these are placeholder tests.
-# Replace with actual functions/classes from your PrestaShop code.
+# No Python code to test was provided in the input.
+# This example creates dummy functions and test cases.
+# Replace these with the actual functions from your code.
 
-
-# Placeholder for a function that retrieves API keys.
 def get_api_key(website_url, credentials_file="credentials.kdbx"):
     """
-    Retrieves the API key for a given website from the credentials file.
-    Placeholder function for testing purposes.
+    Retrieves the API key for a given website URL from a credentials file.
+    
+    Args:
+        website_url: The URL of the website.
+        credentials_file: The path to the credentials file.
+        
+    Returns:
+        The API key as a string, or None if not found.
     """
-    # Replace with actual key retrieval logic.
+    # Replace this with actual logic to read from credentials file.
     if website_url == "e-cat.co.il":
-        return "YOUR_API_KEY_ENCODED"
+        return "YOUR_API_KEY_ENC"
     elif website_url == "emil-design.com":
-        return "YOUR_API_KEY_ENCODED_2"
-    elif website_url == "sergey.mymaster.co.il":
-        return "YOUR_API_KEY_ENCODED_3"
+        return "YOUR_API_KEY_2_ENC"
     else:
         return None
 
+def construct_api_request(website_url, endpoint, api_key):
+    """
+    Constructs the API request string.
 
-def test_get_api_key_valid_website():
-    """Tests retrieving API key for a valid website."""
-    key = get_api_key("e-cat.co.il")
-    assert key is not None
+    Args:
+        website_url: The URL of the website.
+        endpoint: The API endpoint.
+        api_key: The API key.
+        
+    Returns:
+        The API request string, or None if invalid inputs.
 
+    Raises:
+        TypeError: If input types are incorrect.
+    """
+    if not isinstance(website_url, str) or not isinstance(endpoint, str) or not isinstance(api_key, str):
+        raise TypeError("Input types must be strings.")
+    encoded_key = base64.b64encode(api_key.encode()).decode()
+    request_string = f"curl -X GET 'https://{website_url}/api/{endpoint}' \\\n-H 'Authorization: Basic {encoded_key}'"
+    return request_string
 
-def test_get_api_key_invalid_website():
-    """Tests retrieving API key for an invalid website."""
-    key = get_api_key("invalid-website.com")
-    assert key is None
+# Test cases
+def test_get_api_key_valid_input():
+    api_key = get_api_key("e-cat.co.il")
+    assert api_key is not None, "API key not found for e-cat.co.il"
 
+def test_get_api_key_invalid_input():
+    api_key = get_api_key("invalid_url")
+    assert api_key is None, "API key should not be found for invalid URL"
 
-def test_get_api_key_encoding(monkeypatch):
-    """Test that the API key is properly encoded."""
-    # Mock the get_api_key function to return a valid string
-    monkeypatch.setattr(
-        "hypotez.src.endpoints.prestashop.get_api_key",
-        lambda website_url, credentials_file: "YOUR_API_KEY",
-    )
-    key = get_api_key("e-cat.co.il")
-    decoded_key = base64.b64decode(key)
-    assert isinstance(decoded_key, bytes)
+def test_construct_api_request_valid_input():
+    api_key = "TEST_API_KEY"
+    request_string = construct_api_request("e-cat.co.il", "products", api_key)
+    assert isinstance(request_string, str), "API request should be a string"
 
+def test_construct_api_request_invalid_key_type():
+  with pytest.raises(TypeError):
+    construct_api_request("e-cat.co.il", "products", 123)
 
-def test_get_api_key_non_base64_encoding():
-    """Tests handling non-base64 encoded keys."""
-    # Expect the function to throw an error
-    with pytest.raises(ValueError, match="invalid base64"):
-        base64.b64decode("invalid-encoding")
-
-
-# Example usage (replace with your actual API call function):
-def test_api_request_valid_input():
-    """Tests a basic API call with valid inputs."""
-    # Replace with your actual API call function.
-    website_url = "e-cat.co.il"
-    endpoint = "products"
-    api_key = get_api_key(website_url)
-
-    # Simulate an API call, would need to use a mock library in a real test
-    # Replace this with your API call logic, e.g. using requests
-    assert api_key is not None
-
-
-def test_api_request_invalid_website():
-    """Tests an API call with an invalid website."""
-    website_url = "invalid-website"
-    endpoint = "products"
-    api_key = get_api_key(website_url)
-    # Expect an error or None return
-    assert api_key is None
+#Example Usage (replace with your actual function calls)
+# api_key = get_api_key("e-cat.co.il")
+# request = construct_api_request("e-cat.co.il", "products", api_key)
 ```
 
 **Explanation and Improvements:**
 
-1. **Placeholder Functions:** The code now includes placeholder functions (`get_api_key`) to represent the actual PrestaShop API key retrieval logic.  Crucially, these placeholders are used in the tests to simulate the retrieval of the keys.
+1. **Dummy Functions:** The provided code had no Python functions to test.  This example creates placeholder functions `get_api_key` and `construct_api_request` with basic functionality.  Crucially, replace these with your actual functions.
 
-2. **`monkeypatch` for Encoding Tests:** The `test_get_api_key_encoding` test uses `monkeypatch` to mock the `get_api_key` function, allowing for a more controlled test of the key encoding logic. This is essential for testing functions that interact with external resources (like files) in a controlled environment.
+2. **`pytest.raises` for Exception Handling:** Added a test `test_construct_api_request_invalid_key_type` to demonstrate how to test for the `TypeError` raised by `construct_api_request` when input is not a string.
 
-3. **Error Handling:** The `test_get_api_key_non_base64_encoding` test now demonstrates how to use `pytest.raises` to check for specific exceptions (ValueError) when dealing with invalid inputs.  This is a good practice for robust tests.
+3. **Clearer Test Names:** Test function names are more descriptive (e.g., `test_get_api_key_valid_input`).
 
-4. **`test_api_request_valid_input`:** This placeholder tests the basic structure of an API request, but it's **crucial** to replace the placeholder comment with the actual function making the API call from your PrestaShop code.  Use a mocking library like `unittest.mock` or `pytest-mock` to simulate the API call, response, and responses with different return types for various conditions.
+4. **Edge Cases:**  `test_get_api_key_invalid_input` tests for a non-existent website.
 
-5. **`test_api_request_invalid_website`:** This shows how to test with an invalid website, which would result in `get_api_key` returning `None`.
+5. **Type Handling:** The `construct_api_request` function now includes input validation to raise a `TypeError` if the input types are incorrect, and the test case `test_construct_api_request_invalid_key_type` demonstrates how to check for that error.
 
-**How to use with your actual code:**
-
-* Replace the placeholder functions (`get_api_key`, etc.) with your actual PrestaShop code.
-* Make sure your PrestaShop code returns a `bytes` representation for the API key.
-* Replace the placeholder `assert` statements in `test_api_request_valid_input` with assertions to test the expected output of the API request, e.g., to check if the response contains the expected data from the API.
-* Use mocking or stubbing (from `unittest.mock` or `pytest-mock`) to test various scenarios of the API calls, not just the fetching of the API keys.  Mocking is essential for testing the API call logic itself, as it is a separate function from getting keys.
+6. **Assertions:** Assertions are used to check for expected outputs (e.g., `api_key is not None`).
 
 
+**To use these tests:**
 
-Remember to install the necessary libraries:
+1.  **Replace the placeholder functions** with your actual PrestaShop functions.
+2.  **Add `import pytest` at the beginning.**
+3.  **Modify `credentials.kdbx`** (or the way you read data from it) to have example API keys for testing.
 
-```bash
-pip install pytest
-```
+
+Remember to install the `pytest` library if you haven't already: `pip install pytest`.  Then run the tests from your terminal: `pytest your_test_file.py` (replace `your_test_file.py` with the name of your test file). Remember to install the `base64` module: `pip install base64` if you don't have it.
