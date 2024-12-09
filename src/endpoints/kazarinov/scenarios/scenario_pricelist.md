@@ -1,35 +1,34 @@
-
-## Mexiron Builder Scenario
+## Sergey Kazarinov's Mechiron Creation Script
 
 ### Overview
 
-This script is part of the `hypotez/src/endpoints/kazarinov/scenarios` directory and is designed to automate the process of creating a "Mexiron" for Sergey Kazarinov. The script extracts, parses, and processes product data from various suppliers, prepares the data, processes it through AI, and integrates with Facebook for product posting.
+This script is part of the `hypotez/src/endpoints/kazarinov/scenarios` directory and is designed to automate the process of creating a "mechiron" for Sergey Kazarinov. The script extracts, parses, and processes product data from various suppliers, prepares the data, processes it through AI, and integrates with Facebook for product publication.
 
 ### Key Features
 
 1. **Data Extraction and Parsing**: Extracts and parses product data from various suppliers.
-2. **AI Processing**: Processes the extracted data through a Google Generative AI model.
+2. **AI Data Processing**: Processes the extracted data through the Google Generative AI model.
 3. **Data Storage**: Saves the processed data to files.
 4. **Report Generation**: Generates HTML and PDF reports from the processed data.
-5. **Facebook Posting**: Posts the processed data to Facebook.
+5. **Facebook Publication**: Publishes the processed data to Facebook.
 
-### Module Structure
+### Module Flowchart
 
 ```mermaid
 graph TD
     Start[Start] --> InitMexironBuilder[Initialize MexironBuilder]
     InitMexironBuilder --> LoadConfig[Load Configuration]
     LoadConfig --> SetExportPath[Set Export Path]
-    SetExportPath --> LoadSystemInstruction[Load System Instruction]
+    SetExportPath --> LoadSystemInstruction[Load System Instructions]
     LoadSystemInstruction --> InitModel[Initialize AI Model]
     InitModel --> RunScenario[Run Scenario]
     RunScenario --> CheckURLs{URLs Provided?}
     CheckURLs -->|Yes| GetGraber[Get Graber by Supplier URL]
-    CheckURLs -->|No| LogNoURLs[Log: No URLs Provided]
+    CheckURLs -->|No| LogNoURLs[Log: URLs Not Provided]
     GetGraber --> GrabPage[Grab Page Data]
     GrabPage --> ConvertFields[Convert Product Fields]
     ConvertFields --> SaveData[Save Product Data]
-    SaveData --> ProcessAI[Process Data with AI]
+    SaveData --> ProcessAI[Process Data via AI]
     ProcessAI --> CreateReport[Create Report]
     CreateReport --> PostFacebook[Post to Facebook]
     PostFacebook --> End[End]
@@ -38,20 +37,20 @@ graph TD
 ### Legend
 
 1. **Start**: Start of script execution.
-2. **InitMexironBuilder**: Initialize the `MexironBuilder` class.
-3. **LoadConfig**: Load the configuration from the JSON file.
-4. **SetExportPath**: Set the export path based on the configuration.
-5. **LoadSystemInstruction**: Load the system instruction for the AI model.
-6. **InitModel**: Initialize the Google Generative AI model.
-7. **RunScenario**: Execute the main scenario.
-8. **CheckURLs**: Check if URLs are provided for parsing.
-9. **GetGraber**: Get the appropriate graber for the supplier URL.
-10. **GrabPage**: Grab the page data using the graber.
-11. **ConvertFields**: Convert the product fields into a dictionary.
-12. **SaveData**: Save the product data to a file.
-13. **ProcessAI**: Process the product data through the AI model.
-14. **CreateReport**: Create HTML and PDF reports from the processed data.
-15. **PostFacebook**: Post the processed data to Facebook.
+2. **InitMexironBuilder**: Initialization of the `MexironBuilder` class.
+3. **LoadConfig**: Loads configuration from a JSON file.
+4. **SetExportPath**: Sets the path for data export.
+5. **LoadSystemInstruction**: Loads system instructions for the AI model.
+6. **InitModel**: Initializes the Google Generative AI model.
+7. **RunScenario**: Executes the main scenario.
+8. **CheckURLs**: Checks if URLs for parsing are provided.
+9. **GetGraber**: Retrieves the appropriate graber for the supplier URL.
+10. **GrabPage**: Extracts page data using the graber.
+11. **ConvertFields**: Converts product fields into a dictionary.
+12. **SaveData**: Saves product data to a file.
+13. **ProcessAI**: Processes product data through the AI model.
+14. **CreateReport**: Creates HTML and PDF reports from the processed data.
+15. **PostFacebook**: Publishes the processed data to Facebook.
 16. **End**: End of script execution.
 
 -----------------------
@@ -60,9 +59,9 @@ graph TD
 
 - **Attributes**:
   - `driver`: Selenium WebDriver instance.
-  - `export_path`: Path for exporting data.
-  - `mexiron_name`: Custom name for the Mexiron process.
-  - `price`: Price to process.
+  - `export_path`: Path for data export.
+  - `mexiron_name`: Custom name for the mechiron process.
+  - `price`: Price for processing.
   - `timestamp`: Timestamp for the process.
   - `products_list`: List of processed product data.
   - `model`: Google Generative AI model.
@@ -70,20 +69,19 @@ graph TD
 
 - **Methods**:
   - **`__init__(self, driver: Driver, mexiron_name: Optional[str] = None)`**:
-    - **Purpose**: Initializes the `MexironBuilder` class with required components.
+    - **Purpose**: Initializes the `MexironBuilder` class with necessary components.
     - **Parameters**:
       - `driver`: Selenium WebDriver instance.
-      - `mexiron_name`: Custom name for the Mexiron process.
-
+      - `mexiron_name`: Custom name for the mechiron process.
+    ----
   - **`run_scenario(self, system_instruction: Optional[str] = None, price: Optional[str] = None, mexiron_name: Optional[str] = None, urls: Optional[str | List[str]] = None, bot = None) -> bool`**:
-    - **Purpose**: Executes the scenario: parses products, processes them via AI, and stores data.
-
+    - **Purpose**: Executes the scenario: parses products, processes them through AI, and saves the data.
     - **Parameters**:
       - `system_instruction`: System instructions for the AI model.
-      - `price`: Price to process.
-      - `mexiron_name`: Custom Mexiron name.
-      - `urls`: Product page URLs.
-    - **Returns**: `True` if the scenario executes successfully, `False` otherwise.
+      - `price`: Price for processing.
+      - `mexiron_name`: Custom mechiron name.
+      - `urls`: URLs of product pages.
+    - **Returns**: `True` if the scenario runs successfully, otherwise `False`.
 
     -  **Flowchart**:
     ```mermaid
@@ -103,62 +101,61 @@ graph TD
         ReplyError --> Return[Return]
 
     ```
-    LEGEND:
+    Legend:
     
-    **Start**: Начало выполнения сценария.
+    1.&nbsp;**Start**: Start of scenario execution. 
     
-    **CheckURL**: Проверка, является ли URL из OneTab.
+    2.&nbsp;**CheckURL**: Checks if the URL is from OneTab.  
     
-    **FetchData**: Получение данных из OneTab.
+    3.&nbsp;**FetchData**: Fetches data from OneTab. 
     
-    **ReplyTryAgain**: Ответ "Try again", если URL не из OneTab.
+    4.&nbsp;**ReplyTryAgain**: Replies "Try again" if the URL is not from OneTab. 
     
-    **ValidateData**: Проверка валидности данных.
+    5.&nbsp;**ValidateData**: Validates the data.
     
-    **ReplyIncorrectData**: Ответ "Incorrect data", если данные не валидны.
+    6.&nbsp;**ReplyIncorrectData**: Replies "Incorrect data" if the data is invalid.
     
-    **RunScenario**: Запуск сценария Mexiron.
+    7.&nbsp;**RunScenario**: Runs the Mexiron scenario.
     
-    **ScenarioSuccess**: Проверка успешности выполнения сценария.
+    8.&nbsp;**ScenarioSuccess**: Checks if the scenario ran successfully.
     
-    **ReplyDone**: Ответ "Done! I will send the link to WhatsApp", если сценарий выполнен успешно.
+    9.&nbsp;**ReplyDone**: Replies "Done! I will send the link to WhatsApp" if the scenario is successful.
 
-    **ReplyError**: Ответ "Error running scenario", если сценарий не выполнен.
+    10.&nbsp;**ReplyError**: Replies "Error running scenario" if the scenario fails.
 
-    **Return**: Возврат из функции.
+    11.&nbsp;**Return**: Returns from the function.
 
-
-
+----
   - **`get_graber_by_supplier_url(self, url: str)`**:
-    - **Purpose**: Returns the appropriate graber for a given supplier URL.
+    - **Purpose**: Returns the appropriate graber for the given supplier URL.
     - **Parameters**:
       - `url`: Supplier page URL.
-    - **Returns**: Graber instance if a match is found, `None` otherwise.
-
+    - **Returns**: Graber instance if found, otherwise `None`.
+----
   - **`convert_product_fields(self, f: ProductFields) -> dict`**:
     - **Purpose**: Converts product fields into a dictionary.
     - **Parameters**:
       - `f`: Object containing parsed product data.
-    - **Returns**: Formatted product data dictionary.
-
+    - **Returns**: Formatted dictionary of product data.
+----
   - **`save_product_data(self, product_data: dict)`**:
-    - **Purpose**: Saves individual product data to a file.
+    - **Purpose**: Saves product data to a file.
     - **Parameters**:
       - `product_data`: Formatted product data.
-
+----
   - **`process_ai(self, products_list: List[str], lang: str, attempts: int = 3) -> tuple | bool`**:
-    - **Purpose**: Processes the product list through the AI model.
+    - **Purpose**: Processes a list of products through the AI model.
     - **Parameters**:
-      - `products_list`: List of product data dictionaries as a string.
-      - `attempts`: Number of attempts to retry in case of failure.
+      - `products_list`: List of product data dictionaries as strings.
+      - `attempts`: Number of retry attempts in case of failure.
     - **Returns**: Processed response in `ru` and `he` formats.
-
+----
   - **`post_facebook(self, mexiron: SimpleNamespace) -> bool`**:
-    - **Purpose**: Executes the Facebook posting scenario.
+    - **Purpose**: Executes the Facebook publication scenario.
     - **Parameters**:
-      - `mexiron`: Processed data to post.
-    - **Returns**: `True` if the post is successful, `False` otherwise.
-
+      - `mexiron`: Processed data for publication.
+    - **Returns**: `True` if publication is successful, otherwise `False`.
+----
   - **`create_report(self, data: dict, html_file: Path, pdf_file: Path)`**:
     - **Purpose**: Generates HTML and PDF reports from the processed data.
     - **Parameters**:
@@ -172,7 +169,7 @@ To use this script, follow these steps:
 
 1. **Initialize Driver**: Create an instance of the `Driver` class.
 2. **Initialize MexironBuilder**: Create an instance of the `MexironBuilder` class with the driver.
-3. **Run Scenario**: Call the `run_scenario` method with the required parameters.
+3. **Run Scenario**: Call the `run_scenario` method with the necessary parameters.
 
 #### Example
 
@@ -186,7 +183,7 @@ driver = Driver(...)
 # Initialize MexironBuilder
 mexiron_builder = MexironBuilder(driver)
 
-# Run scenario
+# Run Scenario
 urls = ['https://example.com/product1', 'https://example.com/product2']
 mexiron_builder.run_scenario(urls=urls)
 ```
@@ -195,25 +192,21 @@ mexiron_builder.run_scenario(urls=urls)
 
 - `selenium`: For web automation.
 - `asyncio`: For asynchronous operations.
-- `pathlib`: For handling file paths.
+- `pathlib`: For file path handling.
 - `types`: For creating simple namespaces.
 - `typing`: For type annotations.
-- `src.ai.gemini`: For AI processing.
+- `src.ai.gemini`: For AI data processing.
 - `src.suppliers.*.graber`: For data extraction from various suppliers.
-- `src.endpoints.advertisement.facebook.scenarios`: For Facebook posting.
+- `src.endpoints.advertisement.facebook.scenarios`: For Facebook publication.
 
 ### Error Handling
 
-The script includes robust error handling to ensure that the execution continues even if certain elements are not found or if there are issues with the web page. This is particularly useful for handling dynamic or unstable web pages.
+The script includes robust error handling to ensure continued execution even if some elements are not found or if there are issues with the web page. This is particularly useful for handling dynamic or unstable web pages.
 
-### Contributing
+### Contribution
 
 Contributions to this script are welcome. Please ensure that any changes are well-documented and include appropriate tests.
 
 ### License
 
-This script is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
-
-This README provides a comprehensive overview of the `scenario_pricelist.py` script, including its purpose, structure, usage, and dependencies. It is intended to help developers understand and utilize the script effectively.
+This script is licensed under the MIT License. See the `LICENSE` file for details.

@@ -63,10 +63,7 @@ Your task: to process and document code following specific formatting and docume
 
 7. **Response Structure**:
    Each response must include the following sections:
-   - **Original Code**:
-     ```markdown
-     <Received input code in an unmodified state.>
-     ```
+
    - **Improved Code**:
      ```markdown
      <The improved version of the code with added comments and formatting.>
@@ -102,20 +99,7 @@ Your task: to process and document code following specific formatting and docume
 ### **Examples**:
 
 #### Example 1 (Python Code):
-Input:
-```python
-def add_numbers(a,b):
-    return a+b
-```
 
-Expected Response:
-
-```markdown
-### Original Code:
-```python
-def add_numbers(a,b):
-    return a+b
-```
 
 ### Improved Code:
 ```python
