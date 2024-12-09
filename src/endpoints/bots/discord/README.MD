@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.endpoints.bots.discord
+.. module: src.endpoints.bots.discord
 ```
 
 <TABLE >

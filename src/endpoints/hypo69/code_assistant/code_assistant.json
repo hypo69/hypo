@@ -119,9 +119,10 @@
       "code_explainer_md",
       "doc_writer_md",
       "pytest",
-      "how_to_writer_md"
+      "how_to_writer_md",
+      "doc_writer_rst"
     ],
-    "exclude-roles": [ "code_explainer_html", "doc_writer_html", "doc_writer_rst" ],
+    "exclude-roles": [ "code_explainer_html", "doc_writer_html" ],
     "languages": [ "ru", "en" ],
     "model": {
       "default": [ "gemini" ],

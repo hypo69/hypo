@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.webdriver.firefox
+.. module: src.webdriver.firefox
 ```
 # Модуль для работы с WebDriver Firefox
 

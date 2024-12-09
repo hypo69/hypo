@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.category
+.. module: src.category
 ```
 # Module: Category
 

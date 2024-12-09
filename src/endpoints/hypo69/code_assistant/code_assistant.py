@@ -3,7 +3,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 """
-Модуль для работы ассистента программиста
+Модуль обучения модели машинного обучения кодовой базе, составления документации к проекту, примеров кода и тестов
 =========================================================================================
 
 :class:`CodeAssistant`, читает файлы кода, отдает код в модели, модель обрабатывет код и возвращает его в класс, класс сохраняет результат
@@ -22,7 +22,15 @@
 
 .. module: src.endpoints.hypo69.code_assistant 
     :platform: Windows, Unix
-    :synopsis: Модуль для работы ассистента программиста
+    :synopsis: Модуль обучения модели машинного обучения кодовой базе, составления документации к проекту, примеров кода и тестов
+
+.. header.py:
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```
 """
 
 import asyncio
@@ -277,15 +285,15 @@ class CodeAssistant:
         """Создание запроса с учетом роли и языка."""
         content_request = content
         try:
-            roles_translations:SimpleNamespace = getattr(self.translations.roles, self.role)
-            role_description_translated:str = getattr(roles_translations, self.lang)
-            file_location_translated:str = getattr(self.translations.file_location_translated, self.lang)
+            roles_translations:SimpleNamespace = getattr(self.translations.roles, self.role, 'doc_writer_md')
+            role_description_translated:str = getattr(roles_translations, self.lang, 'Your specialization is documentation creation in the `MD` format')
+            file_location_translated:str = getattr(self.translations.file_location_translated, self.lang, 'Path to file: ')
             
             content_request: dict = {
                 "role": f"{role_description_translated}",
                 "output_language": self.lang,
                 f"{file_location_translated}": get_relative_path(file_path, "hypotez"),
-                "instruction": self.code_instruction,
+                "instruction": self.code_instruction or '',
                 "input_code": f"```{content}```",
             }
         except Exception as ex:

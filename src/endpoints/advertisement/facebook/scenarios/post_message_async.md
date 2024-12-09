@@ -1,5 +1,5 @@
 ```rst
-... :module: src.endpoints.advertisement.facebook.post_message_async
+... module: src.endpoints.advertisement.facebook.post_message_async
 ```
 [Русский]()
 

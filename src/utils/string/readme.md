@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.utils.string
+.. module: src.utils.string
 ```
 
 Data Normalizer Module Documentation

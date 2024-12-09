@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.ai.dialogflow
+.. module: src.ai.dialogflow
 ```
 
 <TABLE >

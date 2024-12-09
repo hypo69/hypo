@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.utils.string.normalizer
+.. module: src.utils.string.normalizer
 ```
 Документация модуля нормализации данных
 =========================================

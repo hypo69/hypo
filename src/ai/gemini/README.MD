@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.ai.gemini
+.. module: src.ai.gemini
 ```
 [Русский](https://github.com/hypo69/hypo/tree/master/src/ai/gemini/readme.ru.md)
 

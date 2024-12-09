@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.ai.helicone
+.. module: src.ai.helicone
 ```
 [English](https://github.com/hypo69/hypo/blob/master/src/ai/helicone/README.MD)
 [что такое `helicone.ai`](https://github.com/hypo69/hypo/blob/master/src/ai/helicone/about.ru.md)

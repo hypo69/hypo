@@ -1,5 +1,5 @@
 ```rst
-.. :module: src.credentials
+.. module: src.credentials
 ```
 <TABLE >
 <TR>
