@@ -3,119 +3,108 @@ import pytest
 import winreg as reg
 import os
 from PyQt6 import QtWidgets
-import sys
+import sys  # Needed for mocking sys.exit
+from unittest.mock import patch, Mock
 
-# Mock PyQt6 elements for testing
-class MockQMessageBox:
-    def critical(self, parent, title, message):
-        print(f"Critical Error: {title} - {message}")
-        sys.exit(1)  # Simulate error exit
-
-    def information(self, parent, title, message):
-        print(f"Information: {title} - {message}")
-
-    def warning(self, parent, title, message):
-        print(f"Warning: {title} - {message}")
-
-# Mock out actual functions.
-def mock_add_context_menu_item(path, command_path):
-    #Mock the critical message box
-    mock_msg_box = MockQMessageBox()
-    if not os.path.exists(command_path):
-        mock_msg_box.critical(None, "Ошибка", f"Файл {command_path} не найден.")
-
-def mock_remove_context_menu_item():
-    # Mock for testing purposes
-    pass
-
-def add_context_menu_item_mock(command_path):
-    """Mocks add_context_menu_item for testing."""
-    mock_add_context_menu_item(r"Directory\\Background\\shell\\hypo_AI_assistant", command_path)
+# Mock the necessary imports
+import header
+from src import gs
 
 
-@pytest.fixture
-def mock_gs_path():
-    """Provides a mock gs.path for testing."""
-    class MockPath:
-        def __init__(self):
-            self.src = MockPathSrc()
+@patch("src.gui.context_menu.qt6.QtWidgets")
+@patch("src.gui.context_menu.qt6.gs")
+@patch("src.gui.context_menu.qt6.os")
+def test_add_context_menu_item(mock_os, mock_gs, mock_QtWidgets):
+    """Tests the add_context_menu_item function."""
 
-    class MockPathSrc:
-        def __init__(self):
-            self.gui = MockPathGui()
+    # Mock the file existence check
+    mock_os.path.exists.return_value = True
+    mock_gs.path.src.return_value = Mock(
+        __truediv__=lambda self, path: f"/path/{path}"
+    )
+    
+    # Test valid case
+    add_context_menu_item()
+    mock_QtWidgets.QMessageBox.information.assert_called_once_with(
+        None, "Успех", "Пункт меню успешно добавлен!"
+    )
+    mock_QtWidgets.QMessageBox.critical.assert_not_called()  
 
-        def __truediv__(self, other):
-            return str(self) + "/" + str(other)  # Simulate path joining
+    # Test file not found
+    mock_os.path.exists.return_value = False
+    add_context_menu_item()
+    mock_QtWidgets.QMessageBox.critical.assert_called_once()
 
-    class MockPathGui:
-        def __init__(self):
-            self.context_menu = MockPathContextMenu()
-        def __truediv__(self, other):
-            return str(self) + "/" + str(other)  # Simulate path joining
+    # Test exception handling
+    mock_os.path.exists.side_effect = Exception("Test exception")
+    with pytest.raises(Exception) as excinfo:
+        add_context_menu_item()
 
-    class MockPathContextMenu:
-        def __init__(self):
-            self.main_py = "test_file.py"
-        def __truediv__(self, other):
-            return str(self) + "/" + str(other)
+    mock_QtWidgets.QMessageBox.critical.assert_called_once()
+    assert "Test exception" in str(excinfo.value)
 
+@patch("src.gui.context_menu.qt6.QtWidgets")
+@patch("src.gui.context_menu.qt6.reg")
+def test_remove_context_menu_item(mock_reg, mock_QtWidgets):
+    """Tests the remove_context_menu_item function."""
 
-    return MockPath()
-
-
-
-
-def test_add_context_menu_item_file_exists(mock_gs_path):
-    """Tests add_context_menu_item with a valid file path."""
-
-    mock_add_context_menu_item(r"Directory\\Background\\shell\\hypo_AI_assistant", (mock_gs_path.src / 'gui' / 'context_menu' / 'main.py'))
-
-    #Assert nothing
-    assert True
-
-def test_add_context_menu_item_file_not_exists(mock_gs_path):
-    """Tests add_context_menu_item when the file doesn't exist."""
-
-    mock_add_context_menu_item(r"Directory\\Background\\shell\\hypo_AI_assistant", str(mock_gs_path.src / 'gui' / 'context_menu' / 'nonexistent_file.py'))
-
-    #Assert a specific message was printed.
-    captured_output = [line.strip() for line in sys.stderr.getvalue().split('\n')]
-    assert "Critical Error: Ошибка - Файл" in captured_output[0]
+    # Test successful removal
+    mock_reg.DeleteKey.return_value = None
+    remove_context_menu_item()
+    mock_QtWidgets.QMessageBox.information.assert_called_once_with(
+        None, "Успех", "Пункт меню успешно удален!"
+    )
 
 
-def test_remove_context_menu_item_exists():
-    """Tests remove_context_menu_item when the menu item exists."""
-    mock_remove_context_menu_item()
+    # Test item not found
+    mock_reg.DeleteKey.side_effect = FileNotFoundError()
+    remove_context_menu_item()
+    mock_QtWidgets.QMessageBox.warning.assert_called_once()
 
-    # Assert that no errors are raised.
-    assert True
+    # Test other exception
+    mock_reg.DeleteKey.side_effect = Exception("Test exception")
+    with pytest.raises(Exception) as excinfo:
+        remove_context_menu_item()
+    mock_QtWidgets.QMessageBox.critical.assert_called_once_with(None, "Ошибка", "Ошибка: Test exception")
+    
+    # Check if warning is called in case of other exceptions.
+    mock_reg.DeleteKey.side_effect = ValueError('Fake value')
+    with pytest.raises(ValueError) as excinfo:
+        remove_context_menu_item()
+    assert "Fake value" in str(excinfo.value)
 
 
-def test_remove_context_menu_item_does_not_exist():
-    """Tests remove_context_menu_item when the menu item does not exist."""
+@patch("src.gui.context_menu.qt6.QtWidgets")
+def test_context_menu_manager_init(mock_QtWidgets):
+    """Tests the ContextMenuManager class."""
+    window = ContextMenuManager()
+    assert isinstance(window, ContextMenuManager)
+    mock_QtWidgets.QApplication.assert_called_once_with([])
+    assert window.windowTitle() == "Управление контекстным меню"
 
-    # Mock a FileNotFoundError
-    with pytest.raises(FileNotFoundError):
-        mock_remove_context_menu_item()
+# Import the necessary modules to avoid circular import issues.
+from hypotez.src.gui.context_menu.qt6.main import add_context_menu_item, remove_context_menu_item, ContextMenuManager
+
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now uses `MockQMessageBox` to mock the `QtWidgets.QMessageBox` class. This is crucial for testing the `add_context_menu_item` function, avoiding interaction with the operating system's registry.  Importantly, it simulates the error exit.
-* **Error Handling:** The `test_add_context_menu_item_file_not_exists` test now captures the output of the critical error message using `sys.stderr.getvalue()`. This allows us to confirm that the critical message is displayed as expected.
-* **Clearer Assertions:**  The tests have more specific assertions (e.g., checking for the presence of specific error messages).  The `test_add_context_menu_item_file_not_exists` test now properly verifies the displayed error.
-* **Mocking `gs.path`:** The `mock_gs_path` fixture creates a mock for `gs.path` and constructs a dummy path structure. This isolates the test from relying on actual file system access.
-* **Complete Test Coverage:** The tests now handle the cases where the file exists and where the file doesn't exist.
-* **`pytest.raises`:** While the code doesn't directly use `pytest.raises`, the mock functions now demonstrate the functionality of handling exceptions, which is a primary use case of `pytest.raises`.
-* **Fixture:** The `mock_gs_path` fixture is introduced to mock the necessary parts of the code for testing.
-* **Error Message Assertion:** The tests assert that an error message is printed when the file does not exist.
+1. **Mocking:** The tests now effectively mock `QtWidgets.QMessageBox`, `gs.path`, and `os`. This is crucial because these functions interact with external resources (like the registry and files).  Mocking prevents unexpected interactions and ensures your tests are isolated.
 
+2. **Comprehensive Error Handling:**  The tests cover cases where the script file is not found (`FileNotFoundError`), and more importantly, they test the exception handling in `add_context_menu_item` and `remove_context_menu_item`, which is vital in real-world applications.
+
+3. **Clearer Assertions:** Assertions now directly check for the expected calls to `QMessageBox.information`, `QMessageBox.warning`, and `QMessageBox.critical`, making it easier to understand the test results.
+
+4. **Specific Error Catching:** The `test_remove_context_menu_item` function is improved to use `pytest.raises` for exception testing and now includes catching `ValueError` as well.
+
+
+5. **Test for `ContextMenuManager`:** Added a `test_context_menu_manager_init` to verify the instantiation of the `ContextMenuManager` class, including checks for the window title and the correct initialization.
 
 
 **How to Run the Tests:**
 
-1.  Save the test code as a `.py` file (e.g., `test_context_menu.py`).
-2.  Install `pytest`: `pip install pytest`
+1.  Save the code as a Python file (e.g., `test_context_menu.py`).
+2.  Make sure you have `pytest` installed (`pip install pytest`).
 3.  Run the tests from your terminal: `pytest test_context_menu.py`
 
-This improved test suite is more robust and better reflects the function's error handling, making it more reliable for catching potential issues during development. Remember to adjust the mock functions to match the actual code logic if your imports or paths are different. Replace `test_file.py` with the actual path to the file you want to test.
+This improved set of tests provides a much more comprehensive and robust way to ensure the correctness of your code, addressing the crucial aspect of error handling and interaction with external resources. Remember to replace the placeholder `gs.path.src` with your actual path implementation.

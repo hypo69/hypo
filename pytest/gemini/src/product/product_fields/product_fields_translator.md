@@ -3,99 +3,99 @@ import pytest
 from hypotez.src.product.product_fields.product_fields_translator import rearrange_language_keys, translate_presta_fields_dict
 from unittest.mock import patch
 from src.logger import logger
+from src.logger.exceptions import ProductFieldException
 
-
-# Sample data for testing
-def create_sample_data(page_lang='en-US'):
-    presta_fields_dict = {
-        'reference': '123',
-        'name': {'language': [{'attrs': {'id': 'wrong_id'}, 'value': 'Test Product'}]},
-        'description': {'language': [{'attrs': {'id': 'wrong_id'}, 'value': 'Description'}]}
-    }
-    client_langs_schema = [{'id': 1, 'locale': 'en-US', 'iso_code': 'en', 'language_code': 'en-US'}]
-    return presta_fields_dict, client_langs_schema, page_lang
-
-@pytest.fixture
-def sample_data():
-    return create_sample_data()
-
-
-# Tests for rearrange_language_keys
-def test_rearrange_language_keys_valid_input(sample_data):
-    """Checks correct behavior with valid input."""
-    presta_fields_dict, client_langs_schema, page_lang = sample_data
-    result = rearrange_language_keys(presta_fields_dict, client_langs_schema, page_lang)
-    assert result['name']['language'][0]['attrs']['id'] == '1'
-    assert result['description']['language'][0]['attrs']['id'] == '1'
-
-
-def test_rearrange_language_keys_no_match(sample_data):
-    """Checks behavior when no matching language is found."""
-    presta_fields_dict, client_langs_schema, page_lang = sample_data
-    # Modify client_langs_schema to not contain the page_lang
-    client_langs_schema = [{'id': 2, 'locale': 'fr-FR', 'iso_code': 'fr', 'language_code': 'fr-FR'}]
-    result = rearrange_language_keys(presta_fields_dict, client_langs_schema, page_lang)
-    # Check that the 'id' attribute was not modified, remains the wrong id
-    assert result['name']['language'][0]['attrs']['id'] == 'wrong_id'
-
-def test_translate_presta_fields_dict_valid_input(sample_data):
-    """Test with valid input and translation."""
-    presta_fields_dict, client_langs_schema, page_lang = sample_data
+# Mock functions for testing
+@patch('hypotez.src.product.product_fields.product_fields_translator.get_translations_from_presta_translations_table', return_value=[])
+@patch('hypotez.src.product.product_fields.product_fields_translator.insert_new_translation_to_presta_translations_table')
+def test_translate_presta_fields_dict_empty_translations(mock_insert, mock_get_translations):
+    """Tests translate_presta_fields_dict with empty translations."""
+    presta_fields_dict = {'reference': '123'}
+    client_langs_schema = [{'id': 1, 'iso_code': 'en', 'locale': 'en-US'}]
+    page_lang = 'en-US'
     result = translate_presta_fields_dict(presta_fields_dict, client_langs_schema, page_lang)
-    assert result['name']['language'][0]['attrs']['id'] == '1'
-    assert result['description']['language'][0]['attrs']['id'] == '1'
+    
+    assert result == presta_fields_dict
+    mock_insert.assert_called_once()  # Check if insert function is called
 
-@patch('hypotez.src.product.product_fields.product_fields_translator.get_translations_from_presta_translations_table')
-def test_translate_presta_fields_dict_no_translation(mock_get_translations, sample_data):
-    """Checks behavior when no translation is found in the database."""
-    mock_get_translations.return_value = []  # Mock no translations
-    presta_fields_dict, client_langs_schema, page_lang = sample_data
+@patch('hypotez.src.product.product_fields.product_fields_translator.get_translations_from_presta_translations_table', return_value=[{'reference': '123', 'locale': 'en-US'}])
+def test_translate_presta_fields_dict_valid_translations(mock_get_translations):
+    """Tests translate_presta_fields_dict with valid translations."""
+    presta_fields_dict = {'reference': '123', 'name': {'language': [{'attrs': {'id': '1'}, 'value': 'test'}]}}
+    client_langs_schema = [{'id': 1, 'iso_code': 'en', 'locale': 'en-US'}]
+    page_lang = 'en-US'
     result = translate_presta_fields_dict(presta_fields_dict, client_langs_schema, page_lang)
-    assert result == presta_fields_dict # Verify the input dictionary remains unchanged
-
-
-@patch('hypotez.src.product.product_fields.product_fields_translator.logger')
-def test_translate_presta_fields_dict_exception(mock_logger, sample_data):
-    """Test with exception during translation, handling with logging"""
-    presta_fields_dict, client_langs_schema, page_lang = sample_data
-    mock_logger.error = lambda msg: None  # Mock logger (suppress output)
-
-
-    def side_effect(record):
-        raise Exception("Simulated error during translation")
     
-    with patch('hypotez.src.product.product_fields.product_fields_translator.get_translations_from_presta_translations_table') as mock_get_translations:
-        mock_get_translations.side_effect = side_effect
-
-        with pytest.raises(Exception):
-            translate_presta_fields_dict(presta_fields_dict, client_langs_schema, page_lang) # Verify the exception is caught
-            
+    assert result['reference'] == {'language': [{'attrs': {'id': '1'}, 'value': '123'}]}
+    assert result['name'] == {'language': [{'attrs': {'id': '1'}, 'value': 'test'}]}
+    # Check if the translation is updated
     
+@patch('hypotez.src.product.product_fields.product_fields_translator.get_translations_from_presta_translations_table', side_effect=Exception)
+def test_translate_presta_fields_dict_exception(mock_get_translations):
+    """Tests translate_presta_fields_dict with exceptions."""
+    presta_fields_dict = {'reference': '123'}
+    client_langs_schema = [{'id': 1, 'iso_code': 'en', 'locale': 'en-US'}]
+    page_lang = 'en-US'
+    with pytest.raises(Exception):
+      translate_presta_fields_dict(presta_fields_dict, client_langs_schema, page_lang)
+    
+    mock_get_translations.assert_called_once()  # Check that the function is called
+    #Check for logger error
 
-# Example of how to run the tests:
-# pytest -v test_product_fields_translator.py
+
+def test_rearrange_language_keys_valid_input():
+    """Tests rearrange_language_keys with valid input."""
+    presta_fields_dict = {'field1': {'language': [{'attrs': {'id': '1'}, 'value': 'val1'}]}}
+    client_langs_schema = [{'id': 1, 'locale': 'en-US', 'iso_code':'en'}]
+    page_lang = 'en-US'
+    result = rearrange_language_keys(presta_fields_dict, client_langs_schema, page_lang)
+    assert result['field1']['language'][0]['attrs']['id'] == '1'
+
+def test_rearrange_language_keys_no_match():
+    """Tests rearrange_language_keys when no matching language is found."""
+    presta_fields_dict = {'field1': {'language': [{'attrs': {'id': '1'}, 'value': 'val1'}]}}
+    client_langs_schema = [{'id': 2, 'locale': 'fr-FR', 'iso_code':'fr'}]
+    page_lang = 'en-US'
+    result = rearrange_language_keys(presta_fields_dict, client_langs_schema, page_lang)
+    assert result == presta_fields_dict
+    
+def test_rearrange_language_keys_empty_input():
+    """Tests rearrange_language_keys with empty input."""
+    presta_fields_dict = {}
+    client_langs_schema = []
+    page_lang = 'en-US'
+    result = rearrange_language_keys(presta_fields_dict, client_langs_schema, page_lang)
+    assert result == {}
+
+
 ```
 
 **Explanation and Improvements:**
 
-* **Clearer Test Data:** The `create_sample_data` function now creates more representative sample data for testing, especially with the `page_lang` parameter.  This improves the test's ability to validate the different `page_lang` cases.
+1. **Mocking:**  Crucially, the tests now use `@patch` to mock the external functions (`get_translations_from_presta_translations_table`, `insert_new_translation_to_presta_translations_table`). This isolates the unit under test (the target functions) from the external dependencies, preventing issues if those functions fail or are not available during testing.  The mocking is set up so that various return scenarios are tested.
 
-* **Edge Case `test_rearrange_language_keys_no_match`:** This new test case now covers the scenario where the `page_lang` is not found in the `client_langs_schema`.  Crucially, it verifies that the original `presta_fields_dict` is not altered if no match is found, and it ensures that the `id` doesn't get inadvertently changed.
+2. **Exception Handling:** The `test_translate_presta_fields_dict_exception` test now uses `pytest.raises` to verify that the function handles exceptions correctly.
 
-* **Mocking `get_translations_from_presta_translations_table`:** The `test_translate_presta_fields_dict_no_translation` test now effectively mocks the database call.  This isolates the translator's behavior from the external database dependency, making the test more robust.
+3. **Clearer Test Names:** Test names are more descriptive, making it easier to understand the purpose of each test.
 
-* **Exception Handling `test_translate_presta_fields_dict_exception`:**  This is a *critical* improvement.  It mocks the `logger`, but more importantly, it tests the `try...except` block to verify that the exception gets caught and does not crash the test.  This prevents silent failures from a potential exception.
+4. **Comprehensive Cases:** The tests cover scenarios with valid inputs, empty translations, no match, and empty input data.  This is critical for robust testing.
 
-* **Comprehensive Test Coverage:** The tests now cover valid input, no match cases, and the exception handling. This is much more comprehensive than the previous example.
-
+5. **Edge Cases (rearrange_language_keys):**  `test_rearrange_language_keys_no_match` explicitly tests the case where no matching language is found in the schema.  `test_rearrange_language_keys_empty_input` adds a test for an empty input dictionary.
 
 
 **How to Run the Tests:**
 
-1.  Save the tests as `test_product_fields_translator.py` in a directory with the `hypotez` project.
-2.  Make sure the `hypotez` project's structure and dependencies are set up correctly.
-3.  Run `pytest -v test_product_fields_translator.py` in your terminal to execute the tests.  The `-v` flag gives more detailed output, which is helpful during debugging.
+1.  Make sure you have `pytest` installed. If not, run:
+    ```bash
+    pip install pytest
+    ```
+
+2.  Save the code as `test_product_fields_translator.py` (or a similar name) in the same directory as your `product_fields_translator.py` file.
+
+3.  Run the tests from your terminal:
+    ```bash
+    pytest test_product_fields_translator.py
+    ```
 
 
-
-Remember to adapt the sample data to your specific needs and consider other edge cases based on the `presta_fields_dict`'s structure.  This improved solution is a much more robust and effective testing strategy. Remember to replace placeholders with actual values from your system.
+This improved test suite provides much better coverage and reliability for your code.  Remember to adapt the mocks and fixtures to match your actual implementation if there are more complex dependencies.  Consider adding more tests for various input scenarios and edge cases related to different types of data structures and possible errors.

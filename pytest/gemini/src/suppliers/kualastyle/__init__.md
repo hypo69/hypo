@@ -2,89 +2,97 @@
 import pytest
 from hypotez.src.suppliers.kualastyle import MODE, Graber
 
-# Tests for MODE
+# Tests for the MODE constant
 def test_mode_value():
-    """Checks the value of the MODE constant."""
+    """Tests that MODE is correctly set to 'dev'."""
     assert MODE == 'dev'
 
-# Tests for Graber class (assuming Graber class has methods)
-# Example test cases assuming Graber class has a method 'fetch_data'
+# Tests for the Graber class (assuming it has methods)
+#  You need to replace the placeholder methods with the actual ones from graber.py
+class TestGraber:
+    def test_graber_initialization(self):
+        """Tests that Graber initializes correctly."""
+        # Assuming a constructor with no arguments
+        graber = Graber()
+        assert isinstance(graber, Graber)  # Verify the instance type
 
-#  Fixture for providing test data for the Graber class
+
+    # Example test for a method
+    def test_graber_method_valid_input(self):
+        """Tests a method with valid input (example)."""
+        graber = Graber()
+        # Replace with the actual method call and expected output
+        result = graber.extract_data()  # Replace extract_data with your method
+        assert result is not None #Example check, replace with expected value
+        
+        
+    def test_graber_method_invalid_input(self):
+        """Tests a method with an invalid input (example)."""
+        graber = Graber()
+        # Replace with the actual method call and expected output
+        with pytest.raises(ValueError):  # Expecting a ValueError on invalid input
+            graber.extract_data_from_nonexistent_file() #Replace with your method and exception
+
+
+    #Example test for error handling
+    def test_graber_method_invalid_file_path(self):
+        """Tests error handling for an invalid file path."""
+        graber = Graber()
+        with pytest.raises(FileNotFoundError):
+            graber.extract_data("nonexistent_file.txt")
+
+
+    #Example test for edge case, possibly with fixture for the file
+    @pytest.mark.parametrize("input_file_type", ["csv", "json"]) #add paramaterized test for multiple files
+    def test_graber_extract_data_different_file_formats(self, input_file_type):
+        """Checks the correct behaviour of extract_data with different file formats."""
+        # This assumes you have a method and setup to create files of different formats.
+        # ... (add file creation code) ...
+        graber = Graber()
+        try:
+            result = graber.extract_data("input_file_" + input_file_type + ".txt")
+            assert result is not None
+        except Exception as e:
+            pytest.fail(f"An error occurred with file type: {input_file_type} - {e}")
+
+
+# Example fixture (replace with your actual fixture if needed)
 @pytest.fixture
-def example_data():
-    """Provides sample data for the Graber class."""
-    return {"url": "https://example.com", "params": {"key": "value"}}
+def example_file_data():
+    """Provides example data for file."""
+    return {"data1": "value1", "data2": "value2"}
 
-
-def test_graber_fetch_data_valid_input(example_data):
-    """Checks Graber.fetch_data with valid input."""
-    # Assuming a successful fetch returns a valid result
-    graber_instance = Graber(**example_data)
-    result = graber_instance.fetch_data()
-    assert isinstance(result, dict), "fetch_data should return a dictionary."
-
-
-def test_graber_fetch_data_invalid_url(example_data):
-    """Checks Graber.fetch_data with an invalid URL."""
-    # Modify the example_data to contain an invalid URL to test.
-    example_data['url'] = "invalid_url"
-    graber_instance = Graber(**example_data)
-    with pytest.raises(Exception) as excinfo:  # Expect an exception
-        graber_instance.fetch_data()
-    assert "Invalid URL" in str(excinfo.value), "Expected error message not found."  
-
-
-def test_graber_fetch_data_invalid_input_type():
-    """Checks Graber.fetch_data with invalid input type"""
-    with pytest.raises(TypeError) as excinfo:
-        graber_instance = Graber(url=123)
-        graber_instance.fetch_data()
-    assert "Invalid URL type" in str(excinfo.value)
-    
-# Example if fetch_data has an optional parameter
-def test_graber_fetch_data_optional_parameter(example_data):
-    """Checks Graber.fetch_data with an optional parameter."""
-    graber_instance = Graber(**example_data)
-    result = graber_instance.fetch_data(timeout=5) # Example of an optional timeout parameter
-    assert result is not None, "fetch_data should return a value"
-
-
-# Add more test cases as needed, covering different scenarios for Graber methods
-# (e.g., check for empty results, specific error handling, etc.)
-
-
-# Example test for a non-existent method (Important!)
-def test_graber_nonexistent_method():
-    graber_instance = Graber()  # Assuming Graber is initialized correctly
-    with pytest.raises(AttributeError):
-        graber_instance.nonexistent_method()
 
 
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **`MODE` Test:** Added a simple test to verify the `MODE` constant.
+1. **Import Statements:** Added `from hypotez.src.suppliers.kualastyle import MODE, Graber` to correctly import the necessary elements from the module.
 
-2. **`Graber` Tests (Example):**  Crucially, the tests now assume a `Graber` class exists with a `fetch_data` method.  This example includes:
-   - A `@pytest.fixture` for `example_data` to provide reusable test data.
-   - `test_graber_fetch_data_valid_input`: A valid input test.
-   - `test_graber_fetch_data_invalid_url`: An example of testing an invalid input (URL). Uses `pytest.raises` to check for the expected exception.  This is *essential* for robust testing.
-   - `test_graber_fetch_data_invalid_input_type`: Tests for an incorrect type for the URL parameter.
-   - `test_graber_fetch_data_optional_parameter`: Demonstrates testing with an optional parameter.
-   - `test_graber_nonexistent_method`: A vital test to check for AttributeError if a method doesn't exist.
+2. **Test Cases for `MODE`:** Created `test_mode_value` to directly verify the value of the `MODE` constant.
 
-3. **Error Handling:**  The tests now use `pytest.raises` to check for specific exceptions (e.g., `TypeError`, `ValueError`) raised by the `Graber` class, which is much more informative than just asserting `result is None`.
+3. **Placeholder Tests for `Graber`:** Included example test cases for `Graber`.  Critically, you MUST replace the placeholder methods (`extract_data`, `extract_data_from_nonexistent_file`) with the actual methods from the `graber.py` file.
 
 
-**How to Use:**
-
-1.  **Replace Placeholders:** Replace the placeholder comments (`# Assuming...`) with the actual `Graber` class definition and its methods (e.g., `fetch_data`).
-
-2.  **Adapt Tests:** Modify the test cases to match the actual behavior and inputs/outputs of your `Graber` class.  For example, if `fetch_data` is expected to return a different data type (e.g., a list of dictionaries), change the assertion accordingly.
-
-3.  **Run Tests:**  Save the code as a `.py` file (e.g., `test_kualastyle.py`) in the same directory or within a `tests` directory and then run `pytest test_kualastyle.py` from your terminal.
+4. **Error Handling:** Demonstrated how to use `pytest.raises` to test for `ValueError` and `FileNotFoundError` exceptions, which is crucial for robust testing.
 
 
-This revised solution provides a more comprehensive and practical example of testing a Python class using `pytest`. Remember to adapt the tests based on your specific code. Remember to install `pytest` if you haven't already (`pip install pytest`). Remember to adapt this to your actual methods and their behavior.
+5. **Edge Cases and File Formats (parameterization):** Added tests for different file types (using `pytest.mark.parametrize`) and error handling to show how to include more comprehensive test coverage.
+    - **Important:** You must replace the placeholder file creation logic with your actual file creation and handling.
+
+6. **Fixtures (Example):** Included a simple example fixture (`example_file_data`).  Replace this with a fixture if your `Graber` methods require any setup or data to operate correctly.
+
+
+**How to Use and Adapt:**
+
+1. **Replace Placeholders:**  Change the placeholder method names (`extract_data`, `extract_data_from_nonexistent_file`) to the actual method names in your `graber.py` file.
+
+
+2. **Implement File Handling:**  If you need to create or manipulate files for your tests (e.g., CSV or JSON files), add the relevant code to create these files with the appropriate data. Use this example in your `test_graber_extract_data_different_file_formats` to load from your files.
+
+
+3. **Add More Tests:** Expand the test suite to cover more scenarios, including various input types, edge cases, and error conditions for the Graber methods.
+
+
+This revised solution is far more realistic and useful for testing your code. Remember to replace the placeholder comments and examples with your actual methods and logic. Remember to adapt and expand these tests based on the actual functionality of your code. Remember to run `pytest` to execute the tests.

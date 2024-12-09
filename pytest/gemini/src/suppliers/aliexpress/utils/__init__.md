@@ -1,105 +1,106 @@
 ```python
 import pytest
-import urllib.parse
 
+# Import the functions you want to test
 from hypotez.src.suppliers.aliexpress.utils import extract_prod_ids, ensure_https, locales
 
 
-# Fixtures (if needed, but not applicable for these utils)
-
 # Tests for extract_prod_ids
 def test_extract_prod_ids_valid_input():
-    """Checks correct behavior with valid input (list of strings)."""
-    input_list = ["https://www.aliexpress.com/item/1234567890.html", "https://www.aliexpress.com/item/9876543210.html"]
-    expected_output = ["1234567890", "9876543210"]
-    assert extract_prod_ids(input_list) == expected_output
-
+    """Checks correct behavior with a valid input string."""
+    input_string = "product_id_1,product_id_2,product_id_3"
+    expected_output = ["product_id_1", "product_id_2", "product_id_3"]
+    actual_output = extract_prod_ids(input_string)
+    assert actual_output == expected_output
 
 def test_extract_prod_ids_empty_input():
-    """Checks handling of empty input list."""
-    input_list = []
-    assert extract_prod_ids(input_list) == []
-
-
-def test_extract_prod_ids_invalid_url_format():
-    """Checks handling of invalid URLs."""
-    input_list = ["invalid_url", "https://example.com"]
-    expected_output = ["invalid_url", None]  # Handling failure gracefully
-    actual_output = extract_prod_ids(input_list)
+    """Checks behavior with an empty input string."""
+    input_string = ""
+    expected_output = []  # Or raise an exception, depending on the intended behavior
+    actual_output = extract_prod_ids(input_string)
     assert actual_output == expected_output
 
 
-def test_extract_prod_ids_mixed_urls():
-    """Checks handling of a mix of valid and invalid URLs."""
-    input_list = ["https://www.aliexpress.com/item/1234567890.html", "invalid_url", "https://www.aliexpress.com/item/9876543210.html"]
-    expected_output = ["1234567890", None, "9876543210"]
-    assert extract_prod_ids(input_list) == expected_output
+def test_extract_prod_ids_no_commas():
+    """Checks handling of input with no commas."""
+    input_string = "single_product_id"
+    expected_output = ["single_product_id"]
+    actual_output = extract_prod_ids(input_string)
+    assert actual_output == expected_output
 
+def test_extract_prod_ids_invalid_input():
+    """Checks handling of invalid input (non-string)."""
+    input_string = 123
+    with pytest.raises(TypeError):  # Expect a TypeError
+        extract_prod_ids(input_string)
 
-def test_extract_prod_ids_no_item_id():
-    """Tests if a URL without an item ID returns None."""
-    invalid_url = "https://www.aliexpress.com/something-else"
-    result = extract_prod_ids([invalid_url])
-    assert result == [None]
+def test_extract_prod_ids_extra_spaces():
+    """Checks handling of extra spaces in the input string."""
+    input_string = "product_id_1, product_id_2 , product_id_3"
+    expected_output = ["product_id_1", "product_id_2", "product_id_3"]
+    actual_output = extract_prod_ids(input_string)
+    assert actual_output == expected_output
+
 
 # Tests for ensure_https
 def test_ensure_https_valid_https():
-    """Checks correct behavior with a valid HTTPS URL."""
-    input_url = "https://www.example.com"
-    assert ensure_https(input_url) == input_url
+    """Checks handling of already HTTPS URLs."""
+    url = "https://www.example.com"
+    expected_output = "https://www.example.com"
+    actual_output = ensure_https(url)
+    assert actual_output == expected_output
+
 
 def test_ensure_https_valid_http():
-    """Checks converting HTTP to HTTPS."""
-    input_url = "http://www.example.com"
-    expected_url = "https://www.example.com"
-    assert ensure_https(input_url) == expected_url
+    """Checks handling of HTTP URLs."""
+    url = "http://www.example.com"
+    expected_output = "https://www.example.com"
+    actual_output = ensure_https(url)
+    assert actual_output == expected_output
+
 
 def test_ensure_https_invalid_url():
-    """Checks handling of an invalid URL."""
-    input_url = "invalid_url"
-    assert ensure_https(input_url) is None
+    """Checks handling of invalid URLs."""
+    url = "invalid_url"
+    with pytest.raises(ValueError) as excinfo:  # Expect a ValueError
+        ensure_https(url)
+    assert "Invalid URL" in str(excinfo.value)
 
-def test_ensure_https_already_encoded():
-    input_url = "https://www.example.com/some/path?query=value#fragment"
-    assert ensure_https(input_url) == input_url
 
-#Tests for locales (if there are methods or attributes)
-# Placeholder - Add actual tests if locales has functionality
-def test_locales_get_valid_locale():
-  """ Placeholder Test - Add actual tests if locales has functionality """
-  assert locales('en') == 'en' # Replace with actual test, if locales module has a function
 
+# Tests for locales (if locales is a function or method)
+def test_locales_get_locale():
+  """Test that locales return something valid"""
+  try:
+    locale_list = locales()
+    assert isinstance(locale_list, list)  #or any other type you expect.
+
+  except Exception as e:
+      pytest.fail(f"locales raised an exception: {e}")
 ```
 
 **Explanation and Improvements:**
 
-* **`extract_prod_ids` Tests:**  Added comprehensive tests for various scenarios:
-    * **Valid input:**  Checks for a list of valid URLs.
-    * **Empty input:** Handles an empty input list.
-    * **Invalid URL format:** Tests for URLs that don't follow the expected pattern.  Crucially, it now returns `None` for those, which is a more robust and expected behaviour.
-    * **Mixed URLs:** Tests input with a mixture of valid and invalid URLs.
-    * **Missing item ID:** Tests handling of a URL that doesn't have the expected item ID.
-* **`ensure_https` Tests:** Added tests for:
-    * **Valid HTTPS:** Ensures the function doesn't change a valid HTTPS URL.
-    * **Valid HTTP:** Checks the conversion of HTTP to HTTPS.
-    * **Invalid URL:**  Tests with a malformed URL.
-    * **Already Encoded URL:**  Checks that already encoded URLs (including queries and fragments) aren't modified.
+* **Clearer Test Names:**  Test names now better describe the scenario being tested.
+* **Edge Cases:** Tests for empty input, no commas, extra spaces, and invalid input types (TypeError) are included.
+* **Exception Handling:** `pytest.raises` is used to verify that `extract_prod_ids` raises a `TypeError` with invalid input and `ensure_https` raises a `ValueError` with invalid URLs.  This is crucial for robust testing.
+* **Comprehensive `extract_prod_ids` Tests:** The tests cover valid inputs, empty strings, strings with no commas, extra spaces, and invalid input.
+* **`ensure_https` Tests:** Comprehensive tests cover valid HTTPS URLs, valid HTTP URLs, and invalid URLs.
+* **`locales` Tests:** The `test_locales_get_locale` test now checks if `locales` returns a list (assuming it does) and handles potential exceptions gracefully using a `try...except` block and `pytest.fail`. This is crucial, as the code of `locales` is missing from your sample.  Add more appropriate assertions (e.g., checking for the presence of specific locales, or type checking if the `locales` function returns a different type) based on the actual implementation of `locales`.
 
-* **`locales` Tests:** Added a placeholder test.  **Crucially, this needs to be replaced** with actual tests if the `locales` function/module has methods to test, like getting a list of available locales.
+**Important Considerations for `locales`:**
+
+The provided `locales` function stub does not return any data, and the `locales` function likely needs to return a list or other data structure containing locale information. You need to understand what `locales` *does*.  If it returns an empty list or a list of valid locale identifiers, adjust the `test_locales_get_locale` accordingly to ensure it's working as expected.  The current test just verifies that the function does not raise exceptions, but a test like this is a starting point.  You must tailor it to your function's implementation.
 
 
 **Before running the tests:**
 
-1. **Install pytest:**
-   ```bash
-   pip install pytest
-   ```
-
-2. **Place the provided `utils.py` code** in the `hypotez/src/suppliers/aliexpress/utils/` directory (or the appropriate path).
-
-3. **Run the tests:**
-   ```bash
-   pytest hypotez/src/suppliers/aliexpress/utils/test_utils.py  # adjust the path if necessary.
-   ```
-
-Remember to replace the placeholder test for `locales` with actual tests based on the `locales` module's structure.  If there are no methods or attributes to test in `locales`, remove the corresponding test function or comment it out.  This is a crucial step for creating complete and relevant tests. Also consider including more edge cases and error conditions to the tests for `extract_prod_ids` and `ensure_https` if present. Remember to replace placeholders like `'en'` with appropriate calls and expected values.
+1.  Ensure that the `extract_prod_ids`, `ensure_https`, and `locales` functions are defined correctly in the `hypotez/src/suppliers/aliexpress/utils/__init__.py` file.
+2.  Install pytest:
+    ```bash
+    pip install pytest
+    ```
+3.  Run the tests:
+    ```bash
+    pytest
+    ```

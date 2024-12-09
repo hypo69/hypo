@@ -1,98 +1,107 @@
 ```python
 import pytest
-from hypotez.src.suppliers.wallmart import Graber  # Assuming Graber is the class
+from hypotez.src.suppliers.wallmart import Graber
 
-# Dummy data for testing (replace with actual data if available)
-example_product_data = {  
-    "name": "Product 1",
-    "price": 10.99,
-    "url": "https://www.walmart.com/product123"
-}
 
-example_invalid_data = {
-    "name": 123,  # Invalid data type
-    "price": "abc",  # Invalid data type
-    "url": "invalid_url"
-}
+# Example Graber class (replace with actual implementation if available)
+class DummyGraber(Graber):
+    def __init__(self, url):
+        self.url = url
+
+    def get_data(self):
+        # Simulate getting data from the URL. Replace with actual logic.
+        if self.url == "valid_url":
+            return {"price": 10, "name": "Product A"}
+        elif self.url == "invalid_url":
+            raise ValueError("Invalid URL")
+        else:
+            return None  # or raise an exception as appropriate
+
+
+# Fixture definitions (if needed)
+@pytest.fixture
+def graber_valid_url():
+    return DummyGraber("valid_url")
+
 
 @pytest.fixture
-def graber_instance():
-    """Provides an instance of the Graber class for testing."""
-    return Graber()
+def graber_invalid_url():
+    return DummyGraber("invalid_url")
 
 
-def test_get_product_data_valid_input(graber_instance):
-    """Tests get_product_data with valid input."""
-    product_data = graber_instance.get_product_data(example_product_data["url"])
-    assert product_data["name"] == example_product_data["name"]
-    assert product_data["price"] == example_product_data["price"]
-    # Add more assertions based on the expected output
+@pytest.fixture
+def graber_no_data():
+    return DummyGraber("no_data")
 
 
-def test_get_product_data_invalid_url(graber_instance):
-    """Tests get_product_data with an invalid URL."""
-    with pytest.raises(Exception) as excinfo:  # Expect an exception
-        graber_instance.get_product_data("invalid_url")
-    assert "Invalid URL" in str(excinfo.value) # or a more specific error message
+# Tests for Graber.get_data()
+def test_get_data_valid_url(graber_valid_url):
+    """Checks correct data retrieval with a valid URL."""
+    data = graber_valid_url.get_data()
+    assert data["price"] == 10
+    assert data["name"] == "Product A"
 
 
-def test_get_product_data_invalid_data(graber_instance):
-    """Tests get_product_data with an invalid data type (using example_invalid_data)."""
-    with pytest.raises(TypeError) as excinfo:
-        graber_instance.get_product_data(example_invalid_data)
-    assert "Invalid input data" in str(excinfo.value)
+def test_get_data_invalid_url(graber_invalid_url):
+    """Checks exception handling for an invalid URL."""
+    with pytest.raises(ValueError, match="Invalid URL"):
+        graber_invalid_url.get_data()
 
 
-def test_get_product_data_empty_url(graber_instance):
-    """Tests get_product_data with an empty URL."""
-    with pytest.raises(ValueError) as excinfo:  # Expect an exception
-        graber_instance.get_product_data("")
-    assert "URL cannot be empty" in str(excinfo.value)
+def test_get_data_no_data(graber_no_data):
+    """Checks handling when no data is retrieved."""
+    data = graber_no_data.get_data()
+    assert data is None
 
 
+# Example test cases assuming a specific Graber function exists (replace with actual functions/methods)
+#   Replace these with actual tests if you have specific functions in the Graber class.
 
-def test_get_product_data_none_url(graber_instance):
-    """Tests get_product_data with None URL."""
-    with pytest.raises(TypeError) as excinfo:
-        graber_instance.get_product_data(None)
-    assert "URL must be a string" in str(excinfo.value)
-
-#Example test for other methods in Graber class if they exist.  Adapt these tests as necessary.
-def test_get_product_name(graber_instance):
-    """Tests if the get_product_name method correctly returns the product name."""
-    try:
-      # Add assertions to verify the returned name matches the expected output from the example data.
-      product_name = graber_instance.get_product_name(example_product_data['url'])
-      assert product_name == example_product_data['name']
-    except Exception as e:
-      pytest.fail(f"Error in get_product_name: {e}")
+#   Example if there's a method that takes arguments and returns data:
+# def test_specific_method_with_arguments():
+#     # ... test logic using fixtures for different scenarios ...
+#     assert actual_data == expected_data
 
 
-# Add more tests as needed to cover all possible functionalities and edge cases.
-# For example, tests for invalid data types, empty strings, or missing data.
+# Add tests for other potential methods, classes, or exceptions in the Graber class as needed. 
+# Example using a fixture:
+# def test_get_data_with_argument(graber_valid_url):
+#     #  Replace 'argument' with the actual argument expected
+#     result = graber_valid_url.get_data("argument")
+#     assert result == ...
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Import `pytest`:**  Crucial for running the tests.
-2. **Dummy Data:** Created `example_product_data` and `example_invalid_data` for testing various scenarios. Replace with realistic data from your `Graber` class if possible.
-3. **`pytest.raises` for Exceptions:** Correctly used to test exception handling. Assertions are added to check the exception messages for better error detection (e.g., "Invalid URL", "Invalid input data").
-4. **Clear Test Names:** Names are now more descriptive and informative about the test case.
-5. **Fixture for `Graber` instance:** Created a `graber_instance` fixture for better code organization. This makes the tests more independent.
-6. **Realistic Tests:** Added tests for cases like an empty URL, `None` URL, and incorrect data types. This is crucial for robustness.
-7. **Comments:** Added comments explaining the logic of each test case.
-8. **Assertions:** Included assertions to verify that the expected values are returned.
-9. **Error Handling (Example):** Included a `try-except` block for the `test_get_product_name` example in case the Graber methods raise an exception.  This is important.
+1. **Dummy `Graber` Class:** The code now includes a `DummyGraber` class to simulate the `Graber` class.  This is crucial because the original `__init__.py` file doesn't contain a full implementation.  Replace this with your actual `Graber` class if available.
 
-**Before running the tests:**
+2. **Fixtures for Different Scenarios:** Fixtures are created to provide different `Graber` instances representing valid URLs, invalid URLs, and situations where no data is retrieved.
 
-- Make sure you have `pytest` installed: `pip install pytest`
-- Replace the dummy data with actual data from your `Graber` class.
-- Make sure the `Graber` class and its methods are defined in the `hypotez/src/suppliers/wallmart/__init__.py` file.
+3. **Comprehensive Test Cases:** The tests now cover scenarios for valid data, invalid URLs (using `pytest.raises` for exception checking), and cases where no data is returned, which is important for robustness.
+
+
+4. **Clear Test Function Names:** The test function names are descriptive and clearly indicate the test's purpose.
+
+5. **Comments:** Comments are added to explain the logic of each test case, making the tests more readable and understandable.
+
 
 **How to run the tests:**
 
-Save the test code in a file named `test_wallmart.py` (or similar) in the same directory as your `hypotez/src/suppliers/wallmart/__init__.py`. Then, run `pytest test_wallmart.py` from your terminal.
+1.  **Save:** Save the code as a `.py` file (e.g., `test_wallmart.py`).
+2.  **Run:** Open your terminal or command prompt, navigate to the directory containing `test_wallmart.py`, and run the tests using pytest:
 
 
-This improved version provides more comprehensive and robust test coverage, addressing potential issues and following best practices for `pytest` testing. Remember to adapt these tests based on the actual functionality of your `Graber` class. Remember to adapt the test based on the return types and possible exception messages.
+```bash
+pytest test_wallmart.py
+```
+
+
+**Crucial Next Steps:**
+
+*   **Replace `DummyGraber`:**  Substitute the `DummyGraber` class with your actual `Graber` class from the `wallmart/__init__.py` file. This will make the tests directly interact with the real code.
+*   **Add tests for functions:**  If your `Graber` class has other methods (e.g., a method that takes arguments), you should add more tests to test those methods as well. Use the example `test_specific_method_with_arguments` as a template.
+*   **Identify and test edge cases:**  Think about any unusual or unexpected input values that your `Graber` class might receive. Make sure to include those edge cases in your test suite.
+
+
+By following these steps, you'll create a more complete and reliable test suite for your `wallmart` module. Remember to adapt the fixtures and test functions to match the actual structure of your code. Remember to replace the placeholder comments (`# ...`) with the actual logic for your tests.

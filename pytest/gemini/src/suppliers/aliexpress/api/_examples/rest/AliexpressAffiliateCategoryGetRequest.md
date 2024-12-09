@@ -2,49 +2,47 @@
 import pytest
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateCategoryGetRequest import AliexpressAffiliateCategoryGetRequest
 
-# Fixture for potential data needed in tests
+# Fixture definitions (if needed)
 @pytest.fixture
-def example_domain():
-    return "api-sg.aliexpress.com"
+def api_instance():
+    return AliexpressAffiliateCategoryGetRequest()
 
 
-@pytest.fixture
-def example_port():
-    return 80
+def test_getapiname(api_instance):
+    """Tests the getapiname method."""
+    api_name = api_instance.getapiname()
+    assert api_name == 'aliexpress.affiliate.category.get', "Incorrect API name returned"
 
-
-# Test cases for AliexpressAffiliateCategoryGetRequest
-def test_AliexpressAffiliateCategoryGetRequest_init_valid(example_domain, example_port):
-    """Tests the constructor with valid domain and port."""
-    api_instance = AliexpressAffiliateCategoryGetRequest(domain=example_domain, port=example_port)
-    assert api_instance.domain == example_domain
-    assert api_instance.port == example_port
+def test_init_default_values(api_instance):
+    """Tests the initialization with default values."""
+    assert api_instance.domain == "api-sg.aliexpress.com"
+    assert api_instance.port == 80
     assert api_instance.app_signature is None
 
 
-def test_AliexpressAffiliateCategoryGetRequest_init_invalid_domain():
-    """Tests the constructor with an invalid domain (e.g., not a string)."""
-    with pytest.raises(TypeError):
-        AliexpressAffiliateCategoryGetRequest(domain=123, port=80)
+def test_init_custom_values():
+    """Tests initialization with custom values."""
+    domain = "another-domain.com"
+    port = 443
+    api_instance = AliexpressAffiliateCategoryGetRequest(domain, port)
+    assert api_instance.domain == domain
+    assert api_instance.port == port
+    assert api_instance.app_signature is None
+
+#Test exception handling (if applicable - this code doesn't raise exceptions)
+# def test_init_invalid_domain():
+#     with pytest.raises(ValueError) as excinfo: # Example ValueError. Replace with appropriate exception
+#         AliexpressAffiliateCategoryGetRequest(domain="invalid_domain")
+#     assert "Invalid domain" in str(excinfo.value) # Or a specific message expected
+#
+# def test_init_invalid_port():
+#    with pytest.raises(ValueError) as excinfo:  # Example ValueError
+#        AliexpressAffiliateCategoryGetRequest(port="not_a_number")
+#    assert "Invalid port" in str(excinfo.value) # Or a specific message expected
 
 
-def test_AliexpressAffiliateCategoryGetRequest_init_invalid_port():
-    """Tests the constructor with an invalid port (e.g., not an integer)."""
-    with pytest.raises(TypeError):
-        AliexpressAffiliateCategoryGetRequest(domain="test", port="80")
 
 
-
-def test_getapiname(example_domain, example_port):
-    """Tests the getapiname method."""
-    api_instance = AliexpressAffiliateCategoryGetRequest(domain=example_domain, port=example_port)
-    assert api_instance.getapiname() == 'aliexpress.affiliate.category.get'
-
-
-def test_getapiname_invalid_domain(example_port):
-  """Tests the getapiname method with invalid domain to verify it doesn't crash."""
-  with pytest.raises(TypeError) as excinfo:  # Use pytest.raises to catch exceptions.
-        AliexpressAffiliateCategoryGetRequest(domain=123, port=example_port).getapiname()
-
-  assert "domain" in str(excinfo.value) # Example assertion to confirm the expected error
+# Additional tests can be added here, if needed, based on other methods in the class
+# For example, if there were other methods that took arguments or return values.
 ```

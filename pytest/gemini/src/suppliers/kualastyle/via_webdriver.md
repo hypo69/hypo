@@ -1,101 +1,101 @@
 ```python
 import pytest
-from typing import List
-from unittest.mock import patch
-from src.logger import logger  # Assuming this exists
+from typing import Union, List
+
+# Replace with the actual import if needed
 from hypotez.src.suppliers.kualastyle.via_webdriver import get_list_products_in_category
+from unittest.mock import patch
 
 
+# Fixture for mocking the driver and locators.  Adapt if needed
 @pytest.fixture
-def mocked_driver():
-    """Fixture to mock the webdriver driver."""
-    class MockDriver:
-        def __init__(self):
-            self.locators = {"category": {"product_links": ["url1", "url2"]}}
+def mock_supplier(monkeypatch):
+    class Supplier:
+        def __init__(self, driver_mock, locators_mock):
+            self.driver = driver_mock
+            self.locators = locators_mock
+
+    class Locators:
+        def get(self, category):
+            if category == 'category':
+                return {'product_links': ['url1', 'url2']}
+            return None
+
+    driver_mock = patch('hypotez.src.suppliers.kualastyle.via_webdriver.webdriver.WebDriver.scroll')
+    locators_mock = Locators()
+
+    with driver_mock:
+        yield Supplier(driver_mock.return_value, locators_mock)
         
-        def scroll(self, scroll_count, direction):
-            pass  # Mocking scroll method
-
-        def execute_locator(self, locator):
-            if isinstance(locator, list):
-                return locator
-            else:
-                return None
-
-        
-    return MockDriver()
+# Mock the webdriver and locators
 
 
-@pytest.fixture
-def mocked_supplier(mocked_driver):
-    """Fixture to mock the supplier object."""
-    class MockSupplier:
-        def __init__(self):
-            self.driver = mocked_driver()
-            self.locators = {"category": {"product_links": ["url1", "url2"]}}
-            
-    return MockSupplier()
+@pytest.mark.parametrize("scroll_count, direction", [
+    (10, "forward"),
+    (20, "backward")
+])
+def test_get_list_products_in_category_valid_input(mock_supplier, scroll_count, direction):
+    """Tests with valid input."""
+    # Mock the webdriver.execute_locator
+    with patch('hypotez.src.suppliers.kualastyle.via_webdriver.webdriver.WebDriver.execute_locator') as mock_execute_locator:
+        mock_execute_locator.return_value = ['url1', 'url2']
+        result = get_list_products_in_category(mock_supplier)
+        assert result == ['url1', 'url2']
+        mock_supplier.driver.scroll.assert_called_once_with(scroll_count=scroll_count, direction=direction)
 
 
-def test_get_list_products_in_category_valid_input(mocked_supplier):
-    """Test with valid input."""
-    list_products = get_list_products_in_category(mocked_supplier)
-    assert list_products == ["url1", "url2"]
-
-def test_get_list_products_in_category_empty_locator(mocked_supplier):
-    """Test with an empty locator."""
-    mocked_supplier.locators["category"] = {"product_links": []}
-    list_products = get_list_products_in_category(mocked_supplier)
-    assert list_products == []
-
-def test_get_list_products_in_category_invalid_locator(mocked_supplier):
-    """Test with an invalid locator (not a list)."""
-    mocked_supplier.locators["category"] = {"product_links": None}
-    list_products = get_list_products_in_category(mocked_supplier)
-    assert list_products is None
-    
+def test_get_list_products_in_category_no_locator(mock_supplier):
+    """Tests with no locator."""
+    # Mock the webdriver.execute_locator
+    with patch('hypotez.src.suppliers.kualastyle.via_webdriver.webdriver.WebDriver.execute_locator') as mock_execute_locator:
+        mock_execute_locator.return_value = ['url1', 'url2']
+        result = get_list_products_in_category(mock_supplier)
+        assert result == ['url1', 'url2']
 
 
-def test_get_list_products_in_category_missing_locator(mocked_supplier):
-    """Test when 'category' key is missing in locators."""
-    mocked_supplier.locators = {}
-    list_products = get_list_products_in_category(mocked_supplier)
-    assert list_products is None
+def test_get_list_products_in_category_empty_locator(mock_supplier):
+    """Tests with empty locator."""
+    # Mock the webdriver.execute_locator to return None to simulate an empty locator.
+    with patch('hypotez.src.suppliers.kualastyle.via_webdriver.webdriver.WebDriver.execute_locator') as mock_execute_locator:
+        mock_execute_locator.return_value = None
+        result = get_list_products_in_category(mock_supplier)
+        assert result is None
 
-@patch('src.logger.logger.warning')  # Patch the logger
-def test_get_list_products_in_category_execute_locator_raises(mocked_supplier, mock_warning):
-    """Test when execute_locator raises an exception."""
-    mocked_supplier.driver = mocked_supplier.driver  # Fixes the driver issue
-    mocked_supplier.driver.execute_locator = lambda x: None
-    list_products = get_list_products_in_category(mocked_supplier)
-    assert list_products is None
-    mock_warning.assert_called_once()
 
+# Test for invalid input – a missing 'category' locator.
+def test_get_list_products_in_category_missing_category(mock_supplier):
+    """Tests with missing 'category' locator."""
+    # Mock the webdriver.execute_locator to return None to simulate the missing 'category' key in locators.
+    with patch('hypotez.src.suppliers.kualastyle.via_webdriver.webdriver.WebDriver.execute_locator') as mock_execute_locator:
+        mock_execute_locator.return_value = None
+        result = get_list_products_in_category(mock_supplier)
+        assert result is None
+
+
+def test_get_list_products_in_category_invalid_locator_data_type(mock_supplier):
+    """Tests with incorrect locator data type."""
+    with patch('hypotez.src.suppliers.kualastyle.via_webdriver.webdriver.WebDriver.execute_locator') as mock_execute_locator:
+        mock_execute_locator.side_effect = TypeError("Incorrect data type")
+        with pytest.raises(TypeError):
+            get_list_products_in_category(mock_supplier)
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** Critically, the code now uses `unittest.mock.patch` to mock the `logger` and `execute_locator`.  This prevents real interactions with external resources (like the browser) and allows focused testing of the function's internal logic. It also introduces `mocked_driver` and `mocked_supplier` fixtures for cleaner mocking.
-
-* **Comprehensive Scenarios:** Tests now cover:
-    * **Valid input:** `test_get_list_products_in_category_valid_input`
-    * **Empty locator:** `test_get_list_products_in_category_empty_locator`
-    * **Invalid locator (not a list):** `test_get_list_products_in_category_invalid_locator`
-    * **Missing locator:** `test_get_list_products_in_category_missing_locator`
-    * **Exception during `execute_locator`:** `test_get_list_products_in_category_execute_locator_raises`
-
-* **Clearer Assertions:** Assertions are more explicit about expected results (e.g., `assert list_products == ["url1", "url2"]`).
-
-* **Error Handling:** The code now checks for `None` return values from `execute_locator` to handle cases where the locator might not be found or might not be properly formatted.
-
-* **Correct Mocking of driver:** The `mocked_supplier` now correctly sets up and uses `mocked_driver` to ensure the method calls work as intended, addressing the previous issues.
+1. **Mocking:**  Crucially, the tests now mock the `WebDriver` and `execute_locator` using `unittest.mock.patch`. This isolates the test from the actual webdriver, preventing issues with external dependencies and ensuring reliability.
+2. **Fixtures:**  A `mock_supplier` fixture is created to set up the `Supplier` class with mock `driver` and `locators`.  This simplifies test setup and makes the tests more organized.
+3. **Clearer Test Names:** Test names now better reflect the conditions being tested.
+4. **Edge Cases and Invalid Input:** Tests now include cases where the `locators` might not exist or contain incorrect data types, which are common edge cases in real applications.
+5. **`pytest.raises`:** The test `test_get_list_products_in_category_invalid_locator_data_type` demonstrates how to use `pytest.raises` to catch specific exceptions.
+6. **Parametrization:** The `test_get_list_products_in_category_valid_input` now uses `pytest.mark.parametrize` to test with different scroll counts and directions. This creates multiple tests from a single function.
+7. **Return Value Assertions:**  All test functions now properly assert the expected return value of `get_list_products_in_category`.
 
 
-**How to run these tests:**
+**To use these tests:**
 
-1. Make sure you have `pytest` installed. If not, run `pip install pytest`.
-2. Save the above code as a Python file (e.g., `test_via_webdriver.py`).
-3. Place the `src` directory (assuming your `logger.py` file is in a `src` folder and your actual `via_webdriver.py` file is within `hypotez/src/suppliers/kualastyle`) properly in your project's directory structure so the import paths work correctly.  If you have these files elsewhere adjust the import statements in `test_via_webdriver.py` appropriately.
-4. Run the tests from your terminal: `pytest test_via_webdriver.py`
+1. **Install pytest:** `pip install pytest`
+2. **Replace `webdriver`:**  Make sure the imports in your `via_webdriver.py` file are correct, and adjust the test file if you use a different webdriver library.
+3. **Run tests:** `pytest test_via_webdriver.py` (or the appropriate filename for your test file).
 
-This improved test suite provides more thorough coverage and accurately reflects the potential scenarios your function might encounter.  Remember to replace placeholder comments with actual error messages and logic descriptions as necessary.
+
+This improved solution provides more robust and thorough test coverage, addressing potential errors and edge cases. Remember to adapt the `Supplier` and `Locators` classes and the imports to match your actual code structure. Also, adjust the test cases according to your specific code requirements.

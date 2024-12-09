@@ -2,120 +2,102 @@
 import pytest
 from typing import Any
 from unittest.mock import Mock
-from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
+from src.suppliers.graber import Graber, Context, close_pop_up  # Assuming these imports exist
 from src.webdriver.driver import Driver
-from src.logger import logger
+from src.logger import logger  # Assuming this module exists
 
-# Mock the Driver class
+
+# Mock classes for testing
 class MockDriver(Driver):
-    def __init__(self):
-        super().__init__()
+    def execute_locator(self, locator):
+        return None
 
     async def execute_locator(self, locator):
-        return True
+        return None
 
-# Mock logger for testing purposes
-logger = Mock()
+class MockLogger:
+    def debug(self, message):
+        pass
 
-# Fixture for Driver
+
 @pytest.fixture
 def driver():
+    """Provides a mock driver."""
     return MockDriver()
 
-# Fixture for Graber class
+
 @pytest.fixture
-def graber(driver):
-    return Graber(driver)
-
-class Graber(Grbr):
-    supplier_prefix: str
-
-    def __init__(self, driver: Driver):
-        self.supplier_prefix = 'kualastyle'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+def logger_mock():
+    """Provides a mock logger."""
+    return MockLogger()
 
 
-# Test cases for Graber class
-def test_graber_init(driver):
-    """Test the initialization of the Graber class."""
-    graber = Graber(driver)
+# Tests for Graber class
+def test_graber_init(driver, logger_mock):
+    """Test Graber initialization."""
+    graber = Graber(driver=driver)
     assert graber.supplier_prefix == 'kualastyle'
+    assert graber.driver == driver
+    assert Context.locator_for_decorator is None
 
 
 def test_graber_init_with_context(driver):
-    """Test initialization with Context setting."""
-    graber = Graber(driver)
-    assert Context.locator_for_decorator is None
-
-# Test with driver object
-@pytest.mark.asyncio
-async def test_graber_execute_with_driver(driver):
-    graber = Graber(driver)
-
-    # Mock a placeholder function.
-    result = await graber.grab_field(driver, {"mock_field": "mock_value"})
-    assert result == {"mock_field": "mock_value"}
-
-# Test for close_pop_up decorator.  This test requires mocking some parts.
-def test_close_pop_up_decorator():
-    @close_pop_up()
-    async def test_function(value):
-      assert value == 1
-      return True
-
-    # Run the decorated function, verifying the mock has executed
-    result = test_function(1)
-    assert result == True
-
-def test_close_pop_up_decorator_locator_set(driver):
-    Context.locator_for_decorator = Mock() # Mock locator
-    graber = Graber(driver)
-    @close_pop_up()
-    def test_function(driver):
-        return True
-    result = test_function(driver)
-    assert result == True
-
-# Test exception handling (if there's any in the code). 
-# This needs to be adapted based on the actual exception handling in the code
-@pytest.mark.asyncio
-async def test_graber_execute_exception(driver):
-    graber = Graber(driver)
-
-    with pytest.raises(Exception):
-        await graber.grab_field(driver, "invalid_data")
+    """Test Graber initialization with context."""
+    # Initialize Context with a value to test
+    Context.locator_for_decorator = "some_locator"
+    graber = Graber(driver=driver)
+    assert Context.locator_for_decorator is not None  # Ensure the value is set
 
 
+# Test for close_pop_up decorator (This might need adjustments based on the actual implementation)
+#  (If there's no logic, these tests would assert expected behavior)
+# def test_close_pop_up_decorator(driver):
+#     @close_pop_up()
+#     async def test_func():
+#         return "some_result"
+#     # ... test the returned result for the decorated func ... 
 
+# def test_close_pop_up_decorator_with_value(driver):
+#     @close_pop_up("some_value")
+#     async def test_func():
+#         return "some_result"
+#     # ... test the returned result for the decorated func ...
+
+#  ... (More tests, including invalid input testing, if needed) ...
+
+# Example test for exception handling (assuming you have an appropriate exception)
+# def test_graber_exception_handling():
+#     # Assuming there's a place where exception can be caught
+#     with pytest.raises(Exception):  # Example exception
+#          # ... (your code that raises the exception) ...
+
+
+# Example test with valid input
+# def test_graber_valid_input(driver):
+#     graber = Graber(driver)
+#     # ... test methods and expected output ...
 ```
 
-**Explanation and Improvements:**
+**Explanation and Important Considerations:**
 
-1. **Mocking:** The code now uses `unittest.mock` to mock the `Driver` class and `logger`. This is crucial for unit testing because it isolates the `Graber` class from external dependencies like the actual WebDriver.
-
-2. **Fixtures:**  Fixtures are properly defined (`driver`, `graber`). This makes the tests more organized and reusable.
-
-3. **Asynchronous Tests:** Tests are marked with `@pytest.mark.asyncio` to handle the asynchronous nature of the code, which is good practice.
-
-4. **Comprehensive Tests:** Tests are added for `Graber.__init__` covering the `supplier_prefix` and Context initialization.
-
-5. **`test_close_pop_up_decorator`:** This now tests the decorator with and without a locator, simulating a more real-world situation.
-
-6. **Error Handling:** The `test_graber_execute_exception` test demonstrates how to test for exceptions.  Replace `"invalid_data"` with the appropriate invalid input or scenario that your code handles.
-
-7. **Realistic Test Case `test_graber_execute_with_driver`:** The addition of a test with a working Driver mocks a typical use case where the Graber class is expected to grab data.
-
-**Important Considerations:**
-
-* **Driver interaction:** The code needs to properly interact with the Driver object to fetch information. This is not addressed in the provided test case. You'll need to add more precise test functions and provide specific examples of data and expected outcomes based on the actual interactions your code has with the `Driver`.
-* **Exception handling:** The code provided has no explicit exception handling.  If the `Graber` class handles exceptions, you need to test those error paths.
-* **Decorator Logic:** The `close_pop_up` decorator is mocked in the test, but the actual logic of the decorator (like `Context.locator`) needs to be addressed.
-* **Input Validation:** If your functions accept arguments, test with invalid/edge cases for those arguments as well.
+1. **Mock Objects:**  Crucially, I've added `MockDriver` and `MockLogger`.  You **must** mock the `Driver` and `logger` objects.  This is essential for unit testing because your `Graber` class relies on external dependencies.  Replace `MockDriver` with a proper mock if needed.
 
 
-**To make these tests even more robust:**
+2. **Missing Logic:** The provided `Graber` code doesn't contain any *actual* logic (other than the `__init__` method).  Therefore, the example test cases are also placeholder. You **must** update these placeholder tests to cover the methods of the `Graber` class (e.g., the methods for extracting data).
 
-* **Specific input data:** Provide more tailored test cases with sample data, expected outputs, and specific edge cases that `grab_field` might encounter.
-* **Assertions:**  Instead of just checking for `result == True`, include more specific assertions based on the function's expected return value.
+3. **Error Handling and Edge Cases:**  The code snippet doesn't show exception handling.  You need tests for potential errors (e.g., network problems, invalid inputs) with `pytest.raises`.
 
-Remember to replace the placeholder comments and adjust the tests to match the actual implementation of your functions and exception handling in the `graber.py` file.  This will produce more accurate and meaningful test cases.
+4. **Context and Decorator Tests:**  The tests for `Context` and the decorator (`close_pop_up`) are marked as placeholders, as I don't see how it would work without an `async` function and a `Context.driver` implementation in your original file.  You need tests to validate that the decorator is applied correctly and that it handles potential `ExecuteLocatorException` or other exceptions within the `close_pop_up` function.
+
+5. **Clearer Structure and Documentation:**  Use a consistent naming convention (e.g., `test_graber_valid_input`) for your tests, and add detailed comments to explain the purpose of each test case.
+
+6. **Import Statements:** Ensure that all necessary imports are present (e.g., `pytest`).
+
+
+**How to run the tests:**
+
+1.  Save the test code as a `.py` file (e.g., `test_graber.py`).
+2.  Run `pytest test_graber.py` from your terminal to execute the tests.
+
+
+**Important Note:**  This revised response provides a *template* for testing.  You need to replace the placeholder comments and add actual test cases based on the *complete* implementation of the Graber class, including the logic for processing web data.  The current code is insufficient to create fully functional tests.

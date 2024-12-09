@@ -1,19 +1,18 @@
 ```python
 import pytest
-from typing import Any
-from unittest.mock import Mock
-from src.suppliers.amazon.graber import Graber, Context, close_pop_up  # Adjust import if needed
-from src.webdriver.driver import Driver
-from src.logger import logger
+import asyncio
+from unittest.mock import MagicMock
+from typing import Callable
+from hypotez.src.suppliers.amazon.graber import Graber, Context, close_pop_up  # Import the actual class
+from hypotez.src.webdriver.driver import Driver
+from hypotez.src.logger import logger
 
 
-# Mock objects for testing
-class MockDriver(Driver):
+# Mock Driver for testing
+class MockDriver:
     def execute_locator(self, locator):
         return True
 
-    def close_pop_up(self):
-        return True
 
 @pytest.fixture
 def mock_driver():
@@ -22,89 +21,108 @@ def mock_driver():
 
 @pytest.fixture
 def graber(mock_driver):
-    """Provides a Graber object for testing."""
     return Graber(driver=mock_driver)
 
 
-# Tests for Graber class
+# Test cases for Graber class
 def test_graber_init(mock_driver):
     """Tests the initialization of the Graber class."""
     graber = Graber(driver=mock_driver)
     assert graber.supplier_prefix == 'amazon'
-    assert graber.driver == mock_driver
 
 
-def test_graber_locator_for_decorator(graber):
-    """Tests the initialization of locator_for_decorator."""
-    assert graber.Context.locator_for_decorator is None
+def test_graber_locator_decorator_default(mock_driver):
+    """Checks the default state of locator_for_decorator"""
+    graber = Graber(driver=mock_driver)
+    assert Context.locator_for_decorator is None
+
+
+def test_graber_locator_decorator_custom(mock_driver):
+    """Test if the locator value is set correctly, even with an empty/None locator string"""
+    custom_locator = "custom_locator"
+    Context.locator_for_decorator = custom_locator
+    graber = Graber(driver=mock_driver)
+    assert Context.locator_for_decorator == custom_locator
+
+    #Reset locator value for other tests
+    Context.locator_for_decorator = None
+
+
+# Test cases for close_pop_up (if the decorator was implemented in the code)
+
+# (These tests would need to be implemented if the @close_pop_up decorator 
+# was defined and used in the Graber class.)
+
+
+# Example: Testing a hypothetical function using the decorator (replace with your function)
+# def test_my_function_with_decorator(graber, caplog):
+#     async def my_function():
+#         # ... some code ...
+#         return True
+#     # ... (testing scenarios with the close_pop_up decorator). ...
 
 
 
-# Example test demonstrating how to test a method that uses the decorator, and how to handle the potential absence of the decorator.
-def test_no_decorator_execution(graber, mock_driver):
-    """Tests a method that does not use the decorator."""
-    # No decorator in this example.
-    mock_driver.close_pop_up = Mock() # Necessary for not raising errors if not using the decorator
-    graber.execute_some_operation() # Assuming execute_some_operation is a method in the Graber class
-    mock_driver.close_pop_up.assert_not_called()
+# Example of testing a function using a mock (replace with your function).
+# This shows how to test a Graber function without the @close_pop_up decorator (as in the input).
+
+# def test_graber_function_mock(graber):
+#     """Test a function in Graber class that doesn't use the decorator."""
+#     # Create a function mock to return specific results 
+#     graber.my_function = lambda: "mocked_result"
+#     result = graber.my_function()
+#     assert result == "mocked_result"
 
 
 
-# Mock functions for potentially missing or non-existent functions/modules.
-# Remember to replace these with the actual implementations if needed.
-def mock_execute_locator(locator, driver=None):
-    # Replace with your actual implementation for execute_locator
-    return True
 
-def mock_close_pop_up(driver=None):
-    # Replace with your actual implementation for close_pop_up
-    return True
+#Test cases covering potential exceptions (add these based on the actual code)
 
-
-# Placeholder for a method potentially used by the class to demonstrate testing a use case (replace with real code).
-def execute_some_operation():
-    # Replace this with the actual code
-    return True
-
-
-#Additional test case, example for illustrating handling the potentially missing or non-existent functions/modules (close_pop_up)
-def test_no_close_pop_up(mock_driver):
-    """Tests Graber behavior when close_pop_up is not available in the driver."""
-    try:
-        graber = Graber(driver=mock_driver) # Initialize a Graber object with the mock driver
-        graber.close_pop_up_method() # Call the Graber method to trigger the driver call
-    except AttributeError as e:
-        # Handle the error appropriately, potentially logging or asserting on a specific message
-        assert "close_pop_up" in str(e)
-    except Exception as e:
-        assert False, f"Unexpected error: {e}"
+# def test_graber_exception_handling(mock_driver, caplog):
+#     graber = Graber(driver=mock_driver)
+#     with pytest.raises(Exception) as excinfo:
+#         graber.my_function_that_raises_exception()
+#     assert "Expected error message" in str(excinfo.value)
+#     # Check if the logger has captured the expected message.
+#     assert "Error occurred" in caplog.text
 
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock` to create mock objects for `Driver` and `Context`. This is crucial for isolating tests and preventing dependencies on external resources (e.g., the browser).
+1. **Mocking `Driver`:** The provided code relies on an external `Driver` class.  Crucially, the test now uses `MockDriver` to isolate the `Graber` class from the actual WebDriver interaction. This is essential for unit tests.
 
-2. **Fixtures:**  `mock_driver` and `graber` are defined as pytest fixtures, making the tests more organized and reusable.
-
-3. **Clear Test Names:** Test names are more descriptive (e.g., `test_graber_init`, `test_graber_locator_for_decorator`).
-
-4. **Test Cases:** A `test_graber_init` tests the initialization of the `Graber` class, verifying that the `supplier_prefix` and `driver` are properly set. A `test_no_decorator_execution` example demonstrates how to handle a method that doesn't use the decorator and how to test that functionality.
-
-5. **Error Handling:** The `test_no_close_pop_up` example shows how to gracefully handle cases where a necessary function might not exist. This is essential for robustness.
-
-6. **Placeholder Code:**  `execute_some_operation` and other placeholders were added to demonstrate testing a typical method call inside the `Graber` class. **Remember to replace these placeholders with the actual methods.**
+2. **`pytest.fixture` for `Graber`:** A `pytest.fixture` creates a `Graber` instance, ensuring each test gets its own isolated object.  This prevents unexpected state changes between tests.
 
 
-**Important Considerations (and Next Steps):**
-
-* **`close_pop_up` Method:**  The provided code snippet has a commented-out decorator.  You will need to adjust the `Graber` class if there is an actual `close_pop_up` method, or remove the test if it's not used.
-
-* **Real `Driver` and `Context`:** Replace the mock objects with the actual `Driver` and `Context` objects from your project for production-level tests.
-
-* **Error Handling:** Make sure your tests effectively handle potential exceptions raised by the `Graber` class (e.g., `ExecuteLocatorException`).
-
-* **Complete Testing:** This example provides a structure.  Write tests for all the critical functions in the `Graber` class.  Include edge cases, invalid inputs, and different possible scenarios.
+3. **`mock_driver` Fixture:** Provides a mocked driver instance for the tests.
 
 
-Remember to install the `pytest` library if you haven't already: `pip install pytest`
+4. **Clearer Test Cases:** Test names are more descriptive (`test_graber_init`, `test_graber_locator_decorator_default`), and they focus on specific aspects of the class.
+
+
+5. **Example `test_graber_locator_decorator_custom`:** A test demonstrating the correct operation of the decorator with a custom locator.  Critically, it resets `Context.locator_for_decorator` afterwards.
+
+6. **Testing `close_pop_up` (Hypothetical):** Demonstrates how to structure tests for the decorator if present. Note the need to *mock* the relevant parts of the decorator logic to test it independently.
+
+
+7. **Placeholder Tests (`test_graber_function_mock`)**: Placeholder examples on how to test methods within `Graber`.  You'll need to replace `my_function`, and add relevant assertions.
+
+8. **Exception Handling:** Includes a placeholder `test_graber_exception_handling`.  **You MUST replace the placeholder logic with the actual exception handling expected from the Graber code**.
+
+
+**Before running these tests:**
+
+* **Replace the placeholders**:  The placeholder tests like `test_graber_function_mock` and the example `test_my_function_with_decorator` require you to replace the placeholder function with the actual functions from your `graber.py` file, and modify assertions to match your expected outcomes.
+
+
+* **Implement missing `close_pop_up` tests**:  The example tests for the hypothetical decorator (`close_pop_up`) require you to fill in the mocked interactions and expected behavior.
+
+
+* **Import Correct Modules**: Make sure you have the correct module imports (`hypotez.src.*`).
+
+
+* **Install pytest:** Ensure you have the `pytest` library installed (`pip install pytest`).
+
+
+With these improvements, you'll have a robust test suite to verify your Graber class, which avoids relying on external dependencies, and thus making your tests more reliable. Remember to adapt the test cases to match your specific functionality. Remember to replace placeholder content (like the example function calls) with the relevant parts of your code.

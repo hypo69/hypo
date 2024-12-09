@@ -8,8 +8,8 @@
 
 Модуль для взаимодействия с классом `CodeAssistant`. Назначение класса: обучение модели коду проекта
 
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/assistant/readme.ru.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/assistant/readme.ru.md)
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/code_assistant/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/doc/src/readme.ru.md)
 - [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/assistant)
 - [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/assistant)
 

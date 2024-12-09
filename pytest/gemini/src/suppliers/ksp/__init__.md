@@ -1,90 +1,99 @@
 ```python
 import pytest
-from hypotez.src.suppliers.ksp import MODE, Graber
+from hypotez.src.suppliers.ksp import Graber  # Assuming Graber is in the correct path
 
-# Mock Graber class for testing
-class MockGraber:
-    def __init__(self, data=None):
-        self.data = data
-
-    def get_data(self, query):
-        return self.data
-
-# Fixture for providing test data
+# Fixture definitions (if needed based on Graber's implementation)
+# Example fixture (replace with actual data if needed)
 @pytest.fixture
-def mock_graber_data():
-    return {'name': 'Test Supplier', 'value': 10}
+def example_data():
+    return {"url": "https://example.com/data", "parameters": {"key": "value"}}
 
 
-# Tests for Graber class
-def test_graber_get_data_valid_input(mock_graber_data):
-    """Checks Graber.get_data with valid input."""
-    mock_graber = MockGraber(mock_graber_data)
-    result = mock_graber.get_data('test_query')
-    assert result == mock_graber_data
+# Tests for Graber class (assuming Graber has methods)
+def test_graber_init_valid_url(example_data):
+    """Checks Graber initialization with a valid URL."""
+    graber = Graber(example_data["url"], example_data["parameters"])
+    assert graber.url == example_data["url"]
+    assert graber.parameters == example_data["parameters"]
+
+
+def test_graber_init_invalid_url():
+    """Checks Graber initialization with an invalid URL (e.g., missing protocol)."""
+    with pytest.raises(ValueError):  # Or a more specific exception if appropriate
+        Graber("example.com", {"key": "value"})
+
+
+def test_graber_init_no_url():
+    """Checks Graber initialization without a URL."""
+    with pytest.raises(TypeError): # Or a more specific exception
+        Graber(None, {"key": "value"})
+
+
+def test_graber_init_no_parameters():
+    """Checks Graber initialization without parameters."""
+     graber = Graber("https://example.com", None)
+     assert graber.parameters == {}
+
+
+# Example test for a method in Graber class (replace with actual method)
+def test_graber_get_data(example_data, monkeypatch): # Use monkeypatch for mocking external calls
+    """Tests Graber's get_data method (mocked for testing)."""
     
-def test_graber_get_data_empty_input(mock_graber_data):
-  """Checks Graber.get_data with an empty input query (edge case)."""
-  mock_graber = MockGraber(mock_graber_data)
-  result = mock_graber.get_data('')
-  assert result == mock_graber_data  # Check if it returns the stored data
+    #Mock the request function to return a sample response
+    mock_response = {"data": "some_data"}
+    def mock_get(url, params):
+        return mock_response
+
+    monkeypatch.setattr("requests.get", mock_get)
+    
+    graber = Graber(example_data["url"], example_data["parameters"])
+    data = graber.get_data()
+    assert data == mock_response["data"]
 
 
-def test_graber_get_data_no_data():
-  """Checks Graber.get_data when no data is provided."""
-  mock_graber = MockGraber(None)
-  with pytest.raises(AttributeError):
-      mock_graber.get_data('test_query')
+def test_graber_get_data_exception():
+    """Tests Graber's get_data method handling an exception."""
+    def mock_get(url, params):
+      raise Exception("Network issue")
+
+    monkeypatch.setattr("requests.get", mock_get)
+    graber = Graber("https://example.com", {"key": "value"})
+    with pytest.raises(Exception) as excinfo:
+      graber.get_data()
+    assert "Network issue" in str(excinfo.value)
 
 
-def test_graber_get_data_invalid_input_type():
-    """Tests get_data with invalid input type (edge case)."""
-    mock_graber = MockGraber({'name': 'Test Supplier', 'value': 10})
-    with pytest.raises(TypeError) as excinfo:
-        mock_graber.get_data(123)  # Trying to pass an integer
-    assert "Input query must be a string" in str(excinfo.value)
-
-# Test for MODE constant
-def test_mode_constant():
-  """Verifies the value of the MODE constant."""
-  assert MODE == 'dev'
-  
-# Test for non-existent method (important for robustness)
-def test_graber_no_such_method():
-  """Tests for robustness with a non-existent method."""
-  mock_graber = MockGraber()
-  with pytest.raises(AttributeError):
-    mock_graber.nonexistent_method()
-
-
+# ... Add more tests as needed based on the functions/methods in Graber
+# For example, if Graber has a 'process_data' method, add tests for it, considering
+# edge cases, invalid input, and error handling.
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **Mocking `Graber`:**  The original code didn't have any implementation for `Graber`.  The solution now mocks the `Graber` class (`MockGraber`). This allows us to control the data returned and test without depending on external resources or potentially complex external APIs.
+1. **Import `pytest`:**  The code now imports the necessary `pytest` module.
 
-2. **Data Fixture:** A `mock_graber_data` fixture provides test data.  This makes the tests more organized and reusable.
+2. **Import `Graber`:** It imports the `Graber` class from the specified module.  Crucially, this assumes the correct path to the file.  If there's an error here, double-check the import statement.
 
-3. **Comprehensive Test Cases:** The tests now cover valid input, empty input (edge case), no data (edge case), and invalid input type. This addresses all requirements for thorough testing.
-
-4. **Exception Handling:** `pytest.raises` is used to test the expected `AttributeError` when no data is provided or if an invalid data type is used for the query parameter.
-
-5. **Clear Test Names:** The test function names clearly describe the test's purpose.
-
-6. **Documentation:** Docstrings are added to explain the purpose of each test function, making the tests more understandable.
-
-7. **Robustness:** A test `test_graber_no_such_method` has been added to demonstrate a crucial aspect of test design: testing for non-existent methods.
-
-8. **`MODE` Test:** A simple test for the `MODE` constant is included.
-
-This improved solution provides a more complete and robust test suite for the `Graber` class and related code, ensuring that it behaves correctly under various conditions.  Remember to replace `MockGraber` with the actual `Graber` class implementation if available.
+3. **Example Fixture:**  A `pytest` fixture (`example_data`) is provided as a placeholder.  You *must* replace this with actual test data if the `Graber` class needs initialization parameters.
 
 
-**To run these tests:**
+4. **Error Handling and `pytest.raises`:** The tests now correctly use `pytest.raises` to test for exceptions, including specific types like `ValueError` and `TypeError`. This is essential for robust testing. The tests demonstrate how to handle exceptions raised during the `requests.get` call (network issues, etc.)
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Save the test code (e.g., `test_ksp.py`) in the same directory as your `hypotez/src/suppliers/ksp/__init__.py`.
-3.  Run the tests from your terminal: `pytest test_ksp.py`
+5. **`monkeypatch`:**  This is very important for testing code that interacts with external libraries like `requests`. Using `monkeypatch.setattr` lets you replace the actual `requests.get` function with a mock version that returns expected data or raises exceptions, allowing you to control the inputs and outputs of `requests.get` within your tests.
+
+6. **Test Cases:** Added examples of how to test `Graber`'s `__init__` and a sample `get_data` method.
 
 
-Important: This solution assumes the `Graber` class *likely* has a `.get_data()` method and that this is the core logic that needs testing. If there is different logic, update the testing accordingly. Remember to adapt these tests if your actual code has different methods or if the inputs and outputs are different.
+**Before Running Tests:**
+
+- **Install pytest:**  If you haven't already, install the `pytest` library:
+  ```bash
+  pip install pytest
+  ```
+
+- **Replace Placeholders:** Replace the placeholder fixture data, `example_data`, and the mock response in `test_graber_get_data` with the appropriate values needed by the Graber class.
+- **Update the import statement if the path is not correct**
+
+- **Add more tests:**  This is a starting point.  You must add more test cases for the `Graber` class's methods, considering all possibilities (e.g., invalid URLs, various data types, expected outputs from external API calls).
+
+Remember to thoroughly understand the `Graber` class's API and expected behavior to create effective and comprehensive test cases. Add more tests for other methods or attributes as needed.  Replace the placeholder comments with appropriate test descriptions.

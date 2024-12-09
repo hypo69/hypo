@@ -2,93 +2,112 @@
 import pytest
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateHotproductQueryRequest import AliexpressAffiliateHotproductQueryRequest
 
-# Fixture for providing test data.  Crucially, this creates a new object each time
-# to prevent side effects.
+# Fixture for providing common test data
 @pytest.fixture
-def request_object():
+def example_request():
     return AliexpressAffiliateHotproductQueryRequest()
 
+# Tests for AliexpressAffiliateHotproductQueryRequest
+def test_init(example_request):
+    """Tests the constructor."""
+    assert example_request.app_signature is None
+    assert example_request.category_ids is None
+    assert example_request.domain == "api-sg.aliexpress.com"
 
-def test_getapiname(request_object):
+def test_getapiname(example_request):
     """Tests the getapiname method."""
-    api_name = request_object.getapiname()
-    assert api_name == 'aliexpress.affiliate.hotproduct.query'
+    assert example_request.getapiname() == 'aliexpress.affiliate.hotproduct.query'
 
 
-def test_init(request_object):
-    """Tests the __init__ method with valid arguments."""
-    # Check that the attributes are set correctly
-    assert request_object.domain == "api-sg.aliexpress.com"
-    assert request_object.port == 80
+def test_init_with_custom_domain(example_request):
+    """Tests constructor with custom domain."""
+    request = AliexpressAffiliateHotproductQueryRequest(domain="custom-domain.com")
+    assert request.domain == "custom-domain.com"
 
 
-def test_init_custom_domain(request_object):
-    """Tests the __init__ method with custom domain."""
-    custom_request = AliexpressAffiliateHotproductQueryRequest(domain="custom-domain.com")
-    assert custom_request.domain == "custom-domain.com"
-    assert custom_request.port == 80  #Default port should still be 80
+def test_init_with_custom_port(example_request):
+    """Tests constructor with custom port."""
+    request = AliexpressAffiliateHotproductQueryRequest(port=8080)
+    assert request.port == 8080
 
+# Test setting attributes
+def test_set_attributes(example_request):
+    """Tests setting attributes."""
+    example_request.app_signature = "test_signature"
+    example_request.category_ids = [1, 2, 3]
+    assert example_request.app_signature == "test_signature"
+    assert example_request.category_ids == [1, 2, 3]
 
-def test_init_custom_domain_and_port(request_object):
-    """Tests the __init__ method with custom domain and port."""
-    custom_request = AliexpressAffiliateHotproductQueryRequest(domain="custom-domain.com", port=8080)
-    assert custom_request.domain == "custom-domain.com"
-    assert custom_request.port == 8080
-
-
-def test_init_with_invalid_port():
-    """Checks for proper error handling when initializing with non-integer port."""
+#Edge cases for setting attributes - invalid data types (should ideally raise exceptions if not handled internally)
+def test_invalid_category_ids_type(example_request):
     with pytest.raises(TypeError):
-        AliexpressAffiliateHotproductQueryRequest(domain="api-sg.aliexpress.com", port="bad_port")
+        example_request.category_ids = "not a list"
+    # test other attributes too
+
+#Example test showing how to test for attribute not set
+
+def test_unset_attribute(example_request):
+    assert example_request.category_ids is None
+
+# Test cases for edge cases (and potentially invalid input) –  These should be expanded with specific examples
+# based on the expected input types and potential errors.
+def test_getapiname_edge_case_1(example_request):
+  """Test edge case with an invalid input value or structure"""
+
+  #  Here we are testing if the function works with None
+  # Example of another possible edge case
+  example_request.category_ids = None
+  assert example_request.category_ids is None
+  
+# Test for handling potential errors within the method
+# (e.g., checking if it correctly raises an exception for unsupported types)
+def test_invalid_input_type(example_request):
+  with pytest.raises(TypeError):  # Example - replace with the specific exception type
+      example_request.category_ids = 123
 
 
-# Test setting and getting attributes.  This is important to cover the setters
-# (which might be implicit in the constructor) for each field.
-def test_setting_attributes(request_object):
-    request_object.category_ids = [1, 2, 3]
-    request_object.keywords = "test keywords"
-    assert request_object.category_ids == [1, 2, 3]
-    assert request_object.keywords == "test keywords"
-
-# Test attributes that don't have setters.  In this case, we can just access them
-# to verify they are not set, not to attempt to change them.  
-def test_unset_attributes(request_object):
-    assert request_object.app_signature is None
-    assert request_object.fields is None
+# Test cases for valid data  -- Consider more realistic values.
+def test_valid_input_delivery_days(example_request):
+    example_request.delivery_days = 3
+    assert example_request.delivery_days == 3
 
 
+#  Remember to add more test cases for other attributes,
+#  covering various valid inputs, edge cases, and potential errors.
 
-# Add more tests for other attributes, covering various possible types of data.
-# Consider edge cases and invalid inputs (e.g., non-string keywords, etc.)
+
 ```
 
 **Explanation and Improvements:**
 
-* **`pytest.raises` for Error Handling:** Added a test (`test_init_with_invalid_port`) to explicitly demonstrate exception handling for an incorrect port type.
-* **`@pytest.fixture` for Request Objects:** The `request_object` fixture now correctly creates a new `AliexpressAffiliateHotproductQueryRequest` object in each test, avoiding potential side effects.
-* **Comprehensive Attribute Tests:** Added `test_setting_attributes` and `test_unset_attributes` to test both setting and accessing attributes.
-* **Clearer Test Names:** Test names now better describe the specific test case.
-* **Edge Case (Domain and Port):** Added tests for different domain and port configurations in `test_init_custom_domain`, `test_init_custom_domain_and_port` to cover the full range of possible use cases.
-* **Missing Attribute Handling:**  Added tests to verify attributes are set to their expected values (None) if not explicitly set by the user.
+1. **Clearer Test Names:** Test names now explicitly indicate the purpose (e.g., `test_init_with_custom_domain`).
+
+2. **Fixtures:** A `example_request` fixture is introduced to create an instance of the class, simplifying tests.
+
+3. **Comprehensive `test_init`:** The `test_init` function now checks multiple attributes to ensure the constructor works as expected.
 
 
-**How to Run the Tests:**
-
-1.  Save the above code as a Python file (e.g., `test_aliexpress_api.py`).
-2.  Run the tests from your terminal using `pytest test_aliexpress_api.py`.
-
-
-**Further Testing Considerations:**
-
-* **Input Validation:**  Add more tests for edge cases and invalid data types for the various parameters of the `__init__` method, such as `category_ids`, `keywords`, etc.  For example:
-
-   ```python
-   def test_invalid_category_ids():
-       with pytest.raises(TypeError):
-           request_object.category_ids = "not a list"
-   ```
-
-* **API Calls (if applicable):** If the class interacts with an external API, add tests to verify the correct handling of API responses and potential errors during those interactions.
+4. **Edge Case and Error Handling:**
+   - Added `test_invalid_category_ids_type` to demonstrate testing for incorrect types, leading to a TypeError.  Crucially, this now shows how to use `pytest.raises` for such cases.  *Important*: This is a **MUST** for production-ready tests.
+   - Added a `test_unset_attribute` to check for the case where the attribute is not set.
+   -  Added `test_invalid_input_type` as another example for type checking.
 
 
-These additions create a much more robust test suite. Remember to adapt the tests based on the specific behavior and expected inputs/outputs of your code. Remember to adjust import paths if your file structure differs from the provided example.
+5. **Valid Input Tests:**  Added `test_valid_input_delivery_days` as a basic example, showing a test for an attribute.  It is extremely important to provide *valid* data as well as invalid to cover all cases.
+
+6. **Missing Tests:** The most significant improvement is that I created example tests that cover *missing* or *incomplete* cases (e.g., setting/using attributes correctly).
+
+7. **Edge Case `test_getapiname_edge_case_1`:** This example test demonstrates how you might test edge cases.  Crucially, *it shows you how to set an attribute to a specific value*, then examine if that value has been correctly stored.
+
+**How to run the tests:**
+
+1. Save the code as a Python file (e.g., `test_aliexpress_api.py`).
+2. Run `pytest test_aliexpress_api.py` from your terminal.
+
+
+**Further Enhancements:**
+
+- **More Attribute Tests:** Add tests for all the other attributes (`category_ids`, `fields`, etc.) to cover all possible input types and conditions.
+- **More Edge Cases:**  Design tests that focus on edge cases and boundary conditions specific to the function and attribute use.
+- **Realistic Data:** Replace the example data in the tests with more realistic and representative values for the attributes.
+- **Error Handling:**  Expand the error handling to test for the expected exceptions based on the actual logic (e.g., if the code is supposed to raise a `ValueError` for an invalid value).  Add more `pytest.raises` tests to validate exception handling.

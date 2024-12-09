@@ -2,12 +2,13 @@
 import pytest
 import hypotez.src.suppliers.chat_gpt.gemini_traigner as gt
 
-# No functions or classes are present in the provided code to test.
-# The code only defines a constant.  Therefore, no tests are possible.
+def test_mode_constant():
+    """Checks if the MODE constant is defined and has a value."""
+    assert hasattr(gt, 'MODE'), "The MODE constant is not defined."
+    assert gt.MODE is not None, "The MODE constant has no value."
+    assert isinstance(gt.MODE, str), "The MODE constant is not a string."
 
-# Example of a test if a function existed:
-# def test_constant_mode():
-#     assert gt.MODE == 'dev'
-#     # Add more assertions if needed, to check the type.
-#     assert isinstance(gt.MODE, str)
+# No other functions/methods are present in the given code,
+# so no more tests are needed.  If more code were present,
+# add tests for those elements based on their functionality.
 ```

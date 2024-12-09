@@ -1,50 +1,75 @@
 ```python
 import pytest
-import sys
 import io
+import re
 
-# Placeholder for the user-provided code.  Replace this with the actual code.
-#  This example shows a basic function.
-def process_data(input_data: str, operation: str = "default") -> dict | None:
+# Example function (replace with the actual code from the file)
+def doc_instruction_writer(file_content: str) -> str | None:
     """
+    Generates Markdown documentation for a Python file.
+
     Args:
-        input_data (str): Data to be processed.
-        operation (str, optional): Operation to perform. Defaults to "default".
+        file_content (str): The content of the Python file.
 
     Returns:
-        dict | None: Processed data as a dictionary or None if error.
+        str | None: The generated Markdown documentation, or None if invalid input.
 
     Raises:
-        TypeError: If input_data is not a string.
-        ValueError: If input_data is empty.
+        ValueError: If the input is not a valid string.
     """
-    if not isinstance(input_data, str):
-        raise TypeError("Input data must be a string")
-    if not input_data:
-        raise ValueError("Input data cannot be empty")
+    if not isinstance(file_content, str):
+        raise ValueError("Input must be a string.")
+
+    # Basic validation - check for empty or whitespace-only input.
+    if not file_content.strip():
+        return None
+
+    try:
+        # Extract module name (if any)
+        match = re.search(r"# (.*?)\n", file_content, re.MULTILINE)
+        module_name = match.group(1).strip() if match else "Untitled Module"
+
+
+        # Basic documentation structure
+        doc_string = f"# {module_name}\n\n## Обзор\n\nКраткое описание назначения модуля.\n\n## Функции\n\n"
+        # ... (add more sections for classes, methods, etc., as needed)
+
+
+        # Example:  Processing for functions
+        function_pattern = re.compile(r"def\s+(\w+)\s*\(", re.MULTILINE)
+        for function_name in function_pattern.findall(file_content):
+          doc_string += f"### `{function_name}`\n\n"
+
+        return doc_string  # Return the generated Markdown
+
+    except AttributeError:
+        return None  # Handle cases where the pattern isn't found
+
+# Example Test Cases
+def test_doc_instruction_writer_valid_input():
+    """Tests with valid input."""
+    input_code = """# ИНСТРУКЦИЯ
     
-    processed_data = {"input": input_data, "operation": operation}
-    return processed_data
+    Для каждого входного Python-файла создайте документацию в формате `Markdown` для последующего использования. Документация должна соответствовать следующим требованиям:
+    
+    """
+    expected_output = "# Untitled Module\n\n## Обзор\n\nКраткое описание назначения модуля.\n\n## Функции\n\n"
+    output = doc_instruction_writer(input_code)
+    assert output == expected_output
+    
 
-
-def test_process_data_valid_input():
-    """Checks correct behavior with valid input."""
-    result = process_data("some data", "uppercase")
-    assert result == {"input": "some data", "operation": "uppercase"}
-
-def test_process_data_default_operation():
-    """Checks correct behavior with default operation."""
-    result = process_data("test")
-    assert result == {"input": "test", "operation": "default"}
-
-
-def test_process_data_invalid_input_type():
-    """Checks exception handling for invalid input type."""
-    with pytest.raises(TypeError):
-        process_data(123)
-
-def test_process_data_invalid_input_empty():
-    """Checks exception handling for empty input."""
+def test_doc_instruction_writer_invalid_input_type():
+    """Tests with invalid input type."""
     with pytest.raises(ValueError):
-        process_data("")
+        doc_instruction_writer(123)
+
+def test_doc_instruction_writer_empty_input():
+    """Tests with empty input."""
+    assert doc_instruction_writer("") is None
+
+def test_doc_instruction_writer_whitespace_input():
+    """Tests with whitespace-only input."""
+    assert doc_instruction_writer(" \n\t ") is None
+
+
 ```

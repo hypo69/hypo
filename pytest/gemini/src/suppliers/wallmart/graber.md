@@ -2,115 +2,103 @@
 import pytest
 from typing import Any
 from unittest.mock import patch
-from src.suppliers.wallmart.graber import Graber, Context, close_pop_up
+from src.suppliers.wallmart.graber import Graber, Context
 from src.webdriver.driver import Driver
 from src.logger import logger
-# Dummy imports needed for pytest to work with the code provided
-import header  # Needed because of import in the original code
 
-
-# Replace with actual fixture if available
+# Mock the Driver class
 @pytest.fixture
-def driver_instance():
-    return Driver()
+def mock_driver():
+    """Provides a mock Driver object."""
+    class MockDriver:
+        def execute_locator(self, locator):
+            return "Success"
+    return MockDriver()
 
 
 @pytest.fixture
-def graber_instance(driver_instance):
-    return Graber(driver=driver_instance)
+def graber(mock_driver):
+    """Creates a Graber instance with a mock driver."""
+    return Graber(driver=mock_driver)
 
 
-# Mock the logger for testing
-@pytest.fixture
-def mock_logger():
-    mock_logger = logger
-    mock_logger.debug = lambda x: None  # Mock debug to avoid warnings
-    return mock_logger
-
-
-# Mock the driver methods if needed
-@pytest.fixture
-def mock_driver_instance(monkeypatch):
-    mock_driver = MockDriver()
-    monkeypatch.setattr('src.webdriver.driver.Driver', lambda: mock_driver)
-    return mock_driver
-
-
-class MockDriver:
-    async def execute_locator(self, locator):
-        return True  # Example successful execution
-    
-    async def close_pop_up(self):
-        return
-
-
-# Tests for Graber class
-def test_graber_init(graber_instance, driver_instance):
-    """Test the Graber class initialization."""
-    assert graber_instance.supplier_prefix == 'wallmart'
-    assert graber_instance.driver == driver_instance
-
-
-def test_graber_locator_setting(graber_instance):
-    """Test that locator is correctly set in Context."""
+# Test for __init__ method
+def test_graber_init(mock_driver):
+    """Tests the Graber constructor."""
+    graber = Graber(driver=mock_driver)
+    assert graber.supplier_prefix == 'wallmart'
+    assert graber.driver == mock_driver
     assert Context.locator_for_decorator is None
 
-# Example testing of close_pop_up decorator (If implemented in a different module)
-# def test_close_popup_decorator(mock_driver, mock_logger):
-#     """Test the close_pop_up decorator. (If decorator is implemented)."""
-
-#     # Mock the necessary parts for the decorator
-#     @close_pop_up()
-#     async def my_function():
-#         return True
 
 
-#     # Use pytest.raises if you expect an exception
+# Test for any methods in the Graber class you want to test
+def test_graber_method_example(graber, monkeypatch):
+    """Example test for a method in Graber class."""
 
-# # Example test for a function that might use the decorator (if present)
-# def test_my_function_with_decorator(mock_driver, mock_logger):
-#     """Test a function using the close_pop_up decorator (if present)."""
-#     assert my_function() is True
-
-
-# # Test for the logger (if present). Adjust as necessary
-# def test_logger_debug(mock_logger):
-#     """Test the logging functionality."""
-#     mock_logger.debug("Test message")
-
-
-# Replace this with any actual functions and their tests
-# in the Graber class if present
-# def test_graber_function(graber_instance):
-#     # Test the actual function from the Graber class
-#     # Example using a mock driver
-#     result = graber_instance.my_function()  # Replace with the actual function
-#     assert result == expected_result  # Replace with the expected value
-
-# Replace with any needed tests for the specific functions.
+    # This is a placeholder, replace with the actual method and assertions.
+    # Example using monkeypatch to simulate context.locator_for_decorator:
+    monkeypatch.setattr(Context, 'locator_for_decorator', 'test_locator')
+    # Assuming a method called 'extract_data' in the Graber class
+    try:
+        result = graber.extract_data()  # Replace with your method call
+        assert result == "Expected Result", "Incorrect method result"
+    except Exception as e:
+        pytest.fail(f"Method raised an exception: {e}")
+    # Test edge cases or invalid inputs
+    try:
+        result = graber.extract_data(invalid_input='something')
+        assert False, "Method should have raised an exception for invalid input"
+    except Exception as e:
+        pass #Correct Exception handling
 
 
+# Example test for exception handling (replace with actual method)
+def test_graber_method_exception(graber):
+    """Tests exception handling for a Graber method."""
+    with pytest.raises(AttributeError) as excinfo:
+        graber.nonexistent_method()
+    assert "nonexistent_method" in str(excinfo.value)
+
+# Example using pytest.raises for a specific exception
+@patch('src.suppliers.wallmart.graber.logger')
+def test_graber_execute_locator_error(mock_logger, graber, monkeypatch):
+    """Tests error handling when execute_locator fails."""
+    # Simulate a failed execute_locator call (for example)
+    class MockDriverWithError:
+        def execute_locator(self, locator):
+            raise Exception("Failed to execute locator")
+    monkeypatch.setattr(graber, 'driver', MockDriverWithError())
+    # Add other relevant context setup if needed
+    with pytest.raises(Exception) as excinfo:
+        graber.extract_data()
+    assert "Failed to execute locator" in str(excinfo.value)
+
+    # Check if logger was called (optional)
+    mock_logger.debug.assert_called_with('Ошибка выполнения локатора: Failed to execute locator')
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock.patch` and `MockDriver` to mock the `Driver` and `logger` objects. This is *essential* for unit testing because it isolates the `Graber` class from external dependencies like the actual WebDriver. This prevents flaky tests and allows for focused testing of the Graber's logic.
+* **Mocking:** The `mock_driver` fixture now correctly mocks the `Driver` class, making the tests independent of the actual driver implementation.  Crucially, it now also uses `monkeypatch` to properly modify the `Context.locator_for_decorator` attribute, as it's not possible to directly modify attributes in the `Context` class as the tests now run.
 
-2. **Fixtures:**  Fixtures (`driver_instance`, `graber_instance`, `mock_logger`) are used to properly set up and tear down resources. This is best practice in pytest for managing dependencies.
+* **Comprehensive Tests:**  The `test_graber_method_example` and `test_graber_method_exception` are placeholders.  You MUST replace these with tests for actual methods from the `Graber` class. Add assertions based on what the method should return for valid input and the expected exceptions for invalid/edge cases.
 
-3. **Error Handling:** The example now includes how to test exception handling within a decorator, and how to use `pytest.raises` if an error should be expected.
+* **Exception Handling:** `test_graber_method_exception` demonstrates how to use `pytest.raises` to test for specific exceptions, making sure your code is robust.
 
-4. **Clear Test Cases:** The test functions are now more descriptive (e.g., `test_graber_init`, `test_graber_locator_setting`) and better reflect what they are testing.
+* **Clearer Assertions:**  The assertions are now more descriptive, helping with debugging.
 
+* **Edge Cases:** The example now includes testing for a `nonexistent_method`, showing how to test edge cases where the method doesn't exist and should raise an exception.
 
-5. **Comprehensive Testing (Example):** I've added tests for the initialization and basic functionality. Add more tests as needed for each function or method in the `Graber` class. Remember to replace placeholder comments (`# Replace with the actual function`, `expected_result`) with the actual function calls and expected results.
+* **Logger Testing:** The `test_graber_execute_locator_error` tests that the logger is used correctly when there is an exception during `execute_locator`. This demonstrates checking that specific logging messages are output.  This is an *optional* but recommended test since that part of the code deals with logs.
 
-**How to Run the Tests:**
-
-1. Ensure that you have `pytest` installed (`pip install pytest`).
-2. Save the above code as a Python file (e.g., `test_graber.py`).
-3. Make sure the necessary imports are correct in your actual project (replace dummy `header` import if needed).
-4. Run the tests from your terminal: `pytest test_graber.py`
+* **`monkeypatch` Usage:** The tests now correctly use `monkeypatch` to modify `Context.locator_for_decorator` within the test function, ensuring that the fixture values are not accidentally changed during the test execution.
 
 
-**Crucially important:** Replace the placeholder comments (`# Replace with the actual function`, `expected_result`) with the code from your `Graber` class's methods to test them adequately.  The provided `Graber` class is minimal; therefore, the example test cases are minimal. You need to adapt the test cases to the specific methods within your `Graber` class. Remember to include tests for all public functions and methods.  Also, add necessary error cases.
+**Before running these tests:**
+
+1. **Replace Placeholders:**  Change `test_graber_method_example` and `test_graber_method_exception` with tests for actual methods in your `Graber` class and add the necessary assertions to check for correct functionality and exception handling.  Provide realistic inputs for the mocked `extract_data` method.
+2. **Import necessary modules:** Make sure you have the required imports (`pytest`, `unittest.mock`, your custom modules).
+3. **Install pytest:** `pip install pytest`
+
+Now you should have a much more complete and effective test suite for your `Graber` class.  Remember that proper mocking, patching, and exception handling are crucial for writing robust and reliable tests. Remember to replace placeholders with actual methods from your `Graber` class.

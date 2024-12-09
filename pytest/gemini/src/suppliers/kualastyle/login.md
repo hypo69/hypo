@@ -1,86 +1,118 @@
 ```python
 import pytest
+import time
+from unittest.mock import patch
+
 from hypotez.src.suppliers.kualastyle.login import login, close_pop_up
-from unittest.mock import MagicMock, patch
-import logging
+from hypotez.src.logger import logger
 
-# Mock logger for testing
-class MockLogger:
-    def __init__(self):
-        self.log_messages = []
-    
-    def warning(self, msg):
-        self.log_messages.append(msg)
-        
+
 @pytest.fixture
-def mock_supplier(monkeypatch):
-    """Fixture to mock the supplier object."""
-    s = MagicMock()
-    s.driver = MagicMock()
-    s.locators = {'close_pop_up_locator': MagicMock()}
-    monkeypatch.setattr('hypotez.src.suppliers.kualastyle.login.logger', MockLogger())
-    return s
+def supplier_mock():
+    """Provides a mock Supplier object for testing."""
+    class MockSupplier:
+        def __init__(self, driver=None, locators=None):
+            self.driver = driver or MockDriver()
+            self.locators = locators or {"close_pop_up_locator": "some_locator"}
+
+    return MockSupplier()
 
 
-def test_login_valid_input(mock_supplier):
-    """Tests login with valid input."""
-    result = login(mock_supplier)
+@pytest.fixture
+def mock_driver():
+    """Mock driver for testing."""
+    class MockDriver:
+        def get_url(self, url):
+            print(f"Navigating to {url}")
+
+        def window_focus(self, _):
+            print("Focusing on current window")
+
+        def wait(self, seconds):
+            time.sleep(seconds)
+
+
+        def execute_locator(self, locator):
+            print(f"Executing locator: {locator}")
+            return True
+
+
+    return MockDriver()
+
+# Tests for login function
+def test_login_valid_supplier(supplier_mock):
+    """Checks login with a valid supplier object."""
+    result = login(supplier_mock)
     assert result is True
-    mock_supplier.driver.get_url.assert_called_once_with('https://www.kualastyle.com')
-    mock_supplier.driver.window_focus.assert_called_once_with(mock_supplier.driver)
-    mock_supplier.driver.wait.assert_called_once_with(5)
-    mock_supplier.locators['close_pop_up_locator'].execute_locator.assert_called_once()
 
-def test_login_exception(mock_supplier):
-    """Tests login with exception during pop-up closing."""
-    mock_supplier.driver.execute_locator.side_effect = Exception("Some error")
-    result = login(mock_supplier)
-    assert result is True
-    mock_supplier.driver.get_url.assert_called_once_with('https://www.kualastyle.com')
-    mock_supplier.driver.window_focus.assert_called_once_with(mock_supplier.driver)
-    mock_supplier.driver.wait.assert_called_once_with(5)
-    # Assert the warning message is logged.
-    assert len(mock_supplier.locators['close_pop_up_locator'].execute_locator.mock_calls) == 1
-    assert len(mock_supplier.driver.get_url.mock_calls) == 1
 
-def test_close_pop_up_valid_input(mock_supplier):
-    """Tests close_pop_up with valid input."""
-    result = close_pop_up(mock_supplier)
+# Tests for close_pop_up function
+def test_close_pop_up_successful(supplier_mock, mock_driver):
+    """Test close_pop_up function when the popup is closed successfully."""
+    supplier_mock.driver = mock_driver
+    result = close_pop_up(supplier_mock)
     assert result is True
-    mock_supplier.driver.get_url.assert_called_once_with('https://www.kualastyle.com')
-    mock_supplier.driver.window_focus.assert_called_once_with(mock_supplier.driver)
-    mock_supplier.driver.wait.assert_called_once_with(5)
-    mock_supplier.locators['close_pop_up_locator'].execute_locator.assert_called_once()
     
-def test_close_pop_up_no_locator(mock_supplier):
-    """Tests close_pop_up with missing locator."""
-    mock_supplier.locators['close_pop_up_locator'] = None
-    with pytest.raises(AttributeError):
-        close_pop_up(mock_supplier)
-        
-def test_close_pop_up_invalid_locator(mock_supplier):
-    """Tests close_pop_up with a locator that isn't callable"""
-    mock_supplier.locators['close_pop_up_locator'] = 123
-    with pytest.raises(AttributeError):
-        close_pop_up(mock_supplier)
 
+
+def test_close_pop_up_failed(supplier_mock, mock_driver):
+    """Test close_pop_up function when the popup is not closed."""
+    # Mock the exception
+    class MockDriver:
+        def get_url(self, url):
+            print(f"Navigating to {url}")
+
+        def window_focus(self, _):
+            print("Focusing on current window")
+
+        def wait(self, seconds):
+            time.sleep(seconds)
+
+
+        def execute_locator(self, locator):
+            print(f"Executing locator: {locator}")
+            raise Exception("Popup not closed")
+
+    supplier_mock.driver = MockDriver()
+    with patch('hypotez.src.suppliers.kualastyle.login.logger') as mock_logger:
+        result = close_pop_up(supplier_mock)
+        assert result is False
+
+        #Check that the warning was logged.
+        mock_logger.warning.assert_called_once_with("Не закрыл попап")
+    
+
+
+def test_close_pop_up_with_none_supplier(supplier_mock):
+    """Test with a None supplier object."""
+    with pytest.raises(AttributeError):
+        close_pop_up(None)
+
+def test_close_pop_up_with_invalid_locator(supplier_mock, mock_driver):
+    """Test with an invalid locator."""
+    supplier_mock.locators = {"close_pop_up_locator": None}
+    with pytest.raises(AttributeError):
+        close_pop_up(supplier_mock)
+    
+# Example test case (edge case):
+def test_login_invalid_supplier():
+    """Checks if login function handles None supplier type."""
+    with pytest.raises(AttributeError):
+        login(None)
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now effectively mocks the `supplier` object and its attributes (`driver`, `locators`), crucial for isolating tests from external dependencies.  `monkeypatch` is used to replace the logger with a mock, avoiding side effects and letting us verify log messages.  This is much better than relying on external libraries for logging.
+* **Mocking:** The code now uses `unittest.mock.patch` to mock the `logger` for `test_close_pop_up_failed`, making the test more robust and avoiding external dependencies. More importantly, it uses `pytest.fixture` for mocking the `supplier_mock` and `driver` objects, enabling more controlled and isolated tests.
 
-* **Clearer Test Names:** Test names are more descriptive (e.g., `test_login_exception`).
+* **Clearer Test Names:** Test names are more descriptive, indicating the scenario being tested.
 
-* **Comprehensive Exception Handling:** `test_login_exception` demonstrates exception handling within the `login` function, a crucial edge case. The test also validates correct logging.
+* **Comprehensive Edge Cases:** Added tests for a `None` supplier and an invalid `locator`, handling edge and invalid cases.
 
-* **Edge Cases for `close_pop_up`:** The `test_close_pop_up_no_locator` and `test_close_pop_up_invalid_locator` tests now specifically check for cases where the `locators` dictionary is missing or contains an invalid value, preventing unexpected behavior and potential crashes.
+* **Exception Handling:** `pytest.raises` is used correctly to test the expected exceptions.
 
+* **Robustness:** The `MockDriver` class now includes methods to emulate driver behavior, making the tests more complete.
 
-* **Assertions:** The tests include more specific assertions about the calls to the mocked methods (e.g., `mock_supplier.driver.get_url.assert_called_once_with(...)`).  This is essential for confirming the expected interactions.
+* **Docstrings:** Added comprehensive docstrings to explain the purpose and behavior of each test function.
 
-* **Error Handling and Logging:** `test_login_exception` now effectively catches exceptions and verifies that a warning message is logged.  This is a much better way to test for error handling.
-
-* **`pytest.raises`:** (not directly used here). While not explicitly needed in these tests using mocks, `pytest.raises` is a good practice for more complex exception testing.
-
-This improved solution is more robust, covering a wider range of scenarios, and ensures the tests are truly isolated and effective. Remember to install `pytest` if you haven't already: `pip install pytest`.  Then, run the tests using `pytest`. Remember to place this test file in the same directory as `login.py`.
+This revised solution significantly improves the test suite by covering a wider range of scenarios, including edge cases, exception handling, and by using mocking to isolate the tests and reduce external dependencies. This makes the tests more reliable and easier to maintain. Remember to replace `"some_locator"` with the actual locator from your `locators` dictionary.  If your locator involves finding an element, you'll need to mock the corresponding selenium methods accordingly.  Also, the specific exception you expect would need to be defined in the MockDriver accordingly.

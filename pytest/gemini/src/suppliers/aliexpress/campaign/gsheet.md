@@ -1,159 +1,123 @@
 ```python
 import pytest
-from unittest.mock import patch
 from types import SimpleNamespace
-from gspread.exceptions import APIError
-from gspread.worksheet import Worksheet
 from hypotez.src.suppliers.aliexpress.campaign.gsheet import AliCampaignGoogleSheet
-from hypotez.src.goog.spreadsheet.spreadsheet import SpreadSheet
-from hypotez.src.logger import logger
-# from gspread_formatting import cellFormat, textFormat, numberFormat, format_cell_range, set_column_width, set_row_height, Color
+from unittest.mock import patch
+from gspread.exceptions import APIError
+import logging
 
-# Mock objects for testing
-@pytest.fixture
-def mock_spreadsheet():
-    """Mock object for SpreadSheet."""
-    mock_spreadsheet = SpreadSheet(spreadsheet_id='123')
-    mock_spreadsheet.worksheets = lambda: [
-        SimpleNamespace(title="product", id="1"),
-        SimpleNamespace(title="categories", id="2"),
-        SimpleNamespace(title="campaign", id="3")
+# Mock logger for testing
+logging.basicConfig(level=logging.INFO)  # Configure logging to INFO level
+logger = logging.getLogger(__name__)
+
+# Mock Spreadsheet and Worksheet objects
+@patch('hypotez.src.suppliers.aliexpress.campaign.gsheet.SpreadSheet')
+@patch('hypotez.src.suppliers.aliexpress.campaign.gsheet.Worksheet')
+def test_clear(mock_worksheet, mock_spreadsheet):
+    """Tests the clear method."""
+    campaign_name = 'TestCampaign'
+    campaign_language = 'en'
+    campaign_currency = 'USD'
+    test_campaign = SimpleNamespace(campaign_name=campaign_name, language=campaign_language, currency=campaign_currency)
+
+    # Initialize the class with mock objects
+    mock_gsheet = AliCampaignGoogleSheet(test_campaign.campaign_name, test_campaign.language, test_campaign.currency)
+    mock_gsheet.spreadsheet = mock_spreadsheet.return_value
+    mock_gsheet.spreadsheet.worksheets.return_value = [
+        SimpleNamespace(title='product1'),
+        SimpleNamespace(title='categories'),
+        SimpleNamespace(title='product')
     ]
-    mock_spreadsheet.del_worksheet_by_id = lambda id: None
-    return mock_spreadsheet
 
-@pytest.fixture
-def mock_worksheet(mock_spreadsheet):
-    """Mock object for Worksheet."""
-    mock_worksheet = SimpleNamespace(title="campaign")
-    mock_worksheet.update = lambda range, values: None
-    mock_worksheet.clear = lambda: None
-    mock_spreadsheet.get_worksheet = lambda sheet_name: mock_worksheet
-    return mock_worksheet
+    mock_gsheet.clear()
 
+    mock_spreadsheet.assert_called_once()
+    mock_spreadsheet.return_value.del_worksheet_by_id.assert_called_once_with(
+        'product1'
+        )
+
+
+# Mock Spreadsheet and Worksheet objects
+@patch('hypotez.src.suppliers.aliexpress.campaign.gsheet.SpreadSheet')
+@patch('hypotez.src.suppliers.aliexpress.campaign.gsheet.Worksheet')
+def test_delete_products_worksheets_exception(mock_worksheet, mock_spreadsheet):
+    """Tests the delete_products_worksheets method with an exception."""
+    campaign_name = 'TestCampaign'
+    campaign_language = 'en'
+    campaign_currency = 'USD'
+    test_campaign = SimpleNamespace(campaign_name=campaign_name, language=campaign_language, currency=campaign_currency)
+
+    mock_gsheet = AliCampaignGoogleSheet(test_campaign.campaign_name, test_campaign.language, test_campaign.currency)
+    mock_gsheet.spreadsheet = mock_spreadsheet.return_value
+    mock_gsheet.spreadsheet.worksheets.side_effect = APIError("Mock API error")
+
+    with pytest.raises(APIError) as excinfo:
+        mock_gsheet.delete_products_worksheets()
+    assert "Mock API error" in str(excinfo.value)
+
+# Example fixture for campaign data (replace with your actual data source)
 @pytest.fixture
-def mock_campaign_data():
-    """Mock campaign data for testing."""
+def campaign_data():
+    """Provides test data for the set_campaign_worksheet function."""
     return SimpleNamespace(
         campaign_name="Test Campaign",
         title="Test Title",
         language="en",
         currency="USD",
-        description="Test Description",
-    )
-
-@pytest.fixture
-def mock_category_data():
-    """Mock category data for testing."""
-    return SimpleNamespace(
-        name="Test Category",
-        title="Test Category Title",
-        description="Test Description",
-        tags=["tag1", "tag2"],
-        products_count=10,
-        products=[SimpleNamespace(product_id="123", product_title="Product 1", promotion_link="link1")]
+        description="Test Description"
     )
 
 
-@patch.object(logger, 'error')
-@patch.object(logger, 'info')
-@patch.object(logger, 'success')
-def test_delete_products_worksheets(mock_success, mock_info, mock_error, mock_spreadsheet, mock_worksheet):
-    """Test delete_products_worksheets function."""
-    sheet = AliCampaignGoogleSheet(campaign_name="test")
-    sheet.spreadsheet = mock_spreadsheet
-    sheet.delete_products_worksheets()
-
-    # Assert that no errors were logged
-    assert mock_error.call_count == 0
-    assert mock_info.call_count > 0
-    assert mock_success.call_count > 0
-
-def test_set_campaign_worksheet_valid_data(mock_info, mock_worksheet, mock_campaign_data):
-    """Test set_campaign_worksheet with valid data."""
-    sheet = AliCampaignGoogleSheet(campaign_name="test")
-    sheet.spreadsheet = SimpleNamespace(worksheets=lambda: [mock_worksheet])
-    sheet.set_campaign_worksheet(mock_campaign_data)
-    # Assert that the logger.info function was called.
-    mock_info.assert_any_call("Campaign data written to 'campaign' worksheet vertically.")
-
-def test_set_campaign_worksheet_error(mock_info, mock_error, mock_spreadsheet):
-    """Test set_campaign_worksheet with error."""
-    sheet = AliCampaignGoogleSheet(campaign_name="test")
-    sheet.spreadsheet = mock_spreadsheet
-
-    with pytest.raises(Exception):
-      sheet.set_campaign_worksheet(None) # This will likely cause an error as there is no valid input
-    # Assert that the logger.error function was called.
-    assert mock_error.call_count > 0
-
-def test_set_categories_worksheet_valid_data(mock_info, mock_worksheet, mock_category_data):
-    """Test set_categories_worksheet with valid data."""
-    sheet = AliCampaignGoogleSheet(campaign_name="test")
-    sheet.spreadsheet = SimpleNamespace(worksheets=lambda: [mock_worksheet])
-    sheet.set_categories_worksheet(mock_category_data)
-    assert mock_info.call_count == 1
-
-def test_set_categories_worksheet_missing_attribute(mock_info, mock_error, mock_worksheet):
-    """Test set_categories_worksheet with missing attribute."""
-    sheet = AliCampaignGoogleSheet(campaign_name="test")
-    sheet.spreadsheet = SimpleNamespace(worksheets=lambda: [mock_worksheet])
-    category_data = SimpleNamespace(name="missing_name")
-    with pytest.raises(AttributeError):
-        sheet.set_categories_worksheet(category_data)
-
-    # Assert that the logger.warning function was called.
-    assert mock_warning.call_count > 0
+@patch('hypotez.src.suppliers.aliexpress.campaign.gsheet.SpreadSheet')
+def test_set_campaign_worksheet_valid_input(mock_spreadsheet, campaign_data):
+    """Checks correct behavior with valid input for set_campaign_worksheet."""
+    mock_gsheet = AliCampaignGoogleSheet("TestCampaign", "en", "USD")
+    mock_gsheet.spreadsheet = mock_spreadsheet.return_value
+    mock_gsheet.get_worksheet.return_value = SimpleNamespace(
+        batch_update = lambda x: None # Mock batch_update for testing
+        )
+    mock_gsheet.set_campaign_worksheet(campaign_data)
+    mock_gsheet.get_worksheet.assert_called_once_with('campaign')
+    mock_gsheet.spreadsheet.return_value.batch_update.assert_called_once()
 
 
-def test_set_products_worksheet_valid_data(mock_info, mock_worksheet, mock_category_data):
-    """Test set_products_worksheet with valid data."""
-    sheet = AliCampaignGoogleSheet(campaign_name="test")
-    sheet.spreadsheet = SimpleNamespace(worksheets=lambda: [mock_worksheet])
-    sheet.set_products_worksheet("test_category")
-    assert mock_info.call_count == 1
-    
-    
-# Add more test cases for other functions like get_categories, set_category_products, and error handling for those functions.  This requires mocked data.
+@patch('hypotez.src.suppliers.aliexpress.campaign.gsheet.SpreadSheet')
+def test_set_campaign_worksheet_no_updates(mock_spreadsheet):
+    """Tests set_campaign_worksheet with empty updates list."""
+    mock_gsheet = AliCampaignGoogleSheet("TestCampaign", "en", "USD")
+    mock_gsheet.spreadsheet = mock_spreadsheet.return_value
+    mock_gsheet.get_worksheet.return_value = SimpleNamespace(
+        batch_update = lambda x: None # Mock batch_update for testing
+        )
 
+    mock_gsheet.set_campaign_worksheet(None)  # Trying with None
+    mock_gsheet.get_worksheet.assert_called_once_with('campaign')
 
-
+#Add similar test cases for other functions as per the code (e.g., set_products_worksheet, set_categories_worksheet, etc.)
+# including test cases for invalid input, edge cases, and exceptions as appropriate.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:**  Crucially, the code now uses `unittest.mock.patch` to mock the `logger` and the `SpreadSheet` and `Worksheet` objects. This isolates the tests from external dependencies (like actually interacting with Google Sheets) and prevents real API calls.  This is absolutely vital for robust testing.
+1. **Mocking:** The tests now effectively mock `SpreadSheet` and `Worksheet` objects using `unittest.mock.patch`. This isolates the `AliCampaignGoogleSheet` class from external dependencies like the Google Sheets API, allowing for more controlled testing.  Critically, it avoids actual API calls.
 
-2. **Clearer Fixtures:** Fixtures now properly mock the necessary dependencies.
+2. **Error Handling:** A test `test_delete_products_worksheets_exception` demonstrates how to handle exceptions (`APIError` in this case) that might occur within the function.
 
+3. **Fixture for Data:** A `campaign_data` fixture provides sample data for `set_campaign_worksheet` to avoid repeating the same data in each test.
 
-3. **Error Handling Tests:**  The `test_set_campaign_worksheet_error` and `test_set_categories_worksheet_missing_attribute` examples show how to test for exceptions raised by the functions.
+4. **Comprehensive Test Cases (Partial Example):** The `test_clear` test is an example of how to test a method.  You MUST add similar test cases for each function of your code, including scenarios with invalid inputs, edge cases (like an empty category or list of products), and the various exception paths.  Test the `set_categories_worksheet`, `set_products_worksheet`, `_format_categories_worksheet`, and  `_format_category_products_worksheet` methods as well, and focus on data integrity.
 
+5. **Mock `batch_update`:** Crucially, when mocking the `batch_update` method, you are testing that the function *calls* it. Replace the `lambda x: None` placeholder with more detailed mocking as required to effectively test updates.
 
-4. **Comprehensive Test Cases:** The provided examples are starting points. You need to add more test cases that cover all aspects of the functionality. For example:
-    * Test the `get_categories` function with valid and empty data.
-    * Test the `set_category_products` function with valid and invalid data, checking both successful updates and exception handling.
-    * Add tests for boundary conditions (e.g., very large datasets, empty lists).
-    *  Make sure you test edge cases and error conditions where the code is checking attributes and conditions like `category_name`.
-
-5. **Mock Data Structure:** Mocks for `mock_campaign_data` and `mock_category_data`  are essential for providing specific data to the tests.
-
-6. **`pytest.raises`:**  Use `pytest.raises` to test for expected exceptions, as demonstrated in `test_set_campaign_worksheet_error`.
+6. **Logging Configuration:**  Sets up basic logging for your tests so that you see the `logger` messages during execution, which is helpful for debugging.
 
 
-**Important Considerations:**
+**How to proceed with testing the rest of the code:**
 
-* **`gspread_formatting`:** If you are using external libraries (like `gspread_formatting`) for formatting, you'll need to mock those as well.
-* **Complex Data Structures:** The code deals with `SimpleNamespace` objects, which are useful for representing data structures in tests.
-* **Data Validation:** The tests should include validation to ensure the expected input types and values are passed to methods.
-
-
-**To Run the Tests:**
-
-1.  Ensure you have the necessary libraries installed (`pytest`, `gspread`, `gspread-formatting`).
-2.  Save the tests in a file (e.g., `test_gsheet.py`) in the same directory as `gsheet.py`.
-3.  Run `pytest test_gsheet.py` from your terminal.
+- **`set_products_worksheet`:**  Test with various valid categories and products. Test with `None` or empty category. Test with no products in a category. Ensure exception handling (e.g., `AttributeError`) is working.
+- **`set_categories_worksheet`:** Test with valid `SimpleNamespace` data, an empty `SimpleNamespace` or a `SimpleNamespace` missing required attributes. Ensure that it handles the case where not all categories have all the required attributes gracefully.
+- **`get_categories`:** Test with data in the Google Sheet, and ensure that it returns the correct type and format.
+- **`set_category_products`:** Test with valid input data, a `None` category, empty `products` list.  Test edge cases (e.g., missing data) and exceptions.
 
 
-
-This improved solution provides a solid foundation for comprehensive `pytest` testing of your `AliCampaignGoogleSheet` class, including the crucial steps of mocking dependencies and testing exception handling. Remember to add more tests to cover all the different scenarios and functionalities. Remember to include error handling tests in the `test` files for better code coverage.
+By adding more tests for these functions, considering different input types and conditions, you can thoroughly cover the code's logic.  Remember that testing exception handling is just as important as validating correct behavior. Remember to replace the mock return values (`lambda x: None`) with appropriate mocks that return specific values or raise exceptions, to fully cover your function's logic. Remember to adapt the mock data to your specific needs.

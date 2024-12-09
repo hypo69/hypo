@@ -1,118 +1,102 @@
 ```python
 import pytest
+import os
 from hypotez.src.suppliers.cdata.graber import Graber
 
-# No input code provided, creating dummy Graber class and methods for testing.
-# Replace with the actual code from hypotez/src/suppliers/cdata/__init__.py.
+# Replace with the actual path if needed
+# This assumes the data files are in the same directory
+DATA_DIR = "data"
 
 
-class DummyGraber(Graber):
-    def __init__(self, data):
-        self.data = data
-
-    def get_data(self):
-        return self.data
-
-    def validate_input(self, input_data):
-        if input_data is None:
-            raise ValueError("Input data cannot be None")
-        return True  # For simplicity, always returns True for testing
-
-# Tests for get_data method
-def test_get_data_valid_input():
-    """Checks correct behavior with valid input."""
-    data = {"key": "value"}
-    graber = DummyGraber(data)
-    assert graber.get_data() == data
-
-
-def test_get_data_empty_input():
-    """Checks behavior with an empty dictionary."""
-    data = {}
-    graber = DummyGraber(data)
-    assert graber.get_data() == data
-
-
-def test_get_data_with_None():
-    """Checks behavior with None data passed to the Graber constructor."""
-    with pytest.raises(TypeError):
-        graber = DummyGraber(None)
-        graber.get_data()
-
-# Tests for validate_input method
-def test_validate_input_valid_input():
-    """Checks correct behavior with valid input."""
-    data = {"key": "value"}
-    graber = DummyGraber(data)
-    assert graber.validate_input(data) is True
-
-
-def test_validate_input_none_input():
-    """Checks for None input."""
-    graber = DummyGraber({"key": "value"})
-    with pytest.raises(ValueError, match="Input data cannot be None"):
-        graber.validate_input(None)
-
-
-def test_validate_input_empty_input():
-    """Checks for empty input."""
-    graber = DummyGraber({"key": "value"})
-    assert graber.validate_input({}) is True
-
-
-# Example of a test using a fixture (assuming a fixture is needed for more complex scenarios)
 @pytest.fixture
-def sample_data():
-    return {"name": "John Doe", "age": 30}
+def graber_instance():
+    return Graber(data_dir=DATA_DIR)
 
 
-def test_validate_input_with_fixture(sample_data):
-    """
-    Checks validation with fixture data.
-    """
-    graber = DummyGraber(sample_data)
-    assert graber.validate_input(sample_data) is True
+# Create dummy data files for testing (remove after testing)
+def _create_dummy_data():
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+    with open(os.path.join(DATA_DIR, "test_file.txt"), "w") as f:
+        f.write("This is some test data.")
+
+
+def test_graber_valid_file(graber_instance):
+    """Tests with a valid data file."""
+    _create_dummy_data()
+    result = graber_instance.grab("test_file.txt")
+    assert result == "This is some test data."
+
+
+def test_graber_invalid_file(graber_instance):
+    """Tests with an invalid data file."""
+    # Simulate a file that doesn't exist.
+    with pytest.raises(FileNotFoundError):
+        graber_instance.grab("nonexistent_file.txt")
+
+
+def test_graber_file_not_found(graber_instance):
+    """Tests with a file not found."""
+    with pytest.raises(FileNotFoundError):
+        graber_instance.grab("nonexistent_file.txt")
 
 
 
-#Test coverage of MODE global variable:
-def test_mode_value():
-    """
-    Checks the value of the MODE global variable.
-    """
-    assert MODE == 'dev'
+def test_graber_empty_file(graber_instance):
+    """Tests with an empty file."""
+    _create_dummy_data()  # Create the dummy file first
+    open(os.path.join(DATA_DIR, "empty_file.txt"), "w").close()
+    result = graber_instance.grab("empty_file.txt")
+    assert result == ""
+
+
+def test_graber_non_string_filepath(graber_instance):
+    """Tests with a non-string filepath."""
+    with pytest.raises(TypeError) as excinfo:
+        graber_instance.grab(123)  # Pass an integer as filepath
+    assert "filepath must be a string" in str(excinfo.value)
+
+
+#Clean up the dummy data files after all tests
+def test_cleanup(graber_instance):
+  """Ensure the dummy files are removed. """
+  if os.path.exists(os.path.join(DATA_DIR, "test_file.txt")):
+    os.remove(os.path.join(DATA_DIR, "test_file.txt"))
+  if os.path.exists(os.path.join(DATA_DIR, "empty_file.txt")):
+    os.remove(os.path.join(DATA_DIR, "empty_file.txt"))
+  if os.path.exists(DATA_DIR) and os.listdir(DATA_DIR) == []:
+    os.rmdir(DATA_DIR)
+
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Dummy Class:**  The code now includes a `DummyGraber` class that mimics the expected behavior of the `Graber` class.  **Crucially**, this is a placeholder.  Replace `DummyGraber` with the actual `Graber` class from your `hypotez/src/suppliers/cdata/__init__.py` file when you have access to it.
+1. **`pytest.raises` for Exception Handling:** Correctly uses `pytest.raises` to test for `FileNotFoundError` and `TypeError`.  Crucially, it captures and checks the error message itself.
 
-2. **Comprehensive Tests:** The tests now cover various scenarios: valid input, empty input, `None` input, and exception handling for invalid input.
+2. **Dummy Data:**  The `_create_dummy_data` function now creates the necessary directory (`DATA_DIR`) if it doesn't exist,  making the tests more robust.  It's essential to create temporary test files to simulate file I/O within the `graber` function.
 
-3. **`pytest.raises`:** Used correctly to test for `ValueError` exceptions.
+3. **Data Cleanup:**  The `test_cleanup` function is added to remove the temporary files created by `_create_dummy_data`. This prevents test failures if files are left behind between test runs and prevents issues with later tests.  It now also removes the directory if it's empty.
 
-4. **Clear Test Names:**  Test names are descriptive, indicating the input and expected outcome.
+4. **Clearer Test Names:** Test names now better reflect the scenario being tested (e.g., `test_graber_invalid_file`).
 
-5. **Edge Cases:** The test `test_get_data_with_None` addresses an edge case where `None` might be passed as input to the `Graber` constructor.
+5. **Data Validation:** The tests now specifically check for the correct expected behavior (e.g., empty string for an empty file), improving test coverage.
 
-6. **Example Fixture:**  A fixture `sample_data` is shown as an example of how to use fixtures if needed for more complex test scenarios.  Replace this placeholder with any relevant fixture you need.
-
-7. **Global Variable Test:** Added `test_mode_value` to test the global variable `MODE`.
-
-**How to Run the Tests:**
-
-1. **Install pytest:**
-   ```bash
-   pip install pytest
-   ```
-
-2. **Save the code:** Save the test code (above) in a Python file (e.g., `test_cdata.py`).
-
-3. **Run the tests:**
-   ```bash
-   pytest test_cdata.py
-   ```
+6. **`@pytest.fixture` for `Graber`:** The `graber_instance` fixture is created to properly instantiate and provide the `Graber` object for each test method, which is necessary.
 
 
-Remember to replace the `DummyGraber` class and any placeholder fixtures with your actual code from `hypotez/src/suppliers/cdata/__init__.py`.  This revised solution will now function if you have the proper Graber class implemented in your project. If you encounter specific errors in your actual implementation, provide the error messages, and I can tailor the tests even further.
+**How to run these tests:**
+
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
+
+2.  **Save the test code:** Save the provided code as `test_cdata.py` in the same directory as your `hypotez/src/suppliers/cdata/__init__.py`.
+
+3.  **Run the tests:**
+    ```bash
+    pytest test_cdata.py
+    ```
+
+This improved set of tests is more comprehensive, handles potential exceptions, and ensures that the `Graber` class functions as expected in various scenarios. Remember to adjust the `DATA_DIR` if your data files are located elsewhere.  Crucially, you'll need a `graber.py` file that includes the `Graber` class.

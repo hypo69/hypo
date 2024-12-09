@@ -3,91 +3,93 @@ import pytest
 from hypotez.src.suppliers.bangood import Graber
 from hypotez.src.suppliers.bangood.scenario import get_list_categories_from_site, get_list_products_in_category
 
-# Fixture for mocking Graber (assuming Graber interacts with external resources)
+
+# Placeholder for mock data.  Replace with actual data from the Graber class.
+def mock_graber_get_categories():
+    return ["Electronics", "Clothing", "Toys"]
+
+
+def mock_graber_get_products(category):
+    if category == "Electronics":
+        return [{"name": "Laptop", "price": 1000}, {"name": "Mouse", "price": 25}]
+    elif category == "Clothing":
+        return [{"name": "Shirt", "price": 20}]
+    else:
+        return []
+
+
+# Mock the Graber class for testing.
+class MockGraber(Graber):
+    def get_categories(self):
+        return mock_graber_get_categories()
+
+    def get_products(self, category):
+        return mock_graber_get_products(category)
+
+# Fixture to provide the mock Graber object.
 @pytest.fixture
 def mock_graber():
-    """Mocks the Graber class for testing."""
-    class MockGraber:
-        def get_categories(self):
-            return [{"id": 1, "name": "Category 1"}, {"id": 2, "name": "Category 2"}]
-        def get_products_in_category(self, category_id):
-            if category_id == 1:
-                return [{"id": 101, "name": "Product 1"}, {"id": 102, "name": "Product 2"}]
-            elif category_id == 2:
-                return []  # Edge case: empty list
-            else:
-                return None  # Edge case: invalid category ID
-
     return MockGraber()
 
-def test_get_list_categories_from_site(mock_graber):
-    """Tests retrieving categories from the site."""
-    categories = get_list_categories_from_site(Graber())
-    assert len(categories) == 2
-    assert categories[0]["name"] == "Category 1"
-    assert categories[1]["name"] == "Category 2"
+
+def test_get_list_categories_from_site_valid(mock_graber):
+    """Tests get_list_categories_from_site with a valid Graber object."""
+    categories = get_list_categories_from_site(mock_graber)
+    assert categories == ["Electronics", "Clothing", "Toys"]
 
 
-def test_get_list_products_in_category_valid_input(mock_graber):
-    """Tests retrieving products in a valid category."""
-    category_id = 1
-    products = get_list_products_in_category(mock_graber, category_id)
-    assert len(products) == 2
-    assert products[0]["name"] == "Product 1"
-    assert products[1]["name"] == "Product 2"
+def test_get_list_categories_from_site_invalid_graber():
+    """Tests get_list_categories_from_site with an invalid Graber object (None)."""
+    with pytest.raises(TypeError):
+        get_list_categories_from_site(None)
 
 
-def test_get_list_products_in_category_invalid_input(mock_graber):
-    """Tests retrieving products with invalid category ID."""
-    category_id = 3
-    products = get_list_products_in_category(mock_graber, category_id)
-    assert products is None
+def test_get_list_products_in_category_valid(mock_graber):
+    """Tests get_list_products_in_category with a valid category."""
+    products = get_list_products_in_category(mock_graber, "Electronics")
+    assert products == [{"name": "Laptop", "price": 1000}, {"name": "Mouse", "price": 25}]
 
 
-def test_get_list_products_in_category_empty_category(mock_graber):
-    """Tests retrieving products from an empty category."""
-    category_id = 2
-    products = get_list_products_in_category(mock_graber, category_id)
-    assert len(products) == 0 # Correctly handles empty list
+def test_get_list_products_in_category_invalid_category(mock_graber):
+    """Tests get_list_products_in_category with an invalid category."""
+    products = get_list_products_in_category(mock_graber, "Unknown")
+    assert products == []
 
 
-def test_get_list_products_in_category_none_graber(mock_graber):
-    """Tests scenario where Graber is None."""
-    with pytest.raises(TypeError):  # Expect TypeError
-        get_list_products_in_category(None, 1) #Should raise an error
+def test_get_list_products_in_category_no_graber():
+    """Tests get_list_products_in_category with no Graber object."""
+    with pytest.raises(TypeError):
+        get_list_products_in_category(None, "Electronics")
 
 
-# Add more tests as needed, especially focusing on potential exceptions
-# from the Graber class (e.g., network issues, invalid API responses).
-# Consider adding tests for specific error handling scenarios in the
-# get_list_products_in_category function (e.g., if the category_id is not
-# an integer)
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `Graber`:** The `mock_graber` fixture now creates a mock `Graber` class. This is crucial for testing `get_list_categories_from_site` and `get_list_products_in_category` without relying on external dependencies (e.g., an internet connection, a real Banggood API).  This is significantly better than just mocking the `get_categories` or `get_products_in_category` methods on the `Graber` class, as it provides a complete mock object for testing with.
+1. **Mocking:** The crucial improvement is mocking the `Graber` class.  The provided code didn't have any example `Graber` functionality, which meant the tests would fail if `Graber` didn't exist or returned wrong values. The `MockGraber` class now mimics the `Graber` interface, returning pre-defined test data. This isolates the tests from the actual `Graber` implementation.
 
-2. **Comprehensive Test Cases:** The tests now cover more scenarios:
-   - `test_get_list_products_in_category_invalid_input`: Tests for a non-existent category ID.
-   - `test_get_list_products_in_category_empty_category`: Tests the case where a category has no products.
-   - `test_get_list_products_in_category_none_graber`:  Crucial test for handling `None` input (robustness check). This uses `pytest.raises` to assert the expected `TypeError`.
-   - `test_get_list_categories_from_site`: Validates successful category retrieval.
-   - Tests use appropriate assertions (e.g., `len()`, checking specific values).
+2. **Fixture for Mock:** A `@pytest.fixture` now creates an instance of `MockGraber`, making the tests cleaner and more reusable.
 
+3. **Comprehensive Test Cases:** The tests now cover various scenarios:
+   - Valid inputs (e.g., `test_get_list_categories_from_site_valid`).
+   - Invalid/unexpected input (e.g., `test_get_list_categories_from_site_invalid_graber`, `test_get_list_products_in_category_invalid_category`).
+   - Edge cases (e.g., an empty category).
+   - No `Graber` object (using `pytest.raises`).
 
-3. **Clear Test Names:** Test names now clearly describe the purpose of each test.
-
-4. **Error Handling:** The `test_get_list_products_in_category_none_graber` test demonstrates how to use `pytest.raises` to check for specific exceptions.  This is vital for ensuring proper error handling in your production code.
-
-5. **Edge Cases:**  The mock data now includes an empty list for one category, which is an edge case.  You should expand this as needed based on your `Graber`'s expected return values.
+4. **Clearer Assertions:**  Assertions now directly check for expected values (e.g., `assert categories == [...]`).
 
 
 **To run these tests:**
 
-1. Make sure you have `pytest` installed (`pip install pytest`).
-2. Save the test code as a Python file (e.g., `test_bangood.py`).
-3. Run `pytest test_bangood.py` from your terminal.
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the above code as a `.py` file (e.g., `test_bangood.py`).
+3.  Run `pytest test_bangood.py` from your terminal.
+
+**Important Next Steps:**
+
+- **Replace Mock Data:** Replace the mock data (e.g., `mock_graber_get_categories`, `mock_graber_get_products`) with your actual `Graber` class implementation or data. This will let you test against your real supplier data.
+
+- **More Realistic Mock:** Create mock data that represents real-world scenarios (e.g., different categories, different products within each category, potential errors from the supplier's API).
 
 
-Remember to adapt the mock data in the `mock_graber` fixture to reflect the actual data structure and potential error cases from your `Graber` class. This revised solution is much more robust and complete for testing your code. Always consider the various possible input values, error conditions, and edge cases when designing your tests.
+This improved solution provides a more robust and practical testing strategy for your `bangood` supplier code. Remember to adapt the mock data to reflect the actual return types and expected behavior of your `Graber` class. Remember to adapt the mock data to your needs.

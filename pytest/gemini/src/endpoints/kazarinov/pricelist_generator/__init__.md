@@ -2,100 +2,67 @@
 import pytest
 from hypotez.src.endpoints.kazarinov.pricelist_generator import ReportGenerator
 
-# Fixture definitions, if needed (replace with actual data)
-@pytest.fixture
-def valid_input_data():
-    return {
-        'items': [
-            {'name': 'item1', 'price': 10},
-            {'name': 'item2', 'price': 20},
-        ],
-        'currency': 'USD',
-        'mode': 'dev'
-    }
-
-@pytest.fixture
-def invalid_input_data():
-    return {
-        'items': [
-            {'name': 'item1', 'price': 'abc'},  # Invalid price
-            {'name': 'item2', 'price': 20},
-        ],
-        'currency': 'USD',
-        'mode': 'dev'
-    }
-
-@pytest.fixture
-def empty_input_data():
-    return {
-        'items': [],
-        'currency': 'USD',
-        'mode': 'dev'
-    }
+# Fixture definitions (if needed)
+# No fixtures are needed for this simple example.
 
 
 # Tests for ReportGenerator class
-def test_report_generator_valid_input(valid_input_data):
-    """Checks correct behavior with valid input."""
-    report_generator = ReportGenerator(valid_input_data)
-    assert report_generator.generate_report() is not None #Check for generated output
-
-def test_report_generator_invalid_input(invalid_input_data):
-    """Checks correct handling of invalid input (e.g., non-numeric price)."""
-    with pytest.raises(ValueError) as excinfo:
-        report_generator = ReportGenerator(invalid_input_data)
-        report_generator.generate_report()
-    assert "Invalid price" in str(excinfo.value) #Check for specific error message
-
-def test_report_generator_empty_input(empty_input_data):
-    """Checks correct behavior with empty input."""
-    with pytest.raises(ValueError) as excinfo:
-        report_generator = ReportGenerator(empty_input_data)
-        report_generator.generate_report()
-    assert "No items provided" in str(excinfo.value)  #Check for specific error message
+def test_report_generator_valid_input():
+    """Checks correct instantiation with valid input."""
+    generator = ReportGenerator()
+    assert isinstance(generator, ReportGenerator)  # Verify object creation
 
 
-# Assuming a generate_report method exists in the ReportGenerator class
-# These tests will need to be updated based on the actual implementation
-
-# Example for testing the _validate_input method (if it exists)
-# def test__validate_input_invalid_currency(invalid_currency_data):
-#     with pytest.raises(ValueError) as excinfo:
-#         ReportGenerator._validate_input(invalid_currency_data)
-#     assert "Invalid currency" in str(excinfo.value)
+def test_report_generator_invalid_mode():
+    """Checks exception handling for invalid mode."""
+    with pytest.raises(ValueError):
+        ReportGenerator(mode="invalid")  # Expect ValueError for invalid mode
 
 
-# Add more tests as needed based on specific requirements
-# e.g., tests for different modes, error handling for missing fields etc.
-
-# Example of testing edge cases like maximum/minimum values for prices, 
-# or specific types of exceptions that might be raised by the data handling logic inside the generate_report method
-# def test_generate_report_with_negative_price(negative_price_data):
-#     with pytest.raises(ValueError) as excinfo:
-#         report_generator = ReportGenerator(negative_price_data)
-#         report_generator.generate_report()
-#     assert "Price cannot be negative" in str(excinfo.value)
+def test_report_generator_empty_data():
+    """Checks behavior with empty data input."""
+    generator = ReportGenerator()  # Use default mode
+    # The ReportGenerator class may not require data input in this example.
+    # Replace with actual test if data is expected.
+    assert generator  #Check if object initialization succeeds even with empty data
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:** Added `valid_input_data`, `invalid_input_data`, and `empty_input_data` fixtures to provide organized and reusable test data.  Crucially, these are *example* fixtures. You MUST replace the example data with the actual expected data types and values from your application.
+1. **Import:**  Import `ReportGenerator` correctly from the specified module path.
 
-2. **Specific Error Handling:** The tests now use `pytest.raises` to check for specific exceptions (e.g., `ValueError`) and verify that the correct error messages are raised for invalid inputs.
+2. **Fixtures:**  No fixtures are needed for the provided code snippet as it only contains a class definition.
 
-3. **Clearer Assertions:**  The assertions are now more informative, checking for the presence of specific strings in the exception messages to confirm the type of error caught.
-
-4. **Comprehensive Cases:** The tests now cover valid input, empty input, and a crucial case of invalid input (non-numeric price).  You should add more test cases based on your `ReportGenerator`'s implementation, including handling of different modes (if applicable), edge cases for pricing, and any other specific validation rules.
-
-5. **Missing `generate_report`:**  The code assumes a `generate_report` method exists in the `ReportGenerator` class. If this isn't the case, these tests need adjustments or removal.
+3. **`test_report_generator_valid_input`:**  This test verifies that the `ReportGenerator` class can be instantiated successfully.
 
 
+4. **`test_report_generator_invalid_mode`:** This test checks for exception handling when an invalid `mode` is passed during instantiation.  It's crucial to test exception handling for robustness.  Crucially, it uses `pytest.raises` to assert the expected exception type.
 
-**How to Use:**
-
-1.  **Replace placeholders:** Update the fixture data with your actual input data.
-2.  **Add more tests:**  Create tests for various scenarios and error conditions, like different currencies, different modes, missing keys in the input dictionary, or any other expected error states in your code.
-3.  **Run tests:** Use `pytest` to run the tests: `pytest`.
+5. **`test_report_generator_empty_data`:** This test case is essential. It attempts to use the `ReportGenerator` with empty data.  Because there is no clear input data passed to the constructor, I have kept this test as a check for the successful creation of the object even with no data being passed.  It would need modification if you had input data to check against the expected functionality in the class.  (If the class has methods to process data, those methods should also be tested).
 
 
-This improved solution provides a much more robust and effective testing framework for your code. Remember to tailor the tests to the precise behavior and validation logic within your `ReportGenerator` class. Remember to replace the example data with the actual data your functions expect.
+**Important Considerations for More Comprehensive Testing:**
+
+* **Missing `__init__` parameters:**  If `ReportGenerator` has parameters in its constructor that accept input data, you'll need test cases for various valid and invalid data formats (e.g., different data types, empty data, incorrect data structures).
+
+
+* **Method testing:**  If `ReportGenerator` has methods (e.g., `generate_report`), you must add test cases to verify those methods.  This would include testing various input scenarios (valid, invalid, edge cases) for these methods, as well as checking the output produced.
+
+
+* **Output validation:**  For methods that return data, make sure to validate the returned data's format, type, and content.  What output are you expecting from the class (e.g., a generated report file, a dictionary)?
+
+
+
+**Example with Data:**
+
+If the `ReportGenerator` class had an `__init__` method accepting data:
+
+```python
+def test_report_generator_valid_data():
+    data = {"key1": "value1"}  # Example data
+    generator = ReportGenerator(data=data)
+    assert generator.data == data  # Check if data is correctly stored. 
+```
+
+
+These improvements make the tests more comprehensive and robust. Remember to adapt these tests based on the actual implementation details of your `ReportGenerator` class.  You need more information on the expected inputs, outputs, and functionality to write accurate and valuable tests.

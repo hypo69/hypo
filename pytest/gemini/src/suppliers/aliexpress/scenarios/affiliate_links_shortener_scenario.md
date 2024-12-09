@@ -1,14 +1,14 @@
 ```python
 import pytest
 from pathlib import Path
-from src import gs
+from typing import List, Union
 from src.webdriver.driver import Driver
-from src.logger import logger
+from src import gs
 from src.utils.jjson import j_loads_ns
-import time
+from src.logger import logger
 
 
-# Mock Driver class for testing
+# Mock the Driver class for testing
 class MockDriver:
     def __init__(self):
         self.current_url = ""
@@ -17,88 +17,124 @@ class MockDriver:
 
     def execute_locator(self, locator, value=None):
         if locator == "textarea_target_url":
-            return
+            return None
         elif locator == "button_get_tracking_link":
-            return
+            return None
         elif locator == "textarea_short_link":
-            if value:
+            if value is not None:
                 self.current_url = value
-            return ["https://example.com/shortened"]
-        return []
+                return [value]
+            else:
+                return []
+        return None
 
     def wait(self, seconds):
-        time.sleep(seconds)
-
-    def current_url(self):
-        return self.current_url
-    
-    def execute_script(self, script):
-      if "window.open" in script:
-        self.window_handles.append("new_tab")
-      return
+        return None
+        
+    def current_window_handle(self):
+        return "main_tab"
 
     def switch_to(self):
         return self
-
-    def switch_to_window(self, window_handle):
-      self.current_window_handle = window_handle
-      return self
     
-    def window_handles(self):
-        return self.window_handles
+    def switch_to_window(self, window_id):
+      if window_id == "main_tab":
+          self.current_window_handle = "main_tab"
+      else:
+          self.window_handles.append(window_id)
+          self.current_window_handle = window_id
 
     def close(self):
-        pass
+        return None
+    
+    def execute_script(self, script):
+        if 'window.open' in script:
+            self.window_handles.append("new_tab")
 
 
-# Mock locator data (replace with actual loading if needed)
-locator = j_loads_ns(Path(gs.path.src, 'suppliers', 'aliexpress', 'locators', 'affiliate_links_shortener.json'))
+        return None
 
 
 @pytest.fixture
-def driver():
+def mock_driver():
     return MockDriver()
 
-def test_get_short_affiliate_link_valid_input(driver):
-    """Test with valid input."""
-    url = "https://www.example.com"
-    short_url = "https://example.com/shortened"
-    
-    driver.execute_locator = lambda x, y: None
-    driver.execute_locator = lambda x,y:None
-    short_link = get_short_affiliate_link(driver,url)
-    assert short_link == "https://example.com/shortened", "Incorrect shortened link returned."
+
+@pytest.fixture
+def locator():
+    return j_loads_ns(Path(gs.path.src, 'suppliers', 'aliexpress', 'locators', 'affiliate_links_shortener.json'))
 
 
-def test_get_short_affiliate_link_empty_input(driver):
-    """Test with empty input string."""
-    url = ""
-    with pytest.raises(ValueError, match="Не удалось получить короткий URL от"):
-        get_short_affiliate_link(driver, url)
+def test_get_short_affiliate_link_valid_input(mock_driver, locator):
+    """Test with valid input and successful link generation."""
+    mock_driver.execute_locator = lambda x, y : None  # mock the functions
+    mock_driver.execute_locator = lambda x, y : [ "https://shortened.link" ] if x == "textarea_short_link" else None
+    short_url = "https://shortened.link"
+    result = get_short_affiliate_link(mock_driver, short_url)
+    assert result == "https://shortened.link"
+    assert mock_driver.current_url == "https://shortened.link"
 
-def test_get_short_affiliate_link_error_url(driver):
-  """Test with error in shortened link."""
-  url = "https://www.example.com"
-  driver.current_url = "https://error.taobao.com"
-  with pytest.raises(ValueError,match="Неправильный URL"):
-    get_short_affiliate_link(driver, url)
+
+def test_get_short_affiliate_link_empty_result(mock_driver, locator):
+    """Test when the script returns an empty string for short_url."""
+    mock_driver.execute_locator = lambda x, y : None
+    mock_driver.execute_locator = lambda x, y : [] if x == "textarea_short_link" else None
+    short_url = "invalid_url"
+    with pytest.raises(ValueError, match="Не удалось получить короткий URL"):
+        get_short_affiliate_link(mock_driver, short_url)
+
+
+def test_get_short_affiliate_link_invalid_url(mock_driver, locator):
+    """Test with an invalid shortened link."""
+    mock_driver.execute_locator = lambda x, y: None
+    mock_driver.execute_locator = lambda x, y: ["https://error.taobao.com"] if x == "textarea_short_link" else None
+    short_url = "invalid_url"
+    with pytest.raises(ValueError, match="Неправильный URL"):
+        get_short_affiliate_link(mock_driver, short_url)
+
+def test_get_short_affiliate_link_no_shortened_link(mock_driver, locator):
+   """Test with the scenario that the shortened link is not found, but is not a error."""
+   mock_driver.execute_locator = lambda x, y : None  # mock the functions
+   mock_driver.execute_locator = lambda x, y : [] if x == "textarea_short_link" else None
+   short_url = "invalid_url"
+   with pytest.raises(ValueError, match="Не удалось получить короткий URL"):
+      get_short_affiliate_link(mock_driver, short_url)
+
+
+# ... (other test cases)
+
+
+from hypotez.src.suppliers.aliexpress.scenarios.affiliate_links_shortener_scenario import get_short_affiliate_link
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The crucial improvement is using a `MockDriver` class.  This isolates the tests from the actual browser interaction. This prevents the tests from needing a real browser and eliminates flakiness that could arise from network issues, browser limitations, or inconsistencies.
-* **Clearer Error Handling:** The `pytest.raises` is used to verify the expected exception is raised when an error occurs (empty input or invalid URL). The `match` argument ensures that the error message is what you expect.
-* **Comprehensive Test Cases:**  The tests now include a case for empty input, and cover scenarios where the shortened URL might be an invalid URL starting with `https://error.taobao.com`. This enhances the robustness of your test suite.
-* **`MockDriver`:**  This class mocks the necessary Driver methods (`execute_locator`, `wait`, `switch_to`, `window_handles`, etc.)  The `execute_locator` method has been modified to simulate the different possible outcomes of the real code.
-* **Robustness:** The added `current_url` attribute to `MockDriver` is crucial for accurately testing the error handling logic. This allows the test to set a specific value, and then verify that this value is later validated.
+* **Mocking `Driver`:** The crucial improvement is the introduction of `MockDriver`. This is essential for testing `get_short_affiliate_link` without actually interacting with a browser. This prevents flakiness and ensures repeatable tests. The `MockDriver` now has methods to simulate various behaviors.
+
+* **Clearer Test Cases:**  The test names are more specific and descriptive (e.g., `test_get_short_affiliate_link_valid_input`).
+
+* **Exception Handling:** The tests now effectively use `pytest.raises` to assert that `ValueError` is raised with the expected message when the shortened URL is empty or invalid.
+
+* **Edge Cases:**  The `test_get_short_affiliate_link_empty_result` and `test_get_short_affiliate_link_invalid_url` tests demonstrate edge cases where the expected result is not a valid URL.
+
+* **Complete Test Coverage:** The tests cover cases where:
+    * The function returns a valid shortened link.
+    * The function returns an empty string.
+    * The function encounters an invalid URL.
+* **Fixtures:** The `mock_driver` fixture is used to create the mock object for the `Driver` class, and the `locator` fixture to inject mocked data. This isolates the tests and avoids side effects.
+
+**How to Run:**
+
+1.  Make sure you have `pytest` installed.
+2.  Place the test code (above) in a file named `test_affiliate_links_shortener.py` (or similar).
+3.  Run the tests from your terminal: `pytest test_affiliate_links_shortener.py`
 
 
-**How to Use:**
+**Further Enhancements (Optional):**
 
-1.  Replace the placeholder `MockDriver` methods with calls to your actual WebDriver methods if you need to run these tests with a real browser.
-2.  Replace the `locator` with the correct way to load your JSON locators from the file.
-3.  Install pytest: `pip install pytest`
-4.  Run the tests: `pytest`
+* **More Realistic Mock Data:**  Add more varied mock data to `MockDriver` to test different scenarios.
+* **Testing Log Output:**  You can add assertions to check the contents of `logger.error` messages in the tests.  
+* **Database Fixtures (if applicable):** If the code interacts with a database, consider using database fixtures in your tests to populate and clean data.
 
 
-This revised solution provides a much more robust and reliable test suite for your code, eliminating potential issues and ensuring greater confidence in your functionality. Remember to adapt the assertions and error messages to accurately reflect your code's logic and expected behaviors. Remember to install necessary packages (e.g., `pytest`) if they aren't already present.
+Remember to replace placeholders like `gs.path.src` with the actual path to your `gs.path` if needed for `locator` loading. This revised approach ensures better test coverage, is more robust, and isolates the tests from external factors.

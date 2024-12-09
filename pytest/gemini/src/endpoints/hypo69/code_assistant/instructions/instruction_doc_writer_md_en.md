@@ -2,24 +2,27 @@
 
 ## Overview
 
-This module provides functions for generating documentation for Python code in Markdown format.  It includes functionalities for creating detailed documentation for classes and functions, complete with parameter descriptions, return values, and exception handling.  The documentation also includes a table of contents.
+This module provides a function for generating Markdown documentation for Python code.  It ensures the documentation follows specific formatting guidelines, including detailed descriptions of functions, classes, and methods, a table of contents, and consistent formatting throughout.
+
 
 ## Functions
 
 ### `generate_documentation`
 
-**Description**: This function takes a Python file path as input and generates the corresponding documentation in Markdown format.
+**Description**: This function takes a Python file path as input and generates the corresponding Markdown documentation.
 
 **Parameters**:
 
-- `filepath` (str): The path to the Python file to be documented.
+- `filepath` (str): The path to the Python file for which to generate documentation.
 
 
 **Returns**:
 
 - str: The generated Markdown documentation string.
 
+
 **Raises**:
 
-- `FileNotFoundError`: If the input file does not exist.
-- `Exception`: For any other errors during the documentation generation process.
+- `FileNotFoundError`: If the input `filepath` does not exist.
+- `TypeError`: If the input is not a string.
+- `Exception`: If any other error occurs during the documentation generation process.

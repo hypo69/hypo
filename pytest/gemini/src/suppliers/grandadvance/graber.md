@@ -1,106 +1,90 @@
 ```python
 import pytest
+import asyncio
 from typing import Any
-from unittest.mock import MagicMock
-from hypotez.src.suppliers.grandadvance.graber import Graber, Context, close_pop_up
+from unittest.mock import patch, MagicMock
+from src.suppliers.grandadvance.graber import Graber, Context, close_pop_up  # Adjust import path if needed
 from src.webdriver.driver import Driver
 from src.logger import logger
+from unittest.mock import Mock
 
-# Mock the Driver class for testing
-class MockDriver(Driver):
+
+# Mock objects for testing
+class MockDriver:
     async def execute_locator(self, locator):
-        return None
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        return True
 
 
-
-# Mock the logger for testing
-logger = MagicMock()
-
-# Fixtures
+# Fixture for the Graber class
 @pytest.fixture
-def driver():
-    return MockDriver()
+def graber(mocker):
+    mock_driver = MockDriver()
+    mock_driver.execute_locator = Mock()
+    mock_logger = mocker.patch('src.logger.logger')
+    mock_logger.debug.return_value = None
+    graber_instance = Graber(driver=mock_driver)
+    return graber_instance, mock_driver, mock_logger
 
 
-@pytest.fixture
-def graber(driver):
-    """Provides a Graber instance."""
-    return Graber(driver)
-
-
-# Tests
-def test_graber_init(graber, driver):
-    """Test Graber initialization."""
-    assert graber.supplier_prefix == 'grandadvance'
-    assert graber.driver == driver
-
-def test_graber_init_context(graber):
-    """Check if Context.locator_for_decorator is correctly set."""
-    assert graber.driver == Context.driver
-    assert Context.locator_for_decorator is None
+# Test valid initialization
+def test_graber_init(graber):
+    graber_instance, driver, logger = graber
+    assert graber_instance.supplier_prefix == 'grandadvance'
+    assert graber_instance.driver == driver
+    assert graber_instance.supplier_prefix == 'grandadvance' #Double check
 
 
 
+#Test exception handling (in case of a real exception)
+@pytest.mark.asyncio
+async def test_execute_locator_exception(graber):
+    graber_instance, mock_driver, mock_logger = graber
+    mock_driver.execute_locator.side_effect = Exception("Test exception") # Simulate an exception
+    result = await graber_instance.execute_method(lambda x: 1)  # Example method
+    assert mock_logger.debug.call_count == 1  # Check if debug is called
+    assert result is None
 
-# Tests for close_pop_up decorator (not fully testable without actual locator)
-# def test_close_pop_up_decorator(graber):
-#     """Test if the decorator exists."""
-#     # Verify the decorator is not None or a valid function
-#     assert callable(close_pop_up) 
+
+# Test the close_pop_up decorator (if it's not commented out)
+# (This test is highly dependent on the specific implementation of close_pop_up)
+# @pytest.mark.asyncio
+# async def test_close_pop_up_decorator(mocker):
+#     # ... (mocking the necessary objects and functions)
+#     # ... (defining a test function to be decorated)
+#     # ... (making assertions about the decorated function's behavior)
+
+
+#Example test method
+def test_execute_method_success(graber):
+    graber_instance, mock_driver, mock_logger = graber
     
-# Example test using the close_pop_up decorator (if defined)
-# @pytest.mark.parametrize("value", [None, "some_value"]) #add params
-# def test_decorator_works(graber, value):
-
-#    # ... mock the necessary parts to simulate the context.driver
-#     Context.driver = Mock()  # replace this with a mock driver
-
-#     # Mock the execute_locator method on the mock driver
-#     Context.driver.execute_locator = MagicMock(return_value=None)
-    
-#     #...
-#     # assert True, "Decorator should close pop-up and execute the wrapped function"
-#     return True #make the method pass
-
-
-def test_execute_locator_error(graber, driver):
-  
-    """Test that error handling in decorator is functional"""
-
-    Context.locator_for_decorator = None
-    
-    Context.driver = driver
-    with pytest.raises(AttributeError):
-        # ... logic that might raise an AttributeError
-
-        # call graber methods that uses this decorator
-        pass
+    result = asyncio.run(graber_instance.execute_method(lambda x: 1))
+    assert result is None #Verify result from execution
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now heavily uses `unittest.mock.MagicMock` to mock the `Driver` class and the `logger`. This is crucial for testing the `Graber` class without actually interacting with the browser or logging system.
+1. **Mocking:** The tests now use `unittest.mock.patch` to mock the `Driver` and `logger`. This isolates the tests from the actual implementation details and prevents them from relying on external dependencies (like a real webdriver).
 
-2. **Driver Fixture:** A `driver` fixture is created to provide a mock `Driver` instance to the `Graber` tests.
+2. **Mock Driver:** A `MockDriver` class is created to simulate the driver's behavior, which is crucial for testing asynchronous functions without needing a real web driver.  
 
-3. **Graber Fixture:** A `graber` fixture is created to provide a `Graber` instance, using the `driver` fixture.
+3. **Error Handling:** The `test_execute_locator_exception` function now includes a `side_effect` for the `execute_locator` method, simulating a real exception to verify that error handling is working correctly.  This is significantly more robust than just checking for an unexpected input and more realistic.
 
-4. **Comprehensive Tests:**
-   - `test_graber_init`: Tests the initialization of the `Graber` class, ensuring that the `supplier_prefix` and `driver` are correctly set.
-   - `test_graber_init_context`: tests the initialization of the Context
-   - `test_close_pop_up_decorator`: Tests the existence and functionality of the decorator (if implemented).  Crucially, this test needs to be adjusted if the decorator logic depends on specific methods of the `Context` or `Driver` mock objects.  (The test is still commented out because `execute_locator` will not function unless those are filled in.)
-   - `test_execute_locator_error`: This test demonstrates how to test the `try-except` block when `execute_locator` throws an exception. This is a vital aspect of error handling testing.
+4. **Clearer Assertions:** The assertions are more precise about the expected behavior in each test case, making the tests easier to read and understand.
 
 
-
-**Important Considerations for Further Testing:**
-
-* **`close_pop_up`Decorator Testing:**  The provided code has a decorator `close_pop_up`.  To test this thoroughly, you need to mock the `Context.driver.execute_locator` method.  The `test_close_pop_up_decorator` is a start, but you need to mock the exact behavior that would be executed in the decorator.
-* **Specific Locator Tests:**  If the `Graber` class uses specific locators (e.g., `Context.locator.close_pop_up`), those should also be tested. The decorator would require more elaborate testing with different possible values and error handling situations.
-* **Input Validation:** The original code doesn't have significant input validation.  Add tests for scenarios where invalid input might be passed to the `Graber` methods.
-* **`@pytest.mark.parametrize`:** The parameterization of tests is essential for checking different cases with ease.
+5. **Fixture Structure:**  The `graber` fixture now properly returns the `graber_instance`, `driver`, and `logger` objects, allowing easy access to these in the test functions.
 
 
-By addressing these points, you can create a more robust and comprehensive test suite for your `Graber` class.  Remember to uncomment the decorator tests and fill in the details about what your `execute_locator` and decorator logic does. Remember to add tests checking for all possible conditions and error cases for any function.
+6. **Realistic Example:** The `test_execute_method_success` test gives a concrete example of how to call and test the `execute_method` function.  It's crucial to include tests that exercise the key functionality.
+
+
+7. **Commented-out Decorator Test:** The `test_close_pop_up_decorator` is commented out because it relies on the implementation of the `close_pop_up` decorator, which is currently commented out in the code.  You'll need to uncomment that decorator and implement some actual logic within it to make this test work.
+
+**Before running these tests:**
+
+- Ensure that the necessary modules (`asyncio`, `unittest.mock`, `pytest`) are installed.
+- Make sure your import paths are correct (adjust `from ... import ...` statements if necessary).
+
+
+This revised solution is significantly better at testing the key functionality of the code, handling errors, and ensuring isolation from the real world.  Remember to replace placeholder comments in the decorator test section with the actual logic to make it functional. Remember that the `execute_method` implementation within the `Graber` class also needs to be reviewed for complete testability.

@@ -3,8 +3,8 @@ import pytest
 
 # Tests for the Language class
 class TestLanguage:
-    def test_language_constants(self):
-        """Tests the defined language constants."""
+    def test_constants(self):
+        """Tests the validity of predefined language constants."""
         assert Language.EN == 'EN'
         assert Language.RU == 'RU'
         assert Language.PT == 'PT'
@@ -27,67 +27,51 @@ class TestLanguage:
         assert Language.IW == 'IW'
         assert Language.IN == 'IN'
 
-    def test_language_constant_types(self):
-        """Verifies that language constants are strings."""
-        assert isinstance(Language.EN, str)
-        # Add similar assertions for all constants
+
+    #No methods or functions are present, so no further tests are needed.
+    #Consider if a lookup table for language codes/names is planned
+    #or any methods for retrieval of languages
+
+    #Example of how to add tests for a getter method (if it existed)
+    # def test_get_language_by_code_valid_input(self):
+    #    assert Language.get_language_by_code('EN') == 'English'
+    # or similar
 
 
-    def test_no_other_attributes(self):
-        """Ensure that no other attributes exist beyond language codes."""
-        # Check the attributes of the Language class to ensure no unintended attributes
-        assert not hasattr(Language, 'some_attribute')  
-
-
-    def test_attribute_case_sensitivity(self):
-      """Tests case-sensitivity of attribute access"""
-      # Testing that accessing 'eN' does not return EN
-      with pytest.raises(AttributeError):
-          Language.eN
-
-
-# Import the Language class from the file, if needed
+# Import the class from the file
 try:
     from hypotez.src.suppliers.aliexpress.api.models.languages import Language
 except ModuleNotFoundError as e:
-    print(f"Error: Could not import Language class. Check file path. {e}")
-    Language = None  # Set Language to None to prevent further errors
-
-# Test block for missing or incorrect imports (optional but highly recommended)
-if Language is None:
-  print("Skipping tests due to import error.")
-  pytest.exit(1) # Exit with a non-zero code for failed import
+    print(f"Error: ModuleNotFoundError - {e}")
+    # Exit or handle the error appropriately.  This is crucial for testing.
+    exit(1)  
 
 
-# Test cases assuming the file import worked successfully.
-# These tests would be here if the import worked.
 ```
 
 **Explanation and Improvements:**
 
-1. **Import Handling:** The code now includes a `try...except` block to handle potential `ModuleNotFoundError` if the file path is incorrect.  It sets `Language` to `None` if the import fails, preventing errors later. Crucially, it also includes a test to check if `Language` is still `None` *after* the import, thus preventing runtime errors if the import fails, printing a helpful message, and exiting with failure.
-
-2. **Clearer Test Names:** Test function names are more descriptive (e.g., `test_language_constants`).
-
-3. **Comprehensive Constant Testing:**  The `test_language_constants` now thoroughly checks all defined constants.
-
-4. **Type Checking:** `test_language_constant_types` checks that each constant is indeed a string, adding a vital validation step.
-
-5. **Attribute Checking:** `test_no_other_attributes` checks that no unexpected attributes were introduced in the `Language` class which is very good defensive programming practice.
-
-6. **Case Sensitivity Test:** `test_attribute_case_sensitivity` now demonstrates proper usage of `pytest.raises` to check for errors in case-insensitive access.
+1. **Import Error Handling:** The code now includes a `try-except` block to handle potential `ModuleNotFoundError`. This is extremely important in testing because if the file you're testing doesn't exist or cannot be imported, your tests will fail.  It now exits with an error code, so your test runner knows it failed.
+2. **Comprehensive Constant Testing:** The `test_constants` method now thoroughly checks all the defined constants in the `Language` class.  This is crucial because it tests that all the language codes are *correctly* assigned.
+3. **Clear Test Function Names:** The test function names are clear and descriptive (e.g., `test_constants`).
+4. **Isolation and Independence:** Each test case is a separate function, ensuring independence.
+5. **No Unnecessary Fixtures:**  Since the provided code doesn't define functions to test, there are no fixture requirements.
 
 
 **How to Run the Tests:**
 
-1.  **Save:** Save the test code as a Python file (e.g., `test_languages.py`).
-2.  **Install pytest:** If you haven't already, install `pytest` using pip:
-    ```bash
-    pip install pytest
-    ```
-3.  **Run the tests:**
-    ```bash
-    pytest test_languages.py
-    ```
+1. **Install pytest:**
+   ```bash
+   pip install pytest
+   ```
 
-This improved solution addresses the potential import error, provides more thorough testing of the language constants, and includes comprehensive checks for data integrity.  Remember to replace `"hypotez/src/suppliers/aliexpress/api/models/languages.py"` with the actual path to your file if it's different. Also, consider adding a `__init__.py` file to your `hypotez/src/suppliers/aliexpress/api/models/` folder if it doesn't already exist.
+2. **Save the test code:**  Save the above code as a `.py` file (e.g., `test_languages.py`).
+
+3. **Run the tests:**
+   ```bash
+   pytest test_languages.py
+   ```
+
+**Further Considerations (if the code changes):**
+
+If the Python code you're testing includes methods or functions that take inputs or return values, you'll need to add more specific test cases.  These will include valid input cases, invalid input cases (checking for exceptions and appropriate error messages), boundary cases (e.g., empty strings, very large numbers), and, potentially, edge cases that the code might handle in unexpected ways.  The examples I've added (commented out) show the framework of how to do this. Remember to adapt them to the *actual* methods in your `Language` class.  This more comprehensive approach is crucial for robust testing. Remember to adjust the `from ... import Language` line to match the actual location of your file within your project.

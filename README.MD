@@ -1,5 +1,21 @@
-[Русский](https://github.com/hypo69/hypo/blob/master/README.RU.MD)
-# Project Hypotez
+
+<TABLE >
+<TR>
+<TD>
+[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>code</A>] 
+</TD>
+<TD>
+[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/README.MD'>docs</A>] 
+</TD>
+
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.RU.MD'>Русский</A>
+</TD>
+</TABLE>
+
+
+Project Hypotez
+===================
 
 ## Contents
 
@@ -18,7 +34,7 @@
   - [Setting Up Credentials](#setting-up-credentials)
 
 - [Code](https://github.com/hypo69/hypo/blob/master/src/README.MD)
-- [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/out/en) (**Not Ready* 😕)
+- [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/out/en/toc.md) (**Not Ready* 😕)
 - [User Scenarios](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/README.MD) (**Not Ready* 😕)
 - [Tests](https://github.com/hypo69/hypo/tree/master/pytest)
 - [Additional Information](#additional-information)

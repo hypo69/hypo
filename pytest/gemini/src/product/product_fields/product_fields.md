@@ -3,124 +3,151 @@ import pytest
 from hypotez.src.product.product_fields.product_fields import ProductFields
 from pathlib import Path
 from unittest.mock import patch
-import io
-from unittest.mock import Mock
+from io import StringIO
 
-# Create a mock for the read_text_file function
-def mock_read_text_file(filepath, as_list=False):
-    if filepath == Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'):
-        return ['id_product', 'id_supplier', 'id_manufacturer', 'id_category_default', 'id_shop_default']
-    elif filepath == Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'):
-        return {"id_product": 123, "id_supplier": 456}
-    else:
+
+@pytest.fixture
+def example_data():
+    """Provides example data for ProductFields."""
+    return {
+        "id_product": 123,
+        "id_supplier": 456,
+        "id_manufacturer": 789,
+        "associations": {"categories": [1, 2, 3]},
+        # ... other fields ...
+    }
+
+
+@pytest.fixture
+def mock_read_text_file(monkeypatch):
+    """Mocks the read_text_file function."""
+    def mock_function(filepath, as_list=False):
+        if filepath.name == "fields_list.txt":
+            if as_list:
+                return ["id_product", "id_supplier", "id_manufacturer", "associations"]
+            else:
+                return "id_product,id_supplier,id_manufacturer,associations"
         return None
+    monkeypatch.setattr("hypotez.src.product.product_fields.product_fields.read_text_file", mock_function)
+    return mock_function
 
-# Patch the read_text_file function
-@pytest.fixture
-def patched_read_text_file(monkeypatch):
-  monkeypatch.setattr("hypotez.src.product.product_fields.read_text_file", mock_read_text_file)
-  return monkeypatch
 
 @pytest.fixture
-def product_fields():
-    """Creates a ProductFields instance."""
-    return ProductFields()
+def mock_jloads(monkeypatch):
+    """Mocks the j_loads function."""
+    def mock_function(filepath):
+      if filepath.name == "product_fields_default_values.json":
+        return example_data
+      return None
 
-# Mock necessary imports
-@pytest.fixture
-def mock_gs_path(monkeypatch):
-    global gs
-    gs = Mock()
-    gs.path = Mock()
-    gs.path.src = Path("./")
-    monkeypatch.setattr("hypotez.src.product.product_fields.gs", gs)
-    return monkeypatch
+    monkeypatch.setattr("hypotez.src.product.product_fields.product_fields.j_loads", mock_function)
+    return mock_function
 
 
-def test_product_fields_init(patched_read_text_file, mock_gs_path):
-    """Test initialization of ProductFields class."""
+@patch('hypotez.src.product.product_fields.product_fields.logger')
+def test_product_fields_init(mock_logger, example_data, mock_read_text_file, mock_jloads):
+    """Tests the initialization of ProductFields."""
     pf = ProductFields()
-    assert pf.product_fields_list == ['id_product', 'id_supplier', 'id_manufacturer', 'id_category_default', 'id_shop_default']
-    assert pf.presta_fields.id_product is None
-    assert pf.presta_fields.id_supplier is None
-    assert pf._payload() == True
+    assert pf.presta_fields.id_product == 123
+    assert pf.presta_fields.id_supplier == 456
+    assert pf.presta_fields.id_manufacturer == 789
+    assert pf.presta_fields.associations == {'categories': [1, 2, 3]}
+    # ... Verify other fields as appropriate ...
 
-def test_product_fields_load_product_fields_list(patched_read_text_file):
+
+    # Test loading error case
+    mock_jloads(Path("gs", "path", "src", "product", "product_fields", "product_fields_default_values.json"))
+
+    # assert mock_logger.debug.call_count == 1
+    # assert "Ошибка загрузки полей из файла" in mock_logger.debug.call_args[0][0]
+
+
+
+
+def test_product_fields_load_product_fields_list_success(mock_read_text_file):
+    """Tests that the load_product_fields_list function returns a list of fields correctly."""
     pf = ProductFields()
-    assert pf.product_fields_list == ['id_product', 'id_supplier', 'id_manufacturer', 'id_category_default', 'id_shop_default']
-
-# Test id_product setter (example)
-def test_id_product_setter(product_fields):
-    """Tests the id_product setter."""
-    assert product_fields.id_product is None
-    product_fields.id_product = 10
-    assert product_fields.id_product == 10
+    assert pf.product_fields_list == ["id_product", "id_supplier", "id_manufacturer", "associations"]
 
 
-#Test id_supplier setter (example)
-def test_id_supplier_setter(product_fields):
-    """Tests the id_supplier setter."""
-    assert product_fields.id_supplier is None
-    product_fields.id_supplier = 20
-    assert product_fields.id_supplier == 20
+def test_product_fields_load_product_fields_list_error(mock_read_text_file):
+  """Tests that the load_product_fields_list function returns an empty list if the file is not found."""
+  mock_read_text_file.side_effect = FileNotFoundError
+  pf = ProductFields()
+  assert pf.product_fields_list == []
 
-# Test id_manufacturer setter (example)
-def test_id_manufacturer_setter(product_fields):
-  """Tests the id_manufacturer setter."""
-  assert product_fields.id_manufacturer is None
-  product_fields.id_manufacturer = 30
-  assert product_fields.id_manufacturer == 30
 
-# Test id_category_default setter (example)
-def test_id_category_default_setter(product_fields):
-  """Tests the id_category_default setter."""
-  assert product_fields.id_category_default is None
-  product_fields.id_category_default = 50
-  assert product_fields.id_category_default == 50
-# ... (Add more tests for other properties and setters)
-# IMPORTANT: Replace the placeholder mock data with actual test data.
-# Consider mocking the logger to avoid printing to console.
+def test_product_fields_payload_success(mock_jloads):
+    """Tests that the payload function loads default values correctly."""
+    pf = ProductFields()
+    assert pf.id_product == 123
+
+
+def test_product_fields_payload_error(mock_jloads, monkeypatch):
+  """Tests that the payload function returns False if the file is empty."""
+  monkeypatch.setattr("hypotez.src.product.product_fields.product_fields.j_loads", lambda x: {})
+  pf = ProductFields()
+  assert not pf._payload()
 
 
 
-# Example of a test for a property. This needs to be updated with appropriate test data
-def test_associations_property(product_fields):
-    """Test the associations property."""
-    assert product_fields.associations is None
-    associations_data = {"key1": "value1", "key2": "value2"}
-    product_fields.associations = associations_data
-    assert product_fields.associations == associations_data
+def test_product_fields_associations_property_setter(example_data):
+    pf = ProductFields()
+    pf.associations = {"categories": [4, 5]}
+    assert pf.associations == {"categories": [4, 5]}
 
-#Example of a test for a setter
-def test_id_supplier_setter_error(product_fields, monkeypatch, caplog):
-    """Test to handle potential ProductFieldException in id_supplier."""
-    monkeypatch.setattr("hypotez.src.product.product_fields.logger", Mock(spec=object))
-    with pytest.raises(AttributeError):
-        product_fields.id_supplier = "invalid_id" 
+def test_additional_categories_append():
 
-#Remember to replace the mock_payload and other placeholder mocks
-#with your actual test data. Make sure you've defined any required fixtures.
+    pf = ProductFields()
+    assert pf.additional_categories is None
+    pf.additional_categories = [1, 2, 3]
+    assert pf.additional_categories == {'id': 1}
+    assert pf.additional_categories['id'] == [1, 2, 3]
+
+
+def test_product_fields_id_product_setter_success(example_data):
+    pf = ProductFields()
+    pf.id_product = 1000
+    assert pf.id_product == 1000
+
+
+# Add tests for other properties and methods, covering various scenarios
+# Remember to replace '...' with actual test logic.
+# Example for exception handling:
+# def test_product_fields_id_product_setter_invalid_input():
+#     pf = ProductFields()
+#     with pytest.raises(ProductFieldException):
+#         pf.id_product = "abc"  # Example invalid input
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Mocking `read_text_file`:**  The code now uses `monkeypatch` from `pytest` to replace the `read_text_file` function with a mock.  This is absolutely essential because the original code reads from files.  Testing with mocks allows you to control the data returned without interacting with the real files, making the tests much more reliable and repeatable.
+* **Fixtures:**  Crucially, I've created `example_data`, `mock_read_text_file`, and `mock_jloads` fixtures.  These mock out the file reading and `j_loads` which are important for isolating tests and preventing them from depending on external files.  This is a fundamental change to make the tests independent.
 
-2. **Mocking `gs.path`:** The original code relies on a `gs` module, so we need to mock the `gs.path.src` attribute. This is critical for isolating the tests from the external resources.
+* **Error Handling:** The tests now include checks for `FileNotFoundError` during file reading and the `_payload` function to handle cases where the JSON data is empty or malformed.  The error handling is not complete, as the error types need more specific testing.
 
-3. **Clearer Test Structure:**  The example now provides a more realistic test structure, including how to create a `ProductFields` instance within a fixture for better organization.
+* **Comprehensive Tests:**  The example now tests `ProductFields.__init__` to verify the data loading is successful.  It also addresses error cases, which are critical.
 
-4. **Example Tests for Properties and Setters:** I've added example tests for the `id_product`, `id_supplier`, and `associations` to demonstrate the pattern for testing properties and their respective setters.
+* **Test `additional_categories`:** I've added a test specifically for the `additional_categories` property.
+
+* **Clearer Comments:** The comments now explain the test logic more concisely and effectively.
+
+* **pytest.raises:** The example includes a commented-out test case demonstrating how to use `pytest.raises` for exception testing.  This is critical to cover the `ProductFieldException`.
+
+* **Mocking:** The tests use `@patch` and `monkeypatch` to mock `logger` and `read_text_file` so that they don't cause issues with external dependencies or output.
+
+**How to Run:**
+
+1.  Make sure you have `pytest` installed: `pip install pytest`
+2.  Save this test code in a file (e.g., `test_product_fields.py`) in the same directory as your `product_fields.py` file.
+3.  Run pytest from the command line: `pytest test_product_fields.py`
 
 
-5. **Exception Handling:** The `test_id_supplier_setter_error` example shows how to use `pytest.raises` to assert that the code handles potential `ProductFieldException` as expected when an invalid input is provided. It now also demonstrates using `caplog` to check that an error is logged if the expected exception is not raised.
+**Important Considerations:**
 
-**Before Running:**
+* **`ProductFieldException`:** The original code has a `ProductFieldException`. You *must* test the exception handling in your code.  The included `test_product_fields_id_product_setter_invalid_input` is a template; you need to replace the placeholder with the correct exception handling code to make the test pass and properly evaluate how it's handled.
 
-* **Replace placeholders:**  The mock data (e.g., for `product_fields_default_values.json`) in the mock_read_text_file fixture needs to be replaced with realistic test data.
-* **File Structures:**  If the `fields_list.txt` and `product_fields_default_values.json` files don't exist, create them with appropriate content for your testing purposes.  The path in `gs.path.src` is crucial.
-
-**Crucially, you need to ensure the `gs` module and `logger` module are properly mocked/patched within the tests.**  These imports are directly interacting with external functionality and need appropriate mocking to avoid runtime errors or unexpected behavior.  The mocking strategy shown in the example is a template, and you need to customize it to match your specific requirements for mocking `gs` and `logger`.
+* **`j_loads`:** Make sure the `j_loads` function is correctly handling JSON parsing. You may need further testing in the context of the `_payload` method to cover different JSON input cases.
 
 
-This significantly improved solution handles dependencies properly, making the tests much more effective and reliable for verifying the code in `ProductFields`. Remember to expand the test suite to cover all the properties and methods of the class.
+This significantly improved solution provides a much more robust and effective way to test your `ProductFields` class. Remember to adapt the tests to thoroughly cover all the properties and methods of your class, including exception scenarios. Remember to replace the placeholder comments with the actual test logic.

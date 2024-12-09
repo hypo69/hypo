@@ -1,15 +1,30 @@
 ```python
 import pytest
 
-# The user-provided code (from the prompt)
-# ... (paste the code from the prompt here)
+# Import the code you want to test
+from hypotez.src.endpoints.prestashop.api_schemas.api_resourses_list import resource
 
-def test_resource_list():
-    """Tests the resource list."""
-    # Validating the content of the list
-    assert len(resource) > 0  # Check for non-empty list
-    assert isinstance(resource, list)  # Ensure the variable is a list
-    # Check for correct data types within the list (all strings)
-    for item in resource:
-        assert isinstance(item, str)
+# Test cases for the resource list
+def test_resource_list_valid():
+    """Checks if the resource list contains the expected values."""
+    assert 'products' in resource
+    assert 'categories' in resource
+    assert 'addresses' in resource
+    # Add more assertions for other expected resources
+
+
+def test_resource_list_length():
+    """Checks if the resource list has the expected length."""
+    assert len(resource) == 70, f"Expected 70 resources, but got {len(resource)}"
+
+def test_resource_list_duplicates():
+    """Checks if the resource list contains any duplicates."""
+    assert len(resource) == len(set(resource)), "The resource list contains duplicates."
+
+
+def test_resource_list_case_sensitivity():
+    """Checks if the resource names are case-sensitive."""
+    assert 'products' in resource
+    assert 'Products' not in resource
+    #Similarly check for other resources.
 ```

@@ -1,106 +1,66 @@
 ```python
 import pytest
-
 from hypotez.src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateFeaturedpromoProductsGetRequest import AliexpressAffiliateFeaturedpromoProductsGetRequest
 
+# Fixture for providing test data
+@pytest.fixture
+def api_instance():
+    return AliexpressAffiliateFeaturedpromoProductsGetRequest()
 
-def test_getapiname_returns_correct_name():
-    """Tests that getapiname returns the expected API name."""
-    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
-    assert api_instance.getapiname() == 'aliexpress.affiliate.featuredpromo.products.get'
-
-
-def test_init_sets_attributes_correctly():
-    """Tests that __init__ sets attributes correctly."""
-    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest(
-        domain="test-domain.com", port=8080
-    )
-    assert api_instance.domain == "test-domain.com"
-    assert api_instance.port == 8080
-    assert api_instance.app_signature is None
-    assert api_instance.category_id is None
-    # ... (assert for all other attributes) ...
-
-
-def test_init_with_empty_string_domain():
-    """Tests that init handles empty string domain."""
-    with pytest.raises(ValueError):
-        AliexpressAffiliateFeaturedpromoProductsGetRequest(domain="")
-
-
-def test_init_with_negative_port():
-    """Tests that init handles negative port."""
-    with pytest.raises(ValueError):
-        AliexpressAffiliateFeaturedpromoProductsGetRequest(port=-1)
-
-# Example of testing setting attributes.  (Crucial for testing functionality)
-def test_set_app_signature():
-    """Tests that app_signature can be set."""
-    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
+def test_getapiname(api_instance):
+    """Tests the getapiname method with default values."""
     api_instance.app_signature = "test_signature"
-    assert api_instance.app_signature == "test_signature"
-
-def test_set_category_id():
-    """Tests that category_id can be set."""
-    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
     api_instance.category_id = 123
-    assert api_instance.category_id == 123
+    result = api_instance.getapiname()
+    assert result == 'aliexpress.affiliate.featuredpromo.products.get'
 
-# ... (Add similar tests for all other attributes like
-# country, fields, page_no, page_size, etc.)...
+def test_getapiname_with_attributes(api_instance):
+    """Tests getapiname method with various attributes."""
+    api_instance.app_signature = "test_signature"
+    api_instance.category_id = 123
+    api_instance.country = "US"
+    api_instance.fields = "fields_test"
 
-# Example of testing attribute not being set by default.
-def test_attribute_not_set_by_default():
-    """Tests attributes are not set automatically."""
-    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
-    assert api_instance.category_id is None  # Example
-    # ... add similar checks for all other attributes.
+    result = api_instance.getapiname()
+    assert result == 'aliexpress.affiliate.featuredpromo.products.get'
 
-# Add more comprehensive tests that verify the getter methods
-# (e.g., for category_id).  Crucially important in practice.
-# Example (important addition):
-
-def test_get_category_id():
-    """Tests that the getter method returns the value."""
-    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
-    api_instance.category_id = 456
-    assert api_instance.category_id == 456
-
-
-# Tests for setting various attribute types (e.g., integers, strings).
-# Include tests for potential errors (e.g., invalid types for specific attributes).
-
-
-# Example adding a test for handling a non-string input to a string attribute.
-
-def test_set_invalid_promotion_name():
-    """Tests setting a non-string value to promotion_name raises TypeError."""
-    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest()
-    with pytest.raises(TypeError):
-        api_instance.promotion_name = 123  # Attempting to set with an integer
-
-
-
+# Test initialization with custom domain and port
+def test_init_custom_domain_port(api_instance):
+    """Test initializing with custom domain and port."""
+    api_instance = AliexpressAffiliateFeaturedpromoProductsGetRequest(domain="custom-domain.com", port=8080)
+    assert api_instance.domain == "custom-domain.com"
+    assert api_instance.port == 8080
 ```
 
 **Explanation and Improvements:**
 
-1. **Comprehensive Attribute Tests:** The initial `test_init_sets_attributes_correctly` is a good starting point but doesn't actually test the *functionality* of setting the attributes, which is crucial. The added tests like `test_set_app_signature`, `test_set_category_id`, etc., demonstrate setting values and verifying they're stored correctly.
+1. **`pytest.fixture` for `api_instance`:** A fixture is created to easily instantiate the class for different test cases. This avoids redundant object creation.
 
-2. **Error Handling:** The crucial `test_init_with_empty_string_domain` and `test_init_with_negative_port` tests demonstrate the *correct* response to invalid inputs, which is essential in production-ready tests.
+2. **Clear Test Function Names:** Test function names are descriptive, specifying the test case (e.g., `test_getapiname`, `test_init_custom_domain_port`).
 
-3. **Type Handling:**  A test like `test_set_invalid_promotion_name` specifically addresses the type validation which needs to be there for the class to be robust.
+3. **Comprehensive Testing:** The `test_getapiname` function checks the method with default values, while `test_getapiname_with_attributes` tests with various attributes set.  It is important to understand that `getapiname` does *not* use any of the class attributes, so this is a minimal test of the function returning the correct string.
 
-4. **Getter Method Tests:** Added `test_get_category_id` demonstrates how to test the getter method (essential for using the attributes correctly in subsequent code).
+4. **Custom Domain and Port Test:** The `test_init_custom_domain_port` function specifically tests initialization with custom domain and port values, verifying that the instance attributes are correctly set.
 
-5. **Completeness:** The code now includes more tests for potentially important aspects, like verifying that attributes are correctly *not* set by default (very crucial).
-
-6. **Clearer Comments:** Improved comments to explain the purpose of each test more clearly.
+5. **No Unnecessary Tests (Important):**  The original code only had `getapiname` which doesn't use any attributes to determine the return value.   Therefore, testing *how* the attribute values affect `getapiname` is impossible, making the existing tests redundant (or at least misleadingly comprehensive.)
 
 
-**How to Proceed (Crucial):**
+**Further Considerations (for more robust testing):**
 
-* **Complete the Attribute Tests:** Add tests for `country`, `fields`, `page_no`, `page_size`, `promotion_end_time`, `promotion_name`, `promotion_start_time`, `sort`, `target_currency`, `target_language`, and `tracking_id`. These should cover setting correct and incorrect types of data.
+* **Testing `__init__` with invalid parameters:**  If you expect `__init__` to raise exceptions for invalid input (e.g., non-string domain), add tests with `pytest.raises` to verify exception handling.
+* **Testing API Calls (if applicable):** If the class interacts with an external API (which the code snippet doesn't), you should mock the API calls and/or use `requests` (or similar) to make assertions on the results. Mocking is crucial for testing external interactions without hitting the actual API.
+* **Data validation:** Add tests to verify if the class validates the attributes (e.g., ensuring `category_id` is an integer).
+* **Attribute Access:**  Test that you can access class variables correctly to ensure they are not only assigned but also usable.
 
 
-This revised approach provides a more comprehensive and robust test suite, which is critical for ensuring the reliability and maintainability of the `AliexpressAffiliateFeaturedpromoProductsGetRequest` class. Remember to adapt the tests to the specific expected behavior of the attributes.  For example, some attributes might have restrictions on the acceptable input values.  Your tests should verify those restrictions. Remember to include appropriate `pytest.raises` statements where necessary to check that the code handles incorrect input gracefully.
+**Example using `pytest.raises` (if you need to test exception handling):**
+
+```python
+import pytest
+
+def test_init_invalid_domain(api_instance):
+    with pytest.raises(TypeError):
+        AliexpressAffiliateFeaturedpromoProductsGetRequest(domain=123, port=80)
+```
+
+By following these guidelines, you can create a comprehensive and robust test suite for your code, ensuring that it works correctly under different conditions. Remember to adjust the test cases based on the specific functionality and expected behavior of the class. Remember to replace placeholders with actual values as needed.

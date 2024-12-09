@@ -1,129 +1,139 @@
 ```python
 import pytest
-from spread_formatting import Color, CellFormat, TextFormat, BooleanRule, BooleanCondition, GridRange, ConditionalFormatRule
+from hypotez.src.goog.spreadsheet.bberyakov.grender import GSRender
+from spread_formatting import Color, TextFormat, CellFormat, ConditionalFormatRule, BooleanRule, BooleanCondition, GridRange
 from spread import Spreadsheet, Worksheet
-from goog.spreadsheet.bberyakov.grender import GSRender
-from unittest.mock import patch, Mock
-import json
-
-# Mock objects for testing
-class MockWorksheet:
-    def __init__(self, data=None):
-        self.data = data or []
-        self.id = 1  # Example ID
-    
-    def col_values(self, col_index):
-        return [cell for row in self.data for cell in row[col_index-1:col_index]]
-    
-    def get_all_values(self):
-        return self.data
-
-    def append_row(self, values, table_range=None):
-        if table_range:
-            self.data.append(values)
-        else:
-            self.data.append(values)
+from goog.helpers import hex_to_rgb  # Import necessary modules
 
 
-    def merge_cells(self, range, merge_type):
-        pass
-
+# Mock objects for testing. Replace with actual objects if available.
 class MockSpreadsheet:
-    def __init__(self, worksheet_data=None):
-        self.worksheet_data = worksheet_data or []
-
-
     def batch_update(self, data):
         pass
 
-# Fixture
+    def __init__(self):
+        self.id = 1
+
+
+class MockWorksheet:
+    def __init__(self):
+        self.id = 1
+        self.get_all_values = lambda: [['']]
+        self.col_values = lambda col_index: [['']]
+        self.append_row = lambda values, table_range: None
+        self.merge_cells = lambda range, merge_type: None
+        self.id = 1
+
+
+# Fixture for creating a GSRender instance.
 @pytest.fixture
-def mock_worksheet(request):
-    data = request.param
-    return MockWorksheet(data)
+def grender_instance():
+    return GSRender()
 
 
-@pytest.mark.parametrize("worksheet_data", [
-    [],  # Empty worksheet
-    [['Header1', 'Header2']], #Single row worksheet
-    [['Header1', 'Header2'], ['Value1', 'Value2']],  # Filled worksheet
-])
-def test_render_header(mock_worksheet, monkeypatch): # Mocks dependencies of hex_to_rgb (used internally)
-    mock_gspread = Mock()
-    mock_gspread.utils.hex_to_rgb = lambda x: [1, 1, 1] # Mock
-    mock_cell_format = Mock()
-    monkeypatch.setattr('goog.spreadsheet.bberyakov.grender.gspread', mock_gspread)
-    monkeypatch.setattr('goog.spreadsheet.bberyakov.grender.CellFormat', mock_cell_format)
-    monkeypatch.setattr('goog.spreadsheet.bberyakov.grender.Color', mock_cell_format)
-    monkeypatch.setattr('goog.spreadsheet.bberyakov.grender.TextFormat', mock_cell_format)
-    monkeypatch.setattr('goog.spreadsheet.bberyakov.grender.format_cell_range', lambda ws, range, fmt: None)
-    monkeypatch.setattr('goog.spreadsheet.bberyakov.grender.set_row_height', lambda ws, row_index, height: None)
-    monkeypatch.setattr('goog.spreadsheet.bberyakov.grender.Spreadsheet', MockSpreadsheet)
+# Test cases for GSRender.render_header method
+def test_render_header_valid_input(grender_instance, monkeypatch):
+    mock_ws = MockWorksheet()
+    mock_sh = MockSpreadsheet()
+    monkeypatch.setattr(GSRender, 'format_cell_range', lambda ws, range, fmt: None)
+    monkeypatch.setattr(GSRender, 'merge_range', lambda ws, range, merge_type: None)
+    monkeypatch.setattr(GSRender, 'set_row_height', lambda ws, row_index, height: None)
 
 
-    render = GSRender()
-    render.render_header(mock_worksheet, 'My Header', 'A1:Z1')
-    assert mock_worksheet.data == [] # No append row should be called
+    grender_instance.render_header(mock_ws, "Title", "A1:Z1", "MERGE_ALL")
 
 
-def test_render_header_merge(mock_worksheet):
-    mock_gspread = Mock()
-    mock_cell_format = Mock()
-    mock_worksheet.data = [['Header1', 'Header2']]
-    render = GSRender()
-    render.render_header(mock_worksheet, 'My Header', 'A1:Z1', 'MERGE_COLUMNS')
+def test_render_header_invalid_range(grender_instance, monkeypatch):
+    mock_ws = MockWorksheet()
+    with pytest.raises(TypeError):
+        grender_instance.render_header(mock_ws, "Title", 123, "MERGE_ALL")
 
-    assert mock_worksheet.data == [['Header1', 'Header2']]
+def test_render_header_merge_type(grender_instance, monkeypatch):
+    mock_ws = MockWorksheet()
+    with pytest.raises(TypeError):
+        grender_instance.render_header(mock_ws, "Title", "A1:Z1", 123)
 
-def test_render_header_empty(mock_worksheet):
-    mock_gspread = Mock()
-    mock_cell_format = Mock()
-    render = GSRender()
-    render.render_header(mock_worksheet, 'My Header')
-    assert mock_worksheet.data == [] # No append row should be called
+def test_render_header_no_worksheet(grender_instance):
+    with pytest.raises(TypeError):
+        grender_instance.render_header(None, "Title", "A1:Z1")
 
-def test_merge_range(mock_worksheet):
-    render = GSRender()
-    render.merge_range(mock_worksheet, 'A1:B2', 'MERGE_ALL')
-    assert True # No exception raised
+# Test cases for GSRender.merge_range method
+def test_merge_range_valid_input(grender_instance):
+    mock_ws = MockWorksheet()
+    grender_instance.merge_range(mock_ws, "A1:Z1", "MERGE_ALL")
 
 
-def test_get_first_empty_row(mock_worksheet):
-    render = GSRender()
-    mock_worksheet.data = [['', 'A', 'B']]
-    row = render.get_first_empty_row(mock_worksheet)
-    assert row == 2
+def test_merge_range_invalid_range(grender_instance):
+    mock_ws = MockWorksheet()
+    with pytest.raises(TypeError):
+        grender_instance.merge_range(mock_ws, 123, "MERGE_ALL")
 
-    mock_worksheet.data = [['', 'A', 'B'], ['C', 'D', 'E']]
-    row = render.get_first_empty_row(mock_worksheet)
-    assert row == 3
+
+# Test cases for GSRender.header method
+def test_header_valid_input(grender_instance):
+    mock_ws = MockWorksheet()
+    grender_instance.header(mock_ws, ["Header"])
+
+
+# Test cases for GSRender.get_first_empty_row
+def test_get_first_empty_row_valid_input(grender_instance):
+    mock_ws = MockWorksheet()
+    result = grender_instance.get_first_empty_row(mock_ws)
+    assert result == 2  # Assumes the worksheet has data, thus 1 empty row
+    
+def test_get_first_empty_row_no_data(grender_instance):
+    mock_ws = MockWorksheet()
+    mock_ws.get_all_values = lambda: []  # Emulate empty worksheet.
+    result = grender_instance.get_first_empty_row(mock_ws)
+    assert result == 1
+
+
+
+# Add more tests as needed for other methods and edge cases.
+
+
+# ... (More test functions)
 
 
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** Critically important. The code interacts with external libraries (e.g., `gspread`).  Mocking these dependencies (`gspread`, `pprint`, `logger`) prevents actual interactions, allowing isolated unit tests. This was significantly improved.
-* **Clearer Assertions:** Tests now directly assert the expected state of the `mock_worksheet.data` list.
-* **Parametrization:** `pytest.mark.parametrize` is used to test with different initial worksheet data. This efficiently checks various cases.
-* **Comprehensive Edge Cases:** Tests cover empty worksheets, single-row worksheets, and worksheets with data. This ensures robustness.
-* **Error Handling (Implicit):**  By mocking `gspread` and `pprint` functions, potential errors aren't handled *directly*.  This isolates the internal logic.
-* **Correct Mock Usage:** `MockWorksheet` and `MockSpreadsheet` now correctly implement `col_values` and `get_all_values` to return test data.
-* **Realistic Mock:** `mock_gspread` and `mock_pprint` mock the external library calls to avoid side effects.
-* **Explicit Mocking:** Uses `monkeypatch` to replace the `hex_to_rgb` call and other dependencies, allowing the test to focus on the internal logic.
-* **Realistic Test Data:** Provided sample data to verify the `get_first_empty_row` function.
-* **Test `merge_range`:** A test case is now present to verify `merge_range` call.
+* **Mock Objects:** Crucial for testing functions that interact with external libraries or services.  `MockSpreadsheet` and `MockWorksheet` are defined to simulate the `gspread` objects, avoiding real interactions with Google Sheets.  This is *critical* for independent, fast testing.
 
-**To Run the Tests:**
+* **`monkeypatch`:** Used to replace parts of the `GSRender` class with mock functions, allowing us to test the parts we're interested in without depending on actual `gspread` calls.  This is added to prevent errors like `AttributeError` when functions like `format_cell_range` are not defined.  This is improved with the `monkeypatch` setup.
 
-1.  Install pytest:
+* **Clearer Test Names:** Test names like `test_render_header_valid_input` are more descriptive and easier to understand.
+
+* **Edge Cases and Invalid Input:** The examples now include tests for cases where the input might be incorrect (e.g., a non-string for the range).
+
+* **Exception Handling:**  Uses `pytest.raises` to test how the code handles exceptions.
+
+
+* **Comprehensive Coverage:** The provided tests are a starting point; you'll need more tests to thoroughly cover all possible scenarios for each function, especially considering the various input types (string, list, etc.) for the headers.
+
+* **Fixture `grender_instance`:** A fixture is defined to create a `GSRender` instance for reuse in multiple tests.  This is standard practice for pytest testing.
+
+
+**How to Run:**
+
+1.  **Install pytest:**
     ```bash
     pip install pytest
     ```
-2.  Save the tests in a file (e.g., `test_grender.py`).
-3.  Run the tests from the command line:
+
+2.  **Save:** Save the test code (e.g., `test_grender.py`) in the same directory as your `grender.py` file.
+
+3.  **Run:**
     ```bash
     pytest test_grender.py
     ```
 
-This revised solution provides more robust and reliable tests covering various scenarios and edge cases, crucial for proper software development. Remember to adapt the mocking strategy if the dependencies change. Remember to place the test file in the same folder as the code file or adjust the import paths accordingly.  Also, ensure that `spread_formatting` is correctly installed.
+**Important Considerations for Further Testing:**
+
+*   **More Realistic Mock Objects:** The mocks are simple now. For more robust testing, you might need to create mocks that better simulate the behavior of the `gspread` objects.
+
+*   **Input Validation:** Add tests to ensure that the functions raise appropriate exceptions for invalid input, particularly types.
+
+
+Remember to adjust the mock objects and test cases to match the actual implementation of the functions and the expected interactions with `gspread`. Remember to install the required `gspread` and `spread_formatting` libraries if you haven't already. This improved example is more robust and demonstrates better testing practices. Always aim for comprehensive, independent, and isolated tests!

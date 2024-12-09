@@ -1,95 +1,107 @@
 ```python
 import pytest
-from src.suppliers.amazon.scenario import get_list_products_in_category
+from hypotez.src.suppliers.amazon.scenario import get_list_products_in_category
 from unittest.mock import Mock
 
+# Mock classes for testing purposes
+class Supplier:
+    def __init__(self, driver=None, locators=None, supplier_id=None):
+        self.driver = driver or Mock()
+        self.locators = locators or {'category': {'product_links': 'product_links'}}
+        self.supplier_id = supplier_id or 123
 
-# Fixture for mocking the Supplier object
+class MockDriver:
+    def scroll(self):
+        pass
+
+    def execute_locator(self, locator):
+      return ['url1', 'url2']
+
+    def __init__(self):
+        self.test_value = 'value'
+
+class MockLocators:
+    def __init__(self):
+        pass
+
+
+# Fixture definitions
 @pytest.fixture
-def supplier_mock():
-    """Creates a mock Supplier object."""
-    s = Mock()
-    s.driver = Mock()
-    s.locators = {"category": {"product_links": "product_links"}}  # Example locators
-    s.supplier_id = 123  # Example supplier ID
-    return s
+def supplier_instance():
+    """Provides a Supplier instance for testing."""
+    driver = MockDriver()
+    return Supplier(driver=driver, locators= {'category': {'product_links': 'product_links'}})
+
+# Tests
+def test_get_list_products_in_category_valid_input(supplier_instance):
+    """Tests with valid input, driver returns a list of URLs."""
+    result = get_list_products_in_category(supplier_instance)
+    assert result == ['url1', 'url2']
+    assert len(result) == 2
 
 
-# Test cases for get_list_products_in_category
-def test_get_list_products_in_category_valid_input(supplier_mock):
-    """Tests with valid input and a list of product URLs."""
-    supplier_mock.driver.execute_locator.return_value = ["url1", "url2"]
-    result = get_list_products_in_category(supplier_mock)
-    assert result == ["url1", "url2"]
-    supplier_mock.driver.scroll.assert_called_once()  # Assert scroll is called
-    assert supplier_mock.driver.execute_locator.call_count == 1
+def test_get_list_products_in_category_empty_list(supplier_instance):
+    """Tests when locator returns an empty list."""
+    supplier_instance.driver.execute_locator = lambda x: []
+    result = get_list_products_in_category(supplier_instance)
+    assert result is None # Or raise a more specific exception
 
 
-def test_get_list_products_in_category_single_url(supplier_mock):
-    """Tests with a single product URL as output."""
-    supplier_mock.driver.execute_locator.return_value = "single_url"
-    result = get_list_products_in_category(supplier_mock)
-    assert result == ["single_url"]
+def test_get_list_products_in_category_single_string_url(supplier_instance):
+    """Tests when locator returns a single string as a URL."""
+    supplier_instance.driver.execute_locator = lambda x: 'url1'
+    result = get_list_products_in_category(supplier_instance)
+    assert result == ['url1']
 
 
-def test_get_list_products_in_category_empty_list(supplier_mock):
-    """Tests with an empty list of product URLs."""
-    supplier_mock.driver.execute_locator.return_value = []
-    result = get_list_products_in_category(supplier_mock)
+def test_get_list_products_in_category_locators_not_found(supplier_instance):
+    """Tests when locators are not found."""
+    supplier_instance.locators = {'category': {}}  # Empty dictionary
+    result = get_list_products_in_category(supplier_instance)
+    assert result is None # Or raise a more specific exception and/or log
+
+def test_get_list_products_in_category_scroll_method():
+    """Tests if the scroll method is called"""
+    driver_mock = Mock()
+    driver_mock.scroll.return_value = None
+    supplier_instance = Supplier(driver=driver_mock)
+    get_list_products_in_category(supplier_instance)
+    driver_mock.scroll.assert_called_once()
+
+def test_get_list_products_in_category_no_product_links():
+    """Tests when locator returns an empty list for product links."""
+    driver_mock = Mock()
+    driver_mock.execute_locator = lambda x: None  # Simulate empty list
+    supplier_instance = Supplier(driver=driver_mock)
+    result = get_list_products_in_category(supplier_instance)
     assert result is None
-    supplier_mock.driver.scroll.assert_called_once()  # Assert scroll is called
-    assert supplier_mock.driver.execute_locator.call_count == 1
-    
 
 
-def test_get_list_products_in_category_locators_missing(supplier_mock):
-    """Tests with missing locators."""
-    supplier_mock.locators = {}  # Missing locators
-    result = get_list_products_in_category(supplier_mock)
-    assert result is None
-    supplier_mock.driver.scroll.assert_not_called()  # Scroll shouldn't be called
-    assert supplier_mock.driver.execute_locator.call_count == 0
-    # Check for the error message (crucial for production code)
-    assert supplier_mock.driver.execute_locator.call_args[0][0] == {"product_links": "product_links"}
-
-
-def test_get_list_products_in_category_error_during_execute_locator(supplier_mock):
-    """Tests exception handling during execute_locator."""
-    supplier_mock.driver.execute_locator.side_effect = Exception("some error")
-    with pytest.raises(Exception) as excinfo:
-        get_list_products_in_category(supplier_mock)
-    assert "some error" in str(excinfo.value)
-    
-
-
-#  Add more tests for different error scenarios and edge cases
-#  e.g., invalid locator format, incorrect type of return value, etc.
+# Add more tests if needed to cover edge cases and exception handling
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock.Mock` to create a mock `Supplier` object. This is crucial for testing functions that depend on external resources (like drivers and locators) without actually interacting with them.
-
-2. **Clearer Test Names:** Test names are more descriptive, making it easier to understand the purpose of each test.
-
-3. **Assertions:**  Assertions are used to verify the expected outcomes (e.g., returning a list, handling empty lists, missing locators, etc.).
-
-4. **Error Handling:** A test `test_get_list_products_in_category_error_during_execute_locator` demonstrates how to use `pytest.raises` to check for exceptions.  Crucially, it now includes an assertion to verify the error message.
-
-5. **Fixture for Supplier:** The `supplier_mock` fixture makes the test setup more organized and reusable.
-
-6. **Edge Cases:** Added tests for empty lists and missing locators.
-
-7. **Completeness:** The code includes tests for multiple scenarios like valid input, empty list, missing locators, and error handling.
-
-8. **Avoiding Unnecessary `continue`:** The original code had unnecessary `continue` statements that were removed.
+* **Mocking:** The code now uses `unittest.mock` to mock the `Supplier` and `Driver` classes. This is crucial for testing functions that interact with external resources (like web drivers).  Mock objects allow you to control their behavior during tests.
+* **Clearer Assertions:**  The assertions are more specific about the expected outcome (e.g., checking the length of the returned list).
+* **Edge Case Testing:**  The `test_get_list_products_in_category_empty_list` and `test_get_list_products_in_category_locators_not_found` tests check for cases where the function might receive an empty list or locators don't exist.  These are critical to ensure robustness.
+* **Handling Different Return Types:** The test `test_get_list_products_in_category_single_string_url` now correctly handles a situation where the `execute_locator` returns a single string instead of a list.
+* **Explicit `None` Return:** The tests now explicitly assert `result is None` when the function should return `None` for invalid cases.  This is better than implicit `None` handling.
+* **Logging:** The original code includes `logger.error` and `logger.warning` statements; a test must verify that a logging message is emitted when there's an error or a warning, but that test is missing here.
 
 
-**How to run the tests:**
+**How to Run the Tests:**
 
-1. Make sure you have `pytest` installed (`pip install pytest`).
-2. Place the test code (above) in a file named `test_scenario.py` (or a similar name) in the same directory as your `scenario.py` file.
-3. Run `pytest test_scenario.py` from your terminal.
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
 
+2.  **Save:** Save the test code as a Python file (e.g., `test_scenario.py`).
 
-This improved solution provides more comprehensive and robust test coverage for your function, ensuring that it handles various scenarios correctly. Remember to adapt the locators and data in the tests to accurately reflect the actual implementation of `get_list_products_in_category`.  You can further extend the tests by incorporating more complex inputs and error scenarios.
+3.  **Run:** Run the tests from your terminal:
+    ```bash
+    pytest test_scenario.py
+    ```
+
+This revised solution provides more comprehensive and robust test cases, suitable for real-world applications. Remember to adapt the tests to reflect the specific errors and return types of your actual code.  You'll need to adapt the mocking setup to match how your real `Supplier` and `Driver` classes are constructed.  And adding tests to cover the logging aspects would be an important part of a fully comprehensive solution.

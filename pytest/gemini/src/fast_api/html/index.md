@@ -2,109 +2,80 @@
 import pytest
 import json
 
-# No need for fixtures in this case, as the HTML code doesn't have functions.
-
-
 def test_html_structure():
-    """Checks basic HTML structure, ensuring essential elements exist."""
-    # This test is very basic as the HTML is not Python code.  It's testing for existence.
-    #  A more robust test would involve parsing the HTML and checking for specific attributes.
-    #  But that's beyond the scope of what I can do here without knowing specifics of the expected content
-    expected_elements = ["form", "div", "input", "label", "button"]
-    html_code = """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Form</title>
-    </head>
-    <body>
-        <form id="dataForm">
-            <div class="form-group">
-                <label for="firstName">First Name:</label>
-                <input type="text" id="firstName">
-            </div>
-        </form>
-    </body>
-    </html>
-    """
+    """Checks the basic HTML structure for correctness."""
+    #  This is a simple check, more robust checks would involve parsing the HTML
+    #  and verifying specific elements/attributes.
+    assert '<!DOCTYPE html>' in open('hypotez/src/fast_api/html/index.html').read()
+    assert '<html lang="en">' in open('hypotez/src/fast_api/html/index.html').read()
+    assert '<head>' in open('hypotez/src/fast_api/html/index.html').read()
+    assert '<body>' in open('hypotez/src/fast_api/html/index.html').read()
+    assert '<form id="dataForm">' in open('hypotez/src/fast_api/html/index.html').read()
+    assert '<script>' in open('hypotez/src/fast_api/html/index.html').read()
 
-    for element in expected_elements:
-        assert element in html_code, f"Missing expected element: {element}"
+def test_form_elements():
+    """Checks that the form elements are present and properly structured."""
+    #  Again, more sophisticated tests could be written
+    #  using an HTML parsing library.
+    html_content = open('hypotez/src/fast_api/html/index.html').read()
+    assert '<label for="firstName">Имя:</label>' in html_content
+    assert '<input type="text" class="form-control" id="firstName" placeholder="Введите имя" required>' in html_content
+    assert '<label for="lastName">Фамилия:</label>' in html_content
+    assert '<input type="text" class="form-control" id="lastName" placeholder="Введите фамилию" required>' in html_content
+    assert '<button type="submit" class="btn btn-primary">Отправить</button>' in html_content
 
-
-def test_form_submit_handler():
-    """Tests JavaScript function for form submission event handling."""
-    # This is a test for the JavaScript code, as that is the focus.
-    # You'd need an external server to test the actual AJAX call.
-    # This test, in isolation, can only check the JavaScript's syntax.
-    # If you want to verify AJAX communication (which is the intended functionality),
-    # then you should write tests for your backend endpoint.
-
-    # Example of how to simulate an AJAX call for testing
-    # (This part will need adjustments depending on how you handle the response).
-    js_code = """
-    $('#dataForm').submit(function(event) {
-        event.preventDefault();
-        var firstName = $('#firstName').val();
-        var lastName = $('#lastName').val();
-        $.ajax({
-            type: 'POST',
-            url: '/process_data',
-            contentType: 'application/json',
-            data: JSON.stringify({first_name: firstName, last_name: lastName}),
-            success: function(response) {
-                console.log(response);
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
-    });
-    """
-
-    # You would need a mock or a separate test for the backend here to
-    # validate the success and error handling in the JavaScript.
-    # Without knowing the backend code, it's impossible to do real test cases.
-
-    # Example to simulate the POST request and check return values
-    # This needs to be linked with the backend/api
-    # Consider using a mocking library if you want to test this aspect.
-    pass
+def test_jquery_ajax_structure():
+    """Checks for valid jQuery and AJAX structure."""
+    html_content = open('hypotez/src/fast_api/html/index.html').read()
+    assert '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>' in html_content
+    assert '$.ajax({' in html_content
+    assert 'type: \'POST\'' in html_content
+    assert 'url: \'/process_data\'' in html_content  # Crucial for API interaction
+    assert 'contentType: \'application/json\'' in html_content
+    assert 'data: JSON.stringify({' in html_content
+    assert 'success: function(response) {' in html_content
+    assert 'error: function(xhr, status, error) {' in html_content
 
 
-def test_data_format():
-    """Tests that the data is correctly formatted as JSON."""
-    # Simulate user input values.
+
+def test_valid_data_serialization():
+    """Tests data serialization using JSON.stringify."""
     first_name = "John"
     last_name = "Doe"
-    expected_data = '{"first_name": "John", "last_name": "Doe"}'
-    actual_data = json.dumps({'first_name': first_name, 'last_name': last_name})
-    assert actual_data == expected_data, "Data format incorrect."
+    expected_json = json.dumps({"first_name": first_name, "last_name": last_name})
+    
+    #This is a critical test, but we are verifying the structure, not the actual behavior.  
+    #This needs to be complemented by tests against your FastAPI endpoint.
+    html_content = open('hypotez/src/fast_api/html/index.html').read()
+    assert 'JSON.stringify({first_name: "' + first_name + '", last_name: "' + last_name + '"})' in html_content
 
-
+# Important:  These tests are focused on the HTML's structure;
+# they don't verify the actual POST request to the '/process_data' endpoint.
+# You'll need separate tests for your FastAPI endpoint to verify that part.
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Focus on JavaScript:** The original code was HTML with JavaScript.  The tests now focus on the JavaScript aspects.  Crucially, testing the AJAX part of the code *requires* interaction with a backend API.  Therefore, mocking is needed to test the *interaction*, which was missing before.
+* **Focus on HTML Structure:** The tests now check for the presence and correct structure of the HTML elements,  jQuery, and AJAX structure.
+* **Data Serialization Test:** The `test_valid_data_serialization` function is added to ensure the `JSON.stringify` part produces the expected output for given valid data.  However, this test is *crucial* but currently *limited*.  It only validates the *format* of the JavaScript data that will be sent in the POST request.  It *does not* test the backend API.
+* **Missing Backend:**  The most important part is missing:  tests for the FastAPI `/process_data` endpoint. These tests are absolutely necessary. You will need tests like:
+    ```python
+    # ... (Import pytest, etc.)
+    import requests
+    
+    def test_process_data_endpoint(test_client):
+        # ... (Set up your test client in a fixture, for example)
+        first_name = "Alice"
+        last_name = "Bob"
+        response = test_client.post("/process_data", json={"first_name": first_name, "last_name": last_name})
+        assert response.status_code == 200  # Check the status
+        assert response.json() == {"message": "Data processed successfully"} or \
+               response.json().get("error") is None # Handle possible success or error responses
+    ```
 
-2. **Mock/Backend Integration:** You cannot fully test the `$.ajax` call without a backend API endpoint (`/process_data`).  To truly test the AJAX functionality, you need a way to simulate or directly call the endpoint.
-
-3. **Data Formatting:**  The `test_data_format` checks the crucial JSON formatting step, which is a critical part of the AJAX communication.
+By adding tests for your FastAPI endpoint, you'll create a complete test suite that thoroughly verifies the entire data flow from the front-end HTML form submission to the backend API.  Don't forget to replace placeholders (`test_client`) with your actual setup method.
 
 
-**How to Extend These Tests:**
+**To run the tests:**
 
-* **Backend Mock:** Create a mock of your backend endpoint (`/process_data`). This allows you to control the responses, including success and error conditions.  Use a mocking library like `unittest.mock` or `pytest-mock`.
-
-* **Backend Test:** Write tests for your backend function (`/process_data`) that handle the POST request.
-
-* **Complete AJAX Test:** Combine the JavaScript AJAX test with the backend mock/tests to thoroughly verify that the JavaScript and backend work together correctly (sending and receiving data).
-
-* **Error Handling:**  Implement tests that verify the `error` callback function in the AJAX call handles various error scenarios.
-
-* **Data Validation:** Verify the backend appropriately handles incorrect input (e.g., missing fields, non-string values).
-
-
-This improved structure provides a better starting point for robust JavaScript and API interaction testing.  Remember to adapt the `test_form_submit_handler` section based on how your backend endpoint works.  You cannot test the whole JavaScript and AJAX interaction from just HTML.
+You need to have `pytest` installed.  Then, run `pytest` from your terminal in the directory containing your test file and the `index.html` file.  Remember to replace `/process_data` with your actual endpoint path.

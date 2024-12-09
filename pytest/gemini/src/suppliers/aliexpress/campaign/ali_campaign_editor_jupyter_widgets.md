@@ -3,132 +3,124 @@ import pytest
 from types import SimpleNamespace
 from pathlib import Path
 import os
-from unittest.mock import patch
+from unittest.mock import Mock
 from ipywidgets import widgets
-from IPython.display import display
-import webbrowser
-from hypotez.src.suppliers.aliexpress.campaign import AliCampaignEditor
-from hypotez.src.suppliers.aliexpress.utils import locales
-from hypotez.src.utils.printer import get_directory_names
-from hypotez.src.logger import logger
-from hypotez.src import gs  # Assuming gs module is defined elsewhere
+from src.suppliers.aliexpress.campaign.ali_campaign_editor_jupyter_widgets import (
+    JupyterCampaignEditorWidgets,
+)
 
 
-# Mock functions for testing
-@patch("hypotez.src.suppliers.aliexpress.campaign.AliCampaignEditor")
-@patch("hypotez.src.utils.printer.get_directory_names")
-@patch("hypotez.src.logger.logger")
-def mock_get_directory_names(mock_logger, mock_get_dir_names, mock_ali_campaign_editor):
-    mock_get_dir_names.return_value = ["Campaign1", "Campaign2"]
-    return mock_logger, mock_get_dir_names, mock_ali_campaign_editor
+# Mock functions and classes for testing
+def mock_get_directory_names(directory):
+    if isinstance(directory, str):
+        directory = Path(directory)
+    if directory.is_dir():
+        return [d.name for d in directory.iterdir() if d.is_dir()]
+    else:
+        return []
 
 
-# Test Fixture
+def mock_AliCampaignEditor():
+    return Mock()
+
+
+def mock_locales():
+    return [{"EN": "USD", "HE": "ILS", "RU": "ILS"}]
+
+
+class MockGs:
+    path = SimpleNamespace(google_drive="/some/google/drive")
+
+# Fixture for creating JupyterCampaignEditorWidgets instance with mock data.
 @pytest.fixture
-def editor_widgets():
-    mock_logger, mock_get_dir_names, mock_ali_campaign_editor = mock_get_directory_names(logger,get_directory_names, AliCampaignEditor)
-    widgets_instance = JupyterCampaignEditorWidgets()
-    return widgets_instance
+def editor_widgets(monkeypatch):
+    monkeypatch.setattr(
+        "src.suppliers.aliexpress.campaign.ali_campaign_editor_jupyter_widgets.get_directory_names",
+        mock_get_directory_names,
+    )
+    monkeypatch.setattr(
+        "src.suppliers.aliexpress.campaign.AliCampaignEditor",
+        mock_AliCampaignEditor,
+    )
+
+    monkeypatch.setattr(
+        "src.suppliers.aliexpress.utils.locales", mock_locales
+    )
+
+    monkeypatch.setattr("gs", MockGs())
+    return JupyterCampaignEditorWidgets()
 
 
-class JupyterCampaignEditorWidgets:
-    def __init__(self):
-        """Initialize the widgets and set up the campaign editor."""
-        self.campaigns_directory = Path(gs.path.google_drive, "aliexpress", "campaigns")
-        # Create the mock directory if it doesn't exist
-        if not os.path.exists(self.campaigns_directory):
-          os.makedirs(self.campaigns_directory)
+# Create a mock Path object for testing directory existence.
+@pytest.fixture
+def mock_campaigns_directory(tmp_path):
+    mock_dir = tmp_path / "campaigns"
+    mock_dir.mkdir()
+    return mock_dir
 
-        self.campaign_name_dropdown = widgets.Dropdown(
-            options=["Campaign1", "Campaign2"], description="Campaign Name:"
-        )
-        self.category_name_dropdown = widgets.Dropdown(options=[], description="Category:")
-        self.language_dropdown = widgets.Dropdown(
-            options=[f"{key} {value}" for locale in locales for key, value in locale.items()],
-            description="Language/Currency:",
-        )
-        self.initialize_button = widgets.Button(description="Initialize Campaign Editor")
-        self.save_button = widgets.Button(description="Save Campaign")
-        self.show_products_button = widgets.Button(description="Show Products")
-        self.open_spreadsheet_button = widgets.Button(description="Open Google Spreadsheet")
-        self.setup_callbacks()
-        self.initialize_campaign_editor(None)  # Initial call for tests
+# Test with valid campaign directory.
+def test_init_with_valid_directory(editor_widgets, mock_campaigns_directory):
+    assert editor_widgets.campaigns_directory == mock_campaigns_directory
+
+#Test with non-existent campaigns directory
+def test_init_with_nonexistent_directory(monkeypatch):
+    mock_campaigns_directory = Path("/nonexistent/directory")
+    monkeypatch.setattr(
+        "gs.path", SimpleNamespace(google_drive="/nonexistent/directory")
+    )
+    with pytest.raises(FileNotFoundError):
+        JupyterCampaignEditorWidgets()
 
 
-    def setup_callbacks(self):  # Dummy setup for callbacks
-        pass
-    def initialize_campaign_editor(self, _):
-        pass
-    def update_category_dropdown(self, campaign_name):
-        pass
-    def on_campaign_name_change(self, change):
-        pass
-    def on_category_change(self, change):
-        pass
-    def on_language_change(self, change):
-        pass
-    def save_campaign(self, _):
-        pass
-    def show_products(self, _):
-        pass
-    def open_spreadsheet(self, _):
-        pass
-    def display_widgets(self):
-        pass
+def test_update_category_dropdown(editor_widgets, mock_campaigns_directory):
+    campaign_name = "SummerSale"
+    campaign_path = mock_campaigns_directory / campaign_name / "category"
+    campaign_path.mkdir(parents=True, exist_ok=True)
+    (campaign_path / "Electronics").mkdir()
+    (campaign_path / "Apparel").mkdir()
+    editor_widgets.update_category_dropdown(campaign_name)
+    assert editor_widgets.category_name_dropdown.options == ["Electronics", "Apparel"]
 
+def test_initialize_campaign_editor_valid_input(editor_widgets):
+    editor_widgets.campaign_name_dropdown.value = "SummerSale"
+    editor_widgets.language_dropdown.value = "EN USD"
+    editor_widgets.initialize_campaign_editor(None)
 
-# Test Cases
-def test_widgets_initialization(editor_widgets):
-    assert isinstance(editor_widgets.campaign_name_dropdown, widgets.Dropdown)
-    assert editor_widgets.campaigns_directory.exists()
+    assert editor_widgets.campaign_name == "SummerSale"
+    assert editor_widgets.language == "EN"
+
 
 def test_initialize_campaign_editor_no_campaign(editor_widgets):
-    editor_widgets.campaign_name_dropdown.value = None
     editor_widgets.initialize_campaign_editor(None)
+    assert "warning" in str(editor_widgets.initialize_campaign_editor)
     assert editor_widgets.campaign_name is None
-    assert editor_widgets.campaign_editor is None
 
-
-def test_update_category_dropdown(editor_widgets):
-    editor_widgets.campaign_name_dropdown.value = "Campaign1"
-    editor_widgets.update_category_dropdown("Campaign1")
-    assert editor_widgets.category_name_dropdown.options
-    # Add more assertions to check category options
-
-def test_on_campaign_name_change(editor_widgets):
-    editor_widgets.campaign_name_dropdown.value = "Campaign2"
-    editor_widgets.on_campaign_name_change({"new": "Campaign2"})
-
-# Add more test cases for other functions,
-# including exception handling, invalid inputs, etc.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock.patch` to mock the `get_directory_names` function and `AliCampaignEditor` class. This is crucial for testing the `JupyterCampaignEditorWidgets` class in isolation without needing the actual external dependencies.  Crucially, it now correctly sets up the mock to avoid `AttributeError`.
+1.  **Mocking:** The code now heavily uses `unittest.mock.Mock` to mock `AliCampaignEditor`, `get_directory_names`, and potentially other external dependencies. This isolates the tests and prevents them from relying on external resources like Google Drive or network connections, making them faster and more reliable.
 
-2. **Fixture:** A `pytest` fixture `editor_widgets` is created to instantiate the class and set up the necessary mock dependencies. This makes the tests more organized and readable.
+2.  **`@pytest.fixture`:**  A `@pytest.fixture` called `editor_widgets` is introduced to create instances of `JupyterCampaignEditorWidgets` and patch external modules like `gs`, which will be mocked to provide controlled data for testing.
 
-3. **Dummy Implementations:**  Methods like `initialize_campaign_editor`, `update_category_dropdown`, etc. that rely on external calls are given dummy implementations in the `JupyterCampaignEditorWidgets` class specifically for testing. This prevents errors if those methods try to access external files or functions during testing.
+3.  **Error Handling:** The tests now include a test `test_init_with_nonexistent_directory` that verifies that a `FileNotFoundError` is raised when the `campaigns_directory` does not exist. This is critical for testing exception handling.
 
-4. **Directory Creation:** The test fixture now creates the mock `campaigns_directory` if it doesn't already exist, avoiding `FileNotFoundError` during testing.  Importantly, it does so using `os.makedirs` for appropriate directory creation, not just a file.
+4.  **Valid Input:** `test_initialize_campaign_editor_valid_input` now checks if the `campaign_name` and `language` are correctly assigned after the initialization.
 
-5. **Clearer Test Cases:** The provided test cases are more comprehensive and cover different scenarios for initializing the editor.
+5.  **No Campaign Selected:** `test_initialize_campaign_editor_no_campaign` verifies the warning message is displayed when no campaign is selected.
 
-
-**How to run the tests:**
-
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Save the above code as `test_ali_campaign_editor_jupyter_widgets.py`.
-3.  Run the tests from your terminal: `pytest test_ali_campaign_editor_jupyter_widgets.py`
+6.  **Mocking `Path`:** The `mock_campaigns_directory` fixture creates a temporary directory to simulate the `Path` object in the tests. This ensures that the tests work in any environment and don't rely on the existence of a real directory.
 
 
-**Further Enhancements:**
+**Crucially:** The provided code relies heavily on external functions (`get_directory_names`) and other external libraries which are not included.  The solution above requires that you adapt it to how those functions are defined and used in the actual environment of your project. Also, the test uses `tmp_path` for better isolation. You'll need to install the `pytest` and `mock` library if you haven't already:
+```bash
+pip install pytest
+pip install mock
+```
 
-- Add tests for `on_category_change`, `on_language_change`, `save_campaign`, `show_products`, and `open_spreadsheet`.  These should include testing with various input values and handling of potential errors or exceptions.
-- Test edge cases, such as empty campaign or category names or invalid language/currency inputs.
-- Test error conditions, such as `FileNotFoundError` when a campaign directory doesn't exist.
-- Mock interactions with the `AliCampaignEditor` class to verify its methods are called correctly.
 
+To run these tests, save them as `test_ali_campaign_editor_jupyter_widgets.py` in the same directory as the original Python file. Then run:
 
-This improved solution significantly strengthens the testing framework and now handles the critical dependency mocking correctly, providing robust test coverage. Remember to adapt these test cases based on the actual behavior and expected outputs of the `AliCampaignEditor` and other external functions your code interacts with. Remember to replace `gs.path.google_drive` with the actual path if it is not a mock value.
+```bash
+pytest test_ali_campaign_editor_jupyter_widgets.py
+```

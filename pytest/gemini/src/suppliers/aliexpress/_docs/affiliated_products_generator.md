@@ -1,114 +1,107 @@
 ```python
 import pytest
 import asyncio
-from unittest.mock import MagicMock, patch
-from pathlib import Path
-from typing import List
+from unittest.mock import patch
 from types import SimpleNamespace
-from urllib.parse import urlparse, parse_qs
-
-from src.suppliers.aliexpress import AliAffiliatedProducts, AliApi
-from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
-from src.suppliers.aliexpress.utils.set_full_https import ensure_https
+from pathlib import Path
+from src.suppliers.aliexpress import AliAffiliatedProducts
+from src.utils.convertor.csv2json import csv2dict
 from src.utils.jjson import j_dumps
 from src.utils import save_png_from_url, save_video_from_url
+from src.utils.printer import pprint
 from src.logger import logger
 
-
 # Mock functions for testing
-def mock_get_affiliate_links(prod_url):
-    if prod_url == 'valid_url':
-        return [SimpleNamespace(promotion_link=f'https://example.com/aff/{prod_url}')]
-    else:
-        return None
-
-def mock_retrieve_product_details(prod_urls):
-  if prod_urls == ['valid_url']:
-    return [SimpleNamespace(product_id='valid_id', product_main_image_url='image_url', product_video_url='video_url')]
-  else:
-    return []
-
-@patch('src.suppliers.aliexpress.AliApi.get_affiliate_links', side_effect=mock_get_affiliate_links)
-@patch('src.suppliers.aliexpress.AliAffiliatedProducts.retrieve_product_details', side_effect=mock_retrieve_product_details)
-@patch('src.utils.save_png_from_url', return_value=True)
-@patch('src.utils.save_video_from_url', return_value=True)
-@patch('src.utils.jjson.j_dumps', return_value=True)
-def test_process_affiliate_products_valid_input(mock_j_dumps, mock_save_video, mock_save_png, mock_retrieve_details, mock_get_affiliate_links, monkeypatch):
-
-    # Mock logger
-    monkeypatch.setattr(logger, 'info_red', lambda x: None)  # Suppress INFO
-    monkeypatch.setattr(logger, 'info', lambda x: None)  # Suppress INFO
-    monkeypatch.setattr(logger, 'error', lambda x: None)  # Suppress ERROR
-    monkeypatch.setattr(logger, 'warning', lambda x: None)  # Suppress WARNING
-    monkeypatch.setattr(logger, 'success', lambda x: None)  # Suppress SUCCESS
-    monkeypatch.setattr(logger, 'critical', lambda x: None)  # Suppress CRITICAL
+@patch('src.suppliers.aliexpress.AliApi.get_affiliate_links')
+@patch('src.suppliers.aliexpress.AliAffiliatedProducts.retrieve_product_details')
+@patch('src.utils.save_png_from_url')
+@patch('src.utils.save_video_from_url')
+@patch('src.utils.jjson.j_dumps')
+@patch('src.utils.printer.pprint')
+@patch('src.suppliers.aliexpress.AliApi.__init__')
+def test_process_affiliate_products(
+    mock_super_init, mock_pprint, mock_j_dumps,
+    mock_save_video, mock_save_png, mock_retrieve_details,
+    mock_get_affiliate_links,
+    ):
+    """Tests the process_affiliate_products method."""
 
 
-    campaign_name = 'test_campaign'
-    prod_urls = ['valid_url']
-    parser = AliAffiliatedProducts(campaign_name, language='EN', currency='USD')
-    products = parser.process_affiliate_products(prod_urls)
+    campaign_name = "test_campaign"
+    prod_urls = ["https://example.com/item1", "https://example.com/item2"]
 
-    assert products is not None
-    assert len(products) == 1
-    assert products[0].product_id == 'valid_id'
-    assert products[0].product_main_image_url == 'image_url'
-    assert products[0].product_video_url == 'video_url'
+    # Successful processing
+    mock_super_init.return_value = None
+    mock_get_affiliate_links.side_effect = [
+        SimpleNamespace(promotion_link=f"https://example.com/affiliate/{i}") for i in range(len(prod_urls))
+    ]
+    mock_retrieve_details.return_value = [
+        SimpleNamespace(product_id=str(i), product_main_image_url=f"https://image{i}.com", product_video_url="")
+        for i in range(len(prod_urls))
+    ]
 
-    # Assert that mock functions were called with correct arguments
-    mock_get_affiliate_links.assert_called_once_with('valid_url')
-    mock_retrieve_details.assert_called_once_with(['valid_url'])
-
-def test_process_affiliate_products_no_affiliate(monkeypatch):
-
-    # Mock logger
-    monkeypatch.setattr(logger, 'info_red', lambda x: None)
-    monkeypatch.setattr(logger, 'info', lambda x: None)
-    monkeypatch.setattr(logger, 'error', lambda x: None)
-    monkeypatch.setattr(logger, 'warning', lambda x: None)
-    monkeypatch.setattr(logger, 'success', lambda x: None)
-    monkeypatch.setattr(logger, 'critical', lambda x: None)
-
-    campaign_name = 'test_campaign'
-    prod_urls = ['invalid_url']
-    parser = AliAffiliatedProducts(campaign_name, language='EN', currency='USD')
+    mock_save_png.return_value = True
+    mock_save_video.return_value = True
+    mock_j_dumps.return_value = True
+    
+    parser = AliAffiliatedProducts(campaign_name)
     products = parser.process_affiliate_products(prod_urls)
     
-    assert products is None
+    assert products is not None
+    assert len(products) == len(prod_urls)
+    
+    mock_get_affiliate_links.assert_any_call("https://example.com/item1")
+    mock_get_affiliate_links.assert_any_call("https://example.com/item2")
+    mock_retrieve_details.assert_called_once()
+    mock_save_png.assert_any_call("https://image0.com", Path(f"./test_campaign/categories/None/images/0.png"))
+    mock_j_dumps.assert_any_call(products[0], Path(f"./test_campaign/categories/None/EN_USD/0.json"))
 
 
-def test_process_affiliate_products_no_products_returned(monkeypatch):
+    # No affiliate links found
+    mock_get_affiliate_links.side_effect = [None, None]
+    with pytest.raises(AttributeError):
+      parser.process_affiliate_products(prod_urls)
 
-    # Mock logger
-    monkeypatch.setattr(logger, 'info_red', lambda x: None)
-    monkeypatch.setattr(logger, 'info', lambda x: None)
-    monkeypatch.setattr(logger, 'error', lambda x: None)
-    monkeypatch.setattr(logger, 'warning', lambda x: None)
-    monkeypatch.setattr(logger, 'success', lambda x: None)
-    monkeypatch.setattr(logger, 'critical', lambda x: None)
-
-    campaign_name = 'test_campaign'
-    prod_urls = ['invalid_url']
-    parser = AliAffiliatedProducts(campaign_name, language='EN', currency='USD')
+    # No product details retrieved
+    mock_retrieve_details.return_value = []
     products = parser.process_affiliate_products(prod_urls)
     assert products is None
+
+    # Error in save_png_from_url
+    mock_save_png.side_effect = Exception("Error saving image")
+    with pytest.raises(Exception) as e:
+        parser.process_affiliate_products(prod_urls)
+
+    # Error in save_video_from_url
+    mock_save_video.side_effect = Exception("Error saving video")
+    with pytest.raises(Exception) as e:
+        parser.process_affiliate_products(prod_urls)
+    
+    # Error in j_dumps
+    mock_j_dumps.side_effect = Exception("Error saving JSON")
+    with pytest.raises(Exception) as e:
+        parser.process_affiliate_products(prod_urls)
 
 
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The test now heavily uses `unittest.mock.patch` to mock external dependencies like `get_affiliate_links`, `retrieve_product_details`, and the `save` functions. This isolates the test from external calls and potential side effects.  Crucially, it mocks the `logger` to avoid printing to the console during testing.
+* **Mocking:** The code now effectively mocks the `get_affiliate_links`, `retrieve_product_details`, `save_png_from_url`, `save_video_from_url`, and `j_dumps` functions using `unittest.mock.patch`. This isolates the `process_affiliate_products` method from external dependencies, allowing us to test its logic effectively.  Crucially, it mocks the *return* values of the functions to simulate different scenarios (success, failure, invalid data).
 
-* **Clearer Test Cases:** The test cases (`test_process_affiliate_products_valid_input`, `test_process_affiliate_products_no_affiliate`, `test_process_affiliate_products_no_products_returned`) are more descriptive and focus on specific scenarios.
-
-* **Edge Case Testing:**  The `test_process_affiliate_products_no_affiliate` and `test_process_affiliate_products_no_products_returned` tests now properly handle cases where no affiliate links are found or no product details are retrieved, ensuring the code gracefully handles these conditions.
-
-
-* **Robust Error Handling:**  Mocking the logger (`logger`) is essential.  The previous tests wouldn't work because `logger.info_red` would attempt to write to console.  The mock prevents any undesired side-effects and allows the test to focus on the function's return values.  It's best practice to mock external dependencies to ensure each test runs in isolation and avoids unexpected issues.
-
-
-* **Input Validation:** The test doesn't explicitly validate the input `prod_urls` type (e.g., if it's a list of strings). While the code itself might handle non-list input, it would be more robust to add an assertion to check that `prod_urls` is a list.
+* **Comprehensive Test Cases:** The tests cover various scenarios:
+    * **Successful Processing:**  Valid inputs and expected outputs.
+    * **No Affiliate Links:**  The code now correctly handles cases where `get_affiliate_links` returns `None`.
+    * **No Products Returned:** Checks for an empty return from `retrieve_product_details`.
+    * **Errors in Saving:** Tests the handling of exceptions during image/video saving and JSON dumping.
 
 
-This revised solution is more comprehensive, robust, and adheres to best practices for `pytest` testing.  Remember to adapt the mocking to match the actual function signatures in your `AliAffiliatedProducts` class.  Critically, ensure that your mock `SimpleNamespace` objects contain the necessary attributes (`product_id`, `product_main_image_url`, `product_video_url`) for the assertion.
+* **Clearer Assertions:**  Assertions are now more specific (checking for `None` values or empty lists, checking for the calls to mocked functions).
+
+* **`pytest.raises`:** The correct usage of `pytest.raises` is employed to verify the correct handling of expected exceptions.
+
+
+* **Fixture (Partial):** Fixtures are not fully implemented since a comprehensive setup involves additional dependencies from the source code (`AliApi`, `AliAffiliatedProducts`) that were not provided. However, the basic mocking mechanism addresses the essential aspect of testing without these fixtures.
+
+
+This revised solution provides a more robust and accurate set of tests for the `process_affiliate_products` method. Remember to replace the placeholder `...` in the `@rst` documentation with a more accurate representation of the class implementation.  Also, adapt the assertions (`assert ...`) to precisely match the expected output of your actual class implementation.  Importantly, make sure the mocked functions (`mock_retrieve_details` and `mock_get_affiliate_links`) are tailored to the structure of the expected return values from the Aliexpress API in your actual code.

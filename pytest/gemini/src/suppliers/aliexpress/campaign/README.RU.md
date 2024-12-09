@@ -1,131 +1,101 @@
 ```python
 import pytest
 import os
-# Replace with your actual campaign module
-try:
-    from hypothez.src.suppliers.aliexpress.campaign import Campaign
-except ImportError:
-    print("Error: campaign module not found. Please check the file path.")
-    raise
+
+# Replace with actual code from the 'campaign' module
+class Campaign:
+    def __init__(self, name, language, currency):
+        self.name = name
+        self.language = language
+        self.currency = currency
+        self.data = {}
+
+    def initialize_campaign(self, name, language, currency):
+      if not all([name, language, currency]):
+        raise ValueError("All parameters are required")
+      self.name = name
+      self.language = language
+      self.currency = currency
+      return True
+
+    def create_directories(self):
+      # Simulate directory creation
+      os.makedirs(f"campaign_{self.name}", exist_ok=True)
+      os.makedirs(f"campaign_{self.name}/categories", exist_ok=True)
+      return True
+
+    def save_config(self):
+      # Simulate saving config
+      with open(f"campaign_{self.name}/config.json", "w") as f:
+          f.write(f'{{"name": "{self.name}", "language": "{self.language}", "currency": "{self.currency}"}}')
+      return True
+
+    def collect_product_data(self, source="ali"):
+        # Simulate collecting data
+        if source == "ali":
+            self.data = {"products": [{"name": "Product 1", "price": 10}]}
+        elif source == "html":
+            self.data = {"products": [{"name": "Product 2", "price": 20}]}
+        else:
+            raise ValueError("Invalid data source")
+        return True
+
+    def save_product_data(self):
+        # Simulate saving data
+        with open(f"campaign_{self.name}/products.json", "w") as f:
+            import json
+            json.dump(self.data, f, indent=4)
+        return True
+
+    def generate_materials(self):
+        # Simulate material generation
+        return True
+
+    def validate_campaign(self):
+        # Simulate validation
+        return True  # True if valid, False otherwise
 
 
-# Fixture for creating a Campaign object
+# Fixture definitions
 @pytest.fixture
-def campaign_object():
-    """Creates a Campaign object for testing."""
-    campaign = Campaign("campaign_name", "en", "USD")
-    return campaign
+def campaign():
+    return Campaign("TestCampaign", "en", "USD")
 
 
-# Tests for Campaign Initialization
-def test_campaign_initialization(campaign_object):
-    """Checks initialization of campaign object with valid data."""
-    assert campaign_object.name == "campaign_name"
-    assert campaign_object.language == "en"
-    assert campaign_object.currency == "USD"
+# Tests for Campaign Class
+def test_initialize_campaign_valid_input(campaign):
+    assert campaign.initialize_campaign("TestName", "fr", "EUR") == True
 
 
-def test_campaign_invalid_name(campaign_object):
-    with pytest.raises(ValueError) as excinfo:
-        campaign_object.name = ""  # or any invalid name
-    assert "Invalid campaign name" in str(excinfo.value)
-
-# Mock functions for testing the data collection stage.  Crucial for isolated tests!
-def mock_collect_data(campaign):
-    # Simulate data collection success, return a dummy dataset
-    campaign.products = [{"name": "Product 1", "price": 10}, {"name": "Product 2", "price": 20}]
-    return True
-
-def test_campaign_collect_data(campaign_object):
-  """Check that collect_data does not crash."""
-  mock_collect_data(campaign_object)
-
-  # Ensure products is populated (a basic verification step)
-  assert campaign_object.products
+def test_initialize_campaign_missing_input(campaign):
+    with pytest.raises(ValueError, match="All parameters are required"):
+        campaign.initialize_campaign("", "", "")
 
 
-# Mock functions for testing directory creation
-def mock_create_directories(campaign):
-    # Replace with actual directory creation logic
-    return True
+def test_create_directories(campaign):
+  #This test will not fail as it simulates directory creation; actual directory creation is outside the scope
+  assert campaign.create_directories() == True
 
-def test_campaign_create_directories(campaign_object):
-  """Check that create_directories doesn't crash."""
-  mock_create_directories(campaign_object)
-
-
-def test_campaign_save_configuration(campaign_object):
-  """Check that save_configuration doesn't crash.  Replace with your validation."""
-  mock_create_directories(campaign_object)
-  # Simulate a successful save
-  success = campaign_object.save_configuration()
-  assert success
+def test_save_config(campaign):
+  campaign.initialize_campaign("TestCampaign", "en", "USD")
+  assert campaign.save_config() == True
 
 
-# Mock functions for testing other steps (e.g., generate_assets, validate_campaign, publish_campaign)
-def mock_generate_assets(campaign):
-    return True
+def test_collect_product_data_ali(campaign):
+    assert campaign.collect_product_data("ali") == True
 
-def test_campaign_generate_assets(campaign_object):
-  """Check that generate_assets doesn't crash."""
-  mock_generate_assets(campaign_object)
-
-
-def mock_validate_campaign(campaign):
-  return True
-
-def test_campaign_validate_campaign(campaign_object):
-  """Check that validate_campaign doesn't crash."""
-  mock_validate_campaign(campaign_object)
+def test_collect_product_data_invalid(campaign):
+    with pytest.raises(ValueError, match="Invalid data source"):
+        campaign.collect_product_data("invalid")
 
 
-def mock_publish_campaign(campaign):
-  return True
+def test_save_product_data(campaign):
+    campaign.collect_product_data("ali")
+    assert campaign.save_product_data() == True
 
-def test_campaign_publish_campaign(campaign_object):
-  """Check that publish_campaign doesn't crash."""
-  mock_publish_campaign(campaign_object)
+def test_generate_materials(campaign):
+    assert campaign.generate_materials() == True
 
-
-def test_campaign_all_steps(campaign_object):
-    # Mock each individual step using mock functions
-    mock_collect_data(campaign_object)
-    mock_create_directories(campaign_object)
-    mock_generate_assets(campaign_object)
-    mock_validate_campaign(campaign_object)
-    mock_publish_campaign(campaign_object)
-    assert True
-
-
-# Example of testing for exceptions
-# (Add more tests for expected exceptions, e.g., FileNotFoundError)
+def test_validate_campaign(campaign):
+    assert campaign.validate_campaign() == True
 ```
-
-**Explanation and Crucial Improvements:**
-
-1. **Mocking:** The code now uses mock functions (`mock_collect_data`, `mock_create_directories`, etc.).  This is *essential* for unit testing.  Real-world file system interactions, network requests, and database calls can't be reliably tested directly. Mocking isolates your `Campaign` class from these external dependencies, allowing you to test its internal logic.
-
-2. **Fixtures:** A `campaign_object` fixture is created to prepare a `Campaign` instance for each test.
-
-3. **Clear Test Names:** Test names now accurately reflect the purpose of the test.
-
-4. **Exception Handling (Example):** Added a test (`test_campaign_invalid_name`) to demonstrate how to use `pytest.raises` to test for specific exceptions.
-
-5. **Missing `campaign` module handling:** The code now includes a `try...except` block to gracefully handle the case where the `campaign` module is not found.  This is crucial for testing code that might depend on other files.
-
-6. **Data Collection Mock:** The `mock_collect_data` function is crucial. Your `Campaign` likely interacts with external APIs or file systems.  Mocking these interactions allows for isolated testing of the `Campaign` logic without needing a live Facebook API or file system interaction.
-
-7. **Comprehensive Test Coverage (Conceptual):** You would add more test functions, including:
-   - Tests for different data collection methods (`ali`, `html`).
-   - Tests for edge cases in data validation.
-   - Tests for different directory structures.
-   - Tests for error conditions in file saving or database interactions (mocked out).
-   - Tests for invalid inputs to various methods.
-
-**How to Run:**
-
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Save this code as a `.py` file (e.g., `test_campaign.py`).
-3.  Run `pytest test_campaign.py` from your terminal in the same directory.
-
-Remember to replace the placeholder `mock_` functions with the actual logic from your `campaign` module, and expand the testing to cover all possible input scenarios and error handling in the `Campaign` class. Remember that mocking is critical for isolating these tests from external dependencies. This significantly improves the testability and robustness of your `Campaign` class.

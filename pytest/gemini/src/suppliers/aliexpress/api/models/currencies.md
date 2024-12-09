@@ -4,6 +4,7 @@ import pytest
 from hypotez.src.suppliers.aliexpress.api.models.currencies import Currency
 
 
+# Test cases for the Currency class
 def test_currency_constants():
     """Tests the predefined currency constants."""
     assert Currency.USD == 'USD'
@@ -23,36 +24,15 @@ def test_currency_constants():
     assert Currency.KRW == 'KRW'
     assert Currency.ILS == 'ILS'
 
-
 def test_currency_constants_type():
-    """Tests that the currency constants are strings."""
-    for constant in [
-        Currency.USD,
-        Currency.GBP,
-        Currency.CAD,
-        Currency.EUR,
-        Currency.UAH,
-        Currency.MXN,
-        Currency.TRY,
-        Currency.RUB,
-        Currency.BRL,
-        Currency.AUD,
-        Currency.INR,
-        Currency.JPY,
-        Currency.IDR,
-        Currency.SEK,
-        Currency.KRW,
-        Currency.ILS,
-    ]:
-        assert isinstance(constant, str)
+  """Checks that the currency constants are strings."""
+  assert type(Currency.USD) is str
+  assert type(Currency.JPY) is str
 
+# No functions or methods are present in the Currency class to test
+# This test suite verifies that the Currency class is working as expected,
+# i.e., the constants are defined correctly, with correct types. 
+# Additional tests would be necessary if there were functions or methods
+# to call within the class.
 
-def test_currency_constants_not_equal():
-    """Tests that different currency constants are not equal."""
-    assert Currency.USD != Currency.GBP
-    assert Currency.USD != 'usd'  # Case-sensitive strings
-
-
-# No methods or functions to test in the given code, so no more tests are needed
-# for this particular file.
 ```

@@ -1,107 +1,88 @@
 ```python
 import pytest
-from pathlib import Path
 import os
+from pathlib import Path
 from unittest.mock import patch
+
+# Replace with the actual import path if needed
 from hypotez.src.suppliers.chat_gpt.chat_gpt import ChatGpt
-from hypotez.src import gs
+from hypotez.src import gs  # Replace with actual module path
 
 
 @pytest.fixture
-def mock_gs_path():
-    """Mocking gs.path to control the directory."""
-    mock_path = Path("./test_data/chat_gpt/conversations")
-    mock_path.mkdir(parents=True, exist_ok=True)
-    with patch('hypotez.src.suppliers.chat_gpt.chat_gpt.gs.path', return_value=mock_path):
-        yield mock_path
-
+def conversation_directory_mock():
+    """Creates a temporary directory for conversations."""
+    temp_dir = Path("test_conversations")
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    yield temp_dir
+    if temp_dir.exists():
+        os.rmdir(temp_dir)
 
 @pytest.fixture
-def create_test_htmls(mock_gs_path):
-    """Creates dummy HTML files for testing."""
-    files_to_create = [
-        "conversation1.html",
-        "conversation2.html",
-        "invalid_file.txt",  # invalid file to test edge cases
-    ]
-    for file_name in files_to_create:
-        file_path = mock_gs_path / file_name
-        with open(file_path, "w") as f:
-            f.write("<html><body>Conversation content</body></html>")
+def chatgpt_instance():
+    return ChatGpt()
+
+
+def test_yeld_conversations_htmls_valid_input(conversation_directory_mock, chatgpt_instance):
+    """Tests with valid HTML files in the directory."""
+    # Create test HTML files
+    (conversation_directory_mock / "conversation1.html").touch()
+    (conversation_directory_mock / "conversation2.html").touch()
     
-    yield
-
-
-def test_yeld_conversations_htmls_valid_input(mock_gs_path, create_test_htmls):
-    """Tests with valid input (HTML files exist)."""
-    chat_gpt_instance = ChatGpt()
-    html_files = chat_gpt_instance.yeld_conversations_htmls()
-    assert len(list(html_files)) == 2 # Expect 2 valid html files
-    # verify files from the glob statement are correct
-    for file in list(html_files):
-        assert file.suffix == ".html"  # Ensure only html files are returned.
-
-
-def test_yeld_conversations_htmls_no_files(mock_gs_path):
-    """Tests when no HTML files exist."""
-    chat_gpt_instance = ChatGpt()
-    html_files = chat_gpt_instance.yeld_conversations_htmls()
-    assert len(list(html_files)) == 0 # Expect 0 files if no files are available.
-
-
-
-def test_yeld_conversations_htmls_invalid_files(mock_gs_path, create_test_htmls):
-    """Tests when other types of files exist."""
-    chat_gpt_instance = ChatGpt()
-    html_files = chat_gpt_instance.yeld_conversations_htmls()
-    assert len(list(html_files)) == 2  # Expect only the html files. 
-
-
-def test_yeld_conversations_htmls_exception_handling(mock_gs_path):
-    """Tests exception handling (e.g., directory doesn't exist)."""
-    # Remove the directory to simulate its absence.
+    html_files = list(conversation_directory_mock.glob("*.html"))
     
-    (mock_gs_path / 'conversations').rmdir()
-
-    chat_gpt_instance = ChatGpt()
-    html_files = chat_gpt_instance.yeld_conversations_htmls()
-    assert len(list(html_files)) == 0  # expect no files, because directory does not exist
-
-
-
-
+    # Mock gs.path to return the temporary directory.  Crucial for testing.
+    with patch('hypotez.src.suppliers.chat_gpt.chat_gpt.gs.path', new_callable=lambda: mock_path(conversation_directory_mock)):
+        html_list = chatgpt_instance.yeld_conversations_htmls()
     
-# Important: Clean up the created test data directory after the tests.
-def teardown_module(module):
-    """Deletes the test directory."""
-    try:
-        import shutil
-        shutil.rmtree("./test_data")
-    except FileNotFoundError:
-        pass
+    assert len(html_list) == len(html_files)
+    # Add more specific checks if possible based on expected format of the returned list
 
+def test_yeld_conversations_htmls_no_files(conversation_directory_mock, chatgpt_instance):
+    """Tests when no HTML files exist in the directory."""
+    # No files in the directory.
+    
+    with patch('hypotez.src.suppliers.chat_gpt.chat_gpt.gs.path', new_callable=lambda: mock_path(conversation_directory_mock)):
+        html_list = chatgpt_instance.yeld_conversations_htmls()
+    
+    assert html_list == []
+
+def test_yeld_conversations_htmls_invalid_file_type(conversation_directory_mock, chatgpt_instance):
+    """Tests when non-HTML files exist in the directory."""
+    # Create a non-HTML file
+    (conversation_directory_mock / "not_html.txt").touch()
+    
+    with patch('hypotez.src.suppliers.chat_gpt.chat_gpt.gs.path', new_callable=lambda: mock_path(conversation_directory_mock)):
+        html_list = chatgpt_instance.yeld_conversations_htmls()
+    
+    assert html_list == []  # or any other appropriate handling
+
+# Helper function for patching gs.path to return the desired path.
+def mock_path(path):
+    class MockPath:
+        data = lambda: path
+    return MockPath()
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `gs.path`:** The `mock_gs_path` fixture now correctly mocks `gs.path` to control the directory used by `ChatGpt`.  This is crucial for isolating the tests and preventing issues with file system access on different runs.
+1. **Mocking `gs.path`:** The crucial improvement is mocking `gs.path`.  The original code relies on a `gs.path` object that likely constructs paths relative to a data directory.  Without mocking, the tests would fail because they would try to access real directories, which aren't present in a test environment.  The `mock_path` function now creates a class that returns the `conversation_directory_mock` from the fixture, allowing the test to accurately simulate the path.
 
-2. **Creating Test Data:** The `create_test_htmls` fixture efficiently sets up dummy HTML files within the mocked directory.  Crucially, it now includes an "invalid_file.txt" for testing the case of non-HTML files.
+2. **Clearer Fixture for Temporary Directory:** The `conversation_directory_mock` fixture now creates a temporary directory for each test. This ensures that tests don't interfere with each other.  Critically, it also cleans up the temporary directory using `os.rmdir` after each test, preventing accumulation of temporary files.
 
-3. **Clearer Assertions:** Assertions are more specific. For example, instead of just `assert len(list(html_files)) > 0`, we now explicitly check for the expected number of HTML files.
+3. **Comprehensive Test Cases:** The tests now cover different scenarios: valid HTML files in the directory, no files present, and non-HTML files in the directory. This provides more robust test coverage.
 
-4. **Exception Handling Test:** The `test_yeld_conversations_htmls_exception_handling` function now correctly tests the case where the directory `conversations` doesn't exist. This is a realistic edge case.
-
-5. **Teardown:**  The `teardown_module` function is added to remove the temporary `test_data` directory after the tests, preventing file system pollution. This is *essential* for running tests repeatedly without conflicts.
+4. **Robust Error Handling (Important):**  The tests appropriately handle cases where no HTML files are found or files of different types (e.g., `.txt`) are present.
 
 
-**How to run the tests:**
+**How to Use:**
 
-1.  Make sure you have `pytest` installed.
-2.  Save the code above as a `.py` file (e.g., `test_chat_gpt.py`).
-3.  Create a `test_data` directory in the same directory as your test file.
-4.  Run `pytest test_chat_gpt.py`.
+1.  Install `pytest` (if you haven't already): `pip install pytest`
+
+2.  **Replace Placeholders:** Adjust the imports (`from hypotez.src import gs`) to match your actual project structure.
+
+3.  Run the tests: `pytest`
 
 
-This improved solution provides comprehensive and robust test coverage for the `ChatGpt` class, handling valid and invalid cases, as well as edge cases like missing directories. Remember to adapt the test data (file names, directory structure) if your actual use case is different.
+This revised solution addresses the critical issue of mocking `gs.path` and provides more comprehensive and robust test cases. Remember to adapt the tests further based on the specific expected behavior of `yeld_conversations_htmls` if you have specific requirements for the output format or handling of unexpected situations. Remember to adjust the `conversation_directory_mock` path in the test if required, so that it points to the correct temporary directory to store and read the test files.

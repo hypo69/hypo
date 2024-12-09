@@ -1,127 +1,95 @@
 ```python
 import pytest
-from hypotez.src.suppliers.etzmaleh import Graber
+import sys
+# Replace with the actual path if different
+sys.path.append("./hypotez/src/suppliers/etzmaleh")
 
-# Tests for the Graber class (assuming it has methods to test)
-# Example assuming a 'fetch_data' method
-# Replace with the actual methods and expected behavior
+from .graber import Graber
 
+
+# Tests for the Graber class (assuming it contains methods)
 class TestGraber:
-    def test_fetch_data_valid_input(self):
-        """
-        Tests the fetch_data method with valid input (e.g., a URL).
-        """
-        graber = Graber()
-        # Replace with a valid URL or data source
-        url = "https://www.example.com"  # Replace with actual URL
-        expected_data = {"key": "value"}  # Replace with the expected data
-        
-        # Simulate the actual data fetching behavior
-        data = graber._fetch_data(url)  # Assuming _fetch_data is the underlying method
-        assert data == expected_data
 
-        # Add assertions to validate the structure of the returned data
-        
-    def test_fetch_data_invalid_input(self):
-        """
-        Tests the fetch_data method with invalid input, e.g., an incorrect URL
-        """
+    def test_graber_init_valid(self):
+        """Tests Graber initialization with valid input."""
         graber = Graber()
-        invalid_url = "invalid_url"
-        
+        assert graber is not None  # Check if object is created successfully.
+
+
+    def test_graber_init_invalid_mode(self):
+        """Tests Graber initialization with invalid mode."""
         with pytest.raises(ValueError) as excinfo:
-           graber._fetch_data(invalid_url)
-        assert "Invalid URL" in str(excinfo.value)
+            Graber(mode="invalid")
+        assert "Invalid mode" in str(excinfo.value)  # Check error message
 
-    def test_fetch_data_connection_error(self):
-        """
-        Tests the fetch_data method handling a connection error.
-        """
+
+    def test_graber_method_valid_input(self):
+        """Tests a method of the Graber class with valid input (replace with actual method)."""
         graber = Graber()
-        invalid_url = "http://this-site-doesnt-exist.com"
-        
-        with pytest.raises(Exception) as excinfo:
-            graber._fetch_data(invalid_url)
-        assert "Connection error" in str(excinfo.value)
-        
+        # Replace with the actual method and expected return value
+        result = graber.fetch_data()  # Example: Call a method.
+        assert result is not None  # Replace with appropriate assertion
 
-    def test_fetch_data_empty_response(self):
-        """
-        Tests the fetch_data method handling an empty response from the source
-        """
+
+    def test_graber_method_invalid_input(self):
+        """Tests a method of the Graber class with invalid input (replace with actual method)."""
         graber = Graber()
-        # Mock an empty response (replace with actual mocking if needed)
-        mock_response = {}
-        
-        def mock_fetch(url):
-            return mock_response
-        
-        graber._fetch_data = mock_fetch
-        data = graber._fetch_data("some_url")
-        assert data == mock_response
+        # Replace with the actual method and expected return value
+        with pytest.raises(ValueError) as excinfo:
+            result = graber.fetch_data(invalid_argument="test")
+        assert "Invalid argument" in str(excinfo.value)
 
-
-# Example for other methods (replace with your actual methods)
-
-
-# If the init method or any other class method needs testing
-    def test_init_method(self):
+    def test_graber_edge_case_input(self):
+        """Tests a method of the Graber class with edge case input (replace with actual method)."""
         graber = Graber()
-        #Assertions to check attributes or states
-        assert Graber.MODE == 'dev'
-```
-
-**Explanation and Important Improvements:**
-
-1. **`TestGraber` Class:**  Organized tests into a class for better structure and readability.
-
-2. **Mocking:** The provided code snippet lacks the actual implementation of the `Graber` class. The tests now include a placeholder `_fetch_data` method, and example `test_fetch_data_valid_input` and `test_fetch_data_invalid_input`.
-
-   * **Crucial:** In real-world tests, you would *mock* the `_fetch_data` function. This is critical for isolating the `Graber` class from external dependencies like network calls.  Use a mocking library like `unittest.mock` or `pytest-mock`.
-
-3. **Error Handling:** The `test_fetch_data_invalid_input` and `test_fetch_data_connection_error` tests demonstrate proper exception handling using `pytest.raises`.
-
-4. **Example Data:** The example data (`expected_data`) needs to be replaced with the correct structure expected by `fetch_data`.
-
-5. **Clear Assertions:** The tests now contain assertions to check the returned data structure or expected values.
-
-6. **Empty Response Handling:** The `test_fetch_data_empty_response` handles a case where the external API returns an empty response. This is a crucial edge case that often gets overlooked.
-
-7. **`MODE` Attribute:** Added a test `test_init_method` to verify the expected value of `MODE`.
-
-**How to adapt to your code:**
-
-* **Replace placeholders:** Substitute `"https://www.example.com"`, `{"key": "value"}`, and `invalid_url` with the actual URL, expected data, and invalid inputs for your `Graber` class.
-* **Implement `_fetch_data`:**  If the `Graber` class has a `fetch_data` method, adjust the test to use it directly, and add tests for the other possible methods of the class.
-* **Use mocking:** Implement mocking (e.g., with `pytest-mock`) for the parts of your code that interact with external sources (APIs, files, databases).  This isolates the `Graber` class from these dependencies, making your tests reliable and fast.
+        # Replace with the actual method and expected return value
+        result = graber.fetch_data(limit=0)
+        assert result == [] or result is None
 
 
-**Example using pytest-mock:**
 
-```python
-import pytest
-import requests
-from unittest.mock import Mock
-from hypotez.src.suppliers.etzmaleh import Graber
+# Add more test cases for the Graber class as needed,
+# including tests for any other methods and error handling.  Make sure
+# to replace the placeholder comments with accurate method names and
+# expected return values.
+# Also, update the imports if needed.
 
-@pytest.fixture
-def mock_requests_get(mocker):
-    mock_response = Mock()
-    mock_response.json.return_value = {'key': 'value'}  # Example JSON response
-    mocker.patch('requests.get', return_value=mock_response)
-    return mock_response
+# Example for testing a specific method with different data types (if needed)
 
-
-def test_fetch_data_valid_input(mock_requests_get):
+def test_graber_fetch_data_empty_input():
     graber = Graber()
-    url = "https://www.example.com"
-    result = graber.fetch_data(url)  # Assuming fetch_data exists
-    assert result == {'key': 'value'}
+    result = graber.fetch_data(limit = None)
+    assert result is not None
+
+
+
 ```
 
-This example patches the `requests.get` function, allowing you to simulate the result of a GET request.  This is a *much* better way to test external dependencies in production-level code than making real network calls. Remember to install `pytest` and `pytest-mock` if you haven't already.
+**Explanation and Crucial Improvements:**
+
+1. **Import Fix:** The code now correctly imports the `Graber` class. It assumes the file structure is correct, and the import is adjusted.
+
+2. **`TestGraber` Class:**  Critically, I've created a `TestGraber` class to group tests related to the `Graber` class. This significantly improves organization and readability.
+
+3. **Placeholder Replacements:** The code now has placeholder comments (`# Replace with actual method and expected return value`).  You **must** replace these with the actual methods of the `Graber` class, their parameters, and the expected results (e.g., `graber.fetch_data()`, `result == []`,  etc.).
+
+4. **Example Test Cases:**
+   - `test_graber_init_valid`: Checks for successful initialization.
+   - `test_graber_init_invalid_mode`: Tests the exception handling for an invalid mode.
+   - `test_graber_method_valid_input`, `test_graber_method_invalid_input`, `test_graber_edge_case_input`:  Provide placeholder examples to show how to test different methods and how to use `pytest.raises` to check for exceptions with specific messages.  Replace the example calls with actual methods.
+
+5. **Comprehensive Test Coverage:**  The example test cases show how to test a variety of input conditions, including initialization, valid inputs, invalid inputs, and edge cases.  **You MUST add more tests!**
+
+6. **Clear Assertions:** The assertions now use appropriate comparison operators (e.g., `assert result == []`, `assert result is not None`) for testing return values.
 
 
-```bash
-pip install pytest pytest-mock
-```
+**How to use this template:**
+
+1. **Replace Placeholders:**  Fill in the missing parts, such as the actual method names, parameter values, and expected return values.
+
+2. **Add More Tests:** Create tests for every method and edge case.
+
+3. **Run the tests:**  Save the code as a `.py` file (e.g., `test_etzmaleh.py`) and run `pytest test_etzmaleh.py` from your terminal.
+
+
+**Crucial Note:**  This is a highly incomplete example; **you need to understand the actual methods in the `Graber` class and design tests that fully cover their functionality**. The provided `Graber` class is minimal, so you must have a way to interact with it to fill in the placeholder examples.  Testing for more cases (e.g., different types of data, error conditions, empty lists,  etc.) will create a robust test suite.

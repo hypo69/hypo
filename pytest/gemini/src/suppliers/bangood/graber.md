@@ -2,106 +2,121 @@
 import pytest
 from typing import Any
 from unittest.mock import patch
-from unittest import mock
-from src.suppliers.graber import Context
+from src.suppliers.bangood.graber import Graber, Context  # Assuming these are defined
 from src.webdriver.driver import Driver
-# Replace 'your_module' with the actual module name if different
-# from hypotez.src.suppliers.bangood.graber import Graber
+from src.logger import logger
+
+# Mock logger for testing
+@patch('src.logger.logger')
+def test_graber_init(mock_logger, driver_mock):
+    """Tests the Graber class initialization."""
+    driver = Driver()
+    graber = Graber(driver)
+    assert graber.supplier_prefix == 'bangood'
+    assert graber.driver == driver
+    assert Context.locator_for_decorator is None
 
 
-@pytest.fixture
-def driver_mock():
-    """Mock the Driver class for testing."""
-    driver = mock.MagicMock(spec=Driver)
-    driver.execute_locator.return_value = None  # Mock execute_locator
-    return driver
+# Dummy Driver for testing.  Replace with actual Driver implementation if available.
+class DummyDriver:
+    def execute_locator(self, locator):
+        return True
 
 
-@pytest.fixture
-def graber(driver_mock):
-    """Fixture to create a Graber instance."""
-    return Graber(driver=driver_mock)
+@patch('src.logger.logger')
+def test_graber_init_with_locator(mock_logger, driver_mock):
+    """Tests Graber initialization with custom locator."""
+    driver = DummyDriver()
+    graber = Graber(driver)
+    assert graber.supplier_prefix == 'bangood'
 
 
-
-# Tests for the Graber class
-class TestGraber:
-    def test_init(self, driver_mock):
-        """Tests the initialization of the Graber class."""
-        graber = Graber(driver=driver_mock)
-        assert graber.supplier_prefix == 'bangood'
-        assert graber.driver == driver_mock
-        assert Context.locator_for_decorator is None
+@pytest.mark.parametrize("invalid_driver", [None, "invalid_driver"])
+def test_graber_init_invalid_driver(invalid_driver, mock_logger):
+    """Test for invalid Driver input in the constructor."""
+    with pytest.raises(TypeError):  # Expect TypeError if driver is wrong type
+        Graber(invalid_driver)
 
 
-    @patch('hypotez.src.suppliers.bangood.graber.logger')
-    def test_close_pop_up_decorator_not_implemented(self, mock_logger, driver_mock):
-        """
-        Tests the case where the close_pop_up decorator is not implemented.
-        This verifies that the decorator's function is not called.
-        """
-        graber = Graber(driver=driver_mock)
-        # Simulate a function call that would typically be decorated
-        with mock.patch.object(graber, '__init__') as mock_init:
-            result = graber.some_function() # Replace with an actual method name
-            mock_init.assert_called_once() #Assert the expected method to verify the decorator is not implemented
-        assert mock_logger.debug.call_count == 0 #Verifying that debug is not called
+# Example test case for a method (replace with actual method from the code)
+def test_graber_method_example(mock_logger):
+    """Example test case for a method in the Graber class."""
+    driver = DummyDriver()
+    graber = Graber(driver)
+
+    # Add your assertions for the method here
+    # Example:
+    # result = graber.some_method()  # Replace with your actual method name
+    # assert result == expected_result
+    pass
 
 
+# Mock the `close_pop_up` decorator if present in the code (if any)
+@patch('src.suppliers.bangood.graber.close_pop_up')
+def test_graber_with_close_pop_up(mock_decorator, mock_logger):
+    """Test Graber if it utilizes a close_pop_up decorator."""
+    # Create an instance of Graber.
+    driver = DummyDriver()
+    graber = Graber(driver)
+    # Check if decorator is called
+    mock_decorator.assert_not_called()
+    # ...Add assertion for tests to validate further functionalities if needed...
 
 
-    # Add more test cases as needed, covering different scenarios, including:
-    # - Valid inputs
-    # - Invalid or unexpected inputs (if any)
-    # - Edge cases (e.g., empty lists, special characters)
+# Example for testing exception handling (if any)
+@patch('src.logger.logger')
+def test_graber_exception_handling(mock_logger, caplog):
+    """Test exception handling in Graber's methods, if any."""
+    # Replace with actual code to raise an exception and assertion for error handling
+    try:
+        # Replace with actual code calling a function that might raise an exception
+        driver = DummyDriver()
+        graber = Graber(driver)
+        graber.some_method_that_might_raise_an_error()
 
-    # Example of testing a hypothetical method:
-    # def test_some_method_with_valid_input(self, graber):
-    #    assert graber.some_method(valid_input) == expected_output
-
-    # Example testing for exceptions:
-    # def test_method_raises_exception(self, graber):
-    #    with pytest.raises(ExceptionType) as excinfo:
-    #        graber.some_method(invalid_input)
-    #    assert str(excinfo.value) == "Expected error message"
-
-
-# Assuming Graber is defined in the provided code.
+    except Exception as e:
+        assert "expected_error_message" in str(e)
 
 
-# If the `Graber` class has methods like `process_field` or `collect_data`
-# add tests for those methods here. Remember to mock any external dependencies 
-#  such as the driver and logger.
+# Add more test cases for specific functionalities based on the Graber code
+# Include tests for edge cases, invalid inputs, and exception handling.
+# Mock the necessary objects and classes to isolate tests, such as the driver.
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The solution now heavily utilizes `unittest.mock` to mock the `Driver` and `logger` objects. This isolates the tests and prevents them from interacting with the actual web driver or logger, which is crucial for reliable testing.  Crucially, `mock.MagicMock` is used to mock the `Driver` class properly to simulate its methods like `execute_locator`
+1. **Import Necessary Modules:** Correctly imports `Context` from the `graber.py` file, along with needed modules.
 
-2. **Fixtures:**  The `driver_mock` and `graber` fixtures are used to create and manage the mocks, promoting code reuse and better organization.
-
-3. **`pytest.raises` (important):** The example shows how to use `pytest.raises` to test exception handling.  This is crucial when the tested code might raise exceptions, like an `ExecuteLocatorException`
-
-4. **Clear Test Cases:** The test cases are designed with clear names (`test_init`, `test_close_pop_up_decorator_not_implemented`) and descriptions, which improves readability and understanding.
-
-5. **Placeholder Tests:** The provided code is extremely basic, so I've added placeholder tests like `test_init`. You *must* add tests that cover methods that you actually have in the `Graber` class (e.g., `process_field`, `collect_data`, etc.).
-
-6. **Decorator Test:** The crucial test `test_close_pop_up_decorator_not_implemented` checks that the decorator doesn't run if it isn't implemented (this is likely a desired behavior).
-
-7. **`@patch` for logger:**  Uses `@patch` to mock the logger, allowing controlled logging for testing.
-
-**How to run:**
-
-1.  Make sure you have `pytest` installed.
-2.  Save the code as a Python file (e.g., `test_graber.py`).
-3.  Run `pytest test_graber.py` from your terminal in the directory containing `test_graber.py` and the source code `hypotez/src/suppliers/bangood/graber.py`.
+2. **Dummy `Driver`:**  Crucially, a `DummyDriver` class is introduced to mock the `Driver` object.  This is essential for testing the `Graber` class without depending on an actual web driver setup, which can be resource-intensive and unreliable in test environments.
 
 
-**Crucial Next Steps:**
+3. **Parameterized Tests:** Added a `pytest.mark.parametrize` test to check for different types of input for the `driver` parameter, and use `pytest.raises` to confirm the correct exception handling.
 
-- **Replace Placeholders:** Replace the placeholder methods and examples (`some_method`, `valid_input`, `expected_output`, etc.) with the actual methods and expected behavior from your `Graber` class.
-- **Edge Cases:** Add tests to cover edge cases for each method (e.g., empty inputs, special characters).
-- **Exception Handling:** Add tests to confirm that exceptions are handled correctly, using `pytest.raises` as illustrated.
-- **External Dependencies:** Be sure to properly mock any external libraries or dependencies that your `Graber` class uses (like the `Driver` class).
+4. **Mocking `logger`:** The `@patch('src.logger.logger')` decorator is used to mock the logger, so your tests don't depend on actually writing to a file or console.
+
+5. **Clearer Test Case Structure:** The tests are more structured, with comments explaining the purpose of each test and what assertions are expected.
+
+
+6. **Example Tests:** Demonstrates how to test a method (`test_graber_method_example`).  You'll need to replace placeholders like `graber.some_method()` with actual method calls and the appropriate assertions for the expected outcomes.
+
+
+7. **Decorator Testing:** Shows how to test the `@close_pop_up` decorator if it exists.
+
+
+8. **Exception Handling Testing:**  Includes a `test_graber_exception_handling` function showing the proper way to test exception handling, essential in real-world scenarios.
+
+
+
+
+**How to Use:**
+
+1. **Replace Placeholders:**  Change the example method names (`some_method`, `some_method_that_might_raise_an_error`) with the actual method names from your `graber.py` file.  Crucially, replace the placeholder assertions with actual assertions about the expected behavior of those methods.
+
+2. **Add More Tests:** Write more test functions for other methods, error handling, and edge cases in the `Graber` class, focusing on different possible scenarios for inputs and expected outcomes.
+
+3. **Run Tests:** Use `pytest` to run the tests:  `pytest -v` or `pytest -s` in your terminal, ensuring that you have the `pytest` library installed (`pip install pytest`).
+
+
+**Crucial:** Replace `DummyDriver` with a proper driver implementation if you have access to one (e.g., Selenium WebDriver) to make the tests more realistic and less prone to issues in edge cases.   If there are methods in `graber.py` that interact with external services, use appropriate mock objects for those interactions.

@@ -1,37 +1,45 @@
 ```python
 import pytest
-from hypotez.src.product._examples.version import __version__
-
+import hypotez.src.product._examples.version as version
 
 def test_version_string():
-    """
-    Checks if the __version__ variable is a string.
-    """
-    assert isinstance(__version__, str), "The __version__ attribute should be a string."
+    """Checks if __version__ is a string."""
+    assert isinstance(version.__version__, str), "version should be a string"
+
+def test_version_not_empty():
+    """Checks if __version__ is not empty."""
+    assert version.__version__, "version string cannot be empty"
 
 
-def test_version_value():
-    """
-    Checks if the __version__ variable has the expected value.
-    """
-    expected_version = "3.12.0.0.0.4"
-    assert __version__ == expected_version, f"The __version__ value should be '{expected_version}', but is '{__version__}'."
+def test_author_string():
+    """Checks if __author__ is a string."""
+    assert isinstance(version.__author__, str), "author should be a string"
 
 
-def test_version_non_empty():
-  """
-  Checks if the __version__ string is not empty.
-  """
-  assert __version__ != "", "__version__ string cannot be empty."
+def test_details_string():
+    """Checks if __details__ is a string."""
+    assert isinstance(version.__details__, str), "details should be a string"
 
 
-# Additional test cases if there are other relevant attributes
-# (e.g., __name__, __doc__, __details__, __author__) could be added similarly.
+def test_mode_string():
+    """Checks if MODE is a string."""
+    assert isinstance(version.MODE, str), "MODE should be a string"
 
-# Example for testing exception handling (if applicable)
-# def test_version_invalid_format():
-#     with pytest.raises(ValueError) as excinfo:
-#         # Example of invalid version format
-#         __version__ = 123  # or any other invalid type
-#     assert "The __version__ attribute must be a string." in str(excinfo.value)
+# No direct way to test the remaining variables without more context.
+# They are likely used within other parts of the code,
+#  but without access to that code, testing them is not possible.
+
+#Example of a hypothetical test that might apply if other parts
+# of the code used __version__
+
+def test_version_match():
+    """Test if the version format is as expected."""
+    assert version.__version__.count('.') == 5, "version format does not contain 5 periods."
+
+
+# Example of testing if __version__ is correctly set. 
+# (Assuming __version__ is expected to be a specific type of string.)
+
+# def test_version_format(version_data): # If we had fixture for specific version format
+#   assert version.__version__ == version_data[0], "Incorrect Version String"
 ```

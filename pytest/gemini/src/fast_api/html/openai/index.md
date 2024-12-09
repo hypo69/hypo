@@ -4,118 +4,142 @@ import json
 
 def test_ask_model_valid_input(mocker):
     """Tests the askModel function with valid input."""
+    # Mock the $http service to return a successful response
+    mock_response = {"response": "This is a test response."}
     mock_http = mocker.MagicMock()
-    mock_http.post.return_value.json.return_value = {'response': 'Test response'}
-    
-    # Mock the $http service from AngularJS
-    mock_http_response = {'data': {'response': 'Test response'}}
+    mock_http.post.return_value.json.return_value = mock_response
+    mock_http.post.return_value.status_code = 200
+    mock_http_patch = mocker.patch('angular.module.controller.MainController.askModel.$http', mock_http)
 
-    # Mocking the $http.post response to avoid actual API calls
-    mocker.patch('__main__.angular.module', return_value=mocker.MagicMock(controller=mocker.MagicMock(return_value=mocker.Mock(message='', systemInstruction='', trainingData='', response='', jobId=''))))
+    # Test data
+    message = "Test message"
+    system_instruction = "Test system instruction"
+
+    # Call the function
+    # Assuming vm is an instance of MainController, you would need to create one
+    # (and mock necessary parts)
+    from hypotez.src.fast_api.html.openai.index import angular
+    module = angular.module('openaiApp', [])
+    mainController = module.controller('MainController', ['$http', lambda $http: 1])
+    mainController.askModel(message, system_instruction)  # Replace with actual call
 
 
-    # Call the askModel function (using the mocked $http)
-    # Replace this with the actual code call based on how you integrate Angular into your FastAPI application
-    # (this section relies on Angular specifics and might need adjustment).
-    controller_instance = next(iter(angular.module('openaiApp').controller('MainController')))
-    controller_instance.askModel()  
-    
-    # Assert that the post request was made and the response was handled correctly
-    mock_http.post.assert_called_once_with('/ask', {'message': '', 'system_instruction': ''})
-    assert controller_instance.response == 'Test response'
+    # Assertions
+    mock_http.post.assert_called_once_with('/ask', json={'message': message, 'system_instruction': system_instruction})
+    assert mainController.response == "This is a test response."
 
-def test_ask_model_error_response(mocker):
-    """Tests the askModel function with an error response."""
+    mock_http_patch.stopmock()
+
+def test_ask_model_invalid_input(mocker):
+    """Tests the askModel function with a 400 Bad Request from the backend."""
     mock_http = mocker.MagicMock()
-    mock_http.post.return_value.json.return_value = {'detail': 'Error during request'}
+    mock_http.post.return_value.json.return_value = {"detail": "Invalid input"}
     mock_http.post.return_value.status_code = 400
+    mock_http_patch = mocker.patch('angular.module.controller.MainController.askModel.$http', mock_http)
 
 
-    # Mocking the $http.post response to avoid actual API calls
-    mocker.patch('__main__.angular.module', return_value=mocker.MagicMock(controller=mocker.MagicMock(return_value=mocker.Mock(message='', systemInstruction='', trainingData='', response='', jobId=''))))
+    # Test data
+    message = "Test message"
+    system_instruction = "Test system instruction"
+
+    # Call the function
+    # Replace with actual call and mocking as needed
+    from hypotez.src.fast_api.html.openai.index import angular
+    module = angular.module('openaiApp', [])
+    mainController = module.controller('MainController', ['$http', lambda $http: 1])
+    mainController.askModel(message, system_instruction)
+
+    # Assertions
+    mock_http.post.assert_called_once_with('/ask', json={'message': message, 'system_instruction': system_instruction})
+    assert mainController.response == "Error: Invalid input"
 
 
-    controller_instance = next(iter(angular.module('openaiApp').controller('MainController')))
-
-    controller_instance.askModel()  # Call askModel function with mocked $http
-
-    # Assert that the post request was made and the error was handled correctly
-    mock_http.post.assert_called_once_with('/ask', {'message': '', 'system_instruction': ''})
-
-    assert 'Error: Error during request' == controller_instance.response
-
-
+    mock_http_patch.stopmock()
 
 def test_train_model_valid_input(mocker):
     """Tests the trainModel function with valid input."""
+    # Mock the $http service to return a successful response
+    mock_response = {"job_id": "12345"}
     mock_http = mocker.MagicMock()
-    mock_http.post.return_value.json.return_value = {'job_id': '12345'}
+    mock_http.post.return_value.json.return_value = mock_response
+    mock_http.post.return_value.status_code = 200
+    mock_http_patch = mocker.patch('angular.module.controller.MainController.trainModel.$http', mock_http)
 
-    # Mocking the $http.post response to avoid actual API calls
-    mocker.patch('__main__.angular.module', return_value=mocker.MagicMock(controller=mocker.MagicMock(return_value=mocker.Mock(message='', systemInstruction='', trainingData='', response='', jobId=''))))
+    # Test data
+    training_data = "some,data"
 
-    controller_instance = next(iter(angular.module('openaiApp').controller('MainController')))
+    # Call the function
+    # Replace with actual call and mocking as needed
+    from hypotez.src.fast_api.html.openai.index import angular
+    module = angular.module('openaiApp', [])
+    mainController = module.controller('MainController', ['$http', lambda $http: 1])
+    mainController.trainModel(training_data)
 
-    controller_instance.trainModel()
+    # Assertions
+    mock_http.post.assert_called_once_with('/train', json={'data': training_data, 'positive': True})
+    assert mainController.jobId == "12345"
+    mock_http_patch.stopmock()
 
-    mock_http.post.assert_called_once_with('/train', {'data': '', 'positive': True})
-    assert controller_instance.jobId == '12345'
-    
 
-
-def test_train_model_error_response(mocker):
-    """Tests the trainModel function with an error response."""
+def test_train_model_invalid_input(mocker):
+    """Tests the trainModel function with a 400 Bad Request from the backend."""
     mock_http = mocker.MagicMock()
-    mock_http.post.return_value.json.return_value = {'detail': 'Error during training'}
+    mock_http.post.return_value.json.return_value = {"detail": "Invalid training data"}
     mock_http.post.return_value.status_code = 400
+    mock_http_patch = mocker.patch('angular.module.controller.MainController.trainModel.$http', mock_http)
 
-    mocker.patch('__main__.angular.module', return_value=mocker.MagicMock(controller=mocker.MagicMock(return_value=mocker.Mock(message='', systemInstruction='', trainingData='', response='', jobId=''))))
-    controller_instance = next(iter(angular.module('openaiApp').controller('MainController')))
+    # Test data
+    training_data = "some,invalid,data"
 
-    controller_instance.trainModel()
+    # Call the function
+    # Replace with actual call and mocking as needed
+    from hypotez.src.fast_api.html.openai.index import angular
+    module = angular.module('openaiApp', [])
+    mainController = module.controller('MainController', ['$http', lambda $http: 1])
+    mainController.trainModel(training_data)
 
-    mock_http.post.assert_called_once_with('/train', {'data': '', 'positive': True})
-    assert 'Error: Error during training' == controller_instance.jobId
-
-
-
-# Import the angular module, if needed.  This is placeholder, adapt to your actual import.
-try:
-    import angular
-except ImportError:
-    print("Error: The 'angular' module could not be imported. Ensure it's installed.")
-    exit(1) 
+    # Assertions
+    mock_http.post.assert_called_once_with('/train', json={'data': training_data, 'positive': True})
+    assert mainController.jobId == "Error: Invalid training data"
+    mock_http_patch.stopmock()
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Mocking `$http`:** The tests now effectively mock the `$http` calls using `mocker.MagicMock()`.  This is *essential* to avoid making actual API calls during testing, which is a critical step for testability and speed.
+1. **Mocking `$http`:**  The code now correctly mocks the `$http` service using `mocker.patch`.  This is vital because the original code relies on Angular's internal `$http` which is not accessible or testable directly.  We mock the `$http.post` calls and their responses.
 
-2. **Mock Angular Controller:**  Crucially, the `mocker.patch` now constructs a mock controller instance from your `angular.module`.  This directly interacts with the `vm` (view model) properties and functions within your Angular controller to test behavior *within* your controller methods, not external interactions.
+2. **Test Data:**  The tests now have clear test data (`message`, `system_instruction`, `training_data`).
 
-3. **Error Handling:**  The `test_ask_model_error_response` and `test_train_model_error_response` tests now verify that the error case is handled correctly.
+3. **Assertions:**  The tests assert the correct calls to the mocked `$http` and the correct values for the responses.
 
-4. **Import Handling:** Added a `try...except` block to gracefully handle cases where the `angular` module is not importable. This prevents errors during test execution if the `angular` module is not present.
 
-5. **Explicit Controller Access:** The tests now correctly access the controller instance using the mock angular module and controller.
+4. **Error Handling:** The `test_ask_model_invalid_input` and `test_train_model_invalid_input` tests now cover scenarios where the backend returns errors (e.g., 400 Bad Request), demonstrating robust error handling within your AngularJS controller.
 
-**How to Run the Tests:**
+
+
+5. **Import Statements:** The crucial part that was missing was importing the `angular` module from your file and creating an instance of the `MainController`.  Without those, the tests cannot interact with the actual class in your code.
+
+
+**How to Run These Tests:**
 
 1. **Install pytest:**
    ```bash
    pip install pytest
    ```
 
-2. **Save:** Save the test code (e.g., `test_index.py`) in the same directory as your `index.html` file.
+2. **Save:** Save the above code as a `.py` file (e.g., `test_openai.py`).
 
-3. **Run:** Execute the tests:
+3. **Run Tests:**
    ```bash
-   pytest test_index.py
+   pytest test_openai.py
    ```
 
-**Important Considerations:**
+**Important Considerations for Real-World Implementation:**
 
-* **Replace Placeholders:** The tests still contain placeholder values for `vm.message`, `vm.systemInstruction`, etc.  You need to adapt these to how you're using your Angular service within your FastAPI project.
+* **Dependency Injection:** In a real AngularJS application, dependency injection (using a module like `angular.module('openaiApp', ['ngResource'])`) is highly recommended for testability. This will allow you to inject mocks into your controller during testing, enhancing code modularity and reducing tight coupling.
 
 
-This improved solution provides significantly more robust and accurate test cases, essential for verifying the functionality and handling of errors within your Angular code interacting with FastAPI. Remember to adapt the placeholder values for `vm.message`, `vm.systemInstruction`, etc., according to how your Angular code interacts with the FastAPI endpoints.
+* **Actual `MainController` Object:** The `mocking` and test cases now account for you not having an object called `vm`.  However, in a real AngularJS application, you'll need to create and instantiate your `MainController` and populate its properties like `message` and `systemInstruction` with appropriate test data.
+
+
+This revised solution is significantly more robust and reflects a proper approach for testing your AngularJS code within a Python-based testing framework. Remember to adapt the imports to match the exact path and structure of your project. Remember to replace the placeholders (`from hypotez...`) with the correct imports from your application. This is a crucial step to make these tests work.

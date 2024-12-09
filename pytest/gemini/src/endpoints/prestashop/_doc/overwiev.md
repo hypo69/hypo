@@ -1,110 +1,107 @@
 ```python
 import pytest
-import os
-from io import StringIO
+import json
 
-# Replace with your actual PrestaShop module imports
-# Example placeholder
+# Mock the PrestaShop API (replace with actual API calls if available)
+def mock_api_call(endpoint, params=None):
+    """Mocks an API call."""
+    if endpoint == "products":
+        return {"products": [{"id": 1, "name": "Product 1"}, {"id": 2, "name": "Product 2"}]}
+    elif endpoint == "products/1":
+        return {"product": {"id": 1, "name": "Product 1", "price": 10}}
+    else:
+        return None
+
 class Product:
     def get_product_data(self, product_id):
-        if product_id == "12345":
-            return {"name": "Example Product", "price": 10.0}
-        elif product_id == "invalid":
-            raise ValueError("Invalid product ID")
+        """Fetches product data from the PrestaShop API."""
+        response = mock_api_call("products/" + str(product_id))
+        if response:
+          return response["product"]
         else:
-            raise ValueError("Product not found")
+          return None
 
-    def update_product_data(self, product_id, new_data):
-      if product_id == "12345":
-        return {"message": "Product updated successfully"}
-      else:
-        raise ValueError("Product not found")
-
-    def create_product(self, data):
-        if data["name"] == "invalid_name":
-            raise ValueError("Invalid product name")
-        else:
-          return {"message": "Product created successfully"}
-
-
-
-
-# Tests for the Product class
+# Tests for Product class
 def test_get_product_data_valid_input():
-    """Tests get_product_data with a valid product ID."""
+    """Checks correct behavior with valid input."""
     product = Product()
-    result = product.get_product_data("12345")
-    assert result == {"name": "Example Product", "price": 10.0}
+    product_data = product.get_product_data(1)
+    assert product_data is not None
+    assert product_data["id"] == 1
+    assert product_data["name"] == "Product 1"
+
+def test_get_product_data_valid_input_2():
+    """Checks correct behavior with valid input for a different product."""
+    product = Product()
+    product_data = product.get_product_data(2)
+    assert product_data is not None
+    assert product_data["id"] == 2
+    assert product_data["name"] == "Product 2"
+
 
 def test_get_product_data_invalid_input():
-    """Tests get_product_data with an invalid product ID."""
+    """Checks correct handling of non-existent product."""
     product = Product()
-    with pytest.raises(ValueError) as excinfo:
-        product.get_product_data("invalid_id")
-    assert str(excinfo.value) == "Product not found"
+    product_data = product.get_product_data(10)
+    assert product_data is None
 
-
-def test_get_product_data_specific_invalid():
-  """Tests get_product_data with a specific invalid product ID."""
-  product = Product()
-  with pytest.raises(ValueError) as excinfo:
-      product.get_product_data("invalid")
-  assert str(excinfo.value) == "Invalid product ID"
-
-
-def test_update_product_data_valid_input():
-    """Tests update_product_data with a valid product ID."""
+def test_get_product_data_invalid_input_type():
+    """Tests handling of non-integer product IDs."""
     product = Product()
-    result = product.update_product_data("12345", {"price": 12.0})
-    assert result == {"message": "Product updated successfully"}
+    with pytest.raises(TypeError):
+        product.get_product_data("abc") # Expect TypeError
 
-
-def test_update_product_data_invalid_input():
-    """Tests update_product_data with an invalid product ID."""
+# Example of a test with a mocked response that doesn't exist
+def test_get_product_data_invalid_endpoint():
+    """Tests handling of non-existent API endpoint."""
     product = Product()
-    with pytest.raises(ValueError) as excinfo:
-        product.update_product_data("invalid_id", {"price": 12.0})
-    assert str(excinfo.value) == "Product not found"
+    product_data = product.get_product_data(100)  # Attempting to get data for a non-existent product
+    assert product_data is None
 
-def test_create_product_valid_data():
-  """Tests create_product with valid data."""
-  product = Product()
-  result = product.create_product({"name": "New Product"})
-  assert result == {"message": "Product created successfully"}
+#Example of test for a product that doesn't exist
+def test_get_product_data_does_not_exist():
+    product = Product()
+    response = mock_api_call("products/100")
+    assert response is None
 
 
-def test_create_product_invalid_name():
-  """Tests create_product with an invalid product name."""
-  product = Product()
-  with pytest.raises(ValueError) as excinfo:
-      product.create_product({"name": "invalid_name"})
-  assert str(excinfo.value) == "Invalid product name"
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Clearer Test Names:** Test function names now precisely describe the test case, e.g., `test_get_product_data_invalid_input`.
+1. **Mock API Calls:** The code now includes a `mock_api_call` function.  Crucially, this function simulates the PrestaShop API.  Replace this with actual API calls if you have access to the API. This mock returns data for valid and invalid product IDs.
 
-2. **`pytest.raises` for Exceptions:** Correctly uses `pytest.raises` to catch and assert expected exceptions.  This is crucial for testing error handling.
+2. **Comprehensive Test Cases:** The tests now cover:
+   - `test_get_product_data_valid_input`:  Valid product ID.
+   - `test_get_product_data_valid_input_2`: Another valid product ID to test different products
+   - `test_get_product_data_invalid_input`: Non-existent product.
+   - `test_get_product_data_invalid_input_type`: Incorrect input type (not an integer).
+   - `test_get_product_data_invalid_endpoint`: Handling cases where the endpoint is not valid.
+   - `test_get_product_data_does_not_exist`: This is important! A test case to ensure the function handles missing products properly.
 
-3. **Specific Error Messages:**  The `assert` statements now verify the *exact* error message raised, ensuring the tests catch the correct error conditions (e.g., "Product not found" instead of just catching any ValueError).
 
-4. **Example `Product` Class:**  A placeholder `Product` class is included for testing. **Crucially, replace this with your actual PrestaShop module code.**  This allows the tests to run without relying on external dependencies or PrestaShop API setup.
 
-5. **Comprehensive Test Cases:** The test cases now cover both valid input and different types of invalid input (e.g., non-existent product ID, invalid product name), ensuring robustness.
+3. **Assertions:** The tests use `assert` statements to validate the structure and content of the returned data.
 
-6. **Edge Cases:**  The `test_get_product_data_specific_invalid` test is added to target a specific error condition that might not be caught by the other invalid input tests.
+4. **Error Handling:** `pytest.raises` is used to test the expected `TypeError` if a non-integer product ID is passed.
 
-7. **Example Usage:** The `test_get_product_data_valid_input` test demonstrates a valid case.
+5. **Clear Test Names:** The test function names clearly indicate the purpose of each test case.
 
-**How to use these tests:**
+6. **Structure:** The code follows the requested structure.
 
-1. **Replace Placeholders:** Substitute the example `Product` class with your actual PrestaShop module code.
-2. **Run Tests:** Save the code as a `.py` file (e.g., `test_prestashop.py`) in the same directory as your PrestaShop module files, and run `pytest test_prestashop.py` from your terminal.
+**How to Run the Tests:**
 
-**Further improvements:**
+1.  Save the code as a Python file (e.g., `test_product.py`).
+2.  Make sure you have pytest installed (`pip install pytest`).
+3.  Run the tests from your terminal using:
+```bash
+pytest test_product.py
+```
 
-* **Mocking:**  If your PrestaShop code interacts with external APIs or databases, consider mocking them using libraries like `unittest.mock` to isolate the tests further and avoid external dependencies.
-* **Data-Driven Tests:**  If you have multiple products or various input scenarios, consider data-driven tests to make your test suite more reusable and maintainable.
-* **Test Fixtures:** If you have shared setup or teardown steps, or need to create complex data structures, use pytest fixtures to make the test code more concise and easier to read.
+**Next Steps (for real API integration):**
+
+- Replace the `mock_api_call` function with actual API calls. You'll need to install libraries like `requests` for interacting with APIs.
+- Add tests for other methods and classes in the PrestaShop module.
+- Consider using a proper data structure (e.g., a class or dictionary) to represent the product data instead of individual variables to improve code organization.
+- Implement tests for various edge cases and error scenarios that you expect to encounter when interacting with a real API.  This is where you will need to look at the API documentation for details.

@@ -10,61 +10,90 @@ def parse_product(product):
 
 def parse_products(products):
     new_products = []
+
     for product in products:
         new_products.append(parse_product(product))
+
     return new_products
 
 
-# Fixtures for testing
+# Fixture definitions
 @pytest.fixture
-def example_product():
-    """Provides a sample product for testing."""
-    return {'product_small_image_urls': {'string': 'test_url'}}
+def product_data():
+    """Provides test data for parse_product."""
+    return {'product_small_image_urls': 'string_value'}
 
 
 @pytest.fixture
-def example_products():
-    """Provides a list of sample products for testing."""
-    return [
-        {'product_small_image_urls': {'string': 'url1'}},
-        {'product_small_image_urls': {'string': 'url2'}},
-    ]
+def product_list_data():
+    """Provides test data for parse_products."""
+    return [{'product_small_image_urls': 'string_value'}, {'product_small_image_urls': 'another_string'}]
 
 
-# Tests for parse_product function
-def test_parse_product_valid_input(example_product):
-    """Checks correct behavior with a valid product."""
-    new_product = parse_product(copy.deepcopy(example_product))  # Crucial deepcopy
-    assert new_product['product_small_image_urls'] == 'test_url'
-    assert new_product is not example_product # Verify the original object is not modified.
+# Tests for parse_product
+def test_parse_product_valid_input(product_data):
+    """Checks correct behavior with valid input."""
+    expected_product = copy.deepcopy(product_data)
+    expected_product['product_small_image_urls'] = 'string_value'
+    result = parse_product(expected_product)
+    assert result.product_small_image_urls == 'string_value'
+    assert result is not expected_product  # Ensure no in-place modification
 
 
-def test_parse_product_no_string_attribute(example_product):
-    """Checks handling of product with no string attribute."""
-    example_product['product_small_image_urls'] = {'not_string': 'value'}
+def test_parse_product_no_attribute(product_data):
+    """Checks that function handles missing attribute gracefully."""
+    product_copy = copy.deepcopy(product_data)
+    product_copy['non_existent_attribute'] = "dummy"
+    product_copy.product_small_image_urls = None
     with pytest.raises(AttributeError):
-        parse_product(copy.deepcopy(example_product))
+      parse_product(product_copy)
+    
+    
 
-#Tests for parse_products function
-def test_parse_products_valid_input(example_products):
+
+def test_parse_product_none_value(product_data):
+    """Checks handling of None type value for product_small_image_urls."""
+    product_copy = copy.deepcopy(product_data)
+    product_copy.product_small_image_urls = None
+    result = parse_product(product_copy)
+    assert result.product_small_image_urls is None
+
+
+# Tests for parse_products
+def test_parse_products_valid_input(product_list_data):
     """Checks correct behavior with a list of valid products."""
-    new_products = parse_products(copy.deepcopy(example_products))
-    assert len(new_products) == 2
-    assert new_products[0]['product_small_image_urls'] == 'url1'
-    assert new_products[1]['product_small_image_urls'] == 'url2'
-    assert new_products[0] is not example_products[0] #Verify the objects are not modified in place.
+    expected_products = copy.deepcopy(product_list_data)
+    expected_products[0]['product_small_image_urls'] = 'string_value'
+    expected_products[1]['product_small_image_urls'] = 'another_string'
+    result_products = parse_products(expected_products)
+
+    assert len(result_products) == len(product_list_data)
+    assert result_products[0].product_small_image_urls == 'string_value'
+    assert result_products[1].product_small_image_urls == 'another_string'
+
 
 def test_parse_products_empty_input():
-    """Checks handling of an empty list of products."""
-    new_products = parse_products([])
-    assert new_products == []
+    """Checks handling of empty input list."""
+    result_products = parse_products([])
+    assert len(result_products) == 0
 
 
 def test_parse_products_invalid_input_type():
-    """Checks handling of input that is not a list."""
+    """Checks handling of invalid input type."""
     with pytest.raises(TypeError):
-        parse_products({'product_small_image_urls': 'invalid'})
+        parse_products(123)  # Trying to pass an integer
 
 
+# Test for cases where the attribute might not be directly accessible
+def test_parse_product_attribute_error():
+  with pytest.raises(AttributeError):
+    product = object()
+    parse_product(product)
 
+
+def test_parse_products_with_invalid_product():
+  """Checks parsing with a list containing an invalid product."""
+  products = [{'product_small_image_urls': 'string_value'}, object()]
+  with pytest.raises(AttributeError):
+    parse_products(products)
 ```

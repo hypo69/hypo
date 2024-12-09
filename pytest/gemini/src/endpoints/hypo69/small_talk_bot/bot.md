@@ -1,124 +1,107 @@
 ```python
 import pytest
 import asyncio
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from telegram import Update, Message
 from telegram.ext import CallbackContext
-from hypotez.src.endpoints.hypo69.small_talk_bot.bot import PsychologistTelgrambot
-from hypotez.src import gs
-from hypotez.src.utils.file import read_text_file, recursively_read_text_files
-from hypotez.src.ai.gemini import GoogleGenerativeAI
-from pathlib import Path
+
+from hypotez.src.endpoints.hypo69.small_talk_bot.bot import PsychologistTelgrambot, gs
 
 
-# Fixture for mocked GoogleGenerativeAI
 @pytest.fixture
-def mocked_gemini(monkeypatch):
-    class MockGenerativeAI:
-        def ask(self, q, history_file):
-            return "mocked answer"
-
-    monkeypatch.setattr("hypotez.src.ai.gemini.GoogleGenerativeAI", MockGenerativeAI)
-    return MockGenerativeAI()
-
-# Fixture for creating a mock PsychologistTelgrambot
-@pytest.fixture
-def mock_bot(mocked_gemini):
-    mock_path = Path("mock_path")
-    mock_path.mkdir(parents=True, exist_ok=True)
-    with patch("hypotez.src.utils.file.read_text_file", return_value="mock system instruction") as mock_read_text:
-        with patch("hypotez.src.utils.file.recursively_read_text_files", return_value=["mock question"]) as mock_recursively_read:
-            bot = PsychologistTelgrambot()
-            bot.model = mocked_gemini
-            bot.system_instruction = "mock system instruction"
-            bot.questions_list = ["mock question"]
-            return bot
-
-
-# Test for start command
-def test_start_command(mock_bot, monkeypatch):
-    update = Update.de_json({"message": {"text": "/start"}}, bot=None)
-    context = CallbackContext(update=update)
-    monkeypatch.setattr(
-        "hypotez.src.bots.telegram.TelegramBot.start", lambda x, y: asyncio.Future()
+def mock_update():
+    """Creates a mock telegram Update object."""
+    update = Update(
+        message=MagicMock(spec=Message),
+        effective_user=MagicMock(id=123)
     )
-    asyncio.run(mock_bot.start(update, context))
+    update.message.text = "test message"
+    return update
 
 
-# Test for handle_message function with valid input.
-def test_handle_message_valid_input(mock_bot):
-    update = Update.de_json({"message": {"text": "test message"}}, bot=None)
-    context = CallbackContext(update=update)
-    asyncio.run(mock_bot.handle_message(update, context))
+@pytest.fixture
+def mock_context():
+    """Creates a mock telegram CallbackContext object."""
+    return MagicMock(spec=CallbackContext)
 
 
-# Test for handle_message function with potentially invalid/empty input.
-def test_handle_message_invalid_input(mock_bot):
-    update = Update.de_json({"message": {"text": ""}}, bot=None)
-    context = CallbackContext(update=update)
-    asyncio.run(mock_bot.handle_message(update, context))
+@pytest.fixture
+def mock_model():
+    """Mocks the GoogleGenerativeAI model."""
+    model = MagicMock()
+    model.ask.return_value = "mock answer"
+    return model
+
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.gs')
+def test_handle_message(mock_gs, mock_update, mock_context, mock_model):
+    """Tests the handle_message method with valid input."""
+    mock_gs.path.google_drive = MagicMock(return_value=MagicMock())
+    mock_gs.path.google_drive.__enter__.return_value = MagicMock()
+    mock_gs.path.google_drive / 'bots' / str(123) / 'chat_logs.txt' = MagicMock()
+    mock_gs.now = 'mock_timestamp'
+    mock_gs.credentials.gemini.hypo69_psychologist_bot = 'mock_api_key'
+    bot = PsychologistTelgrambot()
+    bot.model = mock_model
+    asyncio.run(bot.handle_message(mock_update, mock_context))
+    mock_model.ask.assert_called_once_with(q='test message', history_file='123.txt')
+    assert mock_update.message.reply_text.call_count == 1
 
 
-#Test for handle_next_command
-def test_handle_next_command(mock_bot):
-    update = Update.de_json({"message": {"text": "/next"}}, bot=None)
-    context = CallbackContext(update=update)
-    asyncio.run(mock_bot.handle_next_command(update))
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.gs')
+def test_handle_message_invalid_input(mock_gs):
+    """Tests the handle_message method with invalid input (e.g., empty string)."""
+    mock_gs.path.google_drive = MagicMock(return_value=MagicMock())
+    mock_gs.path.google_drive.__enter__.return_value = MagicMock()
+    mock_gs.now = 'mock_timestamp'
+    bot = PsychologistTelgrambot()
+    mock_update = Update(message=MagicMock(spec=Message), effective_user=MagicMock(id=123))
+    mock_update.message.text = ""
+    with pytest.raises(TypeError) as excinfo:
+      asyncio.run(bot.handle_message(mock_update, MagicMock()))
 
-# Test for exception handling in handle_next_command
-def test_handle_next_command_exception(mock_bot, monkeypatch):
-    monkeypatch.setattr("random.choice", lambda x: None)
-    update = Update.de_json({"message": {"text": "/next"}}, bot=None)
-    context = CallbackContext(update=update)
-    asyncio.run(mock_bot.handle_next_command(update))
+    assert "expected str, got" in str(excinfo.value)
 
-# Test for handle_document
-def test_handle_document(mock_bot):
-    update = Update.de_json({"message": {"text": "document"}}, bot=None)
-    context = CallbackContext(update=update)
-    asyncio.run(mock_bot.handle_document(update, context))
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.gs')
+def test_start(mock_gs, mock_update, mock_context):
+  """Test the start command."""
+  mock_gs.path.google_drive = MagicMock(return_value=MagicMock())
+  mock_gs.path.google_drive.__enter__.return_value = MagicMock()
+  mock_gs.now = 'mock_timestamp'
+  bot = PsychologistTelgrambot()
+  asyncio.run(bot.start(mock_update, mock_context))
+  mock_update.message.reply_text.assert_called_once_with('Hi! I am a smart assistant psychologist.')
 
-# Test for handle_suppliers_response (mocked to prevent external calls)
-def test_handle_suppliers_response_success(mock_bot):
-    update = Update.de_json({"message": {"text": "https://morlevi.co.il"}}, bot=None)
-    context = CallbackContext(update=update)
-    # Mocks the necessary function to avoid external calls
-    monkeypatch.setattr("hypotez.src.endpoints.hypo69.small_talk_bot.bot.PsychologistTelgrambot.mexiron", lambda: asyncio.Future(result=True))
-    asyncio.run(mock_bot.handle_suppliers_response(update, "https://morlevi.co.il"))
-
-# Test for handle_suppliers_response (mocked to prevent external calls) - failure case.
-def test_handle_suppliers_response_failure(mock_bot):
-    update = Update.de_json({"message": {"text": "https://morlevi.co.il"}}, bot=None)
-    context = CallbackContext(update=update)
-    monkeypatch.setattr("hypotez.src.endpoints.hypo69.small_talk_bot.bot.PsychologistTelgrambot.mexiron", lambda: asyncio.Future(result=False))
-    asyncio.run(mock_bot.handle_suppliers_response(update, "https://morlevi.co.il"))
+@patch('hypotez.src.endpoints.hypo69.small_talk_bot.bot.random')
+def test_handle_next_command(mock_random, mock_update, mock_context, mock_model):
+    """Tests the handle_next_command method with valid input."""
+    mock_random.choice.return_value = "test question"
+    mock_model.ask.return_value = "test answer"
+    bot = PsychologistTelgrambot()
+    bot.questions_list = ["test question"]
+    bot.model = mock_model
+    asyncio.run(bot.handle_next_command(mock_update))
+    mock_update.message.reply_text.assert_any_call("test question")
+    mock_update.message.reply_text.assert_any_call("test answer")
 
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:**  Crucially, the tests now use `unittest.mock.patch` to mock the external dependencies (`GoogleGenerativeAI`, `read_text_file`, `recursively_read_text_files`, `mexiron`). This is essential because these functions involve external resources or file interactions that cannot be reliably tested in a typical Python environment. This is done through `@pytest.fixture`.  The `monkeypatch` is correctly used within the fixture to avoid potential conflicts.
+* **Mocking:**  Critically important for testing functions that interact with external services (e.g., Google Generative AI, file systems, etc.).  The tests now use `unittest.mock` to mock `gs` and other dependencies, preventing them from interacting with the real services and ensuring isolated test runs.
+* **Detailed Test Cases:** The provided tests cover `handle_message`,  `start`, and `handle_next_command` with various scenarios, including valid input and the important case of empty input.
+* **Error Handling:** The `test_handle_message_invalid_input` test demonstrates how to test exception handling (in this case, the likely TypeError) if an unexpected input is given.  The original code has no error handling around empty strings.
+* **Clearer Assertions:** The assertions now directly check the expected interactions with the mocked objects.
+* **`@patch` Decorator:** Used effectively to mock the `gs` module, ensuring tests are isolated and don't rely on external dependencies.  The original code is not using a dependency injection style and would therefore require more patches to isolate functions.
+* **Fixture Usage:** Fixtures (`mock_update`, `mock_context`, `mock_model`) are used to create reusable test objects, improving code organization and readability.
+* **asyncio:**  The `asyncio.run` is crucial for running asynchronous code within pytest tests.
 
-* **`PsychologistTelgrambot` Fixture:**  The `mock_bot` fixture now properly creates a mock `PsychologistTelgrambot` instance using the `mocked_gemini` fixture.  This is critical for testing methods and attributes of the class.  It also mocks the file reading operations.
+**Important Considerations for Further Testing:**
 
-* **Comprehensive Test Cases:** Tests now cover various scenarios: valid input, potentially empty input, success and failure cases for `handle_suppliers_response`, exception handling in `handle_next_command`.
-
-* **Asynchronous Handling:**  The `asyncio.run` call is correctly used in all the test methods that involve asynchronous operations (like `handle_message`, `handle_next_command`, etc.).
-
-* **Clearer Test Names:** The test names are more descriptive, making the purpose of each test immediately evident.
-
-* **Mocking External Dependencies:** This is the key to robust testing in scenarios where the code interacts with external services.
-
-* **Failure Cases:**  The test cases now include failure scenarios for methods like `handle_suppliers_response`.
-
-* **Correctly handling exception:** tests for `handle_next_command` exception.
-
-This significantly improved test suite is much more effective at verifying the core functionality of your bot code without relying on external resources. Remember to replace `"mock_path"` with a suitable, temporary directory if you need to store any files during the testing.  You may need to adjust the mock setup based on the specific dependencies your bot code uses.
+* **`handle_suppliers_response`, `handle_onetab_response`, and `handle_document`:**  These methods need similar tests with mocked dependencies and expected interactions, including verifying the calls to `mexiron.run_scenario`.
+* **Error Handling:** Test various possible exceptions within these methods (e.g., if `mexiron.run_scenario` raises an exception).
+* **`get_handler_for_url`:** Test different URLs (valid and invalid) to ensure correct URL routing.
+* **Edge Cases:**  Think about cases with very long messages, messages containing special characters, or potential problems with file content.
+* **`register_handlers`:** While the existing code is not doing anything problematic, you could add tests to verify handlers are added correctly.
 
 
-**Important Considerations:**
-
-- **`mexiron`:** The `mexiron` function is mocked in the tests.  If `mexiron` interacts with external resources (e.g., a third-party API), you'll need to mock those interactions within the test.
-
-
-This revised solution provides a solid foundation for testing your bot effectively. Remember to adapt the mocks to accurately reflect the actual dependencies of your code. Always prefer mocking over interaction with external systems during testing to maintain test stability and avoid unexpected results.
+By adding these tests, you'll significantly improve the robustness and reliability of your code. Remember that the example `mock_model` needs to be updated with more realistic interactions and testing specific behaviors of the `ask` method.

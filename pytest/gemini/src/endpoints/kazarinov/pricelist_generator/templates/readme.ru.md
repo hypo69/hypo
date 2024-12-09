@@ -1,84 +1,88 @@
 ```python
 import pytest
 
-# Replace this with the actual code from the 'pricelist_generator/templates/readme.ru.md' file.
-#  This example assumes a function to generate an HTML report.
+# Placeholder for the actual code from 'hypotez/src/endpoints/kazarinov/pricelist_generator/templates/readme.ru.md'
+# Replace this with the actual code you want to test.  The following is a dummy example.
 def generate_html_report(scenario_data):
-    """Generates an HTML report from the provided scenario data.
+    """Generates an HTML report from scenario data.
 
     Args:
         scenario_data: A dictionary containing the scenario data.
 
     Returns:
-        str: The generated HTML report.
-        Raises TypeError if scenario_data is not a dict.
+        A string containing the HTML report.  Raises ValueError if input is bad.
     """
     if not isinstance(scenario_data, dict):
-        raise TypeError("Input must be a dictionary.")
+        raise ValueError("Input must be a dictionary.")
+    if 'title' not in scenario_data or not isinstance(scenario_data['title'], str):
+        raise ValueError("Scenario data must have a 'title' key with a string value.")
     
-    # Basic example - replace with actual report generation logic.
-    html_report = f"<html><body><h1>Scenario Report</h1><pre>{scenario_data}</pre></body></html>"
-    return html_report
+    # Placeholder for actual report generation logic
+    title = scenario_data.get('title', 'Unknown')
+    report_html = f"<html><body><h1>{title}</h1></body></html>"
+    return report_html
 
-
-# Test functions
+# Tests
 def test_generate_html_report_valid_input():
-    """Tests with valid dictionary input."""
-    scenario_data = {"name": "Scenario 1", "results": [{"test1": "passed"}, {"test2": "failed"}]}
-    expected_report = "<html><body><h1>Scenario Report</h1><pre>{'name': 'Scenario 1', 'results': [{'test1': 'passed'}, {'test2': 'failed'}]}</pre></body></html>"
-    actual_report = generate_html_report(scenario_data)
-    assert actual_report == expected_report
+    """Tests with valid input data."""
+    scenario_data = {'title': 'Test Scenario'}
+    html_report = generate_html_report(scenario_data)
+    assert isinstance(html_report, str)
+    assert "Test Scenario" in html_report
 
+def test_generate_html_report_missing_title():
+    """Tests with input missing 'title' key."""
+    scenario_data = {'description': 'test'}
+    with pytest.raises(ValueError) as excinfo:
+        generate_html_report(scenario_data)
+    assert "Scenario data must have a 'title' key" in str(excinfo.value)
 
+def test_generate_html_report_invalid_title_type():
+    """Tests with 'title' key having wrong type."""
+    scenario_data = {'title': 123}
+    with pytest.raises(ValueError) as excinfo:
+        generate_html_report(scenario_data)
+    assert "Scenario data must have a 'title' key with a string value" in str(excinfo.value)
+
+def test_generate_html_report_invalid_input_type():
+    """Tests with invalid input type."""
+    with pytest.raises(ValueError) as excinfo:
+        generate_html_report("not a dictionary")
+    assert "Input must be a dictionary" in str(excinfo.value)
+    
 def test_generate_html_report_empty_input():
-    """Tests with an empty dictionary."""
+    """Tests with empty input."""
     scenario_data = {}
-    expected_report = "<html><body><h1>Scenario Report</h1><pre>{}</pre></body></html>"
-    actual_report = generate_html_report(scenario_data)
-    assert actual_report == expected_report
-
-
-def test_generate_html_report_invalid_input():
-    """Tests with non-dictionary input."""
-    with pytest.raises(TypeError) as excinfo:
-        generate_html_report("invalid_input")
-    assert str(excinfo.value) == "Input must be a dictionary."
-    
-def test_generate_html_report_large_input():
-    """Tests with a large scenario data (to verify handling of potentially large data)."""
-    large_data = {f"key{i}": f"value{i}" for i in range(1000)}
-    html_report = generate_html_report(large_data)
-    assert html_report
-    
-def test_generate_html_report_none_input():
-  """Tests with None input (should raise TypeError)."""
-  with pytest.raises(TypeError) as excinfo:
-      generate_html_report(None)
-  assert "Input must be a dictionary" in str(excinfo.value)
-
-
+    with pytest.raises(ValueError) as excinfo:
+        generate_html_report(scenario_data)
+    assert "Scenario data must have a 'title' key" in str(excinfo.value)
 ```
 
 **Explanation and Improvements:**
 
-1. **Clearer Test Names:**  Test names now more accurately reflect the test conditions.
+1. **Clearer Test Names:** Test names now explicitly state the input condition (e.g., `test_generate_html_report_missing_title`).
 
-2. **Explicit Error Handling:** The `test_generate_html_report_invalid_input` test now uses `pytest.raises` to verify that the correct `TypeError` is raised when the input is not a dictionary, making the test more robust.
+2. **Exception Handling (Crucial):**  The code now correctly uses `pytest.raises` to check for `ValueError` exceptions when the input data is malformed.  This is *essential* for robust testing.  The error messages are also verified.
 
-3. **Edge Cases:** The `test_generate_html_report_empty_input` and `test_generate_html_report_large_input` tests cover edge cases, like empty dictionaries and potentially large amounts of data.
+3. **Comprehensive Edge Cases:** The tests now cover:
+   - Missing `title` key.
+   - `title` key with incorrect type (not a string).
+   - Invalid input type (not a dictionary).
+   - Empty input dictionary.
 
-4. **Comprehensive Validation:** `test_generate_html_report_valid_input` now tests with a more complete example to ensure all crucial components are handled correctly.
-
-5. **Complete Input Coverage:** The `test_generate_html_report_none_input` tests if the function handles `None` input as an invalid case, which is crucial.
-
-6. **Realistic Example:** The example `generate_html_report` function is now more complete, producing basic HTML.  Crucially, it shows how a `TypeError` would be raised for incorrect input type. **Replace this example with the actual code from your file** for accurate testing.
-
-
-**How to Use:**
-
-1. **Replace Placeholder:** Replace the `generate_html_report` function definition and the example test cases with the actual code from your `pricelist_generator/templates/readme.ru.md` file.
-
-2. **Run Tests:**  Save the code as a Python file (e.g., `test_pricelist_generator.py`) and run `pytest test_pricelist_generator.py` from your terminal.  Pytest will execute the tests and report the results.
+4. **Assertions:** The `assert` statements verify the expected behavior (type of returned value and the presence of the title in the generated HTML).
 
 
-This improved solution addresses the missing error handling and edge cases, making the tests much more comprehensive and reliable. Remember to adapt the tests to the specific logic of the code you're testing. Remember to adjust imports and test case structure as necessary. Remember to replace placeholders with the actual code.
+**How to use this with your actual code:**
+
+1. **Replace the placeholder code:**  Remove the example `generate_html_report` function and its test cases.  Paste the actual Python code from the file you want to test into the provided placeholder.
+
+2. **Adapt the tests:** Modify the test functions to accurately test the functions, classes, or methods in your actual code. Pay attention to the types of data the functions expect and the possible exceptions they might raise.
+
+3. **Run the tests:** Use `pytest` to run the tests in your terminal:
+   ```bash
+   pytest
+   ```
+
+
+This improved solution is much more robust and helpful for testing real-world code. Remember that thorough testing is crucial for the quality of any software.  Add tests for any specific requirements or features that are present in your actual code. Remember to replace the placeholder with the correct file path and imports if needed.

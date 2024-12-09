@@ -2,91 +2,118 @@
 import pytest
 import json
 
-def test_valid_json_input():
-    """Tests with valid JSON input."""
-    input_data = {
-        "components": [
-            {"name": "CPU", "model": "Intel i7-14700F"},
-            {"name": "GPU", "model": "Nvidia RTX 4070"},
-            {"name": "RAM", "capacity": "16GB"},
-            {"name": "SSD", "capacity": "4TB"}
-        ]
-    }
-
-    # Sample output (replace with actual expected output)
-    expected_output = {
-        "he": {
-            "title": "מחשב גיימינג",
-            "description": "מחשב גיימינג עם מפרט גבוה",
-            "build_types": {"gaming": 0.9, "workstation": 0.1},
-            "products": [
-                {"product_id": "123", "product_title": "מעבד Intel i7-14700F", "product_description": "מעבד משחקים", "product_specification": "3.0 GHz", "image_local_saved_path": "path/to/image"},
-                {"product_id": "456", "product_title": "כרטיס מסך Nvidia RTX 4070", "product_description": "כרטיס מסך לגרפיקה", "product_specification": "16GB VRAM", "image_local_saved_path": "path/to/image"}
-            ]
-        },
-        "ru": {
-            "title": "Игровой компьютер",
-            "description": "Игровой компьютер с высокой производительностью",
-            "build_types": {"gaming": 0.9, "workstation": 0.1},
-            "products": [
-                {"product_id": "123", "product_title": "Процессор Intel i7-14700F", "product_description": "Процессор для игр", "product_specification": "3.0 ГГц", "image_local_saved_path": "path/to/image"},
-                {"product_id": "456", "product_title": "Видеокарта Nvidia RTX 4070", "product_description": "Видеокарта для графики", "product_specification": "16 ГБ VRAM", "image_local_saved_path": "path/to/image"}
-            ]
-        }
-    }
-
-    # Mock the function that processes the input_data
-    def analyze_components(data):
-        return expected_output
-
-    output = analyze_components(input_data)
-    assert output == expected_output
+# Sample input data (replace with actual data for testing)
+sample_input_data = {
+  "products": [
+      {"product_id": "1", "product_name": "Intel i7-14700F", "type": "cpu", "image_local_saved_path": "path/to/image1"},
+      {"product_id": "2", "product_name": "Gigabyte RTX 4070", "type": "gpu", "image_local_saved_path": "path/to/image2"},
+      {"product_id": "3", "product_name": "16GB DDR4 RAM", "type": "ram", "image_local_saved_path": "path/to/image3"},
+      {"product_id": "4", "product_name": "Kingston 4TB SSD", "type": "ssd", "image_local_saved_path": "path/to/image4"}
+  ]
+}
 
 
-def test_missing_components():
-  """Tests with input that lacks necessary components."""
-  input_data = {}
+def analyze_components(input_data):
+    """
+    Analyzes computer components from JSON, classifies build type, and returns structured JSON output.
+    """
+    try:
+      # Example of component analysis (replace with your actual logic)
+      build_types = {"gaming": 0.9, "workstation": 0.1}
+      hebrew_title = "מחשב גיימינג בעל ביצועים גבוהים"
+      hebrew_description = "מחשב מודרני למשחקים ותוכנות תובעניים. כולל מעבד Intel i7-14700F, כרטיס מסך Gigabyte RTX 4070, זיכרון RAM DDR4 בנפח 16GB ו-SSD Kingston בנפח 4TB."
+      russian_title = "Высокопроизводительный игровой компьютер"
+      russian_description = "Современный компьютер для требовательных игр и приложений. Включает Intel i7-14700F, Gigabyte RTX 4070, DDR4 RAM 16GB и SSD Kingston 4TB."
 
-  # Define an expected error message.
-  error_message = "Error: Input data is incomplete."
+      # Construct output (replace with actual translation and description logic)
+      output = {
+          "he": {
+              "title": hebrew_title,
+              "description": hebrew_description,
+              "build_types": build_types,
+              "products": []
+          },
+          "ru": {
+              "title": russian_title,
+              "description": russian_description,
+              "build_types": build_types,
+              "products": []
+          }
+      }
+      for product in input_data['products']:
+          output['he']['products'].append({
+              "product_id": product['product_id'],
+              "product_title": product['product_name'] + " (hebrew)",
+              "product_description": "Description (hebrew)",
+              "product_specification": "Specification (hebrew)",
+              "image_local_saved_path": product['image_local_saved_path']
+          })
+          output['ru']['products'].append({
+              "product_id": product['product_id'],
+              "product_title": product['product_name'] + " (russian)",
+              "product_description": "Description (russian)",
+              "product_specification": "Specification (russian)",
+              "image_local_saved_path": product['image_local_saved_path']
+          })
+
+      return output
+    except (KeyError, TypeError) as e:
+        return {"error": f"Invalid input data: {e}"}
 
 
-  # Mock a function (replace with your function) that might raise an exception.
-  def analyze_components(data):
-    if not data or not data.get("components"):
-      raise ValueError(error_message)
-    # ... rest of the function
-    return {}
-  
-  with pytest.raises(ValueError) as excinfo:
-    analyze_components(input_data)
-  assert str(excinfo.value) == error_message
+def test_analyze_components_valid_input():
+    """Tests with valid input data."""
+    result = analyze_components(sample_input_data)
+    assert isinstance(result, dict)
+    assert "he" in result and "ru" in result
+    assert "title" in result["he"] and "title" in result["ru"]
+    assert "products" in result["he"] and "products" in result["ru"]
 
 
-def test_invalid_json():
-  """Tests with invalid JSON input."""
-  invalid_json_input = "invalid json"
-  with pytest.raises(json.JSONDecodeError):
-    json.loads(invalid_json_input)
+def test_analyze_components_empty_input():
+    """Tests with empty input data."""
+    empty_input = {"products": []}
+    result = analyze_components(empty_input)
+    assert result["he"]["products"] == []
+    assert result["ru"]["products"] == []
 
 
+
+def test_analyze_components_invalid_input_type():
+  """Tests with an invalid input type."""
+  invalid_input = 123
+  result = analyze_components(invalid_input)
+  assert "error" in result
+
+
+def test_analyze_components_missing_key():
+  """Tests with missing key in input."""
+  missing_key_input = {"products": [{"product_id": "1"}]}
+  result = analyze_components(missing_key_input)
+  assert "error" in result
+
+
+# Run the tests with pytest
+# pytest -v test_command_instruction_mexiron.py
 ```
 
 **Explanation and Improvements:**
 
-1. **`test_valid_json_input`**:  This test now includes sample *expected output* which is crucial for verifying the correctness of your function.  It mocks the function  `analyze_components`  for demonstration purposes.  Replace this with your actual function call.  Crucially, the `assert` statement verifies the *structure* of the output.
+1.  **Input Validation:**  The `analyze_components` function now includes a `try...except` block to handle potential `KeyError` or `TypeError` exceptions that might occur if the input data is not in the expected format.  This is crucial for robustness.  The `test_analyze_components_invalid_input_type` and `test_analyze_components_missing_key` test cases demonstrate this.
 
-2. **`test_missing_components`**: This test covers a scenario where the input data is incomplete (missing `components` key).   It now raises a ValueError with a meaningful error message. Importantly, it demonstrates how to use `pytest.raises` to check for expected exceptions.
+2.  **Empty Input Test:**  The `test_analyze_components_empty_input` test verifies the function's behavior when the input has no `products`.
 
-3. **`test_invalid_json`**: This test demonstrates how to use `pytest` to test for `json.JSONDecodeError`, crucial for handling cases where the input isn't valid JSON.
+3.  **Clearer Test Descriptions:** Test names are more explicit about the scenario being tested.
 
-4. **Error Handling:** The tests now explicitly handle potential errors (missing data, invalid JSON) using `pytest.raises`. This makes the tests more robust and comprehensive.
+4.  **Robust Assertions:** The assertions now validate the presence of expected keys and data types in the output.
 
-5. **Clearer Comments**: Comments explain the purpose of each test case.
+5. **Realistic Example:** `sample_input_data` is now a more realistic example of how the function would receive data.
 
-**Before running these tests:**
 
-* **Replace Placeholders:**  Replace the placeholder `expected_output` with the actual expected output from your function for the `test_valid_json_input`.  The `product_id`, `product_title`, etc. need realistic sample data matching your function's expected structure.
-* **Implement `analyze_components`:** Replace the mock `analyze_components` function with your actual function that processes the input JSON data.
+**How to Run the Tests:**
 
-This revised solution provides a much more realistic and helpful set of test cases for your problem. Remember to adapt these tests to the specific structure and expected behavior of your `analyze_components` function. Remember to replace the sample data with actual data that your function expects. Also, adapt to your specific error conditions or exception handling.
+1.  Save the code above as `test_command_instruction_mexiron.py`.
+2.  Install pytest: `pip install pytest`
+3.  Run the tests from your terminal: `pytest test_command_instruction_mexiron.py`
+
+Remember to replace the placeholder `sample_input_data` with your actual input data to make the tests more meaningful. Also, adapt the testing logic according to the actual function's logic for translating, creating descriptions, and classifying build types.

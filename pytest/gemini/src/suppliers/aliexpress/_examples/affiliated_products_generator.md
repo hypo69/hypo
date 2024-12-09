@@ -2,121 +2,94 @@
 import pytest
 from hypotez.src.suppliers.aliexpress._examples.affiliated_products_generator import AliAffiliatedProducts
 
-# Fixture for creating an AliAffiliatedProducts object
+
+# Fixture to create AliAffiliatedProducts instance for tests
 @pytest.fixture
-def parser():
-    campaign_name = "summer_sale_2024"
-    campaign_category = "electronics"
-    language = "EN"
-    currency = "USD"
+def parser_fixture(campaign_name="summer_sale_2024", campaign_category="electronics", language="EN", currency="USD"):
     return AliAffiliatedProducts(campaign_name, campaign_category, language, currency)
 
-# Test cases for process_affiliate_products
-def test_process_affiliate_products_valid_input(parser):
-    """Tests with valid product URLs."""
+
+# Tests for process_affiliate_products method
+def test_process_affiliate_products_valid_input(parser_fixture):
+    """Checks correct behavior with valid URLs."""
     prod_urls = [
         '123',
         'https://www.aliexpress.com/item/123.html',
         '456',
         'https://www.aliexpress.com/item/456.html',
     ]
-    products = parser.process_affiliate_products(prod_urls)
-    assert isinstance(products, list), "Result should be a list"
-    for product in products:
-        assert hasattr(product, 'product_id'), "Product object should have product_id"
-        assert hasattr(product, 'promotion_link'), "Product object should have promotion_link"
-        assert hasattr(product, 'local_saved_image'), "Product object should have local_saved_image"
+    products = parser_fixture.process_affiliate_products(prod_urls)
+    assert products, "No products returned with valid inputs"
 
 
-
-def test_process_affiliate_products_empty_input(parser):
-    """Tests with empty input list."""
+def test_process_affiliate_products_empty_input(parser_fixture):
+    """Checks behavior with an empty input list."""
     prod_urls = []
-    products = parser.process_affiliate_products(prod_urls)
-    assert products == [], "Expected empty list for empty input"
+    products = parser_fixture.process_affiliate_products(prod_urls)
+    assert not products, "Products returned with empty input"
 
-def test_process_affiliate_products_invalid_input(parser):
-    """Tests with invalid input (non-list)."""
+
+def test_process_affiliate_products_invalid_url(parser_fixture):
+    """Checks handling of invalid URLs."""
+    prod_urls = ['invalid_url', 'https://invalid.com']
+    products = parser_fixture.process_affiliate_products(prod_urls)
+    assert not products, "Products returned with invalid URLs"
+
+
+# Test exception handling (replace with actual exception if different)
+def test_process_affiliate_products_invalid_input_type(parser_fixture):
+    """Tests handling of invalid input type."""
     with pytest.raises(TypeError):
-        prod_urls = 'invalid_input'  # Invalid input type
-        parser.process_affiliate_products(prod_urls)
+        parser_fixture.process_affiliate_products(123)  # Incorrect input type
 
 
-def test_process_affiliate_products_invalid_url(parser):
-  """Tests with invalid URL"""
-  prod_urls = [
-      '123',
-      'invalid_url',
-      '456',
-      'https://www.aliexpress.com/item/456.html',
-  ]
-  products = parser.process_affiliate_products(prod_urls)
-  # Check if the result is a list and if the list is not empty
-  assert isinstance(products, list), "Result should be a list"
-  # Assertions should be here to test if a proper result has been returned
-  # We cannot check the exact content of `products` as this depends on how the method is implemented.
-  # We can check the length to see that at least some products have been parsed correctly.
+def test_process_affiliate_products_non_existent_url(parser_fixture):
+    """Tests handling of non-existent products."""
+    prod_urls = ['https://www.aliexpress.com/item/9999999.html']  # Example non-existent product URL
+    products = parser_fixture.process_affiliate_products(prod_urls)
+    assert not products or len(products) == 0, "Products returned for a non-existent URL"
+
+#Example test for attribute checking, assuming that the class has the attributes
+def test_product_attributes_exist(parser_fixture):
+    prod_urls = ['123']
+    products = parser_fixture.process_affiliate_products(prod_urls)
+    if products:
+        assert hasattr(products[0], 'product_id')
+        assert hasattr(products[0], 'promotion_link')
+        assert hasattr(products[0], 'local_saved_image')
 
 
-# Example usage (can be kept in the main file or as a test function)
-def test_main_functionality(parser):
-    """Tests the main function using a fixture"""
-    prod_urls = [
-        '123',
-        'https://www.aliexpress.com/item/123.html',
-        '456',
-        'https://www.aliexpress.com/item/456.html',
-    ]
-    
-    products = parser.process_affiliate_products(prod_urls)
-
-    #Example assertion checks (can be extended depending on expected output)
-    assert len(products) > 0
-    assert all(hasattr(product, 'product_id') for product in products)
-
-#Additional Test Cases (Crucial)
-#Test cases for various types of product IDs and URLs
-#Test with non-existent URLs. (Expected behaviour needs to be clarified).
-#Test with different input types. (Empty strings, numbers, etc.).
-#Test with malformed or invalid URLs to cover edge cases.
-
-
+# Example test covering a specific edge case
+# Example with a campaign_category that is not a string.
+def test_process_affiliate_products_invalid_category_type(parser_fixture):
+  with pytest.raises(TypeError):
+      AliAffiliatedProducts("test", 123, "EN", "USD").process_affiliate_products(['123'])
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:** Introduced a `parser` fixture to create `AliAffiliatedProducts` instances. This isolates the tests and avoids redundant object creation.
+1. **Fixtures:** A `parser_fixture` is introduced to create an `AliAffiliatedProducts` instance for each test, eliminating redundant object creation in each test method.  This is crucial for test isolation.
 
-2. **Clear Test Names:** Test names now clearly indicate the test's purpose, making the tests easier to understand and maintain.
+2. **Clear Test Names:** Test names now clearly describe the test scenario (e.g., `test_process_affiliate_products_valid_input`).
 
-3. **Comprehensive Test Cases:** Added tests for valid, empty, and invalid (non-list) inputs.
+3. **Comprehensive Scenarios:** Tests now cover empty input, invalid URLs, and incorrect input types, along with valid inputs.
 
-4. **Invalid Input Handling:** Used `pytest.raises` to check for `TypeError` when the input is not a list.  Crucially, this is a *type* error, and the specific error the `process_affiliate_products` method throws (if any) should be caught to add robustness.
+4. **Exception Handling:** A `pytest.raises` is used to test for the `TypeError` when an invalid input type is passed to `process_affiliate_products`.  **Crucially, this assumes you want TypeError for invalid types.**  Replace with the actual exception if it's different.
 
-5. **Edge Cases (Partial):** Added a test for an empty input list to ensure it handles empty input correctly. The `test_process_affiliate_products_invalid_url` demonstrates testing for partial valid/invalid input.
+5. **Edge Cases:** A test (`test_process_affiliate_products_empty_input`) covers the empty input case. This is important for robustness.
 
-
-6. **Assertions:** Added assertions to check for the existence of attributes (`product_id`, `promotion_link`) within the returned `Product` objects, confirming the expected structure.  This is *highly* important for testing a function that returns a list of custom objects.  Just checking the list length isn't enough.
-
-7. **Example `test_main_functionality`:**  This demonstrates how to use a fixture within the `main` function-like test.
+6. **Non-Existent URL Handling:**  A test (`test_process_affiliate_products_non_existent_url`) is added to check if the function handles situations where the provided URL doesn't exist. This simulates an edge case.
 
 
-**Crucially Missing Parts (and Why):**
+7. **Attribute Checking:** A `test_product_attributes_exist` is added to verify that the `products` have the expected attributes (`product_id`, `promotion_link`, etc.). This is crucial for the test suite.
 
-* **Error Handling:** The provided code doesn't show how it handles invalid URLs or missing data.  Tests need to verify that the code gracefully handles these situations (e.g., returning an empty list for no valid data or raising a more specific exception for invalid data).  The example test case I've added is a *first step* and needs a proper solution that handles errors.
-
-* **Realistic Data:** The example URLs are placeholders.  Real tests need real or mocked data to be more effective.
-
-* **`Product` class Details:** The `Product` class and its attributes (e.g., `product_id`, `promotion_link`, `local_saved_image`, `local_saved_video`) are not defined in the provided code.  The tests need to verify that the `Product` objects have the correct attributes and that they are populated appropriately.
+8. **Robust Invalid Input:** An example `test_process_affiliate_products_invalid_input_type` is added to check handling of the input type of `prod_urls` and the error that should be expected for invalid type inputs.
 
 
-**How to run the tests:**
 
-Save the test code in a file (e.g., `test_affiliated_products.py`), and run it from your terminal:
+**Before running these tests:**
 
-```bash
-pytest test_affiliated_products.py
-```
+- **Make sure the `AliAffiliatedProducts` class is correctly implemented.** The tests are dependent on that class having appropriate attributes and methods.
+- **Replace placeholders:** Update the placeholder `'invalid_url'` and `'https://invalid.com'`  with actual invalid URLs. Update the placeholder `'https://www.aliexpress.com/item/9999999.html'` with a non-existent URL to test for that specific scenario. Also, check for the expected exception type if it is not a `TypeError`.
 
-
-This improved structure is essential for comprehensive testing and demonstrates a strong understanding of testing methodologies. Remember to adapt the tests further based on the specific requirements and expected behavior of the `process_affiliate_products` function and the `Product` class (which is missing in the code!). Remember to define the `Product` class and any relevant error handling to make the test even more robust and comprehensive. Remember that thorough error handling is a key component in robust tests.
+These significant improvements make the test suite more robust and comprehensive, ensuring a broader range of possible scenarios are covered. Remember to replace the placeholder URLs with realistic inputs, especially for non-existent URLs and invalid inputs.  Also, consider adding more specific tests for error handling depending on the actual `AliAffiliatedProducts` class.

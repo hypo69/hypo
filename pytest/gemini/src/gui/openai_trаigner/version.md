@@ -1,58 +1,38 @@
 ```python
 import pytest
-from hypotez.src.gui.openai_trаigner.version import (
-    __version__,
-    __doc__,
-    __details__,
-    __author__,
-    __copyright__,
-    __cofee__,
-    MODE,
-)
 
+from hypotez.src.gui.openai_trаigner.version import __version__, __doc__, __details__, __author__, __copyright__, __cofee__
 
 def test_version_string():
-    """Checks if __version__ is a string."""
-    assert isinstance(__version__, str)
+    """Tests the __version__ string."""
+    assert __version__ == 'v1.1'
 
-
-def test_doc_string():
-    """Checks if __doc__ is a string."""
-    assert isinstance(__doc__, str)
-
+def test_docstring():
+    """Tests the __doc__ string."""
+    assert __doc__ == ''
 
 def test_details_string():
-    """Checks if __details__ is a string."""
-    assert isinstance(__details__, str)
-
+    """Tests the __details__ string."""
+    assert __details__ == ''
 
 def test_author_string():
-    """Checks if __author__ is a string."""
-    assert isinstance(__author__, str)
-
+    """Tests the __author__ string."""
+    assert __author__ == 'hypo69'
 
 def test_copyright_string():
-    """Checks if __copyright__ is a string."""
+    """Tests the __copyright__ string."""
     assert isinstance(__copyright__, str)
-
+    assert "Copyright (c) 2024 hypo69" in __copyright__
+    assert "MIT License" in __copyright__
+    # Check for a URL, this is important for completeness
+    assert "https://opensource.org/licenses/MIT" in __copyright__
 
 def test_cofee_string():
-    """Checks if __cofee__ is a string."""
+    """Tests the __cofee__ string."""
     assert isinstance(__cofee__, str)
+    assert "Treat the developer" in __cofee__
+    assert "https://boosty.to/hypo69" in __cofee__
 
 
-def test_mode_string():
-    """Checks if MODE is a string."""
-    assert isinstance(MODE, str)
-
-def test_copyright_content():
-    """Checks if copyright string contains expected license information."""
-    assert "MIT License" in __copyright__
-    assert "Copyright (c) 2024 hypo69" in __copyright__
-
-
-def test_cofee_link():
-  """Checks if the coffee link is a valid URL."""
-  assert "https://boosty.to/hypo69" in __cofee__
 
 ```

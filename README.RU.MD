@@ -1,10 +1,24 @@
-[English](https://github.com/hypo69/hypo/blob/master/README.MD)
-# Проект Hypotez
+<TR>
+<TD>
+[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>code</A>] 
+</TD>
+<TD>
+[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/README.MD'>docs</A>] 
+</TD>
+
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>English</A>
+</TD>
+</TABLE>
+
+Проект Hypotez
+======================================================================
 
 
 ## Мои задачи и цели:
 
 ### Моя цель - найти инвестора для реализации проекта.
+
 ##### что у меня сделано и могу показать инвестору:
 - **Автоматизация рутинных процессов** для экономии времени и повышения эффективности.  
 - **Точный и быстрый анализ данных**, который упрощает принятие решений.  
@@ -27,7 +41,7 @@
 - [Конфигурация](#конфигурация)
   - [Настройка учетных данных](#настройка-учетных-данных)
 - [Код](https://github.com/hypo69/hypo/blob/master/src/readme.ru.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/doc/src/readme.ru.md) ( *В процессе* 😕)  
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/doc/src/toc.ru.md) ( *В процессе* 😕)  
 - [Пользовательские сценарии](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/readme.ru.md) ( *В процессе* 😕) 
 - [Примеры](https://github.com/hypo69/hypo/blob/master/examples/readme.ru.md) 
 - [Тесты](https://github.com/hypo69/hypo/tree/master/pytest/readme.ru.md)
