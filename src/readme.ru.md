@@ -1,3 +1,21 @@
+```rst
+.. :module: src
+```
+
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.RU.MD'>[Root ↑]</A>
+</TD>
+
+
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>English</A>
+</TD>
+</TABLE>
+
+
+
 # Модули проекта
 
 ## Обзор
@@ -82,3 +100,30 @@
 - [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/webdriver/readme.ru.md)
 - [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver)
 - [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver)
+
+---
+
+Глоссарий
+=========
+
+### 1. **webdriver**
+   - **`Driver`**: An object that controls the browser (e.g., Chrome, Firefox) and performs actions such as navigating web pages, filling out forms, etc.
+   - **`Executor`**: An interface or class that executes commands or scripts within the context of the web driver.
+   - **`Chrome`, `Firefox`, ...**: Specific browsers that can be controlled using the web driver.
+   - **`locator`**: A mechanism for finding elements on a web page (e.g., by ID, CSS selector, XPath).
+
+### 2. **`Supplier`**
+   - **list of suppliers (`Amazon`, `Aliexpress`, `Morlevi`, ...)**: A list of companies or platforms that provide products or services.
+   - **`Graber`**: A tool or module that automatically collects data from supplier websites (e.g., prices, product availability).
+
+### 3. **`Product`**
+   - **`Product`**: An object representing a product or service that can be available on various platforms.
+   - **`ProductFields`**: Fields or attributes that describe the characteristics of a product (e.g., name, price, description, images).
+
+### 4. **`ai`**
+	- **`Model Prompt`**: Specifies how the model should process incoming information and return a response. It is set during model initialization.
+	- **`Command Instruction`**: A small command or instruction sent with each request.
+
+Next
+=====
+[Project Initialization and Setup](https://github.com/hypo69/hypo/blob/master/src/credentials.md)

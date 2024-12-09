@@ -1,8 +1,21 @@
 ```rst
 .. :module: src.credentials
 ```
-[Русский](https://github.com/hypo69/hypo/tree/master/src/credentials.md)
-[Up to Parent](https://github.com/hypo69/hypo/tree/master/src/readme.ru.md)
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+
+
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>Русский</A>
+</TD>
+</TABLE>
+
+Модуль стартовых установок программы (файл `credentials.py`)
+=============================================================
+
 ## Обзор
 
 Этот модуль содержит класс `ProgramSettings`, реализующий паттерн Singleton для хранения глобальных настроек проекта. Класс загружает и хранит информацию об учетных данных (API ключи, пароли и т.д.) из файла `credentials.kdbx` базы данных KeePass. Также содержит функцию `set_project_root` для поиска корневой директории проекта.

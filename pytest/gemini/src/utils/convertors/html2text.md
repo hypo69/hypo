@@ -1,131 +1,104 @@
 ```python
 import pytest
-import io
-from hypotez.src.utils.convertors.html2text import html2text, _html2text
-import html.parser as HTMLParser
+import html.parser
 import re
+from hypotez.src.utils.convertors.html2text import html2text_file, html2text, _html2text, unescape, optwrap
+from io import StringIO
 
-# Fixture for providing HTML data
+# Fixture for providing test data
+
+
 @pytest.fixture
-def html_data():
+def sample_html():
     return """
     <h1>This is a header</h1>
     <p>This is a paragraph.</p>
     <p>This is another paragraph.</p>
-    <a href="https://example.com" title="Example website">Example Link</a>
-    <img src="https://example.com/image.jpg" alt="Example Image">
+    <a href="https://www.example.com">Example Link</a>
+    <img src="image.jpg" alt="An image">
     <ul>
         <li>Item 1</li>
         <li>Item 2</li>
     </ul>
+    <pre><code>
+    This is preformatted text.
+    </code></pre>
     """
 
 @pytest.fixture
-def html_data_with_emphasis():
-    return """
-    <p><i>Italic text</i> and <strong>bold text</strong>.</p>
-    """
-
-@pytest.fixture
-def html_data_with_errors():
-    return """
-    <p>This has &lt; invalid &gt; tags.</p>
-    <p>This has &amp; entities.</p>
-    <p>This has &#160; nbsp.</p>
+def sample_html_with_entities():
+  return """
+    &lt;p&gt;This has &amp;lt; and &amp;gt;&lt;/p&gt;
     """
 
 
 
-# Tests for html2text function
-def test_html2text_valid_input(html_data):
-    """Tests with a valid HTML string."""
-    expected_markdown = """
-This is a header
-This is a paragraph.
-This is another paragraph.
-[Example Link](https://example.com)
-![Example Image](https://example.com/image.jpg)
-* Item 1
-* Item 2
-"""
-    actual_markdown = html2text(html_data)
-    assert actual_markdown == expected_markdown.strip()
+# Tests for html2text_file
+def test_html2text_file_basic(sample_html):
+    """Checks basic conversion of valid HTML."""
+    expected_output = "<h1>This is a header</h1>\n\nThis is a paragraph.\n\nThis is another paragraph.\n\n[Example Link](https://www.example.com)\n\n![An image](image.jpg)\n\nul\n* Item 1\n* Item 2\nul\n\n<pre><code>\nThis is preformatted text.\n</code></pre>\n"
+    result = html2text_file(sample_html)
+    assert result == expected_output
 
 
-def test_html2text_with_emphasis(html_data_with_emphasis):
-    """Tests with HTML containing emphasis tags."""
-    expected_markdown = """
-Italic text and bold text.
-"""
-    actual_markdown = html2text(html_data_with_emphasis)
-    assert actual_markdown == expected_markdown.strip()
+def test_html2text_file_entities(sample_html_with_entities):
+    """Checks handling of HTML entities."""
+    expected_output = "<p>This has < and ></p>\n"
+    result = html2text_file(sample_html_with_entities)
+    assert result == expected_output
 
 
-def test_html2text_with_errors(html_data_with_errors):
-    """Tests with HTML containing errors."""
-    actual_markdown = html2text(html_data_with_errors)
-    assert "&lt; invalid &gt;" in actual_markdown
-    assert "&amp;" in actual_markdown
-    assert "&#160;" in actual_markdown
-    # Ensure that the HTML parser doesn't crash
+def test_html2text_file_empty_input():
+    """Tests with empty HTML input."""
+    result = html2text_file("")
+    assert result == ""
+
+def test_html2text_file_invalid_html():
+  """Tests with invalid HTML input that should not raise an exception."""
+  invalid_html = "<p This is invalid</p>"
+  result = html2text_file(invalid_html)
+  assert result == "<p This is invalid</p>"
 
 
-def test_html2text_empty_input():
-    """Tests with an empty HTML string."""
-    actual_markdown = html2text("")
-    assert actual_markdown == ""
-
-def test_html2text_no_paragraph_elements(html_data):
-    html = """
-    <h1>This is a header</h1>
-    <a href="https://example.com" title="Example website">Example Link</a>
-    """
-    expected_markdown = """
-This is a header
-[Example Link](https://example.com)
-"""
-    actual_markdown = html2text(html)
-    assert actual_markdown == expected_markdown.strip()
+# Tests for html2text
+def test_html2text_basic(sample_html):
+    """Checks basic conversion of valid HTML using html2text."""
+    expected_output = "<h1>This is a header</h1>\n\nThis is a paragraph.\n\nThis is another paragraph.\n\n[Example Link](https://www.example.com)\n\n![An image](image.jpg)\n\nul\n* Item 1\n* Item 2\nul\n\n<pre><code>\nThis is preformatted text.\n</code></pre>\n"
+    result = html2text(sample_html)
+    assert result == expected_output
 
 
 
-
-# Tests for _html2text class (Helper class)
-def test__html2text_feed_method(html_data):
-    """Tests _html2text.feed method."""
-    # Create an output buffer
-    out_buffer = io.StringIO()
-    h = _html2text(out=out_buffer)
-    h.feed(html_data)
-    h.close()  # Needed to trigger the close method
-    output = out_buffer.getvalue()
-    expected_output = html2text(html_data) # Compare with the output of the external function
-
-    assert expected_output == output
-```
-
-**Explanation and Improvements:**
-
-* **Clearer Test Names:** The test function names now explicitly describe the input and expected outcome.
-* **Fixtures:**  Crucially, fixtures are used to provide HTML data for various test cases, improving code organization and avoiding repeated code.
-* **Edge Cases:** Tests for empty input and input with various HTML elements (like `ul`, `li`, `a`, `img`) are added, ensuring the code handles a wider range of situations.
-* **Emphasis Handling:** A test `test_html2text_with_emphasis` is added to verify that HTML emphasis tags (`<i>`, `<strong>`) are correctly converted to Markdown.
-* **Error Handling:** A test `test_html2text_with_errors` checks if invalid or unexpected HTML characters are handled gracefully, ensuring that the function doesn't raise errors (which could break the rest of the tests) or produce incorrect outputs.  This is a very important part of robust testing!
-* **Helper Class Testing:**  The tests now include the `_html2text` class testing. This is critical to ensuring that the internal parts of the class behave correctly.
-* **Output Validation:** The test output is now explicitly compared to the expected markdown output. This is vital to prevent incorrect outputs.
-* **No Unnecessary Imports:** Unnecessary imports have been removed.
-* **Robustness:** Tests added to ensure the conversion works as expected for various situations with lists and other HTML constructs.
-* **Complete Example:** An example `html_data` fixture is provided for demonstration.
+def test_html2text_optwrap(sample_html):
+  """Checks if optwrap works correctly on the output."""
+  wrapped_output = optwrap(html2text_file(sample_html))
+  assert len(wrapped_output.split('\n')) > 1  # Check if paragraphs are wrapped
 
 
+def test_html2text_unescape():
+  """Test unescape function."""
+  html_with_entities = "&lt;p&gt;This has &amp;lt; and &amp;gt;&lt;/p&gt;"
+  expected_output = "<p>This has < and ></p>"
+  result = unescape(html_with_entities)
+  assert result == expected_output
 
-**How to Run the Tests:**
 
-1.  Save the test code (e.g., `test_html2text.py`) in the same directory as your `html2text.py` file.
-2.  Run `pytest test_html2text.py` from your terminal.
+def test_html2text_exception_handling():
+  """Tests exception handling for invalid input or situations that should not crash the program."""
+  with pytest.raises(TypeError, match=r"invalid input"):
+      html2text(123) # Attempt to pass non-string input.
 
-This revised solution is more comprehensive and addresses various aspects of the code, making the test suite more robust and reliable. Remember to install `pytest` if you haven't already:
 
-```bash
-pip install pytest
+# Example test demonstrating the use of pytest.raises for exception handling.
+def test_html2text_malformed_html():
+    """Verify the parser handles malformed HTML gracefully, preventing crashes."""
+    malformed_html = "<p>"  # Missing closing tag
+    with pytest.raises(html.parser.HTMLParseError):
+        html2text(malformed_html)
+
+
+
+# Add more test cases as needed for different scenarios and edge cases.
+# Example: tests for different HTML tags, attributes, and nested structures.
+# Include tests for error cases like missing closing tags, invalid attributes, etc.
 ```

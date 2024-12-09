@@ -3,114 +3,122 @@ import pytest
 import re
 from typing import Dict
 from pathlib import Path
-from html.parser import HTMLParser
 from unittest.mock import patch
-from src.utils.convertors.html import html2escape, escape2html, html2dict, html2ns, html2pdf
+from html.parser import HTMLParser
 from types import SimpleNamespace
-from xhtml2pdf import pisa
-from weasyprint import HTML  # Import for testing
+
+from hypotez.src.utils.convertors.html import (
+    html2escape,
+    escape2html,
+    html2dict,
+    html2ns,
+    html2pdf,
+    StringFormatter,  # Assuming this class exists
+)
 
 
-# Fixture for creating mock HTML content
-@pytest.fixture
-def html_content():
-    return "<p>Hello, world!</p><a href='link'>Example</a>"
+def test_html2escape_valid_input():
+    html = "<p>Hello, world!</p>"
+    escaped_html = "&lt;p&gt;Hello, world!&lt;/p&gt;"
+    assert html2escape(html) == escaped_html
 
 
-@pytest.fixture
-def escaped_content():
-    return "&lt;p&gt;Hello, world!&lt;/p&gt;&lt;a href='link'&gt;Example&lt;/a&gt;"
+def test_html2escape_empty_input():
+    assert html2escape("") == ""
 
 
-@pytest.fixture
-def dict_result():
-    return {'p': 'Hello, world!', 'a': 'Example'}
+def test_html2escape_invalid_input():
+    with pytest.raises(TypeError):
+        html2escape(123)  # Test with invalid input type
 
 
-@pytest.fixture
-def ns_result():
-    return SimpleNamespace(p='Hello, world!', a='Example')
+def test_escape2html_valid_input():
+    escaped_html = "&lt;p&gt;Hello, world!&lt;/p&gt;"
+    html = "<p>Hello, world!</p>"
+    assert escape2html(escaped_html) == html
 
 
-# Tests for html2escape
-def test_html2escape_valid_input(html_content):
-    """Tests html2escape with valid input."""
-    escaped_html = html2escape(html_content)
-    assert escaped_html == "&lt;p&gt;Hello, world!&lt;/p&gt;&lt;a href='link'&gt;Example&lt;/a&gt;"
+def test_escape2html_empty_input():
+    assert escape2html("") == ""
 
 
-def test_html2escape_empty_string():
-    """Tests html2escape with empty string."""
-    escaped_html = html2escape("")
-    assert escaped_html == ""
+def test_escape2html_invalid_input():
+    with pytest.raises(TypeError):
+        escape2html(123)  # Test with invalid input type
 
 
-# Tests for escape2html
-def test_escape2html_valid_input(escaped_content):
-    """Tests escape2html with valid input."""
-    html_content = escape2html(escaped_content)
-    assert html_content == "<p>Hello, world!</p><a href='link'>Example</a>"
+def test_html2dict_valid_input():
+    html = "<p>Hello</p><a href='link'>World</a>"
+    expected_dict = {"p": "Hello", "a": "World"}
+    assert html2dict(html) == expected_dict
 
 
-# Tests for html2dict
-def test_html2dict_valid_input(html_content, dict_result):
-    """Tests html2dict with valid input."""
-    html_dict = html2dict(html_content)
-    assert html_dict == dict_result
+def test_html2dict_empty_input():
+    assert html2dict("") == {}
 
 
-# Tests for html2ns
-def test_html2ns_valid_input(html_content, ns_result):
-    """Tests html2ns with valid input."""
-    ns = html2ns(html_content)
-    assert ns.p == 'Hello, world!'
-    assert ns.a == 'Example'
+def test_html2dict_no_tags():
+    html = "Some text without tags"
+    expected_dict = {}
+    assert html2dict(html) == expected_dict
 
 
-# Tests for html2pdf - using a mock for the PDF creation step
-@patch('src.utils.convertors.html.HTML', new=HTML)  # Mock the HTML class
-def test_html2pdf_success(html_content, tmp_path):
-    """Tests html2pdf with a valid HTML string."""
-    pdf_file = tmp_path / "output.pdf"
-    result = html2pdf(html_content, pdf_file)
-    assert result is True
+def test_html2ns_valid_input():
+    html = "<p>Hello</p><a href='link'>World</a>"
+    ns_obj = html2ns(html)
+    assert ns_obj.p == "Hello"
+    assert ns_obj.a == "World"
 
 
-@patch('src.utils.convertors.html.HTML', new=HTML)
-def test_html2pdf_failure(html_content, tmp_path):
-    """Tests html2pdf with an invalid or unsupported HTML string (mock exception)."""
-    pdf_file = tmp_path / "output.pdf"
-    with patch('builtins.print') as mock_print:  # Patch print to capture output
-        html2pdf(html_content, pdf_file)
-        mock_print.assert_any_call("Error during PDF generation: ...")  # Assert print was called
+def test_html2ns_empty_input():
+    ns_obj = html2ns("")
+    assert ns_obj == SimpleNamespace() # or assert vars(ns_obj) == {}
 
 
-# Example testing an edge case. Note that error handling is also present in html2pdf for cases like this.
-@patch('src.utils.convertors.html.HTML', new=HTML)
-def test_html2pdf_no_content():
-    """Tests html2pdf with an empty string input (expected behaviour)."""
-    with patch('builtins.print') as mock_print:  # Patch print to capture output
-        result = html2pdf("", "output.pdf")
-        mock_print.assert_any_call("Error during PDF generation: ...")  # Assert print was called
+@patch('hypotez.src.utils.convertors.html.HTML')
+def test_html2pdf_success(mock_html):
+  html_content = "<html><body><h1>Hello</h1></body></html>"
+  pdf_filename = "output.pdf"
+  mock_html.write_pdf.return_value = None
+
+  result = html2pdf(html_content, pdf_filename)
+
+  mock_html.write_pdf.assert_called_once_with(pdf_filename)
+  assert result == True
 
 
-# Important: Add tests for invalid HTML or edge cases like excessively long HTML strings.
-# Also consider testing with more complex HTML structures to ensure the parser handles them correctly.
+
+@patch('hypotez.src.utils.convertors.html.HTML')
+def test_html2pdf_exception(mock_html):
+    html_content = "<html><body><h1>Hello</h1></body></html>"
+    pdf_filename = "output.pdf"
+    mock_html.write_pdf.side_effect = Exception("Some error")
+
+    result = html2pdf(html_content, pdf_filename)
+
+    mock_html.write_pdf.assert_called_once_with(pdf_filename)
+    assert result is None
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking `HTML`:** The `@patch('src.utils.convertors.html.HTML', new=HTML)` decorator is crucial.  It prevents the real `weasyprint` library from being called, which can cause issues if it requires network access. This allows the test to run without any external dependencies.
-* **`tmp_path` fixture:**  Crucially, we use `pytest.tmpdir` (or `tmp_path` for more direct access) to create a temporary directory for the PDF file. This prevents tests from interfering with each other or creating files in the working directory.
-* **`patch('builtins.print')`:** This patch ensures that the error messages (if any) from `html2pdf` are captured and checked in the test.  Previously, the actual print output wasn't being examined.
-* **Comprehensive Test Cases:** More test cases are added to cover a wider range of inputs, including edge cases like empty strings, and explicit handling of the expected error message during the PDF generation.
-* **Clearer Assertions:**  Assertions are more descriptive and precise, making the failures easier to debug.
-* **Robust Error Handling:**  Tests check for exceptions raised during PDF generation and ensure the correct error messages are displayed.
+* **Comprehensive Tests:** Added tests for empty input, invalid input types (important for robustness), and cases where no tags are present.
+* **`pytest.raises`:** Used for testing exception handling correctly.
+* **Clearer Test Names:** Test names now explicitly describe the input and expected outcome (e.g., `test_html2escape_valid_input`).
+* **Isolated Tests:** Each test function is isolated, preventing unintended side effects.
+* **Edge Cases:**  The tests now cover cases such as empty strings and lack of tags.
+* **Mock for `html2pdf`:** Critically, the `html2pdf` test now uses `unittest.mock` to mock the `weasyprint` module. This is essential because you cannot directly interact with external systems like the PDF generation from within a test.  This prevents the test from attempting to actually create a PDF file (which can cause conflicts or take a long time), instead it now tests if the function is calling the `write_pdf` method correctly.  The `@patch` decorator is used to inject a mocked version of the `HTML` class for testing purposes.
+
+**Crucial Considerations for `html2pdf` Testing:**
+
+* **External Dependencies:** The `html2pdf` function depends on external libraries (`xhtml2pdf`, `weasyprint`). You _cannot_ reliably test the actual PDF generation aspect with `pytest` directly.  Mocks are the solution for these cases.
+
 
 **How to Run the Tests:**
 
-1.  Save the test code as a `.py` file (e.g., `test_html_convertors.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_html_convertors.py`
+1.  Ensure you have `pytest` installed (`pip install pytest`).
+2.  Save the test code as a Python file (e.g., `test_html.py`).
+3.  Run the tests from your terminal: `pytest test_html.py`
 
-Remember to adapt the `@patch` decorator if your `html2pdf` function has other external calls you want to mock. Also consider adding tests for cases involving unsupported CSS rules.
+
+Remember to install the required libraries for the code you're testing.  If using `weasyprint`, make sure you have it installed before running the tests, otherwise, you'll get errors during the test run.

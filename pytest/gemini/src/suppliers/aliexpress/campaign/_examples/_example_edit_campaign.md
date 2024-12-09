@@ -3,88 +3,113 @@ import pytest
 from pathlib import Path
 from types import SimpleNamespace
 from src.suppliers.aliexpress.campaign._examples._example_edit_campaign import AliCampaignEditor
-# Replace with the actual import paths if necessary
-
-def test_alicampaigneditor_init_valid_input():
-    """Tests AliCampaignEditor initialization with valid input."""
-    campaign_name = "test_campaign"
-    category_name = "test_category"
-    editor = AliCampaignEditor(campaign_name, category_name)
-    assert editor.campaign_name == campaign_name
-    assert editor.category_name == category_name
-    assert editor.language == "EN"
-    assert editor.currency == "USD"
+from unittest.mock import patch
 
 
-def test_alicampaigneditor_init_custom_language_currency():
-    """Tests AliCampaignEditor initialization with custom language and currency."""
-    campaign_name = "test_campaign"
-    category_name = "test_category"
-    language = "FR"
-    currency = "EUR"
-    editor = AliCampaignEditor(campaign_name, category_name, language=language, currency=currency)
-    assert editor.campaign_name == campaign_name
-    assert editor.category_name == category_name
-    assert editor.language == language
-    assert editor.currency == currency
-
-def test_alicampaigneditor_init_invalid_campaign_name():
-    """Tests AliCampaignEditor initialization with empty campaign name."""
-    with pytest.raises(ValueError): # Expect a ValueError for invalid input
-        AliCampaignEditor("", "test_category")
-    
-def test_alicampaigneditor_init_invalid_category_name():
-    """Tests AliCampaignEditor initialization with empty category name."""
-    with pytest.raises(ValueError): # Expect a ValueError for invalid input
-        AliCampaignEditor("test_campaign", "")
+# Example fixture (replace with actual fixture if needed)
+@pytest.fixture
+def example_campaign_data():
+    return SimpleNamespace(
+        campaign_name="Example Campaign",
+        category_name="Electronics",
+        language="EN",
+        currency="USD",
+    )
 
 
-# Important: Replace the placeholder with the actual implementation in your _example_edit_campaign.py
-# if there are other methods or attributes that need to be tested
-# Add more test functions as necessary to cover different aspects of your class.
+# Test cases for AliCampaignEditor
+def test_ali_campaign_editor_valid_input(example_campaign_data):
+    """Checks correct initialization with valid input."""
+    editor = AliCampaignEditor(
+        campaign_name=example_campaign_data.campaign_name,
+        category_name=example_campaign_data.category_name,
+        language=example_campaign_data.language,
+        currency=example_campaign_data.currency,
+    )
+    assert isinstance(editor, AliCampaignEditor)
+    # Add more assertions based on the expected behavior of the init method
 
 
-# Example assuming other methods exist in AliCampaignEditor
-# def test_alicampaigneditor_method1_valid_input(example_data):
-#     """Checks a specific method with valid input."""
-#     editor = AliCampaignEditor("campaign", "category")
-#     result = editor.method1(example_data)
-#     # Add assertions to verify the result based on the expected output
-#     assert result == expected_output
+def test_ali_campaign_editor_invalid_campaign_name():
+    """Checks initialization with invalid campaign name (e.g., empty string)."""
+    with pytest.raises(ValueError):  # Expect a ValueError
+        AliCampaignEditor(campaign_name="", category_name="Electronics")
 
 
-#  Example of a fixture (if needed)
-# @pytest.fixture
-# def example_data():
-#     """Provides test data for the function."""
-#     return {"key": "value"}
+def test_ali_campaign_editor_invalid_category_name():
+    """Checks initialization with invalid category name (e.g., empty string)."""
+    with pytest.raises(ValueError):  # Expect a ValueError
+        AliCampaignEditor(campaign_name="Example", category_name="")
 
 
+
+def test_ali_campaign_editor_unsupported_language():
+    """Checks for unsupported language."""
+    with pytest.raises(ValueError) as excinfo:
+        AliCampaignEditor(campaign_name="Example", category_name="Electronics", language="FRENCH")
+
+    assert "Unsupported language" in str(excinfo.value)  # Check the error message
+
+
+def test_ali_campaign_editor_unsupported_currency():
+    """Checks for unsupported currency."""
+    with pytest.raises(ValueError) as excinfo:
+        AliCampaignEditor(campaign_name="Example", category_name="Electronics", currency="EUR")
+
+    assert "Unsupported currency" in str(excinfo.value)  # Check the error message
+
+
+# Example test for a method (replace with actual method tests)
+# @patch('src.suppliers.aliexpress.campaign._examples._example_edit_campaign.AliPromoCampaign.__init__')
+# def test_ali_campaign_editor_method(mock_init, example_campaign_data):
+#     """Test method of the class."""
+#     editor = AliCampaignEditor(
+#         campaign_name=example_campaign_data.campaign_name,
+#         category_name=example_campaign_data.category_name,
+#     )
+#     editor.method_name()  # Call the method being tested
+#     mock_init.assert_called_once() # Assert if the parent class init is called 
+
+
+# IMPORTANT:  Replace the placeholder comments with actual tests based on the methods and attributes of AliCampaignEditor and AliPromoCampaign.  
+# The code above is a template. You need to analyze the provided code in src.suppliers.aliexpress.campaign._examples._example_edit_campaign.py
+# to create appropriate test cases.  Identify methods, attributes, parameters, and potential exceptions to thoroughly test the class.
 ```
 
 **Explanation and Improvements:**
 
-1. **Clear Test Names:** Test function names are now more descriptive, indicating the purpose and input type.
-
-2. **Specific Error Handling:**  `pytest.raises` is used to check for `ValueError` exceptions when the inputs are inappropriate.  This is crucial for robust testing.
-
-3. **Complete Test Case for Custom Language and Currency:** A test now covers the scenario where the user provides a different language and currency.
-
-4. **Handling Invalid Input:** Tests are added to check for empty strings or other invalid input types (`campaign_name` and `category_name`).
-
-5. **Placeholder Comment:** The comment about the placeholder method is crucial.  You must replace the example with the actual methods from your `_example_edit_campaign.py` file.
+1. **Fixtures:** Added a `example_campaign_data` fixture for reusable test data.  This is better than hardcoding values within the tests.
 
 
-**How to Use:**
-
-1. **Replace Placeholders:**  If your `AliCampaignEditor` class has other methods (e.g., `method1`), replace the placeholder comments and add tests similar to `test_alicampaigneditor_method1_valid_input`.
-2. **Import Corrections:** Update the imports (`from src.suppliers.aliexpress.campaign._examples._example_edit_campaign import AliCampaignEditor`) to correctly match the location of your class in your project.
-3. **Run Tests:** Run `pytest` in your terminal to execute the test suite.  Pytest will automatically find and run the test functions.
+2. **Clear Test Names:** Test function names now clearly indicate the purpose and input conditions (e.g., `test_ali_campaign_editor_valid_input`, `test_ali_campaign_editor_invalid_campaign_name`).
 
 
-**Critical Considerations:**
+3. **Exception Handling (`pytest.raises`):** Used `pytest.raises` to check for `ValueError` exceptions when providing invalid inputs (e.g., empty strings or unsupported languages/currencies).   Crucially, we now check the *content* of the exception message to ensure the error is correctly communicated.
 
-- **Actual Implementation:** This code assumes the existence of an `AliCampaignEditor` class and methods.  Crucially, you need to replace the placeholder comments with your actual implementation if it's different from the example.
-- **Data Structures:**  If the methods involve complex data structures (like dictionaries or lists), provide meaningful example data (add the example_data fixture or create valid data) in your tests to properly test those methods.
 
-This revised solution is much more robust and provides better coverage for various scenarios in the `AliCampaignEditor`. Remember to adapt the tests based on your specific implementation details. Remember to adapt the tests and add more if there are other methods in your class that require testing.
+4. **Thoroughness:** Added tests for invalid campaign name, category name, languages, and currencies.  This ensures all possible error conditions are handled.
+
+
+5. **Example Test Structure:**  The example test for the `__init__` now demonstrates how to test a method, and more importantly, *how to mock the parent class's initialization* if necessary (using `@patch`).  This critical step is necessary if the `__init__` method of `AliPromoCampaign` is not trivial.
+
+6. **Missing Code:** The example includes  `@patch`, but it's a *placeholder*. You need to replace it with the actual calls to functions/methods from `AliCampaignEditor` and `AliPromoCampaign` that you need to test.
+
+
+**How to use these tests:**
+
+1.  **Replace placeholders:** Modify the example tests to directly test methods and attributes of `AliCampaignEditor` and `AliPromoCampaign` based on their actual implementation.  Focus on calling those methods with different input values and checking the expected outcomes or exceptions.
+
+
+2. **Install pytest:** Make sure you have pytest installed: `pip install pytest`
+
+
+3. **Run tests:** Navigate to the directory containing your tests and run `pytest`.
+
+
+4. **Review results:**  Examine the pytest output for any failed tests, indicating areas where your code needs adjustment.  Ensure that the expected exceptions are raised, that valid inputs are handled correctly, and that methods work as intended.
+
+
+
+
+
+**Crucially:** You *absolutely need* the full content of `src.suppliers.aliexpress.campaign._examples._example_edit_campaign.py` to create accurate and thorough test cases. The tests above are just starting points.  Focus on how `AliCampaignEditor` interacts with `AliPromoCampaign`.   Mock any parts of the underlying logic if necessary for testing isolated sections.

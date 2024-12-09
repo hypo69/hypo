@@ -10,7 +10,7 @@
 
 
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>Русский</A>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>Русский</A>
 </TD>
 </TABLE>
 
@@ -80,6 +80,7 @@ Module for working with web browser drivers and managing web elements.
 - [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/webdriver/readme.en.md) - Documentation for the `webdriver` module.
 - [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver) - Tests for the `webdriver` module.
 - [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver) - Examples of using the `webdriver` module.
+---
 
 Glossary
 =========
