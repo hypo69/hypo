@@ -102,29 +102,29 @@ graph TD
         ReplyError --> Return[Return]
 
     ```
-    LEGEND:
+    Легенда:
     
-    **Start**: Начало выполнения сценария.
+    1.&nbsp;**Start**: Начало выполнения сценария. 
     
-    **CheckURL**: Проверка, является ли URL из OneTab.
+    2.&nbsp;**CheckURL**: Проверка, является ли URL из OneTab.  
     
-    **FetchData**: Получение данных из OneTab.
+    3.&nbsp;**FetchData**: Получение данных из OneTab. 
     
-    **ReplyTryAgain**: Ответ "Try again", если URL не из OneTab.
+    4.&nbsp;**ReplyTryAgain**: Ответ "Try again", если URL не из OneTab. 
     
-    **ValidateData**: Проверка валидности данных.
+    5.&nbsp;**ValidateData**: Проверка валидности данных.
     
-    **ReplyIncorrectData**: Ответ "Incorrect data", если данные не валидны.
+    6.&nbsp;**ReplyIncorrectData**: Ответ "Incorrect data", если данные не валидны.
     
-    **RunScenario**: Запуск сценария Mexiron.
+    7.&nbsp;**RunScenario**: Запуск сценария Mexiron.
     
-    **ScenarioSuccess**: Проверка успешности выполнения сценария.
+    8.&nbsp;**ScenarioSuccess**: Проверка успешности выполнения сценария.
     
-    **ReplyDone**: Ответ "Done! I will send the link to WhatsApp", если сценарий выполнен успешно.
+    9.&nbsp;**ReplyDone**: Ответ "Done! I will send the link to WhatsApp", если сценарий выполнен успешно.
 
-    **ReplyError**: Ответ "Error running scenario", если сценарий не выполнен.
+    10.&nbsp;**ReplyError**: Ответ "Error running scenario", если сценарий не выполнен.
 
-    **Return**: Возврат из функции.
+    11.&nbsp;**Return**: Возврат из функции.
 
 
   - **`get_graber_by_supplier_url(self, url: str)`**:
