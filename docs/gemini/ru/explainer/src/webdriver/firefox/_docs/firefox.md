@@ -53,7 +53,7 @@ from fake_useragent import UserAgent
 
 from src import gs
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 class Firefox(WebDriver):
     """ Subclass of `webdriver.Firefox` that provides additional functionality."""
@@ -97,99 +97,69 @@ class Firefox(WebDriver):
     # ... (rest of the code)
 ```
 
-# <algorithm>
-
-**Шаг 1:**  Инициализация класса `Firefox`.
-    * Принимает необязательный параметр `user_agent` для задания пользовательского агента.
-    * Загружает настройки из файла `firefox.json` используя `j_loads_ns` и `gs.path`.
-    * Получает путь к `geckodriver` из настроек.
-    * Вызывает методы `_set_profile` и `_set_options` для настройки профиля и опций.
-    * Создает экземпляр `Service` с путем к `geckodriver`.
-    * Если профиль установлен, то он устанавливается для опций.
-    * Запускает `webdriver.Firefox` с заданными `options` и `service`.
-    * Обрабатывает исключения `WebDriverException` и общие ошибки.
-
-**Шаг 2:** Метод `_set_options`.
-    * Создает экземпляр `Options`.
-    * Если в настройках есть опции (`settings.options`), то перебирает их:
-        * Если опция `headless` — устанавливает `options.headless = True`.
-        * Иначе — добавляет опцию в `options` с помощью `options.add_argument`.
-    * Если в настройках есть заголовки (`settings.headers`), то добавляет их в `options` с помощью цикла.
-    * Возвращает экземпляр `Options` с заданными опциями.
-
-**Шаг 3:** Метод `_set_profile`.
-    * Получает путь к профилю из настроек (`settings.profile`).
-    * Обрабатывает возможный путь, содержащий `%APPDATA%`, заменяя его на текущее значение `APPDATA` из среды.
-    * Создает экземпляр `FirefoxProfile` с заданным путем.
-    * Возвращает экземпляр `FirefoxProfile`.
-
-**Пример:**
-Если в `firefox.json` есть `profile_path = "%APPDATA%\FirefoxProfile"` и `os.environ["APPDATA"] = "/home/user/AppData"`, то `profile_directory` будет равен "/home/user/AppData/FirefoxProfile".
-
-
-# <mermaid>
-
 ```mermaid
 graph LR
-    A[Firefox Class] --> B(init);
-    B --> C{_set_profile};
-    B --> D{_set_options};
-    C --> E[FirefoxProfile];
-    D --> F[Options];
-    F --> G[add_argument];
-    F --> H[add_argument_headers];
-    E --> I[options.profile];
-    B --> J[Service];
-    J --> K[webdriver.Firefox];
-    K --> L{Запуск Firefox};
-    L --> M[Успех];
-    L --> N{Ошибка WebDriverException};
-    L --> O{Ошибка};
-    subgraph Обработка ошибок
-        N --> P[Лог критической ошибки];
-        O --> P;
-    end
-    subgraph Настройки профиля
-    E --> Q[Получение профиля из настроек];
-        Q --> R[Обработка %APPDATA%];
-        R --> S[Создание FirefoxProfile];
+    A[Firefox Class] --> B{__init__};
+    B --> C[j_loads_ns];
+    C --> D{settings};
+    D --> E[geckodriver_path];
+    D --> F[_set_profile];
+    D --> G[_set_options];
+    F --> H[FirefoxProfile];
+    G --> I[Options];
+    E --> J[Service];
+    I --> K[super().__init__];
+    H --> K;
+    J --> K;
+    K --> L[WebDriver Object];
+    L --> M[Logger.info];
+    subgraph Error Handling
+        K --> N[WebDriverException];
+        N --> O[Logger.critical];
+        K --> P[Exception];
+        P --> O;
     end
 ```
 
-# <explanation>
+```
+<explanation>
 
-**Импорты:**
-- `os`, `pathlib`:  Стандартные библиотеки для работы с операционной системой и путями к файлам.
-- `types`, `typing`:  Типы данных Python (включая `SimpleNamespace`).
-- `selenium.webdriver`, `selenium.webdriver.firefox.*`: Модули Selenium для управления веб-драйверами Firefox.
-- `selenium.common.exceptions`:  Обработка исключений, возникающих при работе с Selenium.
-- `fake_useragent`:  Для генерации случайных User-Agent строк.
-- `src.gs`, `src.utils.jjson`, `src.logger`: Импорты из собственных модулей проекта (`src`), отвечающих за глобальные настройки, работу с JSON и логирование соответственно.
+**1. Импорты:**
 
-**Классы:**
-- `Firefox`: Подкласс `webdriver.Firefox`. Добавляет дополнительные возможности, такие как запуск в режиме киоска и настройку профиля.
+- `os`, `pathlib`, `types`, `typing`: Стандартные библиотеки Python для работы с файлами, путями, типами данных.
+- `selenium.webdriver`, `selenium.webdriver.firefox.options`, `selenium.webdriver.firefox.service`, `selenium.webdriver.firefox.firefox_profile`, `selenium.common.exceptions`: Библиотека Selenium для управления веб-драйверами, в данном случае, Firefox. Обеспечивает взаимодействие с браузером.
+- `fake_useragent`: Библиотека для генерации случайных user-agent строк, имитируя различные браузеры и устройства.
+- `src.gs`, `src.utils.jjson`, `src.logger.logger`: Импорты из собственных пакетов проекта (`src`).  `gs` скорее всего содержит глобальные настройки (например, пути к файлам), `jjson` - функции для работы с JSON, `logger` - логирование.  Связь:  Данные компоненты вероятно взаимодействуют для настройки и запуска драйвера, организации логирования процесса, работы с конфигурационными файлами.
 
-**Функции:**
-- `__init__(self, user_agent=None, *args, **kwargs)`: Конструктор класса `Firefox`. Настраивает веб-драйвер Firefox с помощью опций, профиля и пользовательского агента.
-- `_set_options(self, settings)`: Устанавливает опции запуска Firefox, такие как запуск в режиме headless, пользовательские аргументы командной строки.
-- `_set_profile(self, settings)`: Загружает и настраивает профиль Firefox.
+**2. Классы:**
 
-**Переменные:**
-- `user_agent`:  Случайный `user-agent` для имитации поведения реального пользователя в браузере.
-- `settings`:  Представляет настройки, загруженные из `firefox.json`, используемые для инициализации драйвера.
-- `geckodriver_path`:  Путь к исполняемому файлу `geckodriver`.
+- `Firefox`: Подкласс класса `WebDriver` из Selenium. Наследует базовые методы для работы с веб-драйвером Firefox, расширяя функциональность.
+   - `driver_name`: Классовый атрибут, определяет имя драйвера.
+   - `__init__`: Инициализирует веб-драйвер. Получает настройки из файла `firefox.json`, устанавливает профиль Firefox, на основе полученных данных.
+    -  `user_agent`: Настройка User-agent. Позволяет имитировать разные браузеры.
+    - `_set_options`: Метод для настройки опций запуска Firefox, таких как headless режим, language и другие параметры из файла настроек.
+    - `_set_profile`: Метод для настройки профиля Firefox, например, путь к профилю, файлы cookie и т.д. Поддерживает различные типы путей (с `%APPDATA%` или без него).
+
+**3. Функции:**
+
+- `_set_options`, `_set_profile`: Вспомогательные функции для настройки опций и профиля соответственно, предоставляя гибкость в настройке запуска веб-драйвера.
+
+**4. Переменные:**
+
+- `settings`: Содержит данные из файла настроек `firefox.json`.
+- `geckodriver_path`: Путь к исполняемому файлу GeckoDriver, необходимый для запуска Firefox.
+- `profile`: Объект профиля Firefox.
+- `options`: Объект опций Firefox.
 
 
-**Возможные ошибки/улучшения:**
-- Отсутствует проверка существования `geckodriver`.
-- Отсутствует проверка корректности данных в `firefox.json`.
-- Можно добавить обработку дополнительных исключений.
-- Документация должна быть дополнена примерами использования.
+**Возможные ошибки и улучшения:**
+
+- **Обработка ошибок:** Блок `try...except` необходим, но можно дополнить проверками, например, наличия файла `firefox.json`, корректности путей к файлам, проверку наличия GeckoDriver.
+- **Документация:** Документация к классу `Firefox` и его методам (в коде) могла бы быть более подробной.  Добавление примеров использования методов и  объяснения типов данных улучшат понимание.
+- **Использование типов:** Можно использовать более конкретные типы данных (например, для путей к файлам) для повышения надежности.
+- **Логирование:** Добавление логирования уровней подробности, не только критичных ошибок, улучшит отладку.
+
 
 **Взаимосвязи с другими частями проекта:**
--  `gs.path` указывает на глобальные настройки пути, определяемые в других частях проекта.
--  `j_loads_ns` из `src.utils.jjson` используется для загрузки JSON конфигурации `firefox.json`.
--  `logger` из `src.logger` используется для регистрации действий и ошибок, что указывает на наличие системы логирования в проекте.
 
-**Общий вывод:**
-Код предоставляет гибкий способ запуска Firefox WebDriver с настройками, загруженными из файла, и обеспечивает обработку ошибок. Важно обеспечить корректный путь к `geckodriver` и правильно настроить профиль для наилучшей работы.  Документация значительно улучшена.
+Код использует файлы настроек (`firefox.json`),  функции (`j_loads_ns`), а также объект `logger` из других частей проекта (`src`).  Это указывает на  взаимозависимость с модулями конфигурации,  обработки json и логирования проекта.

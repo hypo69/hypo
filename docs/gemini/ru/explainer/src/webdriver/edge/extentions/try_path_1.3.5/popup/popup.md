@@ -1,8 +1,6 @@
-# Анализ кода popup.js
+# Анализ кода popup.js для расширения try_path
 
-## <input code>
-
-```javascript
+```
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -16,124 +14,150 @@
 
     var document = window.document;
 
+    const noneClass = "none";
+    const helpClass = "help";
+    const invalidTabId = browser.tabs.TAB_ID_NONE;
+    const invalidExecutionId = NaN;
+    const invalidFrameId = -1;
+
+    var mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
+        contextWay, contextExpression, resolverHeader, resolverBody,
+        resolverCheckbox, resolverExpression, frameDesignationHeader,
+        frameDesignationCheckbox, frameDesignationBody,
+        frameDesignationExpression, frameIdHeader, frameIdCheckbox,
+        frameIdBody, frameIdList, frameIdExpression, resultsMessage,
+        resultsTbody, contextTbody, resultsCount, resultsFrameId,
+        detailsPageCount, helpBody, helpCheckbox;
+
+    var relatedTabId = invalidTabId;
+    var relatedFrameId = invalidFrameId;
+    var executionId = invalidExecutionId;
+    var resultedDetails = [];
+    const detailsPageSize = 50;
+    var detailsPageIndex = 0;
+
     // ... (остальной код)
-});
 ```
 
 ## <algorithm>
 
-Код представляет собой скрипт для расширения браузера, управляющий взаимодействием с вкладкой/рамкой.  Подробный алгоритм сложен и требует анализа всех функций.
+**Блок-схема алгоритма:**
 
-**Шаг 1:** Инициализация переменных.
--  Сохраняются ссылки на DOM-элементы.
-- Инициализируются переменные, связанные с результатами, состоянием, и ID.
+```mermaid
+graph TD
+    A[Инициализация] --> B{Обработка события "load"};
+    B -- success --> C[Получение элементов];
+    C --> D[Установка обработчиков событий];
+    D --> E[Запрос styles];
+    E --> F[Запрос восстановления состояния];
+    F --> G[Отрисовка таблиц];
+    G --> H[Ожидание сообщений];
+    H -- event "showResultsInPopup" --> I[Обработка результата];
+    I --> J[Отрисовка результатов];
+    J --> K[Обновление страницы];
+    K --> H;
+    H -- event "storePopupState" --> L[Сохранение состояния];
+    L --> H;
 
-**Шаг 2:** Функции для отправки сообщений.
-- `sendToActiveTab`: Отправляет сообщение активной вкладке.
-- `sendToSpecifiedFrame`: Отправляет сообщение указанной рамке.
 
-**Шаг 3:** Функции для обработки состояния.
-- `collectPopupState`: Собрать текущее состояние из элементов формы.
-- `changeContextVisible`, `changeResolverVisible`, `changeFrameIdVisible` и т.д.: Изменяют видимость секций интерфейса.
-- `changeHelpVisible`: Изменяет видимость help-блока.
+    subgraph Обработка события "click"
+        I --> M[Выполнение запроса к активной вкладке];
+        M --> N[Получение ответа];
+        N -- success --> O[Отрисовка/Обработка данных];
+        N -- error --> P[Отображение ошибки];
+    end
 
-**Шаг 4:** Функция для формирования сообщения.
-- `makeExecuteMessage`: Собирает данные для отправки в контентную страницу, основываясь на выбранных параметрах.
+    subgraph Обработка события "Enter"
+        H -- event "execute" --> Q[Создание сообщения];
+        Q --> R[Отправка сообщения];
+        R --> S[Обработка ответа];
+        S --> J;
+    end
+```
 
-**Шаг 5:** Функция для получения frameId.
-- `getSpecifiedFrameId`:  Возвращает ID выбранной рамки.
 
-**Шаг 6:** Функции для выполнения скриптов.
-- `execContentScript`: Выполняет скрипты (`try_xpath_functions.js`, `try_xpath_content.js`) на странице.
+Примеры данных:
 
-**Шаг 7:** Обработка событий.
-- `handleExprEnter`: Обрабатывает нажатие Enter в строке выражения.
-- `showDetailsPage`: Показывает результаты в таблице, обрабатывая постраничный вывод.
-- `showError`: Выводит ошибку в интерфейсе.
-- `genericListener`: Слушатель событий для обработки сообщений от контентной страницы.  (ключевой момент, соединяет расширение с содержанием страницы.)
-
-**Шаг 8:** Инициализация событий при загрузке.
-- Привязка обработчиков событий для кнопок, элементов ввода и т. д.
-- Установка обратных вызовов для различных событий.
-- `window.addEventListener("load", ...)`: Начинает работу скрипта при загрузке страницы расширения.
-
+* **Входящие данные (сообщение `showResultsInPopup`):** `{executionId: 123, message: "Результаты успешно получены", main: {itemDetails: [...]}, context: {itemDetail: {...}}}
+* **Выходящие данные (сообщение `execute`):**  `{event: "execute", main: {expression: "xpath", method: "evaluate", resultType: "nodelist", resolver: null}, context: {…}}`
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[popup.js] --> B(sendToActiveTab);
-    A --> C(sendToSpecifiedFrame);
-    A --> D(collectPopupState);
-    A --> E(makeExecuteMessage);
-    A --> F(getSpecifiedFrameId);
-    A --> G(execContentScript);
-    A --> H(genericListener);
-    H --> I(showResultsInPopup);
-    H --> J(restorePopupState);
-    H --> K(insertStyleToPopup);
-    H --> L(addFrameId);
-    I --> M[resultedDetails];
-    M --> N(updateDetailsTable);
-    J --> O[state];
-    O --> A;
-    B --> P[active tab];
-    C --> Q[specified frame];
-    Q --> R[try_xpath_check_frame.js];
-    R --> C;
-    G --> S[try_xpath_functions.js];
-    G --> T[try_xpath_content.js];
-    N --> U[results table];
-    A --> V[DOM elements];
-
-    subgraph Browser Events
-        P --> B
-        Q --> C
-        I --> A
+erDiagram
+    subgraph "Browser API Interactions"
+        browser.tabs --> browser.tabs : query()
+        browser.tabs --> browser.tabs : executeScript()
+        browser.runtime --> browser.runtime : sendMessage()
+        browser.runtime --> browser.runtime : openOptionsPage()
     end
 
-    subgraph Other Scripts
-        R --> Q
-        S --> Q
-        T --> Q
+    subgraph "DOM Interactions"
+        document --> document : getElementById()
+        document --> document : addEventListener()
+        document --> document : createElement()
+        document --> document : appendChild()
     end
+
+    subgraph "tryxpath Logic"
+        tryxpath.functions -- fu :  updateDetailsTable()
+        tryxpath -- tx :  alias
+        tryxpath.functions -- fu :  onError()
+    end
+
+    tryxpath --> browser : sends requests to browser functions for tab management
+    tryxpath -- fu : uses utility functions from tryxpath.functions for manipulating data.
+    popup << (popup.js) >>
+    browser << (browser context) >>
+    popup -- message --> browser : sends messages
+    browser -- response --> popup : sends responses
+    popup --> document : interact with dom elements
 ```
 
 ## <explanation>
 
 **Импорты:**
 
-- `tx = tryxpath;` и `fu = tryxpath.functions;`:  Эти строки импортируют переменные `tryxpath` и `tryxpath.functions` из, предположительно, модуля `tryxpath` (вероятно, из другого файла или модуля скрипта расширения). Это, вероятно, содержит функции для работы с XPath выражениями и другими вспомогательными функциями, используемыми в этом скрипте.
+* `tryxpath`:  Скорее всего, это внутренний модуль или пакет расширения, предоставляющий функции для работы с XPath и обработкой данных.
+
+* `tryxpath.functions`:  Объект, содержащий вспомогательные функции для работы с данными, например, `updateDetailsTable`, `onError`.
 
 **Классы:**
 
-Нет явных классов в коде.  В основном используются функции и глобальные переменные.
+Не используются классы в классическом понимании.
+
 
 **Функции:**
 
-- `sendToActiveTab(msg, opts)`: Отправляет сообщение заданной вкладке.  `msg` - само сообщение, `opts` - дополнительные параметры.
-- `sendToSpecifiedFrame(msg)`: Отправляет сообщение конкретной рамке (frame) в активной вкладке. Использует `browser.tabs.executeScript` для выполнения скриптов на стороне контента. Очень важное взаимодействие с другими частями расширения.
-- `collectPopupState()`: Собирает значения из элементов управления (input, select) в popup-окне, возвращая объект `state` для сохранения/восстановления.
-- `changeContextVisible()`, `changeResolverVisible()`, `changeFrameIdVisible()`, `changeFrameDesignationVisible()`, `changeHelpVisible()`: Изменяют видимость отдельных секций в интерфейсе.  Эти функции обрабатывают логику скрытия/показа элементов, основываясь на состоянии переключателей.
-- `makeExecuteMessage()`: Формирует и возвращает сообщение для отправки в контентный скрипт. Это сообщение содержит XPath выражения и другие настройки.
-- `getSpecifiedFrameId()`: Возвращает ID рамки, выбранной пользователем. Важная функция для определения, на какой конкретной части страницы необходимо выполнить XPath выражения.
-- `execContentScript()`: Выполняет скрипты в рамках вкладки. Важно для взаимодействия с контентом страницы.
-- `showDetailsPage(index)`: Выводит результаты запроса (постранично) в popup-окне.
-- `showError(message, frameId)`: Выводит сообщение об ошибке в popup-окне.
-- `genericListener`: Обрабатывает сообщения, приходящие из контентного скрипта.  Является ключевым звеном для обмена данными между popup и контентной частью расширения.  Важно обратить внимание на обработку событий `showResultsInPopup`, `restorePopupState`, `insertStyleToPopup` and `addFrameId`.
-
+* `sendToActiveTab(msg, opts)`: Отправляет сообщение в активную вкладку.  Аргументы: `msg` (сообщение) и `opts` (опции), возвращает промис. Используется для коммуникации с активной вкладкой.
+* `sendToSpecifiedFrame(msg)`: Отправляет сообщение в указанный фрейм.
+* `collectPopupState()`: Собрать и вернуть состояние элементов popup. 
+* `changeContextVisible()`, `changeResolverVisible()`, `changeFrameIdVisible()`, `changeFrameDesignationVisible()`, `changeHelpVisible()`: Управляют видимость элементов интерфейса в зависимости от состояния чекбоксов.
+* `makeExecuteMessage()`: Генерирует сообщение для выполнения XPath запроса, собирает информацию с UI.
+* `getSpecifiedFrameId()`: Возвращает ID выбранного фрейма.
+* `execContentScript()`: Выполняет скрипты `/scripts/try_xpath_check_frame.js`, `/scripts/try_xpath_functions.js`, и `/scripts/try_xpath_content.js`  в активной вкладке.
+* `sendExecute()`: Отправляет сообщение для выполнения XPath.
+* `handleExprEnter(event)`: Обрабатывает нажатие Enter в полях ввода.
+* `showDetailsPage(index)`: Отображает результаты на определённой странице.
+* `showError(message, frameId)`: Отображает ошибку в popup.
+* `genericListener(message, sender, sendResponse)`:  Функция-обработчик сообщений из контекста страницы.  Подписывается на события `showResultsInPopup`, `restorePopupState`, `insertStyleToPopup`, `addFrameId`.
 
 **Переменные:**
 
-Многие переменные – ссылки на DOM-элементы (например, `mainExpression`, `resultsTbody`, `helpCheckbox`). Это позволяет скрипту получить доступ и управлять элементами интерфейса. Есть также переменные, хранящие состояние (`relatedTabId`, `executionId`, `resultedDetails`), которые нужны для управления результатами и сессиями.
+Многие переменные хранят ссылки на элементы DOM (например, `mainWay`, `mainExpression`).  Также есть переменные для хранения состояния (например, `relatedTabId`, `resultedDetails`, `detailsPageIndex`).
 
 **Возможные ошибки и улучшения:**
 
-- **Обработка ошибок:** В `showError` есть логика для установки `resultedDetails = []`, но не хватает более подробной обработки ошибок (try/catch) во многих функциях, которые взаимодействуют с браузерными API.
-- **Проверка значений:** При обработке ввода (например, `parseInt(frameIdExpression.value, 10)`) нет проверки на корректный ввод, что может привести к ошибкам. Нужно добавить проверки типа данных.
-- **Избыточность кода:** Несколько функций (`changeContextVisible` и т. д.) имеют похожую структуру. Возможно, стоит обобщить их.
+* **Обработка ошибок:**  Обработка ошибок при `browser.tabs.executeScript()` и других API вызовах не всегда полная. Нужно использовать `catch` блоки для перехвата исключений и корректной обработки ошибок.
+* **Типизация:** Отсутствие типизации может затруднять понимание кода и проверки.  Использование TypeScript может помочь.
+* **Код с именем функций (необязательно):** Избыточное использование анонимных функций. Можно вынести логику в именованные функции, чтобы код стал более читаемым и поддерживаемым.
+* **Логика отображения страниц:** Необходимо добавить проверки корректности данных для предотвращения ошибок.
+* **Повторение кода:** Некоторые блоки кода, связанные с управлением видимостью элементов (например, `changeContextVisible`) можно упростить.
 
+**Взаимосвязь с другими частями проекта:**
 
-**Взаимосвязи с другими частями проекта:**
+Код сильно зависит от скриптов в папке `/scripts`.  Они, скорее всего, содержат логику выполнения XPath и обработки полученных данных.  Связь с контентом происходит через механизм отправки сообщений между `popup` и контекстом страницы (`browser.tabs.sendMessage`).
 
-Код сильно связан с контентными скриптами (`try_xpath_check_frame.js`, `try_xpath_functions.js`, `try_xpath_content.js`). Эти скрипты выполняют XPath выражения и возвращают результаты в popup.  Обратите внимание на `browser.tabs.executeScript` и `browser.tabs.sendMessage` для связи с контентом.
+**Заключение:**
+
+Код реализует функциональность расширения, которое позволяет пользователю задавать XPath запросы и получать результаты на странице в Popup окне.  Команды в popup могут выполнять различные действия: например, фокусировку на элементах на странице, запрос дополнительных данных, передача/приём стилей.  Для улучшения кода рекомендуется добавить типизацию, улучшить обработку ошибок, оптимизировать повтор используемого кода и добавить проверок для предотвращения ошибок.

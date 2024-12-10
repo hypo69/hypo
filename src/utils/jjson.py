@@ -220,7 +220,7 @@ def j_loads(
                 files = list(jjson.glob('*.json'))
                 return [j_loads(file, ordered=ordered) for file in files]
             if jjson.suffix.lower() == '.csv':  # Если это CSV
-                import pandas as pd
+
                 return pd.read_csv(jjson).to_dict(orient='records')
             # Если это JSON-файл
             #return decode_strings(json.loads(jjson.read_text(encoding='utf-8')))

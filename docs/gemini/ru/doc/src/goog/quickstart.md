@@ -1,84 +1,54 @@
-# Модуль hypotez/src/goog/quickstart.py
+# Модуль `hypotez/src/goog/quickstart.py`
 
 ## Обзор
 
-Модуль `quickstart.py` предоставляет пример использования API Google Apps Script на Python. Он демонстрирует создание нового проекта Apps Script, загрузку файлов в проект и вывод URL проекта.  Модуль использует библиотеки `google-auth-oauthlib` и `googleapiclient` для взаимодействия с API.
-
-## Импорты
-
-```python
-from pathlib import Path
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient import errors
-from googleapiclient.discovery import build
-import header
-from src import gs
-```
-
-## Константы
-
-```python
-MODE = 'dev'
-SCOPES = ['https://www.googleapis.com/auth/script.projects']
-SAMPLE_CODE = """function helloWorld() {
-  console.log("Hello, world!");
-}
-""".strip()
-SAMPLE_MANIFEST = """{
-  "timeZone": "America/New_York",
-  "exceptionLogging": "CLOUD"
-}
-""".strip()
-```
+Этот модуль предоставляет функции для взаимодействия с Google Apps Script API. Он позволяет создавать новые проекты скриптов, загружать файлы в эти проекты и выводить URL созданных скриптов. Модуль использует авторизацию пользователя для доступа к API.
 
 ## Функции
 
 ### `main`
 
-**Описание**: Выполняет основные операции взаимодействия с API Google Apps Script.
+**Описание**: Функция, которая выполняет весь процесс взаимодействия с Google Apps Script API, включая авторизацию, создание проекта, загрузку файлов и вывод URL проекта.
 
-**Описание аргументов**: Нет входных аргументов.
+**Вызывает исключения**:
+- `errors.HttpError`: Возникает, если API возвращает ошибку.  Ошибка обрабатывается, и ее содержимое выводится на экран.
 
-**Возвращает**: Нет возвращаемых значений.
+**Параметры**:
+Нет входных параметров.
 
-**Возможные исключения**:
-- `errors.HttpError`: Возникает при ошибках, связанных с выполнением запросов к API.  В этом случае выводится содержимое ошибки.
+**Возвращает**:
+Нет возвращаемого значения.
+
+##  Импорты
+
+**Описание**: В этом модуле импортируются необходимые библиотеки для работы с Google Apps Script API и для работы с файловой системой.
+
+**Модули**:
+- `pathlib`: Для работы с путями к файлам.
+- `google.auth.transport.requests`: Для работы с запросами к API.
+- `google.oauth2.credentials`: Для работы с учетными данными.
+- `google_auth_oauthlib.flow`: Для реализации процесса авторизации.
+- `googleapiclient.discovery`: Для создания клиента API.
+- `googleapiclient.errors`: Для обработки ошибок API.
+- `header`:  (Предполагаемый) модуль для работы с заголовками.
+- `src.gs`: (Предполагаемый) модуль для работы с хранилищем Google Cloud.
+
+## Константы
+
+**Описание**:  Определены константы, используемые в коде.
+
+- `MODE`:  строковая переменная, вероятно, для определения режима работы.
+- `SCOPES`: Список необходимых разрешений доступа к Google Apps Script API.
+- `SAMPLE_CODE`: Пример кода для скрипта.
+- `SAMPLE_MANIFEST`: Пример манифеста для скрипта.
+
+## Переменные
+
+**Описание**: Определены локальные переменные, используемые в функции `main`.
+
+- `creds`:  Объект учетных данных пользователя.
+- `token_path`:  Путь к файлу `token.json` для сохранения токенов доступа.
 
 
-```python
-def main():
-    """Calls the Apps Script API."""
-    creds = None
-    token_path = gs.path.tmp / 'e-cat-346312-137284f4419e.json'
-    if token_path.exists():
-        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        with Path('token.json').open('w') as token:
-            token.write(creds.to_json())
 
-    try:
-        service = build('script', 'v1', credentials=creds)
-        request = {'title': 'My Script'}
-        response = service.projects().create(body=request).execute()
-        request = {
-            'files': [
-                {'name': 'hello', 'type': 'SERVER_JS', 'source': SAMPLE_CODE},
-                {'name': 'appsscript', 'type': 'JSON', 'source': SAMPLE_MANIFEST}
-            ]
-        }
-        response = service.projects().updateContent(
-            body=request, scriptId=response['scriptId']).execute()
-        print('https://script.google.com/d/' + response['scriptId'] + '/edit')
-    except errors.HttpError as error:
-        print(error.content)
-```
-```
 ```

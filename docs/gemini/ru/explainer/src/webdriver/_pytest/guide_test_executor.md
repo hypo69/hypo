@@ -39,93 +39,105 @@ def test_send_message_typing_speed(execute_locator, driver_mock):
     pass  # Реализация теста
 ```
 
-
+```
 ## <algorithm>
 
-**Шаг 1:** Импорт необходимых библиотек.
-* `pytest`: для фреймворка тестирования.
-* `unittest.mock`: для создания имитаций объектов (Mock).
-* `selenium`: для работы с Selenium WebDriver.
-* `ExecuteLocator`: класс для тестирования.
-* `ExecuteLocatorException`: исключение для обработки ошибок.
+**Блок-схема** (неполная, т.к. реализации тестов не предоставлены):
 
-**Шаг 2:** Создание фикстур `driver_mock` и `execute_locator`.
-* `driver_mock`: имитация объекта WebDriver.
-* `execute_locator`: экземпляр класса `ExecuteLocator`, использующий имитацию.
+```mermaid
+graph TD
+    A[Начало] --> B{Установка зависимостей};
+    B --> C[Проверка наличия WebDriver];
+    C -- Установлен --> D[Создание файла тестов test_executor.py];
+    C -- Не установлен --> E[Ошибка: Установите WebDriver];
+    D --> F[Реализация тестов get_webelement_by_locator];
+    F --> G[Реализация тестов get_attribute_by_locator];
+    G --> H[Реализация тестов send_message];
+    H --> I[Реализация тестов send_message_typing_speed];
+    I --> J[Запуск тестов];
+    J --> K[Проверка результатов];
+    K -- Успешно --> L[Конец];
+    K -- Неуспешно --> M[Анализ ошибок и исправление];
+    M --> D;
+```
 
-**Шаг 3:** Определение тестов.
-* `test_get_webelement_by_locator_single_element`: поиск одного элемента по локатору.
-* `test_get_webelement_by_locator_multiple_elements`: поиск нескольких элементов по локатору.
-* `test_get_webelement_by_locator_no_element`: поиск элемента, которого нет.
-* `test_get_attribute_by_locator`: получение атрибута элемента.
-* `test_send_message`: отправка сообщения в элемент.
-* `test_send_message_typing_speed`: отправка сообщения с задержкой.
+**Пример перемещения данных:**
 
-**Пример (test_get_webelement_by_locator_single_element):**
-1. Создается `MagicMock` для имитации `WebElement`.
-2. `driver_mock.find_elements` возвращает список, содержащий `WebElement`.
-3. `execute_locator.get_webelement_by_locator` вызывает `driver_mock.find_elements`.
-4. Проверяется, что `driver_mock.find_elements` был вызван с правильным локером.
-5. Проверяется, что результат `get_webelement_by_locator` совпадает с ожидаемым элементом.
+1. Тест `test_get_webelement_by_locator_single_element` получает `execute_locator` и `driver_mock` из фикстур.
+2. Внутри теста создается mock-объект `element` и настраивается `driver_mock.find_elements` для возврата этого элемента.
+3. `execute_locator.get_webelement_by_locator` вызывает `driver_mock.find_elements`, передавая ему локатор.
+4. Результат (`element` или `False`) возвращается из метода и сравнивается с ожидаемым значением в тесте.
 
 
 ## <mermaid>
 
 ```mermaid
 graph LR
-    A[Тест] --> B{Подготовка};
-    B --> C[Имитация WebDriver];
-    C --> D[Создание ExecuteLocator];
-    D --> E[Вызов метода get_webelement_by_locator];
-    E --> F[Поиск элементов (driver_mock.find_elements)];
-    F --> G[Возврат результата];
-    G --> H[Проверка результата (assert)];
-    H --> I[Успех/Неудача];
-    subgraph "Зависимости"
-        pytest --> A;
-        unittest.mock --> C;
-        selenium --> C;
-        ExecuteLocator --> D;
+    subgraph Тестирование ExecuteLocator
+        A[test_executor.py] --> B(ExecuteLocator);
+        B --> C[driver_mock];
+        B --> D[get_webelement_by_locator];
+        B --> E[get_attribute_by_locator];
+        B --> F[send_message];
+        B --> G[send_message_typing_speed];
+        C --> H[find_elements];
+        D --> I[WebElement];
+        E --> J[get_attribute];
+        F --> K[send_keys];
+        G --> L[send_keys];
+    end
+    subgraph Зависимости
+        B --> M[pytest];
+        B --> N[selenium];
+        B --> O[unittest.mock];
+        B --> P[src.webdriver.executor];
+        B --> Q[src.logger.exceptions];
+    end
+    subgraph Инструменты
+        M --> R[pytest];
     end
 ```
 
 ## <explanation>
 
 **Импорты:**
-* `pytest`: фреймворк для написания и запуска тестов. Связан с тестированием Python-кода.
-* `unittest.mock`: используется для создания и управления моделями объектов (Mock).  Подключается к `unittest` для создания имитаций.
-* `selenium`: библиотека для работы с веб-драйвером. Используется для взаимодействия с веб-браузерами.
-* `ExecuteLocator`: класс, который нужно протестировать.  Расположен в пакете `src.webdriver.executor`.
-* `ExecuteLocatorException`: класс для обработки ошибок в `ExecuteLocator`. Расположен в `src.logger.exceptions`.
+
+- `pytest`: Библиотека для написания и запуска тестов.
+- `unittest.mock`: Библиотека для создания mock-объектов, необходимых для имитации поведения объектов.
+- `selenium.webdriver.remote.webelement`: Модуль Selenium WebDriver для работы с веб-элементами.
+- `selenium.webdriver.common.by`: Модуль Selenium WebDriver для определения способов поиска веб-элементов (например, по XPath).
+- `src.webdriver.executor`:  Это класс `ExecuteLocator`, который находится в пакете `webdriver` в подпапке `src` проекта.
+- `src.logger.exceptions`: содержит классы исключений, используемые для обработки ошибок.
+
 
 **Классы:**
-* `ExecuteLocator`:  Класс, отвечающий за взаимодействие с веб-элементами через Selenium WebDriver.
-    * Методы: `get_webelement_by_locator`, `get_attribute_by_locator`, `send_message`.
-    * Атрибуты:  Возможно, внутренние атрибуты, связанные с драйвером или локерами.
+
+- `ExecuteLocator`:  Класс для работы с веб-элементами через Selenium WebDriver.  Атрибуты (возможно) - ссылка на объект webdriver. Методы - для поиска элементов, получения атрибутов, отправки сообщений. Взаимодействие происходит с объектом `driver_mock` (моком `webdriver`).
 
 **Функции:**
-* `test_*`: Функции-тесты, проверяющие методы класса `ExecuteLocator`.
-    * Аргументы: экземпляр `execute_locator` (из фикстуры), `driver_mock` (имитация).
-    * Возвращаемые значения:  обычно `True` или `False` в зависимости от успеха теста.
-    * Примеры: `test_get_webelement_by_locator_single_element`, демонстрирует проверку поиска элемента.
-* `driver_mock`: Фикстура, которая создает имитацию WebDriver.  Она используется для избегания реального взаимодействия с браузером при тестировании.
-* `execute_locator`: Фикстура, которая создает экземпляр класса `ExecuteLocator` с `driver_mock`.
+
+- `test_get_webelement_by_locator_single_element`:  Тест для метода `get_webelement_by_locator` для случая поиска одного элемента.
+- `test_get_webelement_by_locator_multiple_elements`: Тест для метода `get_webelement_by_locator` для случая поиска нескольких элементов.
+- `test_get_webelement_by_locator_no_element`: Тест для метода `get_webelement_by_locator` для случая, когда элемент не найден.
+- `test_get_attribute_by_locator`: Тест для метода `get_attribute_by_locator`.
+- `test_send_message`: Тест для метода `send_message`.
+- `test_send_message_typing_speed`: Тест для метода `send_message` с определенной скоростью.
+- `driver_mock`, `execute_locator`:  Фикстуры для создания и подготовки объектов для тестов (mock webdriver и экземпляра `ExecuteLocator`).
 
 **Переменные:**
-* `locator`: Словарь, содержащий информацию о локаторе элемента (тип и селектор).
-* `message`: Текст сообщения, который нужно отправить в элемент.
-* `typing_speed`: Скорость набора текста.
-* `elements`, `element`: переменные, хранящие объекты `WebElement` или списки таких объектов.
 
-**Возможные ошибки/улучшения:**
-* Отсутствуют реализации тестов. Тесты пока пусты, им требуется наполнение логикой.
-* Тесты должны проверять  обработку исключений (например, если элемент не найден).
-* Необходимо добавить assert-ы в тесты, чтобы проверить, что ожидаемые значения соответствуют фактическим.
-* Тесты не проверяют работу с выгрузкой атрибутов и отправкой сообщений, им нужно указать, как это должно происходить, и проверить.
+- `locator`: Словарь, содержащий информацию о локаторе элемента (тип поиска и селектор).
+- `message`: Строка, которую нужно отправить в качестве текста.
+- `typing_speed`: Скорость ввода (задержка между символами).
+- `continue_on_error`:  Флаг, указывающий, нужно ли продолжать выполнение при ошибке.
 
-**Взаимосвязь с другими частями проекта:**
-`ExecuteLocator` взаимодействует с компонентами `src` (вероятно, с `webdriver`, и `logger`), что указывает на структурированный проект с разделением ответственности.  Файл `requirements.txt` указывает на необходимые пакеты для проекта.
+**Возможные ошибки или улучшения:**
 
-**Дополнительные замечания:**
+- **Не реализованы методы:** Тесты для методов `get_webelement_by_locator`, `get_attribute_by_locator` и `send_message` просто заполнены `pass` и не содержат логики проверки.
+- **Зависимости от `driver_mock`:** Тесты полагаются на `MagicMock` для подмены реального `WebDriver`.  Это хорошо для изоляции тестов, но требует реализации mock-объектов.
+- **Не хватает документации:** Не хватает детального описания самих методов `ExecuteLocator`.
 
-Использование `MagicMock` для имитации `WebElement` и `driver_mock` позволяет изолировать тестирование `ExecuteLocator` от реального веб-драйвера. Это улучшает надежность и производительность тестирования.  В этом же подходе используется `patch` для имитации вызова `time.sleep`.
+
+**Цепочка взаимосвязей:**
+
+Тесты `test_executor.py` в папке `tests` напрямую взаимодействуют с классом `ExecuteLocator` из пакета `src.webdriver.executor`, использую фикстуры `driver_mock` и `execute_locator` для создания mock-объекта `WebDriver` и его инициализации. Также в тестах используются методы из пакета `src.logger.exceptions` для обработки возможных ошибок. `pytest` используется для запуска тестов.

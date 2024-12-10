@@ -1,138 +1,222 @@
+```MD
 # <input code>
 
 ```python
 ## \file hypotez/src/webdriver/chrome/_examples/driver.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.webdriver.chrome._examples \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = \'dev\'\n  \n""" module: src.webdriver.chrome._examples """\n\n\n\n""" Examples for using `Driver` and `Chrome` classes """\n\nfrom src.webdriver.driver import Driver, Chrome\nfrom selenium.webdriver.common.by import By\n\ndef main():\n    """ Main function to demonstrate usage examples for Driver and Chrome """\n\n    # Example 1: Create a Chrome driver instance and navigate to a URL\n    chrome_driver = Driver(Chrome)\n    if chrome_driver.get_url("https://www.example.com"):\n        print("Successfully navigated to the URL")\n\n    # Example 2: Extract the domain from a URL\n    domain = chrome_driver.extract_domain("https://www.example.com/path/to/page")\n    print(f"Extracted domain: {domain}")\n\n    # Example 3: Save cookies to a local file\n    success = chrome_driver._save_cookies_localy()\n    if success:\n        print("Cookies were saved successfully")\n\n    # Example 4: Refresh the current page\n    if chrome_driver.page_refresh():\n        print("Page was refreshed successfully")\n\n    # Example 5: Scroll the page down\n    if chrome_driver.scroll(scrolls=3, direction=\'forward\', frame_size=1000, delay=1):\n        print("Successfully scrolled the page down")\n\n    # Example 6: Get the language of the current page\n    page_language = chrome_driver.locale\n    print(f"Page language: {page_language}")\n\n    # Example 7: Set a custom user agent for the Chrome driver\n    user_agent = {\n        \'user-agent\': \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36\'\n    }\n    custom_chrome_driver = Driver(Chrome, user_agent=user_agent)\n    if custom_chrome_driver.get_url("https://www.example.com"):\n        print("Successfully navigated to the URL with custom user agent")\n\n    # Example 8: Find an element by its CSS selector\n    element = chrome_driver.find_element(By.CSS_SELECTOR, \'h1\')\n    if element:\n        print(f"Found element with text: {element.text}")\n\n    # Example 9: Get the current URL\n    current_url = chrome_driver.current_url\n    print(f"Current URL: {current_url}")\n\n    # Example 10: Focus the window to remove focus from the element\n    chrome_driver.window_focus()\n    print("Focused the window")\n\nif __name__ == "__main__":\n    main()\n\n```
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module:: src.webdriver.chrome._examples 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+MODE = 'dev'
+
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+
+"""
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+
+"""
+  :platform: Windows, Unix
+
+"""
+"""
+  :platform: Windows, Unix
+  :platform: Windows, Unix
+  :synopsis:
+"""MODE = 'dev'
+  
+""" module: src.webdriver.chrome._examples """
+
+
+""" Examples for using `Driver` and `Chrome` classes """
+
+from src.webdriver.driver import Driver, Chrome
+from selenium.webdriver.common.by import By
+
+def main():
+    """ Main function to demonstrate usage examples for Driver and Chrome """
+
+    # Example 1: Create a Chrome driver instance and navigate to a URL
+    chrome_driver = Driver(Chrome)
+    if chrome_driver.get_url("https://www.example.com"):
+        print("Successfully navigated to the URL")
+
+    # Example 2: Extract the domain from a URL
+    domain = chrome_driver.extract_domain("https://www.example.com/path/to/page")
+    print(f"Extracted domain: {domain}")
+
+    # Example 3: Save cookies to a local file
+    success = chrome_driver._save_cookies_localy()
+    if success:
+        print("Cookies were saved successfully")
+
+    # Example 4: Refresh the current page
+    if chrome_driver.page_refresh():
+        print("Page was refreshed successfully")
+
+    # Example 5: Scroll the page down
+    if chrome_driver.scroll(scrolls=3, direction='forward', frame_size=1000, delay=1):
+        print("Successfully scrolled the page down")
+
+    # Example 6: Get the language of the current page
+    page_language = chrome_driver.locale
+    print(f"Page language: {page_language}")
+
+    # Example 7: Set a custom user agent for the Chrome driver
+    user_agent = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
+    }
+    custom_chrome_driver = Driver(Chrome, user_agent=user_agent)
+    if custom_chrome_driver.get_url("https://www.example.com"):
+        print("Successfully navigated to the URL with custom user agent")
+
+    # Example 8: Find an element by its CSS selector
+    element = chrome_driver.find_element(By.CSS_SELECTOR, 'h1')
+    if element:
+        print(f"Found element with text: {element.text}")
+
+    # Example 9: Get the current URL
+    current_url = chrome_driver.current_url
+    print(f"Current URL: {current_url}")
+
+    # Example 10: Focus the window to remove focus from the element
+    chrome_driver.window_focus()
+    print("Focused the window")
+
+if __name__ == "__main__":
+    main()
+```
 
 # <algorithm>
 
-```mermaid
-graph TD
-    A[main()] --> B{Create Chrome driver};
-    B --> C[get_url("https://www.example.com")];
-    C -- success --> D[Print "Successfully navigated"];
-    C -- fail --> E;
-    B --> F[extract_domain("https://www.example.com/path/to/page")];
-    F --> G[Print extracted domain];
-    B --> H{_save_cookies_localy()};
-    H -- success --> I[Print "Cookies saved"];
-    H -- fail --> J;
-    B --> K[page_refresh()];
-    K -- success --> L[Print "Page refreshed"];
-    K -- fail --> M;
-    B --> N[scroll(scrolls=3, direction='forward', frame_size=1000, delay=1)];
-    N -- success --> O[Print "Scrolled"];
-    N -- fail --> P;
-    B --> Q[locale];
-    Q --> R[Print page language];
-    B --> S{Create custom driver};
-    S --> T[get_url("https://www.example.com")];
-    T -- success --> U[Print "Custom agent success"];
-    T -- fail --> V;
-    B --> W[find_element(By.CSS_SELECTOR, 'h1')];
-    W -- success --> X[Print element text];
-    W -- fail --> Y;
-    B --> Z[current_url];
-    Z --> AA[Print current URL];
-    B --> AB[window_focus()];
-    AB --> AC[Print "Focused"];
-```
+**Шаг 1:** Импортирование необходимых модулей. ( `src.webdriver.driver`, `selenium.webdriver.common.by`)
 
-**Пример данных:**
+**Шаг 2:** Вызов функции `main()`.
 
-* **Ввод:** `get_url("https://www.example.com")`
-* **Обработка:**  Во время выполнения `get_url()` происходит навигация браузера по указанному URL.  
-* **Вывод:** Если навигация успешна (например, страница загрузилась), возвращается `True`; в противном случае - `False`.
+**Шаг 3:** Создание экземпляра класса `Driver` с типом драйвера `Chrome`.
+
+**Шаг 4:** Вызов метода `get_url` для навигации по URL.
+
+**Шаг 5:** Вызов метода `extract_domain` для извлечения домена из URL.
+
+**Шаг 6:** Вызов метода `_save_cookies_localy()` для сохранения куки.
+
+**Шаг 7:** Вызов метода `page_refresh()` для обновления страницы.
+
+**Шаг 8:** Вызов метода `scroll()` для прокрутки страницы.
+
+**Шаг 9:** Вызов метода `locale` для получения языка страницы.
+
+**Шаг 10:** Создание экземпляра класса `Driver` с пользовательским user-agent.
+
+**Шаг 11:** Вызов метода `get_url` для навигации по URL с пользовательским user-agent.
+
+**Шаг 12:** Вызов метода `find_element` для поиска элемента по CSS-селектору.
+
+**Шаг 13:** Вызов метода `current_url` для получения текущего URL.
+
+**Шаг 14:** Вызов метода `window_focus` для фокусировки окна.
+
+
+Данные передаются между методами как аргументы и возвращаются как результат. Например, `get_url` принимает URL, а `extract_domain` возвращает домен.
+
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    subgraph Selenium WebDriver
-        A[Driver] --> B(Chrome);
-        B --> C{get_url};
-        C --> D[Navigate to URL];
-        D --> E{Success?};
-        E -- Yes --> F[Print success];
-        E -- No --> G;
-        B --> H[extract_domain];
-        H --> I[Extract domain];
-        B --> J{_save_cookies_localy};
-        J --> K[Save cookies];
-        B --> L[page_refresh];
-        L --> M[Refresh page];
-        B --> N[scroll];
-        N --> O[Scroll page];
-        B --> P[locale];
-        P --> Q[Get page language];
-        B --> R[find_element];
-        R --> S[Find element];
-        B --> T[current_url];
-        T --> U[Get current URL];
-        B --> V[window_focus];
-        V --> W[Focus window];
-    end
-    subgraph src.webdriver
-        subgraph src.webdriver.driver
-            subgraph Driver
-            Driver --> Chrome;
-            end
-        end
-        subgraph src.webdriver.chrome
-            Chrome --from-> Driver;
-            Chrome --> Selenium WebDriver;
-            end
-        end
-    end
-
-    
-    subgraph Python stdlib
-        selenium --> Python stdlib;
-    end
-
-    
-    style A fill:#ccf;
-    style B fill:#ccf;
-    style C fill:#ccf;
-    style D fill:#ccf;
+graph TD
+    A[main()] --> B{Создать Driver(Chrome)};
+    B --> C[get_url("https://www.example.com")];
+    C --Успех--> D(Вывести "Успешно перешли");
+    C --Неуспех--> E(Пропустить);
+    B --> F[extract_domain("URL")];
+    F --> G(Вывести "Домен");
+    B --> H[_save_cookies_localy()];
+    H --> I(Вывести "Куки сохранены");
+    B --> J[page_refresh()];
+    J --> K(Вывести "Обновлено");
+    B --> L[scroll()];
+    L --> M(Вывести "Прокручено");
+    B --> N[locale];
+    N --> O(Вывести "Язык");
+    B --> P{Создать Driver(Chrome, user_agent)};
+    P --> Q[get_url("https://www.example.com")];
+    Q --Успех--> R(Вывести "Успешно перешли (custom)");
+    Q --Неуспех--> S(Пропустить);
+    B --> T[find_element(By.CSS_SELECTOR, 'h1')];
+    T --> U(Вывести "Элемент найден");
+    T --Не найден--> V(Пропустить);
+    B --> W[current_url];
+    W --> X(Вывести "URL");
+    B --> Y[window_focus()];
+    Y --> Z(Вывести "Фокус установлен");
+    style D fill:#ccf,stroke:#333,stroke-width:2px;
+    style I fill:#ccf,stroke:#333,stroke-width:2px;
+    style K fill:#ccf,stroke:#333,stroke-width:2px;
+    style M fill:#ccf,stroke:#333,stroke-width:2px;
+    style O fill:#ccf,stroke:#333,stroke-width:2px;
+    style R fill:#ccf,stroke:#333,stroke-width:2px;
+    style U fill:#ccf,stroke:#333,stroke-width:2px;
+    style X fill:#ccf,stroke:#333,stroke-width:2px;
+    style Z fill:#ccf,stroke:#333,stroke-width:2px;
 ```
+
+**Зависимости:**
+- `src.webdriver.driver`:  Класс `Driver`, который содержит логику взаимодействия с веб-драйвером. Скорее всего это базовый класс, от которого наследованы классы для разных типов браузеров (в данном случае Chrome).
+- `selenium.webdriver.common.by`: Модуль предоставляет константы `By` для определения стратегий поиска элементов на странице. Используется для выбора способа поиска элемента.
+
 
 # <explanation>
 
 **Импорты:**
 
-* `from src.webdriver.driver import Driver, Chrome`: Импортирует классы `Driver` и `Chrome` из модуля `driver.py` внутри пакета `src.webdriver`.  Это указывает на иерархическую структуру проекта, где `src` - корневая папка, `webdriver` - пакет для работы с веб-драйверами, а `driver.py` содержит реализацию драйверов.
+- `from src.webdriver.driver import Driver, Chrome`: Импортирует классы `Driver` и `Chrome` из модуля `driver` в подпапке `webdriver` в проекте. Класс `Driver` - вероятно, базовый класс, отвечающий за общие методы работы с веб-драйверами. Класс `Chrome` - класс для управления драйвером Chrome.
 
-* `from selenium.webdriver.common.by import By`: Импортирует константу `By` из пакета `selenium`. Она необходима для выбора стратегий поиска элементов на веб-странице, например, по CSS-селектору.  `selenium` - это отдельный внешний пакет, предоставляющий инструменты для взаимодействия с веб-браузерами.
+
+- `from selenium.webdriver.common.by import By`: Импортирует константы из модуля `By`, используемые для выбора стратегии поиска элементов в браузере.
+
 
 **Классы:**
 
-* `Driver`:  Предположительно, абстрактный или базовый класс для работы с различными веб-драйверами (например, Chrome, Firefox).  В данном файле демонстрируется его использование с конкретным драйвером Chrome.  Этот класс, вероятно, предоставляет базовые методы для управления веб-драйвером, такие как навигация, поиск элементов, сохранение кукис.
+- `Driver`:  Предполагаемый базовый класс для работы с веб-драйверами. Этот класс содержит общие методы работы, такие как навигация, поиск элементов и прочее.
+- `Chrome`:  Класс, который расширяет функциональность `Driver` для работы с Chrome. Он, вероятно, содержит методы, специфичные для драйвера Chrome (например, инициализация драйвера Chrome).
 
-* `Chrome`: Наследник класса `Driver`, конкретная реализация для управления веб-драйвером Chrome.  В коде представленные примеры взаимодействуют с этим классом, используя его методы.
 
 **Функции:**
 
-* `main()`:  Основная функция, демонстрирующая примеры использования классов `Driver` и `Chrome`. Она содержит вызовы различных методов, демонстрирующие основные возможности работы с веб-драйвером.
+- `main()`:  Функция, которая демонстрирует примеры использования классов `Driver` и `Chrome`. Она содержит различные примеры работы с браузером, включая навигацию, поиск элементов, сохранение куки и прочие.
+
 
 **Переменные:**
 
-* `MODE = 'dev'`: Вероятно, константа, указывающая на режим работы (например, 'dev' для разработки, 'prod' для производства). Не используется в данном примере, но может влиять на поведение приложения в других частях проекта.
+- `MODE`:  Переменная, хранящая режим работы (например, 'dev' или 'prod').  Эта переменная используется для настройки поведения приложения в разных режимах.
+
 
 **Возможные ошибки и улучшения:**
 
-* **Отсутствие обработки исключений:**  Код не содержит обработку исключений (например, `try...except` блоков). Это может привести к аварийному завершению программы, если, например, URL не существует или элемент не найден.  В реальном приложении необходимо добавлять обработку исключений, чтобы сделать его более устойчивым.
+- **Отсутствие обработки исключений:**  Код не обрабатывает потенциальные ошибки, такие как исключения `NoSuchElementException` при поиске элементов или ошибки при взаимодействии с браузером. Добавление обработки исключений позволит сделать код более надежным.
+- **Жестко заданные значения:** Используются жестко заданные значения, такие как `scrolls=3`, `frame_size=1000` и `delay=1` для прокрутки.  Вместо этого можно использовать динамические значения, полученные из других частей приложения или заданные пользователем.
+- **Ошибки в логике:**  Код содержит много примеров, но некоторые могут быть избыточными (например, не нужно сохранять куки для каждого примера). Лучше сконцентрироваться на одной задаче в каждом примере.
+- **Потенциальные утечки памяти:** Если используются объекты веб-драйвера, то важно правильно их закрывать, чтобы избежать утечек памяти.
 
-* **Зависимости от внешних библиотек:**  Используется Selenium. Необходимо убедиться, что он установлен.
 
-* **Возможность многократных вызовов `get_url`:**  Код может быть более эффективным, если бы метод `get_url` использовал кеширование или обработал потенциальную параллельную навигацию по URL.
+**Взаимосвязи с другими частями проекта:**
 
-**Цепочка взаимосвязей:**
+-  Модуль `src.webdriver.driver` используется для взаимодействия с другими частями приложения, которые используют веб-драйвер для взаимодействия с веб-сайтами.
 
-Код из файла `hypotez/src/webdriver/chrome/_examples/driver.py` напрямую зависит от кода в `src.webdriver.driver` для работы с веб-драйвером (Chrome). `src.webdriver.driver` в свою очередь использует Selenium WebDriver для взаимодействия с браузером. Код также зависит от пакета Selenium для поиска и управления элементами веб-страницы. В конечном итоге, этот проект использует внешние библиотеки для работы с веб-браузером.
-
-**Рекомендации:**
-
-* Добавить обработку исключений для устойчивости кода.
-* При вызове `get_url` контролировать состояние драйвера, чтобы избежать проблем с параллельностью.
-* Разделить логику на отдельные классы или функции для повышения читаемости.
+-  Связи с другими компонентами проекта не ясны из данного файла.

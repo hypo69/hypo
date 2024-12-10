@@ -1,62 +1,93 @@
-# Обзор модулей
+# Модули проекта
 
-## Оглавление
+## Обзор
 
-1. [ai](#ai)
-2. [bots](#bots)
-3. [category](#category)
-4. [db](#db)
-5. [endpoints](#endpoints)
-6. [fast_api](#fast_api)
-7. [goog](#goog)
-8. [logger](#logger)
-9. [product](#product)
-10. [scenario](#scenario)
-11. [suppliers](#suppliers)
-12. [templates](#templates)
-13. [translators](#translators)
-14. [utils](#utils)
-15. [webdriver](#webdriver)
+Данный документ предоставляет обзор различных модулей проекта, включая ссылки на исходный код, документацию, тесты и примеры.
 
 
-## Модули
+## Содержание
 
-### ai
-
-**Описание**: Модуль для интеграции с искусственным интеллектом, включая взаимодействие с различными ИИ-моделями.
-
-**Функции и классы:**  (Здесь будут перечислены и описаны функции и классы модуля `ai`, в формате, указанном в инструкции)
-
-- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/ai/readme.ru.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/ai/readme.ru.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/ai)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/ai)
-
-
-### bots
-
-**Описание**: Модуль для создания и управления ботами, которые взаимодействуют с пользователями.
-
-**Функции и классы:** (Здесь будут перечислены и описаны функции и классы модуля `bots`, в формате, указанном в инструкции)
-
-- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/bots/readme.ru.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/bots/readme.ru.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bots)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/bots)
+[Обзор](#обзор)
+[Модуль `bot`](#модуль-bot)
+[Модуль `scenario`](#модуль-scenario)
+[Модуль `suppliers`](#модуль-suppliers)
+[Модуль `templates`](#модуль-templates)
+[Модуль `translators`](#модуль-translators)
+[Модуль `utils`](#модуль-utils)
+[Модуль `webdriver`](#модуль-webdriver)
+[Глоссарий](#глоссарий)
 
 
-### category
+## Модуль `bot`
 
-**Описание**: Модуль для работы с категориями товаров или данных.
+Модуль интерфейсов для `telegram`, `discord` ботов.
 
-**Функции и классы:** (Здесь будут перечислены и описаны функции и классы модуля `category`, в формате, указанном в инструкции)
-
-- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/category/readme.ru.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/category/readme.ru.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/category)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/category)
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/bot/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/bot/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bot)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/bot)
 
 
-... (и так далее для всех остальных модулей)
+## Модуль `scenario`
 
-**Важно:** Для того, чтобы заполнить это шаблон документации, необходимо просмотреть исходные файлы Python для каждого модуля (`ai`, `bots` и т.д.).  После анализа Python-кода, заполните описание классов и функций в каждом разделе, следуя указанному формату.
+Модуль для работы со сценариями, включая генерацию и выполнение сценариев.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/scenario/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/scenario/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/scenario)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/scenario)
+
+
+## Модуль `suppliers`
+
+Модуль для работы с поставщиками, включая управление их данными и отношениями.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/suppliers/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/suppliers/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/suppliers)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/suppliers)
+
+
+## Модуль `templates`
+
+Модуль для работы с шаблонами, включая создание и управление шаблонами для различных целей.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/templates/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/templates/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/templates)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/templates)
+
+
+## Модуль `translators`
+
+Модуль для работы с переводчиками и переводом текста.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/translators/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/translators/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/translators)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/translators)
+
+
+## Модуль `utils`
+
+Модуль для вспомогательных утилит, упрощающих выполнение общих задач.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/utils/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/utils/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/utils)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/utils)
+
+
+## Модуль `webdriver`
+
+Модуль для работы с драйверами веб-браузера и управления веб-элементами.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/webdriver/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/webdriver/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver)
+
+
+## Глоссарий
+
+(Здесь следует поместить глоссарий с определениями терминов)

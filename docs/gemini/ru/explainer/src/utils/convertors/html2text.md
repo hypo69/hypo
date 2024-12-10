@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors.html2text 
+.. module:: src.utils.convertors.html2text 
 	:platform: Windows, Unix
 	:synopsis:  HTML -> MD
 
@@ -41,131 +41,153 @@ import urllib.request as urllib
 import optparse, re, sys, codecs, types
 from textwrap import wrap
 
-
-# Use Unicode characters instead of their ascii psuedo-replacements
-UNICODE_SNOB = 0
-
 # ... (rest of the code)
 ```
 
 # <algorithm>
 
-```mermaid
-graph TD
-    A[Input HTML] --> B(html2text_file);
-    B --> C{Process HTML};
-    C -- Success --> D[Output Markdown];
-    C -- Error --> E[Error Handling];
-    
-    subgraph Process HTML
-        C1[Initialize _html2text object];
-        C1 --> C2{Feed HTML data};
-        C2 --> C3[Handle start/end tags, charrefs, entities];
-        C3 --> C4[Accumulate output];
-        C4 --> C5{Close and return output};
-        C2 --> C6[Handle data (text)];
-        C3 --> C7{Handle styles (if needed)};
-        C7 --> C4
-    end
-```
+**Шаг 1: Инициализация**
+  - Устанавливаются константы для разных режимов работы, настроек форматирования и др. (UNICODE_SNOB, LINKS_EACH_PARAGRAPH и т.д.).
+  - Определяются функции для работы с сущностями HTML (`name2cp`, `charref`, `entityref`, `unescape`).
+  - Инициализируется словарь `unifiable` для замены определённых сущностей.
+  - Создается класс `_html2text`, наследующий `HTMLParser`.
 
-**Example:**
+**Шаг 2: Обработка HTML-данных**
+  - В цикле обрабатываются входные HTML-данные, передаваемые в метод `feed`.
+  - Обрабатываются теги `<tag>`:
+   - Если тег – заголовок (h1-h9), выводится соответствующее число хэш-символов.
+   - Если тег – абзац (`<p>`, `<div>`), добавляется перенос строки.
+   - Если тег – картинка (`<img>`), формируется markdown-представление.
+   - Если тег – ссылка (`<a>`), формируется markdown-представление.
+   - Если тег – список (`<ol>`, `<ul>`), формируется markdown-представление.
+   - Если тег – цитата (`<blockquote>`), применяется Markdown-формат.
+   - Если тег – выделение (`<em>`, <i>`, <u`), применяются markdown-метки.
+   - Если тег – код (`<code>`), применяются markdown-метки.
+  - Обрабатываются символы (`handle_charref`, `handle_entityref`).
 
-Input HTML: `<p>This is a <b>bold</b> paragraph.</p>`
+**Шаг 3: Форматирование вывода**
+  - Метод `o` формирует выходные данные, добавляя в `self.outtextlist` отформатированные строки.
+  - `wrapwrite` записывает результат в стандартный вывод.
 
-1. `html2text_file` takes the HTML and `_html2text` object.
-2. `_html2text` initializes.
-3. `feed` method processes the input HTML.
-4. `handle_starttag` detects `<b` and adds "**" to the output accumulator.
-5. `handle_data` handles text between tags.
-6. `handle_endtag` detects `</b>` and adds "**" to the output accumulator.
-7. `close` method returns the accumulated Markdown string.
-8. `optwrap` method formats the output with line wrapping if needed.
+**Шаг 4: Обработка тегов стилей**
+  - Функция `dumb_css_parser` парсит CSS, определяя стиль для каждого элемента.
+  - Функция `element_style` определяет стиль элемента на основе родительских и собственных стилей.
+
+**Шаг 5: Завершение**
+ - `close` метод объединяет все данные в `self.outtext` и возвращает результат.
 
 
 # <mermaid>
 
 ```mermaid
 graph LR
-    subgraph html2text
-        A[html2text] --> B[_html2text];
-        B --> C[handle_starttag];
-        B --> D[handle_endtag];
-        B --> E[handle_data];
-        B --> F[handle_charref];
-        B --> G[handle_entityref];
-        B --> H[outtextf];
-        C --> I[Accumulate output];
-        D --> I;
-        E --> I;
-        F --> I;
-        G --> I;
-        H --> I;
-        I --> J[Return output];
+    A[html2text] --> B(html_data);
+    B --> C{_html2text};
+    C --> D{Обработка тегов};
+    D --> E[Вывод данных];
+    D -.-> F{Обработка стилей};
+    F --> G[Сборка вывода];
+    G --> H[Закрытие и возврат];
+    H -.-> I[Выходные данные (Markdown)];
+    subgraph "Внутренние функции"
+        D --> J(unescape);
+        D --> K(dumb_css_parser);
+        D --> L(element_style);
+        D --> M(wrap);
+        J -.-> N{Обработка HTML сущностей};
+        K -.-> O{Парсинг CSS};
+        L -.-> P{Вычисление стилей};
+        M -.-> Q{Форматирование текста};
     end
-    
-    A --> K[optwrap];
-    K --> L[Wrap output];
-    L --> M[Return wrapped output];
-    
-    style
-        html2text fill:#ccf,stroke:#333,stroke-width:2px
-        optwrap fill:#ccf,stroke:#333,stroke-width:2px
 ```
 
-**Explanation of dependencies**:
+**Объяснение зависимостей:**
 
-- `html.parser`: Provides the base class `HTMLParser` for parsing HTML.
-- `html.entities`: Provides mappings between named HTML entities and their Unicode equivalents.
-- `urllib.parse`: Used for handling URLs (although not directly utilized in the parsing logic).
-- `urllib.request`:  Used for fetching remote URLs if provided as input.
-- `optparse`: Provides a way to handle command-line options.
-- `re`: Used for regular expression operations, especially with `r_unescape`.
-- `sys`:  For accessing command line arguments and standard input/output.
-- `codecs`: Encoding handling (crucial for supporting various character sets).
-- `types`:  Likely used for type checking (less crucial in this code's main logic but important for Python's design).
-- `textwrap`:  For wrapping text to a specific width.
-- `feedparser` and `chardet`: (ImportError handling). Used to determine encoding from the downloaded data from the URL.
+- `html.entities`:  Для работы с HTML-сущностями.
+- `urllib.parse`:  Для работы с URL.
+- `html.parser`: Базовый класс для парсинга HTML.
+- `urllib.request`: Для работы с HTTP-запросами (для обработки URL).
+- `optparse`: Для парсинга командной строки.
+- `re`: Для работы с регулярными выражениями.
+- `sys`: Для доступа к системным переменным и функциям.
+- `codecs`: Для работы с кодировками.
+- `types`: Для работы с типами данных.
+- `textwrap`:  Для форматирования текста (функция wrap).
+- `feedparser` (опционально): Для определения кодировки HTML, если она не указана.
+- `chardet` (опционально): Для определения кодировки HTML, если она не указана.
 
 
 # <explanation>
 
-**Imports:**
+**Импорты:**
 
-- `html.entities`, `urllib.parse`, `html.parser`, `urllib.request`:  These are part of the Python standard library, providing functionalities for working with HTML, entities, and URLs.  Critically, `html.parser` is used for HTML parsing, which forms the core of the conversion process.
-- `optparse`, `re`, `sys`, `codecs`, `types`, `textwrap`:  These are standard libraries for command-line parsing, regular expressions, system access, character encoding, type checking, and text wrapping.  They provide important utility functions for the command-line interface and data manipulation.  Importantly, `textwrap` allows for line wrapping of the output text.
-
-
-**Classes:**
-
-- `_html2text(HTMLParser.HTMLParser)`: This class extends Python's `HTMLParser`, which is important for handling HTML parsing.  It's the crucial class for parsing the HTML and generating the output. The `feed` and `close` methods are specifically vital. Methods like `handle_starttag`, `handle_endtag`, `handle_charref`, and `handle_data` are responsible for translating HTML tags, character references, and data into their Markdown equivalents.  Crucially, `outtextf` handles building the output string before wrapping.
-
-- `Storage`:  A simple placeholder class likely used for storing options passed to the script (likely through `optparse`).
-
-
-**Functions:**
-
-- `html2text_file(html, out, baseurl)`: This function takes HTML content, an output method (defaults to `wrapwrite` which writes to stdout), and optional base URL (for relative links). It parses the HTML using `_html2text`. It's the main entry point for processing HTML from a file or URL.
-- `html2text(html, baseurl)`: This is a wrapper function that takes raw HTML and a base URL (optional). It uses `html2text_file` and then calls `optwrap` to wrap lines in the output Markdown.  It handles URL input and encoding detection.
-- `replaceEntities`, `charref`, `entityref`, `unescape`, etc.: These are helper functions dealing with HTML entities (e.g., `&nbsp;` to spaces). These are critical for converting special characters into their readable equivalents.
-- `dumb_property_dict`, `dumb_css_parser`, `element_style`, `google_list_style`, `google_nest_count`, `google_has_height`: Support Google Docs specific HTML parsing handling.
+- `html.entities`: Предоставляет информацию о HTML-сущностях.
+- `urllib.parse`: Обеспечивает функции работы с URL-адресами.
+- `html.parser`: Предоставляет базовый класс `HTMLParser` для парсинга HTML.
+- `urllib.request`:  Обеспечивает функции для работы с HTTP-запросами (например, для получения содержимого веб-страницы).
+- `optparse`:  Для парсинга командной строки.
+- `re`: Для работы с регулярными выражениями.
+- `sys`: Предоставляет доступ к системным переменным и функциям.
+- `codecs`: Предоставляет функции для работы с кодировками.
+- `types`: Предоставляет информацию о типах данных.
+- `textwrap`:  Для форматирования текста.
 
 
-**Variables:**
+**Классы:**
 
-- `MODE`, `UNICODE_SNOB`, `LINKS_EACH_PARAGRAPH`, `BODY_WIDTH`, `SKIP_INTERNAL_LINKS`, `INLINE_LINKS`, `GOOGLE_LIST_INDENT`, `IGNORE_ANCHORS`, `IGNORE_IMAGES`:  These are configuration variables that control the behavior of the conversion, for instance, handling of internal links or images, or formatting of Google Doc exports.
-- `options`: Stores the parsed options from the command line using `optparse`.
+- `_html2text(HTMLParser.HTMLParser)`: Главный класс, отвечающий за парсинг HTML и формирование Markdown.
+  - `out`:  Переменная для вывода данных (по умолчанию `outtextf`).
+  - `baseurl`:  Базовый URL для обработки ссылок.
+  - `outtextlist`: Список для хранения промежуточных результатов.
+  - `outtext`: Строка для хранения итогового Markdown-текста.
+  - `quiet`: Счетчик для игнорирования частей HTML-кода.
+  - `p_p`: Счетчик для добавления переносов строки.
+  - `outcount`: Счётчик выходных строк.
+  - `start`: Флаг начала обработки.
+  - `space`: Флаг добавления пробелов.
+  - `a`: Список ссылок.
+  - `astack`: Стек атрибутов ссылок.
+  - `acount`: Счётчик для ссылок.
 
 
-**Possible Errors and Improvements:**
+**Функции:**
 
-- **Error Handling:**  While the code has `try...except` blocks for `NameError`, more robust error handling could be added to deal with malformed HTML, incorrect encodings, or issues with file access.
-- **Efficiency:** For extremely large HTML documents, parsing efficiency could be improved by optimizing the HTML parsing process (potentially using a faster library).
-- **CSS Handling:**  The `css`-parsing code could be made more robust and flexible to handle more complex and nuanced CSS styles. The CSS parsing mechanism is a bit naive in terms of handling complexities.
-- **Flexibility:** The code might be made more adaptable to different HTML structures by allowing the output to be piped to a file instead of just `stdout`.
-- **Documentation:** Adding comments and a detailed docstring to the various functions and classes would significantly improve readability.
+- `has_key`: Проверяет наличие ключа в словаре.
+- `name2cp`: Преобразует имя HTML-сущности в её код символа.
+- `charref`:  Преобразует числовой HTML-ссылочный символ в соответствующий символ.
+- `entityref`: Преобразует имя HTML-сущности в соответствующий символ.
+- `replaceEntities`: Заменяет HTML-сущности на соответствующие символы.
+- `unescape`: Удаляет HTML-сущности, заменяя их соответствующими символами.
+- `onlywhite`: Проверяет, состоит ли строка только из пробелов.
+- `optwrap`: Упаковывает абзацы в соответствии с заданной шириной.
+- `hn`: Определяет номер заголовка.
+- `dumb_property_dict`: Возвращает словарь CSS-атрибутов.
+- `dumb_css_parser`: Парсит CSS-стили.
+- `element_style`: Объединяет родительские и текущие стили элемента.
+- `google_list_style`: Определяет тип списка (unordered/ordered).
+- `google_nest_count`: Определяет уровень вложенности списка.
+- `google_has_height`: Проверяет, есть ли атрибут height в стиле.
+- `google_text_emphasis`: Возвращает список модификаторов выделения.
+- `google_fixed_width_font`: Проверяет, определен ли шрифт с фиксированной шириной.
+- `list_numbering_start`: Получает начальное значение нумерации списка.
+- `wrapwrite`: Функция для записи текста в стандартный вывод.
+- `html2text_file`: Преобразует HTML-файл в Markdown.
+- `html2text`: Преобразует HTML-текст в Markdown.
+- `html2text_file`: Конвертирует HTML-строку или файл в эквивалентный Markdown-текст.
+- `html2text`: Конвертирует входные данные в markdown, обертывает результат.
 
 
-**Relationship with other parts of the project:**
+**Возможные ошибки и улучшения:**
 
-This code is a part of a larger project (`hypotez`) responsible for converting data (likely) between different formats or to different output formats.  It specifically interfaces with other utility classes by providing a markdown output stream and handles specific conversion between HTML and Markdown formats. It is designed to use and depend upon other tools in `hypotez` if needed, such as if there is a way to detect the base URL automatically. The `optparse` mechanism used is important for allowing other parts of the larger project to make use of this conversion tool.
+- Неявное использование глобальных переменных (например, `BODY_WIDTH`, `UNICODE_SNOB`).  Использование параметров в функциях (например, `html2text`) сделает код более гибким и позволит повторно использовать функции без побочных эффектов.
+- Использование устаревших методов (`has_key`).
+- Недостаточная обработка исключений (например, при чтении из файла с нестандартной кодировкой).
+- Возможность обработки более сложных CSS-стилей.
+- Необходимость улучшенной обработки списков Google Docs для корректного выравнивания.
+- Добавление тестов для проверки корректности работы.
+- Возможность переписать некоторые функции с использованием `lambda` для улучшения читабельности кода.
+
+
+**Взаимосвязь с другими частями проекта:**
+
+Этот модуль (`html2text`) является инструментом для преобразования HTML в Markdown, который может быть использован другими частями приложения `hypotez`.  Функции преобразования могут быть включены в другие инструменты или части проекта, которые нуждаются в обработке HTML-контента.

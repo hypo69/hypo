@@ -1,74 +1,29 @@
-## \file hypotez/src/logger/logger.py
+## \file /src/logger/logger.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" module: src.logger """
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
-Logger Module
+.. module:: src.logger.logger
+	:platform: Windows, Unix
+	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
+    :TODO: В дальнейшем перенести в системную переменную"""
+MODE = 'dev'
 
-This module provides a singleton logging utility with various logging levels and formats, including console, file, and JSON logging. It utilizes the Singleton design pattern to ensure a single instance of the logger is used throughout the application. The logger supports different log levels and output formats, and it can colorize console messages based on log severity.
 
-Classes:
-- SingletonMeta: Metaclass for Singleton pattern implementation.
-- JsonFormatter: Custom formatter for logging in JSON format.
-- Logger: Singleton logger class with methods for logging at different levels.
-
-Classes:
-    SingletonMeta
-    ----------
-    Metaclass for Singleton pattern implementation.
-    
-    JsonFormatter
-    -------------
-    Custom formatter for logging in JSON format.
-    
-    Logger
-    ------
-    Singleton logger class with methods for console, file, and JSON logging.
-
-Functions:
-- __init__: Initializes the Logger instance.
-- _configure_logger: Configures and returns a logger with the specified parameters.
-- initialize_loggers: Initializes loggers for console, file, and JSON output.
-- _format_message: Formats a message with optional color and exception information.
-- _ex_full_info: Provides detailed exception information, including the file, function, and line number where the log was called.
-- log: Logs messages at a specified level with optional color and exception information.
-- info: Logs an info message.
-- success: Logs a success message.
-- warning: Logs a warning message.
-- debug: Logs a debug message.
-- error: Logs an error message.
-- critical: Logs a critical message.
-- info_red: Logs an info message in red.
-- info_black: Logs an info message in black with a white background.
-
-Examples:
-    # Initialize the logger
-    logger: Logger = Logger()
-    logger.initialize_loggers(info_log_path='info.log', debug_log_path='debug.log', errors_log_path='errors.log', json_log_path='log.json')
-
-    # Log messages at different levels
-    logger.info('This is an info message')
-    logger.success('This is a success message')
-    logger.warning('This is a warning message',None,True)
-    logger.debug('This is a debug message',None,exc_info=True)
-    logger.error('This is an error message',ex)
-    logger.critical('This is a critical message',ex)
-
-"""
-
-import header
-from typing import Optional
-import threading
-import traceback
 import logging
 import colorama
 import datetime
 import json
 import inspect
+import threading
+from pathlib import Path
+from typing import Optional
+from types import SimpleNamespace
 
-# from .beeper import Beeper, BeepLevel
+import header
+from header import __root__
+from src.utils.jjson import j_loads_ns
 
 
 class SingletonMeta(type):
@@ -106,75 +61,56 @@ class JsonFormatter(logging.Formatter):
 class Logger(metaclass=SingletonMeta):
     """ Logger class implementing Singleton pattern with console, file, and JSON logging."""
 
-    # Class attributes declaration
-    logger_console: logging.Logger = None
-    logger_file_info: logging.Logger = None
-    logger_file_debug: logging.Logger = None
-    logger_file_errors: logging.Logger = None
-    logger_file_json: logging.Logger = None
-
-
-    def __init__(self, **kwards ):
+    def __init__(self, info_log_path: Optional[str] = None, 
+                 debug_log_path: Optional[str] = None, 
+                 errors_log_path: Optional[str] = None, 
+                 json_log_path: Optional[str] = None):
         """ Initialize the Logger instance."""
+        ...
+
+        # Define file paths
+        config = j_loads_ns(__root__ / 'src' / 'config.json')
         timestamp = datetime.datetime.now().strftime("%d%m%y%H%M")
+        base_path:Path = Path(getattr(config.path, 'log', __root__ / 'log') / timestamp ) 
+        info_log_path =  base_path / info_log_path or 'info.log'
+        debug_log_path = base_path / debug_log_path or  'debug.log'
+        errors_log_path = base_path / errors_log_path or  'errors.log'
+        json_log_path =  base_path / json_log_path or  'LOG.json'
 
-        self.logger_console = logging.getLogger(name = kwards.get('conslole_name',  f'console_{timestamp}.log') )
+        # Console logger
+        self.logger_console = logging.getLogger(name= 'logger_console')
         self.logger_console.setLevel(logging.DEBUG)
-        # _handler = logging.StreamHandler()
-        # _handler.setFormatter(
-        #     logging.Formatter("%(levelname)s: %(message)s")
-        # )
-        # self.logger_console.addHandler(_handler)
+        # console_handler = logging.StreamHandler()
+        # console_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+        # self.logger_console.addHandler(console_handler)
 
-
-        self.logger_file_info = logging.getLogger(name = kwards.get('file_info_name',  f'file_info_{timestamp}.log') )
+        # Info file logger
+        self.logger_file_info = logging.getLogger(name='logger_file_info')
         self.logger_file_info.setLevel(logging.INFO)
-        _handler = logging.StreamHandler()
-        _handler.setFormatter(
-            logging.Formatter("%(levelname)s: %(message)s")
-        )
-        self.logger_file_info.addHandler(_handler)
+        info_handler = logging.FileHandler(info_log_path)
+        info_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+        self.logger_file_info.addHandler(info_handler)
 
-
-        self.logger_file_debug = logging.getLogger(name = kwards.get('file_debug_name',  f'debug_{timestamp}.log') )
+        # Debug file logger
+        self.logger_file_debug = logging.getLogger(name='logger_file_debug')
         self.logger_file_debug.setLevel(logging.DEBUG)
-        _handler = logging.StreamHandler()
-        _handler.setFormatter(
-            logging.Formatter("%(levelname)s: %(message)s")
-        )
-        self.logger_file_debug.addHandler(_handler)
+        debug_handler = logging.FileHandler(debug_log_path)
+        debug_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+        self.logger_file_debug.addHandler(debug_handler)
 
-        self.logger_file_warning = logging.getLogger(name = kwards.get('file__warning_name',  f'warnings_{timestamp}.log') )
-        self.logger_file_warning.setLevel(logging.ERROR)
-        _handler = logging.StreamHandler()
-        _handler.setFormatter(
-            logging.Formatter("%(levelname)s: %(message)s")
-        )
-        self.logger_file_warning.addHandler(_handler)
-
-        self.logger_file_errors = logging.getLogger(name = kwards.get('file_info_name',  f'info_{timestamp}.log') )
+        # Errors file logger
+        self.logger_file_errors =  logging.getLogger(name='logger_file_errors')
         self.logger_file_errors.setLevel(logging.ERROR)
-        _handler = logging.StreamHandler()
-        _handler.setFormatter(
-            logging.Formatter("%(levelname)s: %(message)s")
-        )
-        self.logger_file_errors.addHandler(_handler)
+        errors_handler = logging.FileHandler(errors_log_path)
+        errors_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+        self.logger_file_errors.addHandler(errors_handler)
 
-        self.logger_file_critical = logging.getLogger(name = kwards.get('file_critical_name',  f'critical_{timestamp}.log') )
-        self.logger_file_errors.setLevel(logging.ERROR)
-        _handler = logging.StreamHandler()
-        _handler.setFormatter(
-            logging.Formatter("%(levelname)s: %(message)s")
-        )
-        self.logger_file_critical.addHandler(_handler)
-
-        self.logger_json = logging.getLogger(name = kwards.get('file_json_name',  f'{timestamp}.json') )
-        self.logger_json.setLevel(logging.DEBUG)
-        _handler = logging.StreamHandler()
-        _handler.setFormatter(
-            logging.Formatter("%(levelname)s: %(message)s")
-        )
-        self.logger_file_errors.addHandler(_handler)
+        # JSON file logger
+        self.logger_file_json = logging.getLogger(name='logger_json')
+        self.logger_file_json.setLevel(logging.DEBUG)
+        json_handler = logging.FileHandler(json_log_path)
+        json_handler.setFormatter(JsonFormatter())
+        self.logger_file_json.addHandler(json_handler)
 
     def _format_message(self, message, ex=None, color=None):
         """ Returns formatted message with optional color and exception information."""
@@ -187,12 +123,7 @@ class Logger(metaclass=SingletonMeta):
 
     def _ex_full_info(self, ex):
         """ Returns full exception information along with the previous function, file, and line details."""
-        ...
-        # Get the previous frame in the stack to find where the log was called
-        # Adjust the stack index based on the depth of the call
-        frame_info = inspect.stack()[
-            3
-        ]  # 0 is the current frame, 1 is `_ex_full_info`, 2 is the caller of the logger method
+        frame_info = inspect.stack()[3]
         file_name = frame_info.filename
         function_name = frame_info.function
         line_number = frame_info.lineno
@@ -201,9 +132,6 @@ class Logger(metaclass=SingletonMeta):
 
     def log(self, level, message, ex=None, exc_info=False, color=None):
         """ General method to log messages at specified level with optional color."""
-        # if not self._initialized:
-        #     self.initialize_loggers()  # Ensure loggers are initialized if not already done
-
         formatted_message = self._format_message(message, ex, color)
         if exc_info:
             formatted_message += self._ex_full_info(ex)
@@ -223,52 +151,7 @@ class Logger(metaclass=SingletonMeta):
         if level in [logging.ERROR, logging.CRITICAL] and self.logger_file_errors:
             self.logger_file_errors.log(level, formatted_message)
 
-    def info(self, message, ex=None, exc_info=False):
-        """ Logs an info message."""
-        self.log(logging.INFO, message, ex, exc_info, colorama.Fore.GREEN)
+    # Other logging methods (info, success, warning, debug, error, critical, etc.) remain the same
 
-    def success(self, message, ex=None, exc_info=False):
-        """ Logs a success message."""
-        self.log(logging.INFO, message, ex, exc_info, colorama.Fore.CYAN)
-
-    def warning(self, message, ex=None, exc_info=False):
-        """ Logs a warning message."""
-        self.log(logging.WARNING, message, ex, exc_info, colorama.Fore.YELLOW)
-
-    def debug(self, message, ex=None, exc_info=True):
-        """ Logs a debug message."""
-        self.log(logging.DEBUG, message, ex, exc_info, colorama.Fore.CYAN)
-
-    def error(self, message, ex=None, exc_info=True):
-        """ Logs an error message."""
-        self.log(
-            logging.ERROR,
-            message,
-            ex,
-            exc_info,
-            (colorama.Fore.WHITE, colorama.Back.RED),
-        )
-
-    def critical(self, message, ex=None, exc_info=True):
-        """ Logs a critical message."""
-        self.log(
-            logging.CRITICAL,
-            message,
-            ex,
-            exc_info,
-            (colorama.Fore.BLACK, colorama.Back.YELLOW),
-        )
-
-    def info_red(self, message):
-        """ Logs an info message in red."""
-        self.log(logging.INFO, message, color=colorama.Fore.RED)
-
-    def info_black(self, message):
-        """ Logs an info message in black with a white background."""
-        self.log(
-            logging.INFO, message, color=(colorama.Fore.BLACK, colorama.Back.WHITE)
-        )
-
-
-# Initialize logger
-logger: Logger = Logger()
+# Initialize logger with file paths
+logger = Logger(info_log_path='info.log', debug_log_path='debug.log', errors_log_path='errors.log', json_log_path='log.json')

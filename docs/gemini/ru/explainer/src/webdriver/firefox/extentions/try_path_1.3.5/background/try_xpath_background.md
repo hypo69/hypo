@@ -19,137 +19,121 @@
     var results = {};
     var css = "";
     var attributes = {
-        "element": "data-tryxpath-element",
-        "context": "data-tryxpath-context",
-        "focused": "data-tryxpath-focused",
-        "focusedAncestor": "data-tryxpath-focused-ancestor",
-        "frame": "data-tryxpath-frame",
-        "frameAncestor": "data-tryxpath-frame-ancestor"
+        // ... (атрибуты)
     };
 
     function loadDefaultCss() {
-        return new Promise((resolve, reject) => {
-            var req = new XMLHttpRequest();
-            req.open("GET",
-                     browser.runtime.getURL("/css/try_xpath_insert.css"));
-            req.responseType = "text";
-            req.onreadystatechange = function () {
-                if (req.readyState === XMLHttpRequest.DONE) {
-                    resolve(req.responseText);
-                }
-            };
-            req.send();
-        });
+        // ... (загрузка CSS)
     }
 
-    // ... (остальной код)
+    function genericListener(message, sender, sendResponse) {
+        // ... (обработчик сообщений)
+    };
+    genericListener.listeners = Object.create(null);
+    browser.runtime.onMessage.addListener(genericListener);
+
+    // ... (остальные обработчики событий)
+});
 ```
 
 ## <algorithm>
 
-**Алгоритм:**
+```mermaid
+graph TD
+    A[Инициализация] --> B{Проверка наличия tryxpath и tryxpath.functions};
+    B -- Да --> C[Получение значений popupState, popupCss, results, css, attributes];
+    B -- Нет --> D[Ошибка];
+    C --> E[Загрузка defaultCss];
+    E --> F[Обработка onMessage событий];
+    F --> G[Обработчик genericListener];
+    G -- Совпадение события --> H[Выполнение обработчика];
+    G -- Несовпадение события --> I[Возврат];
+    H --> J[Сохранение результатов];
+    H -.-> K[Отправка ответа];
+    H --> L[Обработка изменений в storage];
+    L --> M[Синхронизация настроек из storage];
+    M --> N[Загрузка CSS из storage];
+    N -- Успех --> O[Установка CSS];
+    N -- Ошибка --> E;
+    O --> F;
 
-Код устанавливает обработчики событий для сообщений, получаемых от вкладок.
-1. **Инициализация:**
-   - `tx`, `fu`: алиасы для `tryxpath` и `tryxpath.functions` (для краткости).
-   - `popupState`, `popupCss`, `results`, `css`, `attributes`: инициализация переменных, хранящих состояние всплывающего окна, CSS стили, результаты поиска и атрибуты.
-2. **Загрузка стилей:**
-   - `loadDefaultCss()`: загружает стили из `/css/try_xpath_insert.css` с помощью `XMLHttpRequest` и `Promise`.
-   - **Пример:** Запрос на сервер `/css/try_xpath_insert.css` возвращает ответ в виде строки CSS.
-3. **Обработка сообщений:**
-   - `genericListener`: обработчик сообщений, который определяет тип сообщения и вызывает соответствующую функцию.
-   - **Пример:** Если сообщение `storePopupState`, вызывается функция `genericListener.listeners.storePopupState`.
-   - **Внутри `genericListener.listeners`**: набор функций для обработки разных типов сообщений, таких как:
-    - `storePopupState`: сохраняет состояние всплывающего окна.
-    - `requestRestorePopupState`: востанавливает состояние всплывающего окна.
-    - `requestInsertStyleToPopup`: отправляет стили в всплывающее окно.
-    - `showAllResults`: обрабатывает результаты поиска и создает новую вкладку для их отображения.
-    - `loadResults`: возвращает результаты поиска.
-    - `updateCss`: загружает и удаляет CSS стили.
-    - `loadOptions`: возвращает атрибуты, css и popupCss.
-    - `requestSetContentInfo`: отправляет атрибуты во вкладку.
-4. **Синхронизация данных:**
-   - `browser.storage.onChanged.addListener`: следит за изменениями в хранилище браузера (`attributes`, `css`, `popupCss`).
-   - **Пример:** Если изменились `attributes`, то они обновляются.
-5. **Загрузка настроек:**
-   - `browser.storage.sync.get`: загружает настройки из браузерного хранилища (`attributes`, `css`, `popupCss`).
-   - `loadDefaultCss()`: если `css` не загружено, то загружается по умолчанию.
-   - **Пример:** `attributes` обновляются из хранилища, а если `css` нет, то загружается из файла по умолчанию.
+
+    subgraph Обработка событий
+        H[Выполнение обработчика] --> H1[showAllResults];
+        H1 --> showAllResults;
+        H[Выполнение обработчика] --> H2[loadResults];
+        H2 --> loadResults;
+        H[Выполнение обработчика] --> H3[updateCss];
+        H3 --> updateCss;
+
+    end
+
+```
+
+Пример: Пользователь кликает на кнопку в расширении. Это событие обрабатывается как `genericListener`. Сообщение отправляется.  `genericListener` находит соответствующий обработчик `showAllResults` (соответствует нужному событию), обрабатывает это сообщение и отправляет ответ.  После этого, `results` обновляется, а браузер создает новую вкладку.
 
 
 ## <mermaid>
 
 ```mermaid
 graph LR
-    A[try_xpath_background.js] --> B(Инициализация);
-    B --> C{Загрузка стилей};
-    C --> D[loadDefaultCss];
-    D --> E{Обработка сообщений};
-    E --> F[genericListener];
-    F --> G[storePopupState];
-    F --> H[requestRestorePopupState];
-    F --> I[requestInsertStyleToPopup];
-    F --> J[showAllResults];
-    F --> K[loadResults];
-    F --> L[updateCss];
-    F --> M[loadOptions];
-    F --> N[requestSetContentInfo];
-    F --> O{Синхронизация данных};
-    O --> P[browser.storage.onChanged.addListener];
-    E --> Q{Загрузка настроек};
-    Q --> R[browser.storage.sync.get];
-    R --> S[loadDefaultCss (если css не задано)];
-    S --> T[Загрузка CSS];
-    T --> U[css = loadedCss];
-    U --> E;
-    
-    subgraph Хранилище браузера
-        P --> V[attributes, css, popupCss];
+    subgraph Блоки кода
+        A[try_xpath_background.js] --> B(Инициализация переменных);
+        B --> C{Обработка событий};
+        C --> D(loadDefaultCss);
+        C --> E(Обработчики сообщений);
+        E --> F(genericListener);
+        F --> G(onMessage);
+        G --> H[Функции для событий];
+        H -.-> I[Запрос/Отправка данных];
+        H -.-> J[Обработка изменений];
+        H -.-> K[Загрузка CSS];
+
+
     end
-    subgraph Вкладки браузера
-        G --> W[Всплывающее окно];
-        H --> X[Всплывающее окно];
-        I --> Y[Всплывающее окно];
-        J --> Z[Новая вкладка];
-        K --> AA[Вкладка];
-        L --> AB[Вкладка];
-        M --> AC[Вкладка];
-        N --> AD[Вкладка];
+    subgraph Взаимодействия
+        I --> L(browser.runtime.sendMessage);
+        L --> M(browser.tabs.create);
+        L --> N(browser.tabs.insertCSS);
+        L --> O(browser.tabs.removeCSS);
+        J --> P(browser.storage.onChanged);
+        K --> Q(browser.storage.sync.get);
     end
+
 ```
+
 
 ## <explanation>
 
 **Импорты:**
 
-- `tryxpath` и `tryxpath.functions`:  Предполагается, что эти модули определены в другом месте проекта (`src.`) и содержат функции, необходимые для работы расширения, например, функции обработки ошибок (`fu.onError`).
+Код использует алиасы `tx` и `fu`, которые указывают на переменные `tryxpath` и `tryxpath.functions`.  Это предположительно локальные переменные или импорты из другого модуля (например, из `tryxpath.js` в папке `src/webdriver/firefox/extentions/try_path_1.3.5/`).
 
 **Классы:**
 
-- Нет явных классов. Код использует функции и переменные.
+Нет явных классов.  Код использует функции для обработки событий и данных.
+
 
 **Функции:**
 
-- `loadDefaultCss()`: Загружает CSS из файла `/css/try_xpath_insert.css`  и возвращает его текст как промис.  Возвращаемое значение - `Promise`, содержащий результат загрузки.
-- `genericListener()`: Обработчик сообщений. Находит слушатель `message.event` и вызывает соответствующую функцию `genericListener.listeners`.
-- Все функции в `genericListener.listeners`: обрабатывают различные типы сообщений. Пример: `updateCss` обновляет CSS стили во вкладках, используя `browser.tabs.insertCSS` и `browser.tabs.removeCSS`.
+* **`loadDefaultCss()`:** Загружает CSS из файла `/css/try_xpath_insert.css`.  Возвращает Promise с загруженным CSS.
+* **`genericListener()`:**  Слушает сообщения от других частей приложения (вероятно, popup или content script).  Обрабатывает сообщение, используя массив обработчиков (`genericListener.listeners`). Важно, что это функция-заглушка, она просто направляет обработку на конкретный обработчик.
+* **`genericListener.listeners.<event>`:**  Функции-обработчики для различных событий. (например, `showAllResults`, `loadResults`, `updateCss`, `loadOptions`, `requestSetContentInfo`, `storePopupState`, `requestRestorePopupState`, `requestInsertStyleToPopup`).
 
 **Переменные:**
 
-- `popupState`, `popupCss`, `results`, `css`, `attributes`:  Хранят различные состояния и данные, связанные с расширением.
-- `attributes`:  Словарь, содержащий атрибуты элементов, используемые в `tryxpath`.
+* `popupState`, `popupCss`, `results`, `css`, `attributes`: Хранят данные, необходимые для работы расширения, например, состояние popup, стили, результаты поиска.
+
 
 **Возможные ошибки и улучшения:**
 
-- Отсутствие обработки ошибок в `loadDefaultCss`: Необходимо добавить `reject` в `Promise` для обработки случаев, когда загрузка CSS не удалась.
-- Отсутствие явного `try...catch` вокруг `browser.storage.sync.get`:  Хотя `.then`/`.catch` в коде используются, рекомендуется обернуть в `try...catch` для предотвращения падения всего скрипта при ошибках.
-- Недостаточная проверка типов данных, передаваемых в функции (`message`, `sender`).
+* Отсутствие обработки ошибок при загрузке CSS (`loadDefaultCss`) - если файл не найден или произошла ошибка сети, код не обрабатывает это. Нужно добавить обработчик ошибки в Promise.
+* Некритичная обработка ошибок в `.then` (например,  `catch(fu.onError)`). Необходимо более детально логировать ошибки.
 
-**Взаимосвязь с другими частями проекта:**
 
-- `browser.runtime.getURL()`: Подключается к механизму runtime браузера для получения абсолютного URL ресурса.
-- `browser.runtime.onMessage`: Подключается к системе коммуникации браузера, что подразумевает взаимодействие с другими частями проекта.
-- `browser.tabs.insertCSS`, `browser.tabs.removeCSS`, `browser.tabs.sendMessage`:  Работают с API вкладок браузера, что предполагает использование в других частях проекта (например, в popup-странице или содержимом вкладок).
-- `tryxpath` и `tryxpath.functions`:  Указывают на наличие взаимосвязей с другими частями проекта, где эти функции используются.
-- `/css/try_xpath_insert.css`: указывает на использование внешних ресурсов для стилизации расширения.
-- `/pages/show_all_results.html`:  указывает на наличие html файла для отображения результатов.
+**Цепочка взаимосвязей:**
+
+Расширение (`try_xpath_background.js`) общается с `tryxpath.js` (возможно, содержит функции для работы с XPath),  `show_all_results.html` (для отображения результатов), и `try_xpath_insert.css` (стили).  Общение происходит через `browser.runtime.sendMessage` и `browser.tabs.sendMessage`.
+Обновление настроек (`attributes`, `css`, `popupCss`) происходит из хранилища (`browser.storage`).
+
+**Итог:** Код реализует фоновый процесс расширения браузера, который слушает сообщения от других частей расширения, загружает CSS, сохраняет и предоставляет результаты поиска, и управляет обновлениями настроек.

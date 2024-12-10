@@ -8,7 +8,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.playwright 
+.. module:: src.webdriver.playwright 
 	:platform: Windows, Unix
 	:synopsis: Playwrid Crawler
 
@@ -32,7 +32,7 @@ from types import SimpleNamespace
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
 from src import gs
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 class Playwrid(PlaywrightCrawler):
     """ Subclass of `PlaywrightCrawler` that provides additional functionality."""
@@ -52,6 +52,7 @@ class Playwrid(PlaywrightCrawler):
             browser_type=settings.browser_type,
             **kwargs
         )
+        
 
 
     def _load_settings(self, settings_name: Optional[str] = None) -> Any:
@@ -61,12 +62,12 @@ class Playwrid(PlaywrightCrawler):
         """
         settings_path = Path(gs.path.src / 'webdriver' / 'playwright' / 'playwrid.json')
         settings = j_loads_ns(settings_path)
-
+        
         if settings_name:
             custom_settings_path = settings_path.parent / f'{settings_name}.json'
             if custom_settings_path.exists():
                 settings = j_loads_ns(custom_settings_path)
-
+        
         return settings
 
 
@@ -82,7 +83,7 @@ class Playwrid(PlaywrightCrawler):
 
         if hasattr(settings, 'user_agent'):
             options['user_agent'] = settings.user_agent
-
+        
         return options
 
 
@@ -95,7 +96,7 @@ class Playwrid(PlaywrightCrawler):
             super().run()
         except Exception as ex:
             logger.critical('Playwrid Crawler failed with an error:', ex)
-
+            
     @property
     def current_url():
         """"""
@@ -104,105 +105,87 @@ class Playwrid(PlaywrightCrawler):
 
 # <algorithm>
 
-**Пошаговая блок-схема:**
+```mermaid
+graph TD
+    A[Initialize Playwrid] --> B{Load settings};
+    B -- settings_name=None --> C[Load default settings from playwrid.json];
+    B -- settings_name=custom --> D[Load custom settings from custom.json];
+    C --> E[Configure launch options];
+    D --> E;
+    E --> F[Initialize superclass (PlaywrightCrawler)];
+    F --> G[Start Playwright Crawler];
+    G --> H{Check URL};
+    H -- Valid URL --> I[Run crawler];
+    H -- Invalid URL --> J[Log Error];
+    I --> K[Navigate to URL];
+    J --> L[Log Critical Error];
+    K --> M[Crawler execution (details in PlaywrightCrawler)];
+    M --> N[End of crawler];
+```
 
-1. **Инициализация:**
-    * Создается экземпляр класса `Playwrid`.
-    * Вызывается метод `_load_settings` для загрузки настроек из файла `playwrid.json` (или пользовательского файла с указанным именем).
-    * Вызывается метод `_set_launch_options` для настройки параметров запуска Playwright на основе загруженных настроек.
-    * Вызывается конструктор базового класса `PlaywrightCrawler` с предоставленными параметрами запуска и типа браузера.
-
-2. **Запуск:**
-    * Вызывается метод `start` с URL, который нужно пропарсить.
-    * Внутри метода `start` вызывается метод `super().run()`, который, предположительно, выполняет основной процесс парсинга используя Playwright.
-    * При возникновении ошибки во время парсинга выводится соответствующее сообщение об ошибке в лог.
-
-**Примеры:**
-
-* Если в `playwrid.json` указано `headless=False`, браузер будет запускаться в режиме с отображением.
-* Если в пользовательском файле указан `user_agent`, то он будет добавлен в параметры запуска.
-* Если URL `https://www.example.com` успешно обработан, то в лог запишется соответствующее сообщение.
+Example: If `settings_name` is "prod", the code will load settings from `playwrid.json` and override them with settings from `prod.json` if it exists.
 
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[Playwrid()] --> B{settings_name};
-    B -- yes --> C[load_settings()];
-    B -- no --> C;
-    C --> D[_set_launch_options()];
-    D --> E[super().__init__()];
-    E --> F[start(url)];
-    F --> G{try};
-    G -- success --> H[super().run()];
-    G -- fail --> I[logger.critical()];
+graph LR
+    subgraph Playwrid
+        Playwrid --> _load_settings;
+        _load_settings --> _set_launch_options;
+        _set_launch_options --> PlaywrightCrawler;
+        PlaywrightCrawler --> start;
+        start --> PlaywrightCrawlingContext;
+    end
+    subgraph PlaywrightCrawler
+        PlaywrightCrawler --> run;
+        run --> handle_navigation;
+    end
+    subgraph Utils
+        _load_settings --> j_loads_ns;
+    end
+    subgraph Logger
+        start --> logger;
+        run --> logger;
+    end
+    
 ```
-
-**Объяснение диаграммы:**
-
-* **Playwrid():** Инициализация класса `Playwrid`.
-* **settings_name:** Проверка наличия пользовательских настроек.
-* **load_settings():** Загрузка настроек из файла `playwrid.json` или пользовательского файла.
-* **_set_launch_options():** Настройка параметров запуска Playwright.
-* **super().__init__():** Инициализация базового класса `PlaywrightCrawler` с настроенными параметрами.
-* **start(url):** Запуск парсинга URL.
-* **try/except:** Обработка возможных исключений во время парсинга.
-* **super().run():** Выполнение основного метода парсинга Playwright.
-* **logger.critical():** Вывод сообщения об ошибке в лог.
-
-**Зависимости:**
-
-* `crawlee.playwright_crawler`:  Библиотека для парсинга веб-страниц с использованием Playwright.
-* `src.gs`: Вероятно, содержит пути к ресурсам проекта.
-* `src.utils.jjson`: Библиотека для работы с JSON-файлами (вероятно, для загрузки и парсинга настроек).
-* `src.logger`: Модуль для логирования.
-
 
 # <explanation>
 
-**Импорты:**
+* **Импорты**:
+    * `from pathlib import Path`: Для работы с путями к файлам.
+    * `from turtle import pen`: Не используется. Возможно, остаток от предыдущей версии или ошибка.
+    * `from typing import Optional, Dict, Any`: Для указания типов переменных, что повышает читаемость и предотвращает ошибки.
+    * `from types import SimpleNamespace`: Для создания объекта, который представляет собой пространство имен, что делает доступ к атрибутам проще.
+    * `from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext`: Импортирует классы из модуля `crawlee`, который, вероятно, содержит реализацию работы с Playwright. `PlaywrightCrawler` - базовый класс, от которого наследуется `Playwrid`. `PlaywrightCrawlingContext` - возможно, внутренний класс для управления контекстом.
+    * `from src import gs`: Импортирует модуль `gs` из пакета `src`.  Вероятно, он содержит конфигурационные параметры или вспомогательные функции.
+    * `from src.utils.jjson import j_loads_ns`: Импортирует функцию `j_loads_ns` из пакета `src.utils.jjson`, которая, вероятно, используется для загрузки JSON-данных в структуру `SimpleNamespace`.
+    * `from src.logger.logger import logger`: Импортирует объект `logger` для ведения журналов.
 
-* `from pathlib import Path`: Для работы с файловой системой (пути к файлам).
-* `from typing import Optional, Dict, Any`: Для указания типов данных.
-* `from types import SimpleNamespace`: Для создания объекта, содержащего настроенные значения параметров.
-* `from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext`: Импортирует базовый класс `PlaywrightCrawler` и контекст парсинга.
-* `from src import gs`: Импортирует модуль `gs` (вероятно, содержит настройки пути к ресурсам).
-* `from src.utils.jjson import j_loads_ns`: Импортирует функцию `j_loads_ns` для загрузки настроек из JSON.
-* `from src.logger import logger`: Импортирует модуль `logger` для логирования.
+* **Классы**:
+    * `Playwrid(PlaywrightCrawler)`: Подкласс `PlaywrightCrawler`. Дополняет функциональность базового класса, позволяя настраивать браузер Playwright через `settings_name` и `user_agent`.
+        * `driver_name`: Хранит имя драйвера.
+        * `context`: Вероятно, переменная для хранения текущего контекста.
 
-
-**Классы:**
-
-* `Playwrid`: Подкласс `PlaywrightCrawler`, предоставляющий расширенные возможности настройки (настройки, пользовательский агент, headless).
-    * `driver_name`: Имя драйвера.
-    * `__init__`: Инициализирует экземпляр `Playwrid`, загружает и применяет настройки.
-    * `_load_settings`: Загружает настройки из файлов.
-    * `_set_launch_options`: Настраивает параметры запуска Playwright на основе загруженных настроек.
-    * `start`: Запускает парсинг URL.
-
-
-**Функции:**
-
-* `_load_settings`: Загружает настройки из JSON файла, позволяя использовать как базовый файл, так и пользовательский, переопределяя настройки из пользовательского.
-* `_set_launch_options`:  Собирает настройки запуска Playwright.
-* `start`: Выполняет запуск парсинга, обрабатывает ошибки.
+* **Функции**:
+    * `__init__(settings_name=None, user_agent=None, *args, **kwargs)`: Конструктор класса `Playwrid`. Загружает настройки из файла `playwrid.json` и настроек, переданных в `settings_name` и создаёт необходимые параметры для запуска.
+    * `_load_settings(settings_name=None)`: Загружает настройки из файла `playwrid.json` или из файла с именем, заданным в `settings_name`.
+    * `_set_launch_options(settings)`: Создаёт словарь `launch_options` для Playwright на основе загруженных настроек.
+    * `start(url)`: Запускает обход Playwrid по URL. Использует `super().run()`, делегируя основную работу базовому классу `PlaywrightCrawler`.
 
 
-**Переменные:**
+* **Переменные**:
+    * `MODE`: Вероятно, константа для режима работы.
 
-* `MODE`:  Строковая переменная, хранящая режим работы (вероятно, 'dev' или 'prod').
-* `settings`: Содержит загруженные настройки.
+* **Возможные ошибки/улучшения**:
+    * Отсутствие явного проверки существования файла  `custom_settings_path`  при загрузке пользовательских настроек может привести к исключениям. Необходимо добавить проверку существования файла.
+    * Отсутствует обработка валидации входных данных. Возможно, стоит добавить проверки для `url` и других параметров, чтобы предотвратить некорректные значения и исключения.
+    * Неопределенность в `@property current_url`. Необходимо реализовать метод для получения текущего URL.
+    * Возможно, не хватает документации к внутренним методам, например,  `run`.  Добавление подробной документации улучшит понимание кода и его использования.
 
 
-**Возможные ошибки/улучшения:**
 
-* **Неуказанная обработка ошибок:** Хотя `try...except` используется, точный тип ожидаемых ошибок не указан, следовательно, может быть неполным. Необходимо уточнить возможные типы исключений и соответствующе их обработать.
-* **Отсутствует логирование:** Указано только логирование критических ошибок, но не ошибок валидации или логирования других событий. Рекомендуется расширить логирование.
-* **Непроверенные настройки:** Код полагается на корректность структуры файлов настроек (`playwrid.json`). Не хватает проверки наличия необходимых полей в файле настроек.
+**Цепочка взаимосвязей**:
 
-**Взаимосвязи с другими частями проекта:**
-
-* `crawlee.playwright_crawler`:  Ключевая зависимость для работы с Playwright.
-* `src.gs`, `src.utils.jjson`, `src.logger`:  Части проекта, используемые для управления ресурсами и логированием.
-* По всей видимости, этот код часть системы веб-скрейпинга.  Необходимы дополнительные данные для полного понимания его роли.
+`Playwrid` использует `PlaywrightCrawler` и зависят от `gs`, `j_loads_ns`  и `logger`.  `PlaywrightCrawler` взаимодействует с Playwright (не показано в коде, но подразумевается), выполняя запросы и действия с веб-страницами.  `j_loads_ns` скорее всего, является частью инфраструктуры для обработки JSON, а `logger` - для логирования. `gs` скорее всего, это модуль, предоставляющий глобальные константы или переменные, связанные с путями к файлам, а также другими необходимыми константами.

@@ -2,12 +2,12 @@
 
 ```python
 ## \file hypotez/src/webdriver/edge/edge.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.edge
+.. module::  src.webdriver.edge
    :platform: Windows, Unix
    :synopsis: Custom Edge WebDriver class with simplified configuration using fake_useragent.
 
@@ -26,7 +26,7 @@ from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
 from fake_useragent import UserAgent
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns
 
 
@@ -103,90 +103,101 @@ class Edge(WebDriver):
 
 # <algorithm>
 
-1. **Initialization (`__init__`)**:
-   - Takes an optional `user_agent` dictionary. If not provided, a random user agent is generated using `fake_useragent`.
-   - Loads configuration from `edge.json` using `j_loads_ns`.
-   - Creates `EdgeOptions` object and adds the user agent as an argument.
-   - Initializes `EdgeService` using the executable path from the config.
-   - Initializes the `WebDriver` object using the options and service.
-   - Calls `_payload` to load executors.
+**Шаг 1:** Инициализация класса `Edge`.
+* Принимает необязательный параметр `user_agent`, по умолчанию генерирует случайный пользовательский агент с помощью `UserAgent().random`.
+* Загружает настройки из файла `edge.json` с помощью `j_loads_ns`.
+* Создает экземпляр `EdgeOptions`.
+* Добавляет пользовательский агент в опции браузера.
+* Логирует информацию о запуске драйвера.
 
-2. **Error Handling**:
-   - Includes `try...except` blocks to catch potential `WebDriverException` during WebDriver initialization and general exceptions.  Logs errors using `logger`.
 
-3. **`_payload`**:
-   - Creates an instance of `JavaScript` to access JavaScript methods.
-   - Assigns `JavaScript` methods to the `Edge` instance for later use.
-   - Creates an `ExecuteLocator` instance.
-   - Delegates locator and other methods from `ExecuteLocator` instance to the `Edge` instance for use.
+**Шаг 2:** Запуск драйвера.
+* Получает путь к исполняемому файлу драйвера из `edge.json`.
+* Создает `EdgeService` с заданным путем.
+* Инициализирует `WebDriver` с заданными опциями и сервисом.
+* Выполняет `self._payload()`.
+
+**Шаг 3:** Обработка ошибок.
+* Обрабатывает `WebDriverException`, если драйвер не стартует.
+* Обрабатывает общие исключения, если произошла ошибка во время инициализации.
+
+**Шаг 4:** `_payload()`.
+* Создает экземпляр `JavaScript`.
+* Присваивает методы `JavaScript` текущему объекту `Edge`.
+* Создает экземпляр `ExecuteLocator`.
+* Присваивает методы `ExecuteLocator` текущему объекту `Edge`.
+
+**Пример данных:**
+
+* `user_agent`: `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36`
+* `settings.executable_path.default`: `/path/to/msedgedriver`
+* `options`: `selenium.webdriver.edge.options.Options` объект с добавленным `user-agent`.
+
+**Передача данных:** Данные передаются между функциями и методами через атрибуты класса и аргументы функций.
 
 # <mermaid>
 
 ```mermaid
 graph LR
-    A[Edge Class] --> B(init);
-    B --> C{user_agent?};
-    C -- Yes --> D[UserAgent.random];
-    C -- No --> E[user_agent];
-    D --> F[settings = j_loads_ns];
-    E --> F;
-    F --> G[EdgeOptions];
-    G --> H[add_argument];
-    H --> I[EdgeService];
-    I --> J[WebDriver];
-    J --> K[self._payload];
-    K --> L[JavaScript];
-    L --> M[get_page_lang, ready_state...];
-    K --> N[ExecuteLocator];
-    N --> O[execute_locator,...];
-    O --> P[Edge Instance methods];
-    subgraph "Error Handling"
-        J -- Error --> Q[logger.critical];
+    A[Edge(__init__)] --> B{Загрузка настроек};
+    B --> C[Создание EdgeOptions];
+    C --> D{Добавление user-agent};
+    D --> E[Запуск Edge WebDriver];
+    E --> F{Обработка исключений};
+    F -- Успех --> G[self._payload];
+    F -- Ошибка --> H[Лог ошибки];
+    G --> I[JavaScript];
+    I --> J[ExecuteLocator];
+    J --> K[Настройка методов];
+    K --> L[Edge];
+    subgraph "Внешние зависимости"
+        I -- fake_useragent --> M;
+        I -- src.webdriver.js --> N;
+        I -- src.webdriver.executor --> O;
+        J -- src.webdriver.executor --> P;
     end
 ```
 
-
 # <explanation>
 
-**Импорты**:
+**Импорты:**
 
-- `os`, `pathlib`: Стандартные библиотеки для работы с операционной системой и файлами.
-- `typing`: Для указания типов данных.
-- `selenium.webdriver.*`: Библиотека для работы с веб-драйверами.
-- `selenium.webdriver.edge.*`:  Модули для работы с Edge WebDriver.
-- `selenium.common.exceptions`: Классы исключений для selenium.
-- `src.webdriver.executor`, `src.webdriver.js`, `fake_useragent`, `src.logger`, `src.utils.jjson`, `src.gs`:  Это импорты из внутренних пакетов проекта (`src`). Подробные пояснения о каждом компоненте потребуют доступа к коду из других файлов (например, в `src/webdriver/executor.py` или `src/logger.py`).  Из примера видно, что `gs` скорее всего содержит глобальные настройки проекта.
-- `from src import gs`: Импортирует модуль `gs` из пакета `src`. Вероятно, `gs` предоставляет глобальные настройки или конфигурацию для проекта.
+* `from selenium.webdriver import Edge`: Импортирует класс `Edge` из библиотеки Selenium, который является основой для работы с веб-драйвером Edge.
+* `from selenium.webdriver.edge.service import Service`: Импортирует класс `EdgeService`, отвечающий за запуск веб-драйвера Edge.
+* `from selenium.webdriver.edge.options import Options`: Импортирует класс `EdgeOptions`, предоставляющий настройки для Edge WebDriver.
+* `from selenium.common.exceptions import WebDriverException`: Импортирует `WebDriverException` для обработки ошибок запуска драйвера.
+* `from src.webdriver.executor import ExecuteLocator`: Импортирует класс `ExecuteLocator` из пакета `src.webdriver.executor`, который отвечает за выполнение действий на веб-странице.
+* `from src.webdriver.js import JavaScript`: Импортирует класс `JavaScript` из пакета `src.webdriver.js`, который предоставляет функции для работы с JavaScript на веб-странице.
+* `from fake_useragent import UserAgent`: Импортирует класс `UserAgent` из библиотеки `fake_useragent`, используемой для генерации пользовательских агентов.
+* `from src import gs`: Импортирует модуль `gs` из корневой директории проекта, вероятно, содержащий конфигурационные переменные.
+* `from src.logger.logger import logger`: Импортирует `logger` для логирования событий, что подразумевает использование логгера из пакета `src.logger.logger`.
+* `from src.utils.jjson import j_loads_ns`: Импортирует функцию `j_loads_ns` из пакета `src.utils.jjson`, вероятно, для обработки JSON-данных.
 
+**Классы:**
 
-**Классы**:
+* `Edge`: Наследуется от `WebDriver`. Представляет собой кастомный класс для работы с Edge WebDriver. Он расширяет базовые функциональности, добавляя методы для работы с JavaScript и локализации элементов.
 
-- `Edge(WebDriver)`: Наследуется от класса `WebDriver` из `selenium`.  Представляет собой кастомный класс для работы с Edge WebDriver. Добавляет функции для работы с JavaScript и локаторами.  Атрибут `driver_name` задает имя используемого вебдрайвера.
+**Функции:**
 
-**Функции**:
-
-- `__init__(user_agent: Optional[dict] = None, *args, **kwargs)`: Инициализирует экземпляр класса `Edge`. Принимает необязательный параметр `user_agent` для указания user-agent (использует `fake_useragent` по умолчанию). Загружает настройки из `edge.json` и запускает webdriver.
-- `_payload()`: Загружает исполнители для локаторов и JavaScript.  Загружает методы из `ExecuteLocator` и `JavaScript` в текущий экземпляр.
-- `set_options(opts: Optional[List[str]] = None)`: Создает и настраивает опции запуска для `Edge WebDriver`. Принимает список дополнительных опций и добавляет их к `EdgeOptions`.
-
-**Переменные**:
-
-- `MODE`: Вероятно, глобальная переменная, определяющая режим работы (например, 'dev', 'prod').
-- `edgedriver_path`: Путь к исполняемому файлу Edge WebDriver. Загружается из `edge.json`.
-
-**Возможные ошибки и улучшения**:
-
-- Обработка ошибок: Обработка исключений в `__init__` улучшена, но проверка `settings.executable_path.default` на корректность перед использованием (наличие и корректность значения) была бы желательной.
-- Дополнительные параметры: Возможно, целесообразно добавить дополнительные параметры в конструктор `__init__` (например, для задания url страницы или параметров браузера).
-- Документация: Документация для `_payload` могла бы быть более подробной.  Необходимо пояснить, как происходит загрузка методов.
-- Использование: Неясно, как вызываются методы класса `Edge` из других частей проекта.
+* `__init__(self, user_agent: Optional[dict] = None, *args, **kwargs)`: Инициализирует экземпляр класса `Edge`. Настройка user-agent, загрузка настроек из файла `edge.json`, создание опций для драйвера, запуск драйвера, выполнение `_payload()` для инициализации дополнительных функциональностей. Возвращает `None`.
+* `_payload(self)`: Загружает `ExecuteLocator` и `JavaScript` для выполнения операций с веб-страницей. Присваивает методы этим объектам текущему объекту. Возвращает `None`.
+* `set_options(self, opts: Optional[List[str]] = None)`: Создает и настраивает опции запуска для Edge WebDriver.
 
 
-**Взаимосвязи с другими частями проекта**:
+**Переменные:**
 
-- `gs`: Вероятно, `gs` (global settings) содержит конфигурационные данные, необходимые для работы WebDriver (например, путь к `edge.json`).
-- `src.logger`: Используется для записи сообщений об ошибках и информационных сообщений.
-- `src.utils.jjson`: Вероятно, содержит функции для работы с JSON-данными, используемые для парсинга `edge.json`.
-- `src.webdriver.executor`, `src.webdriver.js`: Обеспечивают функциональность для работы с веб-элементами и JavaScript-кодом в браузере, управляемом WebDriver.  Без доступа к коду `ExecuteLocator` и `JavaScript` точные детали их работы неизвестны.
+* `MODE`: Вероятно, константа, определяющая режим работы приложения (например, 'dev', 'prod').
+* `user_agent`: Хранит текущий пользовательский агент, используемый для имитации реального браузера.
 
-**Важно**: Для более глубокого анализа необходим код файлов `src/webdriver/executor.py`, `src/webdriver/js.py`, и `hypotez/src/webdriver/edge/edge.json`.  Без этого анализа невозможно полностью понять, как `Edge` класс взаимодействует с другими частями проекта и его полную функциональность.
+
+**Возможные ошибки/улучшения:**
+
+* **Пути к файлам:** Код полагается на наличие файла `edge.json` с настройками (например, путь к исполняемому файлу `msedgedriver`). Необходимо убедиться, что этот файл существует и содержит правильные данные.
+* **Обработка исключений:** В блоках `try...except` есть неиспользуемые `...`. Добавьте более подробную обработку ошибок.
+* **Документация:** Добавьте больше комментариев к методам и переменным для лучшего понимания их назначения.
+* **`_payload`:** Добавить в `_payload` валидацию корректности `settings` и `service`. 
+
+
+**Взаимосвязи:**
+
+Класс `Edge` взаимодействует с классами из `src.webdriver.executor` и `src.webdriver.js`.  Эти классы, вероятно, предоставляют инструменты для выполнения JavaScript-кода, работы с локализующими элементами и т.д.  Файл `edge.json` является источником конфигураций для инициализации `Edge`.  `logger` из `src.logger` позволяет отслеживать ход выполнения. `gs` вероятно содержит глобальные переменные для путей к файлам и другим настройкам.

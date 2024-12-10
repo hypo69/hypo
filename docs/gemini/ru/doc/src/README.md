@@ -1,84 +1,130 @@
-# Модули проекта
+# Модули Hypotez
 
 ## Обзор
 
-Данный документ предоставляет обзор различных модулей проекта, включая ссылки на исходный код, документацию, тесты и примеры.
+Данный документ предоставляет обзор основных модулей программы. Каждый модуль отвечает за определенные функциональные области, позволяя разделить и организовать код.
 
-## Модуль `assistant`
+## Модули
 
-Модуль для взаимодействия с классом `CodeAssistant`, помогающим в обработке задач с кодом.
+### `assistant`
 
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/assistant/readme.en.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/assistant/readme.en.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/assistant)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/assistant)
+**Описание**: Модуль для взаимодействия с классом `CodeAssistant`, помогающим в обработке задач с кодом.
 
+**Функции и классы (примеры):**
 
-## Модуль `bot`
+```python
+def process_code(code: str, task: str) -> str | None:
+    """
+    Args:
+        code (str): Исходный код.
+        task (str): Задача для обработки кода.
 
-Модуль для логики бота, включая обработку сообщений и управление командами бота.
+    Returns:
+        str | None: Результат обработки или None при ошибке.
 
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/bot/readme.en.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/bot/readme.en.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bot)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/bot)
+    Raises:
+        ValueError: Если входные данные некорректны.
+    """
+```
 
+### `bot`
 
-## Модуль `scenario`
-
-Модуль для работы со сценариями, включая генерацию и выполнение сценариев.
-
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/scenario/readme.en.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/scenario/readme.en.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/scenario)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/scenario)
+**Описание**: Модуль для логики бота, включая обработку сообщений и управление бот-командами.
 
 
-## Модуль `suppliers`
+### `scenario`
 
-Модуль для работы с поставщиками, включая управление их данными и отношениями.
-
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/suppliers/readme.en.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/suppliers/readme.en.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/suppliers)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/suppliers)
+**Описание**: Модуль для работы со сценариями, включая генерацию и выполнение сценариев.
 
 
-## Модуль `templates`
+### `suppliers`
 
-Модуль для работы с шаблонами, включая создание и управление шаблонами для различных целей.
-
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/templates/readme.en.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/templates/readme.en.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/templates)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/templates)
+**Описание**: Модуль для работы с поставщиками, включая управление данными и отношениями.
 
 
-## Модуль `translators`
+### `templates`
 
-Модуль для работы с переводчиками и переводом текста.
-
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/translators/readme.en.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/translators/readme.en.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/translators)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/translators)
+**Описание**: Модуль для работы с шаблонами, включая создание и управление шаблонами для различных целей.
 
 
-## Модуль `utils`
+### `translators`
 
-Модуль для вспомогательных утилит, упрощающих выполнение общих задач.
-
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/utils/readme.en.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/utils/readme.en.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/utils)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/utils)
+**Описание**: Модуль для работы с переводчиками и переводом текста.
 
 
-## Модуль `webdriver`
+### `utils`
 
-Модуль для работы с драйверами веб-браузера и управления веб-элементами.
+**Описание**: Модуль для вспомогательных утилит, упрощающих выполнение общих задач.
 
-- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/webdriver/readme.en.md)
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/webdriver/readme.en.md)
-- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver)
-- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver)
+
+### `webdriver`
+
+**Описание**: Модуль для работы с драйверами веб-браузеров и управления веб-элементами.
+
+**Классы (пример):**
+
+```python
+class WebDriver:
+    """
+    Описание класса WebDriver.
+    """
+
+    def __init__(self, driver_type: str = 'chrome') -> None:
+        """
+        Инициализирует экземпляр класса WebDriver.
+
+        Args:
+            driver_type (str, optional): Тип драйвера. По умолчанию 'chrome'.
+
+        Raises:
+            ValueError: Если driver_type не является 'chrome' или 'firefox'.
+        """
+    def navigate(self, url: str):
+        """
+        Навигирует к указанному URL.
+        Args:
+            url (str): URL для навигации.
+        """
+```
+
+**Подробная документация для каждого модуля будет доступна по ссылкам, приведенным в оригинальном файле.**
+
+## Глоссарий
+
+### 1. **webdriver**
+
+- **`Driver`**: Объект, управляющий браузером (например, Chrome, Firefox) и выполняющий действия, такие как навигация по веб-страницам, заполнение форм и т. д.
+- **`Executor`**: Интерфейс или класс, выполняющий команды или скрипты в контексте веб-драйвера.
+- **`Chrome`, `Firefox`, ...**: Конкретные браузеры, которые можно управлять с помощью веб-драйвера.
+- **`locator`**: Механизм поиска элементов на веб-странице (например, по ID, CSS-селектору, XPath).
+
+### 2. **`Supplier`**
+
+- **Список поставщиков (`Amazon`, `Aliexpress`, `Morlevi`, ...)**: Список компаний или платформ, которые предоставляют продукты или услуги.
+- **`Graber`**: Инструмент или модуль, который автоматически собирает данные с сайтов поставщиков (например, цены, доступность продуктов).
+
+### 3. **`Product`**
+
+- **`Product`**: Объект, представляющий продукт или услугу, которые могут быть доступны на различных платформах.
+- **`ProductFields`**: Поля или атрибуты, описывающие характеристики продукта (например, название, цена, описание, изображения).
+
+### 4. **`ai`**
+
+- **`Model Prompt`**: Указывает, как модель должна обрабатывать поступающую информацию и возвращать ответ. Устанавливается во время инициализации модели.
+- **`Command Instruction`**: Небольшая команда или инструкция, отправляемая с каждым запросом.
+
+---
+
+**Оглавление:**
+
+* [Модули Hypotez](#модули-hypotez)
+* [Обзор](#обзор)
+* [assistant](#assistant)
+* [bot](#bot)
+* [scenario](#scenario)
+* [suppliers](#suppliers)
+* [templates](#templates)
+* [translators](#translators)
+* [utils](#utils)
+* [webdriver](#webdriver)
+* [Глоссарий](#глоссарий)

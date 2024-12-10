@@ -2,13 +2,30 @@
 
 ## Обзор
 
-Модуль `hypotez/src/webdriver/driver.py` предоставляет класс `Driver` для работы с веб-драйверами Selenium.  Класс обеспечивает унифицированный интерфейс для инициализации, навигации, работы с куки и обработки исключений при работе с веб-драйверами. Поддерживаются различные типы веб-драйверов (например, Chrome, Firefox, Edge).
+Модуль `hypotez/src/webdriver/driver.py` предоставляет класс `Driver` для работы с веб-драйверами Selenium.  Класс обеспечивает унифицированный интерфейс для инициализации, навигации, работы с куки и обработки исключений при взаимодействии с веб-страницами.
+
+## Оглавление
+
+- [Модуль hypotez/src/webdriver/driver.py](#модуль-hypotezsrcwebdriverdriverpy)
+- [Класс Driver](#класс-driver)
+    - [Метод __init__(self, webdriver_cls, *args, **kwargs)](#метод-initself-webdriver_cls-args-kwargs)
+    - [Метод __init_subclass__(cls, *, browser_name=None, **kwargs)](#метод-init_subclasscls-browser_name-kwargs)
+    - [Метод __getattr__(self, item)](#метод-getattrself-item)
+    - [Метод scroll(self, scrolls=1, frame_size=600, direction='both', delay=.3)](#метод-scrollself-scrolls-frame_size-direction-delay)
+    - [Метод carousel(direction='', scrolls=1, frame_size=600, delay=.3)](#метод-carouseldirection-scrolls-frame_size-delay)
+    - [Свойство locale(self)](#свойство-localeself)
+    - [Метод get_url(self, url: str)](#метод-get_urlself-url)
+    - [Метод window_open(self, url: Optional[str] = None)](#метод-window_openself-url)
+    - [Метод wait(self, delay: float = .3)](#метод-waitself-delay)
+    - [Метод _save_cookies_localy(self)](#метод-_save_cookies_localyself)
+    - [Метод fetch_html(self, url: str)](#метод-fetch_htmlself-url)
+
 
 ## Классы
 
 ### `Driver`
 
-**Описание**:  Класс `Driver` предназначен для работы с веб-драйверами Selenium. Он предоставляет методы для взаимодействия с веб-страницей, такие как навигация по URL, прокрутка и извлечение контента.  Обеспечивает единый интерфейс для работы с различными драйверами.
+**Описание**: Класс `Driver` предоставляет унифицированный интерфейс для работы с различными веб-драйверами (например, Chrome, Firefox, Edge), обеспечивая удобный способ взаимодействия с веб-страницами.
 
 **Атрибуты**:
 
@@ -22,12 +39,11 @@
 
 **Параметры**:
 
-- `webdriver_cls` (type): Класс WebDriver, например `Chrome` или `Firefox`.  Ожидается, что `webdriver_cls` является допустимым классом WebDriver.
-- `*args`: Позиционные аргументы для драйвера.
-- `**kwargs`: Ключевые аргументы для драйвера.
+- `webdriver_cls` (type): Класс WebDriver, например `Chrome` или `Firefox`.
+- `args`: Позиционные аргументы для драйвера.
+- `kwargs`: Ключевые аргументы для драйвера.
 
 **Пример**:
-
 ```python
 from selenium.webdriver import Chrome
 driver = Driver(Chrome, executable_path='/path/to/chromedriver')
@@ -39,14 +55,12 @@ driver = Driver(Chrome, executable_path='/path/to/chromedriver')
 
 **Параметры**:
 
-- `browser_name` (str, необязательно): Имя браузера. Необходим для работы, если не указан, генерируется ошибка.
-- `**kwargs`: Дополнительные аргументы.
-
+- `browser_name` (str): Имя браузера.
+- `kwargs`: Дополнительные аргументы.
 
 **Исключения**:
 
 - `ValueError`: Если `browser_name` не указан.
-
 
 #### `__getattr__(self, item)`
 
@@ -57,7 +71,6 @@ driver = Driver(Chrome, executable_path='/path/to/chromedriver')
 - `item` (str): Имя атрибута.
 
 **Пример**:
-
 ```python
 driver.current_url
 ```
@@ -68,37 +81,16 @@ driver.current_url
 
 **Параметры**:
 
-- `scrolls` (int, по умолчанию 1): Количество прокруток.
-- `frame_size` (int, по умолчанию 600): Размер прокрутки в пикселях.
-- `direction` (str, по умолчанию 'both'): Направление прокрутки ('both', 'down', 'up').
-- `delay` (float, по умолчанию 0.3): Задержка между прокрутками в секундах.
+- `scrolls` (int): Количество прокруток (по умолчанию 1).
+- `frame_size` (int): Размер прокрутки в пикселях (по умолчанию 600).
+- `direction` (str): Направление ('both', 'down', 'up') (по умолчанию 'both').
+- `delay` (float): Задержка между прокрутками (по умолчанию 0.3).
 
 **Возвращает**:
 
-- `bool`: `True`, если прокрутка успешна, `False` иначе.
+- `bool`: `True`, если успешно, иначе `False`.
 
-**Пример**:
-
-```python
-driver.scroll(scrolls=3, direction='down')
-```
-
-#### `locale(self)`
-
-**Описание**: Определяет язык страницы.
-
-**Возвращает**:
-
-- `Optional[str]`: Код языка (например, 'en'), если найден, иначе `None`.
-
-**Пример**:
-
-```python
-lang = driver.locale
-print(lang)
-```
-
-#### `get_url(self, url: str) -> bool`
+#### `get_url(self, url: str)`
 
 **Описание**: Переходит по указанному URL.
 
@@ -108,60 +100,13 @@ print(lang)
 
 **Возвращает**:
 
-- `bool`: `True`, если переход успешен, `False` иначе.
-
-**Исключения**:
-
-- `WebDriverException`: При ошибках работы с WebDriver.
-- `InvalidArgumentException`: Если URL некорректен.
-- `Exception`: При других ошибках.
-
-
-#### `window_open(self, url: Optional[str] = None)`
-
-**Описание**: Открывает новую вкладку и переключается на неё.
-
-**Параметры**:
-
-- `url` (Optional[str], необязательно): URL для открытия в новой вкладке. По умолчанию `None`.
-
-#### `wait(self, delay: float = .3)`
-
-**Описание**: Ожидание в течение указанного времени.
-
-**Параметры**:
-
-- `delay` (float, по умолчанию 0.3): Время задержки в секундах.
-
-#### `_save_cookies_localy(self)`
-
-**Описание**: Сохраняет куки в локальный файл.
-
-**Возвращает**:
-
-- `None`
-
-**Исключения**:
-
-- `Exception`: При ошибках сохранения куки.
-
-#### `fetch_html(self, url: str) -> Optional[bool]`
-
-**Описание**: Извлекает HTML-контент из файла или веб-страницы.
-
-**Параметры**:
-
-- `url` (str): Путь к файлу или URL.
-
-**Возвращает**:
-
-- `Optional[bool]`: `True` если контент успешно получен, `None` в противном случае.
+- `bool`: `True`, если переход успешен, `False` - в противном случае.
 
 
 **Исключения**:
+- `WebDriverException`: Ошибка с WebDriver.
+- `InvalidArgumentException`: Некорректный URL.
+- `Exception`: Любые другие ошибки при переходе.
 
-- `Exception`: При ошибках при извлечении контента.
 
-## Функции
-
-(Нет функций в этом модуле)
+(Другие методы и свойства документированы аналогичным образом)

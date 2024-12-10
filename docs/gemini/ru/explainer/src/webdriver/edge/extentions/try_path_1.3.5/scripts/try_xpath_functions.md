@@ -3,7 +3,9 @@
 ## <input code>
 
 ```javascript
-/* ... (Комментарии) */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // namespace
 if (!tryxpath) {
@@ -26,98 +28,122 @@ if (!tryxpath.functions) {
     }
     fu.done = true;
 
-    /* ... (Остальной код) */
+    // ... (остальной код)
 ```
 
 ## <algorithm>
 
-Этот код определяет набор функций для работы с XPath и DOM-элементами в JavaScript.  Алгоритм работы функций довольно разнообразный, но все они сводятся к обработке запросов к DOM, преобразованию результата в массив и, в некоторых случаях, возвращению дополнительных деталей о найденных элементах.
+Этот код реализует набор функций для работы с XPath и DOM-элементами в браузере.  Алгоритм работы основан на последовательном выполнении операций, определённых в функциях `fu.execExpr`, `fu.resToArr`, `fu.makeResolver`, и т.д.
 
-**Пример алгоритма функции fu.execExpr:**
+**Пример:**
 
-1. **Обработка ввода:** Принимает выражение `expr`, метод `method` ("evaluate", "querySelector", "querySelectorAll") и опции `opts`.  Если метод "evaluate" - валидирует тип контекста `context`.
-2. **Выбор метода:**  В зависимости от `method` происходит разное:
-   - **evaluate:** Выполняет XPath-запрос с помощью `doc.evaluate()`, переводит результат в массив `items` с помощью `fu.resToArr`, и определяет `resultType` запроса.
-   - **querySelector/querySelectorAll:** Использует методы `querySelector` или `querySelectorAll` для поиска элементов по CSS-селектору, формирует массив `items`.
-3. **Обработка ошибки:** Если `context` не является допустимым типом, бросает исключение.
-4. **Возврат результата:** Возвращает объект `{ items: массив элементов, method: метод, resultType: тип результата }`.
+1. Вызов `fu.execExpr(expr, method, opts)`:
+   - Параметры: выражение `expr`, метод `method` (например, "evaluate", "querySelector", "querySelectorAll"), опции `opts` (например, `context`, `resolver`).
+   - Проверка `context` на соответствие типу Node/Attr/Document/Element.
+   - В зависимости от метода выполняется соответствующая операция.
+   -  В случае `evaluate`: `doc.evaluate(expr, context, resolver, resultType, null)` - выполняется XPath-выражение.
+   - Результат (`items`, `resultType`) возвращается как объект.
 
-**Пример алгоритма функции fu.resToArr:**
+2. Обработка результатов (`fu.resToArr`):
+   - Преобразование результатов XPath (`res`) в массив (`arr`).
+   - Типы результатов XPath (NUMBER_TYPE, STRING_TYPE, BOOLEAN_TYPE, и т.д.) обрабатываются специфически.
+   - Для типов узлов (ORDERED_NODE_ITERATOR_TYPE, и т.д.) данные итерируются и добавляются в массив.
 
-1. **Определение типа результата:** Получает тип результата из `res` или использует `xpathResult.ANY_TYPE`.
-2. **Обработка различных типов результатов:**  В зависимости от типа результата (`xpathResult.NUMBER_TYPE`, `xpathResult.STRING_TYPE`, `xpathResult.BOOLEAN_TYPE` и т.д.):
-   - Преобразует числовые, строковые и логические значения в массив.
-   - Для результатов, возвращающих узлы (итераторы или снифпеты):
-     - Итерируется по результатам и добавляет каждый узел в массив.
-3. **Бросает ошибку:** В случае неподдерживаемого типа результата.
-4. **Возвращает массив:** Возвращает сгенерированный массив `arr`.
+3. Резольвер (fu.makeResolver):
+   -  Инициализация функции-резолвера.
+   -  Если передан JSON-строка, то происходит попытка её парсинга.
+   -  Если передан объект, используется он напрямую.
+   -  Если резолвер валидный, создаётся Map для его представления, в противном случае выбрасывается ошибка.
+   - Функция возвращает резолвер, который принимает строку и возвращает значение, соответствующее ключу в резолвере.
 
-(Остальные функции в коде имеют аналогичные пошаговые алгоритмы работы с конкретными задачами.)
+**Блок-схема (фрагмент):**
+
+```mermaid
+graph TD
+    A[fu.execExpr(expr, method, opts)] --> B{Проверка context};
+    B -- Node/Attr/Document/Element --> C[Выполнение XPath];
+    B -- Другой тип --> D[Ошибка];
+    C --> E[fu.resToArr(res, type)];
+    E --> F[Обработка результата];
+    F -- success --> G[Возврат объекта {items, method, resultType}];
+```
+
+
 
 ## <mermaid>
 
 ```mermaid
 graph LR
-    A[tryxpath.functions] --> B(execExpr);
-    B --> C{XPath запрос?};
-    C -- Да --> D[doc.evaluate()];
-    C -- Нет --> E[querySelector/querySelectorAll];
-    D --> F[fu.resToArr];
-    E --> G[fu.listToArr/fu.resToArr];
-    F --> H[Возврат результата];
-    G --> H;
-    
-    subgraph "Дополнительные функции"
-        H --> I(getItemDetail);
-        I --> J[Возврат детальной информации];
-        H --> K(saveItemClass/restoreItemClass);
-        K --> L[Сохранение/восстановление класса];
-        H --> M(saveAttrForItem/restoreItemAttrs);
-        M --> N[Сохранение/восстановление атрибутов];
+    subgraph "fu.execExpr"
+        A[fu.execExpr] --> B{Проверка типа context};
+        B -- Документ/Элемент --> C[method = "evaluate" ?];
+        C -- true --> D[doc.evaluate];
+        D --> E[fu.resToArr];
+        E --> F[Возврат результата];
+        B -- querySelector/querySelectorAll --> G[context.querySelector/querySelectorAll];
+        G --> H[fu.listToArr/Результат];
+        H --> F;
+        B -- Ошибка --> I[Ошибка];
+    end
+    subgraph "fu.resToArr"
+        E --> J{Проверка типа результата};
+        J -- NUMBER_TYPE --> K[arr.push(res.numberValue)];
+        J -- STRING_TYPE --> L[arr.push(res.stringValue)];
+        J -- BOOLEAN_TYPE --> M[arr.push(res.booleanValue)];
+        J -- Узел --> N[Итерация узлов];
+        N --> O[arr.push(node)];
+        J -- Ошибка --> P[Ошибка];
     end
 ```
 
+
 ## <explanation>
 
-**Импорты**: Нет явных импортов из внешних библиотек, но используются глобальные переменные `tryxpath` и `xpathResult`. Это предполагает, что эти переменные определены в другом месте проекта (вероятно, в другом модуле или файле).
+**Импорты:**
 
-**Классы**: Нет объявленных классов. Код состоит из набора функций, которые работают с DOM-элементами (например, `fu.isDocOrElem`, `fu.addClassToItem`).
+- Нет явных импортов из других пакетов, начинающихся с `src.`.  Код предполагает доступ к глобальным переменным `tryxpath`, `xpathResult` и `Node`.
 
-**Функции**:
-* `fu.execExpr`: Выполняет XPath-запросы и CSS-селекторы. Принимает выражение, метод выполнения, опции. Возвращает результат в формате JSON.
-* `fu.resToArr`: Преобразует результат XPath-запроса в массив.
-* `fu.makeResolver`: Создаёт функцию-резолвер для XPath-запросов.
-* `fu.isValidDict`: Проверяет, является ли объект валидным словарем.
-* `fu.objToMap`: Преобразует объект в Map.
-* `fu.isDocOrElem`: Проверяет, является ли объект документом или элементом.
-* `fu.listToArr`: Преобразует список в массив.
-* `fu.getItemDetail`: Возвращает подробную информацию об элементе.
-* `fu.getItemDetails`: Возвращает массив с подробной информацией об элементах.
-* `fu.getNodeTypeStr`: Возвращает строковое представление типа узла DOM.
-* `fu.getxpathResultStr`/`fu.getxpathResultNum`: Преобразует типы результатов XPath.
-* `fu.isAttrItem`/`fu.isNodeItem`/`fu.isElementItem`: проверяет тип элемента.
-* `fu.addClassToItem`/`fu.addClassToItems`: Добавляет класс к элементам.
-* `fu.saveItemClass`/`fu.restoreItemClass`/`fu.saveItemClasses`/`fu.restoreItemClasses`: Сохраняет и восстанавливает классы элементов.
-* `fu.setAttrToItem`/`fu.removeAttrFromItem`/`fu.removeAttrFromItems`: Устанавливает и удаляет атрибуты элементов.
-* `fu.setIndexToItems`: Устанавливает индекс к элементам.
-* `fu.getParentElement`: Возвращает родительский элемент.
-* `fu.getAncestorElements`: Возвращает массив родительских элементов.
-* `fu.getOwnerDocument`: Возвращает документ элемента.
-* `fu.createHeaderRow`/`fu.createDetailTableHeader`/`fu.createDetailRow`/`fu.appendDetailRows`/`fu.updateDetailsTable`: Функции для создания и управления таблицей деталей.
-* `fu.emptyChildNodes`: Очищает все дочерние узлы элемента.
-* `fu.saveAttrForItem`/`fu.saveAttrForItems`/`fu.restoreItemAttrs`: Функции для сохранения и восстановления атрибутов элементов.
-* `fu.getFrameAncestry`: Возвращает массив элементов фреймов.
-* `fu.isNumberArray`: Проверяет, является ли массив массивом чисел.
-* `fu.onError`/`fu.isBlankWindow`/`fu.collectBlankWindows`/`fu.findFrameElement`/`fu.findFrameIndex`: Функции для обработки ошибок, проверки пустых окон и фреймов.
-* `fu.makeDetailText`: Форматирует строку описания элемента.
+**Классы:**
+
+- Нет явных определений классов.  Все функции являются статическими.
 
 
-**Переменные**: Используются локальные переменные, такие как `items`, `resultType`, `context`, `doc`, `elems`, содержащие данные различного типа: строки, узлы DOM, числа.
+**Функции:**
 
-**Возможные ошибки или улучшения**:
-* Отсутствует явное указание на то, где определены `tryxpath` и `xpathResult`. Необходима документация для лучшего понимания контекста.
-* Функции обработки ошибок (`fu.onError`) вызывают `console.log` – это может не быть лучшим подходом для обработки ошибок.
-* Использование `return ;` в некоторых местах, возможно, можно улучшить с точки зрения стиля, но это не критично.
-* Примеры использования функций в коде (tests) существенно улучшат понимание функциональности каждой функции.
+- `fu.execExpr`: Основная функция для выполнения XPath-выражений или CSS-селекторов. Принимает выражение, метод выполнения, опции (включая `context`, `resolver`). Возвращает объект с результатами.
+- `fu.resToArr`: Преобразует результат XPath (объект `xpathResult`) в массив узлов. Обрабатывает различные типы результатов XPath.
+- `fu.makeResolver`: Создаёт функцию-резолвер, которая обрабатывает данные для `evaluate`.
+- `fu.isDocOrElem`, `fu.listToArr`:  Вспомогательные функции для проверки типа объекта и преобразования массивоподобных объектов в массивы.
+- `fu.getItemDetail`, `fu.getItemDetails`: Функции для получения подробной информации об узлах (типа, имени, значения).
+- `fu.getNodeTypeStr`: Получает строковое представление типа узла.
+- `fu.getxpathResultStr`, `fu.getxpathResultNum`: преобразовывают типы xpathResult.
+- `fu.isAttrItem`, `fu.isNodeItem`, `fu.isElementItem`:  Проверяют тип объекта на соответствие Attributem Node, Node, Element Node.
+- Функции для работы с классами элементов (`fu.addClassToItem`, `fu.saveItemClass`, etc.)
+- `fu.saveAttrForItem`, `fu.saveAttrForItems`, `fu.restoreItemAttrs`: Для сохранения и восстановления атрибутов элементов.
+- `fu.updateDetailsTable`, `fu.appendDetailRows`, `fu.emptyChildNodes`: Функции, связанные с отображением данных в таблице.
+- `fu.getFrameAncestry`, `fu.isBlankWindow`, `fu.collectBlankWindows`, `fu.findFrameElement`, `fu.findFrameIndex`: Функции для работы с iframe-элементами.
+- `fu.createHeaderRow`, `fu.createDetailTableHeader`, `fu.createDetailRow`: Функции для создания таблицы с детальной информацией.
 
-**Взаимосвязи с другими частями проекта**: Функции `fu.*` предполагают использование объектов DOM и методов `document.evaluate`, `querySelector`, `querySelectorAll`.  Поэтому, они тесно связаны с DOM-API браузера. Они, вероятно, используются для обработки пользовательского ввода или для построения пользовательского интерфейса.  Для более детального анализа необходима информация о контексте использования в `src`.
+**Переменные:**
+
+- `tx`, `fu`: псевдонимы для `tryxpath`, `tryxpath.functions`.
+- `context`: Переменная, хранящая контекст для выполнения XPath/CSS-селекторов.
+- `opts`: Опции для функции `fu.execExpr`.
+- `doc`: `Document` объект, часто используемый для создания новых элементов.
+- `res`, `type`, `arr`, `items`:  Используются для обработки результатов выражений XPath.
+
+
+**Возможные ошибки и улучшения:**
+
+- Отсутствует обработка ошибок при парсинге JSON-строки в `fu.makeResolver`.
+- Отсутствует явное указание типов переменных. В js это не обязательно, но рекомендуется для повышения читабельности.
+- `fu.createDetailRow`, `fu.appendDetailRows`, `fu.updateDetailsTable` могут быть улучшены за счёт использования более оптимальных алгоритмов добавления в DOM-дерево, особенно для больших объёмов данных.
+
+
+**Цепочка взаимосвязей:**
+
+Функции из модуля `tryxpath.functions` (фу) предназначены для работы с DOM-элементами (узлами документа) и XPath выражениями, используя методы `evaluate`, `querySelector`, `querySelectorAll`. Функции этого модуля могут вызываться из других частей проекта, например, скриптов на стороне веб-страницы, для поиска и манипуляции элементами страницы.  Подключаемые зависимости: `document`, `Node`, `xpathResult`.  `window`  играет роль глобального контекста для всего кода.
+
+**Вывод:**
+
+Код представляет собой набор утилитарных функций для работы с XPath, CSS-селекторами, и DOM-элементами, которые могут быть использованы для поиска, манипулирования и анализа структуры веб-страницы. Код хорошо структурирован и предоставляет гибкие возможности обработки результатов XPath-выражений.

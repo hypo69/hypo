@@ -3,12 +3,12 @@
 
 ```python
 ## \file hypotez/src/webdriver/crawlee_python/crawlee_python.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.crawlee_python 
+.. module:: src.webdriver.crawlee_python 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -20,7 +20,7 @@ from pathlib import Path
 from src import gs
 import asyncio
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
-from src.logger import logger
+from src.logger.logger import logger
 
 class CrawleePython:
     def __init__(self, max_requests: int = 5, headless: bool = False, browser_type: str = 'firefox'):
@@ -100,108 +100,114 @@ if __name__ == '__main__':
 
 # <algorithm>
 
-**Шаг 1:**  Инициализация `CrawleePython`  
-  * Принимает `max_requests`, `headless`, и `browser_type` в качестве аргументов.
-  * Инициализирует атрибуты `self.max_requests`, `self.headless`, `self.browser_type` и `self.crawler` = None.
-**Пример:** `experiment = CrawleePython(max_requests=5, headless=False, browser_type='firefox')`
+```mermaid
+graph TD
+    A[Initialise CrawleePython] --> B{Get URLs};
+    B -- urls -> C[setup_crawler];
+    C --> D[Instantiate PlaywrightCrawler];
+    D --> E[Set @default_handler];
+    E --> F[run_crawler];
+    F --> G{Process Each URL};
+    G --> H[Extract Data];
+    H --> I[Enqueue Links];
+    I --> G;
+    G --> J[Push Data];
+    J --> K[Export Data];
+    K --> L[get_data];
+    L --> M[Log Data];
+    M --> N[End];
+```
 
-**Шаг 2:**  `setup_crawler()`  
-  * Создает экземпляр `PlaywrightCrawler` с заданными параметрами.
-  * Определяет обработчик `request_handler` для обработки каждого запроса.
-**Пример:** `await experiment.setup_crawler()`
+* **Initialise CrawleePython:** The `CrawleePython` object is created with configuration parameters (max requests, headless mode, browser type).
+* **Get URLs:** The input URLs are retrieved.
+* **setup_crawler:**  Instantiates a `PlaywrightCrawler` object and sets up a `default_handler` function for handling requests.
+* **run_crawler:** The crawler is started with the list of input URLs.
+* **Process Each URL:** The code iterates through each URL in the list.
+* **Extract Data:**  Fetches the page title and content (truncated).
+* **Enqueue Links:**  Finds and adds new links to the queue.
+* **Push Data:** Sends the extracted data to the PlaywrightCrawler's dataset.
+* **Export Data:** Saves the collected data to a JSON file.
+* **get_data:** Retrieves the collected data.
+* **Log Data:** Logs the extracted data.
 
-**Шаг 3:** `request_handler`
-* Выводит сообщение о обработке текущего URL.
-* Получает ссылки с текущей страницы (`context.enqueue_links()`).
-* Извлекает данные с помощью Playwright API (`context.page.title()`, `context.page.content()`).
-* Отправляет полученные данные в хранилище (`context.push_data()`).
-**Пример:**
-* `context.log.info(f'Processing https://example.com...')`
-* Извлеченные данные сохраняются в словаре `data`.
-
-**Шаг 4:** `run_crawler()`
-  * Запускает `PlaywrightCrawler` с предоставленным списком `urls`.
-**Пример:** `await experiment.run_crawler(['https://example.com'])`
-
-**Шаг 5:** `export_data()`
-  * Экспортирует данные в JSON файл на `file_path`.
-**Пример:**  `await experiment.export_data(str(Path(gs.path.tmp / 'results.json')))`
-
-**Шаг 6:** `get_data()`
-  * Возвращает все сохраненные данные в словаре.
-
-
-**Шаг 7:** `run()`
-  * Вызывает `setup_crawler()`.
-  * Вызывает `run_crawler()` с переданным списком `urls`.
-  * Вызывает `export_data()` с путём к файлу, где будут сохранены результаты.
-  * Возвращает данные.
-**Пример:** `await experiment.run(['https://example.com'])`
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[CrawleePython] --> B{setup_crawler};
-    B --> C[PlaywrightCrawler];
-    C --> D{request_handler};
-    D --> E[enqueue_links];
-    D --> F[extract data];
-    D --> G[push data];
-    E --> H[Crawl URLs];
-    F --> I[Data];
-    G --> I;
-    H --> J[run_crawler];
-    J --> K[export_data];
-    K --> L[file];
-    J --> M[get_data];
-    M --> N[return data];
-    A --> O[run];
-    O --> B;
-    O --> J;
-    O --> K;
-    O --> M;
+graph LR
+    subgraph CrawleePython Class
+        CrawleePython --> setup_crawler;
+        CrawleePython --> run_crawler;
+        CrawleePython --> export_data;
+        CrawleePython --> get_data;
+        CrawleePython --> run;
+    end
+    subgraph PlaywrightCrawler Class
+        PlaywrightCrawler --> run;
+        PlaywrightCrawler --> export_data;
+        PlaywrightCrawler --> get_data;
+    end
+    subgraph request_handler Function
+        request_handler --> enqueue_links;
+        request_handler --> extract_data;
+        request_handler --> push_data;
+    end
+    CrawleePython -- max_requests, headless, browser_type --> PlaywrightCrawler;
+    PlaywrightCrawler -- urls --> request_handler;
+    request_handler -- context, url --> extract_data;
+    extract_data -- title, content --> push_data;
+    push_data -- data --> export_data;
+    export_data --> get_data;
+    get_data --> CrawleePython;
+    CrawleePython --> logger;
+    logger -- info --> console;
+    gs.path.tmp -- path --> export_data;
 ```
-* **crawlee.playwright_crawler**:  Пакет, содержащий классы, необходимые для работы с Playwright для веб-скреппинга.
-* **src.logger**:  Логгер для записи сообщений об ошибках, информации и т.д.
-* **src.gs**:  Вероятно, содержит классы или функции для работы с файловой системой или конфигурацией (судя по использованию `gs.path.tmp`).
+
+**Dependencies:**
+
+* `pathlib`: Used for working with file paths.
+* `asyncio`: For asynchronous operations.
+* `crawlee.playwright_crawler`:  A custom Playwright-based crawler library (presumably part of the project).
+* `src.logger.logger`: A custom logger module (likely part of the project's logging infrastructure).
+* `src.gs`: Likely a module providing global settings or data access.
 
 
 # <explanation>
 
-**Импорты:**
-* `from pathlib import Path`: Используется для работы с путями к файлам.
-* `from src import gs`:  Импортирует модуль `gs` из пакета `src`.  Вероятно, `gs` содержит функции или классы, связанные с хранением или обработкой данных, возможно, файловой системой.
-* `import asyncio`: Используется для асинхронного выполнения кода, особенно полезно для работы с веб-запросами.
-* `from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext`: Импортирует классы для работы с Playwright. `PlaywrightCrawler` отвечает за запуск и обработку веб-запросов, а `PlaywrightCrawlingContext` предоставляет контекст для обработки каждого отдельного запроса.
-* `from src.logger import logger`: Импортирует логгер.
-
-**Классы:**
-* `CrawleePython`: Этот класс представляет собой основное звено для работы со скрэйпингом. Он инициализирует параметры (количество одновременных запросов, режим браузера, тип браузера) и предоставляет методы для настройки, выполнения и экспорта данных.
-
-**Функции:**
-* `__init__`: Инициализирует атрибуты класса, которые определяют поведение процесса скрэйпинга.
-* `setup_crawler`: Настраивает `PlaywrightCrawler`, устанавливает колбэк-функцию `request_handler`.
-* `request_handler`: Обрабатывает каждый запрос в ходе работы.
-* `run_crawler`: Запускает процесс скрэйпинга с предоставленным списком начальных URL-адресов.
-* `export_data`: Экспортирует собранные данные в JSON-файл.
-* `get_data`: Возвращает собранные данные.
-* `run`: Основной метод, объединяющий все предыдущие шаги для запуска процесса.
-
-**Переменные:**
-* `MODE`: Не используется в этом коде, но, вероятно, хранит режим работы (например, «dev», «prod»).
-* `max_requests`:  Максимальное количество одновременных запросов.
-* `headless`: Параметр для запуска браузера без графического интерфейса.
-* `browser_type`: Тип браузера для использования.
+* **Imports:**
+    * `pathlib`: Provides object-oriented way of working with paths.
+    * `asyncio`: Enables asynchronous programming.
+    * `crawlee.playwright_crawler`: This module is part of the project's crawler system. It likely provides the functionality for controlling the web browser, handling requests, and extracting data using Playwright.
+    * `src.logger.logger`:  A custom logger module within the project. It facilitates structured logging, potentially handling log levels and output destinations.
+    * `src.gs`: This module (`gs`) likely contains global variables or functions for accessing configuration settings, such as temporary file paths.
 
 
-**Возможные ошибки или области для улучшений:**
-* **Обработка ошибок:** Нет обработки возможных исключений при работе с веб-страницами (например, проблемы с подключением, некорректный HTML).
-* **Временные ограничения:** Не заданы временные ограничения на выполнение запросов, что может привести к зависанию программы при наличии медленных страниц.
-* **Обработка большого объема данных:** Если будет много данных, то `data` может стать очень большим, и обработка `data.items` может стать медленной.
-* **Избыточное использование `async`/`await`:** `await self.crawler.run(urls)` ожидает завершения `self.crawler.run()`, то есть не нужно добавлять `await` перед `self.crawler.run(urls)`
-* **Проверка на корректность URL-ов:** Необходимо валидировать вводимые URL-ы, чтобы избежать ошибок во время работы.
+* **Classes:**
+    * `CrawleePython`: This class orchestrates the web crawling process.
+        * `__init__`: Initializes the `CrawleePython` instance with parameters controlling the crawl (number of requests, browser type, headless mode).
+        * `setup_crawler`: Configures and initiates the `PlaywrightCrawler` instance.
+        * `run_crawler`: Executes the crawl using the `PlaywrightCrawler`.
+        * `export_data`: Exports the collected data to a JSON file.
+        * `get_data`: Returns the collected data.
+        * `run`: The main method that chains the setup, crawling, export, and data retrieval steps.
+    * `PlaywrightCrawler`: A separate class (possibly external, not defined here) responsible for the actual crawling logic and interacting with the Playwright library.
 
 
-**Взаимосвязи с другими частями проекта:**
-Код зависит от пакета `crawlee` для работы с `PlaywrightCrawler`, и `src.logger` для вывода сообщений в консоль.  Пакет `gs` используется для работы с файловой системой. Это указывает на то, что эти компоненты находятся в рамках одного проекта и имеют определенные связи между собой.
+* **Functions:**
+    * `request_handler`: Handles each URL encountered by the crawler. It extracts data from the page and queues additional links to fetch.
+* **Variables:**
+   * `MODE`: A constant that likely defines the environment mode (e.g., 'dev', 'prod').
+   * `max_requests`, `headless`, `browser_type`: Configuration parameters passed to `CrawleePython`.
+
+
+* **Possible Errors/Improvements:**
+    * Error handling: The code lacks explicit error handling.  Adding `try...except` blocks would catch potential exceptions during web scraping (e.g., network issues, invalid URLs, timeouts) and prevent crashes.
+    * Robustness: The content extraction (`(await context.page.content())[:100]`) truncates data to 100 characters. This could be improved by defining a more dynamic and flexible way of data extraction.
+    * Logging: The logging is done but isn't well-structured. Consider more detailed logging of events, times, URLs, and statuses for better diagnostics.
+    * Asynchronous operations: The use of `asyncio` is good but should be more explicitly managed if the crawler is expected to scale or encounter slow responses.
+
+
+
+* **Relationship to other parts of the project:**
+   The code depends on the `crawlee` library and the `src` package for functionality related to the logger and global settings. The global settings are likely used to specify the path where the extracted data will be stored.

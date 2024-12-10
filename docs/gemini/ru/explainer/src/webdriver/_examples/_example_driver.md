@@ -1,7 +1,4 @@
-```MD
-# Анализ кода example_driver.py
-
-**1. <input code>**
+# <input code>
 
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_driver.py
@@ -10,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver._examples 
+.. module:: src.webdriver._examples 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -85,84 +82,103 @@ def main():
         chrome_driver.quit()
         print("Chrome browser closed.")
 
-    # ... (rest of the code for Firefox and Edge is similar)
+    # Create an instance of the Driver class with the Firefox webdriver
+    print("Creating a Firefox browser instance...")
+    firefox_driver = Driver(Firefox)
+
+    # ... (rest of the code is similar)
 ```
 
-**2. <algorithm>**
+# <algorithm>
 
-Пошаговый алгоритм:
+The algorithm demonstrates using a webdriver (Chrome, Firefox, Edge) to interact with a webpage.
 
-1. **Импорт:** Модули `Driver`, `Chrome`, `Firefox`, `Edge` из `src.webdriver.driver`.
-2. **Функция `main`:**
-   * Создает экземпляры `Driver` для `Chrome`, `Firefox` и `Edge`.
-   * **Цикл:** Для каждого браузера:
-     * **Попытка:** Выполняет операции с браузером (переход по URL, извлечение домена, прокрутка, сохранение куки).
-     * **Обработка ошибок:** Проверяет успешность каждой операции с помощью `if`.
-     * **Закрытие браузера:** Вызывает `quit()` для закрытия драйвера.
+**Step 1:** Initialize Driver objects
 
-**Пример:**
+*   `main` function creates `Driver` objects (`chrome_driver`, `firefox_driver`, `edge_driver`) using `Driver(Chrome)`, `Driver(Firefox)`, `Driver(Edge)`, respectively.
 
-Для Chrome:
+**Step 2:** Navigate to a URL
 
-* Создает экземпляр `Driver` с типом браузера `Chrome`.
-* Переходит по URL `https://www.example.com` с помощью `get_url()`.
-* Извлекает домен с помощью `extract_domain()`.
-* Прокручивает страницу вниз с помощью `scroll()`.
-* Сохраняет куки в файл `cookies_chrome.pkl`.
-* Закрывает браузер.
+*   `get_url(url)` attempts to navigate to a given URL.
 
+**Step 3:** Extract the domain
 
-**Перемещение данных:**
+*   `extract_domain(url)` extracts the domain name from the URL.
 
-Экземпляры `Driver` передают данные между методами (например, данные о URL, браузере) для выполнения различных операций.  Результат вызова методов (true/false) используется для обработки успешности.
+**Step 4:** Scroll the page
+
+*   `scroll(scrolls, direction)` scrolls the page up or down a specified number of times.
+
+**Step 5:** Save cookies
+
+*   `_save_cookies_localy(to_file)` saves the cookies to a file.
 
 
-**3. <mermaid>**
+**Step 6:** Close the browser
+
+*   `quit()` function closes the browser.
+
+
+**Data Flow:**
+
+The `Driver` class likely handles communication with the webdriver.  The `main` function creates instances of the `Driver` class and passes the desired browser type.  The `Driver` class then uses the specific webdriver's methods to perform actions on the webpage. The results (success/failure) are returned and the `main` function logs the results.
+
+
+# <mermaid>
 
 ```mermaid
 graph TD
-    A[main()] --> B{Create Chrome Driver};
-    B --> C{Navigate to URL};
-    C --Success--> D[Extract Domain];
-    C --Fail--> E[Failed to navigate];
-    D --> F{Scroll Down};
-    F --Success--> G[Save Cookies];
-    F --Fail--> H[Failed to scroll];
-    G --Success--> I[Close Chrome];
-    E --> I;
-    H --> I;
-    I --> J{Create Firefox Driver};
-    J --> K[Navigate to URL];
-    K --Success--> L[Extract Domain];
-    K --Fail--> M[Failed to navigate];
-    L --> N{Scroll Up};
-    N --Success--> O[Save Cookies];
-    N --Fail--> P[Failed to scroll];
-    O --> Q[Close Firefox];
-    M --> Q;
-    P --> Q;
-    ... (Аналогичные шаги для Edge)
+    subgraph Driver Class
+        Driver --> Chrome
+        Driver --> Firefox
+        Driver --> Edge
+    end
+    main --> Driver[Driver(Chrome)]
+    Driver[Driver(Chrome)] --> get_url("https://www.example.com")
+    get_url("https://www.example.com") --success--> Successfully navigated to https://www.example.com
+    get_url("https://www.example.com") --failure--> Failed to navigate to https://www.example.com
+    Driver[Driver(Chrome)] --> extract_domain("https://www.example.com")
+    extract_domain("https://www.example.com") --> Extracted domain: example.com
+    Driver[Driver(Chrome)] --> scroll(3, 'forward')
+    scroll(3, 'forward') --success--> Successfully scrolled down the page
+    scroll(3, 'forward') --failure--> Failed to scroll down the page
+    Driver[Driver(Chrome)] --> _save_cookies_localy('cookies_chrome.pkl')
+    _save_cookies_localy('cookies_chrome.pkl') --success--> Cookies saved successfully
+    _save_cookies_localy('cookies_chrome.pkl') --failure--> Failed to save cookies
+    Driver[Driver(Chrome)] --> quit()
+    quit() --> Chrome browser closed
+    main --> Driver[Driver(Firefox)]
+    ... (similar calls for Firefox and Edge) ...
 ```
 
-**4. <explanation>**
+# <explanation>
 
-* **Импорты:**  `from src.webdriver.driver import Driver, Chrome, Firefox, Edge` импортирует классы `Driver`, `Chrome`, `Firefox`, `Edge` из модуля `driver` в папке `src/webdriver`.  Это означает, что код example_driver.py использует функционал для работы с веб-драйверами, определенный в `driver.py` в проекте.
+**Imports:**
 
-* **Классы:**
-    * `Driver`:  Абстрактный класс для управления веб-драйверами.  Он содержит методы для навигации, извлечения данных, прокрутки и сохранения куки.  В коде примеры использования `get_url`, `extract_domain`, `scroll`, `_save_cookies_localy`, `quit`.
-    * `Chrome`, `Firefox`, `Edge`:  Классы конкретных драйверов.  Они наследуются от класса `Driver` и представляют определенный браузер (Chrome, Firefox, Edge).  Важно что пример использования этих классов на основе Driver.
+*   `from src.webdriver.driver import Driver, Chrome, Firefox, Edge`: Imports necessary classes from the `src.webdriver.driver` module.  This implies `src.webdriver.driver` likely contains the base `Driver` class and specific implementations for different browsers (Chrome, Firefox, Edge).  The structure suggests a modular design, allowing easy addition of more browser drivers.
 
-* **Функция `main`:**  Точка входа программы.  Она демонстрирует, как использовать `Driver` с различными браузерами (Chrome, Firefox, Edge).
+**Classes:**
 
-* **Переменные:**
-    * `MODE = 'dev'`:  Переменная, скорее всего, для обозначения режима работы (разработка).
-    * `url = "https://www.example.com"`: Строковая переменная, содержащая URL, который будет использоваться для тестирования.
-* **Возможное улучшение:**
-    * **Обработка исключений:** В коде отсутствует явная обработка исключений, таких как `TimeoutException` или ошибки взаимодействия с драйверами. Это следует добавить для более надежной работы.
-    * **Логирование:**  Добавление логирования (например, с помощью `logging`) улучшит отладку и позволит получить больше информации об успешности или неудачах.
-    * **Управление ресурсами:**  Более продвинутый вариант - использовать контекстный менеджер для управления драйверами (с помощью `with`), чтобы гарантировать, что драйвер будет закрыт даже при возникновении исключений.
+*   `Driver`: Abstract or base class that provides a common interface for interacting with web drivers (Chrome, Firefox, Edge). This likely defines methods like `get_url`, `scroll`, `extract_domain`, `quit`, and `_save_cookies_locally`. This is crucial for code reusability.
+*   `Chrome`, `Firefox`, `Edge`: Concrete implementations of `Driver` for respective browsers. They handle the specific interaction with each browser's webdriver library.
 
+**Functions:**
 
-**Взаимосвязь с другими частями проекта:**
+*   `main()`: The entry point of the script.  It creates instances of `Driver` with different browsers, navigates to a URL, extracts the domain, scrolls the page, and saves cookies. It demonstrates the usage and interaction flow.
 
-Код `example_driver.py` зависит от классов `Driver`, `Chrome`, `Firefox`, `Edge`, которые, вероятно, определены в модуле `driver.py` в директории `src/webdriver`.  Этот модуль, в свою очередь, может зависеть от библиотек веб-драйверов (например, Selenium).
+**Variables:**
+
+*   `MODE = 'dev'`: A global variable likely related to configuration (e.g., 'dev' or 'prod').
+*   `url = "https://www.example.com"`:  Used for navigation tests.
+*   `scrolls`, `direction`: Configuration options for scrolling.
+
+**Possible Errors/Improvements:**
+
+*   **Error Handling:** The code checks for success or failure after each operation (e.g., `get_url`, `scroll`), but it doesn't catch exceptions.  Handling potential exceptions (like network issues) would significantly improve robustness.
+*   **Explicit Timeouts:**  Adding timeouts to operations like `get_url` would prevent indefinite blocking if a site is unresponsive.
+*   **Logging:** Adding logging would provide more context for debugging and monitoring, especially in more complex scenarios.
+*   **Configuration:** The code hardcodes the URLs. Having a configuration file (e.g., YAML) to store these values would enhance maintainability.
+
+**Relationships to other parts of the project:**
+
+The code heavily relies on the `src.webdriver.driver` module for the core `Driver` functionality and specific browser classes.  Other modules might use the `Driver` class to interact with web pages in their own tests or applications, potentially providing a way for various parts of the project to handle web interactions.

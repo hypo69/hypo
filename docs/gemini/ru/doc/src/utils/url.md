@@ -2,7 +2,7 @@
 
 ## Обзор
 
-Этот модуль предоставляет функции для работы со строками URL, включая извлечение параметров запроса и проверку валидности URL-адресов.
+Модуль `src.utils.string.url` предоставляет функции для работы со строками URL, включая извлечение параметров запроса и проверку на валидность URL-адресов.
 
 ## Функции
 
@@ -16,19 +16,13 @@
 **Возвращает**:
 - `dict | None`: Словарь параметров запроса и их значений или `None`, если URL не содержит параметров.
 
-**Примеры использования**:
-
+**Пример использования**:
 ```python
-url = "https://example.com/page?param1=value1&param2=value2&param3="
+url = "https://example.com/path?param1=value1&param2=value2&param3="
 params = extract_url_params(url)
 print(params)  # Output: {'param1': 'value1', 'param2': 'value2', 'param3': ''}
 ```
 
-```python
-url = "https://example.com/page"
-params = extract_url_params(url)
-print(params) # Output: None
-```
 
 ### `is_url`
 
@@ -38,18 +32,20 @@ print(params) # Output: None
 - `text` (str): Строка для проверки.
 
 **Возвращает**:
-- `bool`: `True` если строка является валидным URL, иначе `False`.
+- `bool`: `True`, если строка является валидным URL, иначе `False`.
 
-**Примеры использования**:
-
+**Пример использования**:
 ```python
-url1 = "https://www.example.com"
-url2 = "invalid_url"
-print(is_url(url1))  # Output: True
-print(is_url(url2))  # Output: False
+url = "https://example.com"
+valid_url = is_url(url)
+print(valid_url)  # Output: True
+
+invalid_url = "invalid_url"
+invalid_valid_url = is_url(invalid_url)
+print(invalid_valid_url)  # Output: False
 ```
 
-## Пример использования модуля
+##  Пример использования (встроенный в модуль):
 
 ```python
 # Получаем строку URL от пользователя
@@ -70,19 +66,4 @@ else:
     print("Введенная строка не является валидным URL.")
 ```
 
-```python
-# Пример вывода при вводе "https://www.example.com/page?param1=value1&param2=value2"
-# Параметры URL:
-# param1: value1
-# param2: value2
-```
-
-```python
-# Пример вывода при вводе "invalid_url"
-# Введенная строка не является валидным URL.
-```
-
-## Описание модуля
-
-Модуль `src.utils.string.url` предоставляет вспомогательные функции для работы с URL-адресами, в том числе для извлечения параметров запроса и проверки валидности URL. Функции `extract_url_params` и `is_url` предназначены для упрощения работы с URL-адресами в Python-приложениях.
-```
+**Примечание**:  Код примера демонстрирует как использовать функции из модуля и обрабатывать возможные ошибки.

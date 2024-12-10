@@ -72,97 +72,107 @@
     };
 
     // ... (rest of the code)
-});
 ```
 
 ## <algorithm>
 
-(Блок-схема не помещается, слишком большой)
+```mermaid
+graph TD
+    A[loadOptions] --> B{Extract Options};
+    B --> C{Validate Attributes};
+    C -- Valid -- D[Save Options];
+    C -- Invalid -- E[Error Message];
+    D --> F[Set Storage];
+    F --> G[Success Message];
+    E --> H[Display Error];
+    B -- Default Values -- I[Load Default];
+    I --> J{Load CSS};
+    J --> K[Set Default Values];
+    K --> L[Update UI];
 
-**Общая идея:**
+    subgraph Save Options
+        C --> D
+        D -- Success -- G
+        D -- Failure -- H
+    end
+```
 
-Код обрабатывает ввод пользователя в веб-странице опций, записывает настройки в хранилище браузера и загружает значения по умолчанию.
+**Описание:**
 
-**Пошаговая логика (фрагменты):**
-
-1. **Инициализация:** Определяются переменные для доступа к элементам формы, стилей, сообщений об ошибках, атрибуты по умолчанию.
-
-2. **Загрузка настроек из хранилища:** Используя `browser.runtime.sendMessage`, получает значения настроек из другого компонента.
-
-3. **Установка значений в поля формы:** Заполняет поля формы полученными значениями.
-
-4. **Обработка клика "Сохранить":**
-   - Считывает значения из полей формы.
-   - Проверяет валидность атрибутов и стилей (длина и имена).
-   - Если значения валидные, то записывает их в `browser.storage.sync`.
-   - Выводит сообщение об успехе или ошибке.
-
-5. **Обработка клика "По умолчанию":**
-   - Заполняет поля формы значениями по умолчанию.
-   - Загружает CSS по умолчанию из файла `try_xpath_insert.css`.
-
+Код обрабатывает запрос для сохранения настроек расширения.  Алгоритм:
+1.  Загружает настройки из браузера при загрузке страницы.
+2.  Проверяет корректность введенных атрибутов и стилей.
+3.  Если валидация прошла успешно, сохраняет данные в хранилище браузера.
+4.  Если валидация не прошла, отображает сообщение об ошибке.
+5.  Предоставляет возможность загрузить значения по умолчанию.
+6.  При клике по "Load Default" загружает CSS по умолчанию и устанавливает значения по умолчанию.
 
 ## <mermaid>
 
 ```mermaid
-graph TD
-    A[window.addEventListener("load")] --> B{Initialize variables};
-    B --> C[Load options from storage];
-    C --> D[Set form values];
-    D --> E[Handle "Save" click];
-    E --> F[Validate inputs];
-    F -- Valid -- G[Store options in browser storage];
-    F -- Invalid -- H[Display error message];
-    G --> I[Display success message];
-    E --> J[Handle "Default" click];
-    J --> K[Set default values];
-    K --> L[Load default CSS];
-    L --> M[Update form];
-    subgraph Other components
-        O[browser.runtime] --> C;
-        O --> G;
+graph LR
+    subgraph Options Page
+        A[options.js] --> B(loadOptions);
+        B --> C[Validate Attributes];
+        C -- Valid -- D[Save Options];
+        C -- Invalid -- E[Error Display];
+        D --> F[browser.storage.sync.set];
+        F --> G[Success Message];
+        E --> H[Error Message];
+        B -- Default Values -- I[Show Default];
+        I --> J[loadDefaultCss];
+        J --> K[Set Default Values];
+        K --> L[Update UI];
     end
-    
+    subgraph Runtime Communication
+        B --> M[browser.runtime.sendMessage];
+        M --> N[loadOptions Response];
+    end
+    subgraph External Dependencies
+        J --> O[XMLHttpRequest];
+        F --> P[browser.storage.sync];
+    end
+    N --> B;
 ```
+
+**Описание диаграммы:**
+
+Диаграмма отображает основные взаимосвязи компонентов.  `options.js` взаимодействует с хранилищем `browser.storage.sync` и `browser.runtime` для обмена данными, используя `XMLHttpRequest` для загрузки CSS. Ответ на запрос `loadOptions` возвращается в `options.js`. 
 
 ## <explanation>
 
 **Импорты:**
 
-Нет явных импортов, но `tryxpath` и `tryxpath.functions` предполагают, что эти объекты (вероятно, классы или функции) определены в другом модуле проекта (вероятно в `src.`)  и импортированы, либо доступны в текущей области видимости.
-
+- `tryxpath` и `tryxpath.functions`: Эти импорты предполагают, что `tryxpath` - это глобальный объект, содержащий функции, необходимые для работы расширения.  `tryxpath.functions` - возможно, содержит общие функции, такие как обработка ошибок (`fu.onError`).  Связь с другими частями проекта не ясна без контекста `tryxpath`.
 
 **Классы:**
 
-Нет явных классов, но `XMLHttpRequest` используется.
-
+- Нет явных классов, только функции.
 
 **Функции:**
 
-- `isValidAttrName(name)`: Проверяет, является ли имя атрибута допустимым. Использует `try...catch` для проверки, вызовет ли `setAttribute` ошибку.
-- `isValidAttrNames(names)`: Проверяет, являются ли все имена атрибутов из объекта `names` допустимыми.
-- `isValidStyleLength(len)`: Проверяет, является ли заданная длина стилей (`width` или `height`) допустимой (например, "367px" или "auto").
-- `loadDefaultCss()`: Загружает CSS из файла `try_xpath_insert.css`.  Использует `XMLHttpRequest` для асинхронной загрузки. Важно, что эта функция возвращает `Promise`, что означает, что её вызов не блокирует поток выполнения.
-- `extractBodyStyles(css)`: Извлекает ширину и высоту из CSS-стилей, входящих в параметр `css`.
-- `createPopupCss(bodyStyles)`: Формирует CSS строку для изменения стилей `popupBody`.
-
+- `isValidAttrName(name)`: Проверяет, является ли `name` допустимым именем атрибута. Использует `testElement.setAttribute` для проверки. Возвращает `true` или `false`.
+- `isValidAttrNames(names)`: Проверяет, являются ли все имена атрибутов в `names` допустимыми.
+- `isValidStyleLength(len)`: Проверяет корректность значения длины стиля (`width` или `height`). Использует регулярное выражение для проверки формата (`auto` или числовое значение в пикселях).
+- `loadDefaultCss()`: Загружает CSS по умолчанию из файла `/css/try_xpath_insert.css` через `browser.runtime.getURL`.  Использует `XMLHttpRequest` для асинхронной загрузки. Возвращает Promise, содержащий загруженный CSS.
+- `extractBodyStyles(css)`: Извлекает значения `width` и `height` из CSS строки. Возвращает объект с `width` и `height`.
+- `createPopupCss(bodyStyles)`: Создаёт строку CSS для тела попапа.
 
 **Переменные:**
 
-- `defaultAttributes`, `defaultPopupBodyStyles`:  Объекты, содержащие значения по умолчанию для атрибутов и стилей.
-- `elementAttr`, `contextAttr`, `focusedAttr`, `ancestorAttr`, `frameAttr`, `frameAncestorAttr`, `style`, `popupBodyWidth`, `popupBodyHeight`, `message`, `testElement`:  Переменные, хранящие ссылки на элементы DOM.
-- `tx`, `fu`: Псевдонимы для глобальных объектов `tryxpath` и `tryxpath.functions`.
+- `defaultAttributes`, `defaultPopupBodyStyles`: Объекты, содержащие значения по умолчанию.
+- `elementAttr`, `contextAttr`, ...: Переменные, содержащие ссылки на HTML-элементы страницы.
 
+**Возможные ошибки/улучшения:**
 
-**Возможные ошибки и улучшения:**
+- **Обработка ошибок `XMLHttpRequest`:** Функция `loadDefaultCss` не обрабатывает потенциальные ошибки при запросе CSS.
+- **Валидация input:** Проверка корректности вводимых данных (например, валидация числовых значений для стилей) должна быть более тщательной.
+- **Комментарии:** Добавьте комментарии к каждой функции и блоку кода для пояснения целей и логики.
+- **Обновление UI:** Отсутствует указание на способ обновления пользовательского интерфейса (UI) при изменении настроек.
+- **Имена переменных:** Некоторые имена переменных (например, `p` в `isValidAttrNames`) не слишком информативны.
+- **Обработка пустых значений:** Необходимо учесть возможность получения пустых значений от `browser.runtime.sendMessage` (например, при ошибках).
 
-- Нет проверки на то, что `window` и `document` определены. Необходимо добавить проверки на `undefined`.
-- Обработка ошибок `XMLHttpRequest`  может быть улучшена (обработка `reject` в `Promise`).
--  Должна быть проверка на то, что `browser.runtime` и `browser.storage.sync` доступны.
--  `isValidAttrName` и `isValidAttrNames` - слишком узкие проверки.  В идеале, стоит определять тип атрибутов и правил валидации.
--  Отсутствие обработки в `catch` блоке `browser.storage.sync.set` (возможно, `reject` в `Promise` в этом методе не обрабатывается).
-- Непонятно, что делают переменные `tx` и `fu`.  Их следует либо использовать, либо убрать.
 
 **Взаимосвязи с другими частями проекта:**
 
-Код взаимодействует с другими компонентами через `browser.runtime.sendMessage` и `browser.storage.sync`.  Это подразумевает, что в проекте есть компоненты (например, popup), которые отправляют и принимают сообщения, и компоненты, отвечающие за хранение данных. Эти компоненты должны быть связаны через расширение браузера.  Возможно, данные хранятся в файлах `.json` или других хранилищах, доступных расширениям браузера.
+Код тесно связан с расширением `tryxpath`.  Функция `browser.runtime.sendMessage` предполагает наличие процесса `browser.runtime`, который обрабатывает этот запрос. `browser.storage.sync` используется для сохранения настроек. Файл `/css/try_xpath_insert.css` содержит стили, которые используются расширением. Без понимания `tryxpath` трудно оценить полную картину.

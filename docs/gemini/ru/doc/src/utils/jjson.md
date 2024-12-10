@@ -2,98 +2,85 @@
 
 ## Обзор
 
-Модуль `jjson` предназначен для работы с JSON и CSV файлами. Он предоставляет функции для загрузки, выгрузки, слияния данных в JSON и CSV форматах, а также конвертации в `SimpleNamespace` объекты для удобной работы.
+Модуль `jjson` предназначен для работы с JSON и CSV файлами. Он предоставляет функции для загрузки, выгрузки, объединения данных в JSON формате, а также конвертации данных в `SimpleNamespace` для удобной работы.  Модуль также включает обработку Markdown строк в JSON и поддержку различных режимов работы с файлами.
+
 
 ## Функции
 
 ### `j_dumps`
 
-**Описание**: Функция для выгрузки JSON данных в файл или возврата их как словарь. Поддерживает различные режимы работы с файлами (запись, добавление в конец или начало файла).  Обрабатывает данные в формате SimpleNamespace, списке словарей и т.д.
+**Описание**: Функция `j_dumps` выгружает данные в JSON-формат в файл или возвращает данные в виде словаря. Поддерживает различные типы данных: словари, `SimpleNamespace`, списки словарей и списки `SimpleNamespace`.
 
 **Параметры**:
 
-- `data` (Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]): Данные для выгрузки в формате JSON или SimpleNamespace.
+- `data` (Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]): Данные для выгрузки в JSON-формат.
 - `file_path` (Optional[Path], optional): Путь к файлу для выгрузки. Если `None`, возвращает JSON данные в виде словаря. По умолчанию `None`.
-- `ensure_ascii` (bool, optional):  Если `True`, не ASCII символы в выводе будут экранированы. По умолчанию `True`.
-- `mode` (str, optional): Режим открытия файла ('w', 'a+', '+a'). По умолчанию 'w'.
-- `exc_info` (bool, optional): Если `True`, выводит информацию об исключениях в лог. По умолчанию `True`.
+- `ensure_ascii` (bool, optional): Если `True`, эскейпит не-ASCII символы в выводе. По умолчанию `True`.
+- `mode` (str, optional): Режим открытия файла (`'w'`, `'a+'`, `'+a'`). По умолчанию `'w'`.
+- `exc_info` (bool, optional): Если `True`, логгирует исключения с отслеживанием стека. По умолчанию `True`.
 
 **Возвращает**:
 
-- `Optional[Dict]`: JSON данные в виде словаря при успешной выгрузке, или `None` в случае ошибки.
+- `Optional[Dict]`:  JSON данные в виде словаря, если успешно, или `None` в случае ошибки.
 
-**Вызывает исключения**:
+**Возможные исключения**:
 
-- `ValueError`: Если режим открытия файла не поддерживается.
-- `Exception`: В случае других ошибок при работе с файлами или JSON.
-
+- `ValueError`: Если режим файла не поддерживается.
 
 
 ### `j_loads`
 
-**Описание**: Функция для загрузки JSON или CSV данных из файла, директории, строки, объекта JSON или SimpleNamespace.  Перекодирует строки ключей и значений в Unicode.
+**Описание**: Функция `j_loads` загружает данные из JSON или CSV файла, директории, строки, объекта `dict` или `SimpleNamespace`.  Перекодирует строки ключей и значений в Unicode для правильной обработки.
 
 **Параметры**:
 
-- `jjson` (dict | SimpleNamespace | str | Path | list): Путь к файлу, директории, строка JSON данных, объект JSON или SimpleNamespace.
-- `ordered` (bool, optional): Возвращает OrderedDict для сохранения порядка элементов. По умолчанию `True`.
+- `jjson` (dict | SimpleNamespace | str | Path | list): Путь к файлу, директории, строка JSON данных, объект JSON или `SimpleNamespace`.
+- `ordered` (bool, optional): Возвращает `OrderedDict` для сохранения порядка элементов. По умолчанию `True`.
+
 
 **Возвращает**:
 
 - `dict | list`: Обработанные данные (словарь или список словарей).
 
-**Вызывает исключения**:
+**Возможные исключения**:
 
 - `FileNotFoundError`: Если указанный файл не найден.
 - `json.JSONDecodeError`: Если данные JSON не удалось разобрать.
-- `Exception`: В случае других ошибок при работе с файлами или JSON.
-
+- Другие исключения: В случае ошибок при чтении или обработке данных.
 
 
 ### `j_loads_ns`
 
-**Описание**: Функция для загрузки JSON или CSV данных из файла, директории, строки и конвертации их в `SimpleNamespace` объекты.
+**Описание**: Функция `j_loads_ns` загружает JSON или CSV данные из файла, директории, или строки и конвертирует их в объекты `SimpleNamespace`.
 
 **Параметры**:
 
-- `jjson` (Path | SimpleNamespace | Dict | str): Путь к файлу, директории, строка JSON данных или объект JSON.
-- `ordered` (bool, optional):  Возвращает `OrderedDict` вместо обычного `dict` для сохранения порядка элементов. По умолчанию `False`.
+- `jjson` (Path | SimpleNamespace | Dict | str): Путь к файлу, директории, или JSON данные в виде строки, или объект JSON.
+- `ordered` (bool, optional):  Возвращает `OrderedDict` для сохранения порядка элементов. По умолчанию `False`.
 
 **Возвращает**:
 
-- `Optional[SimpleNamespace | List[SimpleNamespace]]`:  Возвращает `SimpleNamespace` или список `SimpleNamespace` объектов, если операция успешна. Возвращает `None` если файл не найден или не может быть прочитан.
+- `Optional[SimpleNamespace | List[SimpleNamespace]]`: Возвращает `SimpleNamespace` или список `SimpleNamespace` объектов, если успешно. Возвращает `None` в случае, если `jjson` не найден или не может быть прочитан.
 
 **Примеры**:
 
-```python
-# Пример использования:
-j_loads_ns('data.json')  # Возвращает SimpleNamespace с данными из файла
-j_loads_ns(Path('/path/to/directory')) # Возвращает список SimpleNamespace с данными из директории
-j_loads_ns('{"key": "value"}') # Возвращает SimpleNamespace с данными из строки JSON
+```
+>>> j_loads_ns('data.json')
+SimpleNamespace(key='value')
+
+>>> j_loads_ns(Path('/path/to/directory'))
+[SimpleNamespace(key1='value1'), SimpleNamespace(key2='value2')]
+
+>>> j_loads_ns('{"key": "value"}')
+SimpleNamespace(key='value')
+
+>>> j_loads_ns(Path('/path/to/file.csv'))
+[SimpleNamespace(column1='value1', column2='value2')]
 ```
 
-**Вызывает исключения**:
-
-- `FileNotFoundError`: Если указанный файл не найден.
-- `json.JSONDecodeError`: Если данные JSON не удалось разобрать.
-- `Exception`: В случае других ошибок при работе с файлами или JSON.
+**Примечание**: Функция `j_loads_ns` использует `j_loads` для загрузки данных, а затем конвертирует их в `SimpleNamespace`.
 
 
-### `extract_json_from_string`
+## Поддержка
 
-**Описание**: Извлекает JSON-контент из Markdown строки, заключенный в тэги ```json```.
-
-**Параметры**:
-
-- `md_string` (str): Markdown строка, содержащая JSON.
-
-**Возвращает**:
-
-- `str`: Извлеченный JSON-строка или пустая строка, если JSON не найден.
-
-**Вызывает исключения**:
-
-- `Exception`: В случае ошибок при парсинге строки.
-
-
-```
+Данный модуль обеспечивает  функциональность для работы с JSON/CSV данными, обработкой ошибок и поддержкой различных режимов работы с файлами.

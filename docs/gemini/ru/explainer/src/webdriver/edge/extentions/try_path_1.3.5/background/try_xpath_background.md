@@ -1,7 +1,7 @@
 ```MD
 # Анализ кода try_xpath_background.js
 
-## <input code>
+**1. <input code>**
 
 ```javascript
 /* This Source Code Form is subject to the terms of the Mozilla Public
@@ -28,116 +28,70 @@
         "frameAncestor": "data-tryxpath-frame-ancestor"
     };
 
-    function loadDefaultCss() {
-        return new Promise((resolve, reject) => {
-            var req = new XMLHttpRequest();
-            req.open("GET",
-                     browser.runtime.getURL("/css/try_xpath_insert.css"));
-            req.responseType = "text";
-            req.onreadystatechange = function () {
-                if (req.readyState === XMLHttpRequest.DONE) {
-                    resolve(req.responseText);
-                }
-            };
-            req.send();
-        });
-    }
-
     // ... (остальной код)
 ```
 
-## <algorithm>
+**2. <algorithm>**
 
-**Описание алгоритма:**
+(Блок-схема не умещается в этом формате, но мы опишем логику)
 
-Код реализует обработку сообщений от вкладок, управление стилями и получение данных для отображения результатов.
+Код обрабатывает сообщения, получаемые от других частей расширения или от вкладок браузера.  Он управляет состоянием всплывающего окна (popupState), стилями (popupCss, css), результатами поиска (results), атрибутами (attributes).
 
-1. **Инициализация:**
-    - Создаются алиасы `tx` и `fu` для `tryxpath` и его функций.
-    - Инициализируются переменные: `popupState`, `popupCss`, `results`, `css`, `attributes`.
-2. **Загрузка стилей по умолчанию:**
-    - Вызывается `loadDefaultCss()`, которая асинхронно загружает стили из `/css/try_xpath_insert.css`.
-3. **Обработка сообщений:**
-    - `genericListener` — основной обработчик сообщений.
-    - Внутри `genericListener` определяется функция `genericListener.listeners[message.event]`, которая обрабатывает конкретный тип события.
-4. **Обработка событий:**
-    - `storePopupState`: сохраняет состояние `popupState`.
-    - `requestRestorePopupState`: отправляет сообщение в `runtime` для восстановления состояния `popupState`.
-    - `requestInsertStyleToPopup`: отправляет сообщение в `runtime` для вставки `popupCss` в попап.
-    - `showAllResults`: собирает данные о результатах и открывает новую вкладку для их отображения.
-    - `loadResults`: отправляет данные `results` обратно отправителю.
-    - `updateCss`: обновляет стили в открытых вкладках.  Используется `browser.tabs.removeCSS` и `browser.tabs.insertCSS` для удаления и добавления CSS.
-    - `loadOptions`: отправляет атрибуты, CSS и `popupCss` обратно отправителю.
-    - `requestSetContentInfo`: отправляет сообщение в текущую вкладку для установки информации об атрибутах.
-5. **Изменение настроек:**
-    - `browser.storage.onChanged.addListener`: обрабатывает изменения настроек из хранилища. Обновляет переменные `attributes`, `css`, `popupCss` при необходимости.
-6. **Синхронизация настроек:**
-    - `browser.storage.sync.get`: загружает настройки из синхронизированного хранилища (`attributes`, `css`, `popupCss`).
-    - Если `css` не загружен, загружает по умолчанию с помощью `loadDefaultCss()`.
-    - Обновляет глобальные переменные `attributes`, `popupCss` и `css`.
+1. **Инициализация:** Определяет переменные,  создает объект `genericListener.listeners` для хранения обработчиков сообщений. Загружает значения `attributes`, `css`, `popupCss` из хранилища `browser.storage`. Если `css` не загружен, то загружает по умолчанию из файла `/css/try_xpath_insert.css`.
 
+2. **Обработка сообщений:** Функция `genericListener` обрабатывает сообщения, используя `genericListener.listeners`. Каждое сообщение имеет свой обработчик. Например:
+    * `storePopupState`: сохраняет значение `message.state` в `popupState`.
+    * `requestRestorePopupState`: отправляет сообщение в runtime с состоянием `popupState`.
+    * `requestInsertStyleToPopup`: отправляет сообщение в runtime со стилями `popupCss`.
+    * `showAllResults`: сохраняет результаты `message` в `results`, записывает `tabId` и `frameId`, создаёт новую вкладку для отображения результатов.
+    * `loadResults`: отвечает на запрос, возвращая `results`.
+    * `updateCss`: удаляет устаревшие стили из вкладки и добавляет новые. Используется асинхронное выполнение операций с вкладками `browser.tabs`.
+    * `loadOptions`: отвечает на запрос, возвращая `attributes`, `css` и `popupCss`.
+    * `requestSetContentInfo`: отправляет сообщение во вкладку для установки атрибутов.
 
-## <mermaid>
+3. **Обработка изменений хранилища:** Функция `browser.storage.onChanged.addListener` отслеживает изменения в хранилище и обновляет локальные переменные (`attributes`, `css`, `popupCss`).
+
+**3. <mermaid>**
 
 ```mermaid
 graph LR
-    A[browser.storage.sync.get] --> B{Проверка css};
-    B -- css есть --> C[attributes = items.attributes, popupCss = items.popupCss, css = items.css];
-    B -- css нет --> D[loadDefaultCss()];
-    C --> E[attributes = items.attributes, popupCss = items.popupCss, css = loadedCss];
+    A[Инициализация] --> B{Загрузка css};
+    B -- Да -> C[Обработка хранилища];
+    B -- Нет -> D[Загрузка по умолчанию];
+    C --> E[Обработка сообщений];
     D --> E;
-    E --> F[browser.storage.onChanged.addListener];
-    F --> G[Обновление attributes, css, popupCss];
-    G --> H[genericListener];
-    H --> I{message.event};
-    I -- storePopupState --> J[popupState = message.state];
-    I -- requestRestorePopupState --> K[browser.runtime.sendMessage];
-    I -- requestInsertStyleToPopup --> L[browser.runtime.sendMessage];
-    I -- showAllResults --> M[results = message, results.tabId = sender.tab.id, results.frameId = sender.frameId, browser.tabs.create];
-    I -- loadResults --> N[sendResponse(results), return true];
-    I -- updateCss --> O[browser.tabs.removeCSS, browser.tabs.insertCSS, browser.tabs.sendMessage];
-    I -- loadOptions --> P[sendResponse];
-    I -- requestSetContentInfo --> Q[browser.tabs.sendMessage];
+    E --> F[Отправка сообщений в runtime/вкладки];
+    F --> G[Удаление/Добавление CSS];
+    F --> H[Ответ на запрос];
+    G --> I[Обновление вкладок];
+    H --> J[Возврат данных];
+    I --> E;
+    J --> E;
 ```
 
-## <explanation>
+**4. <explanation>**
 
-**Импорты:**
+* **Импорты:**  Нет прямых импортов с `src.`, но код использует переменные `tryxpath` и `tryxpath.functions`, что указывает на зависимость от другого модуля `tryxpath`.  Возможно, этот модуль определяет функции и классы, используемые в этом коде.
 
-- `tryxpath` и `tryxpath.functions`:  Эти импорты скорее всего относятся к другим частям проекта (`src.`) и предоставляют функции и классы, используемые в `try_xpath_background.js`. Без знания `src.` невозможно дать точное описание.
+* **Классы:** Нет явных определений классов.
 
-**Классы:**
+* **Функции:**
+    * `loadDefaultCss`: Загружает CSS из файла `/css/try_xpath_insert.css` с помощью `XMLHttpRequest`.
+    * `genericListener`: Общий обработчик сообщений. Использует `genericListener.listeners` для вызова соответствующих обработчиков в зависимости от `message.event`.
+    * Обработчики сообщений (`genericListener.listeners.*`):  Реагируют на различные события, например,  управление всплывающим окном, запрос стилей, обработка результатов поиска.
 
-- Нет явно определенных классов.  Основное взаимодействие происходит через функции и глобальные переменные.
+* **Переменные:**
+    * `popupState`, `popupCss`, `results`, `css`, `attributes`: Сохраняют состояние всплывающего окна, стили, результаты поиска, атрибуты.
 
-
-**Функции:**
-
-- `loadDefaultCss()`: Асинхронно загружает CSS из файла `/css/try_xpath_insert.css`. Возвращает `Promise` с загруженным текстом CSS.
-- `genericListener()`: Обрабатывает сообщения, полученные от других частей приложения.  `genericListener.listeners` содержит функции для конкретных сообщений.
-- Обработчики событий в `genericListener.listeners`: (e.g., `storePopupState`, `updateCss`, `loadResults`, ...) выполняют различные действия в зависимости от типа полученного сообщения. Примеры:
-  - `storePopupState`: сохраняет состояние `popupState`.
-  - `updateCss`: обновляет CSS в открытых вкладках.
-
-**Переменные:**
-
-- `popupState`, `popupCss`, `results`, `css`, `attributes`: Глобальные переменные, хранящие информацию о состоянии, стилях, результатах и атрибутах.
+* **Возможные ошибки/улучшения:**
+    * Отсутствие валидации входных данных в обработчиках сообщений может привести к ошибкам.
+    * Отсутствие логирования или отладки может затруднить поиск проблем.
+    * Необходимо более детальное описание используемых событий и структуры сообщений.
 
 
-**Возможные ошибки и улучшения:**
+**Цепочка взаимосвязей:**
 
-- **Обработка ошибок:** В `updateCss` есть `.catch(fu.onError)`, что хорошо.  Но обработка ошибок в других функциях, особенно в `loadDefaultCss` и при работе с хранилищем (`browser.storage`) должна быть усилена.
-- **Обработка `undefined`:** Необходимо добавить проверки на `undefined` для переменных, если они могут быть неинициализированы.
-- **Переиспользование кода:** Логика `browser.tabs.sendMessage` повторяется. Можно выделить общую функцию.
-- **Использование `try...catch`:** Для защиты от ошибок при работе с `browser.storage` и `browser.tabs`.
+Код `try_xpath_background.js` взаимодействует с другими частями расширения через сообщения.  Вероятно существуют  `content.js`, `popup.js` или другие компоненты, которые отправляют и принимают сообщения через `browser.runtime.sendMessage` и `browser.tabs.sendMessage`.  Для более подробного анализа нужно изучить эти компоненты.  Так же есть зависимость от `tryxpath.js` и `tryxpath.functions.js`.
 
-
-**Взаимосвязи с другими частями проекта:**
-
-- `browser.runtime.getURL()`: Используется для получения URL ресурсов в расширении, указывая на `runtime` модуль.
-- `browser.tabs.create()`, `browser.runtime.sendMessage()`, `browser.tabs.insertCSS()`, `browser.tabs.removeCSS()`, `browser.tabs.sendMessage()`, `browser.storage.sync.get()`, `browser.storage.onChanged.addListener()`: Функции, взаимодействующие с API браузера, показывают связь с другими частями расширения.  `tryxpath` и `functions` — это предполагаемые модули расширения.  Необходим контекст из `src.`, чтобы определить точные зависимость и местонахождение данных функций.
-
-
-**Заключение:**
-
-Код отвечает за обработку сообщений, обновление CSS в вкладках и взаимодействие с хранилищем настроек. Анализ значительно улучшится при дополнительной информации о структуре проекта `src.`, что позволит более точно определить взаимодействие между модулями.
+```
+tryxpath.js -> try_xpath_background.js -> content.js, popup.js, ... (Другие компоненты)

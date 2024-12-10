@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/chrome/chrome.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -52,7 +52,7 @@ from src import gs
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 
 class Chrome(webdriver.Chrome):
@@ -88,138 +88,107 @@ class Chrome(webdriver.Chrome):
 # <algorithm>
 
 **Шаг 1: Инициализация**
+1. Проверяется, существует ли уже экземпляр класса `Chrome`. Если нет, создается новый экземпляр с помощью `super().__new__(cls)`.  В противном случае вызывается метод `window_open()` на существующем экземпляре.
+2. Выполняется загрузка настроек из файла `chrome.json` с помощью `j_loads_ns()`.
+3. Создается объект `ChromeOptions()` для настройки параметров браузера.
+4. Создается объект `ChromeService()` для управления Chrome WebDriver. Если указан `binary_location`, то используется путь из настроек.
 
-- Проверяет, существует ли уже экземпляр класса `Chrome`. Если нет, создаёт новый. В противном случае, вызывает метод `window_open()` для открытия нового окна.
+**Шаг 2: Настройка опций**
+1. Если задан `user_agent`, используется он, иначе генерируется случайный `user_agent` с помощью `UserAgent()`.
+2. Если в `chrome.json` есть настройки, задаются параметры браузера (`options`, `headers`).
+3. Устанавливается `user-data-dir` из настроек.
+4. Устанавливается `binary_location` из настроек.
 
-**Пример:**
+**Шаг 3: Создание драйвера**
+1. Создается экземпляр `webdriver.Chrome` с заданными `options` и `service`.
+2. Обработка исключений `WebDriverException` и общих ошибок при инициализации.
 
-При первом запуске программы создается новый экземпляр `Chrome`. При повторном вызове - вызывается `window_open()`.
+**Шаг 4: Загрузка дополнительных функций**
+1. Создаются экземпляры `JavaScript` и `ExecuteLocator`.
+2. Назначаются методы `JavaScript` и `ExecuteLocator` текущему экземпляру `Chrome` для доступа к их функциональности.
 
-**Шаг 2: Загрузка настроек из конфигурационного файла `chrome.json`**
+**Пример данных:**
 
-- Загружает настройки из файла `chrome.json` используя функцию `j_loads_ns`.
-- Проверяет корректность загрузки и при ошибке возвращает, возможно, выводит сообщение об ошибке.
-
-
-**Пример:**
-
-Если в файле `chrome.json` не найдены важные параметры, то выполнение данной части прерывается.
-
-**Шаг 3: Настройка параметров WebDriver**
-
-- Создаёт экземпляр `ChromeOptions`.
-- Добавляет аргументы (`--user-agent`, `--profile-directory` и др.) в `options` на основе данных из `chrome.json`.
-- Настраивает путь к исполняемому файлу Chrome (`binary_location`).
-- Настраивает путь к профилю Chrome (`profile_directory`).
-- Создаёт экземпляр `ChromeService`.
-
-**Пример:**
-
-Если в `chrome.json` указано `--disable-gpu`, то он добавляется в `options`.
-
-**Шаг 4: Инициализация WebDriver**
-
-- Создает экземпляр `webdriver.Chrome` с настроенными `options` и `service`.
-- Обрабатывает возможные исключения (`WebDriverException`).
-
-
-**Пример:**
-
-Если при запуске Chrome возникает ошибка, она обрабатывается и выводится сообщение об ошибке.
-
-**Шаг 5: Загрузка дополнительных функций**
-
-- Вызывает метод `_payload()` для инициализации вспомогательных функций (JavaScript).
-- Загружает функции `ExecuteLocator` и `JavaScript` из других модулей.
-- Присваивает `self` методы этих функций для использования в главном классе.
-
-**Пример:**
-
-Теперь можно получить `get_page_lang`, `execute_locator`, и т.д.
-
+*   `chrome.json`: `{"options": {"headless": true}, "profile_directory": {"testing": "%APPDATA%/chrome_profile"}, "binary_location": {"binary": "%LOCALAPPDATA%/chrome/Application"}}`
+*   Входные данные: `user_agent = "Custom User-Agent"`
+*   Выходные данные: Экземпляр класса `Chrome` с настроенными параметрами, и связанными JavaScript/Locator методами.
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[Chrome()] --> B{Проверка экземпляра};
-    B -- Да --> C[window_open()];
-    B -- Нет --> D[j_loads_ns("chrome.json")];
-    D -- Успех --> E[Настройка options];
-    E --> F[Создание ChromeService];
-    F --> G[webdriver.Chrome(options, service)];
-    G --> H{_payload()};
-    H --> I[JavaScript(), ExecuteLocator()];
-    I --> J[Инициализация методов];
-    J --> K[get, quit];
-    subgraph "Функции JavaScript и ExecuteLocator"
-        I -- JavaScript --> L[get_page_lang, ...];
-        I -- ExecuteLocator --> M[execute_locator, ...];
+graph TD
+    subgraph Chrome Initialization
+        A[chrome.py] --> B{Load chrome.json};
+        B --> C[Create ChromeOptions];
+        C --> D[Create ChromeService];
+        D --> E[Set options from chrome.json];
+        E --> F[Create webdriver.Chrome];
     end
-    style A fill:#f9f,stroke:#333,stroke-width:2px;
-    style B fill:#ccf,stroke:#333,stroke-width:2px;
-    style C fill:#ccf,stroke:#333,stroke-width:2px;
-    style D fill:#ccf,stroke:#333,stroke-width:2px;
-    style E fill:#ccf,stroke:#333,stroke-width:2px;
-    style F fill:#ccf,stroke:#333,stroke-width:2px;
-    style G fill:#ccf,stroke:#333,stroke-width:2px;
-    style H fill:#ccf,stroke:#333,stroke-width:2px;
-    style I fill:#ccf,stroke:#333,stroke-width:2px;
-    style J fill:#ccf,stroke:#333,stroke-width:2px;
-    style K fill:#ccf,stroke:#333,stroke-width:2px;
-    style L fill:#ccf,stroke:#333,stroke-width:2px;
-    style M fill:#ccf,stroke:#333,stroke-width:2px;
+    F --> G[Load JavaScript and ExecuteLocator];
+    G --> H[Associate methods to Chrome];
+    style H fill:#f9f,stroke:#333,stroke-width:2px;
+    
+    subgraph Dependencies
+        A --> |src.gs| Gs;
+        A --> |src.webdriver.executor| ExecuteLocator;
+        A --> |src.webdriver.js| JavaScript;
+        A --> |src.logger.logger| Logger;
+        A --> |src.utils.jjson| j_loads_ns;
+        A --> |selenium| webdriver;
+        A --> |selenium| ChromeOptions;
+        A --> |selenium| ChromeService;
+        A --> |fake_useragent| UserAgent;
+    end
+    
+    subgraph Errors and exceptions
+        F -- Error --> I[Error Handling];
+        I --> J[Log Error];
+    end
 
 ```
-
-**Объяснение зависимостей:**
-
-- `j_loads_ns` - из `src.utils.jjson` для парсинга JSON конфигурации.
-- `JavaScript`, `ExecuteLocator` - из `src.webdriver.js` и `src.webdriver.executor` соответственно, для работы с JS-кодом и локаторами.
-- `ChromeService` и `ChromeOptions` - из `selenium.webdriver.chrome`.
-- `logger` - из `src.logger` для ведения журнала.
-- `gs` - из `src` вероятно для доступа к системным переменным и путям.
-- `header` - из `src` - неизвестное назначение без кода. Возможно, подключает дополнительные модули.
-
 
 # <explanation>
 
 **Импорты:**
 
-- `os`, `sys`, `pathlib`, `typing`, `types`, `fake_useragent`, `selenium` и т.д. - стандартные и сторонние библиотеки Python, используемые для работы с файловой системой, обработкой данных, управлением браузером, обработкой ошибок и т.д.
-- `header` - неизвестное назначение без кода. Полагаем, что это импорт дополнительных модулей, но точная роль неясна без полного кода.
-- `gs` - из `src` вероятно для доступа к системным переменным и путям, для работы с конфигурацией.
-- `j_loads_ns` из `src.utils.jjson` - функция для загрузки настроек из JSON.
-- `logger` из `src.logger` - система логгирования.
+*   `os`, `sys`, `pathlib`: Стандартные модули Python для работы с операционной системой и файлами.
+*   `typing`, `types`, `Optional`: Типы данных и инструменты для типов Python.
+*   `selenium`, `selenium.webdriver.chrome.service`, `selenium.webdriver.chrome.options`: Библиотека Selenium для работы с веб-драйверами, в частности, с Chrome.
+*   `fake_useragent`:  Библиотека для генерации случайных user-agent строк.
+*   `header`: Возможно, содержит собственные определения для проекта (необходимо уточнение).
+*   `gs`, `src.webdriver.executor`, `src.webdriver.js`, `src.utils.jjson`, `src.logger.logger`: Модули из других частей проекта.  Они предоставляют инструменты, вероятно, связанные с конфигурацией, логгированием, выполнением скриптов JavaScript и обработкой locators.
 
 **Классы:**
 
-- `Chrome(webdriver.Chrome)` - класс для работы с Chrome WebDriver. Наследует `webdriver.Chrome` и реализует singleton-паттерн (только один экземпляр).
-   - `_instance`: Статическая переменная для поддержания singleton-паттерна.
-   - `driver_name`: имя драйвера
-   - `config`: Объект `SimpleNamespace` для хранения загруженных настроек из `chrome.json`.
-   - `__new__`: переопределенный метод для создания единственного экземпляра класса.
-   - `__init__`: инициализирует WebDriver с опциями из конфигурационного файла.
+*   `Chrome(webdriver.Chrome)`: Наследуется от Selenium `webdriver.Chrome`.  Реализует singleton паттерн, гарантируя, что создается только один экземпляр WebDriver.  Инициализирует WebDriver с настройками из `chrome.json`, включая user-agent и профиль браузера. Добавляет дополнительные методы для взаимодействия с браузером, например,  js-вызовы, обработку locator-ов.
+*   `JavaScript`, `ExecuteLocator`: Классы,  вероятно, обеспечивающие методы для выполнения JavaScript-кода в браузере и работы с `locators` соответственно. Они предоставляют интерфейс для взаимодействия с драйвером Chrome.
 
 **Функции:**
 
-- `normalize_path`:  Принимает строку пути, заменяет плейсхолдеры (например, `%APPDATA%`) на соответствующие значения из окружения.
-- `_payload`: Загружает вспомогательные функции для работы с JavaScript и локаторами.
+*   `__new__(cls, *args, **kwargs)`: Статический метод класса, который реализует singleton паттерн, гарантируя, что создается только один экземпляр класса. Если экземпляр уже существует, возвращает его, в противном случае создает новый.
+*   `__init__(self, user_agent=None, *args, **kwargs)`:  Инициализирует экземпляр класса `Chrome`. Загружает настройки из `chrome.json`, создает экземпляры `ChromeOptions` и `ChromeService`.
+*   `normalize_path(path: str) -> str`:  Функция для обработки строк путей, которые могут содержать переменные окружения (например, %APPDATA%).
+*   `_payload(self) -> None`: Назначает методы JavaScript и ExecuteLocator экземпляру Chrome.
 
 **Переменные:**
 
-- `user_agent`: строка, используемая в качестве User-Agent в запросах к веб-сайтам.
+*   `config`: Содержит настройки, загруженные из файла `chrome.json`.
+*   `driver_name`:  Название драйвера, используется в логике (например, 'chrome').
+*   `user_agent`:  Строка user-agent браузера.
 
 **Возможные ошибки и улучшения:**
 
-- **Обработка ошибок:** Класс `Chrome` содержит множество блоков `try...except`, но, например, в некоторых местах обработка ошибки `except Exception` кажется избыточной, так как может маскировать более специфичные ошибки.  Улучшение - более детальная и точная обработка исключений.
-- **Конфигурация:** Настройки хранятся в `chrome.json`, но нет ясности о структуре этого файла.
-- **Уровни логирования:** Использование `logger.debug`, `logger.error` и `logger.critical` - хороший подход, но следует использовать различные уровни логирования (`WARNING`, `INFO`) для более эффективной диагностики.
-- **Singleton-паттерн:**  Возможно, использование Singleton-паттерна может ограничивать тесты. Обсуждение более подходящих решений, если singleton не нужен в данном случае.
-- **Поведение при отсутствии файла `chrome.json` или ошибок в нем:** Программа  не обрабатывает ситуацию, когда файл `chrome.json` отсутствует или имеет неправильный формат. Необходимо добавить дополнительную проверку на наличие и корректность файла.
-- **Документация:** Документация в коде довольно подробная, но может быть ещё улучшена (например,  описания типов аргументов и возвращаемых значений).
+*   **Обработка ошибок:**  Код содержит много `try...except` блоков, но некоторые части обработкой ошибок, по-видимому, недостаточно ясны. Нужно более точно указать, какие типы исключений ожидаются и как они обрабатываются.
+
+*   **Чтение из файлов:** Должна быть логика проверки существования и корректности файла `chrome.json`.
+
+*   **Документация:** Документация может быть улучшена, более подробные комментарии к функциям и классам.
+
+*   **Логирование:** Логирование, возможно, не максимально эффективно. Рассмотреть использование уровней логов (debug, info, warning, error, critical) для различения важности сообщений.
+
+*   **Переменные окружения:** Используются переменные окружения (`%APPDATA%`, `%LOCALAPPDATA%`).  Необходимо убедиться, что эти переменные определены на всех системах, где будет использоваться код, или найти альтернативы, чтобы код был более портативным.
+
 
 **Взаимосвязи с другими частями проекта:**
 
-- Класс `Chrome` напрямую взаимодействует с `src.webdriver.executor`, `src.webdriver.js` и `src.utils.jjson`.
-- Подключены зависимости для работы с Selenium, `fake_useragent`, обработкой ошибок и файловой системы.
+Код использует различные модули из `src` (например, `gs`, `JavaScript`, `ExecuteLocator`, `j_loads_ns`, `logger`), что указывает на его интеграцию в более крупный проект.  Конкретные взаимосвязи зависят от функциональности `gs`, `JavaScript`, `ExecuteLocator`, `j_loads_ns` и `logger`.

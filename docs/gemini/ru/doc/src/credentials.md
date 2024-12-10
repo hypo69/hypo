@@ -1,89 +1,79 @@
-# Модуль `hypotez/src/credentials.py`
+# Модуль credentials
 
 ## Обзор
 
-Этот модуль содержит класс `ProgramSettings`, реализующий паттерн Singleton для хранения глобальных настроек проекта.  Класс загружает и хранит информацию об учетных данных (API ключи, пароли и т.д.) из файла `credentials.kdbx` базы данных KeePass.  Также содержит функцию `set_project_root` для поиска корневой директории проекта.
-
-
-## Функции
-
-### `set_project_root`
-
-**Описание**: Находит корневую директорию проекта, начиная от текущего каталога. Поиск идёт вверх по директориям, пока не найдена директория, содержащая один из файлов из списка `marker_files`.
-
-**Параметры**:
-
-- `marker_files` (tuple): Кортеж строк, представляющих имена файлов или каталогов, которые используются для определения корневой директории проекта.
-
-**Возвращает**:
-
-- `Path`: Путь к корневой директории проекта, если она найдена, иначе - путь к директории, в которой расположен скрипт.
-
-
-### `singleton`
-
-**Описание**: Декоратор для создания класса-синглтона.
-
-**Параметры**:
-
-- `cls`: Класс, который должен быть преобразован в синглтон.
-
-**Возвращает**:
-
-- `function`: Функция, возвращающая экземпляр класса-синглтона.
-
+Этот модуль содержит настройки проекта, включая пути, пароли, логины и параметры API. Он использует `PyKeePass` для хранения и загрузки учетных данных из базы данных KeePass. Модуль также содержит класс `ProgramSettings` для хранения и управления настройками.
 
 ## Классы
 
 ### `ProgramSettings`
 
-**Описание**: Класс настроек программы. Представляет собой синглтон, хранящий основные параметры и настройки проекта.  Загружает конфигурацию из `config.json` и данные учетных данных из файла `credentials.kdbx` в базе данных KeePass.
+**Описание**: Класс `ProgramSettings` представляет собой синглтон, хранящий основные параметры и настройки проекта.  Он загружает настройки из файла `config.json` и учетные данные из базы данных `credentials.kdbx`.
 
-
-**Атрибуты**:
+**Параметры**:
 
 - `host_name` (str): Имя хоста.
-- `base_dir` (Path): Путь к корневой директории проекта.
-- `config` (SimpleNamespace): Объект, содержащий конфигурацию проекта.
-- `credentials` (SimpleNamespace): Объект, содержащий учетные данные.
-- `MODE` (str): Режим работы проекта (например, 'dev', 'prod').
-- `path` (SimpleNamespace): Объект, содержащий пути к различным директориям проекта.
-
+- `base_dir` (Path): Корневая директория проекта, автоматически определяется при инициализации.
+- `config` (SimpleNamespace): Объект настроек, полученный из `config.json`.
+- `credentials` (SimpleNamespace): Объект с учетными данными из `credentials.kdbx`, содержащий отдельные поля для различных сервисов (Aliexpress, PrestaShop, OpenAI, Gemini, Rev.com, ShutterStock, Discord, Telegram, SMTP, Facebook, GAPI).  Структура вложенных `SimpleNamespace` отражает иерархию данных в базе данных.
+- `MODE` (str): Режим работы (например, 'dev', 'prod').
+- `path` (SimpleNamespace): Объект с путями к различным папкам проекта.
 
 **Методы**:
 
-- `__init__(self, **kwargs)`: Инициализирует экземпляр класса.
-    - Загружает конфигурацию проекта из `config.json`
-    - Инициализирует атрибут `path` с путями к различным директориям проекта.
-    - Вызывает `check_latest_release` для проверки на наличие новой версии проекта.
-    - Загружает учетные данные из `credentials.kdbx`.
-- `_load_credentials(self) -> None`: Загружает учетные данные из KeePass.
-- `_open_kp(self, retry: int = 3) -> PyKeePass | None`: Открывает базу данных KeePass. Обрабатывает возможные исключения при открытии базы данных.
-- `_load_aliexpress_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Aliexpress из KeePass.
-- `_load_openai_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные OpenAI из KeePass.
-- `_load_gemini_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные GoogleAI из KeePass.
-- `_load_telegram_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Telegram из KeePass.
-- `_load_discord_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Discord из KeePass.
-- `_load_PrestaShop_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные PrestaShop из KeePass.
-- `_load_presta_translations_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные PrestaShop Translations из KeePass.
-- `_load_smtp_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные SMTP из KeePass.
-- `_load_facebook_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Facebook из KeePass.
-- `_load_gapi_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Google API из KeePass.
-- `now(self, dformat: str = '%y_%m_%d_%H_%M_%S_%f') -> str`: Возвращает текущую метку времени в заданном формате.
+- `__init__(self, **kwargs)`: Инициализирует экземпляр класса. Загружает настройки из файла `config.json` и учетные данные из `credentials.kdbx`. Выполняет валидацию и инициализацию путей к важным директориям (bin, src, secrets, log, tmp, data, google_drive, external_storage, tools).
+- `_load_credentials()`: Загружает учетные данные из базы данных KeePass. Вызывает ряд вспомогательных методов для загрузки конкретных учетных данных.
+- `_open_kp(self, retry: int = 3) -> PyKeePass | None`: Открывает базу данных KeePass. При ошибке пытается повторить попытку `retry` раз.
+- `_load_aliexpress_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Aliexpress из базы данных KeePass.
+- `_load_openai_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные OpenAI из базы данных KeePass.
+- `_load_gemini_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Gemini из базы данных KeePass.
+- `_load_discord_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Discord из базы данных KeePass.
+- `_load_telegram_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Telegram из базы данных KeePass.
+- `_load_PrestaShop_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные PrestaShop из базы данных KeePass.
+- `_load_presta_translations_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для переводов PrestaShop.
+- `_load_smtp_credentials(self, kp: PyKeePass) -> bool`: Загружает SMTP учетные данные.
+- `_load_facebook_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные Facebook.
+- `_load_gapi_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные GAPI.
 
-**Возможные исключения**:
 
-- `BinaryError`: Исключение для ошибок с бинарными данными.
-- `CredentialsError`: Исключение для ошибок с данными учетных данных.
-- `DefaultSettingsException`: Исключение для ошибок с настройками по умолчанию.
-- `HeaderChecksumError`: Исключение для ошибок проверки контрольной суммы заголовков.
-- `KeePassException`: Исключение для ошибок с базой данных KeePass.
-- `PayloadChecksumError`: Исключение для ошибок проверки контрольной суммы полезной нагрузки.
-- `UnableToSendToRecycleBin`: Исключение для ошибок отправки в корзину.
-- `Exception`: Общее исключение.
+- `now(self) -> str`: Возвращает текущую метку времени в заданном формате.
 
-##  Примечания
 
-- Модуль использует PyKeePass для работы с файлом `credentials.kdbx`.
--  В коде присутствуют блоки обработки исключений (`ex`).
-- Файл паролей (`password.txt`) содержит пароли в открытом виде.  Это потенциальная уязвимость. Необходимо разработать механизм безопасного хранения паролей.
+**Вызывает исключения**:
+
+- `BinaryError`: Ошибка, связанная с бинарными данными.
+- `CredentialsError`: Ошибка при работе с учетными данными.
+- `DefaultSettingsException`: Ошибка при использовании дефолтных настроек.
+- `HeaderChecksumError`: Ошибка проверки контрольной суммы заголовка.
+- `KeePassException`: Общая ошибка при работе с KeePass.
+- `PayloadChecksumError`: Ошибка проверки контрольной суммы полезной нагрузки.
+- `UnableToSendToRecycleBin`: Ошибка отправки файла в корзину.
+
+
+## Функции
+
+### `set_project_root(marker_files=(\'pyproject.toml\', \'requirements.txt\', \'.git\')) -> Path`
+
+**Описание**: Находит корневую директорию проекта, начиная от текущего файла. Поиск идёт вверх по директориям, пока не будет найдена директория, содержащая один из файлов или папок из списка `marker_files`.
+
+**Параметры**:
+
+- `marker_files` (tuple): Список файлов или папок, по которым определяется корневая директория проекта.
+
+**Возвращает**:
+
+- `Path`: Путь к корневой директории проекта, либо директория, в которой расположен текущий файл.
+
+### `singleton(cls)`
+
+**Описание**: Декоратор для реализации паттерна Singleton.
+
+
+**Параметры**:
+
+- `cls`: Класс, который нужно сделать синглтоном.
+
+
+**Возвращает**:
+
+- Функцию-обертку, которая возвращает единственный экземпляр класса.

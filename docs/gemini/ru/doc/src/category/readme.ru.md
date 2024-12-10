@@ -8,13 +8,13 @@
 
 * [Модуль: Category](#модуль-category)
 * [Обзор](#обзор)
-* [Класс: Category](#класс-category)
-    * [Конструктор: __init__](#конструктор-init)
-    * [Метод: get_parents](#метод-get_parents)
-    * [Метод: crawl_categories_async](#метод-crawl_categories_async)
-    * [Метод: crawl_categories](#метод-crawl_categories)
-    * [Метод: _is_duplicate_url](#метод-is_duplicate_url)
-* [Функция: compare_and_print_missing_keys](#функция-compare_and_print_missing_keys)
+* [Класс: `Category`](#класс-category)
+    * [Конструктор: `__init__(self, api_credentials, *args, **kwargs)`](#конструктор-initself-api_credentials-args-kwargs)
+    * [Метод: `get_parents(self, id_category, dept)`](#метод-get_parentsself-id_category-dept)
+    * [Метод: `crawl_categories_async(self, url, depth, driver, locator, dump_file, default_category_id, category=None)`](#метод-crawl_categories_asyncself-url-depth-driver-locator-dump_file-default_category_id-categorynone)
+    * [Метод: `crawl_categories(self, url, depth, driver, locator, dump_file, id_category_default, category={})`](#метод-crawl_categoriesself-url-depth-driver-locator-dump_file-id_category_default-category)
+    * [Метод: `_is_duplicate_url(self, category, url)`](#метод-is_duplicate_urlself-category-url)
+* [Функция: `compare_and_print_missing_keys(current_dict, file_path)`](#функция-compare_and_print_missing_keyscurrent_dict-file_path)
 * [Пример использования](#пример-использования)
 * [Зависимости](#зависимости)
 
@@ -28,13 +28,9 @@
 Инициализирует объект `Category`.
 
 #### Аргументы:
-- `api_credentials`: Учетные данные API для доступа к данным категорий.
-- `args`: Список аргументов переменной длины (не используется).
-- `kwargs`: Ключевые аргументы (не используется).
-
-#### Примечания:
-Требует `api_credentials` для работы.
-
+- `api_credentials`: Учетные данные API для доступа к данным категорий.  (dict)
+- `args`: Список аргументов переменной длины. (не используется)
+- `kwargs`: Ключевые аргументы. (не используется)
 
 ### Метод: `get_parents(self, id_category, dept)`
 
@@ -44,13 +40,8 @@
 - `id_category` (int): ID категории, для которой нужно получить родительские категории.
 - `dept` (int): Уровень глубины категории.
 
-
 #### Возвращает:
-- `list[dict]`: Список родительских категорий. Возвращает `None`, если категория не найдена или произошла ошибка.
-
-#### Примечания:
-Метод реализует логику поиска родительских категорий.
-
+- Список родительских категорий (list).
 
 ### Метод: `crawl_categories_async(self, url, depth, driver, locator, dump_file, default_category_id, category=None)`
 
@@ -65,12 +56,8 @@
 - `default_category_id` (int): ID категории по умолчанию.
 - `category` (dict, optional): Существующий словарь категории (по умолчанию=None).
 
-
 #### Возвращает:
-- `dict`: Обновленный или новый словарь категорий. Возвращает `None` при ошибке.
-
-#### Примечания:
-Используется асинхронно для повышения производительности. Сохраняет результат в файл.
+- Обновленный или новый словарь категорий (dict).
 
 
 ### Метод: `crawl_categories(self, url, depth, driver, locator, dump_file, id_category_default, category={})`
@@ -86,12 +73,8 @@
 - `id_category_default` (int): ID категории по умолчанию.
 - `category` (dict, optional): Словарь категории (по умолчанию пустой).
 
-
 #### Возвращает:
-- `dict`: Иерархический словарь категорий и их URL.
-
-#### Примечания:
-Синхронная версия метода обхода категорий.
+- Иерархический словарь категорий и их URL (dict).
 
 
 ### Метод: `_is_duplicate_url(self, category, url)`
@@ -102,27 +85,45 @@
 - `category` (dict): Словарь категорий.
 - `url` (str): URL для проверки.
 
-
 #### Возвращает:
-- `bool`: `True`, если URL является дубликатом, иначе `False`.
+- `True`, если URL является дубликатом, иначе `False`. (bool)
 
 
 ## Функция: `compare_and_print_missing_keys(current_dict, file_path)`
 
 Сравнивает текущий словарь с данными из файла и выводит отсутствующие ключи.
 
-#### Аргументы:
+### Аргументы:
 - `current_dict` (dict): Словарь для сравнения.
 - `file_path` (str): Путь к файлу, содержащему данные для сравнения.
 
-#### Примечания:
-Проверяет соответствие значений в словаре `current_dict` со значениями в файле `file_path`.
 
 ## Пример использования
 
 ```python
 from src.category import Category
-# ... (код инициализации и использования)
+
+# Инициализация Category с учетными данными API
+category = Category(api_credentials={'api_key': 'your_api_key'})
+
+# Получение родительских категорий
+parents = category.get_parents(id_category=123, dept=2)
+
+# Асинхронный обход категорий
+import asyncio
+from selenium import webdriver
+# ... (создание driver_instance)
+category_data = asyncio.run(category.crawl_categories_async(
+    url='https://example.com/categories',
+    depth=3,
+    driver=driver_instance,
+    locator='//a[@class="category-link"]',
+    dump_file='categories.json',
+    default_category_id=123
+))
+
+# Сравнение текущих данных категорий с файлом и вывод отсутствующих ключей
+compare_and_print_missing_keys(current_dict=category_data, file_path='saved_categories.json')
 ```
 
 ## Зависимости
