@@ -17,7 +17,7 @@ from types import SimpleNamespace
 import time
 from src import gs
 from src.utils.jjson import j_loads_ns, j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 from src.webdriver.driver import Driver
 
 # Загрузка локаторов из JSON-файла

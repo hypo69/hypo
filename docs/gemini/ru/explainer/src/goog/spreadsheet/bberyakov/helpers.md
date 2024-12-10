@@ -1,3 +1,4 @@
+```MD
 # <input code>
 
 ```python
@@ -7,7 +8,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.spreadsheet.bberyakov 
+.. module:: src.goog.spreadsheet.bberyakov 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -19,7 +20,6 @@ MODE = 'dev'
 	:synopsis:
 
 """
-
 
 """
 	:platform: Windows, Unix
@@ -88,6 +88,7 @@ def hex_color_to_decimal(letters: str) -> int:
         return str (ord (letter.lower()) - 96).upper()
     return letter_to_number(letters) if len(letters) == 1 else (letter_to_number(letters[0]) * 26) + letter_to_number(letters[1])
 
+
 def decimal_color_to_hex(number: int) -> str:
     """
      [Function's description]
@@ -117,6 +118,7 @@ def hex_to_rgb (hex: str) -> tuple:
     """
         """
         #FFFFFF -> (255, 255, 255) \n
+
         `hex`: color in hexadecimal
         """
         hex = hex[1:] if '#' in hex else hex           
@@ -125,89 +127,90 @@ def hex_to_rgb (hex: str) -> tuple:
 
 # <algorithm>
 
-The code defines functions for converting colors between hexadecimal (HEX), decimal, and RGB formats.
+**Алгоритм hex_color_to_decimal:**
 
-**hex_color_to_decimal:**
+1. Принимает строку `letters` (HEX цвет).
+2. Преобразует `letters` в верхний регистр.
+3. Вызывает вспомогательную функцию `letter_to_number` для каждого символа в `letters`.
+4. Если `letters` состоит из одного символа, возвращает результат `letter_to_number`.
+5. В противном случае возвращает результат, полученный умножением первого символа на 26 и сложением со вторым символом.
 
-1. Takes a hexadecimal letter(s) as input.
-2. Converts input to uppercase.
-3. Uses an inner function `letter_to_number` to convert single letters to their decimal representation (a -> 1, b -> 2, etc.)
-4. If input is a single letter, returns the result of `letter_to_number`.
-5. If input is two letters, calculates the decimal value by combining the decimal values of the individual letters.
+**Алгоритм letter_to_number:**
 
-**decimal_color_to_hex:**
+1. Принимает символ `letter`.
+2. Использует `ord()` для получения кода Unicode символа.
+3. Вычитает 96.
+4. Преобразует результат в строку и возвращает.
 
-1. Takes a decimal number as input.
-2. If the number is less than or equal to 26, converts the number to its single letter equivalent.
-3. If the number is greater than 26, performs integer division (`divmod`) by 26 to find quotient and remainder. Converts the quotient to HEX, then combines it with the remainder letter, returning the combined result in uppercase.
+**Алгоритм decimal_color_to_hex:**
 
-**hex_to_rgb:**
+1. Принимает целое число `number`.
+2. Если `number` меньше или равно 26, возвращает соответствующую букву в HEX формате.
+3. В противном случае выполняет деление с остатком (`divmod`) на 26.
+4. Рекурсивно вызывает `decimal_color_to_hex` для `quotient`.
+5. Возвращает результат, полученный путем конкатенации результата рекурсивного вызова и символа, соответствующего `remainder`.
 
-1. Takes a hexadecimal color code (e.g., "#FFFFFF") as input.
-2. Removes the '#' if present.
-3. Extracts the red, green, and blue components from the hexadecimal string using slicing and `int(..., 16)` to convert from hexadecimal to decimal.
-4. Returns a tuple containing the RGB values.
+**Алгоритм hex_to_rgb:**
+
+1. Принимает строку `hex`.
+2. Если `hex` начинается с "#", удаляет символ "#".
+3. Возвращает кортеж из трех целых чисел, полученных путем преобразования подстрок `hex` в целые числа в формате 16-ричной системы.
 
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[hex_color_to_decimal] --> B{Single letter?};
-    B -- Yes --> C[letter_to_number];
-    B -- No --> D[calculate decimal from 2 letters];
-    C --> E[return decimal value];
+    A[hex_color_to_decimal(letters)] --> B{len(letters)==1?};
+    B -- yes --> C[letter_to_number(letters)];
+    B -- no --> D((letters[0]*26 + letters[1]));
+    C --> E[return];
     D --> E;
+    F[decimal_color_to_hex(number)] --> G{number<=26?};
+    G -- yes --> H[return chr(number+96)];
+    G -- no --> I((quotient, remainder = divmod(number-1, 26)));
+    I --> J[decimal_color_to_hex(quotient)];
+    J --> K((decimal_color_to_hex(quotient) + chr(remainder + 97)));
+    K --> L[return];
+    M[hex_to_rgb(hex)] --> N{ '#' in hex?};
+    N -- yes --> O[hex = hex[1:] ];
+    N -- no --> O;
+    O --> P((int(hex[:2],16), int(hex[2:4], 16), int(hex[4:],16)));
+    P --> Q[return];
 
-    F[decimal_color_to_hex] --> G{number <= 26?};
-    G -- Yes --> H[convert to single letter];
-    G -- No --> I[divmod by 26, recursive call];
-    H --> J[return letter];
-    I --> K[combine hex, return value];
-
-    L[hex_to_rgb] --> M[remove '#' if exists];
-    M --> N[extract R,G,B components];
-    N --> O[convert to integers];
-    O --> P[return RGB tuple];
 ```
-
-**Dependencies:**
-
-The code relies on the Python built-in `ord()` function for character to Unicode code conversion, and `divmod()` for integer division and remainder calculation. It does not use external libraries.
-
 
 # <explanation>
 
-**Imports:**
+**Импорты:**
 
-There are no imports in this code.  All functions used are built-in to Python.
+Нет импортов в данном файле.
 
-**Classes:**
+**Классы:**
 
-There are no classes defined.
+Нет классов в данном файле.
 
-**Functions:**
+**Функции:**
 
-* **`hex_color_to_decimal(letters: str) -> int`**: Converts a hexadecimal color letter(s) to its decimal equivalent.
-    * Takes a string `letters` as input representing a single or double hexadecimal character.
-    * Returns an integer representing the decimal equivalent.
-* **`decimal_color_to_hex(number: int) -> str`**: Converts a decimal number to its hexadecimal equivalent, also handling cases with multiple hexadecimal letters.
-    * Takes an integer `number` as input.
-    * Returns a string containing the hexadecimal representation.
-* **`hex_to_rgb(hex: str) -> tuple`**: Extracts the RGB values from a hexadecimal color code.
-    * Takes a hexadecimal color code (string) as input.
-    * Returns a tuple containing the red, green, and blue values as integers (RGB format).
+* **`hex_color_to_decimal(letters: str) -> int`:**  Преобразует шестнадцатеричный цвет (строку) в десятичное представление. Аргумент `letters` - шестнадцатеричный цвет (например, "FF0000"). Возвращает целое число - десятичное представление цвета. Использование рекурсии в случае, если цвет состоит из двух символов.
+* **`decimal_color_to_hex(number: int) -> str`:** Преобразует десятичное представление цвета в шестнадцатеричное. Аргумент `number` - десятичное значение цвета. Возвращает строку - шестнадцатеричное представление цвета. Использование рекурсии для обработки больших чисел.
+* **`hex_to_rgb (hex: str) -> tuple`:**  Преобразует шестнадцатеричный цвет в кортеж RGB значений. Аргумент `hex` - шестнадцатеричное представление цвета (например, "#FF0000" или "FF0000"). Возвращает кортеж из трех целых чисел RGB. Удаляет символ '#' если он присутствует.
 
-**Variables:**
+**Переменные:**
 
-* **`MODE`**: A global string variable, likely used for setting a development mode, but it's not used within the functions.
+* **`MODE = 'dev'`:**  Глобальная переменная, вероятно, используется для управления режимом работы программы (например, 'dev', 'prod').
 
 
-**Possible Errors/Improvements:**
+**Возможные ошибки или области для улучшений:**
 
-* **Error Handling:** The `hex_to_rgb` function doesn't explicitly handle cases where the input string `hex` might not be in the correct format (e.g., wrong number of characters, non-hexadecimal characters).  Adding input validation would make it more robust.
+* **Обработка ошибок:** Функции не обрабатывают случаи некорректного ввода (например, `letters` не соответствует формату шестнадцатеричного цвета). Добавьте проверки на корректность ввода.
+* **Документация:** Документация (docstrings) у функций не очень полная, особенно примеры использования. Добавьте более подробные комментарии и примеры.
+* **Имена переменных:** Имя `letters` в функции `hex_color_to_decimal` может быть не слишком интуитивным.
 
+**Взаимосвязи с другими частями проекта:**
 
-**Relationships with other parts of the project:**
+Файл `helpers.py` содержит вспомогательные функции для работы с цветами. Вероятно, эти функции используются в других частях проекта, где требуется работа с цветами (например, в Google Spreadsheets API).  Без дополнительного контекста, определить точное место использования сложно.
 
-The code's purpose is to provide color conversion helpers for the `goog.spreadsheet` module. Its usage will be within another file, likely within the same package, `src.goog.spreadsheet`, and its functions are expected to be called there to convert color values in hexadecimal and decimal formats.
+**Рекомендации:**
+
+Добавьте проверки на валидность ввода для всех функций. Это повысит надежность кода. Добавьте более подробные docstrings, описывающие ожидаемые типы данных и обработку ошибок.

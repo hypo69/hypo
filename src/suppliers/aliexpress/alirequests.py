@@ -21,7 +21,7 @@ from fake_useragent import UserAgent
 
 from src import gs
 from src.utils.jjson import j_dumps
-from src.logger import logger
+from src.logger.logger import logger
 
 class AliRequests:
     """Handles requests to AliExpress using the requests library."""

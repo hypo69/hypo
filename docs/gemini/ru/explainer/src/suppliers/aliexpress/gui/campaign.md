@@ -2,12 +2,12 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/campaign.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress.gui 
+.. module:: src.suppliers.aliexpress.gui 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -98,136 +98,143 @@ class CampaignEditor(QtWidgets.QWidget):
 
         self.load_file(campaign_file)
 
-    # ... (rest of the code)
+    def load_file(self, campaign_file):
+        """ Load a JSON file """
+        try:
+            self.data = j_loads_ns(campaign_file)
+            self.current_campaign_file = campaign_file
+            self.file_name_label.setText(f"File: {self.current_campaign_file}")
+            self.create_widgets(self.data)
+            self.editor = AliCampaignEditor(campaign_file=campaign_file)
+        except Exception as ex:
+            QtWidgets.QMessageBox.critical(self, "Error", f"Failed to load JSON file: {ex}")
+
+    def create_widgets(self, data):
+        """ Create widgets based on the data loaded from the JSON file """
+        layout = self.layout
+
+        # Remove previous widgets except open button and file label
+        for i in reversed(range(layout.count())):
+            widget = layout.itemAt(i).widget()
+            if widget not in [self.open_button, self.file_name_label, self.prepare_button]:
+                widget.deleteLater()
+
+        self.title_input = QtWidgets.QLineEdit(data.title)
+        layout.addWidget(QtWidgets.QLabel("Title:"), 2, 0)
+        layout.addWidget(self.title_input, 2, 1)
+        set_fixed_size(self.title_input, width=500, height=25)
+
+        # ... (rest of the create_widgets method)
+    @asyncSlot()
+    async def prepare_campaign(self):
+        """ Asynchronously prepare the campaign """
+        if self.editor:
+            try:
+                await self.editor.prepare()
+                QtWidgets.QMessageBox.information(self, "Success", "Campaign prepared successfully.")
+            except Exception as ex:
+                QtWidgets.QMessageBox.critical(self, "Error", f"Failed to prepare campaign: {ex}")
 ```
 
-```markdown
 # <algorithm>
 
-**Шаг 1:** Инициализация `CampaignEditor`
+**Блок-схема:**
 
-    - Принимает `parent` и `main_app` в конструкторе.
-    - Вызывает `setup_ui()` для настройки интерфейса.
-    - Вызывает `setup_connections()` для настройки соединений.
+1. **Инициализация:** Создается объект `CampaignEditor`.
+2. **`setup_ui`:** Создаются виджеты (кнопки, метки, поля ввода). Устанавливается макет.
+3. **`setup_connections`:** Устанавливаются соединения (сигналы-слоты).
+4. **`open_file`:** Открывается диалог выбора файла. Если файл выбран, вызывается `load_file`.
+5. **`load_file`:** Загружает данные из файла JSON с помощью `j_loads_ns`. Обновляется интерфейс, создаются виджеты.
+6. **`create_widgets`:** Создает поля ввода для заголовка, описания и названия рекламной акции из загруженных данных. Удаляет предыдущие виджеты.
+7. **`prepare_campaign`:** Выполняет подготовку кампании асинхронно с помощью `editor.prepare()`. Выводит сообщения об успехе или ошибке.
 
-**Шаг 2:** Настройка интерфейса (`setup_ui()`)
+**Пример данных:**
 
-    - Устанавливает заголовок окна и размер.
-    - Создает `QScrollArea` и `QWidget` для содержимого.
-    - Создает `QGridLayout` для размещения элементов.
-    - Добавляет кнопку "Открыть JSON", метку для файла и кнопку "Подготовить кампанию" на интерфейс.
-    - Добавляет элементы на разметку.
-    - Устанавливает главную разметку `QVBoxLayout`.
+Входные данные: `campaign.json` со структурой:
 
-
-**Шаг 3:** Открытие файла (`open_file()`)
-
-    - Открывает диалог выбора файла.
-    - Если файл выбран, загружает его содержимое в `load_file()`.
-
-**Шаг 4:** Загрузка файла (`load_file()`)
-
-    - Пытается загрузить JSON файл с помощью `j_loads_ns()`.
-    - Сохраняет загруженные данные в `self.data`.
-    - Обновляет метку с именем файла.
-    - Создает виджеты на основе загруженных данных с помощью `create_widgets()`.
-    - Создает экземпляр `AliCampaignEditor`.
-
-**Шаг 5:** Создание виджетов (`create_widgets()`)
-
-    - Удаляет все предыдущие виджеты (кроме "Открыть" и "Имя файла").
-    - Создает `QLineEdit` для полей "Название", "Описание" и "Название промо".
-    - Устанавливает значения этих полей из данных `self.data`.
-    - Добавляет эти виджеты в разметку.
-
-
-**Шаг 6:** Подготовка кампании (`prepare_campaign()`)
-
-    - Если `editor` существует, то асинхронно вызывает метод `prepare()` в `editor`
-    - Обрабатывает возможные исключения при подготовке кампании.
-    - Выводит сообщение об успехе или ошибке.
-
-
-**Пример:** Пользователь выбирает JSON-файл. Функция `open_file` получает путь к файлу, передаёт его в `load_file`. `load_file` пытается разобрать JSON в `SimpleNamespace` с помощью `j_loads_ns()`. Если преобразование успешное, вызовется `create_widgets`, которые разместит данные на экране.
-
+```json
+{
+  "title": "My Campaign",
+  "description": "Campaign description",
+  "promotion_name": "Sale"
+}
+```
 
 **Передача данных:**
 
-- Данные JSON из выбранного файла загружаются в `self.data` с помощью `j_loads_ns`.
-- Данные передаются в `create_widgets` для отображения на UI.
-- При вызове `prepare_campaign`, данные из `self.data` используются для запуска подготовки в `AliCampaignEditor`.
+Данные из файла JSON загружаются в `CampaignEditor` и используются для отображения в виджетах. Функция `create_widgets` обрабатывает эти данные, создает виджеты и обновляет интерфейс.
 
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[Пользователь выбирает JSON] --> B(open_file);
-    B --> C[load_file];
-    C --Успешно-- > D{Обработка JSON};
-    C --Ошибка-- > E[Вывод ошибки];
-    D --> F[Создать виджеты];
-    F --> G[prepare_campaign];
-    G --> H[AliCampaignEditor.prepare];
-    H --Успех--> I[Вывод сообщения об успехе];
-    H --Ошибка--> J[Вывод сообщения об ошибке];
-    
-    subgraph "AliCampaignEditor"
-        H --Запрос данных-- > K[Данные для подготовки];
+    A[CampaignEditor] --> B(setup_ui);
+    B --> C{Open File?};
+    C -- Yes --> D[open_file];
+    D --> E[load_file];
+    E --> F[j_loads_ns];
+    F --> G[create_widgets];
+    G --> H[prepare_campaign];
+    H --> I{editor.prepare() Success?};
+    I -- Yes --> J[QMessageBox Success];
+    I -- No --> K[QMessageBox Error];
+    subgraph AliCampaignEditor
+        H --> L[prepare()];
     end
+    C -- No --> A;
 ```
 
+**Описание диаграммы:**
+
+Диаграмма показывает взаимодействие между функциями и классами. `CampaignEditor` отвечает за отображение интерфейса, загрузку данных и обработку кнопок. `AliCampaignEditor` является внешней зависимостью, которая отвечает за подготовку кампании. Функция `j_loads_ns` из модуля `src.utils.jjson` загружает данные из JSON файла.
 
 # <explanation>
 
 **Импорты:**
 
-- `header`: Вероятно, содержит вспомогательные функции или константы для проекта.  Необходимость в нём неясна без большего контекста.
-- `asyncio`: Используется для асинхронного выполнения задач,  такой как `prepare_campaign`.
-- `sys`: Модуль для доступа к системным параметрам (например, аргументы командной строки).
-- `pathlib`: Для работы с путями к файлам.
-- `types`: Для использования `SimpleNamespace`
-- `PyQt6`: Библиотека для создания графического интерфейса пользователя.
-- `qasync`:  Для асинхронной обработки сигналов в PyQt6.
-- `src.utils.jjson`: Модуль для работы с JSON (парсинг и сериализация).
-- `src.suppliers.aliexpress.campaign`: Содержит класс `AliCampaignEditor` для подготовки кампании.
-- `styles`: Вероятно, содержит функции для настройки стилей виджетов PyQt6.
+- `header`: Вероятно, содержит настройки или вспомогательные функции, специфичные для проекта. Необходимо посмотреть его содержимое для уточнения.
+- `asyncio`: Для асинхронной обработки.
+- `sys`: Для доступа к системным переменным.
+- `pathlib`: Для работы с файловыми путями.
+- `types`: Для использования `SimpleNamespace`.
+- `PyQt6`: Библиотека для создания графического интерфейса.
+- `qasync`: Библиотека для асинхронной обработки в PyQt6.
+- `src.utils.jjson`: Модуль для работы с JSON данными.  `j_loads_ns` парсит json в `SimpleNamespace` объект, что удобно для доступа к данным. `j_dumps` (если используется) сериализует объекты в JSON.
+- `src.suppliers.aliexpress.campaign`: Модуль, отвечающий за подготовку кампаний (предполагается, что содержит класс `AliCampaignEditor`).
 
 **Классы:**
 
-- `CampaignEditor`: Главный класс, представляющий окно редактора кампании.
-    - `data`: Хранит загруженные данные кампании (как `SimpleNamespace`).
+- `CampaignEditor`: Класс для отображения и управления окном редактора кампаний.
+    - `data`: Хранит данные из загруженного JSON файла в виде `SimpleNamespace`.
     - `current_campaign_file`: Хранит путь к загруженному файлу.
-    - `editor`: Экземпляр класса `AliCampaignEditor`, используется для подготовки кампании.
+    - `editor`: Объект для подготовки кампании (класс `AliCampaignEditor`).
+    - `__init__`: Инициализирует виджет, устанавливает связи с `main_app` и выполняет `setup_ui`, `setup_connections`.
+    - `setup_ui`: Создает интерфейс с кнопками, метками и полями ввода.
+    - `setup_connections`: Устанавливает связи между элементами интерфейса.
+    - `open_file`: Открывает диалоговое окно для выбора файла.
+    - `load_file`: Загружает данные из выбранного JSON файла и создает виджеты.
+    - `create_widgets`: Создает виджеты для отображения данных из загруженного файла. Удаляет старые виджеты.
+    - `prepare_campaign`: Асинхронно готовит кампанию с помощью `editor`.
 
 **Функции:**
 
-- `__init__`: Инициализирует виджет `CampaignEditor`.
-- `setup_ui`: Создает пользовательский интерфейс.
-- `setup_connections`: Устанавливает соединения между элементами UI.
-- `open_file`: Открывает диалог для выбора JSON-файла.
-- `load_file`: Загружает JSON-файл, создаёт виджеты.
-- `create_widgets`: Создаёт виджеты для отображения данных кампании.
-- `prepare_campaign`: Асинхронно подготавливает кампанию.
-- `@asyncSlot`: Декоратор для асинхронных слотов PyQt6.
+- `set_fixed_size`: Из `styles` - устанавливает фиксированный размер виджета.
 
 
 **Переменные:**
 
-- `MODE`: Переменная, вероятно, задающая режим работы приложения ('dev' в данном случае).
-- `campaign_file`: Содержит путь к выбранному файлу.
-
+- `MODE`:  Переменная с режимом, вероятно, для настройки.
 
 **Возможные ошибки и улучшения:**
 
-- Отсутствие валидации входных данных JSON.
-- Необходимо добавить обработку ситуации, когда файл не найден или не является корректным JSON.
-- Отсутствие обработки случая, когда `AliCampaignEditor` не создан.
-- Необходимо более подробное логирование для отладки.
-- В `create_widgets()` удаляются все виджеты. Возможно, стоит сохранять предыдущие виджеты (если они не заполняют всю область) или использовать более гибкие методы обновления интерфейса.
+- **Обработка ошибок:** Обработка ошибок в `load_file` и `prepare_campaign`  корректна. Добавление логгирования (например, с помощью `logging`) для более детальной информации о проблемах.
+- **Валидация данных:** Добавление валидации загружаемых данных из JSON для обеспечения их корректности.
+- **Управление памятью:**  При удалении предыдущих виджетов необходимо проверить, что `self.open_button`, `self.file_name_label`, `self.prepare_button` не создаются многократно.
+- **Ресурсы:** Удалить виджеты перед новым добавлением, чтобы избежать утечек памяти.
+- **Асинхронность:** Важно понимать, какие операции `editor.prepare()` делает.
+
 
 **Взаимосвязи с другими частями проекта:**
 
-- Класс `AliCampaignEditor` из `src.suppliers.aliexpress.campaign` играет ключевую роль, обрабатывая логику подготовки кампании.
-- Модуль `jjson` из `src.utils` используется для работы с JSON данными.
-- `CampaignEditor` опирается на библиотеку PyQt6 для создания пользовательского интерфейса.
+Класс `AliCampaignEditor` (из `src.suppliers.aliexpress.campaign`) является внешней зависимостью, выполняющей сложную работу по подготовке кампаний.  `CampaignEditor` использует  `j_loads_ns`  и `j_dumps` из `src.utils.jjson` для работы с JSON данными.  Также есть зависимость от `styles` модуля для работы со стилями. Необходима информация о классе `header`, чтобы понять его роль в проекте.  Использование `main_app` предполагает существование класса `MainApp`, в котором `CampaignEditor` будет использоваться.

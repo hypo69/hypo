@@ -42,7 +42,7 @@ MODE = 'dev'
 
 from googletrans import Translator
 from langdetect import detect
-from src.logger import logger
+from src.logger.logger import logger
 
 def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
     """ Translate text from one language to another using Google Translate.

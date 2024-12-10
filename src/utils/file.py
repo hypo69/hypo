@@ -17,7 +17,7 @@ import json
 import fnmatch
 from pathlib import Path
 from typing import List, Optional, Union, Generator
-from src.logger import logger
+from src.logger.logger import logger
 
 
 def save_text_file(

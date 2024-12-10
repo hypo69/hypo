@@ -25,7 +25,7 @@ from typing import Dict, List
 from src import gs
 from src.utils.jjson import j_loads, j_dumps
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 from .scenarios.login import login
 from .scenarios import  switch_account, promote_post,  post_title, upload_media, update_images_captions
 

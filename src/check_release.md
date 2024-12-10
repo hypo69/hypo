@@ -30,7 +30,7 @@
 
 ```python
 import requests
-from src.logger import logger
+from src.logger.logger import logger
 
 def check_latest_release(owner: str, repo: str):
     """Check the latest release version of a GitHub repository.

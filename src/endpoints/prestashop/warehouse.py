@@ -18,7 +18,7 @@ import header
 from src import gs
 from src.utils.printer import  pprint
 from .api import PrestaShop
-from src.logger import logger
+from src.logger.logger import logger
 
 
 class PrestaWarehouse(PrestaShop): 

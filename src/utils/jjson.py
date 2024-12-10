@@ -37,7 +37,7 @@ from types import SimpleNamespace
 from collections import OrderedDict
 
 
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.printer import pprint
 from .convertors.dict import dict2ns
 # from .convertors.ns import ns2dict 
@@ -201,11 +201,14 @@ def j_loads(
         try:
             _j = simplejson.loads(json_string)
         except json.JSONDecodeError:
-            logger.error(f'Ошибка парсинга строки JSON: {json_string}')
+            logger.error(f'Ошибка парсинга строки JSON:\n {json_string}', ex, False)
             return {}
-        # Декодирование escape \u0412\u044b\u0441\u043e\u043a\u043e
-        decoded_json = json.loads(json.dumps(_j))
-        return decoded_json  # Возвращаем неизменённые значения, если они не строка, список или словарь
+        try:
+            # Декодирование escape \u0412\u044b\u0441\u043e\u043a\u043e
+            return json.loads(json.dumps(_j))
+        except Exception as ex:
+            logger.error(f"Ошибка декодирования JSON", ex, False)
+            return {}
 
     # Основная обработка данных
     try:
@@ -233,10 +236,10 @@ def j_loads(
         logger.error(f'Файл не найден: {jjson}')
         return {}
     except json.JSONDecodeError as ex:
-        logger.error(f'Ошибка парсинга JSON: {jjson}')
+        logger.error(f'Ошибка парсинга JSON:\n{jjson}\n', ex, False)
         return {}
     except Exception as ex:
-        logger.error(f'Ошибка загрузки данных: {ex}')
+        logger.error(f'Ошибка загрузки данных: ',ex, False)
         return {}
 
     return {}
@@ -275,45 +278,3 @@ def j_loads_ns(
         return  dict2ns(data)
     return  {} 
 
-
-# def process_json_file(json_file: Path):
-#     """
-#     Обрабатывает JSON файл, заменяя ключ `name` на `category_name`.
-#     @param json_file: Путь к JSON файлу.
-#     """
-#     try:
-#         data = j_loads(json_file.read_text())
-#         replace_key_in_json(data, 'name', 'category_name')
-#         json_file.write_text(j_dumps(data))
-#     except Exception as ex:
-#         logger.error(f"Error processing file: {json_file}", ex)
-
-# def recursive_process_json_files(directory: Path):
-#     """
-#     Рекурсивно обходит папки и обрабатывает JSON файлы.
-#     @param directory: Путь к директории, которую нужно обработать.
-#     """
-#     for path in directory.rglob('*.json'):
-#         if path.is_file():
-#             process_json_file(path)
-        
-def extract_json_from_string(md_string: str) -> str:
-    """Extract JSON content from Markdown string between ```json and ``` markers.
-
-    Args:
-        md_string (str): The Markdown string that contains JSON enclosed in ```json ```.
-
-    Returns:
-        str: The extracted JSON string or an empty string if not found.
-    """
-    try:
-        match = re.search(r'```json\s*(.*?)\s*```', md_string, re.DOTALL)
-        if match:
-            json_string = match.group(1).strip()
-            return json_string
-        else:
-            logger.warning("No JSON content found between ```json and ``` markers.")
-            return ""
-    except Exception as ex:
-        logger.error("Error extracting JSON from Markdown.", exc_info=True)
-        return ""

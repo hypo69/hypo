@@ -53,7 +53,7 @@ from src.webdriver.driver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import read_text_file, recursively_read_text_files, save_text_file
 from src.utils.url import is_url
-from src.logger import logger
+from src.logger.logger import logger
 
 @dataclass
 class PsychologistTelgrambot(TelegramBot):

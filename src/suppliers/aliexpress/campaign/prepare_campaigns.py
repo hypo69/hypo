@@ -30,7 +30,7 @@ from src.suppliers.aliexpress.utils import locales
 from src.utils.printer import pprint 
 from src.utils.file import get_directory_names
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 
 # Define the path to the directory with campaigns

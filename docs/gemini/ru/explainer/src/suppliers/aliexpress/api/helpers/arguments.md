@@ -1,13 +1,10 @@
-```MD
-# Анализ кода файла `hypotez/src/suppliers/aliexpress/api/helpers/arguments.py`
-
-## <input code>
+# <input code>
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
+## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 
 from ..tools.get_product_id import get_product_id
@@ -16,16 +13,20 @@ from ..errors.exceptions import InvalidArgumentException
 def get_list_as_string(value):
     if value is None:
         return
+    
     if isinstance(value, str):
         return value
+    
     elif isinstance(value, list):
         return ','.join(value)
+    
     else:
         raise InvalidArgumentException('Argument should be a list or string: ' + str(value))
 
 def get_product_ids(values):
     if isinstance(values, str):
         values = values.split(',')
+
     elif not isinstance(values, list):
         raise InvalidArgumentException('Argument product_ids should be a list or string')
 
@@ -36,102 +37,93 @@ def get_product_ids(values):
     return product_ids
 ```
 
-## <algorithm>
+# <algorithm>
 
-**Функция `get_list_as_string`:**
+**Функция `get_list_as_string(value)`:**
 
-1. **Проверка на `None`:** Если `value` равно `None`, возвращает `None`.
-2. **Проверка на строку:** Если `value` является строкой, возвращает ее.
-3. **Проверка на список:** Если `value` является списком, возвращает строку, где элементы списка разделены запятыми.
-4. **Исключение:** В противном случае выбрасывает исключение `InvalidArgumentException`, передавая значение `value`.
+1. **Проверка на `None`:** Если входной параметр `value` равен `None`, то функция возвращает `None`.
+2. **Проверка на строку:** Если `value` является строкой, то функция возвращает эту строку.
+3. **Проверка на список:** Если `value` является списком, то функция объединяет элементы списка в строку, разделяя их запятыми, и возвращает эту строку.
+4. **Исключение:** Если `value` не является ни строкой, ни списком, то функция поднимает исключение `InvalidArgumentException`, передавая строку с описанием ошибки.
 
-**Функция `get_product_ids`:**
+**Пример:**
 
-1. **Проверка на строку:** Если `values` является строкой, разбивает ее на список по разделителю ','.
-2. **Проверка на список:** Если `values` не является ни строкой, ни списком, выбрасывает исключение `InvalidArgumentException`.
-3. **Инициализация:** Создает пустой список `product_ids`.
-4. **Итерация по значениям:**  Проходит по каждому элементу списка `values`.
-5. **Вызов `get_product_id`:** Для каждого элемента вызывает функцию `get_product_id` и добавляет результат в список `product_ids`.
-6. **Возврат:** Возвращает список `product_ids`.
+```
+get_list_as_string("123,456")  # Возвращает "123,456"
+get_list_as_string([1, 2, 3])  # Возвращает "1,2,3"
+get_list_as_string(None)       # Возвращает None
+get_list_as_string(42)        # Вызывает InvalidArgumentException
+```
 
+**Функция `get_product_ids(values)`:**
 
-**Пример использования (блок-схема):**
+1. **Проверка на строку:** Если входной параметр `values` является строкой, то функция разбивает ее на список строк по разделителю ','.
+2. **Проверка на список:** Если `values` не является ни строкой, ни списком, то функция поднимает исключение `InvalidArgumentException`.
+3. **Обработка списка:** Создается пустой список `product_ids`.
+4. **Итерация по элементам:** Цикл `for` проходит по каждому элементу списка `values`.
+5. **Вызов функции `get_product_id`:** Для каждого элемента вызывается функция `get_product_id`, результат добавляется в список `product_ids`.
+6. **Возврат:** Функция возвращает список `product_ids`.
+
+**Пример:**
+
+```
+get_product_ids("1,2,3")   # Возвращает список с результатами get_product_id(1), get_product_id(2), get_product_id(3)
+get_product_ids([1, 2, 3])  # Возвращает список с результатами get_product_id(1), get_product_id(2), get_product_id(3)
+get_product_ids(42)        # Вызывает InvalidArgumentException
+```
+
+# <mermaid>
 
 ```mermaid
 graph TD
-    A[get_product_ids("1,2,3")] --> B{isinstance(values, str)};
-    B -- Yes --> C{values = values.split(',')};
-    C --> D[product_ids = []];
-    D --> E(for value in values);
-    E --> F[get_product_id(value)];
-    F --> G{append to product_ids};
-    G --> H[return product_ids];
-    B -- No --> I{isinstance(values, list)};
-    I -- Yes --> E;
-    I -- No --> J[raise InvalidArgumentException];
-    J --> K;
+    A[get_list_as_string(value)] --> B{value is None?};
+    B -- Yes --> C[return None];
+    B -- No --> D{value is str?};
+    D -- Yes --> E[return value];
+    D -- No --> F{value is list?};
+    F -- Yes --> G[return ','.join(value)];
+    F -- No --> H[raise InvalidArgumentException];
+    
+    I[get_product_ids(values)] --> J{values is str?};
+    J -- Yes --> K[values = values.split(',')];
+    J -- No --> L{values is list?};
+    L -- Yes --> M[product_ids = []];
+    L -- No --> N[raise InvalidArgumentException];
+    M --> O[loop for value in values];
+    O --> P[product_ids.append(get_product_id(value))];
+    P --> Q[return product_ids];
+    
+    subgraph get_product_id
+        R(get_product_id(value)) --> S[result];
+    end
 ```
 
-## <mermaid>
-
-```mermaid
-graph LR
-    subgraph "get_list_as_string"
-        A[value = None] --> B{return None};
-        A[value is str] --> C{return value};
-        A[value is list] --> D{return ','.join(value)};
-        A[other] --> E[raise InvalidArgumentException];
-        B -.-> F;
-        C -.-> F;
-        D -.-> F;
-        E -.-> F;
-    end
-    subgraph "get_product_ids"
-        G[values = "1,2,3"] --> H{values.split(',')};
-        H --> I[product_ids = []];
-        I --> J(for value in values);
-        J --> K[get_product_id(value)];
-        K --> L{product_ids.append};
-        L --> M{return product_ids};
-        G[values is str] -.-> H;
-        G[values is list] -.-> J;
-        G[other] --> O[raise InvalidArgumentException];
-        O -.-> M;
-    end
-    F --> "return";
-    M --> "return";
-    K --> G;
-    H --> G;
-
-    get_product_id -- get_product_id from tools --> get_product_id;
-    InvalidArgumentException -- InvalidArgumentException from errors --> InvalidArgumentException;
-```
-
-## <explanation>
+# <explanation>
 
 **Импорты:**
 
-- `from ..tools.get_product_id import get_product_id`: Импортирует функцию `get_product_id` из модуля `get_product_id` в папке `tools`. Двойные точки `..` указывают на то, что модуль находится на два уровня выше текущего файла.  Это предполагает наличие папки `tools` в директории `suppliers/aliexpress/api`.
-- `from ..errors.exceptions import InvalidArgumentException`: Импортирует класс `InvalidArgumentException` из модуля `exceptions` в папке `errors`. Аналогично, предполагается существование директории `errors` в структуре `suppliers/aliexpress/api`.  Эти импорты обеспечивают обработку ошибок и взаимодействие с функциями, определяющими ID продукта.
+- `from ..tools.get_product_id import get_product_id`: Импортирует функцию `get_product_id` из модуля `get_product_id` в подпапке `tools` текущего проекта. Двойные точки (`..`) указывают на то, что нужно подняться на два уровня вверх в файловой системе относительно текущего файла.
+- `from ..errors.exceptions import InvalidArgumentException`: Импортирует класс `InvalidArgumentException` из модуля `exceptions` в подпапке `errors` текущего проекта.
+
 
 **Функции:**
 
-- `get_list_as_string(value)`: Принимает значение `value` и, в зависимости от его типа, возвращает строковое представление списка или само значение. Является вспомогательной функцией для `get_product_ids`.
-- `get_product_ids(values)`:  Принимает значения `values`, которые могут быть строкой или списком. Преобразует строку в список, если необходимо, а затем вызывает `get_product_id` для каждого элемента в списке и возвращает список полученных ID.
+- `get_list_as_string(value)`: Принимает значение `value` и преобразует его в строку, если это список. Возвращает строковое представление списка, разделенного запятыми, или исходную строку, если `value` является строкой. Если `value` не является ни строкой, ни списком, генерирует исключение `InvalidArgumentException`.
+- `get_product_ids(values)`: Принимает `values` (строку или список) и преобразует его в список, если это строка, разделенная запятыми. Затем для каждого элемента из списка вызывается `get_product_id`. Возвращает список значений, полученных от функции `get_product_id`. Если `values` не является ни строкой, ни списком, генерирует исключение `InvalidArgumentException`.
 
 **Переменные:**
 
-- `values`: Переменная, хранящая входные данные для функции `get_product_ids`. Может быть строкой или списком.
-- `product_ids`:  Список, в который добавляются возвращаемые значения от `get_product_id`.
+- `value`:  Тип значения зависит от входных данных.  Может быть строкой, списком или `None`.
+- `values`: Тип значения зависит от входных данных.  Может быть строкой или списком.
+- `product_ids`: Список, содержащий результаты вызова функции `get_product_id`.
+
 
 **Возможные ошибки и улучшения:**
 
-- **Обработка пустых входных данных:** Функция `get_product_ids` не проверяет случай, когда `values` является пустым списком или пустой строкой. Добавление проверки `if not values:` могло бы предотвратить ошибку.
-- **Обработка других типов:**  Функция не обрабатывает другие типы данных, кроме строки и списка. Необходимо подумать над тем, чтобы добавить проверку для других типов данных или ограничить входные данные строками или списками.
-- **Валидация `get_product_id`:**  Код `get_product_id` не показан, но необходимо убедиться, что функция корректно обрабатывает различные типы входных данных и потенциальные исключения.
-- **Документирование:** Добавление docstrings к функциям `get_list_as_string` и `get_product_ids` сделало бы код более понятным и поддерживаемым.
+- **Обработка пустых строк:** Если `values` является пустой строкой, функция `get_product_ids` вернет пустой список. Возможно, стоит добавить проверку на пустую строку или пустой список.
+- **Обработка ошибок `get_product_id`:** Функция `get_product_ids` не обрабатывает возможные исключения, которые могут возникнуть внутри функции `get_product_id`. Стоит добавить обработку исключений (например, `try...except`) для повышения отказоустойчивости.
+- **Использование `TypeError`:** Вместо `InvalidArgumentException` можно использовать стандартное исключение `TypeError` для более подходящего описания ошибки неверного типа аргумента.
 
+**Взаимосвязь с другими частями проекта:**
 
-**Взаимосвязи с другими частями проекта:**
-
-Функции `get_list_as_string` и `get_product_ids` из модуля `arguments` скорее всего используются в других модулях `api` для подготовки данных перед вызовом API AliExpress.  Функция `get_product_id` из модуля `tools` вероятно отвечает за получение идентификатора продукта из различных источников. Модуль `errors` предоставляет механизм обработки исключений.  Это указывает на то, что данный модуль `arguments` является частью более крупного проекта, связанного с обработкой данных для взаимодействия с API AliExpress.
+Функции `get_list_as_string` и `get_product_ids` являются вспомогательными функциями, которые вероятно используются в других частях API для обработки входных данных.  Функция `get_product_id` является частью вспомогательной логики, скорее всего, осуществляет преобразование входного значения в соответствующий идентификатор продукта.  `InvalidArgumentException` используется для выявления проблем с типом и форматом данных на ранних этапах обработки.  Эта цепочка указывает на использование этой функции в более крупных запросах к API и взаимодействие с другими модулями, обрабатывающими продукты Алиэкспресс.

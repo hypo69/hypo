@@ -27,7 +27,7 @@ from src.utils.csv import save_csv_file
 from src.utils.printer import pprint
 from src.utils.convertors.base64 import base64encode
 from src.utils.convertors.md2dict import md2dict
-from src.logger import logger
+from src.logger.logger import logger
 
 class OpenAIModel:
     """OpenAI Model Class for interacting with the OpenAI API and managing the model."""

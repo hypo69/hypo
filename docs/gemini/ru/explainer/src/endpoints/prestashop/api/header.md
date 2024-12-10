@@ -8,7 +8,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop.api 
+.. module:: src.endpoints.prestashop.api 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -74,106 +74,101 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 # <algorithm>
 
-1. **`set_project_root(marker_files)`**:
-    * Принимает кортеж `marker_files` с именами файлов/директорий для поиска корня проекта.
-    * Начинает поиск корня проекта с текущей директории (`__file__`) и поднимается по дереву вверх.
-    * Для каждой родительской директории проверяет существование хотя бы одного файла/директории из `marker_files`.
-    * Если найдена директория с маркерами, то она возвращается как корень проекта.
-    * Если корень проекта не найден, то возвращается текущая директория.
-    * Добавляет найденный корень в `sys.path`, чтобы импорты из него работали.
+1. **`set_project_root` function:**
+    * Takes a tuple of marker files as input.
+    * Starts from the current file's directory.
+    * Iterates through parent directories until it finds a directory containing any of the marker files.
+    * If found, adds the root directory to `sys.path`.
+    * Returns the found root directory.
 
+   **Example:** If the script is located in `/path/to/project/hypotez/src/endpoints/prestashop/api`, and marker files are present in `/path/to/project`, the function will return `/path/to/project`.
+   
+2. **Initialization:** The script retrieves the root directory (`__root__`) using `set_project_root`.
 
-2. **Получение `__root__`:** Вызывается функция `set_project_root()`, чтобы получить путь к корню проекта.
+3. **Reading settings:**
+    * Tries to read settings from `gs.path.root / 'src' / 'settings.json'`.
+    * Handles `FileNotFoundError` and `json.JSONDecodeError` if the file doesn't exist or has invalid JSON.
 
+4. **Reading documentation:**
+    * Tries to read documentation from `gs.path.root / 'src' / 'README.MD'`.
+    * Handles `FileNotFoundError` and `json.JSONDecodeError` similarly.
 
-3. **Чтение `settings.json`:**
-    * Ищет файл `settings.json` в директории `gs.path.root / 'src'`.
-    * Если файл найден, загружает его содержимое как JSON и сохраняет в `settings`.
-    * Обрабатывает `FileNotFoundError` и `json.JSONDecodeError` в случае проблем с чтением/парсингом.
+5. **Setting project properties:**
+    * Retrieves project name, version, documentation, author, copyright, and a developer support link from the settings file.
+    * Uses default values if the settings file doesn't exist or relevant keys are missing.
 
-4. **Чтение `README.MD`:**
-    * Ищет файл `README.MD` в директории `gs.path.root / 'src'`.
-    * Если файл найден, считывает его содержимое в `doc_str`.
-    * Обрабатывает `FileNotFoundError` и `json.JSONDecodeError` в случае проблем с чтением.
+**Data flow:** The function `set_project_root` returns the path to the project root.  This path is then used within the script itself, such as in the `settings` and `doc_str` reading. The data from the settings file is then used to populate project properties.
 
-
-5. **Получение данных проекта:**
-    * Используя `settings.get()`, извлекает значения `project_name`, `version`, `author`, `copyrihgnt`, и `cofee` из словаря `settings`.
-    * Если `settings` отсутствует или ключ не найден, используются значения по умолчанию.
-
-6. **Возврат переменных проекта:**
-    * Возвращает полученные переменные: `__project_name__`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__`.
-
-
-
-**Пример:**
-
-Если в файле `settings.json` находится:
-
-```json
-{
-  "project_name": "MyProject",
-  "version": "1.0.0",
-  "author": "John Doe"
-}
-```
-
-то переменные будут содержать соответствующие значения.
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[set_project_root()] --> B{Find root?};
-    B -- Yes --> C[Return root];
-    B -- No --> D[Return current dir];
-    C --> E{Add to sys.path?};
-    E -- Yes --> F[__root__];
-    E -- No --> F[__root__];
-    F --> G[Read settings.json];
-    G -- Success --> H[settings];
-    G -- Fail --> I[...];
-    H --> J[Read README.MD];
-    J -- Success --> K[doc_str];
-    J -- Fail --> L[...];
-    K --> M[Get project data];
-    M --> N[__project_name__, __version__, ...];
-    N --> O[Return values];
+    A[set_project_root] --> B{Find Root};
+    B -- Marker files found --> C[__root__];
+    B -- Marker files not found --> D[current path];
+    C --> E[sys.path.insert];
+    D --> E;
+    E --> F[Return __root__];
+    F --> G[Read settings];
+    G --> H{settings file exists?};
+    H -- Yes --> I[Load settings];
+    H -- No --> J[settings = None];
+    I --> K[Read README];
+    K --> L{README file exists?};
+    L -- Yes --> M[Read README];
+    L -- No --> N[doc_str = None];
+    M --> O[Populate vars];
+    J --> O;
+    N --> O;
+    O --> P[Project properties];
+    subgraph Settings
+        I --> S{Project name, version...};
+        S --> O;
+    end
 ```
 
-**Подключаемые зависимости:**
-
-* `sys`: для доступа к системным переменным, таким как `sys.path`.
-* `json`: для работы с файлами JSON.
-* `packaging.version`: для работы с версиями пакетов.
-* `pathlib`: для работы с путями к файлам.
-* `gs`: предполагается, что это собственный модуль, вероятно, для управления путями (`gs.path.root`).
 
 # <explanation>
 
-* **Импорты:**
-    * `sys`: предоставляет доступ к интерпретатору Python. Здесь используется для манипуляции `sys.path` при поиске корневой директории проекта.
-    * `json`: используется для работы с файлами JSON, например, для загрузки настроек проекта из `settings.json`.
-    * `packaging.version`:  предоставляет класс `Version` для сравнения версий программного обеспечения.
-    * `pathlib`: предоставляет удобный способ работы с путями к файлам.
-    * `src.gs`: это, скорее всего, собственный модуль, возможно, для работы с файлами и директориями проекта. (`gs.path.root` указывает на него).  Его необходимо описать отдельно в других документах.  Без информации о нём невозможно полноценно понять его функциональность.
+**Imports:**
 
-* **Классы:** Нет классов в этом коде.
-
-* **Функции:**
-    * `set_project_root(marker_files=...)`:  Ищет корневую директорию проекта, поднимаясь по дереву вверх от текущего файла.  Она важна, чтобы избежать проблем с импортом при работе с проектом.  Аргумент `marker_files` определяет файлы/директории, которые сигнализируют о расположении корня. Возвращает `Path` к корневой директории или текущей, если корень не найден.
-
-* **Переменные:**
-    * `MODE`, `__root__`, `settings`, `doc_str`, `__project_name__`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__`: все являются переменными.
-    * Важно то, что `__root__` используется как глобальная переменная, но она инициализируется функцией `set_project_root()`.
-    *  Важно обратить внимание на обработку исключений `FileNotFoundError` и `json.JSONDecodeError` при чтении файлов.  Это важная часть надежной работы кода.
+* `sys`: Provides access to system-specific parameters and functions, including the `sys.path` list which is modified by the `set_project_root` function to enable importing modules from the project's root directory.
+* `json`: Used for working with JSON data, specifically to read settings from a file.
+* `packaging.version`: Used to handle package versions in a more robust way.
+* `pathlib`: Used for working with file paths in a platform-independent way, central to `set_project_root` to find the project root directory and for interacting with files using paths like `gs.path.root`.
 
 
-* **Возможные ошибки/улучшения:**
-    * Неясно, зачем использовать `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12` в начале файла. Скорее всего, это лишнее.
-    * Проверка корректности значения `settings` перед доступом к нему важна. Необходимо избегать `KeyError`.
-    * В именах переменных `__root__`, `__project_name__` и т.п. есть двойной подчерк, что намекает на то, что они глобальные. Это хорошая практика, чтобы избежать конфликтов с локальными переменными.
-    *  Необходимо прояснить роль `src.gs` для полной оценки кода.  Без этого объяснение остаётся неполным.
+**Classes:**
+
+* No classes are defined. The script uses functions (`set_project_root`) and variables to perform operations.
+
+**Functions:**
+
+* `set_project_root(marker_files)`:
+    * Takes a tuple of marker files (`pyproject.toml`, `requirements.txt`, `.git`) as input.
+    * Recursively searches parent directories for the marker file.
+    * If a marker file is found, returns the parent directory.
+    * Inserts the root directory to `sys.path` to enable importing modules from that directory.
+    * Handles cases where the directory isn't found.
 
 
-* **Взаимосвязи с другими частями проекта:** Код явно использует `src.gs` и `settings.json`, что предполагает существование файлов конфигурации и вспомогательных модулей в других частях проекта. Без понимания `gs` трудно определить полную архитектуру.
+**Variables:**
+
+* `MODE`: A string specifying the mode (e.g., 'dev', 'prod').
+* `__root__`: A `Path` object representing the root directory of the project.
+* `settings`: A dictionary holding project settings.
+* `doc_str`: A string containing the project documentation.
+* `__project_name__`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__`:  Strings containing information about the project (name, version, documentation, author, etc.). These variables are populated from the `settings.json` file if available, otherwise using default values.
+
+**Possible errors and improvements:**
+
+* **Error Handling:**  The `try...except` blocks are good for handling `FileNotFoundError` and `json.JSONDecodeError` when reading files. Consider adding more specific error handling, like logging the error or raising a custom exception.
+* **`gs.path.root`:**  The code assumes a module named `gs` exists and defines a `gs.path` object containing the `root` attribute.  This module needs to be defined elsewhere.  The use of external module `gs` needs to be explained, otherwise it is hard to understand where it comes from.
+* **`__root__` variable:**  The variable `__root__` is used twice (as a function and as a global variable). This is not a problem, but using clearer variable names (`project_root` in place of `__root__`) might improve readability.
+* **Settings file structure:** Ensure that the structure of `settings.json` matches the expected keys so that relevant variables are correctly populated.
+
+
+**Relationships with other parts of the project:**
+
+The script heavily relies on the `gs` module (which appears to be project-specific).  This module likely provides functionalities related to file paths and other core project tasks.

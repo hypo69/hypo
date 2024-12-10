@@ -17,7 +17,7 @@ import time
 from src.utils.jjson import j_loads
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook import FacebookPromoter
-from src.logger import logger
+from src.logger.logger import logger
 
 d = Driver(Chrome)
 d.get_url(r"https://facebook.com")

@@ -29,7 +29,7 @@ import header
 from src import gs
 from src.utils.jjson import j_loads
 from .api import PrestaShop
-from src.logger import logger
+from src.logger.logger import logger
 
 
 from typing import Optional

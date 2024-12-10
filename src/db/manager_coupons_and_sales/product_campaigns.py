@@ -18,7 +18,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 
 Base = declarative_base()
 metadata = MetaData()

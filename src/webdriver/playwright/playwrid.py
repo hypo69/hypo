@@ -28,7 +28,7 @@ from types import SimpleNamespace
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
 from src import gs
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 class Playwrid(PlaywrightCrawler):
     """ Subclass of `PlaywrightCrawler` that provides additional functionality."""

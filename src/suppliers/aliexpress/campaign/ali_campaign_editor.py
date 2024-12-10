@@ -76,7 +76,7 @@ from src.utils.jjson import j_loads_ns, j_loads, j_dumps
 from src.utils.convertors.csv import csv2dict
 from src.utils.printer import pprint
 from src.utils.file import read_text_file, save_text_file, get_filenames
-from src.logger import logger
+from src.logger.logger import logger
 
 class AliCampaignEditor(AliPromoCampaign):
     """ Editor for advertising campaigns.

@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.gui.context_menu.qt6 
+.. module:: src.gui.context_menu.qt6 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -78,168 +78,120 @@ def add_context_menu_item():
         Displays an error message if the script file does not exist.
     """
     
+    # Registry path for adding a menu item to the background of folders and the desktop
     key_path = r"Directory\\Background\\shell\\hypo_AI_assistant"
 
     try:
+        # Create a new key for the menu item under the specified registry path
         with reg.CreateKey(reg.HKEY_CLASSES_ROOT, key_path) as key:
-            reg.SetValue(key, "", reg.REG_SZ, "hypo AI assistant")  # Display name
+            reg.SetValue(key, "", reg.REG_SZ, "hypo AI assistant")  # Display name of the context menu item
+            
+            # Sub-key to define the command to run when the menu item is selected
             command_key = rf"{key_path}\\command"
             with reg.CreateKey(reg.HKEY_CLASSES_ROOT, command_key) as command:
-                command_path = gs.path.src / 'gui' / 'context_menu' / 'main.py'
+                
+                # Define the path to the Python script that will be executed
+                command_path = gs.path.src / 'gui' / 'context_menu' / 'main.py'  # Path to the script
                 if not os.path.exists(command_path):
                     QtWidgets.QMessageBox.critical(None, "Ошибка", f"Файл {command_path} не найден.")
                     return
+                
+                # Set the command to execute the script with Python when the context menu item is clicked
                 reg.SetValue(command, "", reg.REG_SZ, f"python \\"{command_path}\\" \\"%1\\"")
+        
+        # Confirmation message for successful addition
         QtWidgets.QMessageBox.information(None, "Успех", "Пункт меню успешно добавлен!")
     except Exception as ex:
+        # Display any error that occurs during the registry modification
         QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {ex}")
 
 
 def remove_context_menu_item():
-    """Removes the 'hypo AI assistant' context menu item."""
-    key_path = r"Directory\\Background\\shell\\hypo_AI_assistant"
-    try:
-        reg.DeleteKey(reg.HKEY_CLASSES_ROOT, key_path)
-        QtWidgets.QMessageBox.information(None, "Успех", "Пункт меню успешно удален!")
-    except FileNotFoundError:
-        QtWidgets.QMessageBox.warning(None, "Предупреждение", "Пункт меню не найден.")
-    except Exception as e:
-        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {e}")
-
+    # ... (same as above)
 
 class ContextMenuManager(QtWidgets.QWidget):
-    """Main application window for managing the custom context menu item."""
-
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-
-    def initUI(self):
-        self.setWindowTitle("Управление контекстным меню")
-        layout = QtWidgets.QVBoxLayout()
-        add_button = QtWidgets.QPushButton("Добавить пункт меню")
-        add_button.clicked.connect(add_context_menu_item)
-        layout.addWidget(add_button)
-        remove_button = QtWidgets.QPushButton("Удалить пункт меню")
-        remove_button.clicked.connect(remove_context_menu_item)
-        layout.addWidget(remove_button)
-        exit_button = QtWidgets.QPushButton("Выход")
-        exit_button.clicked.connect(self.close)
-        layout.addWidget(exit_button)
-        self.setLayout(layout)
-
+    # ... (same as above)
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication([])
-    window = ContextMenuManager()
-    window.show()
-    app.exec()
+    # ... (same as above)
 ```
 
 # <algorithm>
 
-**Блок-схема (пример)**
-
 ```mermaid
 graph TD
-    A[Инициализация приложения] --> B{Запуск add_context_menu_item?};
-    B -- Да --> C[Создать ключ в реестре];
-    B -- Нет --> D[Запуск remove_context_menu_item?];
-    D -- Да --> E[Удалить ключ в реестре];
-    D -- Нет --> F[Создать окно ContextMenuManager];
-    C --> G[Проверка существования файла];
-    G -- Да --> H[Запись команды в реестр];
-    G -- Нет --> I[Ошибка];
-    H --> J[Вывести сообщение об успехе];
-    E --> K[Вывести сообщение об успехе];
-    I --> L[Вывести сообщение об ошибке];
-    C --> J;
-    E --> K;
-    J --> M[Завершить программу];
-    K --> M;
-    F --> N[Запускается основной цикл Qt];
-    N --> M;
+    A[Start] --> B{Check if "main.py" exists};
+    B -- Yes --> C[Create Registry Key];
+    B -- No --> D[Show Error];
+    C --> E[Set Registry Value for Display Name];
+    E --> F[Create Command Key];
+    F --> G[Set Command in Registry];
+    G --> H[Show Success Message];
+    H --> I[End];
+    D --> I;
+    
+    subgraph "remove_context_menu_item"
+        J[Start] --> K{Check if key exists};
+        K -- Yes --> L[Delete Registry Key];
+        K -- No --> M[Show Warning];
+        L --> N[Show Success Message];
+        M --> O[End];
+        N --> O;
+    end
 ```
-
-**Пример:**
-
-Пользователь нажимает кнопку "Добавить пункт меню".  `add_context_menu_item` вызывается.  Проверяется существование файла, затем создаются ключи в реестре, записывается команда, вывод ошибки или сообщения об успехе. После чего, выполняется завершение программы.
-
-**Передача данных:**
-
-Функции `add_context_menu_item` и `remove_context_menu_item` получают данные из `gs.path.src` и записывают данные в Windows реестр. Класс `ContextMenuManager` отвечает за создание интерфейса и реагирует на нажатия кнопок, вызывая соответствующие функции.
-
 
 # <mermaid>
 
 ```mermaid
 graph LR
-    subgraph "Модули"
-        A[os] --> B(main.py);
-        C[winreg] --> B;
-        D(PyQt6) --> B;
+    subgraph "Module Dependencies"
+        A[main.py] --> B(winreg);
+        A --> C(os);
+        A --> D(QtWidgets);
+        A --> E(header);
+        A --> F(gs);
     end
-    subgraph "Файлы"
-        E[header.py] --> B;
-        F[gs.py] --> B;
+    
+    subgraph "PyQt6 Dependencies"
+        D --> G(PyQt6);
     end
-    subgraph "Функции"
-        G[add_context_menu_item] --> H[reg.CreateKey];
-        I[remove_context_menu_item] --> J[reg.DeleteKey];
-        K[add_context_menu_item] -- путь --> L[gs.path.src];
-    end
-    subgraph "Классы"
-        M[ContextMenuManager] --> N[QtWidgets.QWidget];
-        O[ContextMenuManager] --> P[initUI];
-    end
-    B --> Q[main];
 ```
-
-**Объяснение диаграммы:**
-
-- **Модули:** Показывают зависимости от стандартных модулей Python (`os`, `winreg`, `PyQt6`).
-- **Файлы:** Иллюстрируют зависимость от пользовательских модулей (`header.py`, `gs.py`).
-- **Функции:** `add_context_menu_item` использует `reg.CreateKey`, а `remove_context_menu_item` использует `reg.DeleteKey`. Обращение к `gs.path.src`.
-- **Классы:** `ContextMenuManager` наследовается от `QtWidgets.QWidget`.  `initUI` - метод инициализации пользовательского интерфейса.
-- **main:**  Точка входа в программу.
 
 # <explanation>
 
 **Импорты:**
 
-- `winreg`: Модуль для взаимодействия с Windows Registry, необходимый для изменения реестра.
-- `os`: Модуль для работы с файловой системой, используется для проверки существования файла.
-- `QtWidgets`: Модуль PyQt6 для создания графического интерфейса.
-- `header`:  Предполагается, что содержит константы или настройки, необходимые для работы скрипта.
-- `gs`: Модуль из пакета `src`, вероятно, содержит переменные, связанные с путями к файлам.  Это ключевой модуль для понимания архитектуры, он предоставляет данные о расположении ресурсов.
-
+- `winreg as reg`: Импортирует модуль `winreg`, который используется для взаимодействия с реестром Windows.  Переименован как `reg` для краткости.
+- `os`: Импортирует модуль `os`, предоставляющий функции для работы с операционной системой, в том числе проверку существования файлов и манипуляцию с путями.
+- `QtWidgets`: Импортирует класс `QtWidgets` из `PyQt6`, обеспечивая инструменты для создания графического интерфейса.
+- `header`: Импортирует, предположительно, файл `header.py`, который содержит настройки или константы, необходимые для работы модуля.
+- `gs`: Импортирует модуль `gs`, который, по всей видимости, находится в пакете `src`, и предоставляет функции, связанные с путями и структурой проекта (например, `gs.path.src`).
 
 **Классы:**
 
-- `ContextMenuManager`: Главный класс приложения, создаёт и управляет интерфейсом для добавления/удаления пункта меню.
+- `ContextMenuManager`:  Представляет собой главное окно приложения для управления контекстным меню.  Используется `QtWidgets.QWidget` в качестве базового класса.  В нём реализованы методы для инициализации пользовательского интерфейса (UI) и обработки событий нажатия кнопок.
+ - `initUI`: Метод, который отвечает за создание пользовательского интерфейса с кнопками для добавления, удаления и выхода.
 
 **Функции:**
 
-- `add_context_menu_item()`: Добавляет пункт меню в контекстное меню.  Важна проверка существования файла (`command_path`), которая предотвращает ошибку, если файл отсутствует.
-- `remove_context_menu_item()`: Удаляет пункт меню из контекстного меню. Обрабатывает ошибку `FileNotFoundError`, если пункт меню не найден.
-- `initUI()`: Метод инициализации интерфейса приложения (`ContextMenuManager`).
-
+- `add_context_menu_item()`: Добавляет пункт меню "hypo AI assistant" в контекстное меню папок и рабочего стола.  Использует реестр Windows для изменения контекстного меню.
+  -  Проверяет существование целевого файла (`command_path`).
+- `remove_context_menu_item()`: Удаляет пункт меню "hypo AI assistant" из контекстного меню папок и рабочего стола.  Так же использует реестр Windows для изменения контекстного меню.
 
 **Переменные:**
 
-- `MODE`: Переменная, вероятно, для определения режима работы приложения ('dev' в данном случае).
-- `key_path`, `command_key`: Переменные, хранящие пути к записям в реестре.
-- `command_path`:  Путь к Python-скрипту, который будет запущен при нажатии пункта меню.
-
+- `MODE`: Строковая константа, вероятно, хранящая режим работы (например, 'dev' или 'prod').
+- `key_path`, `command_key`: Строковые переменные, содержащие пути к ключам реестра, необходимые для управления контекстным меню.
+- `command_path`: Строковая переменная, хранящая путь к файлу Python-скрипта, который будет выполнен при выборе пункта меню.
 
 **Возможные ошибки и улучшения:**
 
-- **Обработка исключений:**  В функциях `add_context_menu_item` и `remove_context_menu_item` обработка исключений более детальная, но можно добавить `except Exception as e: print(e)` для вывода полной ошибки в консоль.
-- **Локализация:** При выводе сообщений об ошибках и успехе рекомендуется использовать локализованные сообщения.
-- **Взаимодействие с другими модулями:**  Для более четкого понимания, как взаимодействует данный скрипт с другими частями проекта, необходимо рассмотреть модуль `gs`.  Знание содержимого `gs.path.src` очень важно для понимания структуры и логики проекта.
-- **Использование констант:**  Вместо магических чисел (например, `reg.REG_SZ`) следует использовать константы, определённые в `header.py` или `gs.py`, для повышения читаемости и модифицируемости кода.
+- **Обработка ошибок:** Код содержит `try...except` блоки для обработки потенциальных ошибок при работе с реестром (например, если ключ не найден). Однако, обработка некоторых ошибок, особенно `FileNotFoundError`, могла бы быть более подробной.
+- **Локализация:**  Использование `QtWidgets.QMessageBox` хорошо, но для лучшего пользовательского опыта, рекомендуется использовать переведенные сообщения (например, с помощью Qt Linguist).
+- **Обработка исключений:**  В обработчике исключений нужно возвращать значение.
+- **Тестирование:** Тестирование кода, который взаимодействует с реестром Windows, крайне важно. Необходимо убедиться, что код работает как ожидается в разных ситуациях.
 
 
-**Цепочка взаимосвязей:**
+**Цепочка взаимосвязей с другими частями проекта:**
 
-`gui/context_menu/qt6/main.py` использует `src/gs.py` для получения пути к скрипту, который будет запущен при выборе пункта меню.  `src/gs.py`, вероятно, предоставляет общую функциональность для работы с файлами и ресурсами проекта.  `header.py` (если существует) содержит конфигурационные переменные и константы, необходимые для работы программы.
+Модуль `main.py` напрямую зависит от `gs`, который предположительно предоставляет пути к ресурсам проекта, и `header.py`, содержащего настройки.  Функция `add_context_menu_item` пытается получить путь к файлу `main.py` из `gs.path.src`.  Это указывает на то, что этот модуль является частью более крупного приложения и зависит от структуры папок и конфигураций, определенных в других частях проекта.

@@ -22,7 +22,7 @@ from typing import Any
 import header
 from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.webdriver.driver import Driver
-from src.logger import logger
+from src.logger.logger import logger
 
 
 

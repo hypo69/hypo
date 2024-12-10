@@ -48,7 +48,7 @@ from aioconsole import ainput
 
 import header
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.suppliers.chat_gpt import GptGs
 from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 from src.ai.openai.model import Model

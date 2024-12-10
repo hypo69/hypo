@@ -49,7 +49,7 @@ from src.goog.spreadsheet.spreadsheet import SpreadSheet
 
 from src.utils.jjson import j_dumps
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 
 

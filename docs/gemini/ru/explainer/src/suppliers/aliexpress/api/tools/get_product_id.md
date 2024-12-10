@@ -1,11 +1,10 @@
-```MD
 # <input code>
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.tools """
 """Some useful tools."""
 
@@ -28,54 +27,69 @@ def get_product_id(raw_product_id: str) -> str:
 
 # <algorithm>
 
-**Шаг 1**: Функция `get_product_id` принимает строку `raw_product_id` в качестве входного параметра.
+**Шаг 1:** Функция `get_product_id` принимает строку `raw_product_id`.
 
-**Шаг 2**: Функция вызывает функцию `extract_prod_ids` из модуля `src.suppliers.aliexpress.utils.extract_product_id`, передавая ей `raw_product_id`. Функция `extract_prod_ids` отвечает за извлечение идентификатора продукта.
+**Шаг 2:** Она вызывает функцию `extract_prod_ids` из модуля `src.suppliers.aliexpress.utils.extract_product_id` со строкой `raw_product_id` в качестве аргумента.
 
-**Шаг 3**: Функция `get_product_id` возвращает значение, возвращенное функцией `extract_prod_ids`.
+**Шаг 3:** Функция `extract_prod_ids` возвращает извлеченный идентификатор продукта, если он найден.
 
-**Пример**: Если `raw_product_id` содержит "12345", то `extract_prod_ids` возвращает "12345".  Если `raw_product_id` содержит данные, в которых идентификатор продукта не найден, `extract_prod_ids` возвращает `None`. В этом случае вызывается исключение `ProductIdNotFoundException`.
+**Пример:**
 
-**Взаимодействие**: Функция `get_product_id` зависит от функции `extract_prod_ids`. `extract_prod_ids` предположительно содержит сложную логику, в том числе возможно  использование регулярных выражений, для распознавания и извлечения идентификаторов продукта.
+Если `raw_product_id` содержит "123456789", то `extract_prod_ids` возвращает "123456789".
 
+**Пример ошибки:**
 
-# <mermaid>
+Если `raw_product_id` не содержит идентификатор продукта, то `extract_prod_ids` вызывает исключение `ProductIdNotFoundException`.
 
 ```mermaid
 graph TD
     A[get_product_id(raw_product_id)] --> B{extract_prod_ids(raw_product_id)};
-    B --> C(Результат extract_prod_ids);
-    C --(ProductId найден)--> D[Возврат результата];
-    C --(ProductId не найден)--> E[ProductIdNotFoundException];
+    B -- success --> C[return product_id];
+    B -- failure --> D[ProductIdNotFoundException];
+```
+
+# <mermaid>
+
+```mermaid
+graph LR
+    subgraph extract_prod_ids
+        A[raw_product_id] --> B[extract_prod_ids];
+        B -- success --> C{product_id};
+        B -- failure --> D[ProductIdNotFoundException];
+    end
+    subgraph get_product_id
+        E[raw_product_id] --> F[get_product_id];
+        F --> B;
+        C --> G[return product_id];
+        D --> H[raise ProductIdNotFoundException];
+    end
+    B -.-> C;
+    B -.-> D;
+
+    style B fill:#f9f,stroke:#333,stroke-width:2px;
 ```
 
 # <explanation>
 
-**Импорты**:
+**Импорты:**
 
-- `from ..errors import ProductIdNotFoundException`: Импортирует класс `ProductIdNotFoundException` из модуля `errors` в том же каталоге, что и текущий (`../errors`).  Это позволяет использовать исключение для обработки ошибок.
-- `from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids`: Импортирует функцию `extract_prod_ids` из модуля `extract_product_id`, который находится в подпакете `utils` пакета `aliexpress` в `src`. Это указывает на наличие полезной функциональности в модуле `extract_prod_ids`.
-- `import re`: Импортирует модуль `re` для работы с регулярными выражениями.
+* `from ..errors import ProductIdNotFoundException`: Импортирует класс `ProductIdNotFoundException` из модуля `errors` в текущем пакете (в подпапке `suppliers/aliexpress/api`).  Эта зависимость указывает на наличие модуля `errors` в иерархии пакетов.
+* `from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids`: Импортирует функцию `extract_prod_ids` из модуля `extract_product_id` в подпапке `utils` в пакете `aliexpress` в проекте.  Эта зависимость иллюстрирует структуру проекта, где утилиты для извлечения данных находятся отдельно.
 
-**Классы**:
+**Функции:**
 
-- `ProductIdNotFoundException`: Класс для обозначения ситуации, когда идентификатор продукта не был найден. Этот класс используется для обработки ошибок.
+* `get_product_id(raw_product_id: str) -> str`: Функция, которая принимает строку `raw_product_id` (предположительно, содержащую данные о продукте) и возвращает строку, представляющую идентификатор продукта. Если идентификатор не найден, то функция поднимает исключение `ProductIdNotFoundException`.
 
-**Функции**:
+**Переменные:**
 
-- `get_product_id(raw_product_id: str) -> str`:  Функция для извлечения идентификатора продукта из входной строки. Она принимает строку `raw_product_id` и возвращает строку с идентификатором продукта. В текущей реализации она использует  `extract_prod_ids`. Неэффективно, так как обрабатывает потенциальные исключения через `try-except`.
+* `raw_product_id`: Строковый тип данных, содержащий данные о продукте, например, URL или текст.
 
-**Переменные**:
+**Возможные ошибки и улучшения:**
 
-В коде нет глобальных переменных.
+* **Неопределённая обработка данных:** Функция `get_product_id` сейчас просто перенаправляет входящую строку `raw_product_id` в функцию `extract_prod_ids`.  Это предполагает, что `extract_prod_ids` уже содержит полную логику для извлечения идентификатора продукта. Необходимо понять, как `extract_prod_ids` извлекает ID и какие варианты входных данных она поддерживает.  Было бы целесообразно, чтобы `extract_prod_ids` могла принимать данные в разных форматах (URL, строка с ID) и правильно обрабатывать разные ситуации.
 
-**Возможные ошибки или области для улучшений**:
+* **Нет проверки входных данных:**  Функция не проверяет, является ли входной параметр `raw_product_id` допустимым.
 
-- Комментарии "Временный код" - не нужны.
-- Отсутствует явное указание на то, что функция `extract_prod_ids` возвращает `None` в случае отсутствия идентификатора.  Из-за этого `get_product_id` должна обрабатывать возможный `None`.
-- Комментированная часть кода с регулярными выражениями удалена - это значит что `extract_prod_ids` извлекает ID продукта, используя сложные алгоритмы (возможно с использованием регулярных выражений) и возвращает его. Нужно посмотреть код этой функции, чтобы понять какие именно регулярные выражения она использует и как работает.
+**Цепочка взаимосвязей:**
 
-**Цепочка взаимосвязей**:
-
-Функция `get_product_id` использует функцию `extract_prod_ids` из другого модуля. Это указывает на разделение логики для извлечения и валидации идентификатора продукта. Процесс получения ID продукта предполагает использование `extract_prod_ids`.  Если  `extract_prod_ids` будет возвращать некорректное значение, то `get_product_id` вызовет исключение, которое необходимо обрабатывать в коде, который вызывает `get_product_id`.
-```
+`get_product_id` является частью API для работы с поставщиком AliExpress.  Она зависит от `extract_prod_ids`, которая, в свою очередь, может содержать дополнительные функции или методы для работы с разными типами данных, и, вероятно, зависит от других модулей, обеспечивающих работу с конкретными структурами данных AliExpress.  В общем случае, `get_product_id` — это часть более широкой системы обработки данных о продуктах, работающей с API AliExpress.

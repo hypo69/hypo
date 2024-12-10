@@ -55,7 +55,7 @@ from src.utils.convertors import list2string, csv2dict
 from src.utils.printer import pprint
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from utils.interface import read_text_file, get_filenames
-from src.logger import logger
+from src.logger.logger import logger
 
 class AliCampaignEditor(AliPromoCampaign):
     """ Редактор реклманой камапнии """

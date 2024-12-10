@@ -4,6 +4,9 @@
 #! venv/bin/python/python3.12
 
 """
+Модуль интерфейса Телеграм Бота
+=================================
+
 .. module:: src.endpoints.bots.telegram 
 	:platform: Windows, Unix
 	:synopsis:
@@ -20,10 +23,12 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 import header
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.logger import logger
+from src.logger.logger import logger
 import requests  # For downloading files
 from src.utils.convertors.tts import speech_recognizer, text2speech
 from src.utils.file import read_text_file
+
+
 
 class TelegramBot:
     """Telegram bot interface class."""

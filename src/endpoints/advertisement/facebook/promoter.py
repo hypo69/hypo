@@ -36,7 +36,7 @@ from src.utils.file import (read_text_file,
                         )
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.cursor_spinner import spinning_cursor
-from src.logger import logger
+from src.logger.logger import logger
 
 def get_event_url(group_url: str) -> str:
     """

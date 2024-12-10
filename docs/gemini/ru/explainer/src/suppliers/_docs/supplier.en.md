@@ -1,6 +1,5 @@
 # <input code>
 
-```
 Here's a detailed explanation of what the `Supplier` class does, in English:
 
 ### Overview of the `Supplier` Class
@@ -58,96 +57,75 @@ The `Supplier` class serves as a base class for managing data suppliers in your 
 
 # <algorithm>
 
-The algorithm for the `Supplier` class involves these steps:
+The `Supplier` class manages data collection from various suppliers.  A high-level algorithm is as follows:
 
-1. **Initialization (`__init__`):** Sets up basic attributes (supplier prefix, locale, etc.) and potentially initializes a web driver object.  (Input: `supplier_prefix`, `locale`, `webdriver`)
+1. **Initialization (Constructor):**
+   - Takes `supplier_prefix`, `locale`, and `webdriver` as input.
+   - Initializes class attributes with provided values.
+   * **Example:** `supplier = Supplier(supplier_prefix='aliexpress', locale='en', webdriver='chrome')`
 
-2. **Configuration Loading (`_payload`):** This is the crucial step where the class loads supplier-specific data (configurations, locators, etc.). (Input: `webdriver`, other attributes). Output: Returns `True` if successful, `False` otherwise.
+2. **Configuration Loading (`_payload`):**
+   - Loads supplier-specific configurations (settings, locators).
+   - Initializes a web driver (e.g., Chrome, Firefox).
+   * **Example:** Loads `aliexpress_settings.json`, defines web element locators, and starts a Chrome browser. Returns True if successful.
 
-3. **Login (`login`):** Attempts to log in to the supplier's website, if required. (Input: Supplier credentials).  Output: Returns `True` for successful login, `False` otherwise.
 
-4. **Scenario Execution (`run_scenario_files`, `run_scenarios`):** Executes a list of scenarios, either from files or a pre-defined set of scenarios. Each scenario may include actions and targets (e.g. `scrape`, `product_list`). (Input: list of scenarios, files). Output: Returns `True` for successful completion of all scenarios, `False` otherwise.
+3. **Login (`login`):**
+   - Attempts to log in to the supplier's website if needed.
+   - Uses the loaded login data and locators.
+   * **Example:** Enters username and password into login form elements, clicks login button. Returns True if logged in.
 
 
-Example Data Flow:
-
-```
-+-----------------+     +---------------+     +-----------------+
-| Input           |---->| __init__      |---->| Supplier object |
-+-----------------+     +---------------+     +-----------------+
-| supplier_prefix |     | Attributes set|     | ...             |
-| locale           |     |               |     | ...             |
-| webdriver        |     |               |     | ...             |
-+-----------------+     +---------------+     +-----------------+
-
-+-----------------+     +-----------------+
-| Supplier object |---->| _payload       |---->| True/False      |
-+-----------------+     +-----------------+
-| ...             |     | Config loaded   |     | ...             |
-+-----------------+     +-----------------+
-```
-
+4. **Scenario Execution (`run_scenario_files`, `run_scenarios`):**
+   - Iterates through a list of scenario files or a list of scenario dictionaries.
+   - Executes actions specified in each scenario (e.g., scraping products).
+   - Returns True if all scenarios complete successfully; False otherwise.
+   * **Example:** `run_scenario_files(['scenario_1.json'])` or `run_scenarios([{'action': 'scrape', 'target': 'product_list'}]`.
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[Supplier] --> B{__init__(supplier_prefix, locale, webdriver)};
-    B --> C[Supplier Object];
-    C --> D{_payload(webdriver)};
-    D --Success--> E[Login(login)];
-    D --Failure--> F[Error];
-    E --> G{run_scenario_files/run_scenarios(scenarios)};
-    G --Success--> H[Data collected];
-    G --Failure--> I[Error];
-
-    subgraph "Scenario Execution"
-        G --> J[Execute Scenario 1];
-        J --> K[Execute Scenario 2];
-        K --> L[Execute Scenario n];
+graph LR
+    A[Supplier Object] --> B{__init__(supplier_prefix, locale, webdriver)};
+    B --> C{_payload(webdriver)};
+    C --> D[Login];
+    D --> E{Run Scenarios};
+    E --> F[run_scenario_files(scenario_files)];
+    E --> G[run_scenarios(scenarios)];
+    F -- Success --> H[Data Collection];
+    G -- Success --> H;
+    H --> I[Data Processing];
+    I --> J[Data Storage];
+    subgraph Supplier Specific
+        D -- Failure --> K[Login Failure];
+        C -- Failure --> K;
+        F -- Failure --> L[Scenario Failure];
+        G -- Failure --> L;
     end
+
+
 ```
+
+This diagram shows the main components and their dependencies. The `Supplier` object initializes, loads configurations, logs in, and runs scenarios (via `run_scenario_files` or `run_scenarios`).  Success in each step leads to data collection, processing, and storage; failure leads to error handling.  Supplier-specific configuration and data handling is also represented.
 
 # <explanation>
 
-**1. Imports:**
-
-There are no import statements shown in the provided code snippet.  If the code imports `Driver` or other types, those are not defined within the included explanation.
+* **Imports**:  The code itself doesn't explicitly show import statements. The presence of types like `Driver` and `List[str]` implies imports from Python's standard library or external libraries that are not explicitly documented in this part.  Crucially, any external libraries used for web scraping (like `Selenium`) or file handling would need to be imported.   The code's structure implies a project structure where modules are in `src` directory, thus needing `from src.xyz import ...` type import statements, but the imports themselves are missing.
 
 
-**2. Classes:**
+* **Classes**: The `Supplier` class is a base class for handling data collection from various suppliers. It encapsulates the logic for initialization, login, and scenario execution. The class's attributes (like `supplier_prefix`, `login_data`, `locators`) and methods define a common interface for all suppliers, promoting code reuse and maintainability.
 
-- `Supplier`: This class acts as an abstraction for interacting with various data sources (suppliers). It manages the supplier's configuration, login process, and execution of data collection scenarios.
-    - **Attributes:** `supplier_id`, `supplier_prefix`, `supplier_settings`, `locale`, `price_rule`, `related_modules`, `scenario_files`, `current_scenario`, `login_data`, `locators`, `driver`, and `parsing_method`. These attributes hold the essential data for a specific supplier, allowing the class to adapt to each supplier's specific needs.
-    - **Methods:** The methods are designed for interacting with the suppliers.  `__init__` handles the initialization of the `Supplier` object and setup. `_payload` loads configurations and initializes the driver. `login` handles logins. `run_scenario_files` and `run_scenarios` execute scenarios.
+* **Functions**:  The methods (`__init__`, `_payload`, `login`, `run_scenario_files`, `run_scenarios`) encapsulate specific functionalities, clearly defining responsibilities and promoting code reusability. They take arguments and return values that allow them to be used in a modular and flexible manner.
 
-
-**3. Functions:**
-
-- `__init__`: Initializes the `Supplier` object with the `supplier_prefix`, `locale`, and `webdriver` (or other parameters).
-- `_payload`: Loads specific configurations. It likely takes the driver type as a parameter and returns `True` for success, `False` otherwise.
-- `login`: Attempts to log into the supplier's website. It expects specific login information and returns `True` on success, `False` if unsuccessful.
-- `run_scenario_files`: Executes scenarios from a given file list. Returns `True` if all scenarios run successfully.
-- `run_scenarios`: Executes a set of scenarios based on a dictionary or list. Similar behavior to `run_scenario_files` but potentially more flexible.
+* **Variables**: The variables are likely to be of types `str`, `dict`, or `list` (given the types used as hints).  Precise types depend on the actual implementation of scenario files and configuration data.
 
 
-**4. Variables:**
+* **Possible Errors/Improvements**:
+    * **Error Handling**: The code lacks explicit error handling within each method.  If a file isn't found, the driver fails to initialize, or a login fails, the program will likely crash or silently fail.   Robust error handling (using `try...except` blocks) is essential for production-ready code.
+    * **Configuration Management**:  Loading configuration files should be handled in a more robust way, including checking for file existence, appropriate error handling for file parsing, and managing potentially large configuration files to avoid memory issues.
+    * **Dependency Management**: External libraries (like Selenium, beautifulsoup, etc.) need to be listed in `requirements.txt` if they are used.  The documentation does not describe how these dependencies are managed.
+    * **Scenario Format**: The scenario format (`.json`, or another format) should be clearly defined in the documentation to ensure consistency and prevent errors.
+    * **Scalability**: For a large number of suppliers, consider using a more sophisticated mechanism for managing suppliers (e.g., using a registry or configuration system for loading).
 
-The variables within the class are used to store data about the supplier. `supplier_prefix`, `locale`, and `webdriver` are likely passed to the `Supplier` class during object creation to personalize the supplier's setup.  Variable types are indicated (`str`, `List[str]`, `dict`, `list[dict]`), enhancing clarity.
 
-
-**5. Possible Errors/Improvements:**
-
-- **Error Handling:** The code lacks robust error handling.  It's crucial to catch exceptions during configuration loading (`_payload`), login (`login`), and scenario execution (`run_scenario_files`, `run_scenarios`).  The `return` values should ideally indicate *why* the execution failed.  Log the errors and exceptions to track issues more effectively.
-- **Dependency Injection:** Consider injecting the web driver (`webdriver`) into the `Supplier` class to have better control over the drivers and make testing easier.  You may use the dependency injection pattern.
-- **Scenario Structure:**  Clarity is key! The provided example scenarios (`scrape`, `product_list`) are basic.  The scenarios' execution logic should be well-defined within separate files or classes (not just as parameters), improving code maintainability and organization.
-- **Logging:**  Incorporate logging to track the progress and any issues during scenario execution.
-
-**Inter-project Dependencies:**
-
-- The `Supplier` class likely interacts with configuration files (possibly JSON or YAML).
-- The class could potentially interact with modules that provide specific data parsing or web element locating mechanisms.  This shows dependency on other modules.
--  The `Driver` (if exists) class is likely a dependency as well; the `webdriver` string is likely to resolve to an appropriate driver implementation.
-- A connection between `scenario_files` and scenarios themselves would be necessary; there could be an additional step to load the files (e.g., to parse JSON files).
-
-The `Supplier` class acts as a central point to manage interaction with different suppliers, enhancing code organization and maintainability.
+* **Relationship with Other Parts**:  The `Supplier` class is a key component in a system that manages data collection. It likely interacts with other parts of the application for data storage (e.g., a database) and potentially for scenario definition and orchestration.  The scenario files likely describe actions in a specific data format, which could be passed to or fetched from another part of the application.  Information about other modules (that this code depends on) is missing.

@@ -22,7 +22,7 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import get_filenames, read_text_file, recursively_read_text_files, recursively_get_filepath
 from src.utils.jjson import j_dumps
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 
 

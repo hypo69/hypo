@@ -14,7 +14,7 @@ MODE = 'dev'
 from types import SimpleNamespace
 from typing import Optional
 import header
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.printer import pprint
 from .api import PrestaShop
 

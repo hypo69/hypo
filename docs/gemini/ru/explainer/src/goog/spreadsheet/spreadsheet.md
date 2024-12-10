@@ -8,7 +8,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.spreadsheet 
+.. module:: src.goog.spreadsheet 
 	:platform: Windows, Unix
 	:synopsis: Minimal library for working with Google Sheets.
 
@@ -85,129 +85,133 @@ class SpreadSheet:
         except gspread.exceptions.SpreadsheetNotFound:
             logger.error(f"Spreadsheet with ID '{self.spreadsheet_id}' does not exist.")
             raise
-   
+
+
     # ... (rest of the code)
 ```
 
 # <algorithm>
 
-**Описание алгоритма**
+**Шаг 1: Инициализация SpreadSheet**
+    - Принимает `spreadsheet_id`, `spreadsheet_name` и `sheet_name` в качестве аргументов.
+    - Вызывает `_create_credentials()` для получения учетных данных.
+    - Вызывает `_authorize_client()` для авторизации клиента Google Sheets.
+    - Пытается открыть существующий лист по `spreadsheet_id` с помощью `client.open_by_key()`.
+    - Если лист не найден, генерирует ошибку `SpreadsheetNotFound`.
+    - Если лист найден, сохраняет его в `self.spreadsheet`.
 
-1. **Инициализация:**
-   - Создается экземпляр класса `SpreadSheet`.
-   - Передаются `spreadsheet_id`, `sheet_name` и `spreadsheet_name` (используются в методе `__init__`).
-   - В `_create_credentials()` загружаются учетные данные из файла `e-cat-346312-137284f4419e.json`.
-   - В `_authorize_client()` создается и авторизуется клиент `gspread`.
-   - В `__init__` проверяется существование файла с `spreadsheet_id`. Если нет, вызывается исключение.
+**Шаг 2: `_create_credentials`**
+    - Получает путь к файлу с учетными данными из `gs.path.secrets`.
+    - Создает `ServiceAccountCredentials` на основе файла с учетными данными.
+    - Возвращает созданные учетные данные.
 
+**Шаг 3: `_authorize_client`**
+    - Авторизует клиент Google Sheets с помощью созданных учетных данных.
+    - Возвращает авторизованного клиента.
 
-2. **Получение листа:**
-   - Если лист не найден, то метод `get_worksheet` пытается создать новый лист с помощью `create_worksheet`.
+**Шаг 4: `upload_data_to_sheet`**
+    - Проверяет, что `data_file` существует. Если нет, генерирует ошибку.
+    - Читает данные из CSV-файла в Pandas DataFrame.
+    - Преобразует данные в список списков для записи в Google Sheets.
+    - Записывает данные в лист Google Sheets, начиная с ячейки A1.
 
-3. **Загрузка данных:**
-   - В `upload_data_to_sheet` считываются данные из CSV файла (с помощью Pandas).
-   - Данные преобразуются в формат, подходящий для записи в Google Таблицы.
-   - Данные записываются в лист с помощью метода `update`.
+**Пример данных:**
+  - data_file: /mnt/data/google_extracted/your_data_file.csv
+  - sheet_name: Sheet1
+  - spreadsheet_id:  (пусто) - создается новый лист
+  - data_file: содержит данные из csv:
+     Col1,Col2
+     1,2
+     3,4
 
-**Пример данных, перемещающихся между функциями:**
-
-- **Вход:** Путь к CSV-файлу (`data_file`) и имя листа (`sheet_name`).
-- **`_create_credentials`:** Возвращает объект `ServiceAccountCredentials`.
-- **`_authorize_client`:** Возвращает объект `gspread.Client`.
-- **`get_worksheet`:** Возвращает объект `Worksheet`.
-- **`upload_data_to_sheet`:** Данные из CSV, преобразованные в список списков.
-- **Выход:** Данные записаны в лист Google Таблиц.
+**Пример данных внутри кода:**
+ - `data` - pandas DataFrame с содержимым csv.
+ - `data_list` - список списков [["Col1", "Col2"], [1, 2], [3, 4]].
 
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[SpreadSheet(__init__)] --> B(create credentials);
-    B --> C{_authorize_client};
-    C --> D[open_by_key];
-    D -- success --> E{get_worksheet};
-    D -- fail --> F[SpreadsheetNotFound];
-    F --> G[Error handling];
-    E --> H[upload_data_to_sheet];
-    H --> I[read_csv];
-    I --> J[format data];
-    J --> K[update];
-    K --> L[Data uploaded];
-    subgraph Credentials
-        B --> a[ServiceAccountCredentials.from_json];
-        a --> d{Credentials};
-    end
-    subgraph Client authorization
-        C --> b[gspread.authorize];
-        b --> c{Authorized client};
-    end
-
-    subgraph Data handling
-        H --> I;
-        I --> J;
-        J --> K;
-        K --> L;
+graph TD
+    A[Spreadsheet] --> B{_create_credentials};
+    A --> C{_authorize_client};
+    B --> D[Credentials];
+    C --> E[Authorized Client];
+    D --> F[Open Spreadsheet];
+    E --> G[Open Spreadsheet];
+    F --> H{Spreadsheet Exists?};
+    H -- Yes --> I[Spreadsheet Object];
+    H -- No --> J[Error: SpreadsheetNotFound];
+    I --> K[upload_data_to_sheet];
+    K --> L[Read CSV];
+    L --> M[Prepare Data];
+    M --> N[Update Sheet];
+    J --> O[Error Handling];
+    subgraph Google Sheets API
+        G -- Exists --> I;
+        G -- Does not exist --> J
     end
 ```
+
+**Объяснение зависимости:**
+
+- `gspread`:  Библиотека для работы с Google Sheets API.
+- `oauth2client`: Для авторизации с использованием учетных данных сервисного аккаунта.
+- `pandas`: Для работы с данными в формате CSV.
+- `src.logger`: Вероятно, собственная логгирующая библиотека проекта.
+- `src.utils.printer`:  Возможно, собственная утилита для красивого вывода данных.
+- `src.gs`:  Вероятно, содержит конфигурационные данные, такие как пути к файлам с ключами доступа.
 
 # <explanation>
 
 **Импорты:**
 
-- `pathlib`: Для работы с путями к файлам.
-- `gspread`: Библиотека для работы с Google Таблицами.
-- `Worksheet`, `Spreadsheet`:  Классы из `gspread` для работы с листами и таблицами Google Таблиц.
-- `oauth2client.service_account`: Для аутентификации с помощью учетных данных сервисного аккаунта.
-- `pandas`: Библиотека для работы с данными, особенно для удобной обработки CSV.
-- `logger`:  (из `src.logger`) Логгер для вывода сообщений об ошибках и отладки.
-- `gs`: (из `src`) Вероятно, содержит константы или переменные, относящиеся к Google сервисам, вероятно, пути.
-- `printer`: (из `src.utils.printer`) Вероятно, содержит функции для красивого вывода информации.
-
+- `pathlib`: для работы с путями к файлам.
+- `gspread`: для работы с Google Sheets API.
+- `gspread.Spreadsheet`, `gspread.Worksheet`:  классы для взаимодействия со списками и листами Google Sheets.
+- `oauth2client.service_account`: для работы с учетными данными сервисного аккаунта Google.
+- `pandas`: для работы с данными в формате CSV.
+- `src.logger`: собственная логгирующая система.
+- `src.gs`: вероятно содержит константы (например, пути к файлам) для доступа к API Google.
+- `src.utils.printer`:  для вывода данных.
 
 **Классы:**
 
-- `SpreadSheet`: Главный класс для работы с Google Таблицами.
-    - `spreadsheet_id`, `spreadsheet_name`, `sheet_name`: Хранят соответствующую информацию.
-    - `credentials`: Учетные данные сервисного аккаунта Google.
-    - `client`:  Авторизованный клиент `gspread` для доступа к Google Таблицам.
-    - `worksheet`: Лист Google Таблиц.
-    - `__init__`: Инициализирует объект, открывает таблицу по `spreadsheet_id`.  Обратите внимание на обработку `SpreadsheetNotFound`.
-    - `_create_credentials`: Создаёт объект `ServiceAccountCredentials`.
-    - `_authorize_client`: Авторизует `gspread` клиента.
-    - `get_worksheet`: Получает лист по имени. Обрабатывает случай, когда листа нет, и создаёт его.
-    - `create_worksheet`: Создает новый лист.
-    - `upload_data_to_sheet`: Загружает данные из CSV файла в лист.
-
+- `SpreadSheet`:
+    - `spreadsheet_id`, `spreadsheet_name`, `sheet_name`: атрибуты для хранения идентификатора и имени листа Google Sheets.
+    - `credentials`: хранит учетные данные для доступа к API.
+    - `client`: авторизованный клиент для взаимодействия с API.
+    - `_create_credentials()`: создает объект `ServiceAccountCredentials` для доступа к Google Sheets.
+    - `_authorize_client()`: авторизует `gspread` клиент с помощью учетных данных.
+    - `get_worksheet()`:  получает лист по имени. Важно, что `create_if_not_present` (очевидно) отсутствует.
+    - `upload_data_to_sheet()`: загружает данные из CSV в лист.
+    - `__init__()`: инициализирует класс, загружает учетные данные и открывает лист Google Sheets.
 
 **Функции:**
 
-- `__init__`: Инициализирует объект `SpreadSheet`, открывает таблицу и авторизует клиента.
-- `_create_credentials`: Создаёт объект `ServiceAccountCredentials` для доступа к Google Таблицам.
-- `_authorize_client`: Авторизует клиента `gspread` с помощью `credentials`.
-- `get_worksheet`: Возвращает лист по имени.
-- `create_worksheet`: Создает новый лист.
-- `upload_data_to_sheet`: Загружает данные из CSV файла в лист.
-
+- `_create_credentials()`:  создает учетные данные доступа к Google Sheets.
+- `_authorize_client()`: авторизует клиент для взаимодействия с API Google Sheets.
+- `upload_data_to_sheet()`: загрузка данных в Google Sheets.  Важно, что используется pandas для чтения данных из CSV.
 
 **Переменные:**
 
-- `MODE`:  Вероятно, константа, определяющая режим работы (например, `dev` или `prod`).
-- `data_file`: Путь к файлу CSV.
+- `MODE`: вероятно, для настройки режима работы (например, 'dev' или 'prod').
+- `data_file`: путь к файлу CSV.
+- `sheet_name`: имя листа в Google Sheets.
 
 **Возможные ошибки и улучшения:**
 
-- **Обработка ошибок:** Хорошая обработка исключений (`try...except`) во многих методах.
-- **Подключение к базе данных для хранения ключей:** Используется жестко заданный путь к файлу ключей (`gs.path.secrets / 'e-cat-346312-137284f4419e.json'`). Это небезопасно и требует улучшения. Лучше хранить ключи в защищенном месте и получать их через API.
-- **Улучшение обработки отсутствия файла:**  Добавьте проверку на существование файла перед чтением.
-- **Вариативность обработки данных:**  В `upload_data_to_sheet` использование `pd.read_csv` и преобразование в список списков - хорошее решение. Но может быть, стоит сделать метод с параметрами для различных типов данных.
+- Отсутствие обработки ошибок при чтении CSV-файла.
+- Отсутствие проверки на существование файла.
+- `create_worksheet()` - лучшее решение, т.к. позволяет создать лист с нужными размерностями.
+- Обработка ошибок при открытии файла `e-cat-346312-137284f4419e.json`.
+- Нет проверки на корректность данных в CSV-файле.
+- Отсутствует функция проверки существования листа.
+- Отсутствует обработка ошибок при обновлении листа.
 
+**Взаимосвязь с другими частями проекта:**
 
-**Связь с другими частями проекта:**
+- `gs.path`: Вероятно, содержит конфигурационные пути, такие как `secrets`.
+- `src.logger`:  Для регистрации действий и ошибок.
 
-- `src.logger`: Используется для записи сообщений об ошибках и отладки.
-- `src`: Скорее всего, содержит другие модули, связанные с Google сервисами, например, настройки пути к файлам.
-- `utils.printer`:  Служит для отладки или вывода данных.
-
-
-**Общее:** Код написан качественно, с хорошей обработкой исключений, но требует улучшения в части хранения и использования ключей.  Обработка  `SpreadsheetNotFound`  вызывает исключение, но лучше добавить возможность создания новой таблицы, если ее нет.
+Код выглядит достаточно хорошо структурированным и поддерживает минимальную функциональность. Достаточно добавить проверку существования файла и корректности данных, а также улучшить обработку ошибок.

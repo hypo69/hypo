@@ -21,7 +21,7 @@ from typing import Dict
 from pathlib import Path
 from venv import logger
 
-from src.logger import logger
+from src.logger.logger import logger
 from types import SimpleNamespace
 from html.parser import HTMLParser
 from xhtml2pdf import pisa

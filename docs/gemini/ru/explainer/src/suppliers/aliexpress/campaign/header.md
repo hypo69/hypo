@@ -2,12 +2,8 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module: src.suppliers.aliexpress.campaign 
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+.. module:: src.suppliers.aliexpress.campaign 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -43,9 +39,10 @@ def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
 __root__ = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
-import sys
-import json
+
 from src import gs
+import json
+import sys
 
 settings:dict = None
 try:
@@ -68,106 +65,100 @@ __doc__: str = doc_str if doc_str else ''
 __details__: str = ''
 __author__: str = settings.get("author", '')  if settings  else ''
 __copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
-__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
 # <algorithm>
 
-1. **`set_project_root` function:**
-    - Takes a tuple of marker files as input.
-    - Starts from the current file's directory.
-    - Iterates through parent directories.
-    - Checks if any of the marker files exist in the current parent directory.
-    - If found, sets `__root__` to the parent directory and breaks the loop.
-    - If not found, continues to the next parent directory.
-    - Adds the root directory to `sys.path` if it's not already there.
-    - Returns the root directory (`__root__`).
+1. **`set_project_root()` function:**
+   - Takes a tuple of marker file names as input.
+   - Starts from the current file's directory.
+   - Iterates through parent directories until it finds a directory containing at least one of the marker files.
+   - Adds the found root directory to the `sys.path` if it's not already there.
+   - Returns the root directory (`Path`).
+   * **Example:** If `__file__` points to `hypotez/src/suppliers/aliexpress/campaign/header.py`, the function will search up the hierarchy (`hypotez/src/suppliers/aliexpress/campaign`, `hypotez/src/suppliers/aliexpress`, `hypotez/src/suppliers`, `hypotez/src`, `hypotez`). If `pyproject.toml` exists in `hypotez/src`, it returns the Path to that directory.
 
-    *Example:* If the script is in `hypotez/src/suppliers/aliexpress/campaign`, and `pyproject.toml` exists in `hypotez`, the function returns the path to `hypotez`.
+2. **Project root directory retrieval:**
+   - Calls `set_project_root()` to get the project's root directory.
+   - Stores the result in `__root__`.
 
+3. **Loading settings:**
+   - Tries to read `settings.json` from the project root (`gs.path.root / 'src' / 'settings.json'`) using a `try...except` block to handle `FileNotFoundError` and `json.JSONDecodeError`.
+   - If successful, parses the JSON content into the `settings` dictionary.
+   - If fails, `settings` remains `None`.
 
-2. **Project root retrieval:** Calls `set_project_root()` to obtain the project's root directory and stores it in `__root__`.
+4. **Loading documentation:**
+   - Tries to read `README.MD` from the project root (`gs.path.root / 'src' / 'README.MD'`) using a `try...except` block to handle `FileNotFoundError` and `json.JSONDecodeError`.
+   - If successful, stores the content in `doc_str`.
+   - If fails, `doc_str` remains `None`.
 
-3. **Settings loading:** Attempts to load settings from `gs.path.root / 'src' / 'settings.json'`.
-    - Uses `json.load()` to parse the JSON file.
-    - Handles `FileNotFoundError` and `json.JSONDecodeError` gracefully (skips loading if the file is missing or invalid).
-    - Stores the loaded settings in the `settings` variable if successful.
-
-4. **Documentation loading:** Attempts to load documentation from `gs.path.root / 'src' / 'README.MD'`.
-    - Uses `settings_file.read()` to read the file content.
-    - Handles `FileNotFoundError` and `json.JSONDecodeError` gracefully (sets `doc_str` to None if the file is missing or invalid).
-    - Stores the loaded documentation in the `doc_str` variable if successful.
-
-
-5. **Project details extraction:** Extracts project name, version, author, copyright, and coffee link from the `settings` dictionary, using `settings.get()` with default values.
-
-*Example:* If `settings` contains `"project_name": "MyProject"`, `__project_name__` will be "MyProject". If not found, default values are used.
+5. **Extracting project metadata:**
+   - Extracts project name, version, author, copyright and a custom coffee support link from the `settings` dictionary (or uses defaults if `settings` is `None` or the key is missing).
+   - Stores the extracted values in `__project_name__`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, and `__cofee__` variables.
 
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[__root__ = set_project_root()] --> B{Check for marker files};
-    B -- Yes --> C[Add root to sys.path];
-    B -- No --> D[Return current path];
-    C --> E[Load settings from settings.json];
-    E -- Success --> F[Load documentation from README.MD];
-    F -- Success --> G{Extract project details};
-    F -- Error --> H[Set doc_str to None];
-    E -- Error --> I[Set settings to None];
-    G --> J[Store project details in variables];
-    D --> J;
-    I --> J;
-    H --> J;
-    J --> K[Return];
+graph LR
+    A[set_project_root()] --> B{Iterate through parents};
+    B -- Marker file found --> C[__root__];
+    B -- No marker file --> C[__root__ (current)];
+    C --> D[Add __root__ to sys.path (if not present)];
+    D --> E[Return __root__];
+    F[Load settings.json] --> G{Success};
+    F --> H{Error (FileNotFoundError, json.JSONDecodeError)};
+    G --> I[settings];
+    H --> I[settings = None];
+    J[Load README.MD] --> K{Success};
+    J --> L{Error (FileNotFoundError, json.JSONDecodeError)};
+    K --> M[doc_str];
+    L --> M[doc_str = None];
+    I --> N[Extract project metadata];
+    M --> N;
+    N --> O[__project_name__, __version__, __author__, ...];
+    style I fill:#ccf,stroke:#333,stroke-width:2px;
+    style O fill:#ccf,stroke:#333,stroke-width:2px;
 ```
-
-**Dependencies:**
-
-- `pathlib`: For working with file paths.
-- `sys`: To manipulate the Python path.
-- `json`: For loading JSON data.
-- `gs`:  A module likely defined elsewhere in the project, responsible for providing paths (`gs.path.root`).
 
 
 # <explanation>
 
-**Imports:**
+**Импорты:**
 
-- `pathlib`: Used for working with file paths in a more object-oriented and platform-independent way.
-- `sys`: Used for modifying the Python path, allowing the script to import modules from the project root directory.
-- `json`: Used for loading the `settings.json` file, which likely contains configuration data for the project.
-- `src.gs`: This import is crucial for the path handling. `gs` likely contains functions or a module that helps locate different parts of the project's directory structure, particularly for accessing settings and documentation files relative to the project root.
-
-
-**Classes:**
-
-- There are no classes defined directly. The code primarily uses functions and variables.
+- `from pathlib import Path`: Импортирует класс `Path` для работы с путями к файлам.  Это важная часть для работы с файловой системой.
+- `import json`: Импортирует модуль `json` для работы с файлами JSON.
+- `import sys`: Импортирует модуль `sys` для доступа к системным переменным, включая `sys.path`.
+- `from src import gs`: Импортирует модуль `gs` из пакета `src`.  Этот импорт предполагает существование файла `gs.py` в папке `src` и определённых в нём переменных/функций (напр., `gs.path.root`).
 
 
-**Functions:**
+**Классы:**
 
-- `set_project_root(marker_files)`: This function is crucial for locating the project root directory. It searches up the directory tree until it finds a directory containing one of the specified marker files (e.g., `pyproject.toml`). This is a common pattern to ensure the script can import other modules within the project.
+- Нет явных пользовательских классов, только использование встроенного класса `Path` из `pathlib`.
 
+**Функции:**
 
-**Variables:**
-
-- `__root__`: Stores the path to the project root directory.  Crucial for finding other project resources.
-- `settings`: Stores the project settings loaded from `settings.json`.
-- `doc_str`: Stores the content of the project's documentation from `README.MD`.
-- `__project_name__`, `__version__`, etc.: Store extracted project details.
+- `set_project_root(marker_files)`: Ищет корневой каталог проекта, начиная с текущей директории, поднимаясь по иерархии директорий и проверяя наличие файлов/папок из `marker_files`.  Если корневой каталог найден, он добавляется в `sys.path`. Функция важна для определения пути к проекту и добавления его в пути поиска модулей.
 
 
-**Possible Errors/Improvements:**
+**Переменные:**
 
-- **Error handling:** While the `try...except` blocks handle `FileNotFoundError` and `json.JSONDecodeError`, they don't provide specific error messages or logging. More informative error handling could be beneficial.
-- **`gs` dependency:** The code relies on the `gs` module, which needs to be properly defined and implemented elsewhere in the project.  A missing or incorrect `gs` implementation would cause errors.  A clear documentation of `gs` is essential for understanding how it works and interacts with different project parts.
-- **Robust path handling:** Consider using `os.path.abspath` instead of `.resolve()` if your environment might require stricter path handling.
+- `MODE`:  Строковая константа, вероятно, для обозначения режима работы.
+- `__root__`:  Переменная, хранящая путь к корневому каталогу проекта, возвращаемый функцией `set_project_root()`.
+- `settings`: Словарь, содержащий настройки проекта, загружаемые из файла `settings.json`.
+- `doc_str`: Строка, содержащая содержимое файла `README.MD`, если файл найден.
+- `__project_name__`, `__version__`, `__author__`, `__copyright__`, `__cofee__`: Переменные, содержащие метаданные проекта, полученные из `settings.json`.
+
+**Возможные ошибки и улучшения:**
+
+- **Обработка ошибок:** Обработка `FileNotFoundError` и `json.JSONDecodeError` в блоках `try...except` — хорошая практика. Но можно было бы добавить более информативную ошибку или логирование, например, `logging.exception(...)`.
+- **Проверка на пустоту:** Проверка `if settings` перед обращением к `settings.get()` — важна, предотвращает `AttributeError`.
+- **Использование `logging`:** Вместо `...` можно использовать `logging` для более подробного вывода информации о поиске файлов и загрузке данных.
+- **Проверка типов:**  Хотя используется типизация, можно добавить `isinstance()` проверки, например, `if isinstance(settings, dict)`
+
+**Цепочка взаимосвязей:**
+
+Этот файл, `header.py`, служит для инициализации данных проекта (корневой каталог, настройки).  Он использует модуль `gs` (предполагается, что он определяет методы для работы с корневым каталогом проекта), и `settings.json` для доступа к основным настройкам. `README.MD` используется как источник документации. Этот файл, скорее всего, используется другими модулями внутри проекта, которые нуждаются в глобальных переменных.
 
 
-
-
-**Relationship to other parts of the project:**
-
-- The code relies heavily on `gs` (likely a dedicated path management module) to find the project's root directory.  This module provides an abstracted way to handle paths that's crucial for maintaining the project's structure. It ties this module to the rest of the project architecture, particularly how the rest of the project accesses and uses project settings, configuration, and documentation files.
+```

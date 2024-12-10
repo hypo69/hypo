@@ -53,85 +53,113 @@ def filter_child_categories(categories: List[models.Category | models.ChildCateg
 
 # <algorithm>
 
-**filter_parent_categories:**
+**Алгоритм `filter_parent_categories`:**
 
-1. Принимает список `categories` (объекты `Category` или `ChildCategory`).
-2. Проверяет, является ли вход `categories` списком. Если нет, преобразует его в список.
-3. Итерируется по каждому элементу в `categories`.
-4. Проверяет, есть ли атрибут `parent_category_id` у текущего элемента.
-5. Если атрибут `parent_category_id` отсутствует, добавляет текущий элемент в `filtered_categories`.
-6. Возвращает `filtered_categories`.
+1. Принимает список категорий.
+2. Проверяет, является ли входной параметр `categories` списком, или одиночным значением (строкой, числом).  Если это не список, то преобразует его в список.
+3. Итерируется по каждой категории в списке.
+4. Проверяет, содержит ли текущая категория атрибут `parent_category_id`.
+5. Если атрибут `parent_category_id` отсутствует, добавляет категорию в результирующий список `filtered_categories`.
+6. Возвращает список `filtered_categories`.
 
 **Пример:**
 
 Вход: `[Category(id=1), ChildCategory(id=2, parent_category_id=3), Category(id=3, parent_category_id=None)]`
+Выход: `[Category(id=1), Category(id=3, parent_category_id=None)]`
 
-Выход: `[Category(id=1), Category(id=3)]`
+**Алгоритм `filter_child_categories`:**
 
-**filter_child_categories:**
-
-1. Принимает список `categories` (объекты `Category` или `ChildCategory`) и `parent_category_id`.
-2. Проверяет, является ли вход `categories` списком. Если нет, преобразует его в список.
-3. Итерируется по каждому элементу в `categories`.
-4. Проверяет, есть ли атрибут `parent_category_id` у текущего элемента и равен ли он `parent_category_id`.
-5. Если атрибут есть и значения равны, добавляет текущий элемент в `filtered_categories`.
-6. Возвращает `filtered_categories`.
+1. Принимает список категорий и ID родительской категории.
+2. Проверяет, является ли входной параметр `categories` списком, или одиночным значением (строкой, числом).  Если это не список, то преобразует его в список.
+3. Итерируется по каждой категории в списке.
+4. Проверяет, содержит ли текущая категория атрибут `parent_category_id` и равен ли он переданному `parent_category_id`.
+5. Если оба условия верны, добавляет категорию в результирующий список `filtered_categories`.
+6. Возвращает список `filtered_categories`.
 
 **Пример:**
 
-Вход: `[Category(id=1, parent_category_id=3), ChildCategory(id=2, parent_category_id=3), ChildCategory(id=4, parent_category_id=5)]`, `parent_category_id = 3`
-
+Вход: `[ChildCategory(id=2, parent_category_id=3), ChildCategory(id=4, parent_category_id=5), Category(id=1)]`, `parent_category_id = 3`
 Выход: `[ChildCategory(id=2, parent_category_id=3)]`
 
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[categories] --> B{isinstance(categories, list)?};
-    B -- yes --> C[for category in categories];
-    B -- no --> D[categories = [categories]];
-    C --> E{hasattr(category, 'parent_category_id')?};
-    E -- yes --> F[category.parent_category_id == parent_category_id?];
-    F -- yes --> G[filtered_categories.append(category)];
-    F -- no --> H[Null];
-    E -- no --> G;
-    G --> I[return filtered_categories];
+graph TD
+    A[Входной список категорий] --> B{Проверка на список};
+    B -- Список -- > C[Итерация по категориям];
+    B -- Не список -- > D[Преобразование в список];
     D --> C;
+    C --> E{Проверка на parent_category_id (filter_parent_categories)};
+    E -- Отсутствует -- > F[Добавление в filtered_categories];
+    E -- Есть -- > G[Пропускается];
+    F --> H[Возврат filtered_categories];
+    G --> C;
+    C -- (filter_child_categories) -- > I{Проверка на parent_category_id и совпадение};
+    I -- Совпадает -- > J[Добавление в filtered_categories];
+    I -- Не совпадает -- > K[Пропускается];
+    J --> H;
+    K --> C;
+
+    subgraph Объекты
+        Category
+        ChildCategory
+    end
+
+    style F fill:#ccf,stroke:#333,stroke-width:2px,stroke-dasharray:5 5;
+    style J fill:#ccf,stroke:#333,stroke-width:2px,stroke-dasharray:5 5;
+    
 ```
 
 # <explanation>
 
 **Импорты:**
 
-- `from typing import List, Union`: Импортирует типы данных `List` и `Union` для лучшей типизации.
-- `from .. import models`: Импортирует модуль `models` из родительского каталога `suppliers/aliexpress/api`.  Это предполагает, что `models` содержит определения классов для `Category` и `ChildCategory`.  Связь с другими частями проекта:  `models` вероятно содержит структуры данных для работы с категориями товаров, а функции в текущем модуле (`categories.py`) используют эти данные для фильтрации.
+- `from typing import List, Union`: Импортирует типы данных из модуля `typing` для более ясной типизации. `List` используется для работы со списками, `Union` используется для указания, что параметр может быть одного из нескольких типов.
+- `from .. import models`: Импортирует модуль `models` из пакета `..` (две точки обозначают "два уровня вверх" в файловой системе). Этот импорт предполагает, что в директории `hypotez/src/suppliers/aliexpress/api/models.py` определены классы `models.Category` и `models.ChildCategory`, содержащие данные о категориях и подкатегориях.  Неявная зависимость от моделей.
 
 **Классы:**
 
-- `Category` и `ChildCategory`:  Не определены в данном коде, но предполагается, что они находятся в модуле `models`. Классы вероятно представляют собой структуры данных для категорий и подкатегорий товаров.  Атрибуты `id` и `parent_category_id` необходимы для работы фильтрации.
+В коде не объявлены классы.  Они предполагаются в модуле `models`, на который ссылается импорт. Классы `Category` и `ChildCategory` (или их аналоги) должны иметь атрибут `parent_category_id` для работы функций.
 
 **Функции:**
 
-- `filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]`:
-    - Принимает список категорий и подкатегорий.
-    - Возвращает список категорий, у которых нет родительской категории.
-    - Обрабатывает случай, когда `categories` не является списком, превращая его в список.
-- `filter_child_categories(categories: List[models.Category | models.ChildCategory], parent_category_id: int) -> List[models.ChildCategory]`:
-    - Принимает список категорий и подкатегорий и ID родительской категории.
-    - Возвращает список подкатегорий, которые относятся к заданной родительской категории.
-    - Обрабатывает случай, когда `categories` не является списком, превращая его в список.
+- `filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]`:  Фильтрует список категорий, возвращая только родительские категории (без родительской категории).
+    - Принимает список категорий (`categories`).  Обработка не-списков (строки, числа).
+    - Возвращает список `models.Category`, где `parent_category_id` отсутствует.
+- `filter_child_categories(categories: List[models.Category | models.ChildCategory], parent_category_id: int) -> List[models.ChildCategory]`: Фильтрует список категорий, возвращая только подкатегории, относящиеся к указанному родительскому элементу.
+    - Принимает список категорий (`categories`) и ID родительской категории (`parent_category_id`). Обработка не-списков (строки, числа).
+    - Возвращает список `models.ChildCategory`, где `parent_category_id` соответствует переданному значению.
 
 **Переменные:**
 
-- `filtered_categories`: Список, в который добавляются отфильтрованные категории.  Типизирован как `List[models.Category]` или `List[models.ChildCategory]`.
+- `filtered_categories`: Список, который используется для хранения отфильтрованных категорий.  Тип `List`.
+
+**Возможные ошибки и улучшения:**
+
+- **Проверка типов:** В текущем коде есть обработка, если введен не список, но более подходящим вариантом может быть поднятие исключения `TypeError`.  Например:  
+  ```python
+  if not isinstance(categories, list):
+      raise TypeError("Input 'categories' must be a list.")
+  ```
+- **Обработка ошибок:** Функции не проверяют, что переданные категории являются экземплярами `models.Category` или `models.ChildCategory`.  Возможные проблемы с несоответствием типов могут привести к ошибке.  Добавление проверки поможет предотвратить ошибки во время выполнения.  
+```python
+  if not all(isinstance(cat, (models.Category, models.ChildCategory)) for cat in categories):
+      raise TypeError("All elements in 'categories' must be instances of Category or ChildCategory")
+```
+- **Документация:**  Добавить более полную документацию к функциям, включающую  примеры использования.
 
 
-**Возможные ошибки или области для улучшений:**
+**Взаимосвязи с другими частями проекта:**
 
-- **Валидация входных данных:** Функции могли бы проверять, что входные данные `categories` являются списками, и содержат ожидаемые типы данных (объекты `Category` или `ChildCategory`).  Дополнительно можно было бы добавлять проверку, чтобы  `parent_category_id` был валидным значением, учитывая схему базы данных.
-- **Использование `isinstance`:**  В коде используется проверка `isinstance(categories, (str, int, float))` для конвертации в список, но это может привести к ошибкам, если `categories` имеет другой тип. Вместо этого, было бы полезно иметь более точный способ проверки, соответствует ли входное значение ожидаемому типу данных, например, используя `isinstance` для проверки, что `categories` является объектом `List`.
-
-**Цепочка взаимосвязей:**
-
-Функции `filter_parent_categories` и `filter_child_categories` из модуля `categories.py` напрямую взаимодействуют с данными, которые им предоставляют другие части проекта.  Эти данные, вероятно, получаются из API запросов или других источников данных, и далее результаты фильтрации могут быть использованы в других частях проекта для обработки, отображения или дальнейшей работы с данными.
+Функции из этого модуля используются для фильтрации данных, получаемых из API Aliexpress.  Они зависят от моделей данных (`models.Category` и `models.ChildCategory`),  определенных в другом модуле (`models.py`).  Также, вероятно, эти функции используются в других частях приложения, например, для отображения или дальнейшей обработки полученных категорий.
+```
++-----------------+        +---------------------+
+| api/helpers/     |        | api/models/         |
+| categories.py    | ----> | models.py           |
++-----------------+        +---------------------+
+          |
+          V
++---------------------+
+| Другие части проекта |
++---------------------+

@@ -61,7 +61,7 @@ from typing import Iterator
 from src import gs
 from src.ai.openai import OpenAIModel
 from src.utils.file import yield_files_content, read_text_file
-from src.logger import logger
+from src.logger.logger import logger
 
 # Глобальная переменная для роли
 role: str = 'doc_writer'  # Устанавливаем роль напрямую внутри кода

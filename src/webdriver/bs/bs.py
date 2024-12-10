@@ -30,7 +30,7 @@ import requests
 from pathlib import Path
 from src import gs
 from src.webdriver.driver import Driver
-from src.logger import logger
+from src.logger.logger import logger
 
 class BS:
     

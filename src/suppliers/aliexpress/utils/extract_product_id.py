@@ -12,7 +12,7 @@
 MODE = 'dev'
 
 import re
-from src.logger import logger
+from src.logger.logger import logger
 
 
 def extract_prod_ids(urls: str | list[str]) -> str | list[str] | None:

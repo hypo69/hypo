@@ -13,7 +13,7 @@ MODE = 'dev'
 
 import openai
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 
 openai.api_key = gs.credentials.openai
 

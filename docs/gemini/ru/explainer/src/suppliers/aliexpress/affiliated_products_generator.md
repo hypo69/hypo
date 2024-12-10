@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress 
+.. module:: src.suppliers.aliexpress 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -68,107 +68,104 @@ class AliAffiliatedProducts(AliApi):
 
 # <algorithm>
 
-**Пошаговая блок-схема:**
+**Шаг 1:** Инициализация.  Функция `process_affiliate_products` получает список `prod_ids` (списка URL или идентификаторов продуктов) и `category_root` (путь к каталогу для сохранения данных). 
+    * Пример: `prod_ids = ["url1", "url2"]`, `category_root = Path("./campaign_data")`.
+**Шаг 2:** Нормализация URL.  Метод `ensure_https` преобразует URL к виду `https://...`.
+    * Пример: `["http://example.com/product1", "http://example.com/product2"]` -> `["https://example.com/product1", "https://example.com/product2"]`.
+**Шаг 3:** Поиск аффилированных ссылок.  Цикл проходит по каждому `prod_url` и использует `get_affiliate_links` из базового класса `AliApi` для поиска аффилированных ссылок.
+    * Пример: Если для `prod_url` найдена ссылка, то она добавляется в `_promotion_links` и  `_prod_urls`.
+**Шаг 4:** Обработка отсутствия аффилированных ссылок. Если ни для одного продукта не найдено аффилированных ссылок, генерируется предупреждение и функция возвращает пустой список.
+**Шаг 5:** Получение данных продуктов.  Метод `retrieve_product_details` извлекает подробную информацию о продуктах по `_prod_urls`.
+**Шаг 6:** Сохранение изображений и видео. Для каждого продукта из `_affiliated_products`  сохраняется изображение (`save_png_from_url`) и видео (`save_video_from_url`) в соответствующие каталоги.
+**Шаг 7:** Сохранение данных продуктов.  Данные о каждом продукте сохраняются в JSON-файлы в указанной папке.
+**Шаг 8:** Сохранение списка названий продуктов. Список названий продуктов сохраняется в текстовый файл.
+**Шаг 9:** Возврат списка продуктов.  Функция возвращает список обработанных продуктов (`affiliated_products_list`).
 
-1. **Вход:** Список `prod_ids` (списки URL или ID продуктов) и `category_root` (путь к директории).
-2. **Нормализация URL:** Функция `ensure_https` преобразует URL в `https`-формат.  Пример: `http://example.com/product1` -> `https://example.com/product1`.  Результат: `normilized_prod_urls`.
-3. **Получение аффилированных ссылок:** Для каждого `prod_url` вызывается метод `get_affiliate_links`.  Пример: `get_affiliate_links("https://aliexpress.com/item/123456789.html")` -> список ссылок.  Результат: `_promotion_links`, `_prod_urls`.
-4. **Проверка на наличие ссылок:** Если `_promotion_links` пуст, выводится предупреждение, и функция возвращает пустой список.
-5. **Получение данных продукта:** Используя `retrieve_product_details` с `_prod_urls`, запрашиваются подробности о продуктах. Результат: `_affiliated_products`.
-6. **Обработка продуктов:** Для каждой пары `(product, promotion_link)`:
-   - Запись `product_title` в список.
-   - Запись `language` и `promotion_link` в объект `product`.
-   - Сохранение изображения в `images` под именем `product_id.png`. Пример: `product.product_id = 123`, сохранение в `category_root/images/123.png`.
-   - Сохранение видео, если есть, в папку `videos`. Пример: `product.product_id = 456`, сохранение в `category_root/videos/456.mp4`.
-   - Сохранение `product` в файл JSON в папке `language_currency`, где `language` и `currency` - значения из `self`. Пример: `category_root/en_USD/123.json`.
-   - Добавление обработанного `product` в список `affiliated_products_list`.
-7. **Сохранение заголовков:** Сохранение списка `product_titles` в файл `product_titles.txt` в папке `language_currency`.
-8. **Возврат:** Функция возвращает список `affiliated_products_list`.
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[Вход: prod_ids, category_root] --> B{Нормализация URL (ensure_https)};
-    B --> C[Получение аффилированных ссылок (get_affiliate_links)];
-    C -- Успех --> D[Проверка на наличие ссылок];
-    C -- Нет ссылок --> E[Возврат пустого списка];
-    D -- Есть ссылки --> F[Получение данных продукта (retrieve_product_details)];
-    F --> G[Обработка продуктов];
-    G --> H[Сохранение изображения];
-    G --> I[Сохранение видео (если есть)];
-    G --> J[Сохранение JSON];
-    G --> K[Добавление в список];
-    K --> L[Сохранение заголовков];
-    L --> M[Возврат списка affiliated_products_list];
-    E --> M;
+graph TD
+    A[process_affiliate_products] --> B{prod_ids, category_root};
+    B --> C[ensure_https];
+    C --> D(get_affiliate_links);
+    D -- Success --> E[retrieve_product_details];
+    D -- Fail --> F[Log Warning];
+    E --> G[Save Images/Videos];
+    G --> H[Save Product Data];
+    H --> I[Save Product Titles];
+    I --> J[Return affiliated_products_list];
+    F --> J;
+    subgraph AliApi
+        D --> K[get_affiliate_links];
+        K -- Success --> D;
+        K -- Fail --> D;
+    end
+    
+    style F fill:#fdd;
 ```
 
-**Зависимости:**
+**Объяснение диаграммы:**
 
-* `src.logger`: Логирование.
-* `src.gs`: Вероятно, Google Cloud Storage (но не критично для понимания).
-* `src.suppliers.aliexpress.AliApi`: Базовый класс для работы с AliExpress API.
-* `src.suppliers.aliexpress.campaign.html_generators`: Генерация HTML для рекламных кампаний.
-* `src.suppliers.aliexpress.utils.ensure_https`: Преобразование URL к https.
-* `src.product.product_fields`: Структура данных продукта.
-* `src.utils.image`: Сохранение изображений.
-* `src.utils.video`: Сохранение видео.
-* `src.utils.file`: Работа с файлами.
-* `src.utils.jjson`: Работа с JSON.
-* `src.utils.printer`: Печать данных.
+* `process_affiliate_products`: функция, принимающая на вход `prod_ids` и `category_root`.
+* `ensure_https`: преобразует URL в HTTPS.
+* `get_affiliate_links`:  метод из `AliApi` для извлечения аффилированных ссылок.
+* `retrieve_product_details`:  метод из `AliApi` для получения подробных данных о продуктах.
+* `Save Images/Videos`:  использование `save_png_from_url` и `save_video_from_url` для сохранения файлов.
+* `Save Product Data`: использование `j_dumps` для сохранения данных в JSON.
+* `Save Product Titles`: использование `save_text_file` для сохранения названий продуктов.
+* `Return affiliated_products_list`:  возвращение результата.
 
 
 # <explanation>
 
 **Импорты:**
 
-* `asyncio`: Для асинхронных операций (важно для работы с веб-сервисами).
-* `datetime`: Для работы с датами и временем (не используется непосредственно в данном коде).
-* `html`: Для работы с HTML-кодом (не используется непосредственно в данном коде).
-* `pathlib`: Для работы с путями к файлам.
-* `urllib.parse`: Для работы с URL.
-* `types`: Для использования `SimpleNamespace`.
-* `typing`: Для определения типов данных.
-* `src.logger`: Модуль для логирования.
-* `src.suppliers.aliexpress`: Модуль с классами для взаимодействия с AliExpress API.
-* `src.suppliers.aliexpress.campaign.html_generators`: Модуль для генерации HTML.
-* `src.suppliers.aliexpress.utils.ensure_https`: Функция для преобразования URL к https.
-* `src.product.product_fields`: Модуль с определениями полей данных продукта.
-* `src.utils.image`: Модуль для сохранения изображений.
-* `src.utils.video`: Модуль для сохранения видео.
-* `src.utils.file`: Модуль для работы с файлами.
-* `src.utils.jjson`: Модуль для работы с JSON.
-* `src.utils.printer`: Модуль для вывода данных в удобном формате.
+* `asyncio`:  для асинхронной обработки.
+* `datetime`:  для работы со временем (не используется напрямую в этом коде).
+* `html`: для работы с HTML (не используется напрямую в этом коде).
+* `pathlib`: для работы с путями к файлам.
+* `urllib.parse`: для работы с URL.
+* `types`: для использования `SimpleNamespace`.
+* `typing`: для типизации.
+* `logger`: модуль для логирования, определён в `src.logger`.
+* `gs`: предполагается, что это модуль для работы с Google Sheets (или похожим инструментом).
+* `AliApi`: базовый класс для работы с Aliexpress API, определён в `src.suppliers.aliexpress`.
+* `ProductHTMLGenerator`, `CategoryHTMLGenerator`, `CampaignHTMLGenerator`:  классы для генерации HTML-разметки, определённые в `src.suppliers.aliexpress.campaign.html_generators`.
+* `ensure_https`: функция для форматирования URL, определённая в `src.suppliers.aliexpress.utils.ensure_https`.
+* `ProductFields`:  класс для работы с полями продуктов, определённый в `src.product.product_fields`  (используется псевдоним `f`).
+* `save_png_from_url`, `save_video_from_url`: функции для скачивания и сохранения изображений/видео, определённые в `src.utils.image` и `src.utils.video` соответственно.
+* `get_directory_names`, `get_filenames`, `read_text_file`, `save_text_file`: функции для работы с файлами, определённые в `src.utils.file`.
+* `j_loads_ns`, `j_dumps`:  функции для работы с JSON, определённые в `src.utils.jjson`.
+* `pprint`:  функция для красивой печати данных, определённая в `src.utils.printer`.
+
 
 **Классы:**
 
-* `AliAffiliatedProducts`: Наследуется от `AliApi`, расширяет функционал для работы с аффилированными продуктами. Содержит данные о языке и валюте кампании.  Метод `__init__` инициализирует язык и валюту, проверяет их наличие и вызывает `super().__init__` для инициализации базового класса.  `process_affiliate_products` - ключевой метод, обрабатывающий получение, сохранение и форматирование данных о продуктах.
+* `AliAffiliatedProducts`:  наследуется от `AliApi`.  Собирает полные данные продуктов с Aliexpress, включая аффилированные ссылки, изображения и видео.
+    * `language`, `currency`: атрибуты для задания языка и валюты кампании.
+    * `__init__`:  Инициализирует класс, проверяет наличие `language` и `currency`, и инициализирует базовый класс `AliApi`.
+    * `process_affiliate_products`:  главный метод для обработки списка продуктов.
 
 
 **Функции:**
 
-* `process_affiliate_products`: Основная асинхронная функция для обработки списка `prod_ids`.  Принимает `prod_ids` (список URL или ID продуктов) и `category_root` (путь к папке для сохранения данных). Возвращает список `SimpleNamespace`-объектов с обработанными продуктами.
+* `process_affiliate_products`:  обрабатывает список продуктов и возвращает список `SimpleNamespace` объектов.  Принимает список идентификаторов продуктов и корневую папку для сохранения результатов.
+
 
 **Переменные:**
 
-* `MODE`, `language`, `currency`: Хранят настройки и конфигурацию.
+* `_promotion_links`, `_prod_urls`: временные списки для хранения найденных аффилированных ссылок и URL-адресов продуктов.
+* `normilized_prod_urls`: список URL-адресов продуктов после преобразования в HTTPS.
+* `print_flag`, `product_titles`, `affiliated_products_list`, `product_titles_path`: временные переменные для управления выводом и сохранением данных.
 
-**Возможные ошибки/улучшения:**
+**Возможные ошибки и улучшения:**
 
-* **Обработка ошибок:** Не хватает явной обработки исключений при работе с внешними ресурсами (веб-сайтом AliExpress).  Нужно добавить обработку `try...except` блоков для предотвращения аварийных остановок.
-* **Управление ресурсами:** В случае ошибки при сохранении изображения/видео может остаться неполная информация. Рекомендуется добавить обработку исключений и логов ошибок при взаимодействии с внешними ресурсами.
-* **Улучшение логирования:** Более подробное логирование для отладки и диагностики проблем.
-* **Проверка на пустые результаты:**  Рекомендуется проверять на пустые результаты `get_affiliate_links()` и `retrieve_product_details()` для избежания ошибок.
-* **Тип `category_root`:**  `category_root` может быть как строкой, так и `Path`.  Это может привести к ошибкам.
+* **Обработка ошибок:**  Не хватает обработки исключений при скачивании изображений/видео.
+* **Проверка входных данных:**  Не хватает валидации входных данных, например, проверка, что `prod_ids` содержит корректные URL-адреса или идентификаторы.
+* **Производительность:**  Обработка большого количества продуктов может быть медленной.
+* **Модульность:**  Код можно сделать более модульным, выделив отдельные функции для скачивания изображений/видео и сохранения данных.
 
+**Цепочка взаимосвязей:**
 
-**Взаимосвязи с другими частями проекта:**
-
-* Зависит от `AliApi` для получения аффилированных ссылок.
-* Использует `save_png_from_url`, `save_video_from_url`, `j_dumps`, `save_text_file` из других модулей `src.utils`.
-* Использует `logger` из `src.logger`, что указывает на централизованную систему логирования.
-* Использует `ProductFields` для доступа к полям продукта.
-
-
-В целом, код имеет структурированную архитектуру и хорошо документирован.  Добавление обработки ошибок и более подробного логирования значительно улучшит его надёжность и поддержку.
+`AliAffiliatedProducts` использует `AliApi` для работы с Aliexpress API. Функции `save_png_from_url`, `save_video_from_url` и другие служебные функции, реализованные в различных модулях, работают совместно для хранения и обработки данных о продуктах.  Все данные в итоге хранятся в заданном корневом каталоге в формате JSON и TXT.

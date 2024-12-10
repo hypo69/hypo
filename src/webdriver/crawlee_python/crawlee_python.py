@@ -16,7 +16,7 @@ from pathlib import Path
 from src import gs
 import asyncio
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
-from src.logger import logger
+from src.logger.logger import logger
 
 class CrawleePython:
     def __init__(self, max_requests: int = 5, headless: bool = False, browser_type: str = 'firefox'):

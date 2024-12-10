@@ -19,7 +19,7 @@ from gspread.worksheet import Worksheet
 from src.goog.spreadsheet.spreadsheet import SpreadSheet
 from src.utils.jjson import j_dumps
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 
 from src.ai.openai import translate
@@ -37,7 +37,7 @@ from typing import Optional, List, Dict
 # )
 # from src.goog.spreadsheet.spreadsheet import SpreadSheet
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 class AliCampaignGoogleSheet(SpreadSheet):
     """ Класс для работы с Google Sheets в рамках кампаний AliExpress.

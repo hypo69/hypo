@@ -20,7 +20,7 @@
 
 5. **Refactoring and Enhancements**:  
    - Add RST-format comments to all functions, methods, and classes.  
-   - Use `from src.logger import logger` for error logging.  
+   - Use `from src.logger.logger import logger` for error logging.  
    - Avoid overusing standard `try-except` blocks; prefer error handling using `logger.error`.  
    - In comments, avoid vague words like 'get' or 'do'. Instead, use specific terms such as 'validation', 'execution', or 'sending'.  
 

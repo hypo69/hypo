@@ -55,7 +55,7 @@ from typing import Dict, List
 from pathlib import Path
 
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.webdriver.driver import Driver
 from src.suppliers import Supplier
 

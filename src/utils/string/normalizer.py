@@ -26,7 +26,7 @@ import html
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from typing import Any, List, Union
-from src.logger import logger
+from src.logger.logger import logger
 
 MODE = 'dev'
 

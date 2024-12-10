@@ -21,7 +21,7 @@ MODE = 'dev'
 
 import header
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 

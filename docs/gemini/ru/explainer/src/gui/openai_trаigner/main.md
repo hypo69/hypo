@@ -1,4 +1,3 @@
-```MD
 # <input code>
 
 ```python
@@ -8,9 +7,10 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.gui.openai_trаigner 
+.. module:: src.gui.openai_trаigner 
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 MODE = 'dev'
 
@@ -18,17 +18,20 @@ MODE = 'dev'
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 
 """
 	:platform: Windows, Unix
 	:synopsis:
+
 """
 
 
 """
   :platform: Windows, Unix
+
 """
 """
   :platform: Windows, Unix
@@ -49,138 +52,155 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineProfile
+
+class AssistantMainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        # Убираем максимизацию, чтобы пользователь мог изменять размер окна
+        self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.WindowCloseButtonHint)
+
+        # Устанавливаем размеры на 3/4 экрана
+        screen_geometry = QApplication.primaryScreen().geometry()
+        width = int(screen_geometry.width() * 0.75)
+        height = int(screen_geometry.height() * 0.75)
+        self.setGeometry((screen_geometry.width() - width) // 2,
+                         (screen_geometry.height() - height) // 2,
+                         width, height)
+
+        # Запрос браузера по умолчанию
+        browser_choice = self.ask_for_browser()
+
+        # Создание профиля для выбранного браузера
+        if browser_choice == 'Chrome':
+            profile_path = os.path.expanduser("~\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
+        elif browser_choice == 'Firefox':
+            profile_path = os.path.expanduser("~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles")
+        elif browser_choice == 'Edge':
+            profile_path = os.path.expanduser("~\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default")
+        else:
+            QMessageBox.warning(self, "Ошибка", "Браузер не поддерживается.")
+            sys.exit()
+
+        self.profile = QWebEngineProfile(profile_path)
+        self.browser = QWebEngineView(self)
+        self.browser.setPage(self.profile.defaultProfile().createDefaultPage())
+
+        # ... (остальной код)
 ```
 
 # <algorithm>
 
-**Пошаговая блок-схема:**
+**Блок-схема алгоритма**
 
-1. **Инициализация приложения PyQt:**
-   - Создается `QApplication`.
-   - `app.setQuitOnLastWindowClosed(False)`:  приложение не закрывается при закрытии последнего окна, а переходит в трей.
-   - Создается `AssistantMainWindow`.
+```mermaid
+graph TD
+    A[Начало] --> B{Запрос браузера};
+    B -- Chrome --> C[Создание профиля Chrome];
+    B -- Firefox --> D[Создание профиля Firefox];
+    B -- Edge --> E[Создание профиля Edge];
+    B -- Другой --> F[Ошибка];
+    C --> G[Инициализация браузера];
+    D --> G;
+    E --> G;
+    F --> H[Завершение программы];
+    G --> I[Создание интерфейса];
+    I --> J[Обработка событий];
+    J --> K[Загрузка URL];
+    J --> L[Свернуть в трей];
+    J --> M[Открыть на весь экран];
+    J --> N[Закрыть];
+    K --> O[Загрузка страницы];
+    L --> P[Скрыть окно];
+    M --> Q[Перейти в полноэкранный режим];
+    N --> H;
+    O --> J;
+    P --> J;
+    Q --> J;
+```
 
-2. **Инициализация окна `AssistantMainWindow`:**
-   - Устанавливаются размеры окна.
-   - Вызывается `ask_for_browser()` для выбора браузера по умолчанию.
-   - Создается профиль браузера (`QWebEngineProfile`) на основе выбора.
-   - Создается `QWebEngineView` для отображения веб-страниц.
-   - Создаются элементы пользовательского интерфейса (кнопки, поля ввода, меню):
-     - Верхняя панель инструментов (`title_bar`) с полями ввода URL, кнопками загрузки, минимизации, полноэкранного режима и закрытия.
-     - Браузер (`browser`) для отображения веб-страниц.
-   - Создается `QSystemTrayIcon` для иконки в системном трее.
-   - Создаются контекстные меню для иконки в трее и меню сервисов Google и выбора модели.
-
-3. **Установка layout:**
-   - `QHBoxLayout` для верхней панели (`title_bar`).
-   - `QVBoxLayout` для основного окна.
-   - Центральный виджет `QWidget` с установленным layout.
-
-4. **Создание и установка меню:**
-   - Меню выбора сервисов Google (`url_menu`).
-   - Меню выбора моделей (`model_menu`).
-   - Добавление пунктов меню в `url_menu` и `model_menu` для загрузки соответствующих страниц.
-
-5. **Подключение сигналов к слотам:**
-   - Кнопка загрузки URL (`load_button`) связана с методом `load_url()`.
-   - Кнопки минимизации, максимизации и закрытия связаны с методами.
-   - Кнопки меню сервисов Google и моделей связаны с `load_url()` для загрузки URL-адресов.
-   - Пункты контекстного меню в трее связаны с методами `showNormal()` и `quit_app()`.
-   - Поле ввода URL (`url_input`) связано с методом `load_url()` через `returnPressed`.
-
-6. **Метод `ask_for_browser`:**
-   - Показывается диалоговое окно для выбора браузера.
-   - Возвращает выбранный браузер.
-
-7. **Метод `load_url`:**
-   - Загружает URL-адрес в браузер.
-   - Добавляет "http://" перед URL, если это необходимо.
-
-8. **Метод `hide_to_tray`:**
-   - Скрывает главное окно.
-
-9. **Метод `quit_app`:**
-   - Скрывает иконку в трее.
-   - Выходит из приложения.
+**Пример:** Пользователь выбирает браузер Chrome. Алгоритм переходит по ветке `Chrome`, создает профиль Chrome, инициализирует браузер, создает интерфейс с элементами (URL-строка, кнопки), обрабатывает события нажатия на кнопки (загрузка URL, свернуть в трей),  и затем загружает страницу, указанную в URL.
 
 
 # <mermaid>
 
 ```mermaid
 graph LR
-    A[QApplication] --> B(AssistantMainWindow);
-    B --> C{ask_for_browser};
-    C -- Chrome --> D[QWebEngineProfile];
-    C -- Firefox --> E[QWebEngineProfile];
-    C -- Edge --> F[QWebEngineProfile];
-    B --> G[QWebEngineView];
-    B --> H[title_bar];
-    H --> I[url_input];
-    H --> J[load_button];
-    H --> K[minimize_button];
-    H --> L[fullscreen_button];
-    H --> M[close_button];
-    B --> N[QSystemTrayIcon];
-    N --> O[tray_menu];
-    O --> P[restore_action];
-    O --> Q[quit_action];
-    B --> R[url_menu];
-    B --> S[model_menu];
-    I -- returnPressed --> J --> G;
-    J -.-> G;
-    K -.-> B;
-    L -.-> B;
-    M -.-> B;
-    P -.-> B;
-    Q -.-> N;
+    subgraph "PyQt6"
+        A[QApplication] --> B(QMainWindow);
+        B --> C{AssistantMainWindow};
+        C --> D[QWebEngineView];
+        C --> E[QSystemTrayIcon];
+        C --> F[QLineEdit];
+        C --> G[QPushButton];
+        C --> H[QMenu];
+        D --> I(QWebEngineProfile);
+    end
+    subgraph "sys"
+        B -- sys.argv --> A
+    end
+    subgraph "os"
+        C --> J(os.path.expanduser)
+    end
+    subgraph "QUrl"
+        C --> K(QUrl)
+    end
+    subgraph "QIcon, QAction"
+        C --> L[QIcon,QAction]
+    end
+    subgraph "QMessageBox"
+        C --> M(QMessageBox)
+    end
+    I --> O(defaultProfile);
+    D --> P(setUrl);
+    P --> Q(createDefaultPage);
+    C -.> R(ask_for_browser);
+    R --> S(QMessageBox);
+    R -.> T(if/else);
+    T --> U;
 ```
+
+**Объяснение диаграммы:**
+
+Диаграмма показывает зависимости между основными компонентами приложения, основанными на PyQt6 и Python.  `QApplication` управляет приложением, `QMainWindow` - основным окном. `AssistantMainWindow` - пользовательский класс, который расширяет `QMainWindow`.  `QWebEngineView` отвечает за отображение веб-страниц, а `QSystemTrayIcon` - за иконку в системном трее.  `QLineEdit` отображает текстовое поле, а `QPushButton` отвечает за кнопки.  `QMenu` реализует контекстное меню.  `QWebEngineProfile` необходим для работы с профилем браузера. `os` используется для работы с файлами и каталогами,  `QMessageBox` для вывода сообщений пользователю.  `QUrl` - для работы с URL.  `QIcon, QAction` - для управления иконами и действиями в меню.
+
 
 # <explanation>
 
 **Импорты:**
 
-- `sys`, `os`: Стандартные модули Python для работы с системой (например, выходом из приложения, взаимодействием с файловой системой).
-- `Qt`, `QUrl`, `QIcon`, `QAction`, ...: Модули из PyQt6, для создания графического интерфейса (окна, кнопки, меню и т.д.).
-- `QWebEngineView`, `QWebEngineProfile`: Модули PyQt6 для работы с веб-браузером. Связаны с отображением веб-страниц в приложении.
-- Все импорты из `PyQt6` находятся в пространстве имен `PyQt6`.
+- `sys`, `os`: Стандартные модули Python для работы со средой выполнения и файловой системой.
+- `PyQt6`: Библиотека для создания графического интерфейса пользователя (GUI).  Импортируются необходимые классы для создания окон, кнопок, меню, браузера и т.д.  Связь с `src` заключается в том, что  файловая структура проекта предполагает  организацию кода в модулях (файлах) в иерархии.
 
 
 **Классы:**
 
-- `AssistantMainWindow`: Главный класс приложения, наследуется от `QMainWindow`. Отвечает за создание и управление окном приложения, включая UI-элементы, обработку событий и работу с браузером.
-  - `__init__`: Конструктор класса, инициализирует окно, браузер, UI-элементы, системный трей и меню.  `ask_for_browser` запрашивает браузер по умолчанию.  `load_url` загружает веб-страницы.  `hide_to_tray` скрывает главное окно в трее. `quit_app` закрывает приложение.
-  - `closeEvent`: Переопределенный метод для обработки события закрытия окна. Переводит окно в скрытый режим.
-  - `ask_for_browser`: Запрашивает у пользователя выбор браузера по умолчанию из списка.
-  - `load_url`: Загружает URL в браузер.
-  - `hide_to_tray`: Скрывает главное окно и отображает иконку в трее.
-  - `quit_app`: Завершает работу приложения.
+- `AssistantMainWindow`: Главный класс приложения, расширяющий `QMainWindow`.  Он отвечает за создание и управление графическим интерфейсом, взаимодействием с браузером и системным треем.  Атрибуты: `browser`, `profile`, `tray_icon`, `url_input`, `load_button`, `minimize_button` и т.д.  Методы: `__init__`, `ask_for_browser`, `load_url`, `hide_to_tray`, `quit_app`, `closeEvent`.
 
 
 **Функции:**
 
-- `ask_for_browser`: Возвращает строку, представляющую выбранный браузер.
-- `load_url`: Загружает URL в браузер.
-- `hide_to_tray`: Скрывает окно, показывает иконку в трее.
-- `quit_app`: Завершает работу приложения.
+- `ask_for_browser()`: Запрашивает у пользователя выбранный браузер. Возвращает строку с названием браузера (`Chrome`, `Firefox`, `Edge`).
+- `load_url(url=None)`: Загружает URL-адрес в браузер. Если `url` не передан, то берет его из поля `url_input`.  Проверяет наличие префикса `http://`.
 
 
 **Переменные:**
 
-- `MODE`: Строковая переменная, вероятно, используемая для выбора режима работы приложения (например, разработка или производство).
-- `profile`: Объект `QWebEngineProfile`, используемый для настройки браузера.
-- `browser`: Объект `QWebEngineView` для отображения веб-страниц.
-- `url_input`: Объект `QLineEdit` для ввода URL-адреса.
-- Другие переменные: `tray_icon`, `url_menu`, `model_menu`, etc. - представляют различные компоненты UI и контекстные меню.
-
+- `MODE`:  Переменная, вероятно, определяет режим работы приложения (например, `dev` или `prod`).
+- `browser_choice`: Хранит выбранный пользователем браузер.
+- `profile_path`: Путь к профилю браузера.
 
 
 **Возможные ошибки и улучшения:**
 
-- Жесткая кодировка путей к профилям браузеров: может потребоваться динамическое определение путей.
-- Отсутствие валидации URL в `load_url`:  Необходимо проверять корректность вводимого URL-адреса, чтобы избежать ошибок.
-- Недокументированные URL для `Gemini` и `Claude`:  Нужно добавить реальные URL-адреса этих моделей.
--  Можно добавить обработку ошибок при работе с браузером, а также более дружественный пользовательский интерфейс.  Отображение загрузки.
+- **Обработка ошибок:** Код не обрабатывает все возможные исключения (например, если профиль браузера не найден или не поддерживается). Добавьте проверку `os.path.exists(profile_path)` для предотвращения ошибок.
+- **Локализация:**  Добавьте локализованный текст для сообщений и меню (например, используя `QTranslator`).
+- **Универсальность:**  Код ориентирован на конкретные браузеры (Chrome, Firefox, Edge). Возможно, стоит использовать более общий подход для работы с профилями разных браузеров.
 
-**Взаимосвязи с другими частями проекта:**
+**Цепочка взаимосвязей:**
 
-- Код, вероятно, часть графического интерфейса для взаимодействия с OpenAI, Gemini или Claude API.  Поэтому он тесно связан с модулями, отвечающими за работу с этими API. Не хватает информации о том, как данные передаются в эти модули.
+Приложение `AssistantMainWindow` использует `QWebEngineView` для отображения веб-страниц.  Выбор браузера влияет на то, какие профили будут использоваться. Приложение `AssistantMainWindow` использует `QSystemTrayIcon` для создания системного трея, предоставляя пользователю возможность минимизировать его.  Приложение использует модули PyQt6 и  Python-модули `sys` и `os`.
+
+**Общее:**
+
+Код реализует простой веб-браузер с возможностью свертывания в системный трей. Приложение эффективно использует PyQt6 для создания графического интерфейса, но можно улучшить обработку ошибок и сделать его более универсальным для различных браузеров.

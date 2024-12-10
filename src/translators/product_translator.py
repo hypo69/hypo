@@ -56,7 +56,7 @@ from pathlib import Path
 from typing import List, Dict
 ...
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns, j_dumps,  pprint
 from src.db import ProductTranslationsManager
 from src.ai.openai import translate

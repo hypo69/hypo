@@ -34,7 +34,7 @@ from src.utils.file import read_text_file, save_text_file
 from src.utils.pdf import PDFUtils
 from src.utils.convertors.html import html2pdf
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 # config = pdfkit.configuration(wkhtmltopdf= str( gs.path.bin / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe' ) )
 

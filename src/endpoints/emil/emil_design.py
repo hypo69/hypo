@@ -52,7 +52,7 @@ from src.product import Product
 from src.endpoints.advertisement.facebook.scenarios.post_message import post_message, post_title, upload_media
 from src.utils.file import read_text_file, save_text_file, get_filenames
 from src.utils.jjson import j_loads_ns, j_dumps
-from src.logger import logger
+from src.logger.logger import logger
 
 class EmilDesign:
     """ Class for designing and promoting images through various platforms. """

@@ -113,7 +113,7 @@ def critical(self, message: str, ex: Optional = None, exc_info: Optional[bool] =
 ---
 
 ### 7. **Логирование**
-- Использовать `from src.logger import logger` для логирования вместо стандартного `logging`.
+- Использовать `from src.logger.logger import logger` для логирования вместо стандартного `logging`.
 - Пример записи ошибок:
 
 ```python

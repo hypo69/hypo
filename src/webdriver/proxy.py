@@ -30,7 +30,7 @@ from typing import Any, Dict, List, Optional
 import header
 from src import gs
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 # URL источника списка прокси
 url: str = 'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/all/data.txt'

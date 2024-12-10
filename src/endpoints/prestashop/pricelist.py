@@ -19,7 +19,7 @@ from typing import Union
 
 import header
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 from .api import PrestaShop
 from types import SimpleNamespace

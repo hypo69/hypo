@@ -30,7 +30,7 @@ from src import gs
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.javascript.js import JavaScript
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 from src.logger.exceptions import WebDriverException
 ```
 

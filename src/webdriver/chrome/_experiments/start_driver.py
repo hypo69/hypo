@@ -55,7 +55,7 @@ import header
 from header import __root__
 from src.webdriver import  Driver, Firefox, Chrome
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 __bin__ =  Path(__root__, 'bin')
 __src__ = Path(__root__, 'src')

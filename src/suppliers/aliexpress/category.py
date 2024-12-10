@@ -16,7 +16,7 @@ from pathlib import Path
 
 from src import gs
 from src.utils.jjson import j_dumps, j_loads
-from src.logger import logger
+from src.logger.logger import logger
 
 # Импорт класса CategoryManager и модели AliexpressCategory
 # Зачем?  CategoryManager занимается переводами

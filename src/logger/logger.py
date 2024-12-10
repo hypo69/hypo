@@ -59,7 +59,7 @@ Examples:
 """
 
 import header
-
+from typing import Optional
 import threading
 import traceback
 import logging
@@ -112,70 +112,69 @@ class Logger(metaclass=SingletonMeta):
     logger_file_debug: logging.Logger = None
     logger_file_errors: logging.Logger = None
     logger_file_json: logging.Logger = None
-    _initialized: bool = False  # Flag to check initialization
 
-    def __init__(self):
+
+    def __init__(self, **kwards ):
         """ Initialize the Logger instance."""
-        self.logger_console = None
-        self.logger_file_info = None
-        self.logger_file_debug = None
-        self.logger_file_errors = None
-        self.logger_file_json = None
-        self._initialized = False  # Flag to check initialization
-        self.initialize_loggers()
-
-    def _configure_logger(
-        self, name, log_path, level=logging.DEBUG, formatter=None, mode="a"
-    ):
-        """ Configures and returns a logger."""
-        logger = logging.getLogger(name)
-        logger.setLevel(level)
-        handler = logging.FileHandler(filename=log_path, mode=mode)
-        handler.setFormatter(
-            formatter or logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        )
-        logger.addHandler(handler)
-        return logger
-
-    def initialize_loggers(
-        self, info_log_path="", debug_log_path="", errors_log_path="", json_log_path=""
-    ):
-        """ Initializes loggers for console, info, debug, error, and JSON logging."""
-        if self._initialized:
-            return  # Avoid reinitialization
-
         timestamp = datetime.datetime.now().strftime("%d%m%y%H%M")
 
-        if not self.logger_console:
-            self.logger_console = logging.getLogger(f"console_{timestamp}")
-            self.logger_console.setLevel(logging.DEBUG)
-            console_handler = logging.StreamHandler()
-            console_handler.setFormatter(
-                logging.Formatter("%(levelname)s: %(message)s")
-            )
-            self.logger_console.addHandler(console_handler)
+        self.logger_console = logging.getLogger(name = kwards.get('conslole_name',  f'console_{timestamp}.log') )
+        self.logger_console.setLevel(logging.DEBUG)
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+        )
+        self.logger_console.addHandler(console_handler)
 
-        if info_log_path:
-            self.logger_file_info = self._configure_logger(
-                f"info_{timestamp}", info_log_path, logging.INFO
-            )
 
-        if debug_log_path:
-            self.logger_file_debug = self._configure_logger(
-                f"debug_{timestamp}", debug_log_path, logging.DEBUG
-            )
+        self.logger_file_info = logging.getLogger(name = kwards.get('file_info_name',  f'file_info_{timestamp}.log') )
+        self.logger_file_info.setLevel(logging.INFO)
+        file_info_handler = logging.StreamHandler()
+        file_info_handler.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+        )
+        self.logger_file_info.addHandler(console_handler)
 
-        if errors_log_path:
-            self.logger_file_errors = self._configure_logger(
-                f"errors_{timestamp}", errors_log_path, logging.ERROR
-            )
 
-        if json_log_path:
-            self.logger_file_json = self._configure_logger(
-                f"json_{timestamp}", json_log_path, logging.DEBUG, JsonFormatter()
-            )
+        self.logger_file_debug = logging.getLogger(name = kwards.get('file_debug_name',  f'debug_{timestamp}.log') )
+        self.logger_file_debug.setLevel(logging.DEBUG)
+        file_debug_handler = logging.StreamHandler()
+        file_debug_handler.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+        )
+        self.logger_file_debug.addHandler(console_handler)
 
-        self._initialized = True  # Mark as initialized
+        self.logger_file_warning = logging.getLogger(name = kwards.get('file__warning_name',  f'warnings_{timestamp}.log') )
+        self.logger_file_warning.setLevel(logging.ERROR)
+        _handler = logging.StreamHandler()
+        _handler.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+        )
+        self.logger_file_warning.addHandler(_handler)
+
+        self.logger_file_errors = logging.getLogger(name = kwards.get('file_info_name',  f'info_{timestamp}.log') )
+        self.logger_file_errors.setLevel(logging.ERROR)
+        _handler = logging.StreamHandler()
+        _handler.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+        )
+        self.logger_file_errors.addHandler(_handler)
+
+        self.logger_file_critical = logging.getLogger(name = kwards.get('file_critical_name',  f'critical_{timestamp}.log') )
+        self.logger_file_errors.setLevel(logging.ERROR)
+        _handler = logging.StreamHandler()
+        _handler.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+        )
+        self.logger_file_critical.addHandler(_handler)
+
+        self.logger_json = logging.getLogger(name = kwards.get('file_json_name',  f'{timestamp}.json') )
+        self.logger_json.setLevel(logging.DEBUG)
+        _handler = logging.StreamHandler()
+        _handler.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+        )
+        self.logger_file_errors.addHandler(_handler)
 
     def _format_message(self, message, ex=None, color=None):
         """ Returns formatted message with optional color and exception information."""

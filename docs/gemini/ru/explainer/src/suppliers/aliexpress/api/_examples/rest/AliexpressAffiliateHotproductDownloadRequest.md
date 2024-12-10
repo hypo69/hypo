@@ -2,9 +2,9 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductDownloadRequest.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
+## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.rest """
 
 '''
@@ -31,77 +31,93 @@ class AliexpressAffiliateHotproductDownloadRequest(RestApi):
 
 # <algorithm>
 
-```mermaid
-graph TD
-    A[__init__(domain, port)] --> B{Инициализация атрибутов};
-    B --> C[RestApi.__init__(domain, port)];
-    B --> D(self.app_signature = None);
-    B --> E(self.category_id = None);
-    B --> ...;
-    B --> I(self.tracking_id = None);
-    C --> J(Общий код инициализации RestApi);
-    J --> K(Возврат);
-    F[getapiname()] --> G(Возвращает 'aliexpress.affiliate.hotproduct.download');
-    G --> H(Возврат);
-```
+**Шаг 1:** Инициализация класса `AliexpressAffiliateHotproductDownloadRequest`.
+
+* Принимает `domain` и `port` (по умолчанию "api-sg.aliexpress.com" и 80 соответственно).
+* Вызывает конструктор базового класса `RestApi`, передавая ему полученные значения.
+* Инициализирует несколько атрибутов, которые будут хранить параметры запроса (app_signature, category_id, country и т.д.).  Эти атрибуты могут быть заполнены позже.
+
+
+**Шаг 2:** Получение имени API-метода.
+
+* Метод `getapiname` возвращает строку 'aliexpress.affiliate.hotproduct.download'. Это имя используется для вызова соответствующего API-метода.
+
 
 **Пример:**
 
-Инициализация объекта `AliexpressAffiliateHotproductDownloadRequest`:
-
-```python
-request = AliexpressAffiliateHotproductDownloadRequest(domain="api-us.aliexpress.com", port=80)
+```
+request = AliexpressAffiliateHotproductDownloadRequest(domain="my-domain.com")
+print(request.getapiname())  # Выведет "aliexpress.affiliate.hotproduct.download"
 ```
 
-В этом случае, `domain` и `port` передаются в конструктор, а атрибуты  `app_signature`, `category_id` и т.д. инициализируются со значениями по умолчанию (None).  `RestApi.__init__` выполняет общие настройки, связанные с API, например, установку соединения или валидацию.
+**Взаимодействие:** Класс `AliexpressAffiliateHotproductDownloadRequest` наследуется от класса `RestApi`.  `RestApi` является базовым классом, который, скорее всего, предоставляет общие методы для работы с API, такие как отправка запросов и обработка ответов.  Данные передаются между классами через наследование и вызовы методов.
+
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[AliexpressAffiliateHotproductDownloadRequest] --> B(RestApi);
-    B --> C{domain, port};
-    A --> D[app_signature];
-    A --> E[category_id];
-    A --> F[country];
-    A --> G[fields];
-    A --> H[scenario_language_site];
-    A --> I[page_no];
-    A --> J[page_size];
-    A --> K[target_currency];
-    A --> L[target_language];
-    A --> M[tracking_id];
-    A --> N[getapiname()];
-    N --> O{'aliexpress.affiliate.hotproduct.download'};
+graph TD
+    A[AliexpressAffiliateHotproductDownloadRequest] --> B(init);
+    B --> C{RestApi.__init__};
+    C --> D[domain, port];
+    D --> E[self.app_signature, self.category_id, ...];
+    E --> F[getapiname];
+    F --> G["aliexpress.affiliate.hotproduct.download"];
 ```
-
-**Объяснение зависимостей:**
-
-Диаграмма показывает, что класс `AliexpressAffiliateHotproductDownloadRequest` наследуется от класса `RestApi` (зависимость `B --> RestApi`). Это означает, что `AliexpressAffiliateHotproductDownloadRequest` использует функциональность, определенную в `RestApi`, такой как базовые методы для работы с API. `RestApi` находится в модуле `..base`.
 
 # <explanation>
 
 * **Импорты:**
-  - `from ..base import RestApi`: Импортирует класс `RestApi` из модуля `base`, который, предположительно, находится в родительском каталоге (`..`), в папке `base`. Это указывает на иерархическую структуру проекта, где `AliexpressAffiliateHotproductDownloadRequest` использует базовый класс для общих функций работы с API.
+
+```python
+from ..base import RestApi
+```
+
+Этот импорт подключает базовый класс `RestApi` из пакета `src.suppliers.aliexpress.api.base`.  `..base` указывает на директории выше текущей.  Это означает, что `RestApi` предоставляет общие функции для работы с API, такие как отправка HTTP-запросов, обработка ответов и т.д.
 
 * **Классы:**
-  - `AliexpressAffiliateHotproductDownloadRequest`:  Представляет собой класс, предназначенный для запроса данных о популярных продуктах с AliExpress. Наследуется от `RestApi` и содержит атрибуты (характеристики запроса), необходимые для выполнения этого запроса. Важно заметить, что атрибуты инициализируются в конструкторе `__init__`.
 
+```python
+class AliexpressAffiliateHotproductDownloadRequest(RestApi):
+```
 
-* **Функции:**
-  - `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса, инициализирует атрибуты, передавая параметры `domain` и `port`.
-  - `getapiname(self)`:  Возвращает строку 'aliexpress.affiliate.hotproduct.download', которая, скорее всего, представляет собой имя API-метода, используемого для получения данных.  Эта функция необходима для идентификации конечной точки API.
+Это класс, предназначенный для формирования запросов к API AliExpress для загрузки горячих продуктов.  Он наследует от класса `RestApi`, что позволяет использовать общие функции работы с API.
+
+* **Атрибуты:**
+
+```python
+self.app_signature = None
+self.category_id = None
+# ... другие атрибуты
+```
+
+Эти атрибуты хранят параметры запроса, которые могут быть заданы при создании объекта.  Они могут быть использованы для фильтрации результатов, выбора нужных данных и т.д.
+
+* **Методы:**
+
+```python
+def __init__(self, domain="api-sg.aliexpress.com", port=80):
+    RestApi.__init__(self, domain, port)
+
+def getapiname(self):
+	return 'aliexpress.affiliate.hotproduct.download'
+```
+
+* `__init__`: Инициализирует объект с заданными параметрами `domain` и `port`, а также устанавливает значения по умолчанию для других атрибутов.  Это, скорее всего, подготовительный метод для формирования запроса.
+* `getapiname`: Возвращает имя API-метода, которое необходимо использовать для запроса.
 
 * **Переменные:**
-  - `domain`, `port`: Строки, представляющие адрес и порт API.
-  - Атрибуты `app_signature`, `category_id`, и т.д.: Хранят данные, необходимые для формирования запроса к API AliExpress. Типы данных - строки или числа, в зависимости от типа атрибута.
 
-* **Возможные ошибки и улучшения:**
-  - Нет обработки ошибок: Класс не содержит проверок на корректность входных данных (например, валидация `domain` и `port`).
-  - Отсутствует реализация запроса: Нет кода, который бы формировал и отправлял запрос к API. Метод `getapiname` просто возвращает имя API-метода, но не делает сам запрос.  Необходимо добавить код, который вызовет `RestApi` для формирования и отправки запроса, используя полученные данные.
-  - Нет документации: Не хватает комментариев к коду, объясняющих назначение атрибутов.
+`domain`, `port`: Строковые и целочисленные переменные, хранящие значения домена и порта API.
 
 
-**Цепочка взаимосвязей:**
+**Возможные ошибки и улучшения:**
 
-`AliexpressAffiliateHotproductDownloadRequest` зависит от `RestApi`. В свою очередь, `RestApi` может зависеть от других компонентов для работы с HTTP-запросами (например, `requests`).  Влияние на другие части проекта заключается в том, что этот класс предоставляет функциональность для получения данных с API AliExpress.  Далее эти данные могут быть обработаны и использованы другими частями проекта для отображения, анализа, или других целей.
+* **Отсутствует логика формирования запроса:**  Класс не содержит логики построения HTTP-запроса или обработки ответов.  Он просто описывает структуру запроса. Для работы с API необходимы дополнительные методы для выполнения запроса и обработки ответа.
+* **Нет валидации входных данных:** Класс не проверяет корректность входных параметров (`domain`, `port`, другие параметры), что может привести к ошибкам.
+* **Отсутствие документации:**  Не хватает подробного документального описания  параметров и ожидаемого поведения, что затрудняет понимание и использование класса.
+* **Не указано назначение атрибутов:** Непонятно, какие значения должны быть установлены в атрибуты `app_signature`, `category_id` и т.д.
+
+**Взаимосвязи с другими частями проекта:**
+
+Класс `AliexpressAffiliateHotproductDownloadRequest` является частью модуля, который взаимодействует с API AliExpress.  Скорее всего, существуют другие классы и функции для обработки полученных данных, обработки ошибок, а также для настройки подключения к API.

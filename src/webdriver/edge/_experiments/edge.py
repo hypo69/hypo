@@ -45,7 +45,7 @@ from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.common.exceptions import WebDriverException
 from src import gs
 from src.utils.printer import pprint,  j_loads
-from src.logger import logger
+from src.logger.logger import logger
 from src.logger.exceptions import WebDriverException 
 
 

@@ -25,7 +25,7 @@ from src.utils.csv import save_csv_file
 from src.utils.jjson import j_dumps
 from src.utils.xls import save_xls_file
 from src.utils.convertors.dict import dict2xml
-from src.logger import logger
+from src.logger.logger import logger
 
 
 def json2csv(json_data: str | list | dict | Path, csv_file_path: str | Path) -> bool:

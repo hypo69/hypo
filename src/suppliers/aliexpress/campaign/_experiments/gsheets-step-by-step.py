@@ -46,7 +46,7 @@ from src.suppliers.aliexpress import campaign
 from src.suppliers.aliexpress.campaign import AliCampaignGoogleSheet , AliCampaignEditor
 from src.suppliers.aliexpress.campaign.ttypes import CampaignType, CategoryType, ProductType
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 
 gs = AliCampaignGoogleSheet('1nu4mNNFMzSePlggaaL_QM2vdKVP_NNBl2OG7R9MNrs0')

@@ -1,6 +1,7 @@
+```MD
 # Анализ кода сценария pricelist
 
-**1. <input code>**
+## <input code>
 
 ```mermaid
 graph TD
@@ -41,92 +42,78 @@ graph TD
     HandleAIProcessingFailure --> EndScenario
 ```
 
-**2. <algorithm>**
+## <algorithm>
 
-Данный код описывает алгоритм обработки данных для формирования прайслистов, включая взаимодействие с API и обработку результатов. Алгоритм состоит из нескольких этапов: инициализации, загрузки данных, парсинга, обработки AI и отправки данных.  Пройдемся по ключевым этапам:
+Блок-схема описывает последовательность действий сценария pricelist.  Сценарий начинается с инициализации экземпляра Mexiron, загрузки конфигурации, определения пути экспорта, загрузки инструкций, инициализации модели Google GenerativeAI, и запуска сценария.  Далее происходит парсинг URL-адресов продуктов, проверка списка URL-адресов, обработка отсутствующих URL-адресов, получение парсера (grabber) по URL поставщика, парсинг полей продукта, конвертация в словарь, сохранение данных о продуктах в файл, обработка списка продуктов с помощью AI, обработка ответа AI для языков иврит и русский, сохранение обработанных данных, генерация отчётов и публикация на Facebook. Есть обработка ошибок на каждом шаге и возможность ретрия AI обработки.
 
-* **Инициализация:** Создается экземпляр Mexiron, загружаются настройки и пути.
-* **Загрузка данных:** Загружаются инструкции и конфигурация, осуществляется инициализация модели AI.
-* **Парсинг данных:** Парсится список URL-адресов, проверяется их наличие, и, в случае успеха, запрашивается граббер. Выполняется парсинг полей.
-* **Обработка AI:** Данные передаются в AI для обработки.
-* **Обработка результатов:** Результаты обрабатываются, сохраняются в файлы, создаются отчеты на иврите и русском.
-* **Отправка данных:** Отчеты публикуются в Facebook.
-* **Обработка ошибок:** На каждой стадии предусмотрены обработчики ошибок (например, для сбоя в парсинге или отсутствия данных).
-
-**3. <mermaid>**
+## <mermaid>
 
 ```mermaid
-graph LR
-    subgraph Инициализация
+graph TD
+    subgraph Init
         InitMexiron --> LoadConfig
         LoadConfig --> CreateExportPath
         CreateExportPath --> LoadInstructions
         LoadInstructions --> InitializeAI
     end
-    subgraph Парсинг и Обработка
+    subgraph RunScenario
         InitializeAI --> RunScenario
         RunScenario --> ParseURLs
-        ParseURLs --> GetGrabber
+        RunScenario --> HandleScenarioFailure
+    end
+    subgraph DataProcessing
+        ParseURLs --> CheckURLs
+        CheckURLs -- Success --> GetGrabber
+        CheckURLs -- Failure --> HandleMissingURLs --> EndScenario
         GetGrabber --> ParseFields
-        ParseFields --> ConvertToDict
+        ParseFields -- Success --> ConvertToDict
+        ParseFields -- Failure --> HandleParseFailure --> EndScenario
         ConvertToDict --> SaveToFile
-        ParseFields --> HandleParseFailure
-        ConvertToDict --> HandleConversionFailure
-        SaveToFile --> HandleSaveFailure
-    end
-    subgraph Обработка AI
         SaveToFile --> ProcessWithAI
-        ProcessWithAI --> HandleAIResponse
-        HandleAIResponse --> SaveProcessedData
-        HandleAIResponse --> HandleAIResponseFailure
         ProcessWithAI --> HandleAIProcessingFailure
-        HandleAIProcessingFailure --> RetryAI
-    end
-    subgraph Генерация и Отправка
+        ProcessWithAI -- Success --> HandleAIResponse
+        HandleAIResponse -- Success --> SaveProcessedData
+        HandleAIResponse -- Failure --> HandleAIResponseFailure --> RetryAI
         SaveProcessedData --> GenerateReports
         GenerateReports --> PostToFacebook
-        PostToFacebook --> EndScenario
-        RunScenario --> HandleScenarioFailure
-        HandleScenarioFailure --> EndScenario
-        ParseURLs --> CheckURLs
-        CheckURLs --> HandleMissingURLs
-        ParseURLs --> HandleUnknownSupplierURLs
-        HandleMissingURLs --> EndScenario
-        HandleUnknownSupplierURLs --> EndScenario
-        CheckURLs --> EndScenario
-        HandleParseFailure --> EndScenario
-        HandleConversionFailure --> EndScenario
-        HandleSaveFailure --> EndScenario
-        HandleAIProcessingFailure --> EndScenario
+    end
+    PostToFacebook --> EndScenario
+    HandleScenarioFailure --> EndScenario
+    HandleParseFailure --> EndScenario
+    HandleConversionFailure --> EndScenario
+    HandleSaveFailure --> EndScenario
+    HandleAIProcessingFailure --> EndScenario
+    HandleMissingURLs --> EndScenario
+    subgraph ErrorHandling
+        ParseURLs --> HandleUnknownSupplierURLs --> EndScenario
+        ParseFields --> HandleParseFailure --> EndScenario
+        ConvertToDict --> HandleConversionFailure --> EndScenario
+        SaveToFile --> HandleSaveFailure --> EndScenario
+        ProcessWithAI --> HandleAIProcessingFailure --> RetryAI
         HandleAIResponseFailure --> RetryAI
-
-    ```
-
-**4. <explanation>**
-
-* **Импорты**:  В данном случае отсутствует код Python, поэтому анализ импортов невозможен.
-* **Классы**:  Аналогично нет кода, поэтому невозможно определить классы и их взаимодействие.
-* **Функции**:  Нет информации о функциях, поэтому невозможно рассмотреть их поведение.
-* **Переменные**: Нет информации о переменных, поэтому невозможно определить их типы и использование.
-
-**Цепочка взаимосвязей:**
-
-Данный код, вероятно, часть более крупного проекта, связанного с обработкой данных прайслистов, парсингом веб-страниц, взаимодействием с AI-моделями для перевода и созданием отчетов.  Связи могут быть следующими:
-
-1. **mexiron:**  Является  центральным модулем, управляющим всеми этапами обработки.
-2. **API:**  Для загрузки конфигурации и выполнения задач.
-3. **Система хранения данных:** Для сохранения промежуточных и конечных результатов.
-4. **AI-модель:**  Для обработки текстовых данных, перевода.
-5. **Facebook:** Для публикации отчетов.
-
-**Возможные ошибки и улучшения:**
-
-* **Отсутствие обработки исключений:**  В каждом шаге не описаны детальные механизмы обработки ошибок, что может привести к непредсказуемому поведению.  
-* **Логирование:**  Отсутствие логирования затрудняет отладку.
-* **Переиспользование кода:**  Отсутствие рефакторинга.  Сложность повторного использования кода для разных задач.
-* **Избыточность обработки ошибок:**  Несколько обработчиков для одних и тех же типов ошибок (например, ошибки в парсинге).  Можно объединить в более общий обработчик.
+    end
 
 
-**Заключение:**
+```
 
-Схема предоставляет высокую функциональную детализацию процесса, но без кода сложно оценить практическую реализацию и потенциальные проблемы.  Для более глубокого анализа необходим сам код.
+## <explanation>
+
+**Импорты:**  В данном коде импортов нет.  Диаграмма описывает последовательность вызовов функций и обработку ошибок в рамках сценария pricelist.
+
+**Классы:**  Диаграмма описывает работу сценария, но не содержит определений классов.
+
+**Функции:**  Диаграмма изображает последовательность вызовов функций, таких как `Initialize Mexiron`, `Load configuration`, `Create export path`, `LoadInstructions`, `InitializeAI`, `RunScenario`, `ParseURLs`,  `ParseFields`, `ConvertToDict`, `SaveToFile`, `ProcessWithAI`, `HandleAIResponse`, `SaveProcessedData`, `GenerateReports`, `PostToFacebook`, и обработку ошибок.  Не указано, какие именно аргументы принимают и возвращают эти функции, но видно, что они связаны по логике выполнения.
+
+**Переменные:**  Диаграмма не показывает определения переменных, но предполагает, что используются переменные, хранящие конфигурацию, пути к файлам, результаты парсинга, данные о продуктах и т.д.
+
+**Возможные ошибки/улучшения:**
+
+* Отсутствуют детали о возвращаемых значениях функций, обработке исключений и детальном взаимодействии с Google GenerativeAI.
+* Не указана логика обработки ретриев (RetryAI).
+* Нет информации о структуре данных, используемых на разных этапах.
+* Не указаны типы данных для переменных.
+
+**Цепочка взаимосвязей:**  Сценарий pricelist, очевидно, зависит от конфигурации системы, библиотек для работы с Google GenerativeAI, парсеров (grabber) для различных поставщиков.
+
+
+**Общая оценка:** Диаграмма представляет собой хороший стартовый анализ, но требует расширения, чтобы быть полезной для реализации. Она показывает, как части системы взаимодействуют друг с другом, но не описывает конкретное взаимодействие.

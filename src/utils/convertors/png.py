@@ -14,7 +14,7 @@ MODE = 'dev'
 from pathlib import Path
 from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont
-from src.logger import logger  # Logging
+from src.logger.logger import logger  # Logging
 
 class TextToImageGenerator:
     """

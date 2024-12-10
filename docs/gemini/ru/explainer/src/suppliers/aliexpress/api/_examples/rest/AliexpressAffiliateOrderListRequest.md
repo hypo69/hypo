@@ -2,9 +2,9 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderListRequest.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~
+## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api._examples.rest """
 
 '''
@@ -29,77 +29,75 @@ class AliexpressAffiliateOrderListRequest(RestApi):
 
 # <algorithm>
 
-**Блок-схема:**
+**Блок-схема алгоритма:**
 
-```mermaid
-graph TD
-    A[__init__(domain, port)] --> B{Инициализация атрибутов};
-    B -- self.app_signature = None;
-    B -- self.end_time = None;
-    B -- self.fields = None;
-    B -- self.locale_site = None;
-    B -- self.page_no = None;
-    B -- self.page_size = None;
-    B -- self.start_time = None;
-    B -- self.status = None;
-    B --> C[RestApi.__init__(domain, port)];
-    C --> D[Метод getapiname()];
-    D --> E[Возвращает 'aliexpress.affiliate.order.list'];
-    
-    subgraph init
-      A
-      B
-      C
-    end
-    
-    subgraph method_getapiname
-    D
-    E
-    end
+1. **`AliexpressAffiliateOrderListRequest`:**
+    * Инициализация объекта:
+        * Вызов конструктора базового класса `RestApi` с `domain` и `port`.
+        * Инициализация атрибутов:
+            * `app_signature`, `end_time`, `fields`, `locale_site`, `page_no`, `page_size`, `start_time`, `status` устанавливаются в `None`.
+    * **`getapiname`:**
+        * Возвращает строку "aliexpress.affiliate.order.list".
+
+**Пример использования:**
+
+```python
+request = AliexpressAffiliateOrderListRequest(domain="api-us.aliexpress.com", port=8080)
+api_name = request.getapiname()
+print(api_name)  # Выведет 'aliexpress.affiliate.order.list'
 ```
 
-**Пример:**
-
-Создается экземпляр класса `AliexpressAffiliateOrderListRequest` с параметрами `domain="api-sg.aliexpress.com"` и `port=80`.  Это вызывает конструктор базового класса `RestApi`.  Последовательно инициализируются атрибуты класса `AliexpressAffiliateOrderListRequest` со значениями по умолчанию (None).  Затем вызывается метод `getapiname`, возвращающий строку `'aliexpress.affiliate.order.list'`.
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[AliexpressAffiliateOrderListRequest] --> B(RestApi);
-    B --> C{__init__(domain, port)};
+graph TD
+    A[AliexpressAffiliateOrderListRequest] --> B(init);
+    B --> C{Вызов конструктора RestApi};
     C --> D[Инициализация атрибутов];
-    D --> E[getapiname()];
-    E --> F['aliexpress.affiliate.order.list'];
+    D --> E[getapiname];
+    E --> F[Возвращает 'aliexpress.affiliate.order.list'];
+    subgraph "RestApi"
+        C --> G[domain, port]
+        G --> H[Параметры для RestApi]
+    end
 ```
 
 # <explanation>
 
 **Импорты:**
 
-`from ..base import RestApi`: Импортирует базовый класс `RestApi` из пакета `src.suppliers.aliexpress.api.base`.  Это указывает на иерархическое наследование и возможное использование общих функциональных возможностей или атрибутов `RestApi`.  `src` - корневой пакет.
+* `from ..base import RestApi`: Импортирует класс `RestApi` из модуля `base`, который находится в папке на один уровень выше (`../base`). Это предполагает иерархическую структуру проекта, где `suppliers/aliexpress/api` содержит собственные модули, но наследуется от базового класса.
 
 **Классы:**
 
-*   `AliexpressAffiliateOrderListRequest`: Этот класс предназначен для создания запросов к API AliExpress для получения списка заказов. Он наследуется от класса `RestApi`.
+* `AliexpressAffiliateOrderListRequest`:
+    * Это дочерний класс `RestApi`. Он предназначен для работы с API AliExpress для получения списка заказов аффилированного партнёра.
+    * **Атрибуты**: `app_signature`, `end_time`, `fields`, `locale_site`, `page_no`, `page_size`, `start_time`, `status`:  хранят параметры запроса к API. Эти параметры необходимо заполнить перед использованием класса.
+    * **Метод `__init__`**: Инициализирует объект, настраивая его параметры, включая вызов конструктора родительского класса `RestApi`.
+    * **Метод `getapiname`**: Возвращает имя API-метода ('aliexpress.affiliate.order.list'), который будет использован для запроса.
 
-**Методы:**
 
-*   `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса. Инициализирует экземпляр класса, устанавливая значения параметров `domain` и `port`.  Также инициализирует все необходимые атрибуты класса со значениями по умолчанию `None`.
-*   `getapiname(self)`: Возвращает имя API-метода, используемого для получения списка заказов (`'aliexpress.affiliate.order.list'`).  Это строка, которая используется для идентификации нужного API-метода в системе.
+**Функции:**
+
+* **`__init__`**:  Инициализирует объект класса. Принимает `domain` и `port` (по умолчанию "api-sg.aliexpress.com" и 80).
+* **`getapiname`**: Возвращает строку  'aliexpress.affiliate.order.list', содержащую имя API-метода.
+
 
 **Переменные:**
 
-*   Атрибуты класса (например, `self.app_signature`, `self.end_time` и др.) представляют параметры запроса к API. Их значения необходимо установить до вызова методов запроса API.  Они хранят значения данных, которые передаются в запрос.  Их значения по умолчанию `None` указывает на то, что эти параметры не заданы.
+* `domain`, `port` -  строка и целое число, используемые для настройки соединения с API.
+* Все атрибуты класса (e.g., `app_signature`) - хранят данные, относящиеся к запросу.
+
 
 **Возможные ошибки и улучшения:**
 
-*   **Недостающие параметры:** Код не проверяет правильность параметров, переданных в конструктор.  Рекомендуется добавить проверку типов и значений параметров, чтобы предотвратить ошибки в случае некорректных данных.
-*   **Документация:** Добавление документации к методам и атрибутам сделало бы код более понятным.
-*   **Обработка ошибок:** Не указано, как будет обрабатываться ошибка, например, ошибка соединения с API или ошибка ответа от сервера.
+* **Нет валидации данных:**  Класс не содержит валидации входных параметров. Например, `page_no` и `page_size` должны быть числами. Необходимо добавить проверку типов и ограничений.
+* **Отсутствие обработки ошибок:**  Класс не обрабатывает возможные ошибки при взаимодействии с API (например, некорректный ответ, сетевые проблемы). Добавление обработки исключений (try...except) улучшит устойчивость.
+* **Отсутствие документации:**  Необходимо добавить более подробную документацию к методам и атрибутам.
+* **Зависимости:** Класс `RestApi` в `..base` предположительно содержит методы для формирования запросов и работы с API.  Необходимо уточнить его функционал и интерфейс.
 
-**Взаимосвязи с другими частями проекта:**
 
-*   **`src.suppliers.aliexpress.api.base.RestApi`:** Класс `RestApi` предоставляет базовые методы и атрибуты для работы с API.  Этот класс скорее всего содержит функционал, необходимый для отправки запросов, обработки ответа и т.д.  Вероятно, есть функции для формирования запроса и обработки полученных данных.
+**Цепочка взаимосвязей:**
 
-В целом, код представляет собой базовый запрос к API AliExpress для получения списка заказов.  Для использования его в полной мере необходим класс `RestApi` с реализацией методов для отправки запросов и обработки ответов.
+`AliexpressAffiliateOrderListRequest` использует `RestApi` для выполнения запросов к API AliExpress.  `RestApi`, скорее всего, использует `requests` или другой модуль для HTTP-запросов.  Пропущенные звенья этой цепочки зависят от реализации `RestApi`.

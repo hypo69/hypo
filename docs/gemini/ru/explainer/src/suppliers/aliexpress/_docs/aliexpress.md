@@ -2,140 +2,153 @@
 # <Input Code>
 
 ```rst
-.. module:: src.suppliers.aliexpress
+.. module::  src.suppliers.aliexpress
 ```
 
-# Module Aliexpress
+# Модуль Aliexpress
 
-## Overview
+## Обзор
 
-The `aliexpress` module provides the `Aliexpress` class, which integrates the functionality of the `Supplier`, `AliRequests`, and `AliApi` classes to interact with AliExpress. It is designed for tasks related to parsing and interacting with the AliExpress API.
+Модуль `aliexpress` предоставляет класс `Aliexpress`, который интегрирует функциональность классов `Supplier`, `AliRequests` и `AliApi` для взаимодействия с AliExpress. Он предназначен для задач, связанных с парсингом и взаимодействием с API AliExpress.
 
-## Table of Contents
+## Содержание
 
-- [Module Aliexpress](#module-aliexpress)
-- [Class Aliexpress](#class-aliexpress)
-  - [Method __init__](#method-__init__)
+- [Модуль Aliexpress](#модуль-aliexpress)
+- [Класс Aliexpress](#класс-aliexpress)
+  - [Метод __init__](#метод-__init__)
 
-## Class Aliexpress
+## Класс Aliexpress
 
 ### `Aliexpress`
 
-**Description**: A base class for working with AliExpress. Combines the capabilities of `Supplier`, `AliRequests`, and `AliApi` classes for convenient interaction with AliExpress.
+**Описание**: Базовый класс для работы с AliExpress. Объединяет возможности классов `Supplier`, `AliRequests` и `AliApi` для удобного взаимодействия с AliExpress.
 
-**Usage Examples**:
+**Примеры использования**:
 
 ```python
-# Initialize without a WebDriver
+# Инициализация без WebDriver
 a = Aliexpress()
 
 # Chrome WebDriver
 a = Aliexpress('chrome')
 
-# Requests mode
+# Режим запросов
 a = Aliexpress(requests=True)
 ```
 
-### Method `__init__`
+### Метод `__init__`
 
-**Description**: Initializes the `Aliexpress` class.
+**Описание**: Инициализирует класс `Aliexpress`.
 
-**Parameters**:
+**Параметры**:
 
-- `webdriver` (bool | str, optional): Determines the WebDriver usage mode. Possible values:
-  - `False` (default): No WebDriver.
+- `webdriver` (bool | str, необязательно): Определяет режим использования WebDriver. Возможные значения:
+  - `False` (по умолчанию): WebDriver не используется.
   - `'chrome'`: Chrome WebDriver.
   - `'mozilla'`: Mozilla WebDriver.
   - `'edge'`: Edge WebDriver.
-  - `'default'`: Default system WebDriver.
-- `locale` (str | dict, optional): Language and currency settings. Defaults to `{'EN': 'USD'}`.
-- `*args`: Additional positional arguments.
-- `**kwargs`: Additional keyword arguments.
+  - `'default'`: WebDriver по умолчанию.
+- `locale` (str | dict, необязательно): Настройки языка и валюты. По умолчанию `{'EN': 'USD'}`.
+- `*args`: Дополнительные позиционные аргументы.
+- `**kwargs`: Дополнительные именованные аргументы.
 
-**Examples**:
+**Примеры**:
 
 ```python
-# Initialize without a WebDriver
+# Инициализация без WebDriver
 a = Aliexpress()
 
 # Chrome WebDriver
 a = Aliexpress('chrome')
 ```
 
-**Returns**:
-- Does not return a value.
+**Возвращаемое значение**: Нет.
 
-**Raises**:
-- Possible exceptions related to WebDriver initialization or errors when interacting with AliExpress.
-
+**Исключения**: Возможные исключения, связанные с инициализацией WebDriver или ошибками при взаимодействии с AliExpress.
 
 # <Algorithm>
 
+Алгоритм фокусируется на инициализации класса `Aliexpress`.
+
+**Шаг 1: Инициализация**
+
+```
+Вход: Необязательные параметры (webdriver, locale, *args, **kwargs)
+```
+
+**Шаг 2: Определение типа WebDriver**
+
+```
+Если webdriver равен 'chrome', 'mozilla', 'edge' или 'default' -> Используется указанный/системный WebDriver.
+Если webdriver равен False -> WebDriver не используется.
+```
+
+**Шаг 3: Настройка Locale**
+
+```
+Если параметр locale задан (str или dict) -> Устанавливается locale.
+В противном случае -> Используется значение по умолчанию {'EN': 'USD'}.
+```
+
+**Шаг 4: Инициализация внутренних компонентов**
+
+```
+Инициализируются экземпляры классов `Supplier`, `AliRequests` и `AliApi`.  Это, вероятно, включает настройку подключений, инициализацию структур данных и конфигураций.
+```
+
+**Шаг 5: Присвоение (необязательных) аргументов**
+
+```
+Передача *args и **kwargs внутренним компонентам (`Supplier`, `AliRequests`, `AliApi`).
+```
+
+# <mermaid>
+
 ```mermaid
 graph TD
-    A[Input: webdriver, locale, *args, **kwargs] --> B{Is webdriver specified?};
-    B -- Yes --> C{Is webdriver 'chrome'/'mozilla'/'edge'/'default'?};
-    C -- Yes --> D[Use specified WebDriver];
-    C -- No --> E[Use no WebDriver];
-    B -- No --> E;
-    E --> F{Is locale specified?};
-    F -- Yes --> G[Set locale];
-    F -- No --> H[Set locale to {'EN': 'USD'}];
-    D --> I[Initialize Supplier];
-    E --> I;
-    I --> J[Initialize AliRequests];
-    J --> K[Initialize AliApi];
-    K --> L[Assign *args and **kwargs to internal components];
-    subgraph Initialization
-        I --> J --> K --> L
-    end
+    A[Aliexpress(__init__)] --> B{WebDriver?};
+    B -- true --> C[WebDriver Init];
+    B -- false --> D[No WebDriver];
+    C --> E[Supplier Init];
+    C --> F[AliRequests Init];
+    C --> G[AliApi Init];
+    D --> E;
+    D --> F;
+    D --> G;
+    E --> H[Pass *args, **kwargs];
+    F --> H;
+    G --> H;
+    H --> I[Aliexpress Object];
 ```
 
-**Step 1**: Input parameters (webdriver, locale, *args, **kwargs)
+**Объяснение диаграммы:**
 
-**Step 2**: Determine WebDriver Type:  If webdriver is 'chrome', 'mozilla', 'edge', or 'default', use the specified driver.  If webdriver is False, no WebDriver is used.
+Диаграмма отображает, как происходит инициализация класса `Aliexpress`.  `Aliexpress(__init__)` — метод инициализации.  Он проверяет необходимость использования `WebDriver`.  В зависимости от результата, вызываются соответствующие методы для инициализации компонентов: `Supplier`, `AliRequests` и `AliApi`. Далее аргументы `*args` и `**kwargs` передаются всем инициализированным компонентам.  В итоге создаётся объект класса `Aliexpress`.
 
-**Step 3**: Configure Locale: If the locale parameter is provided, set the locale. Otherwise, use the default locale.
+Подключаемые зависимости:
 
-**Step 4**: Initialize Internal Components: Initialize instances of `Supplier`, `AliRequests`, and `AliApi`. This is a crucial step where dependencies are set up.
+* `Supplier`: Класс, скорее всего, отвечает за общую логику поставщика, хранение данных о поставщике или его настройках.
+* `AliRequests`: Вероятно, класс для работы с API AliExpress. Может использовать библиотеки вроде `requests`.
+* `AliApi`: Класс для непосредственного взаимодействия с API AliExpress.
 
-**Step 5**: Assign Arguments: Pass *args and **kwargs to the internal components (`Supplier`, `AliRequests`, `AliApi`).
+# <explanation>
 
-# <Mermaid>
+* **Импорты**: Директива `.. module:: src.suppliers.aliexpress` в формате reStructuredText указывает, что этот модуль входит в более крупный проект. Явных импортов в представленном фрагменте кода нет.  Очевидно, что этот код является частью проекта, и существуют зависимости от других модулей `src.`.
 
-```mermaid
-graph LR
-    subgraph AliExpress Module
-        A[Aliexpress] --> B(Supplier);
-        A --> C(AliRequests);
-        A --> D(AliApi);
-    end
-    subgraph Internal Dependencies
-        B --> E[WebDriver (optional)];
-        C --> F[HTTP Requests Library (e.g., requests)];
-        D --> G[AliExpress API];
-    end
-```
+* **Классы**:
+    * **`Aliexpress`**: Служит основным интерфейсом для работы с AliExpress, объединяя инициализацию, настройку (locale, WebDriver) и функциональность `Supplier`, `AliRequests` и `AliApi` для удобного взаимодействия.
 
-This mermaid code shows the dependency structure. `Aliexpress` depends on `Supplier`, `AliRequests`, and `AliApi`. `AliRequests` depends on an HTTP library like `requests`, and `AliApi` depends on the AliExpress API itself. Optionally, `Aliexpress` could use a `WebDriver`.
+* **Функции**:
+    * **`__init__`**: Инициализирует объект `Aliexpress`. Обрабатывает необязательные параметры (`webdriver`, `locale`), чтобы настроить поведение (например, взаимодействие с браузером или API). Настраивает внутренние компоненты.
 
 
-# <Explanation>
-
-* **Imports**: The directive `.. module:: src.suppliers.aliexpress` in reStructuredText is for documentation purposes and doesn't include actual import statements.  The `src` prefix implies the module is part of a larger project structure.  Implied dependencies include `Supplier`, `AliRequests`, `AliApi` classes, `requests` library for API interaction, and potentially a WebDriver library (Selenium or similar).
-
-* **Classes**:
-    - **`Aliexpress`**: Acts as a facade, integrating the functionality of the other classes (`Supplier`, `AliRequests`, `AliApi`) for easier access. This class handles configuration parameters for interactions with AliExpress, like choosing a WebDriver.
-
-* **Functions**:
-    - **`__init__`**: Initializes the `Aliexpress` object by setting up dependencies, determining WebDriver usage (if any), and configuring locale options.  It takes the webdriver type, locale settings, and potential additional parameters, then passes them to the dependencies.
-
-* **Variables**: `webdriver`, `locale` are key variables used to configure the `Aliexpress` class's behavior.
-
-* **Potential Errors/Improvements**:
-    - **Error Handling**: The documentation mentions potential exceptions but doesn't detail how exceptions are caught and handled during initialization.  Robust error handling is crucial for production code, including proper exception logging.
-    - **Dependency Injection**: Consider using dependency injection for cleaner separation of concerns. This would enable replacing internal components (`Supplier`, `AliRequests`, `AliApi`) with mock objects during testing or changing implementations without modifying the `Aliexpress` class.
-    - **Configuration**: A dedicated configuration file for `locale` or other parameters could enhance maintainability and code organization.
+* **Переменные**: Параметры, такие как `webdriver` и `locale`, используются для настройки операций класса `Aliexpress`.
 
 
-* **Relationship with Other Project Components**: `Aliexpress` relies on `Supplier`, `AliRequests`, and `AliApi`.  These classes likely reside in different modules/files within the project (`src.suppliers.*`).  The broader context of the project is crucial for understanding how this module interacts with other parts and which libraries it may use.
+* **Возможные ошибки/улучшения**:
+    * **Обработка ошибок**: Хотя упоминаются исключения при инициализации, детали обработки отсутствуют. Реализация надежных механизмов обработки ошибок крайне важна для стабильной работы.
+    * **Абстракция**: Модулизация логики инициализации для `Supplier`, `AliRequests` и `AliApi` улучшила бы поддерживаемость.  Использование структурированных кодов ошибок или подробного логирования для каждого компонента упростит отладку.
+
+
+* **Взаимосвязь с другими частями проекта**:
+    * Данный модуль (`aliexpress`) зависит от классов `Supplier`, `AliRequests` и `AliApi`. Вероятно, он также использует библиотеки, такие как `requests` (для HTTP-взаимодействия) и инструменты WebDriver (для взаимодействия с браузером).  Префикс `src` указывает на то, что он является частью хорошо структурированного пакета, который, скорее всего, включает другие модули, взаимодействующие с или используемые модулем `aliexpress`. Для полного понимания его интеграции потребуется дополнительный контекст.

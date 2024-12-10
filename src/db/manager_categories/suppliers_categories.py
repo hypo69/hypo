@@ -24,7 +24,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
 
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.printer import pprint
 
 # Получение учетных данных для подключения к базе данных davidka.net 

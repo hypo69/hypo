@@ -29,7 +29,7 @@ from src import gs
 from src.suppliers.supplier import Supplier
 from .alirequests import AliRequests
 from .aliapi import AliApi
-from src.logger import logger  
+from src.logger.logger import logger  
 
 class Aliexpress(Supplier, AliRequests, AliApi):
     """

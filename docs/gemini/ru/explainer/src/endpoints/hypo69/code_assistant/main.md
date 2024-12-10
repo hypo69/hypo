@@ -1,3 +1,4 @@
+```MD
 # <input code>
 
 ```python
@@ -7,7 +8,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.hypo69.code_assistant 
+.. module:: src.endpoints.hypo69.code_assistant 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -31,91 +32,172 @@ import argparse
 import json
 from pathlib import Path
 from .assistant import CodeAssistant
+
+def parse_args() -> dict:
+    """Парсинг аргументов командной строки.
+
+    Returns:
+        dict: Словарь с параметрами запуска.
+    """
+    parser = argparse.ArgumentParser(description='Code Assistant CLI')
+
+    parser.add_argument(
+        '--settings',
+        type=str,
+        help='Путь к файлу настроек JSON.',
+    )
+    parser.add_argument(
+        '--role',
+        type=str,
+        choices=['code_checker', 'code_analyzer', 'doc_writer', 'tests_creator'],
+        help='Выбор роли ассистента.',
+    )
+    parser.add_argument(
+        '--lang',
+        type=str,
+        choices=['ru', 'en'],
+        default='en',
+        help='Выбор языка.',
+    )
+    parser.add_argument(
+        '--models',
+        type=str,
+        nargs='+',
+        choices=['gemini', 'openai'],
+        help='Список моделей для использования.',
+    )
+    parser.add_argument(
+        '--start_dirs',
+        type=str,
+        nargs='+',
+        help='Список стартовых директорий.',
+    )
+
+    return vars(parser.parse_args())
+
+
+def main():
+    """Главная функция запуска CodeAssistant с параметрами из командной строки или файла настроек."""
+    print('Starting Code Assistant...')
+
+    args = parse_args()
+
+    # Если указан файл настроек, загружаем параметры из него
+    if args.get('settings'):
+        settings_path = Path(args['settings'])
+        if settings_path.exists():
+            with open(settings_path, 'r', encoding='utf-8') as file:
+                settings = json.load(file)
+            assistant = CodeAssistant(**settings)
+        else:
+            print(f'Файл настроек "{settings_path}" не найден.')
+            return
+    else:
+        # Создаем экземпляр ассистента с параметрами из командной строки
+        role = args.get('role')
+        lang = args.get('lang', 'en')
+        models = args.get('models', ['gemini'])
+        start_dirs = [Path(d) for d in args.get('start_dirs', [])]
+
+        assistant = CodeAssistant(role=role, lang=lang, model=models, start_dirs=start_dirs)
+
+    # Инициализация и запуск обработки
+    assistant.initialize_models()
+    assistant.process_files()
+
+
+if __name__ == '__main__':
+    main()
 ```
 
 # <algorithm>
 
-**Алгоритм работы:**
+**Шаг 1**: Парсинг аргументов командной строки (функция `parse_args`).
 
-1. **`parse_args()`:** Парсит аргументы командной строки (например, `--settings`, `--role`, `--lang`, `--models`, `--start_dirs`). Возвращает словарь `args` с полученными параметрами.
+- Принимает аргументы командной строки с помощью `argparse`.
+- Возвращает словарь `args` с параметрами (`--settings`, `--role`, `--lang`, `--models`, `--start_dirs`).
+- Пример: `python main.py --settings settings.json --role doc_writer --lang ru --models gemini openai`.
 
-    * **Пример:** `parse_args()` -> `{'settings': 'settings.json', 'role': 'doc_writer', 'lang': 'ru', 'models': ['gemini', 'openai'], 'start_dirs': ['/path/to/dir1', '/path/to/dir2']}`
+**Шаг 2**: Обработка файла настроек (если указан) или параметров командной строки.
 
+- Если задан `--settings`, то загружает настройки из файла `settings.json`.
+- Иначе, использует переданные параметры командной строки.
+- Пример: Если `settings.json` содержит `{role: 'doc_writer', lang: 'ru', ...}`, то `assistant` инициализируется с этими параметрами.
 
-2. **`main()`:**
-    * Выводит сообщение о запуске.
-    * Вызывает `parse_args()` для получения аргументов.
-    * **Проверяет наличие файла настроек:** Если аргумент `--settings` задан, то пытается загрузить настройки из файла `settings.json`. Если файл не существует, выводит сообщение об ошибке и завершает выполнение.
+**Шаг 3**: Создание экземпляра `CodeAssistant`.
 
-    * **Инициализация `CodeAssistant`:**
-        * Если файл настроек не указан, или если файл не найден, создаёт экземпляр `CodeAssistant` с параметрами из командной строки.
-        * Если файл настроек используется, то инициализирует `CodeAssistant` с параметрами из файла.
+- Используя полученные аргументы, создается экземпляр класса `CodeAssistant` (из `src.endpoints.hypo69.code_assistant.assistant`).
+- Данные из `args` передаются в конструктор `CodeAssistant` в виде аргументов (например, `role`, `lang`, `model`, `start_dirs`).
 
-    * **`assistant.initialize_models()`:** Инициализирует подключение к выбранным моделям (например, `gemini`, `openai`).
-    * **`assistant.process_files()`:** Обрабатывает файлы, заданные в `start_dirs`.  Эта функция реализована в `CodeAssistant` и выполняет основную работу по анализу, написанию документации или выполнения других задач.
+**Шаг 4**: Инициализация моделей (`assistant.initialize_models()`).
 
-3. **Функциональность `CodeAssistant`:** Внутри класса `CodeAssistant` реализуются конкретные логические шаги по обработке кода (например, анализ кода, создание документации, тестирование).
+- Вызывается метод `initialize_models()` у созданного объекта `assistant` для инициализации подключений к выбранным моделям (например, `gemini` или `openai`).
+- В зависимости от модели `assistant` взаимодействует с соответствующим API.
+
+**Шаг 5**: Обработка файлов (`assistant.process_files()`).
+
+- Вызывается метод `process_files()` у объекта `assistant`.
+- Метод обрабатывает файлы в указанных директориях `start_dirs` в соответствии с заданной ролью (`role`) и языком (`lang`).
+- Этот метод является центральным, `assistant` может использовать `initialize_models()` для запроса к моделям.
 
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[main.py] --> B(parse_args);
-    B --> C{settings file?};
-    C -- yes --> D[load settings];
-    C -- no --> E[get args from cmd];
-    D --> F[CodeAssistant(**settings)];
-    E --> G[CodeAssistant(role, lang, models, start_dirs)];
-    F --> H[initialize_models];
-    G --> H;
-    H --> I[process_files];
-    I --> J[Exit];
-    
-    subgraph CodeAssistant
-        H --> K[connect to models];
-        K --> L[process code];
-        L --> M[output result];
-        M --> I;
-    end
+    A[parse_args] --> B{args};
+    B -- settings.json --> C[Load Settings];
+    B -- No settings --> D[Create CodeAssistant];
+    C --> E[CodeAssistant];
+    D --> E;
+    E --> F[initialize_models];
+    F --> G[process_files];
+    G --> H[Exit];
 ```
+
+**Подключаемые зависимости:**
+
+- `argparse`: Для парсинга аргументов командной строки.
+- `json`: Для работы с файлами JSON.
+- `pathlib`: Для работы с путями к файлам.
+- `.assistant`: Подключает класс `CodeAssistant` из модуля `assistant.py`.
+- `src.endpoints.hypo69.code_assistant.assistant`: Содержит логику обработки запросов к моделям (LLM).
+
 
 # <explanation>
 
 **Импорты:**
 
-* `argparse`: Модуль для парсинга аргументов командной строки. Используется для получения параметров запуска программы.
-* `json`: Модуль для работы с JSON-файлами. Используется для загрузки настроек из файла.
-* `pathlib`: Модуль для работы с путями к файлам и директориям.  Используется для работы с файлами и каталогами.
-* `.assistant`:  Файл `assistant.py` внутри пакета `hypotez/src/endpoints/hypo69/code_assistant`, содержащий класс `CodeAssistant`. Связь – импорт из текущего модуля.
-
+- `argparse`: Используется для парсинга аргументов командной строки.
+- `json`: Используется для работы с JSON-файлами.
+- `pathlib`: Обеспечивает удобный способ работы с файловыми путями.
+- `.assistant`: Импортирует класс `CodeAssistant` из модуля `assistant.py`, который, вероятно, содержит логику взаимодействия с LLM (Large Language Models) – такими как `gemini` или `openai` для обработки кода.  Связь идет через `src.endpoints.hypo69.code_assistant`.
 
 **Классы:**
 
-* `CodeAssistant`:  Класс, отвечающий за основную логику работы с кодом (анализ, документация и т.д.).  Подробная информация о методах и атрибутах класса содержится в файле `assistant.py` и должна быть изучена отдельно.  Атрибуты (role, lang, models, start_dirs) определяют параметры работы.  Методы (initialize_models, process_files) управляют процессами.  
-    * Возможные взаимодействия:
-        * С различными моделями машинного обучения (например, `gemini`, `openai`).
-        * С файлами, директориями.
-        * С базами данных (если они используются в `CodeAssistant`).
+- `CodeAssistant`: Этот класс (определен в `assistant.py`) отвечает за всю логику ассистента. Атрибуты класса, скорее всего, содержат информацию о модели, языке, задаче и т.д. Методы класса (такие как `initialize_models()`, `process_files()`) определяют, как ассистент взаимодействует с LLM.
 
 **Функции:**
 
-* `parse_args()`: Парсит аргументы командной строки.  Принимает на вход аргументы командной строки, возвращает словарь с их значениями. Это позволяет гибко настраивать поведение программы извне.
-* `main()`: Главный метод программы.  Инициализирует `CodeAssistant` и запускает его работу с полученными настройками.
+- `parse_args()`: Парсит аргументы командной строки, возвращая словарь с переданными параметрами.
+- `main()`: Является основной функцией программы. Она парсит аргументы, создает экземпляр `CodeAssistant`, инициирует взаимодействие с LLM, и запускает обработку файлов.
 
 **Переменные:**
 
-* `MODE`: Строковая переменная, вероятно, используется для определения режима работы (например, `dev` или `prod`).
-* `args`: Словарь, содержащий параметры, полученные из командной строки или из файла настроек.
-
+- `MODE`: Переменная, содержащая значение `'dev'`. Вероятно, используется для выбора режима работы.
+- `args`: Словарь, содержащий переданные аргументы командной строки или параметры из настроек.
+- `settings_path`: Путь к файлу настроек.
+- `settings`: Словарь, содержащий загруженные настройки из файла.
+- `assistant`: Экземпляр класса `CodeAssistant`.
 
 **Возможные ошибки и улучшения:**
 
-* **Обработка ошибок:**  В коде присутствует проверка существования файла настроек, но нет проверки корректности данных в этом файле.  Важно добавить валидацию для `settings.json`.
-* **Логирование:**  Добавление логирования позволит отслеживать ход выполнения программы, особенно при возникновении проблем.
-* **Обработка исключений:**  Важно обработать все потенциальные исключения (например, `FileNotFoundError`, ошибки в формате JSON).
-* **Документация `CodeAssistant`:** Необходимо добавить подробную документацию к методам и атрибутам класса `CodeAssistant` в файле `assistant.py`.
+- Необходимо проверить корректность пути к файлу настроек `settings.json` перед его загрузкой.
+- В `process_files` нужно правильно обрабатывать возможные исключения, возникающие во время взаимодействия с LLM.
+- Необходима строгая типизация в `assistant.py`.
+- Документация для методов и классов `assistant.py` должна быть более исчерпывающей.
+- Улучшение структуры кода с использованием паттернов проектирования (например, фабрика для создания экземпляров моделей) может привести к большей гибкости.
 
 **Цепочка взаимосвязей:**
 
-Программа `main.py` использует класс `CodeAssistant` из `assistant.py`, который, предположительно, взаимодействует с моделями машинного обучения и обрабатывает файлы.  Для корректной работы требуются зависимости от библиотек, используемых в `CodeAssistant`.  Подробные взаимосвязи зависят от реализации класса `CodeAssistant`.
+`main.py` запускает `CodeAssistant` из модуля `assistant.py`. Модуль `assistant.py` взаимодействует с LLM (например, `gemini` или `openai`), используя соответствующие API. Вероятно, существуют дополнительные модули, которые также взаимодействуют с `CodeAssistant` или LLM.  Общая архитектура выглядит как `main.py` -> `assistant.py` -> `LLM`.

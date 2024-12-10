@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress.gui 
+.. module:: src.suppliers.aliexpress.gui 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -92,111 +92,113 @@ class MainApp(QtWidgets.QMainWindow):
 
 ```mermaid
 graph TD
-    A[MainApp.__init__] --> B{Create Tabs};
-    B --> C[Create JSON Editor Tab];
-    B --> D[Create Campaign Editor Tab];
-    B --> E[Create Product Editor Tab];
-    C --> F[CampaignEditor instantiation];
-    D --> G[CategoryEditor instantiation];
-    E --> H[ProductEditor instantiation];
-    B --> I[Create Menu Bar];
-    I --> J[Open Action];
-    J --> K[open_file];
-    K --> L[QFileDialog];
-    L --> M{Tab Index 0};
-    M -- Yes --> N[load_file];
-    N --> O[PromotionApp.load_file];
-    M -- No --> P;
-    P --> Q[Save Action];
-    Q --> R{Tab Index 0};
-    R -- Yes --> S[PromotionApp.save_changes];
-    R -- No --> T{Tab Index 2};
-    T -- Yes --> U[ProductEditor.save_product];
+    A[Main Application Starts] --> B{Create MainApp};
+    B --> C[Create Tabs];
+    C --> D[Create JSON Editor Tab];
+    D --> E[Create CampaignEditor];
+    C --> F[Create Campaign Editor Tab];
+    F --> G[Create CategoryEditor];
+    C --> H[Create Product Editor Tab];
+    H --> I[Create ProductEditor];
+    C --> J[Create Menu Bar];
+    J --> K[Connect File Menu Actions];
+    K --> L[open_file];
+    L --> M[Open File Dialog];
+    M --> N{File Path Valid?};
+    N -- Yes --> O[Load File (if JSON Editor tab)];
+    N -- No --> P[Do Nothing];
+    O --> Q[Call load_file in CampaignEditor];
+    K --> R[save_file];
+    R --> S{Current Tab?};
+    S -- JSON Editor --> T[Call save_changes in CampaignEditor];
+    S -- Product Editor --> U[Call save_product in ProductEditor];
+    J --> V[Connect Edit Menu Actions];
+    V --> W[copy];
+    W --> X[Copy text to clipboard (focus check)];
+    V --> Y[paste];
+    Y --> Z[Paste text from clipboard (focus check)];
+    B --> AA[Show Main Window];
+    AA --> AB[Event Loop starts];
+    AB --> AC[Run forever];
+    AC --> AD[Application runs];
 ```
 
 **Example Data Flow:**
-
-The user selects a JSON file (`campaign_file`).  `open_file` function calls `load_file`, which passes the file path to `promotion_app.load_file`. `PromotionApp` parses the JSON data and displays it in the JSON editor tab.
-
+1. User clicks "Open" in JSON Editor tab.
+2. `open_file` is called in `MainApp`.
+3. `open_file` shows a file dialog and gets the file path.
+4. The file path (`campaign_file`) is passed to `load_file` in `CampaignEditor`.
 
 # <mermaid>
 
 ```mermaid
 graph LR
     subgraph MainApp
-        MainApp --> CampaignEditor
-        MainApp --> CategoryEditor
-        MainApp --> ProductEditor
+        MainApp((MainApp)) --> CampaignEditor((CampaignEditor));
+        MainApp --> CategoryEditor((CategoryEditor));
+        MainApp --> ProductEditor((ProductEditor));
     end
-    subgraph CampaignEditor
-        CampaignEditor --> AliCampaignEditor
-    end
-    subgraph CategoryEditor
-    end
-    subgraph ProductEditor
-    end
-    MainApp --> QFileDialog;
-    QFileDialog --> MainApp;
-    MainApp --> QtWidgets;
-    QtWidgets --> QtGui;
-    QtWidgets --> QtCore;
-    MainApp --> Path;
-    MainApp --> j_loads_ns;
-    MainApp --> j_dumps;
-    MainApp --> styles;
-    MainApp --> header;
-    MainApp --> asyncio;
-    MainApp --> sys;
-    MainApp --> qasync;
-    style MainApp fill:#ccf,stroke:#333,stroke-width:2px
-    style CampaignEditor fill:#eee,stroke:#555,stroke-width:2px
-    style CategoryEditor fill:#ddd,stroke:#777,stroke-width:2px
-    style ProductEditor fill:#ccc,stroke:#999,stroke-width:2px
+
+    CampaignEditor --> JSON_Editor((JSON Editor));
+    CategoryEditor --> Campaign_Editor((Campaign Editor));
+    ProductEditor --> Product_Editor((Product Editor));
+
+    JSON_Editor --open_file--> MainApp;
+    JSON_Editor --save_changes--> MainApp;
+    Campaign_Editor --open_file--> MainApp;
+    Product_Editor --save_product--> MainApp;
+    MainApp --open_file--> QFileDialog((File Dialog));
+    MainApp --copy--> Clipboard((Clipboard));
+    MainApp --paste--> Clipboard;
+
+
+    style JSON_Editor fill:#f9f,stroke:#333,stroke-width:2px;
+    style Campaign_Editor fill:#ccf,stroke:#333,stroke-width:2px;
+    style Product_Editor fill:#ccf,stroke:#333,stroke-width:2px;
+    style MainApp fill:#ccf,stroke:#333,stroke-width:2px;
 ```
 
-This mermaid code shows the main dependencies between the `MainApp` class and other components, including `CampaignEditor`, `CategoryEditor`, `ProductEditor`, and PyQt6, etc.  It illustrates the class-based structure, while the data flow is explained separately in the `algorithm` section.
-
+**Dependencies Analysis:**
+- PyQt6: Used for creating the GUI.
+- qasync: For asynchronous operations within the PyQt GUI.
+- pathlib: For working with file paths.
+- jjson: For handling JSON data.
+- product.py, campaign.py, category.py, AliCampaignEditor.py, styles.py: These modules likely define the UI elements and logic for editing products, campaigns, and categories.
 
 
 # <explanation>
 
-**Импорты:**
+- **Imports:**
+    - `header`: Likely contains general header files or imports for the project, potentially initializing environment variables, paths, etc. (without further context, harder to say).
+    - `asyncio`: Used for asynchronous operations, especially important when interacting with external resources or performing I/O-bound tasks.
+    - `sys`: Provides access to system-specific parameters and functions, like command-line arguments and exiting the application.
+    - `QtWidgets`, `QtGui`, `QtCore`: Core PyQt6 modules for building the application's graphical user interface (GUI).
+    - `QEventLoop`: Used for managing asynchronous operations within the PyQt application, needed for the interaction with external asynchronous tasks.
+    - `Path`: From `pathlib`, for more robust and object-oriented file path handling.
+    - `j_loads_ns`, `j_dumps`: Likely custom functions for working with JSON data; `src.utils.jjson` probably contains these functions to efficiently load/dump and potentially handle specific JSON formats or namespaces.
+    - `ProductEditor`, `CampaignEditor`, `CategoryEditor`, `AliCampaignEditor`: These classes likely implement the UI and logic for editing products, campaigns, and categories. They are from the `src` directory.
+    - `styles`: Probably contains definitions for styles (e.g., colors, fonts) that customize the appearance of the application.
 
-- `header`:  Likely a custom module, crucial to the specific project and not explicitly explained within the snippet. Understanding its contents would need the `header.py` file.
-- `asyncio`:  Used for asynchronous operations, which could be important for handling potentially time-consuming tasks.
-- `sys`: Provides access to system-specific parameters and functions, commonly used for managing the application's execution.
-- `PyQt6`: The primary GUI framework for the project, providing widgets and tools for creating the user interface.
-- `QEventLoop`:  From `qasync`, essential for managing asynchronous operations within the PyQt6 context.
-- `Path`: From `pathlib`, for working with file paths in a platform-independent manner.
-- `j_loads_ns`, `j_dumps`: Functions from `src.utils.jjson` for loading and saving JSON data. This likely handles JSON with namespace support.
-- `ProductEditor`, `CampaignEditor`, `CategoryEditor`, `AliCampaignEditor`: Custom classes for handling different aspects of managing campaigns and products. They likely reside in different modules (e.g. `src.suppliers.aliexpress.campaign.py`, `src.product.py`, etc.).
-- `styles`:  Likely a module containing styling functions, such as `set_fixed_size`.
+- **Classes:**
+    - `MainApp`: The main application class, inheriting from `QtWidgets.QMainWindow`. It's responsible for setting up the main window, creating tabs (using `QTabWidget`), creating instances of editor classes (for JSON editing, campaign editing and product editing) and connecting menu actions to functions.  The `create_menubar` method creates and populates the application's menu bar.
 
-**Классы:**
+- **Functions:**
+    - `open_file()`: Opens a file dialog to select a JSON file and loads the content. It checks the current tab to determine which editor to load the file into. It calls `load_file` within the relevant editor.
+    - `save_file()`: Saves changes depending on the active tab, calling either `save_changes` on `CampaignEditor` (tab 1) or `save_product` on `ProductEditor` (tab 3).
+    - `exit_application()`: Closes the application.
+    - `copy()`, `paste()`: Basic copy-paste functionality, checking for valid focus widget to avoid errors.
 
-- `MainApp`: The main application window.
-    - `__init__`: Initializes the main window, creates tabs for JSON editing, Campaign, Product editing, and a menu bar.
-    - `create_menubar`:  Creates the menu bar with `File` and `Edit` options.  The key methods like `open_file`, `save_file`, `exit_application`, and the file-related actions (open, save, exit) are connected to actions triggered by user interactions.
-    - `open_file`, `save_file`, `exit_application`, `copy`, `paste`: Methods to handle file operations, copying/pasting text (using clipboard), and application closing.  These methods demonstrate a clear structure in handling user interactions.
-    - `load_file`: Loads a JSON file, potentially parsing it using `j_loads_ns`, based on the index of the tab that is currently selected. Critically important is the error handling in this function (using `try...except`).
-- `CampaignEditor`, `CategoryEditor`, `ProductEditor`, `AliCampaignEditor`:  Subclasses or similar specialized classes responsible for handling specific aspects of campaign management or product editing.  They implement methods such as `load_file` and `save_changes` that likely interact with data from the JSON data or data from their specific sources.  The `AliCampaignEditor` suggests handling campaigns specific to AliExpress.  The lack of detail about these classes makes it hard to analyze their full implementation, but the structure is consistent with a tab-based application.
-
-
-**Функции:**
-
-- `main()`: Initializes the Qt application and creates an instance of the `MainApp` class.  It ensures proper handling of asynchronous operations using the QEventLoop. This is crucial for interaction with the GUI framework.
-
-**Переменные:**
-
-- `MODE`: Likely stores the current mode of operation (e.g., 'dev', 'prod'), potentially used for conditional logic within other modules.
-
-**Возможные ошибки и улучшения:**
-
-- **Error Handling:** While `load_file` has `try...except`, other critical functions might lack it, leading to crashes. Consider adding error handling in critical parts of the code.
-- **Data Validation:**  The code lacks data validation (e.g. checking JSON structure) when loading JSON.  This could lead to unexpected errors.
-- **Dependency Management:**  The code doesn't explicitly declare the dependencies.  The use of `src` suggests a package structure, but the precise dependencies should be documented and possibly managed using `requirements.txt`.  A missing `header` file without documentation makes understanding the program much more difficult.
+- **Variables:**
+    - `MODE`: A string variable likely holding the current mode of operation ('dev' in this example).
 
 
-**Взаимосвязи с другими частями проекта:**
+**Possible Errors/Improvements:**
+- **Error Handling:** The `load_file` method has a `try...except` block, but error handling should be more comprehensive across the application.  Consider more specific error types.
+- **GUI responsiveness:** With large JSON files, loading and saving could block the UI.  Consider using background threads or asynchronous operations (which is already present) to prevent the UI from freezing.
+- **Data Validation:** The code doesn't validate the JSON data loaded. Add validation to ensure that the loaded data matches the expected format to prevent unexpected behavior.
+- **File Format/data validation:** The `open_file` method currently supports only JSON files. Add the ability to load other file formats if needed.
+- **Clearer Tab Management:**  Consider using more descriptive tab names or making a more clear way to communicate between tabs and editors.
+- **Missing Comments**: Add comments to explain the purpose of each step in the code and any specific logic or interactions.
 
-The code heavily relies on other modules within the `hypotez` package, specifically `src.utils.jjson`, `product`, `campaign`, `category`, and `src.suppliers.aliexpress.campaign`.  Without the implementation details of these components, one can't definitively trace the full interactions, but the code structure suggests a modular design. A detailed analysis would involve inspecting the relevant parts of `src`.
+**Project Interconnections:**
+This file (`main.py`) is part of a larger application managing advertising campaigns from AliExpress. It relies heavily on classes from modules like `product.py`, `campaign.py`, `category.py`, and `src.suppliers.aliexpress.campaign.py`. Data is passed between `MainApp`, these editors, and potentially other parts of the application.

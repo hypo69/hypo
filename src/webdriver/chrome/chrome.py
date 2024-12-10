@@ -49,7 +49,7 @@ from src import gs
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 
 class Chrome(webdriver.Chrome):

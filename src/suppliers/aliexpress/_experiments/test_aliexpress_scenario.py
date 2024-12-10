@@ -51,7 +51,7 @@ from src import gs
 from src.suppliers import Supplier
 from src.product import Product
 from categories import Category
-from src.logger import logger
+from src.logger.logger import logger
 
 
 

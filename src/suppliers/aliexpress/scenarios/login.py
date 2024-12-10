@@ -18,7 +18,7 @@ import selenium.webdriver as WebDriver
 from pathlib import Path
 
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 
 def login(s)->bool:
     """ login to aliexpress via webdriver

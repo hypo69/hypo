@@ -51,7 +51,7 @@ from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
 from src.webdriver.proxy import download_proxies_list, get_proxies_dict, check_proxy
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 from fake_useragent import UserAgent
 
 import header

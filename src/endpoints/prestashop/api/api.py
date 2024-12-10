@@ -32,7 +32,7 @@ from src.utils.convertors.xml2dict import xml2dict
 from src.utils.image import save_png_from_url
 from src.utils.printer import pprint
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.logger import logger
+from src.logger.logger import logger
 from src.logger.exceptions import PrestaShopException, PrestaShopAuthenticationError
 
 

@@ -30,7 +30,7 @@ Classes:
 MODE = 'dev'
 
 from typing import Optional
-from src.logger import logger
+from src.logger.logger import logger
 from selenium.common.exceptions import WebDriverException as WDriverException
 from pykeepass.exceptions import (CredentialsError, BinaryError,
                                    HeaderChecksumError, PayloadChecksumError, 

@@ -23,7 +23,7 @@ from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
 from fake_useragent import UserAgent
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns
 
 

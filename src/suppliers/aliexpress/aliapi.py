@@ -25,7 +25,7 @@ from src import gs
 from src.utils.jjson import j_loads_ns, j_loads, j_dumps
 from src.utils.printer import pprint
 from src.utils.convertors.json import json2csv
-from src.logger import logger
+from src.logger.logger import logger
 from .api import AliexpressApi
 
 from src.db.manager_categories import AliexpressCategory, CategoryManager

@@ -53,7 +53,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 import header
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.logger.exceptions import (
     DefaultSettingsException,
     ExecuteLocatorException,

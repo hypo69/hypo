@@ -25,7 +25,7 @@ from reportlab.pdfgen import canvas
 from fpdf import FPDF
 from weasyprint import HTML
 from xhtml2pdf import pisa
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.printer import pprint
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:

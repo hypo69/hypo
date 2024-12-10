@@ -56,7 +56,7 @@ import pytest
 from unittest.mock import Mock, patch, PropertyMock
 from selenium.common.exceptions import InvalidArgumentException
 from src.webdriver.driver import DriverBase
-from src.logger import logger
+from src.logger.logger import logger
 
 
 class TestDriverBase:

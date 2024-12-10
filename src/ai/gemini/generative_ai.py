@@ -31,7 +31,7 @@ from google.api_core.exceptions import (
     InvalidArgument,
 )
 from google.auth.exceptions import DefaultCredentialsError, RefreshError
-from src.logger import logger
+from src.logger.logger import logger
 from src import gs
 from src.utils.printer import pprint
 from src.utils.file import read_text_file, save_text_file

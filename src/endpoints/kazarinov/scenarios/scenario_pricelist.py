@@ -48,7 +48,7 @@ from src.utils.file import read_text_file, save_text_file, recursively_get_file_
 from src.utils.image import save_png_from_url, save_png
 from src.utils.convertors.unicode import decode_unicode_escape
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 
 class MexironBuilder:
@@ -302,8 +302,9 @@ flowchart TD
             Модель может возвращать невелидный результат.
             В таком случае я переспрашиваю модель разумное количество раз.
         """
-        if attempts <= 0:
-            return False  # return early if no attempts are left
+        if attempts < 1:
+            ...
+            return {}  # return early if no attempts are left
         model_command = Path(gs.path.endpoints / 'kazarinov' / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
         # Request response from the AI model
         response = self.model.ask(model_command + '\n' + str(products_list))
@@ -316,8 +317,10 @@ flowchart TD
         if not response_dict:
             logger.error("Ошибка парсинга ответа модели", None, False)
             if attempts >1:
+                ...
                 await self.process_ai(lang, attempts -1 )
             return {}
+        return  response_dict
 
  
     async def post_facebook(self, mexiron:SimpleNamespace) -> bool:

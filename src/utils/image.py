@@ -58,7 +58,7 @@ import aiofiles
 from PIL import Image
 from pathlib import Path
 import asyncio
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.printer import pprint
 
 

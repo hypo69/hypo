@@ -41,7 +41,7 @@ import header
 from src import gs
 from src.utils.jjson import j_loads_ns,j_dumps
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 def htmlColorToJSON(htmlColor):
     if htmlColor.startswith("#"):

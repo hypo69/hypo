@@ -25,7 +25,7 @@ from fake_useragent import UserAgent
 from selenium.common.exceptions import WebDriverException
 from src import gs
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 class Chrome(webdriver.Chrome):
     """ Subclass of `selenium.webdriver.Chrome` that provides additional functionality."""

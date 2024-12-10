@@ -2,12 +2,9 @@
 
 ```python
 ## \file hypotez/src/scenario/_examples/_example_executor.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
 """
-.. module: src.scenario._examples 
+.. module:: src.scenario._examples 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -92,77 +89,119 @@ class MockDriver:
     def get_url(self, url):
         return True
 
+
 # ... (rest of the code)
 ```
 
 # <algorithm>
 
-The code defines a set of examples demonstrating how to use functions from the `src.scenario.executor` module. These functions likely handle the execution of scenarios, which might involve interacting with a PrestaShop API.
+The code defines several example functions demonstrating the usage of the `executor` module functions.  A `MockSupplier` class is used for testing purposes.  The `MockRelatedModules` class simulates fetching product data and `MockDriver` simulates driver functionality.  Each example function utilizes these functions and classes to execute various scenario types (multiple files, single file, single scenario).
 
-**Example Execution Flow (e.g., `example_run_scenario_files`):**
+**Example 1 (run_scenario_files):**
+1. Creates a `MockSupplier` instance.
+2. Defines a list of scenario files.
+3. Calls `run_scenario_files` passing the `supplier` and `scenario_files` to execute each file.
+4. Checks the result of `run_scenario_files` and prints appropriate messages.
 
-1. **Create a `MockSupplier` object:** This object simulates a data source (e.g., a PrestaShop store) that contains the scenarios and related data.
-2. **Define a list of scenario files (`scenario_files`):**  This could be a list of JSON files describing the scenarios to run.
-3. **Call `run_scenario_files`:** This function takes the `supplier` and `scenario_files` and executes all scenarios from those files.  It likely interacts with the `MockSupplier` methods to retrieve scenario details.
-4. **Check the result of execution:**  The function checks if execution was successful based on the return value.
-5. **Print a message based on the result:**  Prints whether all scenarios executed successfully or if some failed.
+**Example 2 (run_scenario_file):**
+1. Creates a `MockSupplier` instance.
+2. Defines a single scenario file.
+3. Calls `run_scenario_file` passing the `supplier` and `scenario_file` to execute the file.
+4. Checks the result and prints messages accordingly.
 
-This pattern is repeated for different execution scenarios with different inputs (single file, single scenario, etc). The code then calls various examples that use `src.scenario.executor` functions.
+**Data Flow:**  Scenario data (`scenario_files`, `scenario`) is passed to the functions.  The `MockSupplier` class likely interacts with other parts of the project to retrieve and process the scenario data. The result, indicating success or failure, is then passed back to the calling function.
+
 
 # <mermaid>
 
 ```mermaid
 graph LR
-    A[main] --> B{run_scenario_files};
-    B --> C[MockSupplier];
-    C --> D{scenario_files};
-    D -.-> E{scenario execution (executor)};
-    E --> F{result};
-    F --success--> G[print success];
-    F --failure--> H[print failure];
+    A[main] --> B(example_run_scenario_files);
+    B --> C{run_scenario_files};
+    C --> D[MockSupplier];
+    D --> E[Scenario Files];
+    E --> F(Processing);
+    F --> G[Result];
+    G --> B;
+    
+    A --> H(example_run_scenario_file);
+    H --> I{run_scenario_file};
+    I --> J[MockSupplier];
+    J --> K[Scenario File];
+    K --> L(Processing);
+    L --> M[Result];
+    M --> H;
 
-    subgraph Supplier
-        C --> I[scenario1.json];
-        C --> J[scenario2.json];
-    end
-    subgraph executor
-        E -.-> K[insert_grabbed_data];
-        K --> L[ProductFields];
+
+    
+    subgraph PrestaShop Interactions
+        A --> N[example_insert_grabbed_data];
+        N --> O{insert_grabbed_data};
+        O --> P[ProductFields];
+        P --> Q[PrestaShop API];
+        Q --> R[Data Insertion];
     end
 
-    subgraph PrestaShop interaction
-        K --> M[execute_PrestaShop_insert];
-    end
+
+    A --> S[example_add_coupon];
+    S --> T{add_coupon};
+    T --> U[credentials];
+    U --> V[API Call];
+    V --> W[Coupon Added];
+    W --> S;
+
+    
+    A --> X[example_execute_PrestaShop_insert_async];
+    X --> Y{execute_PrestaShop_insert_async};
+    Y --> Z[ProductFields];
+    Z --> AA[PrestaShop API async];
+    AA --> AB[Async Operation];
+    AB --> AC[Result];
+    AC --> X;
+    
+    A --> AD[example_execute_PrestaShop_insert];
+    AD --> AE{execute_PrestaShop_insert};
+    AE --> AF[ProductFields];
+    AF --> AG[PrestaShop API];
+    AG --> AH[Sync Operation];
+    AH --> AI[Result];
+    AI --> AD;
 ```
 
-**Dependencies:**
-
-* **`src.scenario.executor`:**  Contains functions for running scenarios, likely handling file loading, scenario processing, and API calls.
-* **`src.utils.jjson`:** A module for handling JSON data.
-* **`src.product.product_fields`:** Likely a module defining the structure of product data.
-* **`src.endpoints.PrestaShop`:** A module that interacts with PrestaShop API, containing functions like `execute_PrestaShop_insert`, `add_coupon`.
-
-The code heavily relies on `MockSupplier`, `MockRelatedModules`, `MockDriver` to simulate the execution process without directly calling the actual PrestaShop or other external services.  These mock objects implement necessary methods (e.g., fetching scenario data, product details) to simulate the real-world interaction.
+**Dependencies:** The diagram shows dependencies between the examples and the `run_scenario_files`, `run_scenario_file`, `insert_grabbed_data`, etc., functions, as well as dependencies on the  `MockSupplier`, `MockRelatedModules`, `MockDriver`, and `ProductFields` classes. It illustrates that these example functions are responsible for calling the functions from the `executor` module.  The arrows also represent data flow between parts of the code.
 
 
 # <explanation>
 
-* **Imports:** The code imports necessary modules from within the `src` package, including functions for running scenarios, handling JSON, product data, and PrestaShop API interactions. This structure suggests a modular design within a larger project.
+**Imports:**
+- `asyncio`: Enables asynchronous operations, important for potentially time-consuming tasks like API calls.
+- `pathlib`: Provides a way to work with file paths in a more object-oriented way, making code more readable and platform-independent.
+- `src.scenario.executor`: Contains functions like `run_scenario_files`, `run_scenario_file`, etc. for executing scenarios, and it's crucial for the main functionality of the module.
+- `src.utils.jjson`: Probably handles JSON parsing and serialization.
+- `src.product.product_fields`: Contains the `ProductFields` class for storing and manipulating product data.
+- `src.endpoints.PrestaShop`: Contains the `PrestaShop` class to interact with the PrestaShop API (likely for product insertion and coupon management).
 
-* **Classes:**
-    * **`MockSupplier`:** A mock class that simulates a supplier providing scenario data, settings, and related module interactions. It avoids actual API calls, replacing them with mock objects.
-    * **`MockRelatedModules`:** Mock for module that fetch product data. This likely represents a layer that fetches product information from the web or other data sources.
-    * **`MockDriver`:** Mock for driver class that likely handles web requests, in this case, returning a boolean value for testing purposes.
+**Classes:**
 
-* **Functions:** The examples demonstrate usage of functions from `src.scenario.executor`, like running scenarios from files, single scenarios, or performing API operations (adding coupons).
+- `MockSupplier`: This is a mock class, used for testing purposes, representing a supplier of scenario data.  It simulates the behavior of a class responsible for managing scenario execution. It has attributes related to scenario files, settings, and interactions with other modules.
+- `MockRelatedModules`:  Simulates fetching product details and handles the API calls.
+- `MockDriver`: A mock class, critical for testing, simulating the functionality of a driver object, handling interactions with external systems or browsers.
+- `ProductFields`: Represents product data, including PrestaShop fields and auxiliary data.
 
-* **Variables:** Variables like `MODE` and different example scenarios (`scenario`, `scenario_files`) are used to control the execution flow and pass data to the functions.
+**Functions:**
 
-* **Possible Errors/Improvements:**
-    * **Missing error handling:** The code lacks error handling for failures within the scenario execution or API interactions.  Adding try/except blocks could improve robustness.
-    * **Dependency on Mock objects:**  The use of mock objects makes the code testable, but the actual code should be integrated with the PrestaShop API and appropriate data sources instead.
-    * **Scenario Validation:**  There might be some validation logic missing to ensure the scenarios are properly formatted before execution.
-    * **Logging:** Adding logging would significantly aid in debugging and monitoring the execution process.
+- Example functions (`example_run_scenario_files`, `example_run_scenario_file`, etc.):  These functions demonstrate how to use the `executor` functions (`run_scenario_files`, `run_scenario_file`, `run_scenario`, `add_coupon`, etc.) and other functions related to interacting with the PrestaShop API to execute scenarios and manage data. They are the entry points for executing different test cases.
+- `run_scenario_files`, `run_scenario_file`, `run_scenarios`, `run_scenario`, `insert_grabbed_data`, `execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`, `add_coupon`: These functions are likely the core functions of the `executor` module, responsible for running scenarios, handling product data, interacting with the PrestaShop API, and performing other actions. The `run_` functions appear to deal with scenario execution (files, single scenarios, etc.), while the `insert_` and `execute_` functions are specific to PrestaShop interactions.
+
+**Possible Improvements:**
+
+- The use of mocks (`MockSupplier`, `MockRelatedModules`, etc.) is good for testing; however, consider making them into a more structured testing setup (e.g., using a testing framework like pytest) to improve testability and maintainability of the code.
+- The example data in the function calls is very simple. Adding more diverse data, particularly for validating edge cases (empty files, malformed JSON, and invalid data) within the scenario files, would strengthen the test cases and robustness of the code.
+- Logging within the example functions will greatly increase debugging capability and help track where a scenario fails.
+- More descriptive variable names will improve readability, especially for function parameters.
+- Clear error handling and exception management in the core functions would make the code more robust and easier to debug in case of errors during scenario execution.
 
 
-**Relationship to Other Parts of the Project:** This code interacts with various modules (`src.scenario.executor`, `src.utils.jjson`, `src.product.product_fields`, `src.endpoints.PrestaShop`) within the `src` package. The modular architecture suggests a larger project where different parts handle various aspects of scenario execution and PrestaShop API management.
+**Relationships to Other Parts of the Project:**
+
+The code heavily depends on the `executor` module, `jjson` utilities, the `ProductFields` class from the `product` package, and the `PrestaShop` class from the `endpoints` package.  The structure suggests a well-organized project with clear responsibilities.  The  `supplier`, `related_modules`, and `driver` parts could be more fleshed out to describe interactions and data flow to other components of the system.

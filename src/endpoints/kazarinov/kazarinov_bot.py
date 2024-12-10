@@ -31,7 +31,7 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import recursively_read_text_files, save_text_file
 from src.utils.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.logger import logger
+from src.logger.logger import logger
 
 class KazarinovTelegramBot(TelegramBot, BotHandler):
     """Telegram bot with custom behavior for Kazarinov."""

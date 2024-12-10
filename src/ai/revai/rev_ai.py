@@ -25,7 +25,7 @@
 
 """
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.logger import logger
+from src.logger.logger import logger
 import requests
 import os
 

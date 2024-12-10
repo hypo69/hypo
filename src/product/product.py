@@ -17,7 +17,7 @@ from src import gs
 from src.endpoints.prestashop import PrestaShop  # Explicit import
 from src.category import Category
 from src.product.product_fields import ProductFields
-from src.logger import logger
+from src.logger.logger import logger
 
 
 class Product(ProductFields, PrestaShop):

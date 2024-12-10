@@ -26,7 +26,7 @@ from src import gs
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.bots.telegram import TelegramBot
-from src.logger import logger
+from src.logger.logger import logger
 
 
 class OnelaBot(TelegramBot):

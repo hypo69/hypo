@@ -25,7 +25,7 @@ The `ExecuteLocator` class is designed to execute navigation algorithms and inte
    from src import gs 
    from src.utils.printer import pprint, j_loads, j_loads_ns, j_dumps, save_png
    
-   from src.logger import logger
+   from src.logger.logger import logger
    from src.logger.exceptions import DefaultSettingsException, WebDriverException, ExecuteLocatorException
    ```
 

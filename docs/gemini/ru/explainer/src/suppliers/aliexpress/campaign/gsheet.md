@@ -1,4 +1,3 @@
-```MD
 # <input code>
 
 ```python
@@ -8,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress.campaign 
+.. module:: src.suppliers.aliexpress.campaign 
 	:platform: Windows, Unix
 	:synopsis:  Редактор рекламной кампании через гугл таблицами
 
@@ -17,7 +16,7 @@ MODE = 'dev'
 
 import time
 from types import SimpleNamespace
-from typing import Optional, Any
+from typing import Optional, Any, List, Dict
 #from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 from gspread.worksheet import Worksheet
 from src.goog.spreadsheet.spreadsheet import SpreadSheet
@@ -25,174 +24,143 @@ from src.utils.jjson import j_dumps
 from src.utils.printer import pprint
 from src.logger import logger
 
-
 from src.ai.openai import translate
 from types import SimpleNamespace
-from typing import Optional, List, Dict
 # from gspread.worksheet import Worksheet
-# from gspread_formatting import (
-#     cellFormat, 
-#     textFormat, 
-#     numberFormat, 
-#     format_cell_range,
-#     set_column_width,
-#     set_row_height,
-#     Color
-# )
-# from src.goog.spreadsheet.spreadsheet import SpreadSheet
-from src.utils.printer import pprint
-from src.logger import logger
-
-class AliCampaignGoogleSheet(SpreadSheet):
-    """ Класс для работы с Google Sheets в рамках кампаний AliExpress.
-    
-    Наследует класс SpreadSheet и предоставляет дополнительные методы для управления листами Google Sheets,
-    записи данных о категориях и продуктах, и форматирования листов.
-    """
-    
-    spreadsheet_id = '1nu4mNNFMzSePlggaaL_QM2vdKVP_NNBl2OG7R9MNrs0'
-    spreadsheet: SpreadSheet = None
-    worksheet: Worksheet = None
-   
-
-    def __init__(self, campaign_name: str, language: str | dict = None, currency: str = None):
-        """ Initialize AliCampaignGoogleSheet with specified Google Sheets spreadsheet ID and additional parameters.
-        @param campaign_name `str`: The name of the campaign.
-        @param category_name `str`: The name of the category.   
-        @param language `str`: The language for the campaign.
-        @param currency `str`: The currency for the campaign.
-        """
-        # Initialize SpreadSheet with the spreadsheet ID
-        super().__init__(spreadsheet_id = self.spreadsheet_id)
-        #self.capmaign_editor = AliCampaignEditor(campaign_name=campaign_name, language=language, currency=currency)
-        # if campaign_editor:
-        #     self.set_campaign_worksheet(campaign_editor.campaign)
-        #     self.set_categories_worksheet(campaign_editor.campaign.category)
-        
-
-    # ... (rest of the code)
+# ... (rest of imports)
+# ... (rest of the code)
 ```
 
 # <algorithm>
 
-**Шаг 1:** Инициализация `AliCampaignGoogleSheet`
+**Шаг 1: Импорты**
+* Импортируются необходимые библиотеки, такие как `time`, `SimpleNamespace`, `typing` для типов данных, `gspread` для работы с Google Sheets, `pprint` для вывода данных, `logger` для логирования.  
+* Из модулей `src` импортируются классы `SpreadSheet`, функции, использующие `logger`.  
+* Пример: `from src.goog.spreadsheet.spreadsheet import SpreadSheet` - импорт класса `SpreadSheet` из подпапки `spreadsheet` в `src`.
 
-- Создается объект `AliCampaignGoogleSheet` с указанием `spreadsheet_id`.
-- Вызывается конструктор родительского класса `SpreadSheet`.
+**Шаг 2: Класс AliCampaignGoogleSheet**
+* Наследует класс `SpreadSheet`, расширяя его функционал для работы с кампаниями AliExpress.
+* Имеет атрибут `spreadsheet_id` с ID Google Sheets.
+* Метод `__init__` инициализирует родительский класс `SpreadSheet` с `spreadsheet_id`.
+* Методы `clear`, `delete_products_worksheets` удаляют листы Google Sheets, за исключением указанных.
+* Методы `set_campaign_worksheet`, `set_products_worksheet`, `set_categories_worksheet` заполняют данные из `SimpleNamespace` объектов в таблицы.  
+* Методы `get_categories`, `set_category_products` - Получают и записывают данные в листы "categories" и  "products" соответственно.
 
-**Шаг 2:** Очистка таблицы (`clear`)
+**Шаг 3: Метод `set_campaign_worksheet`**
+1. Получает лист `campaign`.
+2. Подготавливает данные для записи в вертикальном формате.  Например, `[('A1', 'Campaign Name', 'My Campaign'), ('A2', 'Campaign Title', 'Summer Sale')]`
+3. Использует `batch_update` для эффективной записи данных.
 
-- Удаляются все листы, кроме 'categories' и 'product'.
-- Обработка возможных ошибок.
+**Шаг 4: Метод `set_products_worksheet`**
+1. Получает данные о продуктах из объекта `category`.
+2. Создает список данных для строк.  Пример: `[['product_id', 'title', 'link', ...]]`
+3. Записывает данные в лист.
 
-**Шаг 3:** Запись данных кампании (`set_campaign_worksheet`)
+**Шаг 5: Метод `set_categories_worksheet`**
+1. Получает лист `categories`.
+2. Очищает лист перед записью.
+3. Проверяет, что в `categories` присутствуют требуемые атрибуты.
+4. Записывает данные в лист, используя список данных `rows`.
 
-- Получается лист 'campaign'.
-- Данные кампании (из объекта `campaign`) записываются в лист в вертикальном формате (A1, A2, A3...).
-- Обработка возможных ошибок.
 
-**Шаг 4:** Запись данных категорий (`set_categories_worksheet`)
-
-- Очищается лист 'categories'.
-- Получаются данные категорий (из объекта `categories`).
-- Проверяется наличие необходимых атрибутов у каждой категории.
-- Заголовки и данные записываются в лист 'categories'.
-- Форматируется лист.
-- Обработка возможных ошибок.
-
-**Шаг 5:** Запись данных продуктов (`set_products_worksheet`)
-
-- Получаются данные продуктов из соответствующей категории.
-- Создается новый лист для продуктов.
-- Данные продуктов (из объекта `products`) записываются в лист.
-- Форматируется лист.
-- Обработка возможных ошибок.
+Пример обмена данными: Объект `SimpleNamespace` (campaign, category, products) передает данные в методы `set_campaign_worksheet`, `set_products_worksheet`, `set_categories_worksheet`. Эти методы записывают данные в листы Google Sheets. Метод `get_categories` получает данные обратно.
 
 
 # <mermaid>
 
 ```mermaid
-graph LR
+graph TD
     A[AliCampaignGoogleSheet] --> B{__init__};
-    B --> C[SpreadSheet];
-    C --> D[set_campaign_worksheet];
-    C --> E[set_categories_worksheet];
-    C --> F[set_products_worksheet];
-    C --> G[clear];
-    C --> H[get_categories];
+    B --> C[SpreadSheet.__init__];
+    C --> D[Получение Spreadsheet];
+    D --> E[Запись данных (set_campaign_worksheet, set_products_worksheet, set_categories_worksheet)];
+    E --> F[Google Sheets];
+    F --> G[Выполнение batch_update];
+    G --> F;
+    A --> H{clear, delete_products_worksheets};
+    H --> F;
+    A --> I{get_categories};
+    I --> F;
+    I --> J[Возврат данных];
     
-    subgraph "Google Sheets Interactions"
-        D --> I[Get Worksheet('campaign')];
-        I --> J[Batch Update];
-        E --> K[Get Worksheet('categories')];
-        K --> L[Clear];
-        K --> M[Update Headers];
-        K --> N[Update Rows];
-        K --> O[Format];
-        F --> P[Copy Worksheet('product')];
-        P --> Q[Update Headers];
-        P --> R[Update Rows];
-        P --> S[Format];
-        G --> T[Delete Worksheets];
+    subgraph SpreadSheet
+        C --> K[Получение Worksheet];
     end
-    H --> U[Get Worksheet('categories')];
-    U --> V[Get Records];
-    
-    
-    
-    style B fill:#f9f,stroke:#333,stroke-width:2px;
-    style C fill:#ccf,stroke:#333,stroke-width:2px;
-    style D fill:#ccf,stroke:#333,stroke-width:2px;
-    style E fill:#ccf,stroke:#333,stroke-width:2px;
-    style F fill:#ccf,stroke:#333,stroke-width:2px;
-    style G fill:#ccf,stroke:#333,stroke-width:2px;
-    style H fill:#ccf,stroke:#333,stroke-width:2px;
 ```
+
+**Описание диаграммы:**
+
+* `AliCampaignGoogleSheet` - основной класс, взаимодействующий с Google Sheets.
+* `SpreadSheet.__init__` - инициализирует базовый класс для работы с Google Sheets.
+* `Получение Spreadsheet`, `Получение Worksheet` - операции получения экземпляров `SpreadSheet` и `Worksheet`.
+* `Запись данных` - операции заполнения таблиц.
+* `batch_update` -  метод для массовой записи в Google Sheets.
+* `clear, delete_products_worksheets` - удаляют листы в Google Sheets.
+* `get_categories` - возвращает данные из листа `categories`.
+
+**Подключаемые зависимости:**
+
+* `gspread`: Для работы с Google Sheets API.
+* `src.goog.spreadsheet.spreadsheet`: Для работы с Google Sheets.
+* `src.utils.printer`: Для вывода данных.
+* `src.logger`: Для логирования.
+* `src.ai.openai`: Для перевода текста (не используется в данном фрагменте)
+* `src.utils.jjson`: для работы с JSON.
+
 
 # <explanation>
 
 **Импорты:**
 
-- `time`: используется для задержек (времени ожидания).
-- `types.SimpleNamespace`: для работы с данными в формате именованных кортежей.
-- `typing.Optional`, `typing.Any`, `typing.List`, `typing.Dict`: для типизации параметров функций и возвращаемых значений.
-- `gspread.worksheet`: предоставляет инструменты для работы с листами Google Sheets.
-- `src.goog.spreadsheet.spreadsheet`: собственный класс для работы со спиршитами Google Sheets (вероятно, содержит методы для создания, чтения, записи и управления листами).
-- `src.utils.jjson`: для работы с JSON данными.
-- `src.utils.printer`: для вывода информации (например, `pprint`).
-- `src.logger`: для логирования операций.
-- `src.ai.openai`: для работы с API OpenAI.
+* `from gspread.worksheet import Worksheet`: Импортирует класс `Worksheet` из библиотеки `gspread`, необходимый для работы с отдельными листами Google Sheets.
+* `from src.goog.spreadsheet.spreadsheet import SpreadSheet`: Импортирует класс `SpreadSheet`, вероятно, из модуля `src.goog.spreadsheet`, который содержит методы для взаимодействия со всем документом Google Sheets. Это, скорее всего, содержит функции для доступа к листам, создания и удаления их.
+* `from src.utils.jjson import j_dumps`: импортирует `j_dumps` для работы с JSON-строками.
+* `from src.utils.printer import pprint`: импортирует функцию `pprint` для красивого вывода данных.
+* `from src.logger import logger`: импортирует объект `logger` для ведения журналов. 
+* `from src.ai.openai import translate`: импортирует функцию `translate` из модуля `openai`, вероятно, для перевода текста. В данном примере она не используется.
+
 
 **Классы:**
 
-- `AliCampaignGoogleSheet`: наследуется от `SpreadSheet`. Этот класс предназначен для взаимодействия с Google Sheets в контексте кампаний AliExpress. Он имеет методы для управления данными кампании, категорий и продуктов, а также форматирования листов.  `spreadsheet_id` задает конкретную таблицу Google Sheets.  `spreadsheet` и `worksheet` хранят текущее состояние.  `__init__` инициализирует соединение с Google Sheets.  Этот класс организует процесс обработки данных и их записи в Google Таблицы.
+* `AliCampaignGoogleSheet`:  Класс для управления Google Sheets при работе с рекламными кампаниями AliExpress.  Он наследует функционал базового класса `SpreadSheet`, позволяющего выполнять базовые операции над Google Sheets, и добавляет методы для специфической работы с кампаниями AliExpress.  Атрибуты, такие как `spreadsheet_id`, `spreadsheet`, `worksheet` хранят необходимую информацию для работы.
 
 **Функции:**
 
-- `clear()`: очищает таблицу, удаляя листы продуктов, кроме необходимых.
-- `delete_products_worksheets()`: удаляет листы, кроме 'categories' и 'product'.
-- `set_campaign_worksheet()`: записывает данные о кампании в лист 'campaign'.
-- `set_categories_worksheet()`: записывает данные о категориях в лист 'categories'.
-- `set_products_worksheet()`: записывает данные о продуктах в отдельные листы, соответствующие категориям.
-- `get_categories()`: получает данные из листа 'categories'.
-- `set_category_products()`: записывает продукты для определенной категории в отдельный лист.
-- `_format_categories_worksheet()`: форматирует лист 'categories'.
-- `_format_category_products_worksheet()`: форматирует листы продуктов.
+* `__init__(self, campaign_name, language=None, currency=None)`: Инициализирует экземпляр класса.  Принимает имя кампании, язык и валюту (опционально). Назначает `spreadsheet_id` из класса. Важно, что этот метод использует родительский конструктор `SpreadSheet`, чтобы получить доступ к базовым функциям работы с Google Sheets.
+* `clear()`: Очищает все листы в Google Sheets, кроме 'categories' и 'product_template'.
+* `delete_products_worksheets()`: Удаляет все листы, кроме 'categories' и 'product_template'.
+* `set_campaign_worksheet(campaign)`: Записывает данные кампании в лист `campaign` (заполнение по столбцам).
+* `set_products_worksheet(category_name)`: Записывает данные о продуктах в лист с именем, соответствующим `category_name`.
+* `set_categories_worksheet(categories)`: Записывает данные категорий в лист `categories`.
+* `get_categories()`: Возвращает данные из листа `categories` как список словарей.
+* `set_category_products(category_name, products)`: Запись данных о продуктах в лист с указанным именем категории.
+* `_format_categories_worksheet(ws)`: Форматирует лист `categories`.
+* `_format_category_products_worksheet(ws)`: Форматирует листы с продуктами конкретных категорий.
 
 **Переменные:**
 
-- `spreadsheet_id`: строка, содержащая идентификатор таблицы Google Sheets.
-- `spreadsheet`, `worksheet`: объекты, представляющие таблицу и лист соответственно (вероятно, из `gspread`).
+* `MODE`:  Вероятно, переменная для выбора режима работы (например, `dev`, `prod`).
+* `spreadsheet_id`:  ID таблицы Google Sheets.
+* `spreadsheet`, `worksheet`:  Экземпляры классов для работы с Google Sheets.
 
 
 **Возможные ошибки и улучшения:**
 
-- **Обработка ошибок:**  Функции содержат `try...except` блоки, но они могли бы быть более точными (например, разные исключения для разных ситуаций).  Необходимо больше проверок на корректность входных данных (например, наличие необходимых атрибутов у объектов `SimpleNamespace`).
-- **Переиспользование кода:**  Код для добавления продуктов повторяется в нескольких местах.  Можно вынести общие логические блоки в отдельные функции.
-- **Документация:**  Документация для методов могла бы быть более подробной и ясной, включая типы параметров и возвращаемые значения.
-- **Комментарии:** Код содержит комментарии, но они могут быть более детальными и разъяснять не только что делает функция, но и *как* она это делает.
-- **Зависимости:** Код сильно зависит от других частей проекта (src.goog.spreadsheet.spreadsheet, src.utils.jjson, src.utils.printer, src.logger, src.ai.openai, etc.).  Для лучшего понимания всей картины необходимо знать интерфейсы и логику этих частей.
+* **Обработка исключений:** Обработка исключений (например, `try...except`) в методах улучшила бы надежность кода.  В некоторых случаях проверки на `None` были бы полезны, чтобы избежать ошибок.
+* **Проверка входных данных:** Проверка корректности входных данных (например, типов, наличия необходимых атрибутов в `SimpleNamespace`) предотвратит непредсказуемое поведение.
+* **Избыточность:**  Некоторые разделы кода для `set_category_products` почти идентичны `set_products_worksheet`.  Возможно, стоит вынести общую функциональность в отдельный метод.
+* **Типизация:**  Использование аннотаций типов в коде повышает его читаемость и улучшает поддержку.
+* **Модульная структура:** Возможно, вынести методы форматирования в отдельный модуль.
 
-**Взаимосвязи с другими частями проекта:**
 
-- `AliCampaignGoogleSheet` взаимодействует с `SpreadSheet` (родительский класс), `logger`, `pprint`, `gspread` и другими модулями, которые используются для работы с Google Sheets и ведения логирования.  Предполагается, что `AliCampaignEditor` и другие связанные объекты находятся в `src.suppliers.aliexpress.campaign`.  Необходимо больше информации о структуре и логике `AliCampaignEditor`, `campaign`, `category`, `products`.
+**Взаимосвязь с другими частями проекта:**
+
+* `src.utils.jjson`: Для работы с JSON-данными.
+* `src.utils.printer`: Для вывода данных в удобном формате.
+* `src.logger`: Для логирования событий и ошибок.
+* `src.ai.openai`: Для перевода текста.
+* `src.webdriver.driver`: Возможно, для управления браузером (не используется в этом фрагменте).
+* `AliCampaignEditor` (или подобный класс):  Вероятно, класс, который предоставляет данные о кампаниях.  В коде есть комментарии к нему, но он не реализован.  Для корректной работы `AliCampaignGoogleSheet` нужно, чтобы `AliCampaignEditor` предоставлял ему необходимую информацию о кампаниях и категориях.
+
+
+Код демонстрирует структурированный подход к работе с данными о кампаниях и продуктах.  Наследование от `SpreadSheet` является правильной стратегией для повторного использования кода.

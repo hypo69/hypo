@@ -16,7 +16,7 @@ import asyncio
 import json
 from pathlib import Path
 from pydantic import BaseModel
-from src.logger import logger
+from src.logger.logger import logger
 from .bot import KazarinovTelegramBot
 
 

@@ -42,7 +42,7 @@ MODE = 'dev'
 """
 
 
-from src.logger import logger
+from src.logger.logger import logger
 def login(s) -> bool:
     """ Функция логин. 
    @param

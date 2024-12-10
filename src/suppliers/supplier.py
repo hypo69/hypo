@@ -22,7 +22,7 @@ from src import gs
 from src.utils.jjson import j_loads_ns
 from src.webdriver.driver import Driver
 from src.scenario import run_scenarios, run_scenario_files
-from src.logger import logger
+from src.logger.logger import logger
 from src.logger.exceptions import DefaultSettingsException
 
 

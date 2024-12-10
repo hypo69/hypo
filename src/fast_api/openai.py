@@ -22,7 +22,7 @@ import uvicorn
 
 from src import gs
 from src.utils.jjson import j_loads_ns
-from src.logger import logger  # Используем ваш класс логгирования
+from src.logger.logger import logger  # Используем ваш класс логгирования
 
 # Импортируем класс OpenAIModel из существующего кода
 from src.ai.openai.model.training import OpenAIModel

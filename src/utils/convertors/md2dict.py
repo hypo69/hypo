@@ -12,7 +12,7 @@ MODE = 'dev'
 import re
 from typing import Dict
 from markdown2 import markdown
-from src.logger import logger
+from src.logger.logger import logger
 
 
 def md2dict(md_string: str) -> Dict[str, dict | list]:

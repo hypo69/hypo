@@ -89,7 +89,7 @@
 ---
 
 7. **Logging**
-   - **Logger**: Use `from src.logger import logger` for logging instead of the standard `logging`.
+   - **Logger**: Use `from src.logger.logger import logger` for logging instead of the standard `logging`.
    - **Error logging example**:
      ```python
      logger.error('Error while starting bot: ', ex)

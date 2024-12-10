@@ -23,7 +23,7 @@ import header
 from src import gs, logger
 from src.ai.gemini.generative_ai import GoogleGenerativeAI
 from src.utils.jjson import j_dumps, j_loads_ns,j_loads
-from src.logger import logger
+from src.logger.logger import logger
 
 test_directory:Path = gs.path.external_storage / 'kazarinov' / 'mexironim' / '24_12_07_19_06_40_508' 
 products_in_test_dir:Path = test_directory /  'products'

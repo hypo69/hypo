@@ -68,7 +68,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 import header
 from src import gs
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 import pickle
 from pathlib import Path

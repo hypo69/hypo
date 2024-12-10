@@ -1,7 +1,5 @@
 ```MD
-# Анализ кода сценария pricelist для Казаринова
-
-## <input code>
+# <input code>
 
 ```python
 from __future__ import annotations
@@ -15,7 +13,7 @@ from __future__ import annotations
 ==================================================================
 
 ```rst
-.. module: src.endpoints.kazarinov.scenarios 
+.. module:: src.endpoints.kazarinov.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Provides functionality for extracting, parsing, and processing product data from 
 various suppliers. The module handles data preparation, AI processing, 
@@ -35,7 +33,6 @@ from dataclasses import field
 
 import header
 from src import gs
-from src.bots.telegram.bot import TelegramBot
 from src.product.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
@@ -58,143 +55,175 @@ from src.utils.printer import pprint
 from src.logger import logger
 
 
-# ... (rest of the code)
+class MexironBuilder:
+    """
+    Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
+
+    Attributes:
+        driver (Driver): Экземпляр Selenium WebDriver.
+        export_path (Path): Путь для экспорта данных.
+        products_list (List[dict]): Список обработанных данных о продуктах.
+    """
+
+    driver: Driver
+    export_path: Path
+    mexiron_name: str
+    price: float
+    timestamp: str
+    products_list: List = field(default_factory=list)
+    model: GoogleGenerativeAI
+    config: SimpleNamespace
+
+    def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
+        """
+        Initializes Mexiron class with required components.
+
+        Args:
+            driver (Driver): Selenium WebDriver instance.
+            mexiron_name (Optional[str]): Custom name for the Mexiron process.
+        """
+        # ... (rest of the __init__ method)
+    
+    # ... (rest of the class methods)
 ```
 
-## <algorithm>
+# <algorithm>
 
-**Блок-схема:**
+**Блок-схема алгоритма:**
 
 ```mermaid
 graph TD
-    A[Инициализация MexironBuilder] --> B{Получение конфига};
-    B -- Успех --> C[Формирование export_path];
-    B -- Ошибка --> D[Логирование ошибки и выход];
-    C --> E[Загрузка system_instruction];
-    E --> F[Инициализация GoogleGenerativeAI];
-    F --> G[Получение списка URL'ов];
-    G --> H[Цикл по URL'ам];
-    H --> I[Получение Graber];
-    I -- Успех --> J[Парсинг данных];
-    I -- Неудача --> K[Логирование ошибки и переход к следующему URL];
-    J --> L[Конвертация в dict];
-    L --> M[Сохранение данных];
-    M -- Успех --> H;
-    M -- Ошибка --> N[Логирование ошибки и переход к следующему URL];
-    H --> O[Обработка данных через AI (he)];
-    O --> P[Сохранение результатов (he)];
-    O --> Q[Обработка данных через AI (ru)];
-    Q --> R[Сохранение результатов (ru)];
-    Q --> S[Генерация отчетов (ru)];
-    P -- Успех --> S;
-    P -- Ошибка --> T[Логирование ошибки];
-    R -- Успех --> S;
-    R -- Ошибка --> T;
-    S --> U[Возврат True];
-    T --> U;
+    A[Начало] --> B{URL доступны?};
+    B -- Да --> C[Обработка URL];
+    B -- Нет --> D[Ошибка: Нет URL];
+    C --> E[Запрос данных через грабер];
+    E --> F{Данные валидны?};
+    F -- Да --> G[Конвертация данных];
+    F -- Нет --> H[Ошибка: Невалидные данные];
+    G --> I[Сохранение данных в файл];
+    I --> J[Обработка данных AI (ru)];
+    J --> K[Сохранение результатов AI (ru)];
+    C --> L[Обработка данных AI (he)];
+    L --> M[Сохранение результатов AI (he)];
+    I --> N[Создание отчета (html, pdf)];
+    N --> O[Отправка на Facebook (опционально)];
+    O --> P[Успех];
+    H --> Q[Ошибка];
+    D --> Q;
+    G --> Q;
+    J --> Q;
+    L --> Q;
+    I --> Q;
+    M --> Q;
+    N --> Q;
+    P --> A;
+    Q --> A;
 ```
 
 **Пример:**
 
-Предположим, `urls` содержит `['https://morlevi.co.il/product1', 'https://ksp.co.il/product2']`. Алгоритм обрабатывает каждый URL последовательно, получая соответствующий `Graber` (MorleviGraber для первого URL), парсит данные, сохраняет их в `products_list`, обрабатывает данные через AI (получая `he` и `ru` результаты), сохраняет результаты и генерирует отчеты.
+Пользователь предоставляет список URL. Код обрабатывает каждый URL, извлекая данные с помощью соответствующего грабера. Полученные данные проверяются на валидность. Если данные валидны, они конвертируются в формат, удобный для AI. Затем данные сохраняются в файлы. AI обрабатывает данные и возвращает результат на русском и иврите. Результаты сохраняются в отдельные файлы. Далее генерируется отчет (html, pdf). Опционально, отчет отправляется на Facebook. Если на каком-либо шаге возникла ошибка, выполнение останавливается.
 
 
-## <mermaid>
+# <mermaid>
 
 ```mermaid
 graph LR
     subgraph MexironBuilder
-        A[MexironBuilder] --> B(driver);
-        A --> C(export_path);
-        A --> D(products_list);
-        A --> E(model);
-        B --> F(driver.get_url);
-        C --> G(Path);
-        F --> H(graber.grab_page);
-        H --> I(convert_product_fields);
-        I --> J(save_product_data);
-        J --> K(process_ai);
-        K --> L(post_facebook);
-        K --> M(create_report);
+        A[MexironBuilder] --> B(run_scenario);
+        B --> C{URL is from OneTab?};
+        C -- Yes --> D[Get data from OneTab];
+        C -- No --> E[Reply - Try again];
+        D --> F{Data valid?};
+        F -- Yes --> G[Run Mexiron scenario];
+        F -- No --> H[Reply Incorrect data];
+        G --> I{Scenario successful?};
+        I -- Yes --> J[Reply Done! I will send the link to WhatsApp];
+        I -- No --> K[Reply Error running scenario];
+        H --> L[Return];
+        J --> L;
+        E --> L;
+        K --> L;
     end
-    subgraph Dependencies
-        B --(Driver)--> N[src.webdriver.driver];
-        E --(GoogleGenerativeAI)--> O[src.ai.gemini];
-        D --(List[dict])--> P[ProductFields];
-        J --(j_dumps)--> Q[src.utils.jjson];
-        M --(post_message_title, upload_post_media, message_publish)--> R[src.endpoints.advertisement.facebook.scenarios];
-        H --(MorleviGraber, KspGraber, IvoryGraber, GrandadvanceGraber)--> S[src.suppliers];
-        G --(Path)--> T[pathlib];
+    subgraph Data Processing
+        G --> M[process_ai(products_list, 'he')];
+        G --> N[process_ai(products_list, 'ru')];
+        M --> O[Save 'he' results];
+        N --> P[Save 'ru' results];
+        O --> Q[Create report (html, pdf)];
+        P --> Q;
+        M --> R;
+        N --> S;
+        Q --> T[Post to Facebook (optional)];
     end
-    subgraph Telegram
-        F --> U[TelegramBot]
-    end
-    A --> V[gs]
-    V --> B
+    J --> T;
+    T --> U[Success];
+    L --> V[Error];
+    V --> U;
 ```
 
-**Объяснение диаграммы:**
+**Объяснение зависимостей:**
 
-Диаграмма показывает взаимосвязь классов и функций в `scenario_pricelist.py`.
-`MexironBuilder` (А) взаимодействует с `Driver` (B), `export_path` (C), списком продуктов (D), моделью `GoogleGenerativeAI` (E) и т.д.
-`Driver` (N) из `src.webdriver.driver` отвечает за взаимодействие с веб-драйвером.
-`GoogleGenerativeAI` (O) из `src.ai.gemini` отвечает за работу с моделью Gemini.
-`ProductFields` (P) определяет поля продукта.
-`j_dumps` (Q) из `src.utils.jjson` используется для сериализации данных.
-Функции из `src.endpoints.advertisement.facebook.scenarios` (R) отвечают за взаимодействие с Facebook.
-Классы граберов (S) реализуют парсинг данных с различных сайтов.
-`pathlib` (T) для работы с путями.
-`gs` (V) содержит глобальные настройки.
+Диаграмма показывает взаимосвязи между `MexironBuilder` и подключаемыми модулями:
+* `gs`: для доступа к глобальным переменным и конфигурации.
+* `ProductFields`: для работы с данными о продуктах.
+* `Driver`: для работы с Selenium.
+* `GoogleGenerativeAI`: для работы с AI моделью Gemini.
+* Модули граберов (MorleviGraber, KspGraber, IvoryGraber, GrandadvanceGraber): для извлечения данных с веб-страниц.
+* `ReportGenerator`: для создания отчетов.
+* Модули `src.utils.*`: для различных вспомогательных функций (работы с файлами, изображениями, кодированием и т. д.).
+* `src.logger`: для регистрации сообщений об ошибках и отладочных данных.
+* `facebook` модули: для отправки сообщений в Facebook.
 
-## <explanation>
+# <explanation>
 
 **Импорты:**
 
-- `from __future__ import annotations`:  Улучшает работу с типизацией.
-- `import asyncio`: Для асинхронных операций.
-- `import random`: Для случайных чисел (если используются).
-- `import shutil`: Для работы с файлами (скорее всего не используется напрямую).
-- `from pathlib import Path`: Для работы с путями.
-- `from typing import Optional, List`: Для определения типов данных.
-- `from types import SimpleNamespace`: Для работы с объектами, имеющими атрибуты.
-- `from dataclasses import field`: Для определения атрибутов класса.
-- `import header`: Этот импорт обычно содержит общие настройки или функции для проекта, но без подробностей его трудно проанализировать.
-- `from src import gs`: Доступ к глобальным настройкам и вспомогательным функциям.
-- `from src.bots.telegram.bot import TelegramBot`: Возможно, для взаимодействия с Telegram.
-- `from src.product.product_fields import ProductFields`: Определяет структуру данных о продуктах.
-- `from src.webdriver.driver import Driver`: Для управления веб-драйвером.
-- `from src.ai.gemini import GoogleGenerativeAI`: Для доступа к модели Gemini.
-- `from src.endpoints.advertisement.facebook.scenarios import ...`: Функции для работы с Facebook.
-- `from src.suppliers.* import Graber`: Для работы с разными поставщиками (Morlevi, KSP, etc.).
-- `from src.endpoints.kazarinov.pricelist_generator import ReportGenerator`: Для создания отчетов.
-- `from telegram import Update`: Если используется Telegram.
-- `from telegram.ext import CallbackContext`: Для обработки Telegram обновлений.
-- `from src.utils.*`: Различные вспомогательные функции (парсинг JSON, работа с файлами, обработка изображений, вывод в консоль).
-- `from src.logger import logger`: Модуль для логирования.
+Импорты необходимы для использования функций и классов из других модулей, включая те, которые находятся в подпакетах проекта `src`.  Это типичная структура импорта для организации кода Python.
+
 
 **Классы:**
 
-- `MexironBuilder`: Центральный класс, отвечающий за всю обработку. Имеет атрибуты `driver`, `export_path`, `products_list`, `model` (для Gemini), `config` и т.д. `__init__` инициализирует эти атрибуты. Методы `run_scenario`, `get_graber_by_supplier_url`, `convert_product_fields`, `save_product_data`, `process_ai`, `post_facebook`, `create_report` определяют поведение класса.
+* **`MexironBuilder`:**  Класс для обработки данных о продуктах.
+    * `driver`: Экземпляр `Driver` (Selenium WebDriver) - для взаимодействия с веб-страницами.
+    * `export_path`: Путь для сохранения обработанных данных.
+    * `products_list`: Список данных о продуктах после обработки.
+    * `model`: Экземпляр `GoogleGenerativeAI` - для использования AI модели.
+    * `config`: Настройка из файла `kazarinov.json`.
+    * `__init__`: Инициализирует класс с данными о поставщиках, путем для сохранения данных, AI моделью.
+    * `run_scenario`: Обрабатывает список URL, извлекает данные, отправляет их на обработку AI, сохраняет результаты, отправляет отчет в Facebook (опционально).
+    * `get_graber_by_supplier_url`: Выбирает соответствующий грабер для конкретного поставщика.
+    * `convert_product_fields`: Преобразует данные, полученные от грабера, в формат, подходящий для модели AI.
+    * `save_product_data`: Сохраняет данные о каждом продукте в файл.
+    * `process_ai`: Обрабатывает данные с помощью AI модели.
+    * `post_facebook`: Отправляет данные в Facebook.
+    * `create_report`: Создает отчеты.
+
 
 **Функции:**
 
-- `run_scenario`:  Главная функция сценария, обрабатывающая список URL'ов. Обрабатывает данные от поставщиков, передает их в AI, сохраняет результат и публикует в Facebook.
-- `get_graber_by_supplier_url`: Выбирает нужный грабер для конкретного поставщика по URL.
-- `convert_product_fields`: Преобразует данные о продуктах в подходящий для AI формат.
-- `save_product_data`: Сохраняет обработанные данные о продуктах в файлы.
-- `process_ai`: Обрабатывает список продуктов через AI, получает ответ в формате JSON.  Важный момент – функция может рекурсивно вызывать себя для обработки возможных ошибок AI.
-- `post_facebook`: Публикует информацию о продуктах в Facebook.
-- `create_report`: Создает отчеты в формате HTML и PDF.
+* `run_scenario`:  Основная функция сценария, обрабатывающая полученные URL.
+* `get_graber_by_supplier_url`: Выбирает грабер в зависимости от URL поставщика.
+* `convert_product_fields`: Форматирует данные о продуктах.
+* `save_product_data`: Сохраняет данные о продукте в файл.
+* `process_ai`: Обрабатывает данные с помощью модели AI, переводя их на нужные языки.
+* `post_facebook`: Отправляет данные в Facebook (если нужно).
+* `create_report`: Создаёт отчет в формате html и pdf.
+
+
+
+**Переменные:**
+
+Переменные хранят пути к файлам, результаты обработки, параметры, настройки.
+
 
 **Возможные ошибки и улучшения:**
 
-- **Обработка исключений:** В коде есть обработка исключений (`try...except`), но местами она неполная или неэффективная.  Необходимо улучшить обработку ошибок на всех этапах (например, при чтении конфигураций, работе с поставщиками, обработке ответа AI). Дополнить логирование об ошибках.
-- **Передача данных:** Некоторые части кода используют `products_list` (список данных о продуктах) без явной типизации. Нужно использовать `List[dict]` для лучшей ясности.
-- **Управление рекурсией:**  В функции `process_ai` возможно бесконечное рекурсивное обращение, если модель всегда возвращает ошибочный результат. Необходимо установить предел рекурсии или более надежную стратегию обработки ошибок AI.
-- **Использование `logger`:** Логирование должно быть более подробным, позволяя отслеживать каждый этап выполнения.
-- **Обработка пустых значений:** Необходимо добавить проверки на пустые значения (списки `urls`, результаты парсинга, ответ от модели AI) в соответствующих местах для предотвращения ошибок.
-- **Необработанный код `...`:** В коде присутствуют участки с `...`, что требует дополнительной информации для полного понимания логики и обработки ошибок.
+* **Обработка ошибок:** В коде есть блоки `try...except`, но обработка ошибок могла бы быть более всесторонней. Например, стоит проверять, что файлы `kazarinov.json` и инструкционные файлы существуют и доступны для чтения.
+* **Переменная `attempts` в `process_ai`:** Необходимо обеспечить максимальное количество попыток при обращении к AI-модели. Если модель выдает ошибку или не отвечает, необходимо реализовать ограничение по количеству попыток для предотвращения бесконечного цикла.
+* **Логирование:** Логирование ошибок имеет определённую структуру, которая позволяет отследить и проанализировать происходящее.
+
 
 **Взаимосвязи с другими частями проекта:**
 
-Код сильно зависит от различных модулей из пакета `src`.  Например, `gs` содержит глобальные конфигурации, `src.webdriver.driver` используется для управления веб-драйвером, `src.ai.gemini` — для взаимодействия с моделью Gemini, а `src.suppliers.*` предоставляют инструменты для взаимодействия с поставщиками.  `ReportGenerator` демонстрирует связь с компонентами для создания отчетов.  Взаимодействие с Telegram и Facebook также присутствует, но требует больше информации о структуре проекта для более подробного анализа.
+Код взаимодействует с различными модулями и классами, которые находятся в пакетах `src.*`. Например, с `gs` для доступа к глобальным переменным, `Driver` для управления браузером, `GoogleGenerativeAI` для обработки данных, граберами для получения данных от поставщиков и т. д.  Это указывает на общую архитектуру проекта, основанную на модульном подходе.

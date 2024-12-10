@@ -36,7 +36,7 @@ import aiofiles
 from pathlib import Path
 from typing import Optional
 import asyncio
-from src.logger import logger
+from src.logger.logger import logger
 
 
 async def save_video_from_url(

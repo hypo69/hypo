@@ -49,7 +49,7 @@ from src import gs
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.utils import get_filenames, get_directory_names
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 campaign_name = 'rc'
 aliexpress_editor =  AliCampaignEditor(campaign_name)

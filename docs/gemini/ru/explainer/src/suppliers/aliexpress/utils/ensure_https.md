@@ -3,12 +3,12 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/ensure_https.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress.utils 
+.. module:: src.suppliers.aliexpress.utils 
 	:platform: Windows, Unix
 	:synopsis: Ensures that the provided URL string(s) contain the https:// prefix. 
 If the input is a product ID, it constructs a full URL with https:// prefix.
@@ -87,21 +87,32 @@ def ensure_https(prod_ids: str | list[str]) -> str | list[str]:
 
 # <algorithm>
 
-**Шаг 1**: Функция `ensure_https` принимает на вход `prod_ids`, которое может быть строкой или списком строк.
+**Шаг 1:** Функция `ensure_https` принимает на вход `prod_ids`, которое может быть строкой или списком строк.
 
-**Шаг 2**:  Если `prod_ids` является списком, она вызывает функцию `ensure_https_single` для каждого элемента списка, сохраняя результаты в новый список.
+**Шаг 2:** Если `prod_ids` – список, функция применяет `ensure_https_single` к каждому элементу списка и возвращает новый список с измененными значениями.
 
-**Шаг 3**: Если `prod_ids` является строкой, она вызывает `ensure_https_single` с этой строкой.
+**Шаг 3:** Если `prod_ids` – строка, она вызывает `ensure_https_single` с этой строкой и возвращает результат.
 
-**Шаг 4**: Функция `ensure_https_single` извлекает идентификатор продукта из строки (`prod_id`) с помощью функции `extract_prod_ids`.
 
-**Шаг 5**: Если `extract_prod_ids` возвращает непустое значение, она формирует полную URL-строку вида `https://www.aliexpress.com/item/{product_id}.html` и возвращает её.
+**Шаг 4:** Функция `ensure_https_single` принимает на вход `prod_id` (строка).
 
-**Шаг 6**: Если `extract_prod_ids` возвращает пустое значение, она регистрирует ошибку с помощью `logger.error` и возвращает исходную строку `prod_id`.
+**Шаг 5:** `extract_prod_ids` извлекает идентификатор продукта из строки `prod_id`.
 
-**Пример**: Если `prod_ids` = "example_product_id", то `extract_prod_ids` извлечёт "example_product_id".  `ensure_https_single` сформирует и вернёт "https://www.aliexpress.com/item/example_product_id.html".
+**Шаг 6:** Если `extract_prod_ids` возвращает непустой результат, функция строит полную ссылку с префиксом `https://` и возвращает ее.
 
-**Пример**: Если `prod_ids` = ["example_product_id1", "https://www.example.com/item/example_product_id2"], то `ensure_https` обработает каждый элемент в списке, вызвав `ensure_https_single` и добавив результат в новый список.
+**Шаг 7:** В противном случае, функция записывает сообщение об ошибке в лог с помощью `logger.error` и возвращает исходную строку `prod_id`.
+
+
+**Примеры:**
+
+* Вход: `"example_product_id"`
+  * Выход: `"https://www.aliexpress.com/item/example_product_id.html"`
+
+* Вход: `["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html"]`
+  * Выход: `["https://www.aliexpress.com/item/example_product_id1.html", "https://www.aliexpress.com/item/example_product_id2.html"]`
+
+* Вход: `"https://www.example.com/item/example_product_id"`
+  * Выход: `"https://www.example.com/item/example_product_id"`
 
 
 # <mermaid>
@@ -109,52 +120,45 @@ def ensure_https(prod_ids: str | list[str]) -> str | list[str]:
 ```mermaid
 graph TD
     A[ensure_https(prod_ids)] --> B{prod_ids is list?};
-    B -- Yes --> C[Map prod_ids to ensure_https_single];
+    B -- Yes --> C[map(ensure_https_single, prod_ids)];
     B -- No --> D[ensure_https_single(prod_ids)];
-    C --> E[Return list];
-    D --> F[extract_prod_ids(prod_id)];
-    F -- _prod_id != "" --> G[Construct URL, return];
-    F -- _prod_id == "" --> H[log error, return prod_id];
-    subgraph extract_prod_ids
-        I[extract prod_id] --> J{_prod_id}
+    C --> E[return list];
+    D --> F[return result];
+    
+    subgraph ensure_https_single(prod_id)
+        G[extract_prod_ids(prod_id)] --> H{result empty?};
+        H -- Yes --> I[logger.error, return prod_id];
+        H -- No --> J[construct URL, return];
     end
 ```
-
-**Описание диаграммы:**
-
-* `ensure_https` - основная функция, принимающая на вход `prod_ids`
-* `ensure_https_single` - вспомогательная функция, которая работает с одной строкой.
-* `extract_prod_ids` — функция, которая предположительно извлекает ID продукта из входной строки.
-* `Construct URL` - этап, где формируется итоговая URL строка.
-* `log error` - запись ошибки в лог.
-
 
 # <explanation>
 
 **Импорты:**
 
-* `from src.logger import logger`: Импортирует модуль `logger` из пакета `src.logger`. Вероятно, этот модуль отвечает за логирование (запись сообщений в лог-файл), что позволяет отслеживать выполнение программы.
-* `from .extract_product_id import extract_prod_ids`: Импортирует функцию `extract_prod_ids` из модуля `extract_product_id` из того же каталога. Эта функция вероятно используется для извлечения идентификатора продукта из входной строки.  Это позволяет связать этот файл с другими, которые, вероятно, отвечают за извлечение информации из данных.
+* `from src.logger import logger`: Импортирует логгер из модуля `src.logger`.  Это позволяет записывать сообщения об ошибках. Связь - часть общей логики приложения, связанной с обработкой ошибок и отслеживанием действий.
+
+* `from .extract_product_id import extract_prod_ids`: Импортирует функцию `extract_prod_ids` из модуля `extract_product_id` в той же директории. `extract_prod_ids` - дополнительная функция из другого модуля, которая отвечает за выделение ID продукта из исходных данных.
+
 
 **Функции:**
 
-* `ensure_https(prod_ids)`: Функция, которая проверяет является ли входной параметр `prod_ids` списком, и в зависимости от этого либо обрабатывает каждый элемент списка, либо обрабатывает вход как единственный элемент.  Возвращает строку или список строк с добавленным префиксом `https://`.  Ключевая функция для всего скрипта.
-
-* `ensure_https_single(prod_id)`: Вспомогательная функция, принимающая строку `prod_id` и добавляющая к ней префикс `https://` и строку `www.aliexpress.com/item/` и суффикс `.html` если `extract_prod_ids` извлечёт из prod_id продукт. Важно, что функция `extract_prod_ids` должна возвращать корректный идентификатор продукта.
-
-* `extract_prod_ids`:  Эта функция не реализована в этом фрагменте кода.  Однако, из названия функции и ее использования понятно, что она отвечает за извлечение идентификатора продукта из входной строки (URL или просто ID продукта).
+* `ensure_https(prod_ids)`: Эта функция проверяет, является ли входные данные строкой или списком строк. Если это список, она применяет функцию `ensure_https_single` к каждому элементу списка, а затем возвращает измененный список. Если это строка, она вызывает `ensure_https_single` с этой строкой и возвращает результат.  Она очень важная для всей программы, т.к.  обеспечивает, что все URL-адреса будут иметь префикс `https://`.
 
 
-**Возможные ошибки и улучшения:**
+* `ensure_https_single(prod_id)`: Эта функция проверяет, содержит ли строка `prod_id` URL-адрес. Если это идентификатор продукта, она строит полный URL и возвращает его. В противном случае она возвращает исходную строку или логгирует сообщение об ошибке, чтобы сообщить о неправильном формате входных данных.
 
-* **Непонятно, как работает `extract_prod_ids`:**  Неясно, как эта функция обрабатывает различные форматы ввода.  Для надежности, функция `extract_prod_ids` должна обладать высокой устойчивостью к ошибкам.  Дополнительно рекомендуется протестировать `extract_prod_ids` на всех возможных типах данных, что повысит надёжность работы `ensure_https`
+**Переменные:**
 
-
-* **Обработка ошибок в `extract_prod_ids`:**  При ошибке `extract_prod_ids` функция `ensure_https_single` просто регистрирует ошибку с помощью `logger.error`, что может быть недостаточно.  Рекомендуется добавить более подробную обработку ошибок, включая перехват и обработку исключений, чтобы предотвратить ошибки при работе с некорректными данными.
-
-* **Документация:** Документация для `extract_prod_ids` очень важна.  Необходимо документировать формат входных данных, ожидаемые результаты, возможные исключения и примеры использования.
+* `MODE = 'dev'`:  По-видимому, определяет режим работы (разработка или производство).
 
 
-**Цепочка взаимосвязей:**
+**Возможные ошибки/улучшения:**
 
-`ensure_https` использует `extract_prod_ids` для извлечения идентификатора продукта из входной строки.  `extract_prod_ids`, вероятно, в свою очередь, использует дополнительные библиотеки или вспомогательные функции для анализа входной строки.  `ensure_https` напрямую зависит от корректной работы `extract_prod_ids` и использует логирование через `logger` для отслеживания ошибок.
+* Функция `extract_prod_ids` не показана, но необходима для корректной работы. Ее отсутствие  делает модуль неполным. Необходимо понимать, как `extract_prod_ids` извлекает ID, и как могут выглядеть невалидные данные, чтобы корректно обрабатывать их.
+* Отсутствует обработка исключений, например, `TypeError` в случае, если `prod_ids` имеет неподходящий тип.
+* При использовании `logger.error`, лучше включать `exc_info=True` для подробного отчета об ошибке, особенно на этапе разработки.
+
+**Взаимосвязи с другими частями проекта:**
+
+Функция `ensure_https` зависит от функции `extract_prod_ids`, которая, вероятно, извлекает идентификатор продукта из исходной строки. Также она использует логгер, что предполагает существование системы логирования в проекте.  `src.logger` и `extract_product_id` – это модули, которые предоставляют необходимые сервисы для `ensure_https`.

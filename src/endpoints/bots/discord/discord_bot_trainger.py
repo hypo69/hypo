@@ -21,7 +21,7 @@ import header
 from src import gs
 from src.ai.openai.model.training import Model
 from src.utils.jjson import j_loads_ns, j_loads_ns, j_dumps
-from src.logger import logger
+from src.logger.logger import logger
 import speech_recognition as sr  # Библиотека для распознавания речи
 import requests  # Для скачивания файлов
 from pydub import AudioSegment  # Библиотека для конвертации аудио

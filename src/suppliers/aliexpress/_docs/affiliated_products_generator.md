@@ -30,7 +30,7 @@ from src.utils import save_png_from_url, save_video_from_url
 from src.utils.printer import pprint 
 from src.utils.file import read_text_file, save_text_file
 
-from src.logger import logger
+from src.logger.logger import logger
 ```
 
 - **Standard Libraries:** `asyncio`, `itertools`, `math`, `pathlib`, `typing`, `types`, `urllib.parse`

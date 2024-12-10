@@ -25,7 +25,7 @@ import requests
 
 import header
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_dumps
 from src.endpoints.prestashop import PrestaShop, PrestaCategory
 

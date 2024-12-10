@@ -15,7 +15,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import List, Dict, Union
 import pandas as pd
-from src.logger import logger
+from src.logger.logger import logger
 
 
 def save_csv_file(

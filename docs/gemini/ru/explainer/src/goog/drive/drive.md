@@ -2,12 +2,12 @@
 
 ```python
 ## \file hypotez/src/goog/drive/drive.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.drive 
+.. module:: src.goog.drive 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -144,119 +144,82 @@ if __name__ == '__main__':
 
 # <algorithm>
 
-**Шаг 1:** Импортирование библиотек. Код импортирует необходимые библиотеки для работы с Google Drive API, аутентификацией и обработкой файлов.  
-**Пример:** `import pickle`, `from googleapiclient.discovery import build`.
-
-**Шаг 2:** Определение класса `GoogleDriveHandler`.
-* **__init__():** Инициализирует объект класса, сохраняя имя папки (`folder_name`) и загружая учетные данные (`creds`).
-* **_create_credentials():** Получает или создает учетные данные пользователя Google Drive.
-    * Проверяет, существуют ли сохраненные ранее учетные данные (`token.pickle`).
-    * Если нет, то использует `InstalledAppFlow` для получения новых и сохраняет их.
-    * Обновляет учетные данные, если они истекли.
-
-
-**Шаг 3:** Определение метода `upload_file()`.  Метод предназначен для загрузки файла на Google Диск, но в коде он еще не реализован.
-
-**Шаг 4:** Определение функции `main()`.
-* Создает экземпляр `GoogleDriveHandler` и загружает учетные данные.
-* Использует API Google Drive для получения списка файлов.
-* Выводит список файлов в консоль.
-
-**Шаг 5:**  Основная часть программы (`if __name__ == "__main__":`).
-* Вызывает функцию `main()` для выполнения основного функционала программы.
-
+1. **Initialization (main):**  Creates an instance of `GoogleDriveHandler` and calls its `_create_credentials` method to get authentication credentials.
+2. **Authentication (`_create_credentials`):**
+   - Checks if a `token.pickle` file exists. If yes, it loads the credentials from it.
+   - If no credentials are found or they are invalid:
+     - Attempts to refresh existing credentials if they have expired and a refresh token is available.
+     - If no valid credentials are found, it initiates an authorization flow, obtains new credentials using a local server, and saves them in `token.pickle`.
+3. **Drive API Interaction (main):**
+   - Builds a Google Drive API service object using the obtained credentials.
+   - Makes a request to list files in the user's Google Drive.
+   - Parses the response to extract file names and IDs.
+4. **Output (main):**
+   - Prints "No files found" if no files are listed.
+   - Otherwise, prints a list of file names and IDs.
 
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    subgraph "Импорты"
-        A[drive.py] --> B(googleapiclient);
-        A --> C(google_auth_httplib2);
-        A --> D(google.auth);
-        A --> E(google.oauth2);
-        A --> F(google_auth_oauthlib);
-        A --> G(pathlib);
-        A --> H(os);
-        A --> I(pickle);
-        A --> J(header);
-        A --> K(src);
-        A --> L(gs);
-        A --> M(printer);
-        A --> N(logger);
-
+graph LR
+    A[main] --> B{_create_credentials};
+    B --> C[Check token.pickle];
+    C --Exists--> D[Load credentials];
+    C --Doesn't exist--> E[Run Authorization Flow];
+    E --> F[Get Credentials];
+    F --> G[Save Credentials to token.pickle];
+    D --> H[Validate credentials];
+    H --Valid--> I[Build Drive Service];
+    H --Invalid--> E;
+    I --> J[List Files];
+    J --> K[Parse Response];
+    K --> L[Print Results];
+    subgraph "Google Drive API"
+        J -.-> M[Google Drive API];
+        M --> K;
     end
-    subgraph "Класс GoogleDriveHandler"
-        A --> O[GoogleDriveHandler];
-        O --> P[_create_credentials];
-        O --> Q[upload_file];
-        P --> R[creds_file];
-        P --> S[SCOPES];
-        P --> T[creds];
-
-    end
-    subgraph "Функция main"
-        A --> U[main];
-        U --> V[GoogleDriveHandler()];
-        U --> W[service];
-        U --> X[results];
-        X --> Y[items];
-        Y --> Z[Вывод списка файлов];
-
-
-    
 ```
 
-**Объяснение диаграммы:**
-Диаграмма показывает зависимости между модулями и компонентами.
-- Импорты: `drive.py` зависит от нескольких библиотек (`googleapiclient`, `google_auth`, и т.д.), а также от внутренних модулей `src`.
-- Класс `GoogleDriveHandler`: `drive.py` создает экземпляр класса, который использует метод `_create_credentials` для получения и проверки учетных данных.
-- Функция `main`: эта функция является точкой входа и использует созданный `GoogleDriveHandler` для взаимодействия с Google Drive API.
+**Explanation of Dependencies:**
+
+- `googleapiclient`: Provides the client library for interacting with the Google APIs.
+- `google_auth_httplib2`: Handles HTTP interactions.
+- `google.auth.transport.requests`: Provides authentication using HTTP requests.
+- `google.oauth2.credentials`: Manages OAuth 2.0 credentials.
+- `google_auth_oauthlib.flow`: Facilitates the OAuth 2.0 flow.
+- `pathlib`: Used for handling file paths.  This is a standard Python library.
+- `pickle`: Used for serializing and deserializing the credentials. This is a standard Python library.
+
+Other imports (`header`, `gs`, `pprint`, `logger`) are likely internal to the project, and their roles depend on the particular structure and functionality of the project.
 
 
 # <explanation>
 
-**Импорты:**
-
-Код импортирует необходимые библиотеки для взаимодействия с Google Drive API, аутентификации, обработки файлов и других вспомогательных задач.
-
-* `googleapiclient`, `google_auth_httplib2`, `google.auth`, `google.oauth2`, `google_auth_oauthlib`: предоставляют инструменты для работы с Google Drive API и аутентификации.
-* `pickle`: используется для сохранения и загрузки учетных данных.
-* `os`, `pathlib`:  библиотеки для работы с файловой системой.
-* `header`, `src`, `gs`, `utils.printer`, `logger`:  возможно, это внутренние модули проекта, которые содержат вспомогательные функции или классы.
+- **Imports:** The code imports necessary libraries for interacting with the Google Drive API and for handling file paths and credentials.  The `header`, `gs`, `pprint`, and `logger` imports suggest these are internal components, likely within the larger `hypotez` project, for managing specific aspects of the program (e.g., configuration, file systems, logging).
 
 
-**Классы:**
-
-* `GoogleDriveHandler`:  это класс, который управляет взаимодействием с Google Drive.
-    * `__init__`: инициализирует экземпляр класса, принимает имя папки на Google Диск, загружает учетные данные пользователя.
-    * `_create_credentials`:  метод, ответственный за получение и проверку учетных данных пользователя.  Он важен для доступа к API Google Drive.
-
-
-**Функции:**
-
-* `upload_file`:  метод класса `GoogleDriveHandler`, предназначенный для загрузки файла на Google Диск. Пока не реализован.
-* `main`: функция, которая демонстрирует основное использование класса `GoogleDriveHandler`. Она получает список файлов, а затем выводит их в консоль.
+- **Classes:**
+    - `GoogleDriveHandler`: This class encapsulates the logic for interacting with Google Drive.
+        - `__init__(self, folder_name: str)`: Initializes the handler with the target folder name and retrieves credentials.
+        - `_create_credentials(self)`:  This method is crucial. It fetches or creates credentials for accessing the Google Drive API.  Critically, it handles the OAuth 2.0 flow (creating or refreshing credentials), which is the standard way to authenticate with Google APIs. This method persists credentials in `token.pickle`, ensuring the application doesn't need to re-authorize on subsequent runs.
+        - `upload_file(self, file_path: Path)`: This method is a placeholder; it needs implementation to perform the actual file upload to Google Drive.
 
 
-**Переменные:**
-
-* `MODE`, `SCOPES`: константы, определяющие режим работы и требуемые разрешения доступа к API.
-* `creds_file`:  путь к файлу с ключами доступа к Google Drive.
-* `creds`: объект `Credentials`, содержащий информацию об учетных данных пользователя.
-* `service`: объект, представляющий соединение с API Google Drive.
-* `items`: список файлов, полученных из ответа API Google Drive.
+- **Functions:**
+    - `main()`: This function demonstrates how to use the `GoogleDriveHandler` class. It creates a handler object, fetches credentials, interacts with the Google Drive API to list files, and prints the results.
 
 
-**Возможные ошибки и улучшения:**
-
-* **Отсутствует реализация `upload_file`:**  Функция не выполняет загрузку файла.  Необходимо добавить реализацию этой функции, чтобы выполнить основную задачу приложения.
-* **Обработка ошибок:**  В коде нет обработки возможных ошибок (например, ошибок соединения с API, проблем с аутентификацией, отсутствия файла с ключами). Добавьте обработку исключений `try...except` для повышения устойчивости кода.
-* **Логирование:** Рекомендуется добавить логирование для отслеживания процесса загрузки и выявления потенциальных проблем.
-* **Управление ресурсами:** Если `service` (объект API) создается внутри функции, убедитесь, что он закрывается после использования.
+- **Variables:**
+    - `MODE`, `SCOPES`, `creds`, `creds_file`, `service`, `results`, `items`:  These variables hold values related to the application's configuration, authentication status, API interaction results, and extracted files.
 
 
-**Взаимосвязи с другими частями проекта:**
+- **Possible Errors/Improvements:**
+    - The `upload_file` method is currently empty.  You need to implement the actual file upload logic using the Google Drive API client (`service`) and the provided `file_path`.
+    - Error handling is missing.  Adding `try...except` blocks around API calls and file operations will make the code more robust. For example, handle potential `FileNotFoundError` if `token.pickle` doesn't exist, or if an error arises during API interaction.
+    - The hardcoded `file_path` and `folder_name` should be replaced with more flexible input mechanisms in a production environment.
 
-Код взаимодействует с другими частями проекта через импорты (`src`, `gs`, `logger`). Это указывает на наличие взаимосвязанных модулей и классов, которые вместе образуют более крупное приложение.
+
+- **Inter-project Relationships:** The code is part of a larger project (`hypotez`) as evidenced by the `src` directory.  The usage of `gs.path.secrets` indicates `gs` (likely a Google Storage/Services handler) is also within the `hypotez` project.  The relationships are deeply intertwined, and understanding the `gs` module is crucial to comprehend the full functionality.
+
+The code provides a solid foundation for interacting with Google Drive. Completing the `upload_file` method, adding proper error handling, and making parameters configurable will greatly improve its practicality.

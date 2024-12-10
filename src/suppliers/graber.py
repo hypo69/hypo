@@ -56,7 +56,7 @@ from src.utils.string.normalizer import normalize_string, normalize_int, normali
 from src.logger.exceptions import ExecuteLocatorException
 #from src.endpoints.prestashop import PrestaShop
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 # Глобальные настройки через объект `Context`
 class Context:

@@ -16,7 +16,7 @@ from typing import List
 ...
 from src import gs
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 #from src.db import ProductTranslationsManager
 #from src.translator import get_translations_from_presta_translations_table
 #from src.translator import insert_new_translation_to_presta_translations_table

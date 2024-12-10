@@ -51,7 +51,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import or_
 
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 
 #credentials = gs.db_translations_credentials
 

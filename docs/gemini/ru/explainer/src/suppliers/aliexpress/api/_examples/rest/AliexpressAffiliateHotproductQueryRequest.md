@@ -36,112 +36,93 @@ class AliexpressAffiliateHotproductQueryRequest(RestApi):
 
 # <algorithm>
 
-**Блок-схема:**
-
 ```mermaid
 graph TD
     A[__init__(domain, port)] --> B{Инициализация атрибутов};
-    B --> C[Возвращение имени API];
-    
-    subgraph Инициализация атрибутов
-        B -- app_signature --> D[app_signature = None];
-        B -- category_ids --> E[category_ids = None];
-        ... (Все атрибуты)
-        ... (Инициализация RestApi.__init__)
+    B --> C[RestApi.__init__(self,domain, port)];
+    B --> D[self.app_signature = None];
+    ... (Все атрибуты, по аналогии)
+    E[getapiname()] --> F{Возвращает 'aliexpress.affiliate.hotproduct.query'};
+
+    subgraph "Пример использования"
+    G[Создать AliexpressAffiliateHotproductQueryRequest] --> A;
+    G --> H[Установить значения атрибутов];
+    H --> I[Вызвать getapiname()];
+    I --> J[Получить 'aliexpress.affiliate.hotproduct.query'];
     end
-    
-    style D fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
-**Описание шагов:**
-
-1. **Инициализация:** При вызове `__init__` происходит инициализация объекта класса `AliexpressAffiliateHotproductQueryRequest`.  Внутри, вызывается `RestApi.__init__` для инициализации родительского класса.  Затем, все атрибуты текущего класса, представленные в коде (например, `app_signature`, `category_ids`), инициализируются со значениями по умолчанию (None).
-
-2. **Возвращение имени API:** Метод `getapiname` возвращает строковое значение "aliexpress.affiliate.hotproduct.query", которое, вероятно, используется для идентификации API-запроса.
-
-
-**Пример данных:**
-
-При создании объекта:
+**Пример:**
 
 ```python
-request = AliexpressAffiliateHotproductQueryRequest(domain="custom_domain.com")
+request = AliexpressAffiliateHotproductQueryRequest(domain="api-sg.aliexpress.com")
+request.keywords = "Shirt"
+request.page_no = 1
+request.page_size = 10
+result = request.getapiname()  # Возвращает 'aliexpress.affiliate.hotproduct.query'
 ```
 
-Атрибуты `request.domain` и  `request.app_signature` будут иметь значения соответственно `"custom_domain.com"` и `None`.
 
 # <mermaid>
 
 ```mermaid
 graph LR
     A[AliexpressAffiliateHotproductQueryRequest] --> B(RestApi);
-    A --> C{getapiname()};
-    B --> D{__init__(domain, port)};
-    D -- domain --> E[domain];
-    D -- port --> F[port];
-    subgraph RestApi
-        D --> G[инициализация атрибутов RestApi];
+    B --> C{__init__(domain, port)};
+    C --> D[Инициализация атрибутов];
+    subgraph "Атрибуты класса"
+        D --> E(app_signature);
+        D --> F(category_ids);
+        ... (все остальные атрибуты)
     end
-    C --> H["aliexpress.affiliate.hotproduct.query"];
+    subgraph "Метод getapiname()"
+        A --> G(getapiname());
+        G --> H{'aliexpress.affiliate.hotproduct.query'};
+    end
 ```
-
-
-**Объяснение зависимостей:**
-
-* `AliexpressAffiliateHotproductQueryRequest` наследуется от `RestApi` (зависимость). Это значит, что у `AliexpressAffiliateHotproductQueryRequest` есть все атрибуты и методы класса `RestApi`.  `RestApi` должен быть определен в директории `src.suppliers.aliexpress.api.base`.
-
 
 # <explanation>
 
 **Импорты:**
 
-* `from ..base import RestApi`: Импортирует класс `RestApi` из модуля `base`, находящегося в подпапке `..` (то есть на один уровень выше текущего файла).  Это означает, что `AliexpressAffiliateHotproductQueryRequest` использует функциональность, определённую в родительском классе, который, скорее всего, предоставляет базовые методы и атрибуты для работы с API.
+```python
+from ..base import RestApi
+```
+
+Импортирует класс `RestApi` из модуля `base`, который находится в подпапке `../base` относительно текущего файла.  Это указывает на иерархическую структуру проекта, где `aliexpress` - это подпапка, `api` - это подпапка `aliexpress`, а `_examples/rest` - это еще одна вложенная папка в `api`.  Этот импорт необходим для наследования функциональности базового класса `RestApi`.
 
 **Классы:**
 
-* `AliexpressAffiliateHotproductQueryRequest`: Этот класс предназначен для создания запросов к API AliExpress для получения информации о горячих товарах. Он наследуется от `RestApi`, используя базовые функции и атрибуты для формирования и выполнения запросов.
-* `RestApi`: Этот класс является базовым, предоставляет общие методы и атрибуты для работы с REST API.
+`AliexpressAffiliateHotproductQueryRequest`:
 
-
-**Атрибуты:**
-
-Все атрибуты (например, `app_signature`, `category_ids`)  являются свойствами класса, хранящими параметры запроса к API AliExpress, такие как ID категории,  цена, язык и т.д.  Их значения инициализируются при создании объекта.
-
-**Методы:**
-
-* `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса.  Инициализирует объект с базовыми параметрами (домен и порт).  Важная деталь: он вызывает метод `__init__` родительского класса `RestApi`.
-* `getapiname(self)`:  Возвращает строку, представляющую имя API-эндпоинта для запроса горячих товаров.
+* **Роль:** Этот класс представляет запрос к API AliExpress для получения популярных товаров.
+* **Атрибуты:**  Класс имеет множество атрибутов (например, `app_signature`, `category_ids`, `keywords`), которые представляют параметры запроса. Значения этих параметров могут быть установлены при инициализации объекта или позднее.
+* **Методы:**  `__init__`:  Инициализирует объект, устанавливая значения параметров запроса.  `getapiname`: Возвращает имя API-метода для отправки запроса.
 
 
 **Функции:**
 
-Нет самостоятельных функций, кроме `__init__` и `getapiname`.
+* `__init__(self, domain="api-sg.aliexpress.com", port=80)`:
+    * **Аргументы:** `domain` (строка, по умолчанию "api-sg.aliexpress.com") и `port` (целое число, по умолчанию 80).
+    * **Возвращаемое значение:**  None (неявное).
+    * **Действие:**  Инициализирует объект, вызывая конструктор базового класса `RestApi`, и устанавливает значения атрибутов класса.
+* `getapiname(self)`:
+    * **Аргументы:**  `self` (ссылка на текущий экземпляр класса).
+    * **Возвращаемое значение:** Строка с именем API-метода `'aliexpress.affiliate.hotproduct.query'`.
+    * **Действие:**  Возвращает строку, используемую для вызова API.
 
 
 **Переменные:**
 
-Переменные в коде представляют собой атрибуты класса `AliexpressAffiliateHotproductQueryRequest` и являются параметрами для API запроса.  Их типы - строки, числа.
+Все атрибуты класса (например, `self.app_signature`, `self.category_ids`) являются экземплярами переменных, которые хранят параметры запроса.
 
 **Возможные ошибки и улучшения:**
 
-* **Отсутствие обработки ошибок:** Не указано, как обрабатываются возможные ошибки при запросе к API. Нужно добавить проверку ответов и обработку исключений.
-* **Документирование:** Добавьте более подробные документации к классам и методам для лучшего понимания их назначения и использования.
-* **Типизация:** Разработка с использованием типов данных (например, `typing`) может улучшить читаемость и помочь в выявлении ошибок на этапе разработки.
+* **Недостаток валидации:**  Класс не содержит валидации параметров. Например, `page_no` и `page_size` должны быть целыми числами.
+* **Отсутствие документации:**  Не хватает подробной документации для методов и атрибутов.
+* **Отсутствие обработки ошибок:**  Класс не обрабатывает потенциальные ошибки, которые могут возникнуть при взаимодействии с API.
+* **Неявное использование `RestApi`:**  Непонятно, как именно класс RestApi используется. Важно понимать, как он взаимодействует с API и какие дополнительные методы предоставляются.
 
+**Взаимосвязи с другими частями проекта:**
 
-**Цепочка взаимосвязей:**
-
-`AliexpressAffiliateHotproductQueryRequest` использует `RestApi`, который, вероятно, используется другими запросами к API AliExpress.  Дальше в структуре проекта могут быть классы для обработки данных API ответа, хранения настроек и т.д.
-```
-src
-├── suppliers
-│   └── aliexpress
-│       └── api
-│           └── _examples
-│               └── rest
-│                   └── AliexpressAffiliateHotproductQueryRequest.py
-│               └── ... другие файлы ...
-│           └── base
-│               └── RestApi.py
-└── ... другие модули ...
+Класс `AliexpressAffiliateHotproductQueryRequest` является частью проекта, ориентированного на работу с API AliExpress.  Он взаимодействует с классом `RestApi` для создания и отправки запросов, а также, вероятно, с другими компонентами для обработки ответа API.  Необходимо исследовать `RestApi` для понимания, как он формирует и отправляет HTTP-запросы.

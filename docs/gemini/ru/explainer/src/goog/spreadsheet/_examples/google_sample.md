@@ -1,3 +1,4 @@
+```MD
 # <input code>
 
 ```python
@@ -7,7 +8,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.spreadsheet._examples 
+.. module:: src.goog.spreadsheet._examples 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -33,7 +34,7 @@ SAMPLE_SPREADSHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms'
 SAMPLE_RANGE_NAME = 'Class Data!A2:E'
 
 ROOT_DIRECTORY = Path.cwd().absolute()
-path = Path(ROOT_DIRECTORY, 'google_api', 'secrets', 'client_secret_920776813054-crpf1rcav3uui51kq9q1lis64glkpatj.apps.googleusercontent.com.json')
+path = Path(ROOT_DIRECTORY,'google_api','secrets','client_secret_920776813054-crpf1rcav3uui51kq9q1lis64glkpatj.apps.googleusercontent.com.json')
 def main():
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
@@ -84,36 +85,45 @@ if __name__ == '__main__':
 
 ```mermaid
 graph TD
-    A[Start] --> B{Check if token.json exists};
-    B -- Yes --> C[Load creds from token.json];
-    B -- No --> D[Get client_secret];
-    C --> E[Check creds validity];
-    E -- Valid --> F[Build Sheets API service];
-    E -- Invalid --> G{Refresh token?};
-    G -- Yes --> H[Refresh creds];
-    G -- No --> I[Authenticate user];
-    H --> F;
-    I --> J[Save creds to token.json];
-    J --> F;
-    F --> K[Get spreadsheet values];
-    K --> L{Check if values are empty?};
-    L -- Yes --> M[Print "No data found" and exit];
-    L -- No --> N[Print headers];
-    N --> O[Iterate through rows];
-    O --> P[Print name and major];
-    O --> O;
-    P --> Q[End of loop];
-    Q --> R[End];
-    M --> R;
-    K -- Error --> S[Handle HttpError];
-    S --> R;
+    A[Start] --> B{Check token.json};
+    B -- Exists --> C[Load creds];
+    B -- Not Exists --> D{Check creds};
+    C --> E[Refresh creds];
+    D -- Valid --> E;
+    D -- Invalid --> F[Get client secrets];
+    F --> G[Authorize];
+    G --> H[Save token];
+    E --> I[Build service];
+    I --> J[Get spreadsheet data];
+    J --> K{Check data};
+    K -- Empty --> L[Print "No data found"];
+    K -- Not Empty --> M[Print header];
+    M --> N[Loop through rows];
+    N --> O[Print columns A and E];
+    N -- end --> P[End];
+    L --> P;
+    O --> N;
+   
+    subgraph "Error Handling"
+        J --> Q[Error handling];
+        Q --> R[Print error];
+        R --> P;
+    end
 ```
 
-**Пример данных:**
+**Example Data Flow:**
 
-Предположим, `token.json` содержит валидные данные.  
-При запуске программы, данные из `SAMPLE_SPREADSHEET_ID` (например, из Google Таблицы) извлекаются.  
-Функция `main()` выводит данные в формате "Name, Major",  выводя  соответствующие значения из столбцов A и E.
+1. The script first checks for the existence of `token.json` to see if authentication credentials are already stored.
+2. If `token.json` exists, credentials are loaded.
+3. If the credentials are invalid or expired and refresh token exists, then it's refreshed.
+4. If the credentials are invalid or expired, and the refresh token does not exist, the script prompts for user authorization to obtain new credentials.
+5. New credentials are saved to `token.json`.
+6. The script then builds a Sheets API service.
+7. It fetches data from the specified Google Spreadsheet.
+8. If data is found, it prints a header and then iterates through each row, printing the values from columns A and E.
+9. If no data is found, it prints a message.
+10. If an error occurs during the API call, it's caught and an error message is printed.
+
 
 # <mermaid>
 
@@ -121,82 +131,67 @@ graph TD
 graph LR
     subgraph Google Sheets API Interaction
         A[main()] --> B(creds = None);
-        B -- if os.path.exists(path) --> C[Credentials.from_authorized_user_file];
-        C --> D[Check creds validity];
-        D -- Valid --> E[build('sheets', 'v4', credentials=creds)];
-        D -- Invalid --> F(creds and creds.expired and creds.refresh_token);
-        F -- True --> G[creds.refresh(Request())];
-        F -- False --> H[InstalledAppFlow.from_client_secrets_file];
-        H --> I[flow.run_local_server];
-        I --> J[Save creds to token.json];
-        G --> E;
-        I --> E;
-        E --> K[service.spreadsheets().values().get];
-        K --> L[result = sheet.values().get()];
-        L --> M{if not values:};
-        M -- True --> N[print('No data found')];
-        M -- False --> O[Iterate through rows];
-        O --> P[print('%s, %s' % (row[0], row[4]))];
-    end
-    subgraph Error Handling
-        K --> Q{except HttpError};
-        Q --> R[print(err)];
-    end
-    subgraph Dependencies
-        B -.-> google.oauth2.credentials;
-        B -.-> google.auth.transport.requests;
-        C -.-> google_auth_oauthlib.flow;
-        E -.-> googleapiclient.discovery;
-        K -.-> googleapiclient.errors;
-        K -.-> os.path;
-        K -.-> pathlib;
+        B --> C{os.path.exists(path)};
+        C -- true --> D[Credentials.from_authorized_user_file];
+        C -- false --> E[InstalledAppFlow.from_client_secrets_file];
+        D --> F[creds.valid?];
+        F -- true --> G[build('sheets', 'v4', credentials=creds)];
+        F -- false --> H[creds.refresh(Request())];
+        H --> F;
+        G --> I[sheet.values().get];
+        I --> J{values.empty?};
+        J -- true --> K[print("No data found")];
+        J -- false --> L[for row in values];
+        L --> M[print(row[0], row[4])];
+        I --> N{HttpError};
+        N -- true --> O[print(err)];
     end
 ```
 
 # <explanation>
 
-**Импорты:**
+**Imports:**
 
-- `from __future__ import print_function`:  Указывает на использование `print()`-функции в стиле Python 3, что важно для совместимости с кодом.
-- `import os.path`:  Для работы с путями к файлам, в частности, проверка их существования (`os.path.exists`).
-- `from pathlib import Path`: Используется класс `Path` для более удобного и переносимого управления путями файлов.
-- `from google.auth.transport.requests import Request`:  Для взаимодействия с аутентификацией Google.
-- `from google.oauth2.credentials import Credentials`: Класс для работы с учетными данными OAuth2.
-- `from google_auth_oauthlib.flow import InstalledAppFlow`: Для управления процессом авторизации Google Apps Script.
-- `from googleapiclient.discovery import build`:  Для создания объекта API клиента Google Sheets.
-- `from googleapiclient.errors import HttpError`: Для обработки ошибок HTTP-запросов к Google Sheets API.
+- `os.path`: Provides functions for interacting with the operating system's file system, including checking for file existence.
+- `pathlib`: Provides a way to work with file paths in a more object-oriented manner.
+- `google.auth.transport.requests`: Needed for making requests to Google APIs.
+- `google.oauth2.credentials`: Used for managing OAuth 2.0 credentials.
+- `google_auth_oauthlib.flow`: Provides an API client library for handling the OAuth 2.0 flow.
+- `googleapiclient.discovery`: Used to build the Google Sheets API service client.
+- `googleapiclient.errors`: Handles potential HTTP errors during API interactions.
 
-**Классы:**
+**Classes:**
 
-- `Credentials`: Представляет учетные данные пользователя для доступа к Google Sheets API.  Атрибуты: `valid`, `expired`, `refresh_token`. Методы: `refresh` для обновления токенов.
-- `InstalledAppFlow`:  Управляет процессом авторизации для установки приложения.  Методы:  `run_local_server` для запуска диалога авторизации.
+- `Credentials`: Represents the user's authentication credentials.  The code loads and manages these credentials.
 
+**Functions:**
 
-**Функции:**
-
-- `main()`: Основная функция программы. Загружает учетные данные, проверяет их, строит API-клиент Google Sheets, извлекает данные, выводит результат, обрабатывает исключения.
-- `Credentials.from_authorized_user_file()`: Загружает учетные данные из файла.
-- `creds.refresh()`: Обновляет токены доступа к API Google Sheets.
-- `build('sheets', 'v4', credentials=creds)`: Создает объект API-клиента Google Sheets с предоставленными учетными данными.
+- `main()`: The main function of the script. It handles the entire authentication and data retrieval process.
+    - Takes no arguments, though it uses several constants to target a specific spreadsheet.
+    - Returns nothing (implicitly).
+    - **Example Usage**: The script will run the authorization flow and print the 'Name, Major:' header along with rows from the specified Google Spreadsheet.
 
 
-**Переменные:**
+**Variables:**
 
-- `SCOPES`: Список разрешений, необходимых для доступа к Google Sheets API.
-- `SAMPLE_SPREADSHEET_ID`: ID таблицы в Google Sheets.
-- `SAMPLE_RANGE_NAME`: Диапазон ячеек для извлечения.
-- `ROOT_DIRECTORY`: Абсолютный путь к корневому каталогу текущего проекта.
-- `path`: Путь к файлу `client_secret.json`.
-- `creds`: Объект `Credentials`, хранящий учетные данные пользователя.
+- `SCOPES`: A list of scopes defining the access permissions needed to access the Google Sheets API.  Crucially, it uses `'https://www.googleapis.com/auth/spreadsheets.readonly'` for read-only access.
+- `SAMPLE_SPREADSHEET_ID`: The ID of the Google Spreadsheet to access.  A specific spreadsheet is hardcoded here for demonstration purposes.
+- `SAMPLE_RANGE_NAME`: Specifies the range of cells to retrieve from the spreadsheet.
+- `ROOT_DIRECTORY`: The absolute path to the current working directory.
+- `path`: The complete path to the `client_secret.json` file. The code constructs this path dynamically, which is good for portability.
+- `creds`: Stores the authentication credentials.
+- `service`: The Google Sheets API service client.
+- `result`: The result of the Sheets API call, containing the data retrieved.
+- `values`: The actual data from the spreadsheet.
+
+**Possible Errors/Improvements:**
+
+- **Error Handling:** The code includes a `try...except` block to catch `HttpError` exceptions, which is good practice.  Consider adding more specific error handling (e.g., network issues, invalid credentials) for more robust error management.
+- **File Management:** Using `pathlib` is a good practice.  Consider using a more descriptive variable name than `path`.
+- **Configuration:** Storing the spreadsheet ID and range in a configuration file would be more maintainable and flexible.  Current values are hardcoded which makes it difficult to change the spreadsheet without modifying the code.
+- **Security:** Ensure the `credentials.json` file is secure and not checked into version control.
 
 
-**Возможные ошибки и улучшения:**
+**Dependencies and Relationships:**
 
-- **Обработка ошибок**: Код хорошо обрабатывает `HttpError`. Можно добавить более подробную обработку других возможных ошибок (например, проблемы с файлом `token.json`).
-- **Улучшение читаемости**: Можно добавить комментарии к ключевым строкам кода, объясняя их назначение.
-- **Работа с тайм-аутами**: При работе с API желательно добавить обработку тайм-аутов, чтобы программа не зависала при долгом ответе от сервера Google Sheets.
-
-
-**Связь с другими частями проекта:**
-
-Код зависит от наличия файла `credentials.json`, содержащего секретные ключи для доступа к API Google Sheets.  Также, он использует другие библиотеки для работы с Google API, что подразумевает наличие необходимых зависимостей.  `ROOT_DIRECTORY`, `path` и `client_secret_920776813054-...json` предполагают определённую структуру проекта `hypotez` для хранения конфигурационных файлов.
+The code depends on the Google API Client libraries (`google-api-python-client`, `google-auth`, and `google-auth-oauthlib`).  These external libraries are responsible for communicating with Google's servers.  This script is likely part of a larger system that interacts with Google Spreadsheets.  The `client_secret.json` file (which is *not* present in the provided code) is a critical configuration file; it must exist and be correctly configured.

@@ -32,7 +32,7 @@ from src.utils.jjson import j_loads, j_dumps
 from src.product import Product, ProductFields, translate_presta_fields_dict
 from src.endpoints.prestashop import PrestaShop
 from src.db import ProductCampaignsManager
-from src.logger import logger
+from src.logger.logger import logger
 from src.logger.exceptions import ProductFieldException
 
 

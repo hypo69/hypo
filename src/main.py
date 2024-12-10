@@ -40,7 +40,7 @@ MODE = 'dev'
 
 import argparse
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 def script1():
     """Executes script 1."""

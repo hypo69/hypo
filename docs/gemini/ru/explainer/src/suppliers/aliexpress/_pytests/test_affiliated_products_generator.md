@@ -2,12 +2,8 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module: src.suppliers.aliexpress._pytests 
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+.. module:: src.suppliers.aliexpress._pytests 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -98,93 +94,85 @@ if __name__ == "__main__":
 
 # <algorithm>
 
-**Шаг 1:**  Фикстура `ali_affiliated_products` создает экземпляр класса `AliAffiliatedProducts` с заданными параметрами (campaign_name, category_name, language, currency).
+```mermaid
+graph TD
+    A[Тест process_affiliate_products] --> B{Подготовка данных};
+    B --> C[Вызов retrieve_product_details];
+    C --> D{Обработка деталей продукта};
+    D --> E[Создание списка обработанных продуктов];
+    E --> F[Проверка размера списка];
+    F -- Успешно | Не успешно --> G[Возврат обработанных продуктов / Ошибка];
+    G --> H[Тест test_check_and_process_affiliate_products];
+    H --> I{Вызов check_and_process_affiliate_products};
+    I --> J[Вызов process_affiliate_products];
+    J --> K[Проверка вызова process_affiliate_products];
+    K --> L[Конец теста];
+    
+    subgraph "Пример данных"
+        B --  prod_urls: ['https://www.aliexpress.com/item/123.html', '456'] --> C;
+        C -- mock_product_details: [SimpleNamespace(product_id="123", ...)] --> D;
+    end
+    
+```
 
-**Шаг 2:** Функция `test_check_and_process_affiliate_products`:
-* Инициализируется `mock_process` для подмены метода `process_affiliate_products`.
-* Вызывается `check_and_process_affiliate_products` с `prod_urls`.
-* Проверяется, что `mock_process` был вызван один раз с аргументом `prod_urls`.
+**Пример**: Если prod_urls содержит ссылку на продукт с ID 123, то функция retrieve_product_details должна вернуть список с объектом SimpleNamespace, содержащим подробности об этом продукте.  После чего process_affiliate_products обработает эти данные и вернёт список обработанных продуктов, содержащий деталь product_id=123.
 
-**Шаг 3:** Функция `test_process_affiliate_products`:
-* Создается `mock_product_details` — список объектов SimpleNamespace.
-* Инициализируются моки для методов `retrieve_product_details`, `ensure_https`, `save_png_from_url`, `save_video_from_url`, и `j_dumps`.
-* `retrieve_product_details` возвращает `mock_product_details`.
-* Вызывается `process_affiliate_products` с `prod_urls`.
-* Проверяется, что `processed_products` содержит один элемент с `product_id` равным "123".
-
-**Пример данных:**
-
-Входные данные: `prod_urls = ["https://www.aliexpress.com/item/123.html", "456"]`
-
-Обработанные данные: `processed_products = [SimpleNamespace(product_id="123", ...)]`
-
-**Пример перемещения данных**: `prod_urls` передается в `process_affiliate_products`, а результат (обработанные продукты) возвращается. Методы `retrieve_product_details`, `ensure_https`, `save_png_from_url` и `save_video_from_url` работают с данными из  `prod_urls`
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[ali_affiliated_products] --> B(test_check_and_process_affiliate_products);
-    B --> C{process_affiliate_products (mock)};
-    C --> D[assert called once];
-    E[ali_affiliated_products] --> F(test_process_affiliate_products);
-    F --> G{retrieve_product_details (mock)};
-    G --> H[mock_product_details];
-    H --> I{process_affiliate_products};
-    I --> J[assert len == 1];
-    I --> K[assert product_id == "123"];
-    subgraph "External dependencies"
-        G --> L[ensure_https (mock)];
-        I --> M[save_png_from_url (mock)];
-        I --> N[save_video_from_url (mock)];
-        I --> O[j_dumps (mock)];
+graph LR
+    subgraph AliAffiliatedProducts
+        AliAffiliatedProducts --> check_and_process_affiliate_products
+        check_and_process_affiliate_products --> process_affiliate_products
+        process_affiliate_products --> retrieve_product_details
+        retrieve_product_details -- mock_product_details --> save_png_from_url
+        retrieve_product_details -- mock_product_details --> save_video_from_url
+        retrieve_product_details -- mock_product_details --> ensure_https
+        retrieve_product_details -- mock_product_details --> j_dumps
     end
+    
+    subgraph Модули
+        ensure_https --> "src.suppliers.aliexpress.affiliated_products_generator"
+        save_png_from_url --> "src.suppliers.aliexpress.affiliated_products_generator"
+        save_video_from_url --> "src.suppliers.aliexpress.affiliated_products_generator"
+        j_dumps --> "src.suppliers.aliexpress.affiliated_products_generator"
+    end
+
+
+    
 ```
-
-**Объяснение диаграммы:**
-
-* `ali_affiliated_products`: Объект, содержащий методы, тестируемые в скрипте.
-* `test_check_and_process_affiliate_products`: Тестирует, что метод `process_affiliate_products` был вызван.
-* `test_process_affiliate_products`: Тестирует метод `process_affiliate_products`, проверяя корректность его работы при получении данных от `retrieve_product_details`.
-* `retrieve_product_details (mock)`: Подменяется моком, возвращающим данные о продукте.
-* `process_affiliate_products`:  Метод, обрабатывающий данные и вызывающий внешние методы.
-* Внешние зависимости (`ensure_https`, `save_png_from_url`, `save_video_from_url`, `j_dumps`) подменяются моками.
-
 
 # <explanation>
 
-**Импорты:**
-
-* `pytest`: Библиотека для написания тестов.
-* `unittest.mock`: Библиотека для создания моков (заглушек) для тестирования.  Необходима для имитации вызовов внешних функций.
-* `src.suppliers.aliexpress.affiliated_products_generator`:  Импортирует класс `AliAffiliatedProducts`, который предполагается, находится в модуле `affiliated_products_generator` внутри пакета `aliexpress` в вашем проекте.
-
-**Классы:**
-
-* `AliAffiliatedProducts`:  Класс, вероятно, отвечает за обработку данных о связанных продуктах с AliExpress.  В тестовом файле тестируются методы этого класса, такие как `check_and_process_affiliate_products` и `process_affiliate_products`.  Методы, которые вызываются из него ( `retrieve_product_details`,  `save_png_from_url`, `save_video_from_url` , и `ensure_https` ),  приведены в тестовом файле с помощью `patch`, но предполагаются определенными в самом классе.
-
-**Функции:**
-
-* `test_check_and_process_affiliate_products`: Тестирует, что метод `check_and_process_affiliate_products` правильно вызывает метод `process_affiliate_products`.
-* `test_process_affiliate_products`: Тестирует корректную работу `process_affiliate_products`, проверка работы с `retrieve_product_details` и сохранением данных.
-* `ali_affiliated_products`: Фикстура, предоставляющая экземпляр класса `AliAffiliatedProducts` для тестов.
+**Импорты**:
+- `pytest`:  Библиотека для написания и запуска тестов.
+- `unittest.mock`: Модуль для создания mock-объектов, которые имитируют поведение реальных объектов, но работают в контролируемой среде, это необходимо для тестирования функций, которые зависят от внешних ресурсов.
+- `src.suppliers.aliexpress.affiliated_products_generator`: Импортирует класс `AliAffiliatedProducts`, и функции, которые он использует (`retrieve_product_details`, `ensure_https`, `save_png_from_url`, `save_video_from_url`, `j_dumps`).  Это указывает на то, что класс и функции определены в модуле `affiliated_products_generator` внутри пакета `aliexpress` в структуре проекта.
+- `types.SimpleNamespace`: Используется для создания простых объектов с атрибутами, что позволяет хранить данные в удобном формате.
 
 
-**Переменные:**
-
-* `campaign_name`, `category_name`, `language`, `currency`:  Переменные, представляющие данные для настройки генератора связанных продуктов.
-* `prod_urls`: Список URL-адресов продуктов, которые будут обработаны.
-* `mock_product_details`:  Пример данных, имитирующих результаты извлечения данных о продуктах.
+**Классы**:
+- `AliAffiliatedProducts`:  Класс, вероятно, отвечает за обработку данных о связанных продуктах с AliExpress.  Методы `check_and_process_affiliate_products` и `process_affiliate_products` являются ключевыми для его функциональности.  Атрибуты (campaign_name, category_name, language, currency) – это параметры, влияющие на обработку данных.
 
 
-**Возможные ошибки или улучшения:**
-
-* Отсутствует описание того, что делает `j_dumps`. Необходимо документальное описание.
-* Моки для `ensure_https`, `save_png_from_url`, `save_video_from_url`,  и `j_dumps` должны быть лучше описаны — что они делают и зачем.
-* Не указано, что делает `process_affiliate_products`.
-* Тесты должны быть более полными, охватывать разные сценарии (например, пустые списки, ошибки при запросе).
+**Функции**:
+- `test_check_and_process_affiliate_products`: Тест, проверяющий, что метод `check_and_process_affiliate_products` корректно вызывает `process_affiliate_products` с ожидаемыми аргументами. Использует `patch` для подмены поведения `process_affiliate_products`.
+- `test_process_affiliate_products`: Тест, проверяющий корректность обработки данных в методе `process_affiliate_products`. Использует `patch` для подмены внешних зависимостей (например, `retrieve_product_details`) и проверки ожидаемого результата (например, длины списка обработанных продуктов).
+- `ali_affiliated_products`: Фикстура, предоставляющая экземпляр класса `AliAffiliatedProducts` для использования в тестах.
 
 
-**Взаимосвязи с другими частями проекта:**
+**Переменные**:
+- `campaign_name`, `category_name`, `language`, `currency`, `prod_urls`:  Это примеры данных, используемые для тестирования.
 
-Тестовый скрипт предполагает наличие функций (или методов) `ensure_https`, `save_png_from_url`, `save_video_from_url`, `j_dumps` и `retrieve_product_details` в `src.suppliers.aliexpress.affiliated_products_generator` для работы с продуктами.  Также предполагается использование сторонней библиотеки `pytest` для запуска тестов.
+
+**Возможные ошибки/улучшения**:
+- Отсутствует описание того, что именно делают функции `ensure_https`, `save_png_from_url`, `save_video_from_url`, `j_dumps`.  Желательно добавить документацию для этих функций.
+- Непонятно, откуда берутся данные для `prod_urls` и как они обрабатываются.  Необходимо прояснить логику формирования входных данных.
+- Нет обработки ошибок. Если `retrieve_product_details` вернёт ошибку, то код не обработает её. Добавьте `try-except` блоки для таких ситуаций.
+- Тесты должны тестировать не только валидные, но и невалидные данные, чтобы убедиться в надёжности кода.
+- В коде много комментариев, которые повторяют назначение функций. Можно оптимизировать количество комментариев.
+
+
+**Взаимосвязи с другими частями проекта**:
+- Файл тестов напрямую зависит от модуля `affiliated_products_generator` в пакете `aliexpress`.  Наличие корректного импорта и функциональности в `affiliated_products_generator` – это предпосылка для корректной работы тестов.  Подменяемые функции, вероятно, выполняют вызовы к внешним API или системам сохранения данных, и это повлияет на функциональность.  Они находятся в другом модуле внутри проекта и зависят от других частей проекта.

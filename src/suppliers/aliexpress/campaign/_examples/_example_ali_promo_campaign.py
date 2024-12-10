@@ -50,7 +50,7 @@ from src.suppliers.aliexpress import AliAffiliatedProducts
 from src.utils import get_filenames, get_directory_names, read_text_file, csv2dict
 from src.utils.jjson import j_loads_ns
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 campaigns_directory = Path(gs.path.google_drive, 'aliexpress', 'campaigns')
 campaign_names = get_directory_names(campaigns_directory)

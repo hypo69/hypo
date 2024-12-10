@@ -55,7 +55,7 @@ from src import gs
 from src.utils.printer import pprint,jprint
 #from src.suppliers import Supplier
 #from src.product import Product, ProductFields
-from src.logger import logger
+from src.logger.logger import logger
 
 
 def get_api_credentials (api_url:str) -> dict:

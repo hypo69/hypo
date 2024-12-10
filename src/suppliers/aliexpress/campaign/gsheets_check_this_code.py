@@ -20,7 +20,7 @@ from src.goog.spreadsheet.spreadsheet import SpreadSheet
 from src.suppliers.aliexpress.campaign.ali_campaign_editor import AliCampaignEditor
 from src.utils.jjson import j_dumps
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 
 from src.ai.openai import translate
@@ -39,7 +39,7 @@ from gspread_formatting import (
 from src.goog.spreadsheet.spreadsheet import SpreadSheet
 from src.webdriver.driver import Driver, Chrome
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
 class AliCampaignGoogleSheet(SpreadSheet):
     """ Класс для работы с Google Sheets в рамках кампаний AliExpress.

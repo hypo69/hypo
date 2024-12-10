@@ -52,7 +52,7 @@ from src import gs
 from src.suppliers import Supplier
 from src.product import Product
 from categories import Category
-from src.logger import logger,log_decorator, pprint
+from src.logger.logger import logger,log_decorator, pprint
 
 
 def start_supplier(supplier_prefix):

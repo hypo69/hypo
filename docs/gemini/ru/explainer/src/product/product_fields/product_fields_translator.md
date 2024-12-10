@@ -1,13 +1,14 @@
+```MD
 # <input code>
 
 ```python
 ## \file hypotez/src/product/product_fields/product_fields_translator.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.product.product_fields 
+.. module:: src.product.product_fields 
 	:platform: Windows, Unix
 	:synopsis: Модуль перевода полей товара на языки клиентской базы данных
 
@@ -59,15 +60,40 @@ def translate_presta_fields_dict (presta_fields_dict: dict,
                                   client_langs_schema: list | dict, 
                                   page_lang: str = None) -> dict:
     """ @Перевод мультиязычных полей в соответствии со схемой значений `id` языка в базе данных клиента
+    Функция получает на вход заполненный словарь полей. Мультиязычные поля содржат значения,
+    полученные с сайта поставщика в виде словаря 
+    ```
+    {
+        'language': [
+            {'attrs':{'id':'1'}, 'value':value},
+        ]
+    }
+    ```
+    У клиента язык с ключом `id=1` Может быть любым в зависимости от того на каком языке была 
+    изначально установлена PrestaShop. Чаще всего это английский, но это не правило.
+    Точные соответствия я получаю в схеме языков клиента 
+    locator_description
+    Самый быстрый способ узнать схему API языков - набрать в адресной строке браузера
+    https://API_KEY@mypresta.com/api/languages?display=full&io_format=JSON
+  
+    @param client_langs_schema `dict` словарь актуальных языков на клиенте
+    @param presta_fields_dict `dict` словарь полей товара собранный со страницы поставщика
+    @param page_lang `str` язык страницы поставщика в коде en-US, ru-RU, he_HE. 
+    Если не задан - функция пытается определить п тексту
+    @returns presta_fields_dict переведенный словарь полей товара
     """
+
     presta_fields_dict = rearrange_language_keys (presta_fields_dict, client_langs_schema, page_lang)
     #product_translations = get_translations_from_presta_translations_table(presta_fields_dict['reference'])
     enabled_product_translations = get_translations_from_presta_translations_table(presta_fields_dict['reference'])
+    ...
     if not enabled_product_translations or enabled_product_translations or len(enabled_product_translations) <1:
         """ В таблице переводов нет такого перевода товара. Добавляю текущий, как новый """
+        ...
         global record
         rec = record(presta_fields_dict)
         insert_new_translation_to_presta_translations_table(rec)
+        ...
         return presta_fields_dict
 
     for client_lang in client_langs_schema:
@@ -86,65 +112,87 @@ def translate_presta_fields_dict (presta_fields_dict: dict,
                     for key in presta_fields_dict.keys():
                         if hasattr(translated_record, key):
                             presta_fields_dict[key] = {'language': [{'attrs': {'id': str(client_lang['id'])}, 'value': getattr(translated_record, key)}]}
+                            # айдишники ОБЯЗАТЕЛЬНО строки. Связано с XML парсером
             except Exception as ex:
                 logger.error(f"""Ошибка {ex}
                 client_lang = {pprint(client_lang)}
                 """)
+                ...
+
 
     return presta_fields_dict
 ```
 
 # <algorithm>
 
-**Алгоритм работы функций:**
+**Шаг 1:** Функция `rearrange_language_keys` ищет соответствие между языком страницы (`page_lang`) и языковым идентификатором (`client_lang_id`) в схеме языков (`client_langs_schema`).
 
-**rearrange_language_keys:**
 
-1. Принимает словарь `presta_fields_dict`, схему языков `client_langs_schema` и язык страницы `page_lang`.
-2. Ищет в `client_langs_schema` язык, соответствующий `page_lang` по `locale`, `iso_code` или `language_code`.
-3. Если язык найден, сохраняет его ID в `client_lang_id`.
-4. Если `client_lang_id` существует, обходит все поля в `presta_fields_dict`.
-5. Для каждого поля, если оно словарь и содержит `language`, обходит все данные в `language`.
-6. Для каждого элемента в `language` устанавливает `id` атрибута в `lang_data['attrs']` на строковое представление `client_lang_id`.
-7. Возвращает обновленный `presta_fields_dict`.
+**Пример:**
 
-**translate_presta_fields_dict:**
+Если `page_lang` = "ru-RU", а `client_langs_schema` содержит элемент `{'locale': 'ru-RU', 'id': 4}`, то `client_lang_id` будет равен 4.
 
-1. Принимает словарь `presta_fields_dict`, схему языков `client_langs_schema` и язык страницы `page_lang`.
-2. Вызывает `rearrange_language_keys` для предварительной обработки данных.
-3. Вызывает `get_translations_from_presta_translations_table` для получения переводов из базы данных по ключу `reference` из `presta_fields_dict`.
-4. Если в базе нет переводов, добавляет новый перевод в базу с помощью `insert_new_translation_to_presta_translations_table`.
-5. Проходит по всем языкам в `client_langs_schema`.
-6. Проходит по всем записям перевода в `enabled_product_translations`.
-7. Если `iso_code` текущего языка из `client_langs_schema` содержится в `locale` записи перевода, копирует соответствующие значения из перевода в `presta_fields_dict`, устанавливая `id` на строковое представление ID языка из `client_langs_schema`.
-8. Возвращает обновленный `presta_fields_dict`.
+
+**Шаг 2:** Если `client_lang_id` найден, функция обновляет все языковые поля в `presta_fields_dict`.
+
+
+**Пример:**
+
+Если поле `field` в `presta_fields_dict` имеет `field['language'][0]['attrs']['id']` = "1", то после выполнения `lang_data['attrs']['id'] = str(client_lang_id)` станет `field['language'][0]['attrs']['id']` = "4".
+
+**Шаг 3:** Функция `translate_presta_fields_dict` вызывает `rearrange_language_keys`, чтобы переупорядочить языковые поля.
+
+
+**Шаг 4:** Функция получает переводы из таблицы (`enabled_product_translations`).
+
+
+**Шаг 5:** Проверяет, есть ли переводы для текущего товара. Если нет, добавляет новый.
+
+
+**Шаг 6:** Перебирает каждый язык из `client_langs_schema` и каждый перевод из `enabled_product_translations`.
+
+
+**Шаг 7:** Проверяет, соответствует ли язык из `client_langs_schema` языку из `translated_record`.
+
+
+**Пример:**
+
+Если `client_lang['iso_code']` = "en" и `translated_record.locale` содержит "en", то выполняет запись перевода в `presta_fields_dict`.
+
+
+**Шаг 8:**  Записывает перевод в словарь `presta_fields_dict`.
+
+
+**Пример:**
+
+Если `presta_fields_dict['name']` содержит языковое поле `{'language': [{'attrs': {'id': '1'}, 'value': 'Название'}]}`, а `translated_record.name` = "New name", то `presta_fields_dict['name']` обновляется до `{'language': [{'attrs': {'id': '2'}, 'value': 'New name'}]}`.
 
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[presta_fields_dict] --> B{rearrange_language_keys};
-    B --> C[client_lang_id];
-    C --> D{presta_fields_dict updated};
-    D --> E[translate_presta_fields_dict];
-    E --> F{get_translations_from_presta_translations_table};
-    F --translations exist--> G[Process translations];
-    F --translations not exist--> H[insert_new_translation];
-    G --> I[Iterate client langs];
-    I --> J[Iterate translations];
-    J --> K{translation matches client lang?};
-    K --yes--> L[Update presta_fields_dict];
-    K --no--> J;
-    L --> E;
-    H --> G;
-    G --> E;
-    E --> M[presta_fields_dict returned];
-    subgraph PrestaShop DB
-        F --> N[presta_translations_table];
-        H --> N;
+graph LR
+    A[presta_fields_dict] --> B(rearrange_language_keys);
+    B --> C[presta_fields_dict];
+    C --> D(translate_presta_fields_dict);
+    D --> E[enabled_product_translations];
+    E --> F{Проверка перевода};
+    F -- Есть перевод --> G[Цикл по client_langs_schema и translated_record];
+    F -- Нет перевода --> H[Добавление нового перевода];
+    G --> I[Запись перевода в presta_fields_dict];
+    H --> D;
+    I --> D;
+    D --> J[Возврат presta_fields_dict];
+    
+    subgraph "src.product.product_fields"
+        B -.-> K[client_langs_schema];
+        K -.-> B;
+        E -.-> L[get_translations_from_presta_translations_table];
+        L -.-> E;
+        G -.-> M[insert_new_translation_to_presta_translations_table];
     end
 ```
+
 
 # <explanation>
 
@@ -152,52 +200,44 @@ graph TD
 
 - `from pathlib import Path`: Импортирует класс `Path` для работы с путями к файлам.
 - `from typing import List`: Импортирует тип данных `List` для работы со списками.
-- `from src import gs`: Импортирует модуль `gs` из пакета `src`.  Необходимость и назначение `gs`  необходимо прояснить.
-- `from src.utils.printer import pprint`: Импортирует функцию `pprint` из модуля `printer` в папке `utils` для красивого вывода данных.
-- `from src.logger import logger`: Импортирует логгер `logger` из модуля `logger`.
-- `from src.logger.exceptions import ProductFieldException`: Импортирует пользовательское исключение `ProductFieldException` для обработки ошибок в модуле логгирования.
-- `#from src.db import ProductTranslationsManager`: Комментированный импорт, вероятно, для взаимодействия с базой данных.
-- `#from src.translator import get_translations_from_presta_translations_table`, `#from src.translator import insert_new_translation_to_presta_translations_table`: Комментированные импорты для функций работы с таблицами переводов.
-
+- `from src import gs`: Импортирует модуль `gs` из пакета `src`.  Непонятно, что это за модуль без контекста.
+- `from src.utils.printer import pprint`: Импортирует функцию `pprint` для красивой печати данных. Она находится в модуле `printer` из подпакета `utils` пакета `src`.
+- `from src.logger import logger`: Импортирует логгер `logger` из модуля `logger` пакета `src`. Логгер используется для записи сообщений об ошибках.
+- `from src.logger.exceptions import ProductFieldException`: Импортирует пользовательское исключение `ProductFieldException` из модуля `exceptions` подпакета `logger` пакета `src`.  Это позволяет локализовать обработку исключений в конкретном месте.
 
 **Классы:**
 
-Нет явных определений классов в данном коде.
+В коде нет определенных классов, только функции и переменные.
 
 **Функции:**
 
-- `rearrange_language_keys`: Обновляет идентификатор языка в словаре `presta_fields_dict` на основе `client_langs_schema` и языка страницы.
-    - Аргументы: `presta_fields_dict` (словарь), `client_langs_schema` (список или словарь), `page_lang` (строка).
-    - Возвращает: Обновленный словарь `presta_fields_dict`.
-- `translate_presta_fields_dict`: Переводит мультиязычные поля в соответствии со схемой значений `id` языка в базе данных клиента.
-    - Аргументы: `presta_fields_dict` (словарь), `client_langs_schema` (список или словарь), `page_lang` (строка, необязательно).
-    - Возвращает: Обновленный словарь `presta_fields_dict`.
+- `rearrange_language_keys`: Принимает словарь полей товара, схему языков и язык страницы.  Ищет соответствие языка страницы с языковым идентификатором в схеме и обновляет идентификаторы языков в словаре полей товара.
+- `translate_presta_fields_dict`: Принимает словарь полей товара, схему языков и язык страницы.  Переупорядочивает языковые поля. Получает переводы из базы данных, если перевод не найден – добавляет его в базу. Заменяет языковые поля в соответствии с переводами из базы данных.
+    - **Аргументы**: `presta_fields_dict` (dict): словарь полей товара, `client_langs_schema` (list|dict): схема языков, `page_lang` (str): язык страницы. 
+    - **Возвращаемые значения**: Обновленный словарь `presta_fields_dict`.
+    - **Возможные ошибки**: Обработка исключений `Exception` позволяет ловить ошибки во время работы с переводом, но нет конкретики, что именно обрабатывает исключение.
 
 **Переменные:**
 
-- `MODE`: Строковая переменная, хранящая режим работы ('dev').
-- `client_lang_id`: Переменная, хранящая идентификатор языка клиента.
-- `enabled_product_translations`: Список/словарь переведенных данных.
-
+- `MODE`: Строковая переменная, определяющая режим работы (например, 'dev' или 'prod').
+- `client_lang_id`: Переменная, хранящая идентификатор языка из схемы.
+- `enabled_product_translations`: Переменная, содержащая переводы из базы данных.
 
 **Возможные ошибки и улучшения:**
 
-- **Недостаточная обработка ошибок:** Обработка исключений (`try...except`) присутствует, но неполная.  Следует более подробно обрабатывать все возможные типы исключений и выводить более информативные сообщения об ошибках.
-- **Жесткая привязка к схеме:** Функции сильно зависят от структуры словарей (`presta_fields_dict`, `client_langs_schema`).  Необходимо учитывать возможные вариации в формате данных.
-- **Непонятные комментарии:** Некоторые комментарии не очень информативны.  Следует добавить более подробные пояснения о логике и целях кода.
-- **Недостающая валидация:** Необходимо добавлять проверки на валидность входных данных (например, типы, наличие необходимых ключей).
-- **Переименование переменных:** Переменные типа `client_lang_id` можно переименовать на более говорящие, например, `language_id`.
-- **Непонятные глобальные переменные:** Использование `global record` вызывает опасения. Возможно, это временное решение, которое следует пересмотреть.
+1. **Обработка исключений**: Обработка исключений `Exception` очень общая. Необходимо добавить конкретные типы исключений, например, `KeyError` или `AttributeError`, и обработать их более целенаправленно, в зависимости от того, что именно вы хотите ловить.
+2. **Явное указание типов**: Переменная `client_langs_schema` может быть списком или словарем. Для большей ясности рекомендуется указать конкретный тип при определении переменной.
+3. **Переменная `record`:**  Глобальная переменная `record` используется в коде, но ее определение неизвестно. Следует определить ее вне функции `translate_presta_fields_dict`.
+4. **Проверка `enabled_product_translations`**: Проверка `enabled_product_translations` является неэффективной. Достаточно проверить, является ли она пустым списком, или содержит хотя бы один элемент.
+5. **Язык страницы**: Если `page_lang` не задан, функция `translate_presta_fields_dict` пытается определить его по тексту. Это может быть неоднозначным и привести к ошибкам.
 
 **Взаимосвязи с другими частями проекта:**
 
-Код взаимодействует с:
-- Модулем `gs`.
-- Модулем `printer`.
-- Модулем `logger`.
-- (`src.db`) и  (`src.translator`) (комментированные импорты) для взаимодействия с базой данных переводов.  Необходимо проанализировать и реализовать эти взаимодействия, если они нужны.
+Код взаимодействует с другими модулями:
 
+- `src.utils.printer`: для печати отладочных данных.
+- `src.logger`: для записи логов.
+- `src.db`: для работы с базой данных переводов (`ProductTranslationsManager`).
+- `src.translator`: для получения переводов из таблицы (`get_translations_from_presta_translations_table`) и добавления новых (`insert_new_translation_to_presta_translations_table`).
 
-**Общие замечания:**
-
-Код выполняет сложную задачу перевода полей товара.  Однако, его качество кода может быть улучшено с помощью более подробных комментариев, лучшей обработки ошибок и более понятных имён переменных. Также, необходимо добавить валидацию входных данных.
+Взаимодействие с другими частями проекта не представлено на уровне кода, но предполагается.  Необходимо проанализировать эти модули, чтобы понять полную функциональность.  Отсутствующие `ProductTranslationsManager`,  `get_translations_from_presta_translations_table`, и `insert_new_translation_to_presta_translations_table` явно указывают на необходимость связи с модулем базы данных.

@@ -5,7 +5,7 @@
 """ module: src.suppliers.aliexpress.api.helpers """
 from types import SimpleNamespace
 from time import sleep
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.printer import pprint
 import json
 

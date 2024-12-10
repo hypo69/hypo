@@ -18,7 +18,7 @@ from urllib.parse import urlparse, parse_qs
 from typing import Union
 from urllib.parse import urlparse, parse_qs
 
-from src.logger import logger
+from src.logger.logger import logger
 
 class ProductFieldsValidator:
     """

@@ -50,7 +50,7 @@ from fake_useragent import UserAgent
 
 from src import gs
 from src.utils.jjson import j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 class Firefox(WebDriver):
     """ Subclass of `webdriver.Firefox` that provides additional functionality."""

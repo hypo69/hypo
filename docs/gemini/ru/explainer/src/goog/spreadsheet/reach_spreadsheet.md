@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.spreadsheet 
+.. module:: src.goog.spreadsheet 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -31,7 +31,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import tempfile
 import header
 from src import gs
-from src.utils.jjson import j_loads_ns, j_dumps
+from src.utils.jjson import j_loads_ns,j_dumps
 from src.utils.printer import pprint
 from src.logger import logger
 
@@ -52,136 +52,146 @@ class SheetNotSetError(SpreadsheetError):
 class ReachSpreadsheet:
     def __init__(self, debugMode = False):
         # ... (Initialization logic)
-        pass
+        
+    # Creates new spreadsheet
+    def create(self, title, sheetTitle, rows = 1000, cols = 26, locale = 'en-US', timeZone = 'Etc/GMT'):
+        # ... (Spreadsheet creation logic)
 
+    def share(self, shareRequestBody):
+        # ... (Spreadsheet sharing logic)
+
+    def shareWithEmailForReading(self, email):
+        # ... (Share for reading logic)
+
+    def shareWithEmailForWriting(self, email):
+        # ... (Share for writing logic)
+        
     # ... (Other methods)
-    pass
-
-# === Tests for class Spreadsheet ===
-# ... (Test functions)
-pass
-
-def create_pricelist(docTitle,sheetTitle,values:list):
-    # ... (Function to create a pricelist spreadsheet)
-    pass
-
-# This function creates a spreadsheet as https://telegram.me/TimeManagementBot can create, but with manually specified data
-def testCreateTimeManagementReport():
-    # ... (Function to create a Time Management report spreadsheet)
-    pass
-
-
-if __name__ == "__main__":
-    # ... (Main execution block)
-    pass
 ```
 
 # <algorithm>
 
-(Flowchart would be too large and complex to represent here in markdown.  It would involve many steps, including:
+**Описание алгоритма работы кода**
 
-1. **Initialization:**  `ReachSpreadsheet` object creation, loading credentials, building Google Sheets and Drive services.
-2. **Spreadsheet Creation:**  Calling `create()` with title, sheet title, dimensions to build a new Google Sheet.
-3. **Spreadsheet Sharing:** Calling `share` to make the spreadsheet sharable (with various options).
-4. **Spreadsheet Setting by ID:** Calling `setSpreadsheetById` to set the current spreadsheet to work with.
-5. **Sheet Addition:** Calling `addSheet` to create new sheets.
-6. **Dimension Setting:**  Using `prepare_setColumnWidth`, `prepare_setRowHeight` to set properties like column width or row height.
-7. **Data Preparation:** `prepare_setValues` preps data to update sheet with provided data.
-8. **Formatting:** `prepare_setCellStringFormatterormat` formats cells using various options.
-9. **Data Updating:** Calling `runPrepared` to update the spreadsheet with the prepared requests and values.
-10. **Getting URL:** Calling `getSheetURL` to obtain the URL of the spreadsheet to be shared.
+Класс `ReachSpreadsheet` предназначен для работы с Google Таблицами через API.
 
-Data flows between methods, classes, and functions by passing arguments and returning values.  `ReachSpreadsheet` maintains internal state like `spreadsheetId`, `sheetId`, `requests`, and `valueRanges` to manage the spreadsheet and its operations.)
+1. **`__init__`:** Инициализирует соединение с Google Sheets API и Google Drive API. Загружает ключи доступа из файла `e-cat-346312-137284f4419e.json`.  Пример:  `self.credentials = ServiceAccountCredentials.from_json_keyfile_name('e-cat-346312-137284f4419e.json', ['https://www.googleapis.com/auth/spreadsheets'])`
+
+2. **`create`:** Создаёт новую таблицу в Google Таблицах. Принимает на вход название таблицы, название листа, размеры и локаль. Пример вызова: `ss.create("Моя таблица", "Лист1", rows=500, cols=10)`
+
+3. **`share`:** Общий доступ к таблице. Принимает запрос для общего доступа.
+
+4. **`shareWithEmailForReading/Writing`:** Устанавливает уровень доступа чтения или записи для конкретного email-адреса.
+
+5. **`getSheetURL`:** Возвращает URL для доступа к таблице в Google Таблицах.
+
+6. **`setSpreadsheetById`:** Устанавливает текущую таблицу по её идентификатору.
+
+7. **`runPrepared`:** Выполняет подготовленные запросы обновления таблицы (batchUpdate). Разделяет запросы по типам, чтобы оптимизировать работу.
+
+8. **`prepare_addSheet`:** Подготавливает запрос на добавление листа.
+
+9. **`addSheet`:** Добавляет новый лист к текущей таблице и возвращает его идентификатор.
+
+10. **`toGridRange`:** Преобразует строковое представление диапазона ячеек в словарь, описывающий этот диапазон.
+
+11. **`prepare_setDimensionPixelSize`:** Подготавливает запрос на изменение размера ячеек (ширина столбцов, высота строк).
+
+12. **`prepare_setColumnsWidth/prepare_setColumnWidth/prepare_setRowsHeight/prepare_setRowHeight`:** Подготавливают запросы на изменение ширины столбцов и высоты строк.
+
+13. **`prepare_setValues`:** Подготавливает запрос на заполнение ячеек данными.
+
+14. **`prepare_mergeCells`:** Подготавливает запрос на слияние ячеек.
+
+15. **`prepare_setCellStringFormatterormat/prepare_setCellStringFormatterormats`:** Подготавливают запрос на форматирование ячеек.
+
+
+**Пример данных между функциями:**
+
+`ReachSpreadsheet` получает данные из конструктора `__init__` (ключ доступа, httpAuth). Далее данные используются в методах `create`, `share`, `addSheet`, `runPrepared`.
+В `runPrepared` обрабатываются `requests` и `valueRanges`
 
 
 # <mermaid>
 
 ```mermaid
 graph LR
-    subgraph Google Sheets API Interaction
-        A[ReachSpreadsheet] --> B(create);
-        B --> C{Spreadsheet ID};
-        C --> D[Spreadsheet];
-        D --> E(share);
-        E --> F{Share Request};
-        F --> G[Drive API];
-        G --> H{Spreadsheet Sharing};
-        D --> I(addSheet);
-        I --> J{Sheet Addition};
-        D --> K(runPrepared);
-        K --> L{Batch Update};
-        L --> M[Sheets API];
-        M --> N{Spreadsheet Updates};
-        A --> O(setSpreadsheetById);
-        O --> P{Spreadsheet Setting};
-        P --> Q[Spreadsheet];
-    end
-    A --> R(getSheetURL);
-    R --> S[Sheet URL];
-    subgraph Local Data Structures
-        A -.-> T[Credentials];
-        A -.-> U[Requests];
-        A -.-> V[Values];
-    end
+    A[ReachSpreadsheet] --> B(init);
+    B --> C{Load Credentials};
+    C -- Success --> D[Authorize http];
+    C -- Failure --> E[Error Handling];
+    D --> F[Build Sheets Service];
+    D --> G[Build Drive Service];
+    F --> H[create];
+    H --> I[Execute Spreadsheet Creation];
+    I --> J{Spreadsheet ID};
+    J --> K[Store Spreadsheet ID];
+    K --> L(share);
+    L --> M[Execute Share Request];
+    ...
+    A --> N(addSheet);
+    N --> O[prepare_addSheet];
+    O --> P[Append Request];
+    P --> Q[runPrepared];
+    Q --> R[Execute Batch Update];
+    R --> S[Update Spreadsheet];
     
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    style Q fill:#ccf,stroke:#333,stroke-width:2px
-    style M fill:#ccf,stroke:#333,stroke-width:2px
-
+    subgraph "External Dependencies"
+        F -->|Google Sheets API| Google Sheets;
+        G -->|Google Drive API| Google Drive;
+    end
 ```
+
+**Объяснение зависимостей**:
+
+* `httplib2`:  Библиотека для работы с HTTP протоколом.
+* `googleapiclient`: Библиотека для работы с Google API.
+* `oauth2client`: Библиотека для аутентификации с Google API.
+* `tempfile`:  Модуль для работы с временными файлами.
+* `header`, `gs`, `jjson`, `printer`, `logger`:  Локальные модули, скорее всего, части проекта, которые содержат вспомогательные функции и классы, например, для работы с файловой системой, обработки JSON, вывода сообщений, логирования.  Эти зависимости, скорее всего, находятся в директориях `src` и `src/utils`.
+
 
 # <explanation>
 
-**Импорты:**
+**Импорты**:
 
-* `httplib2`, `googleapiclient.discovery`, `googleapiclient.errors`: Библиотеки для работы с Google API, предоставляющие средства для взаимодействия с Google Sheets и Google Drive.
-* `oauth2client.service_account`: Модуль для аутентификации, использующий учетные записи сервисных аккаунтов Google.
-* `tempfile`, `header`, `gs`, `j_loads_ns`, `j_dumps`, `pprint`, `logger`:  Эти импорты призваны обеспечивать общие функции проекта (обработка временных файлов, заголовок, работу с файловой системой, JSON, вывод и логирование соответственно).  Их точное назначение и связь с другими частями кода не ясны без доступа к `src`-пакетам.
+Код импортирует необходимые библиотеки для работы с Google Sheets API: `httplib2`, `googleapiclient`, `oauth2client`.  Также импортируются модули для работы с временными файлами,  и локальные модули проекта (`header`, `gs`, `jjson`, `printer`, `logger`) которые обеспечивают дополнительные функции, такие как логирование и работу с файлами.
 
-**Классы:**
+**Классы**:
 
-* `SpreadsheetError`, `SpreadsheetNotSetError`, `SheetNotSetError`:  Иерархия исключений, позволяющая ловить и обрабатывать ошибки, связанные с настройкой и использованием Google Spreadsheet.
-* `ReachSpreadsheet`:  Основной класс для взаимодействия с Google Spreadsheets.
-    * `__init__(self, debugMode=False)`: Инициализирует объект, загружает credentials из файла, авторизуется и строит необходимые API-объекты.  Включает в себя возможность дебага (`debugMode`).
-    * `create(self, title, sheetTitle, rows=1000, cols=26, locale='en-US', timeZone='Etc/GMT')`: Создает новый Google Spreadsheet с заданными свойствами (название, название листа, количество строк и столбцов).
-    * `share(self, shareRequestBody)`: Общий метод для добавления разрешений.
-    * `shareWithEmailForReading/Writing`, `shareWithAnybodyForReading/Writing`: Методы для установки разрешений чтения и записи для определенных email адресов и для всех соответственно.
-    * `getSheetURL(self)`: Возвращает URL для доступа к листу.
-    * `setSpreadsheetById(self, spreadsheetId)`: Устанавливает текущий Spreadsheet по идентификатору.
-    * `runPrepared(self, valueInputOption="USER_ENTERED")`: Метод для выполнения подготовленных операций в Google Sheets, например, добавление листов или обновление данных.
-    * `prepare_addSheet(self, sheetTitle, rows=1000, cols=26)`: Подготавливает запрос для добавления нового листа.
-    * `addSheet(self, sheetTitle, rows=1000, cols=26)`:  Добавляет лист и устанавливает его текущим.
-    * `toGridRange(self, cellsRange)`: Преобразует строковое представление диапазона ячеек в словарь с соответствующими параметрами для API.
-    * `prepare_setDimensionPixelSize`, `prepare_setColumnsWidth`, `prepare_setColumnWidth`, `prepare_setRowsHeight`, `prepare_setRowHeight`: Методы для подготовки запросов на изменение размеров столбцов и строк.
-    * `prepare_setValues(self, cellsRange, values, majorDimension="ROWS")`: Подготавливает запрос на обновление значений в ячейках.
-    * `prepare_mergeCells`: Подготавливает запрос на объединение ячеек.
-    * `prepare_setCellStringFormatterormat`, `prepare_setCellStringFormatterormats`: Подготавливает запросы на форматирование текста, цветов и др.
-
-**Функции:**
-
-* `htmlColorToJSON(htmlColor)`: Преобразует HTML-цвет в JSON-объект для представления цвета в формате RGB.
-
-**Переменные:**
-
-* `MODE`, `GOOGLE_CREDENTIALS_FILE`: Константные переменные.  `GOOGLE_CREDENTIALS_FILE` - имя файла с ключами API, которое не используется в данном фрагменте кода.
-* `credentials`, `httpAuth`, `service`:  Объекты, используемые для взаимодействия с Google Sheets API.
+* **`SpreadsheetError`**: Базовый класс для ошибок, связанных с таблицей.
+* **`SpreadsheetNotSetError`**: Ошибка, если таблица не задана.
+* **`SheetNotSetError`**: Ошибка, если лист не задан.
+* **`ReachSpreadsheet`**: Класс для работы с Google Таблицами. Он содержит атрибуты:
+    * `debugMode`: Флаг для включения отладочного режима.
+    * `credentials`: Объект аутентификации, полученный от `ServiceAccountCredentials`.
+    * `httpAuth`: Авторизованный http-клиент.
+    * `service`: Объект для работы с Google Sheets API.
+    * `driveService`: Объект для работы с Google Drive API (для общего доступа).
+    * `spreadsheetId`, `sheetId`, `sheetTitle`: Идентификаторы и название таблицы и листа.
+    * `requests`: Список запросов для `batchUpdate`.
+    * `valueRanges`: Список диапазонов ячеек с данными для `values.batchUpdate`.
+    Методы класса `ReachSpreadsheet` реализуют создание, добавление листов, форматирование и получение данных из Google таблиц, а так же общие методы для работы с Google Drive.
 
 
-**Возможные ошибки и улучшения:**
+**Функции**:
 
-* **Обработка ошибок:**  Код содержит `try...except` блоки для обработки ошибок при создании `credentials`, но обработка ошибок в других методах (например, `share`) неполная.
-* **Проверка параметров:**  Не хватает проверки входных данных (например, `spreadsheetId` в методах) на корректность.
-* **Упрощение логики:**  В некоторых методах (например, `toGridRange`) можно упростить логику преобразования диапазонов ячеек.
-* **Документация:** Документация к методам была бы полезна.
-* **Типизация:** Использование типов данных для аргументов и возвращаемых значений (например, через аннотации типов) могло бы улучшить читаемость и надежность кода.
-* **Переменные состояния:** Обновление параметров `spreadsheetId`, `sheetId`, и `sheetTitle` в методах `create` и `setSpreadsheetById` должно быть общим, чтобы избежать проблем с состоянием.
-* **`gs.path.tmp`:** Неизвестно, что это за объект. Нужна информация о `src.gs` для понимания контекста.
-* **Отсутствие проверки существования листа:**  Функции `addSheet` и другие не проверяют существование листа с заданным названием. Если лист с таким названием уже есть, возникает ошибка.
-* **`if __name__ == "__main__":`:** Основной блок (`if __name__ == "__main__":`) содержит различные тесты. Тесты должны быть организованы в отдельные модули, а не засорять основной файл кода.
+* **`htmlColorToJSON`**: Преобразует строковое представление HTML цвета в JSON-представление.
+* **`test*`-функции**: Тестовые функции для проверки работы класса `ReachSpreadsheet`.  Они создают экземпляры класса, выполняют действия и сравнивают результаты.
 
+**Переменные**:
 
+Переменные `MODE`, `GOOGLE_CREDENTIALS_FILE`, `scopes` и другие содержат константы и переменные, используемые для настройки и выполнения тестов.
 
-**Взаимосвязи с другими частями проекта:**
+**Возможные ошибки и улучшения**:
 
-Этот модуль ( `hypotez/src/goog/spreadsheet/reach_spreadsheet.py`) взаимодействует с `src.gs`, `src.utils.jjson`, `src.utils.printer`, `src.logger` для использования их функциональности, и, скорее всего, зависит от настроек аутентификации и локальных настроек. Без доступа к остальной части проекта нельзя полностью проследить все взаимосвязи.
+* **Обработка ошибок:**  Код содержит `try...except` блоки для обработки возможных ошибок при создании `credentials`, но обработка ошибок при работе с Google API может быть улучшена.  Необходимо добавить более подробную обработку ошибок Google API (например, `googleapiclient.errors.HttpError`).
+* **Избыточность:** Необходимо пересмотреть наличие повторяющихся операций или функций (например, `create`, `share` в разных формах).
+* **Документация:** Добавить подробную документацию к методам, объясняя их назначение, аргументы и возвращаемые значения.
+* **Рефакторинг:**  Разделить на модули логику работы с запросами (`prepare_*`) и их выполнением (`runPrepared`).
+* **Использование `dataclasses`**: Для хранения данных диапазона ячеек можно использовать dataclasses, это упростит структурирование данных.
+* **Вместо `pprint`**: Используйте `logging` для более управляемого вывода в лог.
+
+**Взаимосвязь с другими частями проекта**:
+
+Код использует локальные модули проекта (`gs`, `jjson`, `printer`, `logger`), что указывает на его интеграцию в существующую инфраструктуру.  Неясно, какие именно части проекта взаимодействуют напрямую, но предполагается связь с системными функциями проекта.  Модули `src.utils` и `src` вероятно содержат вспомогательные классы и методы.

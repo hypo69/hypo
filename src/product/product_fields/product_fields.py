@@ -225,12 +225,12 @@ from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.category import Category
 from src.utils.file import read_text_file
-from src.logger import logger
+from src.logger.logger import logger
 from src.logger.exceptions import ProductFieldException 
 
 """Класс, описывающий поля товара в формате API PrestaShop."""
 import header
-from src.logger import logger
+from src.logger.logger import logger
 from src.utils.jjson import j_loads
 from pathlib import Path
 from types import SimpleNamespace

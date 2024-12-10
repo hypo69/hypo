@@ -16,7 +16,7 @@ import header
 import copy
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
-from src.logger import logger
+from src.logger.logger import logger
 
 d = Driver(Chrome)
 d.get_url(r"https://facebook.com")

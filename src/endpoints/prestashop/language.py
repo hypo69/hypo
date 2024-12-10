@@ -18,7 +18,7 @@ from src import gs
 from src.utils.printer import  pprint
 from .api import PrestaShop
 import header
-from src.logger import logger
+from src.logger.logger import logger
 from src.logger.exceptions import PrestaShopException
 
 from typing import Optional

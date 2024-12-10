@@ -15,7 +15,7 @@ MODE = 'dev'
 from pathlib import Path
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 class FacebookFields:
     """Поля для `объявлний` и `эвентов` """
