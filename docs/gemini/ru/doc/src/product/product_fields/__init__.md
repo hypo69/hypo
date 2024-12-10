@@ -1,23 +1,63 @@
-# Модуль `hypotez/src/product/product_fields/__init__.py`
+# Модуль hypotez/src/product/product_fields
 
 ## Обзор
 
-Данный модуль содержит начальные импорты и константу `MODE`, относящиеся к полям товаров. Он импортирует классы и функции из подмодулей `product_fields` и `product_fields_translator`.
+Этот модуль предоставляет классы и функции для работы с полями товара.  Он содержит определения классов и функций для взаимодействия с полями товаров, а также включает перевод данных из одного формата в другой.
 
-## Константы
+## Оглавление
 
-### `MODE`
+* [Модуль `product_fields`](#модуль-product_fields)
+* [Класс `ProductFields`](#класс-productfields)
+* [Функция `translate_presta_fields_dict`](#функция-translate_presta_fields_dict)
 
-**Описание**: Константа, хранящая режим работы (например, 'dev', 'prod'). В данном случае используется строка 'dev'.
 
-**Значение**: 'dev'
+## Модуль `product_fields`
 
-## Импорты
+Модуль содержит определения класса `ProductFields` и функции `translate_presta_fields_dict`, предназначенные для работы с данными полей товара.
 
-### `from .product_fields import ProductFields`
 
-**Описание**: Импортирует класс `ProductFields` из модуля `product_fields`.
+## Класс `ProductFields`
 
-### `from .product_fields_translator import translate_presta_fields_dict`
+**Описание**: Представляет собой класс для работы с полями товара.
 
-**Описание**: Импортирует функцию `translate_presta_fields_dict` из модуля `product_fields_translator`, предназначенную для перевода словарей полей из одного формата в другой.
+**Инициализация**:
+
+```python
+class ProductFields:
+    """
+    Args:
+        data (dict): Словарь с данными полей товара.
+    """
+```
+
+
+## Функция `translate_presta_fields_dict`
+
+**Описание**: Переводит словарь полей товара из формата PrestaShop в внутренний формат.
+
+```python
+def translate_presta_fields_dict(presta_fields: dict) -> dict | None:
+    """
+    Args:
+        presta_fields (dict): Словарь полей товара в формате PrestaShop.
+
+    Returns:
+        dict | None: Словарь полей товара в внутреннем формате или None, если входные данные некорректны.
+
+
+    Raises:
+        TypeError: Если входные данные не являются словарем.
+    """
+```
+
+**Подробное описание**: Эта функция принимает словарь `presta_fields` (поля товара в формате PrestaShop) и возвращает словарь с соответствующими полями в внутреннем формате. При некорректных входных данных она возвращает None. Возможна ситуация, когда входные данные не являются словарем и вызывается исключение TypeError.
+
+
+
+```
+```
+```
+```
+```
+```
+```

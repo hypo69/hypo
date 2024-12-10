@@ -1,7 +1,8 @@
 
 # INSTRUCTION
 
-For each input Python file, create documentation in `Markdown` format for subsequent use. The documentation must meet the following requirements:
+For each input Python file, create developer documentation in `Markdown` format for subsequent use. 
+The documentation must meet the following requirements:
 
 1. **Documentation Format**:
    - Use the `Markdown (.md)` standard.

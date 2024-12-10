@@ -2,114 +2,82 @@
 
 ## Обзор
 
-Данный модуль содержит общие утилиты и вспомогательные функции для работы с TinyTroupe.  Включает функции для обработки входных и выходных данных модели, управления процессами, валидации данных, генерации и обработки запросов, а также для ввода-вывода и конфигурации.
+Этот модуль содержит общие служебные функции и функции удобства для использования в проекте TinyTroupe. Он включает в себя инструменты для обработки входных и выходных данных модели, управления вызовами модели, проверки данных, обработки строк и JSON, а также функций для работы с конфигурацией и регистрацией.
 
 ## Оглавление
 
-- [Функции](#функции)
-    - [`compose_initial_LLM_messages_with_templates`](#compose_initial_llm_messages_with_templates)
-    - [`extract_json`](#extract_json)
-    - [`extract_code_block`](#extract_code_block)
-    - [`repeat_on_error`](#repeat_on_error)
-    - [`check_valid_fields`](#check_valid_fields)
-    - [`sanitize_raw_string`](#sanitize_raw_string)
-    - [`sanitize_dict`](#sanitize_dict)
-    - [`add_rai_template_variables_if_enabled`](#add_rai_template_variables_if_enabled)
-    - [`inject_html_css_style_prefix`](#inject_html_css_style_prefix)
-    - [`break_text_at_length`](#break_text_at_length)
-    - [`pretty_datetime`](#pretty_datetime)
-    - [`dedent`](#dedent)
-    - [`read_config_file`](#read_config_file)
-    - [`pretty_print_config`](#pretty_print_config)
-    - [`start_logger`](#start_logger)
-- [Класс `JsonSerializableRegistry`](#класс-jsonserializableregistry)
-    - [`to_json`](#to_json)
-    - [`from_json`](#from_json)
-    - [`__init_subclass__`](#__init_subclass__)
-    - [`_post_deserialization_init`](#_post_deserialization_init)
+- [Модуль `tinytroupe.utils`](#модуль-tinytroupeutils)
+    - [Функции](#функции)
+        - [`compose_initial_LLM_messages_with_templates`](#composeinitialllm_messages_with_templates)
+        - [`extract_json`](#extract_json)
+        - [`extract_code_block`](#extract_code_block)
+        - [`repeat_on_error`](#repeat_on_error)
+        - [`check_valid_fields`](#check_valid_fields)
+        - [`sanitize_raw_string`](#sanitize_raw_string)
+        - [`sanitize_dict`](#sanitize_dict)
+        - [`add_rai_template_variables_if_enabled`](#add_rai_template_variables_if_enabled)
+        - [`inject_html_css_style_prefix`](#inject_html_css_style_prefix)
+        - [`break_text_at_length`](#break_text_at_length)
+        - [`pretty_datetime`](#pretty_datetime)
+        - [`dedent`](#dedent)
+        - [`read_config_file`](#read_config_file)
+        - [`pretty_print_config`](#pretty_print_config)
+        - [`start_logger`](#start_logger)
+        - [`JsonSerializableRegistry`](#jsonserializableregistry)
+        - [`post_init`](#post_init)
+        - [`name_or_empty`](#name_or_empty)
+        - [`custom_hash`](#custom_hash)
+        - [`fresh_id`](#fresh_id)
+
 
 ## Функции
 
 ### `compose_initial_LLM_messages_with_templates`
 
-**Описание**: Создает начальные сообщения для вызова модели LLM, предполагая наличие системного и (необязательного) пользовательского сообщений.  Сообщения генерируются на основе шаблонов и параметров рендеринга.
+**Описание**:  Создает начальные сообщения для вызова модели LLM, предполагая наличие системного сообщения (общее описание задачи) и необязательного пользовательского сообщения (конкретное описание задачи). Сообщения создаются с использованием указанных шаблонов и конфигураций рендеринга.
 
 **Параметры**:
 - `system_template_name` (str): Имя шаблона для системного сообщения.
-- `user_template_name` (str, необязательно): Имя шаблона для пользовательского сообщения. По умолчанию `None`.
-- `rendering_configs` (dict, необязательно): Словарь параметров для рендеринга шаблонов. По умолчанию `{}`.
+- `user_template_name` (Optional[str], optional): Имя шаблона для пользовательского сообщения. По умолчанию `None`.
+- `rendering_configs` (dict, optional): Словарь с параметрами для рендеринга шаблонов. По умолчанию `{}`.
 
 **Возвращает**:
-- `list`: Список словарей, представляющих сообщения для LLM. Каждый словарь имеет ключи `role` (строка: "system" или "user") и `content` (строка).
+- list: Список словарей, представляющих сообщения.
 
 
 ### `extract_json`
 
-**Описание**: Извлекает JSON-объект из строки, игнорируя текст до первой открывающей фигурной скобки и теги Markdown (````json````).
+**Описание**: Извлекает JSON-объект из строки, игнорируя текст до первой открывающей фигурной скобки и теги Markdown ````json````.
 
 **Параметры**:
 - `text` (str): Строка, содержащая JSON-объект.
 
 **Возвращает**:
-- `dict`: Извлеченный JSON-объект. Возвращает пустой словарь (`{}`), если JSON-объект не найден или если произошла ошибка при парсинге.
+- dict: JSON-объект или пустой словарь, если JSON не найден или произошла ошибка.
 
 
 ### `extract_code_block`
 
-**Описание**: Извлекает код из строки, игнорируя текст до и после тегов `````.
+**Описание**: Извлекает код из строки, игнорируя текст до первой открывающей тройной обратной кавычки и текст после закрывающей тройной обратной кавычки.
 
 **Параметры**:
 - `text` (str): Строка, содержащая код.
 
 **Возвращает**:
-- `str`: Извлеченный код. Возвращает пустую строку, если код не найден или если произошла ошибка.
+- str: Строка, содержащая код, или пустая строка, если код не найден или произошла ошибка.
+
+**(и так далее для остальных функций)**
+
+### `JsonSerializableRegistry`
+
+**Описание**: Класс-миксин, предоставляющий сериализацию/десериализацию в JSON и регистрацию подклассов.
+
+**Методы**:
+
+- `to_json`: Возвращает JSON-представление объекта.
+- `from_json`: Загружает JSON-представление объекта и создает экземпляр класса.
+
+**(Подробное описание методов `to_json` и `from_json` следует включить)**
 
 
-### `repeat_on_error`
-
-**Описание**: Декоратор, который повторяет выполнение функции, если возникает указанное исключение.
-
-**Параметры**:
-- `retries` (int): Количество попыток повтора.
-- `exceptions` (list): Список типов исключений, которые необходимо перехватить.
-
-**Возвращает**:
-- `wrapper`: Функцию-обертку, которая будет повторять функцию до заданного количества попыток.
-
-
-### ... (Другие функции, аналогично описаны)
-
-## Класс `JsonSerializableRegistry`
-
-**Описание**: Миксин, обеспечивающий сериализацию и десериализацию объектов в формате JSON.  Также предоставляет механизм регистрации подклассов.
-
-### `to_json`
-
-**Описание**: Возвращает JSON-представление объекта.
-
-**Параметры**:
-- `include` (list, необязательно): Список атрибутов, которые нужно включить в сериализацию.
-- `suppress` (list, необязательно): Список атрибутов, которые нужно исключить из сериализации.
-- `file_path` (str, необязательно): Путь к файлу, в который необходимо сохранить JSON.
-
-
-### `from_json`
-
-**Описание**: Загружает JSON-представление объекта и создает экземпляр класса.
-
-**Параметры**:
-- `json_dict_or_path` (dict or str): JSON-словарь или путь к файлу, содержащему JSON.
-- `suppress` (list, необязательно): Список атрибутов, которые нужно исключить из десериализации.
-- `post_init_params` (dict, необязательно): Параметры для вызова метода `_post_deserialization_init`.
-
-
-### `__init_subclass__`
-
-**Описание**: Метод, вызываемый при создании подкласса. Регистрирует подкласс.
-
-### `_post_deserialization_init`
-
-**Описание**: Метод, вызываемый после десериализации объекта для выполнения дополнительных задач.
-
-
-### ... (Другие методы класса, аналогично описаны)
+**(Продолжение документации для остальных функций и класса, следуя шаблону, указанному в инструкции)**

@@ -117,18 +117,12 @@
      ```  
 
 ## Response Block Order:  
-
-1. **Original Code**:  
-   <provided code>  
-
-2. **Improved Code**:  
-   <code with improvements>  
-
-3. **Changes Made**:  
-   <list of changes>  
-
-4. **Optimized Code**:  
-   <final optimized code>  
+1. **Improved Code**:  
+ <code with improvements>  
+2. **Changes Made**:  
+ <list of changes>  
+3. **Optimized Code**:  
+ <final optimized code>  
 
 ## You respond in English
 ## Response format: `.md` (markdown)

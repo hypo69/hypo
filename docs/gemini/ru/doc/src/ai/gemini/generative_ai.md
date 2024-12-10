@@ -2,116 +2,89 @@
 
 ## Обзор
 
-Этот модуль предоставляет класс `GoogleGenerativeAI` для взаимодействия с API Google Generative AI.  Класс позволяет отправлять запросы, получать ответы, сохранять диалоги и загружать файлы.  Включает обработку различных ошибок и экспоненциальный бэк-офф для повышения надежности.
+Модуль `generative_ai.py` предоставляет инструменты для работы с API Google Generative AI. Он позволяет отправлять запросы, получать ответы, сохранять диалоги и обрабатывать различные типы запросов, включая текстовые и запросы с изображениями. Модуль также реализует механизмы обработки ошибок и обеспечивает логирование для отладки.
 
-## Оглавление
+## Классы
 
-- [Модуль `hypotez/src/ai/gemini/generative_ai.py`](#модуль-hypotezsrc-ai-gemini-generative-ai-py)
-- [Обзор](#обзор)
-- [Класс `GoogleGenerativeAI`](#класс-googlegenerativeai)
-    - [`__init__`](#-init-)
-    - [`ask`](#ask)
-    - [`chat`](#chat)
-    - [`describe_image`](#describe-image)
-    - [`upload_file`](#upload-file)
-    - [`_save_dialogue`](#_save-dialogue)
-    - [`_start_chat`](#_start-chat)
-    - [`config`](#config)
+### `GoogleGenerativeAI`
+
+**Описание**: Класс `GoogleGenerativeAI` предоставляет интерфейс для работы с моделью Google Generative AI.  Он инициализируется ключом API, названием модели и дополнительными параметрами, и управляет диалогом с моделью, включая сохранение истории.
+
+**Атрибуты**:
+
+- `MODELS` (List[str]): Список поддерживаемых моделей.
+- `api_key` (str): Ключ API для доступа к модели.
+- `model_name` (str): Название используемой модели. По умолчанию "gemini-1.5-flash-8b".
+- `generation_config` (Dict): Конфигурация для генерации. По умолчанию `{"response_mime_type": "text/plain"}`.
+- `system_instruction` (Optional[str]): Инструкция для системы, задающая поведение модели.
+- `dialogue_log_path` (Path): Путь для логирования диалогов.
+- `dialogue_txt_path` (Path): Путь для сохранения текстовых файлов диалогов.
+- `history_dir` (Path): Директория для хранения истории диалогов.
+- `history_txt_file` (Path): Путь к файлу для хранения истории в формате текста.
+- `history_json_file` (Path): Путь к файлу для хранения истории в формате JSON.
+- `model` (Optional[genai.GenerativeModel]): Объект модели Google Generative AI.
+- `_chat` (объект): Объект для управления чатом с моделью.
+
+**Методы**:
+
+- `__init__(self, api_key: str, model_name: Optional[str] = None, generation_config: Optional[Dict] = None, system_instruction: Optional[str] = None, **kwargs)`: Инициализирует объект `GoogleGenerativeAI`.
+- `ask(self, q: str, attempts: int = 15) -> Optional[str]`: Отправляет текстовый запрос модели и получает ответ. Обрабатывает различные исключения, включая сетевые ошибки, ошибки аутентификации и ошибки API.
+- `chat(self, q:str) -> str`: Отправляет запрос в чат с моделью.
+- `describe_image(self, image_path: Path) -> Optional[str]`: Генерирует описание изображения, отправляя его в модель.
+- `upload_file(self, file: str | Path | IOBase, file_name: Optional[str] = None) -> bool`: Загружает файл в Google Cloud Storage.
+
+### `TimeoutCheck`
+
+**Описание**: Класс для контроля времени выполнения операций.
 
 
-## Класс `GoogleGenerativeAI`
+## Функции
 
-### Описание
+### `_save_dialogue(self, dialogue: list)`
 
-Класс для взаимодействия с моделями Google Generative AI.  Обеспечивает настройку, отправку запросов, получение ответов и сохранение диалогов.
-
-### Методы
-
-#### `__init__`
-
-**Описание**: Инициализирует модель Google Generative AI с дополнительными настройками.
-
-**Параметры**:
-- `api_key` (str): Ключ API для доступа к генеративной модели.
-- `model_name` (Optional[str], optional): Название модели для использования. По умолчанию "gemini-1.5-flash-8b".
-- `generation_config` (Optional[Dict], optional): Конфигурация для генерации. По умолчанию `{"response_mime_type": "text/plain"}`.
-- `system_instruction` (Optional[str], optional): Инструкция для системы. По умолчанию `None`.
-
-#### `ask`
-
-**Описание**: Отправляет текстовый запрос модели и возвращает ответ.
-
-**Параметры**:
-- `q` (str): Вопрос, который будет отправлен модели.
-- `attempts` (int, optional): Количество попыток для получения ответа. По умолчанию 15.
-
-**Возвращает**:
-- `Optional[str]`: Ответ от модели или `None`, если ответ не был получен.
-
-**Возможные исключения**:
-- `requests.exceptions.RequestException`: Ошибка сети.
-- `GatewayTimeout`, `ServiceUnavailable`: Сервис недоступен.
-- `ResourceExhausted`: Превышен лимит запросов.
-- `DefaultCredentialsError`, `RefreshError`: Ошибка аутентификации.
-- `ValueError`, `TypeError`: Неверный входной формат.
-- `InvalidArgument`, `RpcError`: Ошибка API.
-- `Exception`: Другие непредвиденные ошибки.
-
-#### `chat`
-
-**Описание**: Отправляет запрос в чат-боту и возвращает ответ.
+**Описание**: Сохраняет диалог в текстовые и JSON файлы.  Управляет размером файлов, добавляя новые данные.
 
 **Параметры**:
-- `q` (str): Вопрос.
 
-**Возвращает**:
-- `str`: Ответ.
-
-**Возможные исключения**:
-- `Exception`: Ошибки во время взаимодействия с чатом.
-
-
-#### `describe_image`
-
-**Описание**: Генерирует описание изображения.
-
-**Параметры**:
-- `image_path` (Path): Путь к изображению, которое нужно описать.
-
-**Возвращает**:
-- `Optional[str]`: Описание изображения или `None`, если произошла ошибка.
-
-**Возможные исключения**:
-- `Exception`: Ошибки при работе с изображением.
-
-
-#### `upload_file`
-
-**Описание**: Загружает файл в Google Cloud Storage.
-
-**Параметры**:
-- `file` (str | Path | IOBase): Путь или объект файла для загрузки.
-- `file_name` (Optional[str], optional): Имя файла для загрузки. По умолчанию `None`.
-
-**Возвращает**:
-- `bool`: `True`, если загрузка прошла успешно; `False` в противном случае.
-
-**Возможные исключения**:
-- `Exception`: Ошибки при загрузке файла.
-
-
-#### `_save_dialogue`
-
-**Описание**: Сохраняет диалог в текстовый и JSON файлы.
-
-**Параметры**:
 - `dialogue` (list): Список сообщений, представляющих диалог.
 
-#### `_start_chat`
 
-**Описание**: Начинает сеанс чата с моделью.
+## Вспомогательные функции (из других модулей)
+
+- `gs.now`: Получение текущей даты и времени.
+- `gs.path`: Обработка путей к файлам.
+- `pprint`: Вывод отформатированных данных.
+- `read_text_file`: Чтение данных из файла.
+- `save_text_file`: Запись данных в файл.
+- `j_loads`: Парсинг JSON данных.
+- `j_loads_ns`: Парсинг JSON данных в формате SimpleNamespace.
+- `j_dumps`: Сериализация данных в JSON формат.
+- `decode_unicode_escape`: Декодирование Unicode escape последовательностей.
+- `genai.configure`: Настройка API Google Generative AI.
+- `genai.upload_file`: Загрузка файла в Google Cloud Storage.
+- `genai.delete_file`: Удаление файла из Google Cloud Storage.
 
 
-#### `config`
+## Обрабатываемые исключения
 
-**Описание**: Возвращает конфигурацию из файла настроек.
+- `requests.exceptions.RequestException`
+- `GatewayTimeout`
+- `ServiceUnavailable`
+- `ResourceExhausted`
+- `InvalidArgument`
+- `DefaultCredentialsError`
+- `RefreshError`
+- `RpcError`
+- `ValueError`
+- `TypeError`
+- `Exception`
+
+
+## Заметки
+
+- Документация содержит примеры использования функций и классов.
+- Некоторые методы (`_start_chat`) имеют недокументированные части.  
+- Необходимы дополнительные проверки в методах, особенно в обработке ошибок и в `upload_file`.
+- Необходимо добавить обработку ситуаций, когда `response` может быть `None`.
+- Документация должна быть дополнена примерами использования `generation_config`.
+- Необходимо добавить подробное описание `_chat` и его методов.

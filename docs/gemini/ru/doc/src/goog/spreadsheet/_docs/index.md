@@ -2,37 +2,163 @@
 
 ## Обзор
 
-Этот модуль предоставляет класс-обертку для работы с Google Sheets API v4. Он упрощает взаимодействие с Google Таблицами, предоставляя методы для создания, обновления, заполнения и форматирования таблиц.  Модуль предназначен для автоматизированного управления данными в Google Таблицах из Python-кода.  Он включает методы для настройки параметров таблиц, таких как ширина столбцов, объединение ячеек, форматирование, цвета фона и прочих элементов.
+Модуль `hypotez/src/goog/spreadsheet/_docs` предоставляет инструменты для работы с Google Sheets API v4.  Он содержит класс-обёртку `Spreadsheet`, позволяющий упрощённо выполнять операции по созданию, обновлению и заполнению данных в Google-таблицах.  Документация описывает процесс работы с API, включая создание сервисного аккаунта, установку необходимых библиотек, а также методы работы с таблицами, такими как: загрузка, сохранение данных, изменение форматирования (ширина столбцов, объединение ячеек, формат отображения, цвет фона, границы).
 
-## Классы
+## Содержание
 
-### `Spreadsheet`
+* [Обзор](#обзор)
+* [Класс `Spreadsheet`](#класс-spreadsheet)
+    * [`__init__`](#__init__)
+    * [`prepare_setColumnWidth`](#prepare_setcolumnwidth)
+    * [`prepare_setColumnsWidth`](#prepare_setcolumnswidth)
+    * [`prepare_setValues`](#prepare_setvalues)
+    * [`runPrepared`](#runprepared)
+    * [`toGridRange`](#togridrange)
+    * [`prepare_mergeCells`](#prepare_mergecells)
+    * [`prepare_setCellsFormat`](#prepare_setcellsformat)
+    * [`prepare_setCellsFormats`](#prepare_setcellsformats)
+* [Пример использования](#пример-использования)
 
-**Описание**: Класс-обёртка для работы с Google Sheets API v4.  Обеспечивает удобный интерфейс для выполнения различных операций с Google Таблицами.
+## Класс `Spreadsheet`
 
-**Атрибуты**:
+### `__init__`
 
-- `service`: Экземпляр `apiclient.discovery.build`, необходимый для взаимодействия с API.
-- `spreadsheetId`: Идентификатор Google Таблицы.
-- `sheetId`: Идентификатор листа.
-- `sheetTitle`: Название листа.
-- `requests`: Список запросов для `spreadsheets.batchUpdate`.
-- `valueRanges`: Список запросов для `spreadsheets.values.batchUpdate`.
+```python
+def __init__(self, service: apiclient.discovery.build, spreadsheet_id: str, sheet_id: int = 0, sheet_title: str = None) -> None:
+    """
+    Инициализирует объект Spreadsheet.
 
-**Методы**:
-
-- `prepare_setColumnWidth(col: int, width: int)`: Подготавливает запрос для изменения ширины указанного столбца.
-- `prepare_setColumnsWidth(startCol: int, endCol: int, width: int)`: Подготавливает запрос для изменения ширины столбцов в указанном диапазоне.
-- `prepare_mergeCells(cellsRange: str)`: Подготавливает запрос для объединения ячеек.
-- `prepare_setCellsFormat(cellsRange: str, format: dict, fields: Optional[str] = None)`: Подготавливает запрос для форматирования ячеек.
-- `prepare_setCellsFormats(cellsRange: str, formatValues: list, fields: Optional[str] = None)`: Подготавливает запрос для форматирования ячеек (применение разных форматов к разным ячейкам в диапазоне).
-- `prepare_setValues(cellsRange: str, values: list, majorDimension: Optional[str] = "ROWS")`: Подготавливает запрос для заполнения ячеек значениями.
-- `runPrepared(valueInputOption: Optional[str] = "USER_ENTERED")`: Выполняет все подготовленные запросы.  Возвращает результаты batchUpdate.
-
-
-## Функции
-
-В этом модуле нет явно определённых функций, но есть класс `Spreadsheet`, предоставляющий все необходимые операции.
-
-
+    Args:
+        service (apiclient.discovery.build): Объект, предоставляющий доступ к Google Sheets API.
+        spreadsheet_id (str): Идентификатор Google таблицы.
+        sheet_id (int, optional): Идентификатор листа. По умолчанию 0 (первый лист).
+        sheet_title (str, optional): Название листа. Если не указано, используется sheet_id.
+    """
 ```
+
+### `prepare_setColumnWidth`
+
+```python
+def prepare_setColumnWidth(self, col: int, width: int) -> None:
+    """
+    Добавляет запрос для установки ширины столбца.
+
+    Args:
+        col (int): Номер столбца (от 0).
+        width (int): Ширина столбца в пикселях.
+    """
+```
+
+### `prepare_setColumnsWidth`
+
+```python
+def prepare_setColumnsWidth(self, startCol: int, endCol: int, width: int) -> None:
+    """
+    Добавляет запрос для установки ширины нескольких столбцов.
+
+    Args:
+        startCol (int): Номер начального столбца (от 0).
+        endCol (int): Номер конечного столбца (от 0).
+        width (int): Ширина столбцов в пикселях.
+    """
+```
+
+### `prepare_setValues`
+
+```python
+def prepare_setValues(self, cellsRange: str, values: list[list], majorDimension: str = "ROWS") -> None:
+    """
+    Добавляет запрос для заполнения ячеек.
+
+    Args:
+        cellsRange (str): Диапазон ячеек в формате A1 (например, "A1:B2").
+        values (list[list]): Данные для заполнения. Внешний список - это строки, внутренние списки - значения в строках.
+        majorDimension (str, optional): Направление заполнения ("ROWS" или "COLUMNS"). По умолчанию "ROWS".
+    """
+```
+
+### `runPrepared`
+
+```python
+def runPrepared(self, valueInputOption: str = "USER_ENTERED") -> tuple:
+    """
+    Выполняет все подготовленные запросы.
+
+    Args:
+        valueInputOption (str, optional): Режим ввода данных. По умолчанию "USER_ENTERED".
+
+    Returns:
+        tuple: Кортеж из результатов запросов spreadsheets.batchUpdate и spreadsheets.values.batchUpdate.
+    """
+```
+
+### `toGridRange`
+
+```python
+def toGridRange(self, cell_range: str) -> dict:
+  """
+  Преобразует диапазон ячеек в формате A1 в формат GridRange.
+
+  Args:
+      cell_range (str): Диапазон ячеек в формате A1 (например, "A1:B2").
+
+  Returns:
+      dict: Словарь с параметрами GridRange.
+  """
+```
+
+### `prepare_mergeCells`
+
+```python
+def prepare_mergeCells(self, range: str) -> None:
+    """
+    Добавляет запрос для объединения ячеек.
+
+    Args:
+      range (str): Диапазон ячеек в формате A1 (например, "A1:E1").
+    """
+```
+
+### `prepare_setCellsFormat`
+
+```python
+def prepare_setCellsFormat(self, range: str, format: dict, fields: str = "userEnteredFormat") -> None:
+    """
+    Добавляет запрос для форматирования ячеек.
+
+    Args:
+        range (str): Диапазон ячеек в формате A1 (например, "A1:B2").
+        format (dict): Словарь с параметрами форматирования.
+        fields (str, optional): Список полей для обновления. По умолчанию "userEnteredFormat".
+    """
+```
+
+### `prepare_setCellsFormats`
+
+```python
+def prepare_setCellsFormats(self, range: str, formats: list[list[dict]], fields: str = "userEnteredFormat") -> None:
+    """
+    Добавляет запрос для форматирования ячеек.
+
+    Args:
+        range (str): Диапазон ячеек в формате A1 (например, "A1:B2").
+        formats (list[list[dict]]): Список списков словарей с параметрами форматирования.
+        fields (str, optional): Список полей для обновления. По умолчанию "userEnteredFormat".
+    """
+```
+
+
+## Пример использования
+
+```python
+# ... (Импорты и инициализация service)
+
+ss = Spreadsheet(service, 'spreadsheet_id')
+ss.prepare_setColumnWidth(0, 317)
+ss.prepare_setValues("A1:B2", [["Value 1", "Value 2"], ["Value 3", "Value 4"]])
+ss.runPrepared()
+
+# ... (Дополнительно: merge cells, format cells, etc.)
+```
+
+**Примечание:**  Данный пример упрощён. Полный пример, с полной реализацией класса `Spreadsheet`, доступен по ссылке в документации.

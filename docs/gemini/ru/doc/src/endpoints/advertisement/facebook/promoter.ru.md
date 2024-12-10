@@ -12,7 +12,7 @@
 - [Использование](#использование)
 - [Документация классов](#документация-классов)
     - [Класс `FacebookPromoter`](#класс-facebookpromoter)
-        - [`__init__`](#init)
+        - [`__init__`](#__init__)
         - [`promote`](#promote)
         - [`log_promotion_error`](#log_promotion_error)
         - [`update_group_promotion_data`](#update_group_promotion_data)
@@ -29,6 +29,7 @@
 - Избежание дублирования публикаций через отслеживание уже опубликованных элементов.
 - Поддержка конфигурации данных групп через файлы.
 - Возможность отключения загрузки видео в публикациях.
+
 
 ## Требования
 
@@ -71,12 +72,12 @@ promoter.process_groups(
 )
 ```
 
-
 ## Документация классов
 
 ### Класс `FacebookPromoter`
 
 Этот класс управляет процессом продвижения товаров и мероприятий AliExpress в группах Facebook.
+
 
 ```mermaid
 flowchart TD
@@ -96,27 +97,21 @@ flowchart TD
     H --> M
 ```
 
-#### `__init__`
+#### Методы
+
+##### `__init__(self, d: Driver, promoter: str, group_file_paths: Optional[list[str | Path] | str | Path] = None, no_video: bool = False)`
 
 Инициализирует промоутер для Facebook с необходимыми конфигурациями.
 
-```python
-def __init__(self, d: Driver, promoter: str, group_file_paths: Optional[list[str | Path] | str | Path] = None, no_video: bool = False) -> None:
-    """
-    Инициализирует промоутер для Facebook с необходимыми конфигурациями.
+- **Аргументы:**
+    - `d (Driver)`: Экземпляр WebDriver для автоматизации.
+    - `promoter (str)`: Имя промоутера (например, "aliexpress").
+    - `group_file_paths (Optional[list[str | Path] | str | Path])`: Пути к файлам с данными групп.
+    - `no_video (bool)`: Флаг для отключения видео в публикациях. По умолчанию `False`.
 
-    Args:
-        d (Driver): Экземпляр WebDriver для автоматизации.
-        promoter (str): Имя промоутера (например, "aliexpress").
-        group_file_paths (Optional[list[str | Path] | str | Path], optional): Пути к файлам с данными групп.
-        no_video (bool): Флаг для отключения видео в публикациях. По умолчанию False.
-    """
-```
 
-(и так далее, для всех методов, аналогично документируя параметры, возвращаемые значения и исключения)
-```
-```
-(Остальная часть документации, для `promote`, `log_promotion_error`, `update_group_promotion_data`, `process_groups`, `get_category_item`, `check_interval`, `validate_group`, аналогично заполняется)
+##### Другие методы (остальные методы класса `FacebookPromoter` документированы аналогично)
+
 
 ## Лицензия
 

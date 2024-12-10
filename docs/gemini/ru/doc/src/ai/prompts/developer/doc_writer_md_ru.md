@@ -1,103 +1,88 @@
-# Модуль: ai.prompts.developer.doc_writer
+# Модуль: doc_writer
 
-Этот модуль предоставляет инструменты для генерации Markdown-документации для Python-кода.  Он предназначен для создания хорошо структурированной и понятной документации, включающей описание модулей, классов, функций и методов.  Модуль ориентирован на удобство использования и соответствие стандартам Markdown.
+Этот модуль предоставляет инструменты для генерации документации кода в формате Markdown. Он предназначен для автоматизации процесса создания описаний классов, функций, методов и модулей, следуя заданному шаблону.
 
 ## Пример использования
 
 ```python
-# Пример использования для генерации документации
-# (Зависит от реализации doc_writer)
-from ai.prompts.developer.doc_writer import DocWriter
+# Пример использования для генерации документации модуля
+from doc_writer import generate_documentation_md
 
-files_to_document = ['my_module.py', 'another_module.py']
-doc_writer = DocWriter(files_to_document)
-generated_docs = doc_writer.generate_docs()
-# Далее можно сохранить generated_docs в файл или использовать другим образом.
-
+documentation = generate_documentation_md("my_module.py")
+print(documentation) # Вывод документации в консоль
 ```
 
 ## Поддерживаемые платформы
 
-- Python 3.x
-
-## Функциональность
-
-Этот модуль предназначен для автоматического создания документации для кода Python, используя комментарии RST-формата. Результатом работы является Markdown-документация.
-
-## Классы
-
-### `DocWriter`
-
-Класс `DocWriter` отвечает за чтение файлов Python-кода, извлечение информации из комментариев, и формирование документации в формате Markdown.
-
-#### Атрибуты
-
-- `files_to_document`: Список путей к файлам Python для документирования.
+- Python 3.8+
 
 
-#### Методы
+## Описание модуля
 
-##### `generate_docs()`
-
-Метод генерирует Markdown-документацию для указанных файлов.
-
-###### Параметры
-
--  `files_to_document`: Список путей к файлам Python.
-
-###### Возвращаемое значение
-
-- Строка содержащая сгенерированную Markdown-документацию.
-
-###### Пример использования
+Модуль `doc_writer` содержит функцию `generate_documentation_md`, которая принимает путь к файлу Python и генерирует документацию в формате Markdown.  Функция анализирует код, извлекает информацию о классах, функциях и методах, а также обрабатывает комментарии для генерации структурированной документации.
 
 ```python
-# Пример использования для генерации документации
-# (Зависит от реализации doc_writer)
-from ai.prompts.developer.doc_writer import DocWriter
+#Пример функции для обработки
+def process_code(file_path: str) -> str:
+  """
+  Обрабатывает код из указанного файла и возвращает строку с документацией.
 
-files_to_document = ['my_module.py', 'another_module.py']
-doc_writer = DocWriter(files_to_document)
-generated_docs = doc_writer.generate_docs()
-print(generated_docs)
+  Args:
+    file_path (str): Путь к файлу с кодом Python.
 
+  Returns:
+    str: Строка с документацией.
+
+  Raises:
+    FileNotFoundError: Если указанный файл не найден.
+    Exception: В случае возникновения других ошибок.
+  """
+  try:
+      with open(file_path, 'r') as file:
+          code = file.read()
+          #Здесь идет обработка кода
+          # и генерация документации в формате markdown
+          documentation = ""
+          return documentation
+  except FileNotFoundError as ex:
+      raise FileNotFoundError(f"Файл {file_path} не найден.") from ex
+  except Exception as ex:
+      raise Exception(f"Ошибка при обработке файла {file_path}: {ex}") from ex
+
+
+def generate_documentation_md(file_path: str) -> str:
+    """Генерирует документацию в формате Markdown."""
+    try:
+        documentation = process_code(file_path)
+        return documentation
+    except Exception as ex:
+        return f"Ошибка при генерации документации: {ex}"
 ```
 
-## Обработка исключений
+## API
 
-###  `FileNotFoundError`
+### `generate_documentation_md(file_path: str) -> str`
 
-Возникает, если указанный в `files_to_document` файл не найден.
+Функция для генерации документации из файла Python.
 
-###### Пример
+**Аргументы:**
+
+- `file_path` (str): Путь к файлу Python, для которого требуется сгенерировать документацию.
+
+**Возвращаемое значение:**
+
+- str: Строка, содержащая сгенерированную документацию в формате Markdown.
+
+**Исключения:**
+
+- `FileNotFoundError`: Если указанный файл не найден.
+- `Exception`: В случае возникновения других ошибок.
+
+**Пример использования:**
 
 ```python
-try:
-    # Здесь будет код, который может вызвать FileNotFoundError, например чтение файла
-    pass
-except FileNotFoundError as ex:
-    print(f"Ошибка: {ex}")
+documentation = generate_documentation_md("my_module.py")
+print(documentation)
 ```
-
-###  `SyntaxError`
-
-Возникает, если комментарии в коде не соответствуют заданному формату RST.
-
-###### Пример
-
-```python
-try:
-    # Здесь будет код, который может вызвать SyntaxError, например, чтение файла с неправильными комментариями
-    pass
-except SyntaxError as ex:
-    print(f"Ошибка: {ex}")
-```
-
-
-```
-```
-```
-```
-
 ```
 ```

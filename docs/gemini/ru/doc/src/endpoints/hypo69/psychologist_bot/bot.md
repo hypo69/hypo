@@ -2,131 +2,146 @@
 
 ## Обзор
 
-Этот модуль содержит код для создания Telegram бота, специализирующегося на психологическом консультировании.  Бот использует модель Google Gemini для генерации ответов на вопросы пользователей и имеет различные обработчики для различных типов входных данных (текст, голосовые сообщения, документы).
+Этот модуль содержит код для бота-психолога в Telegram, использующего модель Google Gemini для генерации ответов на запросы пользователей.  Бот обрабатывает текстовые сообщения, голосовые сообщения и загруженные документы, а также имеет обработку URL-адресов для определенных сценариев.
 
 ## Оглавление
 
-* [Классы](#классы)
-* [Функции](#функции)
+- [Модуль `hypotez/src/endpoints/hypo69/psychologist_bot/bot.py`](#модуль-hypotezsrcendpointshypo69psychologist_botbotpy)
+- [Константа `MODE`](#константа-mode)
+- [Класс `PsychologistTelgrambot`](#класс-psychologisttelgrambot)
+    - [Метод `__post_init__`](#метод-post_init)
+    - [Метод `register_handlers`](#метод-register_handlers)
+    - [Метод `start`](#метод-start)
+    - [Метод `handle_message`](#метод-handle_message)
+    - [Метод `get_handler_for_url`](#метод-get_handler_for_url)
+    - [Метод `handle_suppliers_response`](#метод-handle_suppliers_response)
+    - [Метод `handle_onetab_response`](#метод-handle_onetab_response)
+    - [Метод `handle_next_command`](#метод-handle_next_command)
+    - [Метод `handle_document`](#метод-handle_document)
+- [Остальные функции и классы](#остальные-функции-и-классы)
 
+## Константа `MODE`
 
-## Классы
+```python
+MODE = 'dev'
+```
 
-### `PsychologistTelgrambot`
+**Описание**:  Переменная, определяющая режим работы бота.  В данном коде используется строка `'dev'`.
 
-**Описание**: Класс `PsychologistTelgrambot` наследуется от `TelegramBot` и представляет собой бота для психологического консультирования. Он настраивает бота с помощью ключа API, драйвера браузера, модели Google Gemini и набора вопросов.
+## Класс `PsychologistTelgrambot`
+
+**Описание**: Наследуется от класса `TelegramBot`. Представляет собой бота-психолога для Telegram, взаимодействующего с моделью Google Gemini.
 
 **Атрибуты**:
-
-* `token` (str): Токен API Telegram бота.
-* `d` (Driver): Драйвер браузера для взаимодействия с веб-ресурсами.
-* `model` (GoogleGenerativeAI): Модель Google Gemini для генерации ответов.
-* `system_instruction` (str): Система инструкций для модели Gemini.
-* `questions_list` (list): Список вопросов для случайного выбора.
-* `timestamp` (str): Текущая дата и время.
+- `token`:  токен доступа к боту в Telegram.
+- `d`: Объект класса `Driver`, используемый для взаимодействия с браузером.
+- `model`: Объект класса `GoogleGenerativeAI`, используемый для взаимодействия с моделью Gemini.
+- `system_instruction`: система инструкций для модели Gemini.
+- `questions_list`: список вопросов для диалога.
+- `timestamp`: текущее время.
 
 **Методы**:
 
-* `__post_init__(self)`: Инициализирует бота, загружает инструкции, список вопросов и настраивает модель Gemini.
-* `register_handlers(self)`: Регистрирует обработчики команд и сообщений.
-* `start(self, update: Update, context: CallbackContext) -> None`: Обрабатывает команду `/start`.
-* `handle_message(self, update: Update, context: CallbackContext) -> None`: Обрабатывает текстовые сообщения, используя модель Gemini для генерации ответов. Сохраняет историю диалога в файл.
-* `get_handler_for_url(self, response: str)`: Находит обработчик для URL в сообщении.
-* `handle_suppliers_response(self, update: Update, response: str) -> None`: Обрабатывает URL-адреса поставщиков.
-* `handle_onetab_response(self, update: Update, response: str) -> None`: Обрабатывает URL-адреса сервиса onetab.
-* `handle_next_command(self, update: Update) -> None`: Обрабатывает команду `--next` для генерации случайного вопроса и ответа.
-* `handle_document(self, update: Update, context: CallbackContext) -> None`: Обрабатывает загрузки документов.
+### Метод `__post_init__`
+
+```python
+def __post_init__(self):
+    ...
+```
+
+**Описание**: Инициализирует атрибуты класса, загружает необходимые данные и регистрирует обработчики.
 
 
-## Функции
+### Метод `register_handlers`
 
-### `start`
+```python
+def register_handlers(self):
+    """Register bot commands and message handlers."""
+    self.application.add_handler(CommandHandler('start', self.start))
+    self.application.add_handler(CommandHandler('help', self.help_command))
+    self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
+    self.application.add_handler(MessageHandler(filters.VOICE, self.handle_voice))
+    self.application.add_handler(MessageHandler(filters.Document.ALL, self.handle_document))
+```
 
-**Описание**: Обрабатывает команду `/start` и отправляет приветственное сообщение.
-
-**Параметры**:
-- `update` (Update): Объект, содержащий информацию о сообщении.
-- `context` (CallbackContext): Объект, содержащий контекст выполнения.
-
-**Возвращает**:
-- `None`
-
-
-### `handle_message`
-
-**Описание**: Обрабатывает текстовые сообщения, используя модель Gemini для генерации ответов.
-
-**Параметры**:
-- `update` (Update): Объект, содержащий информацию о сообщении.
-- `context` (CallbackContext): Объект, содержащий контекст выполнения.
-
-**Возвращает**:
-- `None`
-
-**Обрабатывает исключения**:
-- `Exception`: Общий обработчик ошибок.
+**Описание**: Регистрирует обработчики команд `/start` и `/help`, а также обработчики текстовых, голосовых и документоподобных сообщений.
 
 
-### `get_handler_for_url`
+### Метод `start`
 
-**Описание**: Определяет обработчик для URL-адреса.
+```python
+async def start(self, update: Update, context: CallbackContext) -> None:
+    """Handle /start command."""
+    await update.message.reply_text('Hi! I am a smart assistant psychologist.')
+    await super().start(update, context)
+```
 
-**Параметры**:
-- `response` (str): Текст сообщения, содержащий URL.
+**Описание**: Обрабатывает команду `/start`. Отправляет приветственное сообщение пользователю.
 
+### Метод `handle_message`
 
-**Возвращает**:
-- Функция-обработчик или `None`, если URL не найден.
+```python
+async def handle_message(self, update: Update, context: CallbackContext) -> None:
+    """Handle text messages with URL-based routing."""
+    ...
+```
 
+**Описание**: Обрабатывает текстовые сообщения.  Использует модель Gemini для генерации ответа. Сохраняет историю чата в файл.
 
-### `handle_suppliers_response`
+### Метод `get_handler_for_url`
 
-**Описание**: Обрабатывает URL-адреса поставщиков.
+```python
+def get_handler_for_url(self, response: str):
+    """Map URLs to specific handlers."""
+    ...
+```
 
-**Параметры**:
-- `update` (Update): Объект, содержащий информацию о сообщении.
-- `response` (str): Текст сообщения, содержащий URL.
-
-**Возвращает**:
-- `None`
-
-
-### `handle_onetab_response`
-
-**Описание**: Обрабатывает URL-адреса сервиса OneTab.
-
-**Параметры**:
-- `update` (Update): Объект, содержащий информацию о сообщении.
-- `response` (str): Текст сообщения, содержащий URL.
-
-**Возвращает**:
-- `None`
-
-**Обрабатывает исключения**:
-- `Exception`: Общий обработчик ошибок.
+**Описание**:  Возвращает функцию-обработчик для определенных URL.
 
 
-### `handle_next_command`
+### Метод `handle_suppliers_response`
 
-**Описание**: Обрабатывает команду `--next` для генерации случайного вопроса и ответа.
+```python
+async def handle_suppliers_response(self, update: Update, response: str) -> None:
+    """Handle suppliers' URLs."""
+    ...
+```
 
-**Параметры**:
-- `update` (Update): Объект, содержащий информацию о сообщении.
-
-**Возвращает**:
-- `None`
-
-**Обрабатывает исключения**:
-- `Exception`: Общий обработчик ошибок.
+**Описание**: Обработчик для URL, связанных с поставщиками.
 
 
-### `handle_document`
+### Метод `handle_onetab_response`
 
-**Описание**: Обрабатывает загрузки документов.
+```python
+async def handle_onetab_response(self, update: Update, response: str) -> None:
+    """Handle OneTab URLs."""
+    ...
+```
 
-**Параметры**:
-- `update` (Update): Объект, содержащий информацию о сообщении.
-- `context` (CallbackContext): Объект, содержащий контекст выполнения.
+**Описание**: Обработчик для URL, связанных с OneTab.
 
-**Возвращает**:
-- `None`
+
+### Метод `handle_next_command`
+
+```python
+async def handle_next_command(self, update: Update) -> None:
+    """Handle '--next' and related commands."""
+    ...
+```
+
+**Описание**: Обработчик для команды `--next` и связанных команд. Выбирает случайный вопрос из списка и задаёт его пользователю.
+
+### Метод `handle_document`
+
+```python
+async def handle_document(self, update: Update, context: CallbackContext) -> None:
+    """Handle document uploads."""
+    ...
+```
+
+**Описание**: Обрабатывает загруженные документы.
+
+
+## Остальные функции и классы
+
+Остальные функции и классы, используемые в модуле, не документированы в данном фрагменте кода.  Для их документирования необходимо проанализировать код этих элементов.

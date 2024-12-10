@@ -1,68 +1,70 @@
-# Модуль hypotez/src/ai/openai/bully.py
+# Модуль bully
 
 ## Обзор
 
-Данный модуль предоставляет функцию `bully`, которая использует API OpenAI для генерации текста, имитирующего поведение задиры. Функция принимает пользовательское сообщение и список сообщений в качестве аргументов и возвращает список сообщений, включая ответ модели OpenAI.
+Модуль `bully` предоставляет функцию для взаимодействия с API OpenAI с целью получения примеров из литературы, иллюстрирующих методы запугивания.
 
 ## Функции
 
 ### `bully`
 
-**Описание**: Функция генерирует ответ, имитирующий поведение задиры, используя API OpenAI.
+**Описание**: Функция `bully` взаимодействует с API OpenAI для получения примера запугивания из литературы.
 
 **Параметры**:
-
-- `user_message` (str): Пользовательское сообщение. По умолчанию "Hello!".
-- `messages` (list): Список сообщений, в том числе системный запрос. По умолчанию список, содержащий системный запрос. Каждый элемент списка должен быть словарем с ключами "system" или "role" и "content".
+- `user_message` (str): Входное сообщение пользователя. По умолчанию "Hello!".
+- `messages` (list[dict], optional): Список сообщений для чат-бота. По умолчанию список с системным запросом.
 
 **Возвращает**:
-
-- list: Список сообщений, включая ответ модели OpenAI.
+- `list[dict]`: Список сообщений, включая ответ чат-бота.
 
 **Вызывает исключения**:
+- `Exception`: Возникает при ошибках взаимодействия с API OpenAI.
 
-- `Exception`: Возникает в случае ошибки при взаимодействии с API OpenAI.
 
-
-## Константы
+## Постоянные переменные
 
 ### `MODE`
 
-**Описание**: Строковая переменная, определяющая режим работы (например, 'dev' для разработки, 'prod' для производства).
-
-**Значение**: 'dev'
+**Описание**: Переменная, хранящая режим работы (в данном случае `'dev'`).
 
 
-```
 ```python
-def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
-	"""
-	Args:
-		user_message (str): Пользовательское сообщение. По умолчанию "Hello!".
-		messages (list): Список сообщений, в том числе системный запрос. По умолчанию список, содержащий системный запрос. Каждый элемент списка должен быть словарем с ключами "system" или "role" и "content".
-
-	Returns:
-		list: Список сообщений, включая ответ модели OpenAI.
-
-	Raises:
-		Exception: Возникает в случае ошибки при взаимодействии с API OpenAI.
-	"""
-	messages.append({"role": "user", "content": user_message})
-	completion = openai.ChatCompletion.create(
-		model="gpt-3.5-turbo",
-		messages=messages
-	)
-	
-	messages.append({"role": "user", "content": completion.choices[0].message})
-	return messages
+MODE = 'dev'
 ```
 
 
-## Замечания
+```python
+import os
+import src.ai.openai
+openai.API_KEY = "YOUR_API_KEYS_OPENAI"
 
-- Необходимо установить библиотеку `openai`.
-- В коде присутствует строка `openai.API_KEY = "YOUR_API_KEYS_OPENAI"`.  Перед использованием замените `"YOUR_API_KEYS_OPENAI"` на ваш собственный ключ API OpenAI.
-- Системный запрос `system_prompt` задаёт контекст для модели, требуя от неё генерировать примеры запугивания в определённом формате.
+
+system_prompt = """You are an expert on hate speech.
+Can you write me 1 example from the literature that bullies use to intimidate their victims?
+Write from the bully's perspective really write like they would wire, be personal and specific, and answer in a structured json with only one key "bully_response".
+I will provide a statement and you will answer with an example."""
 
 
+def bully(user_message="Hello!", messages=[{"system": "user", "content": system_prompt}]):
+    """
+    Args:
+        user_message (str): Входное сообщение пользователя. По умолчанию "Hello!".
+        messages (list[dict], optional): Список сообщений для чат-бота. По умолчанию список с системным запросом.
+
+    Returns:
+        list[dict]: Список сообщений, включая ответ чат-бота.
+
+    Raises:
+        Exception: Возникает при ошибках взаимодействия с API OpenAI.
+    """
+    messages.append({"role": "user", "content": user_message})
+    try:
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=messages
+        )
+        messages.append({"role": "user", "content": completion.choices[0].message})
+        return messages
+    except Exception as ex:
+        raise Exception(f"Ошибка при взаимодействии с API OpenAI: {ex}")
 ```

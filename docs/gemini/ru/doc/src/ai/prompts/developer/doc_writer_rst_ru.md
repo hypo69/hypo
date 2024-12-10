@@ -2,80 +2,118 @@
 
 ## Обзор
 
-Этот модуль содержит класс `CodeAssistant`, предназначенный для взаимодействия с моделями ИИ (например, Google Gemini и OpenAI) для выполнения задач по обработке кода.  Класс предоставляет методы для анализа и создания документации кода.
+Этот модуль предоставляет базовый класс `CodeAssistant` для работы с различными моделями ИИ (например, Google Gemini и OpenAI) для задач обработки кода.  Он предназначен для упрощения интеграции таких моделей в приложения.
 
-## Примеры использования
+## Пример использования
 
-.. code-block:: python
+```python
+from typing import List, Dict, Optional
 
-    from hypotez.src.ai.prompts.developer.code_assistant import CodeAssistant
+class CodeAssistant:
+    """
+    Класс для работы с ассистентом программиста.
 
-    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-    result = assistant.process_files(['file1.py', 'file2.py'])
-    print(result)
+    Args:
+        role (str): Роль ассистента (например, 'code_checker').
+        lang (str): Язык, на котором будет работать ассистент (например, 'ru').
+        model (List[str]): Список используемых моделей ИИ (например, ['gemini']).
+    """
+    def __init__(self, role: str, lang: str, model: List[str]):
+        self.role = role
+        self.lang = lang
+        self.model = model
+
+
+    def process_files(self, files: List[str], options: Optional[Dict] = None) -> List[Dict]:
+        """
+        Обрабатывает список файлов с кодом.
+
+        Args:
+            files (List[str]): Список путей к файлам.
+            options (Optional[Dict], optional): Дополнительные параметры. Defaults to None.
+
+        Returns:
+            List[Dict]: Список словарей с результатами обработки. Возвращает пустой список, если вход пустой. Возможна обработка исключений.
+
+        Raises:
+            FileNotFoundError: Возникает, если один или несколько файлов не найдены.
+            TypeError: Возникает, если тип аргумента `files` не соответствует ожиданиям.
+        """
+        if not files:
+            return []
+        if not isinstance(files, list):
+            raise TypeError("Аргумент 'files' должен быть списком.")
+        
+        results = []
+        for file in files:
+            try:
+                # Симулируем обработку файла
+                result = {"file": file, "processed_data": f"Обработан файл {file}"}
+                results.append(result)
+            except FileNotFoundError as ex:
+                raise FileNotFoundError(f"Файл {file} не найден") from ex
+
+
+        return results
+
+
+# Пример использования
+assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+try:
+    results = assistant.process_files(files=['file1.py', 'file2.py'])
+    for result in results:
+        print(result)
+
+    results_empty = assistant.process_files(files=[])
+    print(results_empty)
+
+    results_wrong_type = assistant.process_files(files="not a list")
+except FileNotFoundError as ex:
+    print(f"Ошибка: {ex}")
+except TypeError as ex:
+   print(f"Ошибка: {ex}")
+
+
+```
 
 ## Классы
 
 ### `CodeAssistant`
 
-**Описание**:  Класс для взаимодействия с моделями ИИ, такими как Google Gemini, для анализа и генерации информации о коде.
+**Описание**: Класс для работы с ассистентом программиста.
 
 **Атрибуты**:
-
 - `role` (str): Роль ассистента (например, 'code_checker').
 - `lang` (str): Язык, на котором будет работать ассистент (например, 'ru').
-- `model` (list): Список используемых моделей ИИ (например, ['gemini']).
+- `model` (List[str]): Список используемых моделей ИИ (например, ['gemini']).
+
 
 **Методы**:
-
-#### `process_files`
-
-**Описание**: Метод для обработки файлов с кодом.
-
-**Параметры**:
-
-- `files` (list): Список путей к файлам для обработки.
-- `options` (dict, optional): Словарь с дополнительными параметрами для настройки обработки.
-
-**Возвращает**:
-
-- list: Список результатов обработки файлов (с описанием ошибок или информации). Возвращает None при ошибке.
-
-**Пример использования**:
-
-.. code-block:: python
-
-    from hypotez.src.ai.prompts.developer.code_assistant import CodeAssistant
-
-    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
-    try:
-        result = assistant.process_files(['file1.py', 'file2.py'])
-        print(result)  # Обработка результата
-    except Exception as ex:
-        print(f"Ошибка при обработке файлов: {ex}")
-
+- `process_files`: Метод для обработки файлов с кодом.  Подробное описание см. в разделе "Методы".
 
 
 ## Функции
 
-(В данном модуле нет отдельных функций, только методы класса.)
+
+## Методы
+
+### `process_files`
+
+**Описание**: Метод для обработки списка файлов с кодом.
+
+**Параметры**:
+- `files` (List[str]): Список путей к файлам.
+- `options` (Optional[Dict], optional): Дополнительные параметры. По умолчанию `None`.
+
+**Возвращает**:
+- `List[Dict]`: Список словарей с результатами обработки. Возвращает пустой список, если вход пустой.
+
+**Возможные исключения**:
+- `FileNotFoundError`: Если один или несколько файлов не найдены.
+- `TypeError`: Если тип аргумента `files` не соответствует ожиданиям.
 
 
-## Обработка исключений
+**Примеры использования (см. пример в Обзоре).**
 
-Этот модуль обрабатывает исключения, связанные с работой с файлами и моделями ИИ.  В методе `process_files` предусмотрен блок `try...except`, позволяющий обрабатывать потенциальные ошибки при чтении файлов, запросах к моделям и других операциях.
-
-**Примеры обработки исключений**:
-
-.. code-block:: python
-
-    try:
-        # Код, который может вызвать исключение
-        assistant.process_files(['file1.py', 'file2.py'])
-    except FileNotFoundError as ex:
-        print(f"Ошибка: Файл не найден - {ex}")
-    except Exception as ex:  # Обработка других ошибок
-        print(f"Непредвиденная ошибка: {ex}")
 
 ```
-**Примечание:**  Этот шаблон предполагает, что в файле `hypotez/src/ai/prompts/developer/code_assistant.py` определён класс `CodeAssistant` с методом `process_files`. Для более полной документации потребуется код этого файла.  Также добавлены примеры обработки исключений, которые могут быть полезны в реальных сценариях.  Вместо `file1.py` и `file2.py` необходимо подставить реальные пути к файлам.

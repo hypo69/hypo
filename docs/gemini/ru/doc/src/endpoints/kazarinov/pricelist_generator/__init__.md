@@ -1,46 +1,91 @@
 # Модуль hypotez/src/endpoints/kazarinov/pricelist_generator
 
-## Обзор
+## Описание
 
-Этот модуль содержит инструменты для генерации отчетов о ценах.  Основной функциональностью является класс `ReportGenerator`, который, предположительно, отвечает за создание отчетов в определенном формате.
+Данный модуль содержит функционал для генерации отчетов о ценах.
 
 ## Оглавление
 
-* [Модуль `pricelist_generator`](#модуль-pricelist-generator)
-* [Класс `ReportGenerator`](#класс-reportgenerator)
+* [Генератор отчетов](#генератор-отчетов)
 
 
-## Модуль `pricelist_generator`
-
-Модуль предоставляет классы и функции для работы с генерацией отчетов о ценах.  В данном файле импортируется класс `ReportGenerator`.
-
-## Класс `ReportGenerator`
+## Генератор отчетов
 
 ### `ReportGenerator`
 
-**Описание**:  Представляет собой класс для генерации отчетов о ценах. Подробности о функциональности класса должны быть описаны в файле `pricelist_generator.py`.
+**Описание**: Класс `ReportGenerator` отвечает за генерацию отчетов о ценах.
+
+**Описание методов:**
+
+- `generate_report()`: Генерирует отчет о ценах.
 
 
-**Атрибуты:**
+**Пример использования (в другом модуле):**
 
- *  `MODE`:  Переменная, предположительно определяющая режим работы. Значение `'dev'` указывает на режим разработки.  
- *  (Другие атрибуты должны быть описаны, если они есть в классе `ReportGenerator`.)
+```python
+from hypotez.src.endpoints.kazarinov.pricelist_generator import ReportGenerator
 
-**Методы**:
+# ... (Инициализация необходимых данных) ...
+
+report_generator = ReportGenerator(...)
+report = report_generator.generate_report()
+
+# ... (Обработка полученного отчета) ...
+```
 
 
-(Список методов и их описаний должен быть добавлен, если они есть в классе `ReportGenerator`.  В данном примере отсутствует информация о методах.)
+**Методы:**
 
 
-**Пример использования**:
+### `generate_report()`
+
+**Описание**: Генерирует отчет о ценах.
+
+**Параметры**:
+
+Нет параметров.
+
+
+**Возвращает**:
+
+- `dict | None`: Возвращает словарь с данными отчета или `None` в случае ошибки.
+
+
+**Вызывает исключения**:
+
+- `ValueError`: Возникает в случае некорректных входных данных.
+- `Exception`: Возникает при возникновении непредвиденной ошибки.
 
 
 ```python
-# Пример использования, если доступны методы
-generator = ReportGenerator()
-report = generator.generate_report(data)  # Предположительный метод
+from typing import Dict, Optional
+import pandas as pd
+
+class ReportGenerator:
+
+    def generate_report(self) -> Dict | None:
+        """
+        Args:
+            None
+
+        Returns:
+            dict | None: Словарь с данными отчета или None в случае ошибки.
+
+        Raises:
+            ValueError: Возникает в случае некорректных входных данных.
+            Exception: Возникает при возникновении непредвиденной ошибки.
+        """
+        try:
+            # Ваш код для генерации отчета
+            # ...
+            report_data = {
+                "data": "example_report_data"
+            }
+            return report_data
+        excepr ValueError as ex:
+            print(f"Ошибка: {ex}")
+            return None
+        except Exception as ex:
+            print(f"Непредвиденная ошибка: {ex}")
+            return None
 ```
-
-**Примечания**:
-
-Подробное описание и функциональность класса `ReportGenerator` должны быть в файле `hypotez/src/endpoints/kazarinov/pricelist_generator/pricelist_generator.py`. Данный файл `__init__.py`  только импортирует его.

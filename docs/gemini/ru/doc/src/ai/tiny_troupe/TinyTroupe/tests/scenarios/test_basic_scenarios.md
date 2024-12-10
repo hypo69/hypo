@@ -1,50 +1,46 @@
-# Модуль test_basic_scenarios
+# Модуль `test_basic_scenarios.py`
 
 ## Обзор
 
-Этот модуль содержит тесты для базовых сценариев работы с TinyTroupe. Он проверяет корректность инициализации симуляции, добавление агентов, их действия и сохранение состояния.
+Этот модуль содержит тесты для базовых сценариев работы с TinyTroupe. Он проверяет инициализацию симуляции, добавление агентов, определение их характеристик, выполнение действий и сохранение состояния.
 
 ## Функции
 
 ### `test_scenario_1`
 
-**Описание**: Тестирует базовый сценарий работы с TinyTroupe.
+**Описание**: Функция `test_scenario_1` проверяет базовый сценарий работы с TinyTroupe, включая инициализацию, добавление агента, определение его характеристик, сохранение точек сохранения и завершение симуляции.
 
-**Описание сценария**: Функция проверяет, что симуляция начинается и завершается успешно, что агенты добавляются и могут взаимодействовать.  Проверяет сохранение состояния симуляции при использовании `checkpoint`.
+**Описание параметров:**
 
-**Вызывает исключения**:
+* Не принимает аргументов.
 
-- `AssertionError`: Если какие-либо из ожидаемых условий не выполнены (например, симуляция не запущена, нет кэшированной трассы).
+**Описание возвращаемых значений:**
+
+* Не возвращает значений.
+
+**Вызывает исключения:**
+
+* Возможны исключения, связанные с некорректным состоянием симуляции или другими ошибками в системе тестирования.
 
 
-```python
-def test_scenario_1():
-    control.reset()
+**Тело функции:**
 
-    assert control._current_simulations["default"] is None, "There should be no simulation running at this point."
+1. Вызывает `control.reset()`, чтобы сбросить состояние симуляции.
+2. Проверяет, что текущая симуляция `None` используя `assert control._current_simulations["default"] is None`.
+3. Инициализирует симуляцию, используя `control.begin()`.
+4. Проверяет, что статус симуляции `Simulation.STATUS_STARTED` с помощью `assert control._current_simulations["default"].status == Simulation.STATUS_STARTED`.
+5. Создает агента `oscar_the_architect` используя `create_oscar_the_architect()`.
+6. Определяет свойства агента `age` и `nationality` используя `agent.define()`.
+7. Проверяет наличие кэшированных и исполняемых трасс с помощью `assert control._current_simulations["default"].cached_trace is not None` и `assert control._current_simulations["default"].execution_trace is not None`.
+8. Сохраняет точку сохранения используя `control.checkpoint()`.
+9. Выполняет действие агента используя `agent.listen_and_act("How are you doing?")`.
+10. Определяет свойство агента `occupation` используя `agent.define("occupation", "Engineer")`.
+11. Сохраняет точку сохранения используя `control.checkpoint()`.
+12. Завершает симуляцию используя `control.end()`.
 
-    control.begin()
-    assert control._current_simulations["default"].status == Simulation.STATUS_STARTED, "The simulation should be started at this point."
+**Примечания:**
 
-    agent = create_oscar_the_architect()
+* Код содержит TODO-заметки, требующие проверки создания файлов.
+* Используются функции `create_oscar_the_architect()` и другие вспомогательные функции из других модулей, которые должны быть описаны в их собственных документах.
 
-    agent.define("age", 19)
-    agent.define("nationality", "Brazilian")
-
-    assert control._current_simulations["default"].cached_trace is not None, "There should be a cached trace at this point."
-    assert control._current_simulations["default"].execution_trace is not None, "There should be an execution trace at this point."
-
-    control.checkpoint()
-    # TODO check file creation
-
-    agent.listen_and_act("How are you doing?")
-    agent.define("occupation", "Engineer")
-
-    control.checkpoint()
-    # TODO check file creation
-
-    control.end()
 ```
-## Замечания
-
-В данном коде присутствуют TODO, которые нуждаются в реализации.  Необходимо добавить проверку создания файлов при вызове `checkpoint`.  В функции `test_scenario_1`  должны быть добавлены проверки, чтобы убедиться, что создаются ожидаемые файлы и что они содержат ожидаемый контент.

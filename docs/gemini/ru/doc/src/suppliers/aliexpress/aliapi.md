@@ -1,78 +1,60 @@
-# Модуль `hypotez/src/suppliers/aliexpress/aliapi.py`
+# Модуль `aliapi.py`
 
 ## Обзор
 
-Этот модуль предоставляет класс `AliApi` для работы с API AliExpress. Он расширяет базовый класс `AliexpressApi` и добавляет дополнительные функции для работы с продуктами, категориями и рекламными кампаниями. Модуль использует библиотеки `requests`, `json`, `asyncio`, `pathlib` и другие для обработки данных и взаимодействия с API.  Он также взаимодействует с базами данных для хранения и управления данными.
+Модуль `aliapi.py` предоставляет класс `AliApi`, расширяющий базовый класс `AliexpressApi`, для работы с API AliExpress.  Он предназначен для получения подробной информации о продуктах, аффилированных ссылок и других данных, необходимых для работы с AliExpress. Модуль использует менеджеры баз данных для работы с категориями и рекламными кампаниями.
 
 ## Классы
 
 ### `AliApi`
 
-**Описание**: Расширенный класс для работы с API AliExpress.  Предназначен для взаимодействия с API, работы с продуктами, категориями и рекламными кампаниями.
+**Описание**: Класс `AliApi` расширяет функциональность `AliexpressApi`, предоставляя дополнительные методы для взаимодействия с API AliExpress. Он также включает в себя менеджеры баз данных для работы с категориями и рекламными кампаниями.
 
 **Методы**:
 
-#### `__init__`
-
-**Описание**: Инициализирует экземпляр класса `AliApi`.
-
-**Параметры**:
-- `language` (str): Язык для запросов API. По умолчанию 'en'.
-- `currency` (str): Валюта для запросов API. По умолчанию 'usd'.
-
-**Возвращает**:
-- `None`
-
-#### `retrieve_product_details_as_dict`
-
-**Описание**: Отправляет список идентификаторов продуктов в API AliExpress и получает список объектов `SimpleNamespace` с описанием продуктов, преобразует их в список словарей.
+- `__init__`: Инициализирует экземпляр класса `AliApi`.
+- `retrieve_product_details_as_dict`: Преобразует список идентификаторов продуктов в список словарей с деталями продуктов.
+- `get_affiliate_links`: Получает аффилированные ссылки для заданных ссылок на продукты.
 
 **Параметры**:
-- `product_ids` (list): Список идентификаторов продуктов.
+
+- `__init__(language: str = 'en', currency: str = 'usd', *args, **kwargs)`:
+    - `language (str)`: Язык для запросов API. По умолчанию 'en'.
+    - `currency (str)`: Валюта для запросов API. По умолчанию 'usd'.
 
 **Возвращает**:
-- `dict | None`: Список данных о продуктах в формате словарей. Возвращает `None`, если произошла ошибка.
 
-**Пример**:
+- `retrieve_product_details_as_dict(product_ids: list) -> dict | dict | None`:  Список словарей с деталями продуктов. Возвращает None в случае ошибки.
+- `get_affiliate_links(links: str | list, link_type: int = 0, **kwargs) -> List[SimpleNamespace]`: Список объектов `SimpleNamespace` с аффилированными ссылками.
+
+
+## Функции
+
+(Нет функций в данном модуле)
+
+## Примеры использования
+
 ```python
-# Пример использования, см.  внутри документации для `retrieve_product_details_as_dict`
+# Пример использования retrieve_product_details_as_dict
+product_ids = [123, 456, 789]
+aliapi_instance = AliApi()
+product_details = aliapi_instance.retrieve_product_details_as_dict(product_ids)
+print(product_details)
 ```
 
-#### `get_affiliate_links`
+```python
+# Пример использования get_affiliate_links
+links = ["link1", "link2"]
+aliapi_instance = AliApi()
+affiliate_links = aliapi_instance.get_affiliate_links(links)
+print(affiliate_links)
+```
 
-**Описание**: Возвращает аффилированные ссылки для указанных продуктов.
+**Примечания**:
 
-**Параметры**:
-- `links` (str | list): Ссылка на продукт или список ссылок.
-- `link_type` (int, optional): Тип аффилированной ссылки. По умолчанию 0.
-
-
-**Возвращает**:
-- `List[SimpleNamespace]`: Список объектов `SimpleNamespace` с аффилированными ссылками.
-
-
-**Примечания**:  Метод использует `super().get_affiliate_links()` для вызова базового метода.  Более подробная документация для базового метода должна быть доступна в `AliexpressApi`.
+- Пример использования `retrieve_product_details_as_dict` демонстрирует преобразование данных из `SimpleNamespace` в список словарей.
+- Пример `get_affiliate_links` предполагает использование `super().get_affiliate_links()`, так как метод  в `AliApi` не переопределен.
 
 
-##  Атрибуты
-
-**Описание**:  Указанные атрибуты используются для взаимодействия с базами данных.
-
-- `manager_categories`: Объект `CategoryManager`.
-- `manager_campaigns`: Объект `ProductCampaignsManager`.
-
-
-##  Модули и импорты
-
-- `re`, `json`, `asyncio`, `pathlib`, `List`, `Dict`, `SimpleNamespace`, `get`, `post` (из `requests`)
-- `gs`, `j_loads_ns`, `j_loads`, `j_dumps`, `pprint` (из `src.utils.jjson`, `src.utils.printer`)
-- `json2csv` (из `src.utils.convertors.json`)
-- `logger` (из `src.logger`)
-- `AliexpressApi`, `AliexpressCategory`, `CategoryManager`, `ProductCampaignsManager` (из других модулей)
-
-
-##  Примечания
-
-- Модуль использует `gs.credentials.aliexpress` для получения API-ключей.
-- Документация для `AliexpressApi` и других связанных модулей предполагается доступной.
-- Код содержит комментарии, поясняющие использование некоторых функций, и примеры.
+```
+```

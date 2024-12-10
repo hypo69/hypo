@@ -16,7 +16,6 @@ rst
 .. autofunction:: module_name.another_function
     :noindex:
 
-
 Классы
 -------
 
@@ -24,67 +23,81 @@ rst
     :members:
     :undoc-members:
     :show-inheritance:
+```
+```rst
+Модуль обработки данных
+=========================
 
-.. autoclass:: module_name.AnotherClass
+.. automodule:: data_processing_module
     :members:
     :undoc-members:
     :show-inheritance:
 
+Функции
+--------
+
+.. autofunction:: data_processing_module.process_data
+    :noindex:
+
+.. autofunction:: data_processing_module.validate_input
+    :noindex:
+
+Классы
+-------
+
+.. autoclass:: data_processing_module.DataProcessor
+    :members:
+    :undoc-members:
+    :show-inheritance:
 ```
-```python
-# module_name.py
-import typing as t
+```rst
+Обработка изображений
+=======================
 
-class ClassName:
-    """
-    Описание класса ClassName.
-    """
+.. automodule:: image_processing_module
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-    def method_name(self, param: str, param1: t.Optional[str | dict | str] = None) -> t.Dict[str, str] | None:
-        """
-        Аргументы:
-            param (str): Описание параметра `param`.
-            param1 (Optional[str | dict | str], optional): Описание параметра `param1`. По умолчанию равно `None`.
+Классы
+-------
 
-        Возвращаемое значение:
-            dict | None: Описание возвращаемого значения. Возвращает словарь или `None`.
-        """
-        return {"result": param}
+.. autoclass:: image_processing_module.ImageProcessor
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
+Функции
+--------
 
-def function_name(param: str, param1: t.Optional[str | dict | str] = None) -> t.Dict[str, str] | None:
-    """
-    Аргументы:
-        param (str): Описание параметра `param`.
-        param1 (Optional[str | dict | str], optional): Описание параметра `param1`. По умолчанию равно `None`.
+.. autofunction:: image_processing_module.resize_image
+    :noindex:
+```
+```rst
+#  Модуль  обработки  текста
+==========================
 
-    Возвращаемое значение:
-        dict | None: Описание возвращаемого значения. Возвращает словарь или `None`.
-    """
-    return {"result": param}
+.. automodule:: text_processing_module
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-def another_function(param: int, param2: str) -> None:
-  """
-  Аргументы:
-    param (int): описание параметра
-    param2 (str): описание параметра
-  Возвращаемое значение:
-    None: ничего не возвращает
+Функции
+-------
 
-  """
-  pass
+.. autofunction:: text_processing_module.tokenize_text
+    :noindex:
+
+.. autofunction:: text_processing_module.analyze_sentiment
+    :noindex:
+
+Классы
+-------
+
+.. autoclass:: text_processing_module.TextAnalyzer
+    :members:
+    :undoc-members:
+    :show-inheritance:
 ```
 
-**Объяснение и улучшения:**
-
-* **`.. automodule::`:**  Использование `.. automodule::` для автоматического документирования модуля.
-* **`:members:`:**  Эта директива генерирует документацию для всех элементов модуля (классов, функций, и т.д.).
-* **`:undoc-members:`:**  Эта директива позволяет документировать функции и классы без документации.
-* **`:show-inheritance:`:**  Эта директива показывает наследование.
-* **`:noindex:`:** Эта директива добавляется к `.. autofunction::` для предотвращения создания индексных ссылок. Это нужно для того, чтобы не возникали конфликты, если у вас несколько файлов с подобными функциями.
-* **Пример с `another_function`:** Добавлена дополнительная функция для демонстрации корректной структуры.
-* **Добавление классов:** Пример `ClassName` и `AnotherClass` с методом `method_name` добавлены для демонстрации документирования классов.
-* **Типы данных:** Пример кода теперь использует `typing` для явных типов данных параметров и возвращаемых значений.
-
-
-Этот расширенный ответ предоставляет более полную и полезную документацию в формате reStructuredText, которая подходит для использования со Sphinx.  Теперь документация является гораздо более информативной и соответствует требованиям Sphinx.  Помните, что для компиляции документации с использованием Sphinx необходимо иметь установленный Sphinx и выполнить соответствующие команды для генерации HTML документа.
+**Примечание:**  Для корректной работы,  замените `module_name`, `ClassName`,  `function_name` и т.д. на  имена из ваших Python файлов.  Также,  необходимо создать файл `index.rst` для  оглавления,  используя `.. toctree::` для связи с модулями, если требуется.  Примеры `index.rst` и полное дерево оглавления (TOC)  не представлены в ответе, но будут необходимы для генерирования  полной документации.  Представленные примеры показывают только фрагменты документации для отдельных модулей.

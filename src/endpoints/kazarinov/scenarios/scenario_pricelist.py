@@ -314,11 +314,12 @@ flowchart TD
             return {}
 
         response_dict:dict = j_loads(response)
+
         if not response_dict:
             logger.error("Ошибка парсинга ответа модели", None, False)
-            if attempts >1:
+            if attempts > 1:
                 ...
-                await self.process_ai(lang, attempts -1 )
+                await self.process_ai(products_list, lang, attempts -1 )
             return {}
         return  response_dict
 

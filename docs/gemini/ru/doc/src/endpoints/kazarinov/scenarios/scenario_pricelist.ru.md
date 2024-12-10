@@ -2,22 +2,30 @@
 
 ## Обзор
 
-Этот скрипт предназначен для автоматизации процесса создания "мехирона" для Сергея Казаринова. Он извлекает, парсит, обрабатывает данные о продуктах от различных поставщиков, обрабатывает их через ИИ и публикует продукты в Facebook.
+Этот скрипт предназначен для автоматизации создания "мехирона" для Сергея Казаринова. Он извлекает, парсит и обрабатывает данные о продуктах от различных поставщиков, подготавливает данные, обрабатывает их через ИИ и интегрирует с Facebook для публикации продуктов.
 
 ## Оглавление
 
-* [Сценарий создания мехирона для Сергея Казаринова](#сценарий-создания-мехирона-для-сергея-казаринова)
-* [Обзор](#обзор)
-* [Основные возможности](#основные-возможности)
-* [Структура модуля](#структура-модуля)
-* [Легенда](#легенда)
-* [Класс: `MexironBuilder`](#класс-mexironbuilder)
-* [Использование](#использование)
-* [Пример](#пример)
-* [Зависимости](#зависимости)
-* [Обработка ошибок](#обработка-ошибок)
-* [Вклад](#вклад)
-* [Лицензия](#лицензия)
+- [Сценарий создания мехирона для Сергея Казаринова](#сценарий-создания-мехирона-для-сергея-казаринова)
+    - [Обзор](#обзор)
+    - [Основные возможности](#основные-возможности)
+    - [Блок-схема модуля](#блок-схема-модуля)
+    - [Легенда](#легенда)
+    - [Класс: `MexironBuilder`](#класс-mexironbuilder)
+        - [`__init__(self, driver: Driver, mexiron_name: Optional[str] = None)`](#__init__self-driver-driver-mexiron_name-optionalstr--none))
+        - [`run_scenario(self, system_instruction: Optional[str] = None, price: Optional[str] = None, mexiron_name: Optional[str] = None, urls: Optional[str | List[str]] = None, bot = None) -> bool`](#run_scenarioself-system_instruction-optionalstr--none-price-optionalstr--none-mexiron_name-optionalstr--none-urls-optionalstr--liststr--none-bot--none--bool)]
+        - [`get_graber_by_supplier_url(self, url: str)`](#get_graber_by_supplier_urlself-url-str)]
+        - [`convert_product_fields(self, f: ProductFields) -> dict`](#convert_product_fieldsself-f-productfields--dict)]
+        - [`save_product_data(self, product_data: dict)`](#save_product_dataself-product_data-dict)]
+        - [`process_ai(self, products_list: List[str], lang: str, attempts: int = 3) -> tuple | bool`](#process_aiself-products_list-liststr-lang-str-attempts-int--3--tuple--bool)]
+        - [`post_facebook(self, mexiron: SimpleNamespace) -> bool`](#post_facebookself-mexiron-simplenamespace--bool)]
+        - [`create_report(self, data: dict, html_file: Path, pdf_file: Path)`](#createreself-data-dict-html_file-path-pdf_file-path)]
+    - [Использование](#использование)
+    - [Пример](#пример)
+    - [Зависимости](#зависимости)
+    - [Обработка ошибок](#обработка-ошибок)
+    - [Вклад](#вклад)
+    - [Лицензия](#лицензия)
 
 
 ## Основные возможности
@@ -28,7 +36,7 @@
 4. **Генерация отчетов**: Генерирует HTML и PDF отчеты из обработанных данных.
 5. **Публикация в Facebook**: Публикует обработанные данные в Facebook.
 
-## Структура модуля
+## Блок-схема модуля
 
 ```mermaid
 graph TD
@@ -52,106 +60,81 @@ graph TD
 
 ## Легенда
 
-(Описание элементов схемы, как в исходном коде)
+(Описание элементов блок-схемы - смотри исходный код)
 
 ## Класс: `MexironBuilder`
 
-### Описание
-
-Класс `MexironBuilder` отвечает за выполнение сценария создания мехирона.
-
-### Атрибуты
-
-* `driver`: Экземпляр Selenium WebDriver.
-* `export_path`: Путь для экспорта данных.
-* `mexiron_name`: Пользовательское имя для процесса мехирона.
-* `price`: Цена для обработки.
-* `timestamp`: Метка времени для процесса.
-* `products_list`: Список обработанных данных о продуктах.
-* `model`: Модель Google Generative AI.
-* `config`: Конфигурация, загруженная из JSON.
-
-### Методы
-
-#### `__init__(self, driver: Driver, mexiron_name: Optional[str] = None)`
+### `__init__(self, driver: Driver, mexiron_name: Optional[str] = None)`
 
 **Назначение**: Инициализирует класс `MexironBuilder` с необходимыми компонентами.
 
 **Параметры**:
-* `driver`: Экземпляр Selenium WebDriver.
-* `mexiron_name`: Пользовательское имя для процесса мехирона (по умолчанию `None`).
+- `driver`: Экземпляр `Selenium WebDriver`.
+- `mexiron_name`: Пользовательское имя для процесса мехирона (необязательно).
 
-#### `run_scenario(self, system_instruction: Optional[str] = None, price: Optional[str] = None, mexiron_name: Optional[str] = None, urls: Optional[str | List[str]] = None, bot = None) -> bool`
+### `run_scenario(self, system_instruction: Optional[str] = None, price: Optional[str] = None, mexiron_name: Optional[str] = None, urls: Optional[str | List[str]] = None, bot = None) -> bool`
 
 **Назначение**: Выполняет сценарий: парсит продукты, обрабатывает их через ИИ и сохраняет данные.
 
 **Параметры**:
-* `system_instruction`: Системные инструкции для модели ИИ (по умолчанию `None`).
-* `price`: Цена для обработки (по умолчанию `None`).
-* `mexiron_name`: Пользовательское имя мехирона (по умолчанию `None`).
-* `urls`: URLs страниц продуктов (по умолчанию `None`).
-* `bot`: необязательный параметр.
+- `system_instruction`: Системные инструкции для модели ИИ (необязательно).
+- `price`: Цена для обработки (необязательно).
+- `mexiron_name`: Пользовательское имя мехирона (необязательно).
+- `urls`: Список URL страниц продуктов (необязательно).
+- `bot`: (Описание параметра)
 
 **Возвращает**: `True`, если сценарий выполнен успешно, иначе `False`.
 
-#### `get_graber_by_supplier_url(self, url: str)`
+**(Подробное описание с блок-схемой - смотри исходный код)**
 
-**Назначение**: Возвращает соответствующий грабер для данного URL поставщика.
+### `get_graber_by_supplier_url(self, url: str)`
 
-**Параметры**:
-* `url`: URL страницы поставщика.
+**(Описание - смотри исходный код)**
 
-**Возвращает**: Экземпляр грабера, если найден, иначе `None`.
+### `convert_product_fields(self, f: ProductFields) -> dict`
 
+**(Описание - смотри исходный код)**
 
-#### `convert_product_fields(self, f: ProductFields) -> dict`
+### `save_product_data(self, product_data: dict)`
 
-**Назначение**: Конвертирует поля продукта в словарь.
+**(Описание - смотри исходный код)**
 
-**Параметры**:
-* `f`: Объект, содержащий парсированные данные о продукте.
+### `process_ai(self, products_list: List[str], lang: str, attempts: int = 3) -> tuple | bool`
 
-**Возвращает**: Форматированный словарь данных о продукте.
-
-
-#### `save_product_data(self, product_data: dict)`
-
-**Назначение**: Сохраняет данные о продукте в файл.
-
-**Параметры**:
-* `product_data`: Форматированные данные о продукте.
+**(Описание - смотри исходный код)**
 
 
-#### `process_ai(self, products_list: List[str], lang: str, attempts: int = 3) -> tuple | bool`
+### `post_facebook(self, mexiron: SimpleNamespace) -> bool`
 
-**Назначение**: Обрабатывает список продуктов через модель ИИ.
-
-**Параметры**:
-* `products_list`: Список словарей данных о продуктах в виде строки.
-* `lang`: язык обработки (например, 'ru', 'he').
-* `attempts`: Количество попыток повторного запроса (по умолчанию 3).
-
-**Возвращает**: Обработанный ответ в указанных языках.
+**(Описание - смотри исходный код)**
 
 
-#### `post_facebook(self, mexiron: SimpleNamespace) -> bool`
+### `create_report(self, data: dict, html_file: Path, pdf_file: Path)`
 
-**Назначение**: Выполняет сценарий публикации в Facebook.
-
-**Параметры**:
-* `mexiron`: Обработанные данные для публикации.
-
-**Возвращает**: `True`, если публикация успешна, иначе `False`.
+**(Описание - смотри исходный код)**
 
 
-#### `create_report(self, data: dict, html_file: Path, pdf_file: Path)`
 
-**Назначение**: Генерирует HTML и PDF отчеты из обработанных данных.
+## Использование
 
-**Параметры**:
-* `data`: Обработанные данные.
-* `html_file`: Путь для сохранения HTML отчета.
-* `pdf_file`: Путь для сохранения PDF отчета.
+**(Описание - смотри исходный код)**
 
+## Пример
 
-(Остальные разделы документации, как в исходном коде)
+**(Описание - смотри исходный код)**
+
+## Зависимости
+
+**(Описание - смотри исходный код)**
+
+## Обработка ошибок
+
+**(Описание - смотри исходный код)**
+
+## Вклад
+
+**(Описание - смотри исходный код)**
+
+## Лицензия
+
+**(Описание - смотри исходный код)**
